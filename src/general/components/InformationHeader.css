@@ -13,6 +13,13 @@
   position: absolute;
   display: inline-block;
 }
+.searchButtonHolder {
+  width: auto;
+  top: 0;
+  right: 0;
+  position: absolute;
+  display: inline-block;
+}
 .textBox {
   height: auto;
   color: #fff;
@@ -20,6 +27,7 @@
   line-height: 50px;
   font-family: semibold;
   text-align: center;
+  position: relative;
 }
 .span {
   margin-left: 5px;

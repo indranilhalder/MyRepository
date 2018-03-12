@@ -9,17 +9,39 @@ import {
   selectDeliveryMode,
   getOrderSummary,
   getCoupons,
-  applyCoupon,
-  releaseCoupon,
+  applyUserCoupon,
+  releaseUserCoupon,
   getAllStoresCNC,
   addStoreCNC,
-  addPickupPersonCNC
+  addPickupPersonCNC,
+  softReservation,
+  getPaymentModes,
+  applyBankOffer,
+  releaseBankOffer,
+  getNetBankDetails,
+  getEmiBankDetails,
+  applyCliqCash,
+  removeCliqCash
 } from "../actions/cart.actions";
-
+import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    getCartDetailsCNC: (userId, accessToken, cartId) => {
-      dispatch(getCartDetailsCNC(userId, accessToken, cartId));
+    getCartDetailsCNC: (
+      userId,
+      accessToken,
+      cartId,
+      pinCode,
+      isSoftReservation
+    ) => {
+      dispatch(
+        getCartDetailsCNC(
+          userId,
+          accessToken,
+          cartId,
+          pinCode,
+          isSoftReservation
+        )
+      );
     },
     getUserAddress: () => {
       dispatch(getUserAddress());
@@ -27,8 +49,8 @@ const mapDispatchToProps = dispatch => {
     addUserAddress: userAddress => {
       dispatch(addUserAddress(userAddress));
     },
-    addAddressToCart: addressId => {
-      dispatch(addAddressToCart(addressId));
+    addAddressToCart: (addressId, pinCode) => {
+      dispatch(addAddressToCart(addressId, pinCode));
     },
     getOrderSummary: () => {
       dispatch(getOrderSummary());
@@ -36,14 +58,14 @@ const mapDispatchToProps = dispatch => {
     getCoupons: () => {
       dispatch(getCoupons());
     },
-    applyCoupon: () => {
-      dispatch(applyCoupon());
+    applyUserCoupon: () => {
+      dispatch(applyUserCoupon());
     },
-    releaseCoupon: () => {
-      dispatch(releaseCoupon());
+    releaseUserCoupon: () => {
+      dispatch(releaseUserCoupon());
     },
-    selectDeliveryMode: (code, ussId, cartId) => {
-      dispatch(selectDeliveryMode(code, ussId, cartId));
+    selectDeliveryMode: (deliveryUssId, pinCode) => {
+      dispatch(selectDeliveryMode(deliveryUssId, pinCode));
     },
     getAllStoresCNC: pinCode => {
       dispatch(getAllStoresCNC(pinCode));
@@ -53,6 +75,33 @@ const mapDispatchToProps = dispatch => {
     },
     addPickupPersonCNC: (personMobile, personName) => {
       dispatch(addPickupPersonCNC(personMobile, personName));
+    },
+    softReservation: (pinCode, payload) => {
+      dispatch(softReservation(pinCode, payload));
+    },
+    getPaymentModes: () => {
+      dispatch(getPaymentModes());
+    },
+    showCouponModal: data => {
+      dispatch(showModal(BANK_OFFERS, data));
+    },
+    applyBankOffer: couponCode => {
+      dispatch(applyBankOffer(couponCode));
+    },
+    releaseBankOffer: couponCode => {
+      dispatch(releaseBankOffer(couponCode));
+    },
+    getNetBankDetails: () => {
+      dispatch(getNetBankDetails());
+    },
+    getEmiBankDetails: () => {
+      dispatch(getEmiBankDetails());
+    },
+    applyCliqCash: () => {
+      dispatch(applyCliqCash());
+    },
+    removeCliqCash: () => {
+      dispatch(removeCliqCash());
     }
   };
 };

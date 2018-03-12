@@ -21,7 +21,7 @@ class ProductGalleryMobile extends React.Component {
     const translateAmount = this.props.position * -100;
     return (
       <div
-        className={styles.base}
+        className={this.props.isElectronics ? styles.electronics : styles.base}
         onTouchStart={evt => this.handleSwipeStart(evt)}
         onTouchMove={evt => this.handleSwipeMove(evt)}
         onTouchEnd={evt => this.handleSwipeEnd(evt)}

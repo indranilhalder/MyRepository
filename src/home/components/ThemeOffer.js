@@ -35,11 +35,12 @@ export default class ThemeOffer extends React.Component {
   }
 
   render() {
-    let themeData = [];
+    let themeData = [],
+      items = [];
     const { feedComponentData, buttonText, ...rest } = this.props;
-    const items = feedComponentData.items.map(item => {
-      return transformItem(item);
-    });
+    if (feedComponentData.items) {
+      items = feedComponentData.items.map(transformData);
+    }
     const offers = feedComponentData.offers.map(offer => {
       return transformData(offer);
     });

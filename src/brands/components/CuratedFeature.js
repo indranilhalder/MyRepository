@@ -3,42 +3,48 @@ import styles from "./CuratedFeature.css";
 import PropTypes from "prop-types";
 import { Image } from "xelpmoc-core";
 import Grid from "../../general/components/Grid";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
 export default class CuratedFeature extends React.Component {
-  handleClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
-    }
+  handleClick(webURL) {
+    let urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "");
+    this.props.history.push(urlSuffix);
   }
   render() {
+    let feedComponentData = this.props.feedComponentData;
     return (
       <div className={styles.base}>
-        <div className={styles.headerText}>{this.props.header}</div>
+        <div className={styles.headerText}>{feedComponentData.title}</div>
         <div className={styles.featuresCardHolder}>
           <Grid offset={10} elementWidthMobile={50}>
-            {this.props.curatedFeature.map((val, i) => {
-              return (
-                <div
-                  className={styles.curatedCard}
-                  onClick={() => this.handleClick()}
-                >
-                  <div className={styles.overlay}>
-                    <div className={styles.overlayTextHolder}>
-                      {val.header && (
-                        <div className={styles.featuresHeader}>
-                          {val.header}
-                        </div>
-                      )}
-                      {val.text && (
-                        <div className={styles.featuresText}>{val.text}</div>
-                      )}
+            {feedComponentData &&
+              feedComponentData.items.map((val, i) => {
+                return (
+                  <div
+                    className={styles.curatedCard}
+                    onClick={() => this.handleClick(val.webURL)}
+                    key={i}
+                  >
+                    <div className={styles.overlay}>
+                      <div className={styles.overlayTextHolder}>
+                        {val.title && (
+                          <div className={styles.featuresHeader}>
+                            {val.title}
+                          </div>
+                        )}
+                        {val.description && (
+                          <div className={styles.featuresText}>
+                            {val.description}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className={styles.imageHolder}>
+                      <Image image={val.imageURL} fit="cover" />
                     </div>
                   </div>
-                  <div className={styles.imageHolder}>
-                    <Image image={val.imageUrl} fit="cover" />
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </Grid>
         </div>
       </div>

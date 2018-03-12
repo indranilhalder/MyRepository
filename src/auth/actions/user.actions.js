@@ -171,21 +171,20 @@ export function signUpUserFailure(error) {
 
 export function signUpUser(userObj) {
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-
   return async (dispatch, getState, { api }) => {
     dispatch(signUpUserRequest());
     try {
+      let suffix = "";
+      if (userObj.emailId) {
+        suffix = `&emailId=${userObj.emailId}`;
+      }
       let result = await api.post(
         `${SIGN_UP}?access_token=${
           JSON.parse(globalCookie).access_token
         }&isPwa=true&username=${userObj.username}&password=${
           userObj.password
-        }&platformNumber=${PLATFORM_NUMBER}`
+        }&platformNumber=${PLATFORM_NUMBER}${suffix}`
       );
-
-      if (userObj.emailId) {
-        result = `${result}&emailId=${userObj.emailId}`;
-      }
 
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
@@ -238,7 +237,6 @@ export function otpVerification(otpDetails, userDetails) {
       }
       dispatch(hideModal());
       dispatch(otpVerificationSuccess(resultJson));
-      debugger;
       dispatch(customerAccessToken(userDetails));
     } catch (e) {
       dispatch(otpVerificationFailure(e.message));
@@ -491,8 +489,9 @@ export function customerAccessToken(userDetails) {
         }`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
       // TODO: dispatch a modal here
       dispatch(customerAccessTokenSuccess(resultJson));

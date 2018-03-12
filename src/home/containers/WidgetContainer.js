@@ -9,6 +9,10 @@ const mapDispatchToProps = dispatch => {
     },
     getItems: (positionInFeed, itemIds) => {
       dispatch(getItems(positionInFeed, itemIds));
+    },
+    followUnFollowBrand: status => {
+      // dispatch(followUnFollowBrand(status))
+      return undefined;
     }
   };
 };

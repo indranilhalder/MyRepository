@@ -14,6 +14,7 @@ export default class SearchAndUpdate extends React.Component {
   }
   getValue(val) {
     this.setState({ pinCode: val });
+    this.props.getPinCode(val);
   }
   handleClick() {
     if (this.props.getLocation) {
