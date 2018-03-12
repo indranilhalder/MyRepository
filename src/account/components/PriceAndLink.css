@@ -1,0 +1,41 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  position: relative;
+  padding: 25px 80px 25px 0px;
+  border-top: 1px solid #ececec;
+  border-bottom: 1px solid #ececec;
+}
+.priceTextHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+}
+.priceHeader {
+  width: 100%;
+  height: auto;
+  color: #181818;
+  font-size: 14px;
+  font-family: regular;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+.priceAmount {
+  width: 100%;
+  height: auto;
+  color: #181818;
+  font-size: 14px;
+  font-family: semibold;
+  display: inline-block;
+}
+.buttonHolder {
+  width: auto;
+  height: 25px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
