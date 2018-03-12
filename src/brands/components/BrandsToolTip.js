@@ -14,7 +14,7 @@ export default class BrandsToolTip extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.iconAndToolTip}>
-          <div className={this.props.delete ? styles.onDelete : className}>
+          <div className={this.props.onDelete ? styles.onDelete : className}>
             <Icon image={deleteIcon} size={18} />
           </div>
           <div className={styles.brandsIconHolder}>
@@ -33,3 +33,7 @@ export default class BrandsToolTip extends React.Component {
     );
   }
 }
+BrandsToolTip.propTypes = {
+  handleClick: PropTypes.func,
+  logo: PropTypes.string
+};

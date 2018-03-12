@@ -11,9 +11,9 @@ export default class BrandEdit extends React.Component {
       label: this.props.btnText
     };
   }
-  onClickButton() {
+  onClickButton(val) {
     if (this.props.onClick) {
-      this.props.onClick();
+      this.props.onClick(val);
     }
   }
   onDelete() {
@@ -39,9 +39,9 @@ export default class BrandEdit extends React.Component {
             return (
               <BrandsToolTip
                 logo={val.logo}
-                delete={this.state.onDelete}
+                onDelete={this.state.onDelete}
                 key={i}
-                handleClick={() => this.onClickButton()}
+                handleClick={() => this.onClickButton(val.value)}
               />
             );
           })}
@@ -53,11 +53,13 @@ export default class BrandEdit extends React.Component {
 BrandEdit.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      logo: PropTypes.string
+      logo: PropTypes.string,
+      value: PropTypes.string
     })
   ),
   btnText: PropTypes.string,
-  header: PropTypes.string
+  header: PropTypes.string,
+  onClick: PropTypes.func
 };
 BrandEdit.defaultProps = {
   btnText: "Edit",
