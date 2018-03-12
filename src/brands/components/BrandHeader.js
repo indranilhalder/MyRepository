@@ -1,10 +1,11 @@
 import React from "react";
 import styles from "./BrandHeader.css";
-import InformationHeader from "../../general/components/InformationHeader";
+import cancelIcon from "../../general/components/img/cancel.svg";
 import searchIcon from "./img/Search.svg";
+import iconImageURL from "../../general/components/img/arrowBack.svg";
 import searchRedIcon from "./img/SearchRed.svg";
 import PropTypes from "prop-types";
-import { Icon } from "xelpmoc-core";
+import { CircleButton, Icon } from "xelpmoc-core";
 import Input2 from "../../general/components/Input2.js";
 export default class BrandHeader extends React.Component {
   constructor(props) {
@@ -18,35 +19,33 @@ export default class BrandHeader extends React.Component {
       this.props.onClickBack();
     }
   }
-  onClickSearch() {
-    this.setState({ searchBar: true });
-  }
   onSearch(val) {
     if (this.props.onSearch) {
       this.props.onSearch(val);
     }
   }
   render() {
-    let text = this.props.text;
-    if (this.state.searchBar) {
-      text = "";
-    }
     return (
       <div className={styles.base}>
         <div className={styles.InformationHeader}>
-          <InformationHeader text={text} onClick={() => this.onClickBack()} />
+          <div className={styles.backHolder} onClick={() => this.onClickBack()}>
+            <Icon image={iconImageURL} size={18} />
+          </div>
           {!this.state.searchBar && (
-            <div
-              className={styles.searchHolder}
-              onClick={() => this.onClickSearch()}
-            >
-              <Icon image={searchIcon} size={22} />
+            <div className={styles.searchWithText}>
+              <div className={styles.textBox}>{this.props.text}</div>
+              <div
+                className={styles.searchHolder}
+                onClick={() => this.setState({ searchBar: true })}
+              >
+                <Icon image={searchIcon} size={18} />
+              </div>
             </div>
           )}
           {this.state.searchBar && (
             <div className={styles.searchWithInputRedHolder}>
               <div className={styles.searchRedHolder}>
-                <Icon image={searchRedIcon} size={22} />
+                <Icon image={searchRedIcon} size={18} />
               </div>
               <div className={styles.input}>
                 <Input2
@@ -58,6 +57,12 @@ export default class BrandHeader extends React.Component {
                   borderBottom={"0px solid #212121"}
                 />
               </div>
+              <div
+                className={styles.crossIcon}
+                onClick={() => this.setState({ searchBar: false })}
+              >
+                <Icon image={cancelIcon} size={18} />
+              </div>
             </div>
           )}
         </div>
@@ -66,11 +71,9 @@ export default class BrandHeader extends React.Component {
   }
 }
 BrandHeader.propTypes = {
-  underlineButtonColour: PropTypes.string,
-  underlineButtonLabel: PropTypes.string,
-  buttonLabel: PropTypes.string,
-  replaceItem: PropTypes.func,
-  writeReview: PropTypes.func
+  text: PropTypes.string,
+  onClickBack: PropTypes.func,
+  onSearch: PropTypes.func
 };
 BrandHeader.defaultProps = {
   text: "Mobile"
