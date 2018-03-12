@@ -13,19 +13,130 @@ import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import Logo from "../../general/components/Logo.js";
+import Carousel from "../../general/components/Carousel.js";
+import ProductModule from "../../general/components/ProductModule.js";
 import Button from "../../general/components/Button.js";
 import styles from "./ProductDescriptionPage.css";
+import * as Cookie from "../../lib/Cookie";
+import { transformData } from "../../home/components/utils.js";
+import PDPRecommendedSections from "./PDPRecommendedSections.js";
+import {
+  PRODUCT_SELLER_ROUTER_SUFFIX,
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  GLOBAL_ACCESS_TOKEN,
+  CART_DETAILS_FOR_ANONYMOUS,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  ANONYMOUS_USER,
+  PRODUCT_CART_ROUTER,
+  PRODUCT_REVIEWS_PATH_SUFFIX
+} from "../../lib/constants";
 
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
+const PRODUCT_QUANTITY = "1";
 export default class PdpElectronics extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
       this.props.visitBrandStore();
     }
   }
+
+  gotoPreviousPage = () => {
+    this.props.history.goBack();
+  };
+
+  goToSellerPage = () => {
+    let expressionRuleFirst = "/p-(.*)/(.*)";
+    let expressionRuleSecond = "/p-(.*)";
+    let productId;
+    if (this.props.location.pathname.match(expressionRuleFirst)) {
+      productId = this.props.location.pathname.match(expressionRuleFirst)[1];
+    } else {
+      productId = this.props.location.pathname.match(expressionRuleSecond)[1];
+    }
+    this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
+  };
+
+  goToCart = () => {
+    this.props.history.push({
+      pathname: PRODUCT_CART_ROUTER,
+      state: {
+        ProductCode: this.props.productDetails.productListingId,
+        pinCode: PIN_CODE
+      }
+    });
+  };
+  addToCart = () => {
+    let productDetails = {};
+    productDetails.code = this.props.productDetails.productListingId;
+    productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.ussId = this.props.productDetails.winningUssID;
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    if (userDetails) {
+      this.props.addProductToCart(
+        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(cartDetailsLoggedInUser).code,
+        JSON.parse(customerCookie).access_token,
+        productDetails
+      );
+    } else {
+      this.props.addProductToCart(
+        ANONYMOUS_USER,
+        JSON.parse(cartDetailsAnonymous).guid,
+        JSON.parse(globalCookie).access_token,
+        productDetails
+      );
+    }
+  };
+
+  goToReviewPage = () => {
+    const url = `${this.props.location.pathname}${PRODUCT_REVIEWS_PATH_SUFFIX}`;
+    this.props.history.push(url);
+  };
+
+  addToWishList = () => {
+    let productDetails = {};
+    productDetails.code = this.props.productDetails.productListingId;
+    productDetails.ussId = this.props.productDetails.winningUssID;
+
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+    if (userDetails) {
+      this.props.addProductToWishList(
+        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(customerCookie).access_token,
+        productDetails
+      );
+    } else {
+      this.props.addProductToWishList(
+        ANONYMOUS_USER,
+        JSON.parse(globalCookie).access_token,
+        productDetails
+      );
+    }
+  };
+
+  showEmiModal = () => {
+    const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+
+    const globalAccessToken = JSON.parse(globalCookie).access_token;
+    this.props.getPdpEmi(globalAccessToken, cartValue);
+    this.props.getEmiTerms(globalAccessToken, cartValue);
+    this.props.showEmiModal();
+  };
   render() {
-    const productData = this.props;
+    console.log(this.props);
+    const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -35,12 +146,34 @@ export default class PdpElectronics extends React.Component {
       .map(image => {
         return image[0].value;
       });
+    let otherSellersText;
+
+    if (productData.otherSellers && productData.otherSellers.length > 0) {
+      otherSellersText = (
+        <span>
+          Sold by{" "}
+          <span className={styles.winningSellerText}>
+            {" "}
+            {productData.winningSellerName}
+          </span>{" "}
+          and {productData.otherSellers.length} other sellers;
+        </span>
+      );
+    }
+
     if (productData) {
       return (
-        <PdpFrame>
-          <ProductGalleryMobile>
+        <PdpFrame
+          goToCart={() => this.goToCart()}
+          gotoPreviousPage={() => this.gotoPreviousPage()}
+          addProductToBag={() => this.addToCart()}
+          addProductToWishList={() => this.addToWishList()}
+        >
+          <ProductGalleryMobile isElectronics={true}>
             {mobileGalleryImages.map((val, idx) => {
-              return <Image image={val} key={idx} />;
+              return (
+                <Image image={val} key={idx} color="#f5f5f5" fit="contain" />
+              );
             })}
           </ProductGalleryMobile>
           <div className={styles.content}>
@@ -52,10 +185,10 @@ export default class PdpElectronics extends React.Component {
               averageRating={productData.averageRating}
             />
           </div>
-          {productData.emiInfo && (
+          {productData.isEMIEligible === "Y" && (
             <div className={styles.separator}>
               <div className={styles.info}>
-                {productData.emiInfo.emiText}
+                Emi available on this product.
                 <span className={styles.link} onClick={this.showEmiModal}>
                   View Plans
                 </span>
@@ -70,33 +203,24 @@ export default class PdpElectronics extends React.Component {
               onClick={this.goToCouponPage}
             />
           )}
-          {productData.variantOptions &&
-            productData.variantOptions.showColor && (
-              <React.Fragment>
-                <ColourSelector
-                  data={productData.variantOptions.colorlink}
-                  selected={productData.variantOptions.colorlink
-                    .filter(option => {
-                      return option.selected;
-                    })
-                    .map(value => {
-                      return value.color;
-                    })}
-                  updateColour={val => {}}
-                  getProductSpecification={this.props.getProductSpecification}
-                />
-                <SizeSelector
-                  showSizeGuide={this.props.showSizeGuide}
-                  data={productData.variantOptions.colorlink
-                    .filter(option => {
-                      return option.selected;
-                    })
-                    .map(value => {
-                      return value.sizelink;
-                    })}
-                />
-              </React.Fragment>
-            )}
+          {productData.variantOptions && (
+            <React.Fragment>
+              <ColourSelector
+                data={productData.variantOptions.map(value => {
+                  return value.colorlink;
+                })}
+                history={this.props.history}
+                updateColour={val => {}}
+                getProductSpecification={this.props.getProductSpecification}
+              />
+              <SizeSelector
+                showSizeGuide={this.props.showSizeGuide}
+                data={productData.variantOptions.map(value => {
+                  return value.sizelink;
+                })}
+              />
+            </React.Fragment>
+          )}
           {productData.eligibleDeliveryModes &&
             productData.eligibleDeliveryModes.map((val, idx) => {
               return (
@@ -108,18 +232,14 @@ export default class PdpElectronics extends React.Component {
                   onClick={() => this.renderAddressModal()}
                   deliveryOptions={DELIVERY_TEXT}
                   label={PIN_CODE}
+                  showCliqAndPiqButton={false}
                 />
               );
             })}
-          {productData.otherSellersText && (
+          {productData.otherSellers && (
             <div className={styles.separator}>
               <PdpLink onClick={this.goToSellerPage}>
-                <div
-                  className={styles.sellers}
-                  dangerouslySetInnerHTML={{
-                    __html: productData.otherSellersText
-                  }}
-                />
+                <div className={styles.sellers}>{otherSellersText}</div>
               </PdpLink>
             </div>
           )}
@@ -128,15 +248,13 @@ export default class PdpElectronics extends React.Component {
               <ProductDetails data={productData.details} />
             </div>
           )}
-          {productData.numberOfReviews > 0 && (
-            <div className={styles.separator}>
-              <RatingAndTextLink
-                onClick={this.goToReviewPage}
-                averageRating={productData.averageRating}
-                numberOfReview={productData.numberOfReviews}
-              />
-            </div>
-          )}
+          <div className={styles.separator}>
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
+          </div>
           {productData.classifications && (
             <div className={styles.details}>
               <ProductFeatures features={productData.classifications} />
@@ -147,32 +265,11 @@ export default class PdpElectronics extends React.Component {
               productContent={productData.APlusContent.productContent}
             />
           )}
-          <div className={styles.brandSection}>
-            <div className={styles.brandHeader}>About the brand</div>
-            <div className={styles.brandLogoSection}>
-              {productData.brandLogoImage && (
-                <div className={styles.brandLogoHolder}>
-                  <Logo image={productData.brandLogoImage} />
-                </div>
-              )}
-              <div className={styles.followButton}>
-                <Button label="Follow" type="tertiary" />
-              </div>
-            </div>
-            {productData.brandInfo && (
-              <div className={styles.brandDescription}>
-                {productData.brandInfo}
-              </div>
-            )}
-            {/* Suggested  products part goes here  */}
-            <div className={styles.visitBrandButton}>
-              <Button
-                type="secondary"
-                label="Visit Brand Store"
-                oncLick={() => this.visitBrand()}
-              />
-            </div>
-          </div>
+
+          <PDPRecommendedSections
+            msdItems={this.props.msdItems}
+            productData={productData}
+          />
         </PdpFrame>
       );
     } else {

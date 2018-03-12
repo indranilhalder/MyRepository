@@ -8,14 +8,41 @@ export function transformData(datum) {
   if (!title) {
     title = datum.title;
   }
+
+  if (datum.image_link) {
+    image = datum.image_link;
+  }
+
+  let url;
+  if (datum.webURL) {
+    url = datum.webURL;
+  }
+
+  if (datum.link) {
+    url = datum.link;
+  }
+  let price;
+  if (datum.mrp) {
+    price = datum.mrp;
+  }
+  if (datum.mrpPrice) {
+    price = datum.mrpPrice.doubleValue;
+  }
+  let discountPrice;
+  if (datum.winningSellerMOP) {
+    discountPrice = datum.winningSellerMOP;
+  }
+  if (datum.discountedPrice) {
+    discountPrice = datum.discountedPrice.doubleValue;
+  }
   return {
     image: image,
     video: datum.video,
     title: title,
     description: datum.description,
-    price: datum.mrp,
-    discountPrice: datum.winningSellerMOP,
-    webURL: datum.webURL,
+    price,
+    discountPrice,
+    webURL: url,
     ...datum
   };
 }

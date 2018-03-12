@@ -7,10 +7,12 @@ export default class ColourSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayColour: this.props.selected[0]
+      displayColour: this.props.selected ? this.props.selected[0] : [""]
     };
   }
-
+  updateColour(productUrl) {
+    this.props.history.push(productUrl);
+  }
   render() {
     let data = this.props.data;
 
@@ -19,10 +21,9 @@ export default class ColourSelector extends React.Component {
         <Carousel
           elementWidthMobile={22}
           limit={1}
-          selected={this.props.selected}
           headerComponent={
             <div className={styles.header}>
-              Colour -{" "}
+              Colour{" "}
               <span className={styles.colourName}>
                 {this.state.displayColour}
               </span>
@@ -33,8 +34,10 @@ export default class ColourSelector extends React.Component {
             return (
               <ColourSelect
                 key={i}
-                colour={datum.hexCode}
+                colour={datum.colorHexCode}
                 value={datum.color}
+                selected={datum.selected}
+                onSelect={() => this.updateColour(datum.colorurl)}
               />
             );
           })}

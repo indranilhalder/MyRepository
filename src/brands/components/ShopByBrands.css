@@ -1,0 +1,32 @@
+.base{
+  width:100%;
+  height:auto;
+  background:#fff;
+  padding:20px 15px;
+}
+.header{
+  width:100%;
+  height:auto;
+  color:#212121;
+  font-size:16px;
+  font-family:semibold;
+  margin-bottom: 15px;
+}
+.bradListHolder{
+  width:100%;
+  height:auto;
+  margin-bottom:10px;
+}
+.moreListButtonHolder{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  text-align:left;
+  margin-top:10px
+}
+.buttonHolder{
+  width:auto;
+  height:25px;
+  display:inline-block;
+  vertical-align:middle;
+}

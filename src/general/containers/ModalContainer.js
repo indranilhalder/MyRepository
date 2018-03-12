@@ -8,6 +8,13 @@ import {
   forgotPassword,
   forgotPasswordOtpVerification
 } from "../../auth/actions/user.actions";
+
+import {
+  applyBankOffer,
+  releaseBankOffer,
+  applyUserCoupon,
+  releaseUserCoupon
+} from "../../cart/actions/cart.actions";
 const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
@@ -36,6 +43,19 @@ const mapDispatchToProps = dispatch => {
     },
     forgotPasswordOtpVerification: (otpDetails, userDetails) => {
       dispatch(forgotPasswordOtpVerification(otpDetails, userDetails));
+    },
+
+    applyBankOffer: couponCode => {
+      dispatch(applyBankOffer(couponCode));
+    },
+    releaseBankOffer: couponCode => {
+      dispatch(releaseBankOffer(couponCode));
+    },
+    applyUserCoupon: couponCode => {
+      dispatch(applyUserCoupon(couponCode));
+    },
+    releaseUserCoupon: couponCode => {
+      dispatch(releaseUserCoupon(couponCode));
     }
   };
 };

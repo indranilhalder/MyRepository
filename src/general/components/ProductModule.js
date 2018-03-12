@@ -16,15 +16,14 @@ export default class ProductModule extends React.Component {
     }
   };
   onClick = () => {
+    let urlSuffix;
     if (this.props.webURL) {
-      const urlSuffix = this.props.webURL.replace(TATA_CLIQ_ROOT, "");
-      this.props.history.push(urlSuffix);
-    } else if (this.props.productListingId) {
-      const urlSuffix = `p-${this.props.productListingId.toLowerCase()}`;
-      this.props.history.push(urlSuffix);
+      urlSuffix = this.props.webURL.replace(TATA_CLIQ_ROOT, "");
+    } else if (this.props.productId) {
+      urlSuffix = `p-${this.props.productId.toLowerCase()}`;
     }
     if (this.props.onClick) {
-      this.props.onClick();
+      this.props.onClick(urlSuffix);
     }
   };
   handleConnect = () => {
@@ -63,10 +62,10 @@ export default class ProductModule extends React.Component {
           />
           {this.props.view === "list" && (
             <ProductInfo
-              averageRating={4}
-              totalNoOfReviews="65"
-              offerText="25% offers from Rs. 35,000"
-              bestDeliveryInfo="Tuesday, Sep 12"
+              averageRating={this.props.averageRating}
+              totalNoOfReviews={this.props.totalNoOfReviews}
+              offerText={this.props.offerText}
+              bestDeliveryInfo={this.props.bestDeliveryInfo}
             />
           )}
         </div>

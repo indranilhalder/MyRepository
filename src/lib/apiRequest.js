@@ -3,11 +3,16 @@ import * as Cookie from "./Cookie";
 import { LOGGED_IN_USER_DETAILS } from "./constants.js";
 export const API_URL_ROOT =
   "https://uat2.tataunistore.com/marketplacewebservices";
+export const API_URL_ROOT_DUMMY =
+  "https://www.tatacliq.com/marketplacewebservices";
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
 
+const API_URL_ROOT_SUFFIX = "?isPwa=true";
+
 export const TATA_CLIQ_ROOT = "https://www.tatacliq.com";
+export const API_MSD_URL_ROOT = "https://ap-southeast-1-api.madstreetden.com";
 
 export async function postAdobeTargetUrl(
   path: null,
@@ -52,6 +57,7 @@ export async function post(path, postData, doNotUseApiRoot: false) {
   if (doNotUseApiRoot) {
     url = path;
   }
+
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify(postData),
@@ -120,6 +126,21 @@ export async function putMock(url, payload) {
     body: JSON.stringify(payload),
     headers: {
       access_token: localStorage.getItem("authorizationKey")
+    }
+  });
+}
+
+export async function postMsd(url, payload) {
+  return await fetch(`${API_MSD_URL_ROOT}/${url}`, {
+    method: "POST",
+    body: payload
+  });
+}
+
+export async function getMsd(url) {
+  return await fetch(`${API_URL_ROOT_DUMMY}/${url}`, {
+    headers: {
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
 }

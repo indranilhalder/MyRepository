@@ -35,8 +35,8 @@ export default class ProductGrid extends React.Component {
     }
   }
 
-  goToProductDescription = () => {
-    this.props.history.push(PRODUCT_DESCRIPTION_ROUTER);
+  goToProductDescription = url => {
+    this.props.history.push(url);
   };
 
   renderComponent = data => {
@@ -53,7 +53,9 @@ export default class ProductGrid extends React.Component {
         averageRating={data.averageRating}
         totalNoOfReviews={data.totalNoOfReviews}
         view={this.state.view}
-        onClick={() => this.goToProductDescription()}
+        onClick={url => this.goToProductDescription(url)}
+        productCategory={data.productCategoryType}
+        productId={data.productId}
       />
     );
     // } else if (data.type === PLPAD) {
@@ -102,7 +104,7 @@ export default class ProductGrid extends React.Component {
                     key={i}
                     gridWidthMobile={widthMobile}
                     view={this.state.view}
-                    type={datum.type}
+                    type={datum && datum.type}
                   >
                     {this.renderComponent(datum)}
                   </PlpComponent>

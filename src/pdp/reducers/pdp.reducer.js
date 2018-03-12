@@ -1,20 +1,50 @@
 import * as pdpActions from "../actions/pdp.actions";
+import cloneDeep from "lodash/cloneDeep";
 const productDescription = (
   state = {
     status: null,
     error: null,
     loading: false,
     productDetails: null,
-    sizeGuide: null,
+    sizeGuide: {
+      loading: false,
+      sizeGuideList: []
+    },
     emiResult: null,
     wishList: null,
-    reviews: null,
+    reviews: {},
     reviewsStatus: null,
-    reviewsError: null
+    addReviewStatus: false,
+    reviewsError: null,
+    msdItems: {},
+    emiTerms: null
   },
   action
 ) => {
+  let sizeGuide;
   switch (action.type) {
+    case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_FAILURE:
+      return Object.assign({}, state, {
+        emiTerms: {
+          loading: false,
+          error: action.error,
+          status: action.status
+        }
+      });
+    case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_REQUEST:
+      return Object.assign({}, state, {
+        emiTerms: null,
+        loading: true,
+        status: action.status
+      });
+    case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_SUCCESS:
+      return Object.assign({}, state, {
+        emiTerms: {
+          loading: false,
+          status: action.status,
+          data: action.emiTerms
+        }
+      });
     case pdpActions.PRODUCT_DESCRIPTION_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
@@ -113,23 +143,33 @@ const productDescription = (
       });
 
     case pdpActions.PRODUCT_SIZE_GUIDE_REQUEST:
+      sizeGuide = {
+        loading: true,
+        data: null
+      };
       return Object.assign({}, state, {
         status: action.status,
-        loading: true
+        sizeGuide
       });
 
     case pdpActions.PRODUCT_SIZE_GUIDE_SUCCESS:
+      sizeGuide = {
+        loading: false,
+        data: action.sizeGuide
+      };
       return Object.assign({}, state, {
         status: action.status,
-        sizeGuide: action.sizeGuide,
-        loading: false
+        sizeGuide
       });
 
     case pdpActions.PRODUCT_SIZE_GUIDE_FAILURE:
+      sizeGuide = {
+        loading: false,
+        error: action.error
+      };
       return Object.assign({}, state, {
         status: action.status,
-        error: action.error,
-        loading: false
+        sizeGuide
       });
 
     case pdpActions.PRODUCT_PDP_EMI_REQUEST:
@@ -194,19 +234,26 @@ const productDescription = (
 
     case pdpActions.ADD_PRODUCT_REVIEW_REQUEST:
       return Object.assign({}, state, {
-        reviewsStatus: action.status,
+        addReviewStatus: action.status,
         loading: true
       });
 
     case pdpActions.ADD_PRODUCT_REVIEW_SUCCESS:
+      let reviews = cloneDeep(state.reviews);
+      if (!reviews.reviews) {
+        reviews.reviews = [action.productReview];
+      } else {
+        reviews.reviews = reviews.push(action.productReview);
+      }
       return Object.assign({}, state, {
-        reviewsStatus: action.status,
-        loading: false
+        addReviewStatus: action.status,
+        loading: false,
+        reviews
       });
 
     case pdpActions.ADD_PRODUCT_REVIEW_FAILURE:
       return Object.assign({}, state, {
-        reviewsStatus: action.status,
+        addReviewStatus: action.status,
         reviewsError: action.error,
         loading: false
       });
@@ -268,6 +315,46 @@ const productDescription = (
         loading: false
       });
 
+    case pdpActions.PRODUCT_MSD_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case pdpActions.PRODUCT_MSD_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        msdItems: action.msdItems,
+        loading: false
+      });
+
+    case pdpActions.PRODUCT_MSD_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
+    case pdpActions.GET_PDP_ITEMS_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case pdpActions.GET_PDP_ITEMS_SUCCESS:
+      const newMsdItems = cloneDeep(state.msdItems);
+      newMsdItems[action.widgetKey] = action.items;
+      return Object.assign({}, state, {
+        status: action.status,
+        msdItems: newMsdItems,
+        loading: false
+      });
+    case pdpActions.GET_PDP_ITEMS_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
     default:
       return state;
   }

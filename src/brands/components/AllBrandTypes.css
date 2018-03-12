@@ -1,21 +1,20 @@
-.base{
-  width:100%;
-  height:auto;
-  display:inline-block;
-  padding:15px;
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 30px 15px 15px 15px;
 }
-.headerShopAddress{
-  width:100%;
-  height:auto;
-  color:#212121;
-  font-size:16px;
+.headerShopAddress {
+  width: 100%;
+  height: auto;
+  color: #212121;
+  font-size: 16px;
   font-family: semibold;
-  margin-bottom:10px;
-  display:inline-block;
+  margin-bottom: 10px;
+  display: inline-block;
 }
-.typeListHolder{
-  width:100%;
-  height:auto;
-  display:inline-block;
-
+.typeListHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
 }

@@ -60,6 +60,7 @@ export default class Input2 extends React.Component {
               onBlur={event => this.handleBlur(event)}
               onChange={event => this.handleChange(event)}
               style={{ ...this.props.textStyle }}
+              value={this.props.value}
             />
           </div>
           {this.props.leftChild && (
