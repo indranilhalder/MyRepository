@@ -8246,14 +8246,15 @@
 						<persistence type="property" />
 						<description>Attribute contains url to change password that is used in this process.</description>
 					</attribute>
-					<attribute qualifier="forgetPasswordOtp" type="java.lang.String">
+					 <attribute qualifier="forgetPasswordOtp" type="java.lang.String">
 						<persistence type="property" />
 						<description>Attribute contains OTP to change password that is used in this process.</description>
 					</attribute>
 					<attribute qualifier="isOtp" type="java.lang.String">
-						<persistence type="dynamic" />
+						<persistence type="property" />
 						<description>to distinguish whether it is OTP or ORL in VM file</description>
-					</attribute>
+					</attribute> 
+
 				</attributes>
 			</itemtype>
 			<itemtype code="OrderProcess" extends="BusinessProcess"
