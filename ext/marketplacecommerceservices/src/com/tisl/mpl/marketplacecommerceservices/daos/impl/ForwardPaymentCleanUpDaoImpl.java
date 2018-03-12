@@ -34,19 +34,25 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
+	
+	private static final String CODE = "code";
+	private static final String START_TIME = "startTime";
+	private static final String END_TIME = "endTime";
+	private static final String ORDER_TYPE = "orderType";
+	private static final String ORDER_STATUS = "orderStatus";
+	private static final String GUID = "guid";
+	private static final String ORDER_STATUS_ONE = "orderStatusOne";
+	private static final String ORDER_STATUS_TWO = "orderStatusTwo";
+	private static final String AUDIT_ID = "auditId";
+	private static final String EXPIRED_FLAG = "expiredFlag";
 
 	@Override
 	public MplConfigurationModel fetchConfigDetails(final String code)
 	{
-		final StringBuilder queryString = new StringBuilder(500);
-		queryString.append("SELECT {mcf:" + MplConfigurationModel.PK + "}");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM);//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
-		queryString.append(MplConfigurationModel._TYPECODE + " AS mcf}");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{mcf:" + MplConfigurationModel.MPLCONFIGCODE //SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
-				+ "} = ?code");
+		final String queryString = MarketplacecommerceservicesConstants.FPC_QUERY_MPLCONFIG;
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("code", code);
+		query.addQueryParameter(CODE, code);
 
 		final List<MplConfigurationModel> result = flexibleSearchService.<MplConfigurationModel> search(query).getResult();
 
@@ -56,41 +62,24 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	@Override
 	public List<OrderModel> fetchOrdersWithMultiplePayments(final Date startTime, final Date endTime)
 	{
-		final StringBuilder queryString = new StringBuilder(500);
-		queryString.append("SELECT  {ord:" + OrderModel.PK + "} ");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM);
-		queryString.append(OrderModel._TYPECODE + " AS ord},");
-		queryString.append(" {" + MplPaymentAuditModel._TYPECODE + " AS mpa}");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{ord:" + OrderModel.GUID + "} = {mpa:"
-				+ MplPaymentAuditModel.CARTGUID + "}");
-		queryString.append(" AND {ord:" + OrderModel.STATUS + "} = ?orderStatus");
-		queryString.append(" AND {ord:" + OrderModel.CREATIONTIME + "}  BETWEEN ?startTime and ?endTime");
-		queryString.append(" AND {ord:" + OrderModel.TYPE + "}  = ?orderType");
-		queryString.append(" GROUP BY {ord:" + OrderModel.PK + "}");
-		queryString.append(" HAVING COUNT(1) > 1");
+		final String queryString = MarketplacecommerceservicesConstants.FPC_QUERY_MULTIPAYMENT;
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.STARTTIME, startTime);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.DELIVERY_ENDTIME, endTime);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.ORDERTYPE2, MarketplacecommerceservicesConstants.PARENTORDER);
-		query.addQueryParameter("orderStatus", OrderStatus.PAYMENT_SUCCESSFUL);
+		query.addQueryParameter(START_TIME, startTime);
+		query.addQueryParameter(END_TIME, endTime);
+		query.addQueryParameter(ORDER_TYPE, MarketplacecommerceservicesConstants.PARENTORDER);
+		query.addQueryParameter(ORDER_STATUS, OrderStatus.PAYMENT_SUCCESSFUL);
 
 		return flexibleSearchService.<OrderModel> search(query).getResult();
 	}
 
-
 	@Override
 	public List<MplPaymentAuditModel> fetchAuditsForGUID(final String guid)
 	{
-		final StringBuilder queryString = new StringBuilder(500);
-		queryString.append("SELECT  {mpa:" + MplPaymentAuditModel.PK + "} ");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM);
-		queryString.append(MplPaymentAuditModel._TYPECODE + " AS mpa");
-		queryString.append("} " + MarketplacecommerceservicesConstants.QUERYWHERE + " {mpa:" + MplPaymentAuditModel.CARTGUID
-				+ "}  = ?guid");
+		final String queryString = MarketplacecommerceservicesConstants.FPC_QUERY_AUDITBYGUID;
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("guid", guid);
+		query.addQueryParameter(GUID, guid);
 
 		return flexibleSearchService.<MplPaymentAuditModel> search(query).getResult();
 	}
@@ -100,21 +89,28 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	@Override
 	public List<OrderModel> fetchPaymentFailedOrders(final Date startTime, final Date endTime)
 	{
-		final StringBuilder queryString = new StringBuilder(500);
-		queryString.append("SELECT  {ord:" + OrderModel.PK + "} ");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM);
-		queryString.append(OrderModel._TYPECODE + " AS ord}");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{ord:" + OrderModel.STATUS
-				+ "} IN ( ?orderStatusOne , ?OrderStatusTwo )");
-		queryString.append(" AND {ord:" + OrderModel.CREATIONTIME + "}  BETWEEN ?startTime and ?endTime");
-		queryString.append(" AND {ord:" + OrderModel.TYPE + "}  = ?orderType");
+		final String queryString = MarketplacecommerceservicesConstants.FPC_QUERY_FAILEDPAYMENT;
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.STARTTIME, startTime);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.DELIVERY_ENDTIME, endTime);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.ORDERTYPE2, MarketplacecommerceservicesConstants.PARENTORDER);
-		query.addQueryParameter("orderStatusOne", OrderStatus.PAYMENT_FAILED);
-		query.addQueryParameter("orderStatusTwo", OrderStatus.PAYMENT_TIMEOUT);
+		query.addQueryParameter(START_TIME, startTime);
+		query.addQueryParameter(END_TIME, endTime);
+		query.addQueryParameter(ORDER_TYPE, MarketplacecommerceservicesConstants.PARENTORDER);
+		query.addQueryParameter(ORDER_STATUS_ONE, OrderStatus.PAYMENT_FAILED);
+		query.addQueryParameter(ORDER_STATUS_TWO, OrderStatus.PAYMENT_TIMEOUT);
+
+		return flexibleSearchService.<OrderModel> search(query).getResult();
+	}
+
+	@Override
+	public List<OrderModel> fetchCodChargedOrder(final Date startTime, final Date endTime)
+	{
+		final String queryString = MarketplacecommerceservicesConstants.FPC_QUERY_CODCHARGED;
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter(START_TIME, startTime);
+		query.addQueryParameter(END_TIME, endTime);
+		query.addQueryParameter(ORDER_TYPE, MarketplacecommerceservicesConstants.PARENTORDER);
+		query.addQueryParameter(ORDER_STATUS, OrderStatus.PAYMENT_SUCCESSFUL);
 
 		return flexibleSearchService.<OrderModel> search(query).getResult();
 	}
@@ -122,19 +118,11 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	@Override
 	public List<MplPaymentAuditModel> fetchAuditsWithoutOrder(final Date startTime, final Date endTime)
 	{
-		final StringBuilder queryString = new StringBuilder(500);
-		queryString.append("SELECT {pa:" + MplPaymentAuditModel.PK + "}");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM);
-		queryString.append(MplPaymentAuditModel._TYPECODE + " AS pa");
-		queryString.append(" LEFT JOIN " + OrderModel._TYPECODE + " AS ord");
-		queryString.append(" ON {pa:" + MplPaymentAuditModel.CARTGUID + "} = {ord:" + OrderModel.GUID + "}}");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{ord:" + OrderModel.PK + "} is null");
-		queryString.append(" AND {pa:" + MplPaymentAuditModel.CREATIONTIME + "}");
-		queryString.append(" BETWEEN ?startTime AND ?endTime");
+		final String queryString = MarketplacecommerceservicesConstants.FPC_QUERY_AUDITWITHOUTORDER;
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.STARTTIME, startTime);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.DELIVERY_ENDTIME, endTime);
+		query.addQueryParameter(START_TIME, startTime);
+		query.addQueryParameter(END_TIME, endTime);
 
 		return flexibleSearchService.<MplPaymentAuditModel> search(query).getResult();
 	}
@@ -142,19 +130,13 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	@Override
 	public List<OrderModel> fetchRmsFailedOrders(final Date startTime, final Date endTime)
 	{
-		final StringBuilder queryString = new StringBuilder(500);
-		queryString.append("SELECT  {ord:" + OrderModel.PK + "} ");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM);
-		queryString.append(OrderModel._TYPECODE + " AS ord}");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{ord:" + OrderModel.STATUS + "} = ?orderStatus");
-		queryString.append(" AND {ord:" + OrderModel.CREATIONTIME + "}  BETWEEN ?startTime and ?endTime");
-		queryString.append(" AND {ord:" + OrderModel.TYPE + "}  = ?orderType");
+		final String queryString = MarketplacecommerceservicesConstants.FPC_QUERY_RMSFAILED;
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.STARTTIME, startTime);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.DELIVERY_ENDTIME, endTime);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.ORDERTYPE2, MarketplacecommerceservicesConstants.PARENTORDER);
-		query.addQueryParameter("orderStatus", OrderStatus.RMS_VERIFICATION_FAILED);
+		query.addQueryParameter(START_TIME, startTime);
+		query.addQueryParameter(END_TIME, endTime);
+		query.addQueryParameter(ORDER_TYPE, MarketplacecommerceservicesConstants.PARENTORDER);
+		query.addQueryParameter(ORDER_STATUS, OrderStatus.RMS_VERIFICATION_FAILED);
 
 		return flexibleSearchService.<OrderModel> search(query).getResult();
 	}
@@ -162,15 +144,10 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	@Override
 	public FPCRefundEntryModel fetchRefundEntryForAuditId(final String auditId)
 	{
-		final StringBuilder queryString = new StringBuilder(500);
-		queryString.append("SELECT {fre:" + FPCRefundEntryModel.PK + "}");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM);
-		queryString.append(FPCRefundEntryModel._TYPECODE + " AS fre}");
-		queryString
-				.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{fre:" + FPCRefundEntryModel.AUDITID + "} = ?auditId");
+		final String queryString = MarketplacecommerceservicesConstants.FPC_QUERY_REFUNDENTRY;
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("auditId", auditId);
+		query.addQueryParameter(AUDIT_ID, auditId);
 
 		final List<FPCRefundEntryModel> result = flexibleSearchService.<FPCRefundEntryModel> search(query).getResult();
 
@@ -181,15 +158,10 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	@Override
 	public List<FPCRefundEntryModel> fetchSpecificRefundEntries(final String expiredFlag)
 	{
-		final StringBuilder queryString = new StringBuilder(500);
-		queryString.append("SELECT {fre:" + FPCRefundEntryModel.PK + "}");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM);
-		queryString.append(FPCRefundEntryModel._TYPECODE + " AS fre}");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{fre:" + FPCRefundEntryModel.ISEXPIRED
-				+ "} = ?expiredFlag");
+		final String queryString = MarketplacecommerceservicesConstants.FPC_QUERY_REFUNDENTRIES;
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("expiredFlag", expiredFlag);
+		query.addQueryParameter(EXPIRED_FLAG, expiredFlag);
 
 		return flexibleSearchService.<FPCRefundEntryModel> search(query).getResult();
 	}
@@ -198,16 +170,11 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	@Override
 	public OrderModel fetchParentOrderByGUID(final String guid)
 	{
-		final StringBuilder queryString = new StringBuilder(500);
-		queryString.append("SELECT {ord:" + OrderModel.PK + "}");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM);
-		queryString.append(OrderModel._TYPECODE + " AS ord}");
-		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{ord:" + OrderModel.GUID + "} = ?GUID");
-		queryString.append(" AND {ord:" + OrderModel.TYPE + "}  = ?orderType");
+		final String queryString = MarketplacecommerceservicesConstants.FPC_QUERY_PARENTORDER;
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("guid", guid);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.ORDERTYPE2, MarketplacecommerceservicesConstants.PARENTORDER);
+		query.addQueryParameter(GUID, guid);
+		query.addQueryParameter(ORDER_TYPE, MarketplacecommerceservicesConstants.PARENTORDER);
 
 		final List<OrderModel> result = flexibleSearchService.<OrderModel> search(query).getResult();
 		return CollectionUtils.isNotEmpty(result) ? result.get(0) : null;
@@ -235,6 +202,16 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 		query.addQueryParameter("cliqCash", MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH);
 
 		return flexibleSearchService.<OrderModel> search(query).getResult();
+	}
+	
+	public FlexibleSearchService getFlexibleSearchService()
+	{
+		return flexibleSearchService;
+	}
+
+	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
+	{
+		this.flexibleSearchService = flexibleSearchService;
 	}
 
 }

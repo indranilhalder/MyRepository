@@ -948,3 +948,41 @@
 	}
 	
 /*Account Statement New - END*/
+
+/*Terms & Conditions START*/
+.viewCardTerms {color: #a5173c; text-decoration: underline; cursor: pointer;}
+.QcTermsInnerSection {max-height: 400px; overflow: auto; padding-right: 10px;}
+.viewQcTermsHeading {font-size: 24px; padding-bottom: 15px;}
+.viewQcTermsPoints li {padding: 15px 0;}
+#closeQcTermsPopup {float: right; cursor: pointer; font-size: 28px;}
+#QcTermsSection p {text-align: justify;}
+.viewQcTermsPointHead {font-size: 18px; margin-bottom: -5px;}
+#QcTermsSection {
+ display: none;
+ position: fixed;
+ z-index: 99999;
+ padding-top: 100px;
+ left: 0;
+ top: 0;
+ width: 100%;
+ height: 100%;
+ overflow: auto;
+ background-color: rgb(0, 0, 0);
+ background-color: rgba(0, 0, 0, 0.4);
+}
+
+.QcTermsSection-content {
+ background-color: #fefefe;
+ margin: auto;
+ padding: 20px;
+ border: 1px solid #888;
+ width: 70%;
+}
+
+@media(max-width: 768px) {
+	.QcTermsSection-content {
+		width: 90%;
+	}
+}
+
+/*Terms & Conditions END*/

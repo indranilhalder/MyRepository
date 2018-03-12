@@ -159,7 +159,7 @@ public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldVa
 			if (CollectionUtils.isNotEmpty(buyModList))
 			{
 				final List<BuyBoxModel> modifiableBuyBox = new ArrayList<BuyBoxModel>(buyModList);
-				modifiableBuyBox.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
+				modifiableBuyBox.sort(Comparator.comparing(BuyBoxModel::getWeightage).reversed());		//SDI-6124 fix
 				priceRange = mplBuyBoxUtility.getBuyBoxSellingVariantsPrice(modifiableBuyBox, currencySymbol);
 			}
 		}

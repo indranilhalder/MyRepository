@@ -2576,6 +2576,24 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 			for (final MarketplaceDeliveryModeData deliveryModeData : pincodeServiceData.getDeliveryModes())
 			{
+			        //SDI-6367
+				boolean hasDeliverymodeAvailable = false;
+				if (CollectionUtils.isNotEmpty(deliveryModeResOMSWsDtoList))
+				{ //for second time if not null
+					for (final DeliveryModeResOMSWsDto modeofdelivery : deliveryModeResOMSWsDtoList)
+					{
+						if (modeofdelivery.getType().contains(getDeliveryGlobalCode(deliveryModeData.getCode())))
+						{
+							hasDeliverymodeAvailable = true;
+							break;
+						}
+					}
+
+				}
+				if (hasDeliverymodeAvailable)
+				{
+					continue;
+				}
 				// Validation if data is present in OMS fallback table
 				final String isDelieveryModePresent = isDelieveryModePresent(pincodeServiceData, fallbackPincodeList,
 						deliveryModeData.getCode());
@@ -2624,6 +2642,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					deliveryModeDto.setIsPrepaidEligible(MarketplacecclientservicesConstants.Y);
 					deliveryModeDto.setDeliveryDate(new SimpleDateFormat(MarketplacecclientservicesConstants.DELIVERY_DATE_FORMATTER)
 							.format(new Date()));
+					deliveryModeDto.setFulfillmentType(pincodeServiceData.getFullFillmentType()); //SDI-6367
 				}
 				else
 				{
@@ -2639,6 +2658,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							: MarketplacecclientservicesConstants.N);
 					deliveryModeDto.setDeliveryDate(new SimpleDateFormat(MarketplacecclientservicesConstants.DELIVERY_DATE_FORMATTER)
 							.format(new Date()));
+					deliveryModeDto.setFulfillmentType(pincodeServiceData.getFullFillmentType()); //SDI-6367
 				}
 
 				deliveryModeResOMSWsDtoList.add(deliveryModeDto);
