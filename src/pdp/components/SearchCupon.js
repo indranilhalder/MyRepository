@@ -11,8 +11,8 @@ export default class SearchCupon extends React.Component {
   }
 
   onApply() {
-    if (this.props.onApply) {
-      this.props.onApply();
+    if (this.props.applyUserCoupon) {
+      this.props.applyUserCoupon(this.props.couponCode);
     }
   }
   render() {
@@ -34,6 +34,7 @@ export default class SearchCupon extends React.Component {
             boxy={true}
             placeholder="Enter Coupon code"
             onChange={val => this.getValue(val)}
+            value={this.props.couponCode}
             textStyle={{ fontSize: 14 }}
             height={35}
           />

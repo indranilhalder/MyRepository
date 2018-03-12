@@ -44,8 +44,10 @@ class CartPage extends React.Component {
         JSON.parse(cartDetailsAnonymous).guid
       );
     }
-    if (this.props.getCoupons) {
-      this.props.getCoupons();
+    if (userDetails) {
+      if (this.props.getCoupons) {
+        this.props.getCoupons();
+      }
     }
   }
 
@@ -57,6 +59,17 @@ class CartPage extends React.Component {
     );
   };
 
+  applyCoupon = couponCode => {
+    if (this.props.applyCoupon) {
+      this.props.applyCoupon();
+    }
+  };
+
+  releaseCoupon = couponCode => {
+    if (this.props.releaseCoupon) {
+      this.props.releaseCoupon();
+    }
+  };
   goToCouponPage = () => {
     this.props.showCouponModal(this.props.cart.coupons);
   };

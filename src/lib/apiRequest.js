@@ -10,6 +10,8 @@ export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
 export const JUS_PAY_API_URL_ROOT = "https://sandbox.juspay.in";
 
+const API_URL_ROOT_SUFFIX = "?isPwa=true";
+
 export const TATA_CLIQ_ROOT = "https://www.tatacliq.com";
 export const API_MSD_URL_ROOT = "https://ap-southeast-1-api.madstreetden.com";
 

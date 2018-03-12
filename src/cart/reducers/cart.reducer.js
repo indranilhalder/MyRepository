@@ -97,19 +97,19 @@ const cart = (
         loading: false
       });
 
-    case cartActions.APPLY_COUPON_REQUEST:
+    case cartActions.APPLY_USER_COUPON_REQUEST:
       return Object.assign({}, state, {
         couponStatus: action.status,
         loading: true
       });
 
-    case cartActions.APPLY_COUPON_SUCCESS:
+    case cartActions.APPLY_USER_COUPON_SUCCESS:
       return Object.assign({}, state, {
         couponStatus: action.status,
         loading: false
       });
 
-    case cartActions.APPLY_COUPON_FAILURE:
+    case cartActions.APPLY_USER_COUPON_FAILURE:
       return Object.assign({}, state, {
         couponStatus: action.status,
         couponError: action.error,
@@ -136,19 +136,19 @@ const cart = (
         loading: false
       });
 
-    case cartActions.RELEASE_COUPON_REQUEST:
+    case cartActions.RELEASE_USER_COUPON_REQUEST:
       return Object.assign({}, state, {
         couponStatus: action.status,
         loading: true
       });
 
-    case cartActions.RELEASE_COUPON_SUCCESS:
+    case cartActions.RELEASE_USER_COUPON_SUCCESS:
       return Object.assign({}, state, {
         couponStatus: action.status,
         loading: false
       });
 
-    case cartActions.RELEASE_COUPON_FAILURE:
+    case cartActions.RELEASE_USER_COUPON_FAILURE:
       return Object.assign({}, state, {
         couponStatus: action.status,
         couponError: action.error,
