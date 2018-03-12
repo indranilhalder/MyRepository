@@ -882,6 +882,7 @@ ACC.refinements = {
 				}
 			}
 			if (countCustomPrice==1){
+				countCustomPrice=0;		//SDI-2153 fix
 				return false;
 			}
 			//alert("USQ :"+updatedsearchQuery);
