@@ -13,7 +13,9 @@ export default class OrderBanner extends React.Component {
       <div className={styles.base}>
         <div className={styles.orderInnerBox}>
           <div className={styles.orderHeading}>{this.props.headingText}</div>
-          <div className={styles.orderLabel}>{this.props.label}</div>
+          <div className={styles.orderLabel}>{`Order Id: ${
+            this.props.label
+          }`}</div>
           <div className={styles.buttonHolder}>
             <Button
               type="hollow"
@@ -33,4 +35,8 @@ OrderBanner.propTypes = {
   label: PropTypes.string,
   buttonText: PropTypes.string,
   onClick: PropTypes.func
+};
+
+OrderBanner.defaultProps = {
+  buttonText: "Track Order"
 };

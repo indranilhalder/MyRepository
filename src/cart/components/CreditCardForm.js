@@ -71,7 +71,7 @@ export default class CreditCardForm extends React.Component {
     cardValues.monthValue = "03";
     cardValues.yearValue = "2020";
     cardValues.selected = this.state.selected;
-    cardValues.merchant_id = "Tul_QA2";
+    cardValues.merchant_id = "tul_uat2";
     this.props.softReservationForPayment(cardValues);
   };
 

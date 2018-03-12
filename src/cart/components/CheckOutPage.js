@@ -13,15 +13,14 @@ import CartItem from "./CartItem";
 import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
 import _ from "lodash";
+import OrderConfirmation from "./OrderConfirmation";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  GLOBAL_ACCESS_TOKEN,
-  CART_DETAILS_FOR_LOGGED_IN_USER,
-  CART_DETAILS_FOR_ANONYMOUS,
-  ANONYMOUS_USER
+  CART_DETAILS_FOR_LOGGED_IN_USER
 } from "../../lib/constants";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
+const PAYMENT_CHARGED = "CHARGED";
 class CheckOutPage extends React.Component {
   state = {
     confirmAddress: false,
@@ -30,7 +29,9 @@ class CheckOutPage extends React.Component {
     addressId: null,
     addNewAddress: false,
     deliverModeUssId: "",
-    appliedCoupons: false
+    appliedCoupons: false,
+    paymentMode: null,
+    orderConfirmation: false
   };
 
   renderConfirmAddress = () => {
@@ -40,7 +41,7 @@ class CheckOutPage extends React.Component {
   };
 
   handleSelectDeliveryMode(code, id, cartId) {
-    let deliveryModesUssId = `"${code}":"${id}"`;
+    let deliveryModesUssId = `"${id}":"${code}"`;
 
     if (this.state.deliverModeUssId) {
       this.setState({
@@ -152,28 +153,44 @@ class CheckOutPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.cart.justPayPaymentDetails) {
-      this.props.history.push(
-        nextProps.cart.jusPayDetails.payment.authentication.url
+      window.location.replace(
+        nextProps.cart.justPayPaymentDetails.payment.authentication.url
       );
+    }
+    if (nextProps.cart.orderConfirmationDetailsStatus) {
+      Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      this.setState({ orderConfirmation: true });
     }
   }
   componentDidMount() {
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let cartDetailsLoggedInUser = Cookie.getCookie(
-      CART_DETAILS_FOR_LOGGED_IN_USER
-    );
+    const query = new URLSearchParams(this.props.location.search);
+    const value = query.get("status");
+    const orderId = query.get("order_id");
 
-    this.props.getCartDetailsCNC(
-      JSON.parse(userDetails).customerInfo.mobileNumber,
-      JSON.parse(customerCookie).access_token,
-      JSON.parse(cartDetailsLoggedInUser).code,
-      this.props.location.state.pinCode,
-      false
-    );
-    this.props.getUserAddress(this.props.location.state.pinCode);
-    this.props.getPaymentModes();
-    this.props.getNetBankDetails();
+    if (value === PAYMENT_CHARGED) {
+      if (this.props.updateTransactionDetails) {
+        this.props.updateTransactionDetails(this.state.paymentMode, orderId);
+      }
+    } else {
+      if (this.props.getCartDetailsCNC) {
+        let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+        let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+        let cartDetailsLoggedInUser = Cookie.getCookie(
+          CART_DETAILS_FOR_LOGGED_IN_USER
+        );
+
+        this.props.getCartDetailsCNC(
+          JSON.parse(userDetails).customerInfo.mobileNumber,
+          JSON.parse(customerCookie).access_token,
+          JSON.parse(cartDetailsLoggedInUser).code,
+          this.props.location.state.pinCode,
+          false
+        );
+        this.props.getUserAddress(this.props.location.state.pinCode);
+        this.props.getPaymentModes();
+        this.props.getNetBankDetails();
+      }
+    }
   }
 
   onSelectAddress(selectedAddress) {
@@ -183,7 +200,7 @@ class CheckOutPage extends React.Component {
         return address.id === selectedAddress[0];
       }
     );
-    console.log(addressSelected[0].id);
+
     this.setState({ confirmAddress: false });
     this.setState({ addressId: addressSelected });
   }
@@ -196,7 +213,6 @@ class CheckOutPage extends React.Component {
     this.setState(val);
   }
   handleSubmit = () => {
-    console.log(this.state);
     if (!this.state.confirmAddress) {
       this.props.addAddressToCart(
         this.state.addressId[0].id,
@@ -251,13 +267,14 @@ class CheckOutPage extends React.Component {
 
   softReservationForPayment = cardDetails => {
     cardDetails.pinCode = "110001";
-    console.log(this.state.addressId[0]);
     this.props.softReservationForPayment(cardDetails, this.state.addressId[0]);
   };
   render() {
-    console.log(this.props.cart);
     const cartData = this.props.cart;
-    if (this.state.addNewAddress || !cartData.userAddress) {
+    if (
+      (this.state.addNewAddress || !cartData.userAddress) &&
+      !this.state.orderConfirmation
+    ) {
       return (
         <AddDeliveryAddress
           addUserAddress={address => this.addAddress(address)}
@@ -265,8 +282,11 @@ class CheckOutPage extends React.Component {
           onChange={val => this.onChange(val)}
         />
       );
-    }
-    if (!this.state.addNewAddress && this.props.cart) {
+    } else if (
+      !this.state.addNewAddress &&
+      this.props.cart &&
+      !this.state.orderConfirmation
+    ) {
       return (
         <div>
           {cartData.userAddress &&
@@ -330,6 +350,18 @@ class CheckOutPage extends React.Component {
               payable={this.props.cart.cartDetailsCnc.totalPrice}
               onCheckout={this.handleSubmit}
             />
+          )}
+        </div>
+      );
+    } else if (this.state.orderConfirmation) {
+      return (
+        <div>
+          {this.props.cart.orderConfirmationDetails && (
+            <div>
+              <OrderConfirmation
+                orderDetails={this.props.cart.orderConfirmationDetails}
+              />
+            </div>
           )}
         </div>
       );

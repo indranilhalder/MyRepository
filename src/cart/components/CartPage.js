@@ -117,13 +117,14 @@ class CartPage extends React.Component {
 
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
+                console.log(product);
                 return (
                   <div className={styles.cartItem} key={i}>
                     <CartItem
                       productImage={product.imageURL}
                       productDetails={product.description}
                       productName={product.productName}
-                      price={product.priceValue.sellingPrice.formattedValue}
+                      price={product.price}
                       deliveryInformation={product.elligibleDeliveryMode}
                       deliverTime={
                         product.elligibleDeliveryMode &&

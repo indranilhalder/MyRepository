@@ -23,7 +23,8 @@ import {
   applyCliqCash,
   removeCliqCash,
   binValidation,
-  softReservationForPayment
+  softReservationForPayment,
+  updateTransactionDetails
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -110,6 +111,9 @@ const mapDispatchToProps = dispatch => {
     },
     softReservationForPayment: (cardDetails, address) => {
       dispatch(softReservationForPayment(cardDetails, address));
+    },
+    updateTransactionDetails: (paymentMode, juspayOrderID) => {
+      dispatch(updateTransactionDetails(paymentMode, juspayOrderID));
     }
   };
 };
