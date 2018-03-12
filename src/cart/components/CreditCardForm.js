@@ -52,11 +52,11 @@ export default class CreditCardForm extends React.Component {
   onSaveCardDetails(val) {
     if (this.props.onSaveCardDetails) {
       let cardDetails = {};
-      cardDetails.cardNumber = "4242424242424242";
+      cardDetails.cardNumber = this.state.cardNumberValue;
       cardDetails.cardName = "SHDHD";
-      cardDetails.cvvNumber = "123";
-      cardDetails.monthValue = "03";
-      cardDetails.yearValue = "2020";
+      cardDetails.cvvNumber = this.state.cardCvvValue;
+      cardDetails.monthValue = this.state.monthValue;
+      cardDetails.yearValue = this.state.yearValue;
       cardDetails.selected = this.state.selected;
       cardDetails.merchant_id = "tul_uat2";
       this.props.onSaveCardDetails(cardDetails);
@@ -65,11 +65,11 @@ export default class CreditCardForm extends React.Component {
 
   payBill = cardDetails => {
     let cardValues = {};
-    cardValues.cardNumber = "4242424242424242";
+    cardValues.cardNumber = this.state.cardNumberValue;
     cardValues.cardName = "SHDHD";
-    cardValues.cvvNumber = "123";
-    cardValues.monthValue = "03";
-    cardValues.yearValue = "2020";
+    cardValues.cvvNumber = this.state.cardCvvValue;
+    cardValues.monthValue = this.state.monthValue;
+    cardValues.yearValue = this.state.yearValue;
     cardValues.selected = this.state.selected;
     cardValues.merchant_id = "tul_uat2";
     this.props.softReservationForPayment(cardValues);
@@ -110,19 +110,21 @@ export default class CreditCardForm extends React.Component {
           </div>
           <div className={styles.dropDownHolder}>
             <div className={styles.dropDownBox}>
-              <SelectBoxMobile
-                theme="hollowBox"
-                options={this.props.options}
-                value="Expiry month"
+              <Input2
+                placeholder="Expiry Month"
+                boxy={true}
                 onChange={changedValue => this.monthChange(changedValue)}
+                textStyle={{ fontSize: 14 }}
+                height={33}
               />
             </div>
             <div className={styles.dropDownBox}>
-              <SelectBoxMobile
-                theme="hollowBox"
-                options={this.props.optionsYear}
-                value="Expiry year"
+              <Input2
+                placeholder="Expiry year"
+                boxy={true}
                 onChange={changedValue => this.onYearChange(changedValue)}
+                textStyle={{ fontSize: 14 }}
+                height={33}
               />
             </div>
           </div>

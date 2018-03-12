@@ -141,7 +141,7 @@ export function getProductDescription(productCode) {
     dispatch(getProductDescriptionRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_DESCRIPTION_PATH}/${productCode}?&isPwa=true`
+        `${PRODUCT_DESCRIPTION_PATH}/${productCode}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
