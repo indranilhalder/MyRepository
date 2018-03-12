@@ -1,72 +1,64 @@
 .base {
   width: 100%;
-  height: auto;
-  display: inline-block;
+  height: 50px;
   background-color: #212121;
 }
 .InformationHeader {
   width: 100%;
-  height: auto;
-  display: inline-block;
+  height: 50px;
   position: relative;
+  padding: 10px 50px 10px 50px;
 }
 .backHolder {
-  padding-top: 14px;
-  width: 15%;
+  width: auto;
   height: auto;
-  display: inline-block;
-  padding-left: 10px;
+  position: absolute;
+  left: 17px;
+  top: 17px;
 }
 .searchWithText {
-  width: 85%;
-  height: auto;
-  display: inline-block;
+  width: 100%;
+  height: 100%;
   position: relative;
 }
 .textBox {
-  width: 85%;
-  height: auto;
+  width: 100%;
+  height: 100%;
   color: #fff;
   font-size: 14px;
-  line-height: 50px;
   font-family: semibold;
   text-align: center;
+  line-height: 32px;
 }
 .searchHolder {
   position: absolute;
-  display: inline-block;
-  top: 14px;
-  right: 10px;
+  top: 17px;
+  right: 17px;
   width: auto;
   height: auto;
 }
 .searchWithInputRedHolder {
-  width: 85%;
+  width: 100%;
   height: auto;
-  display: inline-block;
   top: 0px;
   bottom: 0px;
   position: relative;
-  margin-bottom: 10px;
+  padding-left: 20px;
 }
 .searchRedHolder {
-  top: 6px;
   width: auto;
   height: auto;
   position: absolute;
-  display: inline-block;
+  left: 0px;
+  top: 6px;
 }
 .input {
-  padding-left: 20px;
   width: auto;
   height: auto;
-  display: inline-block;
 }
 .crossIcon {
-  top: 6px;
   width: auto;
   height: auto;
+  top: 7px;
   position: absolute;
-  display: inline-block;
-  right: 10px;
 }
