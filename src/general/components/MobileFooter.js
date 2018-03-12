@@ -17,11 +17,12 @@ import {
   PRODUCT_CART_ROUTER,
   BRANDS_LANDING_PAGE
 } from "../../../src/lib/constants";
-//this.props.history.push(HOME_ROUTER);
+
 export default class MobileFooter extends React.Component {
   handleSelect(val) {
-    console.log(val);
-    this.props.history.push(val);
+    if (this.props.history) {
+      this.props.history.push(val);
+    }
   }
   render() {
     return (
