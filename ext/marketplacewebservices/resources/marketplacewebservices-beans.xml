@@ -4233,4 +4233,27 @@
 		<property name="message" type="String" />
 		<property name="status" type="String" />
 	</bean>
+	
+	 <!--For Coupon display on Cart Page -->
+	<bean class="com.tisl.mpl.wsdto.MplVisibleCouponsDTO">
+		<property name="couponCode" type="String" />
+		<property name="couponName" type="String" />
+		<property name="description" type="String" />
+		<property name="couponExpiryDate" type="String" />
+		<property name="couponCreationDate" type="String" />
+		<property name="couponType" type="String" />
+		<property name="redemptionQtyLimitPerUser" type="String" />
+		<property name="isPercentage" type="boolean" />
+		<property name="value" type="java.lang.Double" />
+		<property name="maxDiscount" type="java.lang.Double" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.MplFinalVisibleCouponsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="couponsList"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.MplVisibleCouponsDTO>" />
+		<property name="closedCouponsList"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.MplVisibleCouponsDTO>" />
+	</bean>
+	
+	<!--For Coupon display on Cart Page Ends-->
 </beans>

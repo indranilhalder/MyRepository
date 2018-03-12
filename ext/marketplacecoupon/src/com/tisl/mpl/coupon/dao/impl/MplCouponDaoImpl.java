@@ -552,7 +552,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 			LOG.debug(QUERY_STRING + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
-			openVoucherList = getFlexibleSearchService().<VoucherModel> search(query).getResult();
+			openVoucherList = flexibleSearchService.<VoucherModel> search(query).getResult();
 		}
 		catch (final FlexibleSearchException e)
 		{

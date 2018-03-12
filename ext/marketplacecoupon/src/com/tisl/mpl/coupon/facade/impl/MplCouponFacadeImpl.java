@@ -71,6 +71,8 @@ import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerRestrictionModel;
 import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
+import com.tisl.mpl.wsdto.MplFinalVisibleCouponsDTO;
+import com.tisl.mpl.wsdto.MplVisibleCouponsDTO;
 import com.tisl.mpl.wsdto.OfferListWsData;
 import com.tisl.mpl.wsdto.OfferResultWsData;
 
@@ -2179,21 +2181,18 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param currentCustomer
 	 */
 	@Override
-	public void getDisplayCouponList(final String cartGuid, final CustomerModel currentCustomer)
+	public MplFinalVisibleCouponsDTO getDisplayCouponList(final String cartGuid, final CustomerModel currentCustomer)
 	{
-		List<VoucherData> closedVoucherDataList = null;
-		List<VoucherData> openVoucherDataList = null;
+		List<MplVisibleCouponsDTO> closedVoucherDataList = null;
+		List<MplVisibleCouponsDTO> openVoucherDataList = null;
+		final MplFinalVisibleCouponsDTO finalDTO = new MplFinalVisibleCouponsDTO();
+
 		try
 		{
 			final List<VoucherModel> closedVoucherList = mplCouponService.getClosedVoucherList(currentCustomer);
 			if (CollectionUtils.isNotEmpty(closedVoucherList))
 			{
-				closedVoucherDataList = new ArrayList<>();
-				for (final VoucherModel oModel : closedVoucherList)
-				{
-					final VoucherData voucherData = getVoucherConverter().convert(oModel);
-					closedVoucherDataList.add(voucherData);
-				}
+				closedVoucherDataList = populateDataList(closedVoucherList);
 			}
 
 		}
@@ -2207,12 +2206,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			final List<VoucherModel> openVoucherList = mplCouponService.getOpenVoucherList();
 			if (CollectionUtils.isNotEmpty(openVoucherList))
 			{
-				openVoucherDataList = new ArrayList<>();
-				for (final VoucherModel oModel : openVoucherList)
-				{
-					final VoucherData voucherData = getVoucherConverter().convert(oModel);
-					openVoucherDataList.add(voucherData);
-				}
+				openVoucherDataList = populateDataList(openVoucherList);
 			}
 		}
 		catch (final Exception exception)
@@ -2221,6 +2215,75 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		}
 
 
+		if (CollectionUtils.isNotEmpty(closedVoucherDataList))
+		{
+			finalDTO.setClosedCouponsList(closedVoucherDataList);
+		}
+
+		if (CollectionUtils.isNotEmpty(openVoucherDataList))
+		{
+			finalDTO.setCouponsList(openVoucherDataList);
+		}
+
+		return finalDTO;
+	}
+
+
+
+	/**
+	 * The Method populates data in Data Class
+	 *
+	 * @param voucherList
+	 * @return List<MplVisibleCouponsDTO>
+	 */
+	private List<MplVisibleCouponsDTO> populateDataList(final List<VoucherModel> voucherList)
+	{
+		final List<MplVisibleCouponsDTO> voucherDataList = new ArrayList<>();
+
+		for (final VoucherModel oModel : voucherList)
+		{
+			final MplVisibleCouponsDTO dto = new MplVisibleCouponsDTO();
+			dto.setCouponCode(oModel.getCode());
+			dto.setCouponName(oModel.getName());
+			dto.setDescription(oModel.getDescription());
+			dto.setIsPercentage(((oModel.getAbsolute().booleanValue()) ? (false) : (true)));
+			dto.setValue(oModel.getValue());
+
+			if (null != oModel.getMaxDiscountValue())
+			{
+				dto.setMaxDiscount(oModel.getMaxDiscountValue());
+			}
+
+			final List<RestrictionModel> restrictionList = new ArrayList<>(oModel.getRestrictions());
+			if (CollectionUtils.isNotEmpty(restrictionList))
+			{
+				for (final RestrictionModel restriction : restrictionList)
+				{
+					if (restriction instanceof DateRestrictionModel)
+					{
+						final DateRestrictionModel dateRestrictmodel = (DateRestrictionModel) restriction;
+						dto.setCouponCreationDate(dateRestrictmodel.getStartDate().toString());
+						dto.setCouponExpiryDate(dateRestrictmodel.getEndDate().toString());
+
+						break;
+					}
+				}
+			}
+
+			if ((oModel instanceof PromotionVoucherModel) && !(oModel instanceof MplCartOfferVoucherModel))
+			{
+				dto.setCouponType("COUPON");
+			}
+			else
+			{
+				dto.setCouponType("BANKCOUPON");
+			}
+
+			voucherDataList.add(dto);
+
+		}
+
+		return voucherDataList;
 	}
 
 

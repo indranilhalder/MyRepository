@@ -25,6 +25,7 @@ import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.wsdto.MplFinalVisibleCouponsDTO;
 import com.tisl.mpl.wsdto.OfferListWsData;
 
 
@@ -243,7 +244,7 @@ public interface MplCouponFacade
 	 * @param cartGuid
 	 * @param currentCustomer
 	 */
-	void getDisplayCouponList(String cartGuid, CustomerModel currentCustomer);
+	MplFinalVisibleCouponsDTO getDisplayCouponList(String cartGuid, CustomerModel currentCustomer);
 
 
 }

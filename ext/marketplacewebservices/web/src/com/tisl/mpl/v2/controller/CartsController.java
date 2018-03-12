@@ -179,6 +179,7 @@ import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
 import com.tisl.mpl.wsdto.MplCartPinCodeResponseWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
+import com.tisl.mpl.wsdto.MplFinalVisibleCouponsDTO;
 import com.tisl.mpl.wsdto.MplSelectedEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
@@ -4972,49 +4973,64 @@ public class CartsController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{cartId}/displayCouponOffers", method = RequestMethod.GET)
 	@ResponseBody
-	public void displayCouponOffers(@RequestParam(required = false) final String cartGuid,
+	public MplFinalVisibleCouponsDTO displayCouponOffers(@RequestParam(required = false) final String cartGuid,
 			@RequestParam(required = false) final boolean isPwa)
 	{
-		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+		MplFinalVisibleCouponsDTO dto = new MplFinalVisibleCouponsDTO();
 
-		if (null == currentCustomer)
+		try
 		{
-			throw new AccessDeniedException("Access is Denied");
-		}
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
-
-		if (StringUtils.isNotEmpty(cartGuid))
-		{
-			final List<CartModel> cartList = new ArrayList<>(currentCustomer.getCarts());
-			boolean allowFlag = false;
-
-			if (CollectionUtils.isNotEmpty(cartList))
+			if (null == currentCustomer)
 			{
-				for (final CartModel carts : cartList)
+				throw new AccessDeniedException("Access is Denied");
+			}
+
+
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				final List<CartModel> cartList = new ArrayList<>(currentCustomer.getCarts());
+				boolean allowFlag = false;
+
+				if (CollectionUtils.isNotEmpty(cartList))
 				{
-					if (carts.getGuid().equalsIgnoreCase(cartGuid))
+					for (final CartModel carts : cartList)
 					{
-						allowFlag = true;
-						break;
+						if (carts.getGuid().equalsIgnoreCase(cartGuid))
+						{
+							allowFlag = true;
+							break;
+						}
+					}
+
+					if (allowFlag)
+					{
+						dto = mplCouponFacade.getDisplayCouponList(cartGuid, currentCustomer);
+					}
+					else
+					{
+						throw new AccessDeniedException("Access is Denied");
 					}
 				}
 
-				if (allowFlag)
-				{
-					mplCouponFacade.getDisplayCouponList(cartGuid, currentCustomer);
-				}
-				else
-				{
-					throw new AccessDeniedException("Access is Denied");
-				}
+			}
+			else
+			{
+				dto = mplCouponFacade.getDisplayCouponList(MarketplacecommerceservicesConstants.EMPTY, currentCustomer);
 			}
 
-		}
-		else
-		{
-			mplCouponFacade.getDisplayCouponList(MarketplacecommerceservicesConstants.EMPTY, currentCustomer);
-		}
+			dto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 
+		} //TPR-799
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			dto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			dto.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			dto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return dto;
 	}
 
 
