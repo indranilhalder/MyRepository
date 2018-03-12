@@ -5,8 +5,8 @@ import styles from "./BrandsToolTip.css";
 import deleteIcon from "../../general/components/img/delete.svg";
 export default class BrandsToolTip extends React.Component {
   handleClick() {
-    if (this.props.handleClick) {
-      this.props.handleClick();
+    if (this.props.onClick) {
+      this.props.onClick();
     }
   }
   render() {
@@ -34,6 +34,6 @@ export default class BrandsToolTip extends React.Component {
   }
 }
 BrandsToolTip.propTypes = {
-  handleClick: PropTypes.func,
+  onClick: PropTypes.func,
   logo: PropTypes.string
 };

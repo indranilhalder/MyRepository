@@ -16,7 +16,7 @@ export default class BrandEdit extends React.Component {
       this.props.onClick(val);
     }
   }
-  onDelete() {
+  onShowDelete() {
     this.setState({ onDelete: !this.state.onDelete });
     if (this.state.label === "Edit") {
       this.setState({ label: "Done" });
@@ -30,7 +30,7 @@ export default class BrandEdit extends React.Component {
         <div className={styles.followedBrand}>
           <FollowedBrand
             header={this.props.header}
-            onClick={() => this.onDelete()}
+            onClick={() => this.onShowDelete()}
             btnText={this.state.label}
           />
         </div>
@@ -41,7 +41,7 @@ export default class BrandEdit extends React.Component {
                 logo={val.logo}
                 onDelete={this.state.onDelete}
                 key={i}
-                handleClick={() => this.onClickButton(val.value)}
+                onClick={() => this.onClickButton(val.value)}
               />
             );
           })}
