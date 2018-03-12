@@ -16,7 +16,8 @@ const mapStateToProps = state => {
   return {
     loading: state.productListings.loading,
     productListings: state.productListings.productListings,
-    pageNumber: state.productListings.pageNumber
+    pageNumber: state.productListings.pageNumber,
+    searchresult: state.productListings.searchresult
   };
 };
 
