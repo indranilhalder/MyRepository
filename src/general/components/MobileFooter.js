@@ -17,6 +17,11 @@ import {
   PRODUCT_CART_ROUTER,
   BRANDS_LANDING_PAGE
 } from "../../../src/lib/constants";
+const HOME = "home";
+const CATEGORIES = "categories";
+const BRANDS = "brands";
+const PROFILE = "profile";
+const BAG = "bag";
 
 export default class MobileFooter extends React.Component {
   handleSelect(val) {
@@ -38,7 +43,7 @@ export default class MobileFooter extends React.Component {
         <MobileFooterItem
           activeIcon={categoriesIconRed}
           basicIcon={categoriesIcon}
-          value="categories"
+          value={CATEGORIES}
           text="Categories"
           selected={this.props.selected}
           onSelect={() => this.handleSelect(HOME_ROUTER)}
@@ -46,7 +51,7 @@ export default class MobileFooter extends React.Component {
         <MobileFooterItem
           activeIcon={brandsIconRed}
           basicIcon={brandsIcon}
-          value="brands"
+          value={BRANDS}
           text="Brands"
           selected={this.props.selected}
           onSelect={() => this.handleSelect(BRANDS_LANDING_PAGE)}
@@ -54,7 +59,7 @@ export default class MobileFooter extends React.Component {
         <MobileFooterItem
           activeIcon={userIconRed}
           basicIcon={userIcon}
-          value="profile"
+          value={PROFILE}
           text="My Cliq"
           selected={this.props.selected}
           onSelect={() => this.handleSelect(HOME_ROUTER)}
@@ -62,7 +67,7 @@ export default class MobileFooter extends React.Component {
         <MobileFooterItem
           activeIcon={myBagIconRed}
           basicIcon={myBagIcon}
-          value="bag"
+          value={BAG}
           text="My Bag"
           selected={this.props.selected}
           onSelect={val => this.handleSelect(PRODUCT_CART_ROUTER)}
@@ -73,8 +78,8 @@ export default class MobileFooter extends React.Component {
 }
 
 MobileFooter.propTypes = {
-  selected: PropTypes.oneOf(["home", "categories", "brands", "profile", "bag"])
+  selected: PropTypes.oneOf([HOME, CATEGORIES, BRANDS, PROFILE, BAG])
 };
 MobileFooter.defaultProps = {
-  selected: "home"
+  selected: HOME
 };

@@ -51,7 +51,7 @@ import {
   PRODUCT_DESCRIPTION_REVIEWS,
   PRODUCT_SELLER_ROUTER,
   PRODUCT_OTHER_SELLER_ROUTER,
-  BRANDS_LANDING_PAGE
+  DEFAULT_BRANDS_LANDING_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -221,7 +221,7 @@ class App extends Component {
           <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
           <Route
             exact
-            path={BRANDS_LANDING_PAGE}
+            path={DEFAULT_BRANDS_LANDING_PAGE}
             component={BrandsLandingPage}
           />
         </Switch>
