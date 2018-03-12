@@ -1,24 +1,28 @@
 import React from "react";
 import ProductListingsContainer from "../containers/ProductListingsContainer.js";
+import BrandLandingPageContainer from "../../brands/containers/BrandLandingPageContainer";
 import throttle from "lodash/throttle";
 import queryString from "query-string";
-
+import MDSpinner from "react-md-spinner";
+import { BLP_OR_CLP_FEED_TYPE } from "../../lib/constants";
 const CATEGORY_REGEX = /c-msh*/;
 const BRAND_REGEX = /c-mbh*/;
 const CAPTURE_REGEX = /c-(.*)/;
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
+const IS_FILTER_SUFFIX = `&isFilter=true`;
 const SEARCH_CATEGORY_TO_IGNORE = "all";
 
 export default class PlpBrandCategoryWrapper extends React.Component {
-  componentDidMount() {
-    // this will do the check for category or brand
-    // which does not happen now
-    window.addEventListener("scroll", this.handleScroll);
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      pageType: props.location.pathname
+    };
+  }
+  getSearchTextFromUrl() {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const searchCategory = parsedQueryString.searchCategory;
     let searchText = parsedQueryString.q;
-
     const brandOrCategoryId = this.props.match.params.brandOrCategoryId;
     let match;
     if (CATEGORY_REGEX.test(brandOrCategoryId)) {
@@ -40,9 +44,24 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     if (!searchText) {
       searchText = parsedQueryString.text;
     }
+    return searchText;
+  }
+  componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll);
+    let productId = this.props.location.pathname.match(CAPTURE_REGEX)[1];
+    this.props.homeFeed(productId);
+  }
 
-    // I can just assume that we need to set filters here.
-    this.props.getProductListings(searchText, SUFFIX, 0);
+  componentDidUpdate() {
+    if (
+      this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE &&
+      this.props.homeFeedData.homeFeed.length === 0 &&
+      this.props.productListings === null
+    ) {
+      const suffix = "&isFilter=false";
+      const searchText = this.getSearchTextFromUrl();
+      this.props.getProductListings(searchText, suffix, 0, true);
+    }
   }
 
   handleScroll = () => {
@@ -70,24 +89,24 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   componentWillUnmount() {
     window.removeEventListener("scroll", throttle(this.handleScroll, 300));
   }
-
-  // from the url I construct filters
-
-  // and execute a search
-
-  // so this page needs a container that will supply those actions
-  // getProductListings works on the search state, so I will need to update that from the url
-  // then call getProductListings
-
-  // so this thing will need setFIlters, getProductListings
-
+  renderLoader() {
+    return <MDSpinner />;
+  }
   render() {
-    return <ProductListingsContainer />;
+    if (this.props.homeFeedData.loading) {
+      return this.renderLoader();
+    }
+    let isFilter = false;
+    if (this.props.location.state) {
+      isFilter = this.props.location.state.isFilter
+        ? this.props.location.state.isFilter
+        : false;
+    }
+    return this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE &&
+      this.props.homeFeedData.homeFeed.length > 0 ? (
+      <BrandLandingPageContainer />
+    ) : (
+      <ProductListingsContainer isFilter={isFilter} />
+    );
   }
 }
-
-// Brand Page
-// https://uat2.tataunistore.com/marketplacewebservices/v2/mpl/products/serpsearch?type=category&channel=mobile&pageSize=20&typeID=all&page=0&searchText=:relevance:brand:MBH12E00001&isFilter=false&isTextSearch=false&isPwa=false
-
-// Category Page
-// https://uat2.tataunistore.com/marketplacewebservices/v2/mpl/products/serpsearch?type=category&channel=mobile&pageSize=20&typeID=all&page=0&searchText=:relevance:category:MSH1012100&isFilter=false&isTextSearch=false&isPwa=false

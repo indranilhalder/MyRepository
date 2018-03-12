@@ -1,3 +1,4 @@
+// Probably rename this Feed, but no time right now.
 import * as homeActions from "../actions/home.actions";
 import cloneDeep from "lodash/cloneDeep";
 import map from "lodash/map";
@@ -9,7 +10,8 @@ const home = (
     status: null,
     error: null,
     loading: false,
-    msdIndex: 0
+    msdIndex: 0,
+    feedType: null
   },
   action
 ) => {
@@ -31,11 +33,11 @@ const home = (
           status: ""
         };
       });
-
       return Object.assign({}, state, {
         status: action.status,
         homeFeed: homeFeedData,
-        loading: false
+        loading: false,
+        feedType: action.feedType
       });
     case homeActions.HOME_FEED_FAILURE:
       return Object.assign({}, state, {
@@ -43,7 +45,6 @@ const home = (
         error: action.error,
         loading: false
       });
-
     case homeActions.SINGLE_SELECT_REQUEST:
     case homeActions.MULTI_SELECT_SUBMIT_REQUEST:
       homeFeedData = cloneDeep(state.homeFeed);

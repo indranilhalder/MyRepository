@@ -24,6 +24,8 @@ export const PLP_CATEGORY_SEARCH = "/search/?searchCategory=all&text=shirt";
 export const SEARCH_RESULTS_PAGE = "/search/";
 export const HOME_ROUTER = "/home";
 
+export const BRAND_LANDING_PAGE = "/brand";
+
 export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE = "/(.*)/(p-)(.*)";
 export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "/p-(.*)";
 export const PRODUCT_REVIEWS_PATH_SUFFIX = "/product-reviews";
@@ -33,7 +35,8 @@ export const PRODUCT_REVIEW_ROUTER = "/productReview";
 export const LOGIN_PATH = "/login";
 export const SIGN_UP_PATH = "/sign_up";
 export const PRODUCT_FILTER_ROUTER = "/filter";
-export const PRODUCT_SELLER_ROUTER = "/productSeller";
+export const PRODUCT_SELLER_ROUTER_SUFFIX = "/viewSellers";
+export const PRODUCT_OTHER_SELLER_ROUTER = `/p-(.*)(${PRODUCT_SELLER_ROUTER_SUFFIX})`;
 export const PRODUCT_CART_ROUTER = "/myBag";
 export const ORDER_SUMMARY_ROUTER = "/orderSummary";
 export const CHECKOUT_ROUTER = "/checkout";
@@ -51,3 +54,7 @@ export const CART_DETAILS_FOR_LOGGED_IN_USER = "cartDetails";
 export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const ANONYMOUS_USER = "anonymous";
+
+// fetching feed information contant
+export const BLP_OR_CLP_FEED_TYPE = "blpOrClp";
+export const HOME_FEED_TYPE = "home";

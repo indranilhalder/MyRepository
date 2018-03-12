@@ -8,7 +8,7 @@ export default class BrandCardHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonLabel: this.props.buttonLabel
+      buttonLabel: props.feedComponentData.buttonLabel
     };
   }
   handleClick() {
@@ -23,19 +23,30 @@ export default class BrandCardHeader extends React.Component {
     }
   }
   render() {
+    let { feedComponentData } = this.props;
     return (
       <div className={styles.base}>
         <div className={styles.container}>
           <div className={styles.imageHolder}>
-            <Image image={this.props.image} />
+            <Image
+              image={feedComponentData && feedComponentData.items[0].imageURL}
+            />
             <div className={styles.textAndLogoContainer}>
               <div className={styles.logo}>
-                <Logo image={this.props.logo} />
+                <Logo
+                  image={
+                    feedComponentData && feedComponentData.items[0].brandLogo
+                  }
+                />
               </div>
-              <div className={styles.text}>{this.props.text}</div>
+              <div className={styles.text}>
+                {feedComponentData && feedComponentData.items[0].title}
+              </div>
             </div>
             <div className={styles.buttonHolder}>
-              <div className={styles.button}>
+              {/* Need to be uncommented when the follow and unFollow api will work */}
+
+              {/* <div className={styles.button}>
                 <CoreButton
                   width={100}
                   height={36}
@@ -50,7 +61,7 @@ export default class BrandCardHeader extends React.Component {
                   }}
                   onClick={() => this.handleClick()}
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -59,12 +70,11 @@ export default class BrandCardHeader extends React.Component {
   }
 }
 BrandCardHeader.propTypes = {
-  image: PropTypes.string,
-  text: PropTypes.string,
-  logo: PropTypes.string,
+  backgroundImageURL: PropTypes.string,
+  description: PropTypes.string,
+  logoImage: PropTypes.string,
   buttonLabel: PropTypes.string,
-  onClickFollow: PropTypes.func,
-  onClickUnfollow: PropTypes.func
+  onClick: PropTypes.func
 };
 BrandCardHeader.defaultProps = {
   image: "",
