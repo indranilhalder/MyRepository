@@ -1734,7 +1734,11 @@ function displayDeliveryDetails(sellerName) {
 
 				//INC144314017 start
 				 //TPR-6654
-				if(typeof $('#pdpPincodeCheck').data('clicked') != "undefined" && !$('#pdpPincodeCheck').data('clicked')) {
+				
+				//SDI-6595
+				if(typeof $('#pdpPincodeCheck').data('clicked') != "undefined" && $('#pdpPincodeCheck').data('clicked')) {
+
+//					if(typeof $('#pdpPincodeCheck').data('clicked') != "undefined" && !$('#pdpPincodeCheck').data('clicked'))  {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
 					var end_hd=parseInt($("#homeEndId").val())+leadTime;
 				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
