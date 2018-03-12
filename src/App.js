@@ -11,7 +11,7 @@ import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
-import BrandsLandingPage from "./brands/components/BrandsLandingPage";
+import BrandsLandingPageDefault from "./brands/components/BrandsLandingPageDefault";
 import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
 import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 import CartContainer from "./cart/containers/CartContainer";
@@ -222,7 +222,7 @@ class App extends Component {
           <Route
             exact
             path={DEFAULT_BRANDS_LANDING_PAGE}
-            component={BrandsLandingPage}
+            component={BrandsLandingPageDefault}
           />
         </Switch>
 

@@ -2,8 +2,8 @@ import React from "react";
 import BrandsCategory from "./BrandsCategory";
 import BrandsSubCategory from "./BrandsSubCategory";
 import MobileFooter from "../../general/components/MobileFooter";
-import styles from "./BrandsLandingPage.css";
-export default class BrandsLandingPage extends React.Component {
+import styles from "./BrandsLandingPageDefault.css";
+export default class BrandsLandingPageDefault extends React.Component {
   render() {
     const catagory = [
       {
