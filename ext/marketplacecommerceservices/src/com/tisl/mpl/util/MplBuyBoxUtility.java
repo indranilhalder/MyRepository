@@ -607,9 +607,9 @@ public class MplBuyBoxUtility
 
 	/*
 	 * @param sellerArticleSKUList
-	 *
+	 * 
 	 * @param currency
-	 *
+	 * 
 	 * @return priceRange
 	 */
 
@@ -623,8 +623,13 @@ public class MplBuyBoxUtility
 
 		if (CollectionUtils.isNotEmpty(modifiableBuyBox))
 		{
-			min = modifiableBuyBox.get(modifiableBuyBox.size() - 1).getPrice();
-			max = modifiableBuyBox.get(0).getPrice();
+		//SDI-6124 fix starts
+			min = (modifiableBuyBox.get(modifiableBuyBox.size() - 1).getSpecialPrice() != null && modifiableBuyBox.get(
+					modifiableBuyBox.size() - 1).getSpecialPrice() > 0) ? modifiableBuyBox.get(modifiableBuyBox.size() - 1)
+					.getSpecialPrice() : modifiableBuyBox.get(modifiableBuyBox.size() - 1).getPrice();
+			max = (modifiableBuyBox.get(0).getSpecialPrice() != null && modifiableBuyBox.get(0).getSpecialPrice() > 0) ? modifiableBuyBox
+					.get(0).getSpecialPrice() : modifiableBuyBox.get(0).getPrice();
+		//SDI-6124 fix ends
 		}
 
 		//final List<BuyBoxModel> listBuyBox = buyBoxService.getBuyboxSellerPricesForSearch(sellerArticleSKUList);

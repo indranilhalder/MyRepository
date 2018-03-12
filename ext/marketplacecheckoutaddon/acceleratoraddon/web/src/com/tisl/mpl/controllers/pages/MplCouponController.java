@@ -142,8 +142,8 @@ public class MplCouponController
 				//TPR-4461 MESSAGE FOR PAYMENT MODE RESTRICTION FOR COUPON ends here
 
 
-				final Map<String, Double> paymentInfo = getSessionService()
-						.getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
+				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
+						MarketplacecheckoutaddonConstants.PAYMENTMODE);
 
 				//Update paymentInfo in session
 				getMplCouponFacade().updatePaymentInfoSession(paymentInfo, cartModel);
@@ -276,8 +276,8 @@ public class MplCouponController
 				//TPR-4461 MESSAGE FOR PAYMENT MODE RESTRICTION FOR COUPON ends here
 
 
-				final Map<String, Double> paymentInfo = getSessionService()
-						.getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
+				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
+						MarketplacecheckoutaddonConstants.PAYMENTMODE);
 
 				//Update paymentInfo in session
 				getMplCouponFacade().updatePaymentInfoSession(paymentInfo, orderModel);
@@ -527,12 +527,12 @@ public class MplCouponController
 				//Recalculate cart after releasing coupon
 				getMplCouponFacade().recalculateCartForCoupon(cartModel, null); //Handled changed method signature for TPR-629
 
-//				double totalAmount  = cartModel.getTotalPrice().doubleValue();
-//				double payableWalletAmount = cartModel.getTotalWalletAmount().doubleValue();
-//				double nonPayableWalletAmount = totalAmount - payableWalletAmount;
-//				cartModel.setPayableNonWalletAmount(Double.valueOf(nonPayableWalletAmount));
-//				modelService.save(cartModel);
-//				modelService.refresh(cartModel);
+				//				double totalAmount  = cartModel.getTotalPrice().doubleValue();
+				//				double payableWalletAmount = cartModel.getTotalWalletAmount().doubleValue();
+				//				double nonPayableWalletAmount = totalAmount - payableWalletAmount;
+				//				cartModel.setPayableNonWalletAmount(Double.valueOf(nonPayableWalletAmount));
+				//				modelService.save(cartModel);
+				//				modelService.refresh(cartModel);
 
 				if (StringUtils.isNotEmpty(cartCouponCode))
 				{
@@ -561,15 +561,15 @@ public class MplCouponController
 					data = getMplCouponFacade().calculateValues(null, cartModel, true, redeem);
 					getMplCouponFacade().updatePaymentInfoSession(paymentInfo, cartModel);
 				}
-				
-//				 totalAmount  = cartModel.getTotalPrice().doubleValue();
-//				 payableWalletAmount = cartModel.getTotalWalletAmount().doubleValue();
-//				 nonPayableWalletAmount = totalAmount - payableWalletAmount;
-//				cartModel.setPayableNonWalletAmount(Double.valueOf(nonPayableWalletAmount));
-//				modelService.save(cartModel);
-//				modelService.refresh(cartModel);
-				
-				
+
+				//				 totalAmount  = cartModel.getTotalPrice().doubleValue();
+				//				 payableWalletAmount = cartModel.getTotalWalletAmount().doubleValue();
+				//				 nonPayableWalletAmount = totalAmount - payableWalletAmount;
+				//				cartModel.setPayableNonWalletAmount(Double.valueOf(nonPayableWalletAmount));
+				//				modelService.save(cartModel);
+				//				modelService.refresh(cartModel);
+
+
 
 
 
@@ -611,12 +611,12 @@ public class MplCouponController
 
 				//Recalculate cart after releasing coupon
 				getMplCouponFacade().recalculateCartForCoupon(null, orderModel); //Handled changed method signature for TPR-629
-//				double totalAmount  = orderModel.getTotalPrice().doubleValue();
-//				double payableWalletAmount = orderModel.getTotalWalletAmount().doubleValue();
-//				double nonPayableWalletAmount = totalAmount - payableWalletAmount;
-//				orderModel.setPayableNonWalletAmount(Double.valueOf(nonPayableWalletAmount));
-//				modelService.save(orderModel);
-//				modelService.refresh(orderModel);
+				//				double totalAmount  = orderModel.getTotalPrice().doubleValue();
+				//				double payableWalletAmount = orderModel.getTotalWalletAmount().doubleValue();
+				//				double nonPayableWalletAmount = totalAmount - payableWalletAmount;
+				//				orderModel.setPayableNonWalletAmount(Double.valueOf(nonPayableWalletAmount));
+				//				modelService.save(orderModel);
+				//				modelService.refresh(orderModel);
 				if (StringUtils.isNotEmpty(cartCouponCode))
 				{
 					try
@@ -646,12 +646,12 @@ public class MplCouponController
 					//Update paymentInfo in session
 					getMplCouponFacade().updatePaymentInfoSession(paymentInfo, orderModel);
 				}
-//				 totalAmount  = orderModel.getTotalPrice().doubleValue();
-//				 payableWalletAmount = orderModel.getTotalWalletAmount().doubleValue();
-//				 nonPayableWalletAmount = totalAmount - payableWalletAmount;
-//				orderModel.setPayableNonWalletAmount(Double.valueOf(nonPayableWalletAmount));
-//				modelService.save(orderModel);
-//				modelService.refresh(orderModel);
+				//				 totalAmount  = orderModel.getTotalPrice().doubleValue();
+				//				 payableWalletAmount = orderModel.getTotalWalletAmount().doubleValue();
+				//				 nonPayableWalletAmount = totalAmount - payableWalletAmount;
+				//				orderModel.setPayableNonWalletAmount(Double.valueOf(nonPayableWalletAmount));
+				//				modelService.save(orderModel);
+				//				modelService.refresh(orderModel);
 
 			}
 			catch (final VoucherOperationException e)
@@ -1004,16 +1004,19 @@ public class MplCouponController
 		{
 			for (final AbstractOrderEntryModel oModel : entryList)
 			{
-				final Double mrp = oModel.getMrp();
-				final Double entryPrice = (null == oModel.getTotalPrice() ? Double.valueOf(0) : oModel.getTotalPrice());
-				final int quantity = oModel.getQuantity().intValue();
+				if (!oModel.getGiveAway().booleanValue())
+				{
+					final Double mrp = oModel.getMrp();
+					final Double entryPrice = (null == oModel.getTotalPrice() ? Double.valueOf(0) : oModel.getTotalPrice());
+					final int quantity = oModel.getQuantity().intValue();
 
-				final Double cartDiscount = (null == oModel.getCartLevelDisc() ? Double.valueOf(0) : oModel.getCartLevelDisc());
+					final Double cartDiscount = (null == oModel.getCartLevelDisc() ? Double.valueOf(0) : oModel.getCartLevelDisc());
 
 
-				final double value = (mrp.doubleValue() * quantity) - entryPrice.doubleValue();
+					final double value = (mrp.doubleValue() * quantity) - entryPrice.doubleValue();
 
-				totalDiscount += value + cartDiscount.doubleValue();
+					totalDiscount += value + cartDiscount.doubleValue();
+				}
 			}
 		}
 

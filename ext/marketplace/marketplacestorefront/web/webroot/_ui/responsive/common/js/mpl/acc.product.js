@@ -1427,13 +1427,13 @@ sendAddToBagQuick:function(formId){
 		    if(~~facetTopValuesCnt!=0)
 		    {
 		    	var remainingFacetValuesCnt=$("#remainingFacetValuesCnt").val();
-			    $(".brand .js-facet-top-values").hide();
-				$(".brand .js-facet-list.js-facet-list-hidden").show();
+			    $(".Brand .js-facet-top-values").hide();
+				$(".Brand .js-facet-list.js-facet-list-hidden").show();
 				$allListElements.hide();
 				var matchingListElementsSize=$matchingListElements.length;			
 				if($('input[class="brandSearchTxt"]').val() == "") {//If text box is blank 				
-					$(".brand .js-facet-top-values").show();
-					$(".brand .js-facet-list.js-facet-list-hidden").hide();
+					$(".Brand .js-facet-top-values").show();
+					$(".Brand .js-facet-list.js-facet-list-hidden").hide();
 					
 					$(this).parents(".js-facet").find(".js-more-facet-values span").text((~~remainingFacetValuesCnt)-(~~facetTopValuesCnt));
 					if($allListElements.length>facetTopValuesCnt)
