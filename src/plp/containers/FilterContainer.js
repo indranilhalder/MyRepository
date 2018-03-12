@@ -10,9 +10,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const facetData = state.productListings.productListings.facetdata;
-  const categoryData = state.productListings.productListings.facetdatacategory;
-
   return {
     ...ownProps,
     filterData: state.productListings.productListings.facetdata,

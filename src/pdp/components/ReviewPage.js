@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import StarRating from "../../general/components/StarRating";
 export default class ReviewPage extends React.Component {
   render() {
+    const date = new Date(this.props.date).toDateString();
     return (
       <div className={styles.base}>
         {this.props.rating && (
@@ -17,16 +18,14 @@ export default class ReviewPage extends React.Component {
         {this.props.text && (
           <div className={styles.text}>{this.props.text}</div>
         )}
-        {this.props.label && (
-          <div className={styles.dateTimeBox}>{this.props.label}</div>
-        )}
+        {this.props.date && <div className={styles.dateTimeBox}>{date}</div>}
       </div>
     );
   }
 }
 ReviewPage.propTypes = {
   text: PropTypes.string,
-  label: PropTypes.string,
+  date: PropTypes.string,
   heading: PropTypes.string,
   rating: PropTypes.number
 };

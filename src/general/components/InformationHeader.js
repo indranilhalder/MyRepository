@@ -3,10 +3,16 @@ import styles from "./InformationHeader.css";
 import { CircleButton, Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import iconImageURL from "./img/arrowBack.svg";
+import iconSearchURL from "./img/Search.svg";
 export default class InformationHeader extends React.Component {
   handleClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
+    if (this.props.goBack) {
+      this.props.goBack();
+    }
+  }
+  onSearch() {
+    if (this.props.onSearch) {
+      this.props.onSearch();
     }
   }
   render() {
@@ -14,18 +20,28 @@ export default class InformationHeader extends React.Component {
       <div className={styles.base}>
         <div className={styles.holder}>
           <div className={styles.buttonHolder}>
-            <CircleButton
-              color={"rgba(0,0,0,0)"}
-              size={50}
-              onClick={() => this.handleClick()}
-              icon={<Icon image={iconImageURL} size={22} />}
-            />
+            {this.props.hasBackButton && (
+              <CircleButton
+                color={"rgba(0,0,0,0)"}
+                size={50}
+                onClick={() => this.handleClick()}
+                icon={<Icon image={iconImageURL} size={22} />}
+              />
+            )}
           </div>
           <div className={styles.textBox}>
             {this.props.text}
             {this.props.count && (
               <span className={styles.span}>({this.props.count})</span>
             )}
+          </div>
+          <div className={styles.searchButtonHolder}>
+            <CircleButton
+              color={"rgba(0,0,0,0)"}
+              size={50}
+              onClick={() => this.onSearch()}
+              icon={<Icon image={iconSearchURL} size={22} />}
+            />
           </div>
         </div>
       </div>
@@ -35,5 +51,9 @@ export default class InformationHeader extends React.Component {
 InformationHeader.propTypes = {
   text: PropTypes.string,
   count: PropTypes.number,
+  hasBackButton: PropTypes.bool,
   onClick: PropTypes.func
+};
+InformationHeader.defaultProps = {
+  hasBackButton: true
 };

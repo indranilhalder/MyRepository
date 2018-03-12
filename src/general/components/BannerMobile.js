@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styles from "./BannerMobile.css";
 export default class BannerMobile extends React.Component {
   constructor(props) {
@@ -33,6 +34,11 @@ export default class BannerMobile extends React.Component {
       this.slideForward();
     } else {
       this.slideBack();
+    }
+  }
+  handleSwipe(val) {
+    if (this.props.onSwipe) {
+      this.props.onSwipe(val);
     }
   }
   slideForward = () => {
@@ -85,6 +91,7 @@ export default class BannerMobile extends React.Component {
       this.setState({ visibleItems }, () => {
         this.setState({ direction: "" });
       });
+      this.handleSwipe(absolutePosition);
     });
   };
 
@@ -114,6 +121,7 @@ export default class BannerMobile extends React.Component {
         this.setState({ direction: "" });
       });
     });
+    this.handleSwipe(absolutePosition);
   };
   animationEnd(evt) {
     evt.stopPropagation();
@@ -145,6 +153,7 @@ export default class BannerMobile extends React.Component {
     return (
       <div
         className={styles.base}
+        style={{ height: this.props.bannerHeight }}
         onTouchStart={evt => this.swipeStart(evt)}
         onTouchMove={evt => this.swipeMove(evt)}
         onTouchEnd={evt => this.swipeEnd(evt)}
@@ -168,3 +177,10 @@ export default class BannerMobile extends React.Component {
     );
   }
 }
+BannerMobile.propTypes = {
+  bannerHeight: PropTypes.string,
+  onSwipe: PropTypes.func
+};
+BannerMobile.defaultProps = {
+  bannerHeight: "66.33vw"
+};

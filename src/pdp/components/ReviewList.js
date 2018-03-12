@@ -10,10 +10,10 @@ export default class ReviewList extends React.Component {
           this.props.reviewList.map((data, i) => {
             return (
               <ReviewPage
-                rating={data.averageRating}
-                heading={data.productName}
-                text={data.productDescription}
-                label={data.label}
+                rating={data.rating}
+                heading={data.headline}
+                text={data.comment}
+                date={data.date}
               />
             );
           })}

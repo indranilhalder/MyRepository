@@ -20,7 +20,9 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
   ANONYMOUS_USER,
-  PRODUCT_SELLER_ROUTER
+  PRODUCT_SELLER_ROUTER_SUFFIX,
+  PRODUCT_CART_ROUTER,
+  PRODUCT_REVIEWS_PATH_SUFFIX
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
@@ -39,13 +41,30 @@ export default class PdpApparel extends React.Component {
     this.props.history.goBack();
   };
   goToSellerPage = () => {
-    this.props.history.push(PRODUCT_SELLER_ROUTER);
+    let expressionRuleFirst = "/p-(.*)/(.*)";
+    let expressionRuleSecond = "/p-(.*)";
+    let productId;
+    if (this.props.location.pathname.match(expressionRuleFirst)) {
+      productId = this.props.location.pathname.match(expressionRuleFirst)[1];
+    } else {
+      productId = this.props.location.pathname.match(expressionRuleSecond)[1];
+    }
+    this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
+  };
+  goToCart = () => {
+    this.props.history.push({
+      pathname: PRODUCT_CART_ROUTER,
+      state: {
+        ProductCode: this.props.productDetails.productListingId,
+        pinCode: PIN_CODE
+      }
+    });
   };
 
   addToCart = () => {
     let productDetails = {};
-    productDetails.code = this.props.productListingId;
-    productDetails.ussId = productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.code = this.props.productDetails.productListingId;
+    productDetails.quantity = PRODUCT_QUANTITY;
     productDetails.ussId = this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -54,6 +73,7 @@ export default class PdpApparel extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
     if (userDetails) {
       this.props.addProductToCart(
         JSON.parse(userDetails).customerInfo.mobileNumber,
@@ -69,6 +89,11 @@ export default class PdpApparel extends React.Component {
         productDetails
       );
     }
+  };
+
+  goToReviewPage = () => {
+    const url = `${this.props.location.pathname}${PRODUCT_REVIEWS_PATH_SUFFIX}`;
+    this.props.history.push(url);
   };
 
   addToWishList = () => {
@@ -97,7 +122,6 @@ export default class PdpApparel extends React.Component {
 
   render() {
     const productData = this.props.productDetails;
-
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -110,6 +134,7 @@ export default class PdpApparel extends React.Component {
     if (productData) {
       return (
         <PdpFrame
+          goToCart={() => this.goToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
           addProductToWishList={() => this.addToWishList()}
@@ -126,6 +151,7 @@ export default class PdpApparel extends React.Component {
               price={productData.mrp}
               discountPrice={productData.winningSellerMOP}
               averageRating={productData.averageRating}
+              onClick={this.goToReviewPage}
             />
           </div>
           {productData.emiInfo && (
@@ -138,10 +164,10 @@ export default class PdpApparel extends React.Component {
               </div>
             </div>
           )}
-          {productData.productOfferPromotion && (
+          {productData.productOfferMsg && (
             <OfferCard
-              endTime={productData.productOfferPromotion[0].validTill.date}
-              heading={productData.productOfferPromotion[0].promotionTitle}
+              endTime={productData.productOfferMsg[0].validTill.date}
+              heading={productData.productOfferMsg[0].promotionTitle}
               description={productData.productOfferPromotion[0].promotionDetail}
               onClick={this.goToCouponPage}
             />
@@ -157,7 +183,9 @@ export default class PdpApparel extends React.Component {
                 getProductSpecification={this.props.getProductSpecification}
               />
               <SizeSelector
-                showSizeGuide={this.props.showSizeGuide}
+                showSizeGuide={
+                  productData.showSizeGuide ? this.props.showSizeGuide : null
+                }
                 data={productData.variantOptions.map(value => {
                   return value.sizelink;
                 })}
@@ -175,6 +203,7 @@ export default class PdpApparel extends React.Component {
                   onClick={() => this.renderAddressModal()}
                   deliveryOptions={DELIVERY_TEXT}
                   label={PIN_CODE}
+                  showCliqAndPiqButton={false}
                 />
               );
             })}
@@ -195,15 +224,13 @@ export default class PdpApparel extends React.Component {
               <ProductDetails data={productData.details} />
             </div>
           )}
-          {productData.numberOfReviews > 0 && (
-            <div className={styles.separator}>
-              <RatingAndTextLink
-                onClick={this.goToReviewPage}
-                averageRating={productData.averageRating}
-                numberOfReview={productData.numberOfReviews}
-              />
-            </div>
-          )}
+          <div className={styles.separator}>
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
+          </div>
           {productData.classifications && (
             <div className={styles.details}>
               <ProductFeatures features={productData.classifications} />
