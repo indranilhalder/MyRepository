@@ -260,31 +260,6 @@ export default class CategoriesPage extends React.Component {
             </CategoryL1>
           );
         })}
-        {/* <CategoryL1 label="Gadgets">
-          <CategoryL2 label="Mobile Phones">
-            <CategoryL3 label="Andriod phones" />
-            <CategoryL3 label="iPhones" />
-            <CategoryL3 label="Feature Phones" />
-            <CategoryL3 label="Best Camera Phones" />
-            <CategoryL3 label="Best Camera Phones" />
-          </CategoryL2>
-          <CategoryL2 label="Mobile Phones">
-            <CategoryL3 label="Andriod phones" />
-            <CategoryL3 label="iPhones" />
-            <CategoryL3 label="Feature Phones" />
-            <CategoryL3 label="Best Camera Phones" />
-            <CategoryL3 label="Best Camera Phones" />
-          </CategoryL2>
-          <CategoryL2 label="Mobile Phones">
-            <CategoryL3 label="Andriod phones" />
-            <CategoryL3 label="iPhones" />
-            <CategoryL3 label="Feature Phones" />
-            <CategoryL3 label="Best Camera Phones" />
-            <CategoryL3 label="Best Camera Phones" />
-          </CategoryL2>
-        </CategoryL1>
-        <CategoryL1 label="Gadgets" />
-        <CategoryL1 label="Gadgets" /> */}
       </div>
     );
   }
