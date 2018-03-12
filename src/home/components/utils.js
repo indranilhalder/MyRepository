@@ -21,13 +21,27 @@ export function transformData(datum) {
   if (datum.link) {
     url = datum.link;
   }
+  let price;
+  if (datum.mrp) {
+    price = datum.mrp;
+  }
+  if (datum.mrpPrice) {
+    price = datum.mrpPrice.doubleValue;
+  }
+  let discountPrice;
+  if (datum.winningSellerMOP) {
+    discountPrice = datum.winningSellerMOP;
+  }
+  if (datum.discountedPrice) {
+    discountPrice = datum.discountedPrice.doubleValue;
+  }
   return {
     image: image,
     video: datum.video,
     title: title,
     description: datum.description,
-    price: datum.mrp,
-    discountPrice: datum.winningSellerMOP,
+    price,
+    discountPrice,
     webURL: url,
     ...datum
   };
