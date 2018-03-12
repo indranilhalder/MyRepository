@@ -5783,7 +5783,7 @@ label[for='priority_paytm'] img {
 	display: inline;
 	float: left;
 	width: 268px;
-	height: 250px;		/* modified for TISUST-6349 */	/* modified for TISUST-6383 */
+	height: 180px;		/* modified for TISUST-6349 */	/* modified for TISUST-6383 */ /* modified for SDI-6591 */
 	border: solid 1px #dddddd;
 	margin: 6px 19px 6px 0px;
 	padding: 7px;
@@ -6196,7 +6196,7 @@ span#offer_section_responsive_error_msg {
 	}
 	/* start TISUAT-6383 */
 	.offerui li {
-		height: 200px;
+		height: 150px;	/* modified for SDI-6591 */
 	}
 	.offer_des {
 		margin: 5px 0 0 18px;
