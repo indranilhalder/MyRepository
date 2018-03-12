@@ -35,8 +35,6 @@ export default class Filter extends React.Component {
     this.props.history.push(val, { isFilter: true });
   }
   onApply() {
-    console.log("ON APPLY IS CALLED");
-    console.log(this.props);
     const pathName = this.props.location.pathname;
     const search = this.props.location.search;
     const url = `${pathName}${search}`;

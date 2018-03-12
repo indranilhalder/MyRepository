@@ -4,9 +4,9 @@ import throttle from "lodash/throttle";
 import queryString from "query-string";
 import { Redirect } from "react-router";
 import { SEARCH_RESULTS_PAGE } from "../../lib/constants.js";
-const CATEGORY_REGEX = /c-msh*/;
-const BRAND_REGEX = /c-mbh*/;
-const CAPTURE_REGEX = /c-(.*)/;
+export const CATEGORY_REGEX = /c-msh*/;
+export const BRAND_REGEX = /c-mbh*/;
+export const CAPTURE_REGEX = /c-(.*)/;
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const IS_FILTER_SUFFIX = `&isFilter=true`;
 const SEARCH_CATEGORY_TO_IGNORE = "all";
@@ -57,9 +57,8 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     ) {
       return;
     }
-    console.log("COMPONENT DID UPDATE CALLED");
     if (this.props.page === 0) {
-      if (this.props.location.state.isFilter) {
+      if (this.props.location.state && this.props.location.state.isFilter) {
         const suffix = "&isFilter=true";
         const searchText = this.getSearchTextFromUrl();
         this.props.getProductListings(searchText, suffix, 0, true);

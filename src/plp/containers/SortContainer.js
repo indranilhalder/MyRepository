@@ -10,7 +10,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(hideModal());
     },
     onClick: sortBy => {
-      dispatch(getProductListings()).then(dispatch(hideModal()));
+      // dispatch(getProductListings()).then(dispatch(hideModal()));
     }
   };
 };

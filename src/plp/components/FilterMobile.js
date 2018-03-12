@@ -3,13 +3,9 @@ import FilterTab from "./FilterTab";
 import FilterSelect from "./FilterSelect";
 import FilterCategory from "./FilterCategory";
 import FilterCategoryL1 from "./FilterCategoryL1";
-// import { facetData } from "./FacetData";
-// import { facetdatacategory } from "./State";
 import styles from "./FilterMobile.css";
 import queryString from "query-string";
-
-const CATEGORY_CAPTURE_REGEX = /:category:(.*)/;
-const QUERY_REGEX = /(q=)(.*?)(&)/;
+import { createUrlFromQueryAndCategory } from "./FilterUtils.js";
 
 export default class FilterMobile extends React.Component {
   constructor(props) {
@@ -22,6 +18,7 @@ export default class FilterMobile extends React.Component {
       url
     };
   }
+
   selectTab(val) {
     this.setState({ showCategory: false, filterSelectedIndex: val });
   }
@@ -42,33 +39,39 @@ export default class FilterMobile extends React.Component {
     });
   };
 
-  onCategorySelect = (val, disableSerpSearch) => {
+  onCategorySelect = val => {
     const parsedQueryString = queryString.parse(this.props.location.search);
     let query = parsedQueryString.q;
-    console.log(query);
-    if (CATEGORY_CAPTURE_REGEX.test(query)) {
-      const match = CATEGORY_CAPTURE_REGEX.exec(query);
-      if (match[1].toLocaleLowerCase() === val.toLocaleLowerCase()) {
-        query = query.replace(`:category:${match[1]}`, "");
-      } else {
-        query = query.replace(
-          CATEGORY_CAPTURE_REGEX,
-          `:category:${val.toLowerCase()}`
-        );
-      }
-    } else {
-      // there is no category, so safe to append
-      // what if there is a brand
-      query = query.replace(/:\s*$/, "");
-      query = `${query}:category:${val.toLowerCase()}`;
-    }
-    const newUrl = `${
-      this.props.location.pathname
-    }${this.props.location.search.replace(QUERY_REGEX, `$1${query}$3`)}`;
+    const pathName = this.props.location.pathname;
+    const url = createUrlFromQueryAndCategory(query, pathName, val);
 
-    this.props.history.push(newUrl, {
-      disableSerpSearch
-    });
+    console.log(url);
+
+    // if (CATEGORY_CAPTURE_REGEX.test(query)) {
+    //   const match = CATEGORY_CAPTURE_REGEX.exec(query);
+    //   console.log("MATCH");
+    //   console.log(match);
+    //   if (match[1].toLocaleLowerCase() === val.toLocaleLowerCase()) {
+    //     query = query.replace(`:category:${match[1]}`, "");
+    //   } else {
+    //     query = query.replace(
+    //       CATEGORY_CAPTURE_REGEX,
+    //       `:category:${val.toLowerCase()}`
+    //     );
+    //   }
+    // } else {
+    //   // there is no category, so safe to append
+    //   // what if there is a brand
+    //   query = query.replace(/:\s*$/, "");
+    //   query = `${query}:category:${val.toLowerCase()}`;
+    // }
+    // const newUrl = `${
+    //   this.props.location.pathname
+    // }${this.props.location.search.replace(QUERY_REGEX, `$1${query}$3`)}`;
+
+    // this.props.history.push(newUrl, {
+    //   disableSerpSearch
+    // });
   };
 
   onL1Click = val => {
