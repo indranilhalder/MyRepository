@@ -150,7 +150,7 @@ function constructDepartmentHierarchy(inputArray) {
 						 }
 						 //INC_11754 end
 					 }
-					 $('#searchCategoryTree').val(node.categoryCode);
+					 //$('#searchCategoryTree').val(node.categoryCode);
 					
 				} 
 				

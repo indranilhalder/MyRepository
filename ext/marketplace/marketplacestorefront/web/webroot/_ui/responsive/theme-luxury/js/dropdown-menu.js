@@ -202,6 +202,21 @@ $(document).ready(function() {
 		   $('#main-nav > #' + current_menu).siblings().removeClass('current');
 		   $('#main-nav > #' + current_menu).addClass('current');
 		}
+
+        //adjust the text height for - Shop By category 
+        if( $('.shop-by-catagory-slider.circle-pager').length > 0 ){
+            var text_height = [];
+            $('.shop-by-catagory-slider.circle-pager li a h5').each(function() {
+                text_height.push($(this).height());
+            });
+            var max_height = text_height.reduce(function(a, b) {
+                return Math.max(a, b);
+            });
+            $('.shop-by-catagory-slider.circle-pager li a h5').each(function() {
+                text_height.push($(this).height(max_height));
+            });
+        }
+        
     }
 
     //set active menu on search
