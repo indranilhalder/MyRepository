@@ -85,8 +85,14 @@ public class ImageUploadController extends AbstractMplSearchPageController
 	@Autowired
 	private UserService userService;
 
+	private static final String REDIRECTURL = "/my-account";
+	private static final String TEMPIMAGESDIR = "/tempImages";
+	private static final String PARAFOLDER_NAME = "folderName";
+	public static final String PAGEID = "imageUpload";
+	public static final String UPLOAD_FILE_PATH = "mpl.bulkimage.uploadpath";
 	private static final String CATALOG_DATA = "mplContentCatalog";
 	private static final String CATALOG_VERSION_DATA = "Online";
+	private static final String CATALOG_VERSION_DATA_STAGED = "Staged";
 	private static final String siteResource = "file:/";
 	private static final Logger LOG = LoggerFactory.getLogger(ImageUploadController.class);
 
@@ -95,15 +101,21 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			+ CATALOG_VERSION_DATA + "'] \n"
 			+ "INSERT_UPDATE Media;code[unique=true];$catalogversion;mime[default='image/jpeg'];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];folder(qualifier)[default='root']\n";
 
+	private static final String IMPORT_DATA_STAGED = "$catalogversion=catalogversion(catalog(id[default='" + CATALOG_DATA
+			+ "']),version[default='" + CATALOG_VERSION_DATA_STAGED + "'])" + "[unique=true,default='" + CATALOG_DATA + ":"
+			+ CATALOG_VERSION_DATA_STAGED + "'] \n"
+			+ "INSERT_UPDATE Media;code[unique=true];$catalogversion;mime[default='image/jpeg'];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];folder(qualifier)[default='root']\n";
+
+
 	@RequestMapping(value = "/images", method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String getImageUploaded(final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
 	{
 		final List<MediaFolderModel> mediaFolder = getMediaFolderList();
-		storeCmsPageInModel(model, getContentPageForLabelOrId("imageUpload"));
-		setUpMetaDataForContentPage(model, getContentPageForLabelOrId("imageUpload"));
+		storeCmsPageInModel(model, getContentPageForLabelOrId(PAGEID));
+		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(PAGEID));
 		model.addAttribute("mediaFolderList", mediaFolder);
-		model.addAttribute(ModelAttributetConstants.BREADCRUMBS, accountBreadcrumbBuilder.getBreadcrumbs("imageUpload"));
+		model.addAttribute(ModelAttributetConstants.BREADCRUMBS, accountBreadcrumbBuilder.getBreadcrumbs(PAGEID));
 		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
 		boolean userAccessCheck = false;
 		final UserModel userModel = userService.getCurrentUser();
@@ -129,7 +141,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 		LOG.error("USER IS NOT ADMIN");
 		GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 				"User " + userModel.getUid() + " does not Admin role for access");
-		return MarketplacecheckoutaddonConstants.REDIRECT + "/my-account";
+		return MarketplacecheckoutaddonConstants.REDIRECT + REDIRECTURL;
 
 	}
 
@@ -162,7 +174,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 
 
 		final JSONArray ja = new JSONArray();
-		final StringBuilder stringBuilder = new StringBuilder();
+		//final StringBuilder stringBuilder = new StringBuilder();
 		final List<String> list = new ArrayList<String>();
 		String fileUploadLocation = null;
 		String uploadFolderName = StringUtils.EMPTY;
@@ -170,7 +182,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 		{
 			if (null != configurationService)
 			{
-				fileUploadLocation = configurationService.getConfiguration().getString("mpl.bulkimage.uploadpath");
+				fileUploadLocation = (configurationService.getConfiguration().getString(UPLOAD_FILE_PATH) + TEMPIMAGESDIR).toString();
 				if (null != fileUploadLocation && !fileUploadLocation.isEmpty())
 				{
 					final Path path = Paths.get(fileUploadLocation);
@@ -189,9 +201,9 @@ public class ImageUploadController extends AbstractMplSearchPageController
 					}
 				}
 			}
-			if (null != request.getParameterValues("folderName"))
+			if (null != request.getParameterValues(PARAFOLDER_NAME))
 			{
-				uploadFolderName = request.getParameterValues("folderName")[0];
+				uploadFolderName = request.getParameterValues(PARAFOLDER_NAME)[0];
 			}
 			else
 			{
@@ -200,6 +212,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			//File f = new File("");
 			for (final MultipartFile files : file)
 			{
+				final StringBuilder stringBuilder = new StringBuilder();
 				if (files.isEmpty())
 				{
 					continue; //next pls
@@ -213,6 +226,45 @@ public class ImageUploadController extends AbstractMplSearchPageController
 					stringBuilder.append(
 							";" + files.getOriginalFilename() + ";;image/jpg;;" + siteResource + path + ";" + uploadFolderName + ";/n");
 					LOG.info("Upload File Path" + path);
+
+
+					final InputStream inputStreamStaged = new ByteArrayInputStream(
+							(IMPORT_DATA_STAGED + stringBuilder.toString()).getBytes());
+					final InputStream inputStream = new ByteArrayInputStream((IMPORT_DATA + stringBuilder.toString()).getBytes());
+
+					//create stream reader
+					CSVReader readerStaged = null;
+					CSVReader reader = null;
+
+					readerStaged = new CSVReader(inputStreamStaged, "UTF-8");
+					reader = new CSVReader(inputStream, "UTF-8");
+
+					// import
+					MediaDataTranslator.setMediaDataHandler(new DefaultMediaDataHandler());
+					Importer importerStaged = null;
+					Importer importer = null;
+
+					//ImpExException error = null;
+					try
+					{
+						importerStaged = new Importer(readerStaged);
+						importerStaged.getReader().enableCodeExecution(true);
+						importerStaged.setMaxPass(-1);
+						importerStaged.setDumpHandler(new FirstLinesDumpReader());
+						importerStaged.importAll();
+
+						importer = new Importer(reader);
+						importer.getReader().enableCodeExecution(true);
+						importer.setMaxPass(-1);
+						importer.setDumpHandler(new FirstLinesDumpReader());
+						importer.importAll();
+					}
+					catch (final ImpExException e)
+					{
+						e.printStackTrace();
+					}
+
+
 					list.add(files.getOriginalFilename());
 				}
 				catch (final IOException e)
@@ -220,33 +272,11 @@ public class ImageUploadController extends AbstractMplSearchPageController
 					e.printStackTrace();
 				}
 			}
-			final InputStream inputStream = new ByteArrayInputStream((IMPORT_DATA + stringBuilder.toString()).getBytes());
-
-			//create stream reader
-			CSVReader reader = null;
-
-			reader = new CSVReader(inputStream, "UTF-8");
-
-			// import
-			MediaDataTranslator.setMediaDataHandler(new DefaultMediaDataHandler());
-			Importer importer = null;
-			//ImpExException error = null;
-			try
-			{
-				importer = new Importer(reader);
-				importer.getReader().enableCodeExecution(true);
-				importer.setMaxPass(-1);
-				importer.setDumpHandler(new FirstLinesDumpReader());
-				importer.importAll();
-			}
-			catch (final ImpExException e)
-			{
-				e.printStackTrace();
-			}
 			for (final String object : list)
 			{
 				final org.json.simple.JSONObject jObject = new org.json.simple.JSONObject();
 				final Media mediaData = getMediaByCode(object);
+				System.out.println("**************  mediaData.getCode()" + mediaData.getCode());
 				jObject.put("imageName", mediaData.getCode());
 				final String array[] = mediaData.getURL().toString().split("\\.");
 				jObject.put("imageUrl", array[0] + "/" + mediaData.getCode());
@@ -255,11 +285,11 @@ public class ImageUploadController extends AbstractMplSearchPageController
 				ja.add(jObject);
 			}
 			// failure handling
-			if (importer.hasUnresolvedLines())
-			{
-				LOG.info("Import has " + importer.getDumpedLineCountPerPass() + "+unresolved lines, first lines are:\n"
-						+ importer.getDumpHandler().getDumpAsString());
-			}
+			//			if (importer.hasUnresolvedLines())
+			//			{
+			//				LOG.info("Import has " + importer.getDumpedLineCountPerPass() + "+unresolved lines, first lines are:\n"
+			//						+ importer.getDumpHandler().getDumpAsString());
+			//			}
 			return ja;
 		}
 		catch (final Exception e)
