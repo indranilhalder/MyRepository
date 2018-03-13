@@ -10,7 +10,7 @@ import {
   RECOMMENDED_PRODUCTS_WIDGET_KEY,
   SIMILAR_PRODUCTS_WIDGET_KEY
 } from "../actions/pdp.actions.js";
-
+import FollowUnFollowButtonContainer from "../containers/FollowUnFollowButtonContainer";
 import styles from "./PDPRecommendedSections.css";
 
 class PDPRecommendedSections extends React.Component {
@@ -29,7 +29,7 @@ class PDPRecommendedSections extends React.Component {
               </div>
             )}
             <div className={styles.followButton}>
-              <Button label="Follow" type="tertiary" />
+              <FollowUnFollowButtonContainer />
             </div>
           </div>
           {this.props.productData.brandInfo && (
@@ -38,7 +38,8 @@ class PDPRecommendedSections extends React.Component {
             </div>
           )}
 
-          {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY].length > 0 &&
+          {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY] &&
+            this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY].length > 0 &&
             this.renderCarousel(
               this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY]
             )}

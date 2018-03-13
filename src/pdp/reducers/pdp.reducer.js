@@ -5,6 +5,7 @@ const productDescription = (
     status: null,
     error: null,
     loading: false,
+    aboutBrand: null,
     productDetails: null,
     sizeGuide: {
       loading: false,
@@ -21,7 +22,7 @@ const productDescription = (
   },
   action
 ) => {
-  let sizeGuide;
+  let sizeGuide, currentProductDetails;
   switch (action.type) {
     case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_FAILURE:
       return Object.assign({}, state, {
@@ -350,6 +351,38 @@ const productDescription = (
         loading: false
       });
     case pdpActions.GET_PDP_ITEMS_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+    case pdpActions.PDP_ABOUT_BRAND_SUCCESS:
+      currentProductDetails = cloneDeep(state.productDetails);
+      Object.assign(currentProductDetails, {
+        isFollowing: action.productDetails.isFollowing,
+        status: action.status
+      });
+      return Object.assign({}, state, {
+        status: action.status,
+        productDetails: currentProductDetails
+      });
+    case pdpActions.FOLLOW_UN_FOLLOW_BRAND_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case pdpActions.FOLLOW_UN_FOLLOW_BRAND_SUCCESS:
+      currentProductDetails = cloneDeep(state.productDetails);
+      Object.assign(currentProductDetails, {
+        isFollowing: action.isFollowing,
+        status: action.status
+      });
+      return Object.assign({}, state, {
+        status: action.status,
+        productDetails: currentProductDetails
+      });
+    case pdpActions.FOLLOW_UN_FOLLOW_BRAND_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,

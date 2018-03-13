@@ -74,6 +74,10 @@ export const GET_PRODUCT_REVIEW_REQUEST = "GET_PRODUCT_REVIEW_REQUEST";
 export const GET_PRODUCT_REVIEW_SUCCESS = "GET_PRODUCT_REVIEW_SUCCESS";
 export const GET_PRODUCT_REVIEW_FAILURE = "GET_PRODUCT_REVIEW_FAILURE";
 
+export const FOLLOW_UN_FOLLOW_BRAND_REQUEST = "FOLLOW_UN_FOLLOW_BRAND_REQUEST";
+export const FOLLOW_UN_FOLLOW_BRAND_SUCCESS = "FOLLOW_UN_FOLLOW_BRAND_SUCCESS";
+export const FOLLOW_UN_FOLLOW_BRAND_FAILURE = "FOLLOW_UN_FOLLOW_BRAND_FAILURE";
+
 export const DELETE_PRODUCT_REVIEW_REQUEST = "DELETE_PRODUCT_REVIEW_REQUEST";
 export const DELETE_PRODUCT_REVIEW_SUCCESS = "DELETE_PRODUCT_REVIEW_SUCCESS";
 export const DELETE_PRODUCT_REVIEW_FAILURE = "DELETE_PRODUCT_REVIEW_FAILURE";
@@ -96,6 +100,7 @@ export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
 export const PRODUCT_PDP_EMI_PATH =
   "v2/mpl/getBankDetailsforEMI?platformNumber=2";
 export const EMI_TERMS_PATH = "/v2/mpl/cms/products/getEmiTermsAndConditions";
+export const FOLLOW_UN_FOLLOW_PARK = "v2/mpl/products";
 
 export const ABOUT_THE_BRAND_WIDGET_KEY = "aboutTheBrand";
 export const RECOMMENDED_PRODUCTS_WIDGET_KEY = "recommendedProducts";
@@ -689,6 +694,48 @@ export function getProductReviews(productCode) {
   };
 }
 
+export function followUnFollowBrandRequest() {
+  return {
+    type: FOLLOW_UN_FOLLOW_BRAND_REQUEST,
+    status: REQUESTING
+  };
+}
+export function followUnFollowBrandSuccess(isFollowing) {
+  return {
+    type: FOLLOW_UN_FOLLOW_BRAND_SUCCESS,
+    status: SUCCESS,
+    isFollowing
+  };
+}
+
+export function followUnFollowBrandFailure(error) {
+  return {
+    type: FOLLOW_UN_FOLLOW_BRAND_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function followUnFollowBrand(brandCode) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(followUnFollowBrandRequest());
+    try {
+      let currentFollowedStatus = getState().pdp.productDetails.isFollowing;
+      let updateFollowedStatus = !currentFollowedStatus;
+      const result = await api.post(
+        `${FOLLOW_UN_FOLLOW_PARK}/1223234/updateFollowedBrands?brands=${brandCode}&follow=${updateFollowedStatus}&isPwa=true`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(followUnFollowBrandSuccess(resultJson));
+    } catch (e) {
+      dispatch(followUnFollowBrandFailure(e.message));
+    }
+  };
+}
+
 export function productMsdRequest() {
   return {
     type: PRODUCT_MSD_REQUEST,
@@ -758,6 +805,13 @@ export function pdpAboutBrandFailure(error) {
     error
   };
 }
+export function pdpAboutBrandSuccess(productDetails) {
+  return {
+    type: PDP_ABOUT_BRAND_SUCCESS,
+    status: ERROR,
+    productDetails
+  };
+}
 
 export function pdpAboutBrand(productCode) {
   return async (dispatch, getState, { api }) => {
@@ -790,6 +844,8 @@ export function pdpAboutBrand(productCode) {
           getPdpItems(resultJson.data[0].itemIds, ABOUT_THE_BRAND_WIDGET_KEY)
         );
       }
+      // updating reducer for follow brand  key
+      dispatch(pdpAboutBrandSuccess(resultJson.data[0]));
     } catch (e) {
       dispatch(pdpAboutBrandFailure(e.message));
     }
