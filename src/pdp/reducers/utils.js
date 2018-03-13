@@ -5,7 +5,7 @@ import {
   SHORT_EXPRESS,
   HOME_DELIVERY
 } from "../../lib/constants";
-export function transferData(validDeliveryModes) {
+export function transferPincodeToPdpPincode(validDeliveryModes) {
   let eligibleDeliveryModes = [];
   validDeliveryModes.forEach(delivery => {
     if (delivery.type === SHORT_EXPRESS) {

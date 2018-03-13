@@ -1,6 +1,6 @@
 import * as pdpActions from "../actions/pdp.actions";
 import { YES, NO } from "../../lib/constants";
-import { transferData } from "./utils";
+import { transferPincodeToPdpPincode } from "./utils";
 import cloneDeep from "lodash/cloneDeep";
 const productDescription = (
   state = {
@@ -84,7 +84,7 @@ const productDescription = (
         action.productPinCode.deliveryOptions.pincodeListResponse[0]
           .isServicable === YES
       ) {
-        eligibleDeliveryModes = transferData(
+        eligibleDeliveryModes = transferPincodeToPdpPincode(
           action.productPinCode.deliveryOptions.pincodeListResponse[0]
             .validDeliveryModes
         );
