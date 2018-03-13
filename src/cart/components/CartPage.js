@@ -73,7 +73,7 @@ class CartPage extends React.Component {
   goToCouponPage = () => {
     this.props.showCouponModal(this.props.cart.coupons);
   };
-  renderToDeliveryPage() {
+  renderToCheckOutPage() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
     if (customerCookie) {

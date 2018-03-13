@@ -1,7 +1,7 @@
 .base {
-  width: 50px;
+  width: 20%;
   height: 50px;
-  margin: 0 5px;
+  padding: 0 5px;
   position: relative;
   display: inline-block;
 }

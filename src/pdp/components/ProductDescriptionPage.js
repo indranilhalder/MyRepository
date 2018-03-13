@@ -24,6 +24,7 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   ANONYMOUS_USER,
+  CHECKOUT_ROUTER,
   PRODUCT_CART_ROUTER
 } from "../../lib/constants";
 const DELIVERY_TEXT = "Delivery Options For";
