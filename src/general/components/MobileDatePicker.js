@@ -1,38 +1,33 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Input2 from "./Input2.js";
 import styles from "./MobileDatePicker.css";
-import dateIcon from "./img/date.png";
-import { Icon, CircleButton } from "xelpmoc-core";
+
 export default class MobileDatePicker extends React.Component {
-  getValue(val) {
-    if (this.props.getValue) {
-      this.props.getValue(val);
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: this.props.value ? this.props.value : ""
+    };
+  }
+  handleChange(event) {
+    this.setState({ value: event.target.value }, () => {
+      if (this.props.onChange) {
+        this.props.onChange(this.state.value);
+      }
+    });
   }
   render() {
     return (
       <div className={styles.base}>
-        <Input2
-          boxy={true}
+        <input
           type="date"
-          onChange={val => this.getValue(val)}
-          textStyle={{ fontSize: 14 }}
-          height={35}
-          rightChildSize={35}
-          borderBottom="1px solid #d2d2d2"
-          rightChild={
-            <CircleButton
-              size={33}
-              color={"transparent"}
-              icon={<Icon image={dateIcon} size={20} />}
-            />
-          }
+          className={styles.input}
+          onChange={value => this.handleChange(value)}
         />
       </div>
     );
   }
 }
 MobileDatePicker.propTypes = {
-  getValue: PropTypes.func
+  onChange: PropTypes.func
 };

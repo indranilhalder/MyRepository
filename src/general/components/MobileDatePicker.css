@@ -3,3 +3,14 @@
   height: auto;
   display: inline-block;
 }
+.input {
+  width: 100%;
+  height: 35px;
+  border: 1px solid #d2d2d2;
+  padding: 0px 35px 0px 10px;
+  background: url(./img/date.png)no-repeat;
+  background-size: auto 20px;
+  background-position: 95% center;
+  outline: none;
+  border-radius: 3px;
+}
