@@ -12,7 +12,7 @@ import PaymentCardWrapper from "./PaymentCardWrapper.js";
 import CartItem from "./CartItem";
 import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
-import _ from "lodash";
+import filter from "lodash/filter";
 import OrderConfirmation from "./OrderConfirmation";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -30,7 +30,7 @@ class CheckOutPage extends React.Component {
     addNewAddress: false,
     deliverModeUssId: "",
     appliedCoupons: false,
-    paymentMode: null,
+    paymentModeSelected: null,
     orderConfirmation: false
   };
 
@@ -169,7 +169,10 @@ class CheckOutPage extends React.Component {
 
     if (value === PAYMENT_CHARGED) {
       if (this.props.updateTransactionDetails) {
-        this.props.updateTransactionDetails(this.state.paymentMode, orderId);
+        this.props.updateTransactionDetails(
+          this.state.paymentModeSelected,
+          orderId
+        );
       }
     } else {
       if (this.props.getCartDetailsCNC) {
@@ -194,7 +197,7 @@ class CheckOutPage extends React.Component {
   }
 
   onSelectAddress(selectedAddress) {
-    let addressSelected = _.filter(
+    let addressSelected = filter(
       this.props.cart.cartDetailsCnc.addressDetailsList.addresses,
       address => {
         return address.id === selectedAddress[0];
@@ -262,11 +265,12 @@ class CheckOutPage extends React.Component {
   };
 
   binValidation = (paymentMode, binNo) => {
+    this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidation(paymentMode, binNo);
   };
 
   softReservationForPayment = cardDetails => {
-    cardDetails.pinCode = "110001";
+    cardDetails.pinCode = this.props.location.state.pinCode;
     this.props.softReservationForPayment(cardDetails, this.state.addressId[0]);
   };
   render() {
@@ -327,8 +331,8 @@ class CheckOutPage extends React.Component {
                 binValidation={(paymentMode, binNo) =>
                   this.binValidation(paymentMode, binNo)
                 }
-                softReservationForPayment={pinCode =>
-                  this.softReservationForPayment(pinCode)
+                softReservationForPayment={cardDetails =>
+                  this.softReservationForPayment(cardDetails)
                 }
               />
             )}

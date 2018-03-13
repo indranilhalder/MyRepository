@@ -3,7 +3,7 @@ import debitCardIcon from "./img/debit-card.svg";
 import PropTypes from "prop-types";
 import CreditCardForm from "./CreditCardForm.js";
 import ManueDetails from "../../general/components/MenuDetails.js";
-const PAYMENT_MODE = "Credit Card";
+const PAYMENT_MODE = "Debit Card";
 export default class CheckoutDebitCard extends React.Component {
   onChangeCvv(i) {
     if (this.props.onChangeCvv) {
