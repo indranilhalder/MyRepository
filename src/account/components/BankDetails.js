@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./BankDetails.css";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
-import OrderReturn from "../../account/components/OrderReturn";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 export default class BankDetails extends React.Component {
   onChange(val) {
@@ -76,7 +75,15 @@ export default class BankDetails extends React.Component {
     );
   }
 }
-BankDetails.propTypes = {};
+BankDetails.propTypes = {
+  accountNumber: PropTypes.string,
+  reEnterAccountNumber: PropTypes.string,
+  userName: PropTypes.string,
+  mode: PropTypes.string,
+  bankName: PropTypes.string,
+  code: PropTypes.string,
+  onChange: PropTypes.func
+};
 BankDetails.defaultProps = {
   accountNumber: "Account number",
   reEnterAccountNumber: "Re-enter account number",
