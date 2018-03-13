@@ -1,0 +1,17 @@
+.base {
+  width: 100%;
+  height: auto;
+  background-color: #ececec;
+  padding-top: 60px;
+}
+.searchBar {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.searchResults {
+  width: 100%;
+  padding: 0 20px;
+  min-height: calc(100vh - 60px);
+}
