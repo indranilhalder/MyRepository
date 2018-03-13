@@ -34,7 +34,9 @@ export function getCategories(userId, accessToken, cartId) {
       const result = await api.get(
         `${USER_CATEGORY_PATH}/getAllCategorieshierarchy?`
       );
+      console.log(result);
       const resultJson = await result.json();
+      console.log(resultJson);
       if (resultJson.status === FAILURE) {
         throw new Error(resultJson.error);
       }
