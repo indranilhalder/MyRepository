@@ -53,7 +53,6 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    pinCodeServiceAvailability: state.cart.pinCodeServiceAvailability,
     productDetails: state.productDescription.productDetails,
     msdItems: state.productDescription.msdItems,
     loading: state.productDescription.loading

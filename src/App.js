@@ -46,7 +46,10 @@ import {
   CHECKOUT_ROUTER,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
+  PLP_CATEGORY_SEARCH,
+  BRAND_LANDING_PAGE,
   PRODUCT_DESCRIPTION_REVIEWS,
+  PRODUCT_SELLER_ROUTER,
   PRODUCT_OTHER_SELLER_ROUTER,
   DEFAULT_BRANDS_LANDING_PAGE
 } from "../src/lib/constants";
@@ -193,6 +196,11 @@ class App extends Component {
             exact
             path={PRODUCT_FILTER_ROUTER}
             component={FilterContainer}
+          />
+          <Route
+            exact
+            path={BRAND_LANDING_PAGE}
+            component={BrandLandingPageContainer}
           />
           <Route
             exact
