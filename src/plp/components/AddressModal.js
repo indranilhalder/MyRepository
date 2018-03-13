@@ -7,7 +7,7 @@ import styles from "./AddressModal.css";
 
 export default class AddressModal extends React.Component {
   checkPinCodeAvailability(pincode) {
-    this.props.checkPinCodeServiceAvailability(pincode, this.props.productCode);
+    this.props.getProductPinCode(pincode, this.props.productCode);
     this.props.closeModal();
   }
   componentDidMount() {

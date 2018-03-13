@@ -61,3 +61,9 @@ export const HOME_FEED_TYPE = "home";
 
 export const YES = "Y";
 export const NO = "N";
+
+export const EXPRESS = "express-delivery";
+export const COLLECT = "click-and-collect";
+export const HOME_DELIVERY = "home-delivery";
+export const SHORT_EXPRESS = "ED";
+export const SHORT_COLLECT = "CNC";

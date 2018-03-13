@@ -6,9 +6,9 @@ import {
   addProductToWishList,
   getMsdRequest,
   getPdpEmi,
-  getEmiTerms
+  getEmiTerms,
+  getProductPinCode
 } from "../actions/pdp.actions";
-import { checkPinCodeServiceAvailability } from "../../cart/actions/cart.actions";
 import { showModal, EMI_MODAL, ADDRESS } from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
@@ -45,8 +45,8 @@ const mapDispatchToProps = dispatch => {
     showPincodeModal: productCode => {
       dispatch(showModal(ADDRESS, { productCode }));
     },
-    checkPinCodeServiceAvailability: (pincode, productCode) => {
-      dispatch(checkPinCodeServiceAvailability(pincode, productCode));
+    getProductPinCode: (pinCode, productCode) => {
+      dispatch(getProductPinCode(pinCode, productCode));
     }
   };
 };

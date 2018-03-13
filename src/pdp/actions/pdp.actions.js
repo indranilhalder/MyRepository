@@ -9,7 +9,8 @@ import * as Cookie from "../../lib/Cookie";
 import each from "lodash/each";
 import {
   CUSTOMER_ACCESS_TOKEN,
-  LOGGED_IN_USER_DETAILS
+  LOGGED_IN_USER_DETAILS,
+  ANONYMOUS_USER
 } from "../../lib/constants";
 
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
@@ -177,16 +178,35 @@ export function getProductPinCodeFailure(error) {
   };
 }
 
-export function getProductPinCode(productDetails) {
+export function getProductPinCode(pinCode, productCode) {
+  let validProductCode = productCode.toUpperCase();
   return async (dispatch, getState, { api }) => {
     dispatch(getProductPinCodeRequest());
     try {
-      const result = await api.getMock(PIN_CODE_AVAILABILITY_PATH);
+      let url;
+      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+      let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+      let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+      if (userDetails) {
+        let userName = JSON.parse(userDetails).customerInfo.mobileNumber;
+        let accessToken = JSON.parse(customerCookie).access_token;
+        url = `${PRODUCT_DETAILS_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=${validProductCode}&pin=${pinCode}`;
+      } else {
+        let userName = ANONYMOUS_USER;
+        let accessToken = JSON.parse(globalCookie).access_token;
+        url = `${PRODUCT_DETAILS_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=${validProductCode}&pin=${pinCode}`;
+      }
+      const result = await api.post(url);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(getProductPinCodeSuccess(resultJson));
+      dispatch(
+        getProductPinCodeSuccess({
+          pinCode,
+          deliveryOptions: resultJson.listOfDataList[0].value
+        })
+      );
     } catch (e) {
       dispatch(getProductPinCodeFailure(e.message));
     }

@@ -6,7 +6,8 @@ import ProductDescriptionPage from "./ProductDescriptionPage";
 import MDSpinner from "react-md-spinner";
 import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
-  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
+  UPDATE_PDP_REDUCER_FOR_DELIVERY_OPTION
 } from "../../lib/constants";
 // prettier-ignore
 const typeComponentMapping = {
@@ -21,11 +22,12 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       this.props.getProductDescription(this.props.match.params[0]);
       this.props.getMsdRequest(this.props.match.params[0]);
       if (
-        this.props.pinCodeServiceAvailability &&
-        this.props.pinCodeServiceAvailability.pincode
+        this.props.productDetails &&
+        this.props.productDetails.isServiceableToPincode &&
+        this.props.productDetails.isServiceableToPincode.pinCode
       ) {
-        this.props.checkPinCodeServiceAvailability(
-          this.props.pinCodeServiceAvailability.pincode,
+        this.props.getProductPinCode(
+          this.props.productDetails.isServiceableToPincode.pinCode,
           this.props.match.params[0]
         );
       }
@@ -35,11 +37,12 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       this.props.getProductDescription(this.props.match.params[2]);
       this.props.getMsdRequest(this.props.match.params[2]);
       if (
-        this.props.pinCodeServiceAvailability &&
-        this.props.pinCodeServiceAvailability.pincode
+        this.props.productDetails &&
+        this.props.productDetails.isServiceableToPincode &&
+        this.props.productDetails.isServiceableToPincode.pinCode
       ) {
-        this.props.checkPinCodeServiceAvailability(
-          this.props.pinCodeServiceAvailability.pincode,
+        this.props.getProductPinCode(
+          this.props.productDetails.isServiceableToPincode.pinCode,
           this.props.match.params[0]
         );
       }

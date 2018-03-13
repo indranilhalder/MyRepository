@@ -1,16 +1,14 @@
 import { connect } from "react-redux";
-import {
-  getUserAddress,
-  checkPinCodeServiceAvailability
-} from "../../cart/actions/cart.actions";
+import { getUserAddress } from "../../cart/actions/cart.actions";
+import { getProductPinCode } from "../../pdp/actions/pdp.actions";
 import AddressModal from "../components/AddressModal";
 const mapDispatchToProps = dispatch => {
   return {
     getUserAddress: () => {
       dispatch(getUserAddress());
     },
-    checkPinCodeServiceAvailability: (pincode, productCode) => {
-      dispatch(checkPinCodeServiceAvailability(pincode, productCode));
+    getProductPinCode: (pincode, productCode) => {
+      dispatch(getProductPinCode(pincode, productCode));
     }
   };
 };

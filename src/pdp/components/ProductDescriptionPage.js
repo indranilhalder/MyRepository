@@ -225,28 +225,22 @@ class ProductDescriptionPage extends Component {
               description={productData.productOfferPromotion[0].promotionDetail}
               onClick={this.goToCouponPage}
             />
-            {this.props.pinCodeServiceAvailability &&
-            this.props.pinCodeServiceAvailability.pincode ? (
+            {this.props.productDetails.isServiceableToPincode &&
+            this.props.productDetails.isServiceableToPincode.pinCode ? (
               <PdpPincode
                 hasPincode={true}
-                pincode={this.props.pinCodeServiceAvailability.pincode}
+                pincode={
+                  this.props.productDetails.isServiceableToPincode.pinCode
+                }
                 onClick={() => this.showPincodeModal()}
               />
             ) : (
               <PdpPincode onClick={() => this.showPincodeModal()} />
             )}
-            {(this.props.pinCodeServiceAvailability &&
-              this.props.pinCodeServiceAvailability.serviceAvailability &&
-              !this.props.pinCodeServiceAvailability.serviceAvailability
-                .pincodeListResponse) ||
-            (this.props.pinCodeServiceAvailability &&
-              this.props.pinCodeServiceAvailability.serviceAvailability &&
-              this.props.pinCodeServiceAvailability.serviceAvailability
-                .pincodeListResponse &&
-              this.props.pinCodeServiceAvailability.serviceAvailability
-                .pincodeListResponse[0].isServicable === NO) ? (
+            {this.props.productDetails.isServiceableToPincode &&
+            this.props.productDetails.isServiceableToPincode.status === NO ? (
               <Overlay labelText="Not serviceable in you pincode,
-  please try another pincode">
+    please try another pincode">
                 {this.renderDeliveryOptions(productData)}
               </Overlay>
             ) : (

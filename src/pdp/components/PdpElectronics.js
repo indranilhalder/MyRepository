@@ -20,7 +20,6 @@ import ProductModule from "../../general/components/ProductModule.js";
 import Button from "../../general/components/Button.js";
 import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
-import { transformData } from "../../home/components/utils.js";
 import PDPRecommendedSections from "./PDPRecommendedSections.js";
 import {
   PRODUCT_SELLER_ROUTER_SUFFIX,
@@ -256,26 +255,18 @@ export default class PdpElectronics extends React.Component {
               />
             </React.Fragment>
           )}
-          {this.props.pinCodeServiceAvailability &&
-          this.props.pinCodeServiceAvailability.pincode ? (
+          {this.props.productDetails.isServiceableToPincode &&
+          this.props.productDetails.isServiceableToPincode.pinCode ? (
             <PdpPincode
               hasPincode={true}
-              pincode={this.props.pinCodeServiceAvailability.pincode}
+              pincode={this.props.productDetails.isServiceableToPincode.pinCode}
               onClick={() => this.showPincodeModal()}
             />
           ) : (
             <PdpPincode onClick={() => this.showPincodeModal()} />
           )}
-          {(this.props.pinCodeServiceAvailability &&
-            this.props.pinCodeServiceAvailability.serviceAvailability &&
-            !this.props.pinCodeServiceAvailability.serviceAvailability
-              .pincodeListResponse) ||
-          (this.props.pinCodeServiceAvailability &&
-            this.props.pinCodeServiceAvailability.serviceAvailability &&
-            this.props.pinCodeServiceAvailability.serviceAvailability
-              .pincodeListResponse &&
-            this.props.pinCodeServiceAvailability.serviceAvailability
-              .pincodeListResponse[0].isServicable === NO) ? (
+          {this.props.productDetails.isServiceableToPincode &&
+          this.props.productDetails.isServiceableToPincode.status === NO ? (
             <Overlay labelText="Not serviceable in you pincode,
 please try another pincode">
               {this.renderDeliveryOptions(productData)}
