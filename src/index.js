@@ -15,6 +15,8 @@ import registerServiceWorker from "./registerServiceWorker";
 import productListings from "./plp/reducers/plp.reducer";
 import productDescription from "./pdp/reducers/pdp.reducer";
 import categories from "./categories/reducers/categories.reducer";
+import brand from "./brands/reducers/brand.reducer";
+
 import cart from "./cart/reducers/cart.reducer";
 
 import "babel-polyfill";
@@ -27,6 +29,7 @@ const rootReducer = combineReducers({
   productDescription,
   search,
   cart,
+  brand,
   categories
 });
 
