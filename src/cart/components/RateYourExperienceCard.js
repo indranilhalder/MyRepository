@@ -41,3 +41,9 @@ RateyourExperienceCard.propTypes = {
   buttonText: PropTypes.string,
   onCheckout: PropTypes.func
 };
+
+RateyourExperienceCard.defaultProps = {
+  heading: "Rate your experience",
+  label: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit. ",
+  buttonText: "Continue shopping"
+};
