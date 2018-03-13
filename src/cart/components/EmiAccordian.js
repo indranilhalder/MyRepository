@@ -3,6 +3,8 @@ import GridSelect from "../../general/components/GridSelect";
 import EmiCartSelect from "./EmiCartSelect";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
+const PAYMENT_MODE = "EMI";
+const IS_EMI = "1";
 export default class EmiAccordian extends React.Component {
   constructor(props) {
     super(props);
@@ -25,15 +27,13 @@ export default class EmiAccordian extends React.Component {
   }
   handleSelectBank(val) {
     const option = this.props.emiList.filter(data => {
-      return data.value === val[0];
-    })[0].options[0];
+      return data.code === val[0];
+    })[0];
     this.setState({
-      selectedBank: this.props.emiList.filter(data => {
-        return data.value === val[0];
-      })[0].title,
-      selectedEmiRate: option.interestRate,
-      selectedEmi: option.term,
-      selectedPrice: option.monthlyInstallment
+      selectedBank: option.emiBank,
+      selectedEmiRate: option.emitermsrate[0].interestRate,
+      selectedEmi: option.emitermsrate[0].term,
+      selectedPrice: option.emitermsrate[0].monthlyInstallment
     });
   }
   handleConfirmPlan() {
@@ -42,6 +42,23 @@ export default class EmiAccordian extends React.Component {
   handleChangePlan() {
     this.setState({ planSelected: false });
   }
+
+  binValidation = binNo => {
+    if (this.props.binValidation) {
+      this.props.binValidation(PAYMENT_MODE, binNo);
+    }
+  };
+
+  softReservationForPayment = cardDetails => {
+    let bankName = this.state.selectedBank;
+    let emi_tenure = this.state.selectedEmi;
+    cardDetails.emi_bank = { bankName };
+    cardDetails.emi_tenure = { emi_tenure };
+    cardDetails.is_emi = IS_EMI;
+    if (this.props.softReservationForPayment) {
+      this.props.softReservationForPayment(cardDetails);
+    }
+  };
   render() {
     return (
       <React.Fragment>
@@ -59,9 +76,9 @@ export default class EmiAccordian extends React.Component {
                 return (
                   <EmiCartSelect
                     key={i}
-                    value={val.value}
-                    title={val.title}
-                    options={val.options}
+                    value={val.code}
+                    title={val.emiBank}
+                    options={val.emitermsrate}
                     selectPlan={val => this.handleSelectPlan(val)}
                     confirmPlan={() => this.handleConfirmPlan()}
                   />
@@ -78,7 +95,13 @@ export default class EmiAccordian extends React.Component {
               price={this.state.selectedPrice}
               changePlan={() => this.handleChangePlan()}
             />
-            <CreditCardForm />
+            <CreditCardForm
+              onChangeCvv={i => this.onChangeCvv(i)}
+              binValidation={binNo => this.binValidation(binNo)}
+              softReservationForPayment={cardDetails =>
+                this.softReservationForPayment(cardDetails)
+              }
+            />
           </React.Fragment>
         )}
       </React.Fragment>
