@@ -2,7 +2,7 @@ export const SUCCESS = "success";
 export const REQUESTING = "requesting";
 export const ERROR = "error";
 export const FAILURE = "Failure";
-
+export const FAILURE_UPPERCASE = "FAILURE";
 export const SINGLE_SELECT_HEADING_COPY = "Thanks!!!";
 export const SINGLE_SELECT_DESCRIPTION_COPY =
   "We will curate the experience based on your choices. Loading products...";
@@ -42,6 +42,7 @@ export const ORDER_SUMMARY_ROUTER = "/orderSummary";
 export const CHECKOUT_ROUTER = "/checkout";
 export const PRODUCT_CART_DELIVERY_MODES = "/deliveryModes";
 export const PRODUCT_DELIVERY_ADDRESSES = "/deliveryAddress";
+export const DEFAULT_BRANDS_LANDING_PAGE = "/defaultBrandsLanding";
 export const PRICE_TEXT = "Price";
 export const OFFER_AVAILABLE = "Offer Available";
 export const EMI_AVAILABLE = "EMI Available";

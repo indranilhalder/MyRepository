@@ -11,6 +11,7 @@ import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
+import BrandsLandingPageDefault from "./brands/components/BrandsLandingPageDefault";
 import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
 import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 import CartContainer from "./cart/containers/CartContainer";
@@ -21,6 +22,7 @@ import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./brands/containers/BrandLandingPageContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
+
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -44,10 +46,9 @@ import {
   CHECKOUT_ROUTER,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  PLP_CATEGORY_SEARCH,
   PRODUCT_DESCRIPTION_REVIEWS,
-  BRAND_LANDING_PAGE,
-  PRODUCT_OTHER_SELLER_ROUTER
+  PRODUCT_OTHER_SELLER_ROUTER,
+  DEFAULT_BRANDS_LANDING_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -195,11 +196,6 @@ class App extends Component {
           />
           <Route
             exact
-            path={BRAND_LANDING_PAGE}
-            component={BrandLandingPageContainer}
-          />
-          <Route
-            exact
             path={PRODUCT_DELIVERY_ADDRESSES}
             component={CheckoutAddressContainer}
           />
@@ -213,9 +209,15 @@ class App extends Component {
             path={ORDER_SUMMARY_ROUTER}
             component={DisplayOrderSummaryContainer}
           />
-          <Route exact path={CHECKOUT_ROUTER} component={CheckOutContainer} />
+          <Route path={CHECKOUT_ROUTER} component={CheckOutContainer} />
           <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
+          <Route
+            exact
+            path={DEFAULT_BRANDS_LANDING_PAGE}
+            component={BrandsLandingPageDefault}
+          />
         </Switch>
+
         <ModalContainer />
       </div>
     );

@@ -8,7 +8,7 @@ export default class Logo extends React.Component {
         className={styles.base}
         style={{ height: this.props.height, width: this.props.width }}
       >
-        <img className={styles.image} src={this.props.image} alt="No" />
+        <img className={styles.image} src={this.props.image} alt="" />
       </div>
     );
   }

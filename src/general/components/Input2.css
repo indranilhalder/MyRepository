@@ -26,10 +26,10 @@
   border-color: #d3d3d3;
   border-style: solid;
 }
+
 .whiteHollow {
   composes: container;
   color: #fff;
-  border-bottom: 1px solid #fff;
 }
 .whiteBox {
   composes: container;

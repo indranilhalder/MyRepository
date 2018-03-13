@@ -1,0 +1,41 @@
+.base {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  display: inline-block;
+}
+.addressHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 15px;
+  border-bottom: 1px solid #ececec;
+}
+.name {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 14px;
+  font-family: semibold;
+  margin-bottom: 10px;
+}
+.address {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-family: regular;
+  line-height: 20px;
+  font-size: 14px;
+}
+.phoneNumber {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  font-family: regular;
+}
+.actionHolder {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  display: inline-block;
+}

@@ -8,6 +8,7 @@ export const API_URL_ROOT_DUMMY =
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
+export const JUS_PAY_API_URL_ROOT = "https://sandbox.juspay.in";
 
 const API_URL_ROOT_SUFFIX = "?isPwa=true";
 
@@ -142,5 +143,13 @@ export async function getMsd(url) {
     headers: {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
+  });
+}
+
+export async function postJusPay(path, postData) {
+  let url = `${JUS_PAY_API_URL_ROOT}/${path}`;
+  return await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(postData)
   });
 }

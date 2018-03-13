@@ -1,0 +1,16 @@
+.base {
+  width: 100%;
+  height: auto;
+  overflowy: auto;
+  display: inline-block;
+}
+.followedBrand {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.iconHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
