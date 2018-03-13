@@ -47,7 +47,7 @@ export default class BankDetails extends React.Component {
           <div className={styles.container}>
             <SelectBoxMobile
               value={this.props.mode}
-              arrowColour="black"
+              arrowColour="grey"
               height={33}
               onChange={mode => this.onChange({ mode })}
             />
