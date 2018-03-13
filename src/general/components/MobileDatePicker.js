@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./MobileDatePicker.css";
-
 export default class MobileDatePicker extends React.Component {
   constructor(props) {
     super(props);
@@ -19,11 +18,16 @@ export default class MobileDatePicker extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <input
-          type="date"
-          className={styles.input}
-          onChange={value => this.handleChange(value)}
-        />
+        <div className={styles.hideInput}>
+          <input
+            type="date"
+            className={styles.input}
+            onChange={value => this.handleChange(value)}
+          />
+        </div>
+        <div className={styles.displayValue}>
+          <div className={styles.iconHolder} />
+        </div>
       </div>
     );
   }
