@@ -16,7 +16,7 @@ import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
 import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 import CartContainer from "./cart/containers/CartContainer";
 import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
-import CategoriesPage from "./categories/components/CategoriesPage";
+import CategoriesPageContainer from "./categories/containers/CategoriesPageContainer";
 import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
 import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
@@ -229,7 +229,7 @@ class App extends Component {
           <Route
             exact
             path={CATEGORIES_LANDING_PAGE}
-            render={() => <CategoriesPage history={this.props.history} />}
+            component={CategoriesPageContainer}
           />
         </Switch>
         <ModalContainer />
