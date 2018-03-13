@@ -16,6 +16,7 @@ import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
 import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 import CartContainer from "./cart/containers/CartContainer";
 import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
+import CategoriesPage from "./categories/components/CategoriesPage";
 import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
 import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
@@ -51,7 +52,8 @@ import {
   PRODUCT_DESCRIPTION_REVIEWS,
   PRODUCT_SELLER_ROUTER,
   PRODUCT_OTHER_SELLER_ROUTER,
-  DEFAULT_BRANDS_LANDING_PAGE
+  DEFAULT_BRANDS_LANDING_PAGE,
+  CATEGORIES_LANDING_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -224,8 +226,12 @@ class App extends Component {
             path={DEFAULT_BRANDS_LANDING_PAGE}
             component={BrandsLandingPageDefault}
           />
+          <Route
+            exact
+            path={CATEGORIES_LANDING_PAGE}
+            render={() => <CategoriesPage history={this.props.history} />}
+          />
         </Switch>
-
         <ModalContainer />
       </div>
     );
