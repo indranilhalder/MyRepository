@@ -4,6 +4,7 @@ import throttle from "lodash/throttle";
 import queryString from "query-string";
 import { Redirect } from "react-router";
 import { SEARCH_RESULTS_PAGE } from "../../lib/constants.js";
+
 export const CATEGORY_REGEX = /c-msh*/;
 export const BRAND_REGEX = /c-mbh*/;
 export const CAPTURE_REGEX = /c-(.*)/;
@@ -51,21 +52,21 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   }
 
   componentDidUpdate() {
+    console.log("COMPONENT DID UPDATE");
     if (
       this.props.location.state &&
       this.props.location.state.disableSerpSearch === true
     ) {
       return;
     }
-    if (this.props.page === 0) {
-      if (this.props.location.state && this.props.location.state.isFilter) {
-        const suffix = "&isFilter=true";
-        const searchText = this.getSearchTextFromUrl();
-        this.props.getProductListings(searchText, suffix, 0, true);
-      } else {
-        const searchText = this.getSearchTextFromUrl();
-        this.props.getProductListings(searchText, SUFFIX, 0);
-      }
+    if (this.props.location.state && this.props.location.state.isFilter) {
+      console.log("IS THE RIGHT THING BEING HIT");
+      const suffix = "&isFilter=true";
+      const searchText = this.getSearchTextFromUrl();
+      this.props.getProductListings(searchText, suffix, 0, true);
+    } else {
+      const searchText = this.getSearchTextFromUrl();
+      this.props.getProductListings(searchText, SUFFIX, 0);
     }
   }
 
@@ -121,11 +122,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
         return <Redirect to={url} />;
       }
     }
-    return (
-      <React.Fragment>
-        <ProductListingsContainer isFilter={isFilter} />
-      </React.Fragment>
-    );
+    return <ProductListingsContainer isFilter={isFilter} />;
   }
 }
 

@@ -44,9 +44,6 @@ export default class FilterMobile extends React.Component {
     let query = parsedQueryString.q;
     const pathName = this.props.location.pathname;
     const url = createUrlFromQueryAndCategory(query, pathName, val);
-
-    console.log(url);
-
     this.props.history.push(url, { isFilter });
   };
 
@@ -63,6 +60,7 @@ export default class FilterMobile extends React.Component {
   };
 
   onFilterClick = val => {
+    console.log("ON FILTER CLICK");
     this.props.history.push(val, { isFilter: true });
   };
   render() {
@@ -123,7 +121,7 @@ export default class FilterMobile extends React.Component {
                   (val, i) => {
                     return (
                       <FilterSelect
-                        onClick={this.onL3Click}
+                        onClick={this.onFilterClick}
                         selected={val.selected}
                         label={val.name}
                         url={val.url}

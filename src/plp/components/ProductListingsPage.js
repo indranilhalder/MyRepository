@@ -10,6 +10,10 @@ class ProductListingsPage extends Component {
     );
   }
   render() {
+    console.log("PRODUCT LISTINGS PAGE RENDER");
+    console.log(this.props.loading);
+    console.log(this.props.pageNumber);
+    console.log(this.props.isFilter);
     if (
       this.props.loading &&
       this.props.pageNumber === 0 &&
@@ -19,9 +23,9 @@ class ProductListingsPage extends Component {
     } else if (this.props.productListings !== null) {
       return (
         <Plp
+          key={this.props.location.key}
           history={this.props.history}
           searchresult={this.props.productListings.searchresult}
-          facetData={this.props.productListings.facetdata}
           showSort={this.props.showSort}
           onApply={this.props.onApply}
         />

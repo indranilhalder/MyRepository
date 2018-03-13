@@ -1,7 +1,9 @@
 import { connect } from "react-redux";
 import { setSearchString } from "../../search/actions/search.actions.js";
 import { getProductListings, setPage } from "../actions/plp.actions.js";
+
 import PlpBrandCategoryWrapper from "../components/PlpBrandCategoryWrapper";
+
 const mapDispatchToProps = dispatch => {
   return {
     getProductListings: (search: null, suffix, page, isFilter) => {
@@ -16,14 +18,15 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
     page: state.productListings.pageNumber
   };
 };
 
-const FilterContainer = connect(mapStateToProps, mapDispatchToProps)(
-  PlpBrandCategoryWrapper
-);
+const PlpBrandCategoryWrapperContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PlpBrandCategoryWrapper);
 
-export default FilterContainer;
+export default PlpBrandCategoryWrapperContainer;

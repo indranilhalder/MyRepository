@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import styles from "./Sort.css";
 import InformationHeader from "../../general/components/InformationHeader";
 import queryString from "query-string";
+import { applySortToUrl } from "./SortUtils.js";
 
 export const ARRAY_OF_SORTS = [
   "relevance",
@@ -18,36 +19,12 @@ export const ARRAY_OF_SORTS = [
 
 export default class Sort extends React.Component {
   onClick(val) {
-    console.log("SORT CLICK");
-    console.log(this.props);
-
     if (this.props.onClick) {
       const parsedQueryString = queryString.parse(this.props.location.search);
-      let searchText = parsedQueryString.q;
-      console.log("INITIAL SEARCH TEXT");
-      console.log(searchText);
-      if (!searchText) {
-        searchText = val;
-      } else {
-        if (searchText.startsWith(":")) {
-          searchText = `${val}${searchText}`;
-        } else {
-          searchText = `${searchText}${val}`;
-        }
-      }
-
-      console.log("SEARCH TEXT");
-      console.log(searchText);
-
-      /*
-
-      So Cases
-
-      1. If q starts with a :, prepend the sort.
-        Except if I can find the sort in the string, then redirect to the same url.
-      2. If q does not start with a :, then I know I can just append it to q and set.
-      3. If there is no q, then take the sort and do q=:sort: and redirect.
-      */
+      const searchText = parsedQueryString.q;
+      const url = applySortToUrl(searchText, this.props.location.pathname, val);
+      this.props.history.push(url);
+      this.props.onClick();
     }
   }
   handleCloseClick = () => {
