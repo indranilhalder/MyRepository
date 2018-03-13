@@ -59,7 +59,7 @@ export default class BrandsLandingPageDefault extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
-          <BrandHeader />
+          <BrandHeader text="Brands" />
           <BrandsSelect
             limit={1}
             onSelect={val => this.switchTab(val)}
