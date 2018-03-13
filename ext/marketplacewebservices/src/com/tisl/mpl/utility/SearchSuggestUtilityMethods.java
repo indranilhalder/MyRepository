@@ -188,7 +188,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -466,8 +466,8 @@ public class SearchSuggestUtilityMethods
 						&& !facate.getCode().equalsIgnoreCase(DEPT_TYPE) && !facate.getCode().equalsIgnoreCase(SELLER_ID)
 						&& !facate.getCode().equalsIgnoreCase(micrositeSnsCategory)
 						&& !facate.getCode().equalsIgnoreCase("allPromotions")
-						&& !facate.getCode().equalsIgnoreCase(categoryNameCodeMapping)) //CAR -245-Luxury
-				        && !facate.getCode().equalsIgnoreCase("collectionIds")) //SDI-4415
+						&& !facate.getCode().equalsIgnoreCase(categoryNameCodeMapping) //CAR -245-Luxury
+						&& !facate.getCode().equalsIgnoreCase("collectionIds")) //SDI-4415
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
