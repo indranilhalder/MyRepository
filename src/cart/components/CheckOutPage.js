@@ -12,15 +12,15 @@ import PaymentCardWrapper from "./PaymentCardWrapper.js";
 import CartItem from "./CartItem";
 import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
+import filter from "lodash/filter";
+import OrderConfirmation from "./OrderConfirmation";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  GLOBAL_ACCESS_TOKEN,
-  CART_DETAILS_FOR_LOGGED_IN_USER,
-  CART_DETAILS_FOR_ANONYMOUS,
-  ANONYMOUS_USER
+  CART_DETAILS_FOR_LOGGED_IN_USER
 } from "../../lib/constants";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
+const PAYMENT_CHARGED = "CHARGED";
 class CheckOutPage extends React.Component {
   state = {
     confirmAddress: false,
@@ -29,7 +29,9 @@ class CheckOutPage extends React.Component {
     addressId: null,
     addNewAddress: false,
     deliverModeUssId: "",
-    appliedCoupons: false
+    appliedCoupons: false,
+    paymentModeSelected: null,
+    orderConfirmation: false
   };
 
   renderConfirmAddress = () => {
@@ -39,7 +41,7 @@ class CheckOutPage extends React.Component {
   };
 
   handleSelectDeliveryMode(code, id, cartId) {
-    let deliveryModesUssId = `"${code}":"${id}"`;
+    let deliveryModesUssId = `"${id}":"${code}"`;
 
     if (this.state.deliverModeUssId) {
       this.setState({
@@ -54,6 +56,8 @@ class CheckOutPage extends React.Component {
 
   getAllStores = val => {
     this.props.getAllStoresCNC(this.props.location.state.pinCode);
+    this.props.addStoreCNC("273544ASB001", "273544 - 110003");
+    this.props.addPickupPersonCNC("7503721061", "Suraj Kumars");
   };
 
   renderCheckoutAddress = () => {
@@ -148,34 +152,60 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.cart.cartDetailsCnc && !nextProps.cart.emiBankDetails) {
-      let cartValues = {};
-      cartValues.total = nextProps.cart.cartDetailsCnc.products.length;
-      // this.props.getEmiBankDetails(cartValues);
+    if (nextProps.cart.justPayPaymentDetails) {
+      window.location.replace(
+        nextProps.cart.justPayPaymentDetails.payment.authentication.url
+      );
+    }
+    if (nextProps.cart.orderConfirmationDetailsStatus) {
+      Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      this.setState({ orderConfirmation: true });
     }
   }
   componentDidMount() {
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let cartDetailsLoggedInUser = Cookie.getCookie(
-      CART_DETAILS_FOR_LOGGED_IN_USER
-    );
+    const query = new URLSearchParams(this.props.location.search);
+    const value = query.get("status");
+    const orderId = query.get("order_id");
 
-    this.props.getCartDetailsCNC(
-      JSON.parse(userDetails).customerInfo.mobileNumber,
-      JSON.parse(customerCookie).access_token,
-      JSON.parse(cartDetailsLoggedInUser).code,
-      this.props.location.state.pinCode,
-      false
-    );
-    this.props.getUserAddress(this.props.location.state.pinCode);
-    this.props.getPaymentModes();
-    this.props.getNetBankDetails();
+    if (value === PAYMENT_CHARGED) {
+      if (this.props.updateTransactionDetails) {
+        this.props.updateTransactionDetails(
+          this.state.paymentModeSelected,
+          orderId
+        );
+      }
+    } else {
+      if (this.props.getCartDetailsCNC) {
+        let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+        let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+        let cartDetailsLoggedInUser = Cookie.getCookie(
+          CART_DETAILS_FOR_LOGGED_IN_USER
+        );
+
+        this.props.getCartDetailsCNC(
+          JSON.parse(userDetails).customerInfo.mobileNumber,
+          JSON.parse(customerCookie).access_token,
+          JSON.parse(cartDetailsLoggedInUser).code,
+          this.props.location.state.pinCode,
+          false
+        );
+        this.props.getUserAddress(this.props.location.state.pinCode);
+        this.props.getPaymentModes();
+        this.props.getNetBankDetails();
+      }
+    }
   }
 
-  onSelectAddress(address) {
+  onSelectAddress(selectedAddress) {
+    let addressSelected = filter(
+      this.props.cart.cartDetailsCnc.addressDetailsList.addresses,
+      address => {
+        return address.id === selectedAddress[0];
+      }
+    );
+
     this.setState({ confirmAddress: false });
-    this.setState({ address: address[0] });
+    this.setState({ addressId: addressSelected });
   }
 
   changeDeliveryModes = () => {
@@ -188,7 +218,7 @@ class CheckOutPage extends React.Component {
   handleSubmit = () => {
     if (!this.state.confirmAddress) {
       this.props.addAddressToCart(
-        this.state.addressId,
+        this.state.addressId[0].id,
         this.props.location.state.pinCode
       );
       this.setState({ confirmAddress: true });
@@ -233,9 +263,22 @@ class CheckOutPage extends React.Component {
   removeCliqCash = () => {
     this.props.removeCliqCash();
   };
+
+  binValidation = (paymentMode, binNo) => {
+    this.setState({ paymentModeSelected: paymentMode });
+    this.props.binValidation(paymentMode, binNo);
+  };
+
+  softReservationForPayment = cardDetails => {
+    cardDetails.pinCode = this.props.location.state.pinCode;
+    this.props.softReservationForPayment(cardDetails, this.state.addressId[0]);
+  };
   render() {
     const cartData = this.props.cart;
-    if (this.state.addNewAddress || !cartData.userAddress) {
+    if (
+      (this.state.addNewAddress || !cartData.userAddress) &&
+      !this.state.orderConfirmation
+    ) {
       return (
         <AddDeliveryAddress
           addUserAddress={address => this.addAddress(address)}
@@ -243,8 +286,11 @@ class CheckOutPage extends React.Component {
           onChange={val => this.onChange(val)}
         />
       );
-    }
-    if (!this.state.addNewAddress && this.props.cart) {
+    } else if (
+      !this.state.addNewAddress &&
+      this.props.cart &&
+      !this.state.orderConfirmation
+    ) {
       return (
         <div>
           {cartData.userAddress &&
@@ -253,8 +299,8 @@ class CheckOutPage extends React.Component {
 
           {this.state.confirmAddress && (
             <DeliveryAddressSet
-              addressType="replace the Values"
-              address="replace the values"
+              addressType={this.state.addressId[0].addressType}
+              address={this.state.addressId[0].line1}
               changeDeliveryAddress={() => this.changeDeliveryAddress()}
             />
           )}
@@ -279,9 +325,15 @@ class CheckOutPage extends React.Component {
           {!this.state.paymentMethod &&
             (this.state.confirmAddress && this.state.deliverMode) && (
               <PaymentCardWrapper
-                paymentDetails={this.props.cart.paymentModes}
+                cart={this.props.cart}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
+                binValidation={(paymentMode, binNo) =>
+                  this.binValidation(paymentMode, binNo)
+                }
+                softReservationForPayment={cardDetails =>
+                  this.softReservationForPayment(cardDetails)
+                }
               />
             )}
 
@@ -302,6 +354,18 @@ class CheckOutPage extends React.Component {
               payable={this.props.cart.cartDetailsCnc.totalPrice}
               onCheckout={this.handleSubmit}
             />
+          )}
+        </div>
+      );
+    } else if (this.state.orderConfirmation) {
+      return (
+        <div>
+          {this.props.cart.orderConfirmationDetails && (
+            <div>
+              <OrderConfirmation
+                orderDetails={this.props.cart.orderConfirmationDetails}
+              />
+            </div>
           )}
         </div>
       );

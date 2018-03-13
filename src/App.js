@@ -217,7 +217,7 @@ class App extends Component {
             path={ORDER_SUMMARY_ROUTER}
             component={DisplayOrderSummaryContainer}
           />
-          <Route exact path={CHECKOUT_ROUTER} component={CheckOutContainer} />
+          <Route path={CHECKOUT_ROUTER} component={CheckOutContainer} />
           <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
           <Route
             exact
