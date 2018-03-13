@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "./BrandsSubCatagory.css";
-export default class BrandsSubCatagory extends React.Component {
+import styles from "./BrandsSubCategory.css";
+export default class BrandsSubCategory extends React.Component {
   render() {
     let className = styles.base;
     if (this.props.select) {
@@ -10,7 +10,7 @@ export default class BrandsSubCatagory extends React.Component {
     return <div className={className}>{this.props.label}</div>;
   }
 }
-BrandsSubCatagory.propTypes = {
+BrandsSubCategory.propTypes = {
   label: PropTypes.string,
   select: PropTypes.bool
 };

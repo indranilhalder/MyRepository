@@ -12,6 +12,7 @@
   font-family: semibold;
   line-height: 22px;
   text-align: left;
+  text-transform: capitalize;
 }
 .titleDescription {
   width: 100%;
