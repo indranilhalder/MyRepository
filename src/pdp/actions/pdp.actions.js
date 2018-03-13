@@ -86,6 +86,10 @@ export const GET_PDP_ITEMS_REQUEST = "GET_PDP_ITEMS_REQUEST";
 export const GET_PDP_ITEMS_SUCCESS = "GET_PDP_ITEMS_SUCCESS";
 export const GET_PDP_ITEMS_FAILURE = "GET_PDP_ITEMS_FAILURE";
 
+export const PDP_ABOUT_BRAND_REQUEST = "PDP_ABOUT_BRAND_REQUEST";
+export const PDP_ABOUT_BRAND_SUCCESS = "PDP_ABOUT_BRAND_SUCCESS";
+export const PDP_ABOUT_BRAND_FAILURE = "PDP_ABOUT_BRAND_FAILURE";
+
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
@@ -743,21 +747,13 @@ export function getMsdRequest(productCode) {
 }
 export function pdpAboutBrandRequest() {
   return {
-    type: PRODUCT_MSD_REQUEST,
+    type: PDP_ABOUT_BRAND_REQUEST,
     status: REQUESTING
   };
 }
-export function pdpAboutBrandSuccess(msdItems) {
-  return {
-    type: PRODUCT_MSD_SUCCESS,
-    status: SUCCESS,
-    msdItems
-  };
-}
-
 export function pdpAboutBrandFailure(error) {
   return {
-    type: PRODUCT_MSD_FAILURE,
+    type: PDP_ABOUT_BRAND_FAILURE,
     status: ERROR,
     error
   };
@@ -781,18 +777,18 @@ export function pdpAboutBrand(productCode) {
     try {
       // making call for fetch about brand and their items items
       // url may have to change as per api live get live
-      const result = await api.postAboutBrand(
+      const result = await api.postMock(
         MSD_ABOUT_BRAND_REQUEST_PATH,
         msdRequestObject
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-
-      if (resultJson.data.length > 0) {
-        dispatch(getPdpItems(resultJson.data[0], ABOUT_THE_BRAND_WIDGET_KEY));
+      if (resultJson.data[0].itemIds.length > 0) {
+        dispatch(
+          getPdpItems(resultJson.data[0].itemIds, ABOUT_THE_BRAND_WIDGET_KEY)
+        );
       }
     } catch (e) {
       dispatch(pdpAboutBrandFailure(e.message));

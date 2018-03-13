@@ -20,38 +20,36 @@ class PDPRecommendedSections extends React.Component {
   renderAboutTheBrand() {
     return (
       <React.Fragment>
-        {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY] &&
-        this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY].length > 0 ? (
-          <div className={styles.brandSection}>
-            <div className={styles.brandHeader}>About the brand</div>
-            <div className={styles.brandLogoSection}>
-              {this.props.productData.brandLogoImage && (
-                <div className={styles.brandLogoHolder}>
-                  <Logo image={this.props.productData.brandLogoImage} />
-                </div>
-              )}
-              <div className={styles.followButton}>
-                <Button label="Follow" type="tertiary" />
-              </div>
-            </div>
-            {this.props.productData.brandInfo && (
-              <div className={styles.brandDescription}>
-                {this.props.productData.brandInfo}
+        <div className={styles.brandSection}>
+          <div className={styles.brandHeader}>About the brand</div>
+          <div className={styles.brandLogoSection}>
+            {this.props.productData.brandLogoImage && (
+              <div className={styles.brandLogoHolder}>
+                <Logo image={this.props.productData.brandLogoImage} />
               </div>
             )}
-
-            {this.renderCarousel(
-              this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY]
-            )}
-            <div className={styles.visitBrandButton}>
-              <Button
-                type="secondary"
-                label="Visit Brand Store"
-                oncLick={() => this.visitBrand()}
-              />
+            <div className={styles.followButton}>
+              <Button label="Follow" type="tertiary" />
             </div>
           </div>
-        ) : null}
+          {this.props.productData.brandInfo && (
+            <div className={styles.brandDescription}>
+              {this.props.productData.brandInfo}
+            </div>
+          )}
+
+          {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY].length > 0 &&
+            this.renderCarousel(
+              this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY]
+            )}
+          <div className={styles.visitBrandButton}>
+            <Button
+              type="secondary"
+              label="Visit Brand Store"
+              oncLick={() => this.visitBrand()}
+            />
+          </div>
+        </div>
       </React.Fragment>
     );
   }
