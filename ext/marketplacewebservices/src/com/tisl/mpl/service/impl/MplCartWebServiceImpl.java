@@ -3345,8 +3345,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3615,7 +3615,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3702,6 +3702,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<>();
 		List<PinCodeResponseData> pinCodeRes = null;
 
+		int count = 0;
+
 		try
 		{
 			if (cartModel != null)
@@ -3762,6 +3764,19 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				gwlpList = productDetailsPwa(cartModel, deliveryModeDataMap, false, true, pinCodeRes, pincode);
 			}
+
+			if (null != gwlpList && !gwlpList.isEmpty())
+			{
+				for (final GetWishListProductWsDTO entry : gwlpList)
+				{
+					if (null != entry.getIsGiveAway() && entry.getIsGiveAway().equalsIgnoreCase("N"))
+					{
+						count++;
+					}
+				}
+				cartDataDetails.setCount(count);
+			}
+
 			if (null != gwlpList)
 			{
 				cartDataDetails.setProducts(gwlpList);
