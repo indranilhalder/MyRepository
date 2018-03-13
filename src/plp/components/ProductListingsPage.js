@@ -21,9 +21,9 @@ class ProductListingsPage extends Component {
     ) {
       return this.renderLoader();
     } else if (this.props.productListings !== null) {
+      console.log("PRODUCT LISTINGS PATH");
       return (
         <Plp
-          key={this.props.location.key}
           history={this.props.history}
           searchresult={this.props.productListings.searchresult}
           showSort={this.props.showSort}
