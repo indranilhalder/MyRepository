@@ -20,7 +20,9 @@ export default class NetBanking extends React.Component {
       >
         {this.props.bankList &&
           this.props.bankList.map((val, i) => {
-            return <BankSelect image={val.image} value={val.value} key={i} />;
+            return (
+              <BankSelect image={val.image} value={val.bankCode} key={i} />
+            );
           })}
       </GridSelect>
     );

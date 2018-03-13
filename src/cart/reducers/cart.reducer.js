@@ -54,9 +54,25 @@ const cart = (
     bankOfferStatus: null,
     bankOfferError: null,
 
-    paymentStatus: null,
-    paymentStatusError: null,
-    paymentDetails: null
+    cliqCashPaymentStatus: null,
+    cliqCashPaymentStatusError: null,
+    cliqCashPaymentDetails: null,
+
+    jusPayStatus: null,
+    jusPayError: null,
+    jusPayDetails: null,
+
+    transactionDetailsStatus: null,
+    transactionDetailsError: null,
+    transactionDetailsDetails: null,
+
+    orderConfirmationDetailsStatus: null,
+    orderConfirmationDetailsError: null,
+    orderConfirmationDetails: null,
+
+    justPayPaymentDetailsStatus: null,
+    justPayPaymentDetailsError: null,
+    justPayPaymentDetails: null
   },
   action
 ) => {
@@ -477,24 +493,25 @@ const cart = (
         bankOfferError: action.error,
         loading: false
       });
+
     case cartActions.APPLY_CLIQ_CASH_REQUEST:
       return Object.assign({}, state, {
-        paymentStatus: action.status,
+        cliqCashPaymentStatus: action.status,
         loading: true
       });
 
     case cartActions.APPLY_CLIQ_CASH_SUCCESS: {
       return Object.assign({}, state, {
-        paymentStatus: action.status,
-        paymentDetails: action.paymentDetails,
+        cliqCashPaymentStatus: action.status,
+        cliqCashPaymentDetails: action.paymentDetails,
         loading: false
       });
     }
 
     case cartActions.APPLY_CLIQ_CASH_FAILURE:
       return Object.assign({}, state, {
-        paymentStatus: action.status,
-        paymentStatusError: action.error,
+        cliqCashPaymentStatus: action.status,
+        cliqCashPaymentStatusError: action.error,
         loading: false
       });
 
@@ -516,6 +533,90 @@ const cart = (
       return Object.assign({}, state, {
         paymentStatus: action.status,
         paymentStatusError: action.error,
+        loading: false
+      });
+
+    case cartActions.CREATE_JUS_PAY_ORDER_REQUEST:
+      return Object.assign({}, state, {
+        jusPayStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.CREATE_JUS_PAY_ORDER_SUCCESS: {
+      return Object.assign({}, state, {
+        jusPayStatus: action.status,
+        jusPayDetails: action.jusPayDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.CREATE_JUS_PAY_ORDER_FAILURE:
+      return Object.assign({}, state, {
+        jusPayStatus: action.status,
+        jusPayError: action.error,
+        loading: false
+      });
+
+    case cartActions.UPDATE_TRANSACTION_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        jusPayStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.UPDATE_TRANSACTION_DETAILS_SUCCESS: {
+      return Object.assign({}, state, {
+        jusPayStatus: action.status,
+        jusPayDetails: action.jusPayDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.UPDATE_TRANSACTION_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        jusPayStatus: action.status,
+        jusPayError: action.error,
+        loading: false
+      });
+
+    case cartActions.ORDER_CONFIRMATION_REQUEST:
+      return Object.assign({}, state, {
+        orderConfirmationDetailsStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ORDER_CONFIRMATION_SUCCESS: {
+      return Object.assign({}, state, {
+        orderConfirmationDetailsStatus: action.status,
+        orderConfirmationDetails: action.confirmedOrderDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.ORDER_CONFIRMATION_FAILURE:
+      return Object.assign({}, state, {
+        orderConfirmationDetailsStatus: action.status,
+        orderConfirmationDetailsError: action.error,
+        loading: false
+      });
+
+    case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_REQUEST:
+      return Object.assign({}, state, {
+        justPayPaymentDetailsStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_SUCCESS: {
+      return Object.assign({}, state, {
+        justPayPaymentDetailsStatus: action.status,
+        justPayPaymentDetails: action.justPayPaymentDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_FAILURE:
+      return Object.assign({}, state, {
+        justPayPaymentDetailsStatus: action.status,
+        justPayPaymentDetailsError: action.error,
         loading: false
       });
 

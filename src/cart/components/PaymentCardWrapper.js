@@ -1,12 +1,18 @@
 import React from "react";
 import _ from "lodash";
-import EmiAccordian from "./EmiAccordian.js";
 import CliqCashToggle from "./CliqCashToggle";
 import styles from "./PaymentCardWrapper.css";
+import CheckoutEmi from "./CheckoutEmi.js";
+import CheckoutCreditCard from "./CheckoutCreditCard.js";
+import CheckoutDebitCard from "./CheckoutDebitCard.js";
+import CheckoutNetbanking from "./CheckoutNetbanking.js";
 
 // prettier-ignore
 const typeComponentMapping = {
-  "EMI": props => <EmiAccordian {...props} />,
+  "EMI": props => <CheckoutEmi {...props} />,
+  "Credit Card": props => <CheckoutCreditCard {...props} />,
+  "Netbanking": props => <CheckoutNetbanking {...props} />,
+    "Debit Card": props => <CheckoutDebitCard {...props} />,
 };
 
 export default class PaymentCardWrapper extends React.Component {
@@ -24,9 +30,8 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   renderPaymentCardsComponents() {
-    // let paymentModesDisplay = this.props.paymentDetails.paymentModes;
     let paymentModesToDisplay = _.filter(
-      this.props.paymentDetails.paymentModes,
+      this.props.cart.paymentModes.paymentModes,
       modes => {
         return modes.value === true;
       }
@@ -44,6 +49,17 @@ export default class PaymentCardWrapper extends React.Component {
     }
   };
 
+  binValidation = (paymentMode, binNo) => {
+    if (this.props.binValidation) {
+      this.props.binValidation(paymentMode, binNo);
+    }
+  };
+
+  softReservationForPayment = cardDetails => {
+    if (this.props.softReservationForPayment) {
+      this.props.softReservationForPayment(cardDetails);
+    }
+  };
   render() {
     return (
       <div className={styles.base}>

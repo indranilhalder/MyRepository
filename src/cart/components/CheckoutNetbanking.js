@@ -11,7 +11,7 @@ export default class CheckoutNetBanking extends React.Component {
         <NetBanking
           onSelect={val => console.log(val)}
           selected={["1"]}
-          bankList={[]}
+          bankList={this.props.cart.netBankDetails.bankList}
         />
       </ManueDetails>
     );

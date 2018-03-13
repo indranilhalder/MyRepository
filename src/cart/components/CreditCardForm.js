@@ -7,6 +7,11 @@ import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
 import informationIcon from "../../general/components/img/Info-grey.svg";
 import Button from "../../general/components/Button";
 import CheckBox from "../../general/components/CheckBox.js";
+const MERCHANT_ID = "tul_uat2";
+
+const MINIMUM_YEARS_TO_SHOW = 0;
+const MAXIMUM_YEARS_TO_SHOW = 9;
+
 export default class CreditCardForm extends React.Component {
   constructor(props) {
     super(props);
@@ -30,6 +35,9 @@ export default class CreditCardForm extends React.Component {
   }
   onChangeCardNumber(val) {
     this.setState({ cardNumberValue: val });
+    if (val.length === 6) {
+      this.props.binValidation(val);
+    }
   }
   getCardDetails(val) {
     this.setState({ cardNumberValue: val });
@@ -55,11 +63,30 @@ export default class CreditCardForm extends React.Component {
       cardDetails.monthValue = this.state.monthValue;
       cardDetails.yearValue = this.state.yearValue;
       cardDetails.selected = this.state.selected;
+      cardDetails.merchant_id = MERCHANT_ID;
       this.props.onSaveCardDetails(cardDetails);
     }
   }
 
+  payBill = cardDetails => {
+    let cardValues = {};
+    cardValues.cardNumber = this.state.cardNumberValue;
+    cardValues.cardName = this.state.cardNameValue;
+    cardValues.cvvNumber = this.state.cardCvvValue;
+    cardValues.monthValue = this.state.monthValue;
+    cardValues.yearValue = this.state.yearValue;
+    cardValues.selected = this.state.selected;
+    cardValues.merchant_id = MERCHANT_ID;
+    this.props.softReservationForPayment(cardValues);
+  };
+
   render() {
+    const expiryYearObject = [];
+    const currentYear = new Date().getFullYear();
+    for (let i = MINIMUM_YEARS_TO_SHOW; i <= MAXIMUM_YEARS_TO_SHOW; i++) {
+      expiryYearObject.push({ label: currentYear + i, value: currentYear + i });
+    }
+
     return (
       <div className={styles.base}>
         <div className={styles.cardDetails}>
@@ -96,17 +123,31 @@ export default class CreditCardForm extends React.Component {
             <div className={styles.dropDownBox}>
               <SelectBoxMobile
                 theme="hollowBox"
-                options={this.props.options}
-                value="Expiry month"
+                value="Expiry Month"
                 onChange={changedValue => this.monthChange(changedValue)}
+                options={[
+                  { label: "1", value: 1 },
+                  { label: "2", value: 2 },
+                  { label: "3", value: 3 },
+                  { label: "4", value: 4 },
+                  { label: "5", value: 5 },
+                  { label: "6", value: 6 },
+                  { label: "7", value: 7 },
+                  { label: "8", value: 8 },
+                  { label: "9", value: 9 },
+                  { label: "10", value: 10 },
+                  { label: "11", value: 11 },
+                  { label: "12", value: 12 }
+                ]}
+                textStyle={{ fontSize: 14 }}
               />
             </div>
             <div className={styles.dropDownBox}>
               <SelectBoxMobile
                 theme="hollowBox"
-                options={this.props.optionsYear}
+                options={expiryYearObject}
                 value="Expiry year"
-                onChange={changedValue => this.onYearChange(changedValue)}
+                onChange={expiryYear => this.onYearChange(expiryYear)}
               />
             </div>
           </div>
@@ -145,7 +186,7 @@ export default class CreditCardForm extends React.Component {
                   color="#fff"
                   label="Pay now"
                   width={120}
-                  onClick={val => this.onSaveCardDetails(val)}
+                  onClick={() => this.payBill()}
                 />
               </div>
             </div>
