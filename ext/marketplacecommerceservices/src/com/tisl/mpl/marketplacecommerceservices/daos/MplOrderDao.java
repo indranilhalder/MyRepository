@@ -126,6 +126,10 @@ public interface MplOrderDao
 	public OrderModel fetchOrderByTransaction(final String transactionId);
 
 	public List<MplPaymentAuditModel> getAuditLists(final String cartGUID);
+	
+	//CAR-362 or SDI-5941 
+	
+	SearchPageData<OrderModel> getPagedFilteredParentOrderHistoryWebForm(final CustomerModel customerModel,final BaseStoreModel store, final PageableData paramPageableData, final Date fromDate);
 
 
 }

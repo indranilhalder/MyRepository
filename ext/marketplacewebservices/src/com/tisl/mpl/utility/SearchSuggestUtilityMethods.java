@@ -467,6 +467,7 @@ public class SearchSuggestUtilityMethods
 						&& !facate.getCode().equalsIgnoreCase(micrositeSnsCategory)
 						&& !facate.getCode().equalsIgnoreCase("allPromotions")
 						&& !facate.getCode().equalsIgnoreCase(categoryNameCodeMapping)) //CAR -245-Luxury
+				        && !facate.getCode().equalsIgnoreCase("collectionIds")) //SDI-4415
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
@@ -879,14 +880,40 @@ public class SearchSuggestUtilityMethods
 					final List<BuyBoxModel> buyModList = buyBoxDao.getVariantListForPriceRange(productData.getCode());
 					if (CollectionUtils.isNotEmpty(buyModList))
 					{
+						//SDI-6494 fix starts
 						final List<BuyBoxModel> modifiableBuyBox = new ArrayList<BuyBoxModel>(buyModList);
-						modifiableBuyBox.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
+						final Double weightageMobile = modifiableBuyBox.get(0).getWeightageMobile();
+						if (null != weightageMobile && weightageMobile > 0)
+						{
+							modifiableBuyBox.sort(Comparator.comparing(BuyBoxModel::getWeightageMobile).reversed());
+						}
+						else
+						{
+							modifiableBuyBox.sort(Comparator.comparing(BuyBoxModel::getWeightage).reversed());
+						}
 
 						if (CollectionUtils.isNotEmpty(modifiableBuyBox))
 						{
-							pDataMin = productDetailsHelper.formPriceData(modifiableBuyBox.get(modifiableBuyBox.size() - 1).getPrice());
-							pDataMax = productDetailsHelper.formPriceData(modifiableBuyBox.get(0).getPrice());
+							final Double minSpecialPriceMobile = modifiableBuyBox.get(modifiableBuyBox.size() - 1)
+									.getSpecialPriceMobile();
+							final Double minSpecialPrice = modifiableBuyBox.get(modifiableBuyBox.size() - 1).getSpecialPrice();
+
+							final Double minSellingPrice = (null != minSpecialPriceMobile && minSpecialPriceMobile > 0) ? minSpecialPriceMobile
+									: ((null != minSpecialPrice && minSpecialPrice > 0) ? minSpecialPrice : modifiableBuyBox.get(
+											modifiableBuyBox.size() - 1).getPrice());
+
+							final Double maxSpecialPriceMobile = modifiableBuyBox.get(0).getSpecialPriceMobile();
+							final Double maxSpecialPrice = modifiableBuyBox.get(0).getSpecialPrice();
+							final Double maxSellingprice = (null != maxSpecialPriceMobile && maxSpecialPriceMobile > 0) ? maxSpecialPriceMobile
+									: ((null != maxSpecialPrice && maxSpecialPrice > 0) ? modifiableBuyBox.get(0).getSpecialPrice()
+											: modifiableBuyBox.get(0).getPrice());
+
+							pDataMin = productDetailsHelper.formPriceData(minSellingPrice);
+							pDataMax = productDetailsHelper.formPriceData(maxSellingprice);
+
+							//SDI-6494 fix ends
 						}
+
 					}
 					if (null != pDataMin && null != pDataMax)
 					{
@@ -1447,7 +1474,7 @@ public class SearchSuggestUtilityMethods
 						&& !facate.getCode().equalsIgnoreCase(DEPT_TYPE) && !facate.getCode().equalsIgnoreCase(SELLER_ID)
 						&& !facate.getCode().equalsIgnoreCase(micrositeSnsCategory)
 						&& !facate.getCode().equalsIgnoreCase(categoryNameCodeMapping)) //CAR -245-Luxury
-
+				        && !facate.getCode().equalsIgnoreCase("collectionIds")) //SDI-4415
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 					facetValueWsDTOList = new ArrayList<>();

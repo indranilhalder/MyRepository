@@ -12,6 +12,7 @@ import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import de.hybris.platform.servicelayer.model.ModelService;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -43,11 +44,19 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 
 	@Autowired
 	ModelService modelService;
-	
+
 	@Autowired
 	private MplQcPaymentFailService mplQcPaymentFailService;
 
 	private final static Logger LOG = Logger.getLogger(ForwardPaymentCleanUpJob.class.getName());
+
+	private static final String COMMA = ",";
+	private static final String DUPLICATE_PAYMENT = "DUPLICATE_PAYMENT";
+	private static final String QC_DUPLICATE_PAYMENT = "QC_DUPLICATE_PAYMENT";
+	private static final String PAYMENT_FAILED = "PAYMENT_FAILED";
+	private static final String ORDER_NOT_GENERATED = "ORDER_NOT_GENERATED";
+	private static final String RMS_FAILED = "RMS_FAILED";
+	private static final String COD_CHARGED = "COD_CHARGED";
 
 	@Override
 	public PerformResult perform(final CronJobModel cronJob)
@@ -104,118 +113,184 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 
 	private void createdRefundEntries(final Date startTime, final Date endTime)
 	{
-		final List<OrderModel> multiPayOrderList = forwardPaymentCleanUpService.fetchOrdersWithMultiplePayments(startTime, endTime);
-		if (CollectionUtils.isNotEmpty(multiPayOrderList))
+		final String refundTypes = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.FPC_REFUND_TYPES);
+		final List<String> refundTypeList = Arrays.asList(refundTypes.split(COMMA));
+
+		if (refundTypeList.contains(DUPLICATE_PAYMENT))
 		{
-			for (final OrderModel orderModel : multiPayOrderList)
+			final List<OrderModel> multiPayOrderList = forwardPaymentCleanUpService.fetchOrdersWithMultiplePayments(startTime,
+					endTime);
+			if (CollectionUtils.isNotEmpty(multiPayOrderList))
 			{
-				try
-				{
-					forwardPaymentCleanUpService.createRefundEntryForMultiplePayments(orderModel,false);
-				}
-				catch (final Exception e)
-				{
-					LOG.error("Error while processing refund for order: " + orderModel.getCode());
-					LOG.error(e.getMessage(), e);
-				}
-			}
-		}
-		final List<OrderModel> multiPayCliqCashOrderList = forwardPaymentCleanUpService.fetchCliqCashOrdersWithMultiplePayments(startTime, endTime);
-		if (null != multiPayCliqCashOrderList && CollectionUtils.isNotEmpty(multiPayCliqCashOrderList))
-		{
-			for (final OrderModel orderModel : multiPayCliqCashOrderList)
-			{
-				try
-				{
-					forwardPaymentCleanUpService.createRefundEntryForMultiplePayments(orderModel,true);
-				}
-				catch (final Exception e)
-				{
-					LOG.error("Error while processing refund for order: " + orderModel.getCode());
-					LOG.error(e.getMessage(), e);
-				}
-			}
-		}
-		
-		final List<OrderModel> failedOrderList = forwardPaymentCleanUpService.fetchPaymentFailedOrders(startTime, endTime);
-		if (CollectionUtils.isNotEmpty(failedOrderList))
-		{
-			for (final OrderModel orderModel : failedOrderList)
-			{
-				try
-				{
-					forwardPaymentCleanUpService.createRefundEntryForFailedOrders(orderModel);
-				}
-				catch (final Exception e)
-				{
-					LOG.error("Error while processing refund for order: " + orderModel.getCode());
-					LOG.error(e.getMessage(), e);
-				}
-				final String splitInfoMode = orderModel.getSplitModeInfo();
-				LOG.debug("Payment SplitMode for order  "+orderModel.getCode()+ " "+splitInfoMode);
-				if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
+				for (final OrderModel orderModel : multiPayOrderList)
 				{
 					try
 					{
-						mplQcPaymentFailService.processQcRefund(orderModel);
+						forwardPaymentCleanUpService.createRefundEntryForMultiplePayments(orderModel, false);
 					}
 					catch (final Exception e)
 					{
-						LOG.error("Error while processing QC refund for order: " + orderModel.getCode());
+						LOG.error("Error while processing refund for order: " + orderModel.getCode());
 						LOG.error(e.getMessage(), e);
 					}
 				}
 			}
 		}
-		final Calendar rmsStartTime = Calendar.getInstance();
-		rmsStartTime.setTime(startTime);
-		final int rmsTAT = configurationService.getConfiguration().getInt(MarketplacecommerceservicesConstants.FPC_RMS_TAT, 360);
-		rmsStartTime.add(Calendar.MINUTE, -rmsTAT);
-		final List<OrderModel> rmsFailedOrderList = forwardPaymentCleanUpService.fetchRmsFailedOrders(rmsStartTime.getTime(),
-				endTime);
-		if (CollectionUtils.isNotEmpty(rmsFailedOrderList))
+		else
 		{
-			for (final OrderModel orderModel : rmsFailedOrderList)
+			LOG.error("ForwardPaymentCleanUp has been disabled for Duplicate Payment");
+		}
+
+		if (refundTypeList.contains(QC_DUPLICATE_PAYMENT))
+		{
+			final List<OrderModel> multiPayCliqCashOrderList = forwardPaymentCleanUpService.fetchCliqCashOrdersWithMultiplePayments(
+					startTime, endTime);
+			if (null != multiPayCliqCashOrderList && CollectionUtils.isNotEmpty(multiPayCliqCashOrderList))
 			{
-				try
-				{
-					forwardPaymentCleanUpService.createRefundEntryForRmsFailedOrders(orderModel);
-				}
-				catch (final Exception e)
-				{
-					LOG.error("Error while processing refund for order: " + orderModel.getCode());
-					LOG.error(e.getMessage(), e);
-				}
-				
-				final String splitInfoMode = orderModel.getSplitModeInfo();
-				LOG.debug("Payment SplitMode for order  "+orderModel.getCode()+ " "+splitInfoMode);
-				if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
+				for (final OrderModel orderModel : multiPayCliqCashOrderList)
 				{
 					try
 					{
-						mplQcPaymentFailService.processQcRefund(orderModel);
+						forwardPaymentCleanUpService.createRefundEntryForMultiplePayments(orderModel, true);
 					}
 					catch (final Exception e)
 					{
-						LOG.error("Error while processing QC refund for order: " + orderModel.getCode());
+						LOG.error("Error while processing refund for order: " + orderModel.getCode());
 						LOG.error(e.getMessage(), e);
 					}
 				}
 			}
 		}
-		final List<MplPaymentAuditModel> auditList = forwardPaymentCleanUpService.fetchAuditsWithoutOrder(startTime, endTime);
-		if (CollectionUtils.isNotEmpty(auditList))
+		else
 		{
-			for (final MplPaymentAuditModel auditModel : auditList)
+			LOG.error("ForwardPaymentCleanUp has been disabled for CliqCash Duplicate Payment");
+		}
+
+		if (refundTypeList.contains(PAYMENT_FAILED))
+		{
+			final List<OrderModel> failedOrderList = forwardPaymentCleanUpService.fetchPaymentFailedOrders(startTime, endTime);
+			if (CollectionUtils.isNotEmpty(failedOrderList))
 			{
-				try
+				for (final OrderModel orderModel : failedOrderList)
 				{
-					forwardPaymentCleanUpService.createRefundEntryForAuditsWithoutOrder(auditModel);
+					try
+					{
+						forwardPaymentCleanUpService.createRefundEntryForFailedOrders(orderModel);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Error while processing refund for order: " + orderModel.getCode());
+						LOG.error(e.getMessage(), e);
+					}
+					final String splitInfoMode = orderModel.getSplitModeInfo();
+					LOG.debug("Payment SplitMode for order  " + orderModel.getCode() + " " + splitInfoMode);
+					if (null != splitInfoMode
+							&& splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
+					{
+						try
+						{
+							mplQcPaymentFailService.processQcRefund(orderModel);
+						}
+						catch (final Exception e)
+						{
+							LOG.error("Error while processing QC refund for order: " + orderModel.getCode());
+							LOG.error(e.getMessage(), e);
+						}
+					}
 				}
-				catch (final Exception e)
+			}
+		}
+		else
+		{
+			LOG.error("ForwardPaymentCleanUp has been disabled for Payment Failed Orders");
+		}
+
+		if (refundTypeList.contains(COD_CHARGED))
+		{
+			final List<OrderModel> codChargedOrderList = forwardPaymentCleanUpService.fetchCodChargedOrder(startTime, endTime);
+			if (CollectionUtils.isNotEmpty(codChargedOrderList))
+			{
+				for (final OrderModel orderModel : codChargedOrderList)
 				{
-					LOG.error("Error while processing refund for audit: " + auditModel.getAuditId());
-					LOG.error(e.getMessage(), e);
+					try
+					{
+						forwardPaymentCleanUpService.createRefundEntryForCodChargedOrders(orderModel);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Error while processing refund for order: " + orderModel.getCode());
+						LOG.error(e.getMessage(), e);
+					}
+				}
+			}
+		}
+		else
+		{
+			LOG.error("ForwardPaymentCleanUp has been disabled for COD Charged Orders");
+		}
+
+		if (refundTypeList.contains(RMS_FAILED))
+		{
+			final Calendar rmsStartTime = Calendar.getInstance();
+			rmsStartTime.setTime(startTime);
+			final int rmsTAT = configurationService.getConfiguration().getInt(MarketplacecommerceservicesConstants.FPC_RMS_TAT, 360);
+			rmsStartTime.add(Calendar.MINUTE, -rmsTAT);
+			final List<OrderModel> rmsFailedOrderList = forwardPaymentCleanUpService.fetchRmsFailedOrders(rmsStartTime.getTime(),
+					endTime);
+			if (CollectionUtils.isNotEmpty(rmsFailedOrderList))
+			{
+				for (final OrderModel orderModel : rmsFailedOrderList)
+				{
+					try
+					{
+						forwardPaymentCleanUpService.createRefundEntryForRmsFailedOrders(orderModel);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Error while processing refund for order: " + orderModel.getCode());
+						LOG.error(e.getMessage(), e);
+					}
+
+					final String splitInfoMode = orderModel.getSplitModeInfo();
+					LOG.debug("Payment SplitMode for order  " + orderModel.getCode() + " " + splitInfoMode);
+					if (null != splitInfoMode
+							&& splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
+					{
+						try
+						{
+							mplQcPaymentFailService.processQcRefund(orderModel);
+						}
+						catch (final Exception e)
+						{
+							LOG.error("Error while processing QC refund for order: " + orderModel.getCode());
+							LOG.error(e.getMessage(), e);
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			LOG.error("ForwardPaymentCleanUp has been disabled for RMS failed Orders");
+		}
+
+		if (refundTypeList.contains(ORDER_NOT_GENERATED))
+		{
+			final List<MplPaymentAuditModel> auditList = forwardPaymentCleanUpService.fetchAuditsWithoutOrder(startTime, endTime);
+			if (CollectionUtils.isNotEmpty(auditList))
+			{
+				for (final MplPaymentAuditModel auditModel : auditList)
+				{
+					try
+					{
+						forwardPaymentCleanUpService.createRefundEntryForAuditsWithoutOrder(auditModel);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Error while processing refund for audit: " + auditModel.getAuditId());
+						LOG.error(e.getMessage(), e);
+					}
 				}
 			}
 		}

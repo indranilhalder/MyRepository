@@ -151,6 +151,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				}
 
 				//recalculating cart
+				getModelService().refresh(cartModel);
 				final Double deliveryCost = cartModel.getDeliveryCost();
 				//final Double modDeliveryCost = Double.valueOf(0);
 
@@ -185,6 +186,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				LOG.debug("Step 9:::Recalculation done successfully");
 
 				getModelService().save(cartModel);
+				getModelService().refresh(cartModel);
 			}
 			else if (null != orderModel)
 			{
@@ -216,7 +218,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				//					modDeliveryCost = Double.valueOf(deliveryCost.doubleValue() - getModifiedDeliveryCost(orderModel.getEntries()));
 				//				}
 				//TPR-1702 : Changes Ends
-
+				getModelService().refresh(orderModel);
 				orderModel.setDeliveryCost(deliveryCost);
 				//TPR-1702 : Changes for Shipping + Coupon
 				//				orderModel.setTotalPrice(
@@ -233,6 +235,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				LOG.debug("Step 9:::Recalculation done successfully");
 
 				getModelService().save(orderModel);
+				getModelService().refresh(orderModel);
 			}
 
 		}

@@ -10,15 +10,11 @@ import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.voucher.jalo.ProductCategoryRestriction;
-import de.hybris.platform.voucher.jalo.ProductRestriction;
 import de.hybris.platform.voucher.jalo.Restriction;
 import de.hybris.platform.voucher.jalo.util.VoucherEntry;
 import de.hybris.platform.voucher.jalo.util.VoucherEntrySet;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.Iterator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -26,7 +22,6 @@ import org.apache.log4j.Logger;
 
 public class MplOrderRestriction extends GeneratedMplOrderRestriction
 {
-	private static final String SELECTED_USSID = "selectedUSSID";
 	private static final String NETAMOUNTAFTERALLDISC = "netAmountAfterAllDisc";
 	private static final String TOTALPRICE = "totalPrice";
 	@SuppressWarnings("unused")
@@ -53,463 +48,70 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 		final Currency currentOrderCurrency = anOrder.getCurrency();
 
 		final double minimumTotal = minimumOrderValueCurrency.convert(currentOrderCurrency, getTotalAsPrimitive());
-
-		final Set<Restriction> restrictions = getVoucher().getRestrictions();
-		SellerRestriction sellerRestriction = null;
-		ProductRestriction productRestriction = null;
-		ProductCategoryRestriction productCategoryRestriction = null;
-
-		for (final Restriction restriction : restrictions)
+		boolean checkFlag = false;
+		final VoucherEntrySet entries = new VoucherEntrySet(anOrder.getAllEntries());
+		final Iterator iterator = getVoucher().getRestrictions().iterator();
+		while (!entries.isEmpty() && iterator.hasNext())
 		{
-			if (restriction instanceof SellerRestriction)
+			final Restriction nextRestriction = (Restriction) iterator.next();
+			if (nextRestriction instanceof ProductCategoryRestriction)
 			{
-				sellerRestriction = (SellerRestriction) restriction;
+				entries.retainAll(((ProductCategoryRestriction) nextRestriction).getApplicableEntries(anOrder));
+				LOG.debug("Product Category Restriction present" + nextRestriction);
 			}
-			if (restriction instanceof ProductRestriction)
+			else if (nextRestriction instanceof MplOrderRestriction)
 			{
-				productRestriction = (ProductRestriction) restriction;
+				LOG.debug("MplOrderRestriction skipped" + nextRestriction);
+				continue;
 			}
-			if (restriction instanceof ProductCategoryRestriction)
+			else
 			{
-				productCategoryRestriction = (ProductCategoryRestriction) restriction;
+				LOG.debug("Restriction present" + nextRestriction);
+				entries.retainAll(nextRestriction.getApplicableEntries(anOrder));
 			}
 		}
-
-		if (null == sellerRestriction && null == productRestriction && null == productCategoryRestriction) // OTB scenario
-		{
-			try
-			{
-				double currentTotal = 0;
-				final List<AbstractOrderEntry> entryList = anOrder.getAllEntries();
-
-				if (CollectionUtils.isNotEmpty(entryList))
-				{
-					for (final AbstractOrderEntry entry : entryList)
-					{
-						final Double netAmountAfterAllDiscount = (Double) entry.getAttribute(NETAMOUNTAFTERALLDISC);
-						final Double productVal = (Double) entry.getAttribute(TOTALPRICE);
-
-						currentTotal += (netAmountAfterAllDiscount.doubleValue() > 0) ? (netAmountAfterAllDiscount.doubleValue())
-								: (productVal.doubleValue());
-					}
-				}
-				boolean cliqCashValidation = true;
-				String splitModeInfo = null;
-				if (null != anOrder.getAttribute("splitModeInfo"))
-				{
-					splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
-				}
-
-				if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
-				{
-					cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
-					if (isPositiveAsPrimitive() && cliqCashValidation)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-				
-				// Coupon Evaluation
-				if (isPositiveAsPrimitive())
-				{
-					return (currentTotal >= minimumTotal);
-				}
-
-			}
-			catch (final Exception exception)
-			{
-				LOG.error("Exception in Coupon evaluation for Cart Thresh OTB scenario" + exception.getMessage());
-			}
-		}
-		else if (null != sellerRestriction && null == productRestriction && null == productCategoryRestriction) // seller
+		LOG.debug("Entries" + entries);
+		if (CollectionUtils.isNotEmpty(entries))
 		{
 			try
 			{
-				/*
-				 * final Boolean positive = sellerRestriction.isPositive(); boolean isValid = false; final
-				 * Collection<SellerMaster> sellerList = sellerRestriction.getSeller(); final List<AbstractOrderEntry>
-				 * entryList = anOrder.getAllEntries(); if (positive.booleanValue()) { isValid = checkSellerIncl(sellerList,
-				 * entryList, minimumTotal); } else { isValid = checkSellerExcl(sellerList, entryList, minimumTotal); }
-				 * return isValid;
-				 */
-				boolean checkFlag = false;
-				double currentTotal = 0;
-				final VoucherEntrySet voucherEntries = sellerRestriction.getApplicableEntries(anOrder);
-				if (CollectionUtils.isNotEmpty(voucherEntries))
-				{
-					for (final Object entry : voucherEntries)
-					{
-						final AbstractOrderEntry abEntry = ((VoucherEntry) entry).getOrderEntry();
-						final Double netAmountAfterAllDiscount = (Double) abEntry.getAttribute(NETAMOUNTAFTERALLDISC);
-						final Double productVal = (Double) abEntry.getAttribute(TOTALPRICE);
-						currentTotal += (netAmountAfterAllDiscount.doubleValue() > 0) ? (netAmountAfterAllDiscount.doubleValue())
-								: (productVal.doubleValue());
-					}
-				}
-				
-				boolean cliqCashValidation = true;
-				String splitModeInfo = null;
-				if (null != anOrder.getAttribute("splitModeInfo"))
-				{
-					splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
-				}
-
-				if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
-				{
-					cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
-					if (isPositiveAsPrimitive() && cliqCashValidation)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-
-				if (currentTotal >= minimumTotal)
-				{
-					checkFlag = true;
-				}
-				return checkFlag;
+				checkFlag = checkEligibility(entries, minimumTotal, anOrder);
 			}
 			catch (final Exception exception)
 			{
-				LOG.error("Exception in Coupon evaluation for Cart Thresh seller" + exception.getMessage());
+				LOG.error("Exception in Coupon evaluation for Cart Thresh" + exception.getMessage());
 			}
 		}
-		else if (null == sellerRestriction && null != productRestriction && null == productCategoryRestriction) // product
-		{
-			try
-			{
-				boolean checkFlag = false;
-				double currentTotal = 0;
-				final VoucherEntrySet voucherEntries = productRestriction.getApplicableEntries(anOrder);
-				if (CollectionUtils.isNotEmpty(voucherEntries))
-				{
-					for (final Object entry : voucherEntries)
-					{
-						final AbstractOrderEntry abEntry = ((VoucherEntry) entry).getOrderEntry();
-						final Double netAmountAfterAllDiscount = (Double) abEntry.getAttribute(NETAMOUNTAFTERALLDISC);
-						final Double productVal = (Double) abEntry.getAttribute(TOTALPRICE);
-						currentTotal += (netAmountAfterAllDiscount.doubleValue() > 0) ? (netAmountAfterAllDiscount.doubleValue())
-								: (productVal.doubleValue());
-					}
-				}
-				
-				boolean cliqCashValidation = true;
-				String splitModeInfo = null;
-				if (null != anOrder.getAttribute("splitModeInfo"))
-				{
-					splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
-				}
-
-				if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
-				{
-					cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
-					if (isPositiveAsPrimitive() && cliqCashValidation)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-
-				if (currentTotal >= minimumTotal)
-				{
-					checkFlag = true;
-				}
-				return checkFlag;
-			}
-			catch (final Exception exception)
-			{
-				LOG.error("Exception in Coupon evaluation for Cart Thresh product" + exception.getMessage());
-			}
-		}
-		else if (null == sellerRestriction && null == productRestriction && null != productCategoryRestriction) // productCategory
-		{
-			try
-			{
-				boolean checkFlag = false;
-				double currentTotal = 0;
-				final VoucherEntrySet voucherEntries = productCategoryRestriction.getApplicableEntries(anOrder);
-				if (CollectionUtils.isNotEmpty(voucherEntries))
-				{
-					for (final Object entry : voucherEntries)
-					{
-						final AbstractOrderEntry abEntry = ((VoucherEntry) entry).getOrderEntry();
-						final Double netAmountAfterAllDiscount = (Double) abEntry.getAttribute(NETAMOUNTAFTERALLDISC);
-						final Double productVal = (Double) abEntry.getAttribute(TOTALPRICE);
-						currentTotal += (netAmountAfterAllDiscount.doubleValue() > 0) ? (netAmountAfterAllDiscount.doubleValue())
-								: (productVal.doubleValue());
-					}
-				}
-				boolean cliqCashValidation = true;
-				String splitModeInfo = null;
-				if (null != anOrder.getAttribute("splitModeInfo"))
-				{
-					splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
-				}
-
-				if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
-				{
-					cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
-					if (isPositiveAsPrimitive() && cliqCashValidation)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-				if (currentTotal >= minimumTotal)
-				{
-					checkFlag = true;
-				}
-				return checkFlag;
-			}
-			catch (final Exception exception)
-			{
-				LOG.error("Exception in Coupon evaluation for Cart Thresh productCategory" + exception.getMessage());
-			}
-		}
-		else if (null != sellerRestriction && null != productRestriction && null == productCategoryRestriction) // seller + product
-		{
-			try
-			{
-				boolean isValid = false;
-				final Boolean positive = sellerRestriction.isPositive();
-				final List<AbstractOrderEntry> entryList = new ArrayList<AbstractOrderEntry>();
-				final VoucherEntrySet voucherEntries = productRestriction.getApplicableEntries(anOrder);
-				if (CollectionUtils.isNotEmpty(voucherEntries))
-				{
-					for (final Object entry : voucherEntries)
-					{
-						final AbstractOrderEntry abEntry = ((VoucherEntry) entry).getOrderEntry();
-						entryList.add(abEntry);
-					}
-				}
-
-				if (CollectionUtils.isNotEmpty(entryList))
-				{
-					final Collection<SellerMaster> sellerList = sellerRestriction.getSeller();
-					if (positive.booleanValue())
-					{
-						isValid = checkSellerIncl(sellerList, entryList, minimumTotal, anOrder);
-					}
-					else
-					{
-						isValid = checkSellerExcl(sellerList, entryList, minimumTotal, anOrder);
-					}
-				}
-				return isValid;
-			}
-			catch (final Exception exception)
-			{
-				LOG.error("Exception in Coupon evaluation for Cart Thresh seller + product" + exception.getMessage());
-			}
-		}
-		else if (null != sellerRestriction && null == productRestriction && null != productCategoryRestriction) // seller + productCategory
-		{
-			try
-			{
-				boolean isValid = false;
-				final Boolean positive = sellerRestriction.isPositive();
-				final List<AbstractOrderEntry> entryList = new ArrayList<AbstractOrderEntry>();
-				final VoucherEntrySet voucherEntries = productCategoryRestriction.getApplicableEntries(anOrder);
-				if (CollectionUtils.isNotEmpty(voucherEntries))
-				{
-					for (final Object entry : voucherEntries)
-					{
-						final AbstractOrderEntry abEntry = ((VoucherEntry) entry).getOrderEntry();
-						entryList.add(abEntry);
-					}
-				}
-
-				if (CollectionUtils.isNotEmpty(entryList))
-				{
-					final Collection<SellerMaster> sellerList = sellerRestriction.getSeller();
-					if (positive.booleanValue())
-					{
-						isValid = checkSellerIncl(sellerList, entryList, minimumTotal,anOrder);
-					}
-					else
-					{
-						isValid = checkSellerExcl(sellerList, entryList, minimumTotal, anOrder);
-					}
-				}
-				return isValid;
-			}
-			catch (final Exception exception)
-			{
-				LOG.error("Exception in Coupon evaluation for Cart Thresh seller + productCategory" + exception.getMessage());
-			}
-		}
-		else if (null == sellerRestriction && null != productRestriction && null != productCategoryRestriction) // product + productCategory
-		{
-			try
-			{
-				boolean checkFlag = false;
-				double currentTotal = 0;
-				final VoucherEntrySet voucherProductCategoryEntries = productCategoryRestriction.getApplicableEntries(anOrder);
-				if (CollectionUtils.isNotEmpty(voucherProductCategoryEntries))
-				{
-					for (final Object entry : voucherProductCategoryEntries)
-					{
-						final AbstractOrderEntry abEntry = ((VoucherEntry) entry).getOrderEntry();
-						final Double netAmountAfterAllDiscount = (Double) abEntry.getAttribute(NETAMOUNTAFTERALLDISC);
-						final Double productVal = (Double) abEntry.getAttribute(TOTALPRICE);
-						currentTotal += (netAmountAfterAllDiscount.doubleValue() > 0) ? (netAmountAfterAllDiscount.doubleValue())
-								: (productVal.doubleValue());
-					}
-				}
-
-				final VoucherEntrySet voucherProductEntries = productRestriction.getApplicableEntries(anOrder);
-				if (CollectionUtils.isNotEmpty(voucherProductEntries))
-				{
-					for (final Object entry : voucherProductEntries)
-					{
-						final AbstractOrderEntry abEntry = ((VoucherEntry) entry).getOrderEntry();
-						final Double netAmountAfterAllDiscount = (Double) abEntry.getAttribute(NETAMOUNTAFTERALLDISC);
-						final Double productVal = (Double) abEntry.getAttribute(TOTALPRICE);
-						currentTotal += (netAmountAfterAllDiscount.doubleValue() > 0) ? (netAmountAfterAllDiscount.doubleValue())
-								: (productVal.doubleValue());
-					}
-				}
-				
-				boolean cliqCashValidation = true;
-				String splitModeInfo = null;
-				if (null != anOrder.getAttribute("splitModeInfo"))
-				{
-					splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
-				}
-
-				if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
-				{
-					cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
-					if (isPositiveAsPrimitive() && cliqCashValidation)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-
-				if (currentTotal >= minimumTotal)
-				{
-					checkFlag = true;
-				}
-				return checkFlag;
-			}
-			catch (final Exception exception)
-			{
-				LOG.error("Exception in Coupon evaluation for Cart Thresh product + productCategory" + exception.getMessage());
-			}
-		}
-		else if (null != sellerRestriction && null != productRestriction && null != productCategoryRestriction) // seller + product + productCategory
-		{
-			try
-			{
-				boolean isValid = false;
-				final Boolean positive = sellerRestriction.isPositive();
-				final List<AbstractOrderEntry> finalEntryList = new ArrayList<AbstractOrderEntry>();
-				final VoucherEntrySet voucherProductCategoryEntries = productCategoryRestriction.getApplicableEntries(anOrder);
-				if (CollectionUtils.isNotEmpty(voucherProductCategoryEntries))
-				{
-					for (final Object entry : voucherProductCategoryEntries)
-					{
-						final AbstractOrderEntry abProductCategoryEntry = ((VoucherEntry) entry).getOrderEntry();
-						finalEntryList.add(abProductCategoryEntry);
-					}
-				}
-
-				final VoucherEntrySet voucherProductEntries = productRestriction.getApplicableEntries(anOrder);
-				if (CollectionUtils.isNotEmpty(voucherProductEntries))
-				{
-					for (final Object entry : voucherProductEntries)
-					{
-						final AbstractOrderEntry abProductEntry = ((VoucherEntry) entry).getOrderEntry();
-						finalEntryList.add(abProductEntry);
-					}
-				}
-
-				if (CollectionUtils.isNotEmpty(finalEntryList))
-				{
-					final Collection<SellerMaster> sellerList = sellerRestriction.getSeller();
-					if (positive.booleanValue())
-					{
-						isValid = checkSellerIncl(sellerList, finalEntryList, minimumTotal, anOrder);
-					}
-					else
-					{
-						isValid = checkSellerExcl(sellerList, finalEntryList, minimumTotal,anOrder);
-					}
-				}
-				return isValid;
-
-			}
-			catch (final Exception exception)
-			{
-				LOG.error("Exception in Coupon evaluation for Cart Thresh seller + product + productCategory"
-						+ exception.getMessage());
-			}
-		}
-
-		return false;
+		return checkFlag;
 	}
 
-
-
-	protected boolean checkSellerIncl(final Collection<SellerMaster> sellerList, final List<AbstractOrderEntry> entryList,
-			final double minimumTotal, AbstractOrder anOrder) throws JaloInvalidParameterException, JaloSecurityException
+	protected boolean checkEligibility(final VoucherEntrySet voucherEntries, final double minimumTotal, final AbstractOrder anOrder)
+			throws JaloInvalidParameterException, JaloSecurityException
 	{
 		boolean checkFlag = false;
 		double currentTotal = 0;
-		final List<String> sellerIdList = new ArrayList<String>();
-		if (CollectionUtils.isNotEmpty(sellerList))
+		for (final Object entry : voucherEntries)
 		{
-			for (final SellerMaster seller : sellerList)
-			{
-				sellerIdList.add(seller.getId());
-			}
+			final AbstractOrderEntry abEntry = ((VoucherEntry) entry).getOrderEntry();
+			final Double netAmountAfterAllDiscount = (Double) abEntry.getAttribute(NETAMOUNTAFTERALLDISC);
+			final Double productVal = (Double) abEntry.getAttribute(TOTALPRICE);
+			currentTotal += (netAmountAfterAllDiscount.doubleValue() > 0) ? (netAmountAfterAllDiscount.doubleValue()) : (productVal
+					.doubleValue());
 		}
-
-		if (CollectionUtils.isNotEmpty(entryList) && CollectionUtils.isNotEmpty(sellerIdList))
-		{
-			for (final AbstractOrderEntry entry : entryList)
-			{
-				final Object ussid = entry.getProperty(SELECTED_USSID);
-				final String sellerId = ussid.toString().substring(0, 6);
-				if (sellerIdList.contains(sellerId))
-				{
-					final Double netAmountAfterAllDiscount = (Double) entry.getAttribute(NETAMOUNTAFTERALLDISC);
-					final Double productVal = (Double) entry.getAttribute(TOTALPRICE);
-
-					currentTotal += (netAmountAfterAllDiscount.doubleValue() > 0) ? (netAmountAfterAllDiscount.doubleValue())
-							: (productVal.doubleValue());
-				}
-			}
-		}
-		
 		boolean cliqCashValidation = true;
-		String splitModeInfo = null;
-		if (null != anOrder.getAttribute("splitModeInfo"))
-		{
-			splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
-		}
 
-		if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
+		//		String splitModeInfo = null;
+		//		if (null != anOrder.getAttribute("splitModeInfo"))
+		//		{
+		//			splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
+		//		}
+
+		final String splitModeInfo = anOrder.getAttribute("splitModeInfo") != null ? (String) anOrder.getAttribute("splitModeInfo")
+				: null;
+
+		if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher */)
 		{
-			cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
+			cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder, currentTotal);
 			if (isPositiveAsPrimitive() && cliqCashValidation)
 			{
 				return true;
@@ -524,77 +126,16 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 		{
 			checkFlag = true;
 		}
-
 		return checkFlag;
 	}
 
-	protected boolean checkSellerExcl(final Collection<SellerMaster> sellerList, final List<AbstractOrderEntry> entryList,
-			final double minimumTotal, AbstractOrder anOrder) throws JaloInvalidParameterException, JaloSecurityException
-	{
-		boolean checkFlag = false;
-		double currentTotal = 0;
-		final List<String> sellerIdList = new ArrayList<String>();
-		if (CollectionUtils.isNotEmpty(sellerList))
-		{
-			for (final SellerMaster seller : sellerList)
-			{
-				sellerIdList.add(seller.getId());
-			}
-		}
-
-		if (CollectionUtils.isNotEmpty(entryList) && CollectionUtils.isNotEmpty(sellerIdList))
-		{
-			for (final AbstractOrderEntry entry : entryList)
-			{
-				final Object ussid = entry.getProperty(SELECTED_USSID);
-				final String sellerId = ussid.toString().substring(0, 6);
-				if (!(sellerIdList.contains(sellerId)))
-				{
-					final Double netAmountAfterAllDiscount = (Double) entry.getAttribute(NETAMOUNTAFTERALLDISC);
-					final Double productVal = (Double) entry.getAttribute(TOTALPRICE);
-
-					currentTotal += (netAmountAfterAllDiscount.doubleValue() > 0) ? (netAmountAfterAllDiscount.doubleValue())
-							: (productVal.doubleValue());
-				}
-
-			}
-		}
-		
-		boolean cliqCashValidation = true;
-		String splitModeInfo = null;
-		if (null != anOrder.getAttribute("splitModeInfo"))
-		{
-			splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
-		}
-
-		if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
-		{
-			cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
-			if (isPositiveAsPrimitive() && cliqCashValidation)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		if (currentTotal >= minimumTotal)
-		{
-			checkFlag = true;
-		}
-
-		return checkFlag;
-	}
-	
-	private boolean checkCliqCashValue(final double minimumTotal, final AbstractOrder anOrder, double currentTotal)
+	private boolean checkCliqCashValue(final double minimumTotal, final AbstractOrder anOrder, final double currentTotal)
 			throws JaloInvalidParameterException, JaloSecurityException
 	{
 		LOG.debug("Inside Order Retriction checkCliqCashValue");
 		double totalPayableAmount = currentTotal;
 		final Double walletAmount = (Double) anOrder.getAttribute("totalWalletAmount");
-		totalPayableAmount -= null !=walletAmount? walletAmount.doubleValue() :0.0d;
+		totalPayableAmount -= null != walletAmount ? walletAmount.doubleValue() : 0.0d;
 
 		if (totalPayableAmount >= minimumTotal)
 		{
@@ -602,5 +143,4 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 		}
 		return false;
 	}
-
 }

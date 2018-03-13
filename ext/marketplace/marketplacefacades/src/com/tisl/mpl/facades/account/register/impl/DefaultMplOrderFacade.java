@@ -74,6 +74,7 @@ import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
+import com.tisl.mpl.marketplacecommerceservices.event.OrderEGVRecipientEmailEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
@@ -322,6 +323,37 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 			final SearchPageData<OrderModel> orderResults = mplOrderService.getPagedFilteredParentOrderHistory(currentCustomer,
 					currentBaseStore, pageableData, fromDate);
+			return convertPageData(orderResults, orderHistoryConverter);
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+	@Override
+	public SearchPageData<OrderHistoryData> getPagedFilteredParentOrderHistoryWebForm(final PageableData pageableData)
+	{
+		try
+		{
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			final BaseStoreModel currentBaseStore = baseStoreService.getCurrentBaseStore();
+
+			final String orderHistoryDuration = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.ORDER_HISTORY_DURATION_DAYS,
+					MarketplacecommerceservicesConstants.ORDER_HISTORY_DEFAULT_DURATION_DAYS);
+
+
+			LOG.debug(">> Web Form Order History duration : " + orderHistoryDuration);
+
+			final Date fromDate = subtractDays(new Date(), Integer.parseInt(orderHistoryDuration));
+
+			LOG.debug(">> Web Form Order History duration From Date : " + fromDate);
+
+
+			final SearchPageData<OrderModel> orderResults = mplOrderService.getPagedFilteredParentOrderHistoryWebForm(
+					currentCustomer, currentBaseStore, pageableData, fromDate);
 			return convertPageData(orderResults, orderHistoryConverter);
 		}
 		catch (final Exception ex)

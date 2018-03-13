@@ -347,6 +347,8 @@ display:none;
 <input type="hidden" value="false"  id="isBinded"/>
 <input type="hidden" value="true"  id="isQuickView"/>
 <input type="hidden" value="${product.rootCategory}" id="categoryType"/>
+<%--SDI-5609--%>
+<input type="hidden" value="${product.rootCategory}" id="categoryTypeQV"/>
 <input type="hidden" name="showSizeQuickView" id="showSizeQuickView" value="${showSizeGuideForFA}"/>
 
 <!-- CKD:TPR-250:Start -->

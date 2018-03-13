@@ -10234,6 +10234,7 @@ body.page-viewSellers .zoomContainer {
 	}
 	.product-info>div.tabs-block {
 	margin: 45px 25px 0 !important;
+	/*width:90%;*/	
 }
 div.pdp {
  		margin-top: 20px;
@@ -12969,6 +12970,10 @@ p.sizetext.size {
 	@media (max-width: 767px){
 .product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview {
     clear: both;
+    width:100%;/*added for SDI-6202*/
+}
+.homefurnishing-overview-title{
+     padding-left:9px;/*added for SDI-6202*/
 }
 }
 .quickview .product-detail .sizetext a.size-guide:after {
@@ -13165,3 +13170,16 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td {
     margin-top: 12px;
 }
 /* end change of TISPRDT-8311 */
+.homefurnishing-overview{     /*added for SDI-6202*/
+	float:left;
+	width:25%;
+	margin-right:20px;
+}
+.homefurnishing-overview-title{/*added for SDI-6202*/
+    text-transform:uppercase;
+    front-size:14px;
+    margin-bottom:5px;
+    font-weight: 600;
+    list-style-type:none;
+     margin-left:-1em;
+}
