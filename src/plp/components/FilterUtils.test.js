@@ -1,4 +1,4 @@
-import createUrlFromQueryAndCategory from "./FilterUtils.js";
+import { createUrlFromQueryAndCategory } from "./FilterUtils.js";
 import { ARRAY_OF_SORTS } from "./Sort.js";
 
 const DUMMY_CATEGORY_VALUE = "msh121000";
@@ -276,6 +276,19 @@ test("/search/?q=:text:brand:<SOME BRAND>", () => {
   );
   expect(endUrl).toEqual(
     `/search/?q=:shirt:relevance:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}:brand:${DUMMY_BRAND_VALUE}`
+  );
+});
+
+test("/search/?q=:text:category:<SOME_CATEGORY", () => {
+  let searchValue = `:shirt:category:${DUMMY_CATEGORY_VALUE}`;
+  let pathName = `/search/?q=${searchValue}`;
+  let endUrl = createUrlFromQueryAndCategory(
+    searchValue,
+    pathName,
+    ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()
+  );
+  expect(endUrl).toEqual(
+    `/search/?q=:shirt:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}`
   );
 });
 

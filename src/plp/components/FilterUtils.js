@@ -5,8 +5,8 @@ import {
 } from "./PlpBrandCategoryWrapper.js";
 import { ARRAY_OF_SORTS } from "./Sort.js";
 
-const CATEGORY_URL_REGEX = /(:category:)(.*)/;
-const BRAND_URL_REGEX = /:brand:(.*)/;
+export const CATEGORY_URL_REGEX = /(:category:)(.*)/;
+export const BRAND_URL_REGEX = /:brand:(.*)/;
 const SEARCH_TEXT_BEFORE_CATEGORY = /(.*):category:/;
 
 export function getSortFromQuery(str) {
@@ -28,7 +28,39 @@ export function insertSubStringAt(str, toInsert, index) {
   return stringWithSubStringInserted;
 }
 
-export default function createUrlFromQueryAndCategory(query, pathName, val) {
+export function createSortString(query) {
+  const sort = getSortFromQuery(query);
+  let newUrl;
+  if (!sort) {
+    // find the earliest index of brand or category > 0;
+    const brandIndex = query.indexOf(":brand:");
+    const categoryIndex = query.indexOf(":category:");
+    if (brandIndex === -1 && categoryIndex === -1) {
+      // there is no brand or category
+      newUrl = `${query}:relevance`;
+    } else {
+      if (brandIndex === -1 && categoryIndex > -1) {
+        newUrl = insertSubStringAt(query, ":relevance", categoryIndex);
+      }
+      if (brandIndex > -1 && categoryIndex === -1) {
+        newUrl = insertSubStringAt(query, ":relevance", brandIndex);
+      }
+      if (brandIndex > -1 && categoryIndex > -1) {
+        // put in the earliest.
+        if (brandIndex < categoryIndex) {
+          newUrl = insertSubStringAt(query, ":relevance", brandIndex);
+        }
+
+        if (brandIndex > categoryIndex) {
+          newUrl = insertSubStringAt(query, ":relevance", categoryIndex);
+        }
+      }
+    }
+  }
+  return newUrl;
+}
+
+export function createUrlFromQueryAndCategory(query, pathName, val) {
   let url;
   if (query) {
     if (query.indexOf(":") === -1) {

@@ -39,7 +39,7 @@ export default class FilterMobile extends React.Component {
     });
   };
 
-  onCategorySelect = val => {
+  onCategorySelect = (val, isFilter) => {
     const parsedQueryString = queryString.parse(this.props.location.search);
     let query = parsedQueryString.q;
     const pathName = this.props.location.pathname;
@@ -47,31 +47,7 @@ export default class FilterMobile extends React.Component {
 
     console.log(url);
 
-    // if (CATEGORY_CAPTURE_REGEX.test(query)) {
-    //   const match = CATEGORY_CAPTURE_REGEX.exec(query);
-    //   console.log("MATCH");
-    //   console.log(match);
-    //   if (match[1].toLocaleLowerCase() === val.toLocaleLowerCase()) {
-    //     query = query.replace(`:category:${match[1]}`, "");
-    //   } else {
-    //     query = query.replace(
-    //       CATEGORY_CAPTURE_REGEX,
-    //       `:category:${val.toLowerCase()}`
-    //     );
-    //   }
-    // } else {
-    //   // there is no category, so safe to append
-    //   // what if there is a brand
-    //   query = query.replace(/:\s*$/, "");
-    //   query = `${query}:category:${val.toLowerCase()}`;
-    // }
-    // const newUrl = `${
-    //   this.props.location.pathname
-    // }${this.props.location.search.replace(QUERY_REGEX, `$1${query}$3`)}`;
-
-    // this.props.history.push(newUrl, {
-    //   disableSerpSearch
-    // });
+    this.props.history.push(url, { isFilter });
   };
 
   onL1Click = val => {
