@@ -6,6 +6,9 @@ import FilterCategoryL1 from "./FilterCategoryL1";
 import styles from "./FilterMobile.css";
 import queryString from "query-string";
 import { createUrlFromQueryAndCategory } from "./FilterUtils.js";
+import InformationHeader from "../../general/components/InformationHeader.js";
+
+const FILTER_HEADER = "Refine by";
 
 export default class FilterMobile extends React.Component {
   constructor(props) {
@@ -26,7 +29,7 @@ export default class FilterMobile extends React.Component {
   }
 
   onClear = () => {
-    this.props.history.push(this.state.url, { isFilter: true });
+    this.props.history.push(this.state.url, { isFilter: false });
   };
 
   onApply = () => {
@@ -58,6 +61,12 @@ export default class FilterMobile extends React.Component {
     this.onCategorySelect(val, false);
   };
 
+  handleBackClick = () => {
+    if (this.props.backPage) {
+      this.props.backPage();
+    }
+  };
+
   onFilterClick = val => {
     console.log("ON FILTER CLICK");
     this.props.history.push(val, { isFilter: true });
@@ -67,6 +76,12 @@ export default class FilterMobile extends React.Component {
 
     return (
       <div className={styles.base}>
+        <div className={styles.pageHeader}>
+          <InformationHeader
+            text={FILTER_HEADER}
+            onClick={this.handleBackClick}
+          />
+        </div>
         <div className={styles.tabHolder}>
           <div className={styles.slider}>
             <FilterTab

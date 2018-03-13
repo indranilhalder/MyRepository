@@ -7,14 +7,14 @@ const productListings = (
     error: null,
     loading: false,
     productListings: null,
-    pageNumber: 0
+    pageNumber: 0,
+    paginatedLoading: false
   },
   action
 ) => {
   let existingProductListings;
   switch (action.type) {
     case plpActions.UPDATE_FACETS:
-      console.log("IS UPDATE FACETS CALLED");
       const productListings = cloneDeep(state.productListings);
       productListings.facetdata = action.productListings.facetdata;
       productListings.facetdatacategory =
@@ -26,20 +26,20 @@ const productListings = (
     case plpActions.PRODUCT_LISTINGS_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        loading: true
+        paginatedLoading: true
       });
     case plpActions.PRODUCT_LISTINGS_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
         productListings: action.productListings,
-        loading: false
+        paginatedLoading: false
       });
 
     case plpActions.PRODUCT_LISTINGS_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
-        loading: false
+        paginatedLoading: false
       });
     case plpActions.SET_PAGE:
       return Object.assign({}, state, {

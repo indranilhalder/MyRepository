@@ -83,7 +83,6 @@ export function getProductListings(
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       if (paginated) {
         if (resultJson.searchresult) {
           dispatch(getProductListingsPaginatedSuccess(resultJson));

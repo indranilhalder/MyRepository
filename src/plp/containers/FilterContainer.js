@@ -2,10 +2,13 @@ import { connect } from "react-redux";
 import { getProductListings } from "../actions/plp.actions.js";
 import FilterMobile from "../components/FilterMobile.js";
 import { withRouter } from "react-router-dom";
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onApply: filters => {
       dispatch(getProductListings());
+    },
+    backPage: () => {
+      ownProps.backPage();
     }
   };
 };

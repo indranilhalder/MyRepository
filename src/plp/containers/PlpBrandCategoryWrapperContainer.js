@@ -12,6 +12,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(getProductListings(suffix, false, isFilter));
     },
     paginate: (page, suffix) => {
+      console.log("PAGINATE");
+      console.log(page);
       dispatch(setPage(page));
       dispatch(getProductListings(suffix, true, false));
     }

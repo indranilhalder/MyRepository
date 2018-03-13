@@ -12,6 +12,10 @@ const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const IS_FILTER_SUFFIX = `&isFilter=true`;
 const SEARCH_CATEGORY_TO_IGNORE = "all";
 
+// here is where we decide whether to display a BLP, CLP or ProductListingsPage
+
+// in ProductListings is where we will get ProductListings and such.
+
 export default class PlpBrandCategoryWrapper extends React.Component {
   getSearchTextFromUrl() {
     const parsedQueryString = queryString.parse(this.props.location.search);
@@ -52,25 +56,31 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("COMPONENT DID UPDATE");
     if (
       this.props.location.state &&
       this.props.location.state.disableSerpSearch === true
     ) {
       return;
     }
-    if (this.props.location.state && this.props.location.state.isFilter) {
-      console.log("IS THE RIGHT THING BEING HIT");
-      const suffix = "&isFilter=true";
-      const searchText = this.getSearchTextFromUrl();
-      this.props.getProductListings(searchText, suffix, 0, true);
-    } else {
-      const searchText = this.getSearchTextFromUrl();
-      this.props.getProductListings(searchText, SUFFIX, 0);
+    if (this.props.page === 0) {
+      if (this.props.location.state && this.props.location.state.isFilter) {
+        console.log("IS THE RIGHT THING BEING HIT");
+        const suffix = "&isFilter=true";
+        const searchText = this.getSearchTextFromUrl();
+        this.props.getProductListings(searchText, suffix, 0, true);
+      } else {
+        const searchText = this.getSearchTextFromUrl();
+        this.props.getProductListings(searchText, SUFFIX, 0);
+      }
     }
   }
 
   handleScroll = () => {
+    console.log("HANDLE SCROLL");
+    console.log(this.props.modalDisplayed);
+    if (this.props.modalDisplayed) {
+      return;
+    }
     const windowHeight =
       "innerHeight" in window
         ? window.innerHeight

@@ -14,6 +14,7 @@ class ProductListingsPage extends Component {
     console.log(this.props.loading);
     console.log(this.props.pageNumber);
     console.log(this.props.isFilter);
+    console.log(this.props.productListings);
     if (
       this.props.loading &&
       this.props.pageNumber === 0 &&
@@ -21,7 +22,6 @@ class ProductListingsPage extends Component {
     ) {
       return this.renderLoader();
     } else if (this.props.productListings !== null) {
-      console.log("PRODUCT LISTINGS PATH");
       return (
         <Plp
           history={this.props.history}
