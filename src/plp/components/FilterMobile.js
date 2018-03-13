@@ -18,7 +18,6 @@ export default class FilterMobile extends React.Component {
       url
     };
   }
-
   selectTab(val) {
     this.setState({ showCategory: false, filterSelectedIndex: val });
   }
@@ -135,15 +134,12 @@ export default class FilterMobile extends React.Component {
         </div>
         <div className={styles.footer}>
           <div className={styles.buttonHolder}>
-            <div className={styles.button} onClick={this.onClear}>
+            <div className={styles.button} onClick={() => this.onClear()}>
               Clear
             </div>
           </div>
           <div className={styles.buttonHolder}>
-            <div
-              className={styles.redButton}
-              onClick={() => this.onApply(this.state.selected)}
-            >
+            <div className={styles.redButton} onClick={() => this.onApply()}>
               Apply
             </div>
           </div>
