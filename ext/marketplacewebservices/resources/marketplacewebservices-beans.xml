@@ -4251,8 +4251,6 @@
 	<bean class="com.tisl.mpl.wsdto.MplFinalVisibleCouponsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="couponsList"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.MplVisibleCouponsDTO>" />
-		<property name="closedCouponsList"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.MplVisibleCouponsDTO>" />
 	</bean>
 	
 	<!--For Coupon display on Cart Page Ends-->

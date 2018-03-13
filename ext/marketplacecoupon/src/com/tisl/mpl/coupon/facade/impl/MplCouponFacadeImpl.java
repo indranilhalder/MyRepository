@@ -53,7 +53,9 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.cache.strategy.MplDisplayCouponCachingStrategy;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.coupon.service.MplCouponService;
@@ -113,6 +115,9 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	private Converter<VoucherInvalidationModel, CouponHistoryData> voucherTransactionConverter;
 	@Resource(name = "voucherConverter")
 	private Converter<VoucherModel, VoucherData> voucherConverter;
+
+	@Autowired
+	private MplDisplayCouponCachingStrategy mplDisplayCouponCachingStrategy;
 
 	private final static String COMMACONSTANT = ",";
 	private final static String DOTCONSTANT = ".";
@@ -2185,15 +2190,29 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	{
 		List<MplVisibleCouponsDTO> closedVoucherDataList = null;
 		List<MplVisibleCouponsDTO> openVoucherDataList = null;
+		final List<MplVisibleCouponsDTO> finalVoucherDataList = new ArrayList<>();
 		final MplFinalVisibleCouponsDTO finalDTO = new MplFinalVisibleCouponsDTO();
 
 		try
 		{
-			final List<VoucherModel> closedVoucherList = mplCouponService.getClosedVoucherList(currentCustomer);
-			if (CollectionUtils.isNotEmpty(closedVoucherList))
+			closedVoucherDataList = mplDisplayCouponCachingStrategy.get(cartGuid);
+
+			if (CollectionUtils.isEmpty(closedVoucherDataList))
 			{
-				closedVoucherDataList = populateDataList(closedVoucherList);
+				final List<VoucherModel> closedVoucherList = mplCouponService.getClosedVoucherList(currentCustomer);
+				if (CollectionUtils.isNotEmpty(closedVoucherList))
+				{
+					closedVoucherDataList = populateDataList(closedVoucherList);
+
+					if (StringUtils.isNotEmpty(cartGuid))
+					{
+						mplDisplayCouponCachingStrategy.put(cartGuid, closedVoucherDataList);
+					}
+
+				}
 			}
+
+
 
 		}
 		catch (final Exception exception)
@@ -2203,11 +2222,18 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		try
 		{
-			final List<VoucherModel> openVoucherList = mplCouponService.getOpenVoucherList();
-			if (CollectionUtils.isNotEmpty(openVoucherList))
+			openVoucherDataList = mplDisplayCouponCachingStrategy.get("OPENCOUPONS");
+
+			if (CollectionUtils.isEmpty(openVoucherDataList))
 			{
-				openVoucherDataList = populateDataList(openVoucherList);
+				final List<VoucherModel> openVoucherList = mplCouponService.getOpenVoucherList();
+				if (CollectionUtils.isNotEmpty(openVoucherList))
+				{
+					openVoucherDataList = populateDataList(openVoucherList);
+					mplDisplayCouponCachingStrategy.put("OPENCOUPONS", openVoucherDataList);
+				}
 			}
+
 		}
 		catch (final Exception exception)
 		{
@@ -2217,12 +2243,19 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		if (CollectionUtils.isNotEmpty(closedVoucherDataList))
 		{
-			finalDTO.setClosedCouponsList(closedVoucherDataList);
+			finalVoucherDataList.addAll(closedVoucherDataList);
+			//finalDTO.setClosedCouponsList(closedVoucherDataList);
 		}
 
 		if (CollectionUtils.isNotEmpty(openVoucherDataList))
 		{
-			finalDTO.setCouponsList(openVoucherDataList);
+			finalVoucherDataList.addAll(openVoucherDataList);
+			//finalDTO.setCouponsList(openVoucherDataList);
+		}
+
+		if (CollectionUtils.isNotEmpty(finalVoucherDataList))
+		{
+			finalDTO.setCouponsList(finalVoucherDataList);
 		}
 
 		return finalDTO;
@@ -2284,6 +2317,27 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		}
 
 		return voucherDataList;
+	}
+
+
+
+	/**
+	 * @return the mplDisplayCouponCachingStrategy
+	 */
+	public MplDisplayCouponCachingStrategy getMplDisplayCouponCachingStrategy()
+	{
+		return mplDisplayCouponCachingStrategy;
+	}
+
+
+
+	/**
+	 * @param mplDisplayCouponCachingStrategy
+	 *           the mplDisplayCouponCachingStrategy to set
+	 */
+	public void setMplDisplayCouponCachingStrategy(final MplDisplayCouponCachingStrategy mplDisplayCouponCachingStrategy)
+	{
+		this.mplDisplayCouponCachingStrategy = mplDisplayCouponCachingStrategy;
 	}
 
 

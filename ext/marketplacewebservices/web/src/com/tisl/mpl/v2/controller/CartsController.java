@@ -5025,10 +5025,19 @@ public class CartsController extends BaseCommerceController
 		} //TPR-799
 		catch (final Exception e)
 		{
-			ExceptionUtil.getCustomizedExceptionTrace(e);
-			dto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
-			dto.setErrorCode(MarketplacecommerceservicesConstants.E0000);
-			dto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			if (e instanceof AccessDeniedException)
+			{
+				dto.setError("Access is Denied");
+				dto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			else
+			{
+				ExceptionUtil.getCustomizedExceptionTrace(e);
+				dto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+				dto.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+				dto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
 		}
 		return dto;
 	}

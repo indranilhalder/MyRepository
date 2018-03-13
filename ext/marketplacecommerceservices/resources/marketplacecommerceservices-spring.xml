@@ -2548,6 +2548,13 @@
    
    <bean id="MplQcRefundService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.QcRefundServiceImpl">
    </bean>
-
+   
+   <!-- Caching of Coupon Call on Cart Page -->
+   <bean id="mplDisplayCouponCachingStrategy" class="com.tisl.mpl.cache.strategy.impl.MplDisplayCouponCachingStrategyImpl" scope="tenant"> 
+		<property name="memCacheEnabled" value="${promotion.memcache.enabled}"/>
+	</bean>
+ <!-- Caching of Coupon Call on Cart Page Ends-->
+ 
+ 
 </beans>
 
