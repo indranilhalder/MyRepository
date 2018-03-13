@@ -7,6 +7,7 @@ import { ARRAY_OF_SORTS } from "./Sort.js";
 
 export const CATEGORY_URL_REGEX = /(:category:)(.*)/;
 export const BRAND_URL_REGEX = /:brand:(.*)/;
+export const TEXT_REGEX = /text=(.*)/;
 const SEARCH_TEXT_BEFORE_CATEGORY = /(.*):category:/;
 
 export function getSortFromQuery(str) {
@@ -28,41 +29,17 @@ export function insertSubStringAt(str, toInsert, index) {
   return stringWithSubStringInserted;
 }
 
-export function createSortString(query) {
-  const sort = getSortFromQuery(query);
-  let newUrl;
-  if (!sort) {
-    // find the earliest index of brand or category > 0;
-    const brandIndex = query.indexOf(":brand:");
-    const categoryIndex = query.indexOf(":category:");
-    if (brandIndex === -1 && categoryIndex === -1) {
-      // there is no brand or category
-      newUrl = `${query}:relevance`;
-    } else {
-      if (brandIndex === -1 && categoryIndex > -1) {
-        newUrl = insertSubStringAt(query, ":relevance", categoryIndex);
-      }
-      if (brandIndex > -1 && categoryIndex === -1) {
-        newUrl = insertSubStringAt(query, ":relevance", brandIndex);
-      }
-      if (brandIndex > -1 && categoryIndex > -1) {
-        // put in the earliest.
-        if (brandIndex < categoryIndex) {
-          newUrl = insertSubStringAt(query, ":relevance", brandIndex);
-        }
-
-        if (brandIndex > categoryIndex) {
-          newUrl = insertSubStringAt(query, ":relevance", categoryIndex);
-        }
-      }
-    }
-  }
-  return newUrl;
-}
-
 export function createUrlFromQueryAndCategory(query, pathName, val) {
   let url;
   if (query) {
+    // deal with the searchCategory case
+    if (query.indexOf("searchCategory") > -1) {
+      // there is a text option here
+      const textParam = TEXT_REGEX.exec(query);
+      url = `/search/?q=:${textParam[1]}:relevance:category:${val}`;
+      return url;
+    }
+
     if (query.indexOf(":") === -1) {
       // this deals with q=text, with nothing else.
       // in this case I need to add a relevance.

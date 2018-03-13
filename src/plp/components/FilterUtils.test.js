@@ -304,3 +304,17 @@ test("/search/?q=:text:category:<SOME_CATEGORY>:brand:<SOME_BRAND>", () => {
     `/search/?q=:shirt:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}:brand:${DUMMY_BRAND_VALUE.toUpperCase()}`
   );
 });
+
+test("/search/?searchCategory=all&text=shirt", () => {
+  let searchValue = `searchCategory=all&text=shirt`;
+  let pathName = `/search.?q=searchCategory=all&text=shirt`;
+  let endUrl = createUrlFromQueryAndCategory(
+    searchValue,
+    pathName,
+    ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()
+  );
+
+  expect(endUrl).toEqual(
+    `/search/?q=:shirt:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}`
+  );
+});
