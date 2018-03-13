@@ -11,6 +11,7 @@ import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
+import BrandsLandingPageDefault from "./brands/components/BrandsLandingPageDefault";
 import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
 import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 import CartContainer from "./cart/containers/CartContainer";
@@ -21,6 +22,7 @@ import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./brands/containers/BrandLandingPageContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
+
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -48,7 +50,8 @@ import {
   BRAND_LANDING_PAGE,
   PRODUCT_DESCRIPTION_REVIEWS,
   PRODUCT_SELLER_ROUTER,
-  PRODUCT_OTHER_SELLER_ROUTER
+  PRODUCT_OTHER_SELLER_ROUTER,
+  DEFAULT_BRANDS_LANDING_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -216,7 +219,13 @@ class App extends Component {
           />
           <Route exact path={CHECKOUT_ROUTER} component={CheckOutContainer} />
           <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
+          <Route
+            exact
+            path={DEFAULT_BRANDS_LANDING_PAGE}
+            component={BrandsLandingPageDefault}
+          />
         </Switch>
+
         <ModalContainer />
       </div>
     );
