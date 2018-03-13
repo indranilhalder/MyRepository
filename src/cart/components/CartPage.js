@@ -73,7 +73,7 @@ class CartPage extends React.Component {
   goToCouponPage = () => {
     this.props.showCouponModal(this.props.cart.coupons);
   };
-  renderToDeliveryPage() {
+  renderToCheckOutPage() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
     if (customerCookie) {
@@ -86,10 +86,26 @@ class CartPage extends React.Component {
     }
   }
 
-  checkPinCodeAvailability = pinCode => {
-    this.setState({ pinCode });
+  checkPinCodeAvailability = val => {
+    this.setState({ pinCode: val });
     if (this.props.checkPinCodeServiceAvailability) {
-      this.props.checkPinCodeServiceAvailability(pinCode);
+      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+      let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+      let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+      if (userDetails) {
+        this.props.checkPinCodeServiceAvailability(
+          JSON.parse(userDetails).customerInfo.mobileNumber,
+          JSON.parse(customerCookie).access_token,
+          val
+        );
+      } else {
+        this.props.checkPinCodeServiceAvailability(
+          ANONYMOUS_USER,
+          JSON.parse(globalCookie).access_token,
+          val
+        );
+      }
     }
   };
 
@@ -120,7 +136,7 @@ class CartPage extends React.Component {
                       productImage={product.imageURL}
                       productDetails={product.description}
                       productName={product.productName}
-                      price={product.priceValue.sellingPrice.formattedValue}
+                      price={product.price}
                       deliveryInformation={product.elligibleDeliveryMode}
                       deliverTime={
                         product.elligibleDeliveryMode &&
