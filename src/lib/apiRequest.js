@@ -14,7 +14,7 @@ const API_URL_ROOT_SUFFIX = "?isPwa=true";
 
 export const TATA_CLIQ_ROOT = "https://www.tatacliq.com";
 export const API_MSD_URL_ROOT = "https://ap-southeast-1-api.madstreetden.com";
-
+export const API_URL_ABOUT_BRAND = "http://54.147.124.54:8000";
 export async function postAdobeTargetUrl(
   path: null,
   mbox,
@@ -151,5 +151,12 @@ export async function postJusPay(path, postData) {
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify(postData)
+  });
+}
+export async function postAboutBrand(path, payload) {
+  let url = `${API_URL_ABOUT_BRAND}/${path}`;
+  return await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(payload)
   });
 }

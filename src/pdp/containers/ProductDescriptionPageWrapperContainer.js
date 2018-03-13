@@ -6,7 +6,8 @@ import {
   addProductToWishList,
   getMsdRequest,
   getPdpEmi,
-  getEmiTerms
+  getEmiTerms,
+  pdpAboutBrand
 } from "../actions/pdp.actions";
 import { showModal, EMI_MODAL } from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
@@ -28,6 +29,9 @@ const mapDispatchToProps = dispatch => {
     },
     getMsdRequest: productCode => {
       dispatch(getMsdRequest(productCode));
+    },
+    pdpAboutBrand: productCode => {
+      dispatch(pdpAboutBrand(productCode));
     },
     getPdpEmi: (token, cartValue) => {
       dispatch(getPdpEmi(token, cartValue));

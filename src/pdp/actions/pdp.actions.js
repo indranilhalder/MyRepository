@@ -110,9 +110,11 @@ const SORT = "byDate";
 const PAGE_VALUE = "0";
 const PAGE_NUMBER = "1";
 const MSD_REQUEST_PATH = "widgets";
+const MSD_ABOUT_BRAND_REQUEST_PATH = "discover";
 const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
-const WIDGET_LIST = [0, 8];
-const NUMBER_RESULTS = [20];
+const WIDGET_LIST = [0, 4];
+const WIDGET_LIST_FOR_ABOUT_BRAND = ["tata_5"];
+const NUMBER_RESULTS = [10];
 const MAD_UUID = "F4B82964-5E08-4531-87AF-7E03E3CD0307";
 
 export function getProductDescriptionRequest() {
@@ -718,6 +720,8 @@ export function getMsdRequest(productCode) {
     dispatch(productMsdRequest());
 
     try {
+      // making call for fetch all recommended items  form third party api
+      // url may have to change as per api live get live
       const result = await api.postMsd(MSD_REQUEST_PATH, msdRequestObject);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
@@ -725,23 +729,76 @@ export function getMsdRequest(productCode) {
       }
 
       if (resultJson.data[0].length > 0) {
-        dispatch(getPdpItems(resultJson.data[0], ABOUT_THE_BRAND_WIDGET_KEY));
-      }
-      if (resultJson.data[1].length > 0) {
         dispatch(
-          getPdpItems(resultJson.data[1], RECOMMENDED_PRODUCTS_WIDGET_KEY)
+          getPdpItems(resultJson.data[0], RECOMMENDED_PRODUCTS_WIDGET_KEY)
         );
       }
-
-      if (resultJson.data[2].length > 0) {
-        dispatch(getPdpItems(resultJson.data[2], SIMILAR_PRODUCTS_WIDGET_KEY));
+      if (resultJson.data[1].length > 0) {
+        dispatch(getPdpItems(resultJson.data[1], SIMILAR_PRODUCTS_WIDGET_KEY));
       }
     } catch (e) {
       dispatch(productMsdFailure(e.message));
     }
   };
 }
+export function pdpAboutBrandRequest() {
+  return {
+    type: PRODUCT_MSD_REQUEST,
+    status: REQUESTING
+  };
+}
+export function pdpAboutBrandSuccess(msdItems) {
+  return {
+    type: PRODUCT_MSD_SUCCESS,
+    status: SUCCESS,
+    msdItems
+  };
+}
 
+export function pdpAboutBrandFailure(error) {
+  return {
+    type: PRODUCT_MSD_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function pdpAboutBrand(productCode) {
+  return async (dispatch, getState, { api }) => {
+    let msdRequestObject = new FormData();
+    msdRequestObject.append("api_key", API_KEY);
+    msdRequestObject.append(
+      "widget_list",
+      JSON.stringify(WIDGET_LIST_FOR_ABOUT_BRAND)
+    );
+    msdRequestObject.append("num_results", NUMBER_RESULTS);
+    msdRequestObject.append("mad_uuid", MAD_UUID);
+    msdRequestObject.append("details", false);
+    msdRequestObject.append("product_id", productCode);
+
+    dispatch(pdpAboutBrandRequest());
+
+    try {
+      // making call for fetch about brand and their items items
+      // url may have to change as per api live get live
+      const result = await api.postAboutBrand(
+        MSD_ABOUT_BRAND_REQUEST_PATH,
+        msdRequestObject
+      );
+      const resultJson = await result.json();
+      console.log(resultJson);
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+
+      if (resultJson.data.length > 0) {
+        dispatch(getPdpItems(resultJson.data[0], ABOUT_THE_BRAND_WIDGET_KEY));
+      }
+    } catch (e) {
+      dispatch(pdpAboutBrandFailure(e.message));
+    }
+  };
+}
 export function getPdpItemsPdpRequest() {
   return {
     type: GET_PDP_ITEMS_REQUEST,

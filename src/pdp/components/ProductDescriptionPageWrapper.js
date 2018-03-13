@@ -25,6 +25,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     ) {
       this.props.getProductDescription(this.props.match.params[2]);
       this.props.getMsdRequest(this.props.match.params[2]);
+      this.props.pdpAboutBrand(this.props.match.params[2]);
     } else {
       //need to show error page
     }
