@@ -1,0 +1,40 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding-bottom: 45%;
+  position: relative;
+}
+.logoHolder {
+  width: 100%;
+  height: 40px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  text-align: center;
+}
+.logo {
+  height: 100%;
+  display: inline-block;
+}
+.image {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 4px;
+  background-size: cover;
+  background-position: center;
+}
+.image:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 4px;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000000);
+}
