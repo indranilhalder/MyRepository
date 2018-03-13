@@ -2281,6 +2281,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			dto.setDescription(oModel.getDescription());
 			dto.setIsPercentage(((oModel.getAbsolute().booleanValue()) ? (false) : (true)));
 			dto.setValue(oModel.getValue());
+			dto.setDescription(oModel.getDescription());
 
 			if (null != oModel.getMaxDiscountValue())
 			{
