@@ -88,6 +88,14 @@
 		type="list" autocreate="true" generate="true" />
 		<collectiontype elementtype="BrandTabAZBrandElement" code="BrandTabAZBrandCollection"
 		type="list" autocreate="true" generate="true" />
+		<collectiontype elementtype="LandingPageHeaderElement" code="LandingPageHeaderCollection"
+		type="list" autocreate="true" generate="true" />
+		<collectiontype elementtype="AutoProductRecommendationElement" code="AutoProductRecommendationCollection"
+		type="list" autocreate="true" generate="true" />
+		<collectiontype elementtype="LandingPageHierarchyElement" code="LandingPageHierarchyCollection"
+		type="list" autocreate="true" generate="true" />
+		<collectiontype elementtype="LandingPageHierarchyElementList" code="LandingPageHierarchyCollectionList"
+		type="list" autocreate="true" generate="true" />
 		<collectiontype code="ChildOrderCollection"
 			elementtype="Order" autocreate="true" generate="true" type="list" />
 		<!-- Collection of SimpleBannerComponent -->
@@ -16413,6 +16421,12 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
+					<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -16472,7 +16486,7 @@
 			<attributes>
 			<attribute type="BrandsTabAZCollection" qualifier="items">
 				<modifiers read="true" write="true" search="true"
-						 optional="false" />
+						 optional="true" />
 				<persistence type="property" />
 			</attribute>
 			</attributes>
@@ -16484,17 +16498,17 @@
 				<attributes>
 					<attribute type="java.lang.String" qualifier="subType">
 						<modifiers read="true" write="true" search="true"
-						 optional="false" />
+						 optional="true" />
 						<persistence type="property" />
 					</attribute>
 					<attribute type="HeroBannerComponentCollection" qualifier="items">
 						<modifiers read="true" write="true" search="true"
-						 optional="false" />
+						 optional="true" />
 						<persistence type="property" />
 					</attribute>
 					<attribute type="BrandTabAZBrandCollection" qualifier="brands">
 						<modifiers read="true" write="true" search="true"
-						 optional="false" />
+						 optional="true" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
@@ -16507,22 +16521,201 @@
 			<attributes>
 			<attribute type="java.lang.String" qualifier="webURL">
 				<modifiers read="true" write="true" search="true"
-				 optional="false" />
+				 optional="true" />
 				<persistence type="property" />
 			</attribute>
 			<attribute type="java.lang.String" qualifier="brandName">
 				<modifiers read="true" write="true" search="true"
-						 optional="false" />
+						 optional="true" />
 				<persistence type="property" />
 			</attribute>
 			</attributes>
 			</itemtype>
+			
+			<itemtype code="LandingPageTitleComponent" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.LandingPageTitleComponent">
+			<attributes>
+			<attribute type="java.lang.String" qualifier="title">
+				<modifiers read="true" write="true" search="true"
+						 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			</attributes>
+			</itemtype>
+			
+			<itemtype code="LandingPageHeaderComponent" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.LandingPageHeaderComponent">
+			<attributes>
+			<attribute type="LandingPageHeaderCollection" qualifier="items">
+				<modifiers read="true" write="true" search="true"
+						 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			</attributes>
+			</itemtype>
+			
+			<itemtype code="LandingPageHeaderElement" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.LandingPageHeaderElement">
+			<attributes>
+			<attribute type="java.lang.String" qualifier="title">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="java.lang.String" qualifier="webURL">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="media" qualifier="imageURL">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="media" qualifier="brandLogo">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			</attributes>
+			</itemtype>
+			
+			<itemtype code="AutoProductRecommendationComponent" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.AutoProductRecommendationComponent">
+			<attributes>
+			<attribute type="AutoProductRecommendationCollection" qualifier="items">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="java.lang.String" qualifier="btnText">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="java.lang.String" qualifier="title">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="java.lang.String" qualifier="fetchURL">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="java.lang.String" qualifier="backupURL">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="AutoProductRecommendationPostParam" qualifier="postParams">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			</attributes>
+			</itemtype>
+			
+			<itemtype code="AutoProductRecommendationElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.AutoProductRecommendationElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="AutoProductRecommendationPostParam" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.AutoProductRecommendationPostParam">
+			<attributes>
+			<attribute type="java.lang.String" qualifier="widgetPlatform">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			</attributes>
+			</itemtype>
+			
+			<itemtype code="LandingPageHierarchyComponent" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.LandingPageHierarchyComponent">
+			<attributes>
+			<attribute type="java.lang.String" qualifier="title">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="LandingPageHierarchyCollection" qualifier="items">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			</attributes>
+			</itemtype>
+			
+			<itemtype code="LandingPageHierarchyElement" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.LandingPageHierarchyElement">
+			<attributes>
+			<attribute type="java.lang.String" qualifier="title">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="java.lang.String" qualifier="webURL">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="LandingPageHierarchyCollectionList" qualifier="items">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			</attributes>
+			</itemtype>
+			
+			<itemtype code="LandingPageHierarchyElementList" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.LandingPageHierarchyElementList">
+			<attributes>
+			<attribute type="java.lang.String" qualifier="title">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="java.lang.String" qualifier="webURL">
+				<modifiers read="true" write="true" search="true"
+				 optional="true" />
+				<persistence type="property" />
+			</attribute>
+			</attributes>
+			</itemtype>
+			
  </typegroup>
 	<!-- NU-50 end -->
 	
-	
-	
-		
   </itemtypes>
 
 </items>
