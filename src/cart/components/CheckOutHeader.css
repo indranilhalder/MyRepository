@@ -9,7 +9,14 @@
   font-family: semibold;
   line-height: 25px;
   position: relative;
-  padding-left: 35px;
+  float: right;
+}
+.circleHolder {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  float: left;
+  padding: 16px;
 }
 .circle {
   width: 23px;
