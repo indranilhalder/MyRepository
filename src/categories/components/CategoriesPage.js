@@ -2,7 +2,7 @@ import React from "react";
 import CategoryL1 from "./CategoryL1";
 import CategoryL2 from "./CategoryL2";
 import CategoryL3 from "./CategoryL3";
-import BrandHeader from "../../brands/components/BrandHeader";
+import SearchPage from "../../search/components/SearchPage";
 import MobileFooter from "../../general/components/MobileFooter";
 import styles from "./CategoriesPage.css";
 export default class CategoriesPage extends React.Component {
@@ -235,7 +235,7 @@ export default class CategoriesPage extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
-          <BrandHeader />
+          <SearchPage />
         </div>
         {data.subCategories.map((categories, i) => {
           return (

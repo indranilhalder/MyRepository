@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./SearchPage.css";
 import BrandHeader from "../../brands/components/BrandHeader";
-import SearchResult from "./SearchResult";
+import SearchResultItem from "./SearchResultItem";
 
 export default class SearchPage extends React.Component {
   constructor(props) {
@@ -11,8 +11,13 @@ export default class SearchPage extends React.Component {
     };
   }
   handleSearchClick(val) {
-    console.log(val);
     this.setState({ showResults: val });
+  }
+  handleItemClick(val) {
+    console.log(val);
+    if (this.props.onItemClick) {
+      this.props.onItemClick(val);
+    }
   }
   render() {
     const data = {
@@ -77,22 +82,29 @@ export default class SearchPage extends React.Component {
         </div>
         {this.state.showResults && (
           <div className={styles.searchResults}>
-            {data.popularProducts.map((val, i) => {
-              return <SearchResult text={val.name} value={val.url} />;
-            })}
             {data.topBrands.map((val, i) => {
               return (
-                <SearchResult
+                <SearchResultItem
+                  key={i}
+                  suggestedText={data.suggestionText[0]}
                   text={val.categoryName}
                   value={val.categoryCode}
+                  onClick={() => {
+                    this.handleItemClick(val.categoryCode);
+                  }}
                 />
               );
             })}
             {data.topCategories.map((val, i) => {
               return (
-                <SearchResult
+                <SearchResultItem
+                  key={i}
+                  suggestedText={data.suggestionText[0]}
                   text={val.categoryName}
                   value={val.categoryCode}
+                  onClick={() => {
+                    this.handleItemClick(val.categoryCode);
+                  }}
                 />
               );
             })}
