@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./CourierProduct.css";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
+import CheckOutHeader from "../../cart/components/CheckOutHeader.js";
 export default class CourierProduct extends React.Component {
   downloadForm() {
     if (this.props.onClick) {
@@ -13,12 +14,10 @@ export default class CourierProduct extends React.Component {
       <div className={styles.base}>
         {this.props.header && (
           <div className={styles.header}>
-            {this.props.header}
-            {this.props.indexNumber !== "0" && (
-              <div className={styles.circleHolder}>
-                <div className={styles.circle}>{this.props.indexNumber}</div>
-              </div>
-            )}
+            <CheckOutHeader
+              confirmTitle={this.props.header}
+              indexNumber={this.props.indexNumber}
+            />
           </div>
         )}
         {this.props.text && (
