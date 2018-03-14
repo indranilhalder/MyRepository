@@ -15,7 +15,8 @@ import myBagIconRed from "./img/myBag_icon_red.png";
 import {
   HOME_ROUTER,
   PRODUCT_CART_ROUTER,
-  DEFAULT_BRANDS_LANDING_PAGE
+  DEFAULT_BRANDS_LANDING_PAGE,
+  CATEGORIES_LANDING_PAGE
 } from "../../../src/lib/constants";
 const HOME = "home";
 const CATEGORIES = "categories";
@@ -46,7 +47,7 @@ export default class MobileFooter extends React.Component {
           value={CATEGORIES}
           text="Categories"
           selected={this.props.selected}
-          onSelect={() => this.handleSelect(HOME_ROUTER)}
+          onSelect={() => this.handleSelect(CATEGORIES_LANDING_PAGE)}
         />
         <MobileFooterItem
           activeIcon={brandsIconRed}

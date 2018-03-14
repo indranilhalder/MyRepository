@@ -107,5 +107,5 @@ Input2.defaultProps = {
   textStyle: {
     fontSize: 14
   },
-  borderBottom: "1px solid #fff"
+  borderBottom: "1px solid #d2d2d2"
 };

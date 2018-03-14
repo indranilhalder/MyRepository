@@ -3,6 +3,7 @@ import styles from "./AddressCarousel.css";
 import PropTypes from "prop-types";
 import Address from "./Address.js";
 import CarouselWithSelect from "../../general/components/CarouselWithSelect";
+
 export default class AddressCarousel extends React.Component {
   render() {
     let data = this.props.data;
@@ -15,6 +16,7 @@ export default class AddressCarousel extends React.Component {
           }
           elementWidthDesktop={20}
           elementWidthMobile={48}
+          onSelect={pincode => this.props.selectAddress(pincode[0])}
         >
           {data &&
             data.length > 1 &&
@@ -22,9 +24,11 @@ export default class AddressCarousel extends React.Component {
               return (
                 <Address
                   key={i}
-                  heading={datum.heading}
-                  address={datum.address}
-                  value={datum.value}
+                  heading={datum.addressType}
+                  address={`${datum.line1} ${datum.town} ${datum.city}, ${
+                    datum.state
+                  } ${datum.postalCode}`}
+                  value={datum.postalCode}
                 />
               );
             })}

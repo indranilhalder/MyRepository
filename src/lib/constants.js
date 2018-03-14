@@ -54,8 +54,18 @@ export const SOCIAL_SIGN_UP = "signUp";
 export const CART_DETAILS_FOR_LOGGED_IN_USER = "cartDetails";
 export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
+export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
 
 // fetching feed information contant
 export const BLP_OR_CLP_FEED_TYPE = "blpOrClp";
 export const HOME_FEED_TYPE = "home";
+
+export const YES = "Y";
+export const NO = "N";
+
+export const EXPRESS = "express-delivery";
+export const COLLECT = "click-and-collect";
+export const HOME_DELIVERY = "home-delivery";
+export const SHORT_EXPRESS = "ED";
+export const SHORT_COLLECT = "CNC";
