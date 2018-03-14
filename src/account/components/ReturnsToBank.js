@@ -24,14 +24,16 @@ export default class ReturnsToBank extends React.Component {
           </div>
           <div className={styles.cardNumber}>{this.props.cardNumber}</div>
         </div>
-        <div className={styles.footerText}>
-          The refund generally takes 5-8 business days to complete
-        </div>
+        <div className={styles.footerText}>{this.props.footerText}</div>
       </div>
     );
   }
 }
 ReturnsToBank.propTypes = {
   cardNumber: PropTypes.string,
-  cardLogo: PropTypes.string
+  cardLogo: PropTypes.string,
+  footerText: PropTypes.string
+};
+ReturnsToBank.defaultProps = {
+  footerText: "The refund generally takes 5-8 business days to complete"
 };
