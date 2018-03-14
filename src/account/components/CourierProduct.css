@@ -1,0 +1,63 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  background-color: #fff;
+  display: inline-block;
+}
+.header {
+  width: 100%;
+  height: auto;
+  font-size: 16px;
+  font-family: semibold;
+  line-height: 25px;
+  position: relative;
+  float: right;
+}
+.circleHolder {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  float: left;
+  padding: 16px;
+}
+.circle {
+  width: 23px;
+  height: 23px;
+  background-color: #fff;
+  border: 2px solid black;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 14px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #000000;
+  font-size: 14px;
+  font-family: semibold;
+  line-height: 21px;
+}
+.text {
+  width: auto;
+  height: auto;
+  padding-right: 5px;
+  line-height: 2;
+  font-size: 12px;
+  font-family: regular;
+  margin-bottom: 10px;
+  text-align: left;
+}
+.subText {
+  composes: text;
+}
+.formHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  font-family: regular;
+  font-size: 14px;
+  padding-top: 10px;
+}
+.form {
+  display: inline-block;
+}
