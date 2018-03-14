@@ -3,10 +3,10 @@ export const PRODUCT_LISTINGS_REQUEST = "PRODUCT_LISTINGS_REQUEST";
 export const PRODUCT_LISTINGS_SUCCESS = "PRODUCT_LISTINGS_SUCCESS";
 export const PRODUCT_LISTINGS_FAILURE = "PRODUCT_LISTINGS_FAILURE";
 
-export const PRODUCT_LISTINGS_PATH = "v2/mpl/products/serpsearch";
+export const PRODUCT_LISTINGS_PATH = "v2/mpl/products/searchProducts";
 export const PRODUCT_LISTINGS_SUFFIX = "&isPwa=true&pageSize=20&typeID=all";
-export const SORT_PRODUCT_LISTINGS_PATH = "serpsearch";
-export const FILTER_PRODUCT_LISTINGS_PATH = "serpsearch";
+export const SORT_PRODUCT_LISTINGS_PATH = "searchProducts";
+export const FILTER_PRODUCT_LISTINGS_PATH = "searchProducts";
 export const GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS =
   "GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS";
 
