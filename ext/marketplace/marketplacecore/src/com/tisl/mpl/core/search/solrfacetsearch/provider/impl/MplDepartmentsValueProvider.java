@@ -106,8 +106,8 @@ public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvi
 		}
 		catch (final Exception e) /* added part of value provider go through */
 		{
-			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
-					+ super.getClass().getName() + "exception" + e, e);
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
 		}
 	}
 
@@ -146,6 +146,11 @@ public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvi
 			{
 				if (categoryPath != null && categoryPath.size() > 0 && isLuxury
 						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(MarketplaceCoreConstants.LSH1))
+				{
+					accumulateCategoryPaths(categoryPath, allPaths);
+				}
+				else if (categoryPath != null && categoryPath.size() > 0 && isLuxury
+						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(MarketplaceCoreConstants.ISH))
 				{
 					accumulateCategoryPaths(categoryPath, allPaths);
 				}

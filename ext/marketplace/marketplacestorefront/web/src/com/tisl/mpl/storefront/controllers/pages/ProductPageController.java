@@ -4716,7 +4716,14 @@ public class ProductPageController extends MidPageController
 				//INC_11128
 				model.addAttribute("productContentDataMap", productContentDataMap);
 				storeCmsPageInModel(model, getContentPageForLabelOrId(contentPage.getUid()));
+				if (commonUtils.isLuxurySite())
+				{
+					returnString = contentPage.getMasterTemplate().getFrontendTemplateName();
+				}
+				else
+				{
 				returnString = "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
+				}
 
 
 			} //final end of if

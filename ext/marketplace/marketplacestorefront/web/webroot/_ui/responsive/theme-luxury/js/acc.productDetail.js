@@ -3352,7 +3352,7 @@ function lazyLoadProductContents(){
 	}
 }
 
-if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
+if($('#pageTemplateId').val() == 'LuxuryProductDetailsPageTemplate'){
 	$(window).on('scroll load',function() {
 		lazyLoadProductContents();
 	});

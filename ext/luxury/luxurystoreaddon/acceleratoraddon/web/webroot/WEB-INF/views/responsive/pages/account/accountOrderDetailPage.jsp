@@ -518,7 +518,7 @@
 														<p style="margin-top: -8px;">${entry.mplDeliveryMode.name} :</p> 
 														<!-- <div id="pickName" 
 														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
-														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;padding-left: 10px;">${sellerOrder.pickupName}</a><!--  </div> -->
+														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;">${sellerOrder.pickupName}</a><!--  </div> -->
 														<!-- <a type="button" id="button" class="pickupeditbtn" 
 														style="width: 11px; padding-top: 7px; padding-left: -45px; font-weight: 100;margin-left: 15pc;">Edit
 													    </a> -->
@@ -536,8 +536,7 @@
 																			<label class="pickup_name">PickUpName</label>
 																		 </div>
 																		
-																		<div class="col-md-7"
-																			style="z-index: 99999 !important;">
+																		<div class="col-md-7">
 																			<input id="pickUpName" class="pickUpName" type="Text" maxlength="30"
 																				name="pickUpName1"
 																				value="${sellerOrder.getPickupName()}" /> <br />
@@ -1708,7 +1707,7 @@
 														<p style="margin-top: -8px;">${entry.mplDeliveryMode.name} :</p> 
 														<!-- <div id="pickName" 
 														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
-														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;padding-left: 10px;">${sellerOrder.pickupName}</a><!--  </div> -->
+														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;">${sellerOrder.pickupName}</a><!--  </div> -->
 														<!-- <a type="button" id="button" class="pickupeditbtn" 
 														style="width: 11px; padding-top: 7px; padding-left: -45px; font-weight: 100;margin-left: 15pc;">Edit
 													    </a> -->

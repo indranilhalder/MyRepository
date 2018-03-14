@@ -19,6 +19,7 @@ public class MplCustomerProfileForm
 	private String mobileNumber;
 	private String emailId;
 	private String gender;
+	private String homePrefrence;
 
 	private String dateOfBirthDay;
 	private String dateOfBirthMonth;
@@ -354,5 +355,22 @@ public class MplCustomerProfileForm
 	public void setSalutaion(final String salutaion)
 	{
 		this.salutaion = salutaion;
+	}
+
+	/**
+	 * @return the homePrefrence
+	 */
+	public String getHomePrefrence()
+	{
+		return homePrefrence;
+	}
+
+	/**
+	 * @param homePrefrence
+	 *           the homePrefrence to set
+	 */
+	public void setHomePrefrence(final String homePrefrence)
+	{
+		this.homePrefrence = homePrefrence;
 	}
 }

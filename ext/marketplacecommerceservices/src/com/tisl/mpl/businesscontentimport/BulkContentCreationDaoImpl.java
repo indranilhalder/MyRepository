@@ -30,19 +30,28 @@ public class BulkContentCreationDaoImpl implements BulkContentCreationDao
 	@Autowired
 	private CatalogVersionService catalogVersionService;
 
+	private static final String LUX = "lux";
+
 	@Override
 	/**
 	 * Fetches the Page template for the UID
+	 *
 	 * @param templateName
 	 * @return PageTemplateModel
 	 */
-	public PageTemplateModel fetchPageTemplate(final String templateName)
+	public PageTemplateModel fetchPageTemplate(final String templateName, final String site)
 	{
 		final PageTemplateModel pm = new PageTemplateModel();
 
 		pm.setUid(templateName);
-		pm.setCatalogVersion(getContentCatalogVersion());
-
+		if (null != site && site.equals(LUX))
+		{
+			pm.setCatalogVersion(getLuxContentCatalogVersion());
+		}
+		else
+		{
+			pm.setCatalogVersion(getContentCatalogVersion());
+		}
 		return flexibleSearchService.getModelByExample(pm);
 
 	}
@@ -50,21 +59,29 @@ public class BulkContentCreationDaoImpl implements BulkContentCreationDao
 	@Override
 	/**
 	 * Fetches the Product for the given code
+	 *
 	 * @param productCode
 	 * @return ProductModel
 	 */
-	public ProductModel fetchProductforCode(final String productCode)
+	public ProductModel fetchProductforCode(final String productCode, final String site)
 	{
 		final ProductModel product = new ProductModel();
 
 		product.setCode(productCode);
-		product.setCatalogVersion(getProductCatalogVersion());
+		if (null != site && site.equals(LUX))
+		{
+			product.setCatalogVersion(getLuxProductCatalogVersion());
+		}
+		else
+		{
+			product.setCatalogVersion(getProductCatalogVersion());
+		}
 
 		return flexibleSearchService.getModelByExample(product);
 	}
 
 	@Override
-	public ContentPageModel fetchContentPageifPresent(final String contentPageUid)
+	public ContentPageModel fetchContentPageifPresent(final String contentPageUid, final String site)
 	{
 		ContentPageModel cm = null;
 		try
@@ -72,7 +89,14 @@ public class BulkContentCreationDaoImpl implements BulkContentCreationDao
 			cm = new ContentPageModel();
 
 			cm.setUid(contentPageUid);
-			cm.setCatalogVersion(getContentCatalogVersion());
+			if (null != site && site.equals(LUX))
+			{
+				cm.setCatalogVersion(getLuxContentCatalogVersion());
+			}
+			else
+			{
+				cm.setCatalogVersion(getContentCatalogVersion());
+			}
 
 			cm = flexibleSearchService.getModelByExample(cm);
 		}
@@ -85,34 +109,56 @@ public class BulkContentCreationDaoImpl implements BulkContentCreationDao
 
 
 	@Override
-	public SimpleBannerComponentModel getSimpleBannerComponentforUid(final String uid)
+	public SimpleBannerComponentModel getSimpleBannerComponentforUid(final String uid, final String site)
 	{
 		final SimpleBannerComponentModel sm = new SimpleBannerComponentModel();
 
 		sm.setUid(uid);
-		sm.setCatalogVersion(getContentCatalogVersion());
+		if (null != site && site.equals(LUX))
+		{
+			sm.setCatalogVersion(getLuxContentCatalogVersion());
+		}
+		else
+		{
+			sm.setCatalogVersion(getContentCatalogVersion());
+		}
+
 
 		return flexibleSearchService.getModelByExample(sm);
 	}
 
 	@Override
-	public VideoComponentModel getVideoComponentforUid(final String uid)
+	public VideoComponentModel getVideoComponentforUid(final String uid, final String site)
 	{
 		final VideoComponentModel vm = new VideoComponentModel();
 
 		vm.setUid(uid);
-		vm.setCatalogVersion(getContentCatalogVersion());
+		if (null != site && site.equals(LUX))
+		{
+			vm.setCatalogVersion(getLuxContentCatalogVersion());
+		}
+		else
+		{
+			vm.setCatalogVersion(getContentCatalogVersion());
+		}
 
 		return flexibleSearchService.getModelByExample(vm);
 	}
 
 	@Override
-	public CMSParagraphComponentModel getCMSParagraphComponentforUid(final String uid)
+	public CMSParagraphComponentModel getCMSParagraphComponentforUid(final String uid, final String site)
 	{
 		final CMSParagraphComponentModel cmPara = new CMSParagraphComponentModel();
 
 		cmPara.setUid(uid);
-		cmPara.setCatalogVersion(getContentCatalogVersion());
+		if (null != site && site.equals(LUX))
+		{
+			cmPara.setCatalogVersion(getLuxContentCatalogVersion());
+		}
+		else
+		{
+			cmPara.setCatalogVersion(getContentCatalogVersion());
+		}
 
 		return flexibleSearchService.getModelByExample(cmPara);
 	}
@@ -130,6 +176,21 @@ public class BulkContentCreationDaoImpl implements BulkContentCreationDao
 		return catalogVersionModel;
 	}
 
+
+
+	/**
+	 * Fetches the Staged Content Catalog
+	 *
+	 * @return catalogVersionModel
+	 */
+	private CatalogVersionModel getLuxContentCatalogVersion()
+	{
+		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
+				MarketplacecommerceservicesConstants.LUX_IMPORT_CONTENT_CATALOG_ID,
+				MarketplacecommerceservicesConstants.LUX_IMPORT_CONTENT_CATALOG_VERSION);
+		return catalogVersionModel;
+	}
+
 	/**
 	 * Fetches the Staged Product Catalog
 	 *
@@ -138,11 +199,26 @@ public class BulkContentCreationDaoImpl implements BulkContentCreationDao
 	private CatalogVersionModel getProductCatalogVersion()
 	{
 		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
-		//TISSQAUAT-673 starts
-		//MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID, MarketplacecommerceservicesConstants.STAGED);
+				//TISSQAUAT-673 starts
+				//MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID, MarketplacecommerceservicesConstants.STAGED);
 				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID, MarketplacecommerceservicesConstants.ONLINE);
 		//TISSQAUAT-673 ends
 		return catalogVersionModel;
 	}
 
+
+	/**
+	 * Fetches the Staged Product Catalog
+	 *
+	 * @return catalogVersionModel
+	 */
+	private CatalogVersionModel getLuxProductCatalogVersion()
+	{
+		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
+				//TISSQAUAT-673 starts
+				//MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID, MarketplacecommerceservicesConstants.STAGED);
+				MarketplacecommerceservicesConstants.LUX_IMPORT_CATALOG_ID, MarketplacecommerceservicesConstants.ONLINE);
+		//TISSQAUAT-673 ends
+		return catalogVersionModel;
+	}
 }

@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tisl.lux.model.LuxuryHomePagePreferenceModel;
 import com.tisl.mpl.facades.cms.data.AmpMenifestData;
 import com.tisl.mpl.facades.cms.data.AmpServiceWorkerData;
 import com.tisl.mpl.facades.cms.data.CollectionPageData;
@@ -28,7 +29,7 @@ import com.tisl.mpl.wsdto.LuxNavigationWsDTO;
 
 /**
  * @author TCS
- *
+ * 
  */
 public interface MplCmsFacade
 {
@@ -76,7 +77,7 @@ public interface MplCmsFacade
 
 	/**
 	 * Modified for TPR-798
-	 *
+	 * 
 	 * @param homePageUid
 	 * @param pageableData
 	 * @return
@@ -103,11 +104,12 @@ public interface MplCmsFacade
 
 	/**
 	 * TPR-5733
-	 *
+	 * 
 	 * @return List<List<FooterLinkData>>
 	 */
 	Map<Integer, Map<Integer, FooterLinkData>> getFooterLinkData();
 
+	public LuxuryHomePagePreferenceModel getHomePagePreference(String gender, String category);
 	/**
 	 * @return AmpServiceWorkerData
 	 */

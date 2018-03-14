@@ -214,7 +214,27 @@ display: none;}
 				<div class="help-block has-error" id="lastnameError" style="display: none;"></div>
 			</div>
 		</div>
+		<div class="row">
+			<div class='half col-md-6'>
+				<formElement:formInputBox idKey="address.postcode"
+					path="postcode"  placeholder="Pincode*"
+					mandatory="true" maxLength="6" inputCSS="address_postcode"/>
+				<div class="help-block has-error" id="addressPincodeServicableDiv"
+					style="display: none;"></div>
+				<div class="help-block has-error" id="pincodeError" style="display: none;">
+				</div>
+			</div> 
 			
+			<div class='half col-md-6'>
+			        <input type="hidden" name="myselect" value="myselectedvalue" /> 			       
+			       
+			<formElement:formInputBox idKey="address.mobile"
+			path="MobileNo"  placeholder="Contact Number*"
+			mandatory="true" maxLength="10" inputCSS="form-control"/>
+			<div class="help-block has-error" id="mobileError" style="display: none;"></div>
+			
+			</div>	
+		</div>	
 	   <div class="row">
 		  <div class='full col-md-12'>
 		<!-- TISUAT-4696  /TPR-215-->
@@ -324,27 +344,7 @@ display: none;}
 			</div> --%>
 			</div>
 		</div>
-		<div class="row">
-			<div class='half col-md-6'>
-				<formElement:formInputBox idKey="address.postcode"
-					path="postcode"  placeholder="Pincode*"
-					mandatory="true" maxLength="6" inputCSS="address_postcode"/>
-				<div class="help-block has-error" id="addressPincodeServicableDiv"
-					style="display: none;"></div>
-				<div class="help-block has-error" id="pincodeError" style="display: none;">
-				</div>
-			</div> 
-			
-			<div class='half col-md-6'>
-			        <input type="hidden" name="myselect" value="myselectedvalue" /> 			       
-			       
-			     <formElement:formInputBox idKey="address.mobile"
-			path="MobileNo"  placeholder="Contact Number"
-			mandatory="true" maxLength="10" inputCSS="form-control"/>
-				
-			
-			</div>	
-		</div>
+		
 		<div class="row">
 		  <div class="full country-select col-md-12">
 		<c:set var='count'  value='1' />
