@@ -7099,7 +7099,7 @@ public class UsersController extends BaseCommerceController
 							addressmodel.setDistrict(newAddress.getState());
 							addressmodel.setAddressType(newAddress.getAddressType());
 							addressmodel.setLocality(newAddress.getLocality());
-							//addressmodel.setAddressLine1(newAddress.getLine1());	
+							//addressmodel.setAddressLine1(newAddress.getLine1());
 
 
 							//adding new address to user
@@ -11468,7 +11468,10 @@ public class UsersController extends BaseCommerceController
 					{
 						customerToSave.setNickName(null);
 					}
+					LOG.debug("Update customer profile mobile no::::::mobilenumber" + mobilenumber
+							+ "::::::customerToSave.getMobileNumber()" + customerToSave.getMobileNumber());
 					if (StringUtils.isNotEmpty(mobilenumber)
+							&& !mobilenumber.equalsIgnoreCase(customerToSave.getMobileNumber())
 							&& (StringUtils.length(mobilenumber) == MarketplacecommerceservicesConstants.MOBLENGTH && mobilenumber
 									.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX)))
 					{
