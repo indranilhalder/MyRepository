@@ -1593,7 +1593,7 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
   };
 }
 
-export function softReservationForPaymentForNetBanking(
+export function softReservationPaymentForNetBanking(
   paymentMode,
   bankName,
   pinCode

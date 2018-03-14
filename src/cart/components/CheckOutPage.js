@@ -316,8 +316,8 @@ class CheckOutPage extends React.Component {
     );
   };
 
-  softReservationForPaymentForNetBanking = bankName => {
-    this.props.softReservationForPaymentForNetBanking(
+  softReservationPaymentForNetBanking = bankName => {
+    this.props.softReservationPaymentForNetBanking(
       this.state.paymentModeSelected,
       bankName,
       this.props.location.state.pinCode
@@ -401,8 +401,8 @@ class CheckOutPage extends React.Component {
                 softReservationForPayment={cardDetails =>
                   this.softReservationForPayment(cardDetails)
                 }
-                softReservationForPaymentForNetBanking={bankName =>
-                  this.softReservationForPaymentForNetBanking(bankName)
+                softReservationPaymentForNetBanking={bankName =>
+                  this.softReservationPaymentForNetBanking(bankName)
                 }
               />
             )}

@@ -27,7 +27,7 @@ import {
   updateTransactionDetails,
   captureOrderExperience,
   binValidationForNetBanking,
-  softReservationForPaymentForNetBanking
+  softReservationPaymentForNetBanking
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -125,13 +125,9 @@ const mapDispatchToProps = dispatch => {
     binValidationForNetBanking: (paymentMode, binNo) => {
       dispatch(binValidationForNetBanking(paymentMode, binNo));
     },
-    softReservationForPaymentForNetBanking: (
-      paymentMode,
-      bankName,
-      pinCode
-    ) => {
+    softReservationPaymentForNetBanking: (paymentMode, bankName, pinCode) => {
       dispatch(
-        softReservationForPaymentForNetBanking(paymentMode, bankName, pinCode)
+        softReservationPaymentForNetBanking(paymentMode, bankName, pinCode)
       );
     }
   };

@@ -12,9 +12,9 @@ export default class CheckoutNetBanking extends React.Component {
     }
   };
 
-  softReservationForPaymentForNetBanking = cardDetails => {
-    if (this.props.softReservationForPaymentForNetBanking) {
-      this.props.softReservationForPaymentForNetBanking(cardDetails);
+  softReservationPaymentForNetBanking = cardDetails => {
+    if (this.props.softReservationPaymentForNetBanking) {
+      this.props.softReservationPaymentForNetBanking(cardDetails);
     }
   };
   render() {
@@ -34,8 +34,8 @@ export default class CheckoutNetBanking extends React.Component {
           binValidationForNetBank={bankName =>
             this.binValidationForNetBank(bankName)
           }
-          softReservationForPaymentForNetBanking={cardDetails =>
-            this.softReservationForPaymentForNetBanking(cardDetails)
+          softReservationPaymentForNetBanking={cardDetails =>
+            this.softReservationPaymentForNetBanking(cardDetails)
           }
         />
       </ManueDetails>
