@@ -124,15 +124,21 @@
 														code="text.cliq.cash.payment.addcard.label" /></a></span>
 										</c:when>
 										<c:otherwise>
-											<span class="addNewCard" onclick="createWallet();"><a
+											<span class="addNewCard" id="create_wallet_onpayment"><a
 												href="#"><spring:theme
 														code="text.cliq.cash.payment.addcard.label" /></a></span>
 										</c:otherwise>
 									</c:choose>
 								</c:if>
 
-								<%-- <span class="viewCardTerms"><a href="#"><spring:theme
-											code="text.cliq.cash.payment.term.label" /> </a></span>  --%>
+								<span class="viewCardTerms"><spring:theme
+											code="text.cliq.cash.payment.term.label" /></span>
+											
+								<div id="QcTermsSection">
+									<div class="QcTermsSection-content">
+										<single-Checkout:qwikcilverTermAndCondition />
+									</div>
+								</div>
 							</div>
 							<br />
 							<spring:theme code="text.cliq.cash.payment.addcash.label"
@@ -2029,6 +2035,8 @@ var createWalletData = document.getElementById('createWalletData');
 var createWalletPopup = document.getElementById('createWalletPopup');
 
 var createWalletPopupHtml = '';
+var isWalletActive = '${isCustomerWalletActive}';
+
 function createWallet() {
 		$.ajax({
 			type : "GET",
@@ -2045,6 +2053,14 @@ function createWallet() {
 				});  
 	
 }
+
+$('#create_wallet_onpayment').on('click', function () {
+	if(isWalletActive == 'false'){
+		createWallet();	
+	} else {
+		showAddEGV();
+	}
+});
 
 function closepop(){
 	createWalletData.innerHTML=createWalletPopupHtml;
@@ -2167,6 +2183,7 @@ function submitWalletData(){
 				}
 				else if(response=='success'){
 					closepop();
+					isWalletActive = 'true';
 					showAddEGV();
 				}
 				else {
@@ -2177,4 +2194,14 @@ function submitWalletData(){
 			}
 		}); 
 }
+
+//QC Terms and Conditions
+$('#QcTermsSection').hide();
+$('.viewCardTerms').on('click', function () {
+	$('#QcTermsSection').show();
+});
+
+$("#closeQcTermsPopup").on('click', function () {
+	$('#QcTermsSection').hide();
+});
 </script>

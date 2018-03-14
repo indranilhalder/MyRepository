@@ -194,7 +194,9 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 			//SDI-4069 ends
 			else
 			{
-				maxOrderQuantity = Integer.valueOf(maxOrderQuantityConstant);
+				//maxOrderQuantity = Integer.valueOf(maxOrderQuantityConstant);
+				maxOrderQuantity = Integer.valueOf(siteConfigService.getInt(
+						MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0));
 			}
 		}
 		final long newTotalQuantityAfterProductMaxOrder = Math.min(newTotalQuantityAfterStockLimit, maxOrderQuantity.longValue());

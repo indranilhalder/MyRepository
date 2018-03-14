@@ -38,6 +38,10 @@ public class ForgottenPasswordEmailContext extends CustomerEmailContext
 	private String token;
 	public static final String SECURE_RESET_PASSWORD_URL = "secureResetPasswordUrl";
 
+	public static final String IS_OTP = "isOtp";
+
+	public static final String FORGOT_PWD_OTP = "forgotPasswordOtp";
+
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
 	//TISTE-197 starts
@@ -96,6 +100,14 @@ public class ForgottenPasswordEmailContext extends CustomerEmailContext
 			final String secureResetPasswordUrl = ((ForgottenPasswordProcessModel) storeFrontCustomerProcessModel)
 					.getForgetPasswordUrl();
 			put(SECURE_RESET_PASSWORD_URL, secureResetPasswordUrl);
+
+			final String isOtp = ((ForgottenPasswordProcessModel) storeFrontCustomerProcessModel).getIsOtp();
+
+			put(IS_OTP, isOtp);
+
+			final String forgotPasswordOtp = ((ForgottenPasswordProcessModel) storeFrontCustomerProcessModel).getForgetPasswordOtp();
+
+			put(FORGOT_PWD_OTP, forgotPasswordOtp);
 
 		}
 

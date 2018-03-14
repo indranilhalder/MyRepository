@@ -33,6 +33,7 @@ import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
@@ -3429,8 +3430,9 @@ public class UsersController extends BaseCommerceController
 
 								}
 								LOG.debug("Step6-************************Wishlist");
-								if (StringUtils.isNotEmpty(entryModel.getProduct().getCode()))
-
+								//Condition for SDI-4502 as there was no product for Wishlist
+								//if (StringUtils.isNotEmpty(entryModel.getProduct().getCode()))
+								if (null != productData1 && StringUtils.isNotEmpty(productData1.getCode()))
 								{
 									wldpDTO.setProductcode(entryModel.getProduct().getCode());
 
@@ -3620,7 +3622,12 @@ public class UsersController extends BaseCommerceController
 
 								//	final ProductModel productModel = getMplOrderFacade().getProductForCode(entryModel.getProduct().getCode());
 								LOG.debug("Step9-************************Wishlist");
-								final ProductModel productModel = productService.getProductForCode(entryModel.getProduct().getCode());
+								ProductModel productModel = null;
+								//SDI-4502 Condition for when there is no product in wishlist mistakenly
+								if (null != entryModel.getProduct())
+								{
+									productModel = productService.getProductForCode(entryModel.getProduct().getCode());
+								}
 								LOG.debug("Step10-************************Wishlist");
 								if (null != productModel.getSellerInformationRelator())
 								{
@@ -10822,9 +10829,12 @@ public class UsersController extends BaseCommerceController
 		{
 			final int pageSizeConFig = configurationService.getConfiguration().getInt(
 					MarketplacecommerceservicesConstants.WEBFORM_ORDER_HISTORY_PAGESIZE, 5);
-
-			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage,
-					pageSizeConFig, sort, showMode);
+//SDI-5991
+                        final PageableData pageableData = createPageableData(currentPage, pageSizeConFig, sort, showMode);
+			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = getMplOrderFacade()
+ 					.getPagedFilteredParentOrderHistoryWebForm(pageableData);
+			/*final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage,
+					pageSizeConFig, sort, showMode);*/
 
 			if (null == searchPageDataParentOrder.getResults())
 			{
@@ -10842,7 +10852,11 @@ public class UsersController extends BaseCommerceController
 						continue;
 					}
 					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderhistorydetails(orderDetails);
+					//SDI-5991
+					if (null != order && StringUtils.isNotEmpty(order.getOrderId()))
+					{
 					orderTrackingListWsDTO.add(order);
+					}
 				}
 				if (searchPageDataParentOrder.getPagination() != null
 						&& searchPageDataParentOrder.getPagination().getTotalNumberOfResults() > 0)
@@ -10852,7 +10866,9 @@ public class UsersController extends BaseCommerceController
 					orderHistoryListData.setTotalNoOfOrders(totalNum);
 
 					//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
-					orderHistoryListData.setOrderData(orderTrackingListWsDTO.subList(start, end));
+					//orderHistoryListData.setOrderData(orderTrackingListWsDTO.subList(start, end));
+					//SDI-5991
+					orderHistoryListData.setOrderData(orderTrackingListWsDTO);
 					orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
 				else

@@ -54,7 +54,20 @@ Sitemap: <c:url value="https://luxury.tatacliq.com/sitemap.xml"/>
 <c:if test="${storeUrl eq 'mpl'}">User-agent: * 
 Disallow: */quickView 
 Disallow: /search/ 
-Disallow: /p-sizeGuide 
+Disallow: /p-sizeGuide
+Disallow: */simple.widget
+Disallow: */save_state_handler
+Disallow: */elements_renderer
+Disallow: */drag_and_drop_handler
+Disallow: */version
+Disallow: */mouse.widget
+Disallow: */node_element
+Disallow: */key_handler
+Disallow: */scroll_handler
+Disallow: */select_node_handler
+Disallow: */drag_and_drop_handler
+Disallow: */util
+Disallow: */node  
 Sitemap: <c:url value="https://www.tatacliq.com/sitemap.xml"/>
 Sitemap: <c:url value="https://www.tatacliq.com/que/sitemap.xml"/>
 User-agent: Test Certificate Info 

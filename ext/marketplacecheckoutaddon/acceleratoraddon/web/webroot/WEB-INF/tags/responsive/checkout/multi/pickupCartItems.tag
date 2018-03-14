@@ -117,7 +117,7 @@
 		<li class="cncOrderInfo">
 			<div class="thumb">
 				<a href="${productUrl}">
-					<product:productPrimaryImage product="${entry.product}" format="thumbnail"/>
+					<product:productPrimaryImage product="${entry.product}" format="thumbnail"  lazyLoad="false"/>
 				</a>
 			</div>
 			<div class="allDetails">

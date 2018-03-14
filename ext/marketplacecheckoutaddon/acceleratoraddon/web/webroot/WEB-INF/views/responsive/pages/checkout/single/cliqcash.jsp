@@ -11,6 +11,8 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/desktop/common"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="single-Checkout" tagdir="/WEB-INF/tags/addons/marketplacecheckoutaddon/responsive/checkout/single"%>
+
 
 <template:page pageTitle="${pageTitle}">
 <c:set var="dateStyle" value="dd/MM/yyyy	" />
@@ -76,7 +78,9 @@ ul.dropdown-menu {
 						<div class="cliqCashContainerRight">
 					     <a class="cliqCashBtns" href="<c:url value="/wallet"/>"><spring:theme
 							text="ADD GIFT CARD" code="text.add.cliq.cash.addgiftcard.label" />
-				     	</a>
+				     	</a><br />&nbsp;<br />
+				     			<span class="viewCardTerms"><spring:theme
+										code="text.cliq.cash.payment.term.label" /></span>
 				     </div>
 			 </c:when>
 				<c:otherwise>
@@ -86,9 +90,16 @@ ul.dropdown-menu {
 				     	</a> --%>
 				     	<span class="addNewCard" onclick="createWallet();"><a href="#" class="cliqCashBtns">
 				     	<spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
+				     			<br />&nbsp;<br /><span class="viewCardTerms"><spring:theme
+										code="text.cliq.cash.payment.term.label" /></span>
 			    </div>
 				</c:otherwise>
 		</c:choose>
+		<div id="QcTermsSection">
+			<div class="QcTermsSection-content">
+				<single-Checkout:qwikcilverTermAndCondition />
+			</div>
+		</div>
 		
 			</div>
 		</div>
@@ -291,6 +302,16 @@ ul.dropdown-menu {
 		
 	<script>
 	$(document).ready(function(){
+		
+		$('#QcTermsSection').hide();
+		$('.viewCardTerms').on('click', function () {
+			$('#QcTermsSection').show();
+		});
+		
+		$("#closeQcTermsPopup").on('click', function () {
+			$('#QcTermsSection').hide();
+		});
+		
 		var modelAttributeValue = '${isCustomerWalletActive}';
 		  if(modelAttributeValue === 'false'){
 			  createWallet();
