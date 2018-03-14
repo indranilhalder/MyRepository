@@ -158,10 +158,11 @@ export function selectSingleSelectResponse(value, questionId, positionInFeed) {
     }
   };
 }
-export function homeFeedRequest() {
+export function homeFeedRequest(feedType) {
   return {
     type: HOME_FEED_REQUEST,
-    status: REQUESTING
+    status: REQUESTING,
+    feedType
   };
 }
 export function homeFeedSuccess(data, feedType) {
@@ -184,7 +185,11 @@ export function homeFeedFailure(error) {
 // brand feed and category feed  . we need to rename this function name like feed
 export function homeFeed(brandIdOrCategoryId: null) {
   return async (dispatch, getState, { api }) => {
-    dispatch(homeFeedRequest());
+    if (brandIdOrCategoryId) {
+      dispatch(homeFeedRequest(BLP_OR_CLP_FEED_TYPE));
+    } else {
+      dispatch(homeFeedRequest());
+    }
     try {
       let url, result, feedTypeRequest, resultJson;
       if (brandIdOrCategoryId) {

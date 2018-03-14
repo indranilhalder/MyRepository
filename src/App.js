@@ -179,7 +179,7 @@ class App extends Component {
           />
 
           <Route
-            exact
+            strict
             path={CATEGORY_PAGE_WITH_SLUG}
             component={PlpBrandCategoryWrapperContainer}
           />

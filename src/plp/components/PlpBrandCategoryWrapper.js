@@ -17,10 +17,12 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const categoryOrBrandId = this.props.location.pathname.match(
       CAPTURE_REGEX
     )[1];
+    console.log("COMPONENT DID MOUNT");
+    console.log(categoryOrBrandId);
     this.props.homeFeed(categoryOrBrandId);
   }
 
@@ -55,11 +57,18 @@ export default class PlpBrandCategoryWrapper extends React.Component {
       return this.renderLoader();
     }
 
-    return this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE &&
-      this.props.homeFeedData.homeFeed.length > 0 ? (
-      <BrandLandingPageContainer />
-    ) : (
-      <Redirect to={this.getPlpUrl()} />
-    );
+    console.log("this.props");
+    console.log(this.props);
+
+    if (this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE) {
+      console.log("BLP OR CLP");
+      console.log(this.props.homeFeed.feedType);
+      if (this.props.homeFeedData.homeFeed.length > 0) {
+        return <BrandLandingPageContainer />;
+      } else {
+        return <Redirect to={this.getPlpUrl()} />;
+      }
+    }
+    return null;
   }
 }

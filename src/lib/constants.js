@@ -22,7 +22,7 @@ export const BRAND_PAGE = "/c-(mbh.*)";
 export const BRAND_PAGE_WITH_SLUG = `/.*/${BRAND_PAGE}`;
 
 export const CATEGORY_PAGE = "/c-(msh.*)";
-export const CATEGORY_PAGE_WITH_SLUG = `/.*/${CATEGORY_PAGE}`;
+export const CATEGORY_PAGE_WITH_SLUG = `/:slug/c-(msh.*)`;
 export const PRODUCT_LISTINGS = "/search/(.*)";
 
 export const PLP_CATEGORY_SEARCH = "/search/?searchCategory=all&text=shirt";
