@@ -73,7 +73,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     return `/search/?q=${searchText}`;
   };
 
-  componentDidUpdate() {}
   render() {
     if (
       this.props.homeFeedData.loading ||
