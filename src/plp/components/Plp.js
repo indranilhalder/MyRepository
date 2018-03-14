@@ -16,6 +16,9 @@ export default class Plp extends React.Component {
 
   toggleFilter = () => {
     this.setState({ showFilter: !this.state.showFilter });
+    if (this.props.onFilter) {
+      this.props.onFilter(!this.state.showFilter);
+    }
   };
 
   componentWillReceiveProps(nextProps) {
@@ -29,7 +32,6 @@ export default class Plp extends React.Component {
   };
 
   backPage = () => {
-    console.log("BACK PAGE IS HIT");
     this.setState({ showFilter: !this.state.showFilter });
   };
   onSortClick = () => {
@@ -55,9 +57,6 @@ export default class Plp extends React.Component {
     if (this.state.showFilter) {
       filterClass = styles.filterOpen;
     }
-
-    console.log("RENDER");
-    console.log(this.state.showFilter);
 
     return (
       this.props.productListings && (

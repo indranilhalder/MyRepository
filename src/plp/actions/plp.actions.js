@@ -37,25 +37,28 @@ export function getProductListingsPaginatedSuccess(productListings) {
     productListings
   };
 }
-export function getProductListingsRequest() {
+export function getProductListingsRequest(paginated: false) {
   return {
     type: PRODUCT_LISTINGS_REQUEST,
-    status: REQUESTING
+    status: REQUESTING,
+    isPaginated: paginated
   };
 }
-export function getProductListingsSuccess(productListings) {
+export function getProductListingsSuccess(productListings, isPaginated: false) {
   return {
     type: PRODUCT_LISTINGS_SUCCESS,
     status: SUCCESS,
-    productListings
+    productListings,
+    isPaginated
   };
 }
 
-export function getProductListingsFailure(error) {
+export function getProductListingsFailure(error, isPaginated) {
   return {
     type: PRODUCT_LISTINGS_FAILURE,
     status: ERROR,
-    error
+    error,
+    isPaginated
   };
 }
 export function getProductListings(
@@ -64,7 +67,7 @@ export function getProductListings(
   isFilter: false
 ) {
   return async (dispatch, getState, { api }) => {
-    dispatch(getProductListingsRequest());
+    dispatch(getProductListingsRequest(paginated));
     try {
       const searchState = getState().search;
       const pageNumber = getState().productListings.pageNumber;
@@ -84,15 +87,15 @@ export function getProductListings(
       }
       if (paginated) {
         if (resultJson.searchresult) {
-          dispatch(getProductListingsPaginatedSuccess(resultJson));
+          dispatch(getProductListingsPaginatedSuccess(resultJson, true));
         }
       } else if (isFilter) {
         dispatch(updateFacets(resultJson));
       } else {
-        dispatch(getProductListingsSuccess(resultJson));
+        dispatch(getProductListingsSuccess(resultJson, paginated));
       }
     } catch (e) {
-      dispatch(getProductListingsFailure(e.message));
+      dispatch(getProductListingsFailure(e.message, paginated));
     }
   };
 }

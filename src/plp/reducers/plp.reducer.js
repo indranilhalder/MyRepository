@@ -13,7 +13,7 @@ const productListings = (
   action
 ) => {
   let existingProductListings;
-
+  let toUpdate;
   switch (action.type) {
     case plpActions.UPDATE_FACETS:
       const productListings = cloneDeep(state.productListings);
@@ -25,11 +25,30 @@ const productListings = (
         loading: false
       });
     case plpActions.PRODUCT_LISTINGS_REQUEST:
-      return Object.assign({}, state, {
-        status: action.status,
-        loading: true
-      });
+      toUpdate = {
+        status: action.status
+      };
+
+      if (action.isPaginated) {
+        toUpdate.paginatedLoading = true;
+        toUpdate.loading = false;
+      } else {
+        toUpdate.paginatedLoading = false;
+        toUpdate.loading = true;
+      }
+      return Object.assign({}, state, toUpdate);
     case plpActions.PRODUCT_LISTINGS_SUCCESS:
+      toUpdate = {
+        status: action.status
+      };
+
+      if (action.isPaginated) {
+        toUpdate.paginatedLoading = true;
+        toUpdate.loading = false;
+      } else {
+        toUpdate.paginatedLoading = false;
+        toUpdate.loading = true;
+      }
       return Object.assign({}, state, {
         status: action.status,
         productListings: action.productListings,
@@ -37,6 +56,17 @@ const productListings = (
       });
 
     case plpActions.PRODUCT_LISTINGS_FAILURE:
+      toUpdate = {
+        status: action.status
+      };
+
+      if (action.isPaginated) {
+        toUpdate.paginatedLoading = true;
+        toUpdate.loading = false;
+      } else {
+        toUpdate.paginatedLoading = false;
+        toUpdate.loading = true;
+      }
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,

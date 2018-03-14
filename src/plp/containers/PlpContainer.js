@@ -14,6 +14,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = (state, ownProps) => {
   return {
     isFilter: ownProps.isFilter,
+    onFilterClick: ownProps.onFilterClick,
     showFilter: ownProps.showFilter,
     productListings: state.productListings.productListings,
     loading: state.productListings.loading,

@@ -24,6 +24,12 @@ const SUFFIX = `&isTextSearch=false&isFilter=false`;
 // sort of page I am dealing with.
 
 class ProductListingsPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showFilter: false
+    };
+  }
   getSearchTextFromUrl() {
     console.log("PROPS");
     console.log(this.props);
@@ -42,69 +48,70 @@ class ProductListingsPage extends Component {
   }
 
   componentDidMount() {
-    // window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll);
     if (
       this.props.location.state &&
       this.props.location.state.disableSerpSearch === true
     ) {
       return;
     }
-    console.log("COMPONENT DID MOUNT");
-    console.log(this.props.location.state);
     if (this.props.location.state && this.props.location.state.isFilter) {
       const suffix = "&isFilter=true";
       const searchText = this.getSearchTextFromUrl();
-      console.log("FIRST IF CALLED");
       this.props.getProductListings(searchText, suffix, 0, true);
     } else {
-      console.log("SECOND IF CALLED");
-      console.log(this.props.location.state);
-
       const searchText = this.getSearchTextFromUrl();
       this.props.getProductListings(searchText, SUFFIX, 0);
     }
   }
 
   handleScroll = () => {
-    if (this.props.modalDisplayed) {
-      return;
-    }
-    const windowHeight =
-      "innerHeight" in window
-        ? window.innerHeight
-        : document.documentElement.offsetHeight;
-    const body = document.body;
-    const html = document.documentElement;
-    const docHeight = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-    );
-    const windowBottom = windowHeight + window.pageYOffset;
-    if (windowBottom >= docHeight) {
-      this.props.paginate(this.props.page + 1, SUFFIX);
-      // this is where I need to  update the page
-      // I do a getProductListings call, but I need to throttle it.
+    if (!this.state.showFilter) {
+      const windowHeight =
+        "innerHeight" in window
+          ? window.innerHeight
+          : document.documentElement.offsetHeight;
+      const body = document.body;
+      const html = document.documentElement;
+      const docHeight = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        html.clientHeight,
+        html.scrollHeight,
+        html.offsetHeight
+      );
+      const windowBottom = windowHeight + window.pageYOffset;
+      if (windowBottom >= docHeight) {
+        this.props.paginate(this.props.pageNumber + 1, SUFFIX);
+        // this is where I need to  update the page
+        // I do a getProductListings call, but I need to throttle it.
+      }
     }
   };
 
   componentWillUnmount() {
-    // window.removeEventListener("scroll", throttle(this.handleScroll, 300));
+    window.removeEventListener("scroll", throttle(this.handleScroll, 300));
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.filterOpen !== this.state.filterOpen) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  onFilterClick = val => {
+    this.setState({ filterOpen: val });
+  };
+
   componentDidUpdate() {
-    console.log("COMPONENT DID UPDATE");
     if (
       this.props.location.state &&
       this.props.location.state.disableSerpSearch === true
     ) {
       return;
     }
-
-    console.log("STATE");
-    console.log(this.props.location.state);
 
     if (
       this.props.location.state &&
@@ -112,14 +119,12 @@ class ProductListingsPage extends Component {
     ) {
       const suffix = "&isFilter=true";
       const searchText = this.getSearchTextFromUrl();
-      console.log("FIRST IF IS CALLED");
       this.props.getProductListings(searchText, suffix, 0, true);
     } else if (
       this.props.location.state &&
       this.props.location.state.isFilter === false
     ) {
       const searchText = this.getSearchTextFromUrl();
-      console.log("SECOND IF IS CALELD");
       this.props.getProductListings(searchText, SUFFIX, 0);
     }
   }
@@ -135,7 +140,13 @@ class ProductListingsPage extends Component {
     if (this.props.location.state && !this.props.location.state.isFilter) {
       showFilter = false;
     }
-    return <PlpContainer isFilter={isFilter} showFilter={showFilter} />;
+    return (
+      <PlpContainer
+        onFilterClick={this.onFilterClick}
+        isFilter={isFilter}
+        showFilter={showFilter}
+      />
+    );
   }
 }
 
