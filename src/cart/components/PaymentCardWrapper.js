@@ -71,7 +71,7 @@ export default class PaymentCardWrapper extends React.Component {
             onToggle={i => this.handleClick(i)}
           />
         </div>
-        {this.renderPaymentCardsComponents()}
+        {this.props.cart.paymentModes && this.renderPaymentCardsComponents()}
       </div>
     );
   }

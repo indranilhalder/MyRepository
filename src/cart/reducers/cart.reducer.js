@@ -79,7 +79,11 @@ const cart = (
 
     orderExperienceStatus: null,
     orderExperience: null,
-    orderExperienceError: null
+    orderExperienceError: null,
+
+    binValidationStatus: null,
+    binValidationError: null,
+    binValidationDetails: null
   },
   action
 ) => {
@@ -562,6 +566,24 @@ const cart = (
         jusPayStatus: action.status,
         jusPayError: action.error,
         loading: false
+      });
+
+    case cartActions.BIN_VALIDATION_REQUEST:
+      return Object.assign({}, state, {
+        binValidationStatus: action.status
+      });
+
+    case cartActions.BIN_VALIDATION_SUCCESS: {
+      return Object.assign({}, state, {
+        binValidationStatus: action.status,
+        binValidationDetails: action.jusPayDetails
+      });
+    }
+
+    case cartActions.BIN_VALIDATION_FAILURE:
+      return Object.assign({}, state, {
+        binValidationStatus: action.status,
+        binValidationError: action.error
       });
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_REQUEST:

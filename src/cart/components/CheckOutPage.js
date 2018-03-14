@@ -19,10 +19,11 @@ import {
   LOGGED_IN_USER_DETAILS,
   CART_DETAILS_FOR_LOGGED_IN_USER
 } from "../../lib/constants";
-import { HOME_ROUTER } from "../../lib/constants";
+import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
+const PAYMENT_MODE = "EMI";
 
 class CheckOutPage extends React.Component {
   state = {
@@ -164,16 +165,29 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.cart.justPayPaymentDetails) {
+    if (nextProps.cart.justPayPaymentDetails !== null) {
       window.location.replace(
         nextProps.cart.justPayPaymentDetails.payment.authentication.url
       );
     }
-    if (nextProps.cart.orderConfirmationDetailsStatus) {
+    if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
       Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       this.setState({ orderConfirmation: true });
     }
   }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      nextProps.cart.binValidationStatus === SUCCESS &&
+      nextProps.cart.justPayPaymentDetailsStatus === null
+    ) {
+      if (this.state.paymentModeSelected === PAYMENT_MODE) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   componentDidMount() {
     const query = new URLSearchParams(this.props.location.search);
     const value = query.get("status");
@@ -182,10 +196,11 @@ class CheckOutPage extends React.Component {
     if (value === PAYMENT_CHARGED) {
       this.setState({ orderId: orderId });
       if (this.props.updateTransactionDetails) {
-        this.props.updateTransactionDetails(
-          this.state.paymentModeSelected,
-          orderId
-        );
+        let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+        let cartId = JSON.parse(cartDetails).guid;
+        if (cartId) {
+          this.props.updateTransactionDetails("Credit Card", orderId, cartId);
+        }
       }
     } else {
       if (this.props.getCartDetailsCNC) {
@@ -283,12 +298,25 @@ class CheckOutPage extends React.Component {
     this.props.binValidation(paymentMode, binNo);
   };
 
+  binValidationForNetBank = (paymentMode, bankName) => {
+    this.setState({ paymentModeSelected: paymentMode });
+    this.props.binValidationForNetBanking(paymentMode, bankName);
+  };
+
   softReservationForPayment = cardDetails => {
     cardDetails.pinCode = this.props.location.state.pinCode;
     this.props.softReservationForPayment(
       cardDetails,
       this.state.addressId[0],
       this.state.paymentModeSelected
+    );
+  };
+
+  softReservationForPaymentForNetBanking = bankName => {
+    this.props.softReservationForPaymentForNetBanking(
+      this.state.paymentModeSelected,
+      bankName,
+      this.props.location.state.pinCode
     );
   };
 
@@ -363,8 +391,14 @@ class CheckOutPage extends React.Component {
                 binValidation={(paymentMode, binNo) =>
                   this.binValidation(paymentMode, binNo)
                 }
+                binValidationForNetBank={(paymentMode, bankName) =>
+                  this.binValidationForNetBank(paymentMode, bankName)
+                }
                 softReservationForPayment={cardDetails =>
                   this.softReservationForPayment(cardDetails)
+                }
+                softReservationForPaymentForNetBanking={bankName =>
+                  this.softReservationForPaymentForNetBanking(bankName)
                 }
               />
             )}
