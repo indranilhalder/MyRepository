@@ -139,7 +139,7 @@ export async function postMsd(url, payload) {
 }
 
 export async function getMsd(url) {
-  return await fetch(`${API_MSD_URL_ROOT}/${url}`, {
+  return await fetch(`${API_URL_ROOT_DUMMY}/${url}`, {
     headers: {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
