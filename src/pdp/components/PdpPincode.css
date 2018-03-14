@@ -1,0 +1,44 @@
+.base {
+  display: flex;
+  display: inline-block;
+  width: 100%;
+  height: auto;
+  padding: 20px 20px;
+}
+.label {
+  width: 60%;
+  height: 22px;
+  display: inline-block;
+  text-align: left;
+  vertical-align: top;
+  line-height: 25px;
+}
+.labelMessage {
+  width: 60%;
+  height: 22px;
+  display: inline-block;
+  text-align: left;
+  vertical-align: top;
+  font-size: 14px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #000000;
+}
+.buttonHolder {
+  width: 40%;
+  height: 22px;
+  display: inline-block;
+  text-align: right;
+  vertical-align: top;
+  position: relative;
+}
+.button {
+  width: auto;
+  height: 22px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}

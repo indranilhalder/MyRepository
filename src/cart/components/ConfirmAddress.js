@@ -38,7 +38,10 @@ export default class ConfirmAddress extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
-          <CheckOutHeader confirmTitle="Confirm address" indexNumber="1" />
+          <CheckOutHeader
+            confirmTitle="Confirm address"
+            indexNumber={this.props.indexNumber}
+          />
         </div>
         <div className={styles.addressHolder}>
           <GridSelect
@@ -96,10 +99,14 @@ export default class ConfirmAddress extends React.Component {
 }
 ConfirmAddress.propTypes = {
   onNewAddress: PropTypes.func,
+  indexNumber: PropTypes.string,
   address: PropTypes.arrayOf(
     PropTypes.shape({
       addressTitle: PropTypes.string,
       addressDescription: PropTypes.string
     })
   )
+};
+ConfirmAddress.defaultProps = {
+  indexNumber: "1"
 };

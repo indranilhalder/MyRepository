@@ -9,54 +9,65 @@ export default class SearchAndUpdate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pinCode: null
+      pinCode: null,
+      errorMessage: null
     };
   }
-  getValue(val) {
-    this.setState({ pinCode: val });
-    this.props.getPinCode(val);
+  getValue(pinCode) {
+    this.setState({ pinCode });
   }
-  handleClick() {
+  getLocation() {
     if (this.props.getLocation) {
       this.props.getLocation();
     }
   }
   onUpdate() {
-    if (this.props.checkPinCodeAvailability) {
-      this.props.checkPinCodeAvailability(this.state.pinCode);
+    if (this.state.pinCode.match(/^\d{6}$/)) {
+      if (this.props.checkPinCodeAvailability) {
+        this.props.checkPinCodeAvailability(this.state.pinCode);
+      }
+      this.setState({ errorMessage: null });
+    } else {
+      this.setState({ errorMessage: "Please enter a  valid pincode" });
     }
   }
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.buttonHolder}>
-          <div className={styles.buttonCover}>
-            <UnderLinedButton
-              size="14px"
-              fontFamily="regular"
-              color="#000"
-              label="Update"
-              onClick={() => this.onUpdate()}
+        {this.state.errorMessage && (
+          <div className={styles.errorMessage}>{this.state.errorMessage}</div>
+        )}
+        <div className={styles.inputSearchHolder}>
+          <div className={styles.buttonHolder}>
+            <div className={styles.buttonCover}>
+              <UnderLinedButton
+                size="14px"
+                fontFamily="regular"
+                color="#000"
+                label="Update"
+                onClick={() => this.onUpdate()}
+              />
+            </div>
+          </div>
+          <div className={styles.inputHolder}>
+            <Input2
+              boxy={true}
+              type="number"
+              placeholder="Enter a pincode / zipcode"
+              onChange={val => this.getValue(val)}
+              textStyle={{ fontSize: 14 }}
+              height={35}
+              rightChildSize={35}
+              rightChild={
+                <CircleButton
+                  size={35}
+                  color={"transparent"}
+                  icon={<Icon image={gpsIcon} size={20} />}
+                  onClick={() => this.getLocation()}
+                />
+              }
             />
           </div>
-        </div>
-        <div className={styles.inputHolder}>
-          <Input2
-            boxy={true}
-            placeholder="Enter a pincode / zipcode"
-            onChange={val => this.getValue(val)}
-            textStyle={{ fontSize: 14 }}
-            height={35}
-            rightChildSize={35}
-            rightChild={
-              <CircleButton
-                size={35}
-                color={"transparent"}
-                icon={<Icon image={gpsIcon} size={20} />}
-                onClick={() => this.handleClick()}
-              />
-            }
-          />
         </div>
       </div>
     );
@@ -65,5 +76,6 @@ export default class SearchAndUpdate extends React.Component {
 SearchAndUpdate.propTypes = {
   getValue: PropTypes.func,
   getLocation: PropTypes.func,
-  onUpdate: PropTypes.func
+  onUpdate: PropTypes.func,
+  errorMessage: PropTypes.string
 };

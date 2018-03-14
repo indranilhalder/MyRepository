@@ -11,6 +11,8 @@ import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
+import PdpPincode from "./PdpPincode";
+import Overlay from "./Overlay";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import * as Cookie from "../../lib/Cookie";
 import {
@@ -22,7 +24,10 @@ import {
   ANONYMOUS_USER,
   PRODUCT_SELLER_ROUTER_SUFFIX,
   PRODUCT_CART_ROUTER,
-  PRODUCT_REVIEWS_PATH_SUFFIX
+  PRODUCT_REVIEWS_PATH_SUFFIX,
+  PRODUCT_DESCRIPTION_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
+  NO
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
@@ -119,7 +124,34 @@ export default class PdpApparel extends React.Component {
       );
     }
   };
-
+  showPincodeModal() {
+    if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+      this.props.showPincodeModal(this.props.match.params[0]);
+    } else if (
+      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+    ) {
+      this.props.showPincodeModal(this.props.match.params[2]);
+    }
+  }
+  renderDeliveryOptions(productData) {
+    return (
+      productData.eligibleDeliveryModes &&
+      productData.eligibleDeliveryModes.map((val, idx) => {
+        return (
+          <DeliveryInformation
+            key={idx}
+            header={val.name}
+            placedTime={val.timeline}
+            type={val.code}
+            onClick={() => this.renderAddressModal()}
+            deliveryOptions={DELIVERY_TEXT}
+            label={PIN_CODE}
+            showCliqAndPiqButton={false}
+          />
+        );
+      })
+    );
+  }
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -164,6 +196,7 @@ export default class PdpApparel extends React.Component {
               </div>
             </div>
           )}
+
           {productData.productOfferMsg && (
             <OfferCard
               endTime={productData.productOfferMsg[0].validTill.date}
@@ -192,21 +225,26 @@ export default class PdpApparel extends React.Component {
               />
             </React.Fragment>
           )}
-          {productData.eligibleDeliveryModes &&
-            productData.eligibleDeliveryModes.map((val, idx) => {
-              return (
-                <DeliveryInformation
-                  key={idx}
-                  header={val.name}
-                  placedTime={val.timeline}
-                  type={val.code}
-                  onClick={() => this.renderAddressModal()}
-                  deliveryOptions={DELIVERY_TEXT}
-                  label={PIN_CODE}
-                  showCliqAndPiqButton={false}
-                />
-              );
-            })}
+          {this.props.productDetails.isServiceableToPincode &&
+          this.props.productDetails.isServiceableToPincode.pinCode ? (
+            <PdpPincode
+              hasPincode={true}
+              pincode={this.props.productDetails.isServiceableToPincode.pinCode}
+              onClick={() => this.showPincodeModal()}
+            />
+          ) : (
+            <PdpPincode onClick={() => this.showPincodeModal()} />
+          )}
+          {this.props.productDetails.isServiceableToPincode &&
+          this.props.productDetails.isServiceableToPincode.status === NO ? (
+            <Overlay labelText="Not serviceable in you pincode,
+  please try another pincode">
+              {this.renderDeliveryOptions(productData)}
+            </Overlay>
+          ) : (
+            this.renderDeliveryOptions(productData)
+          )}
+
           {productData.otherSellersText && (
             <div className={styles.separator}>
               <PdpLink onClick={this.goToSellerPage}>
