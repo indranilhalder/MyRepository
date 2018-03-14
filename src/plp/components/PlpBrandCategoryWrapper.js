@@ -1,6 +1,6 @@
 import React from "react";
 import ProductListingsContainer from "../containers/ProductListingsContainer.js";
-import BrandLandingPageContainer from "../../brands/containers/BrandLandingPageContainer";
+import BrandLandingPageContainer from "../../blp/containers/BrandLandingPageContainer";
 import throttle from "lodash/throttle";
 import queryString from "query-string";
 import MDSpinner from "react-md-spinner";
