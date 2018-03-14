@@ -21,7 +21,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     const categoryOrBrandId = this.props.location.pathname.match(
       CAPTURE_REGEX
     )[1];
-
     this.props.homeFeed(categoryOrBrandId);
   }
 
