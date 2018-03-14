@@ -17,6 +17,7 @@ import { Icon } from "xelpmoc-core";
 import BrandsItem from "./BrandsItem";
 import styles from "./BrandsLandingPageDefault.css";
 import arrowIcon from "../../general/components/img/down-arrow.svg";
+import searchIcon from "../../general/components/img/Search.svg";
 export default class BrandsLandingPageDefault extends React.Component {
   constructor(props) {
     super(props);
@@ -125,10 +126,18 @@ export default class BrandsLandingPageDefault extends React.Component {
               })}
           </BannerMobile>
         </div>
-        <Input2
-          placeholder="Search by"
-          onChange={val => this.setState({ searchBy: val })}
-        />
+        <div className={styles.searchInput}>
+          <Input2
+            placeholder="Search your brand"
+            onChange={val => this.setState({ searchBy: val })}
+            rightChild={
+              <div className={styles.searchIcon}>
+                <Icon image={searchIcon} size={15} />
+              </div>
+            }
+            rightChildSize={40}
+          />
+        </div>
         <div className={styles.following} />
         <div className={styles.category}>
           {parentBrandsLabel &&
