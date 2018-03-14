@@ -354,7 +354,6 @@ export function applyUserCoupon(couponCode) {
         throw new Error(resultJson.error);
       }
       dispatch(applyUserCouponSuccess());
-
     } catch (e) {
       dispatch(applyUserCouponFailure(e.message));
     }

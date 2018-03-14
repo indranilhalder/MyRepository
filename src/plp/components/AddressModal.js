@@ -6,14 +6,30 @@ import PropTypes from "prop-types";
 import styles from "./AddressModal.css";
 
 export default class AddressModal extends React.Component {
+  checkPinCodeAvailability(pincode) {
+    this.props.getProductPinCode(pincode, this.props.productCode);
+    this.props.closeModal();
+  }
+  componentDidMount() {
+    this.props.getUserAddress();
+  }
   render() {
     return (
       <BottomSlideModal>
         <div className={styles.base}>
           <div className={styles.searchHolder}>
-            <SearchAndUpdate />
+            <SearchAndUpdate
+              checkPinCodeAvailability={pincode =>
+                this.checkPinCodeAvailability(pincode)
+              }
+            />
           </div>
-          {this.props.data && <AddressCarousel data={this.props.data} />}
+          {this.props.userAddress && (
+            <AddressCarousel
+              data={this.props.userAddress.addresses}
+              selectAddress={pincode => this.checkPinCodeAvailability(pincode)}
+            />
+          )}
         </div>
       </BottomSlideModal>
     );
