@@ -7,7 +7,11 @@ export default class CheckOutHeader extends React.Component {
       <div className={styles.base}>
         <div className={styles.confirm}>
           {this.props.confirmTitle}
-          <div className={styles.circle}>{this.props.indexNumber}</div>
+          {this.props.indexNumber !== "0" && (
+            <div className={styles.circleHolder}>
+              <div className={styles.circle}>{this.props.indexNumber}</div>
+            </div>
+          )}
         </div>
       </div>
     );

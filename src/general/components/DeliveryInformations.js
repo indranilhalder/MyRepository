@@ -9,9 +9,7 @@ import ExpressImage from "./img/expressDelivery.svg";
 import HomeImage from "./img/homeDelivery.svg";
 import arrowIcon from "./img/arrowBackblack.svg";
 import CollectImage from "./img/collect.svg";
-const EXPRESS = "express-delivery";
-const COLLECT = "click-and-collect";
-
+import { EXPRESS, COLLECT } from "../../lib/constants";
 export default class DeliveryInformations extends React.Component {
   handleClick() {
     if (this.props.onClick) {

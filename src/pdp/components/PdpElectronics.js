@@ -11,6 +11,8 @@ import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
+import PdpPincode from "./PdpPincode";
+import Overlay from "./Overlay";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import Logo from "../../general/components/Logo.js";
 import Carousel from "../../general/components/Carousel.js";
@@ -18,7 +20,6 @@ import ProductModule from "../../general/components/ProductModule.js";
 import Button from "../../general/components/Button.js";
 import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
-import { transformData } from "../../home/components/utils.js";
 import PDPRecommendedSections from "./PDPRecommendedSections.js";
 import {
   PRODUCT_SELLER_ROUTER_SUFFIX,
@@ -29,7 +30,11 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   ANONYMOUS_USER,
   PRODUCT_CART_ROUTER,
-  PRODUCT_REVIEWS_PATH_SUFFIX
+  PRODUCT_REVIEWS_PATH_SUFFIX,
+  YES,
+  NO,
+  PRODUCT_DESCRIPTION_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
 } from "../../lib/constants";
 
 const DELIVERY_TEXT = "Delivery Options For";
@@ -100,7 +105,15 @@ export default class PdpElectronics extends React.Component {
     const url = `${this.props.location.pathname}${PRODUCT_REVIEWS_PATH_SUFFIX}`;
     this.props.history.push(url);
   };
-
+  showPincodeModal() {
+    if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+      this.props.showPincodeModal(this.props.match.params[0]);
+    } else if (
+      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+    ) {
+      this.props.showPincodeModal(this.props.match.params[2]);
+    }
+  }
   addToWishList = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
@@ -134,8 +147,26 @@ export default class PdpElectronics extends React.Component {
     this.props.getEmiTerms(globalAccessToken, cartValue);
     this.props.showEmiModal();
   };
+  renderDeliveryOptions(productData) {
+    return (
+      productData.eligibleDeliveryModes &&
+      productData.eligibleDeliveryModes.map((val, idx) => {
+        return (
+          <DeliveryInformation
+            key={idx}
+            header={val.name}
+            placedTime={val.timeline}
+            type={val.code}
+            onClick={() => this.renderAddressModal()}
+            deliveryOptions={DELIVERY_TEXT}
+            label={PIN_CODE}
+            showCliqAndPiqButton={false}
+          />
+        );
+      })
+    );
+  }
   render() {
-    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -168,6 +199,7 @@ export default class PdpElectronics extends React.Component {
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
           addProductToWishList={() => this.addToWishList()}
+          showPincodeModal={() => this.showPincodeModal()}
         >
           <ProductGalleryMobile isElectronics={true}>
             {mobileGalleryImages.map((val, idx) => {
@@ -195,6 +227,7 @@ export default class PdpElectronics extends React.Component {
               </div>
             </div>
           )}
+
           {productData.productOfferPromotion && (
             <OfferCard
               endTime={productData.productOfferPromotion[0].validTill.date}
@@ -203,6 +236,7 @@ export default class PdpElectronics extends React.Component {
               onClick={this.goToCouponPage}
             />
           )}
+
           {productData.variantOptions && (
             <React.Fragment>
               <ColourSelector
@@ -221,21 +255,26 @@ export default class PdpElectronics extends React.Component {
               />
             </React.Fragment>
           )}
-          {productData.eligibleDeliveryModes &&
-            productData.eligibleDeliveryModes.map((val, idx) => {
-              return (
-                <DeliveryInformation
-                  key={idx}
-                  header={val.name}
-                  placedTime={val.timeline}
-                  type={val.code}
-                  onClick={() => this.renderAddressModal()}
-                  deliveryOptions={DELIVERY_TEXT}
-                  label={PIN_CODE}
-                  showCliqAndPiqButton={false}
-                />
-              );
-            })}
+          {this.props.productDetails.isServiceableToPincode &&
+          this.props.productDetails.isServiceableToPincode.pinCode ? (
+            <PdpPincode
+              hasPincode={true}
+              pincode={this.props.productDetails.isServiceableToPincode.pinCode}
+              onClick={() => this.showPincodeModal()}
+            />
+          ) : (
+            <PdpPincode onClick={() => this.showPincodeModal()} />
+          )}
+          {this.props.productDetails.isServiceableToPincode &&
+          this.props.productDetails.isServiceableToPincode.status === NO ? (
+            <Overlay labelText="Not serviceable in you pincode,
+please try another pincode">
+              {this.renderDeliveryOptions(productData)}
+            </Overlay>
+          ) : (
+            this.renderDeliveryOptions(productData)
+          )}
+
           {productData.otherSellers && (
             <div className={styles.separator}>
               <PdpLink onClick={this.goToSellerPage}>

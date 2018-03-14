@@ -1,4 +1,6 @@
 import * as pdpActions from "../actions/pdp.actions";
+import { YES, NO } from "../../lib/constants";
+import { transferPincodeToPdpPincode } from "./utils";
 import cloneDeep from "lodash/cloneDeep";
 const productDescription = (
   state = {
@@ -6,6 +8,7 @@ const productDescription = (
     error: null,
     loading: false,
     productDetails: null,
+    isServiceableToPincode: null,
     sizeGuide: {
       loading: false,
       sizeGuideList: []
@@ -72,9 +75,38 @@ const productDescription = (
       });
 
     case pdpActions.CHECK_PRODUCT_PIN_CODE_SUCCESS:
+      let currentPdpDetail = cloneDeep(state.productDetails);
+
+      let eligibleDeliveryModes = [];
+
+      if (
+        action.productPinCode.deliveryOptions.pincodeListResponse &&
+        action.productPinCode.deliveryOptions.pincodeListResponse[0]
+          .isServicable === YES
+      ) {
+        eligibleDeliveryModes = transferPincodeToPdpPincode(
+          action.productPinCode.deliveryOptions.pincodeListResponse[0]
+            .validDeliveryModes
+        );
+        Object.assign(currentPdpDetail, {
+          eligibleDeliveryModes,
+          isServiceableToPincode: {
+            status: YES,
+            pinCode: action.productPinCode.pinCode
+          }
+        });
+      } else {
+        Object.assign(currentPdpDetail, {
+          isServiceableToPincode: {
+            status: NO,
+            pinCode: action.productPinCode.pinCode
+          }
+        });
+      }
+
       return Object.assign({}, state, {
         status: action.status,
-        productDetails: action.productDescription,
+        productDetails: currentPdpDetail,
         loading: false
       });
 

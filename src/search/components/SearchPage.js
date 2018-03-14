@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./SearchPage.css";
-import BrandHeader from "../../brands/components/BrandHeader";
+import BrandHeader from "../../blp/components/BrandHeader";
 import SearchResultItem from "./SearchResultItem";
 
 export default class SearchPage extends React.Component {
