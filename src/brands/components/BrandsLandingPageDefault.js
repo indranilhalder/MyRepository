@@ -85,7 +85,7 @@ export default class BrandsLandingPageDefault extends React.Component {
           <BrandsSelect
             limit={1}
             onSelect={val => this.switchTab(val[0])}
-            selected={[]}
+            selected={[this.state.currentActiveBrandType]}
           >
             {brandList.map((val, idx) => {
               return <BrandsItem label={val} value={idx} key={idx} />;
