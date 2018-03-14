@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import map from "lodash/map";
 import groupBy from "lodash/groupBy";
 import filter from "lodash/filter";
@@ -166,3 +167,7 @@ export default class BrandsLandingPageDefault extends React.Component {
     );
   }
 }
+BrandsLandingPageDefault.propTypes = {
+  loading: PropTypes.bool,
+  brandsStores: PropTypes.object
+};
