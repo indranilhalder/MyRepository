@@ -1,5 +1,4 @@
 import React from "react";
-import FilterCategoryDetails from "./FilterCategoryDetails";
 import styles from "./FilterCategoryL1.css";
 export default class FilterCategoryL1 extends React.Component {
   constructor(props) {
@@ -19,11 +18,6 @@ export default class FilterCategoryL1 extends React.Component {
     }
   };
 
-  // componentWillReceiveProps(nextProps) {
-  //   console.log("next Props");
-  //   console.log(nextProps);
-  //   this.setState({ isOpen: nextProps.isOpen });
-  // }
   render() {
     return (
       <div className={styles.base}>
