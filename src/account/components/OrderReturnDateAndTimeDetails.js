@@ -11,22 +11,23 @@ export default class OrderReturnDateAndTimeDetails extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        {this.props.date && (
-          <div className={styles.dateAndTimeHolder}>
-            {this.props.date && (
-              <div className={styles.dateHolder}>
-                <div className={styles.date}>Date</div>
-                <div className={styles.dateInfo}>{this.props.date}</div>
-              </div>
-            )}
-            {this.props.time && (
-              <div className={styles.timeHolder}>
-                <div className={styles.time}>Time</div>
-                <div className={styles.timeInfo}>{this.props.time}</div>
-              </div>
-            )}
-          </div>
-        )}
+        {this.props.date ||
+          (this.props.time && (
+            <div className={styles.dateAndTimeHolder}>
+              {this.props.date && (
+                <div className={styles.dateHolder}>
+                  <div className={styles.date}>Date</div>
+                  <div className={styles.dateInfo}>{this.props.date}</div>
+                </div>
+              )}
+              {this.props.time && (
+                <div className={styles.timeHolder}>
+                  <div className={styles.time}>Time</div>
+                  <div className={styles.timeInfo}>{this.props.time}</div>
+                </div>
+              )}
+            </div>
+          ))}
         {this.props.underlineButtonLabel && (
           <div className={styles.cancelHolder}>
             <div className={styles.cancel} onClick={() => this.onCancel()}>
@@ -47,4 +48,7 @@ OrderReturnDateAndTimeDetails.propTypes = {
   time: PropTypes.string,
   date: PropTypes.string,
   onCancel: PropTypes.func
+};
+OrderReturnDateAndTimeDetails.defaultProps = {
+  underlineButtonColour: "#9b9b9b"
 };

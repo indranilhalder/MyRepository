@@ -1,15 +1,21 @@
 import React from "react";
 import styles from "./OrderReturnAddressDetails.css";
 import PropTypes from "prop-types";
+import CheckBox from "../../general/components/CheckBox.js";
 export default class OrderReturnAddressDetails extends React.Component {
   onCancel() {
-    if (this.props.onClick) {
-      this.props.onClick();
+    if (this.props.selectItem) {
+      this.props.selectItem();
     }
   }
   render() {
     return (
-      <div className={styles.base}>
+      <div className={this.props.isSelect ? styles.withCheckbox : styles.base}>
+        {this.props.isSelect && (
+          <div className={styles.checkBoxHolder}>
+            <CheckBox selected={this.props.selected} />
+          </div>
+        )}
         {this.props.addressType && (
           <div className={styles.home}>{this.props.addressType}</div>
         )}
@@ -26,5 +32,7 @@ export default class OrderReturnAddressDetails extends React.Component {
 OrderReturnAddressDetails.propTypes = {
   address: PropTypes.string,
   subAddress: PropTypes.string,
-  addressType: PropTypes.string
+  addressType: PropTypes.string,
+  isSelect: PropTypes.bool,
+  selectItem: PropTypes.func
 };

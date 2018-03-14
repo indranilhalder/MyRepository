@@ -3,6 +3,11 @@
   height: auto;
   background-color: #ffffff;
 }
+.withCheckbox {
+  composes: base;
+  padding-right: 35px;
+  position: relative;
+}
 .home {
   width: 100%;
   height: auto;
@@ -17,12 +22,18 @@
   display: inline-block;
   font-family: regular;
   font-size: 14px;
-  line-height: 25px;
+  line-height: normal;
 }
 .address {
   composes: addressDetails;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 80%;
+  margin-top: 5px;
+}
+.checkBoxHolder {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 15px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }
