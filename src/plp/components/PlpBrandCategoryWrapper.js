@@ -1,5 +1,5 @@
 import React from "react";
-import BrandLandingPageContainer from "../../brands/containers/BrandLandingPageContainer";
+import BrandLandingPageContainer from "../../blp/containers/BrandLandingPageContainer";
 import { Redirect } from "react-router";
 import MDSpinner from "react-md-spinner";
 import { BLP_OR_CLP_FEED_TYPE } from "../../lib/constants";
