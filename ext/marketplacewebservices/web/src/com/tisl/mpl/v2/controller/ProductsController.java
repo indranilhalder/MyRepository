@@ -1720,7 +1720,7 @@ public class ProductsController extends BaseController
 
 
 
-	@RequestMapping(value = "/{productCode}", params = "isPwa", method = RequestMethod.GET)
+	@RequestMapping(value = "/productDetsils/{productCode}", params = "isPwa", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PRIVATE, maxAge = 120)
 	@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
 	@ResponseBody
