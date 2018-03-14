@@ -67,7 +67,7 @@ export default class EditAccountDetails extends React.Component {
             />
           </div>
           <div className={styles.container}>
-            <MobileDatePicker />
+            <MobileDatePicker onChange={date => this.onChange({ date })} />
           </div>
         </div>
       </div>
@@ -78,7 +78,8 @@ EditAccountDetails.propTypes = {
   emailId: PropTypes.string,
   phoneNumber: PropTypes.string,
   userName: PropTypes.string,
-  gender: PropTypes.string
+  gender: PropTypes.string,
+  onChange: PropTypes.func
 };
 EditAccountDetails.defaultProps = {
   phoneNumber: "7358082465",
