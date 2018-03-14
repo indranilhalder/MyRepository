@@ -20,7 +20,8 @@ const home = (
     case homeActions.HOME_FEED_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        loading: true
+        loading: true,
+        feedType: action.feedType
       });
 
     case homeActions.HOME_FEED_SUCCESS:

@@ -45,10 +45,9 @@ export default class ProductGrid extends React.Component {
       <ProductModule
         productImage={data.imageURL}
         title={data.brandname}
-        price={data.mrpPrice.formattedValue}
-        discountPrice={data.sellingPrice.formattedValue}
+        price={data.price.mrpPrice.formattedValue}
+        discountPrice={data.price.sellingPrice.formattedValue}
         description={data.productname}
-        bestDeliveryInfo={data.bestDeliveryInfo}
         offerText={data.offerText}
         averageRating={data.averageRating}
         totalNoOfReviews={data.totalNoOfReviews}
@@ -70,13 +69,13 @@ export default class ProductGrid extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
-          <div className={styles.area}>{this.props.area}</div>
-          <div
+          {/* <div className={styles.area}>{this.props.area}</div> */}
+          {/* <div
             className={styles.areaChange}
             onClick={() => this.changeAddress()}
           >
             Change
-          </div>
+          </div> */}
           <div className={styles.icon} onClick={() => this.switchView()}>
             {this.state.view === LIST && <Icon image={gridImage} size={20} />}
             {this.state.view === GRID && <Icon image={listImage} size={20} />}
