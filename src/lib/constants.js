@@ -18,7 +18,13 @@ export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
 export const REFRESH_TOKEN = "refresh_token";
 export const BRAND_OR_CATEGORY_LANDING_PAGE =
   "/:brandOrCategory/:brandOrCategoryId";
-export const PRODUCT_LISTINGS = "/productListings";
+export const BRAND_PAGE = "/c-(mbh.*)";
+export const BRAND_PAGE_WITH_SLUG = `/.*/${BRAND_PAGE}`;
+
+export const CATEGORY_PAGE = "/c-(msh.*)";
+export const CATEGORY_PAGE_WITH_SLUG = `/:slug/c-(msh.*)`;
+export const PRODUCT_LISTINGS = "/search/(.*)";
+
 export const PLP_CATEGORY_SEARCH = "/search/?searchCategory=all&text=shirt";
 
 export const SEARCH_RESULTS_PAGE = "/search/";

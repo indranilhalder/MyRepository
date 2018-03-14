@@ -1,112 +1,67 @@
 import React from "react";
-import ProductListingsContainer from "../containers/ProductListingsContainer.js";
-import BrandLandingPageContainer from "../../blp/containers/BrandLandingPageContainer";
-import throttle from "lodash/throttle";
-import queryString from "query-string";
+import BrandLandingPageContainer from "../../brands/containers/BrandLandingPageContainer";
+import { Redirect } from "react-router";
 import MDSpinner from "react-md-spinner";
 import { BLP_OR_CLP_FEED_TYPE } from "../../lib/constants";
-const CATEGORY_REGEX = /c-msh*/;
-const BRAND_REGEX = /c-mbh*/;
-const CAPTURE_REGEX = /c-(.*)/;
-const SUFFIX = `&isTextSearch=false&isFilter=false`;
-const IS_FILTER_SUFFIX = `&isFilter=true`;
-const SEARCH_CATEGORY_TO_IGNORE = "all";
+
+export const CATEGORY_REGEX = /c-msh*/;
+export const BRAND_REGEX = /c-mbh*/;
+export const CAPTURE_REGEX = /c-(.*)/;
 
 export default class PlpBrandCategoryWrapper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageType: props.location.pathname
+      pageType: props.location.pathname,
+      redirectToPlp: false
     };
   }
-  getSearchTextFromUrl() {
-    const parsedQueryString = queryString.parse(this.props.location.search);
-    const searchCategory = parsedQueryString.searchCategory;
-    let searchText = parsedQueryString.q;
-    const brandOrCategoryId = this.props.match.params.brandOrCategoryId;
+
+  componentWillMount() {
+    const categoryOrBrandId = this.props.location.pathname.match(
+      CAPTURE_REGEX
+    )[1];
+    this.props.homeFeed(categoryOrBrandId);
+  }
+
+  renderLoader() {
+    return <MDSpinner />;
+  }
+
+  getPlpUrl = () => {
+    const url = this.props.location.pathname;
     let match;
-    if (CATEGORY_REGEX.test(brandOrCategoryId)) {
-      match = CAPTURE_REGEX.exec(brandOrCategoryId)[1];
+    let searchText;
+    if (CATEGORY_REGEX.test(url)) {
+      match = CAPTURE_REGEX.exec(url)[1];
       match = match.toUpperCase();
       searchText = `:relevance:category:${match}`;
     }
 
-    if (BRAND_REGEX.test(brandOrCategoryId)) {
-      match = CAPTURE_REGEX.exec(brandOrCategoryId)[1];
+    if (BRAND_REGEX.test(url)) {
+      match = CAPTURE_REGEX.exec(url)[1];
       match = match.toUpperCase();
       searchText = `:relevance:brand:${match}`;
     }
 
-    if (searchCategory && searchCategory !== SEARCH_CATEGORY_TO_IGNORE) {
-      searchText = `:category:${searchCategory}`;
-    }
-
-    if (!searchText) {
-      searchText = parsedQueryString.text;
-    }
-    return searchText;
-  }
-  componentDidMount() {
-    window.addEventListener("scroll", this.handleScroll);
-    let productId = this.props.location.pathname.match(CAPTURE_REGEX)[1];
-    this.props.homeFeed(productId);
-  }
-
-  componentDidUpdate() {
-    if (
-      this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE &&
-      this.props.homeFeedData.homeFeed.length === 0 &&
-      this.props.productListings === null
-    ) {
-      const suffix = "&isFilter=false";
-      const searchText = this.getSearchTextFromUrl();
-      this.props.getProductListings(searchText, suffix, 0, true);
-    }
-  }
-
-  handleScroll = () => {
-    const windowHeight =
-      "innerHeight" in window
-        ? window.innerHeight
-        : document.documentElement.offsetHeight;
-    const body = document.body;
-    const html = document.documentElement;
-    const docHeight = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-    );
-    const windowBottom = windowHeight + window.pageYOffset;
-    if (windowBottom >= docHeight) {
-      this.props.paginate(this.props.page + 1, SUFFIX);
-      // this is where I need to  update the page
-      // I do a getProductListings call, but I need to throttle it.
-    }
+    return `/search/?q=${searchText}`;
   };
 
-  componentWillUnmount() {
-    window.removeEventListener("scroll", throttle(this.handleScroll, 300));
-  }
-  renderLoader() {
-    return <MDSpinner />;
-  }
   render() {
-    if (this.props.homeFeedData.loading) {
+    if (
+      this.props.homeFeedData.loading ||
+      this.props.homeFeedData.feedType === null
+    ) {
       return this.renderLoader();
     }
-    let isFilter = false;
-    if (this.props.location.state) {
-      isFilter = this.props.location.state.isFilter
-        ? this.props.location.state.isFilter
-        : false;
+
+    if (this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE) {
+      if (this.props.homeFeedData.homeFeed.length > 0) {
+        return <BrandLandingPageContainer />;
+      } else {
+        return <Redirect to={this.getPlpUrl()} />;
+      }
     }
-    return this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE &&
-      this.props.homeFeedData.homeFeed.length > 0 ? (
-      <BrandLandingPageContainer />
-    ) : (
-      <ProductListingsContainer isFilter={isFilter} />
-    );
+    return null;
   }
 }

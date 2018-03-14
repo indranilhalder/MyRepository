@@ -53,7 +53,11 @@ import {
   PRODUCT_SELLER_ROUTER,
   PRODUCT_OTHER_SELLER_ROUTER,
   DEFAULT_BRANDS_LANDING_PAGE,
-  CATEGORIES_LANDING_PAGE
+  CATEGORIES_LANDING_PAGE,
+  BRAND_PAGE,
+  CATEGORY_PAGE,
+  BRAND_PAGE_WITH_SLUG,
+  CATEGORY_PAGE_WITH_SLUG
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -151,9 +155,32 @@ class App extends Component {
             )}
           />
 
-          <Route
+          {/* <Route
             exact
             path={SEARCH_RESULTS_PAGE}
+            component={PlpBrandCategoryWrapperContainer}
+          /> */}
+          <Route
+            exact
+            path={BRAND_PAGE}
+            component={PlpBrandCategoryWrapperContainer}
+          />
+
+          <Route
+            exact
+            path={CATEGORY_PAGE}
+            component={PlpBrandCategoryWrapperContainer}
+          />
+
+          <Route
+            exact
+            path={BRAND_PAGE_WITH_SLUG}
+            component={PlpBrandCategoryWrapperContainer}
+          />
+
+          <Route
+            strict
+            path={CATEGORY_PAGE_WITH_SLUG}
             component={PlpBrandCategoryWrapperContainer}
           />
 
@@ -174,11 +201,6 @@ class App extends Component {
           <Route
             path={PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE}
             component={ProductDescriptionPageWrapperContainer}
-          />
-          <Route
-            exact
-            path={BRAND_OR_CATEGORY_LANDING_PAGE}
-            component={PlpBrandCategoryWrapperContainer}
           />
 
           <Route

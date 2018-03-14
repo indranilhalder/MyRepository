@@ -10,7 +10,12 @@ import {
   pdpAboutBrand,
   getProductPinCode
 } from "../actions/pdp.actions";
-import { showModal, EMI_MODAL, ADDRESS } from "../../general/modal.actions.js";
+import {
+  showModal,
+  EMI_MODAL,
+  ADDRESS,
+  SIZE_GUIDE
+} from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
 
@@ -34,6 +39,9 @@ const mapDispatchToProps = dispatch => {
     pdpAboutBrand: productCode => {
       dispatch(pdpAboutBrand(productCode));
     },
+    showSizeGuide: () => {
+      dispatch(showModal(SIZE_GUIDE));
+    },
     getPdpEmi: (token, cartValue) => {
       dispatch(getPdpEmi(token, cartValue));
     },
@@ -42,9 +50,6 @@ const mapDispatchToProps = dispatch => {
     },
     showEmiModal: () => {
       dispatch(showModal(EMI_MODAL));
-    },
-    showSizeGuide: () => {
-      dispatch(showModal("SizeGuide"));
     },
     showPincodeModal: productCode => {
       dispatch(showModal(ADDRESS, { productCode }));

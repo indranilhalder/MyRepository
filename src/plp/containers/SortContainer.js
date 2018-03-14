@@ -1,5 +1,4 @@
 import { connect } from "react-redux";
-import { getProductListings } from "../actions/plp.actions";
 import { hideModal } from "../../general/modal.actions";
 import Sort from "../components/Sort";
 import { withRouter } from "react-router-dom";
@@ -10,7 +9,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(hideModal());
     },
     onClick: sortBy => {
-      dispatch(getProductListings()).then(dispatch(hideModal()));
+      dispatch(hideModal());
     }
   };
 };
