@@ -48,3 +48,9 @@
 .followVisible .arrow {
   transform: rotate(180deg);
 }
+.searchInput {
+  padding: 0 20px;
+}
+.searchIcon {
+  padding: 10px;
+}
