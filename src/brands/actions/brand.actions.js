@@ -1,48 +1,112 @@
 import { SUCCESS, REQUESTING, ERROR, FAILURE } from "../../lib/constants";
 
-export const GET_CATEGORIES_REQUEST = "GET_CATEGORIES_REQUEST";
-export const GET_CATEGORIES_SUCCESS = "GET_CATEGORIES_SUCCESS";
-export const GET_CATEGORIES_FAILURE = "GET_CATEGORIES_FAILURE";
+export const GET_ALL_BRANDS_STORE_REQUEST = "GET_ALL_BRANDS_STORE_REQUEST";
+export const GET_ALL_BRANDS_STORE_SUCCESS = "GET_ALL_BRANDS_STORE_SUCCESS";
+export const GET_ALL_BRANDS_STORE_FAILURE = "GET_ALL_BRANDS_STORE_FAILURE";
 const USER_CATEGORY_PATH = "v2/mpl/catalogs";
-export function getCategoriesRequest() {
+let brandsStores = {
+  brandsTabAZListComponent: {
+    items: [
+      {
+        brands: [
+          {
+            brandName: "Nike",
+            webURL: "https://www.tatacliq.com/nike/mbh-123"
+          },
+          {
+            brandName: "Puma",
+            webURL: "https://www.tatacliq.com/puma/mbh-123"
+          }
+        ],
+        items: [
+          {
+            heroBannerComponent: {
+              items: [
+                {
+                  brandLogo: "",
+                  imageURL: "",
+                  title: "HeroBannerEle title",
+                  webURL: "www.tatacliq.com"
+                }
+              ],
+              type: "Hero Banner Component"
+            }
+          }
+        ],
+        subType: "Men"
+      },
+      {
+        brands: [
+          {
+            brandName: "Nike",
+            webURL: "https://www.tatacliq.com/nike/mbh-123"
+          },
+          {
+            brandName: "Puma",
+            webURL: "https://www.tatacliq.com/puma/mbh-123"
+          }
+        ],
+        items: [
+          {
+            heroBannerComponent: {
+              items: [
+                {
+                  brandLogo: "",
+                  imageURL: "",
+                  title: "HeroBannerEle title",
+                  webURL: "www.tatacliq.com"
+                }
+              ],
+              type: "Hero Banner Component"
+            }
+          }
+        ],
+        subType: "Women"
+      }
+    ],
+    type: "Brands Tab AZ List Component"
+  },
+  componentName: "brandsTabAZListComponent"
+};
+export function getAllBrandsStoreRequest() {
   return {
-    type: GET_CATEGORIES_REQUEST,
+    type: GET_ALL_BRANDS_STORE_REQUEST,
     status: REQUESTING
   };
 }
-export function getCategoriesSuccess(categories) {
+export function getAllBrandsStoreSuccess(brandsStores) {
   return {
-    type: GET_CATEGORIES_SUCCESS,
+    type: GET_ALL_BRANDS_STORE_SUCCESS,
     status: SUCCESS,
-    categories
+    brandsStores
   };
 }
 
-export function getCategoriesFailure(error) {
+export function getAllBrandsStoreFailure(error) {
   return {
-    type: GET_CATEGORIES_FAILURE,
+    type: GET_ALL_BRANDS_STORE_FAILURE,
     status: ERROR,
     error
   };
 }
 
-export function getCategories(userId, accessToken, cartId) {
+export function getAllBrandsStore(userId, accessToken, cartId) {
   return async (dispatch, getState, { api }) => {
-    dispatch(getCategoriesRequest());
+    dispatch(getAllBrandsStoreRequest());
 
     try {
-      const result = await api.get(
-        `${USER_CATEGORY_PATH}/getAllCategorieshierarchy?`
-      );
-      console.log(result);
-      const resultJson = await result.json();
-      console.log(resultJson);
-      if (resultJson.status === FAILURE) {
-        throw new Error(resultJson.error);
-      }
-      dispatch(getCategoriesSuccess(resultJson));
+      // const result = await api.get(
+      //   `${USER_CATEGORY_PATH}/getAllCategorieshierarchy?`
+      // );
+
+      // const resultJson = await result.json();
+
+      // if (resultJson.status === FAILURE) {
+      //   throw new Error(resultJson.error);
+      // }
+      dispatch(getAllBrandsStoreSuccess(brandsStores));
     } catch (e) {
-      dispatch(getCategoriesFailure(e.message));
+      dispatch(getAllBrandsStoreFailure(e.message));
     }
   };
 }
