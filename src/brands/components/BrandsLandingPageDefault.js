@@ -1,6 +1,7 @@
 import React from "react";
 import map from "lodash/map";
 import groupBy from "lodash/groupBy";
+import filter from "lodash/filter";
 import MDSpinner from "react-md-spinner";
 import BrandHeader from "./BrandHeader";
 import BrandsCategory from "./BrandsCategory";
@@ -11,6 +12,7 @@ import BannerMobile from "../../general/components/BannerMobile";
 import Carousel from "../../general/components/Carousel";
 import MobileFooter from "../../general/components/MobileFooter";
 import BrandsSelect from "./BrandsSelect";
+import Input2 from "../../general/components/Input2";
 import { Icon } from "xelpmoc-core";
 import BrandsItem from "./BrandsItem";
 import styles from "./BrandsLandingPageDefault.css";
@@ -20,7 +22,8 @@ export default class BrandsLandingPageDefault extends React.Component {
     super(props);
     this.state = {
       showFollowing: false,
-      currentActiveBrandType: 0
+      currentActiveBrandType: 0,
+      searchBy: null
     };
   }
   componentDidMount() {
@@ -45,31 +48,10 @@ export default class BrandsLandingPageDefault extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     if (!this.props.brandsStores) {
       return this.renderLoader();
     }
-    const catagory = [
-      {
-        index: "1",
-        catagory: "109 F",
-        subCatagory: [{ list: "11cent" }]
-      },
-      {
-        index: "9",
-        catagory: "9rasa",
-        subCatagory: [{ list: "9teenAGAIN", select: true }]
-      },
-      {
-        index: "A",
-        catagory: "AND",
-        subCatagory: [
-          { list: "Amante" },
-          { list: "Avengers", select: true },
-          { list: "Arkham Asylum" }
-        ]
-      }
-    ];
+
     let brandsStores = this.props.brandsStores[
       this.props.brandsStores.componentName
     ].items;
@@ -81,6 +63,11 @@ export default class BrandsLandingPageDefault extends React.Component {
         .heroBannerComponent.items;
     let currentActiveBrandList =
       brandsStores[this.state.currentActiveBrandType].brands;
+    if (this.state.searchBy) {
+      currentActiveBrandList = filter(currentActiveBrandList, brand => {
+        return brand.brandName.toLowerCase().includes(this.state.searchBy);
+      });
+    }
 
     currentActiveBrandList = groupBy(currentActiveBrandList, list => {
       return list.brandName[0];
@@ -101,7 +88,9 @@ export default class BrandsLandingPageDefault extends React.Component {
             })}
           </BrandsSelect>
         </div>
-        <div className={styles.following}>
+        {/* we need to show this once api will be work and at that
+        time also need some modification in integration */}
+        {/* <div className={styles.following}>
           <div
             className={
               this.state.showFollowing
@@ -120,7 +109,7 @@ export default class BrandsLandingPageDefault extends React.Component {
               <BrandImage image="https://i.pinimg.com/originals/96/29/ef/9629efc8a4be4fd1600a9bb3940fd89c.jpg" />
             </Carousel>
           )}
-        </div>
+        </div> */}
         <div className={styles.bannerHolder}>
           <BannerMobile bannerHeight="45vw">
             {currentActiveHeroBanner &&
@@ -136,11 +125,14 @@ export default class BrandsLandingPageDefault extends React.Component {
               })}
           </BannerMobile>
         </div>
+        <Input2
+          placeholder="Search by"
+          onChange={val => this.setState({ searchBy: val })}
+        />
         <div className={styles.following} />
         <div className={styles.category}>
           {parentBrandsLabel &&
             parentBrandsLabel.map((val, i) => {
-              console.log(currentActiveBrandList[val]);
               return (
                 <BrandsCategory index={val} catagory={val} key={i}>
                   {currentActiveBrandList[val] &&
