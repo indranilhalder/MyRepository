@@ -390,7 +390,7 @@ const productDescription = (
       });
     case pdpActions.PDP_ABOUT_BRAND_SUCCESS:
       const newMsdItemsForBrand = cloneDeep(state.msdItems);
-      let brandDetails = Object.assign(
+      const brandDetails = Object.assign(
         {},
         {
           isFollowing: action.brandDetails.isFollowing,
