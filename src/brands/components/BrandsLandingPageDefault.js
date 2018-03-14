@@ -18,6 +18,8 @@ import BrandsItem from "./BrandsItem";
 import styles from "./BrandsLandingPageDefault.css";
 import arrowIcon from "../../general/components/img/down-arrow.svg";
 import searchIcon from "../../general/components/img/Search.svg";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
 export default class BrandsLandingPageDefault extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +33,8 @@ export default class BrandsLandingPageDefault extends React.Component {
     this.props.getAllBrandsStore();
   }
   renderToAnotherURL(webURL) {
-    console.log(webURL);
+    const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "");
+    this.props.history.push(urlSuffix);
   }
   switchTab(val) {
     this.setState({ currentActiveBrandType: val });
