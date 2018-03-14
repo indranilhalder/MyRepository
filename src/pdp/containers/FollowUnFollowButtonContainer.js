@@ -4,13 +4,15 @@ import { followUnFollowBrand } from "../actions/pdp.actions";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onClick: () => {
+      console.log(ownProps);
       dispatch(followUnFollowBrand(ownProps.brandId));
     }
   };
 };
 const mapStateToProps = (state, ownProps) => {
   return {
-    label: ownProps.isFollowing ? "Unfollow" : "Follow"
+    label: ownProps.isFollowing ? "Unfollow" : "Follow",
+    type: "tertiary"
   };
 };
 const FollowUnFollowButtonContainer = connect(
