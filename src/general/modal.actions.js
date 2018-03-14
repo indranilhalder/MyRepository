@@ -20,7 +20,6 @@ export function showModal(type, ownProps) {
 }
 
 export function hideModal() {
-  console.log("HIDE MODAL CALLED");
   return {
     type: HIDE_MODAL,
     modalType: null
