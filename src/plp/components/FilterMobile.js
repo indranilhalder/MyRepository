@@ -14,10 +14,8 @@ export default class FilterMobile extends React.Component {
   constructor(props) {
     super(props);
     const url = `${props.location.pathname}${props.location.search}`;
-
     this.state = {
       showCategory: true,
-      filterSelectedIndex: 0,
       url
     };
   }
@@ -68,7 +66,6 @@ export default class FilterMobile extends React.Component {
   };
 
   onFilterClick = val => {
-    console.log("ON FILTER CLICK");
     this.props.history.push(val, { isFilter: true });
   };
   render() {
@@ -91,21 +88,22 @@ export default class FilterMobile extends React.Component {
               }}
               selected={this.state.showCategory}
             />
-            {facetData.map((val, i) => {
-              return (
-                <FilterTab
-                  name={val.name}
-                  selectedFilterCount={val.selectedFilterCount}
-                  selected={
-                    i === this.state.filterSelectedIndex &&
-                    !this.state.showCategory
-                  }
-                  onClick={() => {
-                    this.selectTab(i);
-                  }}
-                />
-              );
-            })}
+            {facetData &&
+              facetData.map((val, i) => {
+                return (
+                  <FilterTab
+                    name={val.name}
+                    selectedFilterCount={val.selectedFilterCount}
+                    selected={
+                      i === this.state.filterSelectedIndex &&
+                      !this.state.showCategory
+                    }
+                    onClick={() => {
+                      this.selectTab(i);
+                    }}
+                  />
+                );
+              })}
           </div>
         </div>
         <div className={styles.contenHolder}>

@@ -1,0 +1,47 @@
+.base {
+  width: 33.33%;
+  height: auto;
+  display: inline-block;
+  padding: 10px;
+}
+.iconAndToolTip {
+  width: 100%;
+  height: auto;
+  padding-bottom: 100%;
+  border-radius: 50%;
+  background: #000;
+  position: relative;
+  margin: 3%;
+}
+.brandsIconHolder {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-block;
+}
+.logoHolder {
+  width: 80%;
+  height: 60%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  background-repeat: no-repeat;
+}
+.delete {
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  right: 14.6%;
+  top: 14.6%;
+  transform: translateX(50%) translateY(-50%)scale(0);
+  transition: 300ms;
+}
+.onDelete {
+  composes: delete;
+  transform: translateX(50%) translateY(-50%)scale(1);
+}

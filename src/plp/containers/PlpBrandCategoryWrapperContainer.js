@@ -1,28 +1,18 @@
 import { connect } from "react-redux";
-import { setSearchString } from "../../search/actions/search.actions.js";
-import { getProductListings, setPage } from "../actions/plp.actions.js";
-
+import { homeFeed } from "../../home/actions/home.actions";
 import PlpBrandCategoryWrapper from "../components/PlpBrandCategoryWrapper";
 
 const mapDispatchToProps = dispatch => {
   return {
-    getProductListings: (search: null, suffix, page, isFilter) => {
-      dispatch(setSearchString(search));
-      dispatch(setPage(page));
-      dispatch(getProductListings(suffix, false, isFilter));
-    },
-    paginate: (page, suffix) => {
-      console.log("PAGINATE");
-      console.log(page);
-      dispatch(setPage(page));
-      dispatch(getProductListings(suffix, true, false));
+    homeFeed: brandIdOrCategoryId => {
+      dispatch(homeFeed(brandIdOrCategoryId));
     }
   };
 };
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    page: state.productListings.pageNumber
+    homeFeedData: state.home
   };
 };
 

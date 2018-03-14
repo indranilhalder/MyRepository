@@ -12,14 +12,14 @@ export default class SizeGuideMain extends React.Component {
   render() {
     if (this.props.loading) {
       return (
-        <div className={styles.loadingIndicator}>
-          <MDSpinner />
+        <div className={styles.base}>
+          <div className={styles.loadingIndicator}>
+            <MDSpinner />
+          </div>
         </div>
       );
     }
-    console.log("SIZE GUIDE MAIN");
-    console.log(this.props.sizeData);
-    if (this.props.sizeData) {
+    if (this.props.sizeData && this.props.sizeData.sizeGuideList) {
       return (
         <div className={styles.base}>
           <div className={styles.imageHolder}>
@@ -32,7 +32,7 @@ export default class SizeGuideMain extends React.Component {
               console.log("ELEM");
               console.log(list);
               return (
-                <Accordion text={list.dimensionSize} key={i}>
+                <Accordion text={list.dimension} key={i}>
                   <SizeGuideElement data={list.dimensionList} />
                 </Accordion>
               );

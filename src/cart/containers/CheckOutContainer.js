@@ -21,7 +21,10 @@ import {
   getNetBankDetails,
   getEmiBankDetails,
   applyCliqCash,
-  removeCliqCash
+  removeCliqCash,
+  binValidation,
+  softReservationForPayment,
+  updateTransactionDetails
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -102,6 +105,15 @@ const mapDispatchToProps = dispatch => {
     },
     removeCliqCash: () => {
       dispatch(removeCliqCash());
+    },
+    binValidation: (paymentMode, binNo) => {
+      dispatch(binValidation(paymentMode, binNo));
+    },
+    softReservationForPayment: (cardDetails, address) => {
+      dispatch(softReservationForPayment(cardDetails, address));
+    },
+    updateTransactionDetails: (paymentMode, juspayOrderID) => {
+      dispatch(updateTransactionDetails(paymentMode, juspayOrderID));
     }
   };
 };

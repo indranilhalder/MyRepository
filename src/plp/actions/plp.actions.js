@@ -64,7 +64,6 @@ export function getProductListings(
   isFilter: false
 ) {
   return async (dispatch, getState, { api }) => {
-    console.log("GET PRODUCT LISTINGS");
     dispatch(getProductListingsRequest());
     try {
       const searchState = getState().search;

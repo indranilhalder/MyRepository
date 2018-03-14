@@ -13,41 +13,41 @@ const productListings = (
   action
 ) => {
   let existingProductListings;
+
   switch (action.type) {
     case plpActions.UPDATE_FACETS:
       const productListings = cloneDeep(state.productListings);
       productListings.facetdata = action.productListings.facetdata;
       productListings.facetdatacategory =
         action.productListings.facetdatacategory;
-      console.log(productListings);
       return Object.assign({}, state, {
-        productListings
+        productListings,
+        loading: false
       });
     case plpActions.PRODUCT_LISTINGS_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        paginatedLoading: true
+        loading: true
       });
     case plpActions.PRODUCT_LISTINGS_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
         productListings: action.productListings,
-        paginatedLoading: false
+        loading: false
       });
 
     case plpActions.PRODUCT_LISTINGS_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
-        paginatedLoading: false
+        loading: false
       });
     case plpActions.SET_PAGE:
       return Object.assign({}, state, {
         pageNumber: action.pageNumber
       });
     case plpActions.GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS:
-      let searchResults = state.productListings.searchresult;
-
+      let searchResults = cloneDeep(state.productListings.searchresult);
       searchResults = concat(
         searchResults,
         action.productListings.searchresult

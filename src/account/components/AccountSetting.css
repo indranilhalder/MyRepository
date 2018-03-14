@@ -1,0 +1,88 @@
+.base {
+  width: 100%;
+  height: auto;
+  background-color: #ececec;
+  border-radius: 4px;
+}
+.accountHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  position: relative;
+  padding: 20px 115px 20px 70px;
+}
+.profileImageHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.buttonHolder {
+  width: auto;
+  height: 25px;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+.accountSettingFooter {
+  height: auto;
+  width: 100%;
+  display: inline-block;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.accountInformationHolder {
+  width: 33.33%;
+  height: auto;
+  vertical-align: middle;
+  display: inline-block;
+  padding: 0px 10px;
+}
+
+.accountInformation {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+  font-size: 14px;
+  font-family: regular;
+}
+.accountInformationCount {
+  composes: accountInformation;
+  font-family: semibold;
+  font-size: 18px;
+}
+.accountInnerBox {
+  width: 100%;
+  height: auto;
+  position: relative;
+  padding: 0px 50px 0px 50px;
+}
+.headingText {
+  width: 100%;
+  color: #000000;
+  font-size: 17px;
+  font-family: semibold;
+  margin: auto;
+  text-align: left;
+}
+.accountImage {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  left: 0px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+.button {
+  width: auto;
+  right: 0;
+  line-height: 15px;
+  top: 0px;
+  bottom: 0;
+}

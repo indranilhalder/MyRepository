@@ -4,16 +4,23 @@ import ProductGrid from "./ProductGrid";
 import PlpMobileFooter from "./PlpMobileFooter";
 import InformationHeader from "../../general/components/InformationHeader";
 import styles from "./Plp.css";
+import MDSpinner from "react-md-spinner";
+
 export default class Plp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showFilter: false
+      showFilter: props.showFilter
     };
   }
+
   toggleFilter = () => {
     this.setState({ showFilter: !this.state.showFilter });
   };
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ showFilter: nextProps.showFilter });
+  }
   onApply = val => {
     this.toggleFilter();
     if (this.props.onApply) {
@@ -34,35 +41,51 @@ export default class Plp extends React.Component {
       this.props.showSort();
     }
   };
+
+  renderLoader() {
+    return (
+      <div>
+        <MDSpinner />
+      </div>
+    );
+  }
+
   render() {
     let filterClass = styles.filter;
+
+    if (this.props.loading && !this.props.isFilter) {
+      return this.renderLoader();
+    }
     if (this.state.showFilter) {
       filterClass = styles.filterOpen;
     }
+
     return (
-      <div className={styles.base}>
-        <div className={styles.pageHeader}>
-          <InformationHeader
-            onClick={this.handleBackClick}
-            text="Product listing"
-          />
+      this.props.productListings && (
+        <div className={styles.base}>
+          <div className={styles.pageHeader}>
+            <InformationHeader
+              onClick={this.handleBackClick}
+              text="Product listing"
+            />
+          </div>
+          <div className={styles.main}>
+            <ProductGrid
+              history={this.props.history}
+              data={this.props.productListings.searchresult}
+            />
+          </div>
+          <div className={filterClass}>
+            <FilterContainer backPage={() => this.backPage()} />
+          </div>
+          <div className={styles.footer}>
+            <PlpMobileFooter
+              onFilter={this.toggleFilter}
+              onSort={this.onSortClick}
+            />
+          </div>
         </div>
-        <div className={styles.main}>
-          <ProductGrid
-            history={this.props.history}
-            data={this.props.searchresult}
-          />
-        </div>
-        <div className={filterClass}>
-          <FilterContainer backPage={() => this.backPage()} />
-        </div>
-        <div className={styles.footer}>
-          <PlpMobileFooter
-            onFilter={this.toggleFilter}
-            onSort={this.onSortClick}
-          />
-        </div>
-      </div>
+      )
     );
   }
 }

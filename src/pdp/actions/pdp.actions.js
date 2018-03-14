@@ -343,7 +343,7 @@ export function getProductSizeGuide(productCode) {
     dispatch(getProductSizeGuideRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_DESCRIPTION_PATH}/${productCode}/sizeGuide`
+        `${PRODUCT_DESCRIPTION_PATH}/${productCode}/sizeGuide?isPwa=true`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {

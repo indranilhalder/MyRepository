@@ -6,7 +6,10 @@ const productDescription = (
     error: null,
     loading: false,
     productDetails: null,
-    sizeGuide: {},
+    sizeGuide: {
+      loading: false,
+      sizeGuideList: []
+    },
     emiResult: null,
     wishList: null,
     reviews: {},

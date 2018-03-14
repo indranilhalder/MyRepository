@@ -1,0 +1,116 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  background: #fff;
+}
+.paymentDetailsHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 15px;
+  border-bottom: 1px solid #ececec;
+}
+.bankAndCardHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+.bankLogoAndNameHolder {
+  width: 60%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+}
+.bankLogo {
+  width: auto;
+  height: 25px;
+  display: inline-block;
+  vertical-align: top;
+}
+.bankName {
+  width: auto;
+  height: 25px;
+  line-height: 25px;
+  color: #000000;
+  font-size: 14px;
+  font-family: semibold;
+  display: inline-block;
+  vertical-align: top;
+}
+.bankNameGap {
+  composes: bankName;
+  padding-left: 10px;
+}
+.cardAndTextHolder {
+  width: 40%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+}
+.cardLogoHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: right;
+}
+.cardLogo {
+  width: auto;
+  height: 25px;
+  display: inline-block;
+}
+.cardName {
+  width: 100%;
+  height: auto;
+  font-size: 12px;
+  color: #212121;
+  font-family: regular;
+  text-align: right;
+  margin-top: 5px;
+}
+.cardNumberHolder {
+  composes: bankAndCardHolder;
+}
+.cardDataHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+}
+.dataHeader {
+  width: 100%;
+  height: auto;
+  color: #9b9b9b;
+  font-size: 14px;
+  font-family: regular;
+  margin-bottom: 5px;
+}
+.dataHolder {
+  width: 100%;
+  height: auto;
+  color: #000000;
+  font-size: 16px;
+  font-family: regular;
+}
+.cardNameAndValidityHolder {
+  composes: bankAndCardHolder;
+}
+.nameOfCardHolder {
+  composes: bankLogoAndNameHolder;
+}
+.validityHolder {
+  composes: cardAndTextHolder;
+}
+.validityHolder .dataHeader {
+  text-align: right;
+}
+.validityHolder .dataHolder {
+  text-align: right;
+}
+.actionHolder {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  display: inline-block;
+}

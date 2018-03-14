@@ -1,12 +1,8 @@
 import { connect } from "react-redux";
-import { getProductListings } from "../actions/plp.actions.js";
 import FilterMobile from "../components/FilterMobile.js";
 import { withRouter } from "react-router-dom";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onApply: filters => {
-      dispatch(getProductListings());
-    },
     backPage: () => {
       ownProps.backPage();
     }
@@ -14,10 +10,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  let facetData = null;
+  let facetdatacategory = null;
+  if (state.productListings && state.productListings.productListings) {
+    facetData = state.productListings.productListings.facetdata;
+    facetdatacategory = state.productListings.productListings.facetdatacategory;
+  }
+
   return {
     ...ownProps,
-    facetData: state.productListings.productListings.facetdata,
-    facetdatacategory: state.productListings.productListings.facetdatacategory
+    facetData: facetData,
+    facetdatacategory: facetdatacategory
   };
 };
 

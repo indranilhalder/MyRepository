@@ -4,7 +4,7 @@ import ProductModule from "../../general/components/ProductModule";
 import PropTypes from "prop-types";
 import styles from "./FlashSale.css";
 import concat from "lodash/concat";
-import { transformItem } from "./utils.js";
+import { transformData } from "./utils.js";
 import Button from "../../general/components/Button.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import TimerCounter from "../../general/components/TimerCounter.js";
@@ -47,9 +47,12 @@ export default class FlashSale extends React.Component {
       subHeader,
       ...rest
     } = this.props;
-    const items = feedComponentData.items.map(item => {
-      return transformItem(item);
-    });
+    let items = [];
+
+    if (feedComponentData.items) {
+      items = feedComponentData.items.map(transformData);
+    }
+
     let offersAndItemsArray = concat(feedComponentData.offers, items);
 
     return (
