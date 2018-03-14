@@ -140,7 +140,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 
 		LOG.error("USER IS NOT ADMIN");
 		GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-				"User " + userModel.getUid() + " does not Admin role for access");
+				null != userModel.getName() ? userModel.getName() : userModel.getUid() + " does not have admin role for access");
 		return MarketplacecheckoutaddonConstants.REDIRECT + REDIRECTURL;
 
 	}
@@ -173,7 +173,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 	{
 
 
-		final JSONArray ja = new JSONArray();
+		final JSONArray returnObject = new JSONArray();
 		//final StringBuilder stringBuilder = new StringBuilder();
 		final List<String> list = new ArrayList<String>();
 		String fileUploadLocation = null;
@@ -269,7 +269,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 				}
 				catch (final IOException e)
 				{
-					e.printStackTrace();
+					LOG.error("Error while loading Impex for Image Upload Controller: " + e.getMessage());
 				}
 			}
 			for (final String object : list)
@@ -282,25 +282,20 @@ public class ImageUploadController extends AbstractMplSearchPageController
 				jObject.put("imageUrl", array[0] + "/" + mediaData.getCode());
 				jObject.put("size", mediaData.getSize());
 				jObject.put("creationTime", mediaData.getCreationTime());
-				ja.add(jObject);
+				returnObject.add(jObject);
 			}
-			// failure handling
-			//			if (importer.hasUnresolvedLines())
-			//			{
-			//				LOG.info("Import has " + importer.getDumpedLineCountPerPass() + "+unresolved lines, first lines are:\n"
-			//						+ importer.getDumpHandler().getDumpAsString());
-			//			}
-			return ja;
+
+			return returnObject;
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			LOG.error("Error accured in ImageUploadController: " + e.getMessage());
 		}
 		finally
 		{
 			MediaDataTranslator.unsetMediaDataHandler();
 		}
-		return ja;
+		return returnObject;
 	}
 
 	private static class FirstLinesDumpReader extends DefaultDumpHandler
@@ -333,7 +328,5 @@ public class ImageUploadController extends AbstractMplSearchPageController
 	{
 		return (Media) MediaManager.getInstance().getMediaByCode(mediaCode).iterator().next();
 	}
-
-
 
 }

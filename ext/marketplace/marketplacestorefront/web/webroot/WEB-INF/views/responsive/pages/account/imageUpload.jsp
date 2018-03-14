@@ -8,12 +8,38 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common"%>
 
+<style>
+.imageUpload{
+      max-width: 250px;
+	  height: 50px;
+	  padding-left: 0 15px;
+	  }
+table {
+    border-collapse: collapse;
+    width: 100%;
+    padding-bottom: 5%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+    background-color: #514848;
+    color: white;
+    height : 30px !important;
+    text-align: center;
+}
+</style>
 <script type="text/javascript">
 
 	   // Function to add a row in the table
 	   function addRow(filename, size, date) {
 	     var markup = "<tr>";
-	         markup += "<td class='img-preview'><img class='img-preview' src='" + window.location.origin + filename + "'></td>";
+	         markup += "<td class='img-preview' ><img class='imageUpload' src='" + window.location.origin + filename + "'></td>";
 	         markup += "<td class='img-url'><a target='_blank' href='" + window.location.origin + filename + "'>" + window.location.origin + filename + "</a></td>"
 	         markup += "<td>" + (size/1000).toFixed(2) + "kB </td>";
 	         markup += "<td>" + date + "</td>";
@@ -89,7 +115,7 @@ function preview_image()
   <br><br>
  <table style="width:100%" id="uploaded-files">
    <tr>
-     <th style="width: 30%">Image Preview</th>
+     <th>Image Preview</th>
      <th>URL</th>
      <th>Size</th>
      <th> Time </th>
