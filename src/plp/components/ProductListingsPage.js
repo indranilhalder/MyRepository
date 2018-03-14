@@ -2,24 +2,8 @@ import React, { Component } from "react";
 import PlpContainer from "../containers/PlpContainer";
 import queryString from "query-string";
 
-const CATEGORY_REGEX = /c-msh*/;
-const BRAND_REGEX = /c-mbh*/;
-const CAPTURE_REGEX = /c-(.*)/;
 const SEARCH_CATEGORY_TO_IGNORE = "all";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
-
-// Here I can serve a CLP/BLP
-// And any number of PLP pages.
-
-// /c-msh
-// /c-mbh
-// /electronics/c-msh
-// /electronics/c-mbh
-
-// better to take this from the url I think.
-
-// so on ComponentDidMount and ComponentDidUpdate, I need to figure out which
-// sort of page I am dealing with.
 
 class ProductListingsPage extends Component {
   constructor(props) {

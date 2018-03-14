@@ -10,13 +10,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  let facetData = null;
-  let facetdatacategory = null;
-  if (state.productListings && state.productListings.productListings) {
-    facetData = state.productListings.productListings.facetdata;
-    facetdatacategory = state.productListings.productListings.facetdatacategory;
-  }
-
   return {
     ...ownProps,
     facetData: state.productListings.productListings.facetdata,
