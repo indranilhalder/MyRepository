@@ -193,7 +193,6 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 	{
 		// YTODO Auto-generated method stub
 		final List<HomeProductsDTO> finalProductsDTO = new ArrayList<HomeProductsDTO>();
-		final HomeProductsDTO productdto = new HomeProductsDTO();
 		List<ProductData> productDataList = new ArrayList<ProductData>();
 		final CurrencyModel currency = commonI18NService.getCurrency(MarketplaceFacadesConstants.INR);
 		//final String currencySymbol = currency.getSymbol();
@@ -210,6 +209,7 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 		for (final BuyBoxModel buyBoxModel : buyBoxModelList)
 		{
+			final HomeProductsDTO productdto = new HomeProductsDTO();
 			ProductData productdata = new ProductData();
 			final String buyBoxListingId = buyBoxModel.getProduct();
 			if (listingIds.contains(buyBoxListingId))
