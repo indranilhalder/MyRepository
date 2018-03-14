@@ -56,6 +56,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.lux.model.LuxuryHomePagePreferenceModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
 import com.tisl.mpl.core.model.AmpMenifestModel;
@@ -148,7 +149,7 @@ import com.tisl.mpl.wsdto.TextComponentWsDTO;
 
 /**
  * @author TCS
- *
+ * 
  */
 public class MplCmsFacadeImpl implements MplCmsFacade
 {
@@ -3025,7 +3026,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/**
 	 * Fetched the shop by department component
-	 *
+	 * 
 	 * @return DepartmentCollectionComponentModel
 	 * @throws CMSItemNotFoundException
 	 */
@@ -3318,9 +3319,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	}
 
 	/**
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @param void
 	 * @return Map<Integer, Map<Integer, FooterLinkData>>
 	 */
@@ -3433,6 +3434,18 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		}
 
 		return ampMenifestData;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePagePreferece(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public LuxuryHomePagePreferenceModel getHomePagePreference(final String gender, final String category)
+	{
+		// YTODO Auto-generated method stub
+		return mplCMSPageService.getHomePagePreference(gender, category);
 	}
 
 }

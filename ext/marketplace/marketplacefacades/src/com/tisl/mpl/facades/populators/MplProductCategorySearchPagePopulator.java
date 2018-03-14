@@ -21,8 +21,12 @@ import de.hybris.platform.commerceservices.search.facetdata.SpellingSuggestionDa
 import de.hybris.platform.converters.Converters;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.util.Config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+
+import com.tisl.lux.facade.CommonUtils;
 
 
 /**
@@ -37,7 +41,7 @@ public class MplProductCategorySearchPagePopulator<QUERY, STATE, RESULT, ITEM ex
 	private Converter<SpellingSuggestionData<QUERY>, SpellingSuggestionData<STATE>> spellingSuggestionConverter;
 	private Converter<RESULT, ITEM> searchResultProductConverter;
 	private Converter<SCAT, CATEGORY> categoryConverter;
-
+	private static final String DEFAULTCOLLOCTIONID = "collectionIds";
 
 	protected Converter<QUERY, STATE> getSearchStateConverter()
 	{
@@ -106,6 +110,9 @@ public class MplProductCategorySearchPagePopulator<QUERY, STATE, RESULT, ITEM ex
 		this.spellingSuggestionConverter = spellingSuggestionConverter;
 	}
 
+	@Autowired
+	private CommonUtils commonUtils;
+
 	@Override
 	public void populate(final ProductCategorySearchPageData<QUERY, RESULT, SCAT> source,
 			final ProductCategorySearchPageData<STATE, ITEM, CATEGORY> target)
@@ -113,6 +120,16 @@ public class MplProductCategorySearchPagePopulator<QUERY, STATE, RESULT, ITEM ex
 		target.setFreeTextSearch(source.getFreeTextSearch());
 		target.setCategoryCode(source.getCategoryCode());
 		//target.setAllBrand(source.getAllBrand());
+		if (commonUtils.isLuxurySite())
+		{
+
+			source.getBreadcrumbs().removeIf(
+					(final BreadcrumbData breadcrumbData) -> breadcrumbData.getFacetName().equalsIgnoreCase(DEFAULTCOLLOCTIONID)
+							|| (breadcrumbData.getFacetName().equalsIgnoreCase("category") && Config.getString("luxury.salescategories",
+									"LSH1,ISH1").contains(breadcrumbData.getFacetValueCode())));
+
+		}
+
 
 		if (source.getSellerID() != null)
 		{

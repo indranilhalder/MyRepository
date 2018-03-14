@@ -577,6 +577,105 @@
 				</attribute>
 			</attributes>
 		</itemtype>
+		
+		
+		
+		
+		<itemtype code="HomePageTypes" autocreate="true" generate="true" >
+		<deployment table="HPTTable" typecode="13021" />
+		<attributes>
+			
+			<attribute qualifier='code' type="java.lang.String" >
+			<modifiers read="true" write="true" search="true" optional="false"/>
+               	<persistence type="property"/>
+			</attribute>
+			
+			<attribute qualifier='discription' type="java.lang.String" >
+			<modifiers read="true" write="true" search="true" optional="false"/>
+               	<persistence type="property"/>
+			</attribute>
+			
+	  </attributes>
+	  </itemtype>
+	  
+	  <itemtype code="Customer" generate="false" autocreate="false">
+		  <attributes>
+		  	<attribute qualifier="homePagePrefernce" type="HomePageTypes" autocreate="true" generate="true">
+				<modifiers read="true" write="true" search="true"	optional="true" />
+				<persistence type="property" />
+		  	</attribute>
+		  </attributes>
+		  
+	  </itemtype>
+	  
+	  <itemtype code="LuxuryHomePagePreference" autocreate="true" generate="true">
+				<description>Creating the luxury Customer Category Model .</description>
+				<deployment table="LuxuryHomePagePreference" typecode="11066" />
+				<attributes>
+					<attribute qualifier="customerGender" autocreate="true" type="Gender"
+							generate="true">
+							<modifiers read="true" write="true" search="true" unique="true"
+								optional="true" />
+							<persistence type="property" />
+						</attribute>
+						<attribute autocreate="true" generate="true" qualifier="homePageType" type="HomePageTypes">
+							<description>the category.</description>
+							<persistence type="property" />
+							<modifiers read="true" write="true" initial="false" unique="true"
+								optional="true" />
+						</attribute>
+						<attribute type="java.lang.String" qualifier="pageID"
+							autocreate="true" generate="true" >
+							<persistence type="property"></persistence>
+							<modifiers optional="true"  />
+						</attribute>
+					</attributes>
+		</itemtype>		
 
+
+<itemtype code="Product" autocreate="false" generate="false">
+				<description>Extending the Product type from core with additional attributes.</description>
+				<attributes>
+			
+					<attribute qualifier="candleburntimehome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="candletypehome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="artpiecetypehome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="glasstypehome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="accessorytypehome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="sofaupholstryhome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="numberofchairshome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="assemblyrequiredhome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="tabletopshapehome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+				</attributes>
+			</itemtype>
+			
+			
 	</itemtypes>
 </items>
