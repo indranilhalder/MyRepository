@@ -10,10 +10,6 @@ import {
   RECOMMENDED_PRODUCTS_WIDGET_KEY,
   SIMILAR_PRODUCTS_WIDGET_KEY
 } from "../actions/pdp.actions.js";
-import {
-  PRODUCT_DESCRIPTION_PRODUCT_CODE,
-  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
-} from "../../lib/constants";
 import FollowUnFollowButtonContainer from "../containers/FollowUnFollowButtonContainer";
 import styles from "./PDPRecommendedSections.css";
 
@@ -22,14 +18,7 @@ class PDPRecommendedSections extends React.Component {
     this.props.history.push(url);
   };
   renderAboutTheBrand() {
-    let brandId;
-    if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-      brandId = this.props.match.params[0];
-    } else if (
-      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
-    ) {
-      brandId = this.props.match.params[1];
-    }
+    let brandId = this.props.productData.brandId;
     return (
       <React.Fragment>
         <div className={styles.brandSection}>
@@ -40,9 +29,11 @@ class PDPRecommendedSections extends React.Component {
                 <Logo image={this.props.productData.brandLogoImage} />
               </div>
             )}
-            <div className={styles.followButton}>
-              <FollowUnFollowButtonContainer brandId={brandId} />
-            </div>
+            {brandId && (
+              <div className={styles.followButton}>
+                <FollowUnFollowButtonContainer brandId={brandId} />
+              </div>
+            )}
           </div>
           {this.props.productData.brandInfo && (
             <div className={styles.brandDescription}>

@@ -135,7 +135,6 @@ export default class PdpElectronics extends React.Component {
     this.props.showEmiModal();
   };
   render() {
-    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {

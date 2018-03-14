@@ -360,6 +360,7 @@ const productDescription = (
       currentProductDetails = cloneDeep(state.productDetails);
       Object.assign(currentProductDetails, {
         isFollowing: action.productDetails.isFollowing,
+        brandId: action.productDetails.brandCode,
         status: action.status
       });
       return Object.assign({}, state, {
@@ -368,15 +369,13 @@ const productDescription = (
       });
     case pdpActions.FOLLOW_UN_FOLLOW_BRAND_REQUEST:
       return Object.assign({}, state, {
-        status: action.status,
-        loading: true
+        status: action.status
       });
 
     case pdpActions.FOLLOW_UN_FOLLOW_BRAND_SUCCESS:
       currentProductDetails = cloneDeep(state.productDetails);
       Object.assign(currentProductDetails, {
-        isFollowing: action.isFollowing,
-        status: action.status
+        isFollowing: action.isFollowing
       });
       return Object.assign({}, state, {
         status: action.status,
@@ -385,8 +384,7 @@ const productDescription = (
     case pdpActions.FOLLOW_UN_FOLLOW_BRAND_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
-        error: action.error,
-        loading: false
+        error: action.error
       });
     default:
       return state;
