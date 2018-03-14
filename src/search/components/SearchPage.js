@@ -19,6 +19,11 @@ export default class SearchPage extends React.Component {
       this.props.onItemClick(val);
     }
   }
+  handleSearch(val) {
+    if (this.props.getSearchResults) {
+      this.props.getSearchResults(val);
+    }
+  }
   render() {
     const data = {
       type: "mplAutoCompleteResultWsData",
@@ -71,6 +76,7 @@ export default class SearchPage extends React.Component {
         }
       ]
     };
+    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.searchBar}>
@@ -78,6 +84,7 @@ export default class SearchPage extends React.Component {
             onSearchClick={val => {
               this.handleSearchClick(val);
             }}
+            onSearch={val => this.handleSearch(val)}
           />
         </div>
         {this.state.showResults && (
