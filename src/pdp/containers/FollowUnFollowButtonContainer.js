@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import Button from "../../general/components/Button";
 import { followUnFollowBrand } from "../actions/pdp.actions";
+import { FOLLOW, FOLLOWING } from "../../lib/constants";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onClick: () => {
@@ -13,8 +14,8 @@ const mapStateToProps = (state, ownProps) => {
     label:
       state.productDescription.msdItems.brandDetails &&
       state.productDescription.msdItems.brandDetails.isFollowing
-        ? "Following"
-        : "Follow",
+        ? FOLLOWING
+        : FOLLOW,
     type: "tertiary"
   };
 };

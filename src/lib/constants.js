@@ -69,3 +69,6 @@ export const COLLECT = "click-and-collect";
 export const HOME_DELIVERY = "home-delivery";
 export const SHORT_EXPRESS = "ED";
 export const SHORT_COLLECT = "CNC";
+
+export const FOLLOW = "Follow";
+export const FOLLOWING = "Following";

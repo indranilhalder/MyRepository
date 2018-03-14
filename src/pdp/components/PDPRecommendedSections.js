@@ -17,6 +17,14 @@ class PDPRecommendedSections extends React.Component {
   goToProductDescription = url => {
     this.props.history.push(url);
   };
+  visitBrand() {
+    if (
+      this.props.msdItems.brandDetails &&
+      this.props.msdItems.brandDetails.brandId
+    ) {
+      this.props.history.push(`c-${this.props.msdItems.brandDetails.brandId}`);
+    }
+  }
   renderAboutTheBrand() {
     let brandId;
     if (this.props.msdItems.brandDetails) {
@@ -53,7 +61,7 @@ class PDPRecommendedSections extends React.Component {
             <Button
               type="secondary"
               label="Visit Brand Store"
-              oncLick={() => this.visitBrand()}
+              onClick={() => this.visitBrand()}
             />
           </div>
         </div>
