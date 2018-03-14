@@ -75,10 +75,10 @@
 				<ul class="tabs">
                     <cms:pageSlot position="NavigationBar" var="feature">
 						<c:forEach items="${feature.components}" var="component">
-							<li class="tab-link" data-tab="${component.uid}">
+							<li class="tab-link topluxmenu" data-tab="${component.uid}">
 							<c:choose>
 								<c:when test="${not empty component.navigationNode.links}">
-									<cms:component component="${component.navigationNode.links[0]}" evaluateRestriction="true"/>
+									 <cms:component component="${component.navigationNode.links[0]}" evaluateRestriction="true"/>
 								</c:when>
 								<c:otherwise>
 									${component.navigationNode.title}
@@ -163,7 +163,7 @@
 		</div>		
 	</div>
 	</div>
-	<nav class="main-nav" id="main-nav">				   
+	<nav class="main-nav" id="main-nav" style="z-index: 0;">				   
 					
 						<cms:pageSlot position="NavigationBar" var="feature">
 							<cms:component component="${feature}" />
