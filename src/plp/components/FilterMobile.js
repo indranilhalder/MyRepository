@@ -76,7 +76,7 @@ export default class FilterMobile extends React.Component {
         <div className={styles.pageHeader}>
           <InformationHeader
             text={FILTER_HEADER}
-            onClick={this.handleBackClick}
+            goBack={this.handleBackClick}
           />
         </div>
         <div className={styles.tabHolder}>

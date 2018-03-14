@@ -35,7 +35,8 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageType: props.location.pathname
+      pageType: props.location.pathname,
+      redirectToPlp: false
     };
   }
 
@@ -71,8 +72,13 @@ export default class PlpBrandCategoryWrapper extends React.Component {
 
     return `/search/?q=${searchText}`;
   };
+
+  componentDidUpdate() {}
   render() {
-    if (this.props.homeFeedData.loading) {
+    if (
+      this.props.homeFeedData.loading ||
+      this.props.homeFeedData.feedType === null
+    ) {
       return this.renderLoader();
     }
 

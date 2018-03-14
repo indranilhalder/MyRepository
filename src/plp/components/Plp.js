@@ -19,8 +19,6 @@ export default class Plp extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log("SHOW FILTER");
-    console.log(nextProps.showFilter);
     this.setState({ showFilter: nextProps.showFilter });
   }
   onApply = val => {
@@ -29,18 +27,12 @@ export default class Plp extends React.Component {
       this.props.onApply(val);
     }
   };
-  handleBackClick = () => {
-    this.props.history.goBack();
-    if (this.props.onBack) {
-      this.props.onBack();
-    }
-  };
-  backPage() {
+
+  backPage = () => {
+    console.log("BACK PAGE IS HIT");
     this.setState({ showFilter: !this.state.showFilter });
-  }
+  };
   onSortClick = () => {
-    console.log("SHOW SORT");
-    console.log(this.props.showSort);
     if (this.props.showSort) {
       this.props.showSort();
     }
@@ -71,10 +63,7 @@ export default class Plp extends React.Component {
       this.props.productListings && (
         <div className={styles.base}>
           <div className={styles.pageHeader}>
-            <InformationHeader
-              onClick={this.handleBackClick}
-              text="Product listing"
-            />
+            <InformationHeader goBack={this.backPage} text="Product listing" />
           </div>
           <div className={styles.main}>
             <ProductGrid
@@ -84,7 +73,7 @@ export default class Plp extends React.Component {
           </div>
           <div className={filterClass}>
             {this.state.showFilter && (
-              <FilterContainer backPage={() => this.backPage()} />
+              <FilterContainer backPage={this.backPage} />
             )}
           </div>
           <div className={styles.footer}>

@@ -186,29 +186,25 @@ export function homeFeed(brandIdOrCategoryId: null) {
   return async (dispatch, getState, { api }) => {
     dispatch(homeFeedRequest());
     try {
-      let url, result, feedTypeRequest;
+      let url, result, feedTypeRequest, resultJson;
       if (brandIdOrCategoryId) {
         result = await api.get(
           `v2/mpl/cms/defaultpage?pageId=${brandIdOrCategoryId}`
         );
         feedTypeRequest = BLP_OR_CLP_FEED_TYPE;
+        resultJson = await result.json();
+        if (resultJson.errors) {
+          dispatch(homeFeedSuccess([], feedTypeRequest));
+        } else {
+          dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
+        }
       } else {
         url = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
         result = await api.postAdobeTargetUrl(null, url, null, null, true);
         feedTypeRequest = HOME_FEED_TYPE;
+        resultJson = await result.json();
       }
 
-      //TODO this needs to be cleaned up.
-      const resultJson = await result.json();
-      console.log("HOME FEED");
-      console.log(resultJson);
-      if (resultJson.errors) {
-        console.log("ERRORS");
-        console.log(feedTypeRequest);
-        dispatch(homeFeedSuccess([], feedTypeRequest));
-      } else {
-        dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
-      }
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson}`);
       }
