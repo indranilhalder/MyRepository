@@ -36,7 +36,6 @@ export default class Plp extends React.Component {
 
   handleScroll = () => {
     return throttle(() => {
-      console.log("HANDLE SCROLL CALLED");
       if (!this.state.showFilter) {
         const windowHeight =
           "innerHeight" in window
