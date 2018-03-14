@@ -10,9 +10,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 const mapStateToProps = (state, ownProps) => {
   return {
-    label: state.productDescription.productDetails.isFollowing
-      ? "Following"
-      : "Follow",
+    label:
+      state.productDescription.msdItems.brandDetails &&
+      state.productDescription.msdItems.brandDetails.isFollowing
+        ? "Following"
+        : "Follow",
     type: "tertiary"
   };
 };
