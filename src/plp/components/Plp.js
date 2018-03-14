@@ -4,7 +4,10 @@ import ProductGrid from "./ProductGrid";
 import PlpMobileFooter from "./PlpMobileFooter";
 import InformationHeader from "../../general/components/InformationHeader";
 import styles from "./Plp.css";
+import throttle from "lodash/throttle";
+
 import MDSpinner from "react-md-spinner";
+const SUFFIX = `&isTextSearch=false&isFilter=false`;
 
 export default class Plp extends React.Component {
   constructor(props) {
@@ -30,6 +33,41 @@ export default class Plp extends React.Component {
       this.props.onApply(val);
     }
   };
+
+  handleScroll = () => {
+    return throttle(() => {
+      console.log("HANDLE SCROLL CALLED");
+      if (!this.state.showFilter) {
+        const windowHeight =
+          "innerHeight" in window
+            ? window.innerHeight
+            : document.documentElement.offsetHeight;
+        const body = document.body;
+        const html = document.documentElement;
+        const docHeight = Math.max(
+          body.scrollHeight,
+          body.offsetHeight,
+          html.clientHeight,
+          html.scrollHeight,
+          html.offsetHeight
+        );
+        const windowBottom = windowHeight + window.pageYOffset;
+        if (windowBottom >= docHeight) {
+          window.scrollBy(0, -200);
+          this.props.paginate(this.props.pageNumber + 1, SUFFIX);
+        }
+      }
+    }, 2000);
+  };
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.throttledScroll);
+  }
+
+  componentDidMount() {
+    this.throttledScroll = this.handleScroll();
+    window.addEventListener("scroll", this.throttledScroll);
+  }
 
   backPage = () => {
     this.setState({ showFilter: !this.state.showFilter });

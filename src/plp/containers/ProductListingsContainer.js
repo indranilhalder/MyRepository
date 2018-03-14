@@ -22,14 +22,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    pageNumber: state.productListings.pageNumber
-  };
-};
-
 const ProductListingsContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ProductListingsPage)
+  connect(null, mapDispatchToProps)(ProductListingsPage)
 );
 
 export default ProductListingsContainer;
