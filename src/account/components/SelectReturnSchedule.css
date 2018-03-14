@@ -1,0 +1,23 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  background: #fff;
+  border-radius: 4px;
+}
+.header {
+  width: 100%;
+  height: 50px;
+  color: #000;
+  font-size: 14px;
+  line-height: 50px;
+  padding: 0px 15px;
+  border-bottom: 1px solid #ececec;
+  display: inline-block;
+  font-family: semibold;
+}
+.scheduleHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
