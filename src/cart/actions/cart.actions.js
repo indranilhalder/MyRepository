@@ -1683,6 +1683,7 @@ export function jusPayTokenize(
         }`
       );
       const resultJson = await result.json();
+      console.log(resultJson);
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
@@ -1888,7 +1889,7 @@ export function jusPayPaymentMethodType(
       const result = await api.postJusPay(url);
       const resultJson = await result.json();
 
-      if (resultJson.status !== SUCCESS) {
+      if (resultJson.status === FAILURE) {
         throw new Error(resultJson.error_message);
       }
       dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
@@ -1909,7 +1910,7 @@ export function jusPayPaymentMethodTypeForNetBanking(juspayOrderId, bankName) {
       );
       const resultJson = await result.json();
 
-      if (resultJson.status !== SUCCESS) {
+      if (resultJson.status === FAILURE) {
         throw new Error(resultJson.error_message);
       }
       dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
