@@ -1,8 +1,12 @@
 .base {
   width: 100%;
   height: auto;
-  padding: 14px;
   background-color: #ffffff;
+}
+.withCheckbox {
+  composes: base;
+  padding-right: 35px;
+  position: relative;
 }
 .home {
   width: 100%;
@@ -18,61 +22,18 @@
   display: inline-block;
   font-family: regular;
   font-size: 14px;
-  line-height: 25px;
+  line-height: normal;
 }
 .address {
   composes: addressDetails;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 80%;
+  margin-top: 5px;
 }
-.dateAndTimeHolder {
-  width: 100%;
-  height: auto;
-  display: inline-block;
-  font-size: 14px;
-}
-.dateHolder {
-  width: 50%;
-  height: auto;
-  display: inline-block;
-  font-size: 14px;
-  padding: 10px 0px;
-}
-.date {
-  width: auto;
-  height: auto;
-  display: inline-block;
-  font-size: 14px;
-  font-family: semibold;
-  padding-right: 8px;
-}
-.dateInfo {
-  width: auto;
-  height: auto;
-  display: inline-block;
-  font-size: 14px;
-  font-family: regular;
-}
-.timeHolder {
-  composes: dateHolder;
-}
-.time {
-  composes: date;
-}
-.timeInfo {
-  composes: dateInfo;
-}
-.cancelHolder {
-  width: 100%;
-  height: auto;
-  display: inline-block;
-  font-family: regular;
-  font-size: 14px;
-  color: #9b9b9b;
-  padding-top: 10px;
-}
-.cancel {
-  display: inline-block;
+.checkBoxHolder {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 15px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }

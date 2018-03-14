@@ -11,16 +11,16 @@ import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
-import BrandsLandingPageDefault from "./brands/components/BrandsLandingPageDefault";
+import BrandsLandingPageDefaultContainer from "./blp/containers/BrandsLandingPageDefaultContainer";
 import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
 import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 import CartContainer from "./cart/containers/CartContainer";
 import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
-import CategoriesPage from "./categories/components/CategoriesPage";
+import CategoriesPageContainer from "./clp/containers/CategoriesPageContainer";
 import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
 import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
-import BrandLandingPageContainer from "./brands/containers/BrandLandingPageContainer";
+import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 
@@ -224,12 +224,12 @@ class App extends Component {
           <Route
             exact
             path={DEFAULT_BRANDS_LANDING_PAGE}
-            component={BrandsLandingPageDefault}
+            component={BrandsLandingPageDefaultContainer}
           />
           <Route
             exact
             path={CATEGORIES_LANDING_PAGE}
-            render={() => <CategoriesPage history={this.props.history} />}
+            component={CategoriesPageContainer}
           />
         </Switch>
         <ModalContainer />
