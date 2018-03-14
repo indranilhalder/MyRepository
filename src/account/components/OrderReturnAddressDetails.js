@@ -11,27 +11,41 @@ export default class OrderReturnAddressDetails extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.home}>{this.props.addressType}</div>
-        <div className={styles.addressDetails}>{this.props.address}</div>
-        <div className={styles.address}>{this.props.subAddress}</div>
-        <div className={styles.dateAndTimeHolder}>
-          <div className={styles.dateHolder}>
-            <div className={styles.date}>Date</div>
-            <div className={styles.dateInfo}>{this.props.date}</div>
+        {this.props.addressType && (
+          <div className={styles.home}>{this.props.addressType}</div>
+        )}
+        {this.props.address && (
+          <div className={styles.addressDetails}>{this.props.address}</div>
+        )}
+        {this.props.subAddress && (
+          <div className={styles.address}>{this.props.subAddress}</div>
+        )}
+        {this.props.date && (
+          <div className={styles.dateAndTimeHolder}>
+            {this.props.date && (
+              <div className={styles.dateHolder}>
+                <div className={styles.date}>Date</div>
+                <div className={styles.dateInfo}>{this.props.date}</div>
+              </div>
+            )}
+            {this.props.time && (
+              <div className={styles.timeHolder}>
+                <div className={styles.time}>Time</div>
+                <div className={styles.timeInfo}>{this.props.time}</div>
+              </div>
+            )}
           </div>
-          <div className={styles.timeHolder}>
-            <div className={styles.time}>Time</div>
-            <div className={styles.timeInfo}>{this.props.time}</div>
+        )}
+        {this.props.underlineButtonLabel && (
+          <div className={styles.cancelHolder}>
+            <div className={styles.cancel} onClick={() => this.onCancel()}>
+              <UnderLinedButton
+                label={this.props.underlineButtonLabel}
+                color={this.props.underlineButtonColour}
+              />
+            </div>
           </div>
-        </div>
-        <div className={styles.cancelHolder}>
-          <div className={styles.cancel} onClick={() => this.onCancel()}>
-            <UnderLinedButton
-              label={this.props.underlineButtonLabel}
-              color={this.props.underlineButtonColour}
-            />
-          </div>
-        </div>
+        )}
       </div>
     );
   }
@@ -45,8 +59,4 @@ OrderReturnAddressDetails.propTypes = {
   subAddress: PropTypes.string,
   addressType: PropTypes.string,
   onCancel: PropTypes.func
-};
-OrderReturnAddressDetails.defaultProps = {
-  underlineButtonLabel: "Change",
-  underlineButtonColour: "#9b9b9b"
 };
