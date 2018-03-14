@@ -23,8 +23,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  console.log("PRODUCT LISTINGS CONTAINER");
-  console.log(state.productListings);
   return {
     pageNumber: state.productListings.pageNumber
   };

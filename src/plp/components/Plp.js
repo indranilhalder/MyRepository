@@ -19,6 +19,8 @@ export default class Plp extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
+    console.log("SHOW FILTER");
+    console.log(nextProps.showFilter);
     this.setState({ showFilter: nextProps.showFilter });
   }
   onApply = val => {
@@ -37,6 +39,8 @@ export default class Plp extends React.Component {
     this.setState({ showFilter: !this.state.showFilter });
   }
   onSortClick = () => {
+    console.log("SHOW SORT");
+    console.log(this.props.showSort);
     if (this.props.showSort) {
       this.props.showSort();
     }
@@ -60,6 +64,9 @@ export default class Plp extends React.Component {
       filterClass = styles.filterOpen;
     }
 
+    console.log("RENDER");
+    console.log(this.state.showFilter);
+
     return (
       this.props.productListings && (
         <div className={styles.base}>
@@ -76,7 +83,9 @@ export default class Plp extends React.Component {
             />
           </div>
           <div className={filterClass}>
-            <FilterContainer backPage={() => this.backPage()} />
+            {this.state.showFilter && (
+              <FilterContainer backPage={() => this.backPage()} />
+            )}
           </div>
           <div className={styles.footer}>
             <PlpMobileFooter

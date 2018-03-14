@@ -1,6 +1,15 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Plp from "../components/Plp";
+import { showModal, SORT } from "../../general/modal.actions.js";
+
+const mapDispatchToProps = dispatch => {
+  return {
+    showSort: () => {
+      dispatch(showModal(SORT));
+    }
+  };
+};
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -12,5 +21,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const PlpContainer = withRouter(connect(mapStateToProps, null)(Plp));
+const PlpContainer = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(Plp)
+);
 export default PlpContainer;

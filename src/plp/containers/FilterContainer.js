@@ -19,8 +19,8 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     ...ownProps,
-    facetData: facetData,
-    facetdatacategory: facetdatacategory
+    facetData: state.productListings.productListings.facetdata,
+    facetdatacategory: state.productListings.productListings.facetdatacategory
   };
 };
 
