@@ -199,7 +199,11 @@ class CheckOutPage extends React.Component {
         let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
         let cartId = JSON.parse(cartDetails).guid;
         if (cartId) {
-          this.props.updateTransactionDetails("Credit Card", orderId, cartId);
+          this.props.updateTransactionDetails(
+            this.state.paymentModeSelected,
+            orderId,
+            cartId
+          );
         }
       }
     } else {
