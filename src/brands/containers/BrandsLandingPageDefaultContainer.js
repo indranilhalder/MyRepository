@@ -1,16 +1,17 @@
 import { connect } from "react-redux";
 import BrandsLandingPageDefault from "../components/BrandsLandingPageDefault";
-import { getAllBrandsStore } from "../actions/brand.actions";
+import { getAllBrands } from "../actions/brand.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    getAllBrandsStore: () => {
-      dispatch(getAllBrandsStore());
+    getAllBrands: () => {
+      dispatch(getAllBrands());
     }
   };
 };
 const mapStateToProps = state => {
   return {
-    brandsStores: state.brand.brandsStores
+    brandsStores: state.brand.brandsStores,
+    loading: state.brand.loading
   };
 };
 const BrandsLandingPageDefaultContainer = connect(

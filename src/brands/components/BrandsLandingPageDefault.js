@@ -30,7 +30,7 @@ export default class BrandsLandingPageDefault extends React.Component {
     };
   }
   componentDidMount() {
-    this.props.getAllBrandsStore();
+    this.props.getAllBrands();
   }
   renderToAnotherURL(webURL) {
     const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "");
@@ -52,17 +52,17 @@ export default class BrandsLandingPageDefault extends React.Component {
   }
 
   render() {
-    if (!this.props.brandsStores) {
+    if (this.props.loading || !this.props.brandsStores) {
       return this.renderLoader();
     }
 
-    let brandsStores = this.props.brandsStores[
+    const brandsStores = this.props.brandsStores[
       this.props.brandsStores.componentName
     ].items;
-    let brandList = map(brandsStores, brandName => {
+    const brandList = map(brandsStores, brandName => {
       return brandName.subType;
     });
-    let currentActiveHeroBanner =
+    const currentActiveHeroBanner =
       brandsStores[this.state.currentActiveBrandType].items[0]
         .heroBannerComponent.items;
     let currentActiveBrandList =
@@ -76,7 +76,7 @@ export default class BrandsLandingPageDefault extends React.Component {
     currentActiveBrandList = groupBy(currentActiveBrandList, list => {
       return list.brandName[0];
     });
-    let parentBrandsLabel = Object.keys(currentActiveBrandList);
+    const parentBrandsLabel = Object.keys(currentActiveBrandList);
 
     return (
       <div className={styles.base}>
@@ -87,8 +87,8 @@ export default class BrandsLandingPageDefault extends React.Component {
             onSelect={val => this.switchTab(val[0])}
             selected={[this.state.currentActiveBrandType]}
           >
-            {brandList.map((val, idx) => {
-              return <BrandsItem label={val} value={idx} key={idx} />;
+            {brandList.map((val, id) => {
+              return <BrandsItem label={val} value={id} key={id} />;
             })}
           </BrandsSelect>
         </div>

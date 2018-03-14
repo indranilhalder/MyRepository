@@ -3,24 +3,28 @@ const brand = (
   state = {
     status: null,
     error: null,
-    categories: null
+    categories: null,
+    loading: false
   },
   action
 ) => {
   switch (action.type) {
     case categoriesActions.GET_ALL_BRANDS_STORE_REQUEST:
       return Object.assign({}, state, {
-        status: action.status
+        status: action.status,
+        loading: true
       });
     case categoriesActions.GET_ALL_BRANDS_STORE_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
-        error: action.error
+        error: action.error,
+        loading: false
       });
     case categoriesActions.GET_ALL_BRANDS_STORE_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
-        brandsStores: action.brandsStores
+        brandsStores: action.brandsStores,
+        loading: false
       });
     default:
       return state;

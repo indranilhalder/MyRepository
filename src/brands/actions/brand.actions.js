@@ -68,13 +68,13 @@ let brandsStores = {
   },
   componentName: "brandsTabAZListComponent"
 };
-export function getAllBrandsStoreRequest() {
+export function getAllBrandsRequest() {
   return {
     type: GET_ALL_BRANDS_STORE_REQUEST,
     status: REQUESTING
   };
 }
-export function getAllBrandsStoreSuccess(brandsStores) {
+export function getAllBrandsSuccess(brandsStores) {
   return {
     type: GET_ALL_BRANDS_STORE_SUCCESS,
     status: SUCCESS,
@@ -82,7 +82,7 @@ export function getAllBrandsStoreSuccess(brandsStores) {
   };
 }
 
-export function getAllBrandsStoreFailure(error) {
+export function getAllBrandsFailure(error) {
   return {
     type: GET_ALL_BRANDS_STORE_FAILURE,
     status: ERROR,
@@ -90,9 +90,9 @@ export function getAllBrandsStoreFailure(error) {
   };
 }
 
-export function getAllBrandsStore(userId, accessToken, cartId) {
+export function getAllBrands(userId, accessToken, cartId) {
   return async (dispatch, getState, { api }) => {
-    dispatch(getAllBrandsStoreRequest());
+    dispatch(getAllBrandsRequest());
 
     try {
       // const result = await api.get(
@@ -104,9 +104,9 @@ export function getAllBrandsStore(userId, accessToken, cartId) {
       // if (resultJson.status === FAILURE) {
       //   throw new Error(resultJson.error);
       // }
-      dispatch(getAllBrandsStoreSuccess(brandsStores));
+      dispatch(getAllBrandsSuccess(brandsStores));
     } catch (e) {
-      dispatch(getAllBrandsStoreFailure(e.message));
+      dispatch(getAllBrandsFailure(e.message));
     }
   };
 }
