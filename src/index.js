@@ -14,8 +14,8 @@ import search from "../src/search/reducers/search.reducer";
 import registerServiceWorker from "./registerServiceWorker";
 import productListings from "./plp/reducers/plp.reducer";
 import productDescription from "./pdp/reducers/pdp.reducer";
-import categories from "./categories/reducers/categories.reducer";
-import brand from "./brands/reducers/brand.reducer";
+import categoryDefault from "./clp/reducers/clp.reducer";
+import brandDefault from "./blp/reducers/blp.reducer";
 
 import cart from "./cart/reducers/cart.reducer";
 
@@ -29,8 +29,8 @@ const rootReducer = combineReducers({
   productDescription,
   search,
   cart,
-  brand,
-  categories
+  brandDefault,
+  categoryDefault
 });
 
 let store = createStore(

@@ -2,7 +2,7 @@ import React from "react";
 import CategoryL1 from "./CategoryL1";
 import CategoryL2 from "./CategoryL2";
 import CategoryL3 from "./CategoryL3";
-import BrandHeader from "../../brands/components/BrandHeader";
+import BrandHeader from "../../blp/components/BrandHeader";
 import MobileFooter from "../../general/components/MobileFooter";
 import styles from "./CategoriesPage.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";

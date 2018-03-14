@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import CategoriesPage from "../components/CategoriesPage";
-import { getCategories } from "../actions/categories.actions";
+import { getCategories } from "../actions/clp.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getCategories: () => {
@@ -10,7 +10,7 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   return {
-    categories: state.categories.categories
+    categories: state.categoryDefault.categories
   };
 };
 const CategoriesPageContainer = connect(mapStateToProps, mapDispatchToProps)(

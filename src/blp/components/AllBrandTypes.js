@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./AllBrandTypes.css";
 import BrandsType from "./BrandsType.js";
-import ShopByBrandLists from "../../brands/components/ShopByBrandLists";
-import BrandsTypeList from "./BrandsTypeList.js";
+import ShopByBrandLists from "./ShopByBrandLists";
+import BrandsTypeList from "./BrandsTypeList";
 import Grid from "../../general/components/GridSelect";
 import PropTypes from "prop-types";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";

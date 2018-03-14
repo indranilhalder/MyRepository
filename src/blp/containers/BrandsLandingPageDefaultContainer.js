@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import BrandsLandingPageDefault from "../components/BrandsLandingPageDefault";
-import { getAllBrands } from "../actions/brand.actions";
+import { getAllBrands } from "../actions/blp.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getAllBrands: () => {
@@ -10,8 +10,8 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   return {
-    brandsStores: state.brand.brandsStores,
-    loading: state.brand.loading
+    brandsStores: state.brandDefault.brandsStores,
+    loading: state.brandDefault.loading
   };
 };
 const BrandsLandingPageDefaultContainer = connect(

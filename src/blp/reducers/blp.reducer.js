@@ -1,5 +1,5 @@
-import * as categoriesActions from "../actions/brand.actions";
-const brand = (
+import * as categoriesActions from "../actions/blp.actions";
+const brandDefault = (
   state = {
     status: null,
     error: null,
@@ -30,4 +30,4 @@ const brand = (
       return state;
   }
 };
-export default brand;
+export default brandDefault;

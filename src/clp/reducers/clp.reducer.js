@@ -1,5 +1,5 @@
-import * as categoriesActions from "../actions/categories.actions";
-const categories = (
+import * as categoriesActions from "../actions/clp.actions";
+const categoryDefault = (
   state = {
     status: null,
     error: null,
@@ -26,4 +26,4 @@ const categories = (
       return state;
   }
 };
-export default categories;
+export default categoryDefault;
