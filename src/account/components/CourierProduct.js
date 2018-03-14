@@ -46,5 +46,6 @@ CourierProduct.propTypes = {
   text: PropTypes.string,
   indexNumber: PropTypes.string,
   header: PropTypes.string,
-  subText: PropTypes.string
+  subText: PropTypes.string,
+  onClick: PropTypes.func
 };

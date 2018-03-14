@@ -12,16 +12,14 @@
   font-family: semibold;
   margin-bottom: 8px;
   position: relative;
-  float: right;
+  display: inline-block;
 }
 .text {
   width: auto;
   height: auto;
-  padding-right: 5px;
-  line-height: 2;
+  line-height: 25px;
   font-size: 12px;
   font-family: regular;
-  margin-bottom: 10px;
   text-align: left;
   display: inline-block;
 }
