@@ -10,12 +10,6 @@ const search = (
   action
 ) => {
   switch (action.type) {
-    // case searchActions.SET_SEARCH_STRING:
-    //   return Object.assign({}, state, {
-    //     string: action.string
-    //   });
-    // default:
-    //   return state;
     case searchActions.SEARCH_RESULT_REQUEST:
       return Object.assign({}, state, {
         searchResult: {
