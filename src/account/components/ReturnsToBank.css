@@ -1,0 +1,67 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.headingText {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  color: #000;
+  font-family: semibold;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+.cardLogoAndNumberHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.cardLogo {
+  width: auto;
+  height: 25px;
+  display: inline-block;
+  vertical-align: top;
+}
+.dummyCardDataHolder {
+  width: auto;
+  height: 25px;
+  display: inline-block;
+  vertical-align: top;
+  padding: 0px 10px;
+  line-height: 25px;
+}
+.cardNumber {
+  width: auto;
+  height: 25px;
+  color: #000;
+  font-size: 14px;
+  line-height: 25px;
+  font-family: semibold;
+  display: inline-block;
+}
+.circleDesign {
+  width: 9px;
+  height: 9px;
+  background: #000000;
+  opacity: 0.14;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 3px;
+  border-radius: 50%;
+}
+.circleTransparent {
+  composes: circleDesign;
+  background: #fff;
+  margin-right: 0px;
+}
+.footerText {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 12px;
+  font-family: regular;
+  padding-right: 50px;
+  line-height: normal;
+  margin-top: 25px;
+}
