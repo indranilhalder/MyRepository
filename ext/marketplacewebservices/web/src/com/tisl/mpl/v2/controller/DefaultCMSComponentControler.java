@@ -1691,16 +1691,9 @@ public class DefaultCMSComponentControler
 									autoProductRecommendationList.add(autoProductRecommendationListWsDTO);
 								}
 							}
-							if (null != autoProductRecommendationComponentModel.getPostParams()
-									&& null != autoProductRecommendationComponentModel.getPostParams().getWidgetPlatform())
-							{
-								autoProductRecomListPostParamsWsDTO
-										.setWidgetPlatform(autoProductRecommendationComponentModel.getPostParams().getWidgetPlatform());
-							}
-							else
-							{
-								autoProductRecomListPostParamsWsDTO.setWidgetPlatform("");
-							}
+							autoProductRecomListPostParamsWsDTO
+									.setWidgetPlatform(null != autoProductRecommendationComponentModel.getWidgetPlatform()
+											? autoProductRecommendationComponentModel.getWidgetPlatform() : "");
 							autoProductRecommendationComponentWsDTO
 									.setBackupURL(null != autoProductRecommendationComponentModel.getBackupURL()
 											? autoProductRecommendationComponentModel.getBackupURL() : "");
@@ -3409,16 +3402,9 @@ public class DefaultCMSComponentControler
 								autoProductRecommendationList.add(autoProductRecommendationListWsDTO);
 							}
 						}
-						if (null != autoProductRecommendationComponentModel.getPostParams()
-								&& null != autoProductRecommendationComponentModel.getPostParams().getWidgetPlatform())
-						{
-							autoProductRecomListPostParamsWsDTO
-									.setWidgetPlatform(autoProductRecommendationComponentModel.getPostParams().getWidgetPlatform());
-						}
-						else
-						{
-							autoProductRecomListPostParamsWsDTO.setWidgetPlatform("");
-						}
+						autoProductRecomListPostParamsWsDTO
+								.setWidgetPlatform(null != autoProductRecommendationComponentModel.getWidgetPlatform()
+										? autoProductRecommendationComponentModel.getWidgetPlatform() : "");
 						autoProductRecommendationComponentWsDTO
 								.setBackupURL(null != autoProductRecommendationComponentModel.getBackupURL()
 										? autoProductRecommendationComponentModel.getBackupURL() : "");

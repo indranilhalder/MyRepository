@@ -16612,7 +16612,7 @@
 				 optional="true" />
 				<persistence type="property" />
 			</attribute>
-			<attribute type="AutoProductRecommendationPostParam" qualifier="postParams">
+			<attribute type="java.lang.String" qualifier="widgetPlatform">
 				<modifiers read="true" write="true" search="true"
 				 optional="true" />
 				<persistence type="property" />
@@ -16644,19 +16644,7 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-			
-			<itemtype code="AutoProductRecommendationPostParam" autocreate="true"
-			generate="true" extends="SimpleCMSComponent"
-			jaloclass="com.tisl.mpl.jalo.cms.components.AutoProductRecommendationPostParam">
-			<attributes>
-			<attribute type="java.lang.String" qualifier="widgetPlatform">
-				<modifiers read="true" write="true" search="true"
-				 optional="true" />
-				<persistence type="property" />
-			</attribute>
-			</attributes>
-			</itemtype>
-			
+							
 			<itemtype code="LandingPageHierarchyComponent" autocreate="true"
 			generate="true" extends="SimpleCMSComponent"
 			jaloclass="com.tisl.mpl.jalo.cms.components.LandingPageHierarchyComponent">
