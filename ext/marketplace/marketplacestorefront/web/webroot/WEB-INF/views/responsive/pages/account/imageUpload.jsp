@@ -107,11 +107,12 @@ function preview_image()
 	</c:forEach>
 	</select>
   <input type="file" id="upload_file" name="file" onchange="preview_image();" multiple/>
-  <input type="button" name='submit_image' value="Upload Image" onclick="loadImageAjaxCall();"/>
+  <a class="btn"  name='submit_image' value="Upload Image" onclick="loadImageAjaxCall();">Upload</a>
+   <a class="btn" id="downloadBtn" href="#">Download</a>
  </form:form>
  <div id="image_preview"></div>
   <div id="response_preview"></div>
-  <a class="btn hidden" id="downloadBtn" href="#">Download CSV</a>
+ 
   <br><br>
  <table style="width:100%" id="uploaded-files">
    <tr>
@@ -167,7 +168,7 @@ function exportTableToCSV($table, filename) {
 }
 
 $('#downloadBtn').click(function() {
-	   exportTableToCSV.apply(this, [$('#uploaded-files'), 'photo_upload.csv']);
+	   exportTableToCSV.apply(this, [$('#uploaded-files'), 'image_upload.csv']);
 });
 
 </script>
