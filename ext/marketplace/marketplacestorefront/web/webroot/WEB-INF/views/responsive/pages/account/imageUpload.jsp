@@ -19,14 +19,11 @@ table {
     width: 100%;
     padding-bottom: 5%;
 }
-
 th, td {
     text-align: left;
     padding: 8px;
 }
-
 tr:nth-child(even){background-color: #f2f2f2}
-
 th {
     background-color: #514848;
     color: white;
@@ -40,13 +37,14 @@ th {
 	   function addRow(filename, size, date) {
 	     var markup = "<tr>";
 	         markup += "<td class='img-preview' ><img class='imageUpload' src='" + window.location.origin + filename + "'></td>";
-	         markup += "<td class='img-url'><a target='_blank' href='" + window.location.origin + filename + "'>" + window.location.origin + filename + "</a></td>"
+	         markup += "<td class='img-url'><a target='_blank' href='" + window.location.origin + filename + "'>" + window.location.origin + filename + "</a></td>";
 	         markup += "<td>" + (size/1000).toFixed(2) + "kB </td>";
 	         markup += "<td>" + date + "</td>";
 	         markup += "</tr>";
 	     $("#uploaded-files tbody:first-child").after(markup);
 	   }
 
+	   
 	   function getDateTime(date) {
 	     var dateTime = "";
 	     dateTime = date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear() + " " +
@@ -58,6 +56,8 @@ th {
 	   }
 
 function loadImageAjaxCall() {
+	    
+	    $("#uploaded-files tr").html("");
 	    
 	    var formdata = $('#uploadImages')[0];
 		var form = new FormData(formdata);
@@ -76,6 +76,7 @@ function loadImageAjaxCall() {
 				$("#image_preview").empty();
 				$('#downloadBtn').removeClass('hidden');
 				console.log(response);
+				$("#uploaded-files").html("<tr><th>Image Preview</th> <th>URL</th><th>Size</th><th> Time </th></tr>");
 				response.forEach(function(item) {
 					var date = getDateTime(new Date());
 					addRow(item.imageUrl, item.size,date);
