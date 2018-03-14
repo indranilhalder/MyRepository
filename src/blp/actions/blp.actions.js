@@ -38,7 +38,6 @@ export function getAllBrands(userId, accessToken, cartId) {
       );
 
       const resultJson = await result.json();
-      console.log(resultJson);
       if (resultJson.status === FAILURE) {
         throw new Error(resultJson.error);
       }
