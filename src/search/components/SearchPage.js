@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./SearchPage.css";
 import BrandHeader from "../../blp/components/BrandHeader";
 import SearchResultItem from "./SearchResultItem";
-
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 export default class SearchPage extends React.Component {
   constructor(props) {
     super(props);
@@ -13,10 +13,9 @@ export default class SearchPage extends React.Component {
   handleSearchClick(val) {
     this.setState({ showResults: val });
   }
-  handleItemClick(val) {
-    if (this.props.onItemClick) {
-      this.props.onItemClick(val);
-    }
+  handleItemClick(webURL) {
+    const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "");
+    this.props.history.push(urlSuffix);
   }
   handleSearch(val) {
     if (this.props.getSearchResults) {
