@@ -17,7 +17,6 @@ export default class CategoriesPage extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     let categoriesData = this.props.categories;
     return (
       <div className={styles.base}>
