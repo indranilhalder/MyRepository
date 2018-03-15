@@ -1,53 +1,65 @@
-.base{
-  width:100%;
-  height:auto;
-  display:inline-block;
-  margin-bottom:20px;
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 20px;
 }
-.productImageHolder{
-  width:30%;
-  height:auto;
-  display:inline-block;
+.productImageHolder {
+  width: 30%;
+  height: auto;
+  display: inline-block;
 }
-.productDetails{
-  width:70%;
-  height:auto;
-  display:inline-block;
-  padding:20px 0px 20px 20px;
+.productDetails {
+  width: 70%;
+  height: auto;
+  display: inline-block;
+  padding: 20px 0px 20px 20px;
   vertical-align: top;
 }
-.productName{
-  width:100%;
-  height:auto;
-  color:#000;
-  font-size:14px;
-  font-family:regular;
-  line-height:20px;;
-  margin-bottom:5px;
-  display:inline-block;
+.productName {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 14px;
+  font-family: regular;
+  line-height: 20px;
+  margin-bottom: 5px;
+  display: inline-block;
 }
-.priceHolder{
-  width:100%;
-  height:auto;
-  display:inline-block;
+.withCheckBox {
+  composes: productName;
+  position: relative;
+  padding-right: 25px;
 }
-.price{
-  width:auto;
-  height:auto;
-  display:inline-block;
-  vertical-align:middle;
+.checkBoxHolder {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.priceHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.price {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
   color: #181818;
-  font-size:14px;
-  font-family:regular;
+  font-size: 14px;
+  font-family: regular;
 }
-.discountPrice{
-  composes:price;
-  color:#8d8d8d;
-  text-decoration:line-through;
-  padding-left:10px;
+.discountPrice {
+  composes: price;
+  color: #8d8d8d;
+  text-decoration: line-through;
+  padding-left: 10px;
 }
-.additionalContent{
-  width:100%;
-  height:auto;
-  display:inline-block;
+.additionalContent {
+  width: 100%;
+  height: auto;
+  display: inline-block;
 }

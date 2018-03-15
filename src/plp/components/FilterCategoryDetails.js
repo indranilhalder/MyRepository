@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./FilterCatageoryDetails.css";
+import styles from "./FilterCategoryDetails.css";
 import PropTypes from "prop-types";
-export default class FilterCatageoryDetails extends React.Component {
+export default class FilterCategoryDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -11,19 +11,19 @@ export default class FilterCatageoryDetails extends React.Component {
   handleClick() {
     this.setState({ isOpen: !this.state.isOpen }, () => {
       if (this.props.onClick) {
-        this.props.onClick();
+        this.props.onClick(this.props.value);
       }
     });
   }
   render() {
-    let ClassName = styles.subCategoryRegular;
+    let className = styles.subCategoryRegular;
     if (this.state.isOpen) {
-      ClassName = styles.subCategoryBold;
+      className = styles.subCategoryBold;
     }
     return (
       <div className={styles.base}>
         <div className={styles.header} onClick={() => this.handleClick()}>
-          <div className={ClassName}>{this.props.category}</div>
+          <div className={className}>{this.props.category}</div>
           <div className={styles.subCategoryCount}>
             {this.props.categoryCount}
           </div>
@@ -36,7 +36,7 @@ export default class FilterCatageoryDetails extends React.Component {
     );
   }
 }
-FilterCatageoryDetails.propTypes = {
+FilterCategoryDetails.propTypes = {
   onClick: PropTypes.func,
   category: PropTypes.string,
   categoryCount: PropTypes.number

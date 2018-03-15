@@ -5,6 +5,7 @@ export const API_URL_ROOT =
   "https://uat2.tataunistore.com/marketplacewebservices";
 export const API_URL_ROOT_DUMMY =
   "https://www.tatacliq.com/marketplacewebservices";
+// export const API_URL_ROOT = API_URL_ROOT_DUMMY;
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
@@ -54,7 +55,7 @@ export async function postAdobeTargetUrl(
 }
 
 export async function post(path, postData, doNotUseApiRoot: false) {
-  let url = `${API_URL_ROOT}/${path}`;
+  let url = `${API_URL_ROOT}/${path}${API_URL_ROOT_SUFFIX}`;
   if (doNotUseApiRoot) {
     url = path;
   }
