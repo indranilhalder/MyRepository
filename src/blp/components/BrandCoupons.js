@@ -7,7 +7,13 @@ export default class BrandCoupons extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.couponInerBox}>
-          <div className={styles.headingText}>{this.props.heading}</div>
+          <div
+            className={
+              this.props.time ? styles.headingTextWithTime : styles.headingText
+            }
+          >
+            {this.props.heading}
+          </div>
           {this.props.time && (
             <div className={styles.timeText}>{this.props.time}</div>
           )}
