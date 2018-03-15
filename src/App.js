@@ -21,6 +21,7 @@ import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryW
 import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
+import PiqPageContainer from "./cart/containers/PiqPageContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 
@@ -57,7 +58,8 @@ import {
   BRAND_PAGE,
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
-  CATEGORY_PAGE_WITH_SLUG
+  CATEGORY_PAGE_WITH_SLUG,
+  CLIQ_AND_PIQ
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -242,6 +244,8 @@ class App extends Component {
             component={DisplayOrderSummaryContainer}
           />
           <Route path={CHECKOUT_ROUTER} component={CheckOutContainer} />
+          <Route path={CLIQ_AND_PIQ} component={PiqPageContainer} />
+
           <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
           <Route
             exact

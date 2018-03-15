@@ -14,8 +14,12 @@ export default class PiqPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lat: this.props.availableStores[0].geoPoint.latitude,
-      lng: this.props.availableStores[0].geoPoint.longitude,
+      lat: props.availableStores[0]
+        ? props.availableStores[0].geoPoint.latitude
+        : 22.575229,
+      lng: props.availableStores[0]
+        ? props.availableStores[0].geoPoint.longitude
+        : 88.468341,
       position: 0,
       selected: false,
       selectedAddress: "",
@@ -26,6 +30,9 @@ export default class PiqPage extends React.Component {
       headingText: "",
       displayName: ""
     };
+  }
+  componentDidMount() {
+    this.props.getAllStoresCNC(110001);
   }
   handleSwipe(val) {
     const lat = this.props.availableStores[val % this.props.numberOfStores]
@@ -63,7 +70,7 @@ export default class PiqPage extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.map}>
-          <Map lat={this.state.lat} lng={this.state.lng} zoom={18}>
+          <Map lat={this.state.lat} lng={this.state.lng} zoom={15}>
             {this.props.availableStores.map((val, i) => {
               return (
                 <MarkerStore

@@ -40,7 +40,7 @@ const cart = (
     orderSummaryError: null,
     coupons: null,
 
-    storeDetails: null,
+    storeDetails: [],
     storeStatus: null,
     storeError: null,
     storeAdded: null,

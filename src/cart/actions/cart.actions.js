@@ -1032,7 +1032,7 @@ export function getAllStoresCNC(pinCode) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      dispatch(getAllStoresCNCSuccess(resultJson));
+      dispatch(getAllStoresCNCSuccess(resultJson.stores));
     } catch (e) {
       dispatch(getAllStoresCNCFailure(e.message));
     }
