@@ -1,58 +1,61 @@
 .base {
-  width           : 100%;
-  height          : auto;
-  background-color: #ffff;
-  border-radius   : 4px;
-  padding         : 10px 20px;
+  width: 100%;
+  height: auto;
+  background-color: #fff;
+  border-radius: 4px;
 }
 .couponInnerBox {
-  width   : 100%;
-  height  : auto;
+  width: 100%;
+  height: auto;
   position: relative;
-  padding : 0px 50px 0px 50px;
+  padding: 0px 0px 0px 40px;
+  margin-bottom: 10px;
 }
-.headingText  {
-  width      : 100%;
-  color      : #000000;
-  font-size  : 14px;
+.headingText {
+  width: 100%;
+  color: #000000;
+  font-size: 13px;
   font-family: regular;
-  margin     : auto;
-  text-align : left;
+  margin: auto;
+  text-align: left;
   line-height: 25px;
 }
-.couponNumber  {
-
-  composes   : headingText;
-  font-size  : 18px;
+.couponNumber {
+  composes: headingText;
+  font-size: 18px;
   font-family: semibold;
 }
-.lebelText  {
+.lebelText {
   composes: headingText;
 }
 .couponIcon {
-  width   : 25px;
-  height  : 25px;
+  width: 25px;
+  height: 25px;
   position: absolute;
-  left    : 0;
-  top     : 0;
+  left: 0;
+  top: 0;
 }
-.couponFooter  {
-  height    : 154px;
-  width     : 100%;
+.couponFooter {
+  height: auto;
+  width: 100%;
   margin-top: 25px;
 }
-.couponFooterHolder  {
-  width  : 100%;
-  height : 100%;
+.couponFooterHolder {
+  width: 100%;
+  height: auto;
   display: inline-block;
-
+  margin-bottom: 10px;
 }
-.couponInformation  {
-  width      : 50%;
-  height     : auto;
-  display    : inline-block;
+.couponInformation {
+  width: 50%;
+  height: auto;
+  display: inline-block;
   line-height: 17px;
-  color      : #000000;
-  text-align : left;
-  padding    : 5px;
+  color: #000000;
+  text-align: left;
+  font-size: 14px;
+}
+.couponData {
+  composes: couponInformation;
+  padding-left: 30px;
 }

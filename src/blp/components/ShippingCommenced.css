@@ -1,40 +1,39 @@
 .base {
-  width           : 100%;
-  height          : auto;
-  background-color: #ffff;
-  border-radius   : 4px;
-  padding         : 10px 20px;
+  width: 100%;
+  height: auto;
+  background: #fff;
+  border-radius: 4px;
 }
-.couponInnerBox  {
-  width   : 100%;
-  height  : auto;
+.couponInnerBox {
+  width: 100%;
+  height: auto;
   position: relative;
-  padding : 0px 50px 0px 50px;
+  padding: 0px 0px 0px 40px;
+  margin-bottom: 10px;
 }
-.couponIcon  {
+.couponIcon {
   position: absolute;
-  left    : 0;
-  top     : 0;
-  width   : 25px;
-  height  : 25px;
-
+  left: 0;
+  top: 0;
+  width: 25px;
+  height: 25px;
 }
-.headingText  {
-  width      : 100%;
-  color      : #000000;
-  font-size  : 14px;
+.headingText {
+  width: 100%;
+  color: #000000;
+  font-size: 14px;
   font-family: semibold;
-  margin     : auto;
-  text-align : left;
+  margin: auto;
+  text-align: left;
   line-height: 25px;
-  height     : auto;
+  height: auto;
 }
-.lebelText  {
-  width      : 100%;
-  color      : #000000;
-  font-size  : 14px;
+.lebelText {
+  width: 100%;
+  color: #000000;
+  font-size: 14px;
   font-family: regular;
-  text-align : left;
+  text-align: left;
   line-height: 30px;
-  height     : auto;
+  height: auto;
 }

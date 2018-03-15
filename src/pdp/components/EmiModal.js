@@ -14,6 +14,7 @@ export default class EmiModal extends React.Component {
           <div className={styles.content}>
             <div className={styles.info}>{EMI_INFO}</div>
             {this.props.emiData &&
+              this.props.emiData.bankList &&
               this.props.emiData.bankList.map((val, i) => {
                 return (
                   <Accordion text={val.emiBank} key={i}>

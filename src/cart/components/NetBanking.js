@@ -1,9 +1,9 @@
 import React from "react";
 import GridSelect from "../../general/components/GridSelect";
 import BankSelect from "./BankSelect";
-import PropTypes from "prop-types";
 import styles from "./NetBanking.css";
 import Button from "../../general/components/Button";
+import PropTypes from "prop-types";
 export default class NetBanking extends React.Component {
   constructor(props) {
     super(props);
@@ -55,8 +55,12 @@ export default class NetBanking extends React.Component {
 }
 NetBanking.propTypes = {
   bankList: PropTypes.arrayOf(
-    PropTypes.shape({ image: PropTypes.string, value: PropTypes.string })
+    PropTypes.shape({
+      bankCode: PropTypes.string,
+      bankName: PropTypes.string,
+      isAvailable: PropTypes.string,
+      priority: PropTypes.string
+    })
   ),
-  onSelect: PropTypes.func,
-  selected: PropTypes.arrayOf(PropTypes.string)
+  onSelect: PropTypes.func
 };

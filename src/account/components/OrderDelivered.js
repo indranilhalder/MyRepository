@@ -9,14 +9,18 @@ export default class OrderDelivered extends React.Component {
           <div className={styles.deliveredTo}>Delivered to: </div>
           <div className={styles.address}>{this.props.deliveredAddress}</div>
         </div>
-        <div className={styles.deliverDateHolder}>
-          <div className={styles.labelText}>Delivered on:</div>
-          <div className={styles.infoText}>{this.props.deliveredDate}</div>
-        </div>
-        <div className={styles.orderSoldBy}>
-          <div className={styles.labelText}>Sold by:</div>
-          <div className={styles.infoText}>{this.props.soldBy}</div>
-        </div>
+        {this.props.deliveredDate && (
+          <div className={styles.deliverDateHolder}>
+            <div className={styles.labelText}>Delivered on:</div>
+            <div className={styles.infoText}>{this.props.deliveredDate}</div>
+          </div>
+        )}
+        {this.props.soldBy && (
+          <div className={styles.orderSoldBy}>
+            <div className={styles.labelText}>Sold by:</div>
+            <div className={styles.infoText}>{this.props.soldBy}</div>
+          </div>
+        )}
       </div>
     );
   }

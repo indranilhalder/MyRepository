@@ -14,6 +14,7 @@ import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
 import filter from "lodash/filter";
 import OrderConfirmation from "./OrderConfirmation";
+import queryString from "query-string";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -189,9 +190,9 @@ class CheckOutPage extends React.Component {
   }
 
   componentDidMount() {
-    const query = new URLSearchParams(this.props.location.search);
-    const value = query.get("status");
-    const orderId = query.get("order_id");
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    const value = parsedQueryString.status;
+    const orderId = parsedQueryString.order_id;
 
     if (value === PAYMENT_CHARGED) {
       this.setState({ orderId: orderId });

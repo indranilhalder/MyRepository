@@ -934,7 +934,7 @@ export function mergeCartId(cartDetails) {
           JSON.parse(userDetails).customerInfo.mobileNumber
         }/carts?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&&platformNumber=2&userId=${
+        }&isPwa=true&platformNumber=2&userId=${
           JSON.parse(userDetails).customerInfo.mobileNumber
         }&oldCartId=${JSON.parse(cartDetailsAnonymous).guid}&toMergeCartGuid=${
           cartDetails.guid
@@ -1684,7 +1684,6 @@ export function jusPayTokenize(
         }`
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }

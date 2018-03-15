@@ -13,7 +13,7 @@ export const JUS_PAY_API_URL_ROOT = "https://sandbox.juspay.in";
 
 const API_URL_ROOT_SUFFIX = "?isPwa=true";
 
-export const TATA_CLIQ_ROOT = "https://www.tatacliq.com";
+export const TATA_CLIQ_ROOT = "http://uat2.tataunistore.com:3000";
 export const API_MSD_URL_ROOT = "https://ap-southeast-1-api.madstreetden.com";
 
 export async function postAdobeTargetUrl(
@@ -54,11 +54,8 @@ export async function postAdobeTargetUrl(
   });
 }
 
-export async function post(path, postData, doNotUseApiRoot: false) {
-  let url = `${API_URL_ROOT}/${path}${API_URL_ROOT_SUFFIX}`;
-  if (doNotUseApiRoot) {
-    url = path;
-  }
+export async function post(path, postData, doNotUserApiSuffix: true) {
+  const url = `${API_URL_ROOT}/${path}`;
 
   return await fetch(url, {
     method: "POST",
@@ -133,7 +130,7 @@ export async function putMock(url, payload) {
 }
 
 export async function postMsd(url, payload) {
-  return await fetch(`${API_MSD_URL_ROOT}/${url}`, {
+  return await fetch(url, {
     method: "POST",
     body: payload
   });
