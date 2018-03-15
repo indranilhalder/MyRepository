@@ -5,7 +5,7 @@
   border-bottom: 1px solid #d0d0d0;
   position: relative;
   line-height: 49px;
-  padding: 0px 60px 0px 15px;
+  padding: 0px 40px 0px 15px;
 }
 .selected {
   width: auto;
@@ -31,6 +31,7 @@
   line-height: normal;
   font-size: 14px;
   vertical-align: middle;
+  white-space: normal;
 }
 .selectedAdvance {
   composes: base;

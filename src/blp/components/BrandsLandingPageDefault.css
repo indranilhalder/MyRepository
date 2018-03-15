@@ -1,0 +1,56 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding-top: 110px;
+  padding-bottom: 60px;
+}
+.bannerHolder {
+  width: 100%;
+  height: auto;
+}
+.category {
+  composes: bannerHolder;
+  padding: 0 20px;
+}
+.header {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  background: #fff;
+}
+.following {
+  composes: base;
+  padding: 20px 0;
+}
+.followingHeader {
+  width: 100%;
+  height: auto;
+  font-size: 16px;
+  font-family: semibold;
+  color: #212121;
+  position: relative;
+  padding: 0 15px;
+  margin-bottom: 0;
+}
+.followVisible {
+  composes: followingHeader;
+  margin-bottom: 20px;
+}
+.arrow {
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: 0;
+  right: 15px;
+}
+.followVisible .arrow {
+  transform: rotate(180deg);
+}
+.searchInput {
+  padding: 0 20px;
+}
+.searchIcon {
+  padding: 10px;
+}
