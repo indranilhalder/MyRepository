@@ -400,8 +400,9 @@ export function getGlobalAccessToken() {
         `${TOKEN_PATH}?grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=secret`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
 
       dispatch(globalAccessTokenSuccess(resultJson));

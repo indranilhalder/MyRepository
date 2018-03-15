@@ -70,6 +70,8 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   renderRootCategory = datumType => {
+    console.log("DATUM TYPE");
+    console.log(datumType);
     return (
       <React.Fragment>
         {typeComponentMapping[datumType] &&
@@ -86,6 +88,8 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   render() {
+    console.log("RIGHT RENDER IS CALLED");
+    console.log(this.props.productDetails);
     if (!this.props.loading && this.props.productDetails) {
       return (
         <div>

@@ -1,4 +1,6 @@
 export function transformData(datum) {
+  // console.log("IN TRANSFORM DATA");
+  // console.log(datum);
   let image = datum.imageUrl;
   if (!image) {
     image = datum.imageURL;

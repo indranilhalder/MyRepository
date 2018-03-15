@@ -143,6 +143,8 @@ export default class PdpElectronics extends React.Component {
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
 
     const globalAccessToken = JSON.parse(globalCookie).access_token;
+    console.log("GLOBAL ACCESS TOKEN");
+    console.log(globalAccessToken);
     this.props.getPdpEmi(globalAccessToken, cartValue);
     this.props.getEmiTerms(globalAccessToken, cartValue);
     this.props.showEmiModal();

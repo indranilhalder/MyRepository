@@ -16,6 +16,7 @@ export default class ThemeOffer extends React.Component {
     );
     this.props.history.push(urlSuffix);
   }
+
   componentDidUpdate() {
     const offers = this.props.feedComponentData.offers;
 

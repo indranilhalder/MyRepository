@@ -6,9 +6,12 @@ import PropTypes from "prop-types";
 import styles from "./FeedComponent.css";
 import { withRouter } from "react-router";
 
-import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
-
 class FeedComponent extends React.Component {
+  onClick = val => {
+    console.log("FEED COMPONENT");
+    console.log(val);
+    this.props.history.push(val);
+  };
   render() {
     const {
       data,
@@ -38,6 +41,8 @@ class FeedComponent extends React.Component {
         >
           {data &&
             data.map((datum, i) => {
+              // console.log("DATUM");
+              // console.log(datum);
               return (
                 <ProductModule
                   key={i}
@@ -55,6 +60,7 @@ class FeedComponent extends React.Component {
                   description={datum.description}
                   onDownload={datum.onDownload}
                   webURL={datum.webURL}
+                  onClick={this.onClick}
                   {...rest}
                   {...datum}
                 />

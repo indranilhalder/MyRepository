@@ -17,11 +17,16 @@ export default class ProductModule extends React.Component {
   };
   onClick = () => {
     let urlSuffix;
+    console.log("PRODUCT MODULE");
+    console.log(this.props);
     if (this.props.webURL) {
       urlSuffix = this.props.webURL.replace(TATA_CLIQ_ROOT, "");
     } else if (this.props.productId) {
       urlSuffix = `p-${this.props.productId.toLowerCase()}`;
+    } else if (this.props.productListingId) {
+      urlSuffix = `p-${this.props.productListingId.toLowerCase()}`;
     }
+
     if (this.props.onClick) {
       this.props.onClick(urlSuffix);
     }
