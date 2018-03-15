@@ -7,6 +7,7 @@ import {
   getMsdRequest,
   getPdpEmi,
   getEmiTerms,
+  pdpAboutBrand,
   getProductPinCode
 } from "../actions/pdp.actions";
 import {
@@ -34,6 +35,9 @@ const mapDispatchToProps = dispatch => {
     },
     getMsdRequest: productCode => {
       dispatch(getMsdRequest(productCode));
+    },
+    pdpAboutBrand: productCode => {
+      dispatch(pdpAboutBrand(productCode));
     },
     showSizeGuide: () => {
       dispatch(showModal(SIZE_GUIDE));

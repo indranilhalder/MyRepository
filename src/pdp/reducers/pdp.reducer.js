@@ -7,6 +7,7 @@ const productDescription = (
     status: null,
     error: null,
     loading: false,
+    aboutBrand: null,
     productDetails: null,
     isServiceableToPincode: null,
     sizeGuide: {
@@ -24,7 +25,7 @@ const productDescription = (
   },
   action
 ) => {
-  let sizeGuide;
+  let sizeGuide, currentProductDetails, currentBrandDetails;
   switch (action.type) {
     case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_FAILURE:
       return Object.assign({}, state, {
@@ -386,6 +387,41 @@ const productDescription = (
         status: action.status,
         error: action.error,
         loading: false
+      });
+    case pdpActions.PDP_ABOUT_BRAND_SUCCESS:
+      const newMsdItemsForBrand = cloneDeep(state.msdItems);
+      const brandDetails = Object.assign(
+        {},
+        {
+          isFollowing: action.brandDetails.isFollowing,
+          //we need to change this brand code to brandId once api will fix
+          brandId: action.brandDetails.brandCode
+        }
+      );
+      Object.assign(newMsdItemsForBrand, { brandDetails });
+      return Object.assign({}, state, {
+        status: action.status,
+        msdItems: newMsdItemsForBrand,
+        loading: false
+      });
+
+    case pdpActions.FOLLOW_UN_FOLLOW_BRAND_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status
+      });
+
+    case pdpActions.FOLLOW_UN_FOLLOW_BRAND_SUCCESS:
+      currentBrandDetails = cloneDeep(state.msdItems);
+      currentBrandDetails.brandDetails.isFollowing =
+        action.brandDetails.isFollowing;
+      return Object.assign({}, state, {
+        status: action.status,
+        msdItems: currentBrandDetails
+      });
+    case pdpActions.FOLLOW_UN_FOLLOW_BRAND_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error
       });
     default:
       return state;
