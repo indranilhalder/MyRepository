@@ -1,9 +1,4 @@
-import {
-  getSortFromQuery,
-  insertSubStringAt,
-  CATEGORY_URL_REGEX,
-  BRAND_URL_REGEX
-} from "./FilterUtils.js";
+import { getSortFromQuery, insertSubStringAt } from "./FilterUtils.js";
 import {
   CATEGORY_REGEX,
   BRAND_REGEX,
