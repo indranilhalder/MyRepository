@@ -2247,7 +2247,7 @@ export function softReservationForCODPayment(pinCode) {
   return async (dispatch, getState, { api }) => {
     let productItems = {};
     let item = [];
-    each(getState().cart.cartDetailsCnc.products, product => {
+    each(getState().cart.cartDetailsCNC.products, product => {
       let productDetails = {};
       productDetails.ussId = product.USSID;
       productDetails.quantity = product.qtySelectedByUser;

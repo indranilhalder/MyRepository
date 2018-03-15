@@ -2,7 +2,7 @@ import React from "react";
 import creditCardIcon from "./img/credit-card.svg";
 import PropTypes from "prop-types";
 import CodForm from "./CodForm.js";
-import ManueDetails from "../../general/components/MenuDetails.js";
+import MenuDetails from "../../general/components/MenuDetails.js";
 const CASH_ON_DELIVERY = "COD";
 
 export default class CheckoutCOD extends React.Component {
@@ -18,7 +18,7 @@ export default class CheckoutCOD extends React.Component {
     return (
       <div>
         {this.props.cart.codEligibilityDetails.status ? (
-          <ManueDetails text="Cash On Delivery" icon={creditCardIcon}>
+          <MenuDetails text="Cash On Delivery" icon={creditCardIcon}>
             <CodForm
               cart={this.props.cart}
               binValidationForCOD={paymentMode =>
@@ -28,14 +28,11 @@ export default class CheckoutCOD extends React.Component {
                 this.softReservationForCODPayment()
               }
             />
-          </ManueDetails>
+          </MenuDetails>
         ) : (
-          <ManueDetails
-            text="Cash On Delivery Disable UI"
-            icon={creditCardIcon}
-          >
+          <MenuDetails text="Cash On Delivery Disable UI" icon={creditCardIcon}>
             <CodForm />
-          </ManueDetails>
+          </MenuDetails>
         )}
       </div>
     );

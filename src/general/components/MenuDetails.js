@@ -5,7 +5,7 @@ import { Collapse } from "react-collapse";
 import { Icon } from "xelpmoc-core";
 import couponIcon from "./img/credit-card.svg";
 
-export default class ManueDetails extends React.Component {
+export default class MenuDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -52,12 +52,12 @@ export default class ManueDetails extends React.Component {
     );
   }
 }
-ManueDetails.propTypes = {
+MenuDetails.propTypes = {
   text: PropTypes.string,
   icon: PropTypes.string,
   onOpenMenu: PropTypes.bool
 };
 
-ManueDetails.defaultProps = {
+MenuDetails.defaultProps = {
   icon: couponIcon
 };
