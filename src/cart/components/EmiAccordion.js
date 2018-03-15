@@ -53,9 +53,9 @@ export default class EmiAccordion extends React.Component {
 
   softReservationForPayment = cardDetails => {
     let emiBank = this.state.selectedBank;
-    let emi_tenure = this.state.selectedEmi;
+    let emiTenure = this.state.selectedEmi;
     cardDetails.emi_bank = emiBank;
-    cardDetails.emi_tenure = emi_tenure;
+    cardDetails.emi_tenure = emiTenure;
     cardDetails.is_emi = IS_EMI;
     if (this.props.softReservationForPayment) {
       this.props.softReservationForPayment(cardDetails);
