@@ -8,8 +8,11 @@ export default class Map extends React.Component {
     center: { lat: DEFAULT_LATITUDE, lng: DEFAULT_LONGITUDE },
     zoom: DEFAULT_ZOOM
   };
-
+  componentDidUpdate(prevProps, newProps) {
+    console.log(prevProps, newProps);
+  }
   render() {
+    console.log(this.props);
     return (
       <GoogleMapReact
         bootstrapURLKeys={{ key: ["AIzaSyAqkKpQBlLTJwxAjtSKe3Dz7-GUn9xPfd8"] }}

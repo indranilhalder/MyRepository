@@ -1019,6 +1019,9 @@ export function getAllStoresCNCFailure(error) {
 
 // Action Creator for getting all stores CNC
 export function getAllStoresCNC(pinCode) {
+  console.group("IN SIDE THR ACTION FOR GET ALL STORES");
+  console.log(pinCode);
+  console.groupEnd("END OF GROUP OF ACTION CONSOLE");
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getAllStoresCNCRequest());
@@ -1028,10 +1031,12 @@ export function getAllStoresCNC(pinCode) {
           JSON.parse(customerCookie).access_token
         }`
       );
+
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
+      console.log(resultJson);
       dispatch(getAllStoresCNCSuccess(resultJson.stores));
     } catch (e) {
       dispatch(getAllStoresCNCFailure(e.message));

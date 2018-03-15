@@ -505,308 +505,373 @@ const stores = {
     }
   ]
 };
-const data = {
-  type: "cartDataDetailsWsDTO",
-  addressDetailsList: {
-    addresses: [
-      {
-        addressType: "home",
-        city: "Mumbai",
-        country: {
-          isocode: "IN"
-        },
-        defaultAddress: true,
-        firstName: "Chiran",
-        id: "8815360868375",
-        lastName: "Doshi",
-        line1:
-          "L.B.S. Marg, Opposite Richardson and Cruddas, Mulund West, Lal Bahadur Shastri Rd",
-        phone: "9769344954",
-        postalCode: "110001",
-        state: "Maharashtra",
-        town: "Mumbai"
-      }
-    ]
-  },
-  cartAmount: {
-    bagTotal: {
-      currencyIso: "INR",
-      currencySymbol: "₹",
-      doubleValue: 183220,
-      formattedValue: "183220.0"
-    },
-    paybleAmount: {
-      currencyIso: "INR",
-      currencySymbol: "₹",
-      doubleValue: 161588,
-      formattedValue: "161588.00"
-    },
-    totalDiscountAmount: {
-      currencyIso: "INR",
-      currencySymbol: "₹",
-      doubleValue: 21632,
-      formattedValue: "21632.0"
-    }
-  },
-  count: 5,
-  discountPrice: "100.00",
-  maxAllowed: 0,
-  products: [
-    {
-      USSID: "273544ASB001",
-      cartLevelDiscount: "1589.02",
-      color: "Blue",
-      elligibleDeliveryMode: [
-        {
-          code: "click-and-collect",
-          deliveryCost: "0.00",
-          name: "Click and Collect",
-          priority: 2
-        }
-      ],
-      entryNumber: "0",
-      fullfillmentType: "TSHIP",
-      imageURL:
-        "//pcmuat2.tataunistore.com/images/97Wx144H/MP000000000114700_97Wx144H_20171104160625.jpeg",
-      isGiveAway: "N",
-      isLuxury: "Marketplace",
-      maxQuantityAllowed: "10",
-      offerPrice: "1590.0",
-      pinCodeResponse: {
-        cod: "Y",
-        exchangeServiceable: false,
-        isCODLimitFailed: "Y",
-        isPrepaidEligible: "Y",
-        isServicable: "Y",
-        ussid: "273544ASB001",
-        validDeliveryModes: [
-          {
-            CNCServiceableSlavesData: [
-              {
-                fulfillmentType: "TSHIP",
-                qty: 990,
-                serviceableSlaves: [
-                  {
-                    priority: "1",
-                    slaveId: "800112-789654"
-                  }
-                ],
-                storeId: "800112-789654"
-              },
-              {
-                fulfillmentType: "TSHIP",
-                qty: 2,
-                serviceableSlaves: [
-                  {
-                    priority: "1",
-                    slaveId: "800112-789654"
-                  }
-                ],
-                storeId: "800112-789654"
-              },
-              {
-                fulfillmentType: "TSHIP",
-                qty: 4,
-                serviceableSlaves: [
-                  {
-                    priority: "1",
-                    slaveId: "273564-QASLAVE01"
-                  }
-                ],
-                storeId: "273564-QASLAVE01"
-              },
-              {
-                fulfillmentType: "TSHIP",
-                qty: 4,
-                serviceableSlaves: [
-                  {
-                    priority: "1",
-                    slaveId: "273564-QASLAVE01"
-                  }
-                ],
-                storeId: "273564-QASLAVE01"
-              }
-            ],
-            inventory: "990",
-            isCOD: false,
-            type: "CNC"
-          }
-        ]
-      },
-      price: 1620,
-      productBrand: "Cottonworld",
-      productCategoryId: "MSH1112102",
-      productLevelDiscount: 2,
-      productName: "Kurta",
-      productcode: "MP000000000114700",
-      qtySelectedByUser: "3",
-      rootCategory: "Clothing",
-      sellerId: "273544",
-      sellerName: "Vibhanika",
-      size: "39"
-    },
-    {
-      USSID: "963850IP6P123",
-      cartLevelDiscount: "157902.28",
-      entryNumber: "1",
-      fullfillmentType: "tship",
-      imageURL:
-        "//pcmuat.tataunistore.com/images//97Wx144H/MP000000000020550_97Wx144H_20160512121848.jpeg",
-      isGiveAway: "N",
-      isLuxury: "Marketplace",
-      maxQuantityAllowed: "10",
-      offerPrice: "158000.0",
-      pinCodeResponse: {
-        exchangeServiceable: false,
-        isServicable: "N",
-        ussid: "963850IP6P123"
-      },
-      price: 160000,
-      productBrand: "Apple",
-      productCategoryId: "MSH1210102",
-      productLevelDiscount: 1,
-      productName: "IPHONE 6 Plus",
-      productcode: "MP000000000020550",
-      qtySelectedByUser: "2",
-      rootCategory: "Electronics",
-      sellerId: "963850",
-      sellerName: "Pranav"
-    },
-    {
-      USSID: "963850MC123",
-      cartLevelDiscount: "598.63",
-      entryNumber: "2",
-      fullfillmentType: "tship",
-      imageURL:
-        "//pcmuat.tataunistore.com/images//97Wx144H/MP000000000020576_97Wx144H_20160512125424.jpeg",
-      isGiveAway: "N",
-      isLuxury: "Marketplace",
-      maxQuantityAllowed: "10",
-      offerPrice: "599.0",
-      pinCodeResponse: {
-        exchangeServiceable: false,
-        isServicable: "N",
-        ussid: "963850MC123"
-      },
-      price: 600,
-      productBrand: "SanDisk",
-      productCategoryId: "MSH1210101",
-      productLevelDiscount: 0,
-      productName: "Memory Cards",
-      productcode: "MP000000000020576",
-      qtySelectedByUser: "1",
-      rootCategory: "Electronics",
-      sellerId: "963850",
-      sellerName: "Pranav"
-    },
-    {
-      USSID: "963850SPH123",
-      cartLevelDiscount: "998.38",
-      entryNumber: "3",
-      fullfillmentType: "tship",
-      imageURL:
-        "//pcmuat.tataunistore.com/images//97Wx144H/MP000000000020604_97Wx144H_20160512141359.jpeg",
-      isGiveAway: "N",
-      isLuxury: "Marketplace",
-      maxQuantityAllowed: "10",
-      offerPrice: "999.0",
-      pinCodeResponse: {
-        exchangeServiceable: false,
-        isServicable: "N",
-        ussid: "963850SPH123"
-      },
-      price: 1000,
-      productBrand: "Samsung",
-      productCategoryId: "MSH1210100",
-      productLevelDiscount: 0,
-      productName: "Smart Phones",
-      productcode: "MP000000000020604",
-      qtySelectedByUser: "1",
-      rootCategory: "Electronics",
-      sellerId: "963850",
-      sellerName: "Pranav"
-    },
-    {
-      USSID: "273576CAM002",
-      cartLevelDiscount: "499.69",
-      elligibleDeliveryMode: [
-        {
-          code: "express-delivery",
-          deliveryCost: "0.00",
-          desc: "Delivered in 1-2 days",
-          name: "Express Delivery",
-          priority: 0
-        },
-        {
-          code: "home-delivery",
-          deliveryCost: "0.00",
-          desc: "Delivered in 6-7 days",
-          name: "Home Delivery",
-          priority: 1
-        }
-      ],
-      entryNumber: "4",
-      fullfillmentType: "tship",
-      imageURL:
-        "//pcmuat2.tataunistore.com/images/97Wx144H/MP000000000165621_97Wx144H_20180109150708.jpeg",
-      isGiveAway: "N",
-      isLuxury: "Marketplace",
-      maxQuantityAllowed: "10",
-      offerPrice: "500.0",
-      pinCodeResponse: {
-        cod: "Y",
-        exchangeServiceable: false,
-        isCODLimitFailed: "N",
-        isPrepaidEligible: "Y",
-        isServicable: "Y",
-        ussid: "273576CAM002",
-        validDeliveryModes: [
-          {
-            fulfilmentType: "TSHIP",
-            inventory: "9999896",
-            isCOD: true,
-            serviceableSlaves: [
-              {
-                codEligible: "Y",
-                logisticsID: "DELHIVERY",
-                priority: "P002",
-                slaveId: "273576-15486769547865"
-              }
-            ],
-            type: "ED"
-          },
-          {
-            fulfilmentType: "TSHIP",
-            inventory: "9999896",
-            isCOD: true,
-            serviceableSlaves: [
-              {
-                codEligible: "Y",
-                logisticsID: "DELHIVERY",
-                priority: "P002",
-                slaveId: "273576-15486769547865"
-              }
-            ],
-            type: "HD"
-          }
-        ]
-      },
-      price: 20000,
-      productBrand: "W",
-      productCategoryId: "MSH1220116",
-      productLevelDiscount: 98,
-      productName: "CAM002",
-      productcode: "MP000000000165621",
-      qtySelectedByUser: "1",
-      rootCategory: "Electronics",
-      sellerId: "273576",
-      sellerName: "Richa"
-    }
-  ],
-  subtotalPrice: "161688.00",
-  totalPrice: "161588.00"
-};
 
+// const data = {
+//   type: "cartDataDetailsWsDTO",
+//   addressDetailsList: {
+//     addresses: [
+//       {
+//         addressType: "home",
+//         city: "Mumbai",
+//         country: {
+//           isocode: "IN"
+//         },
+//         defaultAddress: true,
+//         firstName: "Chiran",
+//         id: "8815360868375",
+//         lastName: "Doshi",
+//         line1:
+//           "L.B.S. Marg, Opposite Richardson and Cruddas, Mulund West, Lal Bahadur Shastri Rd",
+//         phone: "9769344954",
+//         postalCode: "110001",
+//         state: "Maharashtra",
+//         town: "Mumbai"
+//       }
+//     ]
+//   },
+//   cartAmount: {
+//     bagTotal: {
+//       currencyIso: "INR",
+//       currencySymbol: "₹",
+//       doubleValue: 183220,
+//       formattedValue: "183220.0"
+//     },
+//     paybleAmount: {
+//       currencyIso: "INR",
+//       currencySymbol: "₹",
+//       doubleValue: 161588,
+//       formattedValue: "161588.00"
+//     },
+//     totalDiscountAmount: {
+//       currencyIso: "INR",
+//       currencySymbol: "₹",
+//       doubleValue: 21632,
+//       formattedValue: "21632.0"
+//     }
+//   },
+//   count: 5,
+//   discountPrice: "100.00",
+//   maxAllowed: 0,
+//   products: [
+//     {
+//       USSID: "273544ASB001",
+//       cartLevelDiscount: "1589.02",
+//       color: "Blue",
+//       elligibleDeliveryMode: [
+//         {
+//           code: "click-and-collect",
+//           deliveryCost: "0.00",
+//           name: "Click and Collect",
+//           priority: 2
+//         }
+//       ],
+//       entryNumber: "0",
+//       fullfillmentType: "TSHIP",
+//       imageURL:
+//         "//pcmuat2.tataunistore.com/images/97Wx144H/MP000000000114700_97Wx144H_20171104160625.jpeg",
+//       isGiveAway: "N",
+//       isLuxury: "Marketplace",
+//       maxQuantityAllowed: "10",
+//       offerPrice: "1590.0",
+//       pinCodeResponse: {
+//         cod: "Y",
+//         exchangeServiceable: false,
+//         isCODLimitFailed: "Y",
+//         isPrepaidEligible: "Y",
+//         isServicable: "Y",
+//         ussid: "273544ASB001",
+//         validDeliveryModes: [
+//           {
+//             CNCServiceableSlavesData: [
+//               {
+//                 fulfillmentType: "TSHIP",
+//                 qty: 990,
+//                 serviceableSlaves: [
+//                   {
+//                     priority: "1",
+//                     slaveId: "800112-789654"
+//                   }
+//                 ],
+//                 storeId: "800112-789654"
+//               },
+//               {
+//                 fulfillmentType: "TSHIP",
+//                 qty: 2,
+//                 serviceableSlaves: [
+//                   {
+//                     priority: "1",
+//                     slaveId: "800112-789654"
+//                   }
+//                 ],
+//                 storeId: "800112-789654"
+//               },
+//               {
+//                 fulfillmentType: "TSHIP",
+//                 qty: 4,
+//                 serviceableSlaves: [
+//                   {
+//                     priority: "1",
+//                     slaveId: "273564-QASLAVE01"
+//                   }
+//                 ],
+//                 storeId: "273564-QASLAVE01"
+//               },
+//               {
+//                 fulfillmentType: "TSHIP",
+//                 qty: 4,
+//                 serviceableSlaves: [
+//                   {
+//                     priority: "1",
+//                     slaveId: "273564-QASLAVE01"
+//                   }
+//                 ],
+//                 storeId: "273564-QASLAVE01"
+//               }
+//             ],
+//             inventory: "990",
+//             isCOD: false,
+//             type: "CNC"
+//           }
+//         ]
+//       },
+//       price: 1620,
+//       productBrand: "Cottonworld",
+//       productCategoryId: "MSH1112102",
+//       productLevelDiscount: 2,
+//       productName: "Kurta",
+//       productcode: "MP000000000114700",
+//       qtySelectedByUser: "3",
+//       rootCategory: "Clothing",
+//       sellerId: "273544",
+//       sellerName: "Vibhanika",
+//       size: "39"
+//     },
+//     {
+//       USSID: "963850IP6P123",
+//       cartLevelDiscount: "157902.28",
+//       entryNumber: "1",
+//       fullfillmentType: "tship",
+//       imageURL:
+//         "//pcmuat.tataunistore.com/images//97Wx144H/MP000000000020550_97Wx144H_20160512121848.jpeg",
+//       isGiveAway: "N",
+//       isLuxury: "Marketplace",
+//       maxQuantityAllowed: "10",
+//       offerPrice: "158000.0",
+//       pinCodeResponse: {
+//         exchangeServiceable: false,
+//         isServicable: "N",
+//         ussid: "963850IP6P123"
+//       },
+//       price: 160000,
+//       productBrand: "Apple",
+//       productCategoryId: "MSH1210102",
+//       productLevelDiscount: 1,
+//       productName: "IPHONE 6 Plus",
+//       productcode: "MP000000000020550",
+//       qtySelectedByUser: "2",
+//       rootCategory: "Electronics",
+//       sellerId: "963850",
+//       sellerName: "Pranav"
+//     },
+//     {
+//       USSID: "963850MC123",
+//       cartLevelDiscount: "598.63",
+//       entryNumber: "2",
+//       fullfillmentType: "tship",
+//       imageURL:
+//         "//pcmuat.tataunistore.com/images//97Wx144H/MP000000000020576_97Wx144H_20160512125424.jpeg",
+//       isGiveAway: "N",
+//       isLuxury: "Marketplace",
+//       maxQuantityAllowed: "10",
+//       offerPrice: "599.0",
+//       pinCodeResponse: {
+//         exchangeServiceable: false,
+//         isServicable: "N",
+//         ussid: "963850MC123"
+//       },
+//       price: 600,
+//       productBrand: "SanDisk",
+//       productCategoryId: "MSH1210101",
+//       productLevelDiscount: 0,
+//       productName: "Memory Cards",
+//       productcode: "MP000000000020576",
+//       qtySelectedByUser: "1",
+//       rootCategory: "Electronics",
+//       sellerId: "963850",
+//       sellerName: "Pranav"
+//     },
+//     {
+//       USSID: "963850SPH123",
+//       cartLevelDiscount: "998.38",
+//       entryNumber: "3",
+//       fullfillmentType: "tship",
+//       imageURL:
+//         "//pcmuat.tataunistore.com/images//97Wx144H/MP000000000020604_97Wx144H_20160512141359.jpeg",
+//       isGiveAway: "N",
+//       isLuxury: "Marketplace",
+//       maxQuantityAllowed: "10",
+//       offerPrice: "999.0",
+//       pinCodeResponse: {
+//         exchangeServiceable: false,
+//         isServicable: "N",
+//         ussid: "963850SPH123"
+//       },
+//       price: 1000,
+//       productBrand: "Samsung",
+//       productCategoryId: "MSH1210100",
+//       productLevelDiscount: 0,
+//       productName: "Smart Phones",
+//       productcode: "MP000000000020604",
+//       qtySelectedByUser: "1",
+//       rootCategory: "Electronics",
+//       sellerId: "963850",
+//       sellerName: "Pranav"
+//     },
+//     {
+//       USSID: "273576CAM002",
+//       cartLevelDiscount: "499.69",
+//       elligibleDeliveryMode: [
+//         {
+//           code: "express-delivery",
+//           deliveryCost: "0.00",
+//           desc: "Delivered in 1-2 days",
+//           name: "Express Delivery",
+//           priority: 0
+//         },
+//         {
+//           code: "home-delivery",
+//           deliveryCost: "0.00",
+//           desc: "Delivered in 6-7 days",
+//           name: "Home Delivery",
+//           priority: 1
+//         }
+//       ],
+//       entryNumber: "4",
+//       fullfillmentType: "tship",
+//       imageURL:
+//         "//pcmuat2.tataunistore.com/images/97Wx144H/MP000000000165621_97Wx144H_20180109150708.jpeg",
+//       isGiveAway: "N",
+//       isLuxury: "Marketplace",
+//       maxQuantityAllowed: "10",
+//       offerPrice: "500.0",
+//       pinCodeResponse: {
+//         cod: "Y",
+//         exchangeServiceable: false,
+//         isCODLimitFailed: "N",
+//         isPrepaidEligible: "Y",
+//         isServicable: "Y",
+//         ussid: "273576CAM002",
+//         validDeliveryModes: [
+//           {
+//             fulfilmentType: "TSHIP",
+//             inventory: "9999896",
+//             isCOD: true,
+//             serviceableSlaves: [
+//               {
+//                 codEligible: "Y",
+//                 logisticsID: "DELHIVERY",
+//                 priority: "P002",
+//                 slaveId: "273576-15486769547865"
+//               }
+//             ],
+//             type: "ED"
+//           },
+//           {
+//             fulfilmentType: "TSHIP",
+//             inventory: "9999896",
+//             isCOD: true,
+//             serviceableSlaves: [
+//               {
+//                 codEligible: "Y",
+//                 logisticsID: "DELHIVERY",
+//                 priority: "P002",
+//                 slaveId: "273576-15486769547865"
+//               }
+//             ],
+//             type: "HD"
+//           }
+//         ]
+//       },
+//       price: 20000,
+//       productBrand: "W",
+//       productCategoryId: "MSH1220116",
+//       productLevelDiscount: 98,
+//       productName: "CAM002",
+//       productcode: "MP000000000165621",
+//       qtySelectedByUser: "1",
+//       rootCategory: "Electronics",
+//       sellerId: "273576",
+//       sellerName: "Richa"
+//     }
+//   ],
+//   subtotalPrice: "161688.00",
+//   totalPrice: "161588.00"
+// };
+
+let pinCodeResponse = {
+  cod: "N",
+  exchangeServiceable: false,
+  isCODLimitFailed: "Y",
+  isPrepaidEligible: "Y",
+  isServicable: "Y",
+  ussid: "273544ASB001",
+  validDeliveryModes: [
+    {
+      CNCServiceableSlavesData: [
+        {
+          fulfillmentType: "TSHIP",
+          qty: 986,
+          serviceableSlaves: [
+            {
+              priority: "1",
+              slaveId: "273544-110003"
+            }
+          ],
+          storeId: "273544-110003"
+        }
+      ],
+      inventory: "986",
+      isCOD: false,
+      type: "CNC"
+    },
+    {
+      CNCServiceableSlavesData: [
+        {
+          fulfillmentType: "TSHIP",
+          qty: 986,
+          serviceableSlaves: [
+            {
+              priority: "1",
+              slaveId: "800059-850059"
+            }
+          ],
+          storeId: "800059-850059"
+        }
+      ],
+      inventory: "986",
+      isCOD: false,
+      type: "CNC"
+    },
+    {
+      CNCServiceableSlavesData: [
+        {
+          fulfillmentType: "TSHIP",
+          qty: 986,
+          serviceableSlaves: [
+            {
+              priority: "1",
+              slaveId: "100112-523698"
+            }
+          ],
+          storeId: "100112-523698"
+        }
+      ],
+      inventory: "986",
+      isCOD: false,
+      type: "CNC"
+    }
+  ]
+};
 const mapDispatchToProps = dispatch => {
   return {
     getAllStoresCNC: pincode => {
@@ -821,8 +886,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 const mapStateToProps = state => {
-  console.log(state.cart);
-  const firstSlaveData = data.products[0].pinCodeResponse.validDeliveryModes;
+  const firstSlaveData = pinCodeResponse.validDeliveryModes;
   const someData = firstSlaveData
     .map(slaves => {
       return slaves.CNCServiceableSlavesData.map(slave => {
@@ -848,8 +912,8 @@ const mapStateToProps = state => {
   return {
     availableStores,
     numberOfStores: availableStores.length,
-    productName: data.products[0].productName,
-    productColour: data.products[0].color
+    productName: "data.products[0].productName",
+    productColour: "data.products[0].color"
   };
 };
 const PiqPageContainer = withRouter(

@@ -32,6 +32,7 @@ export default class PiqPage extends React.Component {
     };
   }
   componentDidMount() {
+    console.log("COMPONENT DID MOUNT ");
     this.props.getAllStoresCNC(110001);
   }
   handleSwipe(val) {
@@ -67,10 +68,21 @@ export default class PiqPage extends React.Component {
     }
   }
   render() {
+    console.log(this.props, this.props.availableStores[0]);
     return (
       <div className={styles.base}>
         <div className={styles.map}>
-          <Map lat={this.state.lat} lng={this.state.lng} zoom={15}>
+          <Map
+            lat={
+              this.props.availableStores[0] &&
+              this.props.availableStores[0].geoPoint.latitude
+            }
+            lng={
+              this.props.availableStores[0] &&
+              this.props.availableStores[0].geoPoint.latitude
+            }
+            zoom={16}
+          >
             {this.props.availableStores.map((val, i) => {
               return (
                 <MarkerStore
@@ -101,7 +113,7 @@ export default class PiqPage extends React.Component {
                 return (
                   <PickUpLocation
                     key={i}
-                    address={`${val.returnAddress1} ${val.returnAddress2}, `}
+                    address={`${val.address.line1} ${val.address.line2}, `}
                     PickUpKey="Open on: "
                     workingDays={val.mplWorkingDays}
                     openingTime={val.mplOpeningTime}
