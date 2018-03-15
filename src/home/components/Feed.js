@@ -7,7 +7,7 @@ import VideoProductCarousel from "./VideoProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
 import HeroBanner from "./HeroBanner.js";
 import FollowBase from "./FollowBase.js";
-import InformationHeader from "../../general/components/InformationHeader";
+import SearchContainer from "../../search/SearchContainer";
 import ConnectWidget from "./ConnectWidget";
 import BrandCardHeader from "../../blp/components/BrandCardHeader";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
@@ -150,14 +150,13 @@ class Feed extends Component {
     }
     return (
       <div className={styles.base}>
-        <div className={styles.center}>
-          <InformationHeader
+        <div className={styles.header}>
+          <SearchContainer
             {...propsForHeader}
-            goBack={() => this.props.history.goBack()}
+            onBack={() => this.props.history.goBack()}
           />
-
-          {this.renderFeedComponents()}
         </div>
+        <div className={styles.center}>{this.renderFeedComponents()}</div>
         <MobileFooter history={this.props.history} />
       </div>
     );
