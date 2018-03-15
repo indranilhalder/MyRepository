@@ -10,11 +10,18 @@ export default class SearchPage extends React.Component {
       showResults: false
     };
   }
+
   handleSearchClick(val) {
     this.setState({ showResults: val });
   }
-  handleItemClick(webURL) {
-    const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "");
+  handleBrandClick(webURL) {
+    const url = `b-${webURL.toLowerCase()}`;
+    const urlSuffix = url.replace(TATA_CLIQ_ROOT, "");
+    this.props.history.push(urlSuffix);
+  }
+  handleCategoryClick(webURL) {
+    const url = `c-${webURL.toLowerCase()}`;
+    const urlSuffix = url.replace(TATA_CLIQ_ROOT, "");
     this.props.history.push(urlSuffix);
   }
   handleSearch(val) {
@@ -23,6 +30,7 @@ export default class SearchPage extends React.Component {
     }
   }
   render() {
+    console.log(this.props);
     const data = this.props.searchResult;
     return (
       <div className={styles.base}>
@@ -45,7 +53,7 @@ export default class SearchPage extends React.Component {
                     text={val.categoryName}
                     value={val.categoryCode}
                     onClick={() => {
-                      this.handleItemClick(val.categoryCode);
+                      this.handleBrandClick(val.categoryCode);
                     }}
                   />
                 );
@@ -59,7 +67,7 @@ export default class SearchPage extends React.Component {
                     text={val.categoryName}
                     value={val.categoryCode}
                     onClick={() => {
-                      this.handleItemClick(val.categoryCode);
+                      this.handleCategoryClick(val.categoryCode);
                     }}
                   />
                 );
