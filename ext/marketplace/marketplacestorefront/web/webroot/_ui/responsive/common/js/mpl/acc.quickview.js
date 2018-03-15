@@ -1265,7 +1265,8 @@ $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
 		ACC.product.sendToCartPageQuick("addToCartFormQuick",true);*/
 
 	
-	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='Accessories' && isShowSize=='true' && $("#categoryType").val()!='HomeFurnishing'){
+	 //SDI-5609 categoryType changed to categoryTypeQV
+	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryTypeQV").val()!='Electronics' && $("#categoryTypeQV").val()!='Watches' && $("#categoryTypeQV").val()!='Accessories' && isShowSize=='true' && $("#categoryTypeQV").val()!='HomeFurnishing'){
 		$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		 				$("#addToCartFormQuickTitle").show();
 		  				$("#addToCartFormQuickTitle").fadeOut(5000);

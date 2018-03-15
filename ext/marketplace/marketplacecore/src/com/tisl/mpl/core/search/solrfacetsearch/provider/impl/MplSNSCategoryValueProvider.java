@@ -96,15 +96,21 @@ public class MplSNSCategoryValueProvider extends AbstractPropertyFieldValueProvi
 		 */
 		for (final CategoryModel categoryModel : superCategories)
 		{
+			//SDI-5010 fix starts
+			//
+			//if ((categoryModel instanceof ClassificationClassModel) || (categoryModel.getCode().startsWith("MPH")
+			//		|| (categoryModel.getCode().startsWith("MBH")) || (categoryModel.getCode().startsWith("SSH"))))
+			//{
+			//	continue;
+			//}
 
-
-			if ((categoryModel instanceof ClassificationClassModel) || (categoryModel.getCode().startsWith("MPH")
-					|| (categoryModel.getCode().startsWith("MBH")) || (categoryModel.getCode().startsWith("SSH"))))
+			if ((categoryModel instanceof ClassificationClassModel)
+					|| (categoryModel.getCode().startsWith("MSH") || (categoryModel.getCode().startsWith("LSH"))))
 			{
-				continue;
+				finalCategories.add(categoryModel);
 			}
-			finalCategories.add(categoryModel);
 
+			//SDI-5010 fix ends
 		}
 
 

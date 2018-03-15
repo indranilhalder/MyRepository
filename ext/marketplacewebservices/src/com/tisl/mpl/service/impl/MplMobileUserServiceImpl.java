@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -40,6 +41,7 @@ import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.account.register.ForgetPasswordFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.data.MplPreferencePopulationData;
 import com.tisl.mpl.facades.product.data.ExtRegisterData;
@@ -90,10 +92,13 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	private OTPGenericService otpGenericService;
 	@Resource
 	private SendSMSFacade sendSMSFacade;
+	@Autowired
+	private ForgetPasswordFacade forgetPasswordFacade;
 
 	private static final Logger LOG = Logger.getLogger(MplMobileUserServiceImpl.class);
 	private static String LOG1 = "************** User details validated mobile web service ************";
 	private static String LOG2 = "************** User registered via mobile web service *************";
+	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
 	private String gigyaUID;
 
@@ -944,7 +949,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplMobileUserService#loginSocialUser(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1045,7 +1050,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplMobileUserService#socialMediaRegistration(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1271,7 +1276,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 */
 	//NU-31
 	@Override
-	public MplRegistrationResultWsDto forgotPasswordOtp(final String mobileNumber, final int platformNumber)
+	public MplRegistrationResultWsDto forgotPasswordOtp(final String mobileNumber, final int platformNumber, final boolean isPwa)
 	{
 		final MplRegistrationResultWsDto result = new MplRegistrationResultWsDto();
 		boolean successFlag = false;
@@ -1287,9 +1292,17 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 						mobileNumber);
 				try
 				{
-					sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
-							MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
-									MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otp), mobileNumber);
+					if (StringUtils.isNotEmpty(mobileNumber)
+							&& mobileNumber.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX))
+					{
+						sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+								MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
+										MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otp), mobileNumber);
+					}
+					else if (StringUtils.isNotEmpty(mobileNumber) && mobileNumber.matches(EMAIL_REGEX))
+					{
+						forgetPasswordFacade.forgottenPasswordForEmail(mobileNumber, otp, Boolean.TRUE);
+					}
 				}
 				catch (final ModelSavingException e)
 				{

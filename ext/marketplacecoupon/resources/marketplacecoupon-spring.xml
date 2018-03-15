@@ -100,6 +100,7 @@
 		scope="tenant">
 	</bean>	 -->	
 	
+
 	<bean id="mplUserRestrictionInterceptor" class="com.tisl.mpl.interceptor.MplUserRestrictionInterceptor">
 		<property name="modelService" ref="modelService" />
 	</bean>
@@ -109,5 +110,12 @@
 		<property name="interceptor" ref="mplUserRestrictionInterceptor" />
 		<property name="typeCode" value="UserRestriction" />
 	</bean>
+
+	<!-- SDI-6217 starts -->
+	  <bean id="core.deliverycostsstrategy.default"
+	      class="com.tisl.mpl.jalo.strategy.MplDefaultDeliveryCostsStrategy"
+	      scope="tenant">		
+      </bean>
+	<!-- SDI-6217 ends -->
 
 </beans>

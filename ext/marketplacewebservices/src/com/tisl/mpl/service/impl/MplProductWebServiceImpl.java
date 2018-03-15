@@ -419,7 +419,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -2192,12 +2192,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 *
+	 * 
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 *
-	 *
+	 * 
+	 * 
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
@@ -3259,7 +3259,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getEgvProduct()
 	 */
 	@Override
@@ -3608,7 +3608,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetails(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3654,7 +3654,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER));
+						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER,
+						ProductOption.REVIEW));
 			}
 			else
 			{

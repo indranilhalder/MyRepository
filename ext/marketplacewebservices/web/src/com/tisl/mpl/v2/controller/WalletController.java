@@ -7,7 +7,6 @@ import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
-import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
@@ -49,12 +48,9 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
-import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
-import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplEgvWalletService;
@@ -96,8 +92,8 @@ public class WalletController
 	@Resource(name = "mplPaymentFacade")
 	private MplPaymentFacade mplPaymentFacade;
 
-	@Resource
-	private CommerceCartService commerceCartService;
+	//	@Resource
+	//	private CommerceCartService commerceCartService;
 
 	@Resource
 	private MplCartFacade mplCartFacade;
@@ -119,15 +115,15 @@ public class WalletController
 	@Autowired
 	private CommonI18NService commonI18NService;
 
-	@Autowired
-	private MplEGVCartService mplEGVCartService;
+	//	@Autowired
+	//	private MplEGVCartService mplEGVCartService;
 
 
-	@Resource(name = "mplVoucherService")
-	private MplVoucherService mplVoucherService;
-
-	@Autowired
-	private RegisterCustomerFacade registerCustomerFacade;
+	//	@Resource(name = "mplVoucherService")
+	//	private MplVoucherService mplVoucherService;
+	//
+	//	@Autowired
+	//	private RegisterCustomerFacade registerCustomerFacade;
 
 	@Autowired
 	private MplEgvWalletService mplEgvWalletService;
@@ -141,6 +137,7 @@ public class WalletController
 	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
 	private static final String CUSTOMERMANAGER = "ROLE_CUSTOMERMANAGERGROUP";
 	private static final String APPLICATION_TYPE = "application/json";
+	private static final String DECIMAL_FORMAT = "#.##";
 
 	/**
 	 * This API is used to USe Cliq Cash While Placing Order
@@ -184,7 +181,7 @@ public class WalletController
 					final double amountInclDelCharge = Double.parseDouble(applyCliqCashWsDto.getTotalAmount());
 					final double actualDelCharge = applyCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
 					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
-					final DecimalFormat df = new DecimalFormat("#.##");
+					final DecimalFormat df = new DecimalFormat(DECIMAL_FORMAT);
 					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
 					discount = Double.parseDouble(df.format(discount));
 					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
@@ -207,7 +204,7 @@ public class WalletController
 					final double amountInclDelCharge = Double.parseDouble(applyCliqCashWsDto.getTotalAmount());
 					final double actualDelCharge = applyCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
 					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
-					final DecimalFormat df = new DecimalFormat("#.##");
+					final DecimalFormat df = new DecimalFormat(DECIMAL_FORMAT);
 					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
 					discount = Double.parseDouble(df.format(discount));
 					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
@@ -329,7 +326,7 @@ public class WalletController
 					final double amountInclDelCharge = Double.parseDouble(removeCliqCashWsDto.getTotalAmount());
 					final double actualDelCharge = removeCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
 					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
-					final DecimalFormat df = new DecimalFormat("#.##");
+					final DecimalFormat df = new DecimalFormat(DECIMAL_FORMAT);
 					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
 					discount = Double.parseDouble(df.format(discount));
 					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
@@ -402,7 +399,7 @@ public class WalletController
 					final double amountInclDelCharge = Double.parseDouble(removeCliqCashWsDto.getTotalAmount());
 					final double actualDelCharge = removeCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
 					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
-					final DecimalFormat df = new DecimalFormat("#.##");
+					final DecimalFormat df = new DecimalFormat(DECIMAL_FORMAT);
 					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
 					discount = Double.parseDouble(df.format(discount));
 					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
@@ -458,7 +455,7 @@ public class WalletController
 		final RedeemCliqVoucherWsDTO redeemCliqVoucherWsDTO = new RedeemCliqVoucherWsDTO();
 		final OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 		CartModel cart = null;
-		final ApplyCliqCashWsDto applyCliqCashWsDto = null;
+		//	final ApplyCliqCashWsDto applyCliqCashWsDto = null;
 		try
 		{
 			boolean isWalletOtpVerified = false;

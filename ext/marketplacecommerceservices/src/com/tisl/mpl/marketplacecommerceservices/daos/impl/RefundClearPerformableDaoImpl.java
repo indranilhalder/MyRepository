@@ -186,12 +186,12 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 		final StringBuilder query = new StringBuilder(500);
 		query.append("select {rtm:" + RefundTransactionMappingModel.JUSPAYREFUNDID + "} from ");
 		query.append("{" + RefundTransactionMappingModel._TYPECODE + " as rtm} where ");
-		query.append("{rtm:" + RefundTransactionMappingModel.JUSPAYREFUNDID + "} in (?requestIds)");
+		query.append("{rtm:" + RefundTransactionMappingModel.JUSPAYREFUNDID + "} in (" + reqVarb + ")");
 		final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(query.toString());
 		final List resultClassList = new ArrayList();
 		resultClassList.add(String.class);
 		flexQuery.setResultClassList(resultClassList);
-		flexQuery.addQueryParameter("requestIds", reqVarb);
+		//flexQuery.addQueryParameter("requestIds", reqVarb);
 		return flexibleSearchService.<String> search(flexQuery).getResult();
 	}
 }

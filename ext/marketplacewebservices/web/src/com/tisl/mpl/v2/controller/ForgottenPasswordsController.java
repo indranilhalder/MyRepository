@@ -89,6 +89,7 @@ public class ForgottenPasswordsController extends BaseController
 	private static final String TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
 	private static final String ROLE_CLIENT = "ROLE_CLIENT";
 	private static final String APPLICATION_TYPE = "application/json";
+	private static final String isPwa = "isPwa";
 
 	/**
 	 * Generates a token to restore customer's forgotten password.
@@ -203,15 +204,17 @@ public class ForgottenPasswordsController extends BaseController
 
 	@Secured(
 	{ ROLE_CLIENT, TRUSTED_CLIENT })
-	@RequestMapping(value = "/customerForgotPassword", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "/customerForgotPassword", params = isPwa, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplRegistrationResultWsDto customerForgotPassword(@RequestParam final String username,
-			@RequestParam final int platformNumber, @RequestParam final String isPwa) throws Exception
+			@RequestParam final int platformNumber, @RequestParam final boolean isPwa) throws Exception
 	{
 		MplRegistrationResultWsDto resultWsDto = new MplRegistrationResultWsDto();
 		try
 		{
-			resultWsDto = mobileUserService.forgotPasswordOtp(username, platformNumber);
+			{
+				resultWsDto = mobileUserService.forgotPasswordOtp(username, platformNumber, true);
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -327,7 +330,7 @@ public class ForgottenPasswordsController extends BaseController
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0017);
 				}
 				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				result.setMessage("Password has been updated successfuly");
+				result.setMessage("Password has been updated successfully");
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)

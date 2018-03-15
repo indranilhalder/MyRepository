@@ -235,6 +235,7 @@ function deleteCookie(name){
 //Script from facetNavAppliedFilters.tag
  var serpSizeList=[];
  function populateFacet(){
+	serpSizeList=[]; 
 	var serpSizeCount=-1;
 	var sizeCount=0;
 	var size= $('#sizeCountForAppliedFilter').val();

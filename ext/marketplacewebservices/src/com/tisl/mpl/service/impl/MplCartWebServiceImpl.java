@@ -3345,8 +3345,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3615,7 +3615,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3702,6 +3702,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<>();
 		List<PinCodeResponseData> pinCodeRes = null;
 
+		int count = 0;
+
 		try
 		{
 			if (cartModel != null)
@@ -3762,6 +3764,19 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				gwlpList = productDetailsPwa(cartModel, deliveryModeDataMap, false, true, pinCodeRes, pincode);
 			}
+
+			if (null != gwlpList && !gwlpList.isEmpty())
+			{
+				for (final GetWishListProductWsDTO entry : gwlpList)
+				{
+					if (null != entry.getIsGiveAway() && entry.getIsGiveAway().equalsIgnoreCase("N"))
+					{
+						count++;
+					}
+				}
+				cartDataDetails.setCount(count);
+			}
+
 			if (null != gwlpList)
 			{
 				cartDataDetails.setProducts(gwlpList);
@@ -3987,7 +4002,25 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					gwlp.setProductCategoryId(catId);
 				}
 
-				configurePriceValuePwa(gwlp, abstractOrderEntry);
+				//configurePriceValuePwa(gwlp, abstractOrderEntry);
+
+				double entryPrice = 0;
+				if (null != abstractOrderEntry.getTotalMrp() && null != abstractOrderEntry.getQuantity())
+				{
+					//entryPrice = abstractOrderEntry.getBasePrice().doubleValue() * abstractOrderEntry.getQuantity().doubleValue();
+					//setting mrp here--tpr-3823
+					entryPrice = abstractOrderEntry.getTotalMrp().doubleValue();
+
+				}
+				final Double price = new Double(entryPrice);
+				gwlp.setPrice(price);
+
+				if (null != abstractOrderEntry.getTotalPrice()
+						&& Double.compare(entryPrice, abstractOrderEntry.getTotalPrice().doubleValue()) != 0)
+				{
+					gwlp.setOfferPrice(abstractOrderEntry.getTotalPrice().toString());
+
+				}
 
 				final List<MobdeliveryModeWsDTO> deliveryList = new ArrayList<MobdeliveryModeWsDTO>();
 				final MobdeliveryModeWsDTO delivery = null;
@@ -4635,17 +4668,32 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	/**
 	 * @param deliveryCost
 	 */
-	private PriceData createPriceCharge(final String deliveryCost)
+	private PriceData createPriceCharge(final String cost)
 	{
 		// YTODO Auto-generated method stub
+		// YTODO Auto-generated method stub
+		final BigDecimal value = new BigDecimal(cost);
 		final PriceData priceData = new PriceData();
-		priceData.setFormattedValue(deliveryCost);
-		priceData.setDoubleValue(Double.valueOf(deliveryCost));
+
+		priceData.setDoubleValue(Double.valueOf(cost));
+
 
 		final CurrencyModel currency = commonI18NService.getCurrency(INR);
 		priceData.setCurrencyIso(currency.getIsocode());
-		priceData.setCurrencySymbol(currency.getSymbol());
+		final String currencySymbol = currency.getSymbol();
 
+		StringBuilder stb = new StringBuilder(20);
+		stb = stb.append(currencySymbol).append(cost);
+		priceData.setFormattedValue(stb.toString());
+
+
+		final long valueLong = value.setScale(0, BigDecimal.ROUND_FLOOR).longValue();
+		final String totalPriceNoDecimalPntFormatted = Long.toString(valueLong);
+		StringBuilder stbND = new StringBuilder(20);
+		stbND = stbND.append(currencySymbol).append(totalPriceNoDecimalPntFormatted);
+		priceData.setFormattedValueNoDecimal(stbND.toString());
+		priceData.setValue(value);
+		priceData.setPriceType(PriceDataType.BUY);
 		return priceData;
 	}
 

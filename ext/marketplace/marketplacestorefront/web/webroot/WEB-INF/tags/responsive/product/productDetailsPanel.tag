@@ -575,9 +575,18 @@ tr.d0 td {
 		<c:if test="${product.rootCategory=='FineJewellery'or product.rootCategory=='FashionJewellery' }">
 		 <div class="jewellery-wrapper">
 		 </c:if>
+		  <c:choose>
+		 <c:when test="${product.rootCategory eq 'HomeFurnishing'}">
+		 <div class="tabs-block ${product.rootCategory}" style="width:90%">
+		 <product:productPageTabs product="${product}" />
+		</div>
+		 </c:when>
+		 <c:otherwise>
 		 <div class="tabs-block ${product.rootCategory}">
 				<product:productPageTabs product="${product}" />
 			</div>
+		 </c:otherwise>
+		 </c:choose>
 		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
 		<%-- <c:set var="finejewellery">
 			<spring:theme code='product.finejewellery' />

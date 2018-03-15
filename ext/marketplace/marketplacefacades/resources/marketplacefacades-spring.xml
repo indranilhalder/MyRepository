@@ -2181,5 +2181,9 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	<!--NU-50 end  -->
 	
+	<bean id="mplImageUploadFacade"
+		class="com.tis.mpl.facade.imageupload.impl.MplImageUploadFacadeImpl">
+		<property name="imageUploadService" ref="imageUploadService"></property>
+	</bean>
 </beans>
 

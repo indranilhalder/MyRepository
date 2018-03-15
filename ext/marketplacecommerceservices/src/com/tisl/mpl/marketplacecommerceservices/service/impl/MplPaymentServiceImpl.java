@@ -218,7 +218,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	//Sonar Fix
 	private static final String FAILURE_KEY = "FAILURE";
-
+	private static final String SUCCESS_KEY = "SUCCESS";
+	private static final String PENDING_KEY = "PENDING";
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService; //Added for TPR-1348
    @Autowired
@@ -5009,10 +5010,17 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						
 						final OrderModel subOrderModel = orderModelService.getOrder(orderEntry.getOrder().getCode());
-						if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")) {
-							saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel,subOrderModel);
+						try
+						{
+							if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")) {
+								saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel,subOrderModel);
+							}
+							
 						}
-						// If CosignmentEnteries are present then update OMS with
+						catch(final Exception e)
+						{
+							LOG.error(e.getMessage(),e);
+						}						// If CosignmentEnteries are present then update OMS with
 						// the state.
 						ConsignmentStatus newStatus = null;
 						if (CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
@@ -5020,11 +5028,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							// ConsignmentModel consignmentModel = orderEntry
 							// .getConsignmentEntries().iterator().next()
 							// .getConsignment();
-							if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+							if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS_KEY))
 							{
 								newStatus = ConsignmentStatus.RETURN_COMPLETED;
 							}
-							else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING"))
+							else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), PENDING_KEY))
 							{
 								newStatus = ConsignmentStatus.REFUND_INITIATED;
 								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
@@ -5261,11 +5269,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			 walletApportionReturnModel.setWalletCardList(walletCardApportionDetailList);
 			 walletApportionReturnModel.setTransactionId(abstractOrderEntryModel.getTransactionID());
 			 walletApportionReturnModel.setType("RETURN");
-			if(qcResponseStatus.contains("PENDING")){
-        	 walletApportionReturnModel.setStatus("PENDING");
+			if(qcResponseStatus.contains(PENDING_KEY)){
+        	 walletApportionReturnModel.setStatus(PENDING_KEY);
          }else{
-        	 walletApportionReturnModel.setStatus("SUCCESS");
-        	result="SUCCESS";
+        	 walletApportionReturnModel.setStatus(SUCCESS_KEY);
+        	result=SUCCESS_KEY;
          }
 			modelService.save(walletApportionReturnModel);
 			abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionReturnModel);
@@ -5374,11 +5382,11 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 			}
 			if (StringUtils.equalsIgnoreCase(response.getResponseCode().toString(), "0"))
 			{
-				walletCardApportionDetailModel.setTrnsStatus("SUCCESS");
+				walletCardApportionDetailModel.setTrnsStatus(SUCCESS_KEY);
 			}
 			else
 			{
-				walletCardApportionDetailModel.setTrnsStatus("PENDING");
+				walletCardApportionDetailModel.setTrnsStatus(PENDING_KEY);
 			}
 			walletCardApportionDetailModel.setTransactionId(response.getTransactionId().toString());
 			walletCardApportionDetailModel.setQcApportionValue(walletObject.getQcApportionValue());
@@ -5386,7 +5394,7 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 			walletCardApportionDetailModel.setQcSchedulingValue(walletObject.getQcSchedulingValue());
 			walletCardApportionDetailModel.setQcShippingValue(walletObject.getQcShippingValue());
 		}else{
-			walletCardApportionDetailModel.setTrnsStatus("SUCCESS");
+			walletCardApportionDetailModel.setTrnsStatus(SUCCESS_KEY);
 			walletCardApportionDetailModel.setTransactionId("0");
 			walletCardApportionDetailModel.setQcApportionValue("0");
 			walletCardApportionDetailModel.setQcDeliveryValue("0");
@@ -5410,15 +5418,15 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 		
 		returnModel.setOrderId(orderEntry.getOrder().getCode());
 		returnModel.setType("RETURN");
-		if(qcResponseStatus.contains("PENDING") ){
-			returnModel.setStatusForQc("PENDING");
+		if(qcResponseStatus.contains(PENDING_KEY) ){
+			returnModel.setStatusForQc(PENDING_KEY);
 		}else{
-			returnModel.setStatusForQc("SUCCESS");
+			returnModel.setStatusForQc(SUCCESS_KEY);
 		}
 		if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), MarketplacecommerceservicesConstants.SUCCESS)){
-			returnModel.setStatus("SUCCESS");
-		}else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING")){
-			returnModel.setStatus("PENDING");	  
+			returnModel.setStatus(SUCCESS_KEY);
+		}else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), PENDING_KEY)){
+			returnModel.setStatus(PENDING_KEY);	  
 		}
 		
 		System.out.println("Before Saving Juspay Response is :"+returnModel.getJuspayApportionValue());
@@ -5898,10 +5906,10 @@ private WalletApportionReturnInfoModel constructQuickCilverOrderEntryForSplit(fi
 			 walletApportionReturnModel.setWalletCardList(walletCardApportionDetailModelList);
 			 walletApportionReturnModel.setTransactionId(orderEntry.getTransactionID());
 			 walletApportionReturnModel.setType("RETURN");
-       if(qcResponseStatus.contains("PENDING")){
-      	 walletApportionReturnModel.setStatus("PENDING");
+       if(qcResponseStatus.contains(PENDING_KEY)){
+      	 walletApportionReturnModel.setStatus(PENDING_KEY);
        }else{
-      	 walletApportionReturnModel.setStatus("SUCCESS");
+      	 walletApportionReturnModel.setStatus(SUCCESS_KEY);
        }
        subOrderModel.setPaymentTransactions(paymentTransactions);
 			modelService.saveAll(paymentTransactions);
