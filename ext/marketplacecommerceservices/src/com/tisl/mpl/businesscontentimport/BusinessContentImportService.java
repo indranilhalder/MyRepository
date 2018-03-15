@@ -21,4 +21,16 @@ public interface BusinessContentImportService
 
 	void processUpdateForProductMappingImport(CSVReader reader, CSVWriter writer, Map<Integer, String> map, Integer errorPosition,
 			boolean headerRowIncluded);
+
+	/**
+	 * @param reader
+	 * @param writer
+	 * @param map
+	 * @param errorPosition
+	 * @param headerRowIncluded
+	 * @param site
+	 * @return
+	 */
+	String processUpdateForContentImport(CSVReader reader, CSVWriter writer, Map<Integer, String> map, Integer errorPosition,
+			boolean headerRowIncluded, String site);
 }

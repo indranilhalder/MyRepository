@@ -210,9 +210,29 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 				&& product.getLuxIndicator().getCode().equalsIgnoreCase(LuxIndicatorEnum.LUXURY.getCode()))
 		{
 			rangeKey = rangeKey + "-LUXURY";
+
+			if (null != productCategoryType)
+			{
+				if (productCategoryType.equalsIgnoreCase("Clothing"))
+				{
+					rangeKey = rangeKey + "-APPAREL";
+				}
+				/*
+				 * // JEWELLERY CHANGES START else if (productCategoryType.equalsIgnoreCase("FashionJewellery") ||
+				 * productCategoryType.equalsIgnoreCase("FineJewellery")) { rangeKey = rangeKey + "-FASHIONJEWELLERY"; }
+				 */
+				// JEWELLERY CHANGES END
+				else
+				{
+					rangeKey = rangeKey + "-ELECTRONICS";
+				}
+			}
+			else
+			{
+				return null;
+			}
 		}
 		else
-
 		{
 			if (null != productCategoryType)
 			{

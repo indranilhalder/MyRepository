@@ -342,5 +342,12 @@
 		<property name="cookieDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
 	</bean>
 
+      <bean id="luxuryCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.EnhancedCookieGenerator" >
+           <property name="cookieSecure" value="true" />
+           <property name="cookieName" value="luxuryCookie" />
+           <property name="cookieMaxAge" value="#{configurationService.configuration.getProperty('pdpPincode.cookie.age')}"/>
+           <property name="useDefaultPath" value="true"/>
+           <property name="useDefaultDomain" value="true"/>
+       </bean>
 </beans>
 

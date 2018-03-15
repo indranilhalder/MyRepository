@@ -15,6 +15,7 @@ package com.tisl.mpl.constants;
 
 import java.util.Date;
 
+
 import com.tisl.mpl.core.model.FreebieDetailModel;
 import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 
@@ -2570,4 +2571,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FPC_QUERY_REFUNDENTRY = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:auditId} = ?auditId";
 	public static final String FPC_QUERY_REFUNDENTRIES = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:isExpired} = ?expiredFlag";
 	public static final String FPC_QUERY_PARENTORDER = "SELECT {ord:pk} FROM {Order AS ord} WHERE{ord:guid} = ?guid AND {ord:type}  = ?orderType";
+	
+	public static final String LUX_IMPORT_CATALOG_ID = "luxProductCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_ID = "luxContentCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_VERSION = "Online";
+	public static final String LUXURY_PREFIX = "lux";
+	public static final String TATACLIQ = "tatacliq";
+	public static final String LUXURY_SITE_URL = "luxury.tatacliq.com";
 }

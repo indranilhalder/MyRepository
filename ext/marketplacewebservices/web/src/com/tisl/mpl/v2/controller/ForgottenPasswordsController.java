@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.v2.controller;
 
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
@@ -20,6 +21,7 @@ import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.net.MalformedURLException;
@@ -48,6 +50,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.ForgetPasswordFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.product.data.ExtRegisterData;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.helper.MplUserHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.ForgetPasswordService;
@@ -91,6 +94,9 @@ public class ForgottenPasswordsController extends BaseController
 	private static final String APPLICATION_TYPE = "application/json";
 	private static final String isPwa = "isPwa";
 
+	@Autowired
+	private BaseSiteService baseSiteService;
+
 	/**
 	 * Generates a token to restore customer's forgotten password.
 	 *
@@ -119,8 +125,13 @@ public class ForgottenPasswordsController extends BaseController
 	{ ROLE_CLIENT, TRUSTED_CLIENT })
 	@RequestMapping(value = "/forgotPasswordforEmail", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public UserResultWsDto forgotPassword(@RequestParam final String emailid, final String fields, final HttpServletRequest request)
+	public UserResultWsDto forgotPassword(@RequestParam final String emailid, final String fields,
+			final HttpServletRequest request)
 	{
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		final String site = currentBaseSite.getUid();
+
+
 		final UserResultWsDto userResultWsDto = new UserResultWsDto();
 		String message = "";
 		try
@@ -131,12 +142,22 @@ public class ForgottenPasswordsController extends BaseController
 			}
 			else
 			{
+				String baseUrl = "";
 				final String emailidLwCase = emailid.toLowerCase(); //INC144318796
 				validateEmail(emailidLwCase);
 				final URL requestUrl = new URL(request.getRequestURL().toString());
 				final String portString = requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
 				//final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString + ""; Do not add empty strings
-				final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString;
+
+				if (MarketplaceFacadesConstants.LuxuryPrefix.equals(site)
+						&& requestUrl.getHost().contains(MarketplacecommerceservicesConstants.TATACLIQ))
+				{
+					baseUrl = requestUrl.getProtocol() + "://" + MarketplacecommerceservicesConstants.LUXURY_SITE_URL + portString;
+				}
+				else
+				{
+					baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString;
+				}
 				final String securePasswordUrl = baseUrl + MarketplacecommerceservicesConstants.LINK_PASSWORD_CHANGE;
 				forgetPasswordFacade.forgottenPasswordForEmail(emailidLwCase, securePasswordUrl, Boolean.TRUE);
 				userResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
