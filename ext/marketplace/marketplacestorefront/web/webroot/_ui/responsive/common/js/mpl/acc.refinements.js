@@ -229,8 +229,9 @@ ACC.refinements = {
 		});
 		
 		$(document).on("change",".facet_mobile .js-facet-checkbox-price",function(){
-			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
+			var filterMobileQuery = $(this).closest("form").find('input[name="q"]').val();
 			//console.log("form query:"+filterMobileQuery)
+			$('.qValueForCustomPrice').val(filterMobileQuery);
 			dummyForm = $(this).parents("form");
 			if(updatedsearchQuery==''){
 				updatedsearchQuery=filterMobileQuery;
@@ -589,7 +590,7 @@ ACC.refinements = {
 					}
 				}
 				//TISQAUATS-27 ends
-				
+				$('.qValueForCustomPrice').val(updatedsearchQuery);
 				// generating datastring and postAjaxURL
 				dummyForm.find('input[type="hidden"]').each(function(){
 					if(dataString == null){
@@ -882,7 +883,6 @@ ACC.refinements = {
 				}
 			}
 			if (countCustomPrice==1){
-				countCustomPrice=0;		//SDI-2153 fix
 				return false;
 			}
 			//alert("USQ :"+updatedsearchQuery);
