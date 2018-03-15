@@ -125,11 +125,6 @@ class Feed extends Component {
     // window._satellite.track("page view");
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.type === MERGE_CART_ID_SUCCESS) {
-      this.props.history.push(CHECKOUT_ROUTER);
-    }
-  }
   render() {
     if (this.props.loading) {
       return this.renderLoader();

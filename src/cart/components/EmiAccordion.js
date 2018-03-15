@@ -3,9 +3,11 @@ import GridSelect from "../../general/components/GridSelect";
 import EmiCartSelect from "./EmiCartSelect";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
+import PropTypes from "prop-types";
 const PAYMENT_MODE = "EMI";
+
 const IS_EMI = "1";
-export default class EmiAccordian extends React.Component {
+export default class EmiAccordion extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -108,3 +110,21 @@ export default class EmiAccordian extends React.Component {
     );
   }
 }
+
+EmiAccordion.propTypes = {
+  emiList: PropTypes.arrayOf(
+    PropTypes.shape({
+      code: PropTypes.string,
+      emiBank: PropTypes.string,
+      emitermsrate: PropTypes.arrayOf(
+        PropTypes.shape({
+          interestPayable: PropTypes.string,
+          interestRate: PropTypes.string,
+          monthlyInstallment: PropTypes.string,
+          term: PropTypes.string
+        })
+      )
+    })
+  ),
+  onSelect: PropTypes.func
+};
