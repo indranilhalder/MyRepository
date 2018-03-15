@@ -21,7 +21,15 @@ export default class Sort extends React.Component {
   onClick(val) {
     if (this.props.onClick) {
       const parsedQueryString = queryString.parse(this.props.location.search);
-      const searchText = parsedQueryString.q;
+      console.log("PARSED QUERY STRING");
+      console.log(parsedQueryString);
+      let searchText;
+      if (parsedQueryString.q) {
+        searchText = parsedQueryString.q;
+      } else if (parsedQueryString.text) {
+        searchText = parsedQueryString.text;
+      }
+
       const url = applySortToUrl(searchText, this.props.location.pathname, val);
       this.props.history.push(url, {
         isFilter: false
