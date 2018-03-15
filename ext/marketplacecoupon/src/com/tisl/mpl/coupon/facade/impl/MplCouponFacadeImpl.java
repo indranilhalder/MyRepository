@@ -2268,6 +2268,43 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		return finalDTO;
 	}
 
+	/**
+	 * The Method returns Coupon Details to be displayed on Cart Page
+	 *
+	 */
+	@Override
+	public MplFinalVisibleCouponsDTO getDisplayOpenCouponList()
+	{
+		List<MplVisibleCouponsDTO> openVoucherDataList = null;
+		final MplFinalVisibleCouponsDTO finalDTO = new MplFinalVisibleCouponsDTO();
+
+		try
+		{
+			openVoucherDataList = mplDisplayCouponCachingStrategy.get("OPENCOUPONS");
+
+			if (CollectionUtils.isEmpty(openVoucherDataList))
+			{
+				final List<VoucherModel> openVoucherList = mplCouponService.getOpenVoucherList();
+				if (CollectionUtils.isNotEmpty(openVoucherList))
+				{
+					openVoucherDataList = populateDataList(openVoucherList);
+					mplDisplayCouponCachingStrategy.put("OPENCOUPONS", openVoucherDataList);
+				}
+			}
+
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Open Voucher Fetch", exception);
+		}
+
+		if (CollectionUtils.isNotEmpty(openVoucherDataList))
+		{
+			finalDTO.setOpencouponsList(openVoucherDataList);
+		}
+
+		return finalDTO;
+	}
 
 
 	/**
@@ -2356,7 +2393,5 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	{
 		this.mplDisplayCouponCachingStrategy = mplDisplayCouponCachingStrategy;
 	}
-
-
 
 }

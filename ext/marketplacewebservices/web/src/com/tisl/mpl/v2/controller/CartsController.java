@@ -70,7 +70,6 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -179,7 +178,6 @@ import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
 import com.tisl.mpl.wsdto.MplCartPinCodeResponseWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
-import com.tisl.mpl.wsdto.MplFinalVisibleCouponsDTO;
 import com.tisl.mpl.wsdto.MplSelectedEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
@@ -4961,87 +4959,5 @@ public class CartsController extends BaseCommerceController
 	{
 		this.addToCartHelper = addToCartHelper;
 	}
-
-
-	/**
-	 * The Method is used to display Coupon Details on Cart Page
-	 *
-	 * @param cartGuid
-	 * @param isPwa
-	 */
-	@Secured(
-	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/{cartId}/displayCouponOffers", method = RequestMethod.GET)
-	@ResponseBody
-	public MplFinalVisibleCouponsDTO displayCouponOffers(@RequestParam(required = false) final String cartGuid,
-			@RequestParam(required = false) final boolean isPwa)
-	{
-		MplFinalVisibleCouponsDTO dto = new MplFinalVisibleCouponsDTO();
-
-		try
-		{
-			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-
-			if (null == currentCustomer)
-			{
-				throw new AccessDeniedException("Access is Denied");
-			}
-
-
-			if (StringUtils.isNotEmpty(cartGuid))
-			{
-				final List<CartModel> cartList = new ArrayList<>(currentCustomer.getCarts());
-				boolean allowFlag = false;
-
-				if (CollectionUtils.isNotEmpty(cartList))
-				{
-					for (final CartModel carts : cartList)
-					{
-						if (carts.getGuid().equalsIgnoreCase(cartGuid))
-						{
-							allowFlag = true;
-							break;
-						}
-					}
-
-					if (allowFlag)
-					{
-						dto = mplCouponFacade.getDisplayCouponList(cartGuid, currentCustomer);
-					}
-					else
-					{
-						throw new AccessDeniedException("Access is Denied");
-					}
-				}
-
-			}
-			else
-			{
-				dto = mplCouponFacade.getDisplayCouponList(MarketplacecommerceservicesConstants.EMPTY, currentCustomer);
-			}
-
-			dto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
-		} //TPR-799
-		catch (final Exception e)
-		{
-			if (e instanceof AccessDeniedException)
-			{
-				dto.setError("Access is Denied");
-				dto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			}
-			else
-			{
-				ExceptionUtil.getCustomizedExceptionTrace(e);
-				dto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
-				dto.setErrorCode(MarketplacecommerceservicesConstants.E0000);
-				dto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			}
-
-		}
-		return dto;
-	}
-
-
 
 }

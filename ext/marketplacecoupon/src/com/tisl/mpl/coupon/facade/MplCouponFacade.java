@@ -239,12 +239,18 @@ public interface MplCouponFacade
 
 
 	/**
-	 * The Method return Coupon Details to be displayed on Cart Page
+	 * The Method returns Coupon Details to be displayed on Cart Page
 	 *
 	 * @param cartGuid
 	 * @param currentCustomer
 	 */
 	MplFinalVisibleCouponsDTO getDisplayCouponList(String cartGuid, CustomerModel currentCustomer);
+
+
+	/**
+	 * The Method returns Open Coupon Details to be displayed on Cart Page
+	 */
+	MplFinalVisibleCouponsDTO getDisplayOpenCouponList();
 
 
 }
