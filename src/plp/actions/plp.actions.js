@@ -3,12 +3,14 @@ export const PRODUCT_LISTINGS_REQUEST = "PRODUCT_LISTINGS_REQUEST";
 export const PRODUCT_LISTINGS_SUCCESS = "PRODUCT_LISTINGS_SUCCESS";
 export const PRODUCT_LISTINGS_FAILURE = "PRODUCT_LISTINGS_FAILURE";
 
-export const PRODUCT_LISTINGS_PATH = "v2/mpl/products/serpsearch";
+export const PRODUCT_LISTINGS_PATH = "v2/mpl/products/searchProducts";
 export const PRODUCT_LISTINGS_SUFFIX = "&isPwa=true&pageSize=20&typeID=all";
-export const SORT_PRODUCT_LISTINGS_PATH = "serpsearch";
-export const FILTER_PRODUCT_LISTINGS_PATH = "serpsearch";
+export const SORT_PRODUCT_LISTINGS_PATH = "searchProducts";
+export const FILTER_PRODUCT_LISTINGS_PATH = "searchProducts";
 export const GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS =
   "GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS";
+
+export const UPDATE_FACETS = "UPDATE_FACETS";
 
 export const SET_PAGE = "SET_PAGE";
 
@@ -21,36 +23,51 @@ export function setPage(pageNumber) {
   };
 }
 
+export function updateFacets(productListings) {
+  return {
+    type: UPDATE_FACETS,
+    status: SUCCESS,
+    productListings
+  };
+}
+
 export function getProductListingsPaginatedSuccess(productListings) {
   return {
     type: GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS,
     productListings
   };
 }
-export function getProductListingsRequest() {
+export function getProductListingsRequest(paginated: false) {
   return {
     type: PRODUCT_LISTINGS_REQUEST,
-    status: REQUESTING
+    status: REQUESTING,
+    isPaginated: paginated
   };
 }
-export function getProductListingsSuccess(productListings) {
+export function getProductListingsSuccess(productListings, isPaginated: false) {
   return {
     type: PRODUCT_LISTINGS_SUCCESS,
     status: SUCCESS,
-    productListings
+    productListings,
+    isPaginated
   };
 }
 
-export function getProductListingsFailure(error) {
+export function getProductListingsFailure(error, isPaginated) {
   return {
     type: PRODUCT_LISTINGS_FAILURE,
     status: ERROR,
-    error
+    error,
+    isPaginated
   };
 }
-export function getProductListings(suffix: null, paginated: false) {
+export function getProductListings(
+  suffix: null,
+  paginated: false,
+  isFilter: false
+) {
   return async (dispatch, getState, { api }) => {
-    dispatch(getProductListingsRequest());
+    dispatch(getProductListingsRequest(paginated));
     try {
       const searchState = getState().search;
       const pageNumber = getState().productListings.pageNumber;
@@ -68,16 +85,17 @@ export function getProductListings(suffix: null, paginated: false) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       if (paginated) {
         if (resultJson.searchresult) {
-          dispatch(getProductListingsPaginatedSuccess(resultJson));
+          dispatch(getProductListingsPaginatedSuccess(resultJson, true));
         }
+      } else if (isFilter) {
+        dispatch(updateFacets(resultJson));
       } else {
-        dispatch(getProductListingsSuccess(resultJson));
+        dispatch(getProductListingsSuccess(resultJson, paginated));
       }
     } catch (e) {
-      dispatch(getProductListingsFailure(e.message));
+      dispatch(getProductListingsFailure(e.message, paginated));
     }
   };
 }

@@ -22,14 +22,18 @@ export default class ProfileAddressBook extends React.Component {
           <div className={styles.address}>{this.props.address}</div>
           <div className={styles.contact}>{this.props.contactNumber}</div>
         </div>
-        <div className={styles.buttonHolder}>
-          <OrderReturn
-            underlineButtonLabel={this.props.underlineButtonLabel}
-            buttonLabel={this.props.buttonLabel}
-            writeReview={() => this.editAddress()}
-            replaceItem={() => this.deleteAddress()}
-          />
-        </div>
+        {this.props.underlineButtonLabel &&
+          this.props.buttonLabel && (
+            <div className={styles.buttonHolder}>
+              <OrderReturn
+                underlineButtonLabel={this.props.underlineButtonLabel}
+                buttonLabel={this.props.buttonLabel}
+                writeReview={() => this.editAddress()}
+                replaceItem={() => this.deleteAddress()}
+                isEditable={true}
+              />
+            </div>
+          )}
       </div>
     );
   }
