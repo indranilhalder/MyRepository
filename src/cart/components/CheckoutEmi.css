@@ -1,0 +1,7 @@
+.errorText {
+  font-size: 12px;
+  font-family: regular;
+  display: inline-block;
+  color: #f22424;
+  padding: 10px;
+}
