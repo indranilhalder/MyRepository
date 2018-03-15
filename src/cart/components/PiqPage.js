@@ -48,16 +48,19 @@ export default class PiqPage extends React.Component {
     }
   }
   selectStore(val) {
-    this.setState({
-      selectedAddress: `${this.props.availableStores[val].returnAddress1} ${
-        this.props.availableStores[val].returnAddress2
-      } ${this.props.availableStores[val].returnCity}`,
-      selected: true,
-      workingDays: this.props.availableStores[val].mplWorkingDays,
-      openingTime: this.props.availableStores[val].mplOpeningTime,
-      closingTime: this.props.availableStores[val].mplClosingTime,
-      displayName: this.props.availableStores[val].displayName
-    });
+    // this.setState({
+    //   selectedAddress: `${this.props.availableStores[val].returnAddress1} ${
+    //     this.props.availableStores[val].returnAddress2
+    //   } ${this.props.availableStores[val].returnCity}`,
+    //   selected: true,
+    //   workingDays: this.props.availableStores[val].mplWorkingDays,
+    //   openingTime: this.props.availableStores[val].mplOpeningTime,
+    //   closingTime: this.props.availableStores[val].mplClosingTime,
+    //   displayName: this.props.availableStores[val].displayName
+    // });
+    this.props.addStoreCNC("273544ASB001", "273544-110003");
+    this.setState({ selected: true });
+    console.log(val);
   }
   changeStore() {
     this.setState({ selected: false });
@@ -68,7 +71,6 @@ export default class PiqPage extends React.Component {
     }
   }
   render() {
-    console.log(this.props, this.props.availableStores[0]);
     return (
       <div className={styles.base}>
         <div className={styles.map}>
@@ -104,32 +106,33 @@ export default class PiqPage extends React.Component {
           />
         </div>
         <div className={styles.bannerMobileHolder}>
-          {!this.state.selected && (
-            <BannerMobile
-              onSwipe={val => this.handleSwipe(val)}
-              bannerHeight="55vw"
-            >
-              {this.props.availableStores.map((val, i) => {
-                return (
-                  <PickUpLocation
-                    key={i}
-                    address={`${val.address.line1} ${val.address.line2}, `}
-                    PickUpKey="Open on: "
-                    workingDays={val.mplWorkingDays}
-                    openingTime={val.mplOpeningTime}
-                    closingTime={val.mplClosingTime}
-                    address2={`${val.returnCity} ${val.returnPin}`}
-                    iconText="C"
-                    headingText={val.displayName}
-                    buttonText="Select"
-                    onClick={() => {
-                      this.selectStore(i);
-                    }}
-                  />
-                );
-              })}
-            </BannerMobile>
-          )}
+          {!this.state.selected &&
+            this.props.availableStores && (
+              <BannerMobile
+                onSwipe={val => this.handleSwipe(val)}
+                bannerHeight="55vw"
+              >
+                {this.props.availableStores.map((val, i) => {
+                  return (
+                    <PickUpLocation
+                      key={i}
+                      address={`${val.address.line1} ${val.address.line2}, `}
+                      PickUpKey="Open on: "
+                      workingDays={val.mplWorkingDays}
+                      openingTime={val.mplOpeningTime}
+                      closingTime={val.mplClosingTime}
+                      address2={`${val.returnCity} ${val.returnPin}`}
+                      iconText="C"
+                      headingText={val.displayName}
+                      buttonText="Select"
+                      onClick={() => {
+                        this.selectStore(val.slaveId);
+                      }}
+                    />
+                  );
+                })}
+              </BannerMobile>
+            )}
           {this.state.selected && (
             <div className={styles.getLocationDetailsHolder}>
               <div className={styles.getLocationDetails}>
