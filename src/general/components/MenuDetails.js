@@ -12,11 +12,20 @@ export default class ManueDetails extends React.Component {
       isOpen: false
     };
   }
+
   openMenu() {
-    this.setState(prevState => ({
-      isOpen: !prevState.isOpen
-    }));
+    this.setState(
+      prevState => ({
+        isOpen: !prevState.isOpen
+      }),
+      () => {
+        if (this.props.onOpenMenu) {
+          this.props.onOpenMenu(this.state.isOpen);
+        }
+      }
+    );
   }
+
   render() {
     let iconActive = styles.icon;
     if (this.state.isOpen) {

@@ -12,15 +12,9 @@ export default class CodForm extends React.Component {
     };
   }
 
-  componentDidMount() {
+  binValidationForCOD(paymentMode) {
     if (this.props.binValidationForCOD) {
-      this.props.binValidationForCOD(CASH_ON_DELIVERY);
-    }
-  }
-
-  softReservationForCODPayment() {
-    if (this.props.softReservationForCODPayment) {
-      this.props.softReservationForCODPayment();
+      this.props.binValidationForCOD(paymentMode);
     }
   }
 
@@ -32,8 +26,8 @@ export default class CodForm extends React.Component {
         </div>
         <div className={styles.captcha}>
           <Captcha
-            softReservationForCODPayment={() =>
-              this.softReservationForCODPayment()
+            binValidationForCOD={paymentMode =>
+              this.binValidationForCOD(paymentMode)
             }
           />
         </div>

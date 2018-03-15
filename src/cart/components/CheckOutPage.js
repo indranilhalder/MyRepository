@@ -31,7 +31,8 @@ class CheckOutPage extends React.Component {
     deliverModeUssId: "",
     appliedCoupons: false,
     paymentModeSelected: null,
-    orderConfirmation: false
+    orderConfirmation: false,
+    binValidationCOD: false
   };
 
   renderConfirmAddress = () => {
@@ -161,6 +162,9 @@ class CheckOutPage extends React.Component {
       Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       this.setState({ orderConfirmation: true });
     }
+    if (nextProps.cart.binValidationCODStatus) {
+      this.setState({ binValidationCOD: true });
+    }
   }
   componentDidMount() {
     const query = new URLSearchParams(this.props.location.search);
@@ -232,6 +236,9 @@ class CheckOutPage extends React.Component {
         );
       }
       this.setState({ deliverMode: true });
+    }
+    if (this.state.binValidationCOD) {
+      this.softReservationForCODPayment();
     }
   };
 
