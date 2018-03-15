@@ -54,11 +54,13 @@ export async function postAdobeTargetUrl(
   });
 }
 
-export async function post(path, postData, doNotUseApiRoot: true) {
-  let url = `${API_URL_ROOT}/${path}${API_URL_ROOT_SUFFIX}`;
-  if (doNotUseApiRoot) {
-    url = `${API_URL_ROOT}/${path}`;
-  }
+export async function post(path, postData, doNotUserApiSuffix: true) {
+  console.log("POST");
+  console.log(doNotUserApiSuffix);
+  console.log(path);
+  const url = `${API_URL_ROOT}/${path}`;
+
+  console.log(url);
 
   return await fetch(url, {
     method: "POST",
@@ -133,7 +135,7 @@ export async function putMock(url, payload) {
 }
 
 export async function postMsd(url, payload) {
-  return await fetch(`${API_URL_ROOT_MOCK}/${url}`, {
+  return await fetch(url, {
     method: "POST",
     body: payload
   });

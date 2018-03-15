@@ -42,33 +42,33 @@ const typeKeyMapping = {
 };
 
 const typeComponentMapping = {
-  // "Landing Page Header Component": props => <BrandCardHeader {...props} />,
-  // "Hero Banner Component": props => <HeroBanner {...props} />,
-  // "Theme Offers Component": props => <ThemeOffer {...props} />,
-  // "Auto Product Recommendation Component": props => (
-  //   <RecommendationWidget {...props} />
-  // ),
-  // "Banner Product Carousel Component": props => (
-  //   <BannerProductCarousel {...props} />
-  // ),
-  // "Video Product Carousel Component": props => (
-  //   <VideoProductCarousel {...props} />
-  // ),
-  // // // automatedBrandProductCarousel: props => (
-  // // //   <AutomatedBrandProductCarousel {...props} />
-  // // // ),
-  // "Flash Sales Component": props => <FlashSale {...props} />, // wired up
-  // "Offers Component": props => <OfferWidget {...props} />, // wired up
-  // "Multipurpose Banner Component": props => <ConnectWidget {...props} />, // modal not working - need to figure out what to show here.
-  // // "Multi Click Component": props => <ThemeProductWidget {...props} /> // not wired up for some reason
-  // "Auto Fresh From Brands Component": props => <FollowBase {...props} />, // wired up with clickable url
-  // "Banner Separator Component": props => <BannerSeparator {...props} />,
-  // "Auto Discover More Component": props => <DiscoverMore {...props} />, // wired up with clickable urls
-  // "Auto Product Recommendation": props => <RecommendationWidget {...props} />,
-  // "Recently viewed product": props => <RecommendationWidget {...props} />,
-  // "Single Banner Component": props => <MonoBanner {...props} />,
-  // "Curated Listing Strip Component": props => <LatestCollections {...props} />,
-  // "Two by Two Banner Component": props => <CuratedFeature {...props} />,
+  "Landing Page Header Component": props => <BrandCardHeader {...props} />,
+  "Hero Banner Component": props => <HeroBanner {...props} />,
+  "Theme Offers Component": props => <ThemeOffer {...props} />,
+  "Auto Product Recommendation Component": props => (
+    <RecommendationWidget {...props} />
+  ),
+  "Banner Product Carousel Component": props => (
+    <BannerProductCarousel {...props} />
+  ),
+  "Video Product Carousel Component": props => (
+    <VideoProductCarousel {...props} />
+  ),
+  // // automatedBrandProductCarousel: props => (
+  // //   <AutomatedBrandProductCarousel {...props} />
+  // // ),
+  "Flash Sales Component": props => <FlashSale {...props} />, // wired up
+  "Offers Component": props => <OfferWidget {...props} />, // wired up
+  "Multipurpose Banner Component": props => <ConnectWidget {...props} />, // modal not working - need to figure out what to show here.
+  // "Multi Click Component": props => <ThemeProductWidget {...props} /> // not wired up for some reason
+  "Auto Fresh From Brands Component": props => <FollowBase {...props} />, // wired up with clickable url
+  "Banner Separator Component": props => <BannerSeparator {...props} />,
+  "Auto Discover More Component": props => <DiscoverMore {...props} />, // wired up with clickable urls
+  "Auto Product Recommendation": props => <RecommendationWidget {...props} />,
+  "Recently viewed product": props => <RecommendationWidget {...props} />,
+  "Single Banner Component": props => <MonoBanner {...props} />,
+  "Curated Listing Strip Component": props => <LatestCollections {...props} />,
+  "Two by Two Banner Component": props => <CuratedFeature {...props} />,
   "Curated Products Component": props => <CuratedProductsComponent {...props} />
   // "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
   // "Landing Page Hierarchy": props => <AllBrandTypes {...props} />

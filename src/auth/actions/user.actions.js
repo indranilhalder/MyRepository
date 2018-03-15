@@ -397,7 +397,7 @@ export function getGlobalAccessToken() {
     dispatch(globalAccessTokenRequest());
     try {
       const result = await api.post(
-        `${TOKEN_PATH}?grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=secret`
+        `${TOKEN_PATH}?grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=secret&isPwa=true`
       );
       const resultJson = await result.json();
 

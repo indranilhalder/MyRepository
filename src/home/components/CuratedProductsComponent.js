@@ -19,8 +19,6 @@ class CuratedProductsComponent extends React.Component {
     this.props.history.push(urlSuffix);
   };
   render() {
-    console.log("FEED COMPONENT DATA");
-    console.log(this.props.feedComponentData);
     const {
       feedComponentData,
       backgroundImage,

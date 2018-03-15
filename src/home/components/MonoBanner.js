@@ -5,8 +5,6 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 export default class MonoBanner extends React.Component {
   handleClick() {
-    console.log("MONO BANNER CLICK");
-    console.log(this.props.feedComponentData);
     const urlSuffix = this.props.feedComponentData.items[0].webURL.replace(
       TATA_CLIQ_ROOT,
       ""
@@ -29,8 +27,6 @@ export default class MonoBanner extends React.Component {
 
   render() {
     let feedComponentData = this.props.feedComponentData;
-    console.log("RENDER");
-    console.log(feedComponentData);
     return (
       <div className={styles.base}>
         <div className={styles.shopeRangeHeader}>{feedComponentData.title}</div>
