@@ -155,11 +155,6 @@ class App extends Component {
             )}
           />
 
-          {/* <Route
-            exact
-            path={SEARCH_RESULTS_PAGE}
-            component={PlpBrandCategoryWrapperContainer}
-          /> */}
           <Route
             exact
             path={BRAND_PAGE}
