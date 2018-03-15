@@ -30,7 +30,6 @@ export default class SearchPage extends React.Component {
     }
   }
   render() {
-    console.log(this.props);
     const data = this.props.searchResult;
     return (
       <div className={styles.base}>
