@@ -199,11 +199,6 @@ class App extends Component {
           />
 
           <Route
-            path={PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE}
-            component={ProductDescriptionPageWrapperContainer}
-          />
-
-          <Route
             exact
             path={PRODUCT_LISTINGS}
             component={ProductListingsContainer}
