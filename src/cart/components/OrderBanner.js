@@ -8,6 +8,7 @@ export default class OrderBanner extends React.Component {
       this.props.onClick();
     }
   }
+
   render() {
     return (
       <div className={styles.base}>
