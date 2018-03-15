@@ -26,9 +26,17 @@ export default class BrandHeader extends React.Component {
   }
   onClickIcon() {
     if (this.state.searchBar) {
-      this.setState({ searchBar: false });
+      this.setState({ searchBar: false }, () => {
+        if (this.props.onSearchClick) {
+          this.props.onSearchClick(false);
+        }
+      });
     } else {
-      this.setState({ searchBar: true });
+      this.setState({ searchBar: true }, () => {
+        if (this.props.onSearchClick) {
+          this.props.onSearchClick(true);
+        }
+      });
     }
   }
   render() {
