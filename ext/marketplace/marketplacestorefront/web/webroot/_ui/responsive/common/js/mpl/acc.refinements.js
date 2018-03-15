@@ -136,8 +136,8 @@ ACC.refinements = {
 				}
 			})
 			/*TPR-1283 CHANGES--Starts*/
-			   if(browserURL[0].includes("/b")){
-					var indx1=browserURL[0].indexOf("/b");
+			   if(browserURL[0].includes("/b-")){	//SDI-5754 fix
+					var indx1=browserURL[0].indexOf("/b-");
 					var res = browserURL[0].substring(0, indx1);
 					browserURL[0]=res;
 					//window.location.href=browserURL[0];
