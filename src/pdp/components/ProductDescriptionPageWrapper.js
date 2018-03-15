@@ -21,6 +21,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
       this.props.getProductDescription(this.props.match.params[0]);
       this.props.getMsdRequest(this.props.match.params[0]);
+      this.props.pdpAboutBrand(this.props.match.params[2]);
       if (
         this.props.productDetails &&
         this.props.productDetails.isServiceableToPincode &&
@@ -36,6 +37,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     ) {
       this.props.getProductDescription(this.props.match.params[2]);
       this.props.getMsdRequest(this.props.match.params[2]);
+      this.props.pdpAboutBrand(this.props.match.params[2]);
       if (
         this.props.productDetails &&
         this.props.productDetails.isServiceableToPincode &&
