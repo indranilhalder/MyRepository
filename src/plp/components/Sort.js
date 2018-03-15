@@ -21,8 +21,6 @@ export default class Sort extends React.Component {
   onClick(val) {
     if (this.props.onClick) {
       const parsedQueryString = queryString.parse(this.props.location.search);
-      console.log("PARSED QUERY STRING");
-      console.log(parsedQueryString);
       let searchText;
       if (parsedQueryString.q) {
         searchText = parsedQueryString.q;
