@@ -30,7 +30,10 @@ const cart = (
     userAddress: null,
     setAddress: null,
     netBankDetails: null,
+
     emiBankDetails: null,
+    emiBankStatus: null,
+    emiBankError: null,
 
     orderSummary: null,
     orderSummaryStatus: null,
@@ -87,7 +90,14 @@ const cart = (
 
     softReserveCODPaymentStatus: null,
     softReserveCODPayment: null,
-    softReserveCODPaymentError: null
+    softReserveCODPaymentError: null,
+    orderExperienceStatus: null,
+    orderExperience: null,
+    orderExperienceError: null,
+
+    binValidationStatus: null,
+    binValidationError: null,
+    binValidationDetails: null
   },
   action
 ) => {
@@ -214,14 +224,15 @@ const cart = (
         cartDetailsCNCStatus: action.status,
         loading: true
       });
-    case cartActions.CART_DETAILS_CNC_SUCCESS:
+    case cartActions.CART_DETAILS_CNC_SUCCESS: {
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
         setAddress: action.setAddress,
         userAddress: action.cartDetailsCnc.addressDetailsList,
-        cartDetailsCnc: action.cartDetailsCnc,
+        cartDetailsCNC: action.cartDetailsCnc,
         loading: false
       });
+    }
     case cartActions.CART_DETAILS_CNC_FAILURE:
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
@@ -251,21 +262,21 @@ const cart = (
 
     case cartActions.EMI_BANKING_DETAILS_REQUEST:
       return Object.assign({}, state, {
-        status: action.status,
+        emiBankStatus: action.status,
         loading: true
       });
 
     case cartActions.EMI_BANKING_DETAILS_SUCCESS:
       return Object.assign({}, state, {
-        status: action.status,
+        emiBankStatus: action.status,
         emiBankDetails: action.emiBankDetails,
         loading: false
       });
 
     case cartActions.EMI_BANKING_DETAILS_FAILURE:
       return Object.assign({}, state, {
-        status: action.status,
-        error: action.error,
+        emiBankStatus: action.status,
+        emiBankError: action.error,
         loading: false
       });
 
@@ -572,6 +583,24 @@ const cart = (
         loading: false
       });
 
+    case cartActions.BIN_VALIDATION_REQUEST:
+      return Object.assign({}, state, {
+        binValidationStatus: action.status
+      });
+
+    case cartActions.BIN_VALIDATION_SUCCESS: {
+      return Object.assign({}, state, {
+        binValidationStatus: action.status,
+        binValidationDetails: action.jusPayDetails
+      });
+    }
+
+    case cartActions.BIN_VALIDATION_FAILURE:
+      return Object.assign({}, state, {
+        binValidationStatus: action.status,
+        binValidationError: action.error
+      });
+
     case cartActions.UPDATE_TRANSACTION_DETAILS_REQUEST:
       return Object.assign({}, state, {
         jusPayStatus: action.status,
@@ -649,6 +678,27 @@ const cart = (
       });
     }
 
+    case cartActions.ORDER_EXPERIENCE_CAPTURE_REQUEST:
+      return Object.assign({}, state, {
+        orderExperienceStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ORDER_EXPERIENCE_CAPTURE_SUCCESS: {
+      return Object.assign({}, state, {
+        orderExperienceStatus: action.status,
+        orderExperience: action.orderExperience,
+        loading: false
+      });
+    }
+
+    case cartActions.ORDER_EXPERIENCE_CAPTURE_FAILURE:
+      return Object.assign({}, state, {
+        orderExperienceStatus: action.status,
+        orderExperienceError: action.error,
+        loading: false
+      });
+
     case cartActions.GET_COD_ELIGIBILITY_FAILURE:
       return Object.assign({}, state, {
         codEligibilityStatus: action.status,
@@ -659,7 +709,7 @@ const cart = (
     case cartActions.BIN_VALIDATION_COD_REQUEST:
       return Object.assign({}, state, {
         binValidationCODStatus: action.status,
-        loading: true
+        loading: false
       });
 
     case cartActions.BIN_VALIDATION_COD_SUCCESS: {

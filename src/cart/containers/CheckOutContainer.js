@@ -28,7 +28,10 @@ import {
   getCODEligibility,
   binValidationForCOD,
   updateTransactionDetailsForCOD,
-  softReservationForCODPayment
+  softReservationForCODPayment,
+  captureOrderExperience,
+  binValidationForNetBanking,
+  softReservationPaymentForNetBanking
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -101,8 +104,8 @@ const mapDispatchToProps = dispatch => {
     getNetBankDetails: () => {
       dispatch(getNetBankDetails());
     },
-    getEmiBankDetails: () => {
-      dispatch(getEmiBankDetails());
+    getEmiBankDetails: cartTotalProducts => {
+      dispatch(getEmiBankDetails(cartTotalProducts));
     },
     applyCliqCash: () => {
       dispatch(applyCliqCash());
@@ -113,11 +116,11 @@ const mapDispatchToProps = dispatch => {
     binValidation: (paymentMode, binNo) => {
       dispatch(binValidation(paymentMode, binNo));
     },
-    softReservationForPayment: (cardDetails, address) => {
-      dispatch(softReservationForPayment(cardDetails, address));
+    softReservationForPayment: (cardDetails, address, paymentMode) => {
+      dispatch(softReservationForPayment(cardDetails, address, paymentMode));
     },
-    updateTransactionDetails: (paymentMode, juspayOrderID) => {
-      dispatch(updateTransactionDetails(paymentMode, juspayOrderID));
+    updateTransactionDetails: (paymentMode, juspayOrderID, cartId) => {
+      dispatch(updateTransactionDetails(paymentMode, juspayOrderID, cartId));
     },
     getCODEligibility: () => {
       dispatch(getCODEligibility());
@@ -130,6 +133,17 @@ const mapDispatchToProps = dispatch => {
     },
     softReservationForCODPayment: pinCode => {
       dispatch(softReservationForCODPayment(pinCode));
+    },
+    captureOrderExperience: (orderId, Rating) => {
+      dispatch(captureOrderExperience(orderId, Rating));
+    },
+    binValidationForNetBanking: (paymentMode, binNo) => {
+      dispatch(binValidationForNetBanking(paymentMode, binNo));
+    },
+    softReservationPaymentForNetBanking: (paymentMode, bankName, pinCode) => {
+      dispatch(
+        softReservationPaymentForNetBanking(paymentMode, bankName, pinCode)
+      );
     }
   };
 };

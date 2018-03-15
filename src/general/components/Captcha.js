@@ -9,6 +9,7 @@ class Captcha extends Component {
   verifyCallback = response => {
     if (response) {
       if (this.props.binValidationForCOD) {
+        this.props.verifyCallback(response);
         this.props.binValidationForCOD(CASH_ON_DELIVERY);
       }
     }

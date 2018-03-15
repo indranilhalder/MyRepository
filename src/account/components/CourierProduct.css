@@ -1,0 +1,39 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  background-color: #fff;
+  display: inline-block;
+}
+.header {
+  width: 100%;
+  height: auto;
+  font-size: 16px;
+  font-family: semibold;
+  margin-bottom: 8px;
+  position: relative;
+  display: inline-block;
+}
+.text {
+  width: auto;
+  height: auto;
+  line-height: 25px;
+  font-size: 12px;
+  font-family: regular;
+  text-align: left;
+  display: inline-block;
+}
+.subText {
+  composes: text;
+}
+.formHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  font-family: regular;
+  font-size: 14px;
+  padding-top: 10px;
+}
+.form {
+  display: inline-block;
+}

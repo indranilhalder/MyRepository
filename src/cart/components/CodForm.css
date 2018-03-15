@@ -20,3 +20,9 @@
   position: relative;
   margin: 15px;
 }
+.cardFooterText {
+  width: 48%;
+  height: auto;
+  display: inline-block;
+  margin: auto;
+}

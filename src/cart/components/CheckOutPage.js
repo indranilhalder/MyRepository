@@ -14,13 +14,18 @@ import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
 import filter from "lodash/filter";
 import OrderConfirmation from "./OrderConfirmation";
+import queryString from "query-string";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   CART_DETAILS_FOR_LOGGED_IN_USER
 } from "../../lib/constants";
+import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
+import MDSpinner from "react-md-spinner";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
+const PAYMENT_MODE = "EMI";
+
 class CheckOutPage extends React.Component {
   state = {
     confirmAddress: false,
@@ -32,8 +37,17 @@ class CheckOutPage extends React.Component {
     appliedCoupons: false,
     paymentModeSelected: null,
     orderConfirmation: false,
-    binValidationCOD: false
+    binValidationCOD: false,
+    orderId: ""
   };
+
+  renderLoader() {
+    return (
+      <div className={styles.loadingIndicator}>
+        <MDSpinner />
+      </div>
+    );
+  }
 
   renderConfirmAddress = () => {
     if (this.state.confirmAddress) {
@@ -86,8 +100,8 @@ class CheckOutPage extends React.Component {
         <div className={styles.header}>
           <CheckOutHeader indexNumber="2" confirmTitle="Choose delivery mode" />
         </div>
-        {this.props.cart.cartDetailsCnc.products &&
-          this.props.cart.cartDetailsCnc.products.map((val, i) => {
+        {this.props.cart.cartDetailsCNC.products &&
+          this.props.cart.cartDetailsCNC.products.map((val, i) => {
             return (
               <div className={styles.row}>
                 <CartItem
@@ -153,30 +167,49 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.cart.justPayPaymentDetails) {
+    if (nextProps.cart.justPayPaymentDetails !== null) {
       window.location.replace(
         nextProps.cart.justPayPaymentDetails.payment.authentication.url
       );
     }
-    if (nextProps.cart.orderConfirmationDetailsStatus) {
+    if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
       Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       this.setState({ orderConfirmation: true });
     }
-    if (nextProps.cart.binValidationCODStatus) {
+    if (nextProps.cart.binValidationCODStatus === SUCCESS) {
       this.setState({ binValidationCOD: true });
     }
   }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      nextProps.cart.binValidationStatus === SUCCESS &&
+      nextProps.cart.justPayPaymentDetailsStatus === null
+    ) {
+      if (this.state.paymentModeSelected === PAYMENT_MODE) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   componentDidMount() {
-    const query = new URLSearchParams(this.props.location.search);
-    const value = query.get("status");
-    const orderId = query.get("order_id");
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    const value = parsedQueryString.status;
+    const orderId = parsedQueryString.order_id;
 
     if (value === PAYMENT_CHARGED) {
+      this.setState({ orderId: orderId });
       if (this.props.updateTransactionDetails) {
-        this.props.updateTransactionDetails(
-          this.state.paymentModeSelected,
-          orderId
-        );
+        let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+        let cartId = JSON.parse(cartDetails).guid;
+        if (cartId) {
+          this.props.updateTransactionDetails(
+            this.state.paymentModeSelected,
+            orderId,
+            cartId
+          );
+        }
       }
     } else {
       if (this.props.getCartDetailsCNC) {
@@ -197,13 +230,14 @@ class CheckOutPage extends React.Component {
         this.props.getPaymentModes();
         this.props.getCODEligibility();
         this.props.getNetBankDetails();
+        this.props.getEmiBankDetails(this.props.location.state.productValue);
       }
     }
   }
 
   onSelectAddress(selectedAddress) {
     let addressSelected = filter(
-      this.props.cart.cartDetailsCnc.addressDetailsList.addresses,
+      this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
       address => {
         return address.id === selectedAddress[0];
       }
@@ -282,9 +316,37 @@ class CheckOutPage extends React.Component {
     this.props.binValidationForCOD(paymentMode);
   };
 
+  binValidationForNetBank = (paymentMode, bankName) => {
+    this.setState({ paymentModeSelected: paymentMode });
+    this.props.binValidationForNetBanking(paymentMode, bankName);
+  };
+
   softReservationForPayment = cardDetails => {
     cardDetails.pinCode = this.props.location.state.pinCode;
-    this.props.softReservationForPayment(cardDetails, this.state.addressId[0]);
+    this.props.softReservationForPayment(
+      cardDetails,
+      this.state.addressId[0],
+      this.state.paymentModeSelected
+    );
+  };
+
+  softReservationPaymentForNetBanking = bankName => {
+    this.props.softReservationPaymentForNetBanking(
+      this.state.paymentModeSelected,
+      bankName,
+      this.props.location.state.pinCode
+    );
+  };
+
+  captureOrderExperience = rating => {
+    if (this.props.captureOrderExperience) {
+      this.props.captureOrderExperience(this.state.orderId, rating);
+    }
+  };
+
+  continueShopping = () => {
+    this.props.history.index = 0;
+    this.props.history.push(HOME_ROUTER);
   };
 
   softReservationForCODPayment = () => {
@@ -292,6 +354,9 @@ class CheckOutPage extends React.Component {
   };
 
   render() {
+    if (this.props.cart.loading) {
+      return <div>{this.renderLoader()}</div>;
+    }
     const cartData = this.props.cart;
     if (
       (this.state.addNewAddress || !cartData.userAddress) &&
@@ -323,14 +388,14 @@ class CheckOutPage extends React.Component {
             />
           )}
 
-          {this.props.cart.cartDetailsCnc &&
+          {this.props.cart.cartDetailsCNC &&
             this.state.confirmAddress &&
             !this.state.deliverMode &&
             this.renderDeliverModes()}
 
           {this.state.deliverMode && (
             <DeliveryModeSet
-              productDelivery={this.props.cart.cartDetailsCnc.products}
+              productDelivery={this.props.cart.cartDetailsCNC.products}
               changeDeliveryModes={() => this.changeDeliveryModes()}
             />
           )}
@@ -358,24 +423,30 @@ class CheckOutPage extends React.Component {
                 softReservationForCODPayment={() =>
                   this.softReservationForCODPayment()
                 }
+                binValidationForNetBank={(paymentMode, bankName) =>
+                  this.binValidationForNetBank(paymentMode, bankName)
+                }
+                softReservationPaymentForNetBanking={bankName =>
+                  this.softReservationPaymentForNetBanking(bankName)
+                }
               />
             )}
 
-          {this.props.cart.cartDetailsCnc && (
+          {this.props.cart.cartDetailsCNC && (
             <Checkout
-              amount={this.props.cart.cartDetailsCnc.totalPrice}
+              amount={this.props.cart.cartDetailsCNC.totalPrice}
               totalDiscount={
-                this.props.cart.cartDetailsCnc.cartAmount.totalDiscountAmount
+                this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
                   .formattedValue
               }
               bagTotal={
-                this.props.cart.cartDetailsCnc.cartAmount.bagTotal
+                this.props.cart.cartDetailsCNC.cartAmount.bagTotal
                   .formattedValue
               }
               tax={this.props.tax}
               offers={this.props.offers}
               delivery={this.props.delivery}
-              payable={this.props.cart.cartDetailsCnc.totalPrice}
+              payable={this.props.cart.cartDetailsCNC.totalPrice}
               onCheckout={this.handleSubmit}
             />
           )}
@@ -388,6 +459,10 @@ class CheckOutPage extends React.Component {
             <div>
               <OrderConfirmation
                 orderDetails={this.props.cart.orderConfirmationDetails}
+                captureOrderExperience={rating =>
+                  this.captureOrderExperience(rating)
+                }
+                continueShopping={() => this.continueShopping()}
               />
             </div>
           )}

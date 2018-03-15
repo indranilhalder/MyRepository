@@ -54,7 +54,8 @@ export default class ManueDetails extends React.Component {
 }
 ManueDetails.propTypes = {
   text: PropTypes.string,
-  icon: PropTypes.string
+  icon: PropTypes.string,
+  onOpenMenu: PropTypes.bool
 };
 
 ManueDetails.defaultProps = {

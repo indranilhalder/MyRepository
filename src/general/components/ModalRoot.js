@@ -5,7 +5,7 @@ import RestorePassword from "../../auth/components/RestorePassword";
 import OtpVerification from "../../auth/components/OtpVerification";
 import ConnectDetailsWithModal from "../../home/components/ConnectDetailsWithModal";
 import Sort from "../../plp/components/SortModal";
-import AddressModal from "../../plp/components/AddressModal";
+import AddressModalContainer from "../../plp/containers/AddressModalContainer";
 import SizeGuideModal from "../../pdp/components/SizeGuideModal";
 import EmiModal from "../../pdp/containers/EmiListContainer";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
@@ -69,7 +69,9 @@ export default class ModalRoot extends React.Component {
   releaseUserCoupon = couponCode => {
     this.props.releaseUserCoupon(couponCode);
   };
-
+  getUserAddress = () => {
+    this.props.getUserAddress();
+  };
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -92,7 +94,7 @@ export default class ModalRoot extends React.Component {
       ),
       Sort: <Sort />,
       Address: (
-        <AddressModal
+        <AddressModalContainer
           closeModal={() => this.handleClose()}
           {...this.props.ownProps}
         />

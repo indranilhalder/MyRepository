@@ -178,7 +178,7 @@ export default class CreditCardForm extends React.Component {
                   />
                 </div>
               </div>
-            </div>
+            </div>{" "}
             <div className={styles.cardFooterText}>
               <div className={styles.buttonHolder}>
                 <Button

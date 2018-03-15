@@ -1,0 +1,38 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.header {
+  width: 100%;
+  height: auto;
+  position: relative;
+  padding-right: 30px;
+}
+.subCategoryList {
+  font-size: 14px;
+  font-family: regular;
+  display: inline-block;
+  text-align: left;
+  width: 100%;
+  height: auto;
+  line-height: 40px;
+}
+.subCategoryListCount {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  color: #8d8d8d;
+  position: absolute;
+  right: 0;
+  top: 0;
+  text-align: right;
+}
+.active {
+  composes: header;
+  color: #ff1744;
+}
+
+.active .subCategoryListCount {
+  color: #ff1744;
+}

@@ -18,25 +18,33 @@ export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
 export const REFRESH_TOKEN = "refresh_token";
 export const BRAND_OR_CATEGORY_LANDING_PAGE =
   "/:brandOrCategory/:brandOrCategoryId";
-export const PRODUCT_LISTINGS = "/productListings";
+export const BRAND_PAGE = "/c-(mbh.*)";
+export const BRAND_PAGE_WITH_SLUG = `/.*/${BRAND_PAGE}`;
+
+export const CATEGORY_PAGE = "/c-(msh.*)";
+export const CATEGORY_PAGE_WITH_SLUG = `/:slug/c-(msh.*)`;
+export const PRODUCT_LISTINGS = "/search/(.*)";
+
 export const PLP_CATEGORY_SEARCH = "/search/?searchCategory=all&text=shirt";
 
 export const SEARCH_RESULTS_PAGE = "/search/";
-export const HOME_ROUTER = "/home";
+export const HOME_ROUTER = "/";
 
 export const BRAND_LANDING_PAGE = "/brand";
 
+// USE THESE
+export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "(.*)/p-(.*)";
+export const PRODUCT_DESCRIPTION_REVIEWS = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/product-reviews`;
+export const PRODUCT_OTHER_SELLER_ROUTER = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/viewSellers`;
+
 export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE = "/(.*)/(p-)(.*)";
-export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "/p-(.*)";
 export const PRODUCT_REVIEWS_PATH_SUFFIX = "/product-reviews";
-export const PRODUCT_DESCRIPTION_REVIEWS = `/p-(.*)(${PRODUCT_REVIEWS_PATH_SUFFIX})`;
 export const PRODUCT_DESCRIPTION_ROUTER = PRODUCT_DESCRIPTION_PRODUCT_CODE; //TODO remove this
 export const PRODUCT_REVIEW_ROUTER = "/productReview";
 export const LOGIN_PATH = "/login";
 export const SIGN_UP_PATH = "/sign_up";
 export const PRODUCT_FILTER_ROUTER = "/filter";
 export const PRODUCT_SELLER_ROUTER_SUFFIX = "/viewSellers";
-export const PRODUCT_OTHER_SELLER_ROUTER = `/p-(.*)(${PRODUCT_SELLER_ROUTER_SUFFIX})`;
 export const PRODUCT_CART_ROUTER = "/myBag";
 export const ORDER_SUMMARY_ROUTER = "/orderSummary";
 export const CHECKOUT_ROUTER = "/checkout";
@@ -54,8 +62,21 @@ export const SOCIAL_SIGN_UP = "signUp";
 export const CART_DETAILS_FOR_LOGGED_IN_USER = "cartDetails";
 export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
+export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
 
 // fetching feed information contant
 export const BLP_OR_CLP_FEED_TYPE = "blpOrClp";
 export const HOME_FEED_TYPE = "home";
+
+export const YES = "Y";
+export const NO = "N";
+
+export const EXPRESS = "express-delivery";
+export const COLLECT = "click-and-collect";
+export const HOME_DELIVERY = "home-delivery";
+export const SHORT_EXPRESS = "ED";
+export const SHORT_COLLECT = "CNC";
+
+export const FOLLOW = "Follow";
+export const FOLLOWING = "Following";

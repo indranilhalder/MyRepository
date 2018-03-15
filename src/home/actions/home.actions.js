@@ -158,10 +158,11 @@ export function selectSingleSelectResponse(value, questionId, positionInFeed) {
     }
   };
 }
-export function homeFeedRequest() {
+export function homeFeedRequest(feedType) {
   return {
     type: HOME_FEED_REQUEST,
-    status: REQUESTING
+    status: REQUESTING,
+    feedType
   };
 }
 export function homeFeedSuccess(data, feedType) {
@@ -184,27 +185,31 @@ export function homeFeedFailure(error) {
 // brand feed and category feed  . we need to rename this function name like feed
 export function homeFeed(brandIdOrCategoryId: null) {
   return async (dispatch, getState, { api }) => {
-    dispatch(homeFeedRequest());
+    if (brandIdOrCategoryId) {
+      dispatch(homeFeedRequest(BLP_OR_CLP_FEED_TYPE));
+    } else {
+      dispatch(homeFeedRequest());
+    }
     try {
-      let url, result, feedTypeRequest;
+      let url, result, feedTypeRequest, resultJson;
       if (brandIdOrCategoryId) {
         result = await api.get(
           `v2/mpl/cms/defaultpage?pageId=${brandIdOrCategoryId}`
         );
         feedTypeRequest = BLP_OR_CLP_FEED_TYPE;
+        resultJson = await result.json();
+        if (resultJson.errors) {
+          dispatch(homeFeedSuccess([], feedTypeRequest));
+        } else {
+          dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
+        }
       } else {
         url = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
         result = await api.postAdobeTargetUrl(null, url, null, null, true);
         feedTypeRequest = HOME_FEED_TYPE;
+        resultJson = await result.json();
       }
 
-      //TODO this needs to be cleaned up.
-      const resultJson = await result.json();
-      if (resultJson.errors) {
-        dispatch(homeFeedSuccess([], feedTypeRequest));
-      } else {
-        dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
-      }
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson}`);
       }
@@ -254,10 +259,11 @@ export function getComponentData(positionInFeed, fetchURL, postParams: null) {
           mad_uuid: MAD_UUID,
           widget_list: MSD_WIDGET_LIST //TODO this is going to change.
         };
-        result = await api.post(fetchURL, postData, true);
+        result = await api.postMsd(fetchURL, postData, true);
         let resultJson = await result.json();
-        if (resultJson.status === "FAILURE") {
-          throw new Error(`${resultJson.message}`);
+
+        if (resultJson.errors) {
+          throw new Error(`${resultJson.errors[0].message}`);
         }
         dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
@@ -269,8 +275,8 @@ export function getComponentData(positionInFeed, fetchURL, postParams: null) {
           false
         );
         const resultJson = await result.json();
-        if (resultJson.status === "FAILURE") {
-          throw new Error(`${resultJson.message}`);
+        if (resultJson.errors) {
+          throw new Error(`${resultJson.errors[0].message}`);
         }
         let parsedResultJson = JSON.parse(resultJson.content);
         parsedResultJson = parsedResultJson.items[0];

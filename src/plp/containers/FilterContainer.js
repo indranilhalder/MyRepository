@@ -1,10 +1,10 @@
 import { connect } from "react-redux";
-import { getProductListings } from "../actions/plp.actions.js";
-import Filter from "../components/Filter";
-const mapDispatchToProps = dispatch => {
+import FilterMobile from "../components/FilterMobile.js";
+import { withRouter } from "react-router-dom";
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onApply: filters => {
-      dispatch(getProductListings());
+    backPage: () => {
+      ownProps.backPage();
     }
   };
 };
@@ -12,11 +12,13 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = (state, ownProps) => {
   return {
     ...ownProps,
-    filterData: state.productListings.productListings.facetdata,
-    categoryData: state.productListings.productListings.facetdatacategory
+    facetData: state.productListings.productListings.facetdata,
+    facetdatacategory: state.productListings.productListings.facetdatacategory
   };
 };
 
-const FilterContainer = connect(mapStateToProps, mapDispatchToProps)(Filter);
+const FilterContainer = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(FilterMobile)
+);
 
 export default FilterContainer;

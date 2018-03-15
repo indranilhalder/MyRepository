@@ -51,23 +51,6 @@ export default class PaymentCardWrapper extends React.Component {
     }
   };
 
-  binValidation = (paymentMode, binNo) => {
-    if (this.props.binValidation) {
-      this.props.binValidation(paymentMode, binNo);
-    }
-  };
-
-  softReservationForCODPayment = () => {
-    if (this.props.softReservationForCODPayment) {
-      this.props.softReservationForCODPayment();
-    }
-  };
-
-  binValidationForCOD = paymentMode => {
-    this.setState({ paymentModeSelected: paymentMode });
-    this.props.binValidationForCOD(paymentMode);
-  };
-
   render() {
     return (
       <div className={styles.base}>
@@ -79,7 +62,7 @@ export default class PaymentCardWrapper extends React.Component {
             onToggle={i => this.handleClick(i)}
           />
         </div>
-        {this.renderPaymentCardsComponents()}
+        {this.props.cart.paymentModes && this.renderPaymentCardsComponents()}
       </div>
     );
   }

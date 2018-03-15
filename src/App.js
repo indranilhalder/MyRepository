@@ -11,15 +11,16 @@ import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
-import BrandsLandingPageDefault from "./brands/components/BrandsLandingPageDefault";
+import BrandsLandingPageDefaultContainer from "./blp/containers/BrandsLandingPageDefaultContainer";
 import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
 import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 import CartContainer from "./cart/containers/CartContainer";
 import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
+import CategoriesPageContainer from "./clp/containers/CategoriesPageContainer";
 import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
 import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
-import BrandLandingPageContainer from "./brands/containers/BrandLandingPageContainer";
+import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 
@@ -51,7 +52,12 @@ import {
   PRODUCT_DESCRIPTION_REVIEWS,
   PRODUCT_SELLER_ROUTER,
   PRODUCT_OTHER_SELLER_ROUTER,
-  DEFAULT_BRANDS_LANDING_PAGE
+  DEFAULT_BRANDS_LANDING_PAGE,
+  CATEGORIES_LANDING_PAGE,
+  BRAND_PAGE,
+  CATEGORY_PAGE,
+  BRAND_PAGE_WITH_SLUG,
+  CATEGORY_PAGE_WITH_SLUG
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -151,7 +157,25 @@ class App extends Component {
 
           <Route
             exact
-            path={SEARCH_RESULTS_PAGE}
+            path={BRAND_PAGE}
+            component={PlpBrandCategoryWrapperContainer}
+          />
+
+          <Route
+            exact
+            path={CATEGORY_PAGE}
+            component={PlpBrandCategoryWrapperContainer}
+          />
+
+          <Route
+            exact
+            path={BRAND_PAGE_WITH_SLUG}
+            component={PlpBrandCategoryWrapperContainer}
+          />
+
+          <Route
+            strict
+            path={CATEGORY_PAGE_WITH_SLUG}
             component={PlpBrandCategoryWrapperContainer}
           />
 
@@ -167,16 +191,6 @@ class App extends Component {
             exact
             path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
             component={ProductDescriptionPageWrapperContainer}
-          />
-
-          <Route
-            path={PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE}
-            component={ProductDescriptionPageWrapperContainer}
-          />
-          <Route
-            exact
-            path={BRAND_OR_CATEGORY_LANDING_PAGE}
-            component={PlpBrandCategoryWrapperContainer}
           />
 
           <Route
@@ -222,10 +236,14 @@ class App extends Component {
           <Route
             exact
             path={DEFAULT_BRANDS_LANDING_PAGE}
-            component={BrandsLandingPageDefault}
+            component={BrandsLandingPageDefaultContainer}
+          />
+          <Route
+            exact
+            path={CATEGORIES_LANDING_PAGE}
+            component={CategoriesPageContainer}
           />
         </Switch>
-
         <ModalContainer />
       </div>
     );

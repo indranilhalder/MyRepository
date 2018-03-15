@@ -6,33 +6,34 @@ import ManueDetails from "../../general/components/MenuDetails.js";
 const CASH_ON_DELIVERY = "COD";
 
 export default class CheckoutCOD extends React.Component {
-  binValidationForCOD(paymentMode) {
-    if (this.props.binValidationForCOD) {
-      this.props.binValidationForCOD(paymentMode);
-    }
-  }
+  binValidationForCOD = paymentMode => {
+    this.props.binValidationForCOD(paymentMode);
+  };
+
+  softReservationForCODPayment = () => {
+    this.props.softReservationForCODPayment();
+  };
 
   render() {
     return (
       <div>
         {this.props.cart.codEligibilityDetails.status ? (
-          <ManueDetails
-            text="Cash On Delivery"
-            icon={creditCardIcon}
-            onOpenMenu={val => {
-              if (val) {
-                this.binValidationForCOD(CASH_ON_DELIVERY);
-              }
-            }}
-          >
+          <ManueDetails text="Cash On Delivery" icon={creditCardIcon}>
             <CodForm
+              cart={this.props.cart}
               binValidationForCOD={paymentMode =>
                 this.binValidationForCOD(paymentMode)
+              }
+              softReservationForCODPayment={() =>
+                this.softReservationForCODPayment()
               }
             />
           </ManueDetails>
         ) : (
-          <ManueDetails text="Cash On Delivery" icon={creditCardIcon}>
+          <ManueDetails
+            text="Cash On Delivery Disable UI"
+            icon={creditCardIcon}
+          >
             <CodForm />
           </ManueDetails>
         )}
@@ -41,6 +42,4 @@ export default class CheckoutCOD extends React.Component {
   }
 }
 
-CheckoutCOD.propTypes = {
-  onChangeCvv: PropTypes.func
-};
+CheckoutCOD.propTypes = {};

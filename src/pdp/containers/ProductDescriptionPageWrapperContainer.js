@@ -6,9 +6,16 @@ import {
   addProductToWishList,
   getMsdRequest,
   getPdpEmi,
-  getEmiTerms
+  getEmiTerms,
+  pdpAboutBrand,
+  getProductPinCode
 } from "../actions/pdp.actions";
-import { showModal, EMI_MODAL } from "../../general/modal.actions.js";
+import {
+  showModal,
+  EMI_MODAL,
+  ADDRESS,
+  SIZE_GUIDE
+} from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
 
@@ -29,6 +36,12 @@ const mapDispatchToProps = dispatch => {
     getMsdRequest: productCode => {
       dispatch(getMsdRequest(productCode));
     },
+    pdpAboutBrand: productCode => {
+      dispatch(pdpAboutBrand(productCode));
+    },
+    showSizeGuide: () => {
+      dispatch(showModal(SIZE_GUIDE));
+    },
     getPdpEmi: (token, cartValue) => {
       dispatch(getPdpEmi(token, cartValue));
     },
@@ -38,8 +51,11 @@ const mapDispatchToProps = dispatch => {
     showEmiModal: () => {
       dispatch(showModal(EMI_MODAL));
     },
-    showSizeGuide: () => {
-      dispatch(showModal("SizeGuide"));
+    showPincodeModal: productCode => {
+      dispatch(showModal(ADDRESS, { productCode }));
+    },
+    getProductPinCode: (pinCode, productCode) => {
+      dispatch(getProductPinCode(pinCode, productCode));
     }
   };
 };

@@ -1,0 +1,46 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  position: relative;
+  height: 35px;
+}
+.hideInput {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.displayValue {
+  width: 100%;
+  height: 100%;
+  padding: 0px 35px 0px 10px;
+  color: #000;
+  font-size: 14px;
+  font-family: regular;
+  border: 1px solid #d2d2d2;
+  border-radius: 3px;
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  text-align: left;
+  line-height: 35px;
+}
+.iconHolder {
+  width: 35px;
+  height: 33px;
+  background: #fff url(./img/date.png)no-repeat;
+  background-size: auto 20px;
+  background-position: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  pointer-events: none;
+}
+.input {
+  width: 100%;
+  height: 35px;
+  outline: none;
+}

@@ -5,8 +5,8 @@ import styles from "./FilterSelect.css";
 
 export default class FilterSelect extends React.Component {
   handleClick() {
-    if (this.props.selectItem) {
-      this.props.selectItem();
+    if (this.props.onClick) {
+      this.props.onClick(this.props.url);
     }
   }
   render() {

@@ -11,6 +11,8 @@ import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
 import HollowHeader from "./HollowHeader.js";
 import PdpLink from "./PdpLink";
+import PdpPincode from "./PdpPincode";
+import Overlay from "./Overlay";
 import styles from "./ProductDescriptionPage.css";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import * as Cookie from "../../lib/Cookie";
@@ -24,8 +26,10 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   ANONYMOUS_USER,
-  CHECKOUT_ROUTER,
-  PRODUCT_CART_ROUTER
+  PRODUCT_CART_ROUTER,
+  NO,
+  PRODUCT_DESCRIPTION_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
 } from "../../lib/constants";
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
@@ -119,6 +123,34 @@ class ProductDescriptionPage extends Component {
   renderToMyBag() {
     this.props.history.push(PRODUCT_CART_ROUTER);
   }
+  showPincodeModal() {
+    if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+      this.props.showPincodeModal(this.props.match.params[0]);
+    } else if (
+      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+    ) {
+      this.props.showPincodeModal(this.props.match.params[2]);
+    }
+  }
+  renderDeliveryOptions(productData) {
+    return (
+      productData.eligibleDeliveryModes &&
+      productData.eligibleDeliveryModes.map((val, idx) => {
+        return (
+          <DeliveryInformation
+            key={idx}
+            header={val.name}
+            placedTime={val.timeline}
+            type={val.code}
+            onClick={() => this.renderAddressModal()}
+            deliveryOptions={DELIVERY_TEXT}
+            label={PIN_CODE}
+            showCliqAndPiqButton={false}
+          />
+        );
+      })
+    );
+  }
   render() {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
@@ -193,20 +225,27 @@ class ProductDescriptionPage extends Component {
               description={productData.productOfferPromotion[0].promotionDetail}
               onClick={this.goToCouponPage}
             />
-            {productData.eligibleDeliveryModes &&
-              productData.eligibleDeliveryModes.map((val, idx) => {
-                return (
-                  <DeliveryInformation
-                    key={idx}
-                    header={val.name}
-                    placedTime={val.timeline}
-                    type={val.code}
-                    onClick={() => this.renderAddressModal()}
-                    deliveryOptions={DELIVERY_TEXT}
-                    label={PIN_CODE}
-                  />
-                );
-              })}
+            {this.props.productDetails.isServiceableToPincode &&
+            this.props.productDetails.isServiceableToPincode.pinCode ? (
+              <PdpPincode
+                hasPincode={true}
+                pincode={
+                  this.props.productDetails.isServiceableToPincode.pinCode
+                }
+                onClick={() => this.showPincodeModal()}
+              />
+            ) : (
+              <PdpPincode onClick={() => this.showPincodeModal()} />
+            )}
+            {this.props.productDetails.isServiceableToPincode &&
+            this.props.productDetails.isServiceableToPincode.status === NO ? (
+              <Overlay labelText="Not serviceable in you pincode,
+    please try another pincode">
+                {this.renderDeliveryOptions(productData)}
+              </Overlay>
+            ) : (
+              this.renderDeliveryOptions(productData)
+            )}
             <div className={styles.separator}>
               <RatingAndTextLink
                 onClick={this.goToReviewPage}

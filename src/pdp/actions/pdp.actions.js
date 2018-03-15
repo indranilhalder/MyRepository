@@ -9,7 +9,8 @@ import * as Cookie from "../../lib/Cookie";
 import each from "lodash/each";
 import {
   CUSTOMER_ACCESS_TOKEN,
-  LOGGED_IN_USER_DETAILS
+  LOGGED_IN_USER_DETAILS,
+  ANONYMOUS_USER
 } from "../../lib/constants";
 
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
@@ -74,6 +75,10 @@ export const GET_PRODUCT_REVIEW_REQUEST = "GET_PRODUCT_REVIEW_REQUEST";
 export const GET_PRODUCT_REVIEW_SUCCESS = "GET_PRODUCT_REVIEW_SUCCESS";
 export const GET_PRODUCT_REVIEW_FAILURE = "GET_PRODUCT_REVIEW_FAILURE";
 
+export const FOLLOW_UN_FOLLOW_BRAND_REQUEST = "FOLLOW_UN_FOLLOW_BRAND_REQUEST";
+export const FOLLOW_UN_FOLLOW_BRAND_SUCCESS = "FOLLOW_UN_FOLLOW_BRAND_SUCCESS";
+export const FOLLOW_UN_FOLLOW_BRAND_FAILURE = "FOLLOW_UN_FOLLOW_BRAND_FAILURE";
+
 export const DELETE_PRODUCT_REVIEW_REQUEST = "DELETE_PRODUCT_REVIEW_REQUEST";
 export const DELETE_PRODUCT_REVIEW_SUCCESS = "DELETE_PRODUCT_REVIEW_SUCCESS";
 export const DELETE_PRODUCT_REVIEW_FAILURE = "DELETE_PRODUCT_REVIEW_FAILURE";
@@ -86,12 +91,17 @@ export const GET_PDP_ITEMS_REQUEST = "GET_PDP_ITEMS_REQUEST";
 export const GET_PDP_ITEMS_SUCCESS = "GET_PDP_ITEMS_SUCCESS";
 export const GET_PDP_ITEMS_FAILURE = "GET_PDP_ITEMS_FAILURE";
 
+export const PDP_ABOUT_BRAND_REQUEST = "PDP_ABOUT_BRAND_REQUEST";
+export const PDP_ABOUT_BRAND_SUCCESS = "PDP_ABOUT_BRAND_SUCCESS";
+export const PDP_ABOUT_BRAND_FAILURE = "PDP_ABOUT_BRAND_FAILURE";
+
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
 export const PRODUCT_PDP_EMI_PATH =
   "v2/mpl/getBankDetailsforEMI?platformNumber=2";
 export const EMI_TERMS_PATH = "/v2/mpl/cms/products/getEmiTermsAndConditions";
+export const FOLLOW_UN_FOLLOW_PATH = "v2/mpl/products";
 
 export const ABOUT_THE_BRAND_WIDGET_KEY = "aboutTheBrand";
 export const RECOMMENDED_PRODUCTS_WIDGET_KEY = "recommendedProducts";
@@ -110,9 +120,11 @@ const SORT = "byDate";
 const PAGE_VALUE = "0";
 const PAGE_NUMBER = "1";
 const MSD_REQUEST_PATH = "widgets";
+const MSD_ABOUT_BRAND_REQUEST_PATH = "discover";
 const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
-const WIDGET_LIST = [0, 8];
-const NUMBER_RESULTS = [20];
+const WIDGET_LIST = [0, 4];
+const WIDGET_LIST_FOR_ABOUT_BRAND = ["tata_5"];
+const NUMBER_RESULTS = [10];
 const MAD_UUID = "F4B82964-5E08-4531-87AF-7E03E3CD0307";
 
 export function getProductDescriptionRequest() {
@@ -141,7 +153,7 @@ export function getProductDescription(productCode) {
     dispatch(getProductDescriptionRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_DESCRIPTION_PATH}/${productCode}`
+        `${PRODUCT_DESCRIPTION_PATH}/${productCode}?isPwa=true`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
@@ -177,16 +189,35 @@ export function getProductPinCodeFailure(error) {
   };
 }
 
-export function getProductPinCode(productDetails) {
+export function getProductPinCode(pinCode, productCode) {
+  let validProductCode = productCode.toUpperCase();
   return async (dispatch, getState, { api }) => {
     dispatch(getProductPinCodeRequest());
     try {
-      const result = await api.getMock(PIN_CODE_AVAILABILITY_PATH);
+      let url;
+      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+      let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+      let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+      if (userDetails) {
+        let userName = JSON.parse(userDetails).customerInfo.mobileNumber;
+        let accessToken = JSON.parse(customerCookie).access_token;
+        url = `${PRODUCT_DETAILS_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=${validProductCode}&pin=${pinCode}`;
+      } else {
+        let userName = ANONYMOUS_USER;
+        let accessToken = JSON.parse(globalCookie).access_token;
+        url = `${PRODUCT_DETAILS_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=${validProductCode}&pin=${pinCode}`;
+      }
+      const result = await api.post(url);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(getProductPinCodeSuccess(resultJson));
+      dispatch(
+        getProductPinCodeSuccess({
+          pinCode,
+          deliveryOptions: resultJson.listOfDataList[0].value
+        })
+      );
     } catch (e) {
       dispatch(getProductPinCodeFailure(e.message));
     }
@@ -683,6 +714,54 @@ export function getProductReviews(productCode) {
   };
 }
 
+export function followUnFollowBrandRequest() {
+  return {
+    type: FOLLOW_UN_FOLLOW_BRAND_REQUEST,
+    status: REQUESTING
+  };
+}
+export function followUnFollowBrandSuccess(brandDetails) {
+  return {
+    type: FOLLOW_UN_FOLLOW_BRAND_SUCCESS,
+    status: SUCCESS,
+    brandDetails
+  };
+}
+
+export function followUnFollowBrandFailure(error) {
+  return {
+    type: FOLLOW_UN_FOLLOW_BRAND_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function followUnFollowBrand(brandCode) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(followUnFollowBrandRequest());
+    try {
+      const currentFollowedStatus = getState().productDescription.msdItems
+        .brandDetails.isFollowing;
+      const isFollowing = !currentFollowedStatus;
+      // getting market cloud id it is auto generated by use when use visti web MSSiteModeEvent
+      // we just need to get it here
+      const mcvId = window._satellite
+        .getVisitorId()
+        .getMarketingCloudVisitorID();
+      const result = await api.post(
+        `${FOLLOW_UN_FOLLOW_PATH}/${mcvId}/updateFollowedBrands?brands=${brandCode}&follow=${isFollowing}&isPwa=true`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(followUnFollowBrandSuccess({ isFollowing }));
+    } catch (e) {
+      dispatch(followUnFollowBrandFailure(e.message));
+    }
+  };
+}
+
 export function productMsdRequest() {
   return {
     type: PRODUCT_MSD_REQUEST,
@@ -718,30 +797,84 @@ export function getMsdRequest(productCode) {
     dispatch(productMsdRequest());
 
     try {
-      const result = await api.postMsd(MSD_REQUEST_PATH, msdRequestObject);
+      const result = await api.post(MSD_REQUEST_PATH, msdRequestObject);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
 
       if (resultJson.data[0].length > 0) {
-        dispatch(getPdpItems(resultJson.data[0], ABOUT_THE_BRAND_WIDGET_KEY));
-      }
-      if (resultJson.data[1].length > 0) {
         dispatch(
-          getPdpItems(resultJson.data[1], RECOMMENDED_PRODUCTS_WIDGET_KEY)
+          getPdpItems(resultJson.data[0], RECOMMENDED_PRODUCTS_WIDGET_KEY)
         );
       }
-
-      if (resultJson.data[2].length > 0) {
-        dispatch(getPdpItems(resultJson.data[2], SIMILAR_PRODUCTS_WIDGET_KEY));
+      if (resultJson.data[1].length > 0) {
+        dispatch(getPdpItems(resultJson.data[1], SIMILAR_PRODUCTS_WIDGET_KEY));
       }
     } catch (e) {
       dispatch(productMsdFailure(e.message));
     }
   };
 }
+export function pdpAboutBrandRequest() {
+  return {
+    type: PDP_ABOUT_BRAND_REQUEST,
+    status: REQUESTING
+  };
+}
+export function pdpAboutBrandFailure(error) {
+  return {
+    type: PDP_ABOUT_BRAND_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function pdpAboutBrandSuccess(brandDetails) {
+  return {
+    type: PDP_ABOUT_BRAND_SUCCESS,
+    status: SUCCESS,
+    brandDetails
+  };
+}
 
+export function pdpAboutBrand(productCode) {
+  return async (dispatch, getState, { api }) => {
+    let msdRequestObject = new FormData();
+    msdRequestObject.append("api_key", API_KEY);
+    msdRequestObject.append(
+      "widget_list",
+      JSON.stringify(WIDGET_LIST_FOR_ABOUT_BRAND)
+    );
+    msdRequestObject.append("num_results", NUMBER_RESULTS);
+    msdRequestObject.append("mad_uuid", MAD_UUID);
+    msdRequestObject.append("details", false);
+    msdRequestObject.append("product_id", productCode);
+
+    dispatch(pdpAboutBrandRequest());
+
+    try {
+      // making call for fetch about brand and their items items
+      // url may have to change as per api live get live
+      const result = await api.postMock(
+        MSD_ABOUT_BRAND_REQUEST_PATH,
+        msdRequestObject
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      if (resultJson.data[0].itemIds.length > 0) {
+        dispatch(
+          getPdpItems(resultJson.data[0].itemIds, ABOUT_THE_BRAND_WIDGET_KEY)
+        );
+      }
+      // updating reducer for follow brand  key
+      dispatch(pdpAboutBrandSuccess(resultJson.data[0]));
+    } catch (e) {
+      dispatch(pdpAboutBrandFailure(e.message));
+    }
+  };
+}
 export function getPdpItemsPdpRequest() {
   return {
     type: GET_PDP_ITEMS_REQUEST,
@@ -773,7 +906,7 @@ export function getPdpItems(itemIds, widgetKey) {
         productCodes = `${itemId},${productCodes}`;
       });
       const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
-      const result = await api.getMsd(url);
+      const result = await api.get(url);
 
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {

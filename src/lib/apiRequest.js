@@ -5,6 +5,7 @@ export const API_URL_ROOT =
   "https://uat2.tataunistore.com/marketplacewebservices";
 export const API_URL_ROOT_DUMMY =
   "https://www.tatacliq.com/marketplacewebservices";
+// export const API_URL_ROOT = API_URL_ROOT_DUMMY;
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
@@ -12,7 +13,7 @@ export const JUS_PAY_API_URL_ROOT = "https://sandbox.juspay.in";
 
 const API_URL_ROOT_SUFFIX = "?isPwa=true";
 
-export const TATA_CLIQ_ROOT = "https://www.tatacliq.com";
+export const TATA_CLIQ_ROOT = "http://uat2.tataunistore.com:3000";
 export const API_MSD_URL_ROOT = "https://ap-southeast-1-api.madstreetden.com";
 
 export async function postAdobeTargetUrl(
@@ -53,11 +54,8 @@ export async function postAdobeTargetUrl(
   });
 }
 
-export async function post(path, postData, doNotUseApiRoot: false) {
-  let url = `${API_URL_ROOT}/${path}`;
-  if (doNotUseApiRoot) {
-    url = path;
-  }
+export async function post(path, postData, doNotUserApiSuffix: true) {
+  const url = `${API_URL_ROOT}/${path}`;
 
   return await fetch(url, {
     method: "POST",
@@ -132,7 +130,7 @@ export async function putMock(url, payload) {
 }
 
 export async function postMsd(url, payload) {
-  return await fetch(`${API_MSD_URL_ROOT}/${url}`, {
+  return await fetch(url, {
     method: "POST",
     body: payload
   });

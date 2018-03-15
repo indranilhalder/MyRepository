@@ -79,7 +79,10 @@ class CartPage extends React.Component {
     if (customerCookie) {
       this.props.history.push({
         pathname: CHECKOUT_ROUTER,
-        state: { pinCode: this.state.pinCode }
+        state: {
+          pinCode: this.state.pinCode,
+          productValue: this.props.cart.cartDetails.cartAmount.bagTotal.value
+        }
       });
     } else {
       this.props.history.push(LOGIN_PATH);

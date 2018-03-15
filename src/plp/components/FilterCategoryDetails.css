@@ -1,0 +1,37 @@
+.base {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+}
+.header {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  position: relative;
+  padding-right: 40px;
+}
+.subCategoryRegular {
+  font-size: 16px;
+  font-family: regular;
+  width: 100%;
+  height: auto;
+}
+.subCategoryBold {
+  composes: subCategoryRegular;
+  font-family: semibold;
+}
+.subCategoryCount {
+  font-size: 14px;
+  font-family: regular;
+  position: absolute;
+  right: 0;
+  top: 0;
+  opacity: 0.5;
+  width: 40px;
+  height: 40px;
+  text-align: right;
+}
+.subListHolder {
+  width: 100%;
+  height: auto;
+}

@@ -9,7 +9,7 @@ import HeroBanner from "./HeroBanner.js";
 import FollowBase from "./FollowBase.js";
 import InformationHeader from "../../general/components/InformationHeader";
 import ConnectWidget from "./ConnectWidget";
-import BrandCardHeader from "../../brands/components/BrandCardHeader";
+import BrandCardHeader from "../../blp/components/BrandCardHeader";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
 import MobileFooter from "../../general/components/MobileFooter.js";
 
@@ -18,7 +18,7 @@ import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
 import ProductCapsules from "./ProductCapsules.js";
 import FollowingBrands from "./FollowingBrands";
 import FlashSale from "./FlashSale";
-import AllBrandTypes from "../../brands/components/AllBrandTypes";
+import AllBrandTypes from "../../blp/components/AllBrandTypes";
 import OfferWidget from "./OfferWidget.js";
 import DiscoverMore500 from "./DiscoverMore500.js";
 import ThemeOffer from "./ThemeOffer.js";
@@ -26,14 +26,15 @@ import ThemeProductWidget from "./ThemeProductWidget.js";
 import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionContainer.js";
 import DiscoverMore from "./DiscoverMore.js";
 import CuratedProductsComponent from "./CuratedProductsComponent";
-import CuratedFeature from "../../brands/components/CuratedFeature";
-import LatestCollections from "../../brands/components/LatestCollections";
+import CuratedFeature from "../../blp/components/CuratedFeature";
+import LatestCollections from "../../blp/components/LatestCollections";
 import MonoBanner from "./MonoBanner";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
-import SubBrandsBanner from "../../brands/components/SubBrandsBanner";
+import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
 import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
 import { CHECKOUT_ROUTER } from "../../lib/constants";
+import queryString from "query-string";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeKeyMapping = {
@@ -53,13 +54,13 @@ const typeComponentMapping = {
   "Video Product Carousel Component": props => (
     <VideoProductCarousel {...props} />
   ),
-  // automatedBrandProductCarousel: props => (
-  //   <AutomatedBrandProductCarousel {...props} />
-  // ),
+  // // automatedBrandProductCarousel: props => (
+  // //   <AutomatedBrandProductCarousel {...props} />
+  // // ),
   "Flash Sales Component": props => <FlashSale {...props} />, // wired up
   "Offers Component": props => <OfferWidget {...props} />, // wired up
   "Multipurpose Banner Component": props => <ConnectWidget {...props} />, // modal not working - need to figure out what to show here.
-  "Multi Click Component": props => <ThemeProductWidget {...props} />, // not wired up for some reason
+  // "Multi Click Component": props => <ThemeProductWidget {...props} /> // not wired up for some reason
   "Auto Fresh From Brands Component": props => <FollowBase {...props} />, // wired up with clickable url
   "Banner Separator Component": props => <BannerSeparator {...props} />,
   "Auto Discover More Component": props => <DiscoverMore {...props} />, // wired up with clickable urls
@@ -125,11 +126,6 @@ class Feed extends Component {
     // window._satellite.track("page view");
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.type === MERGE_CART_ID_SUCCESS) {
-      this.props.history.push(CHECKOUT_ROUTER);
-    }
-  }
   render() {
     if (this.props.loading) {
       return this.renderLoader();

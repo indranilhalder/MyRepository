@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ProductImage from "../../general/components/ProductImage.js";
+import CheckBox from "../../general/components/CheckBox.js";
 import styles from "./OrderCard.css";
 export default class OrderCard extends React.Component {
   render() {
@@ -10,7 +11,18 @@ export default class OrderCard extends React.Component {
           <ProductImage image={this.props.imageUrl} />
         </div>
         <div className={styles.productDetails}>
-          <div className={styles.productName}>{this.props.productName}</div>
+          <div
+            className={
+              this.props.isSelect ? styles.withCheckBox : styles.productName
+            }
+          >
+            {this.props.isSelect && (
+              <div className={styles.checkBoxHolder}>
+                <CheckBox selected />
+              </div>
+            )}
+            {this.props.productName}
+          </div>
           <div className={styles.priceHolder}>
             <div className={styles.price}>{`Rs ${this.props.price}`}</div>
             {this.props.discountPrice &&
@@ -34,5 +46,6 @@ OrderCard.propTypes = {
   productImage: PropTypes.string,
   productName: PropTypes.string,
   price: PropTypes.string,
-  discountPrice: PropTypes.string
+  discountPrice: PropTypes.string,
+  isSelect: PropTypes.bool
 };
