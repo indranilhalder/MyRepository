@@ -55,12 +55,7 @@ export async function postAdobeTargetUrl(
 }
 
 export async function post(path, postData, doNotUserApiSuffix: true) {
-  console.log("POST");
-  console.log(doNotUserApiSuffix);
-  console.log(path);
   const url = `${API_URL_ROOT}/${path}`;
-
-  console.log(url);
 
   return await fetch(url, {
     method: "POST",

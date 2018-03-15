@@ -8,8 +8,6 @@ import { withRouter } from "react-router";
 
 class FeedComponent extends React.Component {
   onClick = val => {
-    console.log("FEED COMPONENT");
-    console.log(val);
     this.props.history.push(val);
   };
   render() {
@@ -41,8 +39,6 @@ class FeedComponent extends React.Component {
         >
           {data &&
             data.map((datum, i) => {
-              // console.log("DATUM");
-              // console.log(datum);
               return (
                 <ProductModule
                   key={i}

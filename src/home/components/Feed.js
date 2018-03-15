@@ -69,9 +69,11 @@ const typeComponentMapping = {
   "Single Banner Component": props => <MonoBanner {...props} />,
   "Curated Listing Strip Component": props => <LatestCollections {...props} />,
   "Two by Two Banner Component": props => <CuratedFeature {...props} />,
-  "Curated Products Component": props => <CuratedProductsComponent {...props} />
-  // "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
-  // "Landing Page Hierarchy": props => <AllBrandTypes {...props} />
+  "Curated Products Component": props => (
+    <CuratedProductsComponent {...props} />
+  ),
+  "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
+  "Landing Page Hierarchy": props => <AllBrandTypes {...props} />
 };
 
 class Feed extends Component {

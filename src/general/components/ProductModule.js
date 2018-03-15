@@ -17,8 +17,6 @@ export default class ProductModule extends React.Component {
   };
   onClick = () => {
     let urlSuffix;
-    console.log("PRODUCT MODULE");
-    console.log(this.props);
     if (this.props.webURL) {
       urlSuffix = this.props.webURL.replace(TATA_CLIQ_ROOT, "");
     } else if (this.props.productId) {

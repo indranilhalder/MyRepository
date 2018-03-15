@@ -32,8 +32,6 @@ export default class FlashSale extends React.Component {
   }
 
   handleClick = () => {
-    console.log("HANDLE CLICK");
-    console.log(this.props.feedComponentData.webURL);
     const urlSuffix = this.props.feedComponentData.webURL.replace(
       TATA_CLIQ_ROOT,
       ""

@@ -275,8 +275,6 @@ export function getComponentData(positionInFeed, fetchURL, postParams: null) {
           false
         );
         const resultJson = await result.json();
-        console.log("RESULT JSON");
-        console.log(resultJson);
         if (resultJson.errors) {
           throw new Error(`${resultJson.errors[0].message}`);
         }
