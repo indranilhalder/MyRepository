@@ -77,7 +77,7 @@
 				<div class="row facet-desktop">
 					<div class="col-xs-12">
 						<div class="filterblocks le-checkbox plp-checkbox">
-							<div class="plp-leftbar-close visible-xs">
+							<div class="plp-leftbar-close">
 								Filter <a class="" href="javascript:;"></a>
 							</div>
 							<product:luxuryProductrefinementcomponent/>
@@ -85,9 +85,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="apply-clear visible-xs-block">
+			<div class="apply-clear">
           <button type="button" class="btn btn-block" id="clear_filter">CLEAR FILTERS</button>
-          <button type="button" class="btn btn-block plp-leftbar-close" id="apply_filter">APPLY FILTERS</button>
+          <button type="button" class="btn btn-block" id="apply_filter">APPLY FILTERS</button>
 		    </div>	
 		</div>
 		<div class="col-sm-9 col-xs-12 rightbar right-side-content text-right pull-right nopadding">

@@ -1104,7 +1104,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B5024 = "B5024";
 	public static final String B5025 = "B5025";
 	
-
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
 	public static final String ORDER_ERROR = "B8000";
@@ -2374,6 +2373,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
 
+
 	// EGV  changes Start
 
 		public static final String BUCKET_NAME_PROMOTON = "PROMOTION";
@@ -2459,6 +2459,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String AMP_MENIFEST_JSON_QUERY = "select pk from {AmpMenifest}";
 	//CAR-330
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
+	public static final String LUX_IMPORT_CATALOG_ID = "luxProductCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_ID = "luxContentCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_VERSION = "Online";
+
 	//UBI-605
 	public static final String LANDING_PAGE_BY_CATEGORY_CODE_QUERY = "select pk from {ContentPage} where {categoryAssociated} IN ({{select {c.pk} from {Category as c JOIN Catalogversion as cv ON {c.catalogversion}={cv.pk}} WHERE {c.code} = ?categoryCode AND {cv.version} = ?catalogVersion}})";
 
@@ -2490,7 +2494,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SPLIT = "split".intern();
 	public static final String B5026 = "B5026";
 	public static final String B5027 = "B5027";
-
+	public static final String LUXURY_PREFIX = "lux";
+	public static final String TATACLIQ = "tatacliq";
+	public static final String LUXURY_SITE_URL = "luxury.tatacliq.com";
 	//Report for bulk cancellation
 	/*
 	 * public static final String DATA_FOR_BULK_CANCELLATION_PROCESS =
@@ -2510,8 +2516,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FPC_QUERY_REFUNDENTRY = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:auditId} = ?auditId";
 	public static final String FPC_QUERY_REFUNDENTRIES = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:isExpired} = ?expiredFlag";
 	public static final String FPC_QUERY_PARENTORDER = "SELECT {ord:pk} FROM {Order AS ord} WHERE{ord:guid} = ?guid AND {ord:type}  = ?orderType";
-	
-	
+
 	//changes for SDI 6152--starts
 	public static final String LUXURY_CATALOG_ID = "luxProductCatalog";
 }

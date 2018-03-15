@@ -48,7 +48,7 @@
 
 
 			<div class="mainContent-wrapper">
-	
+			<div id="overlay"></div>
 			<a id="skip-to-content"></a>
 		
 			<div class="container">
