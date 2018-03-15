@@ -34,6 +34,7 @@ import MDSpinner from "react-md-spinner";
 import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
 import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
 import { CHECKOUT_ROUTER } from "../../lib/constants";
+import queryString from "query-string";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeKeyMapping = {
@@ -123,6 +124,7 @@ class Feed extends Component {
     //   { page: { pageInfo: { pageName: "home" } } }
     // );
     // window._satellite.track("page view");
+
   }
 
   render() {
