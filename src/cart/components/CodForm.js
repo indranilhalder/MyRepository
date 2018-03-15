@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./CodForm.css";
 import PropTypes from "prop-types";
 import Captcha from "../../general/components/Captcha";
-const PAYMENT_MODE = "COD";
+const CASH_ON_DELIVERY = "COD";
 
 export default class CodForm extends React.Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export default class CodForm extends React.Component {
 
   componentDidMount() {
     if (this.props.binValidationForCOD) {
-      this.props.binValidationForCOD(PAYMENT_MODE);
+      this.props.binValidationForCOD(CASH_ON_DELIVERY);
     }
   }
 

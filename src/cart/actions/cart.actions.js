@@ -177,6 +177,7 @@ export const SOFT_RESERVATION_FOR_COD_PAYMENT_SUCCESS =
   "SOFT_RESERVATION_FOR_COD_PAYMENT_SUCCESS";
 export const SOFT_RESERVATION_FOR_COD_PAYMENT_FAILURE =
   "SOFT_RESERVATION_FOR_COD_PAYMENT_FAILURE";
+const CASH_ON_DELIVERY = "COD";
 
 export const PAYMENT_MODE = "credit card";
 const pincode = 229001;
@@ -1866,10 +1867,10 @@ export function getCODEligibilityFailure(error) {
 
 //Actions creator for COD Eligibility
 export function getCODEligibility() {
-  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  const cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
     dispatch(getCODEligibilityRequest());
     try {
@@ -1917,10 +1918,10 @@ export function binValidationForCODFailure(error) {
 
 // Action Creator to bin Validation For COD
 export function binValidationForCOD(paymentMode) {
-  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  const cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
     dispatch(binValidationForCODRequest());
     try {
@@ -1967,10 +1968,10 @@ export function updateTransactionDetailsForCODFailure(error) {
 
 // Action Creator to update Transaction Details
 export function updateTransactionDetailsForCOD(paymentMode, juspayOrderID) {
-  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  const cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
     dispatch(updateTransactionDetailsForCODRequest());
     try {
@@ -2018,8 +2019,8 @@ export function softReservationForCODPaymentFailure(error) {
 
 // Action Creator to soft reservation For COD Payment
 export function softReservationForCODPayment(pinCode) {
-  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     let productItems = {};
     let item = [];
@@ -2036,8 +2037,8 @@ export function softReservationForCODPayment(pinCode) {
       productItems.item = item;
     });
 
-    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-    let cartId = JSON.parse(cartDetails).guid;
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    const cartId = JSON.parse(cartDetails).guid;
 
     dispatch(softReservationForCODPaymentRequest());
     try {
@@ -2053,7 +2054,7 @@ export function softReservationForCODPayment(pinCode) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      dispatch(updateTransactionDetailsForCOD("COD", ""));
+      dispatch(updateTransactionDetailsForCOD(CASH_ON_DELIVERY, ""));
       dispatch(softReservationForCODPaymentSuccess(resultJson));
     } catch (e) {
       dispatch(softReservationForCODPaymentFailure(e.message));

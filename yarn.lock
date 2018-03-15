@@ -4680,6 +4680,10 @@ lodash.merge@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.0.tgz#69884ba144ac33fe699737a6086deffadd0f89c5"
 
+lodash.omit@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.omit/-/lodash.omit-4.5.0.tgz#6eb19ae5a1ee1dd9df0b969e66ce0b7fa30b5e60"
+
 lodash.template@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.template/-/lodash.template-4.4.0.tgz#e73a0385c8355591746e020b99679c690e68fba0"
@@ -6220,6 +6224,14 @@ react-dom@^16.2.0:
 react-error-overlay@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-3.0.0.tgz#c2bc8f4d91f1375b3dad6d75265d51cd5eeaf655"
+
+react-grecaptcha@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/react-grecaptcha/-/react-grecaptcha-1.2.5.tgz#886e1df8bac7c1350b23b28b64a29a64f823e684"
+  dependencies:
+    classnames "^2.2.5"
+    lodash.omit "^4.5.0"
+    prop-types "^15.6.0"
 
 react-input-autosize@^2.1.2:
   version "2.2.1"
