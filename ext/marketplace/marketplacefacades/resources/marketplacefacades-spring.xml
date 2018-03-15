@@ -2183,11 +2183,12 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<!--NU-50 end  -->
 	
 	<bean id="mplImageUploadFacade"
-		class="com.tis.mpl.facade.imageupload.impl.MplImageUploadFacadeImpl">
-		<property name="imageUploadService" ref="imageUploadService"></property>
-	<bean id="ampMenifestJsonPopulator"
+	class="com.tis.mpl.facade.imageupload.impl.MplImageUploadFacadeImpl">
+	<property name="imageUploadService" ref="imageUploadService"></property>
+</bean>
+	<!-- <bean id="ampMenifestJsonPopulator"
 			class="com.tisl.mpl.facades.populators.AmpMenifestPopulator">
-	</bean>
+	</bean> -->
 	<alias name="defaultHomePageTypesConverter" alias="homePageTypesConverter" />
 	<bean id="defaultHomePageTypesConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass"
