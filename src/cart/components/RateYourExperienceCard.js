@@ -5,11 +5,15 @@ import ExperienceRateGrid from "./ExperienceRateGrid.js";
 import Button from "../../general/components/Button.js";
 
 export default class RateyourExperienceCard extends React.Component {
-  handleClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
+  continueShopping() {
+    if (this.props.continueShopping) {
+      this.props.continueShopping();
     }
   }
+
+  captureOrderExperience = rating => {
+    this.props.captureOrderExperience(rating);
+  };
   render() {
     return (
       <div className={styles.base}>
@@ -17,7 +21,9 @@ export default class RateyourExperienceCard extends React.Component {
           <div className={styles.heading}>{this.props.heading}</div>
           <div className={styles.retingLabel}>{this.props.label}</div>
           <div className={styles.rating}>
-            <ExperienceRateGrid />
+            <ExperienceRateGrid
+              onSelect={val => this.captureOrderExperience(val)}
+            />
           </div>
           <div className={styles.buttonHolder}>
             <Button
@@ -27,7 +33,7 @@ export default class RateyourExperienceCard extends React.Component {
               label={this.props.buttonText}
               width={211}
               textStyle={{ color: "#FFF", fontSize: 50 }}
-              onClick={() => this.handleClick()}
+              onClick={() => this.continueShopping()}
             />
           </div>
         </div>
