@@ -54,10 +54,10 @@ export async function postAdobeTargetUrl(
   });
 }
 
-export async function post(path, postData, doNotUseApiRoot: false) {
+export async function post(path, postData, doNotUseApiRoot: true) {
   let url = `${API_URL_ROOT}/${path}${API_URL_ROOT_SUFFIX}`;
   if (doNotUseApiRoot) {
-    url = path;
+    url = `${API_URL_ROOT}/${path}`;
   }
 
   return await fetch(url, {
