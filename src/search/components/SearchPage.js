@@ -14,14 +14,9 @@ export default class SearchPage extends React.Component {
   handleSearchClick(val) {
     this.setState({ showResults: val });
   }
-  handleBrandClick(webURL) {
-    const url = `b-${webURL.toLowerCase()}`;
-    const urlSuffix = url.replace(TATA_CLIQ_ROOT, "");
-    this.props.history.push(urlSuffix);
-  }
+
   handleCategoryClick(webURL) {
-    const url = `c-${webURL.toLowerCase()}`;
-    const urlSuffix = url.replace(TATA_CLIQ_ROOT, "");
+    const urlSuffix = `c-${webURL.toLowerCase()}`.replace(TATA_CLIQ_ROOT, "");
     this.props.history.push(urlSuffix);
   }
   handleSearch(val) {
@@ -52,7 +47,7 @@ export default class SearchPage extends React.Component {
                     text={val.categoryName}
                     value={val.categoryCode}
                     onClick={() => {
-                      this.handleBrandClick(val.categoryCode);
+                      this.handleCategoryClick(val.categoryCode);
                     }}
                   />
                 );
