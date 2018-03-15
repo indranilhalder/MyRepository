@@ -20,19 +20,23 @@ export default class MyCoupons extends React.Component {
             <div className={styles.couponInformation}>
               {this.props.maxRedemption}
             </div>
-            <div className={styles.couponInformation}>
+            <div className={styles.couponData}>
               {this.props.maxRedemptionValue}
             </div>
+          </div>
+          <div className={styles.couponFooterHolder}>
             <div className={styles.couponInformation}>
               {this.props.creationDate}
             </div>
-            <div className={styles.couponInformation}>
+            <div className={styles.couponData}>
               {this.props.creationDateValue}
             </div>
+          </div>
+          <div className={styles.couponFooterHolder}>
             <div className={styles.couponInformation}>
               {this.props.expiryDate}
             </div>
-            <div className={styles.couponInformation}>
+            <div className={styles.couponData}>
               {this.props.expiryDateValue}
             </div>
           </div>
