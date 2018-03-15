@@ -797,7 +797,7 @@ export function getMsdRequest(productCode) {
     dispatch(productMsdRequest());
 
     try {
-      const result = await api.postMsd(MSD_REQUEST_PATH, msdRequestObject);
+      const result = await api.post(MSD_REQUEST_PATH, msdRequestObject);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
