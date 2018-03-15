@@ -1,5 +1,4 @@
 import Feed from "../../home/components/Feed";
-import { homeFeed } from "../../home/actions/home.actions";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => {
