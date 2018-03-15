@@ -6,13 +6,15 @@ import CheckoutEmi from "./CheckoutEmi.js";
 import CheckoutCreditCard from "./CheckoutCreditCard.js";
 import CheckoutDebitCard from "./CheckoutDebitCard.js";
 import CheckoutNetbanking from "./CheckoutNetbanking.js";
+import CheckoutCOD from "./CheckoutCOD.js";
 
 // prettier-ignore
 const typeComponentMapping = {
-  "EMI": props => <CheckoutEmi {...props} />,
   "Credit Card": props => <CheckoutCreditCard {...props} />,
-  "Netbanking": props => <CheckoutNetbanking {...props} />,
     "Debit Card": props => <CheckoutDebitCard {...props} />,
+    "Netbanking": props => <CheckoutNetbanking {...props} />,
+    "COD": props => <CheckoutCOD {...props}/>,
+    "EMI": props => <CheckoutEmi {...props} />,
 };
 
 export default class PaymentCardWrapper extends React.Component {
@@ -55,11 +57,6 @@ export default class PaymentCardWrapper extends React.Component {
     }
   };
 
-  softReservationForPayment = cardDetails => {
-    if (this.props.softReservationForPayment) {
-      this.props.softReservationForPayment(cardDetails);
-    }
-  };
   render() {
     return (
       <div className={styles.base}>

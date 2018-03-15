@@ -6,8 +6,10 @@ const LOCALE_ENGLISH = "en";
 const THEME = "light";
 class Captcha extends Component {
   verifyCallback = response => {
-    if (this.props.getCaptcha) {
-      this.props.getCaptcha(response);
+    if (response) {
+      if (this.props.softReservationForCODPayment) {
+        this.props.softReservationForCODPayment();
+      }
     }
   };
   render() {

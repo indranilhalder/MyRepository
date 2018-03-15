@@ -162,7 +162,7 @@ class CartPage extends React.Component {
               offers={this.props.offers}
               delivery={this.props.delivery}
               payable={cartDetails.cartAmount.paybleAmount.formattedValue}
-              onCheckout={() => this.renderToDeliveryPage()}
+              onCheckout={() => this.renderToCheckOutPage()}
             />
           )}
         </div>

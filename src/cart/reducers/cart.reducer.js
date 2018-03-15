@@ -72,7 +72,22 @@ const cart = (
 
     justPayPaymentDetailsStatus: null,
     justPayPaymentDetailsError: null,
-    justPayPaymentDetails: null
+    justPayPaymentDetails: null,
+
+    codEligibilityStatus: null,
+    codEligibilityError: null,
+    codEligibilityDetails: null,
+
+    binValidationCODStatus: null,
+    binValidationCODError: null,
+    binValidationCODDetails: null,
+
+    transactionCODStatus: null,
+    transactionCODError: null,
+
+    softReserveCODPaymentStatus: null,
+    softReserveCODPayment: null,
+    softReserveCODPaymentError: null
   },
   action
 ) => {
@@ -617,6 +632,81 @@ const cart = (
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetailsError: action.error,
+        loading: false
+      });
+
+    case cartActions.GET_COD_ELIGIBILITY_REQUEST:
+      return Object.assign({}, state, {
+        codEligibilityStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.GET_COD_ELIGIBILITY_SUCCESS: {
+      return Object.assign({}, state, {
+        codEligibilityStatus: action.status,
+        codEligibilityDetails: action.codEligibilityDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.GET_COD_ELIGIBILITY_FAILURE:
+      return Object.assign({}, state, {
+        codEligibilityStatus: action.status,
+        codEligibilityError: action.error,
+        loading: false
+      });
+
+    case cartActions.BIN_VALIDATION_COD_REQUEST:
+      return Object.assign({}, state, {
+        binValidationCODStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.BIN_VALIDATION_COD_SUCCESS: {
+      return Object.assign({}, state, {
+        binValidationCODStatus: action.status,
+        binValidationCODDetails: action.binValidationCODDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.BIN_VALIDATION_COD_FAILURE:
+      return Object.assign({}, state, {
+        binValidationCODStatus: action.status,
+        binValidationCODError: action.error,
+        loading: false
+      });
+
+    case cartActions.UPDATE_TRANSACTION_DETAILS_FOR_COD_REQUEST:
+      return Object.assign({}, state, {
+        binValidationCODStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.UPDATE_TRANSACTION_DETAILS_FOR_COD_FAILURE:
+      return Object.assign({}, state, {
+        binValidationCODStatus: action.status,
+        binValidationCODError: action.error,
+        loading: false
+      });
+
+    case cartActions.SOFT_RESERVATION_FOR_COD_PAYMENT_REQUEST:
+      return Object.assign({}, state, {
+        softReserveCODPaymentStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.SOFT_RESERVATION_FOR_COD_PAYMENT_SUCCESS:
+      return Object.assign({}, state, {
+        softReserveCODPaymentStatus: action.status,
+        softReserveCODPayment: action.softReserveCODPayment,
+        loading: false
+      });
+
+    case cartActions.SOFT_RESERVATION_FOR_COD_PAYMENT_FAILURE:
+      return Object.assign({}, state, {
+        softReserveCODPaymentStatus: action.status,
+        ssoftReserveCODPaymentError: action.error,
         loading: false
       });
 

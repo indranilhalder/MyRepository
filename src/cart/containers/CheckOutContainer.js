@@ -24,7 +24,11 @@ import {
   removeCliqCash,
   binValidation,
   softReservationForPayment,
-  updateTransactionDetails
+  updateTransactionDetails,
+  getCODEligibility,
+  binValidationForCOD,
+  updateTransactionDetailsForCOD,
+  softReservationForCODPayment
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -114,6 +118,18 @@ const mapDispatchToProps = dispatch => {
     },
     updateTransactionDetails: (paymentMode, juspayOrderID) => {
       dispatch(updateTransactionDetails(paymentMode, juspayOrderID));
+    },
+    getCODEligibility: () => {
+      dispatch(getCODEligibility());
+    },
+    binValidationForCOD: paymentMode => {
+      dispatch(binValidationForCOD(paymentMode));
+    },
+    updateTransactionDetailsForCOD: (paymentMode, juspayOrderID) => {
+      dispatch(updateTransactionDetailsForCOD(paymentMode, juspayOrderID));
+    },
+    softReservationForCODPayment: pinCode => {
+      dispatch(softReservationForCODPayment(pinCode));
     }
   };
 };
