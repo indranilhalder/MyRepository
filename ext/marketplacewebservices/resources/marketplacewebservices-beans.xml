@@ -4755,10 +4755,13 @@
 		<property name="isPercentage" type="boolean" />
 		<property name="value" type="java.lang.Double" />
 		<property name="maxDiscount" type="java.lang.Double" />
+		<property name="eligibleCartThreshold" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.MplFinalVisibleCouponsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
-		<property name="couponsList"
+		<property name="opencouponsList"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.MplVisibleCouponsDTO>" />
+		<property name="closedcouponsList"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.MplVisibleCouponsDTO>" />
 	</bean>
 	

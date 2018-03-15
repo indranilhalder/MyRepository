@@ -4,6 +4,9 @@
 package com.tisl.mpl.coupon.facade.impl;
 
 
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.voucher.VoucherFacade;
 import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
@@ -41,6 +44,7 @@ import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -69,6 +73,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.ChannelRestrictionModel;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplOrderRestrictionModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerRestrictionModel;
@@ -118,6 +123,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 	@Autowired
 	private MplDisplayCouponCachingStrategy mplDisplayCouponCachingStrategy;
+	@Autowired
+	private PriceDataFactory priceDataFactory;
 
 	private final static String COMMACONSTANT = ",";
 	private final static String DOTCONSTANT = ".";
@@ -2190,12 +2197,15 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	{
 		List<MplVisibleCouponsDTO> closedVoucherDataList = null;
 		List<MplVisibleCouponsDTO> openVoucherDataList = null;
-		final List<MplVisibleCouponsDTO> finalVoucherDataList = new ArrayList<>();
+		//final List<MplVisibleCouponsDTO> finalVoucherDataList = new ArrayList<>();
 		final MplFinalVisibleCouponsDTO finalDTO = new MplFinalVisibleCouponsDTO();
 
+		final String customerUID = currentCustomer.getUid();
+
+		LOG.debug("Customer UID>>>" + customerUID);
 		try
 		{
-			closedVoucherDataList = mplDisplayCouponCachingStrategy.get(cartGuid);
+			closedVoucherDataList = mplDisplayCouponCachingStrategy.get(customerUID);
 
 			if (CollectionUtils.isEmpty(closedVoucherDataList))
 			{
@@ -2206,14 +2216,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 					if (StringUtils.isNotEmpty(cartGuid))
 					{
-						mplDisplayCouponCachingStrategy.put(cartGuid, closedVoucherDataList);
+						mplDisplayCouponCachingStrategy.put(customerUID, closedVoucherDataList);
 					}
 
 				}
 			}
-
-
-
 		}
 		catch (final Exception exception)
 		{
@@ -2243,20 +2250,20 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		if (CollectionUtils.isNotEmpty(closedVoucherDataList))
 		{
-			finalVoucherDataList.addAll(closedVoucherDataList);
-			//finalDTO.setClosedCouponsList(closedVoucherDataList);
+			//finalVoucherDataList.addAll(closedVoucherDataList);
+			finalDTO.setClosedcouponsList(closedVoucherDataList);
 		}
 
 		if (CollectionUtils.isNotEmpty(openVoucherDataList))
 		{
-			finalVoucherDataList.addAll(openVoucherDataList);
-			//finalDTO.setCouponsList(openVoucherDataList);
+			//finalVoucherDataList.addAll(openVoucherDataList);
+			finalDTO.setOpencouponsList(openVoucherDataList);
 		}
 
-		if (CollectionUtils.isNotEmpty(finalVoucherDataList))
-		{
-			finalDTO.setCouponsList(finalVoucherDataList);
-		}
+		//		if (CollectionUtils.isNotEmpty(finalVoucherDataList))
+		//		{
+		//			finalDTO.setCouponsList(finalVoucherDataList);
+		//		}
 
 		return finalDTO;
 	}
@@ -2298,8 +2305,17 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						final DateRestrictionModel dateRestrictmodel = (DateRestrictionModel) restriction;
 						dto.setCouponCreationDate(dateRestrictmodel.getStartDate().toString());
 						dto.setCouponExpiryDate(dateRestrictmodel.getEndDate().toString());
+					}
 
-						break;
+					else if (restriction instanceof MplOrderRestrictionModel)
+					{
+						final MplOrderRestrictionModel restrictionModel = (MplOrderRestrictionModel) restriction;
+
+						final PriceData price = priceDataFactory.create(PriceDataType.BUY,
+								BigDecimal.valueOf(restrictionModel.getTotal().doubleValue()), restrictionModel.getCurrency());
+
+						dto.setEligibleCartThreshold(price);
+
 					}
 				}
 			}

@@ -2601,28 +2601,6 @@
 		scope="tenant">
 	</bean>
 
-
-	<!-- Added EGV Beans 22-09-2017 -->
-	<bean id="MplEGVCartServiceImpl"
-		class="com.tisl.mpl.marketplacecommerceservices.egv.service.cart.impl.MplEGVCartServiceImpl">
-	</bean>
-	<bean id="MplEGVCartDaoImpl"
-		class="com.tisl.mpl.marketplacecommerceservices.egv.dao.cart.impl.MplEGVCartDaoImpl">
-	</bean>
-
-	<!-- END EGV Beans 22-09-2017 -->
-
-	<bean id="MplQcPaymentFailService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplQcPaymentFailServiceImpl">
-	</bean>
-
-	<bean id="MplQcPaymentFailDao" class="com.tisl.mpl.promotion.dao.impl.MplQcPaymentFailDaoImpl">
-	</bean>
-
-	<bean id="MplQcRefundService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.QcRefundServiceImpl">
-	</bean>
-
 	<bean id="mplCmsComponentDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.DefaultMplCMSComponentDao">
 		<property name="flexibleSearchService" ref="flexibleSearchService" />
