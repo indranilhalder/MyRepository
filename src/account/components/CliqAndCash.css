@@ -1,0 +1,52 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  display: inline-block;
+}
+.logoHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 10px;
+  text-align: left;
+}
+.logo {
+  width: auto;
+  height: 35px;
+  display: inline-block;
+  vertical-align: top;
+}
+.cliqCashBalanceHolder {
+  width: 100%;
+  height: auto;
+  padding: 10px 0px 30px 0px;
+  display: inline-block;
+  border-bottom: 1px solid #ececec;
+}
+.balance {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  color: #181818;
+  font-size: 20px;
+  font-family: semibold;
+  margin-bottom: 5px;
+}
+.expiredBalanceText {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 14px;
+  font-family: regular;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+.informationText {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  color: #9b9b9b;
+  font-size: 14px;
+  line-height: normal;
+}
