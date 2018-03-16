@@ -4,10 +4,14 @@ import Config from "../../lib/config";
 import PropTypes from "prop-types";
 const LOCALE_ENGLISH = "en";
 const THEME = "light";
+const CASH_ON_DELIVERY = "COD";
 class Captcha extends Component {
   verifyCallback = response => {
-    if (this.props.getCaptcha) {
-      this.props.getCaptcha(response);
+    if (response) {
+      if (this.props.binValidationForCOD) {
+        this.props.verifyCallback(response);
+        this.props.binValidationForCOD(CASH_ON_DELIVERY);
+      }
     }
   };
   render() {

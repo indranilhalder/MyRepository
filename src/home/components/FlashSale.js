@@ -90,6 +90,7 @@ export default class FlashSale extends React.Component {
                   price={datum.price}
                   description={datum.description}
                   webURL={datum.webURL}
+                  onClick={this.handleClick}
                   {...rest}
                 />
               );

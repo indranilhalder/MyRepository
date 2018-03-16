@@ -259,10 +259,11 @@ export function getComponentData(positionInFeed, fetchURL, postParams: null) {
           mad_uuid: MAD_UUID,
           widget_list: MSD_WIDGET_LIST //TODO this is going to change.
         };
-        result = await api.post(fetchURL, postData, true);
+        result = await api.postMsd(fetchURL, postData, true);
         let resultJson = await result.json();
-        if (resultJson.status === "FAILURE") {
-          throw new Error(`${resultJson.message}`);
+
+        if (resultJson.errors) {
+          throw new Error(`${resultJson.errors[0].message}`);
         }
         dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
@@ -274,8 +275,8 @@ export function getComponentData(positionInFeed, fetchURL, postParams: null) {
           false
         );
         const resultJson = await result.json();
-        if (resultJson.status === "FAILURE") {
-          throw new Error(`${resultJson.message}`);
+        if (resultJson.errors) {
+          throw new Error(`${resultJson.errors[0].message}`);
         }
         let parsedResultJson = JSON.parse(resultJson.content);
         parsedResultJson = parsedResultJson.items[0];

@@ -37,8 +37,13 @@ class CheckOutPage extends React.Component {
     appliedCoupons: false,
     paymentModeSelected: null,
     orderConfirmation: false,
+
     orderId: "",
-    savedCardDetails: ""
+    savedCardDetails: "",
+
+    binValidationCOD: false,
+
+
   };
 
   renderLoader() {
@@ -176,6 +181,9 @@ class CheckOutPage extends React.Component {
       Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       this.setState({ orderConfirmation: true });
     }
+    if (nextProps.cart.binValidationCODStatus === SUCCESS) {
+      this.setState({ binValidationCOD: true });
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -225,6 +233,7 @@ class CheckOutPage extends React.Component {
         );
         this.props.getUserAddress(this.props.location.state.pinCode);
         this.props.getPaymentModes();
+        this.props.getCODEligibility();
         this.props.getNetBankDetails();
         this.props.getEmiBankDetails(this.props.location.state.productValue);
       }
@@ -268,12 +277,18 @@ class CheckOutPage extends React.Component {
       this.setState({ deliverMode: true });
     }
 
+
     if (this.state.savedCardDetails !== "") {
       this.props.softReservationPaymentForSavedCard(
         this.state.savedCardDetails,
         this.state.addressId[0],
         this.state.paymentModeSelected
-      );
+      )
+}
+
+    if (this.state.binValidationCOD) {
+      this.softReservationForCODPayment();
+
     }
   };
 
@@ -310,6 +325,11 @@ class CheckOutPage extends React.Component {
   binValidation = (paymentMode, binNo) => {
     this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidation(paymentMode, binNo);
+  };
+
+  binValidationForCOD = paymentMode => {
+    this.setState({ paymentModeSelected: paymentMode });
+    this.props.binValidationForCOD(paymentMode);
   };
 
   binValidationForNetBank = (paymentMode, bankName) => {
@@ -355,6 +375,11 @@ class CheckOutPage extends React.Component {
     this.props.history.index = 0;
     this.props.history.push(HOME_ROUTER);
   };
+
+  softReservationForCODPayment = () => {
+    this.props.softReservationForCODPayment(this.props.location.state.pinCode);
+  };
+
   render() {
     if (this.props.cart.loading) {
       return <div>{this.renderLoader()}</div>;
@@ -416,11 +441,17 @@ class CheckOutPage extends React.Component {
                 binValidation={(paymentMode, binNo) =>
                   this.binValidation(paymentMode, binNo)
                 }
-                binValidationForNetBank={(paymentMode, bankName) =>
-                  this.binValidationForNetBank(paymentMode, bankName)
+                binValidationForCOD={paymentMode =>
+                  this.binValidationForCOD(paymentMode)
                 }
                 softReservationForPayment={cardDetails =>
                   this.softReservationForPayment(cardDetails)
+                }
+                softReservationForCODPayment={() =>
+                  this.softReservationForCODPayment()
+                }
+                binValidationForNetBank={(paymentMode, bankName) =>
+                  this.binValidationForNetBank(paymentMode, bankName)
                 }
                 softReservationPaymentForNetBanking={bankName =>
                   this.softReservationPaymentForNetBanking(bankName)

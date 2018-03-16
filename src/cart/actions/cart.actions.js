@@ -157,6 +157,28 @@ export const ORDER_CONFIRMATION_REQUEST = "ORDER_CONFIRMATION_REQUEST";
 export const ORDER_CONFIRMATION_SUCCESS = "ORDER_CONFIRMATION_SUCCESS";
 export const ORDER_CONFIRMATION_FAILURE = "ORDER_CONFIRMATION_FAILURE";
 
+export const GET_COD_ELIGIBILITY_REQUEST = "GET_COD_ELIGIBILITY_REQUEST";
+export const GET_COD_ELIGIBILITY_SUCCESS = "GET_COD_ELIGIBILITY_SUCCESS";
+export const GET_COD_ELIGIBILITY_FAILURE = "GET_COD_ELIGIBILITY_FAILURE";
+
+export const BIN_VALIDATION_COD_REQUEST = "BIN_VALIDATION_COD_REQUEST";
+export const BIN_VALIDATION_COD_SUCCESS = "BIN_VALIDATION_COD_SUCCESS";
+export const BIN_VALIDATION_COD_FAILURE = "BIN_VALIDATION_COD_FAILURE";
+
+export const UPDATE_TRANSACTION_DETAILS_FOR_COD_REQUEST =
+  "UPDATE_TRANSACTION_DETAILS_FOR_COD_REQUEST";
+export const UPDATE_TRANSACTION_DETAILS_FOR_COD_SUCCESS =
+  "UPDATE_TRANSACTION_DETAILS_FOR_COD_SUCCESS";
+export const UPDATE_TRANSACTION_DETAILS_FOR_COD_FAILURE =
+  "UPDATE_TRANSACTION_DETAILS_FOR_COD_FAILURE";
+
+export const SOFT_RESERVATION_FOR_COD_PAYMENT_REQUEST =
+  "SOFT_RESERVATION_FOR_COD_PAYMENT_REQUEST";
+export const SOFT_RESERVATION_FOR_COD_PAYMENT_SUCCESS =
+  "SOFT_RESERVATION_FOR_COD_PAYMENT_SUCCESS";
+export const SOFT_RESERVATION_FOR_COD_PAYMENT_FAILURE =
+  "SOFT_RESERVATION_FOR_COD_PAYMENT_FAILURE";
+
 export const ORDER_EXPERIENCE_CAPTURE_REQUEST =
   "ORDER_EXPERIENCE_CAPTURE_REQUEST";
 export const ORDER_EXPERIENCE_CAPTURE_SUCCESS =
@@ -167,6 +189,7 @@ export const ORDER_EXPERIENCE_CAPTURE_FAILURE =
 export const PAYMENT_MODE = "credit card";
 const pincode = 229001;
 const PAYMENT_EMI = "EMI";
+const CASH_ON_DELIVERY = "COD";
 
 export function cartDetailsRequest() {
   return {
@@ -263,7 +286,6 @@ export function getCartDetailsCNC(
           item.push(productDetails);
           productItems.item = item;
         });
-
         dispatch(softReservation(pinCode, productItems));
       }
       if (resultJson.status === FAILURE_UPPERCASE) {
@@ -934,7 +956,7 @@ export function mergeCartId(cartDetails) {
           JSON.parse(userDetails).customerInfo.mobileNumber
         }/carts?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&&platformNumber=2&userId=${
+        }&isPwa=true&platformNumber=2&userId=${
           JSON.parse(userDetails).customerInfo.mobileNumber
         }&oldCartId=${JSON.parse(cartDetailsAnonymous).guid}&toMergeCartGuid=${
           cartDetails.guid
@@ -1187,7 +1209,6 @@ export function softReservation(pinCode, payload) {
       if (resultJson.status === FAILURE) {
         throw new Error(resultJson.error);
       }
-
       dispatch(getOrderSummary());
       dispatch(softReservationSuccess(resultJson.reservationItem));
     } catch (e) {
@@ -2103,7 +2124,6 @@ export function orderConfirmation(orderId) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-
       dispatch(orderConfirmationSuccess(resultJson));
     } catch (e) {
       dispatch(orderConfirmationFailure(e.message));
@@ -2156,6 +2176,227 @@ export function captureOrderExperience(orderId, rating) {
       dispatch(captureOrderExperienceSuccess(resultJson));
     } catch (e) {
       dispatch(captureOrderExperienceFailure(e.message));
+    }
+  };
+}
+
+//Actions For get COD Eligibility
+export function getCODEligibilityRequest() {
+  return {
+    type: GET_COD_ELIGIBILITY_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function getCODEligibilitySuccess(codEligibilityDetails) {
+  return {
+    type: GET_COD_ELIGIBILITY_SUCCESS,
+    status: SUCCESS,
+    codEligibilityDetails
+  };
+}
+
+export function getCODEligibilityFailure(error) {
+  return {
+    type: GET_COD_ELIGIBILITY_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+//Actions creator for COD Eligibility
+export function getCODEligibility() {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  const cartId = JSON.parse(cartDetails).guid;
+  return async (dispatch, getState, { api }) => {
+    dispatch(getCODEligibilityRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/payments/getCODEligibility?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2&cartGuid=${cartId}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
+      }
+      dispatch(getCODEligibilitySuccess(resultJson));
+    } catch (e) {
+      dispatch(getCODEligibilityFailure(e.message));
+    }
+  };
+}
+
+//Actions For bin Validation COD
+export function binValidationForCODRequest() {
+  return {
+    type: BIN_VALIDATION_COD_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function binValidationForCODSuccess(binValidationCOD) {
+  return {
+    type: BIN_VALIDATION_COD_SUCCESS,
+    status: SUCCESS,
+    binValidationCOD
+  };
+}
+
+export function binValidationForCODFailure(error) {
+  return {
+    type: BIN_VALIDATION_COD_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator to bin Validation For COD
+export function binValidationForCOD(paymentMode) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  const cartId = JSON.parse(cartDetails).guid;
+  return async (dispatch, getState, { api }) => {
+    dispatch(binValidationForCODRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/payments/binValidation?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2&paymentMode=${paymentMode}&cartGuid=${cartId}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
+      }
+      dispatch(binValidationForCODSuccess(resultJson));
+    } catch (e) {
+      dispatch(binValidationForCODFailure(e.message));
+    }
+  };
+}
+
+export function updateTransactionDetailsForCODRequest() {
+  return {
+    type: UPDATE_TRANSACTION_DETAILS_FOR_COD_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function updateTransactionDetailsForCODSuccess(transactionDetails) {
+  return {
+    type: UPDATE_TRANSACTION_DETAILS_FOR_COD_SUCCESS,
+    status: SUCCESS,
+    transactionDetails
+  };
+}
+
+export function updateTransactionDetailsForCODFailure(error) {
+  return {
+    type: UPDATE_TRANSACTION_DETAILS_FOR_COD_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator to update Transaction Details
+export function updateTransactionDetailsForCOD(paymentMode, juspayOrderID) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  const cartId = JSON.parse(cartDetails).guid;
+  return async (dispatch, getState, { api }) => {
+    dispatch(updateTransactionDetailsForCODRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/payments/updateTransactionDetailsforCOD?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&platformNumber=2&isPwa=true&paymentMode=${paymentMode}&juspayOrderID=${juspayOrderID}&cartGuid=${cartId}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
+      }
+      dispatch(orderConfirmation(resultJson.orderId));
+    } catch (e) {
+      dispatch(updateTransactionDetailsForCODFailure(e.message));
+    }
+  };
+}
+
+//Actions for soft reservation for COD Payment
+export function softReservationForCODPaymentRequest() {
+  return {
+    type: SOFT_RESERVATION_FOR_COD_PAYMENT_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function softReservationForCODPaymentSuccess(softReserveCODPayment) {
+  return {
+    type: SOFT_RESERVATION_FOR_COD_PAYMENT_SUCCESS,
+    status: SUCCESS,
+    softReserveCODPayment
+  };
+}
+
+export function softReservationForCODPaymentFailure(error) {
+  return {
+    type: SOFT_RESERVATION_FOR_COD_PAYMENT_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator to soft reservation For COD Payment
+export function softReservationForCODPayment(pinCode) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    let productItems = {};
+    let item = [];
+    each(getState().cart.cartDetailsCNC.products, product => {
+      let productDetails = {};
+      productDetails.ussId = product.USSID;
+      productDetails.quantity = product.qtySelectedByUser;
+      productDetails.deliveryMode =
+        product.pinCodeResponse.validDeliveryModes[0].type;
+      productDetails.serviceableSlaves =
+        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+      productDetails.fulfillmentType = product.fullfillmentType;
+      item.push(productDetails);
+      productItems.item = item;
+    });
+
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    const cartId = JSON.parse(cartDetails).guid;
+
+    dispatch(softReservationForCODPaymentRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts/softReservationForPayment?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartId}&pincode=${pinCode}`,
+        productItems
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
+      }
+      dispatch(updateTransactionDetailsForCOD(CASH_ON_DELIVERY, ""));
+      dispatch(softReservationForCODPaymentSuccess(resultJson));
+    } catch (e) {
+      dispatch(softReservationForCODPaymentFailure(e.message));
     }
   };
 }
