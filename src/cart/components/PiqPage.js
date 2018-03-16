@@ -31,10 +31,7 @@ export default class PiqPage extends React.Component {
       displayName: ""
     };
   }
-  componentDidMount() {
-    console.log("COMPONENT DID MOUNT ");
-    this.props.getAllStoresCNC(110001);
-  }
+
   handleSwipe(val) {
     const lat = this.props.availableStores[val % this.props.numberOfStores]
       .geoPoint.latitude;
@@ -43,48 +40,31 @@ export default class PiqPage extends React.Component {
     this.setState({ lat, lng });
   }
   getValue(val) {
-    if (this.props.getValue) {
-      this.props.getValue();
-    }
+    this.setState(val);
   }
-  selectStore(val) {
-    // this.setState({
-    //   selectedAddress: `${this.props.availableStores[val].returnAddress1} ${
-    //     this.props.availableStores[val].returnAddress2
-    //   } ${this.props.availableStores[val].returnCity}`,
-    //   selected: true,
-    //   workingDays: this.props.availableStores[val].mplWorkingDays,
-    //   openingTime: this.props.availableStores[val].mplOpeningTime,
-    //   closingTime: this.props.availableStores[val].mplClosingTime,
-    //   displayName: this.props.availableStores[val].displayName
-    // });
-    this.props.addStoreCNC("273544ASB001", "273544-110003");
-    this.setState({ selected: true });
-    console.log(val);
+  selectStore(slaveId) {
+    this.props.addStoreCNC(slaveId);
   }
   changeStore() {
-    this.setState({ selected: false });
+    this.props.hidePickupPersonDetail();
   }
   handleSubmit() {
-    if (this.props.onSubmit) {
-      this.props.onSubmit();
+    if (this.props.addPickupPersonCNC) {
+      this.props.addPickupPersonCNC(this.state.mobile, this.state.name);
     }
   }
   render() {
+    let selectedStore = {};
+    if (this.props.availableStores) {
+      selectedStore = this.props.availableStores.find(store => {
+        return store.slaveId === this.props.selectedSlaveId;
+      });
+    }
+
     return (
       <div className={styles.base}>
         <div className={styles.map}>
-          <Map
-            lat={
-              this.props.availableStores[0] &&
-              this.props.availableStores[0].geoPoint.latitude
-            }
-            lng={
-              this.props.availableStores[0] &&
-              this.props.availableStores[0].geoPoint.latitude
-            }
-            zoom={16}
-          >
+          <Map lat={this.state.lat} lng={this.state.lng} zoom={16}>
             {this.props.availableStores.map((val, i) => {
               return (
                 <MarkerStore
@@ -106,7 +86,7 @@ export default class PiqPage extends React.Component {
           />
         </div>
         <div className={styles.bannerMobileHolder}>
-          {!this.state.selected &&
+          {!this.props.showPickupPerson &&
             this.props.availableStores && (
               <BannerMobile
                 onSwipe={val => this.handleSwipe(val)}
@@ -133,20 +113,22 @@ export default class PiqPage extends React.Component {
                 })}
               </BannerMobile>
             )}
-          {this.state.selected && (
+          {this.props.showPickupPerson && (
             <div className={styles.getLocationDetailsHolder}>
               <div className={styles.getLocationDetails}>
                 <GetLocationDetails
                   changeLocation={() => {
                     this.changeStore();
                   }}
-                  headingText={this.state.displayName}
-                  address={this.state.selectedAddress}
+                  headingText={selectedStore.displayName}
+                  address={`${selectedStore.returnAddress1} ${
+                    selectedStore.returnAddress2
+                  } ${selectedStore.returnCity}`}
                   pickUpKey="Open on: "
-                  pickUpValue={this.state.selectedStoreTime}
-                  workingDays={this.state.workingDays}
-                  openingTime={this.state.openingTime}
-                  closingTime={this.state.closingTime}
+                  pickUpValue={selectedStore.selectedStoreTime}
+                  workingDays={selectedStore.mplWorkingDays}
+                  openingTime={selectedStore.mplOpeningTime}
+                  closingTime={selectedStore.mplClosingTime}
                 />
               </div>
               <div className={styles.pickUpDetails}>

@@ -545,6 +545,7 @@ export function selectDeliveryModeFailure(error) {
   };
 }
 export function selectDeliveryMode(deliveryUssId, pinCode) {
+  console.log(deliveryUssId, pinCode);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -559,7 +560,7 @@ export function selectDeliveryMode(deliveryUssId, pinCode) {
           JSON.parse(cartDetails).code
         }/selectDeliveryMode?access_token=${
           JSON.parse(customerCookie).access_token
-        }&deliverymodeussId={${deliveryUssId}}&removeExchange=0`
+        }&deliverymodeussId={${JSON.stringify(deliveryUssId)}}&removeExchange=0`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
@@ -1080,7 +1081,6 @@ export function addStoreCNC(ussId, slaveId) {
         }&slaveId=${slaveId}`
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }

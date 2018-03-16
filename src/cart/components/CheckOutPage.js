@@ -1,4 +1,5 @@
 import React from "react";
+import cloneDeep from "lodash/cloneDeep";
 import PropTypes from "prop-types";
 import ConfirmAddress from "./ConfirmAddress";
 import Checkout from "./Checkout";
@@ -15,16 +16,83 @@ import GridSelect from "../../general/components/GridSelect";
 import filter from "lodash/filter";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString from "query-string";
+import PiqPage from "./PiqPage";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  CART_DETAILS_FOR_LOGGED_IN_USER
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  COLLECT
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
+
+let pinCodeResponse = {
+  cod: "N",
+  exchangeServiceable: false,
+  isCODLimitFailed: "Y",
+  isPrepaidEligible: "Y",
+  isServicable: "Y",
+  ussid: "273544ASB001",
+  validDeliveryModes: [
+    {
+      CNCServiceableSlavesData: [
+        {
+          fulfillmentType: "TSHIP",
+          qty: 986,
+          serviceableSlaves: [
+            {
+              priority: "1",
+              slaveId: "273544-110003"
+            }
+          ],
+          storeId: "273544-110003"
+        }
+      ],
+      inventory: "986",
+      isCOD: false,
+      type: "CNC"
+    },
+    {
+      CNCServiceableSlavesData: [
+        {
+          fulfillmentType: "TSHIP",
+          qty: 986,
+          serviceableSlaves: [
+            {
+              priority: "1",
+              slaveId: "800059-850059"
+            }
+          ],
+          storeId: "800059-850059"
+        }
+      ],
+      inventory: "986",
+      isCOD: false,
+      type: "CNC"
+    },
+    {
+      CNCServiceableSlavesData: [
+        {
+          fulfillmentType: "TSHIP",
+          qty: 986,
+          serviceableSlaves: [
+            {
+              priority: "1",
+              slaveId: "100112-523698"
+            }
+          ],
+          storeId: "100112-523698"
+        }
+      ],
+      inventory: "986",
+      isCOD: false,
+      type: "CNC"
+    }
+  ]
+};
 
 class CheckOutPage extends React.Component {
   state = {
@@ -37,6 +105,11 @@ class CheckOutPage extends React.Component {
     appliedCoupons: false,
     paymentModeSelected: null,
     orderConfirmation: false,
+    showCliqAndPiq: false,
+    showPickupPerson: false,
+    selectedSlaveId: null,
+    ussIdAndDeliveryModesObj: {}, // this object we are using for check when user will continue after  delivery mode then we ll check for all products we selected delivery mode or not
+    selectedProductsUssIdForCliqAndPiq: null,
     orderId: ""
   };
 
@@ -54,26 +127,43 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  handleSelectDeliveryMode(code, id, cartId) {
-    let deliveryModesUssId = `"${id}":"${code}"`;
-
-    if (this.state.deliverModeUssId) {
-      this.setState({
-        deliverModeUssId: `${this.state.deliverModeUssId},${deliveryModesUssId}`
-      });
-    } else {
-      this.setState({
-        deliverModeUssId: `${deliveryModesUssId}`
-      });
+  handleSelectDeliveryMode(deliveryMode, ussId, cartId) {
+    let newDeliveryObj = {};
+    newDeliveryObj[ussId] = deliveryMode;
+    let currentSelectedDeliveryModes = cloneDeep(
+      this.state.ussIdAndDeliveryModesObj
+    );
+    if (!currentSelectedDeliveryModes[ussId]) {
+      Object.assign(currentSelectedDeliveryModes, newDeliveryObj);
+      this.setState({ ussIdAndDeliveryModesObj: currentSelectedDeliveryModes });
     }
   }
 
-  getAllStores = val => {
-    this.props.getAllStoresCNC(this.props.location.state.pinCode);
-    this.props.addStoreCNC("273544ASB001", "273544 - 110003");
-    this.props.addPickupPersonCNC("7503721061", "Suraj Kumars");
+  getAllStores = selectedProductsUssIdForCliqAndPiq => {
+    this.setState({ showCliqAndPiq: true, selectedProductsUssIdForCliqAndPiq });
+    this.props.getAllStoresCNC(this.state.selectedAddress.postalCode);
   };
-
+  togglePickupPersonForm() {
+    this.setState(prevState => ({
+      showPickupPerson: !prevState.showPickupPerson
+    }));
+  }
+  addStoreCNC(selectedSlaveId) {
+    this.handleSelectDeliveryMode(
+      COLLECT,
+      this.state.selectedProductsUssIdForCliqAndPiq
+    );
+    this.togglePickupPersonForm();
+    this.setState({ selectedSlaveId });
+    this.props.addStoreCNC(
+      this.state.selectedProductsUssIdForCliqAndPiq,
+      selectedSlaveId
+    );
+  }
+  addPickupPersonCNC(mobile, name) {
+    this.setState({ showCliqAndPiq: false });
+    this.props.addPickupPersonCNC(mobile, name);
+  }
   renderCheckoutAddress = () => {
     const cartData = this.props.cart;
     return (
@@ -120,7 +210,7 @@ class CheckOutPage extends React.Component {
                       this.state.cartId
                     )
                   }
-                  onPiq={val => this.getAllStores(val)}
+                  onPiq={() => this.getAllStores(val.USSID)}
                 />
               </div>
             );
@@ -128,7 +218,48 @@ class CheckOutPage extends React.Component {
       </div>
     );
   };
+  renderCliqAndPiq() {
+    const firstSlaveData = pinCodeResponse.validDeliveryModes;
+    const someData = firstSlaveData
+      .map(slaves => {
+        return slaves.CNCServiceableSlavesData.map(slave => {
+          return slave.serviceableSlaves.map(serviceableSlave => {
+            return serviceableSlave;
+          });
+        });
+      })
+      .map(val => {
+        return val.map(v => {
+          return v;
+        });
+      });
 
+    const allStoreIds = [].concat
+      .apply([], [].concat.apply([], someData))
+      .map(store => {
+        return store.slaveId;
+      });
+    const availableStores = this.props.cart.storeDetails
+      ? this.props.cart.storeDetails.filter(val => {
+          return allStoreIds.includes(val.slaveId);
+        })
+      : [];
+    return (
+      <PiqPage
+        availableStores={availableStores}
+        selectedSlaveId={this.state.selectedSlaveId}
+        numberOfStores={availableStores.length}
+        showPickupPerson={this.state.showPickupPerson}
+        productName="data.products[0].productName"
+        productColour="data.products[0].color"
+        hidePickupPersonDetail={() => this.togglePickupPersonForm()}
+        addStoreCNC={slavesId => this.addStoreCNC(slavesId)}
+        addPickupPersonCNC={(mobile, name) =>
+          this.addPickupPersonCNC(mobile, name)
+        }
+      />
+    );
+  }
   renderPaymentModes = () => {
     if (this.state.paymentMethod) {
       return <div>Payment Modes Expand</div>;
@@ -238,7 +369,10 @@ class CheckOutPage extends React.Component {
       }
     );
 
-    this.setState({ confirmAddress: false });
+    this.setState({
+      confirmAddress: false,
+      selectedAddress: addressSelected[0]
+    });
     this.setState({ addressId: addressSelected });
   }
 
@@ -253,15 +387,15 @@ class CheckOutPage extends React.Component {
     if (!this.state.confirmAddress) {
       this.props.addAddressToCart(
         this.state.addressId[0].id,
-        this.props.location.state.pinCode
+        this.state.selectedAddress.postalCode
       );
       this.setState({ confirmAddress: true });
     }
     if (!this.state.deliverMode && this.state.confirmAddress) {
       if (this.props.selectDeliveryMode) {
         this.props.selectDeliveryMode(
-          this.state.deliverModeUssId,
-          this.props.location.state.pinCode
+          this.state.ussIdAndDeliveryModesObj,
+          this.state.selectedAddress.postalCode
         );
       }
       this.setState({ deliverMode: true });
@@ -336,6 +470,7 @@ class CheckOutPage extends React.Component {
     this.props.history.push(HOME_ROUTER);
   };
   render() {
+    console.log(this.props);
     if (this.props.cart.loading) {
       return <div>{this.renderLoader()}</div>;
     }
@@ -362,18 +497,21 @@ class CheckOutPage extends React.Component {
             !this.state.confirmAddress &&
             this.renderCheckoutAddress()}
 
-          {this.state.confirmAddress && (
-            <DeliveryAddressSet
-              addressType={this.state.addressId[0].addressType}
-              address={this.state.addressId[0].line1}
-              changeDeliveryAddress={() => this.changeDeliveryAddress()}
-            />
-          )}
+          {this.state.confirmAddress &&
+            !this.state.showCliqAndPiq && (
+              <DeliveryAddressSet
+                addressType={this.state.addressId[0].addressType}
+                address={this.state.addressId[0].line1}
+                changeDeliveryAddress={() => this.changeDeliveryAddress()}
+              />
+            )}
 
           {this.props.cart.cartDetailsCNC &&
             this.state.confirmAddress &&
             !this.state.deliverMode &&
-            this.renderDeliverModes()}
+            (this.state.showCliqAndPiq
+              ? this.renderCliqAndPiq()
+              : this.renderDeliverModes())}
 
           {this.state.deliverMode && (
             <DeliveryModeSet
@@ -408,24 +546,26 @@ class CheckOutPage extends React.Component {
               />
             )}
 
-          {this.props.cart.cartDetailsCNC && (
-            <Checkout
-              amount={this.props.cart.cartDetailsCNC.totalPrice}
-              totalDiscount={
-                this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
-                  .formattedValue
-              }
-              bagTotal={
-                this.props.cart.cartDetailsCNC.cartAmount.bagTotal
-                  .formattedValue
-              }
-              tax={this.props.tax}
-              offers={this.props.offers}
-              delivery={this.props.delivery}
-              payable={this.props.cart.cartDetailsCNC.totalPrice}
-              onCheckout={this.handleSubmit}
-            />
-          )}
+          {this.props.cart.cartDetailsCNC &&
+          this.props.cart.cartDetailsCNC.cartAmount &&
+          !this.state.showCliqAndPiq && ( //adding this condition for we don;t have to show footer and header on cliq and piq window
+              <Checkout
+                amount={this.props.cart.cartDetailsCNC.totalPrice}
+                totalDiscount={
+                  this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
+                    .formattedValue
+                }
+                bagTotal={
+                  this.props.cart.cartDetailsCNC.cartAmount.bagTotal
+                    .formattedValue
+                }
+                tax={this.props.tax}
+                offers={this.props.offers}
+                delivery={this.props.delivery}
+                payable={this.props.cart.cartDetailsCNC.totalPrice}
+                onCheckout={this.handleSubmit}
+              />
+            )}
         </div>
       );
     } else if (this.state.orderConfirmation) {

@@ -1,4 +1,5 @@
 import * as cartActions from "../actions/cart.actions";
+import cloneDeep from "lodash/cloneDeep";
 import * as Cookies from "../../lib/Cookie";
 import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
@@ -87,6 +88,7 @@ const cart = (
   },
   action
 ) => {
+  let updatedCartDetailsCNC;
   switch (action.type) {
     case cartActions.CART_DETAILS_REQUEST:
       return Object.assign({}, state, {
@@ -400,9 +402,13 @@ const cart = (
       });
 
     case cartActions.ADD_PICKUP_PERSON_SUCCESS:
+      const currentCartDetailsCNC = cloneDeep(state.cartDetails);
+      updatedCartDetailsCNC = Object.assign({}, action.cartDetailsCNC, {
+        cartAmount: currentCartDetailsCNC.cartAmount
+      });
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
-        cartDetailsCNC: action.cartDetailsCNC,
+        cartDetailsCNC: updatedCartDetailsCNC,
         loading: false
       });
 

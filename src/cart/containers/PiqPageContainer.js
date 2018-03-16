@@ -79,8 +79,8 @@ const mapDispatchToProps = dispatch => {
     addStoreCNC: (ussId, slaveId) => {
       dispatch(addStoreCNC(ussId, slaveId));
     },
-    addPickupPersonCNC: () => {
-      dispatch(addPickupPersonCNC());
+    addPickupPersonCNC: (personMobile, personName) => {
+      dispatch(addPickupPersonCNC(personMobile, personName));
     }
   };
 };

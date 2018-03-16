@@ -15,6 +15,7 @@ export default class DeliveryInfoSelect extends React.Component {
     });
   }
   onPiq = () => {
+    console.log("click me");
     this.props.onPiq();
   };
   render() {
@@ -30,6 +31,7 @@ export default class DeliveryInfoSelect extends React.Component {
               selected={datum.code === this.state.selectedCode}
               onSelect={val => this.handleSelect(val)}
               onPiq={val => this.onPiq(val)}
+              showCliqAndPiqButton={true}
             />
           );
         })}
