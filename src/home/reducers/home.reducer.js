@@ -3,6 +3,7 @@ import * as homeActions from "../actions/home.actions";
 import cloneDeep from "lodash/cloneDeep";
 import map from "lodash/map";
 import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
+import { homeFeed } from "../actions/home.actions";
 
 const home = (
   state = {
@@ -15,7 +16,7 @@ const home = (
   },
   action
 ) => {
-  let homeFeedData;
+  let homeFeedData, toUpdate, componentData;
   switch (action.type) {
     case homeActions.HOME_FEED_REQUEST:
       return Object.assign({}, state, {
@@ -76,6 +77,43 @@ const home = (
         homeFeed: homeFeedData
       });
 
+    case homeActions.COMPONENT_BACK_UP_REQUEST:
+      homeFeedData = cloneDeep(state.homeFeed);
+      homeFeedData[action.positionInFeed].useBackUpData = false;
+      homeFeedData[action.positionInFeed].backUpLoading = true;
+      return Object.assign({}, state, {
+        status: action.status,
+        homeFeed: homeFeedData
+      });
+
+    case homeActions.COMPONENT_BACK_UP_FAILURE:
+      homeFeedData = cloneDeep(state.homeFeed);
+      homeFeedData[action.positionInFeed].useBackUpData = false;
+      homeFeedData[action.positionInFeed].backUpLoading = false;
+      homeFeedData[action.positionInFeed].error = action.error;
+      return Object.assign({}, state, {
+        homeFeed: homeFeedData
+      });
+
+    case homeActions.COMPONENT_BACK_UP_SUCCESS:
+      homeFeedData = cloneDeep(state.homeFeed);
+      homeFeedData[action.positionInFeed].useBackUpData = false;
+      homeFeedData[action.positionInFeed].backUpLoading = false;
+      toUpdate = action.data[action.data.componentName];
+      componentData = {
+        ...homeFeedData[action.positionInFeed],
+        ...toUpdate,
+        backUpLoading: false,
+        status: action.status,
+        loading: false
+      };
+
+      homeFeedData[action.positionInFeed] = componentData;
+      return Object.assign({}, state, {
+        status: action.status,
+        homeFeed: homeFeedData
+      });
+
     case homeActions.COMPONENT_DATA_REQUEST:
       homeFeedData = cloneDeep(state.homeFeed);
       homeFeedData[action.positionInFeed].loading = true;
@@ -93,33 +131,33 @@ const home = (
       });
 
     case homeActions.COMPONENT_DATA_SUCCESS:
-      homeFeedData = cloneDeep(state.homeFeed);
-      let componentData;
-      componentData = {
-        loading: false,
-        status: action.status
-      };
-      let toUpdate;
-      if (!action.isMsd) {
-        toUpdate = action.data[action.data.componentName];
+      if (!state.homeFeed[action.positionInFeed].useBackUpData) {
+        homeFeedData = cloneDeep(state.homeFeed);
         componentData = {
-          ...homeFeedData[action.positionInFeed],
-          ...toUpdate,
-          ...componentData
+          loading: false,
+          status: action.status
         };
-      } else {
-        componentData = {
-          ...homeFeedData[action.positionInFeed],
-          data: action.data,
-          ...componentData
-        };
+        if (!action.isMsd) {
+          toUpdate = action.data[action.data.componentName];
+          componentData = {
+            ...homeFeedData[action.positionInFeed],
+            ...toUpdate,
+            ...componentData
+          };
+        } else {
+          componentData = {
+            ...homeFeedData[action.positionInFeed],
+            data: action.data,
+            ...componentData
+          };
+        }
+        homeFeedData[action.positionInFeed] = componentData;
+        return Object.assign({}, state, {
+          status: action.status,
+          homeFeed: homeFeedData
+        });
       }
-
-      homeFeedData[action.positionInFeed] = componentData;
-      return Object.assign({}, state, {
-        status: action.status,
-        homeFeed: homeFeedData
-      });
+      break;
 
     case homeActions.COMPONENT_DATA_FAILURE:
       homeFeedData = cloneDeep(state.homeFeed);
