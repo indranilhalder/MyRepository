@@ -3831,7 +3831,8 @@ public class UsersController extends BaseCommerceController
 		{
 			//currentUser = mplPaymentWebFacade.getCustomer(userId);
 			final String userIdLwCase = userId.toLowerCase(); //INC144318796
-			currentUser = mplPaymentWebFacade.getCustomer(userIdLwCase);
+			//currentUser = mplPaymentWebFacade.getCustomer(userIdLwCase);
+			currentUser = extUserService.getUserForUid(userIdLwCase); // TPR 7854
 
 			final String authorization = httpRequest.getHeader("Authorization");
 			String username = null;
@@ -10829,12 +10830,14 @@ public class UsersController extends BaseCommerceController
 		{
 			final int pageSizeConFig = configurationService.getConfiguration().getInt(
 					MarketplacecommerceservicesConstants.WEBFORM_ORDER_HISTORY_PAGESIZE, 5);
-//SDI-5991
-                        final PageableData pageableData = createPageableData(currentPage, pageSizeConFig, sort, showMode);
+			//SDI-5991
+			final PageableData pageableData = createPageableData(currentPage, pageSizeConFig, sort, showMode);
 			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = getMplOrderFacade()
- 					.getPagedFilteredParentOrderHistoryWebForm(pageableData);
-			/*final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage,
-					pageSizeConFig, sort, showMode);*/
+					.getPagedFilteredParentOrderHistoryWebForm(pageableData);
+			/*
+			 * final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage,
+			 * pageSizeConFig, sort, showMode);
+			 */
 
 			if (null == searchPageDataParentOrder.getResults())
 			{
@@ -10855,7 +10858,7 @@ public class UsersController extends BaseCommerceController
 					//SDI-5991
 					if (null != order && StringUtils.isNotEmpty(order.getOrderId()))
 					{
-					orderTrackingListWsDTO.add(order);
+						orderTrackingListWsDTO.add(order);
 					}
 				}
 				if (searchPageDataParentOrder.getPagination() != null
@@ -11504,17 +11507,19 @@ public class UsersController extends BaseCommerceController
 									sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
 											MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
 													MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otpassword), mobilenumber);
+									updateCustomerDetailError.setStatus("OTP SENT TO MOBILE NUMBER: PLEASE VALIDATE");
+									return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
 								}
 								else
 								{
-									if (mobileUserService.validateOtp(userId, otp, OTPTypeEnum.REG))
+									if (mobileUserService.validateOtp(mobilenumber, otp, OTPTypeEnum.REG))
 									{
 										customerToSave.setMobileNumber(mobilenumber);
 									}
 									else
 									{
-										updateCustomerDetailError.setStatus("Unable to set Mobile Number");
-										throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
+										updateCustomerDetailError.setStatus("Unable to validate Otp");
+										return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
 									}
 								}
 							}
