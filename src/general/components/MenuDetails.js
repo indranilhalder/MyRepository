@@ -5,18 +5,27 @@ import { Collapse } from "react-collapse";
 import { Icon } from "xelpmoc-core";
 import couponIcon from "./img/credit-card.svg";
 
-export default class ManueDetails extends React.Component {
+export default class MenuDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isOpen: false
     };
   }
+
   openMenu() {
-    this.setState(prevState => ({
-      isOpen: !prevState.isOpen
-    }));
+    this.setState(
+      prevState => ({
+        isOpen: !prevState.isOpen
+      }),
+      () => {
+        if (this.props.onOpenMenu) {
+          this.props.onOpenMenu(this.state.isOpen);
+        }
+      }
+    );
   }
+
   render() {
     let iconActive = styles.icon;
     if (this.state.isOpen) {
@@ -43,11 +52,12 @@ export default class ManueDetails extends React.Component {
     );
   }
 }
-ManueDetails.propTypes = {
+MenuDetails.propTypes = {
   text: PropTypes.string,
-  icon: PropTypes.string
+  icon: PropTypes.string,
+  onOpenMenu: PropTypes.bool
 };
 
-ManueDetails.defaultProps = {
+MenuDetails.defaultProps = {
   icon: couponIcon
 };
