@@ -545,7 +545,6 @@ export function selectDeliveryModeFailure(error) {
   };
 }
 export function selectDeliveryMode(deliveryUssId, pinCode) {
-  console.log(deliveryUssId, pinCode);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);

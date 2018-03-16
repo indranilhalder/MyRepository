@@ -15,7 +15,6 @@ export default class DeliveryInfoSelect extends React.Component {
     });
   }
   onPiq = () => {
-    console.log("click me");
     this.props.onPiq();
   };
   render() {
