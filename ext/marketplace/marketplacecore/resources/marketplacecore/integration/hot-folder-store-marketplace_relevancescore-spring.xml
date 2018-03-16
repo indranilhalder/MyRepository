@@ -54,11 +54,7 @@
      <bean id="batchMplrelevanceScoreConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value> 
-            	
-                
-                 $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online'])[unique=true,default='mplProductCatalog:Online'];;;;;;;;;;;;;;;;;;
-              
-                UPDATE product;code[unique=true];relevancescore;$catalogVersion
+            	UPDATE product[batchmode=true];code[unique=true];relevancescore
        		</value>
         </property>
         <property name="impexRow">

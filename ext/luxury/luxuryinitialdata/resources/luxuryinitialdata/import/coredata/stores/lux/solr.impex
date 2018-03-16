@@ -234,7 +234,9 @@ SELECT distinct pk,code from ({{SELECT {p.PK} as pk , {p:code} AS code FROM {Pro
 # Define the sort fields
 INSERT_UPDATE SolrSortField; sort(indexedType(identifier), code)[unique = true]; fieldName[unique = true]; ascending[unique = true]; sortpos
 ; $solrIndexedType:relevance            ; stockLevelStatus        ; false ; 0
-; $solrIndexedType:relevance            ; score                   ; false ; 1
+; $solrIndexedType:relevance            ; inStockFlag          	  ; false ; 1
+; $solrIndexedType:relevance            ; relevancescore          ; false ; 2
+; $solrIndexedType:relevance            ; score                   ; false ; 3
 ; $solrIndexedType:name-asc             ; stockLevelStatus        ; false ; 0
 ; $solrIndexedType:name-asc             ; name                    ; true  ; 1
 ; $solrIndexedType:name-desc            ; stockLevelStatus        ; false ; 0
@@ -567,3 +569,8 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; numberofchairshome ;string ;  ;     ;     ;true ;true ;MultiSelectOr ;Alpha ;2000 ;true;  ;  ;	 springELValueProvider            ;;;;
 ;$solrIndexedType; assemblyrequiredhome ;string ;  ;     ;     ;true ;true ;MultiSelectOr ;Alpha ;2000 ;true;  ;  ;	 springELValueProvider            ;;;;
 ;$solrIndexedType; tabletopshapehome ;string ;  ;     ;     ;true ;true ;MultiSelectOr ;Alpha ;2000 ;true;  ;  ;	 springELValueProvider            ;;;;
+
+# start TPR-7813/ relevance solr score for luxury
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
+;$solrIndexedType; relevancescore                  ;int ;            ;    ;;    ;;;                 ;
+# End TPR-7813/ relevance solr score for luxury
