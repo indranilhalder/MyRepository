@@ -110,7 +110,6 @@ class CartPage extends React.Component {
           }
         });
       } else {
-        // alert("Please enter the valid PinCode");
         this.setState({ isServiceable: false });
       }
     } else {
