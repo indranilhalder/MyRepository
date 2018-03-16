@@ -12,9 +12,9 @@ if (!NODE_ENV) {
   );
 }
 if (NODE_ENV === "development") {
-  process.env.ENVIRONMENT_TEST = "DEVELOPMENT";
+  process.env.GOOGLE_CLIENT_ID;
 } else {
-  process.env.ENVIRONMENT_TEST = "PRODUCTION";
+  process.env.API_PREFIX;
 }
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
 var dotenvFiles = [
