@@ -13,7 +13,11 @@ const cart = (
 
     customerProfileDetails: null,
     customerProfileDetailsStatus: null,
-    customerProfileDetailsError: null
+    customerProfileDetailsError: null,
+
+    customerAddressDetails: null,
+    customerAddressDetailsStatus: null,
+    customerAddressDetailsError: null
   },
   action
 ) => {
@@ -38,6 +42,25 @@ const cart = (
         loading: false
       });
 
+    case accountActions.Get_CUSTOMER_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        customerAddressDetailsStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.Get_CUSTOMER_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        customerAddressDetailsStatus: action.status,
+        customerAddressDetails: action.customerAddressDetails,
+        loading: false
+      });
+
+    case accountActions.Get_CUSTOMER_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        customerAddressDetailsStatus: action.status,
+        customerAddressDetailsError: action.error,
+        loading: false
+      });
     default:
       return state;
   }

@@ -15,6 +15,10 @@ export const Get_CUSTOMER_PROFILE_REQUEST = "Get_CUSTOMER_PROFILE_REQUEST";
 export const Get_CUSTOMER_PROFILE_SUCCESS = "Get_CUSTOMER_PROFILE_SUCCESS";
 export const Get_CUSTOMER_PROFILE_FAILURE = "Get_CUSTOMER_PROFILE_FAILURE";
 
+export const Get_CUSTOMER_ADDRESS_REQUEST = "Get_CUSTOMER_ADDRESS_REQUEST";
+export const Get_CUSTOMER_ADDRESS_SUCCESS = "Get_CUSTOMER_ADDRESS_SUCCESS";
+export const Get_CUSTOMER_ADDRESS_FAILURE = "Get_CUSTOMER_ADDRESS_FAILURE";
+
 export function getCustomerProfileRequest() {
   return {
     type: Get_CUSTOMER_PROFILE_REQUEST,
@@ -38,7 +42,6 @@ export function getCustomerProfileFailure(error) {
 }
 
 export function getCustomerProfileDetails() {
-  console.log("test");
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -51,9 +54,7 @@ export function getCustomerProfileDetails() {
           JSON.parse(customerCookie).access_token
         }&isPwa=true&platformNumber=2`
       );
-      console.log(result);
       const resultJson = await result.json();
-      console.log(resultJson);
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
@@ -61,6 +62,53 @@ export function getCustomerProfileDetails() {
     } catch (e) {
       console.log(e.message);
       dispatch(getCustomerProfileFailure(e.message));
+    }
+  };
+}
+
+export function getCustomerAddressRequest() {
+  return {
+    type: Get_CUSTOMER_ADDRESS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getCustomerAddressSuccess(customerAddressDetails) {
+  return {
+    type: Get_CUSTOMER_ADDRESS_SUCCESS,
+    status: SUCCESS,
+    customerAddressDetails
+  };
+}
+
+export function getCustomerAddressFailure(error) {
+  return {
+    type: Get_CUSTOMER_ADDRESS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getCustomerAddressDetails() {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(getCustomerAddressRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/addresses?platformNumber=2&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
+      }
+      dispatch(getCustomerAddressSuccess(resultJson));
+    } catch (e) {
+      console.log(e.message);
+      dispatch(getCustomerAddressFailure(e.message));
     }
   };
 }
