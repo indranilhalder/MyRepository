@@ -73,19 +73,26 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   render() {
-    return (
-      <div className={styles.base}>
-        {this.renderSavedCards()}
-        <div>
-          {" "}
-          <CliqCashToggle
-            cashText="Use My CLiQ Cash Balance"
-            price="400"
-            onToggle={i => this.handleClick(i)}
-          />
+    if (this.props.cart.paymentModes) {
+      return (
+        <div className={styles.base}>
+          {this.renderSavedCards()}
+          {this.props.cart.paymentModes.cliqCash.totalCliqCashBalance.value !==
+            0 && (
+            <div>
+              {" "}
+              <CliqCashToggle
+                cashText="Use My CLiQ Cash Balance"
+                price="400"
+                onToggle={i => this.handleClick(i)}
+              />
+            </div>
+          )}
+          {this.props.cart.paymentModes && this.renderPaymentCardsComponents()}
         </div>
-        {this.props.cart.paymentModes && this.renderPaymentCardsComponents()}
-      </div>
-    );
+      );
+    } else {
+      return null;
+    }
   }
 }
