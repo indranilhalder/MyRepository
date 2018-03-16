@@ -131,30 +131,33 @@ const home = (
       });
 
     case homeActions.COMPONENT_DATA_SUCCESS:
-      homeFeedData = cloneDeep(state.homeFeed);
-      componentData = {
-        loading: false,
-        status: action.status
-      };
-      if (!action.isMsd) {
-        toUpdate = action.data[action.data.componentName];
+      if (!state.homeFeed[action.positionInFeed].useBackUpData) {
+        homeFeedData = cloneDeep(state.homeFeed);
         componentData = {
-          ...homeFeedData[action.positionInFeed],
-          ...toUpdate,
-          ...componentData
+          loading: false,
+          status: action.status
         };
-      } else {
-        componentData = {
-          ...homeFeedData[action.positionInFeed],
-          data: action.data,
-          ...componentData
-        };
+        if (!action.isMsd) {
+          toUpdate = action.data[action.data.componentName];
+          componentData = {
+            ...homeFeedData[action.positionInFeed],
+            ...toUpdate,
+            ...componentData
+          };
+        } else {
+          componentData = {
+            ...homeFeedData[action.positionInFeed],
+            data: action.data,
+            ...componentData
+          };
+        }
+        homeFeedData[action.positionInFeed] = componentData;
+        return Object.assign({}, state, {
+          status: action.status,
+          homeFeed: homeFeedData
+        });
       }
-      homeFeedData[action.positionInFeed] = componentData;
-      return Object.assign({}, state, {
-        status: action.status,
-        homeFeed: homeFeedData
-      });
+      break;
 
     case homeActions.COMPONENT_DATA_FAILURE:
       homeFeedData = cloneDeep(state.homeFeed);

@@ -39,6 +39,8 @@ export const GET_ITEMS_REQUEST = "GET_SALE_ITEMS_REQUEST";
 export const GET_ITEMS_SUCCESS = "GET_SALE_ITEMS_SUCCESS";
 export const GET_ITEMS_FAILURE = "GET_SALE_ITEMS_FAILURE";
 
+const ADOBE_TARGET_DELAY = 1500;
+
 const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1";
 
 export function getItemsRequest(positionInFeed) {
@@ -332,7 +334,7 @@ export function getComponentData(
           if (isFetchUrlDataLoading && backUpUrl) {
             dispatch(getComponentDataBackUp(backUpUrl, positionInFeed));
           }
-        }, 1500);
+        }, ADOBE_TARGET_DELAY);
         result = await api.postAdobeTargetUrl(
           fetchURL,
           postParams && postParams.mbox ? postParams.mbox : null,
