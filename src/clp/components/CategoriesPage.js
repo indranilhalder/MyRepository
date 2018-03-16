@@ -21,7 +21,10 @@ export default class CategoriesPage extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
-          <SearchContainer />
+          <SearchContainer
+            onBack={() => this.props.history.goBack()}
+            text="Mobile"
+          />
         </div>
         {categoriesData &&
           categoriesData.subCategories &&
