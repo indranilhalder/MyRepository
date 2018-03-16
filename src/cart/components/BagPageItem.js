@@ -2,11 +2,18 @@ import React from "react";
 import styles from "./BagPageItem.css";
 import ProductImage from "../../general/components/ProductImage.js";
 import PropTypes from "prop-types";
+const NOT_SERVICEABLE = "Service Not Available";
 export default class BagPageItem extends React.Component {
   render() {
     return (
       <div className={styles.base}>
         <div className={styles.productDescription}>
+          {!this.props.isServiceAvailable && (
+            <div className={styles.serviceAvailabilityText}>
+              {" "}
+              {NOT_SERVICEABLE}
+            </div>
+          )}
           {this.props.productName && (
             <div className={styles.informationText}>
               {this.props.productName}
