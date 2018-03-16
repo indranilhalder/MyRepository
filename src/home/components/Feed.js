@@ -150,14 +150,14 @@ class Feed extends Component {
     }
     return (
       <div className={styles.base}>
-        <div className={styles.header}>
+        {/* <div className={styles.header}>
           <SearchContainer
             {...propsForHeader}
             onBack={() => this.props.history.goBack()}
           />
-        </div>
+        </div> */}
         <div className={styles.center}>{this.renderFeedComponents()}</div>
-        <MobileFooter history={this.props.history} />
+        {/* <MobileFooter history={this.props.history} /> */}
       </div>
     );
   }

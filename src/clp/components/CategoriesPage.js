@@ -20,12 +20,12 @@ export default class CategoriesPage extends React.Component {
     let categoriesData = this.props.categories;
     return (
       <div className={styles.base}>
-        <div className={styles.header}>
+        {/* <div className={styles.header}>
           <SearchContainer
             onBack={() => this.props.history.goBack()}
             text="Mobile"
           />
-        </div>
+        </div> */}
         {categoriesData &&
           categoriesData.subCategories &&
           categoriesData.subCategories.map((categories, i) => {
@@ -59,7 +59,7 @@ export default class CategoriesPage extends React.Component {
               </CategoryL1>
             );
           })}
-        <MobileFooter selected={"categories"} history={this.props.history} />
+        {/* <MobileFooter selected={"categories"} history={this.props.history} /> */}
       </div>
     );
   }

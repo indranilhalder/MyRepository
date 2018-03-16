@@ -1,0 +1,24 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 50px 0;
+}
+
+.header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 30;
+}
+.content {
+  width: 100%;
+  height: auto;
+}
+.footer {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 30;
+}
