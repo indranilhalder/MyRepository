@@ -16,14 +16,6 @@ const API_URL_ROOT_SUFFIX = "?isPwa=true";
 export const TATA_CLIQ_ROOT = "http://uat2.tataunistore.com:3000";
 export const API_MSD_URL_ROOT = "https://ap-southeast-1-api.madstreetden.com";
 
-function timeout(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-async function sleep(fn, ...args) {
-  await timeout(3000);
-  return fn(...args);
-}
-
 export async function postAdobeTargetUrl(
   path: null,
   mbox,
