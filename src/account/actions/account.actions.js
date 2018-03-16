@@ -60,7 +60,6 @@ export function getCustomerProfileDetails() {
       }
       dispatch(getCustomerProfileSuccess(resultJson));
     } catch (e) {
-      console.log(e.message);
       dispatch(getCustomerProfileFailure(e.message));
     }
   };
@@ -107,7 +106,6 @@ export function getCustomerAddressDetails() {
       }
       dispatch(getCustomerAddressSuccess(resultJson));
     } catch (e) {
-      console.log(e.message);
       dispatch(getCustomerAddressFailure(e.message));
     }
   };
