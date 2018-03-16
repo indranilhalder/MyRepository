@@ -13,20 +13,20 @@ const cart = (
   action
 ) => {
   switch (action.type) {
-    case accountActions.Get_ALL_ORDERS_REQUEST:
+    case accountActions.GET_ALL_ORDERS_REQUEST:
       return Object.assign({}, state, {
         orderDetailsStatus: action.status,
         loading: true
       });
 
-    case accountActions.Get_ALL_ORDERS_SUCCESS:
+    case accountActions.GET_ALL_ORDERS_SUCCESS:
       return Object.assign({}, state, {
         orderDetailsStatus: action.status,
         orderDetails: action.orderDetails,
         loading: false
       });
 
-    case accountActions.Get_ALL_ORDERS_FAILURE:
+    case accountActions.GET_ALL_ORDERS_FAILURE:
       return Object.assign({}, state, {
         orderDetailsStatus: action.status,
         orderDetailsError: action.error,

@@ -7,19 +7,21 @@ import {
 } from "../../lib/constants";
 export const USER_CART_PATH = "v2/mpl/users";
 
-export const Get_ALL_ORDERS_REQUEST = "Get_ALL_ORDERS_REQUEST";
-export const Get_ALL_ORDERS_SUCCESS = "Get_ALL_ORDERS_SUCCESS";
-export const Get_ALL_ORDERS_FAILURE = "Get_ALL_ORDERS_FAILURE";
+export const GET_ALL_ORDERS_REQUEST = "GET_ALL_ORDERS_REQUEST";
+export const GET_ALL_ORDERS_SUCCESS = "GET_ALL_ORDERS_SUCCESS";
+export const GET_ALL_ORDERS_FAILURE = "GET_ALL_ORDERS_FAILURE";
+export const CURRENT_PAGE = 0;
+export const PAGE_SIZE = 10;
 
 export function getAllOrdersRequest() {
   return {
-    type: Get_ALL_ORDERS_REQUEST,
+    type: GET_ALL_ORDERS_REQUEST,
     status: REQUESTING
   };
 }
 export function getAllOrdersSuccess(orderDetails) {
   return {
-    type: Get_ALL_ORDERS_SUCCESS,
+    type: GET_ALL_ORDERS_SUCCESS,
     status: SUCCESS,
     orderDetails
   };
@@ -27,7 +29,7 @@ export function getAllOrdersSuccess(orderDetails) {
 
 export function getAllOrdersFailure(error) {
   return {
-    type: Get_ALL_ORDERS_FAILURE,
+    type: GET_ALL_ORDERS_FAILURE,
     status: ERROR,
     error
   };
@@ -42,9 +44,9 @@ export function getAllOrdersDetails() {
       const result = await api.get(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).customerInfo.mobileNumber
-        }/orderhistorylist?currentPage=0&access_token=${
+        }/orderhistorylist?currentPage=${CURRENT_PAGE}&access_token=${
           JSON.parse(customerCookie).access_token
-        }&pageSize=10&isPwa=true&platformNumber=2`
+        }&pageSize=${PAGE_SIZE}&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
