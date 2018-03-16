@@ -54,17 +54,6 @@ process.env.NODE_PATH = (process.env.NODE_PATH || "")
 // injected into the application via DefinePlugin in Webpack configuration.
 const REACT_APP = /^REACT_APP_/i;
 
-if (process.env.NODE_ENV !== "development") {
-  process.env.REACT_APP_GOOGLE_CLIENT_ID =
-    "367761167032-apbr4v0nndom1cafs9inrrnkk7iag5be.apps.googleusercontent.com";
-  process.env.REACT_APP_FACEBOOK_CLIENT_ID = "1444012285724567";
-  process.env.REACT_APP_RECAPTCHA_SITE_KEY =
-    "6LfpAk0UAAAAACmNvkmNNTiHlgAcu0DxKXC9oESm";
-  process.env.REACT_APP_RECAPTCHA_SECRET_KEY =
-    "6LfpAk0UAAAAAJkyk-73xj7GEtIBw3KMD6vpXqJW";
-  process.env.REACT_APP_MSD_API_KEY = "a7e46b8a87c52ab85d352e9";
-}
-
 function getClientEnvironment(publicUrl) {
   const raw = Object.keys(process.env)
     .filter(key => REACT_APP.test(key))
