@@ -5,6 +5,7 @@ module.exports = {
       script: "index.js",
       watch: true,
       env: {
+        NODE_ENV: "production",
         REACT_APP_GOOGLE_CLIENT_ID:
           "367761167032-apbr4v0nndom1cafs9inrrnkk7iag5be.apps.googleusercontent.com",
         REACT_APP_FACEBOOK_CLIENT_ID: "1444012285724567",
