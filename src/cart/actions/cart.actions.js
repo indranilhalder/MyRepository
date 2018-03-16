@@ -560,7 +560,7 @@ export function selectDeliveryMode(deliveryUssId, pinCode) {
           JSON.parse(cartDetails).code
         }/selectDeliveryMode?access_token=${
           JSON.parse(customerCookie).access_token
-        }&deliverymodeussId={${JSON.stringify(deliveryUssId)}}&removeExchange=0`
+        }&deliverymodeussId=${JSON.stringify(deliveryUssId)}&removeExchange=0`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {

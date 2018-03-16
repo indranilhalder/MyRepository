@@ -164,6 +164,9 @@ class CheckOutPage extends React.Component {
     this.setState({ showCliqAndPiq: false });
     this.props.addPickupPersonCNC(mobile, name);
   }
+  removeCliqAndPiq() {
+    this.setState({ showCliqAndPiq: false });
+  }
   renderCheckoutAddress = () => {
     const cartData = this.props.cart;
     return (
@@ -219,7 +222,13 @@ class CheckOutPage extends React.Component {
     );
   };
   renderCliqAndPiq() {
-    const firstSlaveData = pinCodeResponse.validDeliveryModes;
+    let currentSelectedProduct = this.props.cart.cartDetailsCNC.products.find(
+      product => {
+        return product.USSID === this.state.selectedProductsUssIdForCliqAndPiq;
+      }
+    );
+    const firstSlaveData =
+      currentSelectedProduct.pinCodeResponse.validDeliveryModes;
     const someData = firstSlaveData
       .map(slaves => {
         return slaves.CNCServiceableSlavesData.map(slave => {
@@ -250,13 +259,14 @@ class CheckOutPage extends React.Component {
         selectedSlaveId={this.state.selectedSlaveId}
         numberOfStores={availableStores.length}
         showPickupPerson={this.state.showPickupPerson}
-        productName="data.products[0].productName"
-        productColour="data.products[0].color"
+        productName={currentSelectedProduct.productName}
+        productColour={currentSelectedProduct.color}
         hidePickupPersonDetail={() => this.togglePickupPersonForm()}
         addStoreCNC={slavesId => this.addStoreCNC(slavesId)}
         addPickupPersonCNC={(mobile, name) =>
           this.addPickupPersonCNC(mobile, name)
         }
+        goBack={() => this.removeCliqAndPiq()}
       />
     );
   }
@@ -470,7 +480,6 @@ class CheckOutPage extends React.Component {
     this.props.history.push(HOME_ROUTER);
   };
   render() {
-    console.log(this.props);
     if (this.props.cart.loading) {
       return <div>{this.renderLoader()}</div>;
     }

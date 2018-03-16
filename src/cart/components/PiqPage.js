@@ -77,7 +77,10 @@ export default class PiqPage extends React.Component {
           </Map>
         </div>
         <div className={styles.header}>
-          <InformationHeader text="CLiQ and PiQ" />
+          <InformationHeader
+            text="CLiQ and PiQ"
+            goBack={() => this.props.goBack()}
+          />
         </div>
         <div className={styles.location}>
           <SearchLocationByPincode
