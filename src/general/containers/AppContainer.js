@@ -41,7 +41,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    modalStatus: state.modal.modalDisplayed
+    modalStatus: state.modal.modalDisplayed,
+    cart: state.cart
   };
 };
 
