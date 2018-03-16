@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 const LOCALE_ENGLISH = "en";
 const THEME = "light";
 const CASH_ON_DELIVERY = "COD";
+const env = process.env;
+
 class Captcha extends Component {
   verifyCallback = response => {
     if (response) {
@@ -17,7 +19,7 @@ class Captcha extends Component {
   render() {
     return (
       <Recaptcha
-        sitekey={Config.reCaptChaSiteKey}
+        sitekey={env.REACT_APP_RECAPTCHA_SITE_KEY}
         callback={this.verifyCallback}
         locale={LOCALE_ENGLISH}
         data-theme={THEME}
