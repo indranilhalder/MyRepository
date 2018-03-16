@@ -58,8 +58,8 @@ const mapDispatchToProps = dispatch => {
     addAddressToCart: (addressId, pinCode) => {
       dispatch(addAddressToCart(addressId, pinCode));
     },
-    getOrderSummary: () => {
-      dispatch(getOrderSummary());
+    getOrderSummary: pinCode => {
+      dispatch(getOrderSummary(pinCode));
     },
     getCoupons: () => {
       dispatch(getCoupons());
