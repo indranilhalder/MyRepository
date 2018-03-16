@@ -21,7 +21,7 @@ import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryW
 import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
-import GetCustomerProfileContainer from "./account/containers/GetCustomerProfileContainer";
+import GetAllOrderContainer from "./account/containers/GetAllOrderContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 
@@ -162,7 +162,7 @@ class App extends Component {
             path={BRAND_PAGE}
             component={PlpBrandCategoryWrapperContainer}
           />
-          <Route path={PROFILE_PAGE} component={GetCustomerProfileContainer} />
+          <Route path={PROFILE_PAGE} component={GetAllOrderContainer} />
 
           <Route
             exact

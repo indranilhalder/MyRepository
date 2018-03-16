@@ -1,9 +1,4 @@
 import * as accountActions from "../actions/account.actions";
-import * as Cookies from "../../lib/Cookie";
-import {
-  CART_DETAILS_FOR_LOGGED_IN_USER,
-  CART_DETAILS_FOR_ANONYMOUS
-} from "../../lib/constants";
 const cart = (
   state = {
     status: null,
@@ -11,54 +6,30 @@ const cart = (
     loading: false,
     type: null,
 
-    customerProfileDetails: null,
-    customerProfileDetailsStatus: null,
-    customerProfileDetailsError: null,
-
-    customerAddressDetails: null,
-    customerAddressDetailsStatus: null,
-    customerAddressDetailsError: null
+    orderDetails: null,
+    orderDetailsStatus: null,
+    orderDetailsError: null
   },
   action
 ) => {
   switch (action.type) {
-    case accountActions.Get_CUSTOMER_PROFILE_REQUEST:
+    case accountActions.Get_ALL_ORDERS_REQUEST:
       return Object.assign({}, state, {
-        customerProfileDetailsStatus: action.status,
+        orderDetailsStatus: action.status,
         loading: true
       });
 
-    case accountActions.Get_CUSTOMER_PROFILE_SUCCESS:
+    case accountActions.Get_ALL_ORDERS_SUCCESS:
       return Object.assign({}, state, {
-        customerProfileDetailsStatus: action.status,
-        customerProfileDetails: action.customerProfileDetails,
+        orderDetailsStatus: action.status,
+        orderDetails: action.orderDetails,
         loading: false
       });
 
-    case accountActions.Get_CUSTOMER_PROFILE_FAILURE:
+    case accountActions.Get_ALL_ORDERS_FAILURE:
       return Object.assign({}, state, {
-        customerProfileDetailsStatus: action.status,
-        customerProfileDetailsError: action.error,
-        loading: false
-      });
-
-    case accountActions.Get_CUSTOMER_ADDRESS_REQUEST:
-      return Object.assign({}, state, {
-        customerAddressDetailsStatus: action.status,
-        loading: true
-      });
-
-    case accountActions.Get_CUSTOMER_ADDRESS_SUCCESS:
-      return Object.assign({}, state, {
-        customerAddressDetailsStatus: action.status,
-        customerAddressDetails: action.customerAddressDetails,
-        loading: false
-      });
-
-    case accountActions.Get_CUSTOMER_ADDRESS_FAILURE:
-      return Object.assign({}, state, {
-        customerAddressDetailsStatus: action.status,
-        customerAddressDetailsError: action.error,
+        orderDetailsStatus: action.status,
+        orderDetailsError: action.error,
         loading: false
       });
     default:
