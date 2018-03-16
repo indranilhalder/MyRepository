@@ -843,7 +843,7 @@ export function getCartIdFailure(error) {
   };
 }
 
-export function getOrderSummary() {
+export function getOrderSummary(pincode) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -858,7 +858,7 @@ export function getOrderSummary() {
           JSON.parse(cartDetails).code
         }/displayOrderSummary?access_token=${
           JSON.parse(customerCookie).access_token
-        }&pincode=400083&isPwa=true&platformNumber=2`
+        }&pincode=${pincode}&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
