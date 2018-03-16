@@ -28,21 +28,23 @@ export const PRODUCT_LISTINGS = "/search/(.*)";
 export const PLP_CATEGORY_SEARCH = "/search/?searchCategory=all&text=shirt";
 
 export const SEARCH_RESULTS_PAGE = "/search/";
-export const HOME_ROUTER = "/home";
+export const HOME_ROUTER = "/";
 
 export const BRAND_LANDING_PAGE = "/brand";
 
+// USE THESE
+export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "(.*)/p-(.*)";
+export const PRODUCT_DESCRIPTION_REVIEWS = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/product-reviews`;
+export const PRODUCT_OTHER_SELLER_ROUTER = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/viewSellers`;
+
 export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE = "/(.*)/(p-)(.*)";
-export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "/p-(.*)";
 export const PRODUCT_REVIEWS_PATH_SUFFIX = "/product-reviews";
-export const PRODUCT_DESCRIPTION_REVIEWS = `/p-(.*)(${PRODUCT_REVIEWS_PATH_SUFFIX})`;
 export const PRODUCT_DESCRIPTION_ROUTER = PRODUCT_DESCRIPTION_PRODUCT_CODE; //TODO remove this
 export const PRODUCT_REVIEW_ROUTER = "/productReview";
 export const LOGIN_PATH = "/login";
 export const SIGN_UP_PATH = "/sign_up";
 export const PRODUCT_FILTER_ROUTER = "/filter";
 export const PRODUCT_SELLER_ROUTER_SUFFIX = "/viewSellers";
-export const PRODUCT_OTHER_SELLER_ROUTER = `/p-(.*)(${PRODUCT_SELLER_ROUTER_SUFFIX})`;
 export const PRODUCT_CART_ROUTER = "/myBag";
 export const ORDER_SUMMARY_ROUTER = "/orderSummary";
 export const CHECKOUT_ROUTER = "/checkout";

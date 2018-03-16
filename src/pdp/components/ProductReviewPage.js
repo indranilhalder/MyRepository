@@ -31,9 +31,9 @@ class ProductReviewPage extends Component {
 
   componentDidMount() {
     if (!this.props.productDetails) {
-      this.props.getProductDescription(this.props.match.params[0]);
+      this.props.getProductDescription(this.props.match.params[1]);
     }
-    this.props.getProductReviews(this.props.match.params[0]);
+    this.props.getProductReviews(this.props.match.params[1]);
   }
 
   reviewSection = () => {
@@ -100,6 +100,19 @@ class ProductReviewPage extends Component {
 
   render() {
     if (this.props.productDetails) {
+      let image = find(
+        this.props.productDetails.galleryImagesList[0].galleryImages,
+        galleryImage => {
+          return galleryImage.key === MOBILE_PDP_VIEW;
+        }
+      );
+
+      if (!image) {
+        image = this.props.productDetails.galleryImagesList[0].galleryImages[0]
+          .value;
+      }
+      console.log("GALLERY IMAGES LIST");
+      console.log(this.props.productDetails.galleryImagesList);
       return (
         <PdpFrame
           addProductToBag={() => this.addProductToBag()}
@@ -114,15 +127,7 @@ class ProductReviewPage extends Component {
                 history={this.props.history}
               />
               <ProductDetailsCard
-                productImage={
-                  find(
-                    this.props.productDetails.galleryImagesList[0]
-                      .galleryImages,
-                    galleryImage => {
-                      return galleryImage.key === MOBILE_PDP_VIEW;
-                    }
-                  ).value
-                }
+                productImage={image}
                 productName={this.props.productDetails.productName}
                 productMaterial={this.props.productDetails.productDescription}
                 price={this.props.productDetails.mrp}

@@ -90,11 +90,8 @@ class ProductSellerPage extends Component {
   };
 
   componentDidMount() {
+    console.log("COMPONENT DID MOUN");
     if (this.props.match.path === PRODUCT_OTHER_SELLER_ROUTER) {
-      this.props.getProductDescription(this.props.match.params[0]);
-    } else if (
-      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
-    ) {
       this.props.getProductDescription(this.props.match.params[1]);
     } else {
       //need to show error page
@@ -102,6 +99,7 @@ class ProductSellerPage extends Component {
   }
 
   render() {
+    console.log("RIGHT RENDER");
     const mobileGalleryImages =
       this.props.productDetails &&
       this.props.productDetails.galleryImagesList

@@ -69,7 +69,11 @@ export default class Plp extends React.Component {
   }
 
   backPage = () => {
-    this.setState({ showFilter: !this.state.showFilter });
+    if (this.state.showFilter) {
+      this.setState({ showFilter: !this.state.showFilter });
+    } else {
+      this.props.history.goBack();
+    }
   };
   onSortClick = () => {
     if (this.props.showSort) {

@@ -4,7 +4,20 @@ import styles from "./CuratedProductsComponent.css";
 import Grid from "../../general/components/Grid";
 import ProductModule from "../../general/components/ProductModule";
 import { transformData } from "./utils.js";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
 class CuratedProductsComponent extends React.Component {
+  onClick = val => {
+    this.props.history.push(val);
+  };
+
+  handleSeeAll = () => {
+    const urlSuffix = this.props.feedComponentData.webURL.replace(
+      TATA_CLIQ_ROOT,
+      ""
+    );
+    this.props.history.push(urlSuffix);
+  };
   render() {
     const {
       feedComponentData,
@@ -33,6 +46,7 @@ class CuratedProductsComponent extends React.Component {
                   price={datum.price}
                   description={datum.description}
                   webURL={datum.webURL}
+                  onClick={this.onClick}
                   {...rest}
                 />
               );
@@ -43,7 +57,7 @@ class CuratedProductsComponent extends React.Component {
             <Button
               type="hollow"
               width={100}
-              onClick={this.handleClick}
+              onClick={this.handleSeeAll}
               label={feedComponentData.btnText}
               color="white"
             />
