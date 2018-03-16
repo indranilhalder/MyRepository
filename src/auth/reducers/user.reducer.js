@@ -25,7 +25,19 @@ const user = (
       });
 
     case userActions.LOGIN_USER_SUCCESS:
-      Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(action.user));
+      let userDetails = {};
+      if (action.user.customerInfo.emailId !== "") {
+        userDetails.userName = action.user.customerInfo.emailId;
+      } else {
+        userDetails.userName = action.user.customerInfo.mobileNumber;
+      }
+      userDetails.customerId = action.user.customerId;
+      userDetails.dateOfBirth = action.user.customerInfo.dateOfBirth;
+      userDetails.firstName = action.user.customerInfo.firstName;
+      userDetails.gender = action.user.customerInfo.gender;
+      userDetails.lastName = action.user.customerInfo.lastName;
+
+      Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(userDetails));
       return Object.assign({}, state, {
         status: action.status,
         user: action.user,
@@ -66,7 +78,19 @@ const user = (
       });
 
     case userActions.OTP_VERIFICATION_SUCCESS:
-      Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(action.user));
+      userDetails = {};
+      if (action.user.customerInfo.mobileNumber !== "") {
+        userDetails.userName = action.user.customerInfo.mobileNumber;
+      } else {
+        userDetails.userName = action.user.customerInfo.emailId;
+      }
+      userDetails.customerId = action.user.customerInfo.customerId;
+      userDetails.dateOfBirth = action.user.customerInfo.dateOfBirth;
+      userDetails.firstName = action.user.customerInfo.firstName;
+      userDetails.gender = action.user.customerInfo.gender;
+      userDetails.lastName = action.user.customerInfo.lastName;
+      Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(userDetails));
+
       return Object.assign({}, state, {
         status: action.status,
         user: action.user,
