@@ -54,7 +54,6 @@ export default class PiqPage extends React.Component {
     }
   }
   render() {
-    console.log(this.props);
     let selectedStore = {};
     if (this.props.availableStores) {
       selectedStore = this.props.availableStores.find(store => {
@@ -123,29 +122,30 @@ export default class PiqPage extends React.Component {
                 )}
             </React.Fragment>
           )}
-          {this.props.availableStores.length === 1 && (
-            <div className={styles.singleCardHolder}>
-              {this.props.availableStores.map((val, i) => {
-                return (
-                  <PickUpLocation
-                    key={i}
-                    address={`${val.address.line1} ${val.address.line2}, `}
-                    PickUpKey="Open on: "
-                    workingDays={val.mplWorkingDays}
-                    openingTime={val.mplOpeningTime}
-                    closingTime={val.mplClosingTime}
-                    address2={`${val.returnCity} ${val.returnPin}`}
-                    iconText="C"
-                    headingText={val.displayName}
-                    buttonText="Select"
-                    onClick={() => {
-                      this.selectStore(val.slaveId);
-                    }}
-                  />
-                );
-              })}
-            </div>
-          )}
+          {this.props.availableStores.length === 1 &&
+            !this.props.showPickupPerson && (
+              <div className={styles.singleCardHolder}>
+                {this.props.availableStores.map((val, i) => {
+                  return (
+                    <PickUpLocation
+                      key={i}
+                      address={`${val.address.line1} ${val.address.line2}, `}
+                      PickUpKey="Open on: "
+                      workingDays={val.mplWorkingDays}
+                      openingTime={val.mplOpeningTime}
+                      closingTime={val.mplClosingTime}
+                      address2={`${val.returnCity} ${val.returnPin}`}
+                      iconText="C"
+                      headingText={val.displayName}
+                      buttonText="Select"
+                      onClick={() => {
+                        this.selectStore(val.slaveId);
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            )}
           {this.props.showPickupPerson && (
             <div className={styles.getLocationDetailsHolder}>
               <div className={styles.getLocationDetails}>
