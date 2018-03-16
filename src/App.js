@@ -21,6 +21,7 @@ import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryW
 import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
+import GetCustomerProfileContainer from "./account/containers/GetCustomerProfileContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 
@@ -57,7 +58,8 @@ import {
   BRAND_PAGE,
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
-  CATEGORY_PAGE_WITH_SLUG
+  CATEGORY_PAGE_WITH_SLUG,
+  PROFILE_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -160,6 +162,7 @@ class App extends Component {
             path={BRAND_PAGE}
             component={PlpBrandCategoryWrapperContainer}
           />
+          <Route path={PROFILE_PAGE} component={GetCustomerProfileContainer} />
 
           <Route
             exact
