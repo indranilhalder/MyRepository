@@ -219,7 +219,6 @@ import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
-import atg.taglib.json.util.JSONException;
 
 
 
@@ -233,7 +232,7 @@ import atg.taglib.json.util.JSONException;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
-	
+
 	private static final String PLEASE_PROVIDE_CORRECT_INFORMATION = "Please provide correct information ";
 
 	private static final String ERRO_MSG = "erroMsg";
@@ -663,7 +662,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 * 
+				 *
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -3107,9 +3106,9 @@ public class ProductPageController extends MidPageController
 										/*
 										 * else if (value.equalsIgnoreCase(featureData.getCode().substring(
 										 * featureData.getCode().lastIndexOf(".") + 1))) {
-										 * 
+										 *
 										 * if (productFeatureMap.size() > 0) { productFeatureMap.clear(); }
-										 * 
+										 *
 										 * productFeatureMap.put(featureValueData.getValue(), jewelleryDescMapping.get(value));
 										 * mapConfigurableAttributes.put(featureData.getName(), productFeatureMap); }
 										 */
@@ -3811,11 +3810,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 * 
+	 *
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -3835,76 +3834,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 * 
+	 *
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 * 
-	 * 
+	 *
+	 *
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 * 
+	 *
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 * 
-	 * 
+	 *
+	 *
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 * 
+	 *
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 * 
+	 *
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 * 
+	 *
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 * 
+	 *
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 * 
-	 * 
+	 *
+	 *
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 * 
+	 *
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 * 
+	 *
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 * 
+	 *
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 * 
+	 *
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 * 
+	 *
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 * 
+	 *
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 * 
+	 *
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 * 
-	 * 
+	 *
+	 *
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 * 
+	 *
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * catch (final Exception e) {
-	 * 
+	 *
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -4722,7 +4721,7 @@ public class ProductPageController extends MidPageController
 				}
 				else
 				{
-				returnString = "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
+					returnString = "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
 				}
 
 
@@ -5557,7 +5556,8 @@ public class ProductPageController extends MidPageController
 	@RequireHardLogIn
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_GIFT_CART, method = RequestMethod.GET)
 	public String getGitProductDetails(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
-			final Model model, final HttpServletRequest request,@RequestParam(value = "egvErrorMsg", required = false) final String egvErrorMsg)
+			final Model model, final HttpServletRequest request,
+			@RequestParam(value = "egvErrorMsg", required = false) final String egvErrorMsg)
 	{
 		try
 		{
@@ -5566,18 +5566,20 @@ public class ProductPageController extends MidPageController
 			{
 				productCode = productCode.toUpperCase();
 			}
-			CustomerModel currentCustomer=null;
+			CustomerModel currentCustomer = null;
 			try
 			{
-				 currentCustomer = (CustomerModel) userService.getCurrentUser();
-				if(currentCustomer ==null){
+				currentCustomer = (CustomerModel) userService.getCurrentUser();
+				if (currentCustomer == null)
+				{
 					return REDIRECT_PREFIX + "/login";
 				}
-				if(currentCustomer.getOriginalUid()==null){
+				if (currentCustomer.getOriginalUid() == null)
+				{
 					return REDIRECT_PREFIX + "/login";
 				}
 			}
-			catch (Exception exception)
+			catch (final Exception exception)
 			{
 				LOG.error("Getting Excpetion While getting current customer ");
 				return REDIRECT_PREFIX + "/login";
@@ -5585,7 +5587,7 @@ public class ProductPageController extends MidPageController
 
 			final ProductModel productModel = productService.getProductForCode(productCode);
 			populateProductDetailForDisplay(productModel, model, request);
-			
+
 			if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
 			{
 				model.addAttribute("isOTPValidtion", Boolean.TRUE);
@@ -5594,7 +5596,7 @@ public class ProductPageController extends MidPageController
 			{
 				model.addAttribute("isOTPValidtion", Boolean.FALSE);
 			}
-			
+
 			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
 			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
 			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
@@ -5604,19 +5606,22 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
 			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 			model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
-			try{
-				 String minPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.minPrice");	
-				 String maxPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.maxPrice");	
-			 String productPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.priceOptions");	
-			 String [] amountList = productPrice.split(",");
-			 model.addAttribute("amountList", amountList);
-			 model.addAttribute("minPrice", minPrice);
-			 model.addAttribute("maxPrice", maxPrice);
-			}catch(Exception exception){
+			try
+			{
+				final String minPrice = configurationService.getConfiguration().getString("mpl.buyingEgv.minPrice");
+				final String maxPrice = configurationService.getConfiguration().getString("mpl.buyingEgv.maxPrice");
+				final String productPrice = configurationService.getConfiguration().getString("mpl.buyingEgv.priceOptions");
+				final String[] amountList = productPrice.split(",");
+				model.addAttribute("amountList", amountList);
+				model.addAttribute("minPrice", minPrice);
+				model.addAttribute("maxPrice", maxPrice);
+			}
+			catch (final Exception exception)
+			{
 				LOG.error("Exception Occur while getting product price  ");
 			}
-			 
-			 model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
+
+			model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
 			if (productModel instanceof PcmProductVariantModel)
 			{
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
@@ -5643,16 +5648,19 @@ public class ProductPageController extends MidPageController
 		model.addAttribute("egvDetailsform", egvDetailsform);
 		if (StringUtils.isNotEmpty(egvErrorMsg))
 		{
-			 if(egvErrorMsg.equalsIgnoreCase("formValidation")){
-			     model.addAttribute(ERRO_MSG,PLEASE_PROVIDE_CORRECT_INFORMATION);
-			 }else if(egvErrorMsg.equalsIgnoreCase("paymentError")){
-				 GlobalMessages.addMessage(model, GlobalMessages.ERROR_MESSAGES_HOLDER, "mpl.gift.error.paymentMessage",
-							new Object[] {});
-			 }
-			 else if(egvErrorMsg.equalsIgnoreCase("EGVOderError")){
-				 GlobalMessages.addMessage(model, GlobalMessages.ERROR_MESSAGES_HOLDER, "mpl.gift.error.message",
-							new Object[] {});
-			 }
+			if (egvErrorMsg.equalsIgnoreCase("formValidation"))
+			{
+				model.addAttribute(ERRO_MSG, PLEASE_PROVIDE_CORRECT_INFORMATION);
+			}
+			else if (egvErrorMsg.equalsIgnoreCase("paymentError"))
+			{
+				GlobalMessages.addMessage(model, GlobalMessages.ERROR_MESSAGES_HOLDER, "mpl.gift.error.paymentMessage",
+						new Object[] {});
+			}
+			else if (egvErrorMsg.equalsIgnoreCase("EGVOderError"))
+			{
+				GlobalMessages.addMessage(model, GlobalMessages.ERROR_MESSAGES_HOLDER, "mpl.gift.error.message", new Object[] {});
+			}
 		}
 		final ContentPageModel contentPage = getContentPageForLabelOrId("egvPDPPage");
 		storeCmsPageInModel(model, contentPage);
