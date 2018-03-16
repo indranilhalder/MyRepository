@@ -134,6 +134,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TRUE_UPPER = "TRUE";
 	public static final String ZERO = "0";
 	public static final String LINK_PASSWORD_CHANGE = "/login/pw/change";
+	
 	//Sonar Fix Jewellery
 	public static final String STONE = "Stone";
 	public static final String SIZE = "size";
@@ -215,6 +216,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static Date EMPTYDATE = null;
 	//PAYMENT SERVICE
 	public static final String MPLPAYMENTSERVICE = "mplPaymentService";
+	public static final String SDPFIFTEENLOG = "sdp.fifteen.log";
 	//public static final String CALLINGPAYUSERVICE =
 	//"Calling PAYU service:::::::";
 	//public static final String ORDERAMOUNT = "Amount of Order::::";

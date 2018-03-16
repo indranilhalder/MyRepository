@@ -2130,9 +2130,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		VoucherDiscountData discData = new VoucherDiscountData();
 		//SDP-15 starts here
 		String sdpLogFlag = null;
-		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("sdp.fifteen.log")))
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SDPFIFTEENLOG)))
 		{
-			sdpLogFlag = configurationService.getConfiguration().getString("sdp.fifteen.log");
+			sdpLogFlag = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SDPFIFTEENLOG);
 		}
 		//SDP-15 ends here
 		if (null != cartModel)
@@ -2375,9 +2375,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		
 		//SDP-15 starts here
 		String sdpLogFlag = null;
-		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("sdp.fifteen.log")))
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SDPFIFTEENLOG)))
 		{
-			sdpLogFlag = configurationService.getConfiguration().getString("sdp.fifteen.log");
+			sdpLogFlag = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SDPFIFTEENLOG);
 		}
 		//SDP-15 ends here
 				
@@ -2691,9 +2691,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		
 		//SDP-15 starts here
 		String sdpLogFlag = null;
-		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("sdp.fifteen.log")))
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SDPFIFTEENLOG)))
 		{
-			sdpLogFlag = configurationService.getConfiguration().getString("sdp.fifteen.log");
+			sdpLogFlag = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SDPFIFTEENLOG);
 		}
 		//SDP-15 ends here
 		try

@@ -210,7 +210,7 @@ public class CartPageController extends AbstractPageController
 		{
 			sdpLogFlag = configurationService.getConfiguration().getString("sdp.fifteen.log");
 		}
-		if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+		if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))
 		{
 			LOG.error("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode + "Cart Guid : "
 					+ cartGuid); //SDP-15
@@ -299,7 +299,8 @@ public class CartPageController extends AbstractPageController
 			{
 
 				cartModel = getCartService().getSessionCart();
-				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag)
+						&& sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))
 				{
 					LOG.error("CartModel total Price is : " + cartModel.getTotalPrice() + "CartGuid : " + cartGuid);//SDP-15
 				}
@@ -330,7 +331,8 @@ public class CartPageController extends AbstractPageController
 						for (final AbstractOrderEntryModel orderEntry : entryList)
 						{
 							final ProductModel product = orderEntry.getProduct();
-							if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+							if (StringUtils.isNotEmpty(sdpLogFlag)
+									&& sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))
 							{
 								LOG.debug("Cart Product is " + product.getCode() + " ussid is " + orderEntry.getSelectedUSSID()
 										+ "Cart Guid : " + cartGuid);//SDP-15
@@ -414,38 +416,46 @@ public class CartPageController extends AbstractPageController
 				//					mplCartFacade.populatePinCodeData(cartModel, sessionPincode.toString());
 				//					//	getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
 				//				}
-				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag)
+						&& sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))
 				{
-					LOG.error("Cart Total Price before release voucher call : " + cartModel.getTotalPrice() + "Cart Guid " + cartGuid);//SDP-15
+					LOG.error("Cart Total Price before release voucher call : " + cartModel.getTotalPrice()
+							+ MarketplacecommerceservicesConstants.CARTGUID + cartGuid);//SDP-15
 				}
 				getMplCouponFacade().releaseVoucherInCheckout(cartModel); //TISPT-104
-				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag)
+						&& sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))
 				{
-					LOG.error("Cart Total Price after release voucher call : " + cartModel.getTotalPrice() + "Cart Guid " + cartGuid);//SDP-15
+					LOG.error("Cart Total Price after release voucher call : " + cartModel.getTotalPrice()
+							+ MarketplacecommerceservicesConstants.CARTGUID + cartGuid);//SDP-15
 				}
 				cartModel = getMplCartFacade().getCalculatedCart(cartModel); /// Cart recalculation method invoked inside this method
-				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag)
+						&& sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))
 				{
-					LOG.error("Cart Total Price after cart recalculation method : " + cartModel.getTotalPrice() + "Cart Guid "
-							+ cartGuid);//SDP-15
+					LOG.error("Cart Total Price after cart recalculation method : " + cartModel.getTotalPrice()
+							+ MarketplacecommerceservicesConstants.CARTGUID + cartGuid);//SDP-15
 				}
 				//final CartModel cart = mplCartFacade.removeDeliveryMode(serviceCart); // Contains recalculate cart TISPT-104
 				//TISST-13010
 
 				getMplCartFacade().setCartSubTotal(cartModel);
-				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag)
+						&& sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))
 				{
 					LOG.error("Cart Total Price after setting Cart Sub Total : " + cartModel.getTotalPrice() + " Cart Sub Total : "
-							+ cartModel.getSubtotal() + "Cart Guid " + cartGuid);//SDP-15
+							+ cartModel.getSubtotal() + MarketplacecommerceservicesConstants.CARTGUID + cartGuid);//SDP-15
 				}
 				//final CartModel cartModel = getCartService().getSessionCart();
 
 				//To calculate discount percentage amount for display purpose
 				// TPR-774-- Total MRP calculation and the Product percentage calculation
 				getMplCartFacade().totalMrpCal(cartModel);
-				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag)
+						&& sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))
 				{
-					LOG.error("Cart Total Price after totalMrpCal : " + cartModel.getTotalPrice() + "Cart Guid " + cartGuid);//SDP-15
+					LOG.error("Cart Total Price after totalMrpCal : " + cartModel.getTotalPrice()
+							+ MarketplacecommerceservicesConstants.CARTGUID + cartGuid);//SDP-15
 				}
 				//final CartModel cartModel = getCartService().getSessionCart();
 
@@ -548,12 +558,14 @@ public class CartPageController extends AbstractPageController
 				String promo_id_cart = "";
 				final List<String> promolist = new ArrayList<String>();
 				productPromoList = cartData.getAppliedOrderPromotions();
-				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag)
+						&& sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))
 				{
 					LOG.error("Product Promo List is " + productPromoList.toString());//SDP-15
 				}
 				orderPromoList = cartData.getAppliedProductPromotions();
-				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag)
+						&& sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))
 				{
 					LOG.error("Order Promo List is " + orderPromoList.toString());//SDP-15
 				}
@@ -647,7 +659,7 @@ public class CartPageController extends AbstractPageController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			getFrontEndErrorHelper().callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
-			if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))//SDP-15
+			if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))//SDP-15
 			{
 				final StringBuilder exceptionDetails = new StringBuilder(e.getClass().getName()).append(" in showCart(), cartGuid:")
 						.append(cartGuid);
@@ -659,7 +671,7 @@ public class CartPageController extends AbstractPageController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))//SDP-15
+			if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))//SDP-15
 			{
 				final StringBuilder exceptionDetails = new StringBuilder(e.getClass().getName()).append(" in showCart(), cartGuid:")
 						.append(cartGuid);
@@ -672,7 +684,7 @@ public class CartPageController extends AbstractPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))//SDP-15
+			if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE_UPPER))//SDP-15
 			{
 				final StringBuilder exceptionDetails = new StringBuilder(e.getClass().getName()).append(" in showCart(), cartGuid:")
 						.append(cartGuid);
@@ -691,7 +703,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 *
+	 * 
 	 * }
 	 */
 
@@ -973,7 +985,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 *
+	 * 
 	 * @param model ,redirectModel
 	 */
 
@@ -1944,7 +1956,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -2001,7 +2013,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
