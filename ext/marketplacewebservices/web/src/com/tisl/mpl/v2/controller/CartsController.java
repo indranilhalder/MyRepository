@@ -3482,7 +3482,13 @@ public class CartsController extends BaseCommerceController
 	{
 		ApplyCouponsDTO applycouponDto = new ApplyCouponsDTO();
 		CartModel cartModel = null;
-		final OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+		OrderModel orderModel = null;
+
+		if (StringUtils.isNotEmpty(cartGuid))
+		{
+			orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+		}
+
 		try
 		{
 			final StringBuilder logBuilder = new StringBuilder();
