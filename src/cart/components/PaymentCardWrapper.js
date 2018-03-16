@@ -83,7 +83,10 @@ export default class PaymentCardWrapper extends React.Component {
               {" "}
               <CliqCashToggle
                 cashText="Use My CLiQ Cash Balance"
-                price="400"
+                price={
+                  this.props.cart.paymentModes.cliqCash.totalCliqCashBalance
+                    .formattedValue
+                }
                 onToggle={i => this.handleClick(i)}
               />
             </div>

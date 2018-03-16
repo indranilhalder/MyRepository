@@ -213,13 +213,13 @@ export function cartDetailsFailure(error) {
   };
 }
 
-export function getCartDetails(userId, accessToken, cartId) {
+export function getCartDetails(userId, accessToken, cartId, pinCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(cartDetailsRequest());
 
     try {
       const result = await api.get(
-        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetails?access_token=${accessToken}&isPwa=true&platformNumber=2`
+        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetails?access_token=${accessToken}&isPwa=true&platformNumber=2&pincode=${pinCode}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
