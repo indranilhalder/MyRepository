@@ -1,5 +1,5 @@
 import * as accountActions from "../actions/account.actions";
-const cart = (
+const account = (
   state = {
     status: null,
     error: null,
@@ -37,4 +37,4 @@ const cart = (
   }
 };
 
-export default cart;
+export default account;
