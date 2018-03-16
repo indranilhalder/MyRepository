@@ -213,7 +213,11 @@ export function homeFeed(brandIdOrCategoryId: null) {
         }
       } else {
         url = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
-        result = await api.postAdobeTargetUrl(null, url, null, null, true);
+        let mcvId = null;
+        if (window._satellite) {
+          mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
+        }
+        result = await api.postAdobeTargetUrl(null, url, mcvId, null, true);
         feedTypeRequest = HOME_FEED_TYPE;
         resultJson = await result.json();
       }
@@ -335,10 +339,14 @@ export function getComponentData(
             dispatch(getComponentDataBackUp(backUpUrl, positionInFeed));
           }
         }, ADOBE_TARGET_DELAY);
+        let mcvId = null;
+        if (window._satellite) {
+          mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
+        }
         result = await api.postAdobeTargetUrl(
           fetchURL,
           postParams && postParams.mbox ? postParams.mbox : null,
-          null,
+          mcvId,
           null,
           false
         );
