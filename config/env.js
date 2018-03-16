@@ -1,5 +1,3 @@
-"use strict";
-
 const fs = require("fs");
 const path = require("path");
 const paths = require("./paths");
@@ -13,7 +11,11 @@ if (!NODE_ENV) {
     "The NODE_ENV environment variable is required but was not specified."
   );
 }
-
+if (NODE_ENV === "development") {
+  process.env.GOOGLE_CLIENT_ID;
+} else {
+  process.env.API_PREFIX;
+}
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
 var dotenvFiles = [
   `${paths.dotenv}.${NODE_ENV}.local`,
