@@ -1487,7 +1487,8 @@ export function binValidation(paymentMode, binNo) {
         }&isPwa=true&platformNumber=2&paymentMode=${paymentMode}&binNo=${binNo}&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
+
+      if (resultJson.error) {
         throw new Error(resultJson.error);
       }
 
@@ -1570,7 +1571,6 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
 
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     let cartId = JSON.parse(cartDetails).guid;
-
     dispatch(softReservationForPaymentRequest());
     try {
       const result = await api.post(
@@ -1582,6 +1582,7 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
         productItems
       );
       const resultJson = await result.json();
+
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
@@ -1640,6 +1641,55 @@ export function softReservationPaymentForNetBanking(
     }
   };
 }
+
+export function softReservationPaymentForSavedCard(
+  cardDetails,
+  address,
+  paymentMode
+) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    let productItems = {};
+    let item = [];
+    each(getState().cart.cartDetailsCNC.products, product => {
+      let productDetails = {};
+      productDetails.ussId = product.USSID;
+      productDetails.quantity = product.qtySelectedByUser;
+      productDetails.deliveryMode =
+        product.pinCodeResponse.validDeliveryModes[0].type;
+      productDetails.serviceableSlaves =
+        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+      productDetails.fulfillmentType = product.fullfillmentType;
+      item.push(productDetails);
+      productItems.item = item;
+    });
+
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    let cartId = JSON.parse(cartDetails).guid;
+    dispatch(softReservationForPaymentRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts/softReservationForPayment?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&type=payment&cartGuid=${cartId}&pincode=${cardDetails.pinCode}`,
+        productItems
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
+      }
+
+      dispatch(createJusPayOrderForSavedCards(cardDetails, productItems));
+    } catch (e) {
+      dispatch(softReservationForPaymentFailure(e.message));
+    }
+  };
+}
+
 export function jusPayTokenizeRequest() {
   return {
     type: JUS_PAY_TOKENIZE_REQUEST,
@@ -1805,6 +1855,47 @@ export function createJusPayOrderForNetBanking(bankName, pinCode, cartItem) {
     }
   };
 }
+
+export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  let cartId = JSON.parse(cartDetails).guid;
+  return async (dispatch, getState, { api }) => {
+    dispatch(createJusPayOrderRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&addressLine3=&sameAsShipping=null&cardSaved=false&bankName=${
+          cardDetails.cardIssuer
+        }&
+        cardFingerPrint=${cardDetails.cardFingerprint}&platform=2&pincode=${
+          cardDetails.pinCode
+        }&city=&cartGuid=${cartId}&token=&cardRefNo=${
+          cardDetails.cardReferenceNumber
+        }&country=&addressLine1=&access_token=${
+          JSON.parse(customerCookie).access_token
+        }`,
+        cartItem
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
+      }
+      dispatch(
+        jusPayPaymentMethodTypeForSavedCards(
+          resultJson.juspayOrderId,
+          cardDetails
+        )
+      );
+    } catch (e) {
+      dispatch(createJusPayOrderFailure(e.message));
+    }
+  };
+}
+
 export function updateTransactionDetailsRequest() {
   return {
     type: UPDATE_TRANSACTION_DETAILS_REQUEST,
@@ -1861,7 +1952,6 @@ export function jusPayPaymentMethodType(
     dispatch(jusPayPaymentMethodTypeRequest());
     try {
       let url;
-
       if (paymentMode === PAYMENT_EMI) {
         url = `txns?payment_method_type=CARD&redirect_after_payment=true&format=json&card_exp_month=${
           cardDetails.monthValue
@@ -1886,6 +1976,32 @@ export function jusPayPaymentMethodType(
         }&order_id=${juspayOrderId}&save_to_locker=true`;
       }
       const result = await api.postJusPay(url);
+      const resultJson = await result.json();
+
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.error_message);
+      }
+      dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+    } catch (e) {
+      dispatch(jusPayPaymentMethodTypeFailure(e.message));
+    }
+  };
+}
+
+export function jusPayPaymentMethodTypeForSavedCards(
+  juspayOrderId,
+  cardDetails
+) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(jusPayPaymentMethodTypeRequest());
+    try {
+      const result = await api.postJusPay(
+        `txns?payment_method_type=CARD&redirect_after_payment=true&format=json&card_security_code=${
+          cardDetails.cvvNumber
+        }&card_token=${cardDetails.cardToken}&merchant_id=${
+          getState().cart.paymentModes.merchantID
+        }&order_id=${juspayOrderId}`
+      );
       const resultJson = await result.json();
 
       if (resultJson.status === FAILURE) {

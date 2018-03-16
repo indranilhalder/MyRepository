@@ -1,11 +1,12 @@
 import React from "react";
-import _ from "lodash";
+import filter from "lodash/filter";
 import CliqCashToggle from "./CliqCashToggle";
 import styles from "./PaymentCardWrapper.css";
 import CheckoutEmi from "./CheckoutEmi.js";
 import CheckoutCreditCard from "./CheckoutCreditCard.js";
 import CheckoutDebitCard from "./CheckoutDebitCard.js";
 import CheckoutNetbanking from "./CheckoutNetbanking.js";
+import CheckoutSavedCard from "./CheckoutSavedCard.js";
 
 // prettier-ignore
 const typeComponentMapping = {
@@ -30,7 +31,7 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   renderPaymentCardsComponents() {
-    let paymentModesToDisplay = _.filter(
+    let paymentModesToDisplay = filter(
       this.props.cart.paymentModes.paymentModes,
       modes => {
         return modes.value === true;
@@ -40,6 +41,24 @@ export default class PaymentCardWrapper extends React.Component {
       return this.renderPaymentCard(feedDatum.key, i);
     });
   }
+
+  binValidationForSavedCard = cardDetails => {
+    if (this.props.binValidationForSavedCard) {
+      this.props.binValidationForSavedCard(cardDetails);
+    }
+  };
+  renderSavedCards = () => {
+    return (
+      <CheckoutSavedCard
+        binValidationForSavedCard={cardDetails =>
+          this.binValidationForSavedCard(cardDetails)
+        }
+        saveCardDetails={
+          this.props.cart.paymentModes.savedCardResponse.savedCardDetailsMap
+        }
+      />
+    );
+  };
 
   handleClick = toggleState => {
     if (toggleState) {
@@ -52,6 +71,7 @@ export default class PaymentCardWrapper extends React.Component {
   render() {
     return (
       <div className={styles.base}>
+        {this.renderSavedCards()}
         <div>
           {" "}
           <CliqCashToggle

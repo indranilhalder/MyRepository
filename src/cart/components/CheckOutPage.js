@@ -37,7 +37,8 @@ class CheckOutPage extends React.Component {
     appliedCoupons: false,
     paymentModeSelected: null,
     orderConfirmation: false,
-    orderId: ""
+    orderId: "",
+    savedCardDetails: ""
   };
 
   renderLoader() {
@@ -266,6 +267,14 @@ class CheckOutPage extends React.Component {
       }
       this.setState({ deliverMode: true });
     }
+
+    if (this.state.savedCardDetails !== "") {
+      this.props.softReservationPaymentForSavedCard(
+        this.state.savedCardDetails,
+        this.state.addressId[0],
+        this.state.paymentModeSelected
+      );
+    }
   };
 
   addAddress = address => {
@@ -306,6 +315,17 @@ class CheckOutPage extends React.Component {
   binValidationForNetBank = (paymentMode, bankName) => {
     this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidationForNetBanking(paymentMode, bankName);
+  };
+
+  binValidationForSavedCard = cardDetails => {
+    this.setState({
+      paymentModeSelected: `${cardDetails.cardType} Card`
+    });
+    this.setState({ savedCardDetails: cardDetails });
+    this.props.binValidation(
+      `${cardDetails.cardType} Card`,
+      cardDetails.cardISIN
+    );
   };
 
   softReservationForPayment = cardDetails => {
@@ -404,6 +424,9 @@ class CheckOutPage extends React.Component {
                 }
                 softReservationPaymentForNetBanking={bankName =>
                   this.softReservationPaymentForNetBanking(bankName)
+                }
+                binValidationForSavedCard={cardDetails =>
+                  this.binValidationForSavedCard(cardDetails)
                 }
               />
             )}
