@@ -41,9 +41,7 @@ class CheckOutPage extends React.Component {
     orderId: "",
     savedCardDetails: "",
 
-    binValidationCOD: false,
-
-
+    binValidationCOD: false
   };
 
   renderLoader() {
@@ -173,9 +171,11 @@ class CheckOutPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.cart.justPayPaymentDetails !== null) {
-      window.location.replace(
-        nextProps.cart.justPayPaymentDetails.payment.authentication.url
-      );
+      if (nextProps.cart.justPayPaymentDetails.payment) {
+        window.location.replace(
+          nextProps.cart.justPayPaymentDetails.payment.authentication.url
+        );
+      }
     }
     if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
       Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -225,7 +225,7 @@ class CheckOutPage extends React.Component {
         );
 
         this.props.getCartDetailsCNC(
-          JSON.parse(userDetails).customerInfo.mobileNumber,
+          JSON.parse(userDetails).userName,
           JSON.parse(customerCookie).access_token,
           JSON.parse(cartDetailsLoggedInUser).code,
           this.props.location.state.pinCode,
@@ -277,18 +277,16 @@ class CheckOutPage extends React.Component {
       this.setState({ deliverMode: true });
     }
 
-
     if (this.state.savedCardDetails !== "") {
       this.props.softReservationPaymentForSavedCard(
         this.state.savedCardDetails,
         this.state.addressId[0],
         this.state.paymentModeSelected
-      )
-}
+      );
+    }
 
     if (this.state.binValidationCOD) {
       this.softReservationForCODPayment();
-
     }
   };
 

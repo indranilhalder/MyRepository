@@ -282,7 +282,8 @@ const cart = (
 
     case cartActions.GENERATE_CART_ID_REQUEST:
       return Object.assign({}, state, {
-        status: action.status
+        status: action.status,
+        loading: true
       });
 
     case cartActions.GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS:
@@ -300,13 +301,15 @@ const cart = (
         JSON.stringify(action.cartDetails)
       );
       return Object.assign({}, state, {
-        status: action.status
+        status: action.status,
+        loading: false
       });
 
     case cartActions.GENERATE_CART_ID_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
-        error: action.error
+        error: action.error,
+        loading: false
       });
 
     case cartActions.ORDER_SUMMARY_REQUEST:

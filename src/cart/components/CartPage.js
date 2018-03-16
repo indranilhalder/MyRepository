@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import MDSpinner from "react-md-spinner";
 import { SUCCESS } from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
-import each from "lodash/each";
+import filter from "lodash/filter";
 
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -39,7 +39,7 @@ class CartPage extends React.Component {
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (userDetails) {
       this.props.getCartDetails(
-        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(userDetails).userName,
         JSON.parse(customerCookie).access_token,
         JSON.parse(cartDetailsLoggedInUser).code,
         ""
@@ -62,17 +62,23 @@ class CartPage extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.cart) {
       if (prevProps.cart.cartDetails !== this.props.cart.cartDetails) {
-        each(this.props.cart.cartDetails.products, product => {
-          if (product.pinCodeResponse) {
-            this.setState({
-              isServiceable: true
-            });
-          } else {
-            this.setState({
-              isServiceable: false
-            });
+        let productServiceAvailability = filter(
+          this.props.cart.cartDetails.products,
+          product => {
+            if (product.pinCodeResponse) {
+              return product.pinCodeResponse.isServicable === "N";
+            }
           }
-        });
+        );
+        if (productServiceAvailability.length > 0) {
+          this.setState({
+            isServiceable: false
+          });
+        } else {
+          this.setState({
+            isServiceable: true
+          });
+        }
       }
     }
   }
@@ -129,7 +135,7 @@ class CartPage extends React.Component {
       let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
       if (userDetails) {
         this.props.getCartDetails(
-          JSON.parse(userDetails).customerInfo.mobileNumber,
+          JSON.parse(userDetails).userName,
           JSON.parse(customerCookie).access_token,
           JSON.parse(cartDetailsLoggedInUser).code,
           val

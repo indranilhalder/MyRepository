@@ -50,7 +50,7 @@ class ProductSellerPage extends Component {
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (userDetails) {
       this.props.addProductToCart(
-        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(userDetails).userName,
         JSON.parse(cartDetailsLoggedInUser).code,
         JSON.parse(customerCookie).access_token,
         productDetails
@@ -76,7 +76,7 @@ class ProductSellerPage extends Component {
 
     if (userDetails) {
       this.props.addProductToWishList(
-        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(userDetails).userName,
         JSON.parse(customerCookie).access_token,
         productDetails
       );
