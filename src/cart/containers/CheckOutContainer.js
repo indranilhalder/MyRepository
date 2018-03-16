@@ -25,6 +25,10 @@ import {
   binValidation,
   softReservationForPayment,
   updateTransactionDetails,
+  getCODEligibility,
+  binValidationForCOD,
+  updateTransactionDetailsForCOD,
+  softReservationForCODPayment,
   captureOrderExperience,
   binValidationForNetBanking,
   softReservationPaymentForNetBanking
@@ -118,10 +122,21 @@ const mapDispatchToProps = dispatch => {
     updateTransactionDetails: (paymentMode, juspayOrderID, cartId) => {
       dispatch(updateTransactionDetails(paymentMode, juspayOrderID, cartId));
     },
+    getCODEligibility: () => {
+      dispatch(getCODEligibility());
+    },
+    binValidationForCOD: paymentMode => {
+      dispatch(binValidationForCOD(paymentMode));
+    },
+    updateTransactionDetailsForCOD: (paymentMode, juspayOrderID) => {
+      dispatch(updateTransactionDetailsForCOD(paymentMode, juspayOrderID));
+    },
+    softReservationForCODPayment: pinCode => {
+      dispatch(softReservationForCODPayment(pinCode));
+    },
     captureOrderExperience: (orderId, Rating) => {
       dispatch(captureOrderExperience(orderId, Rating));
     },
-
     binValidationForNetBanking: (paymentMode, binNo) => {
       dispatch(binValidationForNetBanking(paymentMode, binNo));
     },
