@@ -756,7 +756,7 @@ const cart = (
     case cartActions.SOFT_RESERVATION_FOR_COD_PAYMENT_FAILURE:
       return Object.assign({}, state, {
         softReserveCODPaymentStatus: action.status,
-        ssoftReserveCODPaymentError: action.error,
+        softReserveCODPaymentError: action.error,
         loading: false
       });
 

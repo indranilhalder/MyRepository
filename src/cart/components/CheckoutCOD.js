@@ -39,4 +39,8 @@ export default class CheckoutCOD extends React.Component {
   }
 }
 
-CheckoutCOD.propTypes = {};
+CheckoutCOD.propTypes = {
+  binValidationForCOD: PropTypes.func,
+  softReservationForCODPayment: PropTypes.func,
+  cart: PropTypes.object
+};

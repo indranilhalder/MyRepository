@@ -67,3 +67,8 @@ export default class CodForm extends React.Component {
     );
   }
 }
+
+CodForm.propTypes = {
+  binValidationForCOD: PropTypes.func,
+  softReservationForCODPayment: PropTypes.func
+};
