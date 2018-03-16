@@ -56,6 +56,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.lux.model.LuxuryHomePagePreferenceModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
 import com.tisl.mpl.core.model.AmpMenifestModel;
@@ -3469,11 +3470,15 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				}
 			}
 		}
-
-
 		return emiterms;
-
 	}
 
+
+	@Override
+	public LuxuryHomePagePreferenceModel getHomePagePreference(final String gender, final String category)
+	{
+		// YTODO Auto-generated method stub
+		return mplCMSPageService.getHomePagePreference(gender, category);
+	}
 
 }

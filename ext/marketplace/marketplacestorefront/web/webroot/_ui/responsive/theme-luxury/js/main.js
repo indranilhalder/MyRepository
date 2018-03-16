@@ -110,6 +110,9 @@ TATA.CommonFunctions = {
     },
     
     signUpValidate: function() {
+        jQuery.validator.addMethod("lettersonly", function(value, element) {
+              return this.optional(element) || /^[a-zA-Z ]+$/i.test(value);
+        }, "Letters only please");
         $("#extRegisterForm").validate({
             onfocusout: !1,
             invalidHandler: function(form, validator) {
@@ -119,11 +122,13 @@ TATA.CommonFunctions = {
             rules: {
                 firstName: {
                     required: !0,
-                    maxlength: 100
+                    maxlength: 100,
+                    lettersonly: true
                 },
                 lastName: {
                     required: !0,
-                    maxlength: 30
+                    maxlength: 30,
+                    lettersonly: true
                 },
                 mobileNumber: {
                     minlength: 10,
@@ -146,10 +151,17 @@ TATA.CommonFunctions = {
                 }
             },
             messages:{
-            	mobileNumber: {
+            	
+                firstName: {
+                   lettersonly: "Please enter alphabets only"
+                },
+                lastName: {
+                   lettersonly: "Please enter alphabets only"
+                },
+                mobileNumber: {
             		minlength:"Mobile number should contain 10 digit number only.",
             		maxlength:"Mobile number should contain 10 digit number only.",
-            	},
+            	}
             	
             },
             submitHandler: function(form) {
@@ -694,7 +706,7 @@ TATA.CommonFunctions = {
 
     Header: {
         MobileMenu: function() {
-        	if($(window).width() < 768){
+        	/*if($(window).width() < 768){
 	        	$(".mega-menu li span").each(function() {
 	    	    	$(this).prev().css('pointer-events','none');
 	        	});
@@ -720,11 +732,14 @@ TATA.CommonFunctions = {
 	        		$(this).closest('.parent').children(":first").css('pointer-events','auto');
 	        		
 	        	});
-        	}
+        	}*/
             $("#hamburger-menu").on("click", function() {
+                var curr_menu = sessionStorage.getItem('active-menu');
                 $("body").addClass("menu-open");
-                $( ".header-left .tab-link" ).first().addClass( "current");
-                $( ".main-nav .tab-content" ).first().addClass( "current");
+                if(!curr_menu){
+                    $( ".header-left .tab-link" ).first().addClass( "current");
+                    $( ".main-nav .tab-content" ).first().addClass( "current");
+                }
                 
             }), $("#main-nav-close").on("click", function() {
                 $("body").removeClass("menu-open");
@@ -750,10 +765,10 @@ TATA.CommonFunctions = {
                 $("#"+tab_id).addClass('current');
             });
             
-            $('ul.tabs li, .mega-menu.tab-content').mouseout(function() {
+            /*$('ul.tabs li, .mega-menu.tab-content').mouseout(function() {
                 $('.tab-content').removeClass('current');
                 $('ul.tabs li').removeClass('current');                
-            });
+            });*/
             
             $('.mega-menu.tab-content').mouseover(function(){
                 var tab_id = $(this).attr('id');
@@ -1104,6 +1119,12 @@ TATA.Pages = {
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
+                    var inputArrayB="";
+                    inputArrayB=$(filtered).find('input[name=inputArray]').val();
+                    inputArrayB=inputArrayB.replace('["', "");
+                    inputArrayB=inputArrayB.replace('"]', "");
+                    inputArrayB=inputArrayB.replace('","', ',');
+                    		
                     $(filtered).has("h4.categor-name") && $(".plp-wrapper h4").html($(filtered).find("h4.categor-name"));
                     $(filtered).has(".filterblocks") && ($(".filterblocks").html($(filtered).find(".filterblocks")),
                         TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper").html());
@@ -1119,6 +1140,9 @@ TATA.Pages = {
                         }
                     }
                     TATA.Pages.PLP.productHover();
+                   
+                    constructDepartmentHierarchy(inputArrayB.split(","));
+
                 },
                 complete: function(){
                     $('body').removeClass('loader');
@@ -1542,7 +1566,11 @@ TATA.Pages = {
                 });
             });
 
-
+            $(".play-product-video").on("click", function() {
+                $("body").addClass("pdp-video-active"), $("video").each(function() {
+                    this.play();
+                });
+            });
         },
         BankEMI: function(){
             $('.emi-header').on('click', function(){
@@ -2949,4 +2977,13 @@ $(document).ready(function() {
             return false;
         }
     })
+});
+
+
+$(document).on('keypress','#extRegisterForm input[type=text]:eq(0),#extRegisterForm input[type=text]:eq(1)',function(evt) {
+    var e = window.event || evt; // for trans-browser compatibility
+    var charCode = e.which || e.keyCode;
+    if (charCode >= 48 && charCode <= 57){
+        return false;
+    }
 });

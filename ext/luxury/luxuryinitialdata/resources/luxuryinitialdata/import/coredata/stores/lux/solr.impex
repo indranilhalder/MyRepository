@@ -556,3 +556,14 @@ INSERT_UPDATE SolrValueRange; &rangeValueRefID; solrValueRangeSet(name)[unique =
 
 INSERT_UPDATE SolrIndexedProperty; solrIndexedType(identifier)[unique = true]; name[unique = true]; type(code); genericFacet[default = false]; sortableType(code); currency[default = false]; localized[default = false]; multiValue[default = false]; facet[default = true]; facetType(code); facetSort(code); priority; visible; useForSpellchecking[default = false]; useForAutocomplete[default = false]; fieldValueProvider; facetDisplayNameProvider; customFacetSortProvider; topValuesProvider; rangeSets(name); facetTopValue
 ; $solrIndexedType ; price ; double ; ; ; true ; ; ; ; MultiSelectOr ; Alpha ; 4000 ; true ; ; ; mplPriceValueProvider ; ; ; ; mplElectronicsPriceRangeINR,mplApparelPriceRangeINR,mplLuxuryPriceRangeINR ;
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=true];facetType(code);facetSort(code);priority;visible;useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facetDisplayNameProvider;customFacetSortProvider;topValuesProvider;rangeSets(name)
+;$solrIndexedType; candleburntimehome ;string ;  ;     ;     ;true ;true ;MultiSelectOr ;Alpha ;2000 ;true;  ;  ;	 springELValueProvider            ;;;;
+;$solrIndexedType; candletypehome ;string ;  ;     ;     ;true ;true ;MultiSelectOr ;Alpha ;2000 ;true;  ;  ;	 springELValueProvider            ;;;;
+;$solrIndexedType; artpiecetypehome ;string ;  ;     ;     ;true ;true ;MultiSelectOr ;Alpha ;2000 ;true;  ;  ;	 springELValueProvider            ;;;;
+;$solrIndexedType; glasstypehome ;string ;  ;     ;     ;true ;true ;MultiSelectOr ;Alpha ;2000 ;true;  ;  ;	 springELValueProvider            ;;;;
+;$solrIndexedType; accessorytypehome ;string ;  ;     ;     ;true ;true ;MultiSelectOr ;Alpha ;2000 ;true;  ;  ;	 springELValueProvider            ;;;;
+;$solrIndexedType; sofaupholstryhome ;string ;  ;     ;     ;true ;true ;MultiSelectOr ;Alpha ;2000 ;true;  ;  ;	 springELValueProvider            ;;;;
+;$solrIndexedType; numberofchairshome ;string ;  ;     ;     ;true ;true ;MultiSelectOr ;Alpha ;2000 ;true;  ;  ;	 springELValueProvider            ;;;;
+;$solrIndexedType; assemblyrequiredhome ;string ;  ;     ;     ;true ;true ;MultiSelectOr ;Alpha ;2000 ;true;  ;  ;	 springELValueProvider            ;;;;
+;$solrIndexedType; tabletopshapehome ;string ;  ;     ;     ;true ;true ;MultiSelectOr ;Alpha ;2000 ;true;  ;  ;	 springELValueProvider            ;;;;

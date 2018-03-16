@@ -25,7 +25,7 @@ public interface BulkContentCreationDao
 	 * @param templateName
 	 * @return PageTemplateModel
 	 */
-	public PageTemplateModel fetchPageTemplate(String templateName);
+	public PageTemplateModel fetchPageTemplate(String templateName, String site);
 
 	/**
 	 * Fetches the Product for the given code
@@ -33,7 +33,7 @@ public interface BulkContentCreationDao
 	 * @param productCode
 	 * @return ProductModel
 	 */
-	public ProductModel fetchProductforCode(String productCode);
+	public ProductModel fetchProductforCode(String productCode, String site);
 
 
 	/**
@@ -42,11 +42,12 @@ public interface BulkContentCreationDao
 	 * @param contentPageUid
 	 * @return ContentPageModel
 	 */
-	public ContentPageModel fetchContentPageifPresent(String contentPageUid);
+	public ContentPageModel fetchContentPageifPresent(String contentPageUid, String site);
 
-	public SimpleBannerComponentModel getSimpleBannerComponentforUid(String uid);
+	public SimpleBannerComponentModel getSimpleBannerComponentforUid(String uid, String site);
 
-	public VideoComponentModel getVideoComponentforUid(String uid);
+	public VideoComponentModel getVideoComponentforUid(String uid, String site);
 
-	public CMSParagraphComponentModel getCMSParagraphComponentforUid(String uid);
+	public CMSParagraphComponentModel getCMSParagraphComponentforUid(String uid, String site);
+
 }

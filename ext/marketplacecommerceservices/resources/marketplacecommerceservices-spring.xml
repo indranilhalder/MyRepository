@@ -2568,5 +2568,15 @@
 		<property name="flexibleSearchService" ref="flexibleSearchService" />
 		<property name="modelService" ref="modelService" />
 	</bean>
+	
+		<alias name="defaultHomePageTypesDaoImpl" alias="homePageTypesDao" />
+	<bean id="defaultHomePageTypesDaoImpl" class="com.tils.luxury.dao.impl.HomePageTypesDaoImpl">
+	</bean>
+
+	<alias name="defaultHomePageTypesServiceImpl" alias="homePageTypesService" />
+	<bean id="defaultHomePageTypesServiceImpl"
+		class="com.tils.luxury.service.impl.HomePageTypesServiceImpl"></bean>
+	
+	
 </beans>
 

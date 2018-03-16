@@ -6,6 +6,7 @@ if ($(window).width() < 768) {
     $(".mega-menu > li > a").on("click", function(event) {
 
         event.preventDefault();
+        $(this).parent().siblings().removeClass('parent');
         $(this).parent().toggleClass('parent');
 
         $(this).parents('li').siblings().find(".sub-menu").removeClass("active");

@@ -1,0 +1,226 @@
+#
+# Import the CMS content for the site
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$lang=en
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$category=category(code, $productCV)
+$product=product(code, $productCV)
+$picture=media(code, $contentCV)
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+$medias=medias(code, $contentCV);
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+$mediaResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+$lang=en
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]
+####L1
+;;LuxuryCategoryLink;Luxury Category Link;/GlobalLuxe;LuxuryCategoryLink;LuxuryCategoryLink;;;;LUXURY
+;;INDILUXCategoryLink;INDILUX Category Link;/GlobalLuxe;INDILUXCategoryLink;INDILUXCategoryLink;;;;INDILUX
+;;LUXBOXCategoryLink;INDILUX Category Link;/GlobalLuxe;LUXBOXCategoryLink;LUXBOXCategoryLink;;;;LUXBOX
+
+
+####L2
+;;LuxuryWomenLink;Luxury Women Link;#;LuxuryWomenLink;LuxuryWomenLink;;
+;;LuxuryMenLink;Luxury Men Link;#;LuxuryMenLink;LuxuryMenLink;;
+;;LuxuryBrandLink;Luxury Brand Link;#;LuxuryBrandLink;LuxuryBrandLink;;
+;;LuxuryHandBagLink;Luxury Hand Bag Link;#;LuxuryHandBagLink;LuxuryHandBagLink;;
+;;LuxuryWatchesLink;Luxury Watch Link;#;LuxuryWatchesLink;LuxuryWatchesLink;;
+
+;;INDILUXWomenLink;INDILUX Women Link;#;INDILUXWomenLink;INDILUXWomenLink;;
+;;INDILUXMenLink;INDILUX Men Link;#;INDILUXMenLink;INDILUXMenLink;;
+;;INDILUXBrandLink;INDILUX Brand Link;#;INDILUXBrandLink;INDILUXBrandLink;;
+;;INDILUXHandBagLink;INDILUX Hand Bag Link;#;INDILUXHandBagLink;INDILUXHandBagLink;;
+;;INDILUXWatchesLink;INDILUX Watch Link;#;INDILUXWatchesLink;INDILUXWatchesLink;;
+
+;;LUXBOXWomenLink;LUXBOX Women Link;#;LUXBOXWomenLink;LUXBOXWomenLink;;
+;;LUXBOXMenLink;LUXBOX Men Link;#;LUXBOXMenLink;LUXBOXMenLink;;
+;;LUXBOXBrandLink;LUXBOX Brand Link;#;LUXBOXBrandLink;LUXBOXBrandLink;;
+;;LUXBOXHandBagLink;LUXBOX Hand Bag Link;#;LUXBOXHandBagLink;LUXBOXHandBagLink;;
+;;LUXBOXWatchesLink;LUXBOX Watch Link;#;LUXBOXWatchesLink;LUXBOXWatchesLink;;
+
+
+####L3
+;;LuxuryMenClothingLink;Clothing ] Link;#;LuxuryMenClothingLink;LuxuryMenClothingLink;;
+;;LuxuryMenAccessoriesLink;Accessories Link;#;LuxuryMenAccessoriesLink;LuxuryMenAccessoriesLink;;
+;;LuxuryMenBagsWalletsLink;Bags Link;#;LuxuryMenBagsWalletsLink;LuxuryMenBagsWalletsLink;;
+;;LuxuryMenShoesLink;Shoes Link;#;LuxuryMenShoesLink;LuxuryMenShoesLink;;
+;;LuxuryMenWatchesLink;Watches Link;#;LuxuryMenWatchesLink;LuxuryMenWatchesLink;;
+
+## L4
+;;LuxuryMenViewAllLink;View All;#;LuxuryMenViewAllLink;LuxuryMenViewAllLink;;
+;;LuxuryMenPolosLink;Polos;#;LuxuryMenPolosLink;LuxuryMenPolosLink;;
+;;LuxuryMenTShirtsLink;T-Shirts;#;LuxuryMenTShirtsLink;LuxuryMenTShirtsLink;;
+;;LuxuryMenShirtsLink;Shirts;#;LuxuryMenShirtsLink;LuxuryMenShirtsLink;;
+;;LuxuryMenJeansLink;Jeans;#;LuxuryMenJeansLink;LuxuryMenJeansLink;;
+;;LuxuryMenTrousersChinosLink;Trousers & Chinos;#;LuxuryMenTrousersChinosLink;LuxuryMenTrousersChinosLink;;
+;;LuxuryMenUnderwearLink;Underwear;#;LuxuryMenUnderwearLink;LuxuryMenUnderwearLink;;
+;;LuxuryMenShortsLink;Shorts;#;LuxuryMenShortsLink;LuxuryMenShortsLink;;
+;;LuxuryMenSweatshirtsSweatersLink;Sweatshirts & Sweaters;#;LuxuryMenSweatshirtsSweatersLink;LuxuryMenSweatshirtsSweatersLink;;
+;;LuxuryMenCasualJacketsBlazersLink;Casual Jackets & Blazers;#;LuxuryMenCasualJacketsBlazersLink;LuxuryMenCasualJacketsBlazersLink;;
+
+;;LuxuryMenAccesseriesViewAllLink;View All;#;LuxuryMenAccesseriesViewAllLink;LuxuryMenAccesseriesViewAllLink;;
+;;LuxuryMenAccesseriesBeltsLink;Belts;#;LuxuryMenAccesseriesBeltsLink;LuxuryMenAccesseriesBeltsLink;;
+;;LuxuryMenAccesseriesHatsCapsLink;Hats & Caps;#;LuxuryMenAccesseriesHatsCapsLink;LuxuryMenAccesseriesHatsCapsLink;;
+;;LuxuryMenAccesseriesTiesPocketSquaresLink;Ties & Pocket Squares;#;LuxuryMenAccesseriesTiesPocketSquaresLink;LuxuryMenAccesseriesTiesPocketSquaresLink;;
+;;LuxuryMenAccesseriesCufflinksLink;Cufflinks;#;LuxuryMenAccesseriesCufflinksLink;LuxuryMenAccesseriesCufflinksLink;;
+;;LuxuryMenAccesseriesSocksLink;Socks;#;LuxuryMenAccesseriesSocksLink;LuxuryMenAccesseriesSocksLink;;
+
+;;LuxuryMenBagsViewAllLink;View All;#;LuxuryMenBagsViewAllLink;LuxuryMenBagsViewAllLink;;
+;;LuxuryMenBagsWalletsLink;Belts;#;LuxuryMenBagsWalletsLink;LuxuryMenBagsWalletsLink;;
+;;LuxuryMenBagsCrossbodyMessengerBagsLink;Crossbody & Messenger Bags;#;LuxuryMenBagsCrossbodyMessengerBagsLink;LuxuryMenBagsCrossbodyMessengerBagsLink;;
+;;LuxuryMenBagsLaptopBagsBriefcasesLink;Laptop Bags & Briefcases;#;LuxuryMenBagsLaptopBagsBriefcasesLink;LuxuryMenBagsLaptopBagsBriefcasesLink;;
+;;LuxuryMenBagsSatchelsLink;Satchels;#;LuxuryMenBagsSatchelsLink;LuxuryMenBagsSatchelsLink;;
+;;LuxuryMenBagsBackpacksLink;Backpacks;#;LuxuryMenBagsBackpacksLink;LuxuryMenBagsBackpacksLink;;
+;;LuxuryMenBagsCasesPouchesLink;Cases & Pouches;#;LuxuryMenBagsCasesPouchesLink;LuxuryMenBagsCasesPouchesLink;;
+
+;;LuxuryMenShoeViewAllLink;View All;#;LuxuryMenShoeViewAllLink;LuxuryMenShoeViewAllLink;;
+;;LuxuryMenShoeLoafersMoccasinsLink;Loafers & Moccasins;#;LuxuryMenShoeLoafersMoccasinsLink;LuxuryMenShoeLoafersMoccasinsLink;;
+;;LuxuryMenShoeDerbyShoesLink;Derby Shoes;#;LuxuryMenShoeDerbyShoesLink;LuxuryMenShoeDerbyShoesLink;;
+
+;;LuxuryMenWatchViewAllLink;View All;#;LuxuryMenWatchViewAllLink;LuxuryMenWatchViewAllLink;;
+;;LuxuryMenWatchSeikoLink;Seiko;#;LuxuryMenWatchSeikoLink;LuxuryMenWatchSeikoLink;;
+;;LuxuryMenWatchRaymondWeilLink;Raymond Weil;#;LuxuryMenWatchRaymondWeilLink;LuxuryMenWatchRaymondWeilLink;;
+;;LuxuryMenWatchMovadoLink;Movado;#;LuxuryMenWatchMovadoLink;LuxuryMenWatchMovadoLink;;
+;;LuxuryMenHugoBossLink;Hugo Boss;#;LuxuryMenHugoBossLink;LuxuryMenHugoBossLink;;
+
+
+#LuxuryMenWatchViewAllLink,LuxuryMenWatchSeikoLink,LuxuryMenWatchRaymondWeilLink,LuxuryMenWatchMovadoLink,LuxuryMenHugoBossLink
+#LuxuryMenShoeViewAllLink,LuxuryMenShoeLoafersMoccasinsLink,LuxuryMenShoeDerbyShoesLink
+
+#LuxuryMenBagsViewAllLink,LuxuryMenBagsWalletsLink,LuxuryMenBagsCrossbodyMessengerBagsLink,LuxuryMenBagsLaptopBagsBriefcasesLink,LuxuryMenBagsSatchelsLink,LuxuryMenBagsBackpacksLink,LuxuryMenBagsCasesPouchesLink
+
+#LuxuryMenAccesseriesViewAllLink,LuxuryMenAccesseriesBeltsLink,LuxuryMenAccesseriesHatsCapsLink,LuxuryMenAccesseriesTiesPocketSquaresLink,LuxuryMenAccesseriesCufflinksLink,LuxuryMenAccesseriesSocksLink
+
+#LuxuryMenViewAllLink,LuxuryMenPolosLink,LuxuryMenTShirtsLink,LuxuryMenShirtsLink,LuxuryMenJeansLink,LuxuryMenTrousersChinosLink,LuxuryMenUnderwearLink,LuxuryMenUnderwearLink,LuxuryMenShortsLink,LuxuryMenSweatshirtsSweatersLink,LuxuryMenCasualJacketsBlazersLink
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;title[lang=en];parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef
+;root;;root;;;;;root;
+;SiteRootNode;;SiteRootNode;;root;;;SiteRootNode;
+;LuxurySiteBaseNavNode;;Luxury WebSite;;SiteRootNode;;HomepageNavLink;LuxurySiteBaseNavNode;
+;LuxuryNavNode;;Luxury Category;;LuxurySiteBaseNavNode;;LuxuryCategoryLink;LuxuryNavNode;
+;INDILUXNavNode;;INDILUX Category;;LuxurySiteBaseNavNode;;INDILUXCategoryLink;INDILUXNavNode;
+;LuxBoxNavNode;;LUXBOX Category;;LuxurySiteBaseNavNode;;LUXBOXCategoryLink;LuxBoxNavNode;
+
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;title[lang=en];parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV)
+
+# L2
+;MenNavNodeLuxury;;Men Luxury Category;;LuxuryNavNode;ManAccessoriesNavNodeLuxury,ManBagsWalletsNodeLuxury,ManShoesNavNodeLuxury;LuxuryMenLink;MenNavNodeLuxury;
+;WomenNavNodeLuxury;;Women Luxury Category;;LuxuryNavNode;;LuxuryWomenLink;WomenNavNodeLuxury;
+;BrandNavNodeLuxury;;Brand Luxury Category;;LuxuryNavNode;;LuxuryBrandLink;BrandNavNodeLuxury;
+;HandBagNavNodeLuxury;;Hand Bag Luxury Category;;LuxuryNavNode;;LuxuryHandBagLink;HandBagNavNodeLuxury;
+;WatchesNavNodeLuxury;;Watch Luxury Category;;LuxuryNavNode;;LuxuryWatchesLink;WatchesNavNodeLuxury;
+
+;MenNavNodeINDILUX;;Men INDILUX Category;;INDILUXNavNode;;INDILUXMenLink;MenNavNodeINDILUX;
+;WomenNavNodeINDILUX;;Women INDILUX Category;;INDILUXNavNode;;INDILUXWomenLink;WomenNavNodeINDILUX;
+;BrandNavNodeINDILUX;;Brand INDILUX Category;;INDILUXNavNode;;INDILUXBrandLink;BrandNavNodeINDILUX;
+;HandBagNavNodeINDILUX;;Hand Bag INDILUX Category;;INDILUXNavNode;;INDILUXHandBagLink;HandBagNavNodeINDILUX;
+;WatchesNavNodeINDILUX;;Watch INDILUX Category;;INDILUXNavNode;;INDILUXWatchesLink;WatchesNavNodeINDILUX;
+
+;MenNavNodeLUXBOX;;Men LUXBOX Category;;LuxBoxNavNode;;LUXBOXMenLink;MenNavNodeLUXBOX;
+;WomenNavNodeLUXBOX;;Women LUXBOX Category;;LuxBoxNavNode;;LUXBOXWomenLink;WomenNavNodeLUXBOX;
+;BrandNavNodeLUXBOX;;Brand LUXBOX Category;;LuxBoxNavNode;;LUXBOXBrandLink;BrandNavNodeLUXBOX;
+;HandBagNavNodeLUXBOX;;Hand Bag LUXBOX Category;;LuxBoxNavNode;;LUXBOXHandBagLink;HandBagNavNodeLUXBOX;
+;WatchesNavNodeLUXBOX;;Watch LUXBOX Category;;LuxBoxNavNode;;LUXBOXWatchesLink;WatchesNavNodeLUXBOX;
+
+### L3
+;ManClothingNavNodeLuxury;;Men Clothing Luxury ;;MenNavNodeLuxury;;LuxuryMenViewAllLink,LuxuryMenPolosLink,LuxuryMenTShirtsLink,LuxuryMenShirtsLink,LuxuryMenJeansLink,LuxuryMenTrousersChinosLink,LuxuryMenUnderwearLink,LuxuryMenUnderwearLink,LuxuryMenShortsLink,LuxuryMenSweatshirtsSweatersLink,LuxuryMenCasualJacketsBlazersLink;ClothingNavNodeLuxury;
+;ManAccessoriesNavNodeLuxury;;Men Accesseries MenNavNodeLuxury ;;MenNavNodeLuxury;;LuxuryMenAccesseriesViewAllLink,LuxuryMenAccesseriesBeltsLink,LuxuryMenAccesseriesHatsCapsLink,LuxuryMenAccesseriesTiesPocketSquaresLink,LuxuryMenAccesseriesCufflinksLink,LuxuryMenAccesseriesSocksLink;AccessoriesNavNodeLuxury;
+;ManBagsWalletsNodeLuxury;;Luxury Men Watch;;MenNavNodeLuxury;;LuxuryMenBagsViewAllLink,LuxuryMenBagsWalletsLink,LuxuryMenBagsCrossbodyMessengerBagsLink,LuxuryMenBagsLaptopBagsBriefcasesLink,LuxuryMenBagsSatchelsLink,LuxuryMenBagsBackpacksLink,LuxuryMenBagsCasesPouchesLink;BagsWalletsNodeLuxury;
+;ManShoesNavNodeLuxury;;Luxury Men Watch ;;MenNavNodeLuxury;;LuxuryMenShoeViewAllLink,LuxuryMenShoeLoafersMoccasinsLink,LuxuryMenShoeDerbyShoesLink;ShoesNavNodeLuxury;
+#;ManWatchesNavNodeLuxury;;Luxury Men Watch;;MenNavNodeLuxury;;LuxuryMenWatchViewAllLink,LuxuryMenWatchSeikoLink,LuxuryMenWatchRaymondWeilLink,LuxuryMenWatchMovadoLink,LuxuryMenHugoBossLink;WatchesNavNodeLuxury;
+
+INSERT_UPDATE LuxuryNavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;navigationNode(&nodeRef);link(uid, $contentCV);styleClass;dropDownLayout(code);&componentRef
+;;LuxuryNavBarComponent;LUXURY;10;LuxuryNavNode;LuxuryCategoryLink;;AUTO;LuxuryNavBarComponent
+;;INDILUXNavBarComponent;INDILUX;10;INDILUXNavNode;INDILUXCategoryLink;;AUTO;INDILUXNavNode
+;;LUXBOXNavBarComponent;LUXURY;10;LuxBoxNavNode;LUXBOXCategoryLink;;AUTO;LUXBOXNavBarComponent
+
+
+INSERT_UPDATE LuxuryNavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;components(uid, $contentCV);
+;;NavBarComponent;Luxury Navigation Bar Collection Component;LuxuryNavBarComponent,INDILUXNavBarComponent,LUXBOXNavBarComponent
+
+####################################
+
+UPDATE CMSNavigationNode;$contentCV[unique=true];uid[unique=true];title[lang=$lang]              
+;;WomenNavNodeLuxury;"Women" 
+;;MenNavNodeLuxury;"Men"
+;;BrandNavNodeLuxury;"Brand"
+;;HandBagNavNodeLuxury;"HandBag"
+;;WatchesNavNodeLuxury;"Watches"
+
+####L3
+;;ManClothingNavNodeLuxury;"Clothing"
+;;ManAccessoriesNavNodeLuxury;"Accesseries"
+;;ManBagsWalletsNodeLuxury;"Bags"
+;;ManShoesNavNodeLuxury;"Shoes"
+#;;ManWatchesNavNodeLuxury;"Watch"
+
+
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]           
+###  L2
+;;LuxuryWomenLink;"Women"
+;;LuxuryMenLink;"Men"
+;;LuxuryBrandLink;"Brand"
+;;LuxuryHandBagLink;"HandBag"
+;;LuxuryWatchesLink;"Watches"
+
+;;INDILUXWomenLink;"Women"
+;;INDILUXMenLink;"Men"
+;;INDILUXBrandLink;"Brand"
+;;INDILUXHandBagLink;"HandBag"
+;;INDILUXWatchesLink;"Watches"
+
+;;LUXBOXWomenLink;"Women"
+;;LUXBOXMenLink;"Men"
+;;LUXBOXBrandLink;"Brand"
+;;LUXBOXHandBagLink;"HandBag"
+;;LUXBOXWatchesLink;"Watches"
+
+###L3
+;;LuxuryMenClothingLink;"Clothing"
+;;LuxuryMenAccessoriesLink;"Accessories"
+;;LuxuryMenBagsWalletsLink;"Bags"
+;;LuxuryMenShoesLink;"Shoes"
+;;LuxuryMenWatchesLink;"Watches"
+
+## L4
+;;LuxuryMenViewAllLink;"View All"
+;;LuxuryMenPolosLink;"Polos"
+;;LuxuryMenTShirtsLink;"T-Shirts"
+;;LuxuryMenShirtsLink;"Shirts"
+;;LuxuryMenJeansLink;"Jeans"
+;;LuxuryMenTrousersChinosLink;"Trousers & Chinos"
+;;LuxuryMenUnderwearLink;"Underwear"
+;;LuxuryMenShortsLink;"Shorts"
+;;LuxuryMenSweatshirtsSweatersLink;"Sweatshirts & Sweaters"
+;;LuxuryMenCasualJacketsBlazersLink;"Casual Jackets & Blazers"
+
+
+;;LuxuryMenAccesseriesViewAllLink;"View All"
+;;LuxuryMenAccesseriesBeltsLink;"Belts"
+;;LuxuryMenAccesseriesHatsCapsLink;"Hats & Caps"
+;;LuxuryMenAccesseriesTiesPocketSquaresLink;"Ties & Pocket Squares"
+;;LuxuryMenAccesseriesCufflinksLink;"Cufflinks"
+;;LuxuryMenAccesseriesSocksLink;"Socks"
+
+;;LuxuryMenBagsViewAllLink;"View All"
+;;LuxuryMenBagsWalletsLink;"Wallets"
+;;LuxuryMenBagsCrossbodyMessengerBagsLink;"Crossbody & Messenger Bags"
+;;LuxuryMenBagsLaptopBagsBriefcasesLink;"Laptop Bags & Briefcases"
+;;LuxuryMenBagsSatchelsLink;"Satchels"
+;;LuxuryMenBagsBackpacksLink;"Backpacks"
+;;LuxuryMenBagsCasesPouchesLink;"Cases & Pouches"
+
+;;LuxuryMenShoeViewAllLink;"View All"
+;;LuxuryMenShoeLoafersMoccasinsLink;"Loafers & Moccasins"
+;;LuxuryMenShoeDerbyShoesLink;"Derby Shoes"

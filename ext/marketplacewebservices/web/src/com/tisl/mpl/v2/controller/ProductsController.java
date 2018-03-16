@@ -1722,7 +1722,7 @@ public class ProductsController extends BaseController
 
 	@RequestMapping(value = "/productDetails/{productCode}", params = "isPwa", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PRIVATE, maxAge = 120)
-	@Cacheable(value = "productDetailsCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
+	@Cacheable(value = "productDetailsCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields,#isPwa)")
 	@ResponseBody
 	public MplNewProductDetailMobileWsData getProduct(@PathVariable String productCode,
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request,

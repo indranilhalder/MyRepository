@@ -186,3 +186,16 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;shoecaretype					           ;"Shoe Care Type"
  ;$solrIndexedType		   ;suitablefor						           ;"Suitable for"
  ;$solrIndexedType		   ;weightsportsfootwear					   ;"Weight of Product"
+ 
+ 
+UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];displayName[lang=$lang]
+;$solrIndexedType;candleburntimehome;"Burn Type"
+;$solrIndexedType;candletypehome;"Candle Type"
+;$solrIndexedType;artpiecetypehome;"Art Piece Type"
+;$solrIndexedType;glasstypehome;"Glass Type"
+;$solrIndexedType;accessorytypehome;"Accessory Type"
+;$solrIndexedType;sofaupholstryhome;"Sofa Type"
+;$solrIndexedType;numberofchairshome;"Chair Type"
+;$solrIndexedType;assemblyrequiredhome;"Assembly Type"
+;$solrIndexedType;tabletopshapehome;"Table Top Type"
+ 
