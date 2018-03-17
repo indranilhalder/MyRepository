@@ -48,9 +48,9 @@ class MobileFooter extends React.Component {
       selected = BRANDS;
     }
 
-    if (pathName === PRODUCT_CART_ROUTER) {
-      selected = BAG;
-    }
+    // if (pathName === PRODUCT_CART_ROUTER) {
+    //   selected = BAG;
+    // }
 
     if (selected === null) {
       return null;
@@ -90,14 +90,14 @@ class MobileFooter extends React.Component {
           selected={pathName === }
           onSelect={() => this.handleSelect(HOME_ROUTER)}
         /> */}
-        {/* <MobileFooterItem
+        <MobileFooterItem
           activeIcon={myBagIconRed}
           basicIcon={myBagIcon}
           value={BAG}
           text="My Bag"
           selected={selected}
           onSelect={val => this.handleSelect(PRODUCT_CART_ROUTER)}
-        /> */}
+        />
       </div>
     );
   }
