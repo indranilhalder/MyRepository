@@ -6,7 +6,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     searchResult: state.search.searchResult.result,
     loading: state.search.searchResult.loading,
-    header: ownProps.text
+    header: ownProps.text,
+    canGoBack: ownProps.canGoBack
   };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

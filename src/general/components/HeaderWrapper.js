@@ -37,7 +37,6 @@ class HeaderWrapper extends React.Component {
     let canGoBack = true;
     let shouldRenderHeader = true;
     let headerText = "";
-
     if (
       url === HOME_ROUTER ||
       url === CATEGORIES_LANDING_PAGE ||
@@ -94,10 +93,17 @@ class HeaderWrapper extends React.Component {
     }
 
     if (shouldRenderSearch) {
-      headerToRender = <SearchContainer />;
+      headerToRender = <SearchContainer canGoBack={canGoBack} />;
     }
 
-    return <div className={styles.base}>{headerToRender}</div>;
+    return (
+      shouldRenderHeader && (
+        <React.Fragment>
+          <div className={styles.hiddenHeader} />{" "}
+          <div className={styles.base}>{headerToRender}</div>
+        </React.Fragment>
+      )
+    );
   }
 }
 

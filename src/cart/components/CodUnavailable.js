@@ -1,7 +1,7 @@
 import React from "react";
 import { Icon } from "xelpmoc-core";
 import chashIcon from "./img/cod.svg";
-import arrowIcon from "../../general/components/img/down";
+import arrowIcon from "../../general/components/img/down-arrow.svg";
 import styles from "./CodUnavailable.css";
 export default class CodUnavailable extends React.Component {
   render() {

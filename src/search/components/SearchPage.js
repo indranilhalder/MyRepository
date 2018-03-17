@@ -42,6 +42,7 @@ export default class SearchPage extends React.Component {
             onClickBack={() => {
               this.handleBackClick();
             }}
+            canGoBack={this.props.canGoBack}
             text={this.props.header}
           />
         </div>

@@ -47,9 +47,15 @@ export default class SearchHeader extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.InformationHeader}>
-          <div className={styles.backHolder} onClick={() => this.onClickBack()}>
-            <Icon image={iconImageURL} size={16} />
-          </div>
+          {this.props.canGoBack && (
+            <div
+              className={styles.backHolder}
+              onClick={() => this.onClickBack()}
+            >
+              <Icon image={iconImageURL} size={16} />
+            </div>
+          )}
+
           <div
             className={styles.searchHolder}
             onClick={() => this.onClickIcon()}
@@ -86,8 +92,10 @@ export default class SearchHeader extends React.Component {
 SearchHeader.propTypes = {
   text: PropTypes.string,
   onClickBack: PropTypes.func,
-  onSearch: PropTypes.func
+  onSearch: PropTypes.func,
+  canGoBack: PropTypes.bool
 };
 SearchHeader.defaultProps = {
-  text: "Mobile"
+  text: "Mobile",
+  canGoBack: true
 };
