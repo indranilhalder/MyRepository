@@ -207,6 +207,20 @@ export const REMOVE_ITEM_FROM_CART_LOGGED_OUT_SUCCESS =
 export const REMOVE_ITEM_FROM_CART_LOGGED_OUT_FAILURE =
   "REMOVE_ITEM_FROM_CART_LOGGED_OUT_FAILURE";
 
+export const UPDATE_QUANTITY_IN_CART_LOGGED_IN_REQUEST =
+  "UPDATE_QUANTITY_IN_CART_LOGGED_IN_REQUEST";
+export const UPDATE_QUANTITY_IN_CART_LOGGED_IN_SUCCESS =
+  "UPDATE_QUANTITY_IN_CART_LOGGED_IN_SUCCESS";
+export const UPDATE_QUANTITY_IN_CART_LOGGED_IN_FAILURE =
+  "UPDATE_QUANTITY_IN_CART_LOGGED_IN_FAILURE";
+
+export const UPDATE_QUANTITY_IN_CART_LOGGED_OUT_REQUEST =
+  "UPDATE_QUANTITY_IN_CART_LOGGED_OUT_REQUEST";
+export const UPDATE_QUANTITY_IN_CART_LOGGED_OUT_SUCCESS =
+  "UPDATE_QUANTITY_IN_CART_LOGGED_OUT_SUCCESS";
+export const UPDATE_QUANTITY_IN_CART_LOGGED_OUT_FAILURE =
+  "UPDATE_QUANTITY_IN_CART_LOGGED_OUT_FAILURE";
+
 export const PAYMENT_MODE = "credit card";
 const pincode = 229001;
 const PAYMENT_EMI = "EMI";
@@ -2555,8 +2569,6 @@ export function removeItemFromCartLoggedOutFailure(error) {
 // Action Creator for remove Item from Cart Logged Out
 export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
   return async (dispatch, getState, { api }) => {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     dispatch(removeItemFromCartLoggedOutRequest());
@@ -2583,6 +2595,124 @@ export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
       dispatch(removeItemFromCartLoggedOutRequest());
     } catch (e) {
       dispatch(removeItemFromCartLoggedOutFailure(e.message));
+    }
+  };
+}
+
+// Actions for update quantity in cart
+export function updateQuantityInCartLoggedInRequest() {
+  return {
+    type: UPDATE_QUANTITY_IN_CART_LOGGED_IN_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function updateQuantityInCartLoggedInSuccess(updateQuantityDetails) {
+  return {
+    type: UPDATE_QUANTITY_IN_CART_LOGGED_IN_SUCCESS,
+    status: SUCCESS,
+    updateQuantityDetails
+  };
+}
+
+export function updateQuantityInCartLoggedInFailure(error) {
+  return {
+    type: UPDATE_QUANTITY_IN_CART_LOGGED_IN_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action creator for update quantity in cart for LoggedIn
+export function updateQuantityInCartLoggedIn(selectedItem, quantity, pinCode) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  const cartId = JSON.parse(cartDetails).code;
+
+  return async (dispatch, getState, { api }) => {
+    dispatch(updateQuantityInCartLoggedInRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/carts/${cartId}/updateEntries/${selectedItem}?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2&quantity=${quantity}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
+      }
+      dispatch(
+        getCartDetails(
+          JSON.parse(userDetails).userName,
+          JSON.parse(customerCookie).access_token,
+          cartId,
+          pinCode
+        )
+      );
+      dispatch(updateQuantityInCartLoggedInSuccess(resultJson));
+    } catch (e) {
+      dispatch(updateQuantityInCartLoggedInFailure(e.message));
+    }
+  };
+}
+
+// Actions for update quantity in cart for Logged Out
+export function updateQuantityInCartLoggedOutRequest() {
+  return {
+    type: UPDATE_QUANTITY_IN_CART_LOGGED_OUT_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function updateQuantityInCartLoggedOutSuccess(updateQuantityDetails) {
+  return {
+    type: UPDATE_QUANTITY_IN_CART_LOGGED_OUT_SUCCESS,
+    status: SUCCESS,
+    updateQuantityDetails
+  };
+}
+
+export function updateQuantityInCartLoggedOutFailure(error) {
+  return {
+    type: UPDATE_QUANTITY_IN_CART_LOGGED_OUT_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action creator for update quantity in cart
+export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
+  const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+  const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+
+  return async (dispatch, getState, { api }) => {
+    dispatch(updateQuantityInCartLoggedOutRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/anonymous/carts/${
+          JSON.parse(cartDetailsAnonymous).guid
+        }/updateEntries/${selectedItem}?access_token=${
+          JSON.parse(globalCookie).access_token
+        }&isPwa=true&platformNumber=2&quantity=${quantity}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
+      }
+      dispatch(
+        getCartDetails(
+          ANONYMOUS_USER,
+          JSON.parse(globalCookie).access_token,
+          JSON.parse(cartDetailsAnonymous).guid,
+          pinCode
+        )
+      );
+      dispatch(updateQuantityInCartLoggedOutSuccess(resultJson));
+    } catch (e) {
+      dispatch(updateQuantityInCartLoggedOutFailure(e.message));
     }
   };
 }
