@@ -380,7 +380,7 @@ class CheckOutPage extends React.Component {
 
   render() {
     if (this.props.cart.loading) {
-      return <div>{this.renderLoader()}</div>;
+      return <div className={styles.base}>{this.renderLoader()}</div>;
     }
     const cartData = this.props.cart;
     if (
@@ -388,11 +388,13 @@ class CheckOutPage extends React.Component {
       !this.state.orderConfirmation
     ) {
       return (
-        <AddDeliveryAddress
-          addUserAddress={address => this.addAddress(address)}
-          {...this.state}
-          onChange={val => this.onChange(val)}
-        />
+        <div className={styles.base}>
+          <AddDeliveryAddress
+            addUserAddress={address => this.addAddress(address)}
+            {...this.state}
+            onChange={val => this.onChange(val)}
+          />
+        </div>
       );
     } else if (
       !this.state.addNewAddress &&
@@ -400,7 +402,7 @@ class CheckOutPage extends React.Component {
       !this.state.orderConfirmation
     ) {
       return (
-        <div>
+        <div className={styles.base}>
           {cartData.userAddress &&
             !this.state.confirmAddress &&
             this.renderCheckoutAddress()}
