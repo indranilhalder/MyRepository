@@ -17,7 +17,6 @@ export default class Checkout extends React.Component {
     }
   }
   handleShowDetail() {
-    console.log("click");
     this.setState({ showDetails: !this.state.showDetails });
   }
   render() {
