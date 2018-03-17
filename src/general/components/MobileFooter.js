@@ -48,10 +48,6 @@ class MobileFooter extends React.Component {
       selected = BRANDS;
     }
 
-    if (pathName === PRODUCT_CART_ROUTER) {
-      selected = BAG;
-    }
-
     if (selected === null) {
       return null;
     }
