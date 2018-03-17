@@ -99,7 +99,7 @@ class ProductDescriptionPage extends Component {
     );
     if (userDetails) {
       Object.assign(productDetails, {
-        userId: JSON.parse(userDetails).customerInfo.mobileNumber,
+        userId: JSON.parse(userDetails).userName,
         accessToken: JSON.parse(customerCookie).access_token,
         cartId: JSON.parse(cartDetailsLoggedInUser).code
       });

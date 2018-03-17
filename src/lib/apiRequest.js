@@ -67,6 +67,14 @@ export async function post(path, postData, doNotUserApiSuffix: true) {
   });
 }
 
+export async function getWithoutApiUrlRoot(url) {
+  return await fetch(url, {
+    headers: {
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
+    }
+  });
+}
+
 export async function get(url) {
   return await fetch(`${API_URL_ROOT}/${url}`, {
     headers: {

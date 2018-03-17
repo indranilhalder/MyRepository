@@ -21,8 +21,8 @@ const mapDispatchToProps = dispatch => {
     getEmiBankDetails: cartDetails => {
       dispatch(getEmiBankDetails(cartDetails));
     },
-    getCartDetails: (cartId, userId, accessToken) => {
-      dispatch(getCartDetails(cartId, userId, accessToken));
+    getCartDetails: (cartId, userId, accessToken, pinCode) => {
+      dispatch(getCartDetails(cartId, userId, accessToken, pinCode));
     },
     showCouponModal: data => {
       dispatch(showModal(PRODUCT_COUPONS, data));

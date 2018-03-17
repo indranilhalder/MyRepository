@@ -45,7 +45,9 @@ class CheckOutPage extends React.Component {
     selectedSlaveId: null,
     ussIdAndDeliveryModesObj: {}, // this object we are using for check when user will continue after  delivery mode then we ll check for all products we selected delivery mode or not
     selectedProductsUssIdForCliqAndPiq: null,
-    orderId: ""
+    orderId: "",
+    savedCardDetails: "",
+    binValidationCOD: false
   };
 
   renderLoader() {
@@ -243,13 +245,18 @@ class CheckOutPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.cart.justPayPaymentDetails !== null) {
-      window.location.replace(
-        nextProps.cart.justPayPaymentDetails.payment.authentication.url
-      );
+      if (nextProps.cart.justPayPaymentDetails.payment) {
+        window.location.replace(
+          nextProps.cart.justPayPaymentDetails.payment.authentication.url
+        );
+      }
     }
     if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
       Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       this.setState({ orderConfirmation: true });
+    }
+    if (nextProps.cart.binValidationCODStatus === SUCCESS) {
+      this.setState({ binValidationCOD: true });
     }
   }
 
@@ -292,7 +299,7 @@ class CheckOutPage extends React.Component {
         );
 
         this.props.getCartDetailsCNC(
-          JSON.parse(userDetails).customerInfo.mobileNumber,
+          JSON.parse(userDetails).userName,
           JSON.parse(customerCookie).access_token,
           JSON.parse(cartDetailsLoggedInUser).code,
           this.props.location.state.pinCode,
@@ -300,6 +307,7 @@ class CheckOutPage extends React.Component {
         );
         this.props.getUserAddress(this.props.location.state.pinCode);
         this.props.getPaymentModes();
+        this.props.getCODEligibility();
         this.props.getNetBankDetails();
         this.props.getEmiBankDetails(this.props.location.state.productValue);
       }
@@ -346,6 +354,18 @@ class CheckOutPage extends React.Component {
       }
       this.setState({ deliverMode: true });
     }
+
+    if (this.state.savedCardDetails !== "") {
+      this.props.softReservationPaymentForSavedCard(
+        this.state.savedCardDetails,
+        this.state.addressId[0],
+        this.state.paymentModeSelected
+      );
+    }
+
+    if (this.state.binValidationCOD) {
+      this.softReservationForCODPayment();
+    }
   };
 
   addAddress = address => {
@@ -383,9 +403,25 @@ class CheckOutPage extends React.Component {
     this.props.binValidation(paymentMode, binNo);
   };
 
+  binValidationForCOD = paymentMode => {
+    this.setState({ paymentModeSelected: paymentMode });
+    this.props.binValidationForCOD(paymentMode);
+  };
+
   binValidationForNetBank = (paymentMode, bankName) => {
     this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidationForNetBanking(paymentMode, bankName);
+  };
+
+  binValidationForSavedCard = cardDetails => {
+    this.setState({
+      paymentModeSelected: `${cardDetails.cardType} Card`
+    });
+    this.setState({ savedCardDetails: cardDetails });
+    this.props.binValidation(
+      `${cardDetails.cardType} Card`,
+      cardDetails.cardISIN
+    );
   };
 
   softReservationForPayment = cardDetails => {
@@ -415,6 +451,11 @@ class CheckOutPage extends React.Component {
     this.props.history.index = 0;
     this.props.history.push(HOME_ROUTER);
   };
+
+  softReservationForCODPayment = () => {
+    this.props.softReservationForCODPayment(this.props.location.state.pinCode);
+  };
+
   render() {
     if (this.props.cart.loading) {
       return <div>{this.renderLoader()}</div>;
@@ -479,14 +520,23 @@ class CheckOutPage extends React.Component {
                 binValidation={(paymentMode, binNo) =>
                   this.binValidation(paymentMode, binNo)
                 }
-                binValidationForNetBank={(paymentMode, bankName) =>
-                  this.binValidationForNetBank(paymentMode, bankName)
+                binValidationForCOD={paymentMode =>
+                  this.binValidationForCOD(paymentMode)
                 }
                 softReservationForPayment={cardDetails =>
                   this.softReservationForPayment(cardDetails)
                 }
+                softReservationForCODPayment={() =>
+                  this.softReservationForCODPayment()
+                }
+                binValidationForNetBank={(paymentMode, bankName) =>
+                  this.binValidationForNetBank(paymentMode, bankName)
+                }
                 softReservationPaymentForNetBanking={bankName =>
                   this.softReservationPaymentForNetBanking(bankName)
+                }
+                binValidationForSavedCard={cardDetails =>
+                  this.binValidationForSavedCard(cardDetails)
                 }
               />
             )}

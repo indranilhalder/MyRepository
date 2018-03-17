@@ -25,9 +25,14 @@ import {
   binValidation,
   softReservationForPayment,
   updateTransactionDetails,
+  getCODEligibility,
+  binValidationForCOD,
+  updateTransactionDetailsForCOD,
+  softReservationForCODPayment,
   captureOrderExperience,
   binValidationForNetBanking,
-  softReservationPaymentForNetBanking
+  softReservationPaymentForNetBanking,
+  softReservationPaymentForSavedCard
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -118,16 +123,32 @@ const mapDispatchToProps = dispatch => {
     updateTransactionDetails: (paymentMode, juspayOrderID, cartId) => {
       dispatch(updateTransactionDetails(paymentMode, juspayOrderID, cartId));
     },
+    getCODEligibility: () => {
+      dispatch(getCODEligibility());
+    },
+    binValidationForCOD: paymentMode => {
+      dispatch(binValidationForCOD(paymentMode));
+    },
+    updateTransactionDetailsForCOD: (paymentMode, juspayOrderID) => {
+      dispatch(updateTransactionDetailsForCOD(paymentMode, juspayOrderID));
+    },
+    softReservationForCODPayment: pinCode => {
+      dispatch(softReservationForCODPayment(pinCode));
+    },
     captureOrderExperience: (orderId, Rating) => {
       dispatch(captureOrderExperience(orderId, Rating));
     },
-
     binValidationForNetBanking: (paymentMode, binNo) => {
       dispatch(binValidationForNetBanking(paymentMode, binNo));
     },
     softReservationPaymentForNetBanking: (paymentMode, bankName, pinCode) => {
       dispatch(
         softReservationPaymentForNetBanking(paymentMode, bankName, pinCode)
+      );
+    },
+    softReservationPaymentForSavedCard: (cardDetails, address, paymentMode) => {
+      dispatch(
+        softReservationPaymentForSavedCard(cardDetails, address, paymentMode)
       );
     }
   };

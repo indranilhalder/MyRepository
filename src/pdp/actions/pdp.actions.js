@@ -199,7 +199,7 @@ export function getProductPinCode(pinCode, productCode) {
       let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
       let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
       if (userDetails) {
-        let userName = JSON.parse(userDetails).customerInfo.mobileNumber;
+        let userName = JSON.parse(userDetails).userName;
         let accessToken = JSON.parse(customerCookie).access_token;
         url = `${PRODUCT_DETAILS_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=${validProductCode}&pin=${pinCode}`;
       } else {
