@@ -34,8 +34,10 @@ export default class BrandsLandingPageDefault extends React.Component {
     this.props.getAllBrands();
   }
   renderToAnotherURL(webURL) {
-    const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "");
-    this.props.history.push(urlSuffix);
+    if (webURL) {
+      const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "");
+      this.props.history.push(urlSuffix);
+    }
   }
   switchTab(val) {
     this.setState({ currentActiveBrandType: val });
@@ -155,6 +157,7 @@ export default class BrandsLandingPageDefault extends React.Component {
                           label={data.brandName}
                           select={data.select}
                           key={i}
+                          onClick={() => this.renderToAnotherURL(data.webURL)}
                         />
                       );
                     })}
