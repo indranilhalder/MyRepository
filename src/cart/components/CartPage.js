@@ -244,14 +244,8 @@ class CartPage extends React.Component {
                       onSave={this.addProductToWishList}
                       onRemove={this.removeItemFromCart}
                       onQuantityChange={this.updateQuantityInCart}
-                      maxQuantityAllowed={
-                        this.props.cart.cartDetails.products[i]
-                          .maxQuantityAllowed
-                      }
-                      qtySelectedByUser={
-                        this.props.cart.cartDetails.products[i]
-                          .qtySelectedByUser
-                      }
+                      maxQuantityAllowed={product.maxQuantityAllowed}
+                      qtySelectedByUser={product.qtySelectedByUser}
                     />
                   </div>
                 );

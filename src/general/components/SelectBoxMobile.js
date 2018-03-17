@@ -11,7 +11,6 @@ const GREY = "grey";
 const HOLLOW_BOX = "hollowBox";
 const BLACK_BOX = "blackBox";
 const GREY_BOX = "greyBox";
-
 export default class SelectBoxMobile extends React.Component {
   constructor(props) {
     super(props);
@@ -49,8 +48,6 @@ export default class SelectBoxMobile extends React.Component {
     if (this.props.arrowColour === GREY_BOX) {
       themeClass = styles.base;
     }
-
-    const selectedNumber = "4";
     return (
       <div
         className={themeClass}
@@ -67,12 +64,8 @@ export default class SelectBoxMobile extends React.Component {
           {this.props.options &&
             this.props.options.map((item, i) => {
               return (
-                <option
-                  selected={item === this.props.selectedItem ? true : false}
-                  key={i}
-                  value={item}
-                >
-                  {item}
+                <option key={i} value={item.value}>
+                  {item.value}
                 </option>
               );
             })}
@@ -89,8 +82,7 @@ SelectBoxMobile.propTypes = {
   height: PropTypes.number,
   options: PropTypes.arrayOf(PropTypes.shape({ value: PropTypes.string })),
   arrowColour: PropTypes.oneOf([BLACK, GREY, WHITE]),
-  theme: PropTypes.oneOf([HOLLOW_BOX, BLACK_BOX, GREY_BOX]),
-  selectedItem: PropTypes.string
+  theme: PropTypes.oneOf([HOLLOW_BOX, BLACK_BOX, GREY_BOX])
 };
 SelectBoxMobile.defaultProps = {
   height: 35,

@@ -70,7 +70,7 @@ export default class CartItem extends React.Component {
     if (this.state.quantityList.length === 0) {
       let fetchedQuantityList = [];
       for (let i = 1; i <= parseInt(this.props.maxQuantityAllowed, 10); i++) {
-        fetchedQuantityList.push(i.toString());
+        fetchedQuantityList.push({ value: i.toString() });
       }
       this.setState({
         quantityList: fetchedQuantityList
@@ -140,7 +140,7 @@ export default class CartItem extends React.Component {
                 options={this.state.quantityList}
                 selected={this.state.selectedValue}
                 onChange={val => this.handleQuantityChange(val)}
-                selectedItem={this.state.qtySelectedByUser}
+                value={this.state.qtySelectedByUser}
               />
             </div>
           </div>
