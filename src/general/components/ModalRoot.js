@@ -39,7 +39,9 @@ export default class ModalRoot extends React.Component {
     this.props.otpVerification(otpDetails, this.props.ownProps);
     this.props.hideModal();
   }
-
+  resendOTP(userObj) {
+    this.props.resendOTP(userObj);
+  }
   resetPassword(userDetails) {
     this.props.resetPassword(userDetails);
     this.props.hideModal();
@@ -82,7 +84,9 @@ export default class ModalRoot extends React.Component {
       ),
       SignUpOtpVerification: (
         <OtpVerification
+          userObj={this.props.ownProps}
           closeModal={() => this.handleClose()}
+          resendOtp={userObj => this.resendOTP(userObj)}
           submitOtp={otpDetails => this.submitOtp(otpDetails)}
         />
       ),

@@ -21,7 +21,7 @@ export default class OtpVerification extends React.Component {
   };
   resendOtp = () => {
     if (this.props.resendOtp) {
-      this.props.resendOtp();
+      this.props.resendOtp(this.props.userObj);
     }
   };
   onSubmitOtp = () => {
@@ -61,7 +61,7 @@ export default class OtpVerification extends React.Component {
                 height={30}
                 textStyle={{ color: "#212121", fontSize: 14 }}
                 label={"Resend OTP"}
-                onClick={() => this.callVerify()}
+                onClick={() => this.resendOtp()}
               />
             </div>
 

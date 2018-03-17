@@ -90,6 +90,30 @@ class CartPage extends React.Component {
     );
   };
 
+  addProductToWishList = product => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      if (this.props.addProductToWishList) {
+        this.props.addProductToWishList(product);
+      }
+    } else {
+      this.props.history.push(LOGIN_PATH);
+    }
+  };
+
+  removeItemFromCart = (cartListItemPosition, pinCode) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      if (this.props.removeItemFromCartLoggedIn) {
+        this.props.removeItemFromCartLoggedIn(cartListItemPosition, pinCode);
+      }
+    } else {
+      if (this.props.removeItemFromCartLoggedOut) {
+        this.props.removeItemFromCartLoggedOut(cartListItemPosition, "");
+      }
+    }
+  };
+
   applyCoupon = couponCode => {
     if (this.props.applyCoupon) {
       this.props.applyCoupon();
@@ -181,11 +205,14 @@ class CartPage extends React.Component {
                 return (
                   <div className={styles.cartItem} key={i}>
                     <CartItem
+                      pinCode={this.state.pinCode}
+                      product={product}
                       productIsServiceable={product.pinCodeResponse}
                       productImage={product.imageURL}
                       productDetails={product.description}
                       productName={product.productName}
                       price={product.price}
+                      index={i}
                       deliveryInformation={product.elligibleDeliveryMode}
                       deliverTime={
                         product.elligibleDeliveryMode &&
@@ -197,6 +224,8 @@ class CartPage extends React.Component {
                           label: product.qtySelectedByUser
                         }
                       ]}
+                      onSave={this.addProductToWishList}
+                      onRemove={this.removeItemFromCart}
                     />
                   </div>
                 );
@@ -227,7 +256,11 @@ CartPage.propTypes = {
   cartOffer: PropTypes.string,
   cartTax: PropTypes.string,
   delivery: PropTypes.string,
-  offers: PropTypes.string
+  offers: PropTypes.string,
+  removeItemFromCartLoggedOut: PropTypes.func,
+  removeItemFromCartLoggedIn: PropTypes.func,
+  addProductToWishList: PropTypes.func,
+  getCartDetails: PropTypes.func
 };
 
 CartPage.defaultProps = {

@@ -186,10 +186,33 @@ export const ORDER_EXPERIENCE_CAPTURE_SUCCESS =
 export const ORDER_EXPERIENCE_CAPTURE_FAILURE =
   "ORDER_EXPERIENCE_CAPTURE_FAILURE";
 
+export const ADD_PRODUCT_TO_WISH_LIST_REQUEST =
+  "ADD_PRODUCT_TO_WISH_LIST_REQUEST";
+export const ADD_PRODUCT_TO_WISH_LIST_SUCCESS =
+  "ADD_PRODUCT_TO_WISH_LIST_SUCCESS";
+export const ADD_PRODUCT_TO_WISH_LIST_FAILURE =
+  "ADD_PRODUCT_TO_WISH_LIST_FAILURE";
+
+export const REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST =
+  "REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST";
+export const REMOVE_ITEM_FROM_CART_LOGGED_IN_SUCCESS =
+  "REMOVE_ITEM_FROM_CART_LOGGED_IN_SUCCESS";
+export const REMOVE_ITEM_FROM_CART_LOGGED_IN_FAILURE =
+  "REMOVE_ITEM_FROM_CART_LOGGED_IN_FAILURE";
+
+export const REMOVE_ITEM_FROM_CART_LOGGED_OUT_REQUEST =
+  "REMOVE_ITEM_FROM_CART_LOGGED_OUT_REQUEST";
+export const REMOVE_ITEM_FROM_CART_LOGGED_OUT_SUCCESS =
+  "REMOVE_ITEM_FROM_CART_LOGGED_OUT_SUCCESS";
+export const REMOVE_ITEM_FROM_CART_LOGGED_OUT_FAILURE =
+  "REMOVE_ITEM_FROM_CART_LOGGED_OUT_FAILURE";
+
 export const PAYMENT_MODE = "credit card";
 const pincode = 229001;
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
+const MY_WISH_LIST = "MyWishList";
+export const ANONYMOUS_USER = "anonymous";
 
 export function cartDetailsRequest() {
   return {
@@ -2434,6 +2457,171 @@ export function softReservationForCODPayment(pinCode) {
       dispatch(softReservationForCODPaymentSuccess(resultJson));
     } catch (e) {
       dispatch(softReservationForCODPaymentFailure(e.message));
+    }
+  };
+}
+
+// Actions for Add Product to Wish List
+export function addProductToWishListRequest() {
+  return {
+    type: ADD_PRODUCT_TO_WISH_LIST_REQUEST,
+    status: REQUESTING
+  };
+}
+export function addProductToWishListSuccess() {
+  return {
+    type: ADD_PRODUCT_TO_WISH_LIST_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function addProductToWishListFailure(error) {
+  return {
+    type: ADD_PRODUCT_TO_WISH_LIST_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator for Add Product To Wish List
+export function addProductToWishList(productDetails) {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    const cartId = JSON.parse(cartDetails).guid;
+    dispatch(addProductToWishListRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/addProductInWishlist?platformNumber=2&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&ussid=${productDetails.USSID}&productCode=${
+          productDetails.productcode
+        }&wishlistName=${MY_WISH_LIST}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(addProductToWishListSuccess());
+    } catch (e) {
+      dispatch(addProductToWishListFailure(e.message));
+    }
+  };
+}
+
+// Action for remove Item from Cart Logged In
+export function removeItemFromCartLoggedInRequest() {
+  return {
+    type: REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST,
+    status: REQUESTING
+  };
+}
+export function removeItemFromCartLoggedInSuccess() {
+  return {
+    type: REMOVE_ITEM_FROM_CART_LOGGED_IN_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function removeItemFromCartLoggedInFailure(error) {
+  return {
+    type: REMOVE_ITEM_FROM_CART_LOGGED_IN_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator for remove Item from Cart Logged In
+export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    const cartId = JSON.parse(cartDetails).code;
+    dispatch(removeItemFromCartLoggedInRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/carts/${cartId}/deleteEntries/${cartListItemPosition}?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(
+        getCartDetails(
+          JSON.parse(userDetails).userName,
+          JSON.parse(customerCookie).access_token,
+          cartId,
+          pinCode
+        )
+      );
+      dispatch(removeItemFromCartLoggedInSuccess());
+    } catch (e) {
+      dispatch(removeItemFromCartLoggedInFailure(e.message));
+    }
+  };
+}
+
+// Action for remove Item from Cart Logged Out
+export function removeItemFromCartLoggedOutRequest() {
+  return {
+    type: REMOVE_ITEM_FROM_CART_LOGGED_OUT_REQUEST,
+    status: REQUESTING
+  };
+}
+export function removeItemFromCartLoggedOutSuccess() {
+  return {
+    type: REMOVE_ITEM_FROM_CART_LOGGED_OUT_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function removeItemFromCartLoggedOutFailure(error) {
+  return {
+    type: REMOVE_ITEM_FROM_CART_LOGGED_OUT_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator for remove Item from Cart Logged Out
+export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    dispatch(removeItemFromCartLoggedOutRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/anonymous/carts/${
+          JSON.parse(cartDetailsAnonymous).guid
+        }/deleteEntries/${cartListItemPosition}?access_token=${
+          JSON.parse(globalCookie).access_token
+        }&isPwa=true&platformNumber=2`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(
+        getCartDetails(
+          ANONYMOUS_USER,
+          JSON.parse(globalCookie).access_token,
+          JSON.parse(cartDetailsAnonymous).guid,
+          pinCode
+        )
+      );
+      dispatch(removeItemFromCartLoggedOutRequest());
+    } catch (e) {
+      dispatch(removeItemFromCartLoggedOutFailure(e.message));
     }
   };
 }
