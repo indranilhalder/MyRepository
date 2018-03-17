@@ -97,7 +97,16 @@ const cart = (
 
     binValidationStatus: null,
     binValidationError: null,
-    binValidationDetails: null
+    binValidationDetails: null,
+
+    addToWishlistStatus: null,
+    addToWishlistError: null,
+
+    removeCartItemStatus: null,
+    removeCartItemError: null,
+
+    removeCartItemLoggedOutStatus: null,
+    removeCartItemLoggedOutError: null
   },
   action
 ) => {
@@ -760,6 +769,63 @@ const cart = (
       return Object.assign({}, state, {
         softReserveCODPaymentStatus: action.status,
         softReserveCODPaymentError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_PRODUCT_TO_WISH_LIST_REQUEST:
+      return Object.assign({}, state, {
+        addToWishlistStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_PRODUCT_TO_WISH_LIST_SUCCESS:
+      return Object.assign({}, state, {
+        addToWishlistStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.ADD_PRODUCT_TO_WISH_LIST_FAILURE:
+      return Object.assign({}, state, {
+        addToWishlistStatus: action.status,
+        addToWishlistError: action.error,
+        loading: false
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST:
+      return Object.assign({}, state, {
+        removeCartItemStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_IN_SUCCESS:
+      return Object.assign({}, state, {
+        removeCartItemStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_IN_FAILURE:
+      return Object.assign({}, state, {
+        removeCartItemStatus: action.status,
+        removeCartItemError: action.error,
+        loading: false
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_OUT_REQUEST:
+      return Object.assign({}, state, {
+        removeCartItemLoggedOutStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_OUT_SUCCESS:
+      return Object.assign({}, state, {
+        removeCartItemLoggedOutStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_OUT_FAILURE:
+      return Object.assign({}, state, {
+        removeCartItemLoggedOutStatus: action.status,
+        removeCartItemLoggedOutError: action.error,
         loading: false
       });
 
