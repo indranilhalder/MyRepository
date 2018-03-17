@@ -23,6 +23,11 @@ class HeaderWrapper extends React.Component {
   onBackClick = () => {
     this.props.history.goBack();
   };
+  goToCart = () => {
+    if (this.props.history) {
+      this.props.history.push(PRODUCT_CART_ROUTER);
+    }
+  };
 
   render() {
     const url = this.props.location.pathname;
@@ -89,18 +94,20 @@ class HeaderWrapper extends React.Component {
       />
     );
     if (productCode) {
-      headerToRender = <HollowHeader goBack={this.onBackClick} />;
-    }
-
-    if (shouldRenderSearch) {
+      headerToRender = (
+        <HollowHeader goBack={this.onBackClick} goToCart={this.goToCart} />
+      );
+    } else if (shouldRenderSearch) {
       headerToRender = <SearchContainer canGoBack={canGoBack} />;
     }
 
     return (
       shouldRenderHeader && (
         <React.Fragment>
-          <div className={styles.hiddenHeader} />{" "}
-          <div className={styles.base}>{headerToRender}</div>
+          {!productCode && <div className={styles.hiddenHeader} />}
+          <div className={!productCode ? styles.base : styles.absoluteHeader}>
+            {headerToRender}
+          </div>
         </React.Fragment>
       )
     );

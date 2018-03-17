@@ -5,7 +5,10 @@
   top: 0;
   left: 0;
 }
-
+.absoluteHeader {
+  composes: base;
+  position: absolute;
+}
 .hiddenHeader {
   width: 100%;
   height: 50px;
