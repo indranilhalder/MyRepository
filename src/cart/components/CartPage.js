@@ -17,7 +17,8 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   ANONYMOUS_USER,
   CHECKOUT_ROUTER,
-  LOGIN_PATH
+  LOGIN_PATH,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 class CartPage extends React.Component {
@@ -36,20 +37,22 @@ class CartPage extends React.Component {
     let cartDetailsLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
+    let defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (userDetails) {
       this.props.getCartDetails(
         JSON.parse(userDetails).userName,
         JSON.parse(customerCookie).access_token,
         JSON.parse(cartDetailsLoggedInUser).code,
-        ""
+        defaultPinCode
       );
     } else {
       this.props.getCartDetails(
         ANONYMOUS_USER,
         JSON.parse(globalCookie).access_token,
         JSON.parse(cartDetailsAnonymous).guid,
-        ""
+        defaultPinCode
       );
     }
     if (userDetails) {

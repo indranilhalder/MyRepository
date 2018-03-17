@@ -14,6 +14,7 @@ export const MOBILE_PDP_VIEW = "mobilePdpView";
 export const MAIN_ROUTER = "/";
 export const CUSTOMER_ACCESS_TOKEN = "customerAccessToken";
 export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
+export const DEFAULT_PIN_CODE_LOCAL_STORAGE = "defaultPinCode";
 
 export const REFRESH_TOKEN = "refresh_token";
 export const BRAND_OR_CATEGORY_LANDING_PAGE =
