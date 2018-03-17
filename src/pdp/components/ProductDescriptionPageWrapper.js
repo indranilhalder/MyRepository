@@ -18,7 +18,6 @@ const typeComponentMapping = {
 
 export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidMount() {
-    console.log("COMPONENT DID MOUNT");
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
       this.props.getProductDescription(this.props.match.params[1]);
       this.props.getMsdRequest(this.props.match.params[1]);

@@ -961,10 +961,9 @@ export function mergeCartId(cartGuId) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      console.log(resultJson);
+
       dispatch(mergeCartIdSuccess(resultJson));
     } catch (e) {
-      console.log(e.message);
       dispatch(mergeCartIdFailure(e.message));
     }
   };
