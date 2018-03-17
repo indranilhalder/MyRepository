@@ -28,6 +28,8 @@ const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
 const cartDetailsLoggedInUser = Cookie.getCookie(
   CART_DETAILS_FOR_LOGGED_IN_USER
 );
+const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
 const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 
 class CartPage extends React.Component {
@@ -40,7 +42,6 @@ class CartPage extends React.Component {
   }
 
   componentDidMount() {
-    const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (
       userDetails !== undefined &&
       customerCookie !== undefined &&
