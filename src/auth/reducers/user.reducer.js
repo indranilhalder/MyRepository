@@ -25,8 +25,9 @@ const user = (
       });
 
     case userActions.LOGIN_USER_SUCCESS:
+      console.log(action.user);
       let userDetails = {};
-      if (action.user.customerInfo.emailId !== "") {
+      if (action.user.customerInfo.emailId) {
         userDetails.userName = action.user.customerInfo.emailId;
       } else {
         userDetails.userName = action.user.customerInfo.mobileNumber;
@@ -36,6 +37,7 @@ const user = (
       userDetails.firstName = action.user.customerInfo.firstName;
       userDetails.gender = action.user.customerInfo.gender;
       userDetails.lastName = action.user.customerInfo.lastName;
+      console.log(userDetails);
 
       Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(userDetails));
       return Object.assign({}, state, {
