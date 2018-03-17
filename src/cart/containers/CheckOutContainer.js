@@ -57,8 +57,18 @@ const mapDispatchToProps = dispatch => {
     getUserAddress: () => {
       dispatch(getUserAddress());
     },
-    addUserAddress: userAddress => {
-      dispatch(addUserAddress(userAddress));
+    addUserAddress: (userAddress, getCartDetailCNCObj) => {
+      dispatch(addUserAddress(userAddress)).then(() =>
+        dispatch(
+          getCartDetailsCNC(
+            getCartDetailCNCObj.userId,
+            getCartDetailCNCObj.accessToken,
+            getCartDetailCNCObj.cartId,
+            getCartDetailCNCObj.pinCode,
+            getCartDetailCNCObj.isSoftReservation
+          )
+        )
+      );
     },
     addAddressToCart: (addressId, pinCode) => {
       dispatch(addAddressToCart(addressId, pinCode));
