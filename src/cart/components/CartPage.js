@@ -96,9 +96,16 @@ class CartPage extends React.Component {
     }
   };
 
-  removeItemFromCartLoggedIn = (cartListItemPosition, pinCode) => {
-    if (this.props.removeItemFromCartLoggedIn) {
-      this.props.removeItemFromCartLoggedIn(cartListItemPosition, pinCode);
+  removeItemFromCart = (cartListItemPosition, pinCode) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      if (this.props.removeItemFromCartLoggedIn) {
+        this.props.removeItemFromCartLoggedIn(cartListItemPosition, pinCode);
+      }
+    } else {
+      if (this.props.removeItemFromCartLoggedOut) {
+        this.props.removeItemFromCartLoggedOut(cartListItemPosition, "");
+      }
     }
   };
 
@@ -213,7 +220,7 @@ class CartPage extends React.Component {
                         }
                       ]}
                       onSave={this.addProductToWishList}
-                      onRemove={this.removeItemFromCartLoggedIn}
+                      onRemove={this.removeItemFromCart}
                     />
                   </div>
                 );
@@ -245,8 +252,10 @@ CartPage.propTypes = {
   cartTax: PropTypes.string,
   delivery: PropTypes.string,
   offers: PropTypes.string,
+  removeItemFromCartLoggedOut: PropTypes.func,
   removeItemFromCartLoggedIn: PropTypes.func,
-  addProductToWishList: PropTypes.func
+  addProductToWishList: PropTypes.func,
+  getCartDetails: PropTypes.func
 };
 
 CartPage.defaultProps = {

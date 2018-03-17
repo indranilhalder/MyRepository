@@ -33,18 +33,6 @@ export default class CartItem extends React.Component {
     }
   }
 
-  addProductToWishList(productDetails) {
-    if (this.props.addProductToWishList) {
-      this.props.addProductToWishList(this.props.productDetails);
-    }
-  }
-
-  removeItemFromCartLoggedIn(cartListItemPosition) {
-    if (this.props.removeItemFromCartLoggedIn(cartListItemPosition)) {
-      this.props.removeItemFromCartLoggedIn(cartListItemPosition);
-    }
-  }
-
   getPickUpDetails = () => {
     this.props.onPiq();
   };
@@ -154,8 +142,6 @@ CartItem.propTypes = {
       placedTime: PropTypes.string
     })
   ),
-  addProductToWishList: PropTypes.func,
-  removeItemFromCartLoggedIn: PropTypes.func,
   product: PropTypes.object,
   pinCode: PropTypes.object
 };

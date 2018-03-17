@@ -7,7 +7,8 @@ import {
   getCartDetails,
   checkPinCodeServiceAvailability,
   addProductToWishList,
-  removeItemFromCartLoggedIn
+  removeItemFromCartLoggedIn,
+  removeItemFromCartLoggedOut
 } from "../actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
@@ -40,6 +41,9 @@ const mapDispatchToProps = dispatch => {
     },
     removeItemFromCartLoggedIn: (cartListItemPosition, pinCode) => {
       dispatch(removeItemFromCartLoggedIn(cartListItemPosition, pinCode));
+    },
+    removeItemFromCartLoggedOut: (cartListItemPosition, pinCode) => {
+      dispatch(removeItemFromCartLoggedOut(cartListItemPosition, pinCode));
     }
   };
 };

@@ -103,7 +103,10 @@ const cart = (
     addToWishlistError: null,
 
     removeCartItemStatus: null,
-    removeCartItemError: null
+    removeCartItemError: null,
+
+    removeCartItemLoggedOutStatus: null,
+    removeCartItemLoggedOutError: null
   },
   action
 ) => {
@@ -804,6 +807,25 @@ const cart = (
       return Object.assign({}, state, {
         removeCartItemStatus: action.status,
         removeCartItemError: action.error,
+        loading: false
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_OUT_REQUEST:
+      return Object.assign({}, state, {
+        removeCartItemLoggedOutStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_OUT_SUCCESS:
+      return Object.assign({}, state, {
+        removeCartItemLoggedOutStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_OUT_FAILURE:
+      return Object.assign({}, state, {
+        removeCartItemLoggedOutStatus: action.status,
+        removeCartItemLoggedOutError: action.error,
         loading: false
       });
 
