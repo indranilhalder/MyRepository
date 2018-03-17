@@ -17,7 +17,7 @@ import {
   PRODUCT_CART_ROUTER,
   DEFAULT_BRANDS_LANDING_PAGE,
   CATEGORIES_LANDING_PAGE,
-  PROFILE_PAGE,
+  ORDER_PAGE,
   BRAND_PAGE
 } from "../../../src/lib/constants";
 const HOME = "home";
@@ -65,7 +65,7 @@ export default class MobileFooter extends React.Component {
           value={PROFILE}
           text="My Cliq"
           selected={this.props.selected}
-          onSelect={() => this.handleSelect(PROFILE_PAGE)}
+          onSelect={() => this.handleSelect(ORDER_PAGE)}
         />
         <MobileFooterItem
           activeIcon={myBagIconRed}

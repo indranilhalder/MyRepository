@@ -48,10 +48,8 @@ export default class GetAllOrderDetails extends React.Component {
                       <OrderCard
                         key={j}
                         imageUrl={products.imageURL}
-                        price={orderDetails.orderAmount.bagTotal.value}
-                        discountPrice={
-                          orderDetails.orderAmount.totalDiscountAmount.value
-                        }
+                        price={products.price}
+                        discountPrice={""}
                         productName={products.productName}
                       />
                     );

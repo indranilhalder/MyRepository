@@ -59,7 +59,7 @@ import {
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
-  PROFILE_PAGE
+  ORDER_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -162,7 +162,7 @@ class App extends Component {
             path={BRAND_PAGE}
             component={PlpBrandCategoryWrapperContainer}
           />
-          <Route path={PROFILE_PAGE} component={GetAllOrderContainer} />
+          <Route path={ORDER_PAGE} component={GetAllOrderContainer} />
 
           <Route
             exact
