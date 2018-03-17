@@ -83,16 +83,21 @@ export default class PdpElectronics extends React.Component {
     let cartDetailsLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
-   
+
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (userDetails) {
-      this.props.addProductToCart(
-        JSON.parse(userDetails).userName,
-        JSON.parse(cartDetailsLoggedInUser).code,
-        JSON.parse(customerCookie).access_token,
-        productDetails
-      );
-    } else {
+      if (
+        cartDetailsLoggedInUser !== undefined &&
+        customerCookie !== undefined
+      ) {
+        this.props.addProductToCart(
+          JSON.parse(userDetails).userName,
+          JSON.parse(cartDetailsLoggedInUser).code,
+          JSON.parse(customerCookie).access_token,
+          productDetails
+        );
+      }
+    } else if (cartDetailsAnonymous) {
       this.props.addProductToCart(
         ANONYMOUS_USER,
         JSON.parse(cartDetailsAnonymous).guid,

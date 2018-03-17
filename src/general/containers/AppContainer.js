@@ -8,7 +8,8 @@ import {
 } from "../../auth/actions/user.actions";
 import {
   generateCartIdForLoggedInUser,
-  generateCartIdForAnonymous
+  generateCartIdForAnonymous,
+  mergeCartId
 } from "../../cart/actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import App from "../../App.js";
