@@ -1,5 +1,6 @@
 import React from "react";
 import InformationHeader from "./InformationHeader";
+import HollowHeader from "./HollowHeader";
 import MobileFooter from "./MobileFooter";
 import SearchContainer from "../../search/SearchContainer";
 import {
@@ -12,6 +13,10 @@ import {
   DEFAULT_BRANDS_LANDING_PAGE,
   CATEGORY_PAGE,
   CATEGORY_PAGE_WITH_SLUG,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
+  PRODUCT_REVIEWS_PATH_SUFFIX,
+  PRODUCT_DESCRIPTION_ROUTER,
+  PRODUCT_REVIEW_ROUTER,
   PROFILE_PAGE,
   PRODUCT_SELLER_ROUTER_SUFFIX,
   PRODUCT_CART_DELIVERY_MODES,
@@ -23,6 +28,7 @@ const HOME = "home";
 const CATEGORIES = "categories";
 const BRANDS = "brands";
 const PROFILE = "profile";
+const PRODUCT = "product";
 const BAG = "bag";
 export default class extends React.Component {
   getPageName = () => {
@@ -41,6 +47,14 @@ export default class extends React.Component {
       return PROFILE;
     } else if (url.includes(BAG)) {
       return BAG;
+    } else if (
+      url.includes(PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE) ||
+      url.includes(PRODUCT_REVIEWS_PATH_SUFFIX) ||
+      url.includes(PRODUCT_DESCRIPTION_ROUTER) ||
+      url.includes(PRODUCT_REVIEW_ROUTER) ||
+      url.includes(PRODUCT_CART_DELIVERY_MODES)
+    ) {
+      return PRODUCT;
     } else {
       return null;
     }
@@ -70,19 +84,48 @@ export default class extends React.Component {
       return false;
     }
   };
-
+  renderHeaderText = () => {
+    const pageName = this.getPageName();
+    if (pageName === PRODUCT) {
+      return "Product";
+    } else if (pageName === CATEGORIES) {
+      return "Category";
+    } else if (pageName === HOME) {
+      return "Home";
+    } else if (pageName === "Brands") {
+      return "Brands";
+    }
+  };
+  renderHeader = () => {
+    const pageName = this.getPageName();
+    if (pageName === PRODUCT) {
+      return <HollowHeader {...this.props} text={this.renderHeaderText()} />;
+    } else if (
+      pageName === CATEGORIES ||
+      pageName === HOME ||
+      pageName === BRANDS
+    ) {
+      return <SearchContainer {...this.props} text={this.renderHeaderText()} />;
+    } else {
+      return (
+        <InformationHeader {...this.props} text={this.renderHeaderText()} />
+      );
+    }
+  };
   getShouldRender = () => {
     // again look at the design and decide when to render this.
   };
   getHeaderText = () => {};
   render() {
     console.log(this.props);
+    console.log(this.getPageName());
     this.getShouldRenderSearch();
     return (
       <div className={styles.base}>
         <div className={styles.header}>
-          {this.getShouldRenderSearch && <SearchContainer />}
-          {!this.getShouldRenderSearch && <InformationHeader />}
+          {/* {this.getShouldRenderSearch && <SearchContainer />}
+          {!this.getShouldRenderSearch && <InformationHeader />} */}
+          {this.renderHeader()}
         </div>
         <div className={styles.content}>{this.props.children}</div>
 

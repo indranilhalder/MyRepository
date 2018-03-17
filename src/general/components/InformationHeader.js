@@ -24,7 +24,7 @@ export default class InformationHeader extends React.Component {
                 color={"rgba(0,0,0,0)"}
                 size={50}
                 onClick={() => this.handleClick()}
-                icon={<Icon image={iconImageURL} size={22} />}
+                icon={<Icon image={iconImageURL} size={16} />}
               />
             )}
           </div>
