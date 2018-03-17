@@ -88,9 +88,6 @@ class App extends Component {
 
     if (!customerAccessToken && localStorage.getItem(REFRESH_TOKEN)) {
       this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
-      if (!loggedInUserDetails) {
-        this.props.generateCartIdForLoggedInUser();
-      }
     }
 
     if (customerAccessToken) {
