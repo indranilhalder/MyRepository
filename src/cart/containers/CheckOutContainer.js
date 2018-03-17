@@ -32,7 +32,8 @@ import {
   captureOrderExperience,
   binValidationForNetBanking,
   softReservationPaymentForNetBanking,
-  softReservationPaymentForSavedCard
+  softReservationPaymentForSavedCard,
+  orderConfirmation
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -73,8 +74,8 @@ const mapDispatchToProps = dispatch => {
     addAddressToCart: (addressId, pinCode) => {
       dispatch(addAddressToCart(addressId, pinCode));
     },
-    getOrderSummary: () => {
-      dispatch(getOrderSummary());
+    getOrderSummary: pinCode => {
+      dispatch(getOrderSummary(pinCode));
     },
     getCoupons: () => {
       dispatch(getCoupons());
@@ -131,7 +132,9 @@ const mapDispatchToProps = dispatch => {
       dispatch(softReservationForPayment(cardDetails, address, paymentMode));
     },
     updateTransactionDetails: (paymentMode, juspayOrderID, cartId) => {
-      dispatch(updateTransactionDetails(paymentMode, juspayOrderID, cartId));
+      dispatch(
+        updateTransactionDetails(paymentMode, juspayOrderID, cartId)
+      ).then(() => dispatch(orderConfirmation(juspayOrderID)));
     },
     getCODEligibility: () => {
       dispatch(getCODEligibility());

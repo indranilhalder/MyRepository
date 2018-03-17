@@ -38,7 +38,6 @@ export default class CodForm extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        l
         <div className={styles.codText}>
           Pay with Cash or Card when your order is delivered
         </div>

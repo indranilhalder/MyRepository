@@ -99,7 +99,7 @@ class ProductDescriptionPage extends Component {
     );
     if (userDetails) {
       Object.assign(productDetails, {
-        userId:  JSON.parse(userDetails).userName,
+        userId: JSON.parse(userDetails).userName,
         accessToken: JSON.parse(customerCookie).access_token,
         cartId: JSON.parse(cartDetailsLoggedInUser).code
       });
@@ -125,7 +125,7 @@ class ProductDescriptionPage extends Component {
   }
   showPincodeModal() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-      this.props.showPincodeModal(this.props.match.params[0]);
+      this.props.showPincodeModal(this.props.match.params[1]);
     } else if (
       this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
     ) {

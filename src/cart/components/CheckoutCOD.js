@@ -2,6 +2,7 @@ import React from "react";
 import creditCardIcon from "./img/credit-card.svg";
 import PropTypes from "prop-types";
 import CodForm from "./CodForm.js";
+import CodUnavailable from "./CodUnavailable";
 import MenuDetails from "../../general/components/MenuDetails.js";
 const CASH_ON_DELIVERY = "COD";
 
@@ -30,9 +31,7 @@ export default class CheckoutCOD extends React.Component {
             />
           </MenuDetails>
         ) : (
-          <MenuDetails text="Cash On Delivery Disable UI" icon={creditCardIcon}>
-            <CodForm />
-          </MenuDetails>
+          <CodUnavailable message="Cash on delivery not available " />
         )}
       </div>
     );
