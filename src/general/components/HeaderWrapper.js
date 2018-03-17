@@ -4,6 +4,7 @@ import HollowHeader from "./HollowHeader.js";
 import { withRouter } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import styles from "./HeaderWrapper.css";
+import SearchContainer from "../../search/SearchContainer.js";
 
 import {
   HOME_ROUTER,
@@ -12,23 +13,25 @@ import {
   CATEGORIES_LANDING_PAGE,
   PRODUCT_CART_DELIVERY_MODES,
   LOGIN_PATH,
-  SIGN_UP_PATH
+  SIGN_UP_PATH,
+  PRODUCT_LISTINGS
 } from "../../../src/lib/constants";
 import { SIGN_UP } from "../../auth/actions/user.actions";
 
 const PRODUCT_CODE_REGEX = /p-(.*)/;
 class HeaderWrapper extends React.Component {
   onBackClick = () => {
-    console.log("ON BACK CLICK");
     this.props.history.goBack();
   };
+
   render() {
-    console.log("HEADER IS RENDERED");
     const url = this.props.location.pathname;
+    let shouldRenderSearch = false;
 
     let productCode = null;
     if (PRODUCT_CODE_REGEX.test(url)) {
       productCode = PRODUCT_CODE_REGEX.exec(url);
+      shouldRenderSearch = true;
     }
 
     let canGoBack = true;
@@ -38,9 +41,11 @@ class HeaderWrapper extends React.Component {
     if (
       url === HOME_ROUTER ||
       url === CATEGORIES_LANDING_PAGE ||
-      url === DEFAULT_BRANDS_LANDING_PAGE
+      url === DEFAULT_BRANDS_LANDING_PAGE ||
+      url === PRODUCT_LISTINGS
     ) {
       canGoBack = false;
+      shouldRenderSearch = true;
     }
 
     if (this.props.history.length === 0) {
@@ -77,20 +82,22 @@ class HeaderWrapper extends React.Component {
 
 */
 
-    return shouldRenderHeader ? (
-      <div className={styles.base}>
-        {" "}
-        {productCode ? (
-          <HollowHeader goBack={this.onBackClick} />
-        ) : (
-          <InformationHeader
-            goBack={this.onBackClick}
-            text={headerText}
-            hasBackButton={canGoBack}
-          />
-        )}{" "}
-      </div>
-    ) : null;
+    let headerToRender = (
+      <InformationHeader
+        goBack={this.onBackClick}
+        text={headerText}
+        hasBackButton={canGoBack}
+      />
+    );
+    if (productCode) {
+      headerToRender = <HollowHeader goBack={this.onBackClick} />;
+    }
+
+    if (shouldRenderSearch) {
+      headerToRender = <SearchContainer />;
+    }
+
+    return <div className={styles.base}>{headerToRender}</div>;
   }
 }
 

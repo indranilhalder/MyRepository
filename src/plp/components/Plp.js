@@ -2,7 +2,6 @@ import React from "react";
 import FilterContainer from "../containers/FilterContainer";
 import ProductGrid from "./ProductGrid";
 import PlpMobileFooter from "./PlpMobileFooter";
-import SearchContainer from "../../search/SearchContainer";
 import styles from "./Plp.css";
 import throttle from "lodash/throttle";
 
