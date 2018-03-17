@@ -10,8 +10,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  console.log("FILTER CONTAINER");
-  console.log(state.productListings.productListings.facetdatacategory);
   return {
     ...ownProps,
     facetData: state.productListings.productListings.facetdata,
