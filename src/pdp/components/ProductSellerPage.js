@@ -4,7 +4,6 @@ import ProductDetailsCard from "./ProductDetailsCard";
 import SellerWithMultiSelect from "./SellerWithMultiSelect";
 import SellerCard from "./SellerCard";
 import PdpFrame from "./PdpFrame";
-import HollowHeader from "./HollowHeader.js";
 import * as Cookie from "../../lib/Cookie";
 
 import {
@@ -120,12 +119,6 @@ class ProductSellerPage extends Component {
           gotoPreviousPage={() => this.gotoPreviousPage()}
         >
           <div className={styles.base}>
-            <HollowHeader
-              addProductToBag={() => this.addToCart()}
-              addProductToWishList={() => this.addToWishList()}
-              gotoPreviousPage={() => this.gotoPreviousPage()}
-            />
-
             <ProductDetailsCard
               productImage={mobileGalleryImages[0]}
               productName={this.props.productDetails.productName}

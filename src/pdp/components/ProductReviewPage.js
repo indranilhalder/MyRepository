@@ -6,7 +6,6 @@ import WriteReview from "./WriteReview";
 import PropTypes from "prop-types";
 import RatingHolder from "./RatingHolder";
 import PdpFrame from "./PdpFrame";
-import HollowHeader from "./HollowHeader";
 import {
   MOBILE_PDP_VIEW,
   PRODUCT_REVIEWS_PATH_SUFFIX,
@@ -121,11 +120,6 @@ class ProductReviewPage extends Component {
         >
           <div className={styles.base}>
             <div className={styles.productBackground}>
-              <HollowHeader
-                addProductToBag={this.props.addProductToBag}
-                addProductToWishList={this.props.addProductToWishList}
-                history={this.props.history}
-              />
               <ProductDetailsCard
                 productImage={image}
                 productName={this.props.productDetails.productName}
