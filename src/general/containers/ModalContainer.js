@@ -15,8 +15,12 @@ import {
   releaseBankOffer,
   applyUserCoupon,
   releaseUserCoupon,
-  getUserAddress
+  getUserAddress,
+  mergeCartId,
+  generateCartIdForLoggedInUser,
+  getCartId
 } from "../../cart/actions/cart.actions";
+
 const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
@@ -35,7 +39,15 @@ const mapDispatchToProps = dispatch => {
       dispatch(modalActions.hideModal());
     },
     otpVerification: (otpDetails, userDetails) => {
-      dispatch(otpVerification(otpDetails, userDetails));
+      dispatch(otpVerification(otpDetails, userDetails)).then(() => {
+        dispatch(getCartId()).then(cartVal => {
+          if (cartVal.guid) {
+            dispatch(mergeCartId(cartVal.guid));
+          } else {
+            dispatch(generateCartIdForLoggedInUser(cartVal.guid));
+          }
+        });
+      });
     },
     resetPassword: userDetails => {
       dispatch(resetPassword(userDetails));

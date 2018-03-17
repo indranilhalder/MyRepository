@@ -816,7 +816,9 @@ export function generateCartIdForLoggedInUser() {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
+
       dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
+      return resultJson;
     } catch (e) {
       dispatch(generateCartIdFailure(e.message));
     }
@@ -927,7 +929,7 @@ export function getOrderSummary(pincode) {
 export function getCartId() {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
   return async (dispatch, getState, { api }) => {
     dispatch(getCartIdRequest());
 
@@ -944,11 +946,7 @@ export function getCartId() {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      if (cartDetailsAnonymous) {
-        dispatch(mergeCartId(resultJson));
-      } else {
-        dispatch(generateCartIdForLoggedInUser());
-      }
+      return resultJson;
     } catch (e) {
       dispatch(getCartIdFailure(e.message));
     }
@@ -977,13 +975,13 @@ export function mergeCartIdFailure(error) {
   };
 }
 
-export function mergeCartId(cartDetails) {
+export function mergeCartId(cartGuId) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
   return async (dispatch, getState, { api }) => {
     dispatch(mergeCardIdRequest());
-
     try {
       const result = await api.get(
         `${USER_CART_PATH}/${
@@ -992,15 +990,15 @@ export function mergeCartId(cartDetails) {
           JSON.parse(customerCookie).access_token
         }&isPwa=true&platformNumber=2&userId=${
           JSON.parse(userDetails).userName
-        }&oldCartId=${JSON.parse(cartDetailsAnonymous).guid}&toMergeCartGuid=${
-          cartDetails.guid
-        }`
+        }&oldCartId=${
+          JSON.parse(cartDetailsAnonymous).guid
+        }&toMergeCartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
+
       dispatch(mergeCartIdSuccess(resultJson));
     } catch (e) {
       dispatch(mergeCartIdFailure(e.message));

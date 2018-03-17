@@ -143,6 +143,7 @@ class CheckOutPage extends React.Component {
                   deliveryInformation={val.elligibleDeliveryMode}
                   showDelivery={true}
                   deliveryInfoToggle={false}
+                  productIsServiceable={val.pinCodeResponse}
                   selectDeliveryMode={code =>
                     this.handleSelectDeliveryMode(
                       code,
@@ -298,13 +299,15 @@ class CheckOutPage extends React.Component {
           CART_DETAILS_FOR_LOGGED_IN_USER
         );
 
-        this.props.getCartDetailsCNC(
-          JSON.parse(userDetails).userName,
-          JSON.parse(customerCookie).access_token,
-          JSON.parse(cartDetailsLoggedInUser).code,
-          this.props.location.state.pinCode,
-          false
-        );
+        if (userDetails && customerCookie && cartDetailsLoggedInUser) {
+          this.props.getCartDetailsCNC(
+            JSON.parse(userDetails).userName,
+            JSON.parse(customerCookie).access_token,
+            JSON.parse(cartDetailsLoggedInUser).code,
+            this.props.location.state.pinCode,
+            false
+          );
+        }
         this.props.getUserAddress(this.props.location.state.pinCode);
         this.props.getPaymentModes();
         this.props.getCODEligibility();

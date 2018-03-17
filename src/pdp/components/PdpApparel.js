@@ -80,19 +80,23 @@ export default class PdpApparel extends React.Component {
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
     if (userDetails) {
-      this.props.addProductToCart(
-        JSON.parse(userDetails).userName,
-        JSON.parse(cartDetailsLoggedInUser).code,
-        JSON.parse(customerCookie).access_token,
-        productDetails
-      );
+      if (cartDetailsLoggedInUser && customerCookie) {
+        this.props.addProductToCart(
+          JSON.parse(userDetails).userName,
+          JSON.parse(cartDetailsLoggedInUser).code,
+          JSON.parse(customerCookie).access_token,
+          productDetails
+        );
+      }
     } else {
-      this.props.addProductToCart(
-        ANONYMOUS_USER,
-        JSON.parse(cartDetailsAnonymous).guid,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
+      if (cartDetailsAnonymous && globalCookie) {
+        this.props.addProductToCart(
+          ANONYMOUS_USER,
+          JSON.parse(cartDetailsAnonymous).guid,
+          JSON.parse(globalCookie).access_token,
+          productDetails
+        );
+      }
     }
   };
 
