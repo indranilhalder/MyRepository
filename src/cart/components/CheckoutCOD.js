@@ -16,7 +16,6 @@ export default class CheckoutCOD extends React.Component {
   };
 
   render() {
-    console.log(this.props.cliqCashApplied);
     return (
       <div>
         {this.props.cart.codEligibilityDetails.status ? (
