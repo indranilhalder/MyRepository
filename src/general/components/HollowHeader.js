@@ -25,8 +25,6 @@ export default class HollowHeader extends React.Component {
   };
 
   render() {
-    console.log("WHICH HOLLOW IS BEING RENDERED");
-    console.log(backArrow);
     return (
       <div className={styles.base}>
         <div className={styles.backArrowHolder} onClick={() => this.backPage()}>
