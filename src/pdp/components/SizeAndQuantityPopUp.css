@@ -1,0 +1,24 @@
+.base {
+  width: 100%;
+  height: auto;
+  opacity: 0.85;
+  border-radius: 35px;
+  background-color: #000000;
+  box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.5);
+  display: inline-block;
+}
+.textHolder {
+  width: 100%;
+  height: auto;
+  font-size: 16px;
+  font-family: semregilaribold;
+  padding: 18px;
+  display: inline-block;
+  color: #fff;
+  text-align: center;
+}
+.text {
+  width: 70%;
+  height: auto;
+  margin: auto;
+}
