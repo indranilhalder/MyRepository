@@ -2573,8 +2573,9 @@ export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
           cartId,
           pinCode
         )
-      );
-      dispatch(removeItemFromCartLoggedInSuccess());
+      ).then(() => {
+        dispatch(removeItemFromCartLoggedInSuccess());
+      });
     } catch (e) {
       dispatch(removeItemFromCartLoggedInFailure(e.message));
     }
@@ -2628,8 +2629,9 @@ export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
           JSON.parse(cartDetailsAnonymous).guid,
           pinCode
         )
-      );
-      dispatch(removeItemFromCartLoggedOutSuccess());
+      ).then(() => {
+        dispatch(removeItemFromCartLoggedOutSuccess());
+      });
     } catch (e) {
       dispatch(removeItemFromCartLoggedOutFailure(e.message));
     }
