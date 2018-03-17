@@ -186,10 +186,33 @@ export const ORDER_EXPERIENCE_CAPTURE_SUCCESS =
 export const ORDER_EXPERIENCE_CAPTURE_FAILURE =
   "ORDER_EXPERIENCE_CAPTURE_FAILURE";
 
+export const ADD_PRODUCT_TO_WISH_LIST_REQUEST =
+  "ADD_PRODUCT_TO_WISH_LIST_REQUEST";
+export const ADD_PRODUCT_TO_WISH_LIST_SUCCESS =
+  "ADD_PRODUCT_TO_WISH_LIST_SUCCESS";
+export const ADD_PRODUCT_TO_WISH_LIST_FAILURE =
+  "ADD_PRODUCT_TO_WISH_LIST_FAILURE";
+
+export const REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST =
+  "REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST";
+export const REMOVE_ITEM_FROM_CART_LOGGED_IN_SUCCESS =
+  "REMOVE_ITEM_FROM_CART_LOGGED_IN_SUCCESS";
+export const REMOVE_ITEM_FROM_CART_LOGGED_IN_FAILURE =
+  "REMOVE_ITEM_FROM_CART_LOGGED_IN_FAILURE";
+
+export const REMOVE_ITEM_FROM_CART_LOGGED_OUT_REQUEST =
+  "REMOVE_ITEM_FROM_CART_LOGGED_OUT_REQUEST";
+export const REMOVE_ITEM_FROM_CART_LOGGED_OUT_SUCCESS =
+  "REMOVE_ITEM_FROM_CART_LOGGED_OUT_SUCCESS";
+export const REMOVE_ITEM_FROM_CART_LOGGED_OUT_FAILURE =
+  "REMOVE_ITEM_FROM_CART_LOGGED_OUT_FAILURE";
+
 export const PAYMENT_MODE = "credit card";
 const pincode = 229001;
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
+const MY_WISH_LIST = "MyWishList";
+export const ANONYMOUS_USER = "anonymous";
 
 export function cartDetailsRequest() {
   return {
@@ -271,6 +294,7 @@ export function getCartDetailsCNC(
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
+
       if (isSoftReservation) {
         let productItems = {};
         let item = [];
@@ -278,14 +302,26 @@ export function getCartDetailsCNC(
           let productDetails = {};
           productDetails.ussId = product.USSID;
           productDetails.quantity = product.qtySelectedByUser;
-          productDetails.deliveryMode =
-            product.pinCodeResponse.validDeliveryModes[0].type;
-          productDetails.serviceableSlaves =
-            product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
           productDetails.fulfillmentType = product.fullfillmentType;
+
+          if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+            productDetails.deliveryMode =
+              product.pinCodeResponse.validDeliveryModes[0].type;
+            productDetails.serviceableSlaves =
+              product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          } else if (
+            product.pinCodeResponse.validDeliveryModes[0]
+              .CNCServiceableSlavesData
+          ) {
+            productDetails.deliveryMode =
+              product.pinCodeResponse.validDeliveryModes[0].type;
+            productDetails.serviceableSlaves =
+              product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          }
           item.push(productDetails);
           productItems.item = item;
         });
+
         dispatch(softReservation(pinCode, productItems));
       }
       if (resultJson.status === FAILURE_UPPERCASE) {
@@ -579,7 +615,7 @@ export function selectDeliveryMode(deliveryUssId, pinCode) {
           JSON.parse(cartDetails).code
         }/selectDeliveryMode?access_token=${
           JSON.parse(customerCookie).access_token
-        }&deliverymodeussId={${deliveryUssId}}&removeExchange=0`
+        }&deliverymodeussId=${JSON.stringify(deliveryUssId)}&removeExchange=0`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
@@ -779,7 +815,9 @@ export function generateCartIdForLoggedInUser() {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
+
       dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
+      return resultJson;
     } catch (e) {
       dispatch(generateCartIdFailure(e.message));
     }
@@ -862,7 +900,7 @@ export function getCartIdFailure(error) {
   };
 }
 
-export function getOrderSummary() {
+export function getOrderSummary(pincode) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -875,7 +913,7 @@ export function getOrderSummary() {
           JSON.parse(cartDetails).code
         }/displayOrderSummary?access_token=${
           JSON.parse(customerCookie).access_token
-        }&pincode=400083&isPwa=true&platformNumber=2`
+        }&pincode=${pincode}&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
@@ -890,7 +928,7 @@ export function getOrderSummary() {
 export function getCartId() {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
   return async (dispatch, getState, { api }) => {
     dispatch(getCartIdRequest());
 
@@ -907,11 +945,7 @@ export function getCartId() {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      if (cartDetailsAnonymous) {
-        dispatch(mergeCartId(resultJson));
-      } else {
-        dispatch(generateCartIdForLoggedInUser());
-      }
+      return resultJson;
     } catch (e) {
       dispatch(getCartIdFailure(e.message));
     }
@@ -940,13 +974,13 @@ export function mergeCartIdFailure(error) {
   };
 }
 
-export function mergeCartId(cartDetails) {
+export function mergeCartId(cartGuId) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
   return async (dispatch, getState, { api }) => {
     dispatch(mergeCardIdRequest());
-
     try {
       const result = await api.get(
         `${USER_CART_PATH}/${
@@ -955,15 +989,15 @@ export function mergeCartId(cartDetails) {
           JSON.parse(customerCookie).access_token
         }&isPwa=true&platformNumber=2&userId=${
           JSON.parse(userDetails).userName
-        }&oldCartId=${JSON.parse(cartDetailsAnonymous).guid}&toMergeCartGuid=${
-          cartDetails.guid
-        }`
+        }&oldCartId=${
+          JSON.parse(cartDetailsAnonymous).guid
+        }&toMergeCartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
+
       dispatch(mergeCartIdSuccess(resultJson));
     } catch (e) {
       dispatch(mergeCartIdFailure(e.message));
@@ -1052,7 +1086,7 @@ export function getAllStoresCNC(pinCode) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      dispatch(getAllStoresCNCSuccess(resultJson));
+      dispatch(getAllStoresCNCSuccess(resultJson.stores));
     } catch (e) {
       dispatch(getAllStoresCNCFailure(e.message));
     }
@@ -1579,11 +1613,20 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
       let productDetails = {};
       productDetails.ussId = product.USSID;
       productDetails.quantity = product.qtySelectedByUser;
-      productDetails.deliveryMode =
-        product.pinCodeResponse.validDeliveryModes[0].type;
-      productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
       productDetails.fulfillmentType = product.fullfillmentType;
+      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+      } else if (
+        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+      ) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+      }
       item.push(productDetails);
       productItems.item = item;
     });
@@ -1627,11 +1670,20 @@ export function softReservationPaymentForNetBanking(
       let productDetails = {};
       productDetails.ussId = product.USSID;
       productDetails.quantity = product.qtySelectedByUser;
-      productDetails.deliveryMode =
-        product.pinCodeResponse.validDeliveryModes[0].type;
-      productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
       productDetails.fulfillmentType = product.fullfillmentType;
+      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+      } else if (
+        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+      ) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+      }
       item.push(productDetails);
       productItems.item = item;
     });
@@ -1675,11 +1727,20 @@ export function softReservationPaymentForSavedCard(
       let productDetails = {};
       productDetails.ussId = product.USSID;
       productDetails.quantity = product.qtySelectedByUser;
-      productDetails.deliveryMode =
-        product.pinCodeResponse.validDeliveryModes[0].type;
-      productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
       productDetails.fulfillmentType = product.fullfillmentType;
+      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+      } else if (
+        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+      ) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+      }
       item.push(productDetails);
       productItems.item = item;
     });
@@ -2073,8 +2134,7 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-
-      dispatch(orderConfirmation(resultJson.orderId));
+      dispatch(updateTransactionDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(updateTransactionDetailsFailure(e.message));
     }
@@ -2395,6 +2455,171 @@ export function softReservationForCODPayment(pinCode) {
       dispatch(softReservationForCODPaymentSuccess(resultJson));
     } catch (e) {
       dispatch(softReservationForCODPaymentFailure(e.message));
+    }
+  };
+}
+
+// Actions for Add Product to Wish List
+export function addProductToWishListRequest() {
+  return {
+    type: ADD_PRODUCT_TO_WISH_LIST_REQUEST,
+    status: REQUESTING
+  };
+}
+export function addProductToWishListSuccess() {
+  return {
+    type: ADD_PRODUCT_TO_WISH_LIST_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function addProductToWishListFailure(error) {
+  return {
+    type: ADD_PRODUCT_TO_WISH_LIST_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator for Add Product To Wish List
+export function addProductToWishList(productDetails) {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    const cartId = JSON.parse(cartDetails).guid;
+    dispatch(addProductToWishListRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/addProductInWishlist?platformNumber=2&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&ussid=${productDetails.USSID}&productCode=${
+          productDetails.productcode
+        }&wishlistName=${MY_WISH_LIST}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(addProductToWishListSuccess());
+    } catch (e) {
+      dispatch(addProductToWishListFailure(e.message));
+    }
+  };
+}
+
+// Action for remove Item from Cart Logged In
+export function removeItemFromCartLoggedInRequest() {
+  return {
+    type: REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST,
+    status: REQUESTING
+  };
+}
+export function removeItemFromCartLoggedInSuccess() {
+  return {
+    type: REMOVE_ITEM_FROM_CART_LOGGED_IN_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function removeItemFromCartLoggedInFailure(error) {
+  return {
+    type: REMOVE_ITEM_FROM_CART_LOGGED_IN_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator for remove Item from Cart Logged In
+export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    const cartId = JSON.parse(cartDetails).code;
+    dispatch(removeItemFromCartLoggedInRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/carts/${cartId}/deleteEntries/${cartListItemPosition}?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(
+        getCartDetails(
+          JSON.parse(userDetails).userName,
+          JSON.parse(customerCookie).access_token,
+          cartId,
+          pinCode
+        )
+      );
+      dispatch(removeItemFromCartLoggedInSuccess());
+    } catch (e) {
+      dispatch(removeItemFromCartLoggedInFailure(e.message));
+    }
+  };
+}
+
+// Action for remove Item from Cart Logged Out
+export function removeItemFromCartLoggedOutRequest() {
+  return {
+    type: REMOVE_ITEM_FROM_CART_LOGGED_OUT_REQUEST,
+    status: REQUESTING
+  };
+}
+export function removeItemFromCartLoggedOutSuccess() {
+  return {
+    type: REMOVE_ITEM_FROM_CART_LOGGED_OUT_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function removeItemFromCartLoggedOutFailure(error) {
+  return {
+    type: REMOVE_ITEM_FROM_CART_LOGGED_OUT_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator for remove Item from Cart Logged Out
+export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    dispatch(removeItemFromCartLoggedOutRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/anonymous/carts/${
+          JSON.parse(cartDetailsAnonymous).guid
+        }/deleteEntries/${cartListItemPosition}?access_token=${
+          JSON.parse(globalCookie).access_token
+        }&isPwa=true&platformNumber=2`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(
+        getCartDetails(
+          ANONYMOUS_USER,
+          JSON.parse(globalCookie).access_token,
+          JSON.parse(cartDetailsAnonymous).guid,
+          pinCode
+        )
+      );
+      dispatch(removeItemFromCartLoggedOutRequest());
+    } catch (e) {
+      dispatch(removeItemFromCartLoggedOutFailure(e.message));
     }
   };
 }

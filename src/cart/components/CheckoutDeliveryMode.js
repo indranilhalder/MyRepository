@@ -31,7 +31,7 @@ export default class CheckoutDeliveryMode extends React.Component {
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (userDetails) {
       this.props.getCartDetailsCNC(
-         JSON.parse(userDetails).userName,
+        JSON.parse(userDetails).userName,
         JSON.parse(customerCookie).access_token,
         JSON.parse(cartDetailsLoggedInUser).code
       );

@@ -37,7 +37,11 @@ class CartPage extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (userDetails) {
+    if (
+      userDetails !== undefined &&
+      customerCookie !== undefined &&
+      cartDetailsLoggedInUser !== undefined
+    ) {
       this.props.getCartDetails(
         JSON.parse(userDetails).userName,
         JSON.parse(customerCookie).access_token,
@@ -45,12 +49,18 @@ class CartPage extends React.Component {
         ""
       );
     } else {
-      this.props.getCartDetails(
-        ANONYMOUS_USER,
-        JSON.parse(globalCookie).access_token,
-        JSON.parse(cartDetailsAnonymous).guid,
-        ""
-      );
+      if (
+        globalCookie !== undefined &&
+        cartDetailsAnonymous !== undefined &&
+        ANONYMOUS_USER !== undefined
+      ) {
+        this.props.getCartDetails(
+          ANONYMOUS_USER,
+          JSON.parse(globalCookie).access_token,
+          JSON.parse(cartDetailsAnonymous).guid,
+          ""
+        );
+      }
     }
     if (userDetails) {
       if (this.props.getCoupons) {
@@ -88,6 +98,30 @@ class CartPage extends React.Component {
         <MDSpinner />
       </div>
     );
+  };
+
+  addProductToWishList = product => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      if (this.props.addProductToWishList) {
+        this.props.addProductToWishList(product);
+      }
+    } else {
+      this.props.history.push(LOGIN_PATH);
+    }
+  };
+
+  removeItemFromCart = (cartListItemPosition, pinCode) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      if (this.props.removeItemFromCartLoggedIn) {
+        this.props.removeItemFromCartLoggedIn(cartListItemPosition, pinCode);
+      }
+    } else {
+      if (this.props.removeItemFromCartLoggedOut) {
+        this.props.removeItemFromCartLoggedOut(cartListItemPosition, "");
+      }
+    }
   };
 
   applyCoupon = couponCode => {
@@ -181,11 +215,14 @@ class CartPage extends React.Component {
                 return (
                   <div className={styles.cartItem} key={i}>
                     <CartItem
+                      pinCode={this.state.pinCode}
+                      product={product}
                       productIsServiceable={product.pinCodeResponse}
                       productImage={product.imageURL}
                       productDetails={product.description}
                       productName={product.productName}
                       price={product.price}
+                      index={i}
                       deliveryInformation={product.elligibleDeliveryMode}
                       deliverTime={
                         product.elligibleDeliveryMode &&
@@ -197,6 +234,8 @@ class CartPage extends React.Component {
                           label: product.qtySelectedByUser
                         }
                       ]}
+                      onSave={this.addProductToWishList}
+                      onRemove={this.removeItemFromCart}
                     />
                   </div>
                 );
@@ -227,7 +266,11 @@ CartPage.propTypes = {
   cartOffer: PropTypes.string,
   cartTax: PropTypes.string,
   delivery: PropTypes.string,
-  offers: PropTypes.string
+  offers: PropTypes.string,
+  removeItemFromCartLoggedOut: PropTypes.func,
+  removeItemFromCartLoggedIn: PropTypes.func,
+  addProductToWishList: PropTypes.func,
+  getCartDetails: PropTypes.func
 };
 
 CartPage.defaultProps = {
