@@ -42,6 +42,7 @@ class ProductCouponDetails extends Component {
           <div className={styles.searchHolder}>
             <SearchCupon
               couponCode={this.state.couponVal}
+              getValue={coupon => this.setUserCoupons(coupon)}
               applyUserCoupon={couponCode => this.applyUserCoupon(couponCode)}
             />
           </div>
