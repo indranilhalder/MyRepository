@@ -125,6 +125,23 @@ class CartPage extends React.Component {
     }
   };
 
+  updateQuantityInCart = (selectedItem, quantity) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      if (this.props.updateQuantityInCartLoggedIn) {
+        this.props.updateQuantityInCartLoggedIn(
+          selectedItem,
+          quantity,
+          this.state.pinCode
+        );
+      }
+    } else {
+      if (this.props.updateQuantityInCartLoggedOut) {
+        this.props.updateQuantityInCartLoggedOut(selectedItem, quantity, "");
+      }
+    }
+  };
+
   applyCoupon = couponCode => {
     if (this.props.applyCoupon) {
       this.props.applyCoupon();
@@ -235,6 +252,9 @@ class CartPage extends React.Component {
                       ]}
                       onSave={this.addProductToWishList}
                       onRemove={this.removeItemFromCart}
+                      onQuantityChange={this.updateQuantityInCart}
+                      maxQuantityAllowed={product.maxQuantityAllowed}
+                      qtySelectedByUser={product.qtySelectedByUser}
                     />
                   </div>
                 );
@@ -269,7 +289,9 @@ CartPage.propTypes = {
   removeItemFromCartLoggedOut: PropTypes.func,
   removeItemFromCartLoggedIn: PropTypes.func,
   addProductToWishList: PropTypes.func,
-  getCartDetails: PropTypes.func
+  getCartDetails: PropTypes.func,
+  updateQuantityInCartLoggedIn: PropTypes.func,
+  updateQuantityInCartLoggedOut: PropTypes.func
 };
 
 CartPage.defaultProps = {

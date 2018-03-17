@@ -9,7 +9,6 @@ import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
 import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
-import HollowHeader from "./HollowHeader.js";
 import PdpLink from "./PdpLink";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
@@ -161,13 +160,6 @@ class ProductDescriptionPage extends Component {
           addProductToWishList={() => this.addProductToWishList()}
         >
           <div className={styles.base}>
-            <div className={styles.pageHeader}>
-              <HollowHeader
-                addProductToBag={() => this.renderToMyBag()}
-                addProductToWishList={this.props.addProductToWishList}
-                history={this.props.history}
-              />
-            </div>
             <ProductGalleryMobile>
               {mobileGalleryImages.map((val, idx) => {
                 return <Image image={val.value} key={idx} />;

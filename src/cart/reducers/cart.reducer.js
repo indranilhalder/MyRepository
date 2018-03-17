@@ -107,7 +107,15 @@ const cart = (
     removeCartItemError: null,
 
     removeCartItemLoggedOutStatus: null,
-    removeCartItemLoggedOutError: null
+    removeCartItemLoggedOutError: null,
+
+    updateQuantityLoggedInStatus: null,
+    updateQuantityLoggedInDetails: null,
+    updateQuantityLoggedInError: null,
+
+    updateQuantityLoggedOutStatus: null,
+    updateQuantityLoggedOutDetails: null,
+    updateQuantityLoggedOutError: null
   },
   action
 ) => {
@@ -839,6 +847,46 @@ const cart = (
       return Object.assign({}, state, {
         removeCartItemLoggedOutStatus: action.status,
         removeCartItemLoggedOutError: action.error,
+        loading: false
+      });
+
+    case cartActions.UPDATE_QUANTITY_IN_CART_LOGGED_IN_REQUEST:
+      return Object.assign({}, state, {
+        updateQuantityLoggedInStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.UPDATE_QUANTITY_IN_CART_LOGGED_IN_SUCCESS:
+      return Object.assign({}, state, {
+        updateQuantityLoggedInStatus: action.status,
+        updateQuantityLoggedInDetails: action.updateQuantityDetails,
+        loading: false
+      });
+
+    case cartActions.UPDATE_QUANTITY_IN_CART_LOGGED_IN_FAILURE:
+      return Object.assign({}, state, {
+        updateQuantityLoggedInStatus: action.status,
+        updateQuantityLoggedInError: action.error,
+        loading: false
+      });
+
+    case cartActions.UPDATE_QUANTITY_IN_CART_LOGGED_OUT_REQUEST:
+      return Object.assign({}, state, {
+        updateQuantityLoggedOutStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.UPDATE_QUANTITY_IN_CART_LOGGED_OUT_SUCCESS:
+      return Object.assign({}, state, {
+        updateQuantityLoggedOutStatus: action.status,
+        updateQuantityLoggedOutDetails: action.updateQuantityDetails,
+        loading: false
+      });
+
+    case cartActions.UPDATE_QUANTITY_IN_CART_LOGGED_OUT_FAILURE:
+      return Object.assign({}, state, {
+        updateQuantityLoggedOutStatus: action.status,
+        updateQuantityLoggedOutError: action.error,
         loading: false
       });
 
