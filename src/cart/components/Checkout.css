@@ -21,7 +21,6 @@
   height: auto;
   display: inline-block;
   vertical-align: top;
-  margin-bottom: 30px;
   position: relative;
   padding-right: 125px;
 }
@@ -66,6 +65,7 @@
   width: 100%;
   height: auto;
   margin-bottom: 20px;
+  margin-top: 30px;
   display: inline-block;
 }
 .informationHolder {
