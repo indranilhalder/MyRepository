@@ -12,33 +12,58 @@ import categoriesIconRed from "./img/categories_icon_red.png";
 import brandsIconRed from "./img/brands_icon_red.png";
 import userIconRed from "./img/myCliq_icon_red.png";
 import myBagIconRed from "./img/myBag_icon_red.png";
+import { withRouter } from "react-router-dom";
 import {
   HOME_ROUTER,
   PRODUCT_CART_ROUTER,
   DEFAULT_BRANDS_LANDING_PAGE,
-  CATEGORIES_LANDING_PAGE
+  CATEGORIES_LANDING_PAGE,
+  PRODUCT_CART_DELIVERY_MODES
 } from "../../../src/lib/constants";
+import { CATEGORY_REGEX } from "../../plp/components/PlpBrandCategoryWrapper";
 const HOME = "home";
 const CATEGORIES = "categories";
 const BRANDS = "brands";
 const PROFILE = "profile";
 const BAG = "bag";
 
-export default class MobileFooter extends React.Component {
+class MobileFooter extends React.Component {
   handleSelect(val) {
     if (this.props.history) {
       this.props.history.push(val);
     }
   }
+
   render() {
+    const pathName = this.props.location.pathname;
+    let selected = null;
+    if (pathName === HOME_ROUTER) {
+      selected = HOME;
+    }
+    if (pathName === CATEGORIES_LANDING_PAGE) {
+      selected = CATEGORIES;
+    }
+
+    if (pathName === DEFAULT_BRANDS_LANDING_PAGE) {
+      selected = BRANDS;
+    }
+
+    if (pathName === PRODUCT_CART_ROUTER) {
+      selected = BAG;
+    }
+
+    if (selected === null) {
+      return null;
+    }
+
     return (
       <div className={styles.base}>
         <MobileFooterItem
           activeIcon={homeIconRed}
           basicIcon={homeIcon}
-          value="home"
+          value={HOME}
           text="Home"
-          selected={this.props.selected}
+          selected={selected}
           onSelect={() => this.handleSelect(HOME_ROUTER)}
         />
         <MobileFooterItem
@@ -46,7 +71,7 @@ export default class MobileFooter extends React.Component {
           basicIcon={categoriesIcon}
           value={CATEGORIES}
           text="Categories"
-          selected={this.props.selected}
+          selected={selected}
           onSelect={() => this.handleSelect(CATEGORIES_LANDING_PAGE)}
         />
         <MobileFooterItem
@@ -54,29 +79,31 @@ export default class MobileFooter extends React.Component {
           basicIcon={brandsIcon}
           value={BRANDS}
           text="Brands"
-          selected={this.props.selected}
+          selected={selected}
           onSelect={() => this.handleSelect(DEFAULT_BRANDS_LANDING_PAGE)}
         />
-        <MobileFooterItem
+        {/* <MobileFooterItem
           activeIcon={userIconRed}
           basicIcon={userIcon}
           value={PROFILE}
           text="My Cliq"
-          selected={this.props.selected}
+          selected={pathName === }
           onSelect={() => this.handleSelect(HOME_ROUTER)}
-        />
-        <MobileFooterItem
+        /> */}
+        {/* <MobileFooterItem
           activeIcon={myBagIconRed}
           basicIcon={myBagIcon}
           value={BAG}
           text="My Bag"
-          selected={this.props.selected}
+          selected={selected}
           onSelect={val => this.handleSelect(PRODUCT_CART_ROUTER)}
-        />
+        /> */}
       </div>
     );
   }
 }
+
+export default withRouter(MobileFooter);
 
 MobileFooter.propTypes = {
   selected: PropTypes.oneOf([HOME, CATEGORIES, BRANDS, PROFILE, BAG])
