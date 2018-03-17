@@ -411,7 +411,6 @@ export default class CategoryTotal extends React.Component {
         <div className={styles.productDetailsHolder}>
           <ThemeProductWidget feedComponentData={feedComponentData} />
         </div>
-        <div className={styles.footer} />
       </div>
     );
   }

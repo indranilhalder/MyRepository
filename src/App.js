@@ -24,6 +24,7 @@ import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContaine
 import MobileFooter from "./general/components/MobileFooter.js";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
+import HeaderWrapper from "./general/components/HeaderWrapper.js";
 
 import {
   HOME_ROUTER,
@@ -120,6 +121,7 @@ class App extends Component {
     }
     return (
       <div className={className}>
+        <HeaderWrapper />
         <Switch>
           <Route
             exact

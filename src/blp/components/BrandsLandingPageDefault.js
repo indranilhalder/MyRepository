@@ -4,7 +4,6 @@ import map from "lodash/map";
 import groupBy from "lodash/groupBy";
 import filter from "lodash/filter";
 import MDSpinner from "react-md-spinner";
-import BrandHeader from "./BrandHeader";
 import BrandsCategory from "./BrandsCategory";
 import BrandsSubCategory from "./BrandsSubCategory";
 import BrandBanner from "./BrandBanner";
@@ -81,7 +80,6 @@ export default class BrandsLandingPageDefault extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
-          <BrandHeader text="Brands" />
           <BrandsSelect
             limit={1}
             onSelect={val => this.switchTab(val[0])}

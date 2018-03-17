@@ -1,7 +1,6 @@
 import React from "react";
 import Map from "../../general/components/Map";
 import MarkerStore from "./MarkerStore";
-import InformationHeader from "../../general/components/InformationHeader";
 import BannerMobile from "../../general/components/BannerMobile";
 import PickUpLocation from "./PickUpLocation";
 import GetLocationDetails from "./GetLocationDetails";
@@ -74,9 +73,6 @@ export default class PiqPage extends React.Component {
               );
             })}
           </Map>
-        </div>
-        <div className={styles.header}>
-          <InformationHeader text="CLiQ and PiQ" />
         </div>
         <div className={styles.location}>
           <SearchLocationByPincode
