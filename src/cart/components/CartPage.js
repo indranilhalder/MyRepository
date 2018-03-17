@@ -91,8 +91,13 @@ class CartPage extends React.Component {
   };
 
   addProductToWishList = product => {
-    if (this.props.addProductToWishList) {
-      this.props.addProductToWishList(product);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      if (this.props.addProductToWishList) {
+        this.props.addProductToWishList(product);
+      }
+    } else {
+      this.props.history.push(LOGIN_PATH);
     }
   };
 
