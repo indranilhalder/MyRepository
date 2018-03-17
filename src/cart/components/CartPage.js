@@ -115,7 +115,7 @@ class CartPage extends React.Component {
   };
 
   updateQuantityInCart = (selectedItem, quantity) => {
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     if (userDetails) {
       if (this.props.updateQuantityInCartLoggedIn) {
         this.props.updateQuantityInCartLoggedIn(

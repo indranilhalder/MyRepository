@@ -2592,7 +2592,7 @@ export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
           pinCode
         )
       );
-      dispatch(removeItemFromCartLoggedOutRequest());
+      dispatch(removeItemFromCartLoggedOutSuccess());
     } catch (e) {
       dispatch(removeItemFromCartLoggedOutFailure(e.message));
     }
@@ -2651,8 +2651,9 @@ export function updateQuantityInCartLoggedIn(selectedItem, quantity, pinCode) {
           cartId,
           pinCode
         )
-      );
-      dispatch(updateQuantityInCartLoggedInSuccess(resultJson));
+      ).then(() => {
+        dispatch(updateQuantityInCartLoggedInSuccess(resultJson));
+      });
     } catch (e) {
       dispatch(updateQuantityInCartLoggedInFailure(e.message));
     }
@@ -2709,8 +2710,9 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
           JSON.parse(cartDetailsAnonymous).guid,
           pinCode
         )
-      );
-      dispatch(updateQuantityInCartLoggedOutSuccess(resultJson));
+      ).then(() => {
+        dispatch(updateQuantityInCartLoggedOutSuccess(resultJson));
+      });
     } catch (e) {
       dispatch(updateQuantityInCartLoggedOutFailure(e.message));
     }

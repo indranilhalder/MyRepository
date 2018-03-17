@@ -61,9 +61,7 @@ export default class CartItem extends React.Component {
   }
   setQuantity = () => {
     this.setState({
-      maxQuantityAllowed: parseInt(this.props.maxQuantityAllowed, 10)
-    });
-    this.setState({
+      maxQuantityAllowed: parseInt(this.props.maxQuantityAllowed, 10),
       qtySelectedByUser: parseInt(this.props.qtySelectedByUser, 10)
     });
 
