@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import CuponDetails from "./CuponDetails.js";
 import SlideModal from "../../general/components/SlideModal";
-import styles from "./ProductCouponDetails.css";
 import SearchCupon from "./SearchCupon.js";
 import PropTypes from "prop-types";
 import GridSelect from "../../general/components/GridSelect";
+import StaticDarkHeader from "../../general/components/StaticDarkHeader";
+import styles from "./ProductCouponDetails.css";
 const COUPON_HEADER = "Apply Coupon";
 const COUPON_SUB_HEADER =
   "You can avail the below offer/coupon during checkout";
@@ -33,15 +34,17 @@ class ProductCouponDetails extends Component {
 
   render() {
     return (
-      <div className={styles.base}>
-        <SlideModal {...this.props}>
-          <div>
+      <SlideModal {...this.props}>
+        <div className={styles.base}>
+          <div className={styles.header}>
+            <StaticDarkHeader text="Apply Coupon" />
+          </div>
+          <div className={styles.searchHolder}>
             <SearchCupon
               couponCode={this.state.couponVal}
               applyUserCoupon={couponCode => this.applyUserCoupon(couponCode)}
             />
           </div>
-
           <GridSelect
             elementWidthMobile={100}
             offset={0}
@@ -62,8 +65,8 @@ class ProductCouponDetails extends Component {
                 );
               })}
           </GridSelect>
-        </SlideModal>
-      </div>
+        </div>
+      </SlideModal>
     );
   }
 }

@@ -4,15 +4,22 @@ import Input2 from "../../general/components/Input2.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import styles from "./SearchCupon.css";
 export default class SearchCupon extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      couponCode: this.props.couponCode ? this.props.couponCode : ""
+    };
+  }
   getValue(val) {
     if (this.props.getValue) {
       this.props.getValue(val);
     }
+    this.setState({ couponCode: val });
   }
 
   onApply() {
     if (this.props.applyUserCoupon) {
-      this.props.applyUserCoupon(this.props.couponCode);
+      this.props.applyUserCoupon(this.state.couponCode);
     }
   }
   render() {
@@ -34,7 +41,7 @@ export default class SearchCupon extends React.Component {
             boxy={true}
             placeholder="Enter Coupon code"
             onChange={val => this.getValue(val)}
-            value={this.props.couponCode}
+            value={this.state.couponCode}
             textStyle={{ fontSize: 14 }}
             height={35}
           />
