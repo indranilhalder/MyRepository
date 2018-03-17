@@ -81,10 +81,6 @@ const auth = {
   isAuthenticated: false
 };
 class App extends Component {
-  componentDidUpdate() {
-    this.getAccessToken();
-  }
-
   componentDidMount() {
     this.getAccessToken();
   }
