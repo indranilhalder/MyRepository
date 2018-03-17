@@ -2,26 +2,15 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  background-color: #ececec;
+  background-color: #fff;
+  min-height: 100vh;
 }
-.couponSubHeader {
-  background-color: #ffffff;
-  color: #181818;
-  font-size: 14px;
-  font-family: regular;
-  text-align: left;
-  display: inline-block;
-  position: relative;
+.header {
+  width: 100%;
+  height: auto;
+}
+.searchHolder {
+  composes: header;
   padding: 20px;
-}
-
-.couponHeader {
-  height: 50px;
-  background-color: #212121;
-  color: #fff;
-  font-size: 14px;
-  line-height: 50px;
-  font-family: semibold;
-  text-align: left;
-  padding-left: 20px;
+  margin-bottom: 20px;
 }
