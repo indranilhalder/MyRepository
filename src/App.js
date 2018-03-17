@@ -69,6 +69,7 @@ class App extends Component {
   componentDidMount() {
     this.getAccessToken();
   }
+
   getAccessToken = () => {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -81,9 +82,6 @@ class App extends Component {
 
     if (!globalAccessToken) {
       this.props.getGlobalAccessToken();
-      if (!cartIdForAnonymous) {
-        this.props.generateCartIdForAnonymous();
-      }
     }
 
     if (!customerAccessToken && localStorage.getItem(REFRESH_TOKEN)) {
@@ -91,7 +89,6 @@ class App extends Component {
     }
 
     if (customerAccessToken) {
-      auth.isAuthenticated = true;
       if (!cartDetailsForLoggedInUser) {
         this.props.generateCartIdForLoggedInUser();
       }

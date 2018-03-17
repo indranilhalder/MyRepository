@@ -142,7 +142,9 @@ export function loginUser(userLoginDetails) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
+
       dispatch(loginUserSuccess(resultJson));
+      return resultJson;
     } catch (e) {
       dispatch(loginUserFailure(e.message));
     }

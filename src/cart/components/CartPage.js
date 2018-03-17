@@ -37,7 +37,11 @@ class CartPage extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (userDetails) {
+    if (
+      userDetails !== undefined &&
+      customerCookie !== undefined &&
+      cartDetailsLoggedInUser !== undefined
+    ) {
       this.props.getCartDetails(
         JSON.parse(userDetails).userName,
         JSON.parse(customerCookie).access_token,
@@ -45,12 +49,18 @@ class CartPage extends React.Component {
         ""
       );
     } else {
-      this.props.getCartDetails(
-        ANONYMOUS_USER,
-        JSON.parse(globalCookie).access_token,
-        JSON.parse(cartDetailsAnonymous).guid,
-        ""
-      );
+      if (
+        globalCookie !== undefined &&
+        cartDetailsAnonymous !== undefined &&
+        ANONYMOUS_USER !== undefined
+      ) {
+        this.props.getCartDetails(
+          ANONYMOUS_USER,
+          JSON.parse(globalCookie).access_token,
+          JSON.parse(cartDetailsAnonymous).guid,
+          ""
+        );
+      }
     }
     if (userDetails) {
       if (this.props.getCoupons) {
