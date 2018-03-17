@@ -5,7 +5,9 @@ import {
   getEmiBankDetails,
   getNetBankDetails,
   getCartDetails,
-  checkPinCodeServiceAvailability
+  checkPinCodeServiceAvailability,
+  addProductToWishList,
+  removeItemFromCartLoggedIn
 } from "../actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
@@ -32,6 +34,12 @@ const mapDispatchToProps = dispatch => {
     },
     getCoupons: () => {
       dispatch(getCoupons());
+    },
+    addProductToWishList: productDetails => {
+      dispatch(addProductToWishList(productDetails));
+    },
+    removeItemFromCartLoggedIn: (cartListItemPosition, pinCode) => {
+      dispatch(removeItemFromCartLoggedIn(cartListItemPosition, pinCode));
     }
   };
 };

@@ -90,6 +90,18 @@ class CartPage extends React.Component {
     );
   };
 
+  addProductToWishList = product => {
+    if (this.props.addProductToWishList) {
+      this.props.addProductToWishList(product);
+    }
+  };
+
+  removeItemFromCartLoggedIn = (cartListItemPosition, pinCode) => {
+    if (this.props.removeItemFromCartLoggedIn) {
+      this.props.removeItemFromCartLoggedIn(cartListItemPosition, pinCode);
+    }
+  };
+
   applyCoupon = couponCode => {
     if (this.props.applyCoupon) {
       this.props.applyCoupon();
@@ -181,11 +193,14 @@ class CartPage extends React.Component {
                 return (
                   <div className={styles.cartItem} key={i}>
                     <CartItem
+                      pinCode={this.state.pinCode}
+                      product={product}
                       productIsServiceable={product.pinCodeResponse}
                       productImage={product.imageURL}
                       productDetails={product.description}
                       productName={product.productName}
                       price={product.price}
+                      index={i}
                       deliveryInformation={product.elligibleDeliveryMode}
                       deliverTime={
                         product.elligibleDeliveryMode &&
@@ -197,6 +212,8 @@ class CartPage extends React.Component {
                           label: product.qtySelectedByUser
                         }
                       ]}
+                      onSave={this.addProductToWishList}
+                      onRemove={this.removeItemFromCartLoggedIn}
                     />
                   </div>
                 );
@@ -227,7 +244,9 @@ CartPage.propTypes = {
   cartOffer: PropTypes.string,
   cartTax: PropTypes.string,
   delivery: PropTypes.string,
-  offers: PropTypes.string
+  offers: PropTypes.string,
+  removeItemFromCartLoggedIn: PropTypes.func,
+  addProductToWishList: PropTypes.func
 };
 
 CartPage.defaultProps = {

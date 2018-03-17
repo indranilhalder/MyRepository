@@ -17,19 +17,31 @@ export default class CartItem extends React.Component {
       label: "See all"
     };
   }
-  onSave() {
+  handleSave(product) {
     if (this.props.onSave) {
-      this.props.onSave();
+      this.props.onSave(product);
     }
   }
-  onRemove() {
+  handleRemove(index, pinCode) {
     if (this.props.onRemove) {
-      this.props.onRemove();
+      this.props.onRemove(index, pinCode);
     }
   }
   selectDeliveryMode(val) {
     if (this.props.selectDeliveryMode) {
       this.props.selectDeliveryMode(val);
+    }
+  }
+
+  addProductToWishList(productDetails) {
+    if (this.props.addProductToWishList) {
+      this.props.addProductToWishList(this.props.productDetails);
+    }
+  }
+
+  removeItemFromCartLoggedIn(cartListItemPosition) {
+    if (this.props.removeItemFromCartLoggedIn(cartListItemPosition)) {
+      this.props.removeItemFromCartLoggedIn(cartListItemPosition);
     }
   }
 
@@ -100,8 +112,10 @@ export default class CartItem extends React.Component {
         {this.props.hasFooter && (
           <div className={styles.footer}>
             <BagPageFooter
-              onSave={() => this.onSave()}
-              onRemove={() => this.onRemove()}
+              onSave={() => this.handleSave(this.props.product)}
+              onRemove={() =>
+                this.handleRemove(this.props.index, this.state.pinCode)
+              }
             />
             <div className={styles.dropdown}>
               <div className={styles.dropdownLabel}>
@@ -139,7 +153,11 @@ CartItem.propTypes = {
       header: PropTypes.string,
       placedTime: PropTypes.string
     })
-  )
+  ),
+  addProductToWishList: PropTypes.func,
+  removeItemFromCartLoggedIn: PropTypes.func,
+  product: PropTypes.object,
+  pinCode: PropTypes.object
 };
 
 CartItem.defaultProps = {
