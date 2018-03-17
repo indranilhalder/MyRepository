@@ -4,14 +4,11 @@ import styles from "./MobileFooterItem.css";
 import { Icon } from "xelpmoc-core";
 export default class MobileFooterItem extends React.Component {
   handleSelect() {
-    console.log("MOBILE FOOTER ITEM SELECT");
     if (this.props.onSelect) {
       this.props.onSelect();
     }
   }
   render() {
-    console.log("RENDER");
-    console.log(this.props.selected);
     return (
       <div className={styles.base} onClick={() => this.handleSelect()}>
         <div
