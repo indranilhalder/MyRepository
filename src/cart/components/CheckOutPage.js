@@ -291,7 +291,6 @@ class CheckOutPage extends React.Component {
   };
 
   addAddress = address => {
-    console.log(address);
     if (this.props.addUserAddress) {
       let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
       let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
