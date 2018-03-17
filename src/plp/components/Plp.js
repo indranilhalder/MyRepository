@@ -90,7 +90,6 @@ export default class Plp extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     let filterClass = styles.filter;
 
     if (this.props.loading && !this.props.isFilter) {
@@ -103,9 +102,6 @@ export default class Plp extends React.Component {
     return (
       this.props.productListings && (
         <div className={styles.base}>
-          <div className={styles.pageHeader}>
-            <SearchContainer goBack={this.backPage} text="Product listing" />
-          </div>
           <div className={styles.main}>
             <ProductGrid
               history={this.props.history}
