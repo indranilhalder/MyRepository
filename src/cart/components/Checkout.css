@@ -1,88 +1,98 @@
-.base{
-  width:100%;
-  height:auto;
-  display:inline-block;
-  padding:15px;
-  background:#212121;
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 15px;
+  background: #212121;
+  position: fixed;
+  bottom: 0;
+  left: 0;
 }
-.totalPriceButtonHolder{
-  width:100%;
-  height:auto;
-  display:inline-block;
-  vertical-align:top;
-  margin-bottom:30px;
+.hiddenBase {
+  composes: base;
   position: relative;
-  padding-right:125px;
+  left: initial;
+  bottom: initial;
+  opacity: 0;
+  pointer-events: none;
 }
-.totalPriceHeading{
-  width:100%;
-  height:auto;
-  margin-bottom:5px;
-  font-size:14px;
-  color:#8f8f8f;
-  font-family:regular;
-  display:inline-block;
+.totalPriceButtonHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  padding-right: 125px;
 }
-.amountHolder{
-  width:100%;
-  height:auto;
-  display:inline-block;
+.totalPriceHeading {
+  width: 100%;
+  height: auto;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #8f8f8f;
+  font-family: regular;
+  display: inline-block;
 }
-.amount{
-  color:#fff;
-  font-size:20px;
-  font-family:regular;
-  display:inline-block;
-  vertical-align:middle;
+.amountHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
 }
-.infoIconHolder{
-  width:22px;
-  height:22px;
-  display:inline-block;
-  vertical-align:middle;
+.amount {
+  color: #fff;
+  font-size: 20px;
+  font-family: regular;
+  display: inline-block;
+  vertical-align: middle;
+}
+.infoIconHolder {
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+  vertical-align: middle;
   margin-left: 10px;
   opacity: 0.5;
 }
-.checkoutButtonHolder{
-  width:auto;
-  height:auto;
-  position:absolute;
-  right:0;
-  top:5px;
-  display:inline-block;
+.checkoutButtonHolder {
+  width: auto;
+  height: auto;
+  position: absolute;
+  right: 0;
+  top: 5px;
+  display: inline-block;
 }
-.detailsHolder{
-  width:100%;
-  height:auto;
+.detailsHolder {
+  width: 100%;
+  height: auto;
   margin-bottom: 20px;
-  display:inline-block;
+  margin-top: 30px;
+  display: inline-block;
 }
-.informationHolder{
-  width:100%;
-  height:auto;
-  display:inline-block;
+.informationHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
   margin-bottom: 12px;
 }
-.informationQuestionHolder{
-  width:40%;
-  height:auto;
-  color:#fff;
-  font-size:14px;
-  display:inline-block;
-  text-align:left;
-  font-family:semibold;
+.informationQuestionHolder {
+  width: 40%;
+  height: auto;
+  color: #fff;
+  font-size: 14px;
+  display: inline-block;
+  text-align: left;
+  font-family: semibold;
 }
-.informationAnswerHolder{
-  width:60%;
-  height:auto;
-  color:#fff;
-  font-size:14px;
-  display:inline-block;
- font-family:regular;
- text-align:right;
+.informationAnswerHolder {
+  width: 60%;
+  height: auto;
+  color: #fff;
+  font-size: 14px;
+  display: inline-block;
+  font-family: regular;
+  text-align: right;
 }
-.apply{
+.apply {
   composes: informationAnswerHolder;
-  color:#ff1744
+  color: #ff1744;
 }
-
