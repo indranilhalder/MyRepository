@@ -2090,10 +2090,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	 */
 	//changes for SDI 6152
 	@Override
-	public ProductModel getProductForCode(final String code, final String catalogCode)
+	public ProductModel getProductForCode(final String productCode,final String catalogCode)
 	{
-		// YTODO Auto-generated method stub
-		return null;
+		final ProductModel products = mplOrderService.findProductsByCodewithCatalog(productCode,catalogCode);
+		return products;
 	}
 
 
