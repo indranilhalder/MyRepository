@@ -20,7 +20,6 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidMount() {
     console.log("COMPONENT DID MOUNT");
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-      console.log(this.props.match.params[1]);
       this.props.getProductDescription(this.props.match.params[1]);
       this.props.getMsdRequest(this.props.match.params[1]);
       this.props.pdpAboutBrand(this.props.match.params[1]);
