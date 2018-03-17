@@ -11,7 +11,7 @@ export default class SearchCupon extends React.Component {
   }
 
   onApply() {
-    if (this.props.applyUserCoupon) {
+    if (this.props.applyUserCoupon && this.props.couponCode) {
       this.props.applyUserCoupon(this.props.couponCode);
     }
   }
