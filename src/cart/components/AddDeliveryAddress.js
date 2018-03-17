@@ -31,45 +31,8 @@ export default class AddDeliveryAddress extends React.Component {
     };
   }
 
-  onChangeAddressType(val) {
-    this.setState({ addressType: val.addressType });
-  }
-
-  onChangePhone(val) {
-    this.setState({ phone: val.phone });
-  }
-
-  onChangeFirstName(val) {
-    this.setState({ firstName: val.firstName });
-  }
-
-  onChangeLastName(val) {
-    this.setState({ lastName: val.lastName });
-  }
-  onChangePostalCode(val) {
-    this.setState({ postalCode: val.postalCode });
-  }
-  onChangeLine1(val) {
-    this.setState({ line1: val.line1 });
-  }
-  onChangeState(val) {
-    this.setState({ state: val.state });
-  }
-
-  onChangeEmailId(val) {
-    this.setState({ emailId: val.emailId });
-  }
-
-  onChangeLine2(val) {
-    this.setState({ line2: val.landmark });
-  }
-
-  onChangeLine3(val) {
-    this.setState({ line3: val.town });
-  }
-
-  onChangeTown(val) {
-    this.setState({ town: val.city });
+  onChange(val) {
+    this.setState(val);
   }
   onChangeDefaultFlag(val) {
     this.setState({ defaultFlag: val.defaultFlag });
@@ -108,6 +71,7 @@ export default class AddDeliveryAddress extends React.Component {
   };
 
   render() {
+    console.log(this.state);
     const dataLabel = [
       {
         label: "Home"
@@ -130,7 +94,7 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <Input2
             placeholder="Enter a pincode/zipcode*"
-            onChange={postalCode => this.onChangePostalCode({ postalCode })}
+            onChange={postalCode => this.onChange({ postalCode })}
             textStyle={{ fontSize: 14 }}
             height={33}
             value={
@@ -152,7 +116,7 @@ export default class AddDeliveryAddress extends React.Component {
           <Input2
             option={this.state.options}
             placeholder="Name*"
-            onChange={firstName => this.onChangeFirstName({ firstName })}
+            onChange={firstName => this.onChange({ firstName })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -161,17 +125,16 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <TextArea
             placeholder="Address*"
-            onChange={line1 => this.onChangeLine1({ line1 })}
+            value={this.props.line1 ? this.props.line1 : this.state.line1}
+            onChange={line1 => this.onChange({ line1 })}
           />
         </div>
         <div className={styles.content}>
           <Input2
             boxy={true}
             placeholder="Landmark*"
-            value={
-              this.props.landmark ? this.props.landmark : this.state.landmark
-            }
-            onChange={landmark => this.onChangeLine2({ landmark })}
+            value={this.props.line2 ? this.props.line2 : this.state.line2}
+            onChange={line2 => this.onChange({ line2 })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -181,7 +144,7 @@ export default class AddDeliveryAddress extends React.Component {
             boxy={true}
             placeholder="Locality/town*"
             value={this.props.town ? this.props.town : this.state.town}
-            onChange={town => this.onChangeLine3({ town })}
+            onChange={town => this.onChange({ town })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -191,7 +154,7 @@ export default class AddDeliveryAddress extends React.Component {
             boxy={true}
             placeholder="City/district*"
             value={this.props.city ? this.props.city : this.state.city}
-            onChange={city => this.onChangeTown({ city })}
+            onChange={city => this.onChange({ city })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -201,7 +164,7 @@ export default class AddDeliveryAddress extends React.Component {
             placeholder="State*"
             value={this.props.state ? this.props.state : this.state.state}
             boxy={true}
-            onChange={state => this.onChangeState({ state })}
+            onChange={state => this.onChange({ state })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -212,7 +175,7 @@ export default class AddDeliveryAddress extends React.Component {
             placeholder="Phone number*"
             value={this.props.phone ? this.props.phone : this.state.phone}
             boxy={true}
-            onChange={phone => this.onChangePhone({ phone })}
+            onChange={phone => this.onChange({ phone })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -223,7 +186,7 @@ export default class AddDeliveryAddress extends React.Component {
             limit={1}
             offset={0}
             elementWidthMobile={50}
-            onSelect={val => this.onChangeAddressType({ addressType: val[0] })}
+            onSelect={val => this.onChange({ addressType: val[0] })}
           >
             {dataLabel.map((val, i) => {
               return (

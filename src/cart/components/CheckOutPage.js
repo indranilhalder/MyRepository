@@ -291,8 +291,22 @@ class CheckOutPage extends React.Component {
   };
 
   addAddress = address => {
+    console.log(address);
     if (this.props.addUserAddress) {
-      this.props.addUserAddress(address);
+      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+      let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+      let cartDetailsLoggedInUser = Cookie.getCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER
+      );
+      let getCartDetailCNCObj = {
+        userId: JSON.parse(userDetails).userName,
+        accessToken: JSON.parse(customerCookie).access_token,
+        cartId: JSON.parse(cartDetailsLoggedInUser).code,
+        pinCode: address.postalCode,
+        isSoftReservation: false
+      };
+      this.props.addUserAddress(address, getCartDetailCNCObj);
+
       this.setState({ addNewAddress: false });
     }
   };
