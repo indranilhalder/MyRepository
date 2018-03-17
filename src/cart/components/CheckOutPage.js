@@ -370,7 +370,20 @@ class CheckOutPage extends React.Component {
 
   addAddress = address => {
     if (this.props.addUserAddress) {
-      this.props.addUserAddress(address);
+      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+      let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+      let cartDetailsLoggedInUser = Cookie.getCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER
+      );
+      let getCartDetailCNCObj = {
+        userId: JSON.parse(userDetails).userName,
+        accessToken: JSON.parse(customerCookie).access_token,
+        cartId: JSON.parse(cartDetailsLoggedInUser).code,
+        pinCode: address.postalCode,
+        isSoftReservation: false
+      };
+      this.props.addUserAddress(address, getCartDetailCNCObj);
+
       this.setState({ addNewAddress: false });
     }
   };
@@ -458,7 +471,7 @@ class CheckOutPage extends React.Component {
 
   render() {
     if (this.props.cart.loading) {
-      return <div>{this.renderLoader()}</div>;
+      return <div className={styles.base}>{this.renderLoader()}</div>;
     }
     const cartData = this.props.cart;
     if (
@@ -466,11 +479,13 @@ class CheckOutPage extends React.Component {
       !this.state.orderConfirmation
     ) {
       return (
-        <AddDeliveryAddress
-          addUserAddress={address => this.addAddress(address)}
-          {...this.state}
-          onChange={val => this.onChange(val)}
-        />
+        <div className={styles.base}>
+          <AddDeliveryAddress
+            addUserAddress={address => this.addAddress(address)}
+            {...this.state}
+            onChange={val => this.onChange(val)}
+          />
+        </div>
       );
     } else if (
       !this.state.addNewAddress &&
@@ -478,7 +493,7 @@ class CheckOutPage extends React.Component {
       !this.state.orderConfirmation
     ) {
       return (
-        <div>
+        <div className={styles.base}>
           {cartData.userAddress &&
             !this.state.confirmAddress &&
             this.renderCheckoutAddress()}
