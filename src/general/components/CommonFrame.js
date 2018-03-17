@@ -117,8 +117,6 @@ export default class extends React.Component {
   };
   getHeaderText = () => {};
   render() {
-    console.log(this.props);
-    console.log(this.getPageName());
     this.getShouldRenderSearch();
     return (
       <div className={styles.base}>

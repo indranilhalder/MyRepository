@@ -1,0 +1,31 @@
+.base {
+  width: 100%;
+  height: 50px;
+  padding: 15px 70px 15px 40px;
+  position: relative;
+}
+.backArrowHolder {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+.historyDownloadIcon {
+  width: auto;
+  height: 20px;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+.downloadIconHolder {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 15px;
+}
+.orderIconHolder {
+  composes: downloadIconHolder;
+  margin-left: 0px;
+}

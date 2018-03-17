@@ -11,7 +11,6 @@ import SearchContainer from "../../search/SearchContainer";
 import ConnectWidget from "./ConnectWidget";
 import BrandCardHeader from "../../blp/components/BrandCardHeader";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
-import MobileFooter from "../../general/components/MobileFooter.js";
 
 import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
@@ -153,7 +152,6 @@ class Feed extends Component {
           />
         </div> */}
         <div className={styles.center}>{this.renderFeedComponents()}</div>
-        {/* <MobileFooter history={this.props.history} /> */}
       </div>
     );
   }

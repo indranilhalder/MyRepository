@@ -2,8 +2,6 @@ import React from "react";
 import CategoryL1 from "./CategoryL1";
 import CategoryL2 from "./CategoryL2";
 import CategoryL3 from "./CategoryL3";
-import SearchContainer from "../../search/SearchContainer";
-import MobileFooter from "../../general/components/MobileFooter";
 import styles from "./CategoriesPage.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
@@ -59,7 +57,6 @@ export default class CategoriesPage extends React.Component {
               </CategoryL1>
             );
           })}
-        {/* <MobileFooter selected={"categories"} history={this.props.history} /> */}
       </div>
     );
   }

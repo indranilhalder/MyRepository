@@ -11,7 +11,6 @@ import BrandBanner from "./BrandBanner";
 import BrandImage from "../../general/components/BrandImage";
 import BannerMobile from "../../general/components/BannerMobile";
 import Carousel from "../../general/components/Carousel";
-import MobileFooter from "../../general/components/MobileFooter";
 import BrandsSelect from "./BrandsSelect";
 import Input2 from "../../general/components/Input2";
 import { Icon } from "xelpmoc-core";
@@ -162,7 +161,6 @@ export default class BrandsLandingPageDefault extends React.Component {
               );
             })}
         </div>
-        <MobileFooter selected="brands" history={this.props.history} />
       </div>
     );
   }
