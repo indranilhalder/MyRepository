@@ -26,7 +26,7 @@ const user = (
 
     case userActions.LOGIN_USER_SUCCESS:
       let userDetails = {};
-      if (action.user.customerInfo.emailId !== "") {
+      if (action.user.customerInfo.emailId) {
         userDetails.userName = action.user.customerInfo.emailId;
       } else {
         userDetails.userName = action.user.customerInfo.mobileNumber;
