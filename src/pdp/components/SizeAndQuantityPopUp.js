@@ -16,9 +16,7 @@ export default class SizeAndQuantityPopUp extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.textHolder}>
-          <div className={styles.text}>{this.props.data}</div>
-        </div>
+        <div className={styles.textHolder}>{this.props.data}</div>
       </div>
     );
   }
