@@ -271,6 +271,7 @@ export function getCartDetailsCNC(
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
+
       if (isSoftReservation) {
         let productItems = {};
         let item = [];
@@ -278,14 +279,26 @@ export function getCartDetailsCNC(
           let productDetails = {};
           productDetails.ussId = product.USSID;
           productDetails.quantity = product.qtySelectedByUser;
-          productDetails.deliveryMode =
-            product.pinCodeResponse.validDeliveryModes[0].type;
-          productDetails.serviceableSlaves =
-            product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
           productDetails.fulfillmentType = product.fullfillmentType;
+
+          if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+            productDetails.deliveryMode =
+              product.pinCodeResponse.validDeliveryModes[0].type;
+            productDetails.serviceableSlaves =
+              product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          } else if (
+            product.pinCodeResponse.validDeliveryModes[0]
+              .CNCServiceableSlavesData
+          ) {
+            productDetails.deliveryMode =
+              product.pinCodeResponse.validDeliveryModes[0].type;
+            productDetails.serviceableSlaves =
+              product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          }
           item.push(productDetails);
           productItems.item = item;
         });
+
         dispatch(softReservation(pinCode, productItems));
       }
       if (resultJson.status === FAILURE_UPPERCASE) {
@@ -1579,11 +1592,20 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
       let productDetails = {};
       productDetails.ussId = product.USSID;
       productDetails.quantity = product.qtySelectedByUser;
-      productDetails.deliveryMode =
-        product.pinCodeResponse.validDeliveryModes[0].type;
-      productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
       productDetails.fulfillmentType = product.fullfillmentType;
+      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+      } else if (
+        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+      ) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+      }
       item.push(productDetails);
       productItems.item = item;
     });
@@ -1627,11 +1649,20 @@ export function softReservationPaymentForNetBanking(
       let productDetails = {};
       productDetails.ussId = product.USSID;
       productDetails.quantity = product.qtySelectedByUser;
-      productDetails.deliveryMode =
-        product.pinCodeResponse.validDeliveryModes[0].type;
-      productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
       productDetails.fulfillmentType = product.fullfillmentType;
+      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+      } else if (
+        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+      ) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+      }
       item.push(productDetails);
       productItems.item = item;
     });
@@ -1675,11 +1706,20 @@ export function softReservationPaymentForSavedCard(
       let productDetails = {};
       productDetails.ussId = product.USSID;
       productDetails.quantity = product.qtySelectedByUser;
-      productDetails.deliveryMode =
-        product.pinCodeResponse.validDeliveryModes[0].type;
-      productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
       productDetails.fulfillmentType = product.fullfillmentType;
+      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+      } else if (
+        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+      ) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+      }
       item.push(productDetails);
       productItems.item = item;
     });
@@ -2073,8 +2113,7 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-
-      dispatch(orderConfirmation(resultJson.orderId));
+      dispatch(updateTransactionDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(updateTransactionDetailsFailure(e.message));
     }

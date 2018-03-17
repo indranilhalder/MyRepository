@@ -738,14 +738,21 @@ const cart = (
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_FOR_COD_REQUEST:
       return Object.assign({}, state, {
-        binValidationCODStatus: action.status,
+        transactionDetailsStatus: action.status,
         loading: true
+      });
+
+    case cartActions.UPDATE_TRANSACTION_DETAILS_FOR_COD_SUCCESS:
+      return Object.assign({}, state, {
+        transactionDetailsStatus: action.status,
+        transactionDetailsDetails: action.transactionDetails,
+        loading: false
       });
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_FOR_COD_FAILURE:
       return Object.assign({}, state, {
-        binValidationCODStatus: action.status,
-        binValidationCODError: action.error,
+        transactionDetailsStatus: action.status,
+        transactionDetailsError: action.error,
         loading: false
       });
 

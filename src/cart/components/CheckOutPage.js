@@ -350,7 +350,7 @@ class CheckOutPage extends React.Component {
           this.state.ussIdAndDeliveryModesObj,
           this.state.selectedAddress.postalCode
         );
-        this.props.getOrderSummary(this.state.selectedAddress.postalCode);
+        // this.props.getOrderSummary(this.state.selectedAddress.postalCode);
       }
       this.setState({ deliverMode: true });
     }
