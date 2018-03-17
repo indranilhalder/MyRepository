@@ -1,4 +1,5 @@
 import * as cartActions from "../actions/cart.actions";
+import cloneDeep from "lodash/cloneDeep";
 import * as Cookies from "../../lib/Cookie";
 import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
@@ -40,7 +41,7 @@ const cart = (
     orderSummaryError: null,
     coupons: null,
 
-    storeDetails: null,
+    storeDetails: [],
     storeStatus: null,
     storeError: null,
     storeAdded: null,
@@ -110,6 +111,7 @@ const cart = (
   },
   action
 ) => {
+  let updatedCartDetailsCNC;
   switch (action.type) {
     case cartActions.CART_DETAILS_REQUEST:
       return Object.assign({}, state, {
@@ -427,9 +429,13 @@ const cart = (
       });
 
     case cartActions.ADD_PICKUP_PERSON_SUCCESS:
+      const currentCartDetailsCNC = cloneDeep(state.cartDetails);
+      updatedCartDetailsCNC = Object.assign({}, action.cartDetailsCNC, {
+        cartAmount: currentCartDetailsCNC.cartAmount
+      });
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
-        cartDetailsCNC: action.cartDetailsCNC,
+        cartDetailsCNC: updatedCartDetailsCNC,
         loading: false
       });
 
@@ -741,14 +747,21 @@ const cart = (
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_FOR_COD_REQUEST:
       return Object.assign({}, state, {
-        binValidationCODStatus: action.status,
+        transactionDetailsStatus: action.status,
         loading: true
+      });
+
+    case cartActions.UPDATE_TRANSACTION_DETAILS_FOR_COD_SUCCESS:
+      return Object.assign({}, state, {
+        transactionDetailsStatus: action.status,
+        transactionDetailsDetails: action.transactionDetails,
+        loading: false
       });
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_FOR_COD_FAILURE:
       return Object.assign({}, state, {
-        binValidationCODStatus: action.status,
-        binValidationCODError: action.error,
+        transactionDetailsStatus: action.status,
+        transactionDetailsError: action.error,
         loading: false
       });
 
