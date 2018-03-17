@@ -17,9 +17,10 @@ const typeComponentMapping = {
   "Clothing":props => <PdpApparel {...props} />
 };
 
+const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
 export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidMount() {
-    let defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
       this.props.getProductDescription(this.props.match.params[1]);
       this.props.getMsdRequest(this.props.match.params[1]);
