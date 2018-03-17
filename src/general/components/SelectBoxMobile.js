@@ -11,7 +11,6 @@ const GREY = "grey";
 const HOLLOW_BOX = "hollowBox";
 const BLACK_BOX = "blackBox";
 const GREY_BOX = "greyBox";
-
 export default class SelectBoxMobile extends React.Component {
   constructor(props) {
     super(props);

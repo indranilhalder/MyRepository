@@ -4,7 +4,7 @@ import BagPageItem from "./BagPageItem.js";
 
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import BagPageFooter from "../../general/components/BagPageFooter";
-import SelectBox from "../../general/components/SelectBox.js";
+import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 import DeliveryInfoSelect from "./DeliveryInfoSelect";
 import PropTypes from "prop-types";
 
@@ -14,7 +14,10 @@ export default class CartItem extends React.Component {
     this.state = {
       showDelivery: this.props.showDelivery ? this.props.showDelivery : false,
       selectedValue: "",
-      label: "See all"
+      label: "See all",
+      maxQuantityAllowed: 1,
+      qtySelectedByUser: 1,
+      quantityList: []
     };
   }
   handleSave(product) {
@@ -45,13 +48,33 @@ export default class CartItem extends React.Component {
       }
     });
   }
-  handleChange(changedValue) {
+
+  componentWillMount() {
+    this.setQuantity();
+  }
+  handleQuantityChange(changedValue) {
     this.setState({ selectedValue: changedValue }, () => {
       if (this.props.onQuantityChange) {
-        this.props.onQuantityChange(this.state.selectedValue);
+        this.props.onQuantityChange(this.props.index, this.state.selectedValue);
       }
     });
   }
+  setQuantity = () => {
+    this.setState({
+      maxQuantityAllowed: parseInt(this.props.maxQuantityAllowed, 10),
+      qtySelectedByUser: parseInt(this.props.qtySelectedByUser, 10)
+    });
+
+    if (this.state.quantityList.length === 0) {
+      let fetchedQuantityList = [];
+      for (let i = 1; i <= parseInt(this.props.maxQuantityAllowed, 10); i++) {
+        fetchedQuantityList.push({ value: i.toString() });
+      }
+      this.setState({
+        quantityList: fetchedQuantityList
+      });
+    }
+  };
   render() {
     let isServiceAble = false;
     if (this.props.productIsServiceable) {
@@ -109,12 +132,13 @@ export default class CartItem extends React.Component {
               <div className={styles.dropdownLabel}>
                 {this.props.dropdownLabel}
               </div>
-              <SelectBox
+              <SelectBoxMobile
                 borderNone={true}
                 placeholder="1"
-                options={this.props.option}
+                options={this.state.quantityList}
                 selected={this.state.selectedValue}
-                onChange={val => this.handleChange(val)}
+                onChange={val => this.handleQuantityChange(val)}
+                value={this.state.qtySelectedByUser}
               />
             </div>
           </div>
@@ -143,7 +167,9 @@ CartItem.propTypes = {
     })
   ),
   product: PropTypes.object,
-  pinCode: PropTypes.object
+  pinCode: PropTypes.object,
+  maxQuantityAllowed: PropTypes.string,
+  qtySelectedByUser: PropTypes.string
 };
 
 CartItem.defaultProps = {
