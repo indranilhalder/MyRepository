@@ -15,7 +15,7 @@ export default class CodUnavailable extends React.Component {
         <div className={styles.head}>{HEADER_TEXT}</div>
         <div className={styles.message}>({this.props.message})</div>
         <div className={styles.arrow}>
-          <Icon image={arrowIcon} size={12} />
+          <Icon image={arrowIcon} size={14} />
         </div>
       </div>
     );

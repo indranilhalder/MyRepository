@@ -1,6 +1,7 @@
 .base {
   width: 100%;
   height: auto;
+  padding: 20px 0;
 }
 .bankName {
   width: auto;
@@ -38,6 +39,7 @@
   width: auto;
   height: auto;
   padding-right: 25px;
+  position: relative;
 }
 .button {
   width: auto;

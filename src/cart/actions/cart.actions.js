@@ -308,6 +308,7 @@ export function getCartDetailsCNC(
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
+
       if (isSoftReservation) {
         let productItems = {};
         let item = [];
@@ -315,14 +316,26 @@ export function getCartDetailsCNC(
           let productDetails = {};
           productDetails.ussId = product.USSID;
           productDetails.quantity = product.qtySelectedByUser;
-          productDetails.deliveryMode =
-            product.pinCodeResponse.validDeliveryModes[0].type;
-          productDetails.serviceableSlaves =
-            product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
           productDetails.fulfillmentType = product.fullfillmentType;
+
+          if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+            productDetails.deliveryMode =
+              product.pinCodeResponse.validDeliveryModes[0].type;
+            productDetails.serviceableSlaves =
+              product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          } else if (
+            product.pinCodeResponse.validDeliveryModes[0]
+              .CNCServiceableSlavesData
+          ) {
+            productDetails.deliveryMode =
+              product.pinCodeResponse.validDeliveryModes[0].type;
+            productDetails.serviceableSlaves =
+              product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          }
           item.push(productDetails);
           productItems.item = item;
         });
+
         dispatch(softReservation(pinCode, productItems));
       }
       if (resultJson.status === FAILURE_UPPERCASE) {
@@ -616,7 +629,7 @@ export function selectDeliveryMode(deliveryUssId, pinCode) {
           JSON.parse(cartDetails).code
         }/selectDeliveryMode?access_token=${
           JSON.parse(customerCookie).access_token
-        }&deliverymodeussId={${deliveryUssId}}&removeExchange=0`
+        }&deliverymodeussId=${JSON.stringify(deliveryUssId)}&removeExchange=0`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
@@ -816,7 +829,9 @@ export function generateCartIdForLoggedInUser() {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
+
       dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
+      return resultJson;
     } catch (e) {
       dispatch(generateCartIdFailure(e.message));
     }
@@ -899,7 +914,7 @@ export function getCartIdFailure(error) {
   };
 }
 
-export function getOrderSummary() {
+export function getOrderSummary(pincode) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -912,7 +927,7 @@ export function getOrderSummary() {
           JSON.parse(cartDetails).code
         }/displayOrderSummary?access_token=${
           JSON.parse(customerCookie).access_token
-        }&pincode=400083&isPwa=true&platformNumber=2`
+        }&pincode=${pincode}&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
@@ -927,7 +942,7 @@ export function getOrderSummary() {
 export function getCartId() {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
   return async (dispatch, getState, { api }) => {
     dispatch(getCartIdRequest());
 
@@ -944,11 +959,7 @@ export function getCartId() {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      if (cartDetailsAnonymous) {
-        dispatch(mergeCartId(resultJson));
-      } else {
-        dispatch(generateCartIdForLoggedInUser());
-      }
+      return resultJson;
     } catch (e) {
       dispatch(getCartIdFailure(e.message));
     }
@@ -977,13 +988,13 @@ export function mergeCartIdFailure(error) {
   };
 }
 
-export function mergeCartId(cartDetails) {
+export function mergeCartId(cartGuId) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
   return async (dispatch, getState, { api }) => {
     dispatch(mergeCardIdRequest());
-
     try {
       const result = await api.get(
         `${USER_CART_PATH}/${
@@ -992,15 +1003,15 @@ export function mergeCartId(cartDetails) {
           JSON.parse(customerCookie).access_token
         }&isPwa=true&platformNumber=2&userId=${
           JSON.parse(userDetails).userName
-        }&oldCartId=${JSON.parse(cartDetailsAnonymous).guid}&toMergeCartGuid=${
-          cartDetails.guid
-        }`
+        }&oldCartId=${
+          JSON.parse(cartDetailsAnonymous).guid
+        }&toMergeCartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
+
       dispatch(mergeCartIdSuccess(resultJson));
     } catch (e) {
       dispatch(mergeCartIdFailure(e.message));
@@ -1089,7 +1100,7 @@ export function getAllStoresCNC(pinCode) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      dispatch(getAllStoresCNCSuccess(resultJson));
+      dispatch(getAllStoresCNCSuccess(resultJson.stores));
     } catch (e) {
       dispatch(getAllStoresCNCFailure(e.message));
     }
@@ -1616,11 +1627,20 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
       let productDetails = {};
       productDetails.ussId = product.USSID;
       productDetails.quantity = product.qtySelectedByUser;
-      productDetails.deliveryMode =
-        product.pinCodeResponse.validDeliveryModes[0].type;
-      productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
       productDetails.fulfillmentType = product.fullfillmentType;
+      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+      } else if (
+        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+      ) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+      }
       item.push(productDetails);
       productItems.item = item;
     });
@@ -1664,11 +1684,20 @@ export function softReservationPaymentForNetBanking(
       let productDetails = {};
       productDetails.ussId = product.USSID;
       productDetails.quantity = product.qtySelectedByUser;
-      productDetails.deliveryMode =
-        product.pinCodeResponse.validDeliveryModes[0].type;
-      productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
       productDetails.fulfillmentType = product.fullfillmentType;
+      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+      } else if (
+        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+      ) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+      }
       item.push(productDetails);
       productItems.item = item;
     });
@@ -1712,11 +1741,20 @@ export function softReservationPaymentForSavedCard(
       let productDetails = {};
       productDetails.ussId = product.USSID;
       productDetails.quantity = product.qtySelectedByUser;
-      productDetails.deliveryMode =
-        product.pinCodeResponse.validDeliveryModes[0].type;
-      productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
       productDetails.fulfillmentType = product.fullfillmentType;
+      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+      } else if (
+        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+      ) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+      }
       item.push(productDetails);
       productItems.item = item;
     });
@@ -2110,8 +2148,7 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-
-      dispatch(orderConfirmation(resultJson.orderId));
+      dispatch(updateTransactionDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(updateTransactionDetailsFailure(e.message));
     }

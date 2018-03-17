@@ -11,6 +11,7 @@ export default class BannerMobile extends React.Component {
     itemArray.unshift(lastItem);
     this.items = itemArray;
     this.state = {
+      children: this.props.children,
       visibleItems: this.props.children
         ? itemArray.filter((child, i) => {
             return i < 3;
@@ -39,6 +40,23 @@ export default class BannerMobile extends React.Component {
   handleSwipe(val) {
     if (this.props.onSwipe) {
       this.props.onSwipe(val);
+    }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.children.length !== nextState.children.length) {
+      const itemArray = React.Children.map(nextProps.children, (child, i) => {
+        return child;
+      });
+      const lastItem = itemArray.pop();
+      itemArray.unshift(lastItem);
+      this.items = itemArray;
+      this.setState({
+        children: nextProps.children,
+        visibleItems: itemArray.filter((child, i) => {
+          return i < 3;
+        })
+      });
     }
   }
   slideForward = () => {
