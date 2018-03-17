@@ -71,7 +71,6 @@ export default class AddDeliveryAddress extends React.Component {
   };
 
   render() {
-    console.log(this.state);
     const dataLabel = [
       {
         label: "Home"
