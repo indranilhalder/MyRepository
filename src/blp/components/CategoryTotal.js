@@ -6,7 +6,6 @@ import ProductModule from "../../general/components/ProductModule.js";
 import Carousel from "../../general/components/Carousel";
 import StoresLocationBanner from "./StoresLocationBanner.js";
 import ShopCollection from "../../pdp/components/ShopCollection.js";
-import MobileFooterBase from "../../general/components/MobileFooter.js";
 import CuratedFeature from "./CuratedFeature.js";
 import SelectColourWithCarousel from "./SelectColourWithCarousel.js";
 import ThemeProductWidget from "../../home/components/ThemeProductWidget";
@@ -411,9 +410,6 @@ export default class CategoryTotal extends React.Component {
         />
         <div className={styles.productDetailsHolder}>
           <ThemeProductWidget feedComponentData={feedComponentData} />
-        </div>
-        <div className={styles.footer}>
-          <MobileFooterBase />
         </div>
       </div>
     );

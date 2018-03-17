@@ -6,6 +6,7 @@ import {
   resetPassword,
   otpVerification,
   forgotPassword,
+  signUpUser,
   forgotPasswordOtpVerification
 } from "../../auth/actions/user.actions";
 
@@ -57,7 +58,9 @@ const mapDispatchToProps = dispatch => {
     forgotPasswordOtpVerification: (otpDetails, userDetails) => {
       dispatch(forgotPasswordOtpVerification(otpDetails, userDetails));
     },
-
+    resendOTP: userObj => {
+      dispatch(signUpUser(userObj));
+    },
     applyBankOffer: couponCode => {
       dispatch(applyBankOffer(couponCode));
     },

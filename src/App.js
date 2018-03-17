@@ -21,6 +21,7 @@ import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryW
 import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
+import MobileFooter from "./general/components/MobileFooter.js";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 
@@ -60,22 +61,6 @@ import {
   CATEGORY_PAGE_WITH_SLUG
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
-const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={props =>
-      auth.isAuthenticated === true ? (
-        <Component {...props} />
-      ) : (
-        <Redirect
-          to={{
-            pathname: { MAIN_ROUTER }
-          }}
-        />
-      )
-    }
-  />
-);
 
 const auth = {
   isAuthenticated: false
@@ -234,6 +219,8 @@ class App extends Component {
             component={CategoriesPageContainer}
           />
         </Switch>
+        <MobileFooter />
+
         <ModalContainer />
       </div>
     );
