@@ -31,7 +31,8 @@ import {
   softReservationForCODPayment,
   captureOrderExperience,
   binValidationForNetBanking,
-  softReservationPaymentForNetBanking
+  softReservationPaymentForNetBanking,
+  softReservationPaymentForSavedCard
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -143,6 +144,11 @@ const mapDispatchToProps = dispatch => {
     softReservationPaymentForNetBanking: (paymentMode, bankName, pinCode) => {
       dispatch(
         softReservationPaymentForNetBanking(paymentMode, bankName, pinCode)
+      );
+    },
+    softReservationPaymentForSavedCard: (cardDetails, address, paymentMode) => {
+      dispatch(
+        softReservationPaymentForSavedCard(cardDetails, address, paymentMode)
       );
     }
   };

@@ -119,11 +119,7 @@ class Feed extends Component {
     if (this.props.isHomeFeedPage) {
       this.props.getCartId();
       this.props.homeFeed();
-    } // window.digitalData = Object.assign(
-    //   {},
-    //   { page: { pageInfo: { pageName: "home" } } }
-    // );
-    // window._satellite.track("page view");
+    }
   }
 
   render() {

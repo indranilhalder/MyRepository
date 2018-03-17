@@ -37,8 +37,11 @@ class CheckOutPage extends React.Component {
     appliedCoupons: false,
     paymentModeSelected: null,
     orderConfirmation: false,
-    binValidationCOD: false,
-    orderId: ""
+
+    orderId: "",
+    savedCardDetails: "",
+
+    binValidationCOD: false
   };
 
   renderLoader() {
@@ -168,9 +171,11 @@ class CheckOutPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.cart.justPayPaymentDetails !== null) {
-      window.location.replace(
-        nextProps.cart.justPayPaymentDetails.payment.authentication.url
-      );
+      if (nextProps.cart.justPayPaymentDetails.payment) {
+        window.location.replace(
+          nextProps.cart.justPayPaymentDetails.payment.authentication.url
+        );
+      }
     }
     if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
       Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -220,7 +225,7 @@ class CheckOutPage extends React.Component {
         );
 
         this.props.getCartDetailsCNC(
-          JSON.parse(userDetails).customerInfo.mobileNumber,
+          JSON.parse(userDetails).userName,
           JSON.parse(customerCookie).access_token,
           JSON.parse(cartDetailsLoggedInUser).code,
           this.props.location.state.pinCode,
@@ -271,6 +276,15 @@ class CheckOutPage extends React.Component {
       }
       this.setState({ deliverMode: true });
     }
+
+    if (this.state.savedCardDetails !== "") {
+      this.props.softReservationPaymentForSavedCard(
+        this.state.savedCardDetails,
+        this.state.addressId[0],
+        this.state.paymentModeSelected
+      );
+    }
+
     if (this.state.binValidationCOD) {
       this.softReservationForCODPayment();
     }
@@ -319,6 +333,17 @@ class CheckOutPage extends React.Component {
   binValidationForNetBank = (paymentMode, bankName) => {
     this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidationForNetBanking(paymentMode, bankName);
+  };
+
+  binValidationForSavedCard = cardDetails => {
+    this.setState({
+      paymentModeSelected: `${cardDetails.cardType} Card`
+    });
+    this.setState({ savedCardDetails: cardDetails });
+    this.props.binValidation(
+      `${cardDetails.cardType} Card`,
+      cardDetails.cardISIN
+    );
   };
 
   softReservationForPayment = cardDetails => {
@@ -428,6 +453,9 @@ class CheckOutPage extends React.Component {
                 }
                 softReservationPaymentForNetBanking={bankName =>
                   this.softReservationPaymentForNetBanking(bankName)
+                }
+                binValidationForSavedCard={cardDetails =>
+                  this.binValidationForSavedCard(cardDetails)
                 }
               />
             )}

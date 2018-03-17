@@ -81,7 +81,7 @@ export default class PdpApparel extends React.Component {
 
     if (userDetails) {
       this.props.addProductToCart(
-        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(userDetails).userName,
         JSON.parse(cartDetailsLoggedInUser).code,
         JSON.parse(customerCookie).access_token,
         productDetails
@@ -112,7 +112,7 @@ export default class PdpApparel extends React.Component {
 
     if (userDetails) {
       this.props.addProductToWishList(
-        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(userDetails).userName,
         JSON.parse(customerCookie).access_token,
         productDetails
       );

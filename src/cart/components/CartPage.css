@@ -14,6 +14,7 @@
 }
 .search {
   composes: cartItem;
+  margin-bottom: 0;
   padding: 20px;
 }
 .content {
@@ -21,6 +22,11 @@
   height: auto;
   padding: 0 20px;
   margin-bottom: 20px;
+}
+.disabled {
+  composes: content;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .offer {

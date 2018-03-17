@@ -7,6 +7,7 @@ import BagPageFooter from "../../general/components/BagPageFooter";
 import SelectBox from "../../general/components/SelectBox.js";
 import DeliveryInfoSelect from "./DeliveryInfoSelect";
 import PropTypes from "prop-types";
+
 export default class CartItem extends React.Component {
   constructor(props) {
     super(props);
@@ -52,6 +53,13 @@ export default class CartItem extends React.Component {
     });
   }
   render() {
+    let isServiceAble = false;
+    if (this.props.productIsServiceable) {
+      if (this.props.productIsServiceable.isServicable === "Y") {
+        isServiceAble = true;
+      }
+    }
+
     return (
       <div className={styles.base}>
         <div className={styles.productInformation}>
@@ -60,6 +68,7 @@ export default class CartItem extends React.Component {
             productName={this.props.productName}
             productDetails={this.props.productDetails}
             price={this.props.price}
+            isServiceAvailable={isServiceAble}
           />
         </div>
         {this.props.deliveryInformation &&

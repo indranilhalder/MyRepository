@@ -1,11 +1,14 @@
 import React from "react";
-import _ from "lodash";
+import filter from "lodash/filter";
 import CliqCashToggle from "./CliqCashToggle";
 import styles from "./PaymentCardWrapper.css";
 import CheckoutEmi from "./CheckoutEmi.js";
 import CheckoutCreditCard from "./CheckoutCreditCard.js";
 import CheckoutDebitCard from "./CheckoutDebitCard.js";
 import CheckoutNetbanking from "./CheckoutNetbanking.js";
+
+import CheckoutSavedCard from "./CheckoutSavedCard.js";
+
 import CheckoutCOD from "./CheckoutCOD.js";
 
 // prettier-ignore
@@ -32,7 +35,7 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   renderPaymentCardsComponents() {
-    let paymentModesToDisplay = _.filter(
+    let paymentModesToDisplay = filter(
       this.props.cart.paymentModes.paymentModes,
       modes => {
         return modes.value === true;
@@ -43,6 +46,24 @@ export default class PaymentCardWrapper extends React.Component {
     });
   }
 
+  binValidationForSavedCard = cardDetails => {
+    if (this.props.binValidationForSavedCard) {
+      this.props.binValidationForSavedCard(cardDetails);
+    }
+  };
+  renderSavedCards = () => {
+    return (
+      <CheckoutSavedCard
+        binValidationForSavedCard={cardDetails =>
+          this.binValidationForSavedCard(cardDetails)
+        }
+        saveCardDetails={
+          this.props.cart.paymentModes.savedCardResponse.savedCardDetailsMap
+        }
+      />
+    );
+  };
+
   handleClick = toggleState => {
     if (toggleState) {
       this.props.applyCliqCash();
@@ -52,18 +73,29 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   render() {
-    return (
-      <div className={styles.base}>
-        <div>
-          {" "}
-          <CliqCashToggle
-            cashText="Use My CLiQ Cash Balance"
-            price="400"
-            onToggle={i => this.handleClick(i)}
-          />
+    if (this.props.cart.paymentModes) {
+      return (
+        <div className={styles.base}>
+          {this.renderSavedCards()}
+          {this.props.cart.paymentModes.cliqCash.totalCliqCashBalance.value !==
+            0 && (
+            <div>
+              {" "}
+              <CliqCashToggle
+                cashText="Use My CLiQ Cash Balance"
+                price={
+                  this.props.cart.paymentModes.cliqCash.totalCliqCashBalance
+                    .formattedValue
+                }
+                onToggle={i => this.handleClick(i)}
+              />
+            </div>
+          )}
+          {this.props.cart.paymentModes && this.renderPaymentCardsComponents()}
         </div>
-        {this.props.cart.paymentModes && this.renderPaymentCardsComponents()}
-      </div>
-    );
+      );
+    } else {
+      return null;
+    }
   }
 }
