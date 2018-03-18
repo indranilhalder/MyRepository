@@ -70,7 +70,9 @@ export default class BrandsLandingPageDefault extends React.Component {
       brandsStores[this.state.currentActiveBrandType].brands;
     if (this.state.searchBy) {
       currentActiveBrandList = filter(currentActiveBrandList, brand => {
-        return brand.brandName.toLowerCase().includes(this.state.searchBy);
+        return brand.brandName
+          .toLowerCase()
+          .includes(this.state.searchBy.toLowerCase());
       });
     }
 
