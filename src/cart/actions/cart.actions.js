@@ -996,7 +996,7 @@ export function mergeCartId(cartGuId) {
   return async (dispatch, getState, { api }) => {
     dispatch(mergeCardIdRequest());
     try {
-      const result = await api.get(
+      const result = await api.post(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/carts?access_token=${
