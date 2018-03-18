@@ -816,7 +816,6 @@ export function generateCartIdForLoggedInUser() {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(generateCartIdRequest());
-    console.log(userDetails, customerCookie);
     try {
       const result = await api.post(
         `${USER_CART_PATH}/${
@@ -826,11 +825,9 @@ export function generateCartIdForLoggedInUser() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (resultJson.status === FAILURE_UPPERCASE || resultJson.errors) {
         throw new Error(resultJson.error);
       }
-      console.log("DO NOT THRWO ERROR");
       dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
       return resultJson;
     } catch (e) {
