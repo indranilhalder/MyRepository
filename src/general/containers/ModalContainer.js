@@ -41,10 +41,10 @@ const mapDispatchToProps = dispatch => {
     otpVerification: (otpDetails, userDetails) => {
       dispatch(otpVerification(otpDetails, userDetails)).then(() => {
         dispatch(getCartId()).then(cartVal => {
-          if (cartVal.guid) {
+          if (cartVal) {
             dispatch(mergeCartId(cartVal.guid));
           } else {
-            dispatch(generateCartIdForLoggedInUser(cartVal.guid));
+            dispatch(generateCartIdForLoggedInUser());
           }
         });
       });
