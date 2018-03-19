@@ -2239,7 +2239,7 @@ export function captureOrderExperience(orderId, rating) {
   return async (dispatch, getState, { api }) => {
     dispatch(captureOrderExperienceRequest());
     try {
-      const result = await api.get(
+      const result = await api.post(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/orderExperience/${orderId}?access_token=${
