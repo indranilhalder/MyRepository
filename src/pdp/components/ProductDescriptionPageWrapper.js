@@ -7,7 +7,8 @@ import MDSpinner from "react-md-spinner";
 import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  UPDATE_PDP_REDUCER_FOR_DELIVERY_OPTION
+  UPDATE_PDP_REDUCER_FOR_DELIVERY_OPTION,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 // prettier-ignore
 const typeComponentMapping = {
@@ -16,19 +17,17 @@ const typeComponentMapping = {
   "Clothing":props => <PdpApparel {...props} />
 };
 
+const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
 export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidMount() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
       this.props.getProductDescription(this.props.match.params[1]);
       this.props.getMsdRequest(this.props.match.params[1]);
       this.props.pdpAboutBrand(this.props.match.params[1]);
-      if (
-        this.props.productDetails &&
-        this.props.productDetails.isServiceableToPincode &&
-        this.props.productDetails.isServiceableToPincode.pinCode
-      ) {
+      if (defaultPinCode) {
         this.props.getProductPinCode(
-          this.props.productDetails.isServiceableToPincode.pinCode,
+          defaultPinCode,
           this.props.match.params[1]
         );
       }
@@ -38,13 +37,9 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       this.props.getProductDescription(this.props.match.params[2]);
       this.props.getMsdRequest(this.props.match.params[2]);
       this.props.pdpAboutBrand(this.props.match.params[2]);
-      if (
-        this.props.productDetails &&
-        this.props.productDetails.isServiceableToPincode &&
-        this.props.productDetails.isServiceableToPincode.pinCode
-      ) {
+      if (defaultPinCode) {
         this.props.getProductPinCode(
-          this.props.productDetails.isServiceableToPincode.pinCode,
+          defaultPinCode,
           this.props.match.params[0]
         );
       }
