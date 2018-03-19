@@ -82,7 +82,7 @@ class App extends Component {
     );
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
-    if (!globalAccessToken) {
+    if (!globalAccessToken && !this.props.cart.loading) {
       this.props.getGlobalAccessToken();
     }
 
@@ -91,11 +91,15 @@ class App extends Component {
     }
 
     if (customerAccessToken) {
-      if (!cartDetailsForLoggedInUser) {
+      if (!cartDetailsForLoggedInUser && !this.props.cart.loading) {
         this.props.generateCartIdForLoggedInUser();
       }
     } else {
-      if (!cartDetailsForAnonymous && globalAccessToken) {
+      if (
+        !cartDetailsForAnonymous &&
+         globalAccessToken &&
+        !this.props.cart.loading
+      ) {
         this.props.generateCartIdForAnonymous();
       }
     }

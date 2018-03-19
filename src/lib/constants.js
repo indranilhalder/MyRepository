@@ -46,7 +46,7 @@ export const LOGIN_PATH = "/login";
 export const SIGN_UP_PATH = "/sign_up";
 export const PRODUCT_FILTER_ROUTER = "/filter";
 export const PRODUCT_SELLER_ROUTER_SUFFIX = "/viewSellers";
-export const PRODUCT_CART_ROUTER = "/myBag";
+export const PRODUCT_CART_ROUTER = "/cart ";
 export const ORDER_SUMMARY_ROUTER = "/orderSummary";
 export const CHECKOUT_ROUTER = "/checkout";
 export const CLIQ_AND_PIQ = "/select-stores";
@@ -67,6 +67,7 @@ export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
 export const ORDER_PAGE = "/allOrders";
+export const PAYMENT_MODE_TYPE = "paymentMode";
 
 // fetching feed information contant
 export const BLP_OR_CLP_FEED_TYPE = "blpOrClp";
