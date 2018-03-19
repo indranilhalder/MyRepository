@@ -253,4 +253,7 @@ public interface MplCouponFacade
 	MplFinalVisibleCouponsDTO getDisplayOpenCouponList();
 
 
+	boolean releaseCartVoucherInCheckout(CartModel cart) throws VoucherOperationException, EtailNonBusinessExceptions;
+
+
 }

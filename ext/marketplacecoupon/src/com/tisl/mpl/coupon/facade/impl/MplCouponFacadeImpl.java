@@ -2394,4 +2394,55 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		this.mplDisplayCouponCachingStrategy = mplDisplayCouponCachingStrategy;
 	}
 
+
+
+	/**
+	 * Releases Cart Voucher from Cart
+	 *
+	 * @param cart
+	 * @throws VoucherOperationException
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public boolean releaseCartVoucherInCheckout(final CartModel cart) throws VoucherOperationException, EtailNonBusinessExceptions
+	{
+
+		final List<DiscountModel> discountList = cart.getDiscounts();
+		boolean recalculateRequired = false;
+		try
+		{
+			if (CollectionUtils.isNotEmpty(discountList))
+			{
+				for (final DiscountModel oModel : discountList)
+				{
+					if (oModel instanceof MplCartOfferVoucherModel)
+					{
+						final MplCartOfferVoucherModel coupon = (MplCartOfferVoucherModel) oModel;
+						getVoucherService().releaseVoucher(coupon.getVoucherCode(), cart);
+						final List<AbstractOrderEntryModel> entryList = cart.getEntries();
+						if (CollectionUtils.isNotEmpty(entryList))
+						{
+							for (final AbstractOrderEntryModel entry : entryList)
+							{
+								entry.setCartCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+								entry.setCartCouponValue(Double.valueOf(0.00D));
+							}
+							if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
+							{
+								getModelService().saveAll(entryList);
+							}
+						}
+					}
+				}
+				recalculateRequired = true;
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception in releaseVoucherInCheckout ", ex); //TISPT-104
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		return recalculateRequired;
+	}
+
 }
