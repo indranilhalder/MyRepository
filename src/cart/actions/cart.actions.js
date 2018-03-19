@@ -2152,9 +2152,9 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
+
       dispatch(updateTransactionDetailsSuccess(resultJson));
       dispatch(orderConfirmation(resultJson.orderId));
-      return resultJson;
     } catch (e) {
       dispatch(updateTransactionDetailsFailure(e.message));
     }
