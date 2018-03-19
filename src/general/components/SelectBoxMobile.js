@@ -28,6 +28,7 @@ export default class SelectBoxMobile extends React.Component {
     });
   }
   render() {
+    console.log(this.props);
     let arrow = GreyArrow;
     if (this.props.arrowColour === BLACK) {
       arrow = BlackArrow;

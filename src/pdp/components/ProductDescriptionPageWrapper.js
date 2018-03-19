@@ -1,6 +1,7 @@
 import React from "react";
 import PdpElectronics from "./PdpElectronics";
 import PdpApparel from "./PdpApparel";
+import PdpHome from "./PdpHome";
 import styles from "./ProductDescriptionPageWrapper.css";
 import ProductDescriptionPage from "./ProductDescriptionPage";
 import MDSpinner from "react-md-spinner";
@@ -13,7 +14,8 @@ import {
 const typeComponentMapping = {
   "Electronics": props => <PdpElectronics {...props} />,
   "FashionJewellery":props => <ProductDescriptionPage {...props} />,
-  "Clothing":props => <PdpApparel {...props} />
+  "Clothing":props => <PdpApparel {...props} />,
+  "HomeFurnishing":props => <PdpHome {...props} />
 };
 
 export default class ProductDescriptionPageWrapper extends React.Component {
@@ -86,6 +88,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     if (!this.props.loading && this.props.productDetails) {
       return (
         <div>
