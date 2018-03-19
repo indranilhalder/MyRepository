@@ -67,22 +67,21 @@ import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const auth = {
   isAuthenticated: false
 };
+const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+const customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+const cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+const loggedInUserDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+const cartDetailsForLoggedInUser = Cookie.getCookie(
+  CART_DETAILS_FOR_LOGGED_IN_USER
+);
+
 class App extends Component {
   componentDidMount() {
     this.getAccessToken();
   }
 
   getAccessToken = () => {
-    let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    let loggedInUserDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let cartDetailsForLoggedInUser = Cookie.getCookie(
-      CART_DETAILS_FOR_LOGGED_IN_USER
-    );
-    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-
-    if (!globalAccessToken) {
+    if (!globalAccessToken || !JSON.parse(globalAccessToken).access_token) {
       this.props.getGlobalAccessToken();
     }
 
@@ -90,13 +89,17 @@ class App extends Component {
       this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
     }
 
-    if (customerAccessToken) {
-      if (!cartDetailsForLoggedInUser) {
+    if (!customerAccessToken || !JSON.parse(customerAccessToken).access_token) {
+      if (
+        !cartDetailsForLoggedInUser ||
+        !JSON.parse(cartDetailsForLoggedInUser).code
+      ) {
         this.props.generateCartIdForLoggedInUser();
       }
     } else {
-      if (!cartDetailsForAnonymous && globalAccessToken) {
-        this.props.generateCartIdForAnonymous();
+      if (globalAccessToken && JSON.parse(globalAccessToken).access_token) {
+        if (!cartIdForAnonymous || !JSON.parse(cartIdForAnonymous).guid)
+          this.props.generateCartIdForAnonymous();
       }
     }
   };
