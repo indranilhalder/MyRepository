@@ -7398,7 +7398,8 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String platform, @RequestParam(required = false) final String bankName,
 			@RequestBody(required = false) final InventoryReservListRequestWsDTO item,
 			@RequestParam(required = false) final String token, @RequestParam(required = false) final String cardRefNo,
-			@RequestParam(required = false) final String cardFingerPrint) throws EtailNonBusinessExceptions
+			@RequestParam(required = false) final String cardFingerPrint, @RequestParam(required = false) final String juspayUrl)
+			throws EtailNonBusinessExceptions
 	{
 		OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
 		String uid = "";
@@ -7480,9 +7481,17 @@ public class UsersController extends BaseCommerceController
 			}
 			else
 			{
-				juspayReturnUrl = !getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
-						.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL) : NO_JUSPAY_URL;
+				if (StringUtils.isEmpty(juspayUrl))
+				{
+					juspayReturnUrl = !getConfigurationService().getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
+							.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL) : NO_JUSPAY_URL;
+				}
+				else
+				{
+					juspayReturnUrl = juspayUrl;
+				}
+
 			}
 
 			returnUrlBuilder.append(juspayReturnUrl);
@@ -7745,9 +7754,16 @@ public class UsersController extends BaseCommerceController
 						}
 						else
 						{
-							juspayReturnUrl = !getConfigurationService().getConfiguration()
-									.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
-									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL) : NO_JUSPAY_URL;
+							if (StringUtils.isEmpty(juspayUrl))
+							{
+								juspayReturnUrl = !getConfigurationService().getConfiguration()
+										.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
+										.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL) : NO_JUSPAY_URL;
+							}
+							else
+							{
+								juspayReturnUrl = juspayUrl;
+							}
 						}
 
 						if (null != cart.getSplitModeInfo()
