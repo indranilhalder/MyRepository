@@ -60,6 +60,7 @@ import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
+import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -4524,14 +4525,37 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final PriceWsPwaDTO priceWsPwaDTO = new PriceWsPwaDTO();
 		final CurrencyModel currency = commonI18NService.getCurrency(INR);
 
-		if (null != cartModel.getSubtotal() && StringUtils.isNotEmpty(cartModel.getSubtotal().toString()))
+		final List<AbstractOrderEntryModel> entryList = new ArrayList<>(cartModel.getEntries());
+		Tuple3<?, ?, ?> tuple3 = null;
+
+		if (CollectionUtils.isNotEmpty(entryList))
 		{
-			final PriceData paybleAmount = priceDataFactory.create(PriceDataType.BUY,
-					BigDecimal.valueOf(cartModel.getSubtotal().doubleValue()), currency);
-			if (null != paybleAmount)
+			tuple3 = getPayableAmount(entryList);
+			final Double payableAmount = (Double) tuple3.getFirst();
+			final PriceData amount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(payableAmount.doubleValue()),
+					currency);
+			if (null != amount)
 			{
-				priceWsPwaDTO.setPaybleAmount(paybleAmount);
+				priceWsPwaDTO.setPaybleAmount(amount);
 			}
+		}
+
+		//		else if (null != cartModel.getSubtotal() && StringUtils.isNotEmpty(cartModel.getSubtotal().toString()))
+		//		{
+		//			final PriceData paybleAmount = priceDataFactory.create(PriceDataType.BUY,
+		//					BigDecimal.valueOf(cartModel.getSubtotal().doubleValue()), currency);
+		//			if (null != paybleAmount)
+		//			{
+		//				priceWsPwaDTO.setPaybleAmount(paybleAmount);
+		//			}
+		//		}
+
+		final Double couponDiscount = (Double) tuple3.getSecond();
+		if (null != couponDiscount && couponDiscount.doubleValue() > 0)
+		{
+			final PriceData couponVal = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(couponDiscount.doubleValue()),
+					currency);
+			priceWsPwaDTO.setCouponDiscountAmount(couponVal);
 		}
 
 		final Double cartTotalMrp = calculateCartTotalMrp(cartModel);
@@ -4542,11 +4566,42 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			priceWsPwaDTO.setBagTotal(bagTotal);
 		}
 
-		final double discount = cartTotalMrp.doubleValue() - cartModel.getSubtotal().doubleValue();
+		final Double productDiscount = (Double) tuple3.getThird();
+
+		final double discount = cartTotalMrp.doubleValue() - productDiscount.doubleValue();
 		final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
 		priceWsPwaDTO.setTotalDiscountAmount(totalDiscount);
 
 		return priceWsPwaDTO;
+	}
+
+
+	/**
+	 * The Method Return total Payable amount Coupon Discount and Cart Discount
+	 *
+	 * @param entryList
+	 * @return Tuple3<?, ?, ?>
+	 */
+	private Tuple3<?, ?, ?> getPayableAmount(final List<AbstractOrderEntryModel> entryList)
+	{
+		double payableAmount = 0.00D;
+		double couponDiscount = 0.00D;
+		double mopPlusPromoDiscounty = 0.00D;
+
+		for (final AbstractOrderEntryModel oModel : entryList)
+		{
+			final Double netAmountAfrDiscount = oModel.getNetAmountAfterAllDisc();
+			final Double totalPrice = oModel.getTotalPrice();
+
+			payableAmount += (netAmountAfrDiscount.doubleValue() > 0) ? netAmountAfrDiscount.doubleValue()
+					: totalPrice.doubleValue();
+			couponDiscount += oModel.getCouponValue().doubleValue();
+			mopPlusPromoDiscounty += (oModel.getBasePrice().doubleValue() * oModel.getQuantity().intValue())
+					+ oModel.getTotalProductLevelDisc().doubleValue() + oModel.getCartLevelDisc().doubleValue();
+		}
+
+		return new Tuple3<Double, Double, Double>(Double.valueOf(payableAmount), Double.valueOf(couponDiscount),
+				Double.valueOf(mopPlusPromoDiscounty));
 	}
 
 
