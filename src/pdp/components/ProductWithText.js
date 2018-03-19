@@ -5,6 +5,11 @@ import PropTypes from "prop-types";
 import styles from "./ProductWithText.css";
 
 export default class ProductWithText extends React.Component {
+  onClick(val) {
+    if (this.props.onClick) {
+      this.props.onClick(val);
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -16,6 +21,7 @@ export default class ProductWithText extends React.Component {
                   key={i}
                   productImage={datum.productImage}
                   productName={datum.productName}
+                  onClick={val => this.onClick(val)}
                 />
               );
             })}
