@@ -15,6 +15,7 @@ package com.tisl.mpl.constants;
 
 import java.util.Date;
 
+
 import com.tisl.mpl.core.model.FreebieDetailModel;
 import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 
@@ -2507,7 +2508,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "Use OTP {1} to buy your Gift Card/CLiQ Cash. Valid for 2 minutes only. For security reasons, do not share this number with anyone. Call us on {2} for queries.";
 	public static final String INVALID_WALLET_OTP = "INVALID";
 	public static final String WALLET_ACTIVATED_MESSAGE = "your wallet activated  successfully";
-	public static final String SMS_MESSAGE_ORDER_PLACED_FROM_WALLET= "Your Tata Cliq Gift card {0} has been redeemed for Rs. {1}. The remaining balance is Rs.{2}";
+	public static final String SMS_MESSAGE_ORDER_PLACED_FROM_WALLET = "Your Tata Cliq Gift card {0} has been redeemed for Rs. {1}. The remaining balance is Rs.{2}";
 
 	//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
 	public static final String BANNERURLLINK = "bannerUrlLink".intern();
@@ -2520,6 +2521,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ERRORCREATINGREFUNDENTRYFORAUDIT = "Error while creating refund entry for audit: ".intern();
 	public static final String REFUNDENTRYEXISTSFORAUDIT = "Refund entry already exists for audit :".intern();
 	public static final String LANDINGPAGENOTFOUNDFORCATEGORY = "Could not find a landing page for the given category ".intern();
+	public static final String STATUSPENDINGVBV = "Payment status PENDING_VBV for audit: ".intern();
 	public static final String SPLIT = "split".intern();
 	public static final String B5026 = "B5026";
 	public static final String B5027 = "B5027";
@@ -2530,7 +2532,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	 * "select {bc.pk} from {BulkCancellationProcess as bc} where {bc.loadstatus}='0'"; public static final String
 	 * bulk_cancellation_report_path = "bulk.cancellation.report.path";
 	 */
-
 	public static final String NU150 = "NU150";
 	public static final String NU250 = "NU250";
 	public static final String NU350 = "NU350";
@@ -2538,6 +2539,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NU550 = "NU550";
 
 	public static final String NU005 = "NU005";
+	public static final String NU008 = "NU008";
 
 	public static final String SORT = "sort";
 	public static final String BY_RATING = "byRating";
@@ -2557,4 +2559,23 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ERROR_FLAG_CUST_EXP = "Failure";
 	public static final String ERROR_Message_response = "Some issue occurred, please try again";
 	public static final String B009900 = "B009900";
+	public static final String PENDING_VBV = "PENDING_VBV";
+	public static final String FPC_REFUND_TYPES = "mpl.forwardpaymentcleanup.refund.types";
+	public static final String FPC_QUERY_MPLCONFIG = "SELECT {mcf:pk} FROM {MplConfiguration AS mcf} WHERE{mcf:mplConfigCode} = ?code";
+	public static final String FPC_QUERY_MULTIPAYMENT = "SELECT  {ord:pk}  FROM {Order AS ord}, {MplPaymentAudit AS mpa} WHERE {ord:guid} = {mpa:cartGUID} AND {ord:status} = ?orderStatus AND {ord:creationtime}  BETWEEN ?startTime and ?endTime AND {ord:type}  = ?orderType GROUP BY {ord:pk} HAVING COUNT(1) > 1";
+	public static final String FPC_QUERY_AUDITBYGUID = "SELECT  {mpa:pk}  FROM {MplPaymentAudit AS mpa} WHERE {mpa:cartGUID}  = ?guid";
+	public static final String FPC_QUERY_FAILEDPAYMENT = "SELECT  {ord:pk}  FROM {Order AS ord} WHERE {ord:status} IN ( ?orderStatusOne , ?orderStatusTwo ) AND {ord:creationtime}  BETWEEN ?startTime and ?endTime AND {ord:type}  = ?orderType";
+	public static final String FPC_QUERY_CODCHARGED = "SELECT  {ord:pk}  FROM {Order AS ord}, {MplPaymentAudit AS mpa}, {CODPaymentInfo AS cpi} WHERE {ord:guid} = {mpa:cartGUID} AND {ord:status} = ?orderStatus AND {ord:paymentInfo} = {cpi:pk} AND {ord:creationtime}  BETWEEN ?startTime and ?endTime AND {ord:type}  = ?orderType";
+	public static final String FPC_QUERY_AUDITWITHOUTORDER = "SELECT {pa:pk} FROM {MplPaymentAudit AS pa LEFT JOIN Order AS ord ON {pa:cartGUID} = {ord:guid}} WHERE {ord:pk} is null AND {pa:creationtime} BETWEEN ?startTime AND ?endTime";
+	public static final String FPC_QUERY_RMSFAILED = "SELECT  {ord:pk}  FROM {Order AS ord} WHERE {ord:status} = ?orderStatus AND {ord:creationtime}  BETWEEN ?startTime and ?endTime AND {ord:type}  = ?orderType";
+	public static final String FPC_QUERY_REFUNDENTRY = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:auditId} = ?auditId";
+	public static final String FPC_QUERY_REFUNDENTRIES = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:isExpired} = ?expiredFlag";
+	public static final String FPC_QUERY_PARENTORDER = "SELECT {ord:pk} FROM {Order AS ord} WHERE{ord:guid} = ?guid AND {ord:type}  = ?orderType";
+	
+	public static final String LUX_IMPORT_CATALOG_ID = "luxProductCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_ID = "luxContentCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_VERSION = "Online";
+	public static final String LUXURY_PREFIX = "lux";
+	public static final String TATACLIQ = "tatacliq";
+	public static final String LUXURY_SITE_URL = "luxury.tatacliq.com";
 }

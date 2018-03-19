@@ -8,19 +8,43 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common"%>
 
+<style>
+.imageUpload{
+      max-width: 250px;
+	  height: 50px;
+	  padding-left: 0 15px;
+	  }
+table {
+    border-collapse: collapse;
+    width: 100%;
+    padding-bottom: 5%;
+}
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+tr:nth-child(even){background-color: #f2f2f2}
+th {
+    background-color: #514848;
+    color: white;
+    height : 30px !important;
+    text-align: center;
+}
+</style>
 <script type="text/javascript">
 
 	   // Function to add a row in the table
 	   function addRow(filename, size, date) {
 	     var markup = "<tr>";
-	         markup += "<td class='img-preview'><img class='img-preview' src='" + window.location.origin + filename + "'></td>";
-	         markup += "<td class='img-url'><a target='_blank' href='" + window.location.origin + filename + "'>" + window.location.origin + filename + "</a></td>"
+	         markup += "<td class='img-preview' ><img class='imageUpload' src='" + window.location.origin + filename + "'></td>";
+	         markup += "<td class='img-url'><a target='_blank' href='" + window.location.origin + filename + "'>" + window.location.origin + filename + "</a></td>";
 	         markup += "<td>" + (size/1000).toFixed(2) + "kB </td>";
 	         markup += "<td>" + date + "</td>";
 	         markup += "</tr>";
 	     $("#uploaded-files tbody:first-child").after(markup);
 	   }
 
+	   
 	   function getDateTime(date) {
 	     var dateTime = "";
 	     dateTime = date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear() + " " +
@@ -32,6 +56,8 @@
 	   }
 
 function loadImageAjaxCall() {
+	    
+	    $("#uploaded-files tr").html("");
 	    
 	    var formdata = $('#uploadImages')[0];
 		var form = new FormData(formdata);
@@ -50,6 +76,7 @@ function loadImageAjaxCall() {
 				$("#image_preview").empty();
 				$('#downloadBtn').removeClass('hidden');
 				console.log(response);
+				$("#uploaded-files").html("<tr><th>Image Preview</th> <th>URL</th><th>Size</th><th> Time </th></tr>");
 				response.forEach(function(item) {
 					var date = getDateTime(new Date());
 					addRow(item.imageUrl, item.size,date);
@@ -81,15 +108,16 @@ function preview_image()
 	</c:forEach>
 	</select>
   <input type="file" id="upload_file" name="file" onchange="preview_image();" multiple/>
-  <input type="button" name='submit_image' value="Upload Image" onclick="loadImageAjaxCall();"/>
+  <a class="btn"  name='submit_image' value="Upload Image" onclick="loadImageAjaxCall();">Upload</a>
+   <a class="btn" id="downloadBtn" href="#">Download</a>
  </form:form>
  <div id="image_preview"></div>
   <div id="response_preview"></div>
-  <a class="btn hidden" id="downloadBtn" href="#">Download CSV</a>
+ 
   <br><br>
  <table style="width:100%" id="uploaded-files">
    <tr>
-     <th style="width: 30%">Image Preview</th>
+     <th>Image Preview</th>
      <th>URL</th>
      <th>Size</th>
      <th> Time </th>
@@ -141,7 +169,7 @@ function exportTableToCSV($table, filename) {
 }
 
 $('#downloadBtn').click(function() {
-	   exportTableToCSV.apply(this, [$('#uploaded-files'), 'photo_upload.csv']);
+	   exportTableToCSV.apply(this, [$('#uploaded-files'), 'image_upload.csv']);
 });
 
 </script>

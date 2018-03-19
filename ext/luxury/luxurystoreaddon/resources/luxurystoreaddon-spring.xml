@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- [y] hybris Platform
-
- Copyright (c) 2000-2015 hybris AG
- All rights reserved.
-
- This software is the confidential and proprietary information of hybris
- ("Confidential Information"). You shall not disclose such Confidential
- Information and shall use it only in accordance with the terms of the
- license agreement you entered into with hybris.
--->
+<!-- [y] hybris Platform Copyright (c) 2000-2015 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -23,140 +16,209 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context.xsd
            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
-           
-    <context:annotation-config/> 
+
+	<context:annotation-config />
 
 	<!-- Hot Folder configuration for Luxury -->
-	
-		<import
+
+	<import
 		resource="classpath:/luxurystoreaddon/integration/hot-folder-store-luxury_import-spring.xml" />
-		<import
+	<import
 		resource="classpath:/luxurystoreaddon/integration/hot-folder-store-luxury_price-spring.xml" />
-		<import
+	<import
 		resource="classpath:/luxurystoreaddon/integration/hot-folder-store-luxury_ratingReview-spring.xml" />
-		<import
+	<import
 		resource="classpath:/luxurystoreaddon/integration/hot-folder-store-luxury_cms-spring.xml" />
-	
+
 	<bean id="luxurystoreaddonCoreDataImportedEventListener" parent="abstractCoreDataImportedEventListener">
 		<property name="supportedChannels">
 			<list value-type="de.hybris.platform.commerceservices.enums.SiteChannel">
 				<value>B2C</value>
-				<!--
-								<value>B2B</value>
-				-->
+				<!-- <value>B2B</value> -->
 			</list>
 		</property>
 		<property name="addonExtensionMetadata">
 			<bean class="de.hybris.platform.addonsupport.data.AddonExtensionMetadata">
-				<property name="suffixChannel" value="false"/>
-				<property name="baseExtensionName" value="luxurystoreaddon"/>
+				<property name="suffixChannel" value="false" />
+				<property name="baseExtensionName" value="luxurystoreaddon" />
 			</bean>
 		</property>
 	</bean>
 
-	<bean id="luxurystoreaddonSampleDataEventListener" parent="abstractGenericAddOnSampleDataEventListener"  >
+	<bean id="luxurystoreaddonSampleDataEventListener" parent="abstractGenericAddOnSampleDataEventListener">
 		<property name="extensionName" value="luxurystoreaddon" />
 	</bean>
-	
-	<alias name="luxuryProductClassificationPopulatorList" alias="productClassificationPopulatorList"/>
+
+	<alias name="luxuryProductClassificationPopulatorList" alias="productClassificationPopulatorList" />
 	<bean id="luxuryProductClassificationPopulatorList" parent="defaultProductClassificationPopulatorList">
 		<property name="populators">
 			<list merge="true">
-				<ref bean="luxuryProductFlagsPopulator"/>
+				<ref bean="luxuryProductFlagsPopulator" />
 			</list>
 		</property>
 	</bean>
-	
-	<alias name="defaultLuxuryProductFlagsPopulator" alias="luxuryProductFlagsPopulator"/>
+
+	<alias name="defaultLuxuryProductFlagsPopulator" alias="luxuryProductFlagsPopulator" />
 	<bean id="defaultLuxuryProductFlagsPopulator" parent="baseProductPopulator"
-			class="com.tisl.lux.facades.populators.LuxuryProductFlagsPopulator">
-		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility"/>
-		<property name="promotionService" ref="promotionsService"/>
-		<property name="baseSiteService" ref="baseSiteService"/>
+		class="com.tisl.lux.facades.populators.LuxuryProductFlagsPopulator">
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+		<property name="promotionService" ref="promotionsService" />
+		<property name="baseSiteService" ref="baseSiteService" />
 		<property name="configurationService" ref="configurationService" />
 		<property name="timeService" ref="timeService" />
-		</bean>
-		
-		
-	<bean id="luxuryCmsUiExperienceRestrictionEvaluator" parent="cmsUiExperienceRestrictionEvaluator" class="com.tisl.lux.evaluator.LuxuryCMSUiExperienceRestrictionEvaluator" >
-		<property name="sessionService" ref="sessionService"/>
 	</bean>
-	
-	<bean id="cmsUiExperienceRestrictionEvaluatorMapping" class="de.hybris.platform.cms2.servicelayer.services.evaluator.CMSRestrictionEvaluatorMapping" >
+
+
+	<bean id="luxuryCmsUiExperienceRestrictionEvaluator" parent="cmsUiExperienceRestrictionEvaluator"
+		class="com.tisl.lux.evaluator.LuxuryCMSUiExperienceRestrictionEvaluator">
+		<property name="sessionService" ref="sessionService" />
+	</bean>
+
+	<bean id="cmsUiExperienceRestrictionEvaluatorMapping"
+		class="de.hybris.platform.cms2.servicelayer.services.evaluator.CMSRestrictionEvaluatorMapping">
 		<property name="restrictionTypeCode" value="CMSUiExperienceRestriction" />
 		<property name="restrictionEvaluator" ref="luxuryCmsUiExperienceRestrictionEvaluator" />
 	</bean>
-	
-	<alias name="luxuryDeviceDetectionFacade" alias="deviceDetectionFacade"/>
-	<bean id="luxuryDeviceDetectionFacade" class="com.tisl.lux.device.impl.LuxuryDeviceDetectionFacade" parent="defaultDeviceDetectionFacade">
-		<property name="sessionService" ref="sessionService"/>
-		<property name="uiExperienceService" ref="uiExperienceService"/>
-		<property name="requestDeviceDataConverter" ref="defaultSpringMobileRequestDeviceDataConverter"/>
-		<property name="deviceDataUiExperienceDataConverter" ref="deviceDataUiExperienceDataConverter"/>
-		<property name="siteConfigService" ref="siteConfigService"/>
+
+	<alias name="luxuryDeviceDetectionFacade" alias="deviceDetectionFacade" />
+	<bean id="luxuryDeviceDetectionFacade" class="com.tisl.lux.device.impl.LuxuryDeviceDetectionFacade"
+		parent="defaultDeviceDetectionFacade">
+		<property name="sessionService" ref="sessionService" />
+		<property name="uiExperienceService" ref="uiExperienceService" />
+		<property name="requestDeviceDataConverter"
+			ref="defaultSpringMobileRequestDeviceDataConverter" />
+		<property name="deviceDataUiExperienceDataConverter" ref="deviceDataUiExperienceDataConverter" />
+		<property name="siteConfigService" ref="siteConfigService" />
 	</bean>
-	
-<!-- Logic for resolving view resolver for addon prefix supporting multi site -->
-	
-	<util:map id="addonReplacePrefixMap" >
-		<entry key="lux" value-ref="luxAddonReplacePrefixMap"/>
+
+	<!-- Logic for resolving view resolver for addon prefix supporting multi 
+		site -->
+
+	<util:map id="addonReplacePrefixMap">
+		<entry key="lux" value-ref="luxAddonReplacePrefixMap" />
 	</util:map>
 	<util:map id="luxAddonReplacePrefixMap">
-		<entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage"/>
-		<entry key="pages/cart/cartPage" value="addon:/luxurystoreaddon/pages/cart/cartPage"/>
-		<entry key="pages/search/facetResultPanel" value="addon:/luxurystoreaddon/pages/search/luxuryFacetResultPanel"/>
-		<entry key="fragments/product/searchResultPanel" value="addon:/luxurystoreaddon/pages/search/luxuryFacetResultPanel"/>
-		<entry key="pages/category/productGridPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchResultsPage"/>
-		<entry key="pages/search/searchGridPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchResultsPage"/>
-		<entry key="pages/search/searchEmptyPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchEmptyPage"/>
-		<entry key="fragments/cart/cartPopup" value="addon:/luxurystoreaddon/fragments/cart/cartPopup"/>
-        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/addEditDeliveryAddressPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/addEditDeliveryAddressPage"/>
-        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/chooseDeliveryMethodPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/chooseDeliveryMethodPage"/>
-        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage"/>
-        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/choosePickupLocationPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/choosePickupLocationPage"/>
-        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/addPaymentMethodPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/addPaymentMethodPage"/>
-        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/checkoutSummaryPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/checkoutSummaryPage"/>
-        <entry key="addon:addon:/marketplacecheckoutaddon/pages/checkout/multi/hostedOrderPageErrorPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/hostedOrderPageErrorPage"/>
-        <entry key="addon:addon:/marketplacecheckoutaddon/pages/checkout/multi/hostedOrderPostPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/hostedOrderPostPage"/>
-        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/silentOrderPostPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/silentOrderPostPage"/>
-        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/giftWrapPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/giftWrapPage"/>
-        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/enterPaymentDetailsPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/enterPaymentDetailsPage"/>
-        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/addNewAddressPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/addNewAddressPage"/>
-        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/editAddressDetailsPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/editAddressDetailsPage"/>
-        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/chooseDeliverySlotPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/chooseDeliverySlotPage"/>
-        <entry key="addon:/marketplacecheckoutaddon/fragments/checkout/termsAndConditionsPopup" value="addon:/luxurycheckoutaddon/fragments/checkout/termsAndConditionsPopup"/>
-        <entry key="addon:addon:/marketplacecheckoutaddon/fragments/checkout/billingAddressForm" value="addon:/luxurycheckoutaddon/fragments/checkout/billingAddressForm"/>
-        <entry key="addon:/marketplacecheckoutaddon/fragments/checkout/netbankingPanel" value="addon:/luxurycheckoutaddon/fragments/checkout/netbankingPanel"/>
-        <entry key="addon:/marketplacecheckoutaddon/fragments/checkout/codPanel" value="addon:/luxurycheckoutaddon/fragments/checkout/codPanel"/>
-	    <entry key="fragments/password/passwordResetRequestPopup" value="addon:/luxurystoreaddon/fragments/home/forgottenPwd"/>
-		<entry key="pages/account/accountLoginPage" value="addon:/luxurystoreaddon/fragments/home/luxRegister"/>
-		<entry key="pages/password/passwordResetChangePage" value="addon:/luxurystoreaddon/pages/password/passwordResetChangePage"/>
-		
-		<entry key="fragments/product/sizeGuidePopup" value="addon:/luxurystoreaddon/fragments/product/sizeGuidePopup"/>
-	    
-	    <!-- My Account Pages-->
-	    <entry key="pages/account/accountProfileEditPage" value="addon:/luxurystoreaddon/pages/account/accountProfileEditPage"/>
-		<entry key="pages/account/accountProfilePage" value="addon:/luxurystoreaddon/pages/account/accountProfilePage"/>
-		<entry key="pages/account/accountProfileEmailEditPage" value="addon:/luxurystoreaddon/pages/account/accountProfileEmailEditPage"/>
-		<entry key="pages/account/accountChangePasswordPage" value="addon:/luxurystoreaddon/pages/account/accountChangePasswordPage"/>
-		<entry key="pages/account/accountAddressBookPage" value="addon:/luxurystoreaddon/pages/account/accountAddressBookPage"/>
-		<entry key="pages/account/accountEditAddressPage" value="addon:/luxurystoreaddon/pages/account/accountEditAddressPage"/>
-		<entry key="pages/account/accountOrderDetailPage" value="addon:/luxurystoreaddon/pages/account/accountOrderDetailPage"/>
-		<entry key="pages/account/accountOrderHistoryPage" value="addon:/luxurystoreaddon/pages/account/accountOrderHistoryPage"/>
-		<entry key="pages/account/accountCouponDetailsPage" value="addon:/luxurystoreaddon/pages/account/accountCouponDetailsPage"/>
-		<entry key="pages/account/accountLayoutPage" value="addon:/luxurystoreaddon/pages/account/accountLayoutPage"/>
-		<entry key="pages/account/accountMarketPreference" value="addon:/luxurystoreaddon/pages/account/accountMarketPreference"/>
-		<entry key="pages/account/accountPaymentInfoPage" value="addon:/luxurystoreaddon/pages/account/accountPaymentInfoPage"/>
-		<entry key="pages/account/myInterest" value="addon:/luxurystoreaddon/pages/account/myInterest"/>
-		<entry key="pages/account/reviewPage" value="addon:/luxurystoreaddon/pages/account/reviewPage"/>
-		<entry key="pages/account/returnRequest" value="addon:/luxurystoreaddon/pages/account/returnRequest"/>
-		<entry key="pages/account/returnSubmit" value="addon:/luxurystoreaddon/pages/account/returnSubmit"/>
-		<entry key="pages/account/returnSuccess" value="addon:/luxurystoreaddon/pages/account/returnSuccess"/>
-		<entry key="pages/checkout/checkoutConfirmationPage" value="addon:/luxurystoreaddon/pages/checkout/checkoutConfirmationPage"/>
-		<entry key="pages/account/returnPincodeAvailabilityCheck" value="addon:/luxurystoreaddon/pages/account/returnPincodeAvailabilityCheck"/>
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage" />
+		<entry key="pages/cart/cartPage" value="addon:/luxurystoreaddon/pages/cart/cartPage" />
+		<entry key="pages/search/facetResultPanel"
+			value="addon:/luxurystoreaddon/pages/search/luxuryFacetResultPanel" />
+		<entry key="fragments/product/searchResultPanel"
+			value="addon:/luxurystoreaddon/pages/search/luxuryFacetResultPanel" />
+		<entry key="pages/category/productGridPage"
+			value="addon:/luxurystoreaddon/pages/search/luxurySearchResultsPage" />
+		<entry key="pages/search/searchGridPage"
+			value="addon:/luxurystoreaddon/pages/search/luxurySearchResultsPage" />
+		<entry key="pages/search/searchEmptyPage"
+			value="addon:/luxurystoreaddon/pages/search/luxurySearchEmptyPage" />
+		<entry key="fragments/cart/cartPopup" value="addon:/luxurystoreaddon/fragments/cart/cartPopup" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/addEditDeliveryAddressPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/addEditDeliveryAddressPage" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/chooseDeliveryMethodPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/chooseDeliveryMethodPage" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/choosePickupLocationPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/choosePickupLocationPage" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/addPaymentMethodPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/addPaymentMethodPage" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/checkoutSummaryPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/checkoutSummaryPage" />
+		<entry
+			key="addon:addon:/marketplacecheckoutaddon/pages/checkout/multi/hostedOrderPageErrorPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/hostedOrderPageErrorPage" />
+		<entry
+			key="addon:addon:/marketplacecheckoutaddon/pages/checkout/multi/hostedOrderPostPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/hostedOrderPostPage" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/silentOrderPostPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/silentOrderPostPage" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/giftWrapPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/giftWrapPage" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/enterPaymentDetailsPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/enterPaymentDetailsPage" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/addNewAddressPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/addNewAddressPage" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/editAddressDetailsPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/editAddressDetailsPage" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/pages/checkout/multi/chooseDeliverySlotPage"
+			value="addon:/luxurycheckoutaddon/pages/checkout/multi/chooseDeliverySlotPage" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/fragments/checkout/termsAndConditionsPopup"
+			value="addon:/luxurycheckoutaddon/fragments/checkout/termsAndConditionsPopup" />
+		<entry
+			key="addon:addon:/marketplacecheckoutaddon/fragments/checkout/billingAddressForm"
+			value="addon:/luxurycheckoutaddon/fragments/checkout/billingAddressForm" />
+		<entry
+			key="addon:/marketplacecheckoutaddon/fragments/checkout/netbankingPanel"
+			value="addon:/luxurycheckoutaddon/fragments/checkout/netbankingPanel" />
+		<entry key="addon:/marketplacecheckoutaddon/fragments/checkout/codPanel"
+			value="addon:/luxurycheckoutaddon/fragments/checkout/codPanel" />
+		<entry key="fragments/password/passwordResetRequestPopup" value="addon:/luxurystoreaddon/fragments/home/forgottenPwd" />
+		<entry key="pages/account/accountLoginPage" value="addon:/luxurystoreaddon/fragments/home/luxRegister" />
+		<entry key="pages/password/passwordResetChangePage"
+			value="addon:/luxurystoreaddon/pages/password/passwordResetChangePage" />
+
+		<entry key="fragments/product/sizeGuidePopup"
+			value="addon:/luxurystoreaddon/fragments/product/sizeGuidePopup" />
+
+		<!-- My Account Pages -->
+		<entry key="pages/account/accountProfileEditPage"
+			value="addon:/luxurystoreaddon/pages/account/accountProfileEditPage" />
+		<entry key="pages/account/accountProfilePage"
+			value="addon:/luxurystoreaddon/pages/account/accountProfilePage" />
+		<entry key="pages/account/accountProfileEmailEditPage"
+			value="addon:/luxurystoreaddon/pages/account/accountProfileEmailEditPage" />
+		<entry key="pages/account/accountChangePasswordPage"
+			value="addon:/luxurystoreaddon/pages/account/accountChangePasswordPage" />
+		<entry key="pages/account/accountAddressBookPage"
+			value="addon:/luxurystoreaddon/pages/account/accountAddressBookPage" />
+		<entry key="pages/account/accountEditAddressPage"
+			value="addon:/luxurystoreaddon/pages/account/accountEditAddressPage" />
+		<entry key="pages/account/accountOrderDetailPage"
+			value="addon:/luxurystoreaddon/pages/account/accountOrderDetailPage" />
+		<entry key="pages/account/accountOrderHistoryPage"
+			value="addon:/luxurystoreaddon/pages/account/accountOrderHistoryPage" />
+		<entry key="pages/account/accountCouponDetailsPage"
+			value="addon:/luxurystoreaddon/pages/account/accountCouponDetailsPage" />
+		<entry key="pages/account/accountLayoutPage"
+			value="addon:/luxurystoreaddon/pages/account/accountLayoutPage" />
+		<entry key="pages/account/accountMarketPreference"
+			value="addon:/luxurystoreaddon/pages/account/accountMarketPreference" />
+		<entry key="pages/account/accountPaymentInfoPage"
+			value="addon:/luxurystoreaddon/pages/account/accountPaymentInfoPage" />
+		<entry key="pages/account/myInterest" value="addon:/luxurystoreaddon/pages/account/myInterest" />
+		<entry key="pages/account/reviewPage" value="addon:/luxurystoreaddon/pages/account/reviewPage" />
+		<entry key="pages/account/returnRequest" value="addon:/luxurystoreaddon/pages/account/returnRequest" />
+		<entry key="pages/account/returnSubmit" value="addon:/luxurystoreaddon/pages/account/returnSubmit" />
+		<entry key="pages/account/returnSuccess" value="addon:/luxurystoreaddon/pages/account/returnSuccess" />
+		<entry key="pages/checkout/checkoutConfirmationPage"
+			value="addon:/luxurystoreaddon/pages/checkout/checkoutConfirmationPage" />
+		<entry key="pages/account/returnPincodeAvailabilityCheck"
+			value="addon:/luxurystoreaddon/pages/account/returnPincodeAvailabilityCheck" />
 
 
-		
+
 	</util:map>
 	<!-- Logic for resolving view resolver for addon prefix -->
+
+	
+
+
+
+	
+
+
 </beans>

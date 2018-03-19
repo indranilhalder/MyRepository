@@ -124,6 +124,9 @@ public interface MplOrderService
 
 	//TPR-4841
 	public OrderModel fetchOrderByTransactionId(final String transactionId);
+	
+	//CAR-362 or SDI-5941
+	SearchPageData<OrderModel> getPagedFilteredParentOrderHistoryWebForm(CustomerModel paramCustomerModel,BaseStoreModel paramBaseStoreModel, PageableData paramPageableData, Date fromDate);
 
 	/**
 	 * Added for NU-56

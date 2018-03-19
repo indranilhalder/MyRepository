@@ -79,7 +79,6 @@ import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
-import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
@@ -174,8 +173,8 @@ public class PaymentServicesController extends BaseController
 	@Resource(name = "mplDefaultPriceDataFactory")
 	private DefaultPriceDataFactory PriceDataFactory;
 
-	@Autowired
-	private MplEGVCartService mplEGVCartService;
+	//	@Autowired
+	//	private MplEGVCartService mplEGVCartService;
 
 	@Autowired
 	private NotificationFacade notificationFacade;
@@ -432,8 +431,8 @@ public class PaymentServicesController extends BaseController
 								final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue()
 										- delCharge.getDoubleValue().doubleValue();
 								final double discount = mrp.doubleValue() - payableamtWdDelCharge;
-								final PriceData totalDiscount = createPriceObj(Double.valueOf(discount).toString());
-								pricePwa.setTotalDiscountAmount(totalDiscount);
+								pricePwa.setTotalDiscountAmount(createPriceObj(Double.valueOf(discount).toString()));
+								//pricePwa.setTotalDiscountAmount(totalDiscount);
 								promoPriceData.setCartAmount(pricePwa);
 							}
 

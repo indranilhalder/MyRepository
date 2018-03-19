@@ -1529,7 +1529,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
 						orderModel.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
 						modelService.save(orderModel);
-					}else
+					}else if(null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
+						
+						orderModel.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+						modelService.save(orderModel);
+					}
+					else
 					{
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
 					}
