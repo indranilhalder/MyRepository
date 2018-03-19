@@ -7,17 +7,20 @@ export let TATA_CLIQ_ROOT = "https://uat2.tataunistore.com:3000";
 if (
   process.env.REACT_APP_STAGE === "local" ||
   process.env.REACT_APP_STAGE === "devxelp" ||
-  process.env.REACT_APP_STAGE === "uat2"
+  process.env.REACT_APP_STAGE === "uat2" ||
+  process.env.REACT_APP_STAGE === "production"
 ) {
   API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
   TATA_CLIQ_ROOT = "http://uat2.tataunistore.com:3000";
 } else if (process.env.REACT_APP_STAGE === "tmpprod") {
   API_URL_ROOT = "https://tmppprd.tataunistore.com";
   TATA_CLIQ_ROOT = "https://tmppprd.tataunistore.com";
-} else if (process.env.REACT_APP_STAGE === "production") {
-  API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
-  TATA_CLIQ_ROOT = "https://www.tatacliq.com/marketplacewebservices";
 }
+// TODO - need to comment this back in.
+// } else if (process.env.REACT_APP_STAGE === "production") {
+//   API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
+//   TATA_CLIQ_ROOT = "https://www.tatacliq.com/marketplacewebservices";
+// }
 
 export const API_URL_ROOT_DUMMY =
   "https://www.tatacliq.com/marketplacewebservices";
