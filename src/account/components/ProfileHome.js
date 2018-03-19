@@ -22,9 +22,6 @@ export default class ProfileHome extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.profileHedaer}>
-          <InformationHeader text="My Cliq" />
-        </div>
         <ProfileMenuGrid />
         <div className={styles.accountHolder}>
           <AccountSetting
