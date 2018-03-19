@@ -7,6 +7,7 @@ import ColourSelector from "./ColourSelector";
 import SizeQuantitySelect from "./SizeQuantitySelect";
 import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
+import UnderLinedButton from "../../general/components/UnderLinedButton";
 import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
@@ -44,6 +45,11 @@ export default class PdpApparel extends React.Component {
   }
   gotoPreviousPage = () => {
     this.props.history.goBack();
+  };
+  goToBuyingGuide = () => {
+    if (this.props.goToBuyingGuide) {
+      this.props.goToBuyingGuide();
+    }
   };
   goToSellerPage = () => {
     let expressionRuleFirst = "/p-(.*)/(.*)";
@@ -139,7 +145,9 @@ export default class PdpApparel extends React.Component {
   }
 
   handleQuantitySelect(val) {
-    console.log(val);
+    if (this.props.onQuantitySelect) {
+      this.props.onQuantitySelect();
+    }
   }
   renderDeliveryOptions(productData) {
     return (
@@ -229,6 +237,20 @@ export default class PdpApparel extends React.Component {
                   maxQuantity={productData.maxQuantityAllowed}
                   onQuantitySelect={val => this.props.handleQuantitySelect(val)}
                 />
+                {this.props.customiseMessage && (
+                  <div className={styles.customisation}>
+                    <div className={styles.customiseText}>
+                      Customisation available -{this.props.customiseMessage}
+                    </div>
+                    <div className={styles.customisationButton}>
+                      <UnderLinedButton
+                        label="Checkout our buying guide"
+                        onClick={() => this.goToBuyingGuide()}
+                        color="#ff1744"
+                      />
+                    </div>
+                  </div>
+                )}
                 <ColourSelector
                   noBackground={true}
                   data={productData.variantOptions.map(value => {
