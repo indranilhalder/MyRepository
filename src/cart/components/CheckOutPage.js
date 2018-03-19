@@ -609,7 +609,6 @@ class CheckOutPage extends React.Component {
                 delivery={this.props.delivery}
                 payable={this.props.cart.cartDetailsCNC.totalPrice}
                 onCheckout={this.handleSubmit}
-                isDisabledButton={this.state.addressId === null}
               />
             )}
         </div>
