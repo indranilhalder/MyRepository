@@ -26,7 +26,9 @@ const mapDispatchToProps = dispatch => {
       dispatch(googlePlusLogin(type));
     },
     getGlobalAccessToken: () => {
-      dispatch(getGlobalAccessToken());
+      dispatch(getGlobalAccessToken()).then(val => {
+        console.log(val);
+      });
     },
     refreshToken: () => {
       dispatch(refreshToken());
