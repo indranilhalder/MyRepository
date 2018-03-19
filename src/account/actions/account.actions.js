@@ -51,7 +51,7 @@ export function getAllOrdersDetails() {
       );
       const resultJson = await result.json();
       if (resultJson.error) {
-        throw new Error(resultJson.error);
+        throw new Error(`${resultJson.errors[0].message}`);
       }
       dispatch(getAllOrdersSuccess(resultJson));
     } catch (e) {
