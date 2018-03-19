@@ -343,7 +343,6 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
           productDetails.quantity
         }&addedToCartWl=false`
       );
-      console.log(result);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);

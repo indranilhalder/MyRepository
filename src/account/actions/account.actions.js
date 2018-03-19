@@ -11,9 +11,9 @@ export const GET_ALL_ORDERS_REQUEST = "GET_ALL_ORDERS_REQUEST";
 export const GET_ALL_ORDERS_SUCCESS = "GET_ALL_ORDERS_SUCCESS";
 export const GET_ALL_ORDERS_FAILURE = "GET_ALL_ORDERS_FAILURE";
 
-export const GET_ALL_WISHLIST_REQUEST = "GET_ALL_WISHLIST_REQUEST";
-export const GET_ALL_WISHLIST_SUCCESS = "GET_ALL_WISHLIST_SUCCESS";
-export const GET_ALL_WISHLIST_FAILURE = "GET_ALL_WISHLIST_FAILURE";
+export const GET_WISHLIST_REQUEST = "GET_WISHLIST_REQUEST";
+export const GET_WISHLIST_SUCCESS = "GET_WISHLIST_SUCCESS";
+export const GET_WISHLIST_FAILURE = "GET_WISHLIST_FAILURE";
 
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
@@ -64,23 +64,23 @@ export function getAllOrdersDetails() {
   };
 }
 
-export function getAllWishlistRequest() {
+export function getWishlistRequest() {
   return {
-    type: GET_ALL_WISHLIST_REQUEST,
+    type: GET_WISHLIST_REQUEST,
     status: REQUESTING
   };
 }
-export function getAllWishlistSuccess(wishlist) {
+export function getWishlistSuccess(wishlist) {
   return {
-    type: GET_ALL_WISHLIST_SUCCESS,
+    type: GET_WISHLIST_SUCCESS,
     status: SUCCESS,
     wishlist
   };
 }
 
-export function getAllWishlistFailure(error) {
+export function getWishlistFailure(error) {
   return {
-    type: GET_ALL_WISHLIST_FAILURE,
+    type: GET_WISHLIST_FAILURE,
     status: ERROR,
     error
   };
@@ -88,9 +88,9 @@ export function getAllWishlistFailure(error) {
 
 export function getWishList() {
   return async (dispatch, getState, { api }) => {
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    dispatch(getAllWishlistRequest());
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(getWishlistRequest());
     try {
       const result = await api.post(
         `${USER_CART_PATH}/${
@@ -103,9 +103,9 @@ export function getWishList() {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      dispatch(getAllWishlistSuccess(resultJson.wishList[0]));
+      dispatch(getWishlistSuccess(resultJson.wishList[0]));
     } catch (e) {
-      dispatch(getAllWishlistFailure(e.message));
+      dispatch(getWishlistFailure(e.message));
     }
   };
 }

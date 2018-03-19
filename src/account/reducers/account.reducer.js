@@ -35,20 +35,20 @@ const account = (
         orderDetailsError: action.error,
         loading: false
       });
-    case accountActions.GET_ALL_WISHLIST_REQUEST:
+    case accountActions.GET_WISHLIST_REQUEST:
       return Object.assign({}, state, {
         wishlistStatus: action.status,
         loading: true
       });
 
-    case accountActions.GET_ALL_WISHLIST_SUCCESS:
+    case accountActions.GET_WISHLIST_SUCCESS:
       return Object.assign({}, state, {
         wishlistStatus: action.status,
         wishlist: action.wishlist,
         loading: false
       });
 
-    case accountActions.GET_ALL_WISHLIST_FAILURE:
+    case accountActions.GET_WISHLIST_FAILURE:
       return Object.assign({}, state, {
         wishlistStatus: action.status,
         wishlistError: action.error,

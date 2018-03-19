@@ -21,9 +21,9 @@ export default class SaveListDetails extends React.Component {
   componentDidMount() {
     this.props.getWishList();
   }
-  addToBagItem(USSID, productcode) {
+  addToBagItem(ussid, productcode) {
     let productDetails = {};
-    productDetails.ussId = USSID;
+    productDetails.ussId = ussid;
     productDetails.code = productcode;
     productDetails.quantity = PRODUCT_QUANTITY;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -53,15 +53,15 @@ export default class SaveListDetails extends React.Component {
       }
     }
   }
-  removeItem(USSID) {
+  removeItem(ussid) {
     let productDetails = {};
-    productDetails.USSID = USSID;
+    productDetails.USSID = ussid;
     if (this.props.removeProductFromWishList) {
       this.props.removeProductFromWishList(productDetails);
     }
   }
   render() {
-    let wishList = this.props.profile.wishlist;
+    const wishList = this.props.profile.wishlist;
     return (
       <div className={styles.base}>
         <div className={styles.headerHolder}>
@@ -83,7 +83,7 @@ export default class SaveListDetails extends React.Component {
                   addToBagItem={() =>
                     this.addToBagItem(val.USSID, val.productcode)
                   }
-                  removeItem={() => this.removeItem(val.USSID)}
+                  removeItem={val => this.removeItem(val.USSID)}
                 />
               </div>
             );
