@@ -1,7 +1,7 @@
 .base {
   width: 100%;
   height: auto;
-  padding-top: 110px;
+  padding-top: 60px;
   padding-bottom: 60px;
 }
 .bannerHolder {
@@ -16,7 +16,7 @@
   width: 100%;
   position: fixed;
   left: 0;
-  top: 0;
+  top: 50px;
   z-index: 10;
   background: #fff;
 }

@@ -1,9 +1,9 @@
 .base {
   width: 100%;
   height: auto;
-  min-height: 100vh;
+  min-height: calc(100vh - 120px);
   background-color: #ececec;
-  padding: 60px 15px;
+  padding: 15px;
 }
 .header {
   width: 100%;

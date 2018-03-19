@@ -4,8 +4,10 @@ import { withRouter } from "react-router-dom";
 import Widget from "../components/Widget";
 const mapDispatchToProps = dispatch => {
   return {
-    getComponentData: (fetchUrl, positionInFeed, postParams) => {
-      dispatch(getComponentData(positionInFeed, fetchUrl, postParams));
+    getComponentData: (fetchUrl, positionInFeed, postParams, backUpUrl) => {
+      dispatch(
+        getComponentData(positionInFeed, fetchUrl, postParams, backUpUrl)
+      );
     },
     getItems: (positionInFeed, itemIds) => {
       dispatch(getItems(positionInFeed, itemIds));

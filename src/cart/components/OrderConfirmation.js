@@ -17,9 +17,7 @@ export default class OrderConfirmation extends React.Component {
           label={this.props.orderDetails.orderRefNo}
         />
         <RateYourExperienceCard
-          captureOrderExperienceCapture={rating =>
-            this.captureOrderExperience(rating)
-          }
+          captureOrderExperience={rating => this.captureOrderExperience(rating)}
           continueShopping={() => this.continueShopping()}
         />
       </div>

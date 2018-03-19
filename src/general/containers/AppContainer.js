@@ -8,7 +8,8 @@ import {
 } from "../../auth/actions/user.actions";
 import {
   generateCartIdForLoggedInUser,
-  generateCartIdForAnonymous
+  generateCartIdForAnonymous,
+  mergeCartId
 } from "../../cart/actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import App from "../../App.js";
@@ -41,7 +42,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    modalStatus: state.modal.modalDisplayed
+    modalStatus: state.modal.modalDisplayed,
+    cart: state.cart
   };
 };
 

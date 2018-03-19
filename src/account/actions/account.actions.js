@@ -43,7 +43,7 @@ export function getAllOrdersDetails() {
     try {
       const result = await api.get(
         `${USER_CART_PATH}/${
-          JSON.parse(userDetails).customerInfo.mobileNumber
+          JSON.parse(userDetails).userName
         }/orderhistorylist?currentPage=${CURRENT_PAGE}&access_token=${
           JSON.parse(customerCookie).access_token
         }&pageSize=${PAGE_SIZE}&isPwa=true&platformNumber=2`

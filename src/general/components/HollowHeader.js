@@ -2,13 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./HollowHeader.css";
 import orderIcon from "./img/order-history.svg";
-import backArrow from "./img/arrowBack.svg";
-import downloadIcon from "../../general/components/img/download.svg";
+import backArrow from "./img/arrowBackblack.svg";
+import downloadIcon from "./img/download.svg";
 import { Icon } from "xelpmoc-core";
 export default class HollowHeader extends React.Component {
   backPage() {
-    if (this.props.gotoPreviousPage) {
-      this.props.gotoPreviousPage();
+    if (this.props.goBack) {
+      this.props.goBack();
     }
   }
 
@@ -49,7 +49,7 @@ export default class HollowHeader extends React.Component {
   }
 }
 HollowHeader.propTypes = {
-  backPage: PropTypes.func,
+  goBack: PropTypes.func,
   orderProduct: PropTypes.func,
   downloadProduct: PropTypes.func
 };
