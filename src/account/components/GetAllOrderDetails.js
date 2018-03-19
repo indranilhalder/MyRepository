@@ -7,6 +7,7 @@ import OrderDelivered from "./OrderDelivered.js";
 import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
 import moment from "moment";
+const dateFormat = "DD MMM YYYY";
 export default class GetAllOrderDetails extends React.Component {
   onViewDetails() {
     if (this.props.onViewDetails) {
@@ -37,7 +38,7 @@ export default class GetAllOrderDetails extends React.Component {
                 <div className={styles.orderIdHolder}>
                   <OrderPlacedAndId
                     placedTime={moment(orderDetails.orderDate).format(
-                      "DD MMM YYYY"
+                      dateFormat
                     )}
                     orderId={orderDetails.orderId}
                   />
@@ -68,9 +69,9 @@ export default class GetAllOrderDetails extends React.Component {
                 />
                 <div className={styles.buttonHolder}>
                   <OrderReturn
-                    buttonLabel="Return or Replace"
-                    underlineButtonLabel="Write a review"
-                    underlineButtonColour=" #ff1744"
+                    buttonLabel={this.props.buttonLabel}
+                    underlineButtonLabel={this.props.underlineButtonLabel}
+                    underlineButtonColour={this.props.underlineButtonColour}
                     isEditable={true}
                     replaceItem={() => this.replaceItem()}
                     writeReview={() => this.writeReview()}
@@ -102,4 +103,10 @@ GetAllOrderDetails.propTypes = {
   onViewDetails: PropTypes.func,
   replaceItem: PropTypes.func,
   writeReview: PropTypes.func
+};
+
+GetAllOrderDetails.defaultprops = {
+  buttonLabel: "Return or Replace",
+  underlineButtonLabel: "Write a review",
+  underlineButtonColour: " #ff1744"
 };

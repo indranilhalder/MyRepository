@@ -4,7 +4,6 @@ const account = (
     status: null,
     error: null,
     loading: false,
-    type: null,
 
     orderDetails: null,
     orderDetailsStatus: null,
@@ -32,6 +31,7 @@ const account = (
         orderDetailsError: action.error,
         loading: false
       });
+
     default:
       return state;
   }
