@@ -243,4 +243,5 @@ public final class MessageConstants
 	public static final String AMP_ACCESS_CONTROL_ALLOW_SOURCE_REQUEST_HEADER = "AMP-Access-Control-Allow-Source-Origin";
 	public static final String CACHE_CONTROL_REQUEST_HEADER = "Cache-Control";
 	public static final String SESSION = "session";
+	public static final String MOBILE_ERROR_ACCOUNT_EXISTS_TITLE = "mobile.error.account.exists.title";
 }
