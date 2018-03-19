@@ -164,8 +164,8 @@ class CartPage extends React.Component {
         this.props.history.push({
           pathname: CHECKOUT_ROUTER,
           state: {
-            pinCode: defaultPinCode,
-            productValue: this.props.cart.cartDetails.cartAmount.bagTotal.value
+            productValue: this.props.cart.cartDetails.cartAmount.bagTotal.value,
+            isRequestComeThrowMyBag: true
           }
         });
       } else {
