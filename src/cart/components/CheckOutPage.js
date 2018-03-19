@@ -279,7 +279,6 @@ class CheckOutPage extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.history);
     if (
       !this.props.history.location.state ||
       !this.props.history.location.state.isRequestComeThrowMyBag
