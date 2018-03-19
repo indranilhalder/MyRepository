@@ -17,9 +17,21 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   ANONYMOUS_USER,
   CHECKOUT_ROUTER,
-  LOGIN_PATH
+  LOGIN_PATH,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
+
+const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+const cartDetailsLoggedInUser = Cookie.getCookie(
+  CART_DETAILS_FOR_LOGGED_IN_USER
+);
+const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
+const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
 class CartPage extends React.Component {
   constructor(props) {
     super(props);
@@ -30,13 +42,6 @@ class CartPage extends React.Component {
   }
 
   componentDidMount() {
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let cartDetailsLoggedInUser = Cookie.getCookie(
-      CART_DETAILS_FOR_LOGGED_IN_USER
-    );
-    let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (
       userDetails !== undefined &&
       customerCookie !== undefined &&
@@ -46,19 +51,15 @@ class CartPage extends React.Component {
         JSON.parse(userDetails).userName,
         JSON.parse(customerCookie).access_token,
         JSON.parse(cartDetailsLoggedInUser).code,
-        ""
+        defaultPinCode
       );
     } else {
-      if (
-        globalCookie !== undefined &&
-        cartDetailsAnonymous !== undefined &&
-        ANONYMOUS_USER !== undefined
-      ) {
+      if (globalCookie !== undefined && cartDetailsAnonymous !== undefined) {
         this.props.getCartDetails(
           ANONYMOUS_USER,
           JSON.parse(globalCookie).access_token,
           JSON.parse(cartDetailsAnonymous).guid,
-          ""
+          defaultPinCode
         );
       }
     }
@@ -158,11 +159,11 @@ class CartPage extends React.Component {
   renderToCheckOutPage() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (customerCookie) {
-      if (this.state.pinCode !== "" && this.state.isServiceable === true) {
+      if (defaultPinCode && this.state.isServiceable === true) {
         this.props.history.push({
           pathname: CHECKOUT_ROUTER,
           state: {
-            pinCode: this.state.pinCode,
+            pinCode: defaultPinCode,
             productValue: this.props.cart.cartDetails.cartAmount.bagTotal.value
           }
         });
@@ -218,9 +219,7 @@ class CartPage extends React.Component {
             </div>
           </div>
           <div
-            className={
-              this.state.pinCode === "" ? styles.disabled : styles.content
-            }
+            className={defaultPinCode === "" ? styles.disabled : styles.content}
           >
             <div className={styles.offer}>
               <div className={styles.offerText}>{this.props.cartOfferText}</div>
@@ -232,7 +231,7 @@ class CartPage extends React.Component {
                 return (
                   <div className={styles.cartItem} key={i}>
                     <CartItem
-                      pinCode={this.state.pinCode}
+                      pinCode={defaultPinCode}
                       product={product}
                       productIsServiceable={product.pinCodeResponse}
                       productImage={product.imageURL}
