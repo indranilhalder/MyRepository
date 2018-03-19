@@ -5805,7 +5805,10 @@ label[for='priority_paytm'] img {
 }
 .max-min-value {
 	position: absolute;
-	bottom: -10px;
+	/* start change for TISUAT-6528 */
+	top: 67px;
+	/* bottom: -10px; */
+	/* end change for TISUAT-6528 */
 }
 .offer_heading {
 	font-size: 16px;
