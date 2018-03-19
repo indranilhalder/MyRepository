@@ -25,7 +25,7 @@ import MobileFooter from "./general/components/MobileFooter.js";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
-
+import GetAllOrderContainer from "./account/containers/GetAllOrderContainer";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -59,7 +59,8 @@ import {
   BRAND_PAGE,
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
-  CATEGORY_PAGE_WITH_SLUG
+  CATEGORY_PAGE_WITH_SLUG,
+  ORDER_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -135,7 +136,7 @@ class App extends Component {
                 <SignUpContainer {...routeProps} {...this.props} />
               )}
             />
-
+            <Route path={ORDER_PAGE} component={GetAllOrderContainer} />
             <Route
               exact
               path={BRAND_PAGE}

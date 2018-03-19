@@ -65,6 +65,7 @@ export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
+export const ORDER_PAGE = "/allOrders";
 
 // fetching feed information contant
 export const BLP_OR_CLP_FEED_TYPE = "blpOrClp";
