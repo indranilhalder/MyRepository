@@ -137,9 +137,7 @@ export default class PdpApparel extends React.Component {
       this.props.showPincodeModal(this.props.match.params[2]);
     }
   }
-  handleSizeSelect(val) {
-    console.log(val);
-  }
+
   handleQuantitySelect(val) {
     console.log(val);
   }
@@ -221,6 +219,7 @@ export default class PdpApparel extends React.Component {
             {productData.variantOptions && (
               <React.Fragment>
                 <SizeQuantitySelect
+                  history={this.props.history}
                   showSizeGuide={
                     productData.showSizeGuide ? this.props.showSizeGuide : null
                   }
@@ -228,7 +227,6 @@ export default class PdpApparel extends React.Component {
                     return value.sizelink;
                   })}
                   maxQuantity={productData.maxQuantityAllowed}
-                  onSizeSelect={val => this.handleSizeSelect(val)}
                   onQuantitySelect={val => this.props.handleQuantitySelect(val)}
                 />
                 <ColourSelector

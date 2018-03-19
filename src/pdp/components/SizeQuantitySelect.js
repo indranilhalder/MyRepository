@@ -4,6 +4,9 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import styles from "./SizeQuantitySelect.css";
 
 export default class SizeQuantitySelect extends React.Component {
+  updateSize(productUrl) {
+    this.props.history.push(productUrl);
+  }
   render() {
     let fetchedQuantityList = [];
     if (this.props.maxQuantity) {
@@ -31,8 +34,9 @@ export default class SizeQuantitySelect extends React.Component {
             <MobileSelectWithError
               value="Size"
               options={this.props.sizes.map(val => {
-                return { value: val.size };
+                return { label: val.size, value: val.url };
               })}
+              onChange={value => this.updateSize(value)}
             />
           </div>
           <div className={styles.sizeQuantity}>

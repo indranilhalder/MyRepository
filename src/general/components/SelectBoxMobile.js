@@ -17,18 +17,28 @@ export default class SelectBoxMobile extends React.Component {
     this.state = {
       value: this.props.value
         ? this.props.value
-        : this.props.options ? this.props.options[0].value : ""
+        : this.props.options ? this.props.options[0].value : "",
+      label: this.props.label
+        ? this.props.label
+        : this.props.options ? this.props.options[0].label : ""
     };
   }
   handleChange(event) {
-    this.setState({ value: event.target.value }, () => {
+    const selectedValue = event.target.value;
+    const selectedLabel = this.props.options
+      .filter(val => {
+        return val.value === selectedValue;
+      })
+      .map(val => {
+        return val.label ? val.label : val.value;
+      })[0];
+    this.setState({ value: selectedValue, label: selectedLabel }, () => {
       if (this.props.onChange) {
         this.props.onChange(this.state.value);
       }
     });
   }
   render() {
-    console.log(this.props);
     let arrow = GreyArrow;
     if (this.props.arrowColour === BLACK) {
       arrow = BlackArrow;
@@ -66,12 +76,14 @@ export default class SelectBoxMobile extends React.Component {
             this.props.options.map((item, i) => {
               return (
                 <option key={i} value={item.value}>
-                  {item.value}
+                  {item.label ? item.label : item.value}
                 </option>
               );
             })}
         </select>
-        <div className={styles.visibleBox}>{this.state.value}</div>
+        <div className={styles.visibleBox}>
+          {this.state.label ? this.state.label : this.state.value}
+        </div>
         <div className={styles.arrow}>
           <Icon image={arrow} size={12} />
         </div>
@@ -81,7 +93,9 @@ export default class SelectBoxMobile extends React.Component {
 }
 SelectBoxMobile.propTypes = {
   height: PropTypes.number,
-  options: PropTypes.arrayOf(PropTypes.shape({ value: PropTypes.string })),
+  options: PropTypes.arrayOf(
+    PropTypes.shape({ value: PropTypes.string, label: PropTypes.string })
+  ),
   arrowColour: PropTypes.oneOf([BLACK, GREY, WHITE]),
   theme: PropTypes.oneOf([HOLLOW_BOX, BLACK_BOX, GREY_BOX])
 };
