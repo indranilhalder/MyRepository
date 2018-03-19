@@ -40,7 +40,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       if (defaultPinCode) {
         this.props.getProductPinCode(
           defaultPinCode,
-          this.props.match.params[0]
+          this.props.match.params[2]
         );
       }
     } else {
@@ -53,11 +53,23 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
         this.props.getProductDescription(this.props.match.params[1]);
         this.props.getMsdRequest(this.props.match.params[1]);
+        if (defaultPinCode) {
+          this.props.getProductPinCode(
+            defaultPinCode,
+            this.props.match.params[1]
+          );
+        }
       } else if (
         this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
       ) {
-        this.props.getProductDescription(this.props.match.params[1]);
-        this.props.getMsdRequest(this.props.match.params[1]);
+        this.props.getProductDescription(this.props.match.params[2]);
+        this.props.getMsdRequest(this.props.match.params[2]);
+        if (defaultPinCode) {
+          this.props.getProductPinCode(
+            defaultPinCode,
+            this.props.match.params[2]
+          );
+        }
       } else {
         //need to show error page
       }
