@@ -14,6 +14,7 @@ export const MOBILE_PDP_VIEW = "mobilePdpView";
 export const MAIN_ROUTER = "/";
 export const CUSTOMER_ACCESS_TOKEN = "customerAccessToken";
 export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
+export const DEFAULT_PIN_CODE_LOCAL_STORAGE = "defaultPinCode";
 
 export const REFRESH_TOKEN = "refresh_token";
 export const BRAND_OR_CATEGORY_LANDING_PAGE =
@@ -65,6 +66,7 @@ export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
+export const ORDER_PAGE = "/allOrders";
 
 // fetching feed information contant
 export const BLP_OR_CLP_FEED_TYPE = "blpOrClp";

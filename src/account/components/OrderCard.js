@@ -45,7 +45,7 @@ export default class OrderCard extends React.Component {
 OrderCard.propTypes = {
   productImage: PropTypes.string,
   productName: PropTypes.string,
-  price: PropTypes.string,
-  discountPrice: PropTypes.string,
+  price: PropTypes.number,
+  discountPrice: PropTypes.number,
   isSelect: PropTypes.bool
 };

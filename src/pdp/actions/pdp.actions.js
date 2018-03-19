@@ -2,7 +2,8 @@ import {
   SUCCESS,
   REQUESTING,
   ERROR,
-  GLOBAL_ACCESS_TOKEN
+  GLOBAL_ACCESS_TOKEN,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
@@ -191,6 +192,7 @@ export function getProductPinCodeFailure(error) {
 
 export function getProductPinCode(pinCode, productCode) {
   let validProductCode = productCode.toUpperCase();
+  localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, pinCode);
   return async (dispatch, getState, { api }) => {
     dispatch(getProductPinCodeRequest());
     try {
