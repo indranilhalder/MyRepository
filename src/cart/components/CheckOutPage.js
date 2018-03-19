@@ -21,7 +21,8 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  COLLECT
+  COLLECT,
+  PRODUCT_CART_ROUTER
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
@@ -105,19 +106,23 @@ class CheckOutPage extends React.Component {
     this.setState({ showCliqAndPiq: false });
   }
   renderCheckoutAddress = () => {
+    console.log(this.props.cart.userAddress);
     const cartData = this.props.cart;
     return (
       <ConfirmAddress
-        address={cartData.userAddress.addresses.map(address => {
-          return {
-            addressTitle: address.addressType,
-            addressDescription: `${address.line1} ${address.town} ${
-              address.city
-            }, ${address.state} ${address.postalCode}`,
-            value: address.id,
-            selected: address.defaultAddress
-          };
-        })}
+        address={
+          cartData.userAddress.addresses &&
+          cartData.userAddress.addresses.map(address => {
+            return {
+              addressTitle: address.addressType,
+              addressDescription: `${address.line1} ${address.town} ${
+                address.city
+              }, ${address.state} ${address.postalCode}`,
+              value: address.id,
+              selected: address.defaultAddress
+            };
+          })
+        }
         onNewAddress={() => this.addNewAddress()}
         onSelectAddress={address => this.onSelectAddress(address)}
       />
@@ -274,6 +279,14 @@ class CheckOutPage extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props.history);
+    if (
+      !this.props.history.location.state ||
+      !this.props.history.location.state.isRequestComeThrowMyBag
+    ) {
+      this.props.history.push(PRODUCT_CART_ROUTER);
+      return true;
+    }
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
