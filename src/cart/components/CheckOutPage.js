@@ -1,6 +1,7 @@
 import React from "react";
 import cloneDeep from "lodash/cloneDeep";
 import PropTypes from "prop-types";
+import DummyTab from "./DummyTab";
 import ConfirmAddress from "./ConfirmAddress";
 import Checkout from "./Checkout";
 import AddDeliveryAddress from "./AddDeliveryAddress";
@@ -106,26 +107,29 @@ class CheckOutPage extends React.Component {
     this.setState({ showCliqAndPiq: false });
   }
   renderCheckoutAddress = () => {
-    console.log(this.props.cart.userAddress);
     const cartData = this.props.cart;
     return (
-      <ConfirmAddress
-        address={
-          cartData.userAddress.addresses &&
-          cartData.userAddress.addresses.map(address => {
-            return {
-              addressTitle: address.addressType,
-              addressDescription: `${address.line1} ${address.town} ${
-                address.city
-              }, ${address.state} ${address.postalCode}`,
-              value: address.id,
-              selected: address.defaultAddress
-            };
-          })
-        }
-        onNewAddress={() => this.addNewAddress()}
-        onSelectAddress={address => this.onSelectAddress(address)}
-      />
+      <div className={styles.addInitialAddAddress}>
+        <ConfirmAddress
+          address={
+            cartData.userAddress.addresses &&
+            cartData.userAddress.addresses.map(address => {
+              return {
+                addressTitle: address.addressType,
+                addressDescription: `${address.line1} ${address.town} ${
+                  address.city
+                }, ${address.state} ${address.postalCode}`,
+                value: address.id,
+                selected: address.defaultAddress
+              };
+            })
+          }
+          onNewAddress={() => this.addNewAddress()}
+          onSelectAddress={address => this.onSelectAddress(address)}
+        />
+        <DummyTab title="Delivery Mode" number={2} />
+        <DummyTab title="Payment Method" number={3} />
+      </div>
     );
   };
   renderDeliverModes = () => {
@@ -245,6 +249,19 @@ class CheckOutPage extends React.Component {
     );
   };
 
+  renderInitialAddAddressForm() {
+    return (
+      <div className={styles.addInitialAddAddress}>
+        <AddDeliveryAddress
+          addUserAddress={address => this.addAddress(address)}
+          {...this.state}
+          onChange={val => this.onChange(val)}
+        />
+        <DummyTab title="Delivery Mode" number={2} />
+        <DummyTab title="Payment Method" number={3} />
+      </div>
+    );
+  }
   changeDeliveryAddress = () => {
     this.setState({ confirmAddress: false });
   };
@@ -336,14 +353,19 @@ class CheckOutPage extends React.Component {
         return address.id === selectedAddress[0];
       }
     );
-
-    this.setState({
-      confirmAddress: false,
-      selectedAddress: addressSelected[0]
-    });
-    this.setState({ addressId: addressSelected });
+    // here we are checking the if user selected any address then setting our state
+    // and in else condition if user deselect then this function will again call and
+    //  then we are resetting the previous selected address
+    if (selectedAddress[0]) {
+      this.setState({
+        confirmAddress: false,
+        selectedAddress: addressSelected[0]
+      });
+      this.setState({ addressId: addressSelected });
+    } else {
+      this.setState({ addressId: null, selectedAddress: null });
+    }
   }
-
   changeDeliveryModes = () => {
     this.setState({ deliverMode: false });
   };
@@ -489,10 +511,7 @@ class CheckOutPage extends React.Component {
       return <div className={styles.base}>{this.renderLoader()}</div>;
     }
     const cartData = this.props.cart;
-    if (
-      (this.state.addNewAddress || !cartData.userAddress) &&
-      !this.state.orderConfirmation
-    ) {
+    if (this.state.addNewAddress && !this.state.orderConfirmation) {
       return (
         <div className={styles.base}>
           <AddDeliveryAddress
@@ -509,9 +528,10 @@ class CheckOutPage extends React.Component {
     ) {
       return (
         <div className={styles.base}>
-          {cartData.userAddress &&
-            !this.state.confirmAddress &&
-            this.renderCheckoutAddress()}
+          {!this.state.confirmAddress &&
+            (cartData.userAddress && cartData.userAddress.addresses
+              ? this.renderCheckoutAddress()
+              : this.renderInitialAddAddressForm())}
 
           {this.state.confirmAddress &&
             !this.state.showCliqAndPiq && (
@@ -589,6 +609,7 @@ class CheckOutPage extends React.Component {
                 delivery={this.props.delivery}
                 payable={this.props.cart.cartDetailsCNC.totalPrice}
                 onCheckout={this.handleSubmit}
+                isDisabledButton={this.state.addressId === null}
               />
             )}
         </div>

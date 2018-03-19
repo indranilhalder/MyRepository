@@ -36,6 +36,7 @@ export default class Checkout extends React.Component {
                 label="Checkout"
                 width={120}
                 textStyle={{ color: "#FFF", fontSize: 14 }}
+                disabled={this.props.isDisabledButton}
                 onClick={() => this.handleClick()}
               />
             </div>
