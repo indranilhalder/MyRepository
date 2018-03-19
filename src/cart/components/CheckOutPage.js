@@ -21,7 +21,8 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  COLLECT
+  COLLECT,
+  PAYMENT_MODE_TYPE
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
@@ -282,13 +283,15 @@ class CheckOutPage extends React.Component {
       this.setState({ orderId: orderId });
       if (this.props.updateTransactionDetails) {
         let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-        let cartId = JSON.parse(cartDetails).guid;
-        if (cartId) {
-          this.props.updateTransactionDetails(
-            this.state.paymentModeSelected,
-            orderId,
-            cartId
-          );
+        if (cartDetails) {
+          let cartId = JSON.parse(cartDetails).guid;
+          if (cartId) {
+            this.props.updateTransactionDetails(
+              localStorage.getItem(PAYMENT_MODE_TYPE),
+              orderId,
+              cartId
+            );
+          }
         }
       }
     } else {
@@ -415,16 +418,19 @@ class CheckOutPage extends React.Component {
   };
 
   binValidation = (paymentMode, binNo) => {
+    localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
     this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidation(paymentMode, binNo);
   };
 
   binValidationForCOD = paymentMode => {
+    localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
     this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidationForCOD(paymentMode);
   };
 
   binValidationForNetBank = (paymentMode, bankName) => {
+    localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
     this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidationForNetBanking(paymentMode, bankName);
   };
@@ -433,6 +439,7 @@ class CheckOutPage extends React.Component {
     this.setState({
       paymentModeSelected: `${cardDetails.cardType} Card`
     });
+    localStorage.setItem(PAYMENT_MODE_TYPE, `${cardDetails.cardType} Card`);
     this.setState({ savedCardDetails: cardDetails });
     this.props.binValidation(
       `${cardDetails.cardType} Card`,

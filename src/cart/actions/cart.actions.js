@@ -1042,7 +1042,8 @@ export function checkPinCodeServiceAvailabilityFailure(error) {
 export function checkPinCodeServiceAvailability(
   userName,
   accessToken,
-  pinCode
+  pinCode,
+  productCode
 ) {
   localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, pinCode);
 
@@ -1050,7 +1051,7 @@ export function checkPinCodeServiceAvailability(
     dispatch(checkPinCodeServiceAvailabilityRequest());
     try {
       const result = await api.post(
-        `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=MP000000000165621&pin=${pinCode}`
+        `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=${productCode}&pin=${pinCode}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
@@ -2150,6 +2151,7 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
         throw new Error(resultJson.error);
       }
       dispatch(updateTransactionDetailsSuccess(resultJson));
+      return resultJson;
     } catch (e) {
       dispatch(updateTransactionDetailsFailure(e.message));
     }
@@ -2197,6 +2199,7 @@ export function orderConfirmation(orderId) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
+
       dispatch(orderConfirmationSuccess(resultJson));
     } catch (e) {
       dispatch(orderConfirmationFailure(e.message));

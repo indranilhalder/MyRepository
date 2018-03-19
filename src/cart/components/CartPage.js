@@ -157,9 +157,10 @@ class CartPage extends React.Component {
     this.props.showCouponModal(this.props.cart.coupons);
   };
   renderToCheckOutPage() {
+    let pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (customerCookie) {
-      if (defaultPinCode && this.state.isServiceable === true) {
+      if (pinCode && this.state.isServiceable === true) {
         this.props.history.push({
           pathname: CHECKOUT_ROUTER,
           state: {
@@ -177,29 +178,28 @@ class CartPage extends React.Component {
 
   checkPinCodeAvailability = val => {
     this.setState({ pinCode: val });
-    if (this.props.checkPinCodeServiceAvailability) {
-      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-      let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-      let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-      let cartDetailsLoggedInUser = Cookie.getCookie(
-        CART_DETAILS_FOR_LOGGED_IN_USER
+    localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, val);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    if (userDetails) {
+      this.props.getCartDetails(
+        JSON.parse(userDetails).userName,
+        JSON.parse(customerCookie).access_token,
+        JSON.parse(cartDetailsLoggedInUser).code,
+        val
       );
-      let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-      if (userDetails) {
-        this.props.getCartDetails(
-          JSON.parse(userDetails).userName,
-          JSON.parse(customerCookie).access_token,
-          JSON.parse(cartDetailsLoggedInUser).code,
-          val
-        );
-      } else {
-        this.props.getCartDetails(
-          ANONYMOUS_USER,
-          JSON.parse(globalCookie).access_token,
-          JSON.parse(cartDetailsAnonymous).guid,
-          val
-        );
-      }
+    } else {
+      this.props.getCartDetails(
+        ANONYMOUS_USER,
+        JSON.parse(globalCookie).access_token,
+        JSON.parse(cartDetailsAnonymous).guid,
+        val
+      );
     }
   };
 

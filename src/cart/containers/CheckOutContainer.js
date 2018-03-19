@@ -134,7 +134,7 @@ const mapDispatchToProps = dispatch => {
     updateTransactionDetails: (paymentMode, juspayOrderID, cartId) => {
       dispatch(
         updateTransactionDetails(paymentMode, juspayOrderID, cartId)
-      ).then(() => dispatch(orderConfirmation(juspayOrderID)));
+      ).then(val => dispatch(orderConfirmation(val.orderId)));
     },
     getCODEligibility: () => {
       dispatch(getCODEligibility());
