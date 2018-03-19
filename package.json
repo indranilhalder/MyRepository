@@ -62,9 +62,9 @@
     "start": "node -r dotenv/config scripts/start.js",
     "tmpprod": "REACT_APP_STAGE=local node scrips/build.js",
     "local": "REACT_APP_STAGE=local node scripts/build.js",
-    "dev": "REACT_APP_STAGE=dev node scripts/build.js",
+    "dev": "REACT_APP_STAGE=devxelp node scripts/build.js",
     "uat2": "REACT_APP_STAGE=uat2 node scripts/build.js",
-    "build": "node REACT_APP_STAGE=production scripts/build.js",
+    "build": "node REACT_APP_STAGE=devxelp scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "lint": "eslint 'src/**/*.js'",
     "pre-build":
