@@ -50,7 +50,7 @@ export function getAllOrdersDetails() {
         }&pageSize=${PAGE_SIZE}&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
-      if (resultJson.error) {
+      if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
       dispatch(getAllOrdersSuccess(resultJson));
