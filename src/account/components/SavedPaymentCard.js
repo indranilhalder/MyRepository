@@ -59,6 +59,8 @@ export default class SavedPaymentCard extends React.Component {
           <OrderReturn
             replaceItem={() => this.replaceItem()}
             buttonLabel="Remove"
+            underlineButtonLabel="Edit"
+            isEditable={true}
           />
         </div>
       </div>

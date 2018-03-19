@@ -16,7 +16,7 @@ import productListings from "./plp/reducers/plp.reducer";
 import productDescription from "./pdp/reducers/pdp.reducer";
 import categoryDefault from "./clp/reducers/clp.reducer";
 import brandDefault from "./blp/reducers/blp.reducer";
-
+import account from "./account/reducers/account.reducer";
 import cart from "./cart/reducers/cart.reducer";
 
 import "babel-polyfill";
@@ -30,7 +30,8 @@ const rootReducer = combineReducers({
   search,
   cart,
   brandDefault,
-  categoryDefault
+  categoryDefault,
+  account
 });
 
 let store = createStore(
