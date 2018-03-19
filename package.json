@@ -65,6 +65,7 @@
     "dev": "REACT_APP_STAGE=devxelp node scripts/build.js",
     "uat2": "REACT_APP_STAGE=uat2 node scripts/build.js",
     "build": "node REACT_APP_STAGE=devxelp scripts/build.js",
+    "production": "node REACT_APP_STAGE=production scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "lint": "eslint 'src/**/*.js'",
     "pre-build":
