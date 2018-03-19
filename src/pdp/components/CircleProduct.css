@@ -1,0 +1,33 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  white-space: initial;
+}
+.imageHolder {
+  width: 100%;
+  height: auto;
+  position: relative;
+  padding-bottom: 100%;
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 50%;
+}
+.image {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.textHolder {
+  width: 100%;
+  height: auto;
+  text-align: center;
+  color: #000000;
+  font-size: 14px;
+  font-family: semibold;
+  margin-top: 10px;
+}
