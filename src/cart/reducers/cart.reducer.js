@@ -353,10 +353,6 @@ const cart = (
         status: action.status
       });
     case cartActions.GET_CART_ID_SUCCESS:
-      Cookies.createCookie(
-        CART_DETAILS_FOR_LOGGED_IN_USER,
-        JSON.stringify(action.cartDetails)
-      );
       // Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
       return Object.assign({}, state, {
         status: action.status

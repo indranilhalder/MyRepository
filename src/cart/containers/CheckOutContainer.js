@@ -132,9 +132,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(softReservationForPayment(cardDetails, address, paymentMode));
     },
     updateTransactionDetails: (paymentMode, juspayOrderID, cartId) => {
-      dispatch(
-        updateTransactionDetails(paymentMode, juspayOrderID, cartId)
-      ).then(() => dispatch(orderConfirmation(juspayOrderID)));
+      dispatch(updateTransactionDetails(paymentMode, juspayOrderID, cartId));
     },
     getCODEligibility: () => {
       dispatch(getCODEligibility());
