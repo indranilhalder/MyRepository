@@ -4838,5 +4838,18 @@
 	<bean class="com.tisl.mpl.wsdto.GetWishlistData" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="wishlistData" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductCapsulesDataWsDTO>" />
 		<property name="delistedMessage" type="String" />
-	</bean> 
+	</bean>
+	
+	<!-- new ui/ux SEO for PDP & PLP -->
+	<bean class="com.tisl.wsdto.SeoContentData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="title" type="String" />
+		<property name="description" type="String" />
+		<property name="keywords" type="String" />
+		<property name="canonicalURL" type="String" />
+		<property name="alternateURL" type="String" />
+		<property name="imageURL" type="String" />
+		<property name="breadcrumbs" type="java.util.List&lt;com.tisl.mpl.wsdto.BreadcrumbListWsDTO>" />
+	</bean>
+	
+	 
 </beans>
