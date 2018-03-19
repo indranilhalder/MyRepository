@@ -97,7 +97,7 @@ class App extends Component {
     } else {
       if (
         !cartDetailsForAnonymous &&
-        globalAccessToken &&
+         globalAccessToken &&
         !this.props.cart.loading
       ) {
         this.props.generateCartIdForAnonymous();
