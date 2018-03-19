@@ -2153,6 +2153,7 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
         throw new Error(resultJson.error);
       }
       dispatch(updateTransactionDetailsSuccess(resultJson));
+      dispatch(orderConfirmation(resultJson.orderId));
       return resultJson;
     } catch (e) {
       dispatch(updateTransactionDetailsFailure(e.message));
