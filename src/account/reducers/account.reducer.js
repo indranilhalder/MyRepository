@@ -7,7 +7,11 @@ const account = (
 
     orderDetails: null,
     orderDetailsStatus: null,
-    orderDetailsError: null
+    orderDetailsError: null,
+
+    wishlist: null,
+    wishlistStatus: null,
+    wishlistError: null
   },
   action
 ) => {
@@ -29,6 +33,25 @@ const account = (
       return Object.assign({}, state, {
         orderDetailsStatus: action.status,
         orderDetailsError: action.error,
+        loading: false
+      });
+    case accountActions.GET_ALL_WISHLIST_REQUEST:
+      return Object.assign({}, state, {
+        wishlistStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.GET_ALL_WISHLIST_SUCCESS:
+      return Object.assign({}, state, {
+        wishlistStatus: action.status,
+        wishlist: action.wishlist,
+        loading: false
+      });
+
+    case accountActions.GET_ALL_WISHLIST_FAILURE:
+      return Object.assign({}, state, {
+        wishlistStatus: action.status,
+        wishlistError: action.error,
         loading: false
       });
 

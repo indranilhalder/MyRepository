@@ -1,0 +1,23 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 70px 15px 15px 15px;
+  background: #ececec;
+}
+.headerHolder {
+  width: 100%;
+  height: 50px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+}
+.listCardHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 15px;
+  background: #fff;
+  padding: 15px 0px;
+}

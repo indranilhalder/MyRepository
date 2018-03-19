@@ -289,9 +289,17 @@ export function removeProductFromWishListFailure(error) {
 
 export function removeProductFromWishList(productDetails) {
   return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     dispatch(removeProductFromWishListRequest());
     try {
-      const result = await api.postMock(REMOVE_FROM_WISH_LIST);
+      const result = await api.post(
+        `${PRODUCT_DETAILS_PATH}/${
+          JSON.parse(userDetails).userName
+        }/removeProductFromWishlist?&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&USSID=${productDetails.USSID}&wishlistName=${MY_WISH_LIST}`
+      );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
@@ -335,6 +343,7 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
           productDetails.quantity
         }&addedToCartWl=false`
       );
+      console.log(result);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);

@@ -26,6 +26,7 @@ import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
 import GetAllOrderContainer from "./account/containers/GetAllOrderContainer";
+import SaveListContainer from "./account/containers/SaveListContainer";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -60,7 +61,8 @@ import {
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
-  ORDER_PAGE
+  ORDER_PAGE,
+  SAVE_LIST_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -134,6 +136,8 @@ class App extends Component {
               )}
             />
             <Route path={ORDER_PAGE} component={GetAllOrderContainer} />
+            <Route path={SAVE_LIST_PAGE} component={SaveListContainer} />
+
             <Route
               exact
               path={BRAND_PAGE}

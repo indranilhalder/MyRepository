@@ -19,7 +19,8 @@ import {
   DEFAULT_BRANDS_LANDING_PAGE,
   CATEGORIES_LANDING_PAGE,
   PRODUCT_CART_DELIVERY_MODES,
-  ORDER_PAGE
+  ORDER_PAGE,
+  SAVE_LIST_PAGE
 } from "../../../src/lib/constants";
 import { CATEGORY_REGEX } from "../../plp/components/PlpBrandCategoryWrapper";
 const HOME = "home";
@@ -89,7 +90,7 @@ class MobileFooter extends React.Component {
           value={PROFILE}
           text="My Cliq"
           selected={selected}
-          onSelect={() => this.handleSelect(ORDER_PAGE)}
+          onSelect={() => this.handleSelect(SAVE_LIST_PAGE)}
         />
         <MobileFooterItem
           activeIcon={myBagIconRed}
