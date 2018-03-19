@@ -8,7 +8,8 @@ import {
   FAILURE,
   FAILURE_UPPERCASE,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  CART_DETAILS_FOR_ANONYMOUS
+  CART_DETAILS_FOR_ANONYMOUS,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 export const USER_CART_PATH = "v2/mpl/users";
 export const CART_PATH = "v2/mpl";
@@ -816,7 +817,6 @@ export function generateCartIdForLoggedInUser() {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(generateCartIdRequest());
-
     try {
       const result = await api.post(
         `${USER_CART_PATH}/${
@@ -826,10 +826,9 @@ export function generateCartIdForLoggedInUser() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
+      if (resultJson.status === FAILURE_UPPERCASE || resultJson.errors) {
         throw new Error(resultJson.error);
       }
-
       dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
       return resultJson;
     } catch (e) {
@@ -1045,6 +1044,8 @@ export function checkPinCodeServiceAvailability(
   accessToken,
   pinCode
 ) {
+  localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, pinCode);
+
   return async (dispatch, getState, { api }) => {
     dispatch(checkPinCodeServiceAvailabilityRequest());
     try {
