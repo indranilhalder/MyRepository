@@ -6,7 +6,6 @@ import FilterCategoryL1 from "./FilterCategoryL1";
 import styles from "./FilterMobile.css";
 import queryString from "query-string";
 import { createUrlFromQueryAndCategory } from "./FilterUtils.js";
-import InformationHeader from "../../general/components/InformationHeader.js";
 
 const FILTER_HEADER = "Refine by";
 
@@ -73,12 +72,7 @@ export default class FilterMobile extends React.Component {
 
     return (
       <div className={styles.base}>
-        <div className={styles.pageHeader}>
-          <InformationHeader
-            text={FILTER_HEADER}
-            goBack={this.handleBackClick}
-          />
-        </div>
+        <div className={styles.pageHeader} />
         <div className={styles.tabHolder}>
           <div className={styles.slider}>
             <FilterTab

@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import MDSpinner from "react-md-spinner";
 import { SUCCESS } from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
+import filter from "lodash/filter";
 
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -20,9 +21,14 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 class CartPage extends React.Component {
-  state = {
-    pinCode: ""
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      pinCode: "",
+      isServiceable: false
+    };
+  }
+
   componentDidMount() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -31,18 +37,30 @@ class CartPage extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (userDetails) {
+    if (
+      userDetails !== undefined &&
+      customerCookie !== undefined &&
+      cartDetailsLoggedInUser !== undefined
+    ) {
       this.props.getCartDetails(
-        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(userDetails).userName,
         JSON.parse(customerCookie).access_token,
-        JSON.parse(cartDetailsLoggedInUser).code
+        JSON.parse(cartDetailsLoggedInUser).code,
+        ""
       );
     } else {
-      this.props.getCartDetails(
-        ANONYMOUS_USER,
-        JSON.parse(globalCookie).access_token,
-        JSON.parse(cartDetailsAnonymous).guid
-      );
+      if (
+        globalCookie !== undefined &&
+        cartDetailsAnonymous !== undefined &&
+        ANONYMOUS_USER !== undefined
+      ) {
+        this.props.getCartDetails(
+          ANONYMOUS_USER,
+          JSON.parse(globalCookie).access_token,
+          JSON.parse(cartDetailsAnonymous).guid,
+          ""
+        );
+      }
     }
     if (userDetails) {
       if (this.props.getCoupons) {
@@ -51,12 +69,76 @@ class CartPage extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.cart) {
+      if (prevProps.cart.cartDetails !== this.props.cart.cartDetails) {
+        let productServiceAvailability = filter(
+          this.props.cart.cartDetails.products,
+          product => {
+            if (product.pinCodeResponse) {
+              return product.pinCodeResponse.isServicable === "N";
+            }
+          }
+        );
+        if (productServiceAvailability.length > 0) {
+          this.setState({
+            isServiceable: false
+          });
+        } else {
+          this.setState({
+            isServiceable: true
+          });
+        }
+      }
+    }
+  }
   renderLoader = () => {
     return (
       <div>
         <MDSpinner />
       </div>
     );
+  };
+
+  addProductToWishList = product => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      if (this.props.addProductToWishList) {
+        this.props.addProductToWishList(product);
+      }
+    } else {
+      this.props.history.push(LOGIN_PATH);
+    }
+  };
+
+  removeItemFromCart = (cartListItemPosition, pinCode) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      if (this.props.removeItemFromCartLoggedIn) {
+        this.props.removeItemFromCartLoggedIn(cartListItemPosition, pinCode);
+      }
+    } else {
+      if (this.props.removeItemFromCartLoggedOut) {
+        this.props.removeItemFromCartLoggedOut(cartListItemPosition, "");
+      }
+    }
+  };
+
+  updateQuantityInCart = (selectedItem, quantity) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      if (this.props.updateQuantityInCartLoggedIn) {
+        this.props.updateQuantityInCartLoggedIn(
+          selectedItem,
+          quantity,
+          this.state.pinCode
+        );
+      }
+    } else {
+      if (this.props.updateQuantityInCartLoggedOut) {
+        this.props.updateQuantityInCartLoggedOut(selectedItem, quantity, "");
+      }
+    }
   };
 
   applyCoupon = couponCode => {
@@ -75,15 +157,18 @@ class CartPage extends React.Component {
   };
   renderToCheckOutPage() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
     if (customerCookie) {
-      this.props.history.push({
-        pathname: CHECKOUT_ROUTER,
-        state: {
-          pinCode: this.state.pinCode,
-          productValue: this.props.cart.cartDetails.cartAmount.bagTotal.value
-        }
-      });
+      if (this.state.pinCode !== "" && this.state.isServiceable === true) {
+        this.props.history.push({
+          pathname: CHECKOUT_ROUTER,
+          state: {
+            pinCode: this.state.pinCode,
+            productValue: this.props.cart.cartDetails.cartAmount.bagTotal.value
+          }
+        });
+      } else {
+        this.setState({ isServiceable: false });
+      }
     } else {
       this.props.history.push(LOGIN_PATH);
     }
@@ -95,17 +180,22 @@ class CartPage extends React.Component {
       let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
       let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
       let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
+      let cartDetailsLoggedInUser = Cookie.getCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER
+      );
+      let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
       if (userDetails) {
-        this.props.checkPinCodeServiceAvailability(
-          JSON.parse(userDetails).customerInfo.mobileNumber,
+        this.props.getCartDetails(
+          JSON.parse(userDetails).userName,
           JSON.parse(customerCookie).access_token,
+          JSON.parse(cartDetailsLoggedInUser).code,
           val
         );
       } else {
-        this.props.checkPinCodeServiceAvailability(
+        this.props.getCartDetails(
           ANONYMOUS_USER,
           JSON.parse(globalCookie).access_token,
+          JSON.parse(cartDetailsAnonymous).guid,
           val
         );
       }
@@ -126,6 +216,12 @@ class CartPage extends React.Component {
                 }
               />
             </div>
+          </div>
+          <div
+            className={
+              this.state.pinCode === "" ? styles.disabled : styles.content
+            }
+          >
             <div className={styles.offer}>
               <div className={styles.offerText}>{this.props.cartOfferText}</div>
               <div className={styles.offerName}>{this.props.cartOffer}</div>
@@ -136,10 +232,14 @@ class CartPage extends React.Component {
                 return (
                   <div className={styles.cartItem} key={i}>
                     <CartItem
+                      pinCode={this.state.pinCode}
+                      product={product}
+                      productIsServiceable={product.pinCodeResponse}
                       productImage={product.imageURL}
                       productDetails={product.description}
                       productName={product.productName}
                       price={product.price}
+                      index={i}
                       deliveryInformation={product.elligibleDeliveryMode}
                       deliverTime={
                         product.elligibleDeliveryMode &&
@@ -151,23 +251,28 @@ class CartPage extends React.Component {
                           label: product.qtySelectedByUser
                         }
                       ]}
+                      onSave={this.addProductToWishList}
+                      onRemove={this.removeItemFromCart}
+                      onQuantityChange={this.updateQuantityInCart}
+                      maxQuantityAllowed={product.maxQuantityAllowed}
+                      qtySelectedByUser={product.qtySelectedByUser}
                     />
                   </div>
                 );
               })}
+            <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
+            {cartDetails.cartAmount && (
+              <Checkout
+                amount={cartDetails.cartAmount.bagTotal.formattedValue}
+                bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
+                tax={this.props.cartTax}
+                offers={this.props.offers}
+                delivery={this.props.delivery}
+                payable={cartDetails.cartAmount.paybleAmount.formattedValue}
+                onCheckout={() => this.renderToCheckOutPage()}
+              />
+            )}
           </div>
-          <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
-          {cartDetails.cartAmount && (
-            <Checkout
-              amount={cartDetails.cartAmount.bagTotal.formattedValue}
-              bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
-              tax={this.props.cartTax}
-              offers={this.props.offers}
-              delivery={this.props.delivery}
-              payable={cartDetails.cartAmount.paybleAmount.formattedValue}
-              onCheckout={() => this.renderToCheckOutPage()}
-            />
-          )}
         </div>
       );
     } else {
@@ -181,7 +286,13 @@ CartPage.propTypes = {
   cartOffer: PropTypes.string,
   cartTax: PropTypes.string,
   delivery: PropTypes.string,
-  offers: PropTypes.string
+  offers: PropTypes.string,
+  removeItemFromCartLoggedOut: PropTypes.func,
+  removeItemFromCartLoggedIn: PropTypes.func,
+  addProductToWishList: PropTypes.func,
+  getCartDetails: PropTypes.func,
+  updateQuantityInCartLoggedIn: PropTypes.func,
+  updateQuantityInCartLoggedOut: PropTypes.func
 };
 
 CartPage.defaultProps = {

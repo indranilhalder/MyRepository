@@ -4,26 +4,30 @@ import BagPageItem from "./BagPageItem.js";
 
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import BagPageFooter from "../../general/components/BagPageFooter";
-import SelectBox from "../../general/components/SelectBox.js";
+import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 import DeliveryInfoSelect from "./DeliveryInfoSelect";
 import PropTypes from "prop-types";
+
 export default class CartItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       showDelivery: this.props.showDelivery ? this.props.showDelivery : false,
       selectedValue: "",
-      label: "See all"
+      label: "See all",
+      maxQuantityAllowed: 1,
+      qtySelectedByUser: 1,
+      quantityList: []
     };
   }
-  onSave() {
+  handleSave(product) {
     if (this.props.onSave) {
-      this.props.onSave();
+      this.props.onSave(product);
     }
   }
-  onRemove() {
+  handleRemove(index, pinCode) {
     if (this.props.onRemove) {
-      this.props.onRemove();
+      this.props.onRemove(index, pinCode);
     }
   }
   selectDeliveryMode(val) {
@@ -44,14 +48,41 @@ export default class CartItem extends React.Component {
       }
     });
   }
-  handleChange(changedValue) {
+
+  componentWillMount() {
+    this.setQuantity();
+  }
+  handleQuantityChange(changedValue) {
     this.setState({ selectedValue: changedValue }, () => {
       if (this.props.onQuantityChange) {
-        this.props.onQuantityChange(this.state.selectedValue);
+        this.props.onQuantityChange(this.props.index, this.state.selectedValue);
       }
     });
   }
+  setQuantity = () => {
+    this.setState({
+      maxQuantityAllowed: parseInt(this.props.maxQuantityAllowed, 10),
+      qtySelectedByUser: parseInt(this.props.qtySelectedByUser, 10)
+    });
+
+    if (this.state.quantityList.length === 0) {
+      let fetchedQuantityList = [];
+      for (let i = 1; i <= parseInt(this.props.maxQuantityAllowed, 10); i++) {
+        fetchedQuantityList.push({ value: i.toString() });
+      }
+      this.setState({
+        quantityList: fetchedQuantityList
+      });
+    }
+  };
   render() {
+    let isServiceAble = false;
+    if (this.props.productIsServiceable) {
+      if (this.props.productIsServiceable.isServicable === "Y") {
+        isServiceAble = true;
+      }
+    }
+
     return (
       <div className={styles.base}>
         <div className={styles.productInformation}>
@@ -60,6 +91,7 @@ export default class CartItem extends React.Component {
             productName={this.props.productName}
             productDetails={this.props.productDetails}
             price={this.props.price}
+            isServiceAvailable={isServiceAble}
           />
         </div>
         {this.props.deliveryInformation &&
@@ -91,19 +123,22 @@ export default class CartItem extends React.Component {
         {this.props.hasFooter && (
           <div className={styles.footer}>
             <BagPageFooter
-              onSave={() => this.onSave()}
-              onRemove={() => this.onRemove()}
+              onSave={() => this.handleSave(this.props.product)}
+              onRemove={() =>
+                this.handleRemove(this.props.index, this.state.pinCode)
+              }
             />
             <div className={styles.dropdown}>
               <div className={styles.dropdownLabel}>
                 {this.props.dropdownLabel}
               </div>
-              <SelectBox
+              <SelectBoxMobile
                 borderNone={true}
                 placeholder="1"
-                options={this.props.option}
+                options={this.state.quantityList}
                 selected={this.state.selectedValue}
-                onChange={val => this.handleChange(val)}
+                onChange={val => this.handleQuantityChange(val)}
+                value={this.state.qtySelectedByUser}
               />
             </div>
           </div>
@@ -130,7 +165,11 @@ CartItem.propTypes = {
       header: PropTypes.string,
       placedTime: PropTypes.string
     })
-  )
+  ),
+  product: PropTypes.object,
+  pinCode: PropTypes.object,
+  maxQuantityAllowed: PropTypes.string,
+  qtySelectedByUser: PropTypes.string
 };
 
 CartItem.defaultProps = {

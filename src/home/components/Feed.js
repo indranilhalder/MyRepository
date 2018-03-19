@@ -7,11 +7,10 @@ import VideoProductCarousel from "./VideoProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
 import HeroBanner from "./HeroBanner.js";
 import FollowBase from "./FollowBase.js";
-import InformationHeader from "../../general/components/InformationHeader";
+import SearchContainer from "../../search/SearchContainer";
 import ConnectWidget from "./ConnectWidget";
 import BrandCardHeader from "../../blp/components/BrandCardHeader";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
-import MobileFooter from "../../general/components/MobileFooter.js";
 
 import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
@@ -119,11 +118,7 @@ class Feed extends Component {
     if (this.props.isHomeFeedPage) {
       this.props.getCartId();
       this.props.homeFeed();
-    } // window.digitalData = Object.assign(
-    //   {},
-    //   { page: { pageInfo: { pageName: "home" } } }
-    // );
-    // window._satellite.track("page view");
+    }
   }
 
   render() {
@@ -150,15 +145,7 @@ class Feed extends Component {
     }
     return (
       <div className={styles.base}>
-        <div className={styles.center}>
-          <InformationHeader
-            {...propsForHeader}
-            goBack={() => this.props.history.goBack()}
-          />
-
-          {this.renderFeedComponents()}
-        </div>
-        <MobileFooter history={this.props.history} />
+        <div className={styles.center}>{this.renderFeedComponents()}</div>
       </div>
     );
   }

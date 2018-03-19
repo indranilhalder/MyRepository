@@ -3,7 +3,10 @@ module.exports = {
     {
       name: "tata-cliq-frontend",
       script: "index.js",
-      watch: true
+      watch: true,
+      env: {
+        NODE_ENV: "production"
+      }
     }
   ],
   deploy: {

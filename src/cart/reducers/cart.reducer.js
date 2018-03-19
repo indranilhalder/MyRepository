@@ -1,4 +1,5 @@
 import * as cartActions from "../actions/cart.actions";
+import cloneDeep from "lodash/cloneDeep";
 import * as Cookies from "../../lib/Cookie";
 import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
@@ -40,7 +41,7 @@ const cart = (
     orderSummaryError: null,
     coupons: null,
 
-    storeDetails: null,
+    storeDetails: [],
     storeStatus: null,
     storeError: null,
     storeAdded: null,
@@ -97,10 +98,28 @@ const cart = (
 
     binValidationStatus: null,
     binValidationError: null,
-    binValidationDetails: null
+    binValidationDetails: null,
+
+    addToWishlistStatus: null,
+    addToWishlistError: null,
+
+    removeCartItemStatus: null,
+    removeCartItemError: null,
+
+    removeCartItemLoggedOutStatus: null,
+    removeCartItemLoggedOutError: null,
+
+    updateQuantityLoggedInStatus: null,
+    updateQuantityLoggedInDetails: null,
+    updateQuantityLoggedInError: null,
+
+    updateQuantityLoggedOutStatus: null,
+    updateQuantityLoggedOutDetails: null,
+    updateQuantityLoggedOutError: null
   },
   action
 ) => {
+  let updatedCartDetailsCNC;
   switch (action.type) {
     case cartActions.CART_DETAILS_REQUEST:
       return Object.assign({}, state, {
@@ -282,7 +301,8 @@ const cart = (
 
     case cartActions.GENERATE_CART_ID_REQUEST:
       return Object.assign({}, state, {
-        status: action.status
+        status: action.status,
+        loading: true
       });
 
     case cartActions.GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS:
@@ -300,13 +320,15 @@ const cart = (
         JSON.stringify(action.cartDetails)
       );
       return Object.assign({}, state, {
-        status: action.status
+        status: action.status,
+        loading: false
       });
 
     case cartActions.GENERATE_CART_ID_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
-        error: action.error
+        error: action.error,
+        loading: false
       });
 
     case cartActions.ORDER_SUMMARY_REQUEST:
@@ -335,7 +357,7 @@ const cart = (
         CART_DETAILS_FOR_LOGGED_IN_USER,
         JSON.stringify(action.cartDetails)
       );
-      Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+      // Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
       return Object.assign({}, state, {
         status: action.status
       });
@@ -415,9 +437,13 @@ const cart = (
       });
 
     case cartActions.ADD_PICKUP_PERSON_SUCCESS:
+      const currentCartDetailsCNC = cloneDeep(state.cartDetails);
+      updatedCartDetailsCNC = Object.assign({}, action.cartDetailsCNC, {
+        cartAmount: currentCartDetailsCNC.cartAmount
+      });
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
-        cartDetailsCNC: action.cartDetailsCNC,
+        cartDetailsCNC: updatedCartDetailsCNC,
         loading: false
       });
 
@@ -729,14 +755,21 @@ const cart = (
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_FOR_COD_REQUEST:
       return Object.assign({}, state, {
-        binValidationCODStatus: action.status,
+        transactionDetailsStatus: action.status,
         loading: true
+      });
+
+    case cartActions.UPDATE_TRANSACTION_DETAILS_FOR_COD_SUCCESS:
+      return Object.assign({}, state, {
+        transactionDetailsStatus: action.status,
+        transactionDetailsDetails: action.transactionDetails,
+        loading: false
       });
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_FOR_COD_FAILURE:
       return Object.assign({}, state, {
-        binValidationCODStatus: action.status,
-        binValidationCODError: action.error,
+        transactionDetailsStatus: action.status,
+        transactionDetailsError: action.error,
         loading: false
       });
 
@@ -757,6 +790,103 @@ const cart = (
       return Object.assign({}, state, {
         softReserveCODPaymentStatus: action.status,
         softReserveCODPaymentError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_PRODUCT_TO_WISH_LIST_REQUEST:
+      return Object.assign({}, state, {
+        addToWishlistStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_PRODUCT_TO_WISH_LIST_SUCCESS:
+      return Object.assign({}, state, {
+        addToWishlistStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.ADD_PRODUCT_TO_WISH_LIST_FAILURE:
+      return Object.assign({}, state, {
+        addToWishlistStatus: action.status,
+        addToWishlistError: action.error,
+        loading: false
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST:
+      return Object.assign({}, state, {
+        removeCartItemStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_IN_SUCCESS:
+      return Object.assign({}, state, {
+        removeCartItemStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_IN_FAILURE:
+      return Object.assign({}, state, {
+        removeCartItemStatus: action.status,
+        removeCartItemError: action.error,
+        loading: false
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_OUT_REQUEST:
+      return Object.assign({}, state, {
+        removeCartItemLoggedOutStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_OUT_SUCCESS:
+      return Object.assign({}, state, {
+        removeCartItemLoggedOutStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_OUT_FAILURE:
+      return Object.assign({}, state, {
+        removeCartItemLoggedOutStatus: action.status,
+        removeCartItemLoggedOutError: action.error,
+        loading: false
+      });
+
+    case cartActions.UPDATE_QUANTITY_IN_CART_LOGGED_IN_REQUEST:
+      return Object.assign({}, state, {
+        updateQuantityLoggedInStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.UPDATE_QUANTITY_IN_CART_LOGGED_IN_SUCCESS:
+      return Object.assign({}, state, {
+        updateQuantityLoggedInStatus: action.status,
+        updateQuantityLoggedInDetails: action.updateQuantityDetails,
+        loading: false
+      });
+
+    case cartActions.UPDATE_QUANTITY_IN_CART_LOGGED_IN_FAILURE:
+      return Object.assign({}, state, {
+        updateQuantityLoggedInStatus: action.status,
+        updateQuantityLoggedInError: action.error,
+        loading: false
+      });
+
+    case cartActions.UPDATE_QUANTITY_IN_CART_LOGGED_OUT_REQUEST:
+      return Object.assign({}, state, {
+        updateQuantityLoggedOutStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.UPDATE_QUANTITY_IN_CART_LOGGED_OUT_SUCCESS:
+      return Object.assign({}, state, {
+        updateQuantityLoggedOutStatus: action.status,
+        updateQuantityLoggedOutDetails: action.updateQuantityDetails,
+        loading: false
+      });
+
+    case cartActions.UPDATE_QUANTITY_IN_CART_LOGGED_OUT_FAILURE:
+      return Object.assign({}, state, {
+        updateQuantityLoggedOutStatus: action.status,
+        updateQuantityLoggedOutError: action.error,
         loading: false
       });
 

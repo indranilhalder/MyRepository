@@ -5,7 +5,12 @@ import {
   getEmiBankDetails,
   getNetBankDetails,
   getCartDetails,
-  checkPinCodeServiceAvailability
+  checkPinCodeServiceAvailability,
+  addProductToWishList,
+  removeItemFromCartLoggedIn,
+  removeItemFromCartLoggedOut,
+  updateQuantityInCartLoggedIn,
+  updateQuantityInCartLoggedOut
 } from "../actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
@@ -21,8 +26,8 @@ const mapDispatchToProps = dispatch => {
     getEmiBankDetails: cartDetails => {
       dispatch(getEmiBankDetails(cartDetails));
     },
-    getCartDetails: (cartId, userId, accessToken) => {
-      dispatch(getCartDetails(cartId, userId, accessToken));
+    getCartDetails: (cartId, userId, accessToken, pinCode) => {
+      dispatch(getCartDetails(cartId, userId, accessToken, pinCode));
     },
     showCouponModal: data => {
       dispatch(showModal(PRODUCT_COUPONS, data));
@@ -32,6 +37,21 @@ const mapDispatchToProps = dispatch => {
     },
     getCoupons: () => {
       dispatch(getCoupons());
+    },
+    addProductToWishList: productDetails => {
+      dispatch(addProductToWishList(productDetails));
+    },
+    removeItemFromCartLoggedIn: (cartListItemPosition, pinCode) => {
+      dispatch(removeItemFromCartLoggedIn(cartListItemPosition, pinCode));
+    },
+    removeItemFromCartLoggedOut: (cartListItemPosition, pinCode) => {
+      dispatch(removeItemFromCartLoggedOut(cartListItemPosition, pinCode));
+    },
+    updateQuantityInCartLoggedIn: (selectedItem, quantity, pinCode) => {
+      dispatch(updateQuantityInCartLoggedIn(selectedItem, quantity, pinCode));
+    },
+    updateQuantityInCartLoggedOut: (selectedItem, quantity, pinCode) => {
+      dispatch(updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode));
     }
   };
 };

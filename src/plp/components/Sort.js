@@ -2,7 +2,6 @@ import React from "react";
 import SortTab from "./SortTab.js";
 import PropTypes from "prop-types";
 import styles from "./Sort.css";
-import InformationHeader from "../../general/components/InformationHeader";
 import queryString from "query-string";
 import { applySortToUrl } from "./SortUtils.js";
 
@@ -42,7 +41,6 @@ export default class Sort extends React.Component {
     let data = this.props.sortList;
     return (
       <div className={styles.base}>
-        <InformationHeader text="Sort" onClick={this.handleCloseClick} />
         {this.props.sortList &&
           this.props.sortList.length > 0 &&
           data.map((datum, i) => {
