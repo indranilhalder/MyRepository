@@ -34,10 +34,11 @@ th {
 <script type="text/javascript">
 
 	   // Function to add a row in the table
-	   function addRow(filename, size, date) {
+	   function addRow(filename, size, date,code) {
 	     var markup = "<tr>";
-	         markup += "<td class='img-preview' ><img class='imageUpload' src='" + window.location.origin + filename + "'></td>";
-	         markup += "<td class='img-url'><a target='_blank' href='" + window.location.origin + filename + "'>" + window.location.origin + filename + "</a></td>";
+	         markup += "<td class='img-preview' ><img class='imageUpload' src='" +filename + "'></td>";
+	         markup += "<td class='img-url'>" + code + "</td>";
+	         markup += "<td class='img-url'><a target='_blank' href='" +filename + "'>" + filename + "</a></td>";
 	         markup += "<td>" + (size/1000).toFixed(2) + "kB </td>";
 	         markup += "<td>" + date + "</td>";
 	         markup += "</tr>";
@@ -76,10 +77,10 @@ function loadImageAjaxCall() {
 				$("#image_preview").empty();
 				$('#downloadBtn').removeClass('hidden');
 				console.log(response);
-				$("#uploaded-files").html("<tr><th>Image Preview</th> <th>URL</th><th>Size</th><th> Time </th></tr>");
+				$("#uploaded-files").html("<tr><th>Image Preview</th><th>Image Name</th><th>URL</th><th>Size</th><th> Time </th></tr>");
 				response.forEach(function(item) {
 					var date = getDateTime(new Date());
-					addRow(item.imageUrl, item.size,date);
+					addRow(item.imageUrl, item.size,date,item.imageName);
 				})
 			},
 			error : function(resp) {
@@ -118,6 +119,7 @@ function preview_image()
  <table style="width:100%" id="uploaded-files">
    <tr>
      <th>Image Preview</th>
+     <th>Image Name</th>
      <th>URL</th>
      <th>Size</th>
      <th> Time </th>
