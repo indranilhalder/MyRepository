@@ -1906,7 +1906,7 @@ public class SearchSuggestUtilityMethods
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
 		List<FacetValueDataWsDTO> facetValueWsDTOList = null;
-		final boolean prioritySort = configurationService.getConfiguration().getBoolean("search.facet.sort");
+		final boolean prioritySort = configurationService.getConfiguration().getBoolean("search.facet.sort", true);
 
 		if (CollectionUtils.isNotEmpty(searchPageData.getFacets()))
 		{
@@ -2104,7 +2104,7 @@ public class SearchSuggestUtilityMethods
 	{
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
-		final boolean prioritySort = configurationService.getConfiguration().getBoolean("search.facet.sort");
+		final boolean prioritySort = configurationService.getConfiguration().getBoolean("search.facet.sort", true);
 		if (null != searchPageData.getResults())
 		{
 

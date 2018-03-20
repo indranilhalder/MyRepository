@@ -2026,6 +2026,7 @@ public class ProductsController extends BaseController
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("SEARCH PRODUCT ERROR ::" + e.getMessage());
 			if (null != e.getErrorMessage())
 			{
 				productSearchPage.setError(e.getErrorMessage());
@@ -2039,6 +2040,7 @@ public class ProductsController extends BaseController
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
+			LOG.error("SEARCH PRODUCT ERROR ::" + e.getMessage());
 			if (null != e.getErrorMessage())
 			{
 				productSearchPage.setError(e.getErrorMessage());
@@ -2051,6 +2053,7 @@ public class ProductsController extends BaseController
 		}
 		catch (final Exception e)
 		{
+			LOG.error("SEARCH PRODUCT ERROR ::" + e.getMessage());
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 			productSearchPage.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
 			productSearchPage.setErrorCode(MarketplacecommerceservicesConstants.E0000);
