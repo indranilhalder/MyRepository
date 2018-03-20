@@ -86,7 +86,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.cache.strategy.MplApiCachingStrategy;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
@@ -256,8 +255,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	private DefaultCategoryService categoryService;
 
-	@Resource(name = "defaultApiCachingStrategy")
-	MplApiCachingStrategy mplApiCachingStrategy;
+	//	@Resource(name = "defaultApiCachingStrategy")
+	//	MplApiCachingStrategy mplApiCachingStrategy;
 
 	//check if memcache enabled is true in properties
 	private String isCacheEnabled;
@@ -419,7 +418,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -2192,12 +2191,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 * 
+	 *
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 * 
-	 * 
+	 *
+	 *
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
@@ -3259,7 +3258,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getEgvProduct()
 	 */
 	@Override
@@ -3608,7 +3607,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetails(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3668,17 +3667,17 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					if (Boolean.parseBoolean(getIsCacheEnabled()))
 					{
-						details = mplApiCachingStrategy.get(productCode);
-
-						if (null != details)
-						{
-							productDetailMobileNew = details;
-						}
-						else
-						{
-							details = getCachedAttributes(productData, productModel, baseUrl);
-							productDetailMobileNew = details;
-						}
+						//						details = mplApiCachingStrategy.get(productCode);
+						//
+						//						if (null != details)
+						//						{
+						//							productDetailMobileNew = details;
+						//						}
+						//						else
+						//						{
+						//							details = getCachedAttributes(productData, productModel, baseUrl);
+						//							productDetailMobileNew = details;
+						//						}
 					}
 					else
 					{
@@ -4869,7 +4868,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 			if (Boolean.parseBoolean(getIsCacheEnabled()))
 			{
-				mplApiCachingStrategy.put(productData.getCode(), productDetailMobileNew);
+				//mplApiCachingStrategy.put(productData.getCode(), productDetailMobileNew);
 			}
 		}
 		catch (final UnknownIdentifierException e)
