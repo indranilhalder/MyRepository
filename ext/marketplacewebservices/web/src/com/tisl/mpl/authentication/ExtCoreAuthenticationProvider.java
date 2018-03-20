@@ -223,14 +223,14 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			{
 				custModel = extUserService.getUserForUid(StringUtils.lowerCase(authentication.getName()));
 			}
-
-			boolean userRegisteredBySocialMedia = false;
-			if (null != custModel.getCustomerRegisteredBySocialMedia())
-			{
-				userRegisteredBySocialMedia = custModel.getCustomerRegisteredBySocialMedia().booleanValue();
-			}
+			//below lines have been commented out for New UI/UX || NEWUIUX-313
+			//boolean userRegisteredBySocialMedia = false;
+			//if (null != custModel.getCustomerRegisteredBySocialMedia())
+			//{
+			//	userRegisteredBySocialMedia = custModel.getCustomerRegisteredBySocialMedia().booleanValue();
+			//}
 			boolean isSocial = false;
-			if (isSocialMedia || userRegisteredBySocialMedia)
+			if (isSocialMedia)
 			{
 				isSocial = true;
 			}
