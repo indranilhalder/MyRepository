@@ -7,8 +7,11 @@ import {
   otpVerification,
   forgotPassword,
   signUpUser,
-  forgotPasswordOtpVerification
+  forgotPasswordOtpVerification,
+  loginUser,
+  loginUserRequest
 } from "../../auth/actions/user.actions";
+import { SUCCESS } from "../../lib/constants";
 
 import {
   applyBankOffer,
@@ -38,16 +41,33 @@ const mapDispatchToProps = dispatch => {
     hideModal: () => {
       dispatch(modalActions.hideModal());
     },
-    otpVerification: (otpDetails, userDetails) => {
-      dispatch(otpVerification(otpDetails, userDetails)).then(() => {
-        dispatch(getCartId()).then(cartVal => {
-          if (cartVal) {
-            dispatch(mergeCartId(cartVal.guid));
+    otpVerification: async (otpDetails, userDetails) => {
+      const otpResponse = await dispatch(
+        otpVerification(otpDetails, userDetails)
+      );
+      console.log("OTP RESPONSE");
+      console.log(otpResponse);
+      if (otpResponse.status === SUCCESS) {
+        const loginUserResponse = await dispatch(loginUser(userDetails));
+        console.log("LOGIN USER RESPONSE");
+        console.log(loginUserResponse);
+        if (loginUserResponse.status === SUCCESS) {
+          const cartVal = await dispatch(getCartId());
+          console.log("CART VAL");
+          console.log(cartVal);
+          if (
+            cartVal.status === SUCCESS &&
+            cartVal.cartDetails.guid &&
+            cartVal.cartDetails.code
+          ) {
+            // This is the anonymous case
+            // And I have an existing cart that needs to be merged.
+            dispatch(mergeCartId(cartVal.cartDetails.guid));
           } else {
             dispatch(generateCartIdForLoggedInUser());
           }
-        });
-      });
+        }
+      }
     },
     resetPassword: userDetails => {
       dispatch(resetPassword(userDetails));

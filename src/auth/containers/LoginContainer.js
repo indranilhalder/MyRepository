@@ -2,7 +2,8 @@ import { connect } from "react-redux";
 import {
   loginUser,
   customerAccessToken,
-  refreshToken
+  refreshToken,
+  loginUserRequest
 } from "../actions/user.actions";
 import {
   mergeCartId,
@@ -13,6 +14,7 @@ import { withRouter } from "react-router-dom";
 import { showModal, RESTORE_PASSWORD } from "../../general/modal.actions.js";
 import { homeFeed } from "../../home/actions/home.actions";
 import Login from "../components/Login.js";
+import { SUCCESS } from "../../lib/constants";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -23,18 +25,24 @@ const mapDispatchToProps = dispatch => {
       dispatch(homeFeed());
     },
     onSubmit: async userDetails => {
-      await dispatch(customerAccessToken(userDetails));
-      await dispatch(loginUser(userDetails));
-      // TODO change
-      const cartVal = await dispatch(getCartId());
-      if (cartVal.guid && cartVal.code) {
-        // This is the anonymous case
-        // And I have an existing cart that needs to be merged.
-        dispatch(mergeCartId(cartVal.guid));
-      } else {
-        dispatch(generateCartIdForLoggedInUser());
+      const userDetailsResponse = await dispatch(
+        customerAccessToken(userDetails)
+      );
+      if (userDetailsResponse.status === SUCCESS) {
+        const loginUserResponse = await dispatch(loginUser(userDetails));
+        if (loginUserResponse.status === SUCCESS) {
+          const cartVal = await dispatch(getCartId());
+          if (
+            cartVal.status === SUCCESS &&
+            cartVal.cartDetails.guid &&
+            cartVal.cartDetails.code
+          ) {
+            dispatch(mergeCartId(cartVal.cartDetails.guid));
+          } else {
+            dispatch(generateCartIdForLoggedInUser());
+          }
+        }
       }
-
       // dispatch(customerAccessToken(userDetails)).then(() => {
       //   dispatch(loginUser(userDetails)).then(val => {
       //     dispatch(getCartId()).then(cartVal => {

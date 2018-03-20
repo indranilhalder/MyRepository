@@ -143,10 +143,9 @@ export function loginUser(userLoginDetails) {
         throw new Error(`${resultJson.message}`);
       }
 
-      dispatch(loginUserSuccess(resultJson));
-      return resultJson;
+      return dispatch(loginUserSuccess(resultJson));
     } catch (e) {
-      dispatch(loginUserFailure(e.message));
+      return dispatch(loginUserFailure(e.message));
     }
   };
 }
@@ -238,10 +237,9 @@ export function otpVerification(otpDetails, userDetails) {
         throw new Error(`${resultJson.message}`);
       }
       dispatch(hideModal());
-      dispatch(otpVerificationSuccess(resultJson));
-      dispatch(customerAccessToken(userDetails));
+      return dispatch(otpVerificationSuccess(resultJson));
     } catch (e) {
-      dispatch(otpVerificationFailure(e.message));
+      return dispatch(otpVerificationFailure(e.message));
     }
   };
 }
