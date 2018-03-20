@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 export default class Banner extends React.Component {
   onClick = () => {
-    const urlSuffix = this.props.url.replace(TATA_CLIQ_ROOT, "");
+    const urlSuffix = this.props.url.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   };
   render() {

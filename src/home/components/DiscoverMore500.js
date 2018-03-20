@@ -8,7 +8,7 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import styles from "./DiscoverMore500.css";
 class DiscoverMore500 extends React.Component {
   handleClick = webUrl => {
-    const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "");
+    const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   };
 
