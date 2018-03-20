@@ -2756,6 +2756,8 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
+
+      console.log("UPDATE");
       dispatch(
         getCartDetails(
           ANONYMOUS_USER,

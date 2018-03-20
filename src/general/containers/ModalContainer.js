@@ -9,7 +9,8 @@ import {
   signUpUser,
   forgotPasswordOtpVerification,
   loginUser,
-  loginUserRequest
+  loginUserRequest,
+  customerAccessToken
 } from "../../auth/actions/user.actions";
 import { SUCCESS } from "../../lib/constants";
 
@@ -45,7 +46,9 @@ const mapDispatchToProps = dispatch => {
       const otpResponse = await dispatch(
         otpVerification(otpDetails, userDetails)
       );
-      const customerAccessResponse = await dispatch(userDetails);
+      const customerAccessResponse = await dispatch(
+        customerAccessToken(userDetails)
+      );
       if (customerAccessResponse.status === SUCCESS) {
         console.log("OTP RESPONSE");
         console.log(otpResponse);
