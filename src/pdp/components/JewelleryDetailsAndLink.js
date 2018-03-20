@@ -53,10 +53,7 @@ export default class JewelleryDetailsAndLink extends React.Component {
                 </div>
               )}
             <div className={styles.button} onClick={() => this.handleClick()}>
-              <UnderLinedButton
-                label={this.props.label}
-                color={this.props.buttonColour}
-              />
+              <UnderLinedButton label={this.props.label} color="#ff1744" />
             </div>
           </div>
         </div>

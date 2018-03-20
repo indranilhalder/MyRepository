@@ -1,6 +1,7 @@
 import React from "react";
 import PdpElectronics from "./PdpElectronics";
 import PdpApparel from "./PdpApparel";
+import PdpJewellery from "./PdpJewellery";
 import styles from "./ProductDescriptionPageWrapper.css";
 import ProductDescriptionPage from "./ProductDescriptionPage";
 import MDSpinner from "react-md-spinner";
@@ -13,7 +14,7 @@ import {
 // prettier-ignore
 const typeComponentMapping = {
   "Electronics": props => <PdpElectronics {...props} />,
-  "FashionJewellery":props => <ProductDescriptionPage {...props} />,
+  "FashionJewellery":props => <PdpJewellery {...props} />,
   "Clothing":props => <PdpApparel {...props} />
 };
 
