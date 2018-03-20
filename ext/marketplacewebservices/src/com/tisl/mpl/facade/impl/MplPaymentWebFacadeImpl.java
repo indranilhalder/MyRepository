@@ -868,7 +868,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 				cartDetailsData.setCartGuid(cartModel.getGuid());
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel, cartDetailsData);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel);
 					cartDetailsData.setCartAmount(pricePwa);
 
 					//					final Double mrp = mplCartWebService.calculateCartTotalMrp(cartModel);
@@ -900,7 +900,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			cartDetailsData.setCartGuid(cartGuId);
 			if (isPwa)
 			{
-				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel, cartDetailsData);
+				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel);
 				cartDetailsData.setCartAmount(pricePwa);
 
 				//				final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
