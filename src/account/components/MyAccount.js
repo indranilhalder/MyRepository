@@ -43,6 +43,7 @@ export default class MyAccount extends React.Component {
             onClick={() => this.renderToAccountSetting()}
             heading={
               this.props.userDetails &&
+              this.props.userDetails.firstName &&
               `${this.props.userDetails.firstName} ${
                 this.props.userDetails.lastName
               }`
