@@ -7,6 +7,7 @@ import {
   MY_ACCOUNT_ORDERS_PAGE,
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_SAVED_CARDS_PAGE,
+  ACCOUNT_SAVED_CARD_ROUTER,
   MY_ACCOUNT_ADDRESS_PAGE,
   MY_ACCOUNT_BRANDS_PAGE,
   MY_ACCOUNT_UPDATE_PROFILE_PAGE,
@@ -34,7 +35,7 @@ export default class ProfileMenuGrid extends React.Component {
       {
         image: savedList,
         text: "Saved List",
-        url: MY_ACCOUNT_SAVED_CARDS_PAGE
+        url: ACCOUNT_SAVED_CARD_ROUTER
       },
       {
         image: addressBook,
@@ -50,7 +51,7 @@ export default class ProfileMenuGrid extends React.Component {
       {
         image: savedPayments,
         text: "Saved Payments",
-        url: MY_ACCOUNT_SAVED_CARDS_PAGE
+        url: ACCOUNT_SAVED_CARD_ROUTER
       },
       {
         image: alertsCoupons,
