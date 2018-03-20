@@ -18,6 +18,11 @@ export default class JewelleryDetailsAndLink extends React.Component {
       this.props.viewPlans();
     }
   }
+  handlePriceBreakup() {
+    if (this.props.showPriceBreakUp) {
+      this.props.showPriceBreakUp();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -52,9 +57,17 @@ export default class JewelleryDetailsAndLink extends React.Component {
                   </div>
                 </div>
               )}
-            <div className={styles.button} onClick={() => this.handleClick()}>
-              <UnderLinedButton label={this.props.label} color="#ff1744" />
-            </div>
+            {this.props.showPriceBreakUp && (
+              <div className={styles.button} onClick={() => this.handleClick()}>
+                <UnderLinedButton
+                  label={this.props.label}
+                  color="#ff1744"
+                  onClick={() => {
+                    this.handlePriceBreakup();
+                  }}
+                />
+              </div>
+            )}
           </div>
         </div>
         <div className={styles.textHolder}>
