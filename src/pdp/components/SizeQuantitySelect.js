@@ -7,6 +7,11 @@ export default class SizeQuantitySelect extends React.Component {
   updateSize(productUrl) {
     this.props.history.push(productUrl);
   }
+  handleShowSize() {
+    if (this.props.showSizeGuide) {
+      this.props.showSizeGuide();
+    }
+  }
   render() {
     let fetchedQuantityList = [];
     if (this.props.maxQuantity) {
@@ -20,14 +25,16 @@ export default class SizeQuantitySelect extends React.Component {
       <div className={styles.base}>
         <div className={styles.header}>
           Select a size
-          <div className={styles.button}>
-            <UnderLinedButton
-              label="Size Guide"
-              onClick={() => {
-                this.handleShowSize();
-              }}
-            />
-          </div>
+          {this.props.showSizeGuide && (
+            <div className={styles.button}>
+              <UnderLinedButton
+                label="Size Guide"
+                onClick={() => {
+                  this.handleShowSize();
+                }}
+              />
+            </div>
+          )}
         </div>
         <div className={styles.selectHolder}>
           <div className={styles.sizeSelect}>

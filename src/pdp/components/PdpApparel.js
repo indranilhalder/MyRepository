@@ -137,6 +137,11 @@ export default class PdpApparel extends React.Component {
       this.props.showPincodeModal(this.props.match.params[2]);
     }
   }
+  handleShowSizeguide() {
+    if (this.props.getProductSizeGuide) {
+      this.props.getProductSizeGuide();
+    }
+  }
   renderDeliveryOptions(productData) {
     return (
       productData.eligibleDeliveryModes &&
