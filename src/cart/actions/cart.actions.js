@@ -2749,10 +2749,12 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
           JSON.parse(globalCookie).access_token
         }&isPwa=true&platformNumber=2&quantity=${quantity}`
       );
+
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
+
       dispatch(
         getCartDetails(
           ANONYMOUS_USER,
