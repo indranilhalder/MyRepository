@@ -64,9 +64,6 @@ export default class SaveListDetails extends React.Component {
     const wishList = this.props.profile.wishlist;
     return (
       <div className={styles.base}>
-        <div className={styles.headerHolder}>
-          <SearchHeader text={this.props.text} />
-        </div>
         {wishList &&
           wishList.products.map((val, i) => {
             return (
