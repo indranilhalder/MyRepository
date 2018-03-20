@@ -310,6 +310,9 @@ const cart = (
         CART_DETAILS_FOR_LOGGED_IN_USER,
         JSON.stringify(action.cartDetails)
       );
+
+      Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+
       return Object.assign({}, state, {
         status: action.status
       });
@@ -369,12 +372,10 @@ const cart = (
       });
 
     case cartActions.MERGE_CART_ID_SUCCESS:
-      console.log("MERGE CART SUCCESS");
       Cookies.createCookie(
         CART_DETAILS_FOR_LOGGED_IN_USER,
         JSON.stringify(action.cartDetails)
       );
-      console.log(CART_DETAILS_FOR_ANONYMOUS);
       Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
       return Object.assign({}, state, {
         status: action.status,
