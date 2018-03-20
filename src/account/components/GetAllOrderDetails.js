@@ -8,6 +8,7 @@ import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
 import Button from "../../general/components/Button";
 import moment from "moment";
+import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 export default class GetAllOrderDetails extends React.Component {
   onViewDetails() {
@@ -28,6 +29,9 @@ export default class GetAllOrderDetails extends React.Component {
   componentDidMount() {
     this.props.getAllOrdersDetails();
   }
+  renderToContinueShopping() {
+    this.props.history.push(HOME_ROUTER);
+  }
   renderNoOrder() {
     return (
       <div className={styles.noOrder}>
@@ -40,6 +44,7 @@ export default class GetAllOrderDetails extends React.Component {
             type="primary"
             width={170}
             height={40}
+            onClick={() => this.renderToContinueShopping()}
           />
         </div>
       </div>
