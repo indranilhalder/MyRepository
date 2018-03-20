@@ -14,13 +14,8 @@ export default class GetAllOrderDetails extends React.Component {
     super(props);
     this.state = {
       viewDetails: false,
-      viewData: false,
-      visible: false
+      onClickViewDetails: false
     };
-  }
-  onViewDetails(viewDetails) {
-    this.setState({ viewDetails: true });
-    this.setState({ viewData: viewDetails });
   }
   requestInvioice() {
     if (this.props.requestInvioice) {
@@ -34,7 +29,7 @@ export default class GetAllOrderDetails extends React.Component {
     let orderDetails = this.props.profile.orderDetails;
     return (
       <div className={styles.base}>
-        {!this.state.viewDetails &&
+        {!this.state.onClickViewDetails &&
           orderDetails &&
           orderDetails.orderData.map((orderDetails, i) => {
             return (
@@ -60,7 +55,12 @@ export default class GetAllOrderDetails extends React.Component {
                     );
                   })}
                 <PriceAndLink
-                  onViewDetails={() => this.onViewDetails(orderDetails)}
+                  onViewDetails={() =>
+                    this.setState({
+                      onClickViewDetails: true,
+                      viewDetails: orderDetails
+                    })
+                  }
                   price={orderDetails.totalOrderAmount}
                 />
                 <OrderDelivered
@@ -75,7 +75,7 @@ export default class GetAllOrderDetails extends React.Component {
           })}
         {this.state.viewDetails && (
           <ViewDetail
-            data={this.state.viewData}
+            data={this.state.viewDetails}
             requestInvioice={() => this.requestInvioice()}
           />
         )}
