@@ -16,6 +16,7 @@ import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
 import { PRODUCT_COUPONS, showModal } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
+  console.log("MAP DISPATCH TO PROPS");
   return {
     getUserAddress: () => {
       dispatch(getUserAddress());

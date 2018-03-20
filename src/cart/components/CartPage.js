@@ -42,6 +42,11 @@ class CartPage extends React.Component {
   }
 
   componentDidMount() {
+    // console.log("CART PAGE");
+    // console.log("USER DETAILS");
+    // console.log(userDetails);
+    // console.log("CUSTOMER COOKIE");
+    // console.log(customerCookie);
     if (
       userDetails !== undefined &&
       customerCookie !== undefined &&
@@ -186,6 +191,7 @@ class CartPage extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    console.log("CHECK PINCODE AVAILABILITY");
     if (userDetails) {
       this.props.getCartDetails(
         JSON.parse(userDetails).userName,
@@ -204,6 +210,7 @@ class CartPage extends React.Component {
   };
 
   render() {
+    // console.log("IS RENDER IN CART PAGE CALLED");
     if (this.props.cart.cartDetailsStatus === SUCCESS) {
       const cartDetails = this.props.cart.cartDetails;
       return (

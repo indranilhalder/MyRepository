@@ -1013,6 +1013,8 @@ export function mergeCartId(cartGuId) {
         }&toMergeCartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
+      console.log("MERGE CART ID");
+      console.log(resultJson);
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
@@ -2754,7 +2756,6 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-
       dispatch(
         getCartDetails(
           ANONYMOUS_USER,

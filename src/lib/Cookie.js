@@ -1,3 +1,5 @@
+//TODO why are some cookies session and why are some timestamped?
+// What is the difference?
 export function createCookie(name, value, days) {
   let expires;
   if (days) {

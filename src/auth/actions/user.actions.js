@@ -131,6 +131,8 @@ export function loginUser(userLoginDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(loginUserRequest());
     try {
+      console.log("CUSTOMER COOKIE");
+      console.log(customerCookie);
       const result = await api.post(
         `${LOGIN_PATH}/${
           userLoginDetails.username
@@ -138,7 +140,11 @@ export function loginUser(userLoginDetails) {
           JSON.parse(customerCookie).access_token
         }&password=${userLoginDetails.password}&isPwa=true`
       );
+      console.log("RSULT");
+      console.log(result);
       const resultJson = await result.json();
+      console.log("LOGIN USER");
+      console.log(resultJson);
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }

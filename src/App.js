@@ -77,6 +77,8 @@ class App extends Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
 
+    console.log("WHAT IS GOING ON");
+
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
     // Case 1. THe user is not logged in.
@@ -100,9 +102,9 @@ class App extends Component {
         this.props.generateCartIdForAnonymous();
       }
     }
-  }
 
-  getAccessToken = async () => {};
+    console.log("DOES IT GET TO THE DN");
+  }
 
   renderLoader() {
     return (
