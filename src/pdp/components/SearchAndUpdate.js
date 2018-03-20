@@ -21,6 +21,10 @@ export default class SearchAndUpdate extends React.Component {
       this.props.getLocation();
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ pinCode: nextProps.pinCode });
+  }
   onUpdate() {
     if (this.state.pinCode && this.state.pinCode.match(/^\d{6}$/)) {
       if (this.props.checkPinCodeAvailability) {

@@ -50,16 +50,10 @@ const mapDispatchToProps = dispatch => {
         customerAccessToken(userDetails)
       );
       if (customerAccessResponse.status === SUCCESS) {
-        console.log("OTP RESPONSE");
-        console.log(otpResponse);
         if (otpResponse.status === SUCCESS) {
           const loginUserResponse = await dispatch(loginUser(userDetails));
-          console.log("LOGIN USER RESPONSE");
-          console.log(loginUserResponse);
           if (loginUserResponse.status === SUCCESS) {
             const cartVal = await dispatch(getCartId());
-            console.log("CART VAL");
-            console.log(cartVal);
             if (
               cartVal.status === SUCCESS &&
               cartVal.cartDetails.guid &&
@@ -69,7 +63,10 @@ const mapDispatchToProps = dispatch => {
               // And I have an existing cart that needs to be merged.
               dispatch(mergeCartId(cartVal.cartDetails.guid));
             } else {
-              dispatch(generateCartIdForLoggedInUser());
+              const createdCartVal = await dispatch(
+                generateCartIdForLoggedInUser()
+              );
+              dispatch(mergeCartId(createdCartVal.cartDetails.guid));
             }
           }
         }

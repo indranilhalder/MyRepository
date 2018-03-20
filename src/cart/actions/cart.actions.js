@@ -861,8 +861,6 @@ export function generateCartIdForAnonymous() {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      console.log("ANONYMOUS");
-      console.log(resultJson);
       return dispatch(generateCartIdAnonymousSuccess(resultJson));
     } catch (e) {
       return dispatch(generateCartIdFailure(e.message));
@@ -932,8 +930,6 @@ export function getOrderSummary(pincode) {
         }&pincode=${pincode}&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
-      console.log("RESULT JSON");
-      console.log(resultJson);
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
@@ -959,8 +955,6 @@ export function getCartId() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      console.log("GET CART ID");
-      console.log(resultJson);
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
@@ -1013,8 +1007,6 @@ export function mergeCartId(cartGuId) {
         }&toMergeCartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-      console.log("MERGE CART ID");
-      console.log(resultJson);
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
@@ -2757,7 +2749,6 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
         throw new Error(resultJson.error);
       }
 
-      console.log("UPDATE");
       dispatch(
         getCartDetails(
           ANONYMOUS_USER,

@@ -311,8 +311,6 @@ const cart = (
         JSON.stringify(action.cartDetails)
       );
 
-      Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
-
       return Object.assign({}, state, {
         status: action.status
       });
