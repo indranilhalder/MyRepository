@@ -4,25 +4,47 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS
 } from "../../lib/constants";
+import styles from "./UserSavedCard.css";
+import Button from "../../general/components/Button.js";
 import SavedPaymentCard from "./SavedPaymentCard.js";
+import PropTypes from "prop-types";
 const CARD_FORMAT = /\B(?=(\d{4})+(?!\d))/g;
 export default class UserSavedCard extends React.Component {
   componentDidMount() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     if (customerCookie && userDetails) {
-      if (this.props.getSavedCartDetails) {
-        this.props.getSavedCartDetails(
+      if (this.props.getSavedCardDetails) {
+        this.props.getSavedCardDetails(
           JSON.parse(userDetails).userName,
           JSON.parse(customerCookie).access_token
         );
       }
     }
   }
+
+  removeSavedCardDetails = () => {
+    if (this.props.removeSavedCardDetails) {
+      this.props.removeSavedCardDetails();
+    }
+  };
+
+  addCardDetails = () => {
+    if (this.props.addCardDetails) {
+      this.props.addCardDetails();
+    }
+  };
+
+  editSavedCardDetails = () => {
+    if (this.props.editSavedCardDetails) {
+      this.props.editSavedCardDetails();
+    }
+  };
+
   render() {
     if (this.props.account.savedCards) {
       return (
-        <div>
+        <div className={styles.base}>
           {this.props.account.savedCards.savedCardDetailsMap.map((data, i) => {
             let cardNumber = `${data.value.cardISIN}xx xxxx ${
               data.value.cardEndingDigits
@@ -44,9 +66,22 @@ export default class UserSavedCard extends React.Component {
                 cardNumber={cardNumber}
                 cardImage={data.cardImage}
                 onChangeCvv={(cvv, cardNo) => this.onChangeCvv(cvv, cardNo)}
+                removeSavedCardDetails={() => this.removeSavedCardDetails()}
+                editSavedCardDetails={() => this.editSavedCardDetails()}
               />
             );
           })}
+
+          <div className={styles.buttonHolder}>
+            <Button
+              type="hollow"
+              height={40}
+              label={this.props.buttonText}
+              width={200}
+              textStyle={{ color: "#212121", fontSize: 14 }}
+              onClick={() => this.addCardDetails()}
+            />
+          </div>
         </div>
       );
     } else {
@@ -54,3 +89,10 @@ export default class UserSavedCard extends React.Component {
     }
   }
 }
+UserSavedCard.propTypes = {
+  buttonText: PropTypes.string
+};
+
+UserSavedCard.defaultProps = {
+  buttonText: "Add a new card"
+};

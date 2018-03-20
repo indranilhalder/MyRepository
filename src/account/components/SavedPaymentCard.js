@@ -10,6 +10,19 @@ export default class SavedPaymentCard extends React.Component {
       this.props.replaceItem();
     }
   }
+
+  removeSavedCardDetails = () => {
+    if (this.props.removeSavedCardDetails) {
+      this.props.removeSavedCardDetails();
+    }
+  };
+
+  editSavedCardDetails = () => {
+    if (this.props.editSavedCardDetails) {
+      this.props.editSavedCardDetails();
+    }
+  };
+
   render() {
     return (
       <div className={styles.base}>
@@ -57,10 +70,11 @@ export default class SavedPaymentCard extends React.Component {
         </div>
         <div className={styles.actionHolder}>
           <OrderReturn
-            replaceItem={() => this.replaceItem()}
             buttonLabel="Remove"
             underlineButtonLabel="Edit"
             isEditable={true}
+            replaceItem={() => this.removeSavedCardDetails()}
+            writeReview={() => this.editSavedCardDetails()}
           />
         </div>
       </div>

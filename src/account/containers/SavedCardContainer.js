@@ -1,12 +1,26 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import UserSavedCard from "../components/UserSavedCard.js";
-import { getSavedCartDetails } from "../actions/account.actions";
+import {
+  getSavedCardDetails,
+  editSavedCardDetails,
+  removeSavedCardDetails,
+  addCardDetails
+} from "../actions/account.actions";
 
 const mapDispatchToProps = dispatch => {
   return {
-    getSavedCartDetails: (userId, customerAccessToken) => {
-      dispatch(getSavedCartDetails(userId, customerAccessToken));
+    getSavedCardDetails: (userId, customerAccessToken) => {
+      dispatch(getSavedCardDetails(userId, customerAccessToken));
+    },
+    editSavedCardDetails: () => {
+      dispatch(editSavedCardDetails());
+    },
+    addCardDetails: () => {
+      dispatch(addCardDetails());
+    },
+    removeSavedCardDetails: () => {
+      dispatch(removeSavedCardDetails());
     }
   };
 };

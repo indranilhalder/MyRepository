@@ -30,6 +30,65 @@ const account = (
         loading: false
       });
 
+    case accountActions.EDIT_SAVED_CARD_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case accountActions.EDIT_SAVED_CARD_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        savedCards: action.savedCards,
+        loading: false
+      });
+
+    case accountActions.EDIT_SAVED_CARD_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
+    case accountActions.ADD_SAVED_CARD_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case accountActions.ADD_SAVED_CARD_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        savedCards: action.savedCards,
+        loading: false
+      });
+
+    case accountActions.ADD_SAVED_CARD_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
+    case accountActions.REMOVE_SAVED_CARD_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case accountActions.REMOVE_SAVED_CARD_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        savedCards: action.savedCards,
+        loading: false
+      });
+
+    case accountActions.REMOVE_SAVED_CARD_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
     default:
       return state;
   }
