@@ -11,11 +11,11 @@ if (
 ) {
   API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "tmpprod") {
-  API_URL_ROOT = "https://tmppprd.tataunistore.com";
+  API_URL_ROOT = "https://tmppprd.tataunistore.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "production") {
-  API_URL_ROOT = "https://www.tatacliq.com";
+  API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE == "p2") {
-  API_URL_ROOT = "https://p2.tatacliq.com";
+  API_URL_ROOT = "https://p2.tatacliq.com/marketplacewebservices";
 }
 
 export const API_URL_ROOT_DUMMY =
