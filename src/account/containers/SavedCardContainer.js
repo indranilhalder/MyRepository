@@ -3,9 +3,7 @@ import { withRouter } from "react-router-dom";
 import UserSavedCard from "../components/UserSavedCard.js";
 import {
   getSavedCardDetails,
-  editSavedCardDetails,
-  removeSavedCardDetails,
-  addCardDetails
+  removeSavedCardDetails
 } from "../actions/account.actions";
 
 const mapDispatchToProps = dispatch => {
@@ -13,12 +11,7 @@ const mapDispatchToProps = dispatch => {
     getSavedCardDetails: (userId, customerAccessToken) => {
       dispatch(getSavedCardDetails(userId, customerAccessToken));
     },
-    editSavedCardDetails: () => {
-      dispatch(editSavedCardDetails());
-    },
-    addCardDetails: () => {
-      dispatch(addCardDetails());
-    },
+
     removeSavedCardDetails: () => {
       dispatch(removeSavedCardDetails());
     }

@@ -5,7 +5,6 @@ import {
   LOGGED_IN_USER_DETAILS
 } from "../../lib/constants";
 import styles from "./UserSavedCard.css";
-import Button from "../../general/components/Button.js";
 import SavedPaymentCard from "./SavedPaymentCard.js";
 import PropTypes from "prop-types";
 const CARD_FORMAT = /\B(?=(\d{4})+(?!\d))/g;
@@ -71,17 +70,6 @@ export default class UserSavedCard extends React.Component {
               />
             );
           })}
-
-          <div className={styles.buttonHolder}>
-            <Button
-              type="hollow"
-              height={40}
-              label={this.props.buttonText}
-              width={200}
-              textStyle={{ color: "#212121", fontSize: 14 }}
-              onClick={() => this.addCardDetails()}
-            />
-          </div>
         </div>
       );
     } else {

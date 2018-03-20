@@ -3,7 +3,7 @@ import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import Logo from "../../general/components/Logo";
 import styles from "./SavedPaymentCard.css";
-import OrderReturn from "./OrderReturn.js";
+import SavedCardItemFooter from "./SavedCardItemFooter.js";
 export default class SavedPaymentCard extends React.Component {
   replaceItem() {
     if (this.props.replaceItem) {
@@ -69,12 +69,10 @@ export default class SavedPaymentCard extends React.Component {
           </div>
         </div>
         <div className={styles.actionHolder}>
-          <OrderReturn
+          <SavedCardItemFooter
             buttonLabel="Remove"
             underlineButtonLabel="Edit"
-            isEditable={true}
-            replaceItem={() => this.removeSavedCardDetails()}
-            writeReview={() => this.editSavedCardDetails()}
+            removeSavedCardDetails={() => this.removeSavedCardDetails()}
           />
         </div>
       </div>
