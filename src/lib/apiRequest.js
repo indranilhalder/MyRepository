@@ -4,19 +4,18 @@ import { LOGGED_IN_USER_DETAILS } from "./constants.js";
 let API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 export let TATA_CLIQ_ROOT = /https?:[\/]{2}\S*?(\/\S*)/;
 
-if (process.env.REACT_APP_STAGE === "local") {
-  API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
-}
-
 if (
   process.env.REACT_APP_STAGE === "devxelp" ||
-  process.env.REACT_APP_STAGE === "uat2"
+  process.env.REACT_APP_STAGE === "uat2" ||
+  process.env.REACT_APP_STAGE === "local"
 ) {
   API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "tmpprod") {
   API_URL_ROOT = "https://tmppprd.tataunistore.com";
 } else if (process.env.REACT_APP_STAGE === "production") {
   API_URL_ROOT = "https://www.tatacliq.com";
+} else if (process.env.REACT_APP_STAGE == "p2") {
+  API_URL_ROOT = "https://p2.tatacliq.com";
 }
 
 export const API_URL_ROOT_DUMMY =
