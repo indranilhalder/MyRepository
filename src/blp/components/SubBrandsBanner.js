@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 export default class SubBrandsBanner extends React.Component {
   handleClick(webURL) {
-    let urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "");
+    let urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   }
   render() {
