@@ -100,8 +100,6 @@ class App extends Component {
         this.props.generateCartIdForAnonymous();
       }
     }
-
-    console.log("DOES IT GET TO THE DN");
   }
 
   renderLoader() {

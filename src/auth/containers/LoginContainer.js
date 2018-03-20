@@ -43,17 +43,6 @@ const mapDispatchToProps = dispatch => {
           }
         }
       }
-      // dispatch(customerAccessToken(userDetails)).then(() => {
-      //   dispatch(loginUser(userDetails)).then(val => {
-      //     dispatch(getCartId()).then(cartVal => {
-      //       if (cartVal) {
-      //         dispatch(mergeCartId(cartVal.guid));
-      //       } else {
-      //         dispatch(generateCartIdForLoggedInUser());
-      //       }
-      //     });
-      //   });
-      // });
     },
     refreshToken: sessionData => {
       dispatch(refreshToken(sessionData));
