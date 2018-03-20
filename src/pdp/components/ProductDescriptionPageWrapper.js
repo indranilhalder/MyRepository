@@ -1,6 +1,7 @@
 import React from "react";
 import PdpElectronics from "./PdpElectronics";
 import PdpApparel from "./PdpApparel";
+import PdpHome from "./PdpHome";
 import styles from "./ProductDescriptionPageWrapper.css";
 import ProductDescriptionPage from "./ProductDescriptionPage";
 import MDSpinner from "react-md-spinner";
@@ -14,7 +15,8 @@ import {
 const typeComponentMapping = {
   "Electronics": props => <PdpElectronics {...props} />,
   "FashionJewellery":props => <ProductDescriptionPage {...props} />,
-  "Clothing":props => <PdpApparel {...props} />
+  "Clothing":props => <PdpApparel {...props} />,
+  "HomeFurnishing":props => <PdpHome {...props} />
 };
 
 const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
