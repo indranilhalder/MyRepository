@@ -37,4 +37,5 @@
 }
 .continueShoppingButton {
   margin: auto;
+  display: inline-block;
 }
