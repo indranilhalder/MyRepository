@@ -5,10 +5,11 @@ import SearchAndUpdate from "../../pdp/components/SearchAndUpdate";
 import styles from "./CartPage.css";
 import PropTypes from "prop-types";
 import MDSpinner from "react-md-spinner";
-import { SUCCESS } from "../../lib/constants";
+import { SUCCESS, HOME_ROUTER } from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
 import filter from "lodash/filter";
-
+import { Redirect } from "react-router-dom";
+import { MAIN_ROUTER } from "../../lib/constants";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -42,11 +43,11 @@ class CartPage extends React.Component {
   }
 
   componentDidMount() {
-    // console.log("CART PAGE");
-    // console.log("USER DETAILS");
-    // console.log(userDetails);
-    // console.log("CUSTOMER COOKIE");
-    // console.log(customerCookie);
+    console.log("CART PAGE");
+    console.log("USER DETAILS");
+    console.log(userDetails);
+    console.log("CUSTOMER COOKIE");
+    console.log(customerCookie);
     if (
       userDetails !== undefined &&
       customerCookie !== undefined &&
@@ -210,7 +211,13 @@ class CartPage extends React.Component {
   };
 
   render() {
-    // console.log("IS RENDER IN CART PAGE CALLED");
+    const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    const cartDetailsForAnonymous = Cookie.getCookie(
+      CART_DETAILS_FOR_ANONYMOUS
+    );
+    if (!globalAccessToken || !cartDetailsForAnonymous) {
+      return <Redirect exact to={HOME_ROUTER} />;
+    }
     if (this.props.cart.cartDetailsStatus === SUCCESS) {
       const cartDetails = this.props.cart.cartDetails;
       return (
