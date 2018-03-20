@@ -25,8 +25,9 @@ import MobileFooter from "./general/components/MobileFooter.js";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
-import GetAllOrderContainer from "./account/containers/GetAllOrderContainer";
-import SaveListContainer from "./account/containers/SaveListContainer";
+import GetAllOrderContainer from "./account/containers/GetAllOrderContainer
+import SaveListContainer from "./account/containers/SaveListContaine
+import SavedCardContainer from "./account/containers/SavedCardContainer.j
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -62,7 +63,9 @@ import {
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
   ORDER_PAGE,
-  SAVE_LIST_PAGE
+  SAVE_LIST_PAGE,
+  ACCOUNT_SAVED_CARD_ROUTER
+
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -229,6 +232,11 @@ class App extends Component {
               exact
               path={CATEGORIES_LANDING_PAGE}
               component={CategoriesPageContainer}
+            />
+            <Route
+              exact
+              path={ACCOUNT_SAVED_CARD_ROUTER}
+              component={SavedCardContainer}
             />
           </Switch>
           <MobileFooter />

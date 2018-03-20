@@ -1,0 +1,16 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.removeHolder {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  text-align: left;
+}
+.remove {
+  font-size: 14px;
+  display: inline-block;
+  opacity: 0.5;
+}

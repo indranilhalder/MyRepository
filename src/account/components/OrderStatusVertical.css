@@ -1,0 +1,132 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.deliveredStepHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding-left: 20px;
+  position: relative;
+  padding-bottom: 50px;
+  border-left: 2px solid #10e368;
+}
+
+.deliveredStepHolder:last-child {
+  padding-bottom: 0px;
+  border-left: none;
+}
+.processCheckHolder {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: -11px;
+  top: 0;
+  border-radius: 50%;
+  border: 1px solid #eeeeee;
+  z-index: 10;
+  background: #fff;
+}
+.processDone {
+  composes: processCheckHolder;
+  background: url(../../general/components/img/check.svg)no-repeat;
+  background-size: auto 35px;
+  background-position: center;
+  border: none;
+}
+.processFail {
+  composes: processCheckHolder;
+  background: red;
+  background-size: auto 35px;
+  background-position: center;
+  border: none;
+  border-radius: 50%;
+}
+.processFail::before {
+  content: "X";
+  width: 20px;
+  height: 20px;
+  color: #fff;
+  font-size: 13px;
+  font-family: semibold;
+  line-height: 20px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  text-align: center;
+}
+.deliveredProcesesAndTime {
+  width: 100%;
+  height: 20px;
+  display: inline-block;
+  line-height: 20px;
+}
+.processNameHolder {
+  width: 40%;
+  height: auto;
+  display: inline-block;
+  color: #212121;
+  font-size: 14px;
+  vertical-align: top;
+  font-family: regular;
+}
+.dateAndTimeHolder {
+  width: 60%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+  text-align: right;
+}
+.timeHolder {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  padding-left: 10px;
+  color: #212121;
+  font-size: 14px;
+  font-family: regular;
+}
+.dateHolder {
+  composes: timeHolder;
+  padding-left: 0px;
+}
+.dummyHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  min-height: 60px;
+  text-align: right;
+  margin-top: 10px;
+}
+
+.courierInfoHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: right;
+  margin-bottom: 8px;
+}
+.moreInfoQuestionHolder {
+  width: auto;
+  height: 20px;
+  line-height: 20px;
+  color: #212121;
+  font-family: regular;
+  display: inline-block;
+}
+.moreAnswerHolder {
+  composes: moreInfoQuestionHolder;
+  padding-left: 5px;
+  display: inline-block;
+}
+.buttonHolder {
+  composes: courierInfoHolder;
+  margin: 15px 0px 25px 0px;
+}
+.button {
+  width: auto;
+  height: 25px;
+  display: inline-block;
+  vertical-align: middle;
+}
