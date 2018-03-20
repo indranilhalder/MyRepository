@@ -4,9 +4,7 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS
 } from "../../lib/constants";
-import styles from "./UserSavedCard.css";
 import SavedPaymentCard from "./SavedPaymentCard.js";
-import PropTypes from "prop-types";
 const CARD_FORMAT = /\B(?=(\d{4})+(?!\d))/g;
 export default class UserSavedCard extends React.Component {
   componentDidMount() {
@@ -28,12 +26,6 @@ export default class UserSavedCard extends React.Component {
     }
   };
 
-  addCardDetails = () => {
-    if (this.props.addCardDetails) {
-      this.props.addCardDetails();
-    }
-  };
-
   editSavedCardDetails = () => {
     if (this.props.editSavedCardDetails) {
       this.props.editSavedCardDetails();
@@ -43,7 +35,7 @@ export default class UserSavedCard extends React.Component {
   render() {
     if (this.props.account.savedCards) {
       return (
-        <div className={styles.base}>
+        <div>
           {this.props.account.savedCards.savedCardDetailsMap.map((data, i) => {
             let cardNumber = `${data.value.cardISIN}xx xxxx ${
               data.value.cardEndingDigits
@@ -77,10 +69,3 @@ export default class UserSavedCard extends React.Component {
     }
   }
 }
-UserSavedCard.propTypes = {
-  buttonText: PropTypes.string
-};
-
-UserSavedCard.defaultProps = {
-  buttonText: "Add a new card"
-};
