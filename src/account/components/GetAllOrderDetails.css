@@ -1,10 +1,13 @@
 .base {
   width: 100%;
   height: auto;
-  background: #fff;
-  padding: 15px;
   border-radius: 4px;
   display: inline-block;
+}
+.order {
+  padding: 20px;
+  margin-bottom: 20px;
+  background: #fff;
 }
 .orderIdHolder {
   width: 100%;
@@ -17,4 +20,21 @@
   height: auto;
   margin-top: 20px;
   display: inline-block;
+}
+.noOrder {
+  width: 100%;
+  text-align: center;
+}
+.noOderText {
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.71;
+  letter-spacing: normal;
+  color: #181818;
+}
+.continueShoppingButton {
+  margin: auto;
 }

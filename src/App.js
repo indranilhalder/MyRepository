@@ -22,6 +22,7 @@ import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryC
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
 import MobileFooter from "./general/components/MobileFooter.js";
+import MyAccountContainer from "./account/containers/MyAccountContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
@@ -60,7 +61,8 @@ import {
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
-  ORDER_PAGE
+  ORDER_PAGE,
+  MY_ACCOUNT_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -97,7 +99,7 @@ class App extends Component {
     } else {
       if (
         !cartDetailsForAnonymous &&
-         globalAccessToken &&
+        globalAccessToken &&
         !this.props.cart.loading
       ) {
         this.props.generateCartIdForAnonymous();
@@ -138,6 +140,7 @@ class App extends Component {
               )}
             />
             <Route path={ORDER_PAGE} component={GetAllOrderContainer} />
+            <Route path={MY_ACCOUNT_PAGE} component={MyAccountContainer} />
             <Route
               exact
               path={BRAND_PAGE}

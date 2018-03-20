@@ -48,6 +48,7 @@ export const PRODUCT_FILTER_ROUTER = "/filter";
 export const PRODUCT_SELLER_ROUTER_SUFFIX = "/viewSellers";
 export const PRODUCT_CART_ROUTER = "/cart ";
 export const ORDER_SUMMARY_ROUTER = "/orderSummary";
+export const MY_ACCOUNT_PAGE = "/myAccount";
 export const CHECKOUT_ROUTER = "/checkout";
 export const CLIQ_AND_PIQ = "/select-stores";
 export const PRODUCT_CART_DELIVERY_MODES = "/deliveryModes";
