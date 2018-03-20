@@ -86,6 +86,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.cache.strategy.MplApiCachingStrategy;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
@@ -255,31 +256,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	private DefaultCategoryService categoryService;
 
-	//	@Resource(name = "defaultApiCachingStrategy")
-	//	MplApiCachingStrategy mplApiCachingStrategy;
-
-	//check if memcache enabled is true in properties
-	private String isCacheEnabled;
-
-
-	//added for pdp new ui end
-
-	/**
-	 * @return the isCacheEnabled
-	 */
-	public String getIsCacheEnabled()
-	{
-		return isCacheEnabled;
-	}
-
-	/**
-	 * @param isCacheEnabled
-	 *           the isCacheEnabled to set
-	 */
-	public void setIsCacheEnabled(final String isCacheEnabled)
-	{
-		this.isCacheEnabled = isCacheEnabled;
-	}
+	@Resource(name = "defaultApiCachingStrategy")
+	MplApiCachingStrategy mplApiCachingStrategy;
 
 	@Autowired
 	private UserService userService;
@@ -3644,7 +3622,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		String sellerMonogramMessage = MarketplacecommerceservicesConstants.EMPTY;
 		//String buyingGuideURL = MarketplacecommerceservicesConstants.EMPTY;
 		MplNewProductDetailMobileWsData details = null;
-
+		final Boolean isCacheEnabled = configurationService.getConfiguration().getBoolean("pdp.memcache.enabled", Boolean.FALSE);
+		LOG.debug("isCacheEnabled::" + isCacheEnabled);
 		try
 		{
 			productModel = productService.getProductForCode(productCode);
@@ -3665,19 +3644,19 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				try
 				{
-					if (Boolean.parseBoolean(getIsCacheEnabled()))
+					if (isCacheEnabled.booleanValue())
 					{
-						//						details = mplApiCachingStrategy.get(productCode);
-						//
-						//						if (null != details)
-						//						{
-						//							productDetailMobileNew = details;
-						//						}
-						//						else
-						//						{
-						//							details = getCachedAttributes(productData, productModel, baseUrl);
-						//							productDetailMobileNew = details;
-						//						}
+						details = mplApiCachingStrategy.get(productCode);
+
+						if (null != details)
+						{
+							productDetailMobileNew = details;
+						}
+						else
+						{
+							details = getCachedAttributes(productData, productModel, baseUrl);
+							productDetailMobileNew = details;
+						}
 					}
 					else
 					{
@@ -4865,10 +4844,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			sharedText += MarketplacecommerceservicesConstants.SPACE
 					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
 			productDetailMobileNew.setSharedText(sharedText);
-
-			if (Boolean.parseBoolean(getIsCacheEnabled()))
+			final Boolean isCacheEnabled = configurationService.getConfiguration().getBoolean("pdp.memcache.enabled", Boolean.FALSE);
+			LOG.debug("isCacheEnabled::::::" + isCacheEnabled);
+			if (isCacheEnabled.booleanValue())
 			{
-				//mplApiCachingStrategy.put(productData.getCode(), productDetailMobileNew);
+				mplApiCachingStrategy.put(productData.getCode(), productDetailMobileNew);
 			}
 		}
 		catch (final UnknownIdentifierException e)
