@@ -2320,7 +2320,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		for (final VoucherModel oModel : voucherList)
 		{
 			final MplVisibleCouponsDTO dto = new MplVisibleCouponsDTO();
-			dto.setCouponCode(oModel.getCode());
+			//dto.setCouponCode(oModel.getCode());
 			dto.setCouponName(oModel.getName());
 			dto.setDescription(oModel.getDescription());
 			dto.setIsPercentage(((oModel.getAbsolute().booleanValue()) ? (false) : (true)));
@@ -2359,10 +2359,13 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			if ((oModel instanceof PromotionVoucherModel) && !(oModel instanceof MplCartOfferVoucherModel))
 			{
+				final PromotionVoucherModel coupon = (PromotionVoucherModel) oModel;
+				dto.setCouponCode(coupon.getVoucherCode());
 				dto.setCouponType("COUPON");
 			}
 			else
 			{
+				dto.setCouponCode(oModel.getCode());
 				dto.setCouponType("BANKCOUPON");
 			}
 
