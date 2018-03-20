@@ -42,6 +42,7 @@ import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.commerceservices.url.UrlResolver;
 import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewellerySellerDetailsModel;
@@ -63,6 +64,7 @@ import de.hybris.platform.solrfacetsearch.model.redirect.SolrURIRedirectModel;
 import de.hybris.platform.solrfacetsearch.search.KeywordRedirectSorter;
 import de.hybris.platform.solrfacetsearch.search.SolrFacetSearchKeywordDao;
 import de.hybris.platform.util.localization.Localization;
+import de.hybris.platform.variants.model.VariantProductModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -122,6 +124,7 @@ import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
 import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.AmountOptionsWSDTO;
+import com.tisl.mpl.wsdto.BreadcrumbListWsDTO;
 import com.tisl.mpl.wsdto.CapacityLinkData;
 import com.tisl.mpl.wsdto.ClassificationDTO;
 import com.tisl.mpl.wsdto.ClassificationDTOLister;
@@ -149,6 +152,7 @@ import com.tisl.mpl.wsdto.SellerInformationMobileData;
 import com.tisl.mpl.wsdto.SizeLinkData;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 import com.tisl.mpl.wsdto.VariantOptionMobileData;
+import com.tisl.wsdto.SeoContentData;
 
 
 /**
@@ -254,10 +258,15 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	@Resource(name = "defaultCategoryModelUrlResolver")
 	private ExtDefaultCategoryModelUrlResolver defaultCategoryModelUrlResolver;
 
+	@Autowired
+	private UrlResolver<ProductModel> productModelUrlResolver;
+
+	@Autowired
 	private DefaultCategoryService categoryService;
 
 	@Resource(name = "defaultApiCachingStrategy")
 	MplApiCachingStrategy mplApiCachingStrategy;
+
 
 	//check if memcache enabled is true in properties
 	private String isCacheEnabled;
@@ -4212,6 +4221,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobileNew.setNumberOfReviews(productData.getNumberOfReviews());
 				}
 
+				setSeoContent(productData, productModel, productDetailMobileNew);
+
 			}
 
 		}
@@ -4890,6 +4901,161 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		}
 		return productDetailMobileNew;
 
+	}
+
+	/**
+	 * @param productData
+	 * @param productDetailMobileNew
+	 */
+	private void setSeoContent(final ProductData productData, final ProductModel productModel,
+			final MplNewProductDetailMobileWsData productDetailMobileNew)
+	{
+		// YTODO Auto-generated method stub
+		final SeoContentData seo = new SeoContentData();
+		Map<String, String> imageMap = new HashMap<String, String>();
+		String thumbnailUrl = null;
+
+		final List<GalleryImageData> galleryImageList = productDetailsHelper.getGalleryImagesMobile(productData);
+		if (CollectionUtils.isNotEmpty(galleryImageList))
+		{
+			final GalleryImageData galleryImage = galleryImageList.get(0);
+			imageMap = galleryImage.getGalleryImages();
+			thumbnailUrl = imageMap.get("thumbnail");
+		}
+
+		if (StringUtils.isNotEmpty(productData.getSeoMetaTitle()))
+		{
+			seo.setTitle(productData.getSeoMetaTitle());
+		}
+		if (StringUtils.isNotEmpty(productData.getSeoMetaDescription()))
+		{
+			seo.setDescription(productData.getSeoMetaDescription());
+		}
+		if (StringUtils.isNotEmpty(productData.getSeoMetaKeyword()))
+		{
+			seo.setKeywords(productData.getSeoMetaKeyword());
+		}
+		if (StringUtils.isNotEmpty(thumbnailUrl))
+		{
+			seo.setImageURL(thumbnailUrl);
+		}
+
+		final List<BreadcrumbListWsDTO> breadCrumList = getBreadCrums(productModel);
+
+		if (CollectionUtils.isNotEmpty(breadCrumList))
+		{
+			seo.setBreadcrumbs(breadCrumList);
+		}
+
+		final String canonicalUrl = findCanonicalProduct(productData);
+
+		if (StringUtils.isNotEmpty(canonicalUrl))
+		{
+			seo.setCanonicalURL(canonicalUrl);
+			seo.setAlternateURL(canonicalUrl);
+		}
+
+		productDetailMobileNew.setSeo(seo);
+	}
+
+	/**
+	 * @param productData
+	 */
+	private String findCanonicalProduct(final ProductData productData)
+	{
+		String canonicalUrl = null;
+
+		if (CollectionUtils.isNotEmpty(productData.getVariantOptions()))
+		{
+			final List<VariantOptionData> variants = productData.getVariantOptions();
+			canonicalUrl = variants.get(0).getUrl();
+		}
+
+		return canonicalUrl;
+	}
+
+
+
+	/**
+	 * @param productModel
+	 * @return
+	 */
+	private List<BreadcrumbListWsDTO> getBreadCrums(final ProductModel productModel)
+	{
+		// YTODO Auto-generated method stub
+		final List<BreadcrumbListWsDTO> breadcrumbs = new ArrayList<>();
+		final Collection<CategoryModel> categoryModels = new ArrayList<>();
+		final BreadcrumbListWsDTO last = new BreadcrumbListWsDTO();
+
+		final ProductModel baseProductModel = getBaseProduct(productModel);
+
+		final String productUrl = productModelUrlResolver.resolve(productModel);
+		last.setName(productModel.getTitle());
+		last.setUrl(productUrl);
+
+		categoryModels.addAll(baseProductModel.getSupercategories());
+		breadcrumbs.add(last);
+
+		while (!categoryModels.isEmpty())
+		{
+			CategoryModel toDisplay = null;
+			final BreadcrumbListWsDTO breadCrumDto = new BreadcrumbListWsDTO();
+
+			for (final CategoryModel categoryModel : categoryModels)
+			{
+				if (categoryModel.getCode().startsWith(
+						configurationService.getConfiguration().getString("marketplace.mplcatalog.salescategory.code"))
+						|| configurationService.getConfiguration().getString("luxury.salescategories")
+								.contains(categoryModel.getCode().substring(0, 3)))
+				{
+					if (toDisplay == null)
+					{
+						toDisplay = categoryModel;
+					}
+				}
+			}
+			categoryModels.clear();
+			if (toDisplay != null)
+			{
+				if (!categoryService.isRoot(toDisplay))
+				{
+					breadcrumbs.add(getCategoryBreadcrumb(toDisplay, breadCrumDto));
+					categoryModels.addAll(toDisplay.getSupercategories());
+				}
+			}
+		}
+
+		return breadcrumbs;
+	}
+
+
+
+	/**
+	 * @param toDisplay
+	 * @param breadCrumDto
+	 * @return
+	 */
+	private BreadcrumbListWsDTO getCategoryBreadcrumb(final CategoryModel toDisplay, final BreadcrumbListWsDTO breadCrumDto)
+	{
+		// YTODO Auto-generated method stub
+		final String categoryUrl = defaultCategoryModelUrlResolver.resolve(toDisplay);
+		breadCrumDto.setName(toDisplay.getName());
+		breadCrumDto.setUrl(categoryUrl);
+
+		return breadCrumDto;
+	}
+
+	/**
+	 * @param productModel
+	 * @return
+	 */
+	private ProductModel getBaseProduct(final ProductModel productModel)
+	{
+		if (productModel instanceof VariantProductModel)
+		{
+			return getBaseProduct(((VariantProductModel) productModel).getBaseProduct());
+		}
+		return productModel;
 	}
 
 	/**
