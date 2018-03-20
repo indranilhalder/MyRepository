@@ -9,12 +9,10 @@ const account = (
     orderDetails: null,
     orderDetailsStatus: null,
     orderDetailsError: null
-
   },
   action
 ) => {
   switch (action.type) {
-
     case accountActions.GET_SAVED_CARD_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
@@ -44,7 +42,6 @@ const account = (
     case accountActions.REMOVE_SAVED_CARD_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
-        savedCards: action.savedCards,
         loading: false
       });
 
@@ -74,7 +71,6 @@ const account = (
         orderDetailsError: action.error,
         loading: false
       });
-
 
     default:
       return state;

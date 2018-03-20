@@ -68,11 +68,10 @@ export function removeSavedCardRequest() {
     status: REQUESTING
   };
 }
-export function removeSavedCardSuccess(savedCards) {
+export function removeSavedCardSuccess() {
   return {
     type: REMOVE_SAVED_CARD_SUCCESS,
-    status: SUCCESS,
-    savedCards
+    status: SUCCESS
   };
 }
 
