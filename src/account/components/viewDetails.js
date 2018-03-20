@@ -3,7 +3,6 @@ import styles from "./viewDetails.css";
 import OrderPlacedAndId from "./OrderPlacedAndId.js";
 import OrderCard from "./OrderCard.js";
 import OrderDelivered from "./OrderDelivered.js";
-import OrderReturn from "./OrderReturn.js";
 import OrderViewPaymentDetails from "./OrderViewPaymentDetails";
 import OrderPaymentMethod from "./OrderPaymentMethod";
 //import VerticalDeliveredDetails from "./VerticalDeliveredDetails";
@@ -11,14 +10,9 @@ import PropTypes from "prop-types";
 import moment from "moment";
 const dateFormat = "DD MMM YYYY";
 export default class ViewDetails extends React.Component {
-  replaceItem() {
-    if (this.props.replaceItem) {
-      this.props.replaceItem();
-    }
-  }
-  writeReview() {
-    if (this.props.writeReview) {
-      this.props.writeReview();
+  requestInvioice() {
+    if (this.props.requestInvioice) {
+      this.props.requestInvioice();
     }
   }
   render() {
@@ -57,7 +51,7 @@ export default class ViewDetails extends React.Component {
             <OrderPaymentMethod
               phoneNumber={orderDetails.billingAddress.phone}
               paymentMethod={orderDetails.paymentMethod}
-              request={() => this.test1()}
+              request={() => this.requestInvioice()}
             />
             <OrderDelivered
               deliveredAddress={`${orderDetails.billingAddress.addressLine1} ${
@@ -67,16 +61,6 @@ export default class ViewDetails extends React.Component {
               }`}
             />
             {/* <VerticalDeliveredDetails /> */}
-            <div className={styles.buttonHolder}>
-              <OrderReturn
-                buttonLabel={""}
-                underlineButtonLabel={this.props.underlineButtonLabel}
-                underlineButtonColour={this.props.underlineButtonColour}
-                isEditable={true}
-                replaceItem={() => this.replaceItem()}
-                writeReview={() => this.writeReview()}
-              />
-            </div>
           </div>
         )}
       </div>
@@ -84,20 +68,24 @@ export default class ViewDetails extends React.Component {
   }
 }
 ViewDetails.propTypes = {
-  placedTime: PropTypes.string,
-  orderId: PropTypes.string,
-  imageUrl: PropTypes.string,
-  Productprice: PropTypes.string,
-  discountPrice: PropTypes.string,
-  productName: PropTypes.string,
-  TotalPrice: PropTypes.string,
-  deliveryAddress: PropTypes.string,
-  onViewDetails: PropTypes.func,
-  replaceItem: PropTypes.func,
-  writeReview: PropTypes.func
-};
-ViewDetails.defaultprops = {
-  buttonLabel: "Return or Replace",
-  underlineButtonLabel: "Write a review",
-  underlineButtonColour: " #ff1744"
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      orderDate: PropTypes.string,
+      orderId: PropTypes.string,
+      totalOrderAmount: PropTypes.string,
+      subTotal: PropTypes.string,
+      totalDiscounts: PropTypes.string,
+      convenienceCharge: PropTypes.string,
+      paymentMethod: PropTypes.string,
+      billingAddress: PropTypes.arrayOf(
+        PropTypes.shape({
+          addressLine1: PropTypes.string,
+          town: PropTypes.string,
+          state: PropTypes.string,
+          postalcode: PropTypes.string
+        })
+      )
+    })
+  ),
+  requestInvioice: PropTypes.func
 };

@@ -4,9 +4,7 @@ import OrderPlacedAndId from "./OrderPlacedAndId.js";
 import OrderCard from "./OrderCard.js";
 import PriceAndLink from "./PriceAndLink.js";
 import OrderDelivered from "./OrderDelivered.js";
-import OrderReturn from "./OrderReturn.js";
 import ViewDetail from "./viewDetails.js";
-import WriteReview from "../../pdp/components/WriteReview";
 import PropTypes from "prop-types";
 import moment from "moment";
 const dateFormat = "DD MMM YYYY";
@@ -24,15 +22,11 @@ export default class GetAllOrderDetails extends React.Component {
     this.setState({ viewDetails: true });
     this.setState({ viewData: viewDetails });
   }
-  writeReview() {
-    this.setState({ visible: true });
+  requestInvioice() {
+    if (this.props.requestInvioice) {
+      this.props.requestInvioice();
+    }
   }
-  onSubmit = productReview => {
-    this.props.addProductReview(
-      this.props.productDetails.productListingId,
-      productReview
-    );
-  };
   componentDidMount() {
     this.props.getAllOrdersDetails();
   }
@@ -76,21 +70,15 @@ export default class GetAllOrderDetails extends React.Component {
                     orderDetails.billingAddress.state
                   } ${orderDetails.billingAddress.postalcode}`}
                 />
-                <div className={styles.buttonHolder}>
-                  <OrderReturn
-                    buttonLabel={""}
-                    underlineButtonLabel={this.props.underlineButtonLabel}
-                    underlineButtonColour={this.props.underlineButtonColour}
-                    isEditable={true}
-                    replaceItem={() => this.replaceItem()}
-                    writeReview={() => this.writeReview()}
-                  />
-                </div>
-                {this.state.visible && <WriteReview onSubmit={this.onSubmit} />}
               </div>
             );
           })}
-        {this.state.viewDetails && <ViewDetail data={this.state.viewData} />}
+        {this.state.viewDetails && (
+          <ViewDetail
+            data={this.state.viewData}
+            requestInvioice={() => this.requestInvioice()}
+          />
+        )}
       </div>
     );
   }
@@ -111,13 +99,5 @@ GetAllOrderDetails.propTypes = {
       )
     })
   ),
-  onViewDetails: PropTypes.func,
-  replaceItem: PropTypes.func,
-  writeReview: PropTypes.func
-};
-
-GetAllOrderDetails.defaultprops = {
-  buttonLabel: "Return or Replace",
-  underlineButtonLabel: "Write a review",
-  underlineButtonColour: " #ff1744"
+  requestInvioice: PropTypes.func
 };
