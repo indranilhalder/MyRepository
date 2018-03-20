@@ -12,7 +12,7 @@ update * [y] hybris Platform
  *
  */
 package com.tisl.mpl.storefront.controllers.pages;
-import com.tisl.luxury.facade.HomePageTypesFacade;
+
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
@@ -145,6 +145,7 @@ import com.granule.json.JSONObject;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
+import com.tisl.luxury.facade.HomePageTypesFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
@@ -201,7 +202,6 @@ import com.tisl.mpl.facades.data.StatusRecordData;
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
 import com.tisl.mpl.facades.product.data.DayData;
-import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.facades.product.data.GenderData;
 import com.tisl.mpl.facades.product.data.MonthData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
@@ -3522,28 +3522,28 @@ public class AccountPageController extends AbstractMplSearchPageController
 				mplCustomerProfileData.setDisplayUid(currentCustomerData.getDisplayUid());
 				mplCustomerProfileData.setMobileNumber(mplCustomerProfileForm.getMobileNumber().trim());
 
-				try
-				{
-					//to-do for unique mobile number
-					if (StringUtils.isNotEmpty(customerProfileData.getMobileNumber()))
-					{
-						final ExtRegisterData registration = new ExtRegisterData();
-						registration.setLogin(customerProfileData.getMobileNumber());
-						if (!registerCustomerFacade.checkMobileNumberUnique(registration))
-						{
-							throw new DuplicateUidException(MarketplacecommerceservicesConstants.NU003);
-						}
-					}
-				}
-				catch (final DuplicateUidException ex)
-				{
-
-					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex,
-							MarketplacecommerceservicesConstants.NU003));
-					bindingResult.rejectValue(ModelAttributetConstants.MOBILE, MessageConstants.MOBILE_ERROR_ACCOUNT_EXISTS_TITLE);
-					GlobalMessages.addErrorMessage(model, MessageConstants.FORM_GLOBAL_ERROR);
-				}
-				//to-do for unique mobile number
+				//				try
+				//				{
+				//					//to-do for unique mobile number
+				//					if (StringUtils.isNotEmpty(customerProfileData.getMobileNumber()))
+				//					{
+				//						final ExtRegisterData registration = new ExtRegisterData();
+				//						registration.setLogin(customerProfileData.getMobileNumber());
+				//						if (!registerCustomerFacade.checkMobileNumberUnique(registration))
+				//						{
+				//							throw new DuplicateUidException(MarketplacecommerceservicesConstants.NU003);
+				//						}
+				//					}
+				//				}
+				//				catch (final DuplicateUidException ex)
+				//				{
+				//
+				//					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex,
+				//							MarketplacecommerceservicesConstants.NU003));
+				//					bindingResult.rejectValue(ModelAttributetConstants.MOBILE, MessageConstants.MOBILE_ERROR_ACCOUNT_EXISTS_TITLE);
+				//					GlobalMessages.addErrorMessage(model, MessageConstants.FORM_GLOBAL_ERROR);
+				//				}
+				//				//to-do for unique mobile number
 
 
 
