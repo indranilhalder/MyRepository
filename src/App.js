@@ -143,7 +143,15 @@ class App extends Component {
               )}
             />
             <Route path={ORDER_PAGE} component={GetAllOrderContainer} />
-            <Route path={MY_ACCOUNT_PAGE} component={MyAccountContainer} />
+            <Route
+              exact
+              path={MY_ACCOUNT_PAGE}
+              component={MyAccountContainer}
+            />
+            <Route
+              path={`${MY_ACCOUNT_PAGE}${ACCOUNT_SAVED_CARD_ROUTER}`}
+              component={SavedCardContainer}
+            />
             <Route
               exact
               path={BRAND_PAGE}
@@ -231,11 +239,6 @@ class App extends Component {
               exact
               path={CATEGORIES_LANDING_PAGE}
               component={CategoriesPageContainer}
-            />
-            <Route
-              exact
-              path={ACCOUNT_SAVED_CARD_ROUTER}
-              component={SavedCardContainer}
             />
           </Switch>
           <MobileFooter />
