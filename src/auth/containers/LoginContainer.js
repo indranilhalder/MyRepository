@@ -16,27 +16,36 @@ import Login from "../components/Login.js";
 
 const mapDispatchToProps = dispatch => {
   return {
-    onSubmit: userLoginDetails => {
-      dispatch(loginUser(userLoginDetails));
-    },
     onForgotPassword: () => {
       dispatch(showModal(RESTORE_PASSWORD));
     },
     homeFeed: () => {
       dispatch(homeFeed());
     },
-    customerAccessToken: userDetails => {
-      dispatch(customerAccessToken(userDetails)).then(() => {
-        dispatch(loginUser(userDetails)).then(val => {
-          dispatch(getCartId()).then(cartVal => {
-            if (cartVal) {
-              dispatch(mergeCartId(cartVal.guid));
-            } else {
-              dispatch(generateCartIdForLoggedInUser());
-            }
-          });
-        });
-      });
+    onSubmit: async userDetails => {
+      await dispatch(customerAccessToken(userDetails));
+      await dispatch(loginUser(userDetails));
+      // TODO change
+      const cartVal = await dispatch(getCartId());
+      if (cartVal.guid && cartVal.code) {
+        // This is the anonymous case
+        // And I have an existing cart that needs to be merged.
+        dispatch(mergeCartId(cartVal.guid));
+      } else {
+        dispatch(generateCartIdForLoggedInUser());
+      }
+
+      // dispatch(customerAccessToken(userDetails)).then(() => {
+      //   dispatch(loginUser(userDetails)).then(val => {
+      //     dispatch(getCartId()).then(cartVal => {
+      //       if (cartVal) {
+      //         dispatch(mergeCartId(cartVal.guid));
+      //       } else {
+      //         dispatch(generateCartIdForLoggedInUser());
+      //       }
+      //     });
+      //   });
+      // });
     },
     refreshToken: sessionData => {
       dispatch(refreshToken(sessionData));

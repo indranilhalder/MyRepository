@@ -407,9 +407,9 @@ export function getGlobalAccessToken() {
         throw new Error(`${resultJson.errors[0].message}`);
       }
 
-      dispatch(globalAccessTokenSuccess(resultJson));
+      return dispatch(globalAccessTokenSuccess(resultJson));
     } catch (e) {
-      dispatch(globalAccessTokenFailure(e.message));
+      return dispatch(globalAccessTokenFailure(e.message));
     }
   };
 }
@@ -451,9 +451,9 @@ export function refreshToken() {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-      dispatch(refreshTokenSuccess(resultJson));
+      return dispatch(refreshTokenSuccess(resultJson));
     } catch (e) {
-      dispatch(refreshTokenFailure(e.message));
+      return dispatch(refreshTokenFailure(e.message));
     }
   };
 }
@@ -497,10 +497,10 @@ export function customerAccessToken(userDetails) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
       // TODO: dispatch a modal here
-      dispatch(customerAccessTokenSuccess(resultJson));
-      dispatch(loginUser(userDetails));
+      return dispatch(customerAccessTokenSuccess(resultJson));
+      // dispatch(loginUser(userDetails));
     } catch (e) {
-      dispatch(customerAccessTokenFailure(e.message));
+      return dispatch(customerAccessTokenFailure(e.message));
     }
   };
 }

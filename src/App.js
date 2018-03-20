@@ -68,11 +68,7 @@ const auth = {
   isAuthenticated: false
 };
 class App extends Component {
-  componentDidMount() {
-    this.getAccessToken();
-  }
-
-  getAccessToken = () => {
+  async componentDidMount() {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
@@ -80,14 +76,19 @@ class App extends Component {
     let cartDetailsForLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
+
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
+    // Case 1. THe user is not logged in.
+
     if (!globalAccessToken && !this.props.cart.loading) {
-      this.props.getGlobalAccessToken();
+      await this.props.getGlobalAccessToken();
+      globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     }
 
     if (!customerAccessToken && localStorage.getItem(REFRESH_TOKEN)) {
-      this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
+      await this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
+      customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     }
 
     if (customerAccessToken) {
@@ -95,15 +96,13 @@ class App extends Component {
         this.props.generateCartIdForLoggedInUser();
       }
     } else {
-      if (
-        !cartDetailsForAnonymous &&
-         globalAccessToken &&
-        !this.props.cart.loading
-      ) {
+      if (!cartDetailsForAnonymous && globalAccessToken) {
         this.props.generateCartIdForAnonymous();
       }
     }
-  };
+  }
+
+  getAccessToken = async () => {};
 
   renderLoader() {
     return (
