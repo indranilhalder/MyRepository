@@ -3,13 +3,20 @@ import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import Logo from "../../general/components/Logo";
 import styles from "./SavedPaymentCard.css";
-import OrderReturn from "./OrderReturn.js";
+import SavedCardItemFooter from "./SavedCardItemFooter.js";
 export default class SavedPaymentCard extends React.Component {
   replaceItem() {
     if (this.props.replaceItem) {
       this.props.replaceItem();
     }
   }
+
+  removeSavedCardDetails = () => {
+    if (this.props.removeSavedCardDetails) {
+      this.props.removeSavedCardDetails();
+    }
+  };
+
   render() {
     return (
       <div className={styles.base}>
@@ -56,9 +63,10 @@ export default class SavedPaymentCard extends React.Component {
           </div>
         </div>
         <div className={styles.actionHolder}>
-          <OrderReturn
-            replaceItem={() => this.replaceItem()}
+          <SavedCardItemFooter
             buttonLabel="Remove"
+            underlineButtonLabel="Edit"
+            removeSavedCardDetails={() => this.removeSavedCardDetails()}
           />
         </div>
       </div>
