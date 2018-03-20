@@ -27,10 +27,10 @@ export default class UserSavedCard extends React.Component {
   };
 
   render() {
-    if (this.props.account.savedCards) {
+    if (this.props.profile.savedCards) {
       return (
         <div>
-          {this.props.account.savedCards.savedCardDetailsMap.map((data, i) => {
+          {this.props.profile.savedCards.savedCardDetailsMap.map((data, i) => {
             let cardNumber = `${data.value.cardISIN}xx xxxx ${
               data.value.cardEndingDigits
             }`.replace(CARD_FORMAT, " ");

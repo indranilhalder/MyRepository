@@ -20,7 +20,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    account: state.account
+    profile: state.profile
   };
 };
 
