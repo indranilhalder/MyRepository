@@ -215,7 +215,6 @@ export function getUserAlerts() {
         }&emailId=${JSON.parse(userDetails).userName}`
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (
         resultJson.errors ||
         resultJson.status === FAILURE_UPPERCASE ||
