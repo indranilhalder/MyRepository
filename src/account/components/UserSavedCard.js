@@ -26,12 +26,6 @@ export default class UserSavedCard extends React.Component {
     }
   };
 
-  editSavedCardDetails = () => {
-    if (this.props.editSavedCardDetails) {
-      this.props.editSavedCardDetails();
-    }
-  };
-
   render() {
     if (this.props.account.savedCards) {
       return (
@@ -58,7 +52,6 @@ export default class UserSavedCard extends React.Component {
                 cardImage={data.cardImage}
                 onChangeCvv={(cvv, cardNo) => this.onChangeCvv(cvv, cardNo)}
                 removeSavedCardDetails={() => this.removeSavedCardDetails()}
-                editSavedCardDetails={() => this.editSavedCardDetails()}
               />
             );
           })}

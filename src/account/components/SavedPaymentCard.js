@@ -17,12 +17,6 @@ export default class SavedPaymentCard extends React.Component {
     }
   };
 
-  editSavedCardDetails = () => {
-    if (this.props.editSavedCardDetails) {
-      this.props.editSavedCardDetails();
-    }
-  };
-
   render() {
     return (
       <div className={styles.base}>
