@@ -181,7 +181,7 @@ export function fetchOrderDetails(orderId) {
     dispatch(fetchOrderDetailsRequest());
     try {
       const result = await api.get(
-        `${USER_CART_PATH}/${
+        `${USER_PATH}/${
           JSON.parse(userDetails).userName
         }/getSelectedOrder/${orderId}?access_token=${
           JSON.parse(customerCookie).access_token

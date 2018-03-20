@@ -28,7 +28,16 @@ export default class GetAllOrderDetails extends React.Component {
       this.props.requestInvioice();
     }
   }
-
+  writeReview() {
+    if (this.props.writeReview) {
+      this.props.writeReview();
+    }
+  }
+  replaceItem() {
+    if (this.props.replaceItem) {
+      this.props.replaceItem();
+    }
+  }
   componentDidMount() {
     this.props.getAllOrdersDetails();
   }
@@ -81,6 +90,8 @@ export default class GetAllOrderDetails extends React.Component {
             <ViewDetail
               data={fetchOrderDetails}
               requestInvioice={() => this.requestInvioice()}
+              writeReview={() => this.writeReview()}
+              replaceItem={() => this.replaceItem()}
             />
           )}
       </div>
