@@ -5,14 +5,21 @@ import OrderCard from "./OrderCard.js";
 import PriceAndLink from "./PriceAndLink.js";
 import OrderDelivered from "./OrderDelivered.js";
 import OrderReturn from "./OrderReturn.js";
+import ViewDetail from "./viewDetails.js";
 import PropTypes from "prop-types";
 import moment from "moment";
 const dateFormat = "DD MMM YYYY";
 export default class GetAllOrderDetails extends React.Component {
-  onViewDetails() {
-    if (this.props.onViewDetails) {
-      this.props.onViewDetails();
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      viewDetails: false,
+      viewData: false
+    };
+  }
+  onViewDetails(viewDetails) {
+    this.setState({ viewDetails: true });
+    this.setState({ viewData: viewDetails });
   }
   replaceItem() {
     if (this.props.replaceItem) {
@@ -31,7 +38,8 @@ export default class GetAllOrderDetails extends React.Component {
     let orderDetails = this.props.profile.orderDetails;
     return (
       <div className={styles.base}>
-        {orderDetails &&
+        {!this.state.viewDetails &&
+          orderDetails &&
           orderDetails.orderData.map((orderDetails, i) => {
             return (
               <div className={styles.order} key={i}>
@@ -56,7 +64,7 @@ export default class GetAllOrderDetails extends React.Component {
                     );
                   })}
                 <PriceAndLink
-                  onViewDetails={() => this.onViewDetails()}
+                  onViewDetails={() => this.onViewDetails(orderDetails)}
                   price={orderDetails.totalOrderAmount}
                 />
 
@@ -80,6 +88,7 @@ export default class GetAllOrderDetails extends React.Component {
               </div>
             );
           })}
+        {this.state.viewDetails && <ViewDetail data={this.state.viewData} />}
       </div>
     );
   }

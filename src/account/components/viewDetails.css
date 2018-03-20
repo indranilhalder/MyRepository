@@ -1,0 +1,24 @@
+.base {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  padding: 15px;
+  border-radius: 4px;
+  display: inline-block;
+}
+.orderIdHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 25px;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+  display: inline-block;
+}
+
+.payment {
+  border-top: 1px solid #ececec;
+}

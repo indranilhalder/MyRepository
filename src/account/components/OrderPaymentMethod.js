@@ -26,7 +26,7 @@ export default class OrderPaymentMethod extends React.Component {
           </div>
         </div>
         <div className={styles.cashAndMobileHolder}>
-          <div className={styles.cashText}>Cash on delivery</div>
+          <div className={styles.cashText}>{this.props.paymentMethod}</div>
           {this.props.phoneNumber && (
             <div className={styles.mobileNumber}>
               {`Ph: +91 ${this.props.phoneNumber}`}
