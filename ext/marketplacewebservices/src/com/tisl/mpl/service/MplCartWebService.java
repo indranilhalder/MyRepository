@@ -202,6 +202,6 @@ public interface MplCartWebService
 	 */
 	public Double calculateCartTotalMrp(OrderData orderDetails);
 
-	public PriceWsPwaDTO configureCartAmtPwaWithDelCharge(final AbstractOrderModel absOrder, CartDataDetailsWsDTO cartDetailsData);
+	public PriceWsPwaDTO configureCartAmtPwaWithDelCharge(final AbstractOrderModel absOrder);
 
 }

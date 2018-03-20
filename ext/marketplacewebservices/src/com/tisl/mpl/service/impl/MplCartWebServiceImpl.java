@@ -973,7 +973,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = configureCartAmtPwaWithDelCharge(cart, cartDataDetails);
+					final PriceWsPwaDTO pricePwa = configureCartAmtPwaWithDelCharge(cart);
 					cartDataDetails.setCartAmount(pricePwa);
 
 					//					final Double mrp = calculateCartTotalMrp(cart);
@@ -4761,8 +4761,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 
 	@Override
-	public PriceWsPwaDTO configureCartAmtPwaWithDelCharge(final AbstractOrderModel absOrder,
-			final CartDataDetailsWsDTO cartDetailsData)
+	public PriceWsPwaDTO configureCartAmtPwaWithDelCharge(final AbstractOrderModel absOrder)
 	{
 		// YTODO Auto-generated method stub
 		final PriceWsPwaDTO priceWsPwaDTO = new PriceWsPwaDTO();
@@ -4775,8 +4774,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		if (CollectionUtils.isNotEmpty(entryList))
 		{
 			tuple3 = getPayableAmount(entryList);
-			delCharge = cartDetailsData.getDeliveryCharge() != null ? Double.parseDouble(cartDetailsData.getDeliveryCharge())
-					: getCartDelCharge(entryList);
+			delCharge = getCartDelCharge(entryList);
+			//			delCharge = errorDTO.getDeliveryCharge() != null ? Double.parseDouble(errorDTO.getDeliveryCharge())
+			//					: getCartDelCharge(entryList);
 		}
 
 		Double payableAmount = new Double(0.00), couponDiscount = new Double(0.00), productDiscount = new Double(0.00);
