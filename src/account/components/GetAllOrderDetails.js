@@ -6,31 +6,33 @@ import PriceAndLink from "./PriceAndLink.js";
 import OrderDelivered from "./OrderDelivered.js";
 import OrderReturn from "./OrderReturn.js";
 import ViewDetail from "./viewDetails.js";
+import WriteReview from "../../pdp/components/WriteReview";
 import PropTypes from "prop-types";
 import moment from "moment";
 const dateFormat = "DD MMM YYYY";
+
 export default class GetAllOrderDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       viewDetails: false,
-      viewData: false
+      viewData: false,
+      visible: false
     };
   }
   onViewDetails(viewDetails) {
     this.setState({ viewDetails: true });
     this.setState({ viewData: viewDetails });
   }
-  replaceItem() {
-    if (this.props.replaceItem) {
-      this.props.replaceItem();
-    }
-  }
   writeReview() {
-    if (this.props.writeReview) {
-      this.props.writeReview();
-    }
+    this.setState({ visible: true });
   }
+  onSubmit = productReview => {
+    this.props.addProductReview(
+      this.props.productDetails.productListingId,
+      productReview
+    );
+  };
   componentDidMount() {
     this.props.getAllOrdersDetails();
   }
@@ -67,7 +69,6 @@ export default class GetAllOrderDetails extends React.Component {
                   onViewDetails={() => this.onViewDetails(orderDetails)}
                   price={orderDetails.totalOrderAmount}
                 />
-
                 <OrderDelivered
                   deliveredAddress={`${
                     orderDetails.billingAddress.addressLine1
@@ -77,7 +78,7 @@ export default class GetAllOrderDetails extends React.Component {
                 />
                 <div className={styles.buttonHolder}>
                   <OrderReturn
-                    buttonLabel={this.props.buttonLabel}
+                    buttonLabel={""}
                     underlineButtonLabel={this.props.underlineButtonLabel}
                     underlineButtonColour={this.props.underlineButtonColour}
                     isEditable={true}
@@ -85,6 +86,7 @@ export default class GetAllOrderDetails extends React.Component {
                     writeReview={() => this.writeReview()}
                   />
                 </div>
+                {this.state.visible && <WriteReview onSubmit={this.onSubmit} />}
               </div>
             );
           })}

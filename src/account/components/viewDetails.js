@@ -23,7 +23,6 @@ export default class ViewDetails extends React.Component {
   }
   render() {
     let orderDetails = this.props.data;
-    console.log(orderDetails);
     return (
       <div className={styles.base}>
         {orderDetails && (
@@ -49,9 +48,9 @@ export default class ViewDetails extends React.Component {
             <div className={styles.payment}>
               <OrderViewPaymentDetails
                 SubTotal={orderDetails.subTotal}
-                DeliveryCharges={"Free"}
+                DeliveryCharges={orderDetails.deliveryCharge}
                 Discount={orderDetails.totalDiscounts}
-                ConvenienceCharges={"00.00"}
+                ConvenienceCharges={orderDetails.convenienceCharge}
                 Total={orderDetails.totalOrderAmount}
               />
             </div>
@@ -70,7 +69,7 @@ export default class ViewDetails extends React.Component {
             {/* <VerticalDeliveredDetails /> */}
             <div className={styles.buttonHolder}>
               <OrderReturn
-                buttonLabel={this.props.buttonLabel}
+                buttonLabel={""}
                 underlineButtonLabel={this.props.underlineButtonLabel}
                 underlineButtonColour={this.props.underlineButtonColour}
                 isEditable={true}
