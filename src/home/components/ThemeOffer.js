@@ -14,9 +14,6 @@ export default class ThemeOffer extends React.Component {
       TATA_CLIQ_ROOT,
       "$1"
     );
-    console.log("THEME OFFER");
-    console.log(this.props.feedComponentData.webURL);
-    console.log(urlSuffix);
     this.props.history.push(urlSuffix);
   }
 
