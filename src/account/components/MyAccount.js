@@ -13,7 +13,7 @@ export default class MyAccount extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isSelected: 1
+      isSelected: 0
     };
   }
   tabSelect(val) {

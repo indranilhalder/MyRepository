@@ -9,7 +9,7 @@ import {
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   GLOBAL_ACCESS_TOKEN
 } from "../../lib/constants";
-export const USER_CART_PATH = "v2/mpl/users";
+export const USER_PATH = "v2/mpl/users";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
@@ -66,7 +66,7 @@ export function getAllOrdersDetails() {
     dispatch(getAllOrdersRequest());
     try {
       const result = await api.get(
-        `${USER_CART_PATH}/${
+        `${USER_PATH}/${
           JSON.parse(userDetails).userName
         }/orderhistorylist?currentPage=${CURRENT_PAGE}&access_token=${
           JSON.parse(customerCookie).access_token
@@ -107,12 +107,10 @@ export function getUserDetailsFailure(error) {
 
 export function getUserDetails() {
   return async (dispatch, getState, { api }) => {
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     dispatch(getUserDetailsRequest());
     try {
       const result = await api.get(
-        `${USER_CART_PATH}/${
+        `${USER_PATH}/${
           JSON.parse(userDetails).userName
         }/getCustomerProfile?access_token=${
           JSON.parse(customerCookie).access_token
@@ -160,7 +158,7 @@ export function getUserCoupons() {
     dispatch(getUserCouponsRequest());
     try {
       const result = await api.get(
-        `${USER_CART_PATH}/${
+        `${USER_PATH}/${
           JSON.parse(userDetails).userName
         }/getCoupons?currentPage=${CURRENT_PAGE}&access_token=${
           JSON.parse(customerCookie).access_token
@@ -208,7 +206,7 @@ export function getUserAlerts() {
     dispatch(getUserAlertsRequest());
     try {
       const result = await api.get(
-        `${USER_CART_PATH}/${
+        `${USER_PATH}/${
           JSON.parse(userDetails).userName
         }/getOrderTrackingNotifications?access_token=${
           JSON.parse(customerCookie).access_token
