@@ -4963,6 +4963,33 @@ public class CartsController extends BaseCommerceController
 			applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv())
 					.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 			applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(cartModel));
+
+			//if (isPwa)
+			//{
+			final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+			final Double mrp = mplCartWebService.calculateCartTotalMrp(cartModel);
+			final DecimalFormat df = new DecimalFormat(DECIMAL);
+			final CurrencyModel currency = commonI18NService.getCurrency(INR);
+			final double amountInclDelCharge = Double.parseDouble(applycouponDto.getTotal());
+			double actualDelCharge = 0.0;
+			if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+			{
+				for (final AbstractOrderEntryModel cartentry : cartModel.getEntries())
+				{
+					actualDelCharge += cartentry.getCurrDelCharge().doubleValue();
+				}
+			}
+			final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+			double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+			discount = Double.parseDouble(df.format(discount));
+			final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+			final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()), currency);
+			pricePwa.setBagTotal(totalMrp);
+			pricePwa.setTotalDiscountAmount(totalDiscount);
+			pricePwa.setPaybleAmount(applycouponDto.getTotalPrice());
+			applycouponDto.setCartAmount(pricePwa);
+
+			//}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -5012,13 +5039,6 @@ public class CartsController extends BaseCommerceController
 		try
 		{
 
-			//			if (StringUtils.isNotEmpty(cartGuid))
-			//			{
-			//				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-			//			//	orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
-			//			}
-
-
 			final CartModel cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
 			//cartModel.setChannel(SalesApplication.valueOf(channel));
 			//getModelService().save(cartModel);
@@ -5049,8 +5069,8 @@ public class CartsController extends BaseCommerceController
 			releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 					.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 
-			//			if (isPwa)
-			//			{
+			//if (isPwa)
+			//{
 			final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
 			final Double mrp = mplCartWebService.calculateCartTotalMrp(cartModel);
 			final DecimalFormat df = new DecimalFormat(DECIMAL);
@@ -5069,13 +5089,10 @@ public class CartsController extends BaseCommerceController
 			discount = Double.parseDouble(df.format(discount));
 			final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
 			final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()), currency);
-			//					final PriceData paybleAmount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(amountInclDelCharge),
-			//							currency);
 			pricePwa.setBagTotal(totalMrp);
 			pricePwa.setTotalDiscountAmount(totalDiscount);
 			pricePwa.setPaybleAmount(releaseCouponDto.getTotalPrice());
 			releaseCouponDto.setCartAmount(pricePwa);
-
 			//}
 
 
