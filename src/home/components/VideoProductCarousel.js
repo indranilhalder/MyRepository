@@ -8,7 +8,7 @@ export default class VideoProductCarousel extends React.Component {
   handleClick() {
     const urlSuffix = this.props.feedComponentData.webURL.replace(
       TATA_CLIQ_ROOT,
-      ""
+      "$1"
     );
     this.props.history.push(urlSuffix);
   }

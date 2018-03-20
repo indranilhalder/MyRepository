@@ -16,7 +16,7 @@ export default class SearchPage extends React.Component {
   }
 
   handleCategoryClick(webURL) {
-    const urlSuffix = `c-${webURL.toLowerCase()}`.replace(TATA_CLIQ_ROOT, "");
+    const urlSuffix = `c-${webURL.toLowerCase()}`.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   }
   handleSearch(val) {
