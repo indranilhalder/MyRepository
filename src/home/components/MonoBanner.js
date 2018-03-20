@@ -7,7 +7,7 @@ export default class MonoBanner extends React.Component {
   handleClick() {
     const urlSuffix = this.props.feedComponentData.items[0].webURL.replace(
       TATA_CLIQ_ROOT,
-      ""
+      "$1"
     );
     this.props.history.push(urlSuffix);
   }

@@ -14,7 +14,7 @@ class CuratedProductsComponent extends React.Component {
   handleSeeAll = () => {
     const urlSuffix = this.props.feedComponentData.webURL.replace(
       TATA_CLIQ_ROOT,
-      ""
+      "$1"
     );
     this.props.history.push(urlSuffix);
   };
