@@ -333,15 +333,15 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 			//Added for TPR-1035
 			promoPriceData = getMplPaymentWebService().validateBinNumber(binNo, paymentMode, bankName, userId);
-			if(null != cart && null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue()){
+			if (null != cart && null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue())
+			{
 				if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT))
 				{
 					cart.setModeOfPayment(MarketplacewebservicesConstants.CREDIT);
 					cart.setConvenienceCharges(Double.valueOf(0.0));
 					getModelService().save(cart);
 				}
-				else if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT))
+				else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT))
 				{
 					cart.setModeOfPayment(MarketplacewebservicesConstants.DEBIT);
 					cart.setConvenienceCharges(Double.valueOf(0.0));
@@ -362,12 +362,13 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 				// Validate Cart Model is not null
 				if (null != cart)
 				{
-					/*EGV Changes START */
-					
-					if(null != cart.getPayableWalletAmount() && cart.getPayableWalletAmount().doubleValue() > 0.0D ) {
+					/* EGV Changes START */
+
+					if (null != cart.getPayableWalletAmount() && cart.getPayableWalletAmount().doubleValue() > 0.0D)
+					{
 						promoPriceData.setCliqCashApplied(true);
 					}
-					/*EGV Changes END */
+					/* EGV Changes END */
 					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 					if (cart.getEntries() != null)
@@ -562,16 +563,16 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		{
 			// Validate Correct Input
 			promoPriceData = getMplPaymentWebService().validateBinNumber(binNo, paymentMode, bankName, userId);
-			
-			if(null != order && null != order.getIsEGVCart() && order.getIsEGVCart().booleanValue()){
+
+			if (null != order && null != order.getIsEGVCart() && order.getIsEGVCart().booleanValue())
+			{
 				if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT))
 				{
 					order.setModeOfOrderPayment(MarketplacewebservicesConstants.CREDIT);
 					order.setConvenienceCharges(Double.valueOf(0.0));
 					getModelService().save(order);
 				}
-				else if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT))
+				else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT))
 				{
 					order.setModeOfOrderPayment(MarketplacewebservicesConstants.DEBIT);
 					order.setConvenienceCharges(Double.valueOf(0.0));
@@ -592,13 +593,14 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 				// Validate Cart Model is not null
 				if (null != order)
 				{
-					/*EGV Changes START */
-					
-					if(null != order.getPayableWalletAmount() && order.getPayableWalletAmount().doubleValue() > 0.0D ) {
+					/* EGV Changes START */
+
+					if (null != order.getPayableWalletAmount() && order.getPayableWalletAmount().doubleValue() > 0.0D)
+					{
 						promoPriceData.setCliqCashApplied(true);
 					}
-					
-					/*EGV Changes END */
+
+					/* EGV Changes END */
 					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 					if (order.getEntries() != null)
@@ -824,7 +826,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -848,7 +850,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			final String pincode, final boolean isPwa)
 	{
 		CartDataDetailsWsDTO cartDetailsData = new CartDataDetailsWsDTO();
-		final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+		//final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
 		OrderModel orderModel = null;
 		CartModel cartModel = null;
 		if (StringUtils.isNotEmpty(cartGuId))
@@ -866,20 +868,22 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 				cartDetailsData.setCartGuid(cartModel.getGuid());
 				if (isPwa)
 				{
-					final Double mrp = mplCartWebService.calculateCartTotalMrp(cartModel);
-					//
-					final PriceData totalMrp = createPriceCharge(mrp.toString());
-					pricePwa.setBagTotal(totalMrp);
-					final PriceData amountInclDelCharge = createPriceCharge(cartDetailsData.getTotalPrice());
-					pricePwa.setPaybleAmount(amountInclDelCharge);
-					final double delCharge = Double.valueOf(cartDetailsData.getDeliveryCharge()).doubleValue();
-					final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue() - delCharge;
-					final double discount = mrp.doubleValue() - payableamtWdDelCharge;
-					BigDecimal bdval = new BigDecimal(discount);
-					bdval = bdval.setScale(2, BigDecimal.ROUND_HALF_UP);
-					final PriceData totalDiscount = createPriceCharge((bdval).toString());
-					pricePwa.setTotalDiscountAmount(totalDiscount);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel, cartDetailsData);
 					cartDetailsData.setCartAmount(pricePwa);
+
+					//					final Double mrp = mplCartWebService.calculateCartTotalMrp(cartModel);
+					//					final PriceData totalMrp = createPriceCharge(mrp.toString());
+					//					pricePwa.setBagTotal(totalMrp);
+					//					final PriceData amountInclDelCharge = createPriceCharge(cartDetailsData.getTotalPrice());
+					//					pricePwa.setPaybleAmount(amountInclDelCharge);
+					//					final double delCharge = Double.valueOf(cartDetailsData.getDeliveryCharge()).doubleValue();
+					//					final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue() - delCharge;
+					//					final double discount = mrp.doubleValue() - payableamtWdDelCharge;
+					//					BigDecimal bdval = new BigDecimal(discount);
+					//					bdval = bdval.setScale(2, BigDecimal.ROUND_HALF_UP);
+					//					final PriceData totalDiscount = createPriceCharge((bdval).toString());
+					//					pricePwa.setTotalDiscountAmount(totalDiscount);
+					//             cartDetailsData.setCartAmount(pricePwa);
 
 				}
 
@@ -896,18 +900,20 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			cartDetailsData.setCartGuid(cartGuId);
 			if (isPwa)
 			{
-				final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
-				//
-				final PriceData totalMrp = createPriceCharge(mrp.toString());
-				pricePwa.setBagTotal(totalMrp);
-				final PriceData amountInclDelCharge = createPriceCharge(cartDetailsData.getTotalPrice());
-				pricePwa.setPaybleAmount(amountInclDelCharge);
-				final double delCharge = Double.valueOf(cartDetailsData.getDeliveryCharge()).doubleValue();
-				final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue() - delCharge;
-				final double discount = mrp.doubleValue() - payableamtWdDelCharge;
-				final PriceData totalDiscount = createPriceCharge(Double.valueOf(discount).toString());
-				pricePwa.setTotalDiscountAmount(totalDiscount);
+				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel, cartDetailsData);
 				cartDetailsData.setCartAmount(pricePwa);
+
+				//				final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
+				//				final PriceData totalMrp = createPriceCharge(mrp.toString());
+				//				pricePwa.setBagTotal(totalMrp);
+				//				final PriceData amountInclDelCharge = createPriceCharge(cartDetailsData.getTotalPrice());
+				//				pricePwa.setPaybleAmount(amountInclDelCharge);
+				//				final double delCharge = Double.valueOf(cartDetailsData.getDeliveryCharge()).doubleValue();
+				//				final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue() - delCharge;
+				//				final double discount = mrp.doubleValue() - payableamtWdDelCharge;
+				//				final PriceData totalDiscount = createPriceCharge(Double.valueOf(discount).toString());
+				//				pricePwa.setTotalDiscountAmount(totalDiscount);
+				//				cartDetailsData.setCartAmount(pricePwa);
 
 			}
 			cartDetailsData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
