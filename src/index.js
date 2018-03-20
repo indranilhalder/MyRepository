@@ -16,11 +16,10 @@ import productListings from "./plp/reducers/plp.reducer";
 import productDescription from "./pdp/reducers/pdp.reducer";
 import categoryDefault from "./clp/reducers/clp.reducer";
 import brandDefault from "./blp/reducers/blp.reducer";
-import account from "./account/reducers/account.reducer";
+import profile from "./account/reducers/account.reducer";
+
 import cart from "./cart/reducers/cart.reducer";
-
 import "babel-polyfill";
-
 const rootReducer = combineReducers({
   user,
   modal,
@@ -31,7 +30,8 @@ const rootReducer = combineReducers({
   cart,
   brandDefault,
   categoryDefault,
-  account
+  profile
+
 });
 
 let store = createStore(
@@ -42,6 +42,8 @@ let store = createStore(
     })
   )
 );
+console.log("NODE ENV");
+console.log(process.env);
 
 ReactDOM.render(
   <Provider store={store}>

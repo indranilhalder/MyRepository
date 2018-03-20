@@ -18,7 +18,8 @@ import {
   PRODUCT_CART_ROUTER,
   DEFAULT_BRANDS_LANDING_PAGE,
   CATEGORIES_LANDING_PAGE,
-  PRODUCT_CART_DELIVERY_MODES
+  PRODUCT_CART_DELIVERY_MODES,
+  ORDER_PAGE
 } from "../../../src/lib/constants";
 import { CATEGORY_REGEX } from "../../plp/components/PlpBrandCategoryWrapper";
 const HOME = "home";
@@ -82,14 +83,14 @@ class MobileFooter extends React.Component {
           selected={selected}
           onSelect={() => this.handleSelect(DEFAULT_BRANDS_LANDING_PAGE)}
         />
-        {/* <MobileFooterItem
+        <MobileFooterItem
           activeIcon={userIconRed}
           basicIcon={userIcon}
           value={PROFILE}
           text="My Cliq"
-          selected={pathName === }
-          onSelect={() => this.handleSelect(HOME_ROUTER)}
-        /> */}
+          selected={selected}
+          onSelect={() => this.handleSelect(ORDER_PAGE)}
+        />
         <MobileFooterItem
           activeIcon={myBagIconRed}
           basicIcon={myBagIcon}

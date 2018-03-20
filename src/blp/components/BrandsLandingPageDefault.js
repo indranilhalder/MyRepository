@@ -33,7 +33,7 @@ export default class BrandsLandingPageDefault extends React.Component {
   }
   renderToAnotherURL(webURL) {
     if (webURL) {
-      const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "");
+      const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
       this.props.history.push(urlSuffix);
     }
   }

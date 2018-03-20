@@ -25,6 +25,7 @@ import MobileFooter from "./general/components/MobileFooter.js";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
+import GetAllOrderContainer from "./account/containers/GetAllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 
 import {
@@ -61,6 +62,7 @@ import {
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
+  ORDER_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
@@ -83,7 +85,7 @@ class App extends Component {
     );
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
-    if (!globalAccessToken) {
+    if (!globalAccessToken && !this.props.cart.loading) {
       this.props.getGlobalAccessToken();
     }
 
@@ -92,11 +94,15 @@ class App extends Component {
     }
 
     if (customerAccessToken) {
-      if (!cartDetailsForLoggedInUser) {
+      if (!cartDetailsForLoggedInUser && !this.props.cart.loading) {
         this.props.generateCartIdForLoggedInUser();
       }
     } else {
-      if (!cartDetailsForAnonymous && globalAccessToken) {
+      if (
+        !cartDetailsForAnonymous &&
+         globalAccessToken &&
+        !this.props.cart.loading
+      ) {
         this.props.generateCartIdForAnonymous();
       }
     }
@@ -134,7 +140,7 @@ class App extends Component {
                 <SignUpContainer {...routeProps} {...this.props} />
               )}
             />
-
+            <Route path={ORDER_PAGE} component={GetAllOrderContainer} />
             <Route
               exact
               path={BRAND_PAGE}

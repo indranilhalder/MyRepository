@@ -32,8 +32,20 @@ const mapDispatchToProps = dispatch => {
     showCouponModal: data => {
       dispatch(showModal(PRODUCT_COUPONS, data));
     },
-    checkPinCodeServiceAvailability: (userName, accessToken, pinCode) => {
-      dispatch(checkPinCodeServiceAvailability(userName, accessToken, pinCode));
+    checkPinCodeServiceAvailability: (
+      userName,
+      accessToken,
+      pinCode,
+      productCode
+    ) => {
+      dispatch(
+        checkPinCodeServiceAvailability(
+          userName,
+          accessToken,
+          pinCode,
+          productCode
+        )
+      );
     },
     getCoupons: () => {
       dispatch(getCoupons());
