@@ -9,6 +9,10 @@ import AccountSetting from "./AccountSetting.js";
 import TabHolder from "./TabHolder";
 import TabData from "./TabData";
 import styles from "./MyAccount.css";
+import {
+  MY_ACCOUNT_PAGE,
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE
+} from "../../lib/constants";
 export default class MyAccount extends React.Component {
   constructor(props) {
     super(props);
@@ -19,6 +23,11 @@ export default class MyAccount extends React.Component {
   tabSelect(val) {
     this.setState({ isSelected: val });
   }
+  renderToAccountSetting() {
+    this.props.history.push(
+      `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`
+    );
+  }
   componentDidMount() {
     this.props.getUserDetails();
     this.props.getUserCoupons();
@@ -27,11 +36,11 @@ export default class MyAccount extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <ProfileMenuGrid />
+        <ProfileMenuGrid {...this.props} />
         <div className={styles.accountHolder}>
           <AccountSetting
             image="http://tong.visitkorea.or.kr/cms/resource/58/1016958_image2_1.jpg"
-            onClick={() => this.onClick()}
+            onClick={() => this.renderToAccountSetting()}
             heading={
               this.props.userDetails &&
               `${this.props.userDetails.firstName} ${
