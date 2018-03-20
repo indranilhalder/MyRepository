@@ -1,4 +1,5 @@
 import * as accountActions from "../actions/account.actions";
+
 const account = (
   state = {
     status: null,
@@ -7,7 +8,11 @@ const account = (
 
     orderDetails: null,
     orderDetailsStatus: null,
-    orderDetailsError: null
+    orderDetailsError: null,
+
+    fetchOrderDetails: null,
+    fetchOrderDetailsStatus: null,
+    fetchOrderDetailsError: null
   },
   action
 ) => {
@@ -31,7 +36,25 @@ const account = (
         orderDetailsError: action.error,
         loading: false
       });
+    case accountActions.FETCH_ORDER_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        fetchOrderDetailsStatus: action.status,
+        loading: true
+      });
 
+    case accountActions.FETCH_ORDER_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        fetchOrderDetailsStatus: action.status,
+        fetchOrderDetails: action.fetchOrderDetails,
+        loading: false
+      });
+
+    case accountActions.FETCH_ORDER_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        fetchOrderDetailsStatus: action.status,
+        fetchOrderDetailsError: action.error,
+        loading: false
+      });
     default:
       return state;
   }

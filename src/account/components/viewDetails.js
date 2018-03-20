@@ -43,7 +43,7 @@ export default class ViewDetails extends React.Component {
               <OrderViewPaymentDetails
                 SubTotal={orderDetails.subTotal}
                 DeliveryCharges={orderDetails.deliveryCharge}
-                Discount={orderDetails.totalDiscounts}
+                Discount={orderDetails.totalDiscount}
                 ConvenienceCharges={orderDetails.convenienceCharge}
                 Total={orderDetails.totalOrderAmount}
               />

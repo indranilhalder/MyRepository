@@ -17,16 +17,24 @@ export default class GetAllOrderDetails extends React.Component {
       onClickViewDetails: false
     };
   }
+  onViewDetails(orderID) {
+    this.setState({ onClickViewDetails: true });
+    if (this.props.fetchOrderDetails) {
+      this.props.fetchOrderDetails(orderID);
+    }
+  }
   requestInvioice() {
     if (this.props.requestInvioice) {
       this.props.requestInvioice();
     }
   }
+
   componentDidMount() {
     this.props.getAllOrdersDetails();
   }
   render() {
     let orderDetails = this.props.profile.orderDetails;
+    let fetchOrderDetails = this.props.profile.fetchOrderDetails;
     return (
       <div className={styles.base}>
         {!this.state.onClickViewDetails &&
@@ -55,12 +63,7 @@ export default class GetAllOrderDetails extends React.Component {
                     );
                   })}
                 <PriceAndLink
-                  onViewDetails={() =>
-                    this.setState({
-                      onClickViewDetails: true,
-                      viewDetails: orderDetails
-                    })
-                  }
+                  onViewDetails={() => this.onViewDetails(orderDetails.orderId)}
                   price={orderDetails.totalOrderAmount}
                 />
                 <OrderDelivered
@@ -73,12 +76,13 @@ export default class GetAllOrderDetails extends React.Component {
               </div>
             );
           })}
-        {this.state.viewDetails && (
-          <ViewDetail
-            data={this.state.viewDetails}
-            requestInvioice={() => this.requestInvioice()}
-          />
-        )}
+        {this.state.onClickViewDetails &&
+          fetchOrderDetails && (
+            <ViewDetail
+              data={fetchOrderDetails}
+              requestInvioice={() => this.requestInvioice()}
+            />
+          )}
       </div>
     );
   }
