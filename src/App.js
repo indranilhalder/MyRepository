@@ -22,6 +22,7 @@ import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryC
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
 import MobileFooter from "./general/components/MobileFooter.js";
+import MyAccountContainer from "./account/containers/MyAccountContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
@@ -64,7 +65,7 @@ import {
   CATEGORY_PAGE_WITH_SLUG,
   ORDER_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
-  MY_ACCOUNT,
+  MY_ACCOUNT_PAGE,
   ORDER_PREFIX,
   ORDER
 } from "../src/lib/constants";
@@ -102,11 +103,7 @@ class App extends Component {
         this.props.generateCartIdForLoggedInUser();
       }
     } else {
-      if (
-        !cartDetailsForAnonymous &&
-        globalAccessToken &&
-        !this.props.cart.loading
-      ) {
+      if (!cartDetailsForAnonymous && globalAccessToken) {
         this.props.generateCartIdForAnonymous();
       }
     }
@@ -147,12 +144,21 @@ class App extends Component {
             <Route path={ORDER_PAGE} component={GetAllOrderContainer} />
             <Route
               exact
+              path={MY_ACCOUNT_PAGE}
+              component={MyAccountContainer}
+            />
+            <Route
+              path={`${MY_ACCOUNT_PAGE}${ACCOUNT_SAVED_CARD_ROUTER}`}
+              component={SavedCardContainer}
+            />
+            <Route
+              exact
               path={BRAND_PAGE}
               component={PlpBrandCategoryWrapperContainer}
             />
             <Route
               exact
-              path={`${MY_ACCOUNT}${ORDER_PREFIX}:${ORDER}`}
+              path={`${MY_ACCOUNT_PAGE}${ORDER_PREFIX}:${ORDER}`}
               component={FetchOrderDetailsContainer}
             />
             <Route
@@ -236,11 +242,6 @@ class App extends Component {
               exact
               path={CATEGORIES_LANDING_PAGE}
               component={CategoriesPageContainer}
-            />
-            <Route
-              exact
-              path={ACCOUNT_SAVED_CARD_ROUTER}
-              component={SavedCardContainer}
             />
           </Switch>
           <MobileFooter />

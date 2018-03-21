@@ -36,14 +36,3 @@
   height: auto;
   display: inline-block;
 }
-.cardHolder {
-  width: 100%;
-  height: auto;
-  margin-bottom: 25px;
-  display: inline-block;
-  background: #fff;
-  padding: 15px;
-}
-.couponHolder {
-  composes: alertsHolder;
-}

@@ -110,7 +110,7 @@ describe("User Actions", () => {
       {
         type: userActions.LOGIN_USER_FAILURE,
         status: ERROR,
-        error: user.userDetailsFailure.message
+        error: user.userDetailsFailure.status
       }
     ];
 
