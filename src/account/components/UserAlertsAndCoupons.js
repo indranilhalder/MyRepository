@@ -27,7 +27,7 @@ export default class UserAlertsAndCoupons extends React.Component {
     this.props.history.push(URL_PATH_COUPONS);
   }
   render() {
-    let { pathname } = this.props.history.location;
+    const { pathname } = this.props.history.location;
     let currentActivePath;
     if (pathname === URL_PATH_ALERTS) {
       currentActivePath = ALERTS;
