@@ -4,9 +4,10 @@ import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import { Image } from "xelpmoc-core";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ColourSelector from "./ColourSelector";
-import SizeSelector from "./SizeSelector";
+import SizeQuantitySelect from "./SizeQuantitySelect";
 import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
+import UnderLinedButton from "../../general/components/UnderLinedButton";
 import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
@@ -44,6 +45,11 @@ export default class PdpApparel extends React.Component {
   }
   gotoPreviousPage = () => {
     this.props.history.goBack();
+  };
+  goToBuyingGuide = () => {
+    if (this.props.goToBuyingGuide) {
+      this.props.goToBuyingGuide();
+    }
   };
   goToSellerPage = () => {
     let expressionRuleFirst = "/p-(.*)/(.*)";
@@ -137,9 +143,10 @@ export default class PdpApparel extends React.Component {
       this.props.showPincodeModal(this.props.match.params[2]);
     }
   }
-  handleShowSizeguide() {
-    if (this.props.getProductSizeGuide) {
-      this.props.getProductSizeGuide();
+
+  handleQuantitySelect(val) {
+    if (this.props.onQuantitySelect) {
+      this.props.onQuantitySelect();
     }
   }
   renderDeliveryOptions(productData) {
@@ -185,55 +192,77 @@ export default class PdpApparel extends React.Component {
               return <Image image={val} key={idx} />;
             })}
           </ProductGalleryMobile>
-          <div className={styles.content}>
-            <ProductDetailsMainCard
-              productName={productData.brandName}
-              productDescription={productData.productName}
-              price={productData.mrp}
-              discountPrice={productData.winningSellerMOP}
-              averageRating={productData.averageRating}
-              onClick={this.goToReviewPage}
-            />
-          </div>
-          {productData.emiInfo && (
-            <div className={styles.separator}>
-              <div className={styles.info}>
-                {productData.emiInfo.emiText}
-                <span className={styles.link} onClick={this.showEmiModal}>
-                  View Plans
-                </span>
-              </div>
+          <div className={styles.whiteBackground}>
+            <div className={styles.content}>
+              <ProductDetailsMainCard
+                productName={productData.brandName}
+                productDescription={productData.productName}
+                price={productData.mrp}
+                discountPrice={productData.winningSellerMOP}
+                averageRating={productData.averageRating}
+                onClick={this.goToReviewPage}
+              />
             </div>
-          )}
+            {productData.emiInfo && (
+              <div className={styles.separator}>
+                <div className={styles.info}>
+                  {productData.emiInfo.emiText}
+                  <span className={styles.link} onClick={this.showEmiModal}>
+                    View Plans
+                  </span>
+                </div>
+              </div>
+            )}
 
-          {productData.productOfferMsg && (
-            <OfferCard
-              endTime={productData.productOfferMsg[0].validTill.date}
-              heading={productData.productOfferMsg[0].promotionTitle}
-              description={productData.productOfferPromotion[0].promotionDetail}
-              onClick={this.goToCouponPage}
-            />
-          )}
-          {productData.variantOptions && (
-            <React.Fragment>
-              <ColourSelector
-                data={productData.variantOptions.map(value => {
-                  return value.colorlink;
-                })}
-                history={this.props.history}
-                updateColour={val => {}}
-                getProductSpecification={this.props.getProductSpecification}
-              />
-              <SizeSelector
-                showSizeGuide={
-                  productData.showSizeGuide ? this.props.showSizeGuide : null
+            {productData.productOfferMsg && (
+              <OfferCard
+                endTime={productData.productOfferMsg[0].validTill.date}
+                heading={productData.productOfferMsg[0].promotionTitle}
+                description={
+                  productData.productOfferPromotion[0].promotionDetail
                 }
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
+                onClick={this.goToCouponPage}
               />
-            </React.Fragment>
-          )}
+            )}
+            {productData.variantOptions && (
+              <React.Fragment>
+                <SizeQuantitySelect
+                  history={this.props.history}
+                  showSizeGuide={
+                    productData.showSizeGuide ? this.props.showSizeGuide : null
+                  }
+                  sizes={productData.variantOptions.map(value => {
+                    return value.sizelink;
+                  })}
+                  maxQuantity={productData.maxQuantityAllowed}
+                  onQuantitySelect={val => this.props.handleQuantitySelect(val)}
+                />
+                {this.props.customiseMessage && (
+                  <div className={styles.customisation}>
+                    <div className={styles.customiseText}>
+                      Customisation available -{this.props.customiseMessage}
+                    </div>
+                    <div className={styles.customisationButton}>
+                      <UnderLinedButton
+                        label="Checkout our buying guide"
+                        onClick={() => this.goToBuyingGuide()}
+                        color="#ff1744"
+                      />
+                    </div>
+                  </div>
+                )}
+                <ColourSelector
+                  noBackground={true}
+                  data={productData.variantOptions.map(value => {
+                    return value.colorlink;
+                  })}
+                  history={this.props.history}
+                  updateColour={val => {}}
+                  getProductSpecification={this.props.getProductSpecification}
+                />
+              </React.Fragment>
+            )}
+          </div>
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.pinCode ? (
             <PdpPincode

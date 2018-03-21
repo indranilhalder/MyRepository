@@ -110,8 +110,7 @@ class ProductReviewPage extends Component {
         image = this.props.productDetails.galleryImagesList[0].galleryImages[0]
           .value;
       }
-      console.log("GALLERY IMAGES LIST");
-      console.log(this.props.productDetails.galleryImagesList);
+
       return (
         <PdpFrame
           addProductToBag={() => this.addProductToBag()}

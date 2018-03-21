@@ -5,10 +5,11 @@ import SearchAndUpdate from "../../pdp/components/SearchAndUpdate";
 import styles from "./CartPage.css";
 import PropTypes from "prop-types";
 import MDSpinner from "react-md-spinner";
-import { SUCCESS } from "../../lib/constants";
+import { SUCCESS, HOME_ROUTER } from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
 import filter from "lodash/filter";
-
+import { Redirect } from "react-router-dom";
+import { MAIN_ROUTER } from "../../lib/constants";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -22,16 +23,6 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
-const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-const cartDetailsLoggedInUser = Cookie.getCookie(
-  CART_DETAILS_FOR_LOGGED_IN_USER
-);
-const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-
-const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-
 class CartPage extends React.Component {
   constructor(props) {
     super(props);
@@ -42,6 +33,15 @@ class CartPage extends React.Component {
   }
 
   componentDidMount() {
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
+    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     if (
       userDetails !== undefined &&
       customerCookie !== undefined &&
@@ -204,6 +204,16 @@ class CartPage extends React.Component {
   };
 
   render() {
+    const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    const cartDetailsForAnonymous = Cookie.getCookie(
+      CART_DETAILS_FOR_ANONYMOUS
+    );
+
+    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
+    if (!globalAccessToken && !cartDetailsForAnonymous) {
+      return <Redirect exact to={HOME_ROUTER} />;
+    }
     if (this.props.cart.cartDetailsStatus === SUCCESS) {
       const cartDetails = this.props.cart.cartDetails;
       return (
@@ -211,6 +221,7 @@ class CartPage extends React.Component {
           <div className={styles.content}>
             <div className={styles.search}>
               <SearchAndUpdate
+                value={defaultPinCode}
                 getPinCode={val => this.setState({ pinCode: val })}
                 checkPinCodeAvailability={val =>
                   this.checkPinCodeAvailability(val)

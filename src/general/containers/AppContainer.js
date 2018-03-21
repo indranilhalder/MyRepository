@@ -25,19 +25,17 @@ const mapDispatchToProps = dispatch => {
     googlePlusLogin: type => {
       dispatch(googlePlusLogin(type));
     },
-    getGlobalAccessToken: () => {
-      dispatch(getGlobalAccessToken()).then(() =>
-        dispatch(generateCartIdForAnonymous())
-      );
+    getGlobalAccessToken: async () => {
+      return await dispatch(getGlobalAccessToken());
     },
-    refreshToken: () => {
-      dispatch(refreshToken());
+    refreshToken: async () => {
+      return dispatch(refreshToken());
     },
-    generateCartIdForLoggedInUser: () => {
-      dispatch(generateCartIdForLoggedInUser());
+    generateCartIdForLoggedInUser: async () => {
+      return dispatch(generateCartIdForLoggedInUser());
     },
-    generateCartIdForAnonymous: () => {
-      dispatch(generateCartIdForAnonymous());
+    generateCartIdForAnonymous: async () => {
+      return dispatch(generateCartIdForAnonymous());
     }
   };
 };

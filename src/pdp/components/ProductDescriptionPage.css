@@ -13,6 +13,10 @@
   height: auto;
   padding: 0 15px;
 }
+.whiteBackground {
+  composes: base;
+  background: #fff;
+}
 .info {
   width: 100%;
   height: auto;
@@ -55,4 +59,17 @@
 
 .winningSellerText {
   font-family: bolder;
+}
+.customisation {
+  width: 100%;
+  line-height: 24px;
+  font-size: 14px;
+  font-family: regular;
+  color: #171d1c;
+  padding: 10px 15px;
+}
+.customisationButton {
+  width: auto;
+  display: inline-block;
+  margin-top: 15px;
 }

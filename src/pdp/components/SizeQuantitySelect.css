@@ -1,0 +1,38 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 20px 0px;
+}
+.header {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  font-family: semibold;
+  position: relative;
+  margin-bottom: 20px;
+  padding: 0 15px;
+}
+.button {
+  width: auto;
+  position: absolute;
+  top: 0;
+  right: 20px;
+}
+
+.selectHolder {
+  width: 100%;
+  height: auto;
+  padding: 0 15px;
+}
+.select {
+  width: 50%;
+  display: inline-block;
+}
+.sizeSelect {
+  composes: select;
+  padding-right: 10px;
+}
+.sizeQuantity {
+  composes: select;
+  padding-left: 10px;
+}
