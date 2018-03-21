@@ -4,50 +4,22 @@ import OrderPlacedAndId from "./OrderPlacedAndId.js";
 import OrderCard from "./OrderCard.js";
 import PriceAndLink from "./PriceAndLink.js";
 import OrderDelivered from "./OrderDelivered.js";
-import ViewDetail from "./viewDetails.js";
 import PropTypes from "prop-types";
 import moment from "moment";
+import { ORDER_SUMMARY_ROUTER } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
-
 export default class GetAllOrderDetails extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      viewDetails: false,
-      onClickViewDetails: false
-    };
-  }
   onViewDetails(orderID) {
-    this.setState({ onClickViewDetails: true });
-    if (this.props.fetchOrderDetails) {
-      this.props.fetchOrderDetails(orderID);
-    }
-  }
-  requestInvioice() {
-    if (this.props.requestInvioice) {
-      this.props.requestInvioice();
-    }
-  }
-  writeReview() {
-    if (this.props.writeReview) {
-      this.props.writeReview();
-    }
-  }
-  replaceItem() {
-    if (this.props.replaceItem) {
-      this.props.replaceItem();
-    }
+    this.props.history.push(`${ORDER_SUMMARY_ROUTER}/${orderID}`);
   }
   componentDidMount() {
     this.props.getAllOrdersDetails();
   }
   render() {
     let orderDetails = this.props.profile.orderDetails;
-    let fetchOrderDetails = this.props.profile.fetchOrderDetails;
     return (
       <div className={styles.base}>
-        {!this.state.onClickViewDetails &&
-          orderDetails &&
+        {orderDetails &&
           orderDetails.orderData.map((orderDetails, i) => {
             return (
               <div className={styles.order} key={i}>
@@ -85,15 +57,6 @@ export default class GetAllOrderDetails extends React.Component {
               </div>
             );
           })}
-        {this.state.onClickViewDetails &&
-          fetchOrderDetails && (
-            <ViewDetail
-              data={fetchOrderDetails}
-              requestInvioice={() => this.requestInvioice()}
-              writeReview={() => this.writeReview()}
-              replaceItem={() => this.replaceItem()}
-            />
-          )}
       </div>
     );
   }

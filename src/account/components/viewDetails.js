@@ -9,6 +9,7 @@ import OrderStatusVertical from "./OrderStatusVertical";
 import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
 import moment from "moment";
+import { ORDER_DESCRIPTION } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 const Is_Returned = "Return";
 const Is_Cancel = "Cancel";
@@ -28,69 +29,78 @@ export default class ViewDetails extends React.Component {
       this.props.writeReview();
     }
   }
+  componentDidMount() {
+    if (this.props.match.path === ORDER_DESCRIPTION) {
+      let orderId = this.props.match.params[1];
+      this.props.fetchOrderDetails(orderId);
+    }
+  }
   render() {
-    let orderDetails = this.props.data;
+    let orderDetails = this.props.profile.fetchOrderDetails;
     return (
       <div className={styles.base}>
-        {orderDetails.products.map((products, i) => {
-          return (
-            <div className={styles.order} key={i}>
-              <div className={styles.orderIdHolder}>
-                <OrderPlacedAndId
-                  placedTime={moment(orderDetails.orderDate).format(dateFormat)}
-                  orderId={orderDetails.orderId}
-                />
-              </div>
+        {orderDetails &&
+          orderDetails.products.map((products, i) => {
+            return (
+              <div className={styles.order} key={i}>
+                <div className={styles.orderIdHolder}>
+                  <OrderPlacedAndId
+                    placedTime={moment(orderDetails.orderDate).format(
+                      dateFormat
+                    )}
+                    orderId={orderDetails.orderId}
+                  />
+                </div>
 
-              <OrderCard
-                imageUrl={products.imageURL}
-                price={products.price}
-                discountPrice={""}
-                productName={products.productName}
-              />
+                <OrderCard
+                  imageUrl={products.imageURL}
+                  price={products.price}
+                  discountPrice={""}
+                  productName={products.productName}
+                />
 
-              <div className={styles.payment}>
-                <OrderViewPaymentDetails
-                  SubTotal={products.price}
-                  DeliveryCharges={orderDetails.deliveryCharge}
-                  Discount={orderDetails.totalDiscount}
-                  ConvenienceCharges={orderDetails.convenienceCharge}
-                  Total={products.price}
+                <div className={styles.payment}>
+                  <OrderViewPaymentDetails
+                    SubTotal={products.price}
+                    DeliveryCharges={orderDetails.deliveryCharge}
+                    Discount={orderDetails.totalDiscount}
+                    ConvenienceCharges={orderDetails.convenienceCharge}
+                    Total={products.price}
+                  />
+                </div>
+                <OrderPaymentMethod
+                  phoneNumber={orderDetails.billingAddress.phone}
+                  paymentMethod={orderDetails.paymentMethod}
+                  request={() => this.requestInvioice()}
                 />
-              </div>
-              <OrderPaymentMethod
-                phoneNumber={orderDetails.billingAddress.phone}
-                paymentMethod={orderDetails.paymentMethod}
-                request={() => this.requestInvioice()}
-              />
-              <OrderDelivered
-                deliveredAddress={`${
-                  orderDetails.billingAddress.addressLine1
-                } ${orderDetails.billingAddress.town} ${
-                  orderDetails.billingAddress.state
-                } ${orderDetails.billingAddress.postalcode}`}
-              />
-              <div className={styles.orderStatusVertical}>
-                <OrderStatusVertical
-                  statusMessageList={
-                    products.statusDisplayMsg[0].value.statusList[0]
-                      .statusMessageList
-                  }
+                <OrderDelivered
+                  deliveredAddress={`${
+                    orderDetails.billingAddress.addressLine1
+                  } ${orderDetails.billingAddress.town} ${
+                    orderDetails.billingAddress.state
+                  } ${orderDetails.billingAddress.postalcode}`}
                 />
+                <div className={styles.orderStatusVertical}>
+                  <OrderStatusVertical
+                    statusMessageList={
+                      products.statusDisplayMsg[0].value.statusList[0]
+                        .statusMessageList
+                    }
+                  />
+                </div>
+                <div className={styles.buttonHolder}>
+                  <OrderReturn
+                    buttonLabel={
+                      products.isReturned === false ? Is_Cancel : Is_Returned
+                    }
+                    isEditable={true}
+                    replaceItem={() => this.replaceItem()}
+                    writeReview={() => this.writeReview()}
+                  />
+                </div>
               </div>
-              <div className={styles.buttonHolder}>
-                <OrderReturn
-                  buttonLabel={
-                    products.isReturned === false ? Is_Cancel : Is_Returned
-                  }
-                  isEditable={true}
-                  replaceItem={() => this.replaceItem()}
-                  writeReview={() => this.writeReview()}
-                />
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     );
   }

@@ -27,7 +27,7 @@ import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
 import GetAllOrderContainer from "./account/containers/GetAllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
-
+import FetchOrderDetailsContainer from "./account/containers/FetchOrderDetailsContainer.js";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -63,7 +63,8 @@ import {
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
   ORDER_PAGE,
-  ACCOUNT_SAVED_CARD_ROUTER
+  ACCOUNT_SAVED_CARD_ROUTER,
+  ORDER_DESCRIPTION
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -100,7 +101,7 @@ class App extends Component {
     } else {
       if (
         !cartDetailsForAnonymous &&
-         globalAccessToken &&
+        globalAccessToken &&
         !this.props.cart.loading
       ) {
         this.props.generateCartIdForAnonymous();
@@ -146,7 +147,11 @@ class App extends Component {
               path={BRAND_PAGE}
               component={PlpBrandCategoryWrapperContainer}
             />
-
+            <Route
+              exact
+              path={ORDER_DESCRIPTION}
+              component={FetchOrderDetailsContainer}
+            />
             <Route
               exact
               path={CATEGORY_PAGE}
