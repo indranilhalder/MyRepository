@@ -45,8 +45,6 @@ const mapDispatchToProps = dispatch => {
       dispatch(modalActions.hideModal());
     },
     loginUser: async userDetails => {
-      console.log("user details");
-      console.log(userDetails);
       const loginResponse = await dispatch(loginUser(userDetails));
       if (loginResponse.status === SUCCESS) {
         dispatch(modalActions.hideModal());
