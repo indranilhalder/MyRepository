@@ -49,7 +49,6 @@ import {
   BRAND_OR_CATEGORY_LANDING_PAGE,
   ORDER_SUMMARY_ROUTER,
   CHECKOUT_ROUTER,
-  ORDER_DESCRIPTION,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PLP_CATEGORY_SEARCH,
@@ -64,7 +63,10 @@ import {
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
   ORDER_PAGE,
-  ACCOUNT_SAVED_CARD_ROUTER
+  ACCOUNT_SAVED_CARD_ROUTER,
+  MY_ACCOUNT,
+  ORDER_PREFIX,
+  ORDER
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -150,7 +152,7 @@ class App extends Component {
             />
             <Route
               exact
-              path={ORDER_DESCRIPTION}
+              path={`${MY_ACCOUNT}${ORDER_PREFIX}:${ORDER}`}
               component={FetchOrderDetailsContainer}
             />
             <Route

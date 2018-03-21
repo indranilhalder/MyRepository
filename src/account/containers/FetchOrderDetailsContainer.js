@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { fetchOrderDetails } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
-import FetchOrderDetail from "../components/FetchOrderDetail";
+import OrderDetails from "../components/OrderDetails";
 const mapDispatchToProps = dispatch => {
   return {
     fetchOrderDetails: orderId => {
@@ -11,12 +11,12 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   return {
-    profile: state.profile
+    orderDetails: state.profile.fetchOrderDetails
   };
 };
 
 const GetAllOrderContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(FetchOrderDetail)
+  connect(mapStateToProps, mapDispatchToProps)(OrderDetails)
 );
 
 export default GetAllOrderContainer;

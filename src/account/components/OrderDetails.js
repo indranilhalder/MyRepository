@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./FetchOrderDetail.css";
+import styles from "./OrderDetails.css";
 import OrderPlacedAndId from "./OrderPlacedAndId.js";
 import OrderCard from "./OrderCard.js";
 import OrderDelivered from "./OrderDelivered.js";
@@ -9,14 +9,14 @@ import OrderStatusVertical from "./OrderStatusVertical";
 import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { ORDER_DESCRIPTION } from "../../lib/constants";
+import { MY_ACCOUNT, ORDER_PREFIX, ORDER } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_Returned = "Return";
 const PRODUCT_Cancel = "Cancel";
-export default class FetchOrderDetail extends React.Component {
+export default class OrderDetails extends React.Component {
   requestInvoice() {
-    if (this.props.requestInvioice) {
-      this.props.requestInvioice();
+    if (this.props.requestInvoice) {
+      this.props.requestInvoice();
     }
   }
   replaceItem() {
@@ -30,13 +30,13 @@ export default class FetchOrderDetail extends React.Component {
     }
   }
   componentDidMount() {
-    if (this.props.match.path === ORDER_DESCRIPTION) {
-      let orderId = this.props.match.params[1];
+    if (this.props.match.path === `${MY_ACCOUNT}${ORDER_PREFIX}:${ORDER}`) {
+      let orderId = this.props.match.params[0];
       this.props.fetchOrderDetails(orderId);
     }
   }
   render() {
-    const orderDetails = this.props.profile.fetchOrderDetails;
+    const orderDetails = this.props.orderDetails;
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -71,7 +71,7 @@ export default class FetchOrderDetail extends React.Component {
                 <OrderPaymentMethod
                   phoneNumber={orderDetails.billingAddress.phone}
                   paymentMethod={orderDetails.paymentMethod}
-                  request={() => this.requestInvioice()}
+                  request={() => this.requestInvoice()}
                 />
                 <OrderDelivered
                   deliveredAddress={`${
@@ -107,8 +107,8 @@ export default class FetchOrderDetail extends React.Component {
     );
   }
 }
-FetchOrderDetail.propTypes = {
-  data: PropTypes.arrayOf(
+OrderDetails.propTypes = {
+  orderDetails: PropTypes.arrayOf(
     PropTypes.shape({
       orderDate: PropTypes.string,
       orderId: PropTypes.string,

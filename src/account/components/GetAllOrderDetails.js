@@ -6,11 +6,11 @@ import PriceAndLink from "./PriceAndLink.js";
 import OrderDelivered from "./OrderDelivered.js";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { ORDER_DESCRIPTION_ROUTER } from "../../lib/constants";
+import { MY_ACCOUNT, ORDER_PREFIX } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
-export default class GetAllOrderDetails extends React.Component {
+export default class AllOrderDetails extends React.Component {
   onViewDetails(orderId) {
-    this.props.history.push(`${ORDER_DESCRIPTION_ROUTER}/${orderId}`);
+    this.props.history.push(`${MY_ACCOUNT}${ORDER_PREFIX}:${orderId}`);
   }
   componentDidMount() {
     this.props.getAllOrdersDetails();
@@ -61,7 +61,7 @@ export default class GetAllOrderDetails extends React.Component {
     );
   }
 }
-GetAllOrderDetails.propTypes = {
+AllOrderDetails.propTypes = {
   orderDetails: PropTypes.arrayOf(
     PropTypes.shape({
       orderDate: PropTypes.string,
