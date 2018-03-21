@@ -94,7 +94,7 @@ class MobileFooter extends React.Component {
           value={PROFILE}
           text="My Cliq"
           selected={selected}
-          onSelect={() => this.handleSelect(SAVE_LIST_PAGE)}
+          onSelect={() => this.handleSelect(MY_ACCOUNT_PAGE)}
         />
         <MobileFooterItem
           activeIcon={myBagIconRed}
