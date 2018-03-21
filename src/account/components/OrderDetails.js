@@ -12,8 +12,8 @@ import moment from "moment";
 import queryString from "query-string";
 import { MY_ACCOUNT, ORDER_PREFIX } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
-const PRODUCT_Returned = "Return";
-const PRODUCT_Cancel = "Cancel";
+const PRODUCT_Returned = "Return Product";
+const PRODUCT_Cancel = "Cancel Product";
 export default class OrderDetails extends React.Component {
   requestInvoice(ussid, sellerOrderNo) {
     if (this.props.sendInvoice) {
@@ -33,8 +33,8 @@ export default class OrderDetails extends React.Component {
   }
   componentDidMount() {
     if (this.props.match.path === `${MY_ACCOUNT}${ORDER_PREFIX}`) {
-      let orderDetails = queryString.parse(this.props.location.search);
-      let orderId = orderDetails.orderCode;
+      const orderDetails = queryString.parse(this.props.location.search);
+      const orderId = orderDetails.orderCode;
       this.props.fetchOrderDetails(orderId);
     }
   }
@@ -64,11 +64,11 @@ export default class OrderDetails extends React.Component {
 
                 <div className={styles.payment}>
                   <OrderViewPaymentDetails
-                    SubTotal={products.price}
+                    SubTotal={orderDetails.subTotal}
                     DeliveryCharges={orderDetails.deliveryCharge}
                     Discount={orderDetails.totalDiscount}
                     ConvenienceCharges={orderDetails.convenienceCharge}
-                    Total={products.price}
+                    Total={orderDetails.totalOrderAmount}
                   />
                 </div>
                 <OrderPaymentMethod
