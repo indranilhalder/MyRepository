@@ -4605,8 +4605,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			final Double netAmountAfrDiscount = oModel.getNetAmountAfterAllDisc();
 			final Double totalPrice = oModel.getTotalPrice();
 
-			payableAmount += ((netAmountAfrDiscount.doubleValue() > 0) ? netAmountAfrDiscount.doubleValue() : totalPrice
-					.doubleValue()) - walletAmt;
+			payableAmount += (((netAmountAfrDiscount.doubleValue() > 0) ? netAmountAfrDiscount.doubleValue() : totalPrice
+					.doubleValue()) - walletAmt) + oModel.getCurrDelCharge().doubleValue();
 			couponDiscount += oModel.getCouponValue().doubleValue();
 			mopPlusPromoDiscounty += (oModel.getBasePrice().doubleValue() * oModel.getQuantity().intValue())
 					+ oModel.getTotalProductLevelDisc().doubleValue() + oModel.getCartLevelDisc().doubleValue()
@@ -4774,14 +4774,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 		final List<AbstractOrderEntryModel> entryList = new ArrayList<>(absOrder.getEntries());
 		Tuple3<?, ?, ?> tuple3 = null;
-		double delCharge = 0.00d;
+		//double delCharge = 0.00d;
 
 		if (CollectionUtils.isNotEmpty(entryList))
 		{
 			tuple3 = getPayableAmount(entryList);
-			delCharge = getCartDelCharge(entryList);
-			//			delCharge = errorDTO.getDeliveryCharge() != null ? Double.parseDouble(errorDTO.getDeliveryCharge())
-			//					: getCartDelCharge(entryList);
+			//delCharge = getCartDelCharge(entryList);
 		}
 
 		Double payableAmount = new Double(0.00), couponDiscount = new Double(0.00), productDiscount = new Double(0.00);
@@ -4819,7 +4817,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 		//final Double productDiscount = (Double) tuple3.getThird();
 		//final double delCharge = Double.valueOf(cartDetailsData.getDeliveryCharge()).doubleValue();
-		final double discount = (cartTotalMrp.doubleValue() - productDiscount.doubleValue()) - delCharge;
+		final double discount = (cartTotalMrp.doubleValue() - productDiscount.doubleValue());// - delCharge;
 		final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
 		priceWsPwaDTO.setTotalDiscountAmount(totalDiscount);
 
@@ -4829,13 +4827,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	/*
 	 * For calculation delivery charge based on currDelCharge
 	 */
-	private double getCartDelCharge(final List<AbstractOrderEntryModel> entryList)
-	{
-		double actualDelCharge = 0.00D;
-		for (final AbstractOrderEntryModel cartentry : entryList)
-		{
-			actualDelCharge += cartentry.getCurrDelCharge().doubleValue();
-		}
-		return actualDelCharge;
-	}
+	//	private double getCartDelCharge(final List<AbstractOrderEntryModel> entryList)
+	//	{
+	//		double actualDelCharge = 0.00D;
+	//		for (final AbstractOrderEntryModel cartentry : entryList)
+	//		{
+	//			actualDelCharge += cartentry.getCurrDelCharge().doubleValue();
+	//		}
+	//		return actualDelCharge;
+	//	}
 }
