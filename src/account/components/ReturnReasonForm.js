@@ -1,82 +1,110 @@
 import React from "react";
-import OrderCard from "./OrderForm";
-import MobileSelect from "../../general/components/MobileSelect";
+import OrderCard from "./OrderCard";
+import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 import TextArea from "../../general/components/TextArea";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-import styles from "./ReasonForm.css";
+import Button from "../../general/components/Button";
+import styles from "./ReturnReasonForm.css";
+const data = {
+  type: "returnRequestDTO",
+  orderProductWsDTO: [
+    {
+      USSID: "273570HMAIBSSZ06",
+      imageURL:
+        "//pcmuat2.tataunistore.com/images/97Wx144H/MP000000000113801_97Wx144H_20171102155229.jpeg",
+      price: "778.0",
+      productBrand: "Red Rose",
+      productColour: "Red",
+      productName: "Infants Boys Clothing Shirts",
+      productSize: "M",
+      productcode: "MP000000000113801",
+      sellerID: "273570",
+      sellerName: "Saravanan",
+      sellerorderno: "180314-000-111548",
+      transactionId: "273570000120027"
+    }
+  ],
+  returnModes: {
+    quickDrop: true,
+    schedulePickup: true,
+    selfCourier: false
+  },
+  returnReasonMap: [
+    {
+      parentReasonCode: "JEW100",
+      parentReturnReason: "Dummy reason 1",
+      subReasons: [
+        {
+          subReasonCode: "JEW1S1",
+          subReturnReason: "Sub reason 11"
+        },
+        {
+          subReasonCode: "JEW1S2",
+          subReturnReason: "Sub reason 12"
+        }
+      ]
+    },
+    {
+      parentReasonCode: "JEW200",
+      parentReturnReason: "Dummy reason 2",
+      subReasons: [
+        {
+          subReasonCode: "JEW2S2",
+          subReturnReason: "Sub reason 21"
+        }
+      ]
+    }
+  ],
+  showReverseSealFrJwlry: "no"
+};
+
 export default class ReturnReasonForm extends React.Component {
-  render() {
-    const data = {
-      type: "returnRequestDTO",
-      orderProductWsDTO: [
-        {
-          USSID: "273570HMAIBSSZ06",
-          imageURL:
-            "//pcmuat2.tataunistore.com/images/97Wx144H/MP000000000113801_97Wx144H_20171102155229.jpeg",
-          price: "778.0",
-          productBrand: "Red Rose",
-          productColour: "Red",
-          productName: "Infants Boys Clothing Shirts",
-          productSize: "M",
-          productcode: "MP000000000113801",
-          sellerID: "273570",
-          sellerName: "Saravanan",
-          sellerorderno: "180314-000-111548",
-          transactionId: "273570000120025"
-        }
-      ],
-      returnModes: {
-        quickDrop: true,
-        schedulePickup: true,
-        selfCourier: false
-      },
-      returnReasonMap: [
-        {
-          parentReasonCode: "01",
-          parentReturnReason: "The product I received was damaged"
-        },
-        {
-          parentReasonCode: "02",
-          parentReturnReason: "The product delivered is faulty"
-        },
-        {
-          parentReasonCode: "03",
-          parentReturnReason: "I'm not happy with the product quality"
-        },
-        {
-          parentReasonCode: "04",
-          parentReturnReason: "I was sent the wrong product"
-        },
-        {
-          parentReasonCode: "05",
-          parentReturnReason: "The product is missing a part"
-        },
-        {
-          parentReasonCode: "06",
-          parentReturnReason: "My order took too long to reach me"
-        },
-        {
-          parentReasonCode: "07",
-          parentReturnReason:
-            "The product doesn't look like what I saw on the website"
-        },
-        {
-          parentReasonCode: "08",
-          parentReturnReason: "What I ordered doesn't fit me well"
-        },
-        {
-          parentReasonCode: "09",
-          parentReturnReason: "Forward Seal Mismatch"
-        }
-      ],
-      showReverseSealFrJwlry: "no"
+  constructor(props) {
+    super(props);
+    this.state = {
+      displaySecondary: false,
+      secondaryReasons: null
     };
+  }
+  handleContinue() {
+    if (this.props.onContinue) {
+      this.props.onContinue();
+    }
+  }
+  onChangePrimary(code) {
+    this.setState({
+      secondaryReasons: data.returnReasonMap
+        .filter(val => {
+          return val.parentReasonCode === code;
+        })
+        .map(val => {
+          return val.subReasons.map(value => {
+            return { value: value.subReasonCode, label: value.subReturnReason };
+          });
+        })[0]
+    });
+  }
+  onChangeSecondary(code) {
+    if (this.props.onChangeSecondary) {
+      this.props.onChangeSecondary(code);
+    }
+  }
+  handleCancel() {
+    if (this.props.onCancel) {
+      this.props.onCancel();
+    }
+  }
+  render() {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
           Select reason for your return
-          <div classNae={styles.buttonHolder}>
-            <UnderLinedButton label="Cancel" />
+          <div className={styles.cancelHolder}>
+            <UnderLinedButton
+              label="Cancel"
+              color="#ff1744"
+              onClick={() => this.handleCancel()}
+            />
           </div>
         </div>
         <div className={styles.content}>
@@ -85,7 +113,7 @@ export default class ReturnReasonForm extends React.Component {
             productName={`${data.orderProductWsDTO[0].productBrand} ${
               data.orderProductWsDTO[0].productName
             }`}
-            price={data.orderProductWsDTO[0].productName}
+            price={data.orderProductWsDTO[0].price}
           >
             {data.orderProductWsDTO[0].quantity && (
               <div className={styles.quantity}>
@@ -94,12 +122,39 @@ export default class ReturnReasonForm extends React.Component {
             )}
           </OrderCard>
           <div className={styles.select}>
-            <MobileSelect />
+            <SelectBoxMobile
+              label="Select a reason"
+              options={data.returnReasonMap.map((val, i) => {
+                return {
+                  value: val.parentReasonCode,
+                  label: val.parentReturnReason
+                };
+              })}
+              onChange={val => this.onChangePrimary(val)}
+            />
           </div>
-          <div className={styles.select}>
-            <MobileSelect />
+          {this.state.secondaryReasons && (
+            <div className={styles.select}>
+              <SelectBoxMobile
+                label="Select a reason"
+                options={this.state.secondaryReasons}
+                onChange={val => this.onChangeSecondary()}
+              />
+            </div>
+          )}
+          <div className={styles.textArea}>
+            <TextArea onChange={val => this.handleChange()} />
           </div>
-          <TextArea />
+        </div>
+        <div className={styles.buttonHolder}>
+          <div className={styles.button}>
+            <Button
+              width={175}
+              type="primary"
+              label="Continue"
+              onClick={this.handleContinue()}
+            />
+          </div>
         </div>
       </div>
     );
