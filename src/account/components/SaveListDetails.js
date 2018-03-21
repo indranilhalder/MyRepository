@@ -22,17 +22,17 @@ export default class SaveListDetails extends React.Component {
     this.props.getWishList();
   }
   addToBagItem(ussid, productcode) {
-    let productDetails = {};
+    const productDetails = {};
     productDetails.ussId = ussid;
     productDetails.code = productcode;
     productDetails.quantity = PRODUCT_QUANTITY;
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let cartDetailsLoggedInUser = Cookie.getCookie(
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const cartDetailsLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
-    let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (userDetails) {
       if (cartDetailsLoggedInUser && customerCookie) {
         this.props.addProductToCart(
@@ -54,7 +54,7 @@ export default class SaveListDetails extends React.Component {
     }
   }
   removeItem(ussid) {
-    let productDetails = {};
+    const productDetails = {};
     productDetails.USSID = ussid;
     if (this.props.removeProductFromWishList) {
       this.props.removeProductFromWishList(productDetails);
@@ -80,7 +80,7 @@ export default class SaveListDetails extends React.Component {
                   addToBagItem={() =>
                     this.addToBagItem(val.USSID, val.productcode)
                   }
-                  removeItem={val => this.removeItem(val.USSID)}
+                  removeItem={() => this.removeItem(val.USSID)}
                 />
               </div>
             );
