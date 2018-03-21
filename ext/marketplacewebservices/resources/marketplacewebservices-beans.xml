@@ -3961,6 +3961,7 @@
 		<property name="averageRating" type="Double" />
 		<property name="numberOfReviews" type="Integer" />
 		<property name="styleNote" type="String"></property>
+		<property name="seo" type="com.tisl.wsdto.SeoContentData"></property>
 	</bean>
 	
 	<!-- added for pdp new ui end -->
