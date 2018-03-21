@@ -6,7 +6,9 @@ import PriceAndLink from "./PriceAndLink.js";
 import OrderDelivered from "./OrderDelivered.js";
 import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
+import Button from "../../general/components/Button";
 import moment from "moment";
+import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 export default class GetAllOrderDetails extends React.Component {
   onViewDetails() {
@@ -27,59 +29,81 @@ export default class GetAllOrderDetails extends React.Component {
   componentDidMount() {
     this.props.getAllOrdersDetails();
   }
+  renderToContinueShopping() {
+    this.props.history.push(HOME_ROUTER);
+  }
+  renderNoOrder() {
+    return (
+      <div className={styles.noOrder}>
+        <div className={styles.noOderText}>
+          You have not made any purchase yet
+        </div>
+        <div className={styles.continueShoppingButton}>
+          <Button
+            label="Continue Shopping"
+            type="primary"
+            width={170}
+            height={40}
+            onClick={() => this.renderToContinueShopping()}
+          />
+        </div>
+      </div>
+    );
+  }
   render() {
     let orderDetails = this.props.profile.orderDetails;
     return (
       <div className={styles.base}>
-        {orderDetails &&
-          orderDetails.orderData.map((orderDetails, i) => {
-            return (
-              <div className={styles.order} key={i}>
-                <div className={styles.orderIdHolder}>
-                  <OrderPlacedAndId
-                    placedTime={moment(orderDetails.orderDate).format(
-                      dateFormat
-                    )}
-                    orderId={orderDetails.orderId}
+        {orderDetails && orderDetails.orderData
+          ? orderDetails.orderData.map((orderDetails, i) => {
+              return (
+                <div className={styles.order} key={i}>
+                  <div className={styles.orderIdHolder}>
+                    <OrderPlacedAndId
+                      placedTime={moment(orderDetails.orderDate).format(
+                        dateFormat
+                      )}
+                      orderId={orderDetails.orderId}
+                    />
+                  </div>
+                  {orderDetails.products &&
+                    orderDetails.products.map((products, j) => {
+                      return (
+                        <OrderCard
+                          key={j}
+                          imageUrl={products.imageURL}
+                          price={products.price}
+                          discountPrice={""}
+                          productName={products.productName}
+                        />
+                      );
+                    })}
+                  <PriceAndLink
+                    onViewDetails={() => this.onViewDetails()}
+                    price={orderDetails.totalOrderAmount}
                   />
-                </div>
-                {orderDetails.products &&
-                  orderDetails.products.map((products, j) => {
-                    return (
-                      <OrderCard
-                        key={j}
-                        imageUrl={products.imageURL}
-                        price={products.price}
-                        discountPrice={""}
-                        productName={products.productName}
-                      />
-                    );
-                  })}
-                <PriceAndLink
-                  onViewDetails={() => this.onViewDetails()}
-                  price={orderDetails.totalOrderAmount}
-                />
 
-                <OrderDelivered
-                  deliveredAddress={`${
-                    orderDetails.billingAddress.addressLine1
-                  } ${orderDetails.billingAddress.town} ${
-                    orderDetails.billingAddress.state
-                  } ${orderDetails.billingAddress.postalcode}`}
-                />
-                <div className={styles.buttonHolder}>
-                  <OrderReturn
-                    buttonLabel={this.props.buttonLabel}
-                    underlineButtonLabel={this.props.underlineButtonLabel}
-                    underlineButtonColour={this.props.underlineButtonColour}
-                    isEditable={true}
-                    replaceItem={() => this.replaceItem()}
-                    writeReview={() => this.writeReview()}
+                  <OrderDelivered
+                    deliveredAddress={`${
+                      orderDetails.billingAddress.addressLine1
+                    } ${orderDetails.billingAddress.town} ${
+                      orderDetails.billingAddress.state
+                    } ${orderDetails.billingAddress.postalcode}`}
                   />
+                  <div className={styles.buttonHolder}>
+                    <OrderReturn
+                      buttonLabel={this.props.buttonLabel}
+                      underlineButtonLabel={this.props.underlineButtonLabel}
+                      underlineButtonColour={this.props.underlineButtonColour}
+                      isEditable={true}
+                      replaceItem={() => this.replaceItem()}
+                      writeReview={() => this.writeReview()}
+                    />
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          : this.renderNoOrder()}
       </div>
     );
   }

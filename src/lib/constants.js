@@ -51,6 +51,20 @@ export const ORDER_SUMMARY_ROUTER = "/orderSummary";
 export const CHECKOUT_ROUTER = "/checkout";
 export const ACCOUNT_SAVED_CARD_ROUTER = "/savedCards";
 
+// MyAccount Routes
+export const MY_ACCOUNT_PAGE = "/myAccount";
+export const MY_ACCOUNT_WISHLIST_PAGE = "/wishList";
+export const MY_ACCOUNT_ORDERS_PAGE = "/orders";
+export const MY_ACCOUNT_GIFT_CARD_PAGE = "/giftCard";
+export const MY_ACCOUNT_SAVED_CARDS_PAGE = "/payment-details";
+export const MY_ACCOUNT_ADDRESS_PAGE = "/address-book";
+export const MY_ACCOUNT_BRANDS_PAGE = "/brands";
+export const MY_ACCOUNT_UPDATE_PROFILE_PAGE = "/update-profile";
+export const MY_ACCOUNT_ALERTS_PAGE = "/alerts";
+export const MY_ACCOUNT_COUPON_PAGE = "/coupons";
+export const MY_ACCOUNT_CART_PAGE = "/cart";
+export const MY_ACCOUNT_CLIQ_CASH_PAGE = "/cliq-cash";
+
 export const CLIQ_AND_PIQ = "/select-stores";
 export const PRODUCT_CART_DELIVERY_MODES = "/deliveryModes";
 export const PRODUCT_DELIVERY_ADDRESSES = "/deliveryAddress";
