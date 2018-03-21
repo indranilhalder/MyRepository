@@ -1,0 +1,21 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.header {
+  width: 100%;
+  font-size: 18px;
+  color: #000000;
+  font-family: semibold;
+  position: relative;
+  padding-right: 80px;
+}
+.buttonHolder {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.select {
+  composes: base;
+  margin-bottom: 20px;
+}
