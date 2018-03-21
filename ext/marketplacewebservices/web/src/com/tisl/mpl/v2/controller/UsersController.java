@@ -2810,6 +2810,9 @@ public class UsersController extends BaseCommerceController
 				newAddress.setLine1(line1);
 				newAddress.setTown(town);
 				newAddress.setPostalCode(postalCode);
+				newAddress.setBillingAddress(false);
+				newAddress.setShippingAddress(true);
+				newAddress.setVisibleInAddressBook(true);
 				newAddress.setAddressType(addressType);
 				newAddress.setPhone(phone);
 				newAddress.setState(state);
