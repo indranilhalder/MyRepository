@@ -18,9 +18,6 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
-const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
 export default class MyAccount extends React.Component {
   constructor(props) {
     super(props);
@@ -37,6 +34,9 @@ export default class MyAccount extends React.Component {
     );
   }
   componentDidMount() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
     if (userDetails && customerCookie) {
       this.props.getUserDetails();
       this.props.getUserCoupons();
