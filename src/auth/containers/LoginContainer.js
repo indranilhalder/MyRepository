@@ -36,10 +36,6 @@ const mapDispatchToProps = dispatch => {
       );
       if (userDetailsResponse.status === SUCCESS) {
         const loginUserResponse = await dispatch(loginUser(userDetails));
-        console.log("LOGIN USER RESPONSE");
-        console.log(loginUserResponse);
-        console.log("USER DETAILS");
-        console.log(userDetails);
         if (loginUserResponse.status === SUCCESS) {
           const cartVal = await dispatch(getCartId());
           if (
@@ -54,7 +50,6 @@ const mapDispatchToProps = dispatch => {
         } else if (
           loginUserResponse.error === OTP_VERIFICATION_REQUIRED_MESSAGE
         ) {
-          console.log("RIGHT IF BRANCH");
           dispatch(showModal(OTP_LOGIN_MODAL, userDetails));
         }
       }

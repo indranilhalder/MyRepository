@@ -27,8 +27,6 @@ export default class OtpVerification extends React.Component {
   onSubmitOtp = () => {
     if (this.props.submitOtp) {
       if (this.props.username && this.props.password) {
-        console.log("OTP IN STATE");
-        console.log(this.state.otp);
         this.props.submitOtp({
           username: this.props.username,
           password: this.props.password,

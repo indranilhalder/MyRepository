@@ -141,16 +141,12 @@ export function loginUser(userLoginDetails) {
       }
       const result = await api.post(url);
       const resultJson = await result.json();
-      console.log("RESULT JSON");
-      console.log(resultJson);
       if (resultJson.errorCode) {
         throw new Error(`${resultJson.status}`);
       }
 
       return dispatch(loginUserSuccess(resultJson));
     } catch (e) {
-      console.log("IN ERROR");
-      console.log(e);
       return dispatch(loginUserFailure(e.message));
     }
   };
