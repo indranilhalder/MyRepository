@@ -15,7 +15,9 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     userCoupons: state.profile.userCoupons,
-    userAlerts: state.profile.userAlerts
+    userAlerts: state.profile.userAlerts,
+    loadingForUserCoupons: state.profile.loadingForUserCoupons,
+    loadingForUserAlerts: state.profile.loadingForUserAlerts
   };
 };
 const UserAlertsAndCouponsContainer = withRouter(

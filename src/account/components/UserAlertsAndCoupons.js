@@ -1,8 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 import TabHolder from "./TabHolder";
 import TabData from "./TabData";
 import UserAlerts from "./UserAlerts";
 import UserCoupons from "./UserCoupons";
+import MDSpinner from "react-md-spinner";
+
 import {
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_ALERTS_PAGE,
@@ -26,7 +29,14 @@ export default class UserAlertsAndCoupons extends React.Component {
   renderToCoupons() {
     this.props.history.push(URL_PATH_COUPONS);
   }
+  renderLoader() {
+    return <MDSpinner />;
+  }
+
   render() {
+    if (!this.props.loadingForUserCoupons || this.props.loadingForUserAlerts) {
+      return this.renderLoader();
+    }
     const { pathname } = this.props.history.location;
     let currentActivePath;
     if (pathname === URL_PATH_ALERTS) {
@@ -64,3 +74,11 @@ export default class UserAlertsAndCoupons extends React.Component {
     );
   }
 }
+UserAlertsAndCoupons.propTypes = {
+  loadingForUserAlerts: PropTypes.bool,
+  loadingForUserCoupons: PropTypes.bool,
+  userAlerts: PropTypes.shape({ orderNotifications: PropTypes.array }),
+  userCoupons: PropTypes.shape({ unusedCouponsList: PropTypes.array }),
+  getUserAlerts: PropTypes.func,
+  getUserCoupons: PropTypes.func
+};

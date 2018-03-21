@@ -14,10 +14,7 @@ import {
   PRODUCT_CART_DELIVERY_MODES,
   LOGIN_PATH,
   SIGN_UP_PATH,
-  PRODUCT_LISTINGS,
-  MY_ACCOUNT_PAGE,
-  MY_ACCOUNT_ALERTS_PAGE,
-  MY_ACCOUNT_COUPON_PAGE
+  PRODUCT_LISTINGS
 } from "../../../src/lib/constants";
 import { SIGN_UP } from "../../auth/actions/user.actions";
 
@@ -74,12 +71,7 @@ class HeaderWrapper extends React.Component {
     if (url === LOGIN_PATH || url === SIGN_UP_PATH) {
       shouldRenderHeader = false;
     }
-    if (
-      url === `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ALERTS_PAGE}` ||
-      url === `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`
-    ) {
-      headerText = "Alerts & Coupons";
-    }
+
     // if we are on home, category landing, brand landing, we cannot go back.
 
     /*
