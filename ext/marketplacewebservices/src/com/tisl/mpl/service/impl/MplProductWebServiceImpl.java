@@ -268,29 +268,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	MplApiCachingStrategy mplApiCachingStrategy;
 
 
-	//check if memcache enabled is true in properties
-	private String isCacheEnabled;
-
-
-	//added for pdp new ui end
-
-	/**
-	 * @return the isCacheEnabled
-	 */
-	public String getIsCacheEnabled()
-	{
-		return isCacheEnabled;
-	}
-
-	/**
-	 * @param isCacheEnabled
-	 *           the isCacheEnabled to set
-	 */
-	public void setIsCacheEnabled(final String isCacheEnabled)
-	{
-		this.isCacheEnabled = isCacheEnabled;
-	}
-
 	@Autowired
 	private UserService userService;
 
@@ -3654,7 +3631,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		String sellerMonogramMessage = MarketplacecommerceservicesConstants.EMPTY;
 		//String buyingGuideURL = MarketplacecommerceservicesConstants.EMPTY;
 		MplNewProductDetailMobileWsData details = null;
-
+		final Boolean isCacheEnabled = configurationService.getConfiguration().getBoolean("pdp.memcache.enabled", Boolean.FALSE);
+		LOG.debug("isCacheEnabled::" + isCacheEnabled);
 		try
 		{
 			productModel = productService.getProductForCode(productCode);
@@ -3675,7 +3653,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				try
 				{
-					if (Boolean.parseBoolean(getIsCacheEnabled()))
+					if (isCacheEnabled.booleanValue())
 					{
 						details = mplApiCachingStrategy.get(productCode);
 
@@ -4877,8 +4855,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			sharedText += MarketplacecommerceservicesConstants.SPACE
 					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
 			productDetailMobileNew.setSharedText(sharedText);
-
-			if (Boolean.parseBoolean(getIsCacheEnabled()))
+			final Boolean isCacheEnabled = configurationService.getConfiguration().getBoolean("pdp.memcache.enabled", Boolean.FALSE);
+			LOG.debug("isCacheEnabled::::::" + isCacheEnabled);
+			if (isCacheEnabled.booleanValue())
 			{
 				mplApiCachingStrategy.put(productData.getCode(), productDetailMobileNew);
 			}
