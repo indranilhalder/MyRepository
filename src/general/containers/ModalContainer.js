@@ -26,8 +26,6 @@ import {
 } from "../../cart/actions/cart.actions";
 
 const mapStateToProps = (state, ownProps) => {
-  console.log("MAP STATE TO PROPS");
-  console.log(state.modal.ownProps);
   return {
     modalType: state.modal.modalType,
     ownProps: state.modal.ownProps,
