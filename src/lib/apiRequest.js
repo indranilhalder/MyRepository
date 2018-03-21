@@ -72,7 +72,7 @@ export async function post(path, postData, doNotUserApiSuffix: true) {
   const url = `${API_URL_ROOT}/${path}`;
   return await fetch(url, {
     method: "POST",
-    body: postData,
+    body: JSON.stringify(postData),
     headers: {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#"),
       "Content-Type": "application/json"
@@ -151,7 +151,7 @@ export async function putMock(url, payload) {
 }
 
 export async function postMsd(url, payload) {
-  return await fetch(`${API_URL_ROOT}/${url}`, {
+  return await fetch(`${API_MSD_URL_ROOT}/${url}`, {
     method: "POST",
     body: payload
   });
