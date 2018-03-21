@@ -34,7 +34,7 @@ export default class UserAlertsAndCoupons extends React.Component {
   }
 
   render() {
-    if (!this.props.loadingForUserCoupons || this.props.loadingForUserAlerts) {
+    if (this.props.loadingForUserCoupons || this.props.loadingForUserAlerts) {
       return this.renderLoader();
     }
     const { pathname } = this.props.history.location;
