@@ -12,7 +12,7 @@
  *
  */
 package com.tisl.mpl.v2.controller;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+
 import de.hybris.platform.acceleratorfacades.flow.impl.SessionOverrideCheckoutFlowFacade;
 import de.hybris.platform.acceleratorservices.email.EmailService;
 import de.hybris.platform.commercefacades.order.OrderFacade;
@@ -22,8 +22,6 @@ import de.hybris.platform.commercefacades.order.data.OrderHistoriesData;
 import de.hybris.platform.commercefacades.order.data.OrderHistoryData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.ImageData;
-import de.hybris.platform.commercefacades.product.data.PriceData;
-import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
@@ -61,7 +59,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -95,6 +92,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -228,9 +226,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 *
+	 * 
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 *
+	 * 
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -474,9 +472,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 *
+	 * 
 	 * @param orderNumber
-	 *
+	 * 
 	 * @param lineID
 	 */
 
@@ -1181,11 +1179,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1382,19 +1380,23 @@ public class OrdersController extends BaseCommerceController
 				final DecimalFormat df = new DecimalFormat("#.##");
 				final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 				final CurrencyModel currency = commonI18NService.getCurrency(INR);
-				final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
-				final Double mrp = mplCartWebService.calculateCartTotalMrp(orderDetails);
-				df.format(mrp);
-				final PriceData mrpPrice = priceDataFactory
-						.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()), currency);
-				final double amountInclDelCharge = Double.parseDouble(orderTrackingWsDTO.getTotalOrderAmount());
-				final double delCharge = Double.parseDouble(orderTrackingWsDTO.getDeliveryCharge());
-				final double amtWdDelCharge = amountInclDelCharge - delCharge;
-				final double discount = mrp.doubleValue() - Double.parseDouble(df.format(amtWdDelCharge));
-				final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
-				pricePwa.setBagTotal(mrpPrice);
-				pricePwa.setTotalDiscountAmount(totalDiscount);
+
+				final PriceWsPwaDTO pricePwa = mplPaymentWebFacade.configureCartAmtPwaWithDelCharge(orderCode);
 				orderTrackingWsDTO.setOrderAmount(pricePwa);
+
+				//				final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+				//				final Double mrp = mplCartWebService.calculateCartTotalMrp(orderDetails);
+				//				df.format(mrp);
+				//				final PriceData mrpPrice = priceDataFactory
+				//						.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()), currency);
+				//				final double amountInclDelCharge = Double.parseDouble(orderTrackingWsDTO.getTotalOrderAmount());
+				//				final double delCharge = Double.parseDouble(orderTrackingWsDTO.getDeliveryCharge());
+				//				final double amtWdDelCharge = amountInclDelCharge - delCharge;
+				//				final double discount = mrp.doubleValue() - Double.parseDouble(df.format(amtWdDelCharge));
+				//				final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+				//				pricePwa.setBagTotal(mrpPrice);
+				//				pricePwa.setTotalDiscountAmount(totalDiscount);
+				//				orderTrackingWsDTO.setOrderAmount(pricePwa);
 
 			}
 		}
@@ -1648,22 +1650,25 @@ public class OrdersController extends BaseCommerceController
 					}
 					if (isPwa)
 					{
-						final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
-						final Double mrp = mplCartWebService.calculateCartTotalMrp(orderDetails);
-						final DecimalFormat df = new DecimalFormat("#.##");
-						df.format(mrp);
-						final CurrencyModel currency = commonI18NService.getCurrency(INR);
-						final double amountInclDelCharge = Double.parseDouble(order.getTotalOrderAmount());
-						final double delCharge = Double.parseDouble(order.getDeliveryCharge());
-						final double payableamtWdDelCharge = amountInclDelCharge - delCharge;
-						final double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
-						final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount),
-								currency);
-						final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
-								currency);
-						pricePwa.setBagTotal(totalMrp);
-						pricePwa.setTotalDiscountAmount(totalDiscount);
+						final PriceWsPwaDTO pricePwa = mplPaymentWebFacade.configureCartAmtPwaWithDelCharge(orderData.getCode());
 						order.setOrderAmount(pricePwa);
+
+						//						final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+						//						final Double mrp = mplCartWebService.calculateCartTotalMrp(orderDetails);
+						//						final DecimalFormat df = new DecimalFormat("#.##");
+						//						df.format(mrp);
+						//						final CurrencyModel currency = commonI18NService.getCurrency(INR);
+						//						final double amountInclDelCharge = Double.parseDouble(order.getTotalOrderAmount());
+						//						final double delCharge = Double.parseDouble(order.getDeliveryCharge());
+						//						final double payableamtWdDelCharge = amountInclDelCharge - delCharge;
+						//						final double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+						//						final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount),
+						//								currency);
+						//						final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+						//								currency);
+						//						pricePwa.setBagTotal(totalMrp);
+						//						pricePwa.setTotalDiscountAmount(totalDiscount);
+						//						order.setOrderAmount(pricePwa);
 
 					}
 				}
