@@ -9,12 +9,8 @@ import OrderStatusVertical from "./OrderStatusVertical";
 import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
 import moment from "moment";
-import {
-  MY_ACCOUNT,
-  ORDER_PREFIX,
-  ORDER,
-  ORDER_CODE
-} from "../../lib/constants";
+import queryString from "query-string";
+import { MY_ACCOUNT, ORDER_PREFIX } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_Returned = "Return";
 const PRODUCT_Cancel = "Cancel";
@@ -36,11 +32,9 @@ export default class OrderDetails extends React.Component {
     }
   }
   componentDidMount() {
-    if (
-      this.props.match.path ===
-      `${MY_ACCOUNT}${ORDER_PREFIX}${ORDER_CODE}=${ORDER}`
-    ) {
-      let orderId = this.props.match.params[0];
+    if (this.props.match.path === `${MY_ACCOUNT}${ORDER_PREFIX}`) {
+      let orderDetails = queryString.parse(this.props.location.search);
+      let orderId = orderDetails.orderCode;
       this.props.fetchOrderDetails(orderId);
     }
   }

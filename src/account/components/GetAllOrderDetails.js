@@ -7,14 +7,12 @@ import OrderDelivered from "./OrderDelivered.js";
 import PropTypes from "prop-types";
 import Button from "../../general/components/Button";
 import moment from "moment";
-import { MY_ACCOUNT, ORDER_PREFIX, ORDER_CODE } from "../../lib/constants";
+import { MY_ACCOUNT, ORDER, ORDER_CODE } from "../../lib/constants";
 import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 export default class AllOrderDetails extends React.Component {
   onViewDetails(orderId) {
-    this.props.history.push(
-      `${MY_ACCOUNT}${ORDER_PREFIX}${ORDER_CODE}=${orderId}`
-    );
+    this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   componentDidMount() {
     this.props.getAllOrdersDetails();
