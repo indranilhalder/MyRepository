@@ -11,8 +11,16 @@ import TabData from "./TabData";
 import styles from "./MyAccount.css";
 import {
   MY_ACCOUNT_PAGE,
-  MY_ACCOUNT_UPDATE_PROFILE_PAGE
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE,
+  LOGGED_IN_USER_DETAILS,
+  CUSTOMER_ACCESS_TOKEN,
+  LOGIN_PATH
 } from "../../lib/constants";
+import * as Cookie from "../../lib/Cookie";
+
+const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
 export default class MyAccount extends React.Component {
   constructor(props) {
     super(props);
@@ -29,9 +37,13 @@ export default class MyAccount extends React.Component {
     );
   }
   componentDidMount() {
-    this.props.getUserDetails();
-    this.props.getUserCoupons();
-    this.props.getUserAlerts();
+    if (userDetails && customerCookie) {
+      this.props.getUserDetails();
+      this.props.getUserCoupons();
+      this.props.getUserAlerts();
+    } else {
+      this.props.history.push(LOGIN_PATH);
+    }
   }
   render() {
     return (
