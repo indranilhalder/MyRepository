@@ -9,8 +9,10 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -26,6 +28,8 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
 
 import java.math.BigDecimal;
@@ -39,6 +43,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
@@ -115,6 +120,10 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	@Resource(name = "notificationFacade")
 	private NotificationFacade notificationFacade;
+
+	private CheckoutCustomerStrategy checkoutCustomerStrategy;
+	private CustomerAccountService customerAccountService;
+	private UserService userService;
 
 	/**
 	 * To Check COD Eligibility for Cart Items
@@ -1271,4 +1280,65 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		priceData.setPriceType(PriceDataType.BUY);
 		return priceData;
 	}
+
+	//Added for NU- starts
+	public PriceWsPwaDTO configureCartAmtPwaWithDelCharge(final String code)
+	{
+		PriceWsPwaDTO priceWsPwaDTO = new PriceWsPwaDTO();
+		if (code != null)
+		{
+			final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
+			final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout() ? getCustomerAccountService()
+					.getOrderDetailsForGUID(code, baseStoreModel) : getCustomerAccountService().getOrderForCode(
+					(CustomerModel) getUserService().getCurrentUser(), code, baseStoreModel);
+
+			priceWsPwaDTO = mplCartWebService.configureCartAmtPwaWithDelCharge(orderModel);
+		}
+		return priceWsPwaDTO;
+	}
+
+	protected CheckoutCustomerStrategy getCheckoutCustomerStrategy()
+	{
+		return checkoutCustomerStrategy;
+	}
+
+	@Required
+	public void setCheckoutCustomerStrategy(final CheckoutCustomerStrategy checkoutCustomerStrategy)
+	{
+		this.checkoutCustomerStrategy = checkoutCustomerStrategy;
+	}
+
+	@Required
+	public void setCustomerAccountService(final CustomerAccountService customerAccountService)
+	{
+		this.customerAccountService = customerAccountService;
+	}
+
+	protected CustomerAccountService getCustomerAccountService()
+	{
+		return customerAccountService;
+	}
+
+	protected BaseStoreService getBaseStoreService()
+	{
+		return baseStoreService;
+	}
+
+	@Required
+	public void setBaseStoreService(final BaseStoreService baseStoreService)
+	{
+		this.baseStoreService = baseStoreService;
+	}
+
+	protected UserService getUserService()
+	{
+		return userService;
+	}
+
+	@Required
+	public void setUserService(final UserService userService)
+	{
+		this.userService = userService;
+	}
+	//Added for NU- ends
 }

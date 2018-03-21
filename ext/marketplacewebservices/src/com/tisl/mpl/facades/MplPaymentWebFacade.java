@@ -20,6 +20,7 @@ import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
+import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 
 
 /**
@@ -182,4 +183,6 @@ public interface MplPaymentWebFacade
 	 */
 	public void saveTPWalletPaymentInfoMobile(AbstractOrderModel cart, final String refernceCode, Map<String, Double> paymentMode,
 			String amount);
+
+	public PriceWsPwaDTO configureCartAmtPwaWithDelCharge(final String code);
 }

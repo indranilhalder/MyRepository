@@ -4598,14 +4598,19 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 		for (final AbstractOrderEntryModel oModel : entryList)
 		{
+			final double walletAmt = oModel.getWalletApportionPaymentInfo() != null ? (StringUtils.isNotEmpty(oModel
+					.getWalletApportionPaymentInfo().getQcApportionPartValue()) ? Double.parseDouble(oModel
+					.getWalletApportionPaymentInfo().getQcApportionPartValue()) : 0.00d) : 0.00d;
+
 			final Double netAmountAfrDiscount = oModel.getNetAmountAfterAllDisc();
 			final Double totalPrice = oModel.getTotalPrice();
 
-			payableAmount += (netAmountAfrDiscount.doubleValue() > 0) ? netAmountAfrDiscount.doubleValue() : totalPrice
-					.doubleValue();
+			payableAmount += ((netAmountAfrDiscount.doubleValue() > 0) ? netAmountAfrDiscount.doubleValue() : totalPrice
+					.doubleValue()) - walletAmt;
 			couponDiscount += oModel.getCouponValue().doubleValue();
 			mopPlusPromoDiscounty += (oModel.getBasePrice().doubleValue() * oModel.getQuantity().intValue())
-					+ oModel.getTotalProductLevelDisc().doubleValue() + oModel.getCartLevelDisc().doubleValue();
+					+ oModel.getTotalProductLevelDisc().doubleValue() + oModel.getCartLevelDisc().doubleValue()
+					+ oModel.getCartCouponValue().doubleValue();
 		}
 
 		return new Tuple3<Double, Double, Double>(Double.valueOf(payableAmount), Double.valueOf(couponDiscount),

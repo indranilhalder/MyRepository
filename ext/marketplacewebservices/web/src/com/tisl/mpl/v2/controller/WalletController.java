@@ -158,7 +158,7 @@ public class WalletController
 			CalculationException
 	{
 		ApplyCliqCashWsDto applyCliqCashWsDto = new ApplyCliqCashWsDto();
-		final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+		//final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
 		final OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 		CartModel cart = null;
 		LOG.info("Applying  cliq Cash For Order Guid " + cartGuid);
@@ -173,20 +173,23 @@ public class WalletController
 				applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, totalWalletAmount);
 				if (isPwa)
 				{
-					final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);
-					final CurrencyModel currency = commonI18NService.getCurrency(INR);
-					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
-							currency);
-					pricePwa.setBagTotal(totalMrp);
-					final double amountInclDelCharge = Double.parseDouble(applyCliqCashWsDto.getTotalAmount());
-					final double actualDelCharge = applyCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
-					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
-					final DecimalFormat df = new DecimalFormat(DECIMAL_FORMAT);
-					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
-					discount = Double.parseDouble(df.format(discount));
-					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
-					pricePwa.setTotalDiscountAmount(totalDiscount);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cart);
 					applyCliqCashWsDto.setCartAmount(pricePwa);
+
+					//					final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);
+					//					final CurrencyModel currency = commonI18NService.getCurrency(INR);
+					//					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+					//							currency);
+					//					pricePwa.setBagTotal(totalMrp);
+					//					final double amountInclDelCharge = Double.parseDouble(applyCliqCashWsDto.getTotalAmount());
+					//					final double actualDelCharge = applyCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
+					//					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+					//					final DecimalFormat df = new DecimalFormat(DECIMAL_FORMAT);
+					//					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+					//					discount = Double.parseDouble(df.format(discount));
+					//					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+					//					pricePwa.setTotalDiscountAmount(totalDiscount);
+					//					applyCliqCashWsDto.setCartAmount(pricePwa);
 
 				}
 			}
@@ -196,20 +199,23 @@ public class WalletController
 				applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, totalWalletAmount);
 				if (isPwa)
 				{
-					final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
-					final CurrencyModel currency = commonI18NService.getCurrency(INR);
-					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
-							currency);
-					pricePwa.setBagTotal(totalMrp);
-					final double amountInclDelCharge = Double.parseDouble(applyCliqCashWsDto.getTotalAmount());
-					final double actualDelCharge = applyCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
-					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
-					final DecimalFormat df = new DecimalFormat(DECIMAL_FORMAT);
-					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
-					discount = Double.parseDouble(df.format(discount));
-					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
-					pricePwa.setTotalDiscountAmount(totalDiscount);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(orderModel);
 					applyCliqCashWsDto.setCartAmount(pricePwa);
+
+					//					final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
+					//					final CurrencyModel currency = commonI18NService.getCurrency(INR);
+					//					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+					//							currency);
+					//					pricePwa.setBagTotal(totalMrp);
+					//					final double amountInclDelCharge = Double.parseDouble(applyCliqCashWsDto.getTotalAmount());
+					//					final double actualDelCharge = applyCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
+					//					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+					//					final DecimalFormat df = new DecimalFormat(DECIMAL_FORMAT);
+					//					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+					//					discount = Double.parseDouble(df.format(discount));
+					//					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+					//					pricePwa.setTotalDiscountAmount(totalDiscount);
+					//					applyCliqCashWsDto.setCartAmount(pricePwa);
 
 				}
 
@@ -255,7 +261,7 @@ public class WalletController
 		LOG.info("Removing cliq Cash ");
 		ApplyCliqCashWsDto removeCliqCashWsDto = new ApplyCliqCashWsDto();
 		final OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
-		final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+		//final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
 		CartModel cart = null;
 		try
 		{
@@ -318,20 +324,23 @@ public class WalletController
 				removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, cart);
 				if (isPwa)
 				{
-					final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);
-					final CurrencyModel currency = commonI18NService.getCurrency(INR);
-					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
-							currency);
-					pricePwa.setBagTotal(totalMrp);
-					final double amountInclDelCharge = Double.parseDouble(removeCliqCashWsDto.getTotalAmount());
-					final double actualDelCharge = removeCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
-					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
-					final DecimalFormat df = new DecimalFormat(DECIMAL_FORMAT);
-					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
-					discount = Double.parseDouble(df.format(discount));
-					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
-					pricePwa.setTotalDiscountAmount(totalDiscount);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(orderModel);
 					removeCliqCashWsDto.setCartAmount(pricePwa);
+
+					//					final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);
+					//					final CurrencyModel currency = commonI18NService.getCurrency(INR);
+					//					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+					//							currency);
+					//					pricePwa.setBagTotal(totalMrp);
+					//					final double amountInclDelCharge = Double.parseDouble(removeCliqCashWsDto.getTotalAmount());
+					//					final double actualDelCharge = removeCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
+					//					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+					//					final DecimalFormat df = new DecimalFormat(DECIMAL_FORMAT);
+					//					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+					//					discount = Double.parseDouble(df.format(discount));
+					//					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+					//					pricePwa.setTotalDiscountAmount(totalDiscount);
+					//					removeCliqCashWsDto.setCartAmount(pricePwa);
 
 				}
 
@@ -391,20 +400,23 @@ public class WalletController
 				removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, orderModel);
 				if (isPwa)
 				{
-					final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
-					final CurrencyModel currency = commonI18NService.getCurrency(INR);
-					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
-							currency);
-					pricePwa.setBagTotal(totalMrp);
-					final double amountInclDelCharge = Double.parseDouble(removeCliqCashWsDto.getTotalAmount());
-					final double actualDelCharge = removeCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
-					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
-					final DecimalFormat df = new DecimalFormat(DECIMAL_FORMAT);
-					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
-					discount = Double.parseDouble(df.format(discount));
-					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
-					pricePwa.setTotalDiscountAmount(totalDiscount);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(orderModel);
 					removeCliqCashWsDto.setCartAmount(pricePwa);
+
+					//					final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
+					//					final CurrencyModel currency = commonI18NService.getCurrency(INR);
+					//					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+					//							currency);
+					//					pricePwa.setBagTotal(totalMrp);
+					//					final double amountInclDelCharge = Double.parseDouble(removeCliqCashWsDto.getTotalAmount());
+					//					final double actualDelCharge = removeCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
+					//					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+					//					final DecimalFormat df = new DecimalFormat(DECIMAL_FORMAT);
+					//					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+					//					discount = Double.parseDouble(df.format(discount));
+					//					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+					//					pricePwa.setTotalDiscountAmount(totalDiscount);
+					//					removeCliqCashWsDto.setCartAmount(pricePwa);
 
 				}
 
