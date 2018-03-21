@@ -43,7 +43,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
@@ -121,8 +120,11 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	@Resource(name = "notificationFacade")
 	private NotificationFacade notificationFacade;
 
+	@Resource
 	private CheckoutCustomerStrategy checkoutCustomerStrategy;
+	@Resource
 	private CustomerAccountService customerAccountService;
+	@Resource
 	private UserService userService;
 
 	/**
@@ -835,7 +837,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1302,13 +1304,12 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		return checkoutCustomerStrategy;
 	}
 
-	@Required
 	public void setCheckoutCustomerStrategy(final CheckoutCustomerStrategy checkoutCustomerStrategy)
 	{
 		this.checkoutCustomerStrategy = checkoutCustomerStrategy;
 	}
 
-	@Required
+
 	public void setCustomerAccountService(final CustomerAccountService customerAccountService)
 	{
 		this.customerAccountService = customerAccountService;
@@ -1324,7 +1325,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		return baseStoreService;
 	}
 
-	@Required
+
 	public void setBaseStoreService(final BaseStoreService baseStoreService)
 	{
 		this.baseStoreService = baseStoreService;
@@ -1335,7 +1336,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		return userService;
 	}
 
-	@Required
+
 	public void setUserService(final UserService userService)
 	{
 		this.userService = userService;
