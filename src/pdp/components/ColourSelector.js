@@ -17,7 +17,9 @@ export default class ColourSelector extends React.Component {
     let data = this.props.data;
 
     return (
-      <div className={styles.base}>
+      <div
+        className={this.props.noBackground ? styles.noBackground : styles.base}
+      >
         <Carousel
           elementWidthMobile={22}
           limit={1}
@@ -47,6 +49,7 @@ export default class ColourSelector extends React.Component {
   }
 }
 ColourSelector.propTypes = {
+  noBackground: PropTypes.bool,
   onSelect: PropTypes.func,
   data: PropTypes.arrayOf(
     PropTypes.shape({

@@ -116,7 +116,6 @@ class Feed extends Component {
 
   componentWillMount() {
     if (this.props.isHomeFeedPage) {
-      this.props.getCartId();
       this.props.homeFeed();
     }
   }

@@ -14,6 +14,11 @@ export default class ShippingCommenced extends React.Component {
           <div className={styles.headingText}>{this.props.heading}</div>
         </div>
         <div className={styles.lebelText}>{this.props.label}</div>
+        {this.props.orderNotificationPassDate && (
+          <div className={styles.dayAgo}>{`${
+            this.props.orderNotificationPassDate
+          } ago`}</div>
+        )}
       </div>
     );
   }

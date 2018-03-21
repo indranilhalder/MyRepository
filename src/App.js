@@ -22,12 +22,17 @@ import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryC
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
 import MobileFooter from "./general/components/MobileFooter.js";
+
+// importing All container for my Accounts
+import MyAccountContainer from "./account/containers/MyAccountContainer";
+import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
+
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
-import GetAllOrderContainer from "./account/containers/GetAllOrderContainer
-import SaveListContainer from "./account/containers/SaveListContaine
-import SavedCardContainer from "./account/containers/SavedCardContainer.j
+import GetAllOrderContainer from "./account/containers/GetAllOrderContainer";
+import SaveListContainer from "./account/containers/SaveListContainer";
+import SavedCardContainer from "./account/containers/SavedCardContainer";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -64,8 +69,10 @@ import {
   CATEGORY_PAGE_WITH_SLUG,
   ORDER_PAGE,
   SAVE_LIST_PAGE,
-  ACCOUNT_SAVED_CARD_ROUTER
-
+  MY_ACCOUNT_PAGE,
+  ACCOUNT_SAVED_CARD_ROUTER,
+  MY_ACCOUNT_ALERTS_PAGE,
+  MY_ACCOUNT_COUPON_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -73,11 +80,7 @@ const auth = {
   isAuthenticated: false
 };
 class App extends Component {
-  componentDidMount() {
-    this.getAccessToken();
-  }
-
-  getAccessToken = () => {
+  async componentDidMount() {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
@@ -85,14 +88,19 @@ class App extends Component {
     let cartDetailsForLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
+
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
+    // Case 1. THe user is not logged in.
+
     if (!globalAccessToken && !this.props.cart.loading) {
-      this.props.getGlobalAccessToken();
+      await this.props.getGlobalAccessToken();
+      globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     }
 
     if (!customerAccessToken && localStorage.getItem(REFRESH_TOKEN)) {
-      this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
+      await this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
+      customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     }
 
     if (customerAccessToken) {
@@ -100,15 +108,11 @@ class App extends Component {
         this.props.generateCartIdForLoggedInUser();
       }
     } else {
-      if (
-        !cartDetailsForAnonymous &&
-         globalAccessToken &&
-        !this.props.cart.loading
-      ) {
+      if (!cartDetailsForAnonymous && globalAccessToken) {
         this.props.generateCartIdForAnonymous();
       }
     }
-  };
+  }
 
   renderLoader() {
     return (
@@ -145,6 +149,25 @@ class App extends Component {
             <Route path={ORDER_PAGE} component={GetAllOrderContainer} />
             <Route path={SAVE_LIST_PAGE} component={SaveListContainer} />
 
+            <Route
+              exact
+              path={MY_ACCOUNT_PAGE}
+              component={MyAccountContainer}
+            />
+            <Route
+              path={`${MY_ACCOUNT_PAGE}${ACCOUNT_SAVED_CARD_ROUTER}`}
+              component={SavedCardContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ALERTS_PAGE}`}
+              component={UserAlertsAndCouponsContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`}
+              component={UserAlertsAndCouponsContainer}
+            />
             <Route
               exact
               path={BRAND_PAGE}
@@ -232,11 +255,6 @@ class App extends Component {
               exact
               path={CATEGORIES_LANDING_PAGE}
               component={CategoriesPageContainer}
-            />
-            <Route
-              exact
-              path={ACCOUNT_SAVED_CARD_ROUTER}
-              component={SavedCardContainer}
             />
           </Switch>
           <MobileFooter />

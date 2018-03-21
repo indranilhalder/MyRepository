@@ -831,10 +831,9 @@ export function generateCartIdForLoggedInUser() {
         throw new Error(resultJson.error);
       }
 
-      dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
-      return resultJson;
+      return dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
     } catch (e) {
-      dispatch(generateCartIdFailure(e.message));
+      return dispatch(generateCartIdFailure(e.message));
     }
   };
 }
@@ -862,9 +861,9 @@ export function generateCartIdForAnonymous() {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      dispatch(generateCartIdAnonymousSuccess(resultJson));
+      return dispatch(generateCartIdAnonymousSuccess(resultJson));
     } catch (e) {
-      dispatch(generateCartIdFailure(e.message));
+      return dispatch(generateCartIdFailure(e.message));
     }
   };
 }
@@ -956,13 +955,12 @@ export function getCartId() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      return resultJson;
+      return dispatch(getCartIdSuccess(resultJson));
     } catch (e) {
-      dispatch(getCartIdFailure(e.message));
+      return dispatch(getCartIdFailure(e.message));
     }
   };
 }
@@ -1013,9 +1011,9 @@ export function mergeCartId(cartGuId) {
         throw new Error(resultJson.error);
       }
 
-      dispatch(mergeCartIdSuccess(resultJson));
+      return dispatch(mergeCartIdSuccess(resultJson));
     } catch (e) {
-      dispatch(mergeCartIdFailure(e.message));
+      return dispatch(mergeCartIdFailure(e.message));
     }
   };
 }
@@ -2745,10 +2743,12 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
           JSON.parse(globalCookie).access_token
         }&isPwa=true&platformNumber=2&quantity=${quantity}`
       );
+
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
+
       dispatch(
         getCartDetails(
           ANONYMOUS_USER,
