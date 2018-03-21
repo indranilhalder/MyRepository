@@ -10,14 +10,6 @@ import {
   GLOBAL_ACCESS_TOKEN
 } from "../../lib/constants";
 
-// Local Storage and Cookie storage
-const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-
-const defaultPincode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
 export const GET_USER_DETAILS_FAILURE = "GET_USER_DETAILS_FAILURE";
@@ -159,6 +151,8 @@ export function getAllOrdersFailure(error) {
   };
 }
 export function getAllOrdersDetails() {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getAllOrdersRequest());
     try {
@@ -203,6 +197,8 @@ export function getUserDetailsFailure(error) {
 }
 
 export function getUserDetails() {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getUserDetailsRequest());
     try {
@@ -251,6 +247,8 @@ export function getUserCouponsFailure(error) {
 }
 
 export function getUserCoupons() {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getUserCouponsRequest());
     try {
@@ -299,6 +297,8 @@ export function getUserAlertsFailure(error) {
 }
 
 export function getUserAlerts() {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getUserAlertsRequest());
     try {
@@ -347,6 +347,8 @@ export function fetchOrderDetailsFailure(error) {
 }
 
 export function fetchOrderDetails(orderId) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(fetchOrderDetailsRequest());
     try {
@@ -391,9 +393,9 @@ export function sendInvoiceFailure(error) {
 }
 
 export function sendInvoice(lineID, orderNumber) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     dispatch(sendInvoiceRequest());
     try {
       const result = await api.get(
