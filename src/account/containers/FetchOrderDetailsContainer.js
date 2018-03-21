@@ -18,8 +18,8 @@ const mapStateToProps = state => {
   };
 };
 
-const GetAllOrderContainer = withRouter(
+const FetchOrderDetailsContainer = withRouter(
   connect(mapStateToProps, mapDispatchToProps)(OrderDetails)
 );
 
-export default GetAllOrderContainer;
+export default FetchOrderDetailsContainer;
