@@ -27,7 +27,11 @@ const account = (
     userAlerts: null,
     userAlertsStatus: null,
     userAlertsError: null,
-    loadingForUserAlerts: false
+    loadingForUserAlerts: false,
+
+    sendInvoice: null,
+    sendInvoiceStatus: null,
+    sendInvoiceError: null
   },
   action
 ) => {
@@ -166,6 +170,26 @@ const account = (
       return Object.assign({}, state, {
         fetchOrderDetailsStatus: action.status,
         fetchOrderDetailsError: action.error,
+        loading: false
+      });
+
+    case accountActions.SEND_INVOICE_REQUEST:
+      return Object.assign({}, state, {
+        sendInvoiceStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.SEND_INVOICE_SUCCESS:
+      return Object.assign({}, state, {
+        sendInvoiceStatus: action.status,
+        sendInvoice: action.sendInvoice,
+        loading: false
+      });
+
+    case accountActions.SEND_INVOICE_FAILURE:
+      return Object.assign({}, state, {
+        sendInvoiceStatus: action.status,
+        sendInvoiceError: action.error,
         loading: false
       });
     default:

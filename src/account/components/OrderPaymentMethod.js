@@ -13,17 +13,19 @@ export default class OrderPaymentMethod extends React.Component {
       <div className={styles.base}>
         <div className={styles.paymentHolder}>
           <div className={styles.paymentMethod}>Payment Method</div>
-          <div className={styles.requestHolder}>
-            <div
-              className={styles.requestWithUnderline}
-              onClick={() => this.request()}
-            >
-              <UnderLinedButton
-                label={this.props.underlineButtonLabel}
-                color={this.props.underlineButtonColour}
-              />
+          {this.props.isInvoiceAvailable && (
+            <div className={styles.requestHolder}>
+              <div
+                className={styles.requestWithUnderline}
+                onClick={() => this.request()}
+              >
+                <UnderLinedButton
+                  label={this.props.underlineButtonLabel}
+                  color={this.props.underlineButtonColour}
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className={styles.cashAndMobileHolder}>
           <div className={styles.cashText}>{this.props.paymentMethod}</div>
@@ -45,5 +47,6 @@ OrderPaymentMethod.propTypes = {
 };
 OrderPaymentMethod.defaultProps = {
   underlineButtonLabel: "Request Invoice",
-  underlineButtonColour: "#979797"
+  underlineButtonColour: "#979797",
+  isInvoiceAvailable: false
 };

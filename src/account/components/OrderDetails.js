@@ -14,11 +14,12 @@ const dateFormat = "DD MMM YYYY";
 const PRODUCT_Returned = "Return";
 const PRODUCT_Cancel = "Cancel";
 export default class OrderDetails extends React.Component {
-  requestInvoice() {
-    if (this.props.requestInvoice) {
-      this.props.requestInvoice();
+  requestInvoice(ussid, sellerOrderNo) {
+    if (this.props.sendInvoice) {
+      this.props.sendInvoice(ussid, sellerOrderNo);
     }
   }
+
   replaceItem() {
     if (this.props.replaceItem) {
       this.props.replaceItem();
@@ -71,7 +72,10 @@ export default class OrderDetails extends React.Component {
                 <OrderPaymentMethod
                   phoneNumber={orderDetails.billingAddress.phone}
                   paymentMethod={orderDetails.paymentMethod}
-                  request={() => this.requestInvoice()}
+                  isInvoiceAvailable={products.isInvoiceAvailable}
+                  request={() =>
+                    this.requestInvoice(products.USSID, products.sellerorderno)
+                  }
                 />
                 <OrderDelivered
                   deliveredAddress={`${

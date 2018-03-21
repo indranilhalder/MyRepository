@@ -1,11 +1,14 @@
 import { connect } from "react-redux";
-import { fetchOrderDetails } from "../actions/account.actions";
+import { fetchOrderDetails, sendInvoice } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import OrderDetails from "../components/OrderDetails";
 const mapDispatchToProps = dispatch => {
   return {
     fetchOrderDetails: orderId => {
       dispatch(fetchOrderDetails(orderId));
+    },
+    sendInvoice: (ussid, sellerOrderNo) => {
+      dispatch(sendInvoice(ussid, sellerOrderNo));
     }
   };
 };

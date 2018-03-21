@@ -46,6 +46,10 @@ export const GET_USER_ALERTS_REQUEST = "GET_USER_ALERTS_REQUEST";
 export const GET_USER_ALERTS_SUCCESS = "GET_USER_ALERTS_SUCCESS";
 export const GET_USER_ALERTS_FAILURE = "GET_USER_ALERTS_FAILURE";
 
+export const SEND_INVOICE_REQUEST = "SEND_INVOICE_REQUEST";
+export const SEND_INVOICE_SUCCESS = "SEND_INVOICE_SUCCESS";
+export const SEND_INVOICE_FAILURE = "SEND_INVOICE_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const USER_PATH = "v2/mpl/users";
@@ -360,6 +364,52 @@ export function fetchOrderDetails(orderId) {
       dispatch(fetchOrderDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(fetchOrderDetailsFailure(e.message));
+    }
+  };
+}
+
+export function sendInvoiceRequest() {
+  return {
+    type: SEND_INVOICE_REQUEST,
+    status: REQUESTING
+  };
+}
+export function sendInvoiceSuccess(sendInvoice) {
+  return {
+    type: SEND_INVOICE_SUCCESS,
+    status: SUCCESS,
+    sendInvoice
+  };
+}
+
+export function sendInvoiceFailure(error) {
+  return {
+    type: SEND_INVOICE_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function sendInvoice(lineID, orderNumber) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(sendInvoiceRequest());
+    try {
+      const result = await api.get(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/sendInvoice?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&orderNumber=${orderNumber}&lineID=${lineID}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
+      }
+      dispatch(sendInvoiceSuccess(resultJson));
+    } catch (e) {
+      dispatch(sendInvoiceFailure(e.message));
     }
   };
 }
