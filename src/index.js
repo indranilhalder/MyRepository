@@ -41,8 +41,6 @@ let store = createStore(
     })
   )
 );
-console.log("NODE ENV");
-console.log(process.env);
 
 ReactDOM.render(
   <Provider store={store}>
