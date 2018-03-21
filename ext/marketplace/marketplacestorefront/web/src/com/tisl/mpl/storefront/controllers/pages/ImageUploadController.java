@@ -303,6 +303,8 @@ public class ImageUploadController extends AbstractMplSearchPageController
 					}
 					catch (final ImpExException e)
 					{
+						path.toFile().delete();
+						getSessionService().removeAttribute("uploadImageName");
 						e.printStackTrace();
 					}
 					path.toFile().delete();

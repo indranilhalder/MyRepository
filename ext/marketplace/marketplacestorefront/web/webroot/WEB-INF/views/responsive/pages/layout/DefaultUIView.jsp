@@ -10,6 +10,26 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 
+<style>
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    padding-bottom: 5%;
+}
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+tr:nth-child(even){background-color: #f2f2f2}
+th {
+    background-color: #514848;
+    color: white;
+    height : 30px !important;
+    text-align: center;
+}
+</style>
+
 <template:page pageTitle="${pageTitle}">
 <html>
 	<div class="sub-brand">
@@ -107,9 +127,9 @@
 						<tr>
 						     <td> ${offersWidgetElement.title}</td>
 						     <td> <a href="${offersWidgetElement.webURL}">${offersWidgetElement.webURL}</a></td>
-						    <td><img alt="" src="${offersWidgetElement.imageURL}"></td>
+						     <td><img alt="" src="${offersWidgetElement.imageURL}"></td>
 						     <td> ${offersWidgetElement.btnText}</td>
-						      <td> ${offersWidgetElement.discountText}</td>
+						     <td> ${offersWidgetElement.discountText}</td>
 						</tr>
 						</c:if>
 					</div>
@@ -118,8 +138,6 @@
 <%-- 					</c:if> --%>
 					</div>
 					</c:if>
-					
-					
 				</cms:pageSlot>
 
 			</div>
