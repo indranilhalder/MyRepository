@@ -4,6 +4,10 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS
 } from "../../lib/constants";
+
+const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
 export const GET_SAVED_CARD_REQUEST = "GET_SAVED_CARD_REQUEST";
 export const GET_SAVED_CARD_SUCCESS = "GET_SAVED_CARD_SUCCESS";
 export const GET_SAVED_CARD_FAILURE = "GET_SAVED_CARD_FAILURE";
@@ -130,8 +134,6 @@ export function getAllOrdersFailure(error) {
 }
 export function getAllOrdersDetails() {
   return async (dispatch, getState, { api }) => {
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     dispatch(getAllOrdersRequest());
     try {
       const result = await api.get(
@@ -176,8 +178,6 @@ export function fetchOrderDetailsFailure(error) {
 
 export function fetchOrderDetails(orderId) {
   return async (dispatch, getState, { api }) => {
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     dispatch(fetchOrderDetailsRequest());
     try {
       const result = await api.get(

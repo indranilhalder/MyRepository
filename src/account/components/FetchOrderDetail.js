@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./viewDetails.css";
+import styles from "./FetchOrderDetail.css";
 import OrderPlacedAndId from "./OrderPlacedAndId.js";
 import OrderCard from "./OrderCard.js";
 import OrderDelivered from "./OrderDelivered.js";
@@ -11,10 +11,10 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { ORDER_DESCRIPTION } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
-const Is_Returned = "Return";
-const Is_Cancel = "Cancel";
-export default class ViewDetails extends React.Component {
-  requestInvioice() {
+const PRODUCT_Returned = "Return";
+const PRODUCT_Cancel = "Cancel";
+export default class FetchOrderDetail extends React.Component {
+  requestInvoice() {
     if (this.props.requestInvioice) {
       this.props.requestInvioice();
     }
@@ -36,7 +36,7 @@ export default class ViewDetails extends React.Component {
     }
   }
   render() {
-    let orderDetails = this.props.profile.fetchOrderDetails;
+    const orderDetails = this.props.profile.fetchOrderDetails;
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -91,7 +91,9 @@ export default class ViewDetails extends React.Component {
                 <div className={styles.buttonHolder}>
                   <OrderReturn
                     buttonLabel={
-                      products.isReturned === false ? Is_Cancel : Is_Returned
+                      products.isReturned === false
+                        ? PRODUCT_Cancel
+                        : PRODUCT_Returned
                     }
                     isEditable={true}
                     replaceItem={() => this.replaceItem()}
@@ -105,7 +107,7 @@ export default class ViewDetails extends React.Component {
     );
   }
 }
-ViewDetails.propTypes = {
+FetchOrderDetail.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       orderDate: PropTypes.string,
@@ -125,5 +127,5 @@ ViewDetails.propTypes = {
       )
     })
   ),
-  requestInvioice: PropTypes.func
+  requestInvoice: PropTypes.func
 };

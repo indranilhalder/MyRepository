@@ -6,17 +6,17 @@ import PriceAndLink from "./PriceAndLink.js";
 import OrderDelivered from "./OrderDelivered.js";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { ORDER_SUMMARY_ROUTER } from "../../lib/constants";
+import { ORDER_DESCRIPTION_ROUTER } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 export default class GetAllOrderDetails extends React.Component {
-  onViewDetails(orderID) {
-    this.props.history.push(`${ORDER_SUMMARY_ROUTER}/${orderID}`);
+  onViewDetails(orderId) {
+    this.props.history.push(`${ORDER_DESCRIPTION_ROUTER}/${orderId}`);
   }
   componentDidMount() {
     this.props.getAllOrdersDetails();
   }
   render() {
-    let orderDetails = this.props.profile.orderDetails;
+    const orderDetails = this.props.profile.orderDetails;
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -76,6 +76,5 @@ GetAllOrderDetails.propTypes = {
         })
       )
     })
-  ),
-  requestInvioice: PropTypes.func
+  )
 };
