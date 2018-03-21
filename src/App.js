@@ -70,7 +70,8 @@ import {
   ORDER_PAGE,
   MY_ACCOUNT_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
-  MY_ACCOUNT_ALERTS_PAGE
+  MY_ACCOUNT_ALERTS_PAGE,
+  MY_ACCOUNT_COUPON_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -157,6 +158,11 @@ class App extends Component {
             <Route
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ALERTS_PAGE}`}
+              component={UserAlertsAndCouponsContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`}
               component={UserAlertsAndCouponsContainer}
             />
             <Route
