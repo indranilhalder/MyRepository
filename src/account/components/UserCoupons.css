@@ -1,3 +1,10 @@
+
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+
 .cardHolder {
   width: 100%;
   height: auto;
