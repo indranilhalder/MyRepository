@@ -26,12 +26,23 @@ export default class OtpVerification extends React.Component {
   };
   onSubmitOtp = () => {
     if (this.props.submitOtp) {
-      this.props.submitOtp(this.state.otp);
+      if (this.props.username && this.props.password) {
+        console.log("OTP IN STATE");
+        console.log(this.state.otp);
+        this.props.submitOtp({
+          username: this.props.username,
+          password: this.props.password,
+          otp: this.state.otp
+        });
+      } else {
+        this.props.submitOtp(this.state.otp);
+      }
     }
   };
   handleOtpInput(val) {
     this.setState({ otp: val });
   }
+
   render() {
     return (
       <AuthPopUp>
@@ -148,5 +159,6 @@ OtpVerification.propTypes = {
 };
 
 OtpVerification.defaultProps = {
-  mobileNumber: ""
+  mobileNumber: "",
+  userDetails: null
 };

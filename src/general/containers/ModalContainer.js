@@ -26,6 +26,8 @@ import {
 } from "../../cart/actions/cart.actions";
 
 const mapStateToProps = (state, ownProps) => {
+  console.log("MAP STATE TO PROPS");
+  console.log(state.modal.ownProps);
   return {
     modalType: state.modal.modalType,
     ownProps: state.modal.ownProps,
@@ -41,6 +43,14 @@ const mapDispatchToProps = dispatch => {
     },
     hideModal: () => {
       dispatch(modalActions.hideModal());
+    },
+    loginUser: async userDetails => {
+      console.log("user details");
+      console.log(userDetails);
+      const loginResponse = await dispatch(loginUser(userDetails));
+      if (loginResponse.status === SUCCESS) {
+        dispatch(modalActions.hideModal());
+      }
     },
     otpVerification: async (otpDetails, userDetails) => {
       const otpResponse = await dispatch(
