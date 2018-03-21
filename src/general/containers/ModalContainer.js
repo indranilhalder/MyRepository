@@ -42,6 +42,12 @@ const mapDispatchToProps = dispatch => {
     hideModal: () => {
       dispatch(modalActions.hideModal());
     },
+    loginUser: async userDetails => {
+      const loginResponse = await dispatch(loginUser(userDetails));
+      if (loginResponse.status === SUCCESS) {
+        dispatch(modalActions.hideModal());
+      }
+    },
     otpVerification: async (otpDetails, userDetails) => {
       const otpResponse = await dispatch(
         otpVerification(otpDetails, userDetails)
