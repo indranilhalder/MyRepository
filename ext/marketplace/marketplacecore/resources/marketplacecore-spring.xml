@@ -1503,6 +1503,14 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		ref="returnRequestDao"/> </bean> <bean id="mplConsignmentBasedReturnableCheck" 
 		class="com.tisl.mpl.core.strategies.impl.MPLDefaultConsignmentBasedReturnableCheck" 
 		parent="abstractBusinessService" scope="tenant"> </bean> -->
+		
+	 <bean id="mplLocalFileMediaStorageStrategy" class="com.tisl.mpl.core.media.MPLLocalFileMediaStorageStrategy">
+		<property name="locationHashService" ref="mediaLocationHashService" />
+		<property name="storageConfigService" ref="mediaStorageConfigService" />
+		<property name="mimeService" ref="mimeService" />
+		<property name="mainDataDir" value="#{T(de.hybris.platform.util.MediaUtil).getLocalStorageDataDir()}" />
+		<property name="replicationDirs" value="#{T(de.hybris.platform.util.MediaUtil).getLocalStorageReplicationDirs()}" />
+	   </bean>
 
 	<alias name="defaultMplCategorySource" alias="abstractMplCategorySource" />
 	<bean id="defaultMplCategorySource" abstract="true"
