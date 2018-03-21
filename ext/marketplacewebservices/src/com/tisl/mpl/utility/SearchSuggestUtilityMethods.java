@@ -16,6 +16,7 @@ import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
+import de.hybris.platform.commerceservices.url.UrlResolver;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.enums.LuxIndicatorEnum;
 import com.tisl.mpl.core.model.BuyBoxModel;
+import com.tisl.mpl.core.model.SeoContentModel;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
@@ -49,6 +51,7 @@ import com.tisl.mpl.solr.search.MplSearchFacetPriorityComparator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplCompetingProductsUtility;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
+import com.tisl.mpl.wsdto.BreadcrumbListWsDTO;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
 import com.tisl.mpl.wsdto.DepartmentFilterWsDto;
 import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
@@ -62,6 +65,7 @@ import com.tisl.mpl.wsdto.SellerItemDetailWsDto;
 import com.tisl.mpl.wsdto.SellerSNSWsData;
 import com.tisl.mpl.wsdto.SellingItemDetailWsDto;
 import com.tisl.mpl.wsdto.VariantOptionsWsDto;
+import com.tisl.wsdto.SeoContentData;
 
 
 /**
@@ -83,6 +87,10 @@ public class SearchSuggestUtilityMethods
 	private MplCompetingProductsUtility mplCompetingProductsUtility;
 	@Resource(name = "mplProductWebService")
 	private MplProductWebService mplProductWebService;
+
+	@Resource(name = "categoryModelUrlResolver")
+	private UrlResolver<CategoryModel> categoryModelUrlResolver;
+
 	//	@Resource(name = "productService")
 	//	private ProductService productService;
 
@@ -2535,6 +2543,89 @@ public class SearchSuggestUtilityMethods
 		priceData.setDoubleValue(productMRP.getDoubleValue());
 		priceData.setFormattedValue(productMRP.getFormattedValue().substring(1));
 		return priceData;
+	}
+
+	/**
+	 * @return the categoryModelUrlResolver
+	 */
+	public UrlResolver<CategoryModel> getCategoryModelUrlResolver()
+	{
+		return categoryModelUrlResolver;
+	}
+
+	/**
+	 * @param categoryModelUrlResolver
+	 *           the categoryModelUrlResolver to set
+	 */
+	public void setCategoryModelUrlResolver(final UrlResolver<CategoryModel> categoryModelUrlResolver)
+	{
+		this.categoryModelUrlResolver = categoryModelUrlResolver;
+	}
+
+	/**
+	 * @param categorycode
+	 */
+	public SeoContentData getSeoData(final String categorycode)
+	{
+		// YTODO Auto-generated method stub
+		final SeoContentData seoContentData = new SeoContentData();
+		final CategoryModel lastCategoryModel = categoryService.getCategoryForCode(categorycode);
+		final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(lastCategoryModel.getSeoContents());
+		final String categoryUrl = getCategoryModelUrlResolver().resolve(lastCategoryModel);
+		int count = 0;
+		if (CollectionUtils.isNotEmpty(seoContent))
+		{
+			final SeoContentModel seoContentModel = seoContent.get(seoContent.size() - 1);
+
+			seoContentData.setTitle(seoContentModel.getSeoMetaTitle());
+			seoContentData.setKeywords(seoContentModel.getSeoMetaKeyword());
+			seoContentData.setDescription(seoContentModel.getSeoMetaDescription());
+			seoContentData.setCanonicalURL(categoryUrl);
+			seoContentData.setAlternateURL(categoryUrl);
+
+			final List<BreadcrumbListWsDTO> categoryBreadcrumbs = new ArrayList<>();
+			final Collection<CategoryModel> categoryModels = new ArrayList<>();
+
+			categoryModels.addAll(lastCategoryModel.getSupercategories());
+
+			categoryBreadcrumbs.add(getCategoryBreadcrumb(lastCategoryModel, count));
+			while (!categoryModels.isEmpty())
+			{
+				final CategoryModel categoryModel = categoryModels.iterator().next();
+				if (!(categoryModel instanceof ClassificationClassModel) && null != categoryModel
+						&& !(categoryService.isRoot(categoryModel)))
+				{
+					categoryBreadcrumbs.add(getCategoryBreadcrumb(categoryModel, ++count));
+					categoryModels.clear();
+					categoryModels.addAll(categoryModel.getSupercategories());
+				}
+				else
+				{
+					categoryModels.remove(categoryModel);
+				}
+			}
+			seoContentData.setBreadcrumbs(categoryBreadcrumbs);
+		}
+
+		return seoContentData;
+
+	}
+
+	/**
+	 * @param lastCategoryModel
+	 * @param count
+	 * @return
+	 */
+	private BreadcrumbListWsDTO getCategoryBreadcrumb(final CategoryModel categoryModel, final int count)
+	{
+		// YTODO Auto-generated method stub
+		final BreadcrumbListWsDTO breadcrumbListWsDTO = new BreadcrumbListWsDTO();
+		final String categoryUrl = getCategoryModelUrlResolver().resolve(categoryModel);
+		breadcrumbListWsDTO.setUrl(categoryUrl);
+		breadcrumbListWsDTO.setName(categoryModel.getName());
+		//breadcrumbListWsDTO.setCode(categoryModel.getCode());
+		//breadcrumbListWsDTO.setLevel(new Integer(count));
+		return breadcrumbListWsDTO;
 	}
 
 }

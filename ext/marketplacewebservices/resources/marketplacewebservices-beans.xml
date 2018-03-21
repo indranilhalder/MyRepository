@@ -2080,7 +2080,7 @@
 		<property name="crosssellBanner" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO" />
 		<property name="plpHeroBanner" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO" />
 		<!-- Ended -->
-
+        <property name="seo" type="com.tisl.wsdto.SeoContentData" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FacetDataWsDTO">
 		<property name="name" type="String" />
@@ -4841,7 +4841,7 @@
 	</bean>
 	
 	<!-- new ui/ux SEO for PDP & PLP -->
-	<bean class="com.tisl.wsdto.SeoContentData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+	<bean class="com.tisl.wsdto.SeoContentData">
 		<property name="title" type="String" />
 		<property name="description" type="String" />
 		<property name="keywords" type="String" />
