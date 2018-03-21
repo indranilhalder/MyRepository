@@ -1,4 +1,5 @@
 import * as accountActions from "../actions/account.actions";
+import * as cartActions from "../../cart/actions/cart.actions";
 
 const account = (
   state = {
@@ -23,7 +24,14 @@ const account = (
     userAlerts: null,
     userAlertsStatus: null,
     userAlertsError: null,
-    loadingForUserAlerts: false
+    loadingForUserAlerts: false,
+
+    userAddress: null,
+    userAddressStatus: null,
+    userAddressError: null,
+
+    removeAddressStatus: null,
+    removeAddressError: null
   },
   action
 ) => {
@@ -143,6 +151,45 @@ const account = (
         userAlertsStatus: action.status,
         userAlertsError: action.error,
         loadingForUserAlerts: false
+      });
+
+    case cartActions.GET_USER_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        userAddressStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.GET_USER_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        userAddressStatus: action.status,
+        userAddress: action.userAddress,
+        loading: false
+      });
+
+    case cartActions.GET_USER_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        userAddressStatus: action.status,
+        userAddressError: action.error,
+        loading: false
+      });
+
+    case accountActions.REMOVE_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        removeAddressStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.REMOVE_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        removeAddressStatus: action.status,
+        loading: false
+      });
+
+    case accountActions.REMOVE_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        removeAddressStatus: action.status,
+        removeAddressError: action.error,
+        loading: false
       });
 
     default:

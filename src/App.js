@@ -28,7 +28,7 @@ import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
 import GetAllOrderContainer from "./account/containers/GetAllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
-
+import AddressBookContainer from "./account/containers/AddressBookContainer.js";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -65,7 +65,8 @@ import {
   CATEGORY_PAGE_WITH_SLUG,
   ORDER_PAGE,
   MY_ACCOUNT_PAGE,
-  ACCOUNT_SAVED_CARD_ROUTER
+  MY_ACCOUNT_SAVED_CARDS_PAGE,
+  MY_ACCOUNT_ADDRESS_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -101,9 +102,7 @@ class App extends Component {
         this.props.generateCartIdForLoggedInUser();
       }
     } else {
-
       if (!cartDetailsForAnonymous && globalAccessToken) {
-
         this.props.generateCartIdForAnonymous();
       }
     }
@@ -148,7 +147,7 @@ class App extends Component {
               component={MyAccountContainer}
             />
             <Route
-              path={`${MY_ACCOUNT_PAGE}${ACCOUNT_SAVED_CARD_ROUTER}`}
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_SAVED_CARDS_PAGE}`}
               component={SavedCardContainer}
             />
             <Route
@@ -238,6 +237,11 @@ class App extends Component {
               exact
               path={CATEGORIES_LANDING_PAGE}
               component={CategoriesPageContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_PAGE}`}
+              component={AddressBookContainer}
             />
           </Switch>
           <MobileFooter />
