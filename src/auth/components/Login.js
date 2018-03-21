@@ -42,7 +42,7 @@ class Login extends Component {
       let userDetails = {};
       userDetails.username = this.state.emailValue;
       userDetails.password = this.state.passwordValue;
-      this.props.customerAccessToken(userDetails);
+      this.props.onSubmit(userDetails);
     }
   };
 

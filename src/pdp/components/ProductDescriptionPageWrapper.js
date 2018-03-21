@@ -2,6 +2,7 @@ import React from "react";
 import PdpElectronics from "./PdpElectronics";
 import PdpApparel from "./PdpApparel";
 import PdpJewellery from "./PdpJewellery";
+import PdpHome from "./PdpHome";
 import styles from "./ProductDescriptionPageWrapper.css";
 import ProductDescriptionPage from "./ProductDescriptionPage";
 import MDSpinner from "react-md-spinner";
@@ -14,8 +15,9 @@ import {
 // prettier-ignore
 const typeComponentMapping = {
   "Electronics": props => <PdpElectronics {...props} />,
-  "FashionJewellery":props => <PdpJewellery {...props} />,
-  "Clothing":props => <PdpApparel {...props} />
+  "FashionJewellery":props => <ProductDescriptionPage {...props} />,
+  "Clothing":props => <PdpApparel {...props} />,
+  "HomeFurnishing":props => <PdpHome {...props} />
 };
 
 const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);

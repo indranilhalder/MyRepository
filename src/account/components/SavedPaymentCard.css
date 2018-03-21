@@ -114,3 +114,17 @@
   padding: 15px;
   display: inline-block;
 }
+
+.edit {
+  width: 25px;
+  height: 24px;
+  font-family: Rubik;
+  font-size: 14px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.71;
+  letter-spacing: normal;
+  text-align: right;
+  color: #ff1744;
+}

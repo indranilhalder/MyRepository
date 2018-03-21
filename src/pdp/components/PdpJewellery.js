@@ -1,6 +1,7 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
+import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import { Image } from "xelpmoc-core";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ColourSelector from "./ColourSelector";
@@ -14,37 +15,43 @@ import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import Logo from "../../general/components/Logo.js";
+import Carousel from "../../general/components/Carousel.js";
+import ProductModule from "../../general/components/ProductModule.js";
+import Button from "../../general/components/Button.js";
+import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
+import PDPRecommendedSections from "./PDPRecommendedSections.js";
 import {
+  PRODUCT_SELLER_ROUTER_SUFFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   GLOBAL_ACCESS_TOKEN,
-  CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
   ANONYMOUS_USER,
-  PRODUCT_SELLER_ROUTER_SUFFIX,
   PRODUCT_CART_ROUTER,
   PRODUCT_REVIEWS_PATH_SUFFIX,
+  YES,
+  NO,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
-  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  NO
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
 } from "../../lib/constants";
 
-import styles from "./ProductDescriptionPage.css";
-import PDPRecommendedSections from "./PDPRecommendedSections.js";
-
-const PRODUCT_QUANTITY = "1";
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
-export default class PdpApparel extends React.Component {
+const PRODUCT_QUANTITY = "1";
+export default class PdpJewellery extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
       this.props.visitBrandStore();
     }
   }
+
   gotoPreviousPage = () => {
     this.props.history.goBack();
   };
+
   goToSellerPage = () => {
     let expressionRuleFirst = "/p-(.*)/(.*)";
     let expressionRuleSecond = "/p-(.*)";
@@ -56,6 +63,7 @@ export default class PdpApparel extends React.Component {
     }
     this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
   };
+
   goToCart = () => {
     this.props.history.push({
       pathname: PRODUCT_CART_ROUTER,
@@ -65,7 +73,6 @@ export default class PdpApparel extends React.Component {
       }
     });
   };
-
   addToCart = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
@@ -77,10 +84,13 @@ export default class PdpApparel extends React.Component {
     let cartDetailsLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
-    let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
+    let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (userDetails) {
-      if (cartDetailsLoggedInUser && customerCookie) {
+      if (
+        cartDetailsLoggedInUser !== undefined &&
+        customerCookie !== undefined
+      ) {
         this.props.addProductToCart(
           JSON.parse(userDetails).userName,
           JSON.parse(cartDetailsLoggedInUser).code,
@@ -88,15 +98,13 @@ export default class PdpApparel extends React.Component {
           productDetails
         );
       }
-    } else {
-      if (cartDetailsAnonymous && globalCookie) {
-        this.props.addProductToCart(
-          ANONYMOUS_USER,
-          JSON.parse(cartDetailsAnonymous).guid,
-          JSON.parse(globalCookie).access_token,
-          productDetails
-        );
-      }
+    } else if (cartDetailsAnonymous) {
+      this.props.addProductToCart(
+        ANONYMOUS_USER,
+        JSON.parse(cartDetailsAnonymous).guid,
+        JSON.parse(globalCookie).access_token,
+        productDetails
+      );
     }
   };
 
@@ -104,7 +112,15 @@ export default class PdpApparel extends React.Component {
     const url = `${this.props.location.pathname}${PRODUCT_REVIEWS_PATH_SUFFIX}`;
     this.props.history.push(url);
   };
-
+  showPincodeModal() {
+    if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+      this.props.showPincodeModal(this.props.match.params[1]);
+    } else if (
+      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+    ) {
+      this.props.showPincodeModal(this.props.match.params[2]);
+    }
+  }
   addToWishList = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
@@ -128,20 +144,16 @@ export default class PdpApparel extends React.Component {
       );
     }
   };
-  showPincodeModal() {
-    if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-      this.props.showPincodeModal(this.props.match.params[1]);
-    } else if (
-      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
-    ) {
-      this.props.showPincodeModal(this.props.match.params[2]);
-    }
-  }
-  handleShowSizeguide() {
-    if (this.props.getProductSizeGuide) {
-      this.props.getProductSizeGuide();
-    }
-  }
+
+  showEmiModal = () => {
+    const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+
+    const globalAccessToken = JSON.parse(globalCookie).access_token;
+    this.props.getPdpEmi(globalAccessToken, cartValue);
+    this.props.getEmiTerms(globalAccessToken, cartValue);
+    this.props.showEmiModal();
+  };
   renderDeliveryOptions(productData) {
     return (
       productData.eligibleDeliveryModes &&
@@ -162,6 +174,7 @@ export default class PdpApparel extends React.Component {
     );
   }
   render() {
+    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -172,6 +185,21 @@ export default class PdpApparel extends React.Component {
       .map(image => {
         return image[0].value;
       });
+    let otherSellersText;
+
+    if (productData.otherSellers && productData.otherSellers.length > 0) {
+      otherSellersText = (
+        <span>
+          Sold by{" "}
+          <span className={styles.winningSellerText}>
+            {" "}
+            {productData.winningSellerName}
+          </span>{" "}
+          and {productData.otherSellers.length} other sellers;
+        </span>
+      );
+    }
+
     if (productData) {
       return (
         <PdpFrame
@@ -179,26 +207,35 @@ export default class PdpApparel extends React.Component {
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
           addProductToWishList={() => this.addToWishList()}
+          showPincodeModal={() => this.showPincodeModal()}
         >
-          <ProductGalleryMobile>
+          <ProductGalleryMobile isElectronics={true}>
             {mobileGalleryImages.map((val, idx) => {
-              return <Image image={val} key={idx} />;
+              return (
+                <Image image={val} key={idx} color="#f5f5f5" fit="contain" />
+              );
             })}
           </ProductGalleryMobile>
           <div className={styles.content}>
-            <ProductDetailsMainCard
+            {/* <ProductDetailsMainCard
               productName={productData.brandName}
               productDescription={productData.productName}
               price={productData.mrp}
               discountPrice={productData.winningSellerMOP}
               averageRating={productData.averageRating}
-              onClick={this.goToReviewPage}
+            /> */}
+            <JewelleryDetailsAndLink
+              productName={productData.brandName}
+              productDescription={productData.productName}
+              price={productData.mrp}
+              discountPrice={productData.winningSellerMOP}
+              discount={productData.discount}
             />
           </div>
-          {productData.emiInfo && (
+          {productData.isEMIEligible === "Y" && (
             <div className={styles.separator}>
               <div className={styles.info}>
-                {productData.emiInfo.emiText}
+                Emi available on this product.
                 <span className={styles.link} onClick={this.showEmiModal}>
                   View Plans
                 </span>
@@ -206,14 +243,15 @@ export default class PdpApparel extends React.Component {
             </div>
           )}
 
-          {productData.productOfferMsg && (
+          {productData.productOfferPromotion && (
             <OfferCard
-              endTime={productData.productOfferMsg[0].validTill.date}
-              heading={productData.productOfferMsg[0].promotionTitle}
+              endTime={productData.productOfferPromotion[0].validTill.date}
+              heading={productData.productOfferPromotion[0].promotionTitle}
               description={productData.productOfferPromotion[0].promotionDetail}
               onClick={this.goToCouponPage}
             />
           )}
+
           {productData.variantOptions && (
             <React.Fragment>
               <ColourSelector
@@ -225,12 +263,11 @@ export default class PdpApparel extends React.Component {
                 getProductSpecification={this.props.getProductSpecification}
               />
               <SizeSelector
-                showSizeGuide={
-                  productData.showSizeGuide ? this.props.showSizeGuide : null
-                }
+                showSizeGuide={this.props.showSizeGuide}
                 data={productData.variantOptions.map(value => {
                   return value.sizelink;
                 })}
+                headerText="Select a variant"
               />
             </React.Fragment>
           )}
@@ -247,22 +284,17 @@ export default class PdpApparel extends React.Component {
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.status === NO ? (
             <Overlay labelText="Not serviceable in you pincode,
-  please try another pincode">
+please try another pincode">
               {this.renderDeliveryOptions(productData)}
             </Overlay>
           ) : (
             this.renderDeliveryOptions(productData)
           )}
 
-          {productData.otherSellersText && (
+          {productData.otherSellers && (
             <div className={styles.separator}>
               <PdpLink onClick={this.goToSellerPage}>
-                <div
-                  className={styles.sellers}
-                  dangerouslySetInnerHTML={{
-                    __html: productData.otherSellersText
-                  }}
-                />
+                <div className={styles.sellers}>{otherSellersText}</div>
               </PdpLink>
             </div>
           )}
@@ -288,6 +320,7 @@ export default class PdpApparel extends React.Component {
               productContent={productData.APlusContent.productContent}
             />
           )}
+
           <PDPRecommendedSections
             msdItems={this.props.msdItems}
             productData={productData}
