@@ -5,11 +5,14 @@ import TabData from "./TabData";
 import UserAlerts from "./UserAlerts";
 import UserCoupons from "./UserCoupons";
 import MDSpinner from "react-md-spinner";
-
+import * as Cookie from "../../lib/Cookie";
 import {
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_ALERTS_PAGE,
-  MY_ACCOUNT_COUPON_PAGE
+  MY_ACCOUNT_COUPON_PAGE,
+  LOGGED_IN_USER_DETAILS,
+  CUSTOMER_ACCESS_TOKEN,
+  LOGIN_PATH
 } from "../../lib/constants";
 import * as styles from "./UserAlertsAndCoupons.css";
 
@@ -19,8 +22,15 @@ const COUPONS = "coupons";
 const ALERTS = "alerts";
 export default class UserAlertsAndCoupons extends React.Component {
   componentDidMount() {
-    this.props.getUserAlerts();
-    this.props.getUserCoupons();
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+    if (userDetails && customerCookie) {
+      this.props.getUserAlerts();
+      this.props.getUserCoupons();
+    } else {
+      this.props.history.push(LOGIN_PATH);
+    }
   }
   renderToAlerts() {
     this.props.history.push(URL_PATH_ALERTS);
