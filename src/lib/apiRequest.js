@@ -70,10 +70,9 @@ export async function postAdobeTargetUrl(
 
 export async function post(path, postData, doNotUserApiSuffix: true) {
   const url = `${API_URL_ROOT}/${path}`;
-
   return await fetch(url, {
     method: "POST",
-    body: JSON.stringify(postData),
+    body: postData,
     headers: {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#"),
       "Content-Type": "application/json"
@@ -152,7 +151,7 @@ export async function putMock(url, payload) {
 }
 
 export async function postMsd(url, payload) {
-  return await fetch(url, {
+  return await fetch(`${API_URL_ROOT}/${url}`, {
     method: "POST",
     body: payload
   });
@@ -171,5 +170,12 @@ export async function postJusPay(path, postData) {
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify(postData)
+  });
+}
+
+export async function postFormData(url, payload) {
+  return await fetch(`${API_URL_ROOT}/${url}`, {
+    method: "POST",
+    body: payload
   });
 }

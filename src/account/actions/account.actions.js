@@ -346,14 +346,20 @@ export function removeAddress(addressId) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let addressObject = new FormData();
+
+    addressObject.append("addressId", addressId);
+    addressObject.append("emailId", "aakarsh@xelpmoc.in");
+
     dispatch(removeAddressRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
         }/removeAddress?isPwa=true&platformNumber=2&access_token=${
           JSON.parse(customerCookie).access_token
-        }&addressId=${addressId}&emailId=`
+        }`,
+        addressObject
       );
       const resultJson = await result.json();
       if (resultJson.errors) {
