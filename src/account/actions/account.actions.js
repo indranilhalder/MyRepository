@@ -27,6 +27,10 @@ export const GET_ALL_ORDERS_REQUEST = "GET_ALL_ORDERS_REQUEST";
 export const GET_ALL_ORDERS_SUCCESS = "GET_ALL_ORDERS_SUCCESS";
 export const GET_ALL_ORDERS_FAILURE = "GET_ALL_ORDERS_FAILURE";
 
+export const FETCH_ORDER_DETAILS_REQUEST = "FETCH_ORDER_DETAILS_REQUEST";
+export const FETCH_ORDER_DETAILS_SUCCESS = "FETCH_ORDER_DETAILS_SUCCESS";
+export const FETCH_ORDER_DETAILS_FAILURE = "FETCH_ORDER_DETAILS_FAILURE";
+
 export const GET_USER_COUPON_REQUEST = "GET_USER_COUPON_REQUEST";
 export const GET_USER_COUPON_SUCCESS = "GET_USER_COUPON_SUCCESS";
 export const GET_USER_COUPON_FAILURE = "GET_USER_COUPON_FAILURE";
@@ -34,6 +38,10 @@ export const GET_USER_COUPON_FAILURE = "GET_USER_COUPON_FAILURE";
 export const GET_USER_ALERTS_REQUEST = "GET_USER_ALERTS_REQUEST";
 export const GET_USER_ALERTS_SUCCESS = "GET_USER_ALERTS_SUCCESS";
 export const GET_USER_ALERTS_FAILURE = "GET_USER_ALERTS_FAILURE";
+
+export const SEND_INVOICE_REQUEST = "SEND_INVOICE_REQUEST";
+export const SEND_INVOICE_SUCCESS = "SEND_INVOICE_SUCCESS";
+export const SEND_INVOICE_FAILURE = "SEND_INVOICE_FAILURE";
 
 export const REMOVE_ADDRESS_REQUEST = "REMOVE_ADDRESS_REQUEST";
 export const REMOVE_ADDRESS_SUCCESS = "REMOVE_ADDRESS_SUCCESS";
@@ -129,15 +137,6 @@ export function removeSavedCardDetails(userId, customerAccessToken) {
   };
 }
 
-// Local Storage and Cookie storage
-const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-
-const defaultPincode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-
 export function getAllOrdersRequest() {
   return {
     type: GET_ALL_ORDERS_REQUEST,
@@ -161,6 +160,8 @@ export function getAllOrdersFailure(error) {
   };
 }
 export function getAllOrdersDetails() {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getAllOrdersRequest());
     try {
@@ -205,6 +206,8 @@ export function getUserDetailsFailure(error) {
 }
 
 export function getUserDetails() {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getUserDetailsRequest());
     try {
@@ -253,6 +256,8 @@ export function getUserCouponsFailure(error) {
 }
 
 export function getUserCoupons() {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getUserCouponsRequest());
     try {
@@ -301,6 +306,8 @@ export function getUserAlertsFailure(error) {
 }
 
 export function getUserAlerts() {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getUserAlertsRequest());
     try {
@@ -399,6 +406,29 @@ export function editAddressFailure(error) {
   };
 }
 
+export function fetchOrderDetailsRequest() {
+  return {
+    type: FETCH_ORDER_DETAILS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function fetchOrderDetailsSuccess(fetchOrderDetails) {
+  return {
+    type: FETCH_ORDER_DETAILS_SUCCESS,
+    status: SUCCESS,
+    fetchOrderDetails
+  };
+}
+
+export function fetchOrderDetailsFailure(error) {
+  return {
+    type: FETCH_ORDER_DETAILS_FAILURE,
+
+    status: ERROR,
+    error
+  };
+}
+
 export function editAddress(addressDetails) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -437,6 +467,84 @@ export function editAddress(addressDetails) {
       dispatch(editAddressSuccess(resultJson));
     } catch (e) {
       dispatch(editAddressFailure(e.message));
+    }
+  };
+}
+
+export function fetchOrderDetails(orderId) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(fetchOrderDetailsRequest());
+    try {
+      const result = await api.get(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/getSelectedOrder/${orderId}?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`
+      );
+      const resultJson = await result.json();
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(fetchOrderDetailsSuccess(resultJson));
+    } catch (e) {
+      dispatch(fetchOrderDetailsFailure(e.message));
+    }
+  };
+}
+
+export function sendInvoiceRequest() {
+  return {
+    type: SEND_INVOICE_REQUEST,
+    status: REQUESTING
+  };
+}
+export function sendInvoiceSuccess(sendInvoice) {
+  return {
+    type: SEND_INVOICE_SUCCESS,
+    status: SUCCESS,
+    sendInvoice
+  };
+}
+
+export function sendInvoiceFailure(error) {
+  return {
+    type: SEND_INVOICE_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function sendInvoice(lineID, orderNumber) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(sendInvoiceRequest());
+    try {
+      const result = await api.get(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/sendInvoice?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&orderNumber=${orderNumber}&lineID=${lineID}`
+      );
+      const resultJson = await result.json();
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(sendInvoiceSuccess(resultJson));
+    } catch (e) {
+      dispatch(sendInvoiceFailure(e.message));
     }
   };
 }
