@@ -42,6 +42,10 @@ export const SEND_INVOICE_REQUEST = "SEND_INVOICE_REQUEST";
 export const SEND_INVOICE_SUCCESS = "SEND_INVOICE_SUCCESS";
 export const SEND_INVOICE_FAILURE = "SEND_INVOICE_FAILURE";
 
+export const REMOVE_ADDRESS_REQUEST = "REMOVE_ADDRESS_REQUEST";
+export const REMOVE_ADDRESS_SUCCESS = "REMOVE_ADDRESS_SUCCESS";
+export const REMOVE_ADDRESS_FAILURE = "REMOVE_ADDRESS_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const USER_PATH = "v2/mpl/users";
@@ -324,6 +328,57 @@ export function getUserAlerts() {
   };
 }
 
+export function removeAddressRequest() {
+  return {
+    type: REMOVE_ADDRESS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function removeAddressSuccess() {
+  return {
+    type: REMOVE_ADDRESS_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function removeAddressFailure(error) {
+  return {
+    type: REMOVE_ADDRESS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function removeAddress(addressId) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let addressObject = new FormData();
+
+    addressObject.append("addressId", addressId);
+    addressObject.append("emailId", "");
+
+    dispatch(removeAddressRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/removeAddress?isPwa=true&platformNumber=2&access_token=${
+          JSON.parse(customerCookie).access_token
+        }`,
+        addressObject
+      );
+      const resultJson = await result.json();
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(removeAddressSuccess());
+    } catch (e) {
+      dispatch(removeAddressFailure(e.message));
+    }
+  };
+}
+
 export function fetchOrderDetailsRequest() {
   return {
     type: FETCH_ORDER_DETAILS_REQUEST,
@@ -360,11 +415,7 @@ export function fetchOrderDetails(orderId) {
         }`
       );
       const resultJson = await result.json();
-      if (
-        resultJson.errors ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.status === FAILURE
-      ) {
+      if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
       dispatch(fetchOrderDetailsSuccess(resultJson));
@@ -410,12 +461,8 @@ export function sendInvoice(lineID, orderNumber) {
         }&orderNumber=${orderNumber}&lineID=${lineID}`
       );
       const resultJson = await result.json();
-      if (
-        resultJson.errors ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.status === FAILURE
-      ) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
       }
       dispatch(sendInvoiceSuccess(resultJson));
     } catch (e) {

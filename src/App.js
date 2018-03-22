@@ -33,6 +33,7 @@ import HeaderWrapper from "./general/components/HeaderWrapper.js";
 import AllOrderContainer from "./account/containers/AllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
+import AddressBookContainer from "./account/containers/AddressBookContainer.js";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -69,10 +70,12 @@ import {
   CATEGORY_PAGE_WITH_SLUG,
   ORDER_PAGE,
   MY_ACCOUNT_PAGE,
-  ORDER_PREFIX,
-  ACCOUNT_SAVED_CARD_ROUTER,
+  MY_ACCOUNT_SAVED_CARDS_PAGE,
+  MY_ACCOUNT_ADDRESS_PAGE,
   MY_ACCOUNT_ALERTS_PAGE,
-  MY_ACCOUNT_COUPON_PAGE
+  MY_ACCOUNT_COUPON_PAGE,
+  ACCOUNT_SAVED_CARD_ROUTER,
+  ORDER_PREFIX
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -153,7 +156,7 @@ class App extends Component {
               component={MyAccountContainer}
             />
             <Route
-              path={`${MY_ACCOUNT_PAGE}${ACCOUNT_SAVED_CARD_ROUTER}`}
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_SAVED_CARDS_PAGE}`}
               component={SavedCardContainer}
             />
             <Route
@@ -253,6 +256,11 @@ class App extends Component {
               exact
               path={CATEGORIES_LANDING_PAGE}
               component={CategoriesPageContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_PAGE}`}
+              component={AddressBookContainer}
             />
           </Switch>
           <MobileFooter />
