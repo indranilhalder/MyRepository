@@ -6,6 +6,7 @@ import { Image } from "xelpmoc-core";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
+import PriceBreakUp from "./PriceBreakUp";
 import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
 import ProductDetails from "./ProductDetails";
@@ -665,8 +666,9 @@ export default class PdpJewellery extends React.Component {
     );
   }
   render() {
-    console.log(this.props);
-    const productData = this.props.productDetails;
+    console.log(data.priceBreakUpDetailsMap);
+    // const productData = this.props.productDetails;
+    const productData = data;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -798,8 +800,10 @@ please try another pincode">
               numberOfReview={productData.numberOfReviews}
             />
           </div>
+
           {productData.fineJewelleryClassificationList && (
             <div className={styles.details}>
+              <PriceBreakUp data={productData.priceBreakUpDetailsMap} />
               <JewelleryClassification
                 data={productData.fineJewelleryClassificationList}
               />
