@@ -19,8 +19,9 @@
   display: inline-block;
 }
 .order {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   background: #fff;
+  padding: 12px;
 }
 .payment {
   border-top: 1px solid #ececec;
