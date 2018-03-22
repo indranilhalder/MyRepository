@@ -104,6 +104,8 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String CARTCOUPONRELEASE = "/releasevoucher";
 	public static final String SELLER_RESTRICTION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart";
 
+	public static final String ALLOPENVISIBLECOUPON = "select {v.pk} from {PromotionVoucher as v JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} and {v.visibility} = 1 and {v.isUserRestricted} = 0";
+
 	private MarketplacecouponConstants()
 	{
 		//empty to avoid instantiating this constant class

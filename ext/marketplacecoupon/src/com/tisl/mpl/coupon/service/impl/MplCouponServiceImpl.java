@@ -194,4 +194,26 @@ public class MplCouponServiceImpl implements MplCouponService
 	}
 
 
+	/**
+	 * The Method returns closed coupon details
+	 *
+	 * @param currentCustomer
+	 */
+	@Override
+	public List<VoucherModel> getClosedVoucherList(final CustomerModel currentCustomer)
+	{
+		return mplCouponDao.getClosedVoucherList(currentCustomer);
+	}
+
+
+	/**
+	 * The Method Return Open Voucher List
+	 */
+	@Override
+	public List<VoucherModel> getOpenVoucherList()
+	{
+		return mplCouponDao.getOpenVoucherList();
+	}
+
+
 }
