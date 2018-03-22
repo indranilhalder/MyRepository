@@ -70,11 +70,11 @@ export default class SaveListDetails extends React.Component {
                 <SaveListCard
                   productName={val.productBrand}
                   productMaterial={val.productName}
-                  price={val.mrp.value}
+                  price={val.mrp && val.mrp.value}
                   date={moment(val.date).format(dateFormat)}
                   day=""
                   offer=""
-                  offerPrice={val.mop.value}
+                  offerPrice={val.mop && val.mop.value}
                   image={val.imageURL}
                   addToBagItem={() =>
                     this.addToBagItem(val.USSID, val.productcode)
