@@ -1,10 +1,10 @@
 .base {
   width: 100%;
   height: auto;
-  background: #fff;
-  padding: 15px;
+  padding: 12px;
   border-radius: 4px;
   display: inline-block;
+  background: #ececec;
 }
 .orderIdHolder {
   width: 100%;
@@ -20,6 +20,7 @@
 }
 .order {
   margin-bottom: 30px;
+  background: #fff;
 }
 .payment {
   border-top: 1px solid #ececec;

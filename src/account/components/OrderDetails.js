@@ -32,9 +32,8 @@ export default class OrderDetails extends React.Component {
     }
   }
   componentDidMount() {
-    if (this.props.match.path === `${MY_ACCOUNT}${ORDER_PREFIX}`) {
-      const orderDetails = queryString.parse(this.props.location.search);
-      const orderId = orderDetails.orderCode;
+    if (this.props.match.path === `${ORDER_PREFIX}`) {
+      const orderId = queryString.parse(this.props.location.search).orderCode;
       this.props.fetchOrderDetails(orderId);
     }
   }

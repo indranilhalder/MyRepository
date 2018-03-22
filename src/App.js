@@ -66,7 +66,6 @@ import {
   ORDER_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
   MY_ACCOUNT_PAGE,
-  MY_ACCOUNT,
   ORDER_PREFIX
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
@@ -157,7 +156,7 @@ class App extends Component {
               component={PlpBrandCategoryWrapperContainer}
             />
             <Route
-              path={`${MY_ACCOUNT}${ORDER_PREFIX}`}
+              path={`${ORDER_PREFIX}`}
               component={FetchOrderDetailsContainer}
             />
             <Route
