@@ -3,6 +3,7 @@ import ReturnsFrame from "./ReturnsFrame";
 import OrderCard from "./OrderCard";
 import ReturnsToBank from "./ReturnsToBank";
 import OrderReturnAddressDetails from "./OrderReturnAddressDetails";
+import styles from "./ReturnStoreConfirmation.css";
 const data = {
   type: "returnRequestDTO",
   orderProductWsDTO: [
@@ -61,7 +62,7 @@ export default class ReturnsStoreConfirmation extends React.Component {
     return (
       <ReturnsFrame headerText="Return to store">
         <OrderReturnAddressDetails />
-        <div>
+        <div className={styles.card}>
           <OrderCard
             productImage={data.orderProductWsDTO[0].imageURL}
             productName={`${data.orderProductWsDTO[0].productBrand} ${
