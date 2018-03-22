@@ -33,16 +33,16 @@ export default class AddressBook extends React.Component {
 
   editAddress = address => {
     this.props.history.push({
-      pathname: `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_EDIT_PAGE}`
+      pathname: `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_EDIT_PAGE}`,
+      state: {
+        addressDetails: address
+      }
     });
   };
 
   addAddress = () => {
     this.props.history.push({
-      pathname: `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_ADD_PAGE}`,
-      state: {
-        isFromProfile: true
-      }
+      pathname: `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_ADD_PAGE}`
     });
   };
   renderAddressBook = () => {
