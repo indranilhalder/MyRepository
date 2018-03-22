@@ -46,6 +46,10 @@ export const REMOVE_ADDRESS_REQUEST = "REMOVE_ADDRESS_REQUEST";
 export const REMOVE_ADDRESS_SUCCESS = "REMOVE_ADDRESS_SUCCESS";
 export const REMOVE_ADDRESS_FAILURE = "REMOVE_ADDRESS_FAILURE";
 
+export const UPDATE_PROFILE_REQUEST = "UPDATE_PROFILE_REQUEST";
+export const UPDATE_PROFILE_SUCCESS = "UPDATE_PROFILE_SUCCESS";
+export const UPDATE_PROFILE_FAILURE = "UPDATE_PROFILE_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const USER_PATH = "v2/mpl/users";
@@ -463,6 +467,63 @@ export function sendInvoice(lineID, orderNumber) {
         }/sendInvoice?access_token=${
           JSON.parse(customerCookie).access_token
         }&orderNumber=${orderNumber}&lineID=${lineID}`
+      );
+      const resultJson = await result.json();
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(sendInvoiceSuccess(resultJson));
+    } catch (e) {
+      dispatch(sendInvoiceFailure(e.message));
+    }
+  };
+}
+
+export function updateProfileRequest() {
+  return {
+    type: UPDATE_PROFILE_REQUEST,
+    status: REQUESTING
+  };
+}
+export function updateProfileSuccess(sendInvoice) {
+  return {
+    type: UPDATE_PROFILE_SUCCESS,
+    status: SUCCESS,
+    sendInvoice
+  };
+}
+
+export function updateProfileFailure(error) {
+  return {
+    type: UPDATE_PROFILE_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function updateProfile(accountDetails) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(sendInvoiceRequest());
+    try {
+      const result = await api.get(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/updateprofile?isPwa=true&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&ProfileDataRequired=true&firstName=${
+          accountDetails.firstName
+        }&lastName=${accountDetails.lastname}&dateOfBirth=${
+          accountDetails.dateOfBirth
+        }&gender=${accountDetails.gender}&mobilenumber=${
+          accountDetails.phoneNumber
+        }&emailId=${accountDetails.emailId}
+`
       );
       const resultJson = await result.json();
       if (
