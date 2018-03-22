@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import InformationHeader from "../../general/components/InformationHeader.js";
-import GetAllOrderContainer from "../containers/GetAllOrderContainer";
+import AllOrderContainer from "../containers/AllOrderContainer";
 import UserCoupons from "./UserCoupons";
 import UserAlerts from "./UserAlerts";
 import ProfileMenuGrid from "../../blp/components/ProfileMenuGrid.js";
@@ -88,7 +88,7 @@ export default class MyAccount extends React.Component {
           {this.state.isSelected === 0 && (
             <div className={styles.ordersHolder}>
               <div className={styles.recentOrderHolder}>
-                <GetAllOrderContainer />
+                <AllOrderContainer />
               </div>
             </div>
           )}

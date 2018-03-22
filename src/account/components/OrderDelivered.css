@@ -1,58 +1,57 @@
-.base{
-  width:100%;
-  height:auto;
+.base {
+  width: 100%;
+  height: auto;
   display: inline-block;
-  padding:25px 0px ;
-  border-bottom:1px solid #ececec;
+  padding: 25px 0px;
 }
-.addressHolder{
-  width:100%;
-  height:auto;
-  display:inline-block;
-  margin-bottom:10px;
+.addressHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 10px;
 }
-.deliveredTo{
-  width:100%;
-  color:#181818;
-  font-size:14px;
-  font-family:semibold;
-  margin-bottom:5px;
-  display:inline-block;
+.deliveredTo {
+  width: 100%;
+  color: #181818;
+  font-size: 14px;
+  font-family: semibold;
+  margin-bottom: 5px;
+  display: inline-block;
 }
-.address{
-  width:100%;
-  height:auto;
-  color:#181818;
-  font-family:regular;
-  font-size:14px;
-  line-height:22px;
-  display:inline-block;
+.address {
+  width: 100%;
+  height: auto;
+  color: #181818;
+  font-family: regular;
+  font-size: 14px;
+  line-height: 22px;
+  display: inline-block;
 }
-.deliverDateHolder{
-  width:100;
-  height:auto;
-  display:inline-block;
-  margin-bottom:10px;
+.deliverDateHolder {
+  width: 100;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 10px;
 }
-.labelText{
-  width:auto;
-  height:auto;
-  display:inline-block;
-  vertical-align:middle;
-  color:#181818;
-  font-size:14px;
-  font-family:semibold;
+.labelText {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
+  color: #181818;
+  font-size: 14px;
+  font-family: semibold;
 }
-.infoText{
-  width:auto;
-  height:auto;
-  display:inline-block;
-  color:#181818;
-  padding-left:5px;
-  font-size:14px;
-  font-family:regular;
+.infoText {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  color: #181818;
+  padding-left: 5px;
+  font-size: 14px;
+  font-family: regular;
 }
-.orderSoldBy{
-  composes:deliverDateHolder;
-  margin-bottom:0px;
+.orderSoldBy {
+  composes: deliverDateHolder;
+  margin-bottom: 0px;
 }
