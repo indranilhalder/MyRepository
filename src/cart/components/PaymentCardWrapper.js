@@ -77,8 +77,7 @@ export default class PaymentCardWrapper extends React.Component {
       return (
         <div className={styles.base}>
           {this.renderSavedCards()}
-          {this.props.cart.paymentModes.cliqCash.totalCliqCashBalance.value !==
-            0 && (
+          {this.props.cart.paymentModes.cliqCash && (
             <div>
               {" "}
               <CliqCashToggle
