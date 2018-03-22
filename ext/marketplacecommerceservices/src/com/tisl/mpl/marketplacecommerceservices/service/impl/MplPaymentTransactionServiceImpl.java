@@ -150,12 +150,13 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 				}
 				else
 				{
-					if (cardType.equalsIgnoreCase("DEBIT"))
+					//SDI-6121
+					if (cardType.equalsIgnoreCase("DEBIT") && StringUtils.isEmpty(getOrderStatusResponse.getBankEmi()))
 					{
 						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card", baseStore);
 						paymentTransactionEntry.setPaymentMode(paymenttype);
 					}
-					else if (cardType.equalsIgnoreCase("CREDIT"))
+					else if (cardType.equalsIgnoreCase("CREDIT") && StringUtils.isEmpty(getOrderStatusResponse.getBankEmi()))
 					{
 						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card", baseStore);
 						paymentTransactionEntry.setPaymentMode(paymenttype);
@@ -602,12 +603,13 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 				}
 				else
 				{
-					if (cardType.equalsIgnoreCase("DEBIT"))
+					//SDI-6121
+					if (cardType.equalsIgnoreCase("DEBIT") && StringUtils.isEmpty(getOrderStatusResponse.getBankEmi()))
 					{
 						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card", order.getStore());
 						paymentTransactionEntry.setPaymentMode(paymenttype);
 					}
-					else if (cardType.equalsIgnoreCase("CREDIT"))
+					else if (cardType.equalsIgnoreCase("CREDIT") && StringUtils.isEmpty(getOrderStatusResponse.getBankEmi()))
 					{
 						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card", order.getStore());
 						paymentTransactionEntry.setPaymentMode(paymenttype);

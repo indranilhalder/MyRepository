@@ -525,7 +525,7 @@ public class MplCouponController
 				//Release the coupon
 				getMplCouponFacade().releaseVoucher(couponCode, cartModel, null);
 				//Recalculate cart after releasing coupon
-				getMplCouponFacade().recalculateCartForCoupon(cartModel, null); //Handled changed method signature for TPR-629
+				//getMplCouponFacade().recalculateCartForCoupon(cartModel, null); //Handled changed method signature for TPR-629
 
 				//				double totalAmount  = cartModel.getTotalPrice().doubleValue();
 				//				double payableWalletAmount = cartModel.getTotalWalletAmount().doubleValue();
@@ -610,7 +610,7 @@ public class MplCouponController
 				getMplCouponFacade().releaseVoucher(couponCode, null, orderModel);
 
 				//Recalculate cart after releasing coupon
-				getMplCouponFacade().recalculateCartForCoupon(null, orderModel); //Handled changed method signature for TPR-629
+				//getMplCouponFacade().recalculateCartForCoupon(null, orderModel); //Handled changed method signature for TPR-629
 				//				double totalAmount  = orderModel.getTotalPrice().doubleValue();
 				//				double payableWalletAmount = orderModel.getTotalWalletAmount().doubleValue();
 				//				double nonPayableWalletAmount = totalAmount - payableWalletAmount;

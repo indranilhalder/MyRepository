@@ -134,6 +134,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TRUE_UPPER = "TRUE";
 	public static final String ZERO = "0";
 	public static final String LINK_PASSWORD_CHANGE = "/login/pw/change";
+	
 	//Sonar Fix Jewellery
 	public static final String STONE = "Stone";
 	public static final String SIZE = "size";
@@ -215,6 +216,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static Date EMPTYDATE = null;
 	//PAYMENT SERVICE
 	public static final String MPLPAYMENTSERVICE = "mplPaymentService";
+	public static final String SDPFIFTEENLOG = "sdp.fifteen.log";
 	//public static final String CALLINGPAYUSERVICE =
 	//"Calling PAYU service:::::::";
 	//public static final String ORDERAMOUNT = "Amount of Order::::";
@@ -1104,7 +1106,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B5024 = "B5024";
 	public static final String B5025 = "B5025";
 	
-
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
 	public static final String ORDER_ERROR = "B8000";
@@ -2031,6 +2032,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LUXURY = "luxury";
 	public static final String MSH = "MSH";
 	public static final String LSH = "LSH";
+	public static final String ISH = "ISH";
 
 	public static final String LUX_SALESCATEGORYTYPE = "luxury.salescategory.code";
 
@@ -2373,6 +2375,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
 
+
 	// EGV  changes Start
 
 		public static final String BUCKET_NAME_PROMOTON = "PROMOTION";
@@ -2515,4 +2518,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FPC_QUERY_REFUNDENTRY = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:auditId} = ?auditId";
 	public static final String FPC_QUERY_REFUNDENTRIES = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:isExpired} = ?expiredFlag";
 	public static final String FPC_QUERY_PARENTORDER = "SELECT {ord:pk} FROM {Order AS ord} WHERE{ord:guid} = ?guid AND {ord:type}  = ?orderType";
+
+	//changes for SDI 6152--starts
+	public static final String LUXURY_CATALOG_ID = "luxProductCatalog";
 }

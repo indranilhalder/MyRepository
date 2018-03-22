@@ -79,7 +79,7 @@
 							<spring:theme text="Order Details" />
 						</h2>
 						
-						<p class="commonAccountPara">If you find any issue with the details, you can contact our customer care at 1800 208 8282.</p>
+						<p class="commonAccountPara">If you find any issue with the details, you can contact our customer care at 90291 08282.</p>
 
 
 					</div>

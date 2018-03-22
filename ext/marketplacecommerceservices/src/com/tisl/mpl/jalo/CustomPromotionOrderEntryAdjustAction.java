@@ -21,6 +21,7 @@ import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.promotions.jalo.AbstractPromotion;
 import de.hybris.platform.promotions.jalo.PromotionResult;
 import de.hybris.platform.promotions.util.Pair;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.util.DiscountValue;
 
 import java.util.ArrayList;
@@ -30,7 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
@@ -43,6 +46,27 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 {
 	private final static Logger log = Logger.getLogger(CustomPromotionOrderEntryAdjustAction.class.getName());
 
+	//SDP-15 starts here
+	@Autowired
+	private ConfigurationService configurationService;
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+	//SDP-15 ends here
 	/**
 	 * @Description : This method is called when promotion is applied
 	 * @param : ctx
@@ -433,6 +457,23 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 						Double.valueOf(percentageDiscount));
 			}
 
+			//SDP-15 logs added
+			String sdpLogFlag = null;
+			if(StringUtils.isNotEmpty(configurationService.getConfiguration().getString("sdp.fifteen.log")))
+			{
+			sdpLogFlag = configurationService.getConfiguration().getString("sdp.fifteen.log");
+			}
+			if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+			{
+			StringBuilder logMessage = new StringBuilder("percentageDiscount:").append(percentageDiscount);
+			logMessage.append(", orderEntryAdjustment:").append(orderEntryAdjustment);
+			logMessage.append(", productPromoCode:").append(productPromoCode).append(", TOTALSALEPRICE:").append(lineItemLevelPrice);
+			logMessage.append(", TOTALPRODUCTLEVELDISC:").append(amtTobeDeductedAtlineItemLevel).append(", NETSELLINGPRICE:").append(aportionedItemValue);
+			logMessage.append(", NETAMOUNTAFTERALLDISC:").append(netAmountAfterAllDisc);
+			log.error(logMessage.toString());
+			}
+			//SDP-15
+			
 			needsCalc = true;
 			setMarkedApplied(ctx, true);
 		}
