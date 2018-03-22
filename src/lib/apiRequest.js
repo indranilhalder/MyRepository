@@ -151,7 +151,7 @@ export async function putMock(url, payload) {
 }
 
 export async function postMsd(url, payload) {
-  return await fetch(`${API_MSD_URL_ROOT}/${url}`, {
+  return await fetch(url, {
     method: "POST",
     body: payload
   });
