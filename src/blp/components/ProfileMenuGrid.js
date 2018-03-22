@@ -51,7 +51,7 @@ export default class ProfileMenuGrid extends React.Component {
       {
         image: savedPayments,
         text: "Saved Payments",
-        url: ACCOUNT_SAVED_CARD_ROUTER
+        url: MY_ACCOUNT_SAVED_CARDS_PAGE
       },
       {
         image: alertsCoupons,

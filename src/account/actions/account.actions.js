@@ -34,6 +34,10 @@ export const GET_USER_ALERTS_REQUEST = "GET_USER_ALERTS_REQUEST";
 export const GET_USER_ALERTS_SUCCESS = "GET_USER_ALERTS_SUCCESS";
 export const GET_USER_ALERTS_FAILURE = "GET_USER_ALERTS_FAILURE";
 
+export const REMOVE_ADDRESS_REQUEST = "REMOVE_ADDRESS_REQUEST";
+export const REMOVE_ADDRESS_SUCCESS = "REMOVE_ADDRESS_SUCCESS";
+export const REMOVE_ADDRESS_FAILURE = "REMOVE_ADDRESS_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const USER_PATH = "v2/mpl/users";
@@ -313,6 +317,57 @@ export function getUserAlerts() {
       dispatch(getUserAlertsSuccess(resultJson));
     } catch (e) {
       dispatch(getUserAlertsFailure(e.message));
+    }
+  };
+}
+
+export function removeAddressRequest() {
+  return {
+    type: REMOVE_ADDRESS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function removeAddressSuccess() {
+  return {
+    type: REMOVE_ADDRESS_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function removeAddressFailure(error) {
+  return {
+    type: REMOVE_ADDRESS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function removeAddress(addressId) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let addressObject = new FormData();
+
+    addressObject.append("addressId", addressId);
+    addressObject.append("emailId", "");
+
+    dispatch(removeAddressRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/removeAddress?isPwa=true&platformNumber=2&access_token=${
+          JSON.parse(customerCookie).access_token
+        }`,
+        addressObject
+      );
+      const resultJson = await result.json();
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(removeAddressSuccess());
+    } catch (e) {
+      dispatch(removeAddressFailure(e.message));
     }
   };
 }
