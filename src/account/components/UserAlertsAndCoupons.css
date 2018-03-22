@@ -1,0 +1,15 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.tabHeader {
+  width: 100%;
+}
+.tabBody {
+  width: 100%;
+  height: auto;
+  background-color: #ececec;
+  padding: 15px;
+  margin-top: 15px;
+}
