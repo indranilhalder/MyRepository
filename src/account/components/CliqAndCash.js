@@ -41,7 +41,7 @@ export default class CliqAndCash extends React.Component {
             added to your CLiQ Cash
           </div>
         </div>
-        <div className={styles.fromHolder}>
+        <div className={styles.formHolder}>
           <div className={styles.addBlanceHeader}>
             Add Balance from Gift Card
           </div>

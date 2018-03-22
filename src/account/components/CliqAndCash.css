@@ -2,7 +2,6 @@
   width: 100%;
   height: auto;
   padding: 15px;
-  display: inline-block;
 }
 .logoHolder {
   width: 100%;
@@ -50,7 +49,7 @@
   font-size: 14px;
   line-height: normal;
 }
-.fromHolder {
+.formHolder {
   width: 100%;
   height: auto;
   display: inline-block;
