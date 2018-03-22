@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./GetAllOrderDetails.css";
+import styles from "./AllOrderDetails.css";
 import OrderPlacedAndId from "./OrderPlacedAndId.js";
 import OrderCard from "./OrderCard.js";
 import PriceAndLink from "./PriceAndLink.js";

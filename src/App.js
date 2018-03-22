@@ -30,9 +30,9 @@ import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCou
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
-import GetAllOrderContainer from "./account/containers/GetAllOrderContainer";
+import AllOrderContainer from "./account/containers/AllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
-import FetchOrderDetailsContainer from "./account/containers/FetchOrderDetailsContainer.js";
+import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -146,7 +146,7 @@ class App extends Component {
                 <SignUpContainer {...routeProps} {...this.props} />
               )}
             />
-            <Route path={ORDER_PAGE} component={GetAllOrderContainer} />
+            <Route path={ORDER_PAGE} component={AllOrderContainer} />
             <Route
               exact
               path={MY_ACCOUNT_PAGE}
@@ -171,10 +171,7 @@ class App extends Component {
               path={BRAND_PAGE}
               component={PlpBrandCategoryWrapperContainer}
             />
-            <Route
-              path={`${ORDER_PREFIX}`}
-              component={FetchOrderDetailsContainer}
-            />
+            <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
             <Route
               exact
               path={CATEGORY_PAGE}

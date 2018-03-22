@@ -13,6 +13,7 @@ const account = (
     fetchOrderDetails: null,
     fetchOrderDetailsStatus: null,
     fetchOrderDetailsError: null,
+    loadingForFetchOrderDetails: false,
 
     userDetails: null,
     userDetailsStatus: null,
@@ -31,7 +32,8 @@ const account = (
 
     sendInvoice: null,
     sendInvoiceStatus: null,
-    sendInvoiceError: null
+    sendInvoiceError: null,
+    loadingForSendInvoice: false
   },
   action
 ) => {
@@ -156,41 +158,41 @@ const account = (
     case accountActions.FETCH_ORDER_DETAILS_REQUEST:
       return Object.assign({}, state, {
         fetchOrderDetailsStatus: action.status,
-        loading: true
+        loadingForFetchOrderDetails: true
       });
 
     case accountActions.FETCH_ORDER_DETAILS_SUCCESS:
       return Object.assign({}, state, {
         fetchOrderDetailsStatus: action.status,
         fetchOrderDetails: action.fetchOrderDetails,
-        loading: false
+        loadingForFetchOrderDetails: false
       });
 
     case accountActions.FETCH_ORDER_DETAILS_FAILURE:
       return Object.assign({}, state, {
         fetchOrderDetailsStatus: action.status,
         fetchOrderDetailsError: action.error,
-        loading: false
+        loadingForFetchOrderDetails: false
       });
 
     case accountActions.SEND_INVOICE_REQUEST:
       return Object.assign({}, state, {
         sendInvoiceStatus: action.status,
-        loading: true
+        loadingForSendInvoice: true
       });
 
     case accountActions.SEND_INVOICE_SUCCESS:
       return Object.assign({}, state, {
         sendInvoiceStatus: action.status,
         sendInvoice: action.sendInvoice,
-        loading: false
+        loadingForSendInvoice: false
       });
 
     case accountActions.SEND_INVOICE_FAILURE:
       return Object.assign({}, state, {
         sendInvoiceStatus: action.status,
         sendInvoiceError: action.error,
-        loading: false
+        loadingForSendInvoice: false
       });
     default:
       return state;

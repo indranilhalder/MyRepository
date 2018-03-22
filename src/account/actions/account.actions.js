@@ -360,7 +360,11 @@ export function fetchOrderDetails(orderId) {
         }`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
       dispatch(fetchOrderDetailsSuccess(resultJson));
@@ -406,8 +410,12 @@ export function sendInvoice(lineID, orderNumber) {
         }&orderNumber=${orderNumber}&lineID=${lineID}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
       dispatch(sendInvoiceSuccess(resultJson));
     } catch (e) {
