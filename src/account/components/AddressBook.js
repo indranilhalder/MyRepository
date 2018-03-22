@@ -33,10 +33,7 @@ export default class AddressBook extends React.Component {
 
   editAddress = address => {
     this.props.history.push({
-      pathname: `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_EDIT_PAGE}`,
-      state: {
-        addressDetails: address
-      }
+      pathname: `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_EDIT_PAGE}`
     });
   };
 
