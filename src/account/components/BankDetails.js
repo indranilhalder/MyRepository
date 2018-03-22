@@ -83,9 +83,9 @@ BankDetails.propTypes = {
   mode: PropTypes.string,
   bankName: PropTypes.string,
   code: PropTypes.string,
-  refundModes: PropTypes.arrayOf([
+  refundModes: PropTypes.arrayOf(
     PropTypes.shape({ value: PropTypes.string, label: PropTypes.string })
-  ]),
+  ),
   onChange: PropTypes.func
 };
 BankDetails.defaultProps = {
