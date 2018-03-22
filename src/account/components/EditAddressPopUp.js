@@ -51,7 +51,6 @@ export default class EditAddressPopUp extends React.Component {
     }
   }
   onChange(val) {
-    console.log(val);
     this.setState(val);
   }
 
