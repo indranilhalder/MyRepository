@@ -15,9 +15,9 @@ export default class AwbForm extends React.Component {
       courierCharge: this.props.courierCharge ? this.props.courierCharge : ""
     };
   }
-  doItLater() {
-    if (this.props.doItLater) {
-      this.props.doItLater();
+  updateLater() {
+    if (this.props.updateLater) {
+      this.props.updateLater();
     }
   }
   onUpdate(val) {
@@ -49,7 +49,7 @@ export default class AwbForm extends React.Component {
             }
             onChange={awbNumber => this.setState({ awbNumber })}
             textStyle={{ fontSize: 14 }}
-            height={33}
+            height={35}
           />
         </div>
         <div className={styles.inputHolder}>
@@ -63,7 +63,7 @@ export default class AwbForm extends React.Component {
             }
             onChange={logisticsPartner => this.setState({ logisticsPartner })}
             textStyle={{ fontSize: 14 }}
-            height={33}
+            height={35}
           />
         </div>
         <div className={styles.inputHolder}>
@@ -77,7 +77,7 @@ export default class AwbForm extends React.Component {
             }
             onChange={courierCharge => this.setState({ courierCharge })}
             textStyle={{ fontSize: 14 }}
-            height={33}
+            height={35}
           />
         </div>
         <div className={styles.inputHolder}>
@@ -100,7 +100,7 @@ export default class AwbForm extends React.Component {
               fontFamily="regular"
               color="#000"
               label="Do it later"
-              onClick={() => this.doItLater()}
+              onClick={() => this.updateLater()}
             />
           </div>
           <div className={styles.updateHolder}>
@@ -119,7 +119,7 @@ export default class AwbForm extends React.Component {
 }
 AwbForm.propTypes = {
   doItLater: PropTypes.func,
-  onUpdate: PropTypes.func,
+  updateLater: PropTypes.func,
   awbNumber: PropTypes.string,
   logisticsPartner: PropTypes.string,
   courierCharge: PropTypes.string,
