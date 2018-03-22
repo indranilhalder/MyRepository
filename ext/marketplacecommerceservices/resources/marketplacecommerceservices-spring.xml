@@ -32,6 +32,27 @@
 		<property name="returnRequestDao" ref="returnRequestDao" />
 	</bean>
 
+	<!-- Added EGV Beans 22-09-2017 -->
+	<bean id="MplEGVCartServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.egv.service.cart.impl.MplEGVCartServiceImpl">
+	</bean>
+	<bean id="MplEGVCartDaoImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.egv.dao.cart.impl.MplEGVCartDaoImpl">
+	</bean>
+
+	<!-- END EGV Beans 22-09-2017 -->
+
+	<bean id="MplQcPaymentFailService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplQcPaymentFailServiceImpl">
+	</bean>
+
+	<bean id="MplQcPaymentFailDao" class="com.tisl.mpl.promotion.dao.impl.MplQcPaymentFailDaoImpl">
+	</bean>
+
+	<bean id="MplQcRefundService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.QcRefundServiceImpl">
+	</bean>
+
 	<bean id="mplConsignmentBasedReturnableCheck"
 		class="com.tisl.mpl.marketplacecommerceservices.strategy.MPLDefaultConsignmentBasedReturnableCheck"
 		parent="abstractBusinessService" scope="tenant">
@@ -59,19 +80,17 @@
 	<bean id="mplDeliveryInformationDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplDeliveryInformationDaoImpl">
 	</bean>
-<!-- Optimization Fix PDP Start -->
-<bean id="mplMediDao"
-		class="com.tils.mpl.media.impl.MplMediaDaoImpl">
+	<!-- Optimization Fix PDP Start -->
+	<bean id="mplMediDao" class="com.tils.mpl.media.impl.MplMediaDaoImpl">
 	</bean>
-	
-	<bean id="mplMediService"
-		class="com.tils.mpl.media.impl.MplMediaServiceImpl">
+
+	<bean id="mplMediService" class="com.tils.mpl.media.impl.MplMediaServiceImpl">
 	</bean>
-	
+
 	<bean id="mplboostSearchQueryPopulator" class="com.tisl.mpl.solr.search.MplBoostSearchQueryPopulator"
-    parent="boostSearchQueryPopulator" />
-    
-<!-- Optimization Fix PDP End -->
+		parent="boostSearchQueryPopulator" />
+
+	<!-- Optimization Fix PDP End -->
 	<!-- PDP RestrictedPincode end -->
 	<!-- The hybris platform provides one single Spring application context 
 		for beans located at the jalo layer. Each extension can add beans to this 
@@ -123,10 +142,10 @@
 				<ref bean="commerceSearchSortPopulator" />
 				<ref bean="commerceSearchTextPopulator" />
 				<ref bean="commerceSearchFiltersPopulator" />
-				<ref bean="mplSearchSolrQueryTypeFacetsPopulator"/>
-                                <ref bean="mplboostSearchQueryPopulator"/>
-                                <ref bean="conditionalSortFilteringIndexedTypePopulator" />
-                                <ref bean="facetReconfigurationPopulator"/>
+				<ref bean="mplSearchSolrQueryTypeFacetsPopulator" />
+				<ref bean="mplboostSearchQueryPopulator" />
+				<ref bean="conditionalSortFilteringIndexedTypePopulator" />
+				<ref bean="facetReconfigurationPopulator" />
 
 			</list>
 		</property>
@@ -147,8 +166,8 @@
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPriceRowServiceImpl" />
 
 	<bean id="mplNotificationSaveService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplNotificationServiceImpl" >
-		<property name="businessProcessService" ref="businessProcessService"/>  <!-- Added for TPR-1348 AutorefundInitiated -->
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplNotificationServiceImpl">
+		<property name="businessProcessService" ref="businessProcessService" />  <!-- Added for TPR-1348 AutorefundInitiated -->
 		<property name="sendSMSService" ref="sendSMSService" />     <!-- Added for TPR-1348 AutorefundInitiated -->
 	</bean>
 
@@ -157,14 +176,15 @@
 	<bean id="mplPriceRowDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPriceRowDaoImpl">
 	</bean>
-	
+
 	<alias name="mplSearchSolrQueryTypeFacetsPopulator" alias="mplSearchSolrQueryTypeFacetsPopulator" />
-		<bean id="mplSearchSolrQueryTypeFacetsPopulator" class="com.tisl.mpl.solr.search.MplSearchSolrQueryTypeFacetsPopulator">
+	<bean id="mplSearchSolrQueryTypeFacetsPopulator"
+		class="com.tisl.mpl.solr.search.MplSearchSolrQueryTypeFacetsPopulator">
 	</bean>
-	
+
 	<bean parent="modifyPopulatorList">
-		<property name="list" ref="commerceSearchQueryPageableConverter"/>
-		<property name="add" ref="mplSearchSolrQueryTypeFacetsPopulator"/>
+		<property name="list" ref="commerceSearchQueryPageableConverter" />
+		<property name="add" ref="mplSearchSolrQueryTypeFacetsPopulator" />
 	</bean>
 
 
@@ -199,7 +219,7 @@
 		<property name="typeCode" value="PriceRow" />
 	</bean>
 
-    <!-- For Bulk Product Upload on HMC Configuration Screen -->
+	<!-- For Bulk Product Upload on HMC Configuration Screen -->
 	<bean id="productPromotionInterceptor" class="com.tisl.mpl.interceptor.ProductPromotionInterceptor">
 
 	</bean>
@@ -209,7 +229,7 @@
 		<property name="interceptor" ref="productPromotionInterceptor" />
 		<property name="typeCode" value="ProductPromotion" />
 	</bean>
-	
+
 	<!-- PR-15 starts here -->
 	<!-- For Bulk Product Upload on HMC Configuration Screen -->
 	<bean id="orderPromotionInterceptor" class="com.tisl.mpl.interceptor.OrderPromotionInterceptor">
@@ -221,7 +241,7 @@
 		<property name="typeCode" value="OrderPromotion" />
 	</bean>
 	<!-- PR-15 ends here -->
-	
+
 	<!-- PriceRowPromotionInterceptor ends -->
 	<!-- DeliveryModeInterceptor Start -->
 	<!-- <bean id="deliveryModeCreateInterceptor" class="com.tisl.mpl.interceptor.DeliveryModeCreateInterceptor"> 
@@ -245,17 +265,18 @@
 	</bean>
 
 	<!-- AddProductCategoryInterceptor End -->
-<!-- HasVariantProductForFineJewellery for Fine Jewellery Start -->
-   <bean id="addHasVariantForFineJewelleryInterceptor" class="com.tisl.mpl.interceptor.AddHasVariantForFineJewelleryInterceptor">
+	<!-- HasVariantProductForFineJewellery for Fine Jewellery Start -->
+	<bean id="addHasVariantForFineJewelleryInterceptor"
+		class="com.tisl.mpl.interceptor.AddHasVariantForFineJewelleryInterceptor">
 	</bean>
 
-     <bean id="addHasVariantForFineJewelleryInterceptorMapping"
+	<bean id="addHasVariantForFineJewelleryInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="addHasVariantForFineJewelleryInterceptor" />
 		<property name="typeCode" value="SellerInformation" />
-		
+
 	</bean>
-<!-- HasVariantProductForFineJewellery for Fine Jewellery End -->
+	<!-- HasVariantProductForFineJewellery for Fine Jewellery End -->
 
 	<!-- AddProductCategoryInterceptor Start -->
 	<bean id="addProductColorHexCodeInterceptor"
@@ -357,9 +378,9 @@
 	<alias alias="extDefaultCustomerService" name="extDefaultCustomerService" />
 	<bean id="extDefaultCustomerService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ExtDefaultCustomerServiceImpl"
-		parent="defaultCustomerAccountService" scope="tenant" >
-		<property name="passwordEncoding" value="${default.password.encoder.key}"/>
-		</bean>
+		parent="defaultCustomerAccountService" scope="tenant">
+		<property name="passwordEncoding" value="${default.password.encoder.key}" />
+	</bean>
 
 	<bean id="genotpservice" autowire="byName"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.GenerateOTPServiceImpl">
@@ -376,10 +397,10 @@
 	<bean id="extendedUserDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ExtendedUserDaoImpl"
 		scope="tenant" />
-		
+
 	<!-- Change for social access token validation -->
 	<bean id="socialLoginValidationService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.SocialLoginValidationServiceImpl"/>
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.SocialLoginValidationServiceImpl" />
 
 
 	<bean id="extendedCustomerEmailResolutionService"
@@ -414,11 +435,11 @@
 	</bean>
 
 	<!-- Prodcut Service Implementation -->
- 	<alias name="mplProductService" alias="mplProductService" />
- 	<bean id="mplProductService"
- 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProductServiceImpl">
- 		<property name="productDao" ref="productDao" />
- 	</bean>
+	<alias name="mplProductService" alias="mplProductService" />
+	<bean id="mplProductService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProductServiceImpl">
+		<property name="productDao" ref="productDao" />
+	</bean>
 
 	<!-- ============== Update Profile Service & DAO ============== -->
 	<bean id="mplCustomerProfileDao"
@@ -443,15 +464,15 @@
 
 
 	<!-- ============== configure beans for pincode ============== -->
-		
-		<alias name="pincodeService" alias="pincodeService" />
+
+	<alias name="pincodeService" alias="pincodeService" />
 	<bean id="pincodeService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.PincodeServiceImpl">
 		<property name="pincodeDao" ref="pincodeDao" />
-		
+
 	</bean>
 	<bean id="pincodeDao"
-		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PincodeDaoImpl" >
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PincodeDaoImpl">
 		<property name="flexibleSearchService" ref="flexibleSearchService" />
 	</bean>
 
@@ -487,29 +508,29 @@
 	<!-- Blacklist Service and DAO Implementation ends -->
 
 
-	<!-- SellerReport Service and Service Implementation  -->
-	
+	<!-- SellerReport Service and Service Implementation -->
+
 	<bean id="mplSellerPriorityReportService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplSellerPriorityReportServiceImpl">
 	</bean>
-	<!-- SellerReport Service and Service Implementation  ends -->
-	
+	<!-- SellerReport Service and Service Implementation ends -->
+
 	<!-- SellerReport Service and DAO Implementation -->
-		
+
 	<bean id="mplSellerPriorityReportDAO"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplSellerPriorityReportDAOImpl">
 	</bean>
-	
-	<!-- SellerReport Service and DAO Implementation  ends -->
-	
-	
+
+	<!-- SellerReport Service and DAO Implementation ends -->
+
+
 	<alias alias="cODPaymentService" name="mplCODPaymentServiceImpl" />
 	<bean id="mplCODPaymentServiceImpl"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.CODPaymentServiceImpl">
 		<property name="modelService" ref="modelService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
-	
+
 	<alias alias="jusPayPaymentService" name="jusPayPaymentServiceImpl" />
 	<bean id="jusPayPaymentServiceImpl"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.JuspayPaymentServiceImpl">
@@ -582,14 +603,14 @@
 		<property name="mplCommerceCartDao" ref="mplCommerceCartDao" />
 		<property name="cartConverter" ref="cartConverter" />
 		<!-- CAR:127 -->
-		<property name="orderConverter" ref="orderConverter"/>
+		<property name="orderConverter" ref="orderConverter" />
 		<property name="cartModificationConverter" ref="cartModificationConverter" />
 		<property name="siteConfigService" ref="siteConfigService" />
 		<property name="baseSiteService" ref="baseSiteService" />
 		<property name="cartService" ref="cartService" />
 		<property name="commerceUpdateCartEntryStrategy" ref="commerceUpdateCartEntryStrategy" />
 	</bean>
-	
+
 	<!-- agent id for store service -->
 	<alias name="defaultAgentIdForStoreService" alias="agentIdForStore" />
 	<bean id="defaultAgentIdForStoreService"
@@ -672,15 +693,16 @@
 		<property name="configurationService" ref="configurationService" />
 		<property name="mplVoucherService" ref="mplVoucherService" />
 		<!-- TPR-3782 -->
- 		<property name="priceBreakupService" ref="priceBreakupService" />
+		<property name="priceBreakupService" ref="priceBreakupService" />
 
 	</bean>
 
-	<alias name="mplCommerceCheckoutService" alias="commerceCheckoutService" /> 
-	<bean id="mplCommerceCheckoutService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDefaultCommerceCheckoutService" 
+	<alias name="mplCommerceCheckoutService" alias="commerceCheckoutService" />
+	<bean id="mplCommerceCheckoutService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDefaultCommerceCheckoutService"
 		parent="defaultCommerceCheckoutService">
 	</bean>
-	
+
 	<bean id="userLoginService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.UserLoginServiceImpl">
 		<property name="userDetailsService" ref="extendedUserDetailsService" />
@@ -693,7 +715,7 @@
 	<bean id="mplUpdatePromotionPriceService"
 		class="com.tisl.mpl.promotion.service.impl.UpdatePromotionalPriceServiceImpl">
 		<property name="modelService" ref="modelService" />
-		<property name="updateSplPriceHelperService" ref="updateSplPriceHelperService" />	
+		<property name="updateSplPriceHelperService" ref="updateSplPriceHelperService" />
 	</bean>
 
 	<alias name="mplUpdatePromotionPriceDao" alias="mplUpdatePromotionPriceDao" />
@@ -859,18 +881,18 @@
 	<bean id="sizeGuideService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.SizeGuideServiceImpl">
 	</bean>
-	
+
 	<!-- for price breakup -->
 	<bean id="priceBreakupService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.PriceBreakupServiceImpl">
 		<property name="jewelleryAttrMapping" ref="jewelleryAttrMapping"></property>
 	</bean>
-	
+
 	<bean id="priceBreakupDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PriceBreakupDaoImpl">
 	</bean>
 	<!-- for price breakup -->
-	
+
 	<!-- for merchant master -->
 	<bean id="merchantmaster" class="com.tisl.mpl.integration.job.MerchantMaster"
 		autowire="byName" />
@@ -1006,7 +1028,8 @@
 				<value>PICK_IN_PROGRESS</value>
 				<value>PICK_HOLD</value>
 				<value>PICK_CONFIRMED</value>
-				<!-- commented by because for packed status cancellation is not possible ( TISUATC-99) -->
+				<!-- commented by because for packed status cancellation is not possible 
+					( TISUATC-99) -->
 				<!-- <value>PACKED</value> -->
 				<value>ORDER_REJECTED</value>
 				<value>AWB_ASSIGNED</value>
@@ -1029,10 +1052,10 @@
 
 	<bean id="mplJusPayRefundService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplJusPayRefundService" />
-		
-		<!-- Mrupee implementation -->	
-	
-		<bean id="mplMWalletRefundService"
+
+	<!-- Mrupee implementation -->
+
+	<bean id="mplMWalletRefundService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplMWalletRefundService" />
 
 	<!-- For Bulk Upload of Promotions -->
@@ -1152,36 +1175,36 @@
 			<property name="orderFacade" ref="orderFacade"></property> <property name="productFacade" 
 			ref="productFacade"></property> <property name="cronJobService" ref="cronJobService"></property> -->
 	</bean>
-	
+
 	<bean id="orderRefundReportJob"
-		class="com.tisl.mpl.marketplacecommerceservices.jobs.OrderRefundReportJob" >
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.OrderRefundReportJob">
 		<property name="modelService" ref="modelService" />
 		<property name="sessionService" ref="sessionService" />
 		<property name="flexibleSearchService" ref="flexibleSearchService" />
 	</bean>
-	
+
 	<!-- <alias alias="refundService" name="mplRefundService" /> -->
 	<bean id="mplRefundService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MPLDefaultRefundService" 
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MPLDefaultRefundService"
 		parent="defaultRefundService" scope="tenant">
-		
+
 	</bean>
-	
+
 	<bean id="mplrefundDao"
-		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MPLDefaultRefundDao" 
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MPLDefaultRefundDao"
 		parent="defaultRefundDao" scope="tenant">
 	</bean>
-	
+
 	<bean id="mplreplacmentDao"
-		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MPLDefaultReplacmentDao" 
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MPLDefaultReplacmentDao"
 		parent="defaultReplacementOrderDao" scope="tenant">
 	</bean>
-	
+
 	<bean id="mplorderCancelDao"
-		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MPLDefaultOrderCancelDao" 
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MPLDefaultOrderCancelDao"
 		parent="defaultOrderCancelDao" scope="tenant">
 	</bean>
-	
+
 	<alias name="mplCustomerPopulator" alias="customerPopulator" />
 	<bean id="mplCustomerPopulator"
 		class="com.tisl.mpl.converter.populator.CustomCustomerPopulator">
@@ -1290,8 +1313,9 @@
 		<property name="cartFactory" ref="cartFactory" />
 		<property name="commerceAddToCartStrategy" ref="commerceAddToCartStrategy" />
 		<property name="guidKeyGenerator" ref="guidKeyGenerator" />
-		<!-- Commented due to cart merge Issue,During Promotion Caching Implementation need to override rebuildsessioncart and rewriteentriesfromcarttocart -->
-<!-- 		<property name="cartValidityPeriod" value="0"/> -->
+		<!-- Commented due to cart merge Issue,During Promotion Caching Implementation 
+			need to override rebuildsessioncart and rewriteentriesfromcarttocart -->
+		<!-- <property name="cartValidityPeriod" value="0"/> -->
 	</bean>
 
 
@@ -1311,17 +1335,18 @@
 	<bean id="pdpEmailService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.DefaultPDPEmailNotificationService">
 	</bean>
-	
+
 	<!-- Key generator for Juspay -->
 	<bean id="juspayOrderIdGenerator"
 		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
 		init-method="init" scope="tenant">
 		<property name="key" value="juspayOrderId" />
 		<property name="digits" value="9" />
-		<property name="start" value="#{configurationService.configuration.getProperty('juspay.orderId.startId')}" />
+		<property name="start"
+			value="#{configurationService.configuration.getProperty('juspay.orderId.startId')}" />
 		<property name="numeric" value="true" />
 	</bean>
-	<!-- Key generator for Juspay Ends --> 
+	<!-- Key generator for Juspay Ends -->
 
 	<!-- Key generator for COD Payment Transaction -->
 	<bean id="codCodeGenerator"
@@ -1333,17 +1358,18 @@
 		<property name="numeric" value="true" />
 	</bean>
 	<!-- Key generator for COD Payment Transaction Ends -->
-	
+
 	<!-- Key generator for Third Party Wallet -->
 	<bean id="walletOrderIdGenerator"
 		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
 		init-method="init" scope="tenant">
 		<property name="key" value="walletOrderId" />
 		<property name="digits" value="9" />
-		<property name="start" value="#{configurationService.configuration.getProperty('wallet.orderId.startId')}" />
+		<property name="start"
+			value="#{configurationService.configuration.getProperty('wallet.orderId.startId')}" />
 		<property name="numeric" value="true" />
 	</bean>
-	<!-- Key generator for Third Party Wallet Ends --> 
+	<!-- Key generator for Third Party Wallet Ends -->
 
 
 	<!-- For Payment Web Hook Integration -->
@@ -1380,7 +1406,8 @@
 		<property name="commerceCategoryService" ref="commerceCategoryService" />
 		<property name="baseSiteService" ref="baseSiteService" />
 		<property name="defaultPattern" value="/{product-name}/p-{product-code}" />
-		<!-- <property name="defaultPattern" value="/{product-name}/p/{product-code}" /> -->
+		<!-- <property name="defaultPattern" value="/{product-name}/p/{product-code}" 
+			/> -->
 		<!-- <property name="defaultPattern" value="/{category-path}/{product-name}/p/{product-code}" 
 			/> -->
 	</bean>
@@ -1392,7 +1419,8 @@
 		<property name="commerceCategoryService" ref="commerceCategoryService" />
 		<property name="baseSiteService" ref="baseSiteService" />
 		<property name="pattern" value="/{category-path}/c-{category-code}" />
-		<!-- <property name="pattern" value="/{category-path}/c/{category-code}" /> -->
+		<!-- <property name="pattern" value="/{category-path}/c/{category-code}" 
+			/> -->
 	</bean>
 
 	<bean id="mplWishlistDao"
@@ -1567,19 +1595,27 @@
 	<bean id="sizeGuideDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.SizeGuideDaoImpl">
 	</bean>
-	
-	<alias name="defaultMplCommerceSearchResponseSellerIDPopulator" alias="commerceSearchResponseSellerIDPopulator" />
-	<bean id="defaultMplCommerceSearchResponseSellerIDPopulator" class="com.tisl.mpl.converter.populator.MplSearchResponseSellerIDPopulator" />
-	
-	<alias name="defaultMplCommerceSearchResponseQueryPopulator" alias="commerceSearchResponseQueryPopulator" />
-	<bean id="defaultMplCommerceSearchResponseQueryPopulator" class="com.tisl.mpl.converter.populator.MplSearchResponseQueryPopulator" />
-	
-	<alias name="defaultMplCommerceSearchResponseOfferIDPopulator" alias="commerceSearchResponseOfferIDPopulator" />
-	<bean id="defaultMplCommerceSearchResponseOfferIDPopulator" class="com.tisl.mpl.converter.populator.MplSearchResponseOfferIDPopulator" />
-			
-	<alias name="defaultMplCommerceSearchResponseOfferCategoryIDPopulator" alias="commerceSearchResponseOfferCategoryIDPopulator" />
-	<bean id="defaultMplCommerceSearchResponseOfferCategoryIDPopulator" class="com.tisl.mpl.converter.populator.MplSearchResponseOfferCategoryIDPopulator" />
-	
+
+	<alias name="defaultMplCommerceSearchResponseSellerIDPopulator"
+		alias="commerceSearchResponseSellerIDPopulator" />
+	<bean id="defaultMplCommerceSearchResponseSellerIDPopulator"
+		class="com.tisl.mpl.converter.populator.MplSearchResponseSellerIDPopulator" />
+
+	<alias name="defaultMplCommerceSearchResponseQueryPopulator"
+		alias="commerceSearchResponseQueryPopulator" />
+	<bean id="defaultMplCommerceSearchResponseQueryPopulator"
+		class="com.tisl.mpl.converter.populator.MplSearchResponseQueryPopulator" />
+
+	<alias name="defaultMplCommerceSearchResponseOfferIDPopulator"
+		alias="commerceSearchResponseOfferIDPopulator" />
+	<bean id="defaultMplCommerceSearchResponseOfferIDPopulator"
+		class="com.tisl.mpl.converter.populator.MplSearchResponseOfferIDPopulator" />
+
+	<alias name="defaultMplCommerceSearchResponseOfferCategoryIDPopulator"
+		alias="commerceSearchResponseOfferCategoryIDPopulator" />
+	<bean id="defaultMplCommerceSearchResponseOfferCategoryIDPopulator"
+		class="com.tisl.mpl.converter.populator.MplSearchResponseOfferCategoryIDPopulator" />
+
 	<alias name="defaultMplCommerceSearchResponseBreadcrumbsPopulator"
 		alias="commerceSearchResponseBreadcrumbsPopulator" />
 	<bean id="defaultMplCommerceSearchResponseBreadcrumbsPopulator"
@@ -1590,20 +1626,20 @@
 		autowire="byName">
 	</bean>
 	<!-- End -->
-	
+
 	<!-- Mpl ticket Service & Dao -->
 	<bean id="mplTicketService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplTicketServiceImpl">
 		<property name="mplTicketDao" ref="mplTicketDao" />
 	</bean>
-	
+
 	<bean id="mplTicketDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplTicketDaoImpl">
 	</bean>
-	
+
 	<bean id="sizeAttributeComparator"
-	      class="de.hybris.platform.acceleratorservices.search.comparators.SizeAttributeComparator">
-		<property name="pattern" value="^[0-9]+$"/>
+		class="de.hybris.platform.acceleratorservices.search.comparators.SizeAttributeComparator">
+		<property name="pattern" value="^[0-9]+$" />
 		<property name="sizeSystems">
 			<list><!-- based on EN_13402 -->
 				<value>XXS</value>
@@ -1620,14 +1656,15 @@
 			</list>
 		</property>
 	</bean>
-	
-	<bean id="addPriorityStatusInterceptor" class="com.tisl.mpl.interceptor.AddSellerPriorityInterceptor" /> 
-	<bean id="SellerPriorityStatusInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
-  <property name="interceptor" ref="addPriorityStatusInterceptor" /> 
-  <property name="typeCode" value="MplSellerPriority" /> 
-  </bean>
-	
-	
+
+	<bean id="addPriorityStatusInterceptor" class="com.tisl.mpl.interceptor.AddSellerPriorityInterceptor" />
+	<bean id="SellerPriorityStatusInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="addPriorityStatusInterceptor" />
+		<property name="typeCode" value="MplSellerPriority" />
+	</bean>
+
+
 	<!-- pdp seller priority interceptor starts -->
 	<bean id="sellerPriorityInterceptor" class="com.tisl.mpl.interceptor.SellerPriorityInterceptor">
 	</bean>
@@ -1637,63 +1674,64 @@
 		<property name="interceptor" ref="sellerPriorityInterceptor" />
 		<property name="typeCode" value="MplSellerPriority" />
 	</bean>
-  
+
 	<!--pdp seller priority interceptor ends -->
 	<!-- pdp seller priority starts -->
-	<bean id="mplSellerPriorityDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplSellerPriorityDaoImpl">
+	<bean id="mplSellerPriorityDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplSellerPriorityDaoImpl">
 	</bean>
-	<bean id="mplSellerPriorityService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplSellerPriorityServiceImpl">
+	<bean id="mplSellerPriorityService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplSellerPriorityServiceImpl">
 	</bean>
 	<!-- pdp seller priority ends -->
-	
-	
+
+
 	<!-- End -->
-	
-	<!-- <bean id="mplPromotionService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPromotionServiceImpl">
-	</bean>
-	
-	<bean id="mplPromotionDao"
-		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPromotionDaoImpl">
-	</bean> -->
-	
-	
-	<!-- <bean id="findOrderDiscountValuesStrategy"
-		class="com.tisl.mpl.order.impl.MplFindOrderDiscountValuesStrategy"
+
+	<!-- <bean id="mplPromotionService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPromotionServiceImpl"> 
+		</bean> <bean id="mplPromotionDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPromotionDaoImpl"> 
+		</bean> -->
+
+
+	<!-- <bean id="findOrderDiscountValuesStrategy" class="com.tisl.mpl.order.impl.MplFindOrderDiscountValuesStrategy" 
 		parent="abstractBusinessService"/> -->
-		
 
-		 <!--  pdp seller priority report cron job -->
 
-    <bean id="sellerPriorityReportJob" parent="abstractJobPerformable" class="com.tisl.mpl.marketplacecommerceservices.jobs.SellerPriorityReportJob" autowire="byName">
-    </bean>
-	  <!--  pdp seller priority report cron job ends -->
-	  
-	  <alias name="mplVoucherService" alias="mplVoucherService" />
+	<!-- pdp seller priority report cron job -->
+
+	<bean id="sellerPriorityReportJob" parent="abstractJobPerformable"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.SellerPriorityReportJob"
+		autowire="byName">
+	</bean>
+	<!-- pdp seller priority report cron job ends -->
+
+	<alias name="mplVoucherService" alias="mplVoucherService" />
 	<bean id="mplVoucherService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplVoucherServiceImpl">
-<!-- <property name="calculationService" ref="calculationService" /> -->
+		<!-- <property name="calculationService" ref="calculationService" /> -->
 		<property name="modelService" ref="modelService" />
 		<property name="voucherModelService" ref="voucherModelService" />
 		<!-- <property name="commerceCartService" ref="commerceCartService" /> -->
 		<property name="voucherService" ref="voucherService" />
-		<!-- <property name="commerceCartCalculationStrategy" ref="commerceCartCalculationStrategy" /> -->
+		<!-- <property name="commerceCartCalculationStrategy" ref="commerceCartCalculationStrategy" 
+			/> -->
 		<property name="discountUtility" ref="discountUtility" />
 	</bean>
-	
-	<bean id="homepageComponentService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.HomepageComponentServiceImpl">
-		<!-- <property name="threadContextService" ref="threadContextService" />
-		<property name="commerceCategoryService" ref="commerceCategoryService" />
-		<property name="baseSiteService" ref="baseSiteService" />
-		<property name="pattern" value="/{category-path}/c-{category-code}" /> -->
+
+	<bean id="homepageComponentService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.HomepageComponentServiceImpl">
+		<!-- <property name="threadContextService" ref="threadContextService" /> 
+			<property name="commerceCategoryService" ref="commerceCategoryService" /> 
+			<property name="baseSiteService" ref="baseSiteService" /> <property name="pattern" 
+			value="/{category-path}/c-{category-code}" /> -->
 	</bean>
-	
-    <bean id="automationService"
+
+	<bean id="automationService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.InternalExternalAutomationServiceImpl">
 	</bean>
-	
-	
-		
+
+
+
 	<bean id="CampaignAutomationJob" parent="abstractJobPerformable"
 		class="com.tisl.mpl.marketplacecommerceservices.jobs.InternalExternalCampaignAutomationJob"
 		autowire="byName">
@@ -1704,7 +1742,7 @@
 	<bean id="campaignPromoSubService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoSubService">
 	</bean>
-	
+
 	<bean id="campaignPromoDataService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoDataService">
 		<property name="modelService" ref="modelService" />
@@ -1718,52 +1756,53 @@
 	<bean id="mplPincodeServiceDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPincodeServiceDaoImpl">
 	</bean>
-	
+
 	<bean id="mplPincodeService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplPincodeService" >
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplPincodeService">
 		<property name="mplPincodeServiceDao" ref="mplPincodeServiceDao" />
 		<property name="juspayWebHookService" ref="juspayWebHookService" />
 	</bean>
 	<!-- End: fallback mechanism -->
-	
+
 	<!-- Coupon restriction service, added for getting restrictions for coupon -->
 	<bean id="couponRestrictionService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCouponRestrictionServiceImpl">		
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCouponRestrictionServiceImpl">
 	</bean>
 
 
 	<!-- Using Google Map service to look up address data. -->
-	<alias alias="geoServiceWrapper" name="defaultGoogleMapsGeoServiceWrapper"/>
-	
-	<alias alias="countryIsoGPSLocationMap" name="mplCountryIsoGPSLocationMap"/>
+	<alias alias="geoServiceWrapper" name="defaultGoogleMapsGeoServiceWrapper" />
+
+	<alias alias="countryIsoGPSLocationMap" name="mplCountryIsoGPSLocationMap" />
 	<bean id="mplCountryIsoGPSLocationMap" class="org.springframework.beans.factory.config.MapFactoryBean">
 		<property name="sourceMap">
 			<map merge="true" key-type="java.lang.String" value-type="de.hybris.platform.storelocator.GPS">
 				<entry key="DEFAULT">
 					<bean class="de.hybris.platform.storelocator.impl.DefaultGPS">
-						<constructor-arg value="0D"/>
-						<constructor-arg value="0D"/>
+						<constructor-arg value="0D" />
+						<constructor-arg value="0D" />
 					</bean>
 				</entry>
 				<entry key="IN">
 					<bean class="de.hybris.platform.storelocator.impl.DefaultGPS">
-						<constructor-arg value="21.0000D"/>
-						<constructor-arg value="78.0000D"/>
+						<constructor-arg value="21.0000D" />
+						<constructor-arg value="78.0000D" />
 					</bean>
 				</entry>
 			</map>
 		</property>
 	</bean>
-	
-	<alias name="mplGoogleMapTools" alias="googleMapTools"/>
-	<bean id="mplGoogleMapTools" class="de.hybris.platform.storelocator.impl.GoogleMapTools" scope="prototype">
-		<property name="addressLocationParser" ref="firstPlacemarkWinsGoogleResponseParser"/>
-		<property name="routeDataParser" ref="routeDataGoogleResponseParser"/>
-		<property name="directionsUrlBuilder" ref="geolocationDirectionsUrlBuilder"/>
+
+	<alias name="mplGoogleMapTools" alias="googleMapTools" />
+	<bean id="mplGoogleMapTools" class="de.hybris.platform.storelocator.impl.GoogleMapTools"
+		scope="prototype">
+		<property name="addressLocationParser" ref="firstPlacemarkWinsGoogleResponseParser" />
+		<property name="routeDataParser" ref="routeDataGoogleResponseParser" />
+		<property name="directionsUrlBuilder" ref="geolocationDirectionsUrlBuilder" />
 	</bean>
-	
+
 	<!-- Store Locator Beans end here -->
-	
+
 	<!-- UserGroupSaveInterceptor starts -->
 	<bean id="UserGroupSaveInterceptor" class="com.tisl.mpl.interceptor.UserGroupSaveInterceptor" />
 
@@ -1774,64 +1813,58 @@
 
 
 	</bean>
-	<!-- UserGroupSaveInterceptor ends -->	
+	<!-- UserGroupSaveInterceptor ends -->
 	<bean id="fallbackOrderPojo" class="com.tisl.mpl.pojo.FallbackOrderPojo" />
 	<!-- TISPRD-1631 Changes Start (Extending Product Service) -->
-	
-<alias alias="productService" name="defaultProductService"/>
-	<bean id="defaultProductService" class="com.tisl.mpl.marketplacecommerceservices.services.product.impl.MplProductServiceImpl"
-			parent="abstractBusinessService">
-		<property name="productDao" ref="productDao"/>
-		<property name="unitDao" ref="unitDao"/>
-		<property name="priceService" ref="priceService"/>
-		<property name="customerReviewConverter" ref="customerReviewConverter"/>
+
+	<alias alias="productService" name="defaultProductService" />
+	<bean id="defaultProductService"
+		class="com.tisl.mpl.marketplacecommerceservices.services.product.impl.MplProductServiceImpl"
+		parent="abstractBusinessService">
+		<property name="productDao" ref="productDao" />
+		<property name="unitDao" ref="unitDao" />
+		<property name="priceService" ref="priceService" />
+		<property name="customerReviewConverter" ref="customerReviewConverter" />
 	</bean>
-	
+
 	<!-- TISPRD-1631 Changes End (Extending Product Service) -->
-	
-	<!-- Tata Cliq : Special Price Updation Logic Service-->
+
+	<!-- Tata Cliq : Special Price Updation Logic Service -->
 	<bean id="updateSplPriceHelperService"
 		class="com.tisl.mpl.promotion.service.impl.DefaultUpdateSplPriceHelperService">
 	</bean>
-<!-- IA  export job 22 May 16 -->
+	<!-- IA export job 22 May 16 -->
 	<bean id="catProdExportJob" class="com.tisl.mpl.integration.job.CategoryProductExtractJob"
-		parent="abstractJobPerformable"
-			autowire="byName">
+		parent="abstractJobPerformable" autowire="byName">
 		<property name="modelService" ref="modelService" />
 	</bean>
 	<bean id="brandProductExportJob" class="com.tisl.mpl.integration.job.BrandProductExtractJob"
-		parent="abstractJobPerformable"
-			autowire="byName">
+		parent="abstractJobPerformable" autowire="byName">
 		<property name="modelService" ref="modelService" />
 	</bean>
 	<bean id="priceInventoryExportJob" class="com.tisl.mpl.integration.job.PriceInventoryExtractJob"
-		parent="abstractJobPerformable"
-			autowire="byName">
+		parent="abstractJobPerformable" autowire="byName">
 		<property name="modelService" ref="modelService" />
 	</bean>
 	<bean id="priceInventoryControlJob" class="com.tisl.mpl.integration.job.PriceInventoryControlJob"
-		parent="abstractJobPerformable"
-			autowire="byName">
+		parent="abstractJobPerformable" autowire="byName">
 		<property name="modelService" ref="modelService" />
 	</bean>
 	<bean id="iaFeedUtil" class="com.tisl.mpl.integration.job.IAFeedUtility">
 	</bean>
-<!-- IA STAGED DATA SOURCE -->
-<!-- <bean id="iaDataSource"
- -->
+	<!-- IA STAGED DATA SOURCE -->
+	<!-- <bean id="iaDataSource" -->
 
-  <!--  <bean id="iaDataSource"
->>>>>>> refs/remotes/origin/GOLDEN_PROD_SUPPORT_3rd_Nov_2016
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@10.10.64.34:1621/MPLDEVDB" />
-		<property name="username" value="mpldev2com" />
-		<property name="password" value="mpldev2com123" />
-	</bean>   -->
+	<!-- <bean id="iaDataSource" >>>>>>> refs/remotes/origin/GOLDEN_PROD_SUPPORT_3rd_Nov_2016 
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource"> <property 
+		name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> <property 
+		name="url" value="jdbc:oracle:thin:@10.10.64.34:1621/MPLDEVDB" /> <property 
+		name="username" value="mpldev2com" /> <property name="password" value="mpldev2com123" 
+		/> </bean> -->
 
 
-	
-	 <bean id="iaDataSource"
+
+	<bean id="iaDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url" value="${jdbc.iastg.url}" />
@@ -1839,42 +1872,45 @@
 		<property name="password" value="${jdbc.iastg.pass}" />
 	</bean>
 	<!-- New Buy Box Implementation Start -->
-<!-- 	<bean id="buyBoxDataSource" -->
-<!-- 		class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
-<!-- 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> -->
-<!-- 		<property name="url" value="${buybox.jdbc.url}" /> -->
-<!-- 		<property name="username" value="${buybox.jdbc.user}" /> -->
-<!-- 		<property name="password" value="${buybox.jdbc.pass}" /> -->
-<!-- 	</bean> -->
-	
+	<!-- <bean id="buyBoxDataSource" -->
+	<!-- class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
+	<!-- <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" 
+		/> -->
+	<!-- <property name="url" value="${buybox.jdbc.url}" /> -->
+	<!-- <property name="username" value="${buybox.jdbc.user}" /> -->
+	<!-- <property name="password" value="${buybox.jdbc.pass}" /> -->
+	<!-- </bean> -->
+
 
 	<bean id="buyBoxImportUtil" class="com.tisl.mpl.buyboxdataimport.BuyBoxImportUtility">
 	</bean>
-	
+
 	<bean id="buyBoxDataImportJob" class="com.tisl.mpl.buyboxdataimportjob.BuyBoxDataExtractJob"
 		parent="abstractJobPerformable">
-			<property name="modelService" ref="modelService" />
-			</bean>
-	<!-- New Buy Box Implementation End -->
-	
-	<bean id="juspayOrderResponseConverter" parent="abstractPopulatingConverter">
-		<property name="targetClass" value="com.tisl.mpl.juspay.response.GetOrderStatusResponse"/>
-        <property name="populators">
-            <list merge="true">
-				<ref bean="juspayOrderResponsePopulator"/>
-            </list>
-        </property>
-    </bean>
-    
-	<bean id="juspayOrderResponsePopulator"
-			class="com.tisl.mpl.converter.populator.JuspayOrderResponsePopulator" >
+		<property name="modelService" ref="modelService" />
 	</bean>
-	
-	<!-- New Keyword Redirection Implementation End -->
-	<bean id="mplKeywordRedirectDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplKeywordRedirectDaoImpl">
+	<!-- New Buy Box Implementation End -->
+
+	<bean id="juspayOrderResponseConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass"
+			value="com.tisl.mpl.juspay.response.GetOrderStatusResponse" />
+		<property name="populators">
+			<list merge="true">
+				<ref bean="juspayOrderResponsePopulator" />
+			</list>
+		</property>
 	</bean>
 
-	<!-- New Payment Solution Starts TPR-629-->	
+	<bean id="juspayOrderResponsePopulator"
+		class="com.tisl.mpl.converter.populator.JuspayOrderResponsePopulator">
+	</bean>
+
+	<!-- New Keyword Redirection Implementation End -->
+	<bean id="mplKeywordRedirectDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplKeywordRedirectDaoImpl">
+	</bean>
+
+	<!-- New Payment Solution Starts TPR-629 -->
 	<bean id="mplProcessOrderService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplProcessOrderServiceImpl">
 		<property name="orderService" ref="orderService" />
@@ -1882,15 +1918,15 @@
 		<!-- CAR:127 -->
 		<property name="orderConverter" ref="orderConverter"></property>
 	</bean>
-	
+
 	<bean id="mplProcessOrderDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplProcessOrderDaoImpl" />
 
 	<bean id="mplVoucherDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplVoucherDaoImpl" />
 	<!-- TPR-629 ends -->
-	
-	<!-- Bean for POC Search starts-->
+
+	<!-- Bean for POC Search starts -->
 
 	<bean id="standardizationDao"
 		class="com.tisl.mpl.standardizationfactory.StandardizationDaoImpl">
@@ -1898,9 +1934,8 @@
 	<bean id="standardizationService"
 		class="com.tisl.mpl.standardizationfactory.StandardizationServiceImpl">
 	</bean>
-	
-	<bean id="sizeStandardInterceptor"
-		class="com.tisl.mpl.interceptor.SizeStandardInterceptor">
+
+	<bean id="sizeStandardInterceptor" class="com.tisl.mpl.interceptor.SizeStandardInterceptor">
 	</bean>
 
 	<bean id="sizeStandardInterceptorMapping"
@@ -1908,7 +1943,7 @@
 		<property name="interceptor" ref="sizeStandardInterceptor" />
 		<property name="typeCode" value="Sizesystem" />
 	</bean>
-	<!-- Bean for POC Search ends-->
+	<!-- Bean for POC Search ends -->
 
 
 
@@ -1920,317 +1955,344 @@
 		<property name="interceptor" ref="mplShopByLookSaveInterceptor" />
 		<property name="typeCode" value="MplShopByLook" />
 	</bean>
-	
 
-	<!-- Added for displaying offer messages other than promotion, TPR-589-->
+
+	<!-- Added for displaying offer messages other than promotion, TPR-589 -->
 	<bean id="prodOfferDetService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ProductOfferDetailServiceImpl">		
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ProductOfferDetailServiceImpl">
 	</bean>
 	<bean id="prodOfferDetDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ProductOfferDetailDaoImpl">
 		<property name="flexibleSearchService" ref="flexibleSearchService" />
-		<property name="modelService" ref="modelService" />		
+		<property name="modelService" ref="modelService" />
 	</bean>
-	
+
 	<!-- Bundle Promotion Helper Class -->
 	<bean id="mplBundlePromotionHelper" class="com.tisl.mpl.promotion.helper.MplBundlePromotionHelper" />
-	
-	
-	<!-- Added for TPR-1035-->
- 	
- 	<bean id="mplBinErrorService"
- 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplBinErrorService">
- 		<property name="modelService" ref="modelService" />
- 		<property name="mplBinErrorDao" ref="mplBinErrorDao" />
- 	</bean>
- 	
- 	<bean id="mplBinErrorDao" class="com.tisl.mpl.promotion.dao.impl.MplBinErrorDaoImpl" />
- 	
- 	<bean id="mplBinErrorData" class="com.tisl.mpl.pojo.MplBinErrorData" />
- 	
-	 <!-- For Bulk Seller  Upload on HMC Configuration Screen  TPR -715-->
+
+
+	<!-- Added for TPR-1035 -->
+
+	<bean id="mplBinErrorService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplBinErrorService">
+		<property name="modelService" ref="modelService" />
+		<property name="mplBinErrorDao" ref="mplBinErrorDao" />
+	</bean>
+
+	<bean id="mplBinErrorDao" class="com.tisl.mpl.promotion.dao.impl.MplBinErrorDaoImpl" />
+
+	<bean id="mplBinErrorData" class="com.tisl.mpl.pojo.MplBinErrorData" />
+
+	<!-- For Bulk Seller Upload on HMC Configuration Screen TPR -715 -->
 	<bean id="sellerBulkLoadInterceptor" class="com.tisl.mpl.interceptor.SellerBulkLoadInterceptor" />
-	
+
 	<bean id="sellerBulkLoadInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="sellerBulkLoadInterceptor" />
 		<property name="typeCode" value="EtailSellerSpecificRestriction" />
 	</bean>
-	
-	<!-- For Bulk Seller  Upload on HMC Configuration Screen  TPR -715 + TPR-1620-->
+
+	<!-- For Bulk Seller Upload on HMC Configuration Screen TPR -715 + TPR-1620 -->
 	<bean id="exSellerBulkLoadInterceptor" class="com.tisl.mpl.interceptor.ExSellerBulkLoadInterceptor" />
-	
+
 	<bean id="exSellerBulkLoadInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="exSellerBulkLoadInterceptor" />
 		<property name="typeCode" value="EtailExcludeSellerSpecificRestriction" />
 	</bean>
 
-	
+
 	<!-- TPR-1282 -->
 
-	<alias name="mplCmsCacheService" alias="cmsCacheService"/>
-	<bean id="mplCmsCacheService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCmsCacheServiceImpl"
+	<alias name="mplCmsCacheService" alias="cmsCacheService" />
+	<bean id="mplCmsCacheService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCmsCacheServiceImpl"
 		parent="defaultCmsCacheService">
-		
+
 	</bean>
-	
-		<!-- A+ Content TPR-978 -->
-	<bean id="businessContentImportJob" class="com.tisl.mpl.businesscontentimport.BusinessContentImportJob"
+
+	<!-- A+ Content TPR-978 -->
+	<bean id="businessContentImportJob"
+		class="com.tisl.mpl.businesscontentimport.BusinessContentImportJob"
 		parent="abstractJobPerformable">
-			<property name="modelService" ref="modelService" />
-			</bean>
-			
-	<bean id="businessContentImportUtil" class="com.tisl.mpl.businesscontentimport.BusinessContentImportUtility" >
-	<property name="businessContentImportService" ref="businessContentImportService" />
+		<property name="modelService" ref="modelService" />
+	</bean>
+
+	<bean id="businessContentImportUtil"
+		class="com.tisl.mpl.businesscontentimport.BusinessContentImportUtility">
+		<property name="businessContentImportService" ref="businessContentImportService" />
 	</bean>
 
 	<bean id="businessContentImportService"
 		class="com.tisl.mpl.businesscontentimport.BusinessContentImportServiceImpl">
 		<property name="modelService" ref="modelService" />
 		<property name="businessContentImportDao" ref="businessContentImportDao" />
-		</bean>
-		 
-	<bean id="businessContentImportDao" class="com.tisl.mpl.businesscontentimport.BulkContentCreationDaoImpl" >
-		</bean>
-		
-	<!-- TPR-3487 -->	
-<!-- 	<bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" />
+	</bean>
 
-	<bean id="SaveDeliveryCostInterceptorMapping"
-		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
-		<property name="interceptor" ref="DeliveryCostInterceptor" />
-		<property name="typeCode" value="AbstractOrder" />	
-	</bean>	 -->
-	<!-- TPR-3487 -->		
-		
-	<!-- Bean for Promotion Job starts-->
- 	
- 	<bean id="promotionPriceUpdaterDao"
- 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PromotionPriceUpdaterDaoImpl" />
- 
- 	<bean id="promotionPriceUpdaterService"
- 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultPromotionPriceUpdaterServiceImpl">	
- 	</bean>
- 	<!-- Bean for Promotion Job ends-->
+	<bean id="businessContentImportDao"
+		class="com.tisl.mpl.businesscontentimport.BulkContentCreationDaoImpl">
+	</bean>
+
+	<!-- TPR-3487 -->
+	<!-- <bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" 
+		/> <bean id="SaveDeliveryCostInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping"> 
+		<property name="interceptor" ref="DeliveryCostInterceptor" /> <property name="typeCode" 
+		value="AbstractOrder" /> </bean> -->
+	<!-- TPR-3487 -->
+
+	<!-- Bean for Promotion Job starts -->
+
+	<bean id="promotionPriceUpdaterDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PromotionPriceUpdaterDaoImpl" />
+
+	<bean id="promotionPriceUpdaterService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultPromotionPriceUpdaterServiceImpl">
+	</bean>
+	<!-- Bean for Promotion Job ends -->
 
 
-	<!-- Bean for Indexing timestamp update in MplConfiguration  Starts -->
-	
-	<bean id="mplLastIndexTimeService" 
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplLastIndexTimeServiceImpl"/>
-		
+	<!-- Bean for Indexing timestamp update in MplConfiguration Starts -->
+
+	<bean id="mplLastIndexTimeService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplLastIndexTimeServiceImpl" />
+
 	<bean id="mplLastIndexTimeDao"
-		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplLastIndexTimeDaoImpl"/>
-		
-	<bean id="updateLastRunTimeJob" class="com.tisl.mpl.marketplacecommerceservices.jobs.UpdateLastRunTimeJob" autowire="byName"/>
-	
-	<!-- Bean for Indexing timestamp update in MplConfiguration  ends  -->
-	
-	
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplLastIndexTimeDaoImpl" />
+
+	<bean id="updateLastRunTimeJob"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.UpdateLastRunTimeJob"
+		autowire="byName" />
+
+	<!-- Bean for Indexing timestamp update in MplConfiguration ends -->
+
+
 	<!-- LW-245 -->
-	<bean id="brandProductLuxuryExportJob" class="com.tisl.mpl.integration.job.BrandProductLuxuryExportJob"
-		parent="abstractJobPerformable"
-			autowire="byName">
+	<bean id="brandProductLuxuryExportJob"
+		class="com.tisl.mpl.integration.job.BrandProductLuxuryExportJob"
+		parent="abstractJobPerformable" autowire="byName">
 		<property name="modelService" ref="modelService" />
 	</bean>
-	<bean id="catProdLuxuryExportJob" class="com.tisl.mpl.integration.job.CategoryProductLuxuryExtractJob"
-		parent="abstractJobPerformable"
-			autowire="byName">
+	<bean id="catProdLuxuryExportJob"
+		class="com.tisl.mpl.integration.job.CategoryProductLuxuryExtractJob"
+		parent="abstractJobPerformable" autowire="byName">
 		<property name="modelService" ref="modelService" />
 	</bean>
-	<bean id="priceInventoryLuxuryExportJob" class="com.tisl.mpl.integration.job.PriceInventoryLuxuryExportJob"
-		parent="abstractJobPerformable"
-			autowire="byName">
+	<bean id="priceInventoryLuxuryExportJob"
+		class="com.tisl.mpl.integration.job.PriceInventoryLuxuryExportJob"
+		parent="abstractJobPerformable" autowire="byName">
 		<property name="modelService" ref="modelService" />
 	</bean>
 
-	<!-- Old Cron Job Deletion Logic : Added as part of PT FIX-->
+	<!-- Old Cron Job Deletion Logic : Added as part of PT FIX -->
 	<alias name="mplcleanupCronJobsPerformable" alias="cleanupCronJobsPerformable" />
 	<bean id="mplcleanupCronJobsPerformable" parent="abstractGenericMaintenanceJobPerformable">
-        <property name="maintenanceCleanupStrategy">
-            <bean class="com.tisl.mpl.marketplacecommerceservices.strategy.MplCleanupCronJobStrategy">
-                <property name="modelService" ref="modelService"/>
-                <property name="typeService" ref="typeService"/>
-                <property name="status">
-                    <set>
-                        <value type="de.hybris.platform.cronjob.enums.CronJobStatus">FINISHED</value>
-                        <value type="de.hybris.platform.cronjob.enums.CronJobStatus">ABORTED</value>
-                    </set>
-                </property>
-                <property name="result">
-                    <set>
-                        <value type="de.hybris.platform.cronjob.enums.CronJobResult">SUCCESS</value>
-      				    <value type="de.hybris.platform.cronjob.enums.CronJobResult">FAILURE</value>
-                        <value type="de.hybris.platform.cronjob.enums.CronJobResult">ERROR</value>
-                    </set>
-                </property>
-                <property name="excludedCronJobCodes">
-                    <set/>
-                </property>
-                <!-- <property name="expiryDays" value="${cronjob.dayOld.count}"/>  -->
-            </bean>
-        </property>
-    </bean>
-   <!--  mrupee changes starts -->
-   <bean id="mRupeeWalletService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplThirdPartyWalletServiceImpl">
-      <property name="configurationService" ref="configurationService" />
-      <property name="orderService" ref="orderService" />
-      <property name="orderConverter" ref="orderConverter"/>
-   </bean>
-   <bean id="mplThirdPartyWalletDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplThirdPartyWalletDaoImpl">
-   </bean>
-  <!--  mrupee changes ends -->
+		<property name="maintenanceCleanupStrategy">
+			<bean
+				class="com.tisl.mpl.marketplacecommerceservices.strategy.MplCleanupCronJobStrategy">
+				<property name="modelService" ref="modelService" />
+				<property name="typeService" ref="typeService" />
+				<property name="status">
+					<set>
+						<value type="de.hybris.platform.cronjob.enums.CronJobStatus">FINISHED</value>
+						<value type="de.hybris.platform.cronjob.enums.CronJobStatus">ABORTED</value>
+					</set>
+				</property>
+				<property name="result">
+					<set>
+						<value type="de.hybris.platform.cronjob.enums.CronJobResult">SUCCESS</value>
+						<value type="de.hybris.platform.cronjob.enums.CronJobResult">FAILURE</value>
+						<value type="de.hybris.platform.cronjob.enums.CronJobResult">ERROR</value>
+					</set>
+				</property>
+				<property name="excludedCronJobCodes">
+					<set />
+				</property>
+				<!-- <property name="expiryDays" value="${cronjob.dayOld.count}"/> -->
+			</bean>
+		</property>
+	</bean>
+	<!-- mrupee changes starts -->
+	<bean id="mRupeeWalletService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplThirdPartyWalletServiceImpl">
+		<property name="configurationService" ref="configurationService" />
+		<property name="orderService" ref="orderService" />
+		<property name="orderConverter" ref="orderConverter" />
+	</bean>
+	<bean id="mplThirdPartyWalletDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplThirdPartyWalletDaoImpl">
+	</bean>
+	<!-- mrupee changes ends -->
 	<!-- Old Cron Job Deletion Logic ends: -->
 
 
 	<!-- TPR-1285 Start -->
-	<alias name="mplProductPageSiteMapGenerator" alias="productPageSiteMapGenerator"/>
+	<alias name="mplProductPageSiteMapGenerator" alias="productPageSiteMapGenerator" />
 	<bean id="mplProductPageSiteMapGenerator"
-	    class="com.tisl.mpl.sitemap.generator.impl.MplProductPageSiteMapGenerator"
-	    parent="defaultProductPageSiteMapGenerator">
+		class="com.tisl.mpl.sitemap.generator.impl.MplProductPageSiteMapGenerator"
+		parent="defaultProductPageSiteMapGenerator">
 	</bean>
-	
-	<alias name="mplCustomPageSiteMapGenerator" alias="mplCustomPageSiteMapGenerator"/>
+
+	<alias name="mplCustomPageSiteMapGenerator" alias="mplCustomPageSiteMapGenerator" />
 	<bean id="mplCustomPageSiteMapGenerator"
 		class="com.tisl.mpl.sitemap.generator.impl.MplCustomPageSiteMapGenerator"
-	    parent="abstractSiteMapGenerator">
-		<property name="siteMapUrlDataConverter" ref="mplCustomPageToSiteMapUrlDataConverter"/>
-		<property name="siteMapPageEnum" value="CUSTOM"/>
-	    <property name="cmsPageService" ref="cmsPageService"/>
-	</bean> 
-	
+		parent="abstractSiteMapGenerator">
+		<property name="siteMapUrlDataConverter" ref="mplCustomPageToSiteMapUrlDataConverter" />
+		<property name="siteMapPageEnum" value="CUSTOM" />
+		<property name="cmsPageService" ref="cmsPageService" />
+	</bean>
+
 	<!-- PRDI-423 start -->
-	<alias name="mplbrandPageSiteMapGenerator" alias="mplbrandPageSiteMapGenerator"/>
+	<alias name="mplbrandPageSiteMapGenerator" alias="mplbrandPageSiteMapGenerator" />
 	<bean id="mplbrandPageSiteMapGenerator"
 		class="com.tisl.mpl.sitemap.generator.impl.MplBrandPageSiteMapGenerator"
-	    parent="abstractSiteMapGenerator">
-		<property name="siteMapUrlDataConverter" ref="mplCustomPageToSiteMapUrlDataConverter"/>
-		<property name="siteMapPageEnum" value="CUSTOM"/>
-	    <property name="cmsPageService" ref="cmsPageService"/>
-	</bean> 
-	<!-- PRDI-423 end-->
-	
-	<alias name="mplCustomPageToSiteMapUrlDataConverter" alias="mplCustomPageToSiteMapUrlDataConverter"/>
+		parent="abstractSiteMapGenerator">
+		<property name="siteMapUrlDataConverter" ref="mplCustomPageToSiteMapUrlDataConverter" />
+		<property name="siteMapPageEnum" value="CUSTOM" />
+		<property name="cmsPageService" ref="cmsPageService" />
+	</bean>
+	<!-- PRDI-423 end -->
+
+	<alias name="mplCustomPageToSiteMapUrlDataConverter" alias="mplCustomPageToSiteMapUrlDataConverter" />
 	<bean id="mplCustomPageToSiteMapUrlDataConverter" parent="abstractPopulatingConverter">
-		<property name="targetClass" value="de.hybris.platform.acceleratorservices.sitemap.data.SiteMapUrlData"/>
+		<property name="targetClass"
+			value="de.hybris.platform.acceleratorservices.sitemap.data.SiteMapUrlData" />
 		<property name="populators">
 			<list>
-				<ref bean="mplCustomPageToSiteMapUrlDataPopulator"/>
+				<ref bean="mplCustomPageToSiteMapUrlDataPopulator" />
 			</list>
 		</property>
 	</bean>
-	
-	
-	<alias name="mplCustomPageToSiteMapUrlDataPopulator" alias="mplCustomPageToSiteMapUrlDataPopulator"/>
+
+
+	<alias name="mplCustomPageToSiteMapUrlDataPopulator" alias="mplCustomPageToSiteMapUrlDataPopulator" />
 	<bean id="mplCustomPageToSiteMapUrlDataPopulator"
-	      class="com.tisl.mpl.converter.populator.MplCustomPageToSiteMapUrlDataPopulator">
-	</bean>	
-	
-	<alias name="mplProductModelToSiteMapUrlDataPopulator" alias="productModelToSiteMapUrlDataPopulator"/>
- 	<bean id="mplProductModelToSiteMapUrlDataPopulator"
- 	      class="com.tisl.mpl.converter.populator.MplProductModelToSiteMapUrlDataPopulator"
- 	      parent="defaultProductModelToSiteMapUrlDataPopulator">
- 	</bean>
- 	<!-- TPR-965 STARTS-->
-	 <bean id="stockPromoCheckService"
+		class="com.tisl.mpl.converter.populator.MplCustomPageToSiteMapUrlDataPopulator">
+	</bean>
+
+	<alias name="mplProductModelToSiteMapUrlDataPopulator" alias="productModelToSiteMapUrlDataPopulator" />
+	<bean id="mplProductModelToSiteMapUrlDataPopulator"
+		class="com.tisl.mpl.converter.populator.MplProductModelToSiteMapUrlDataPopulator"
+		parent="defaultProductModelToSiteMapUrlDataPopulator">
+	</bean>
+	<!-- TPR-965 STARTS -->
+	<bean id="stockPromoCheckService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ExtStockLevelPromotionCheckServiceImpl">
 	</bean>
-	 <bean id="stockPromoCheckDao"
+	<bean id="stockPromoCheckDao"
 		class="com.tisl.mpl.promotion.dao.impl.ExtStockLevelPromotionCheckDaoImpl">
 		<property name="flexibleSearchService" ref="flexibleSearchService" />
 		<property name="modelService" ref="modelService" />
 	</bean>
-	<!-- TPR-965 ENDS-->
-<!-- TPR-1285 End -->
+	<!-- TPR-965 ENDS -->
+	<!-- TPR-1285 End -->
 
-<!-- TPR-978 -->
-<bean id="aPlusContentPrepareInterceptor" class="com.tisl.mpl.interceptor.APlusContentPrepareInterceptor" autowire="byName"></bean>
-<bean id="AplusContentPrepareInterceptor" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
-<property name="interceptor" ref="aPlusContentPrepareInterceptor"></property>
-<property name="typeCode" value="APlusContent"></property>
-</bean>
+	<!-- TPR-978 -->
+	<bean id="aPlusContentPrepareInterceptor" class="com.tisl.mpl.interceptor.APlusContentPrepareInterceptor"
+		autowire="byName"></bean>
+	<bean id="AplusContentPrepareInterceptor"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="aPlusContentPrepareInterceptor"></property>
+		<property name="typeCode" value="APlusContent"></property>
+	</bean>
 
-<bean id="aPlusContentValidateInterceptor" class="com.tisl.mpl.interceptor.APlusContentValidateInterceptor" autowire="byName"></bean>
-<bean id="AplusContentValidateInterceptor" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
-<property name="interceptor" ref="aPlusContentValidateInterceptor"></property>
-<property name="typeCode" value="APlusContent"></property>
-</bean>
+	<bean id="aPlusContentValidateInterceptor"
+		class="com.tisl.mpl.interceptor.APlusContentValidateInterceptor"
+		autowire="byName"></bean>
+	<bean id="AplusContentValidateInterceptor"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="aPlusContentValidateInterceptor"></property>
+		<property name="typeCode" value="APlusContent"></property>
+	</bean>
 
-<!-- bulk cancellation -->
- <bean id="bulkCancellationPrepareInterceptor" class="com.tisl.mpl.interceptor.BulkCancellationPrepareInterceptor" autowire="byName"></bean>
-<bean id="BulkCancellationPrepareInterceptor" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
-<property name="interceptor" ref="bulkCancellationPrepareInterceptor"></property>
-<property name="typeCode" value="BulkCancellation"></property>
-</bean> 
-<bean id="cronJobModel" class="de.hybris.platform.cronjob.model.CronJobModel" />
-<bean id="cronJobService" class="de.hybris.platform.servicelayer.cronjob.CronJobService" />
+	<!-- bulk cancellation -->
+	<bean id="bulkCancellationPrepareInterceptor"
+		class="com.tisl.mpl.interceptor.BulkCancellationPrepareInterceptor"
+		autowire="byName"></bean>
+	<bean id="BulkCancellationPrepareInterceptor"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="bulkCancellationPrepareInterceptor"></property>
+		<property name="typeCode" value="BulkCancellation"></property>
+	</bean>
+	<bean id="cronJobModel" class="de.hybris.platform.cronjob.model.CronJobModel" />
+	<bean id="cronJobService" class="de.hybris.platform.servicelayer.cronjob.CronJobService" />
 
-<bean id="bulkCancellationDao" class="com.tisl.mpl.bulk.dao.BulkCancellationDaoImpl" />
+	<bean id="bulkCancellationDao" class="com.tisl.mpl.bulk.dao.BulkCancellationDaoImpl" />
 
-<alias name="bulkCancellationService" alias="bulkCancellationService" />
-	<bean id="bulkCancellationService"
-		class="com.tisl.mpl.bulk.service.BulkCancellationServiceImpl">
+	<alias name="bulkCancellationService" alias="bulkCancellationService" />
+	<bean id="bulkCancellationService" class="com.tisl.mpl.bulk.service.BulkCancellationServiceImpl">
 		<!-- <property name="modelService" ref="modelService" /> -->
 		<property name="bulkCancellationDao" ref="bulkCancellationDao" />
 	</bean>
-	
-<!-- end bulk cancellation -->
-<!-- Return Window Increase Start -->
-<bean id="returnWindowIncreasePrepareInterceptor" class="com.tisl.mpl.interceptor.ReturnWindowIncreasePrepareInterceptor" autowire="byName"></bean>
-<bean id="ReturnWindowIncreasePrepareInterceptor" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
-<property name="interceptor" ref="returnWindowIncreasePrepareInterceptor"></property>
-<property name="typeCode" value="ReturnWindowIncrease"></property>
-</bean>
 
-<bean id="returnWindowIncreaseDao" class="com.tisl.mpl.returnwindowincrease.dao.ReturnWindowIncreaseDaoImpl"></bean>
-<alias name="returnWindowIncreaseService" alias="returnWindowIncreaseService"/>
-<bean id="returnWindowIncreaseService" class="com.tisl.mpl.returnwindowincrease.service.ReturnWindowIncreaseServiceImpl">
-<property name="returnWindowIncreaseDao" ref="returnWindowIncreaseDao" />
-</bean>
+	<!-- end bulk cancellation -->
+	<!-- Return Window Increase Start -->
+	<bean id="returnWindowIncreasePrepareInterceptor"
+		class="com.tisl.mpl.interceptor.ReturnWindowIncreasePrepareInterceptor"
+		autowire="byName"></bean>
+	<bean id="ReturnWindowIncreasePrepareInterceptor"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="returnWindowIncreasePrepareInterceptor"></property>
+		<property name="typeCode" value="ReturnWindowIncrease"></property>
+	</bean>
+
+	<bean id="returnWindowIncreaseDao"
+		class="com.tisl.mpl.returnwindowincrease.dao.ReturnWindowIncreaseDaoImpl"></bean>
+	<alias name="returnWindowIncreaseService" alias="returnWindowIncreaseService" />
+	<bean id="returnWindowIncreaseService"
+		class="com.tisl.mpl.returnwindowincrease.service.ReturnWindowIncreaseServiceImpl">
+		<property name="returnWindowIncreaseDao" ref="returnWindowIncreaseDao" />
+	</bean>
 
 
-<!-- Return Window Increase End -->
+	<!-- Return Window Increase End -->
 
-<!-- TPR-1984 START -->
-<bean id="npsFeedbackQuestionService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.NPSFeedbackQuestionServiceImpl">
- 	</bean>
- 	
- <bean id="npsFeedbackQuestionDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.NPSFeedbackQuestionDaoImpl" />
-<!-- Key generator for NPS -->
+	<!-- TPR-1984 START -->
+	<bean id="npsFeedbackQuestionService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.NPSFeedbackQuestionServiceImpl">
+	</bean>
+
+	<bean id="npsFeedbackQuestionDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.NPSFeedbackQuestionDaoImpl" />
+	<!-- Key generator for NPS -->
 	<bean id="npsIdGenerator"
 		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
 		init-method="init" scope="tenant">
 		<property name="key" value="npsId" />
 		<property name="digits" value="6" />
-		<property name="start" value="#{configurationService.configuration.getProperty('npsmailer.npsId.startId')}" />
+		<property name="start"
+			value="#{configurationService.configuration.getProperty('npsmailer.npsId.startId')}" />
 		<property name="numeric" value="true" />
 	</bean>
-<!-- TPR-1984 END -->
+	<!-- TPR-1984 END -->
 
-<!-- Size Guide Upload starts -->
-<bean id="sizeGuideUploadPrepareInterceptor" class="com.tisl.mpl.interceptor.SizeGuideUploadPrepareInterceptor" autowire="byName"></bean>
-<bean id="sizeGuideUploadPrepareInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
-	<property name="interceptor" ref="sizeGuideUploadPrepareInterceptor"></property>
-	<property name="typeCode" value="SizeGuideUpload"></property>
-</bean>
+	<!-- Size Guide Upload starts -->
+	<bean id="sizeGuideUploadPrepareInterceptor"
+		class="com.tisl.mpl.interceptor.SizeGuideUploadPrepareInterceptor"
+		autowire="byName"></bean>
+	<bean id="sizeGuideUploadPrepareInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="sizeGuideUploadPrepareInterceptor"></property>
+		<property name="typeCode" value="SizeGuideUpload"></property>
+	</bean>
 
-<!-- Size Guide Upload ends -->
+	<!-- Size Guide Upload ends -->
 
 
-	<!-- Jewellery Changes Start --> 
-	
+	<!-- Jewellery Changes Start -->
+
 	<alias name="mplJewelleryService" alias="mplJewelleryService" />
-	<bean id="mplJewelleryService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplJewelleryServiceImpl"
-			autowire="byName">
+	<bean id="mplJewelleryService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplJewelleryServiceImpl"
+		autowire="byName">
 	</bean>
-	
-	
+
+
 	<alias name="mplJewelleryDao" alias="mplJewelleryDao" />
-	<bean id="mplJewelleryDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplJewelleryDaoImpl"
-			autowire="byName">
+	<bean id="mplJewelleryDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplJewelleryDaoImpl"
+		autowire="byName">
 	</bean>
-	
+
 	<bean id="mplJewelleryUtility" class="com.tisl.mpl.util.MplJewelleryUtility">
 		<property name="mplJewelleryService" ref="mplJewelleryService" />
 	</bean>
@@ -2239,115 +2301,106 @@
 	<!-- Jewellery Changes End -->
 
 	<!-- added for jewellery attribute mapping starts -->
-	
+
 	<alias name="defaultJewelleryAttrMapping" alias="jewelleryAttrMapping" />
 	<util:map id="defaultJewelleryAttrMapping" map-class="java.util.HashMap">
-		<entry key = "goldValue" 	value = "Gold" ></entry>
-		<entry key = "silverValue" 	value = "Silver" ></entry>
-		<entry key = "platinumValue" 	value = "Platinum" ></entry>
-		<entry key = "solitaireValue" 	value = "Solitaire" ></entry>
-		<entry key = "diamond"    	value = "Diamond" ></entry>
-		<entry key = "gemstone"   	value = "Gems Stone" ></entry>
-		<entry key = "makingcharge" value = "Making Charge" ></entry>
-		<entry key = "wastagetax" 	value = "Taxes And Duties" ></entry>				
+		<entry key="goldValue" value="Gold"></entry>
+		<entry key="silverValue" value="Silver"></entry>
+		<entry key="platinumValue" value="Platinum"></entry>
+		<entry key="solitaireValue" value="Solitaire"></entry>
+		<entry key="diamond" value="Diamond"></entry>
+		<entry key="gemstone" value="Gems Stone"></entry>
+		<entry key="makingcharge" value="Making Charge"></entry>
+		<entry key="wastagetax" value="Taxes And Duties"></entry>
 
 	</util:map>
 	<!-- //TPR-3752 Jewel Heading Added -->
 	<!-- added for jewellery attribute mapping ends -->
-	
+
 	<alias name="defaultJewelleryDescMapping" alias="jewelleryDescMapping" />
 	<util:map id="defaultJewelleryDescMapping" map-class="java.util.HashMap">
-	    <entry key ="stonefinejwlry1" 	value = "stonesizefinejwlry1" ></entry>
-		<entry key = "stonefinejwlry2" 	value = "stonesizefinejwlry2" ></entry>
-		<entry key = "stonefinejwlry3" 	value = "stonesizefinejwlry3" ></entry>
-		<entry key = "stonefinejwlry4" 	value = "stonesizefinejwlry4" ></entry>	
-		<entry key = "stonefinejwlry5" 	value = "stonesizefinejwlry5" ></entry>
-		<entry key = "stonefinejwlry6" 	value = "stonesizefinejwlry6" ></entry>	
-		<entry key = "stonefinejwlry7" 	value = "stonesizefinejwlry7" ></entry>		
-		<entry key = "stonefinejwlry8" 	value = "stonesizefinejwlry8" ></entry>	
-		<entry key = "stonefinejwlry9"	value = "stonesizefinejwlry9" ></entry>
-		<entry key = "stonefinejwlry10" value = "stonesizefinejwlry10"></entry>	
-		<entry key = "metalfinejwlry" value = "metalweightfinejwlry"  ></entry>	
-		<entry key= "diamond" value= "diamondweightfinejwlry1,diamondweightfinejwlry2,diamondweightfinejwlry3,diamondweightfinejwlry4,diamondweightfinejwlry5,diamondweightfinejwlry6,diamondweightfinejwlry7"></entry>
-				
-					
+		<entry key="stonefinejwlry1" value="stonesizefinejwlry1"></entry>
+		<entry key="stonefinejwlry2" value="stonesizefinejwlry2"></entry>
+		<entry key="stonefinejwlry3" value="stonesizefinejwlry3"></entry>
+		<entry key="stonefinejwlry4" value="stonesizefinejwlry4"></entry>
+		<entry key="stonefinejwlry5" value="stonesizefinejwlry5"></entry>
+		<entry key="stonefinejwlry6" value="stonesizefinejwlry6"></entry>
+		<entry key="stonefinejwlry7" value="stonesizefinejwlry7"></entry>
+		<entry key="stonefinejwlry8" value="stonesizefinejwlry8"></entry>
+		<entry key="stonefinejwlry9" value="stonesizefinejwlry9"></entry>
+		<entry key="stonefinejwlry10" value="stonesizefinejwlry10"></entry>
+		<entry key="metalfinejwlry" value="metalweightfinejwlry"></entry>
+		<entry key="diamond"
+			value="diamondweightfinejwlry1,diamondweightfinejwlry2,diamondweightfinejwlry3,diamondweightfinejwlry4,diamondweightfinejwlry5,diamondweightfinejwlry6,diamondweightfinejwlry7"></entry>
+
+
 	</util:map>
-	
-	
+
+
 	<!-- For pancard details -->
-	
-	<bean id="mplPancardServiceImpl" class="com.tisl.mpl.marketplacecommerceservices.services.pancard.impl.MplPancardServiceImpl">
-	</bean>
-	
-	
-	<bean id="mplPancardDao" class="com.tisl.mpl.marketplacecommerceservices.daos.pancard.impl.MplPancardDaoImpl">
+
+	<bean id="mplPancardServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.services.pancard.impl.MplPancardServiceImpl">
 	</bean>
 
 
-   <alias name="defaultmplReturnDao" alias="mplReturnDao"/>
-<bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
+	<bean id="mplPancardDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.pancard.impl.MplPancardDaoImpl">
+	</bean>
 
-    <!--bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
-		<property name="warmerStrategies">
-			<list>
-				<bean class="com.hybris.yps.nodewarmer.warmer.impl.ComposedTypeWarmer" />
-				<bean class="com.hybris.yps.nodewarmer.warmer.impl.EnumerationTypesWarmer" />
-				<bean class="com.hybris.yps.nodewarmer.warmer.impl.PageWarmer">
-					<property name="hostname"
-						value="#{configurationService.configuration.getProperty('nodewarmer.test.http.host')}" />
-					<property name="throwExceptionOnFailure" value="true" />
-					<property name="urls">
-						<list>
-							<value>/</value>
-						</list>
-					</property>
-				</bean>
-			</list>
-		</property>
 
-	</bean> -->
+	<alias name="defaultmplReturnDao" alias="mplReturnDao" />
+	<bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
+
+	<!--bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService"> 
+		<property name="warmerStrategies"> <list> <bean class="com.hybris.yps.nodewarmer.warmer.impl.ComposedTypeWarmer" 
+		/> <bean class="com.hybris.yps.nodewarmer.warmer.impl.EnumerationTypesWarmer" 
+		/> <bean class="com.hybris.yps.nodewarmer.warmer.impl.PageWarmer"> <property 
+		name="hostname" value="#{configurationService.configuration.getProperty('nodewarmer.test.http.host')}" 
+		/> <property name="throwExceptionOnFailure" value="true" /> <property name="urls"> 
+		<list> <value>/</value> </list> </property> </bean> </list> </property> </bean> -->
 	<!-- Old Cron Job Deletion Logic ends: -->
 
 
 
 	<!-- Node Warmer Changes: -->
-	
-	
+
+
 	<!-- getPointService Thread lock fix -->
-	<alias name="mplPickupAvailabilityStrategy" alias="pickupAvailabilityStrategy"/>
+	<alias name="mplPickupAvailabilityStrategy" alias="pickupAvailabilityStrategy" />
 	<bean id="mplPickupAvailabilityStrategy"
-			class="com.tisl.mpl.marketplacecommerceservices.strategy.impl.ExtDefaultPickupAvailabilityStrategy">
-		<property name="pickupStrategy" ref="pickupStrategy"/>
-		<property name="stockLevelProductStrategy" ref="stockLevelProductID"/>
-		<property name="storePickupDao" ref="storePickupDao"/>
+		class="com.tisl.mpl.marketplacecommerceservices.strategy.impl.ExtDefaultPickupAvailabilityStrategy">
+		<property name="pickupStrategy" ref="pickupStrategy" />
+		<property name="stockLevelProductStrategy" ref="stockLevelProductID" />
+		<property name="storePickupDao" ref="storePickupDao" />
 
 	</bean>
 	<bean id="mplDeliveryAddressServiceImpl"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl"/>
-<bean id="mplDeliveryAddressDaoImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl" />
+	<bean id="mplDeliveryAddressDaoImpl"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.changedeliveryaddress.impl.MplDeliveryAddressDaoImpl">
-</bean>
-  <!--  R2.3 Added 27-02-2017 Start-->
-  <bean id="multipartResolver"
+	</bean>
+	<!-- R2.3 Added 27-02-2017 Start -->
+	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="maxUploadSize" value="-1" />
 		<property name="defaultEncoding" value="utf8" />
-	 </bean>
-	 <!--  R2.3 Added 27-02-2017 END-->
-	 
-	 <!-- Addition for Exchange Start  -->
-<bean id="exchangeGuideService"
+	</bean>
+	<!-- R2.3 Added 27-02-2017 END -->
+
+	<!-- Addition for Exchange Start -->
+	<bean id="exchangeGuideService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ExchangeGuideServiceImpl">
 		<property name="exchangeGuideDao" ref="exchangeGuideDao"></property>
 		<property name="modelService" ref="modelService" />
 	</bean>
-	
+
 	<bean id="exchangeGuideDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ExchangeGuideDaoImpl">
 	</bean>
-	
-	
-		
+
+
+
 	<bean id="temporaryExchangeId"
 		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
 		init-method="init" scope="tenant">
@@ -2356,7 +2409,7 @@
 		<property name="start" value="10000001" />
 		<property name="numeric" value="false" />
 	</bean>
-	
+
 	<bean id="EXCHANGEREQUESTID"
 		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
 		init-method="init" scope="tenant">
@@ -2365,92 +2418,96 @@
 		<property name="start" value="10000001" />
 		<property name="numeric" value="false" />
 	</bean>
-	
-	<!-- Addition for Exchange End 	-->
-	 
-	 
-	 <!-- Changes for CAR-267 -->
-   
-   <!-- <bean id="promotions.manager" class="de.hybris.platform.promotions.jalo.CachingPromotionsManager" init-method="init" destroy-method="destroy" scope="tenant" >
-    	  <property name="cache" ref="promotionsCachingStrategy"/>
-	</bean>-->
-	
-	<bean id="mplMemcachedClientHelper" class="com.tisl.mpl.cache.strategy.MplMemcachedClientHelper" >
-	<constructor-arg value = "${promotion.memcache.env.ip}"/>
-	 </bean>
-	 <!-- <alias alias="promotionsCachingStrategy" name="defaultPromotionsCachingStrategy"/>
-		<bean id="defaultPromotionsCachingStrategy" class="com.tisl.mpl.cache.strategy.MplDefaultCachingStrategy" scope="tenant"> 
-		<property name="memCacheEnabled" value="${promotion.memcache.enabled}"/>
-	</bean>  -->
 
-	
-    <!-- Override the Cart so that calls to get promotion results can be intercepted -->
-   
-
-       <!--<bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" />-->
-
-    <!-- <bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" /> -->
+	<!-- Addition for Exchange End -->
 
 
-    <!-- CACHING FINISH -->
-     <!-- CAR-285 Start Zipping XML Creation and Copying Job Sitemap Start -->
-    <bean id="siteMapZipperJob" class="com.tisl.mpl.sitemap.generator.impl.SiteMapZipperJob"
+	<!-- Changes for CAR-267 -->
+
+	<!-- <bean id="promotions.manager" class="de.hybris.platform.promotions.jalo.CachingPromotionsManager" 
+		init-method="init" destroy-method="destroy" scope="tenant" > <property name="cache" 
+		ref="promotionsCachingStrategy"/> </bean> -->
+
+	<bean id="mplMemcachedClientHelper" class="com.tisl.mpl.cache.strategy.MplMemcachedClientHelper">
+		<constructor-arg value="${promotion.memcache.env.ip}" />
+	</bean>
+	<!-- <alias alias="promotionsCachingStrategy" name="defaultPromotionsCachingStrategy"/> 
+		<bean id="defaultPromotionsCachingStrategy" class="com.tisl.mpl.cache.strategy.MplDefaultCachingStrategy" 
+		scope="tenant"> <property name="memCacheEnabled" value="${promotion.memcache.enabled}"/> 
+		</bean> -->
+
+
+	<!-- Override the Cart so that calls to get promotion results can be intercepted -->
+
+
+	<!--<bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" 
+		scope="prototype" /> -->
+
+	<!-- <bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" 
+		scope="prototype" /> -->
+
+
+	<!-- CACHING FINISH -->
+	<!-- CAR-285 Start Zipping XML Creation and Copying Job Sitemap Start -->
+	<bean id="siteMapZipperJob" class="com.tisl.mpl.sitemap.generator.impl.SiteMapZipperJob"
 		parent="abstractJobPerformable">
-			<property name="modelService" ref="modelService" />
-			</bean>
-    
-    <!-- CAR-285 End -->
-    
-    	 
- 	 <!-- //Added for 3782 -->
- 	<alias name="productJwelConverter" alias="productJwelConverter"/>
- 	<bean id="productJwelConverter" parent="abstractPopulatingConverter">
- 		<property name="targetClass" value="de.hybris.platform.commercefacades.product.data.ProductData"/>
- 		<property name="populators">
- 			<list>
- 				<ref bean="productPopulator"/>
- 			</list>
- 		</property>
- 	</bean>
- 	<!-- //Added for 3782 -->
-    <bean id="catalogUtils" class="com.tisl.mpl.util.CatalogUtils" />
-    
+		<property name="modelService" ref="modelService" />
+	</bean>
 
-    <!-- added for PR-4 -->
-    <bean id="SendRefundSmsCronJob"
+	<!-- CAR-285 End -->
+
+
+	<!-- //Added for 3782 -->
+	<alias name="productJwelConverter" alias="productJwelConverter" />
+	<bean id="productJwelConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass"
+			value="de.hybris.platform.commercefacades.product.data.ProductData" />
+		<property name="populators">
+			<list>
+				<ref bean="productPopulator" />
+			</list>
+		</property>
+	</bean>
+	<!-- //Added for 3782 -->
+	<bean id="catalogUtils" class="com.tisl.mpl.util.CatalogUtils" />
+
+
+	<!-- added for PR-4 -->
+	<bean id="SendRefundSmsCronJob"
 		class="com.tisl.mpl.marketplacecommerceservices.jobs.SendRefundSmsCronJob"
 		autowire="byName">
 	</bean>
-<!-- added for PR-4 -->
-    <bean id="mplPincodeDistanceService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPincodeDistanceServiceImpl" ></bean>
-    <bean id="mplDistanceMatrixUtility" class="com.tisl.mpl.util.DistanceMatrixUtility" />
-    
-    <!--  TPR-6945 Near Real time Stock and Price changes in PLP and PDP -->
-    
+	<!-- added for PR-4 -->
+	<bean id="mplPincodeDistanceService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPincodeDistanceServiceImpl"></bean>
+	<bean id="mplDistanceMatrixUtility" class="com.tisl.mpl.util.DistanceMatrixUtility" />
+
+	<!-- TPR-6945 Near Real time Stock and Price changes in PLP and PDP -->
+
 	<bean id="productSpecificIndexerCronJob"
 		class="com.tisl.mpl.marketplacecommerceservices.jobs.ProductSpecificIndexerCronJob"
 		autowire="byName">
-	</bean>   
-    
+	</bean>
+
 	<bean id="solrSlaveReplicatorJob"
 		class="com.tisl.mpl.marketplacecommerceservices.jobs.SolrSlaveReplicatorJob"
 		autowire="byName">
 		<property name="solrCoreNameResolver" ref="solrCoreNameResolver" />
 	</bean>
-	
+
 	<bean id="akamaiRefreshCronJob"
 		class="com.tisl.mpl.marketplacecommerceservices.jobs.AkamaiRefreshCronJob"
 		autowire="byName">
 	</bean>
-	
-	<!--  End TPR-6945 -->
-	
+
+	<!-- End TPR-6945 -->
+
 	<bean id="mplWebFormDao"
-		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplWebFormDaoImpl" >
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplWebFormDaoImpl">
 	</bean>
-	
+
 	<bean id="mplWebFormService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplWebFormServiceImpl" >
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplWebFormServiceImpl">
 	</bean>
 
 	<bean id="refundClearPerformableDao"
@@ -2458,21 +2515,23 @@
 
 	<bean id="refundClearPerformableService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultRefundClearPerformableServiceImpl">
-			<property name="modelService" ref="modelService" />
+		<property name="modelService" ref="modelService" />
 	</bean>
 
-  <!-- TPR-7412 start -->   
-  <alias name="mplUtrNoArnNoService" alias="mplUtrNoArnNoService" />
-	<bean id="mplUtrNoArnNoService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplUtrNoArnNoSeviceImpl"
-			autowire="byName">
+	<!-- TPR-7412 start -->
+	<alias name="mplUtrNoArnNoService" alias="mplUtrNoArnNoService" />
+	<bean id="mplUtrNoArnNoService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplUtrNoArnNoSeviceImpl"
+		autowire="byName">
 	</bean>
-	
-	
+
+
 	<alias name="mplUtrNoArnNoDao" alias="mplUtrNoArnNoDao" />
-	<bean id="mplUtrNoArnNoDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplUtrNoArnNoDaoImpl"
-			autowire="byName">
+	<bean id="mplUtrNoArnNoDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplUtrNoArnNoDaoImpl"
+		autowire="byName">
 	</bean>
-	<!--  TPR-7412 end -->
+	<!-- TPR-7412 end -->
 
 	<!-- SDI-2924 -->
 	<bean id="forwardPaymentCleanUpService"
@@ -2481,86 +2540,81 @@
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ForwardPaymentCleanUpDaoImpl">
 	</bean>
 	<!-- TPR-7415 -->
-    <bean id="omsSubmissionPendingReportJob"
+	<bean id="omsSubmissionPendingReportJob"
 		class="com.tisl.mpl.marketplacecommerceservices.jobs.OmsSubmissionPendingReportJob"
 		autowire="byName">
 	</bean>
-	<!-- gigya data pulling job starts-->
-	
+	<!-- gigya data pulling job starts -->
+
 	<bean id="gigyaDataPullingJob" class="com.tisl.mpl.core.cronjobs.gigya.GigyaDataPullingJob"
 		autowire="byName" />
-	
+
 	<bean id="gigyaDataPullServiceImpl"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.GigyaDataPullServiceImpl">
 		<property name="modelService" ref="modelService" />
 	</bean>
-	
+
 	<bean id="gigyaDataPullDaoImpl"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.GigyaDataPullDaoImpl" />
-		
+
 	<bean id="gigyaDataPullUtility" class="com.tisl.mpl.core.cronjobs.gigya.GigyaDataPullUtility" />
-	
+
 	<!-- gigya data pulling job ends -->
-	<!--NU-50 start  -->
-	
-<alias name="mplFollowedBrandService" alias="mplFollowedBrandService"/>
-	<bean id="mplFollowedBrandService" class="com.tisl.mpl.marketplacecommerceservices.service.brand.impl.MplFollowedBrandServiceImpl" >
-     	<property name="mplFollowedBrandDao" ref="mplFollowedBrandDao" />
-    </bean>
-	
-	<alias name="mplFollowedBrandDao" alias="mplFollowedBrandDao"/>
-	<bean id="mplFollowedBrandDao" class="com.tisl.mpl.marketplacecommerceservices.daos.brand.impl.MplFollowedBrandDaoImpl" >
-    </bean>
-    
-    <bean id="followedBrandUploadPrepareInterceptor" class="com.tisl.mpl.interceptor.FollowedBrandUploadPrepareInterceptor" autowire="byName"></bean>
-<bean id="followedBrandUploadPrepareInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
-	<property name="interceptor" ref="followedBrandUploadPrepareInterceptor"></property>
-	<property name="typeCode" value="FollowedBrandUpload"></property>
-</bean>
-   <!--  NU-50 end -->
+	<!--NU-50 start -->
 
-	<alias alias="mplCustomerReviewService" name="mplCustomerReviewService"/>
-	<bean id="mplCustomerReviewService" class="com.tisl.mpl.marketplacecommerceservices.services.product.impl.MplCustomerReviewServiceImpl" parent="customerReviewService">
-		<property name="mplCustomerReviewDao" ref="mplCustomerReviewDao"/>
+	<alias name="mplFollowedBrandService" alias="mplFollowedBrandService" />
+	<bean id="mplFollowedBrandService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.brand.impl.MplFollowedBrandServiceImpl">
+		<property name="mplFollowedBrandDao" ref="mplFollowedBrandDao" />
 	</bean>
-		
-	<bean id="mplCustomerReviewDao" class="com.tisl.mpl.marketplacecommerceservices.daos.product.impl.MplCustomerReviewDaoImpl" parent="customerReviewDao"/>
 
-	
+	<alias name="mplFollowedBrandDao" alias="mplFollowedBrandDao" />
+	<bean id="mplFollowedBrandDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.brand.impl.MplFollowedBrandDaoImpl">
+	</bean>
+
+	<bean id="followedBrandUploadPrepareInterceptor"
+		class="com.tisl.mpl.interceptor.FollowedBrandUploadPrepareInterceptor"
+		autowire="byName"></bean>
+	<bean id="followedBrandUploadPrepareInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="followedBrandUploadPrepareInterceptor"></property>
+		<property name="typeCode" value="FollowedBrandUpload"></property>
+	</bean>
+	<!-- NU-50 end -->
+
+	<alias alias="mplCustomerReviewService" name="mplCustomerReviewService" />
+	<bean id="mplCustomerReviewService"
+		class="com.tisl.mpl.marketplacecommerceservices.services.product.impl.MplCustomerReviewServiceImpl"
+		parent="customerReviewService">
+		<property name="mplCustomerReviewDao" ref="mplCustomerReviewDao" />
+	</bean>
+
+	<bean id="mplCustomerReviewDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.product.impl.MplCustomerReviewDaoImpl"
+		parent="customerReviewDao" />
+
+
 	<!-- memcache for new ui/ux pdp api -->
-	<bean id="defaultApiCachingStrategy" class="com.tisl.mpl.cache.strategy.impl.MplDefaultApiCachingStrategy" scope="tenant"> 
+	<bean id="defaultApiCachingStrategy"
+		class="com.tisl.mpl.cache.strategy.impl.MplDefaultApiCachingStrategy"
+		scope="tenant">
 	</bean>
-	
 
-       <!--  Added EGV Beans 22-09-2017 --> 
-   <bean id="MplEGVCartServiceImpl" class="com.tisl.mpl.marketplacecommerceservices.egv.service.cart.impl.MplEGVCartServiceImpl">
-   </bean>
-   <bean id="MplEGVCartDaoImpl" class="com.tisl.mpl.marketplacecommerceservices.egv.dao.cart.impl.MplEGVCartDaoImpl">
-   </bean>
-   
-   <!--  END EGV Beans 22-09-2017 -->
-   
-   <bean id="MplQcPaymentFailService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplQcPaymentFailServiceImpl">
-   </bean>
-   
-   <bean id="MplQcPaymentFailDao" class="com.tisl.mpl.promotion.dao.impl.MplQcPaymentFailDaoImpl">
-   </bean>
-   
-   <bean id="MplQcRefundService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.QcRefundServiceImpl">
-   </bean>
-
-<bean id="mplCmsComponentDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.DefaultMplCMSComponentDao">
+	<bean id="mplCmsComponentDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.DefaultMplCMSComponentDao">
 		<property name="flexibleSearchService" ref="flexibleSearchService" />
 		<property name="modelService" ref="modelService" />
 	</bean>
-	<bean id="mplCmsComponentService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplCMSComponentService" >
+	<bean id="mplCmsComponentService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplCMSComponentService">
 		<property name="mplCmsComponentDao" ref="mplCmsComponentDao" />
 		<property name="catalogService" ref="catalogService" />
 	</bean>
-	
+
 	<bean id="imageUploadService"
-			class="com.tisl.mpl.marketplacecommerceservices.service.impl.ImageUploadServiceImpl">
-			<property name="imageUploadDao" ref="imageUploadDao" />
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ImageUploadServiceImpl">
+		<property name="imageUploadDao" ref="imageUploadDao" />
 	</bean>
 
 	<bean id="imageUploadDao"
@@ -2569,6 +2623,15 @@
 		<property name="modelService" ref="modelService" />
 	</bean>
 	
+
+	<!-- Caching of Coupon Call on Cart Page -->
+	<bean id="mplDisplayCouponCachingStrategy"
+		class="com.tisl.mpl.cache.strategy.impl.MplDisplayCouponCachingStrategyImpl"
+		scope="tenant">
+		<property name="memCacheEnabled" value="${promotion.memcache.enabled}" />
+	</bean>
+	<!-- Caching of Coupon Call on Cart Page Ends -->
+
 		<alias name="defaultHomePageTypesDaoImpl" alias="homePageTypesDao" />
 	<bean id="defaultHomePageTypesDaoImpl" class="com.tils.luxury.dao.impl.HomePageTypesDaoImpl">
 	</bean>
@@ -2577,6 +2640,4 @@
 	<bean id="defaultHomePageTypesServiceImpl"
 		class="com.tils.luxury.service.impl.HomePageTypesServiceImpl"></bean>
 	
-	
 </beans>
-

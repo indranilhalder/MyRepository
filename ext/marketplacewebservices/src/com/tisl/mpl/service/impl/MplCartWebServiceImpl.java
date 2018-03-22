@@ -60,6 +60,7 @@ import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
+import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -954,7 +955,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 		CartModel cart = null;
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
-		final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+		//final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		try
 		{
@@ -972,25 +973,28 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 				if (isPwa)
 				{
-					final Double mrp = calculateCartTotalMrp(cart);
-					final PriceData totalMrp = createPriceCharge(mrp.toString());
-					pricePwa.setBagTotal(totalMrp);
-					double actualDelCharge = 0.0;
-					if (CollectionUtils.isNotEmpty(cart.getEntries()))
-					{
-						for (final AbstractOrderEntryModel cartentry : cart.getEntries())
-						{
-							actualDelCharge += cartentry.getCurrDelCharge().doubleValue();
-						}
-					}
-					final PriceData amountInclDelCharge = createPriceCharge(cartDataDetails.getTotalPrice());
-					pricePwa.setPaybleAmount(amountInclDelCharge);
-					final double delCharge = actualDelCharge;
-					final double payableamtWdDelCharge = (Double.parseDouble(cartDataDetails.getTotalPrice()) - delCharge);
-					final double discount = mrp.doubleValue() - payableamtWdDelCharge;
-					final PriceData totalDiscount = createPriceCharge(String.valueOf(discount));//Sonar fix
-					pricePwa.setTotalDiscountAmount(totalDiscount);
+					final PriceWsPwaDTO pricePwa = configureCartAmountPwa(cart);
 					cartDataDetails.setCartAmount(pricePwa);
+
+					//					final Double mrp = calculateCartTotalMrp(cart);
+					//					final PriceData totalMrp = createPriceCharge(mrp.toString());
+					//					pricePwa.setBagTotal(totalMrp);
+					//					double actualDelCharge = 0.0;
+					//					if (CollectionUtils.isNotEmpty(cart.getEntries()))
+					//					{
+					//						for (final AbstractOrderEntryModel cartentry : cart.getEntries())
+					//						{
+					//							actualDelCharge += cartentry.getCurrDelCharge().doubleValue();
+					//						}
+					//					}
+					//					final PriceData amountInclDelCharge = createPriceCharge(cartDataDetails.getTotalPrice());
+					//					pricePwa.setPaybleAmount(amountInclDelCharge);
+					//					final double delCharge = actualDelCharge;
+					//					final double payableamtWdDelCharge = (Double.parseDouble(cartDataDetails.getTotalPrice()) - delCharge);
+					//					final double discount = mrp.doubleValue() - payableamtWdDelCharge;
+					//					final PriceData totalDiscount = createPriceCharge(String.valueOf(discount));//Sonar fix
+					//					pricePwa.setTotalDiscountAmount(totalDiscount);
+					//					cartDataDetails.setCartAmount(pricePwa);
 
 				}
 				if (deListedStatus)
@@ -3708,7 +3712,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			if (cartModel != null)
 			{
-				mplCouponFacade.releaseVoucherInCheckout(cartModel); //TISPT-104
+				mplCouponFacade.releaseCartVoucherInCheckout(cartModel); //TISPT-104
 				cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true, true, true);
 			}
 			try
@@ -4523,35 +4527,99 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	/**
 	 * @param cartModel
 	 */
-	private PriceWsPwaDTO configureCartAmountPwa(final CartModel cartModel)
-	{
-		// YTODO Auto-generated method stub
-		final PriceWsPwaDTO priceWsPwaDTO = new PriceWsPwaDTO();
-		final CurrencyModel currency = commonI18NService.getCurrency(INR);
+	//	private PriceWsPwaDTO configureCartAmountPwa(final CartModel cartModel)
+	//	{
+	//		// YTODO Auto-generated method stub
+	//		final PriceWsPwaDTO priceWsPwaDTO = new PriceWsPwaDTO();
+	//		final CurrencyModel currency = commonI18NService.getCurrency(INR);
+	//
+	//		final List<AbstractOrderEntryModel> entryList = new ArrayList<>(cartModel.getEntries());
+	//		Tuple3<?, ?, ?> tuple3 = null;
+	//
+	//		if (CollectionUtils.isNotEmpty(entryList))
+	//		{
+	//			tuple3 = getPayableAmount(entryList);
+	//			final Double payableAmount = (Double) tuple3.getFirst();
+	//			final PriceData amount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(payableAmount.doubleValue()),
+	//					currency);
+	//			if (null != amount)
+	//			{
+	//				priceWsPwaDTO.setPaybleAmount(amount);
+	//			}
+	//		}
+	//
+	//		//		else if (null != cartModel.getSubtotal() && StringUtils.isNotEmpty(cartModel.getSubtotal().toString()))
+	//		//		{
+	//		//			final PriceData paybleAmount = priceDataFactory.create(PriceDataType.BUY,
+	//		//					BigDecimal.valueOf(cartModel.getSubtotal().doubleValue()), currency);
+	//		//			if (null != paybleAmount)
+	//		//			{
+	//		//				priceWsPwaDTO.setPaybleAmount(paybleAmount);
+	//		//			}
+	//		//		}
+	//
+	//		final Double couponDiscount = (Double) tuple3.getSecond();
+	//		if (null != couponDiscount && couponDiscount.doubleValue() > 0)
+	//		{
+	//			final PriceData couponVal = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(couponDiscount.doubleValue()),
+	//					currency);
+	//			priceWsPwaDTO.setCouponDiscountAmount(couponVal);
+	//		}
+	//
+	//		final Double cartTotalMrp = calculateCartTotalMrp(cartModel);
+	//		final PriceData bagTotal = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(cartTotalMrp.doubleValue()),
+	//				currency);
+	//		if (null != bagTotal)
+	//		{
+	//			priceWsPwaDTO.setBagTotal(bagTotal);
+	//		}
+	//
+	//		final Double productDiscount = (Double) tuple3.getThird();
+	//
+	//		final double discount = productDiscount.doubleValue();
+	//		final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+	//		priceWsPwaDTO.setTotalDiscountAmount(totalDiscount);
+	//
+	//		return priceWsPwaDTO;
+	//	}
 
-		if (null != cartModel.getSubtotal() && StringUtils.isNotEmpty(cartModel.getSubtotal().toString()))
+
+	/**
+	 * The Method Return total Payable amount Coupon Discount and Cart Discount
+	 *
+	 * @param entryList
+	 * @return Tuple3<?, ?, ?>
+	 */
+	private Tuple3<?, ?, ?> getPayableAmount(final List<AbstractOrderEntryModel> entryList)
+	{
+		double payableAmount = 0.00D;
+		double couponDiscount = 0.00D;
+		double mopPlusPromoDiscounty = 0.00D;
+		double mrp = 0.00D;
+
+		for (final AbstractOrderEntryModel oModel : entryList)
 		{
-			final PriceData paybleAmount = priceDataFactory.create(PriceDataType.BUY,
-					BigDecimal.valueOf(cartModel.getSubtotal().doubleValue()), currency);
-			if (null != paybleAmount)
+			if (!oModel.getGiveAway().booleanValue())
 			{
-				priceWsPwaDTO.setPaybleAmount(paybleAmount);
+				final double walletAmt = oModel.getWalletApportionPaymentInfo() != null ? (StringUtils.isNotEmpty(oModel
+						.getWalletApportionPaymentInfo().getQcApportionPartValue()) ? Double.parseDouble(oModel
+						.getWalletApportionPaymentInfo().getQcApportionPartValue()) : 0.00d) : 0.00d;
+
+				final Double netAmountAfrDiscount = oModel.getNetAmountAfterAllDisc();
+				final Double totalPrice = oModel.getTotalPrice();
+
+				mrp = oModel.getMrp().doubleValue();
+				payableAmount += (((netAmountAfrDiscount.doubleValue() > 0) ? netAmountAfrDiscount.doubleValue() : totalPrice
+						.doubleValue()) - walletAmt) + oModel.getCurrDelCharge().doubleValue();
+				couponDiscount += oModel.getCouponValue().doubleValue();
+				mopPlusPromoDiscounty += (mrp - (oModel.getBasePrice().doubleValue() * oModel.getQuantity().intValue()))
+						+ oModel.getTotalProductLevelDisc().doubleValue() + oModel.getCartLevelDisc().doubleValue()
+						+ oModel.getCartCouponValue().doubleValue();
 			}
 		}
 
-		final Double cartTotalMrp = calculateCartTotalMrp(cartModel);
-		final PriceData bagTotal = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(cartTotalMrp.doubleValue()),
-				currency);
-		if (null != bagTotal)
-		{
-			priceWsPwaDTO.setBagTotal(bagTotal);
-		}
-
-		final double discount = cartTotalMrp.doubleValue() - cartModel.getSubtotal().doubleValue();
-		final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
-		priceWsPwaDTO.setTotalDiscountAmount(totalDiscount);
-
-		return priceWsPwaDTO;
+		return new Tuple3<Double, Double, Double>(Double.valueOf(payableAmount), Double.valueOf(couponDiscount),
+				Double.valueOf(mopPlusPromoDiscounty));
 	}
 
 
@@ -4697,11 +4765,72 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		return priceData;
 	}
 
+	/**
+	 * @param configureCartAmtPwa
+	 *           for displayOrderSummary API
+	 */
 
+	@Override
+	public PriceWsPwaDTO configureCartAmountPwa(final AbstractOrderModel absOrder)
+	{
+		// YTODO Auto-generated method stub
+		final PriceWsPwaDTO priceWsPwaDTO = new PriceWsPwaDTO();
+		final CurrencyModel currency = commonI18NService.getCurrency(INR);
 
+		final List<AbstractOrderEntryModel> entryList = new ArrayList<>(absOrder.getEntries());
+		Tuple3<?, ?, ?> tuple3 = null;
 
+		if (CollectionUtils.isNotEmpty(entryList))
+		{
+			tuple3 = getPayableAmount(entryList);
+		}
 
+		Double payableAmount = new Double(0.00), couponDiscount = new Double(0.00), productDiscount = new Double(0.00);
 
+		if (tuple3 != null)
+		{
+			payableAmount = (Double) tuple3.getFirst();
+			couponDiscount = (Double) tuple3.getSecond();
+			productDiscount = (Double) tuple3.getThird();
 
+		}
+		final PriceData amount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(payableAmount.doubleValue()),
+				currency);
+		if (null != amount)
+		{
+			priceWsPwaDTO.setPaybleAmount(amount);
+		}
+		if (couponDiscount.doubleValue() > 0)
+		{
+			final PriceData couponVal = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(couponDiscount.doubleValue()),
+					currency);
+			priceWsPwaDTO.setCouponDiscountAmount(couponVal);
+		}
+		final Double cartTotalMrp = calculateCartTotalMrp(absOrder);
+		final PriceData bagTotal = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(cartTotalMrp.doubleValue()),
+				currency);
+		if (null != bagTotal)
+		{
+			priceWsPwaDTO.setBagTotal(bagTotal);
+		}
 
+		final double discount = productDiscount.doubleValue();
+		final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+		priceWsPwaDTO.setTotalDiscountAmount(totalDiscount);
+
+		return priceWsPwaDTO;
+	}
+
+	/*
+	 * For calculation delivery charge based on currDelCharge
+	 */
+	//	private double getCartDelCharge(final List<AbstractOrderEntryModel> entryList)
+	//	{
+	//		double actualDelCharge = 0.00D;
+	//		for (final AbstractOrderEntryModel cartentry : entryList)
+	//		{
+	//			actualDelCharge += cartentry.getCurrDelCharge().doubleValue();
+	//		}
+	//		return actualDelCharge;
+	//	}
 }

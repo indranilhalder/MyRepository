@@ -378,7 +378,7 @@ public class PaymentServicesController extends BaseController
 		LOG.debug(String.format("binValidation : binNo :  %s | paymentMode : %s | cartGuid : %s | userId : %s | bankName : %s ",
 				binNo, paymentMode, cartGuid, userId, bankName));
 		MplPromoPriceWsDTO promoPriceData = new MplPromoPriceWsDTO(); //The New Returning DTO
-		final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+		//final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
 
 		OrderModel orderModel = null;
 		CartModel cart = null;
@@ -420,20 +420,23 @@ public class PaymentServicesController extends BaseController
 							promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, cart, userId, bankName);
 							if (isPwa)
 							{
-								final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);
-								final PriceData totalMrp = createPriceObj(mrp.toString());
-								pricePwa.setBagTotal(totalMrp);
-								final PriceData amountInclDelCharge = promoPriceData.getTotalPriceInclConv();
-								final PriceData payableAmount = promoPriceData.getTotalPrice();
-								//	final PriceData amountInclDelCharge = createPriceObj(promoPriceData.getTotalPriceInclConv().toString());
-								pricePwa.setPaybleAmount(payableAmount);
-								final PriceData delCharge = promoPriceData.getDeliveryCost();
-								final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue()
-										- delCharge.getDoubleValue().doubleValue();
-								final double discount = mrp.doubleValue() - payableamtWdDelCharge;
-								pricePwa.setTotalDiscountAmount(createPriceObj(Double.valueOf(discount).toString()));
-								//pricePwa.setTotalDiscountAmount(totalDiscount);
+								final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cart);
 								promoPriceData.setCartAmount(pricePwa);
+
+								//								final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);
+								//								final PriceData totalMrp = createPriceObj(mrp.toString());
+								//								pricePwa.setBagTotal(totalMrp);
+								//								final PriceData amountInclDelCharge = promoPriceData.getTotalPriceInclConv();
+								//								final PriceData payableAmount = promoPriceData.getTotalPrice();
+								//								//	final PriceData amountInclDelCharge = createPriceObj(promoPriceData.getTotalPriceInclConv().toString());
+								//								pricePwa.setPaybleAmount(payableAmount);
+								//								final PriceData delCharge = promoPriceData.getDeliveryCost();
+								//								final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue()
+								//										- delCharge.getDoubleValue().doubleValue();
+								//								final double discount = mrp.doubleValue() - payableamtWdDelCharge;
+								//								pricePwa.setTotalDiscountAmount(createPriceObj(Double.valueOf(discount).toString()));
+								//								//pricePwa.setTotalDiscountAmount(totalDiscount);
+								//								promoPriceData.setCartAmount(pricePwa);
 							}
 
 						}

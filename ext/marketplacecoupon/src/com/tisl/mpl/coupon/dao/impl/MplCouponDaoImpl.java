@@ -19,6 +19,7 @@ import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -142,12 +143,10 @@ public class MplCouponDaoImpl implements MplCouponDao
 			queryBiulder
 					.append(
 							"select {v.pk} from {Promotionvoucher as v JOIN CouponUserRestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} AND ( {ur.closedUser} = ?")
-					.append(MarketplacecouponConstants.CUSTOMERPK)
-					.append(groupBiulder.toString())
+					.append(MarketplacecouponConstants.CUSTOMERPK).append(groupBiulder.toString())
 					.append(
 							" )AND {ur.positive} = ?isIncluded AND {v.redemptionQuantityLimitPerUser} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} AND {vin.user}=?")
-					.append(MarketplacecouponConstants.CUSTOMERPK)
-					.append(
+					.append(MarketplacecouponConstants.CUSTOMERPK).append(
 							"  }}) AND {v.redemptionQuantityLimit} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}}) ORDER BY {dr.startdate} DESC");
 
 
@@ -156,7 +155,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData(MarketplacecouponConstants.BYDATE, CLOSED_VOUCHER
 
-			) });
+					) });
 
 
 			return getPagedFlexibleSearchService().search(sortQueries, MarketplacecouponConstants.BYDATE, queryParams, pageableData);
@@ -330,8 +329,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 			//Fix for TISPRO-530 --- Only work with Oracle DB
 			queryBiulder.append("SELECT COUNT(distinct{vi.voucher}),SUM({vi.savedAmount}) FROM {VoucherInvalidation as vi JOIN ")
-					.append("Order AS odr ON {vi.order}={odr.pk}} WHERE {vi.user} LIKE ")
-					.append("('%")
+					.append("Order AS odr ON {vi.order}={odr.pk}} WHERE {vi.user} LIKE ").append("('%")
 					//.append(customer.getPk().getLongValue()).append("%')").append("AND {odr.date} > to_date('").append(currentDate)
 					//.append("', 'MM/DD/YYYY') - INTERVAL '6' MONTH");
 					.append(customer.getPk().getLongValue()).append("%')")
@@ -471,5 +469,103 @@ public class MplCouponDaoImpl implements MplCouponDao
 		}
 		return MarketplacecommerceservicesConstants.EMPTY;
 
+	}
+
+
+	/**
+	 *
+	 * @param customer
+	 */
+	@Override
+	public List<VoucherModel> getClosedVoucherList(final CustomerModel customer)
+	{
+		List<VoucherModel> closedVoucherList = new ArrayList<>();
+		try
+		{
+			final StringBuilder queryBiulder = new StringBuilder(600);
+			final StringBuilder groupBiulder = new StringBuilder(200);
+
+			final Set<PrincipalGroupModel> groups = customer.getGroups();
+			final Map queryParams = new HashMap();
+			int count = 1;
+			for (final PrincipalGroupModel principal : groups)
+			{
+				groupBiulder.append(" OR {ur.closedUser} = ?").append("customerGroupPk_").append(count);
+				queryParams.put("customerGroupPk_" + count, principal.getPk().toString());
+				count++;
+			}
+
+			queryParams.put(MarketplacecouponConstants.CUSTOMERPK, customer.getPk().toString());
+			queryParams.put("isIncluded", "1");
+
+			queryBiulder
+					.append(
+							"select {v.pk} from {Promotionvoucher as v JOIN CouponUserRestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} AND ( {ur.closedUser} = ?")
+					.append(MarketplacecouponConstants.CUSTOMERPK).append(groupBiulder.toString())
+					.append(
+							" )AND {ur.positive} = ?isIncluded AND {v.redemptionQuantityLimitPerUser} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} AND {vin.user}=?")
+					.append(MarketplacecouponConstants.CUSTOMERPK).append(
+							"  }}) AND {v.redemptionQuantityLimit} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}}) AND {v.visibility} = 1 ORDER BY {dr.startdate} DESC");
+
+
+			final String CLOSED_VOUCHER = queryBiulder.toString();
+			LOG.debug(QUERY_STRING + CLOSED_VOUCHER);
+
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(CLOSED_VOUCHER, queryParams);
+
+			closedVoucherList = flexibleSearchService.<VoucherModel> search(query).getResult();
+
+			if (CollectionUtils.isNotEmpty(closedVoucherList))
+			{
+				return closedVoucherList;
+			}
+
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		return closedVoucherList;
+	}
+
+
+	/**
+	 * The Method returns Open Voucher List
+	 */
+	@Override
+	public List<VoucherModel> getOpenVoucherList()
+	{
+		List<VoucherModel> openVoucherList = new ArrayList<>();
+		try
+		{
+			final String queryString = MarketplacecouponConstants.ALLOPENVISIBLECOUPON;
+			LOG.debug(QUERY_STRING + queryString);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+			openVoucherList = flexibleSearchService.<VoucherModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return openVoucherList;
 	}
 }
