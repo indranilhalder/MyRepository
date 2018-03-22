@@ -11534,6 +11534,7 @@ public class UsersController extends BaseCommerceController
 									if (mobileUserService.validateOtp(mobilenumber, otp, OTPTypeEnum.REG))
 									{
 										customerToSave.setMobileNumber(mobilenumber);
+
 									}
 									else
 									{
@@ -11635,6 +11636,10 @@ public class UsersController extends BaseCommerceController
 					if (StringUtils.isNotEmpty(emailid))
 					{
 						customerToSave.setDisplayUid(emailid);
+						if (customerToSave.getEmailId() != null && !customerToSave.getEmailId().contains("@"))
+						{
+							customerToSave.setDisplayUid(mobilenumber);
+						}
 					}
 					else
 					{
