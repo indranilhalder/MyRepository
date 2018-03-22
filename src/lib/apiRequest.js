@@ -194,7 +194,6 @@ export async function postMsdRowData(url, payload) {
     method: "POST",
     body: JSON.stringify(payload),
     headers: {
-      "Cache-Control": "no-cache",
       "Content-Type": "application/json"
     }
   });

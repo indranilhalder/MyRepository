@@ -11,7 +11,7 @@ import {
   DEFAULT_BRANDS_LANDING_PAGE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-
+const TRUE = "true";
 export default class MyAccountBrands extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -39,6 +39,16 @@ export default class MyAccountBrands extends React.Component {
     if (this.props.loading) {
       return this.renderLoader();
     }
+    let followedBrands = [];
+    if (this.props.followedBrands) {
+      followedBrands = this.props.followedBrands.filter(brand => {
+        // here api sending isFollowing is string type
+        if (brand.isFollowing === TRUE) {
+          return brand;
+        }
+      });
+    }
+
     return (
       <div className={styles.base}>
         {/* we need to show this when we ll state getting profile image */}
@@ -51,10 +61,10 @@ export default class MyAccountBrands extends React.Component {
           label="More Brands"
           onClick={() => this.renderToBLP()}
         />
-        {this.props.followedBrands && (
+        {followedBrands && (
           <div className={styles.brandsHolder}>
             <BrandEdit
-              data={this.props.followedBrands}
+              data={followedBrands}
               onClick={(brandId, followStatus) =>
                 this.followAndUnFollow(brandId, followStatus)
               }
