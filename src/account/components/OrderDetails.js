@@ -10,7 +10,7 @@ import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
 import moment from "moment";
 import queryString from "query-string";
-import { MY_ACCOUNT, ORDER_PREFIX } from "../../lib/constants";
+import { ORDER_PREFIX } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_Returned = "Return Product";
 const PRODUCT_Cancel = "Cancel Product";
