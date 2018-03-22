@@ -1084,7 +1084,7 @@
 			    padding: 10px 100px 10px 10px;
 			    width: 100%;
 			    border-radius: 3px;
-                line-height: 0;
+                line-height: 1;
                 box-shadow: none;
                  @include media-breakpoint-down(sm) {
                       line-height:normal;

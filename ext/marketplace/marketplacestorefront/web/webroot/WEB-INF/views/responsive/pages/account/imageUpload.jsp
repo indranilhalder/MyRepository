@@ -8,19 +8,78 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common"%>
 
+<style>
+.imageUpload{
+      max-width: 250px;
+	  height: 50px;
+	  padding-left: 0 15px;
+	  }
+table {
+    border-collapse: collapse;
+    width: 100%;
+    padding-bottom: 5%;
+}
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+tr:nth-child(even){background-color: #f2f2f2}
+th {
+    background-color: #514848;
+    color: white;
+    height : 30px !important;
+    text-align: center;
+}
+.upload-img-btn,.download-img-btn{
+	background: #a9133d;
+    letter-spacing: .6px;
+    color: #fff;
+    padding: 10px 20px !important;
+    font-size:12px !important;
+    width: 120px;
+}
+.upload-img-btn{
+	margin-right: 10px;
+}
+.upload-img-btn:hover,.download-img-btn:hover{
+	color: #fff;
+}
+#upload_file{
+	border:none !important;
+}
+#uploadImages{
+	padding: 20px 30px;
+}
+#uploaded-files tbody tr th{
+	padding: 10px !important;
+	background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,1));
+}
+#uploaded-files tr td{
+	text-align:center;
+}
+@media (min-width:768px){
+	#uploaded-files{
+		width: 95.5%;
+    	margin: 0 auto;
+    	margin-bottom:30px;
+	}
+}
+</style>
 <script type="text/javascript">
 
 	   // Function to add a row in the table
-	   function addRow(filename, size, date) {
+	   function addRow(filename, size, date,code) {
 	     var markup = "<tr>";
-	         markup += "<td class='img-preview'><img class='img-preview' src='" + window.location.origin + filename + "'></td>";
-	         markup += "<td class='img-url'><a target='_blank' href='" + window.location.origin + filename + "'>" + window.location.origin + filename + "</a></td>"
+	         markup += "<td class='img-preview' ><img class='imageUpload' src='" +filename + "'></td>";
+	         markup += "<td class='img-url'>" + code + "</td>";
+	         markup += "<td class='img-url'><a target='_blank' href='" +filename + "'>" + filename + "</a></td>";
 	         markup += "<td>" + (size/1000).toFixed(2) + "kB </td>";
 	         markup += "<td>" + date + "</td>";
 	         markup += "</tr>";
 	     $("#uploaded-files tbody:first-child").after(markup);
 	   }
 
+	   
 	   function getDateTime(date) {
 	     var dateTime = "";
 	     dateTime = date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear() + " " +
@@ -33,6 +92,8 @@
 
 function loadImageAjaxCall() {
 	    
+	    $("#uploaded-files tr").html("");
+	    
 	    var formdata = $('#uploadImages')[0];
 		var form = new FormData(formdata);
 	 
@@ -44,15 +105,17 @@ function loadImageAjaxCall() {
 		        processData: false,  // Important!
 		        contentType: false,
 		        cache: false,
-			success : function(response) {
+			success : function(response) {				
 				//alert(response[0].imageUrl);
 				$("#upload_file").empty();
 				$("#image_preview").empty();
 				$('#downloadBtn').removeClass('hidden');
 				console.log(response);
+				$("#uploaded-files").html("<tr><th>Image Preview</th><th>Image Name</th><th>URL</th><th>Size</th><th> Time </th></tr>");
 				response.forEach(function(item) {
+					//alert(item.imageUrl);
 					var date = getDateTime(new Date());
-					addRow(item.imageUrl, item.size,date);
+					addRow(item.imageUrl, item.size,date,item.imageName);
 				})
 			},
 			error : function(resp) {
@@ -80,16 +143,19 @@ function preview_image()
 	<option value="${mediaFolder.qualifier}">${mediaFolder.qualifier}</option>
 	</c:forEach>
 	</select>
+	
   <input type="file" id="upload_file" name="file" onchange="preview_image();" multiple/>
-  <input type="button" name='submit_image' value="Upload Image" onclick="loadImageAjaxCall();"/>
+  <a class="btn upload-img-btn"  name='submit_image' value="Upload Image" onclick="loadImageAjaxCall();">Upload</a>
+   <a class="btn download-img-btn" id="downloadBtn" href="#">Download</a>
  </form:form>
  <div id="image_preview"></div>
   <div id="response_preview"></div>
-  <a class="btn hidden" id="downloadBtn" href="#">Download CSV</a>
+ 
   <br><br>
- <table style="width:100%" id="uploaded-files">
+ <table id="uploaded-files">
    <tr>
-     <th style="width: 30%">Image Preview</th>
+     <th>Image Preview</th>
+     <th>Image Name</th>
      <th>URL</th>
      <th>Size</th>
      <th> Time </th>
@@ -141,7 +207,7 @@ function exportTableToCSV($table, filename) {
 }
 
 $('#downloadBtn').click(function() {
-	   exportTableToCSV.apply(this, [$('#uploaded-files'), 'photo_upload.csv']);
+	   exportTableToCSV.apply(this, [$('#uploaded-files'), 'image_upload.csv']);
 });
 
 </script>

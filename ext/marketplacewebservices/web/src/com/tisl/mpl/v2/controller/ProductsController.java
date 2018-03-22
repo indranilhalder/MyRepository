@@ -138,6 +138,7 @@ import com.tisl.mpl.wsdto.ProductInfoWSDTO;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPagefacateWsDTO;
 import com.tisl.mpl.wsdto.SizeGuideWsDTO;
+import com.tisl.wsdto.SeoContentData;
 
 
 /**
@@ -1720,9 +1721,9 @@ public class ProductsController extends BaseController
 
 
 
-	@RequestMapping(value = "/{productCode}", params = "isPwa", method = RequestMethod.GET)
+	@RequestMapping(value = "/productDetails/{productCode}", params = "isPwa", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PRIVATE, maxAge = 120)
-	@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
+	@Cacheable(value = "productDetailsCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields,#isPwa)")
 	@ResponseBody
 	public MplNewProductDetailMobileWsData getProduct(@PathVariable String productCode,
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request,
@@ -1987,6 +1988,8 @@ public class ProductsController extends BaseController
 				{
 					productSearchPage.setSorts(sortingvalues.getSorts());
 				}
+
+				//added for applied filter and applied sort section
 				if (null != sortingvalues.getCurrentQuery())
 				{
 					final SearchStateWsDTO currentQuery = new SearchStateWsDTO();
@@ -2022,10 +2025,44 @@ public class ProductsController extends BaseController
 				}
 
 			}
+			//Added for PLP SEO--start
+			if (null != sortingvalues.getCurrentQuery() && null != sortingvalues.getCurrentQuery().getQuery()
+					&& StringUtils.isNotEmpty(sortingvalues.getCurrentQuery().getQuery().getValue()))
+			{
+				final String query = sortingvalues.getCurrentQuery().getQuery().getValue();
+				final String[] arr = query.split(":");
+				String categorycode = "";
+				if (arr.length > 0)
+				{
+					for (int i = 0; i < arr.length; i++)
+					{
+						if (arr[i].equalsIgnoreCase("category"))
+						{
+							if (StringUtils.isNotEmpty(arr[i + 1]))
+							{
+								categorycode = arr[i + 1];
+								break;
+							}
+						}
+					}
+				}
+
+				if (StringUtils.isNotEmpty(categorycode))
+				{
+					final SeoContentData seoContentData = searchSuggestUtilityMethods.getSeoData(categorycode);
+					if (null != seoContentData)
+					{
+						productSearchPage.setSeo(seoContentData);
+					}
+				}
+			}
+			//Added for PLP SEO--end
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("SEARCH PRODUCT ERROR ::" + e.getMessage());
 			if (null != e.getErrorMessage())
 			{
 				productSearchPage.setError(e.getErrorMessage());
@@ -2039,6 +2076,7 @@ public class ProductsController extends BaseController
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
+			LOG.error("SEARCH PRODUCT ERROR ::" + e.getMessage());
 			if (null != e.getErrorMessage())
 			{
 				productSearchPage.setError(e.getErrorMessage());
@@ -2051,6 +2089,7 @@ public class ProductsController extends BaseController
 		}
 		catch (final Exception e)
 		{
+			LOG.error("SEARCH PRODUCT ERROR ::" + e.getMessage());
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 			productSearchPage.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
 			productSearchPage.setErrorCode(MarketplacecommerceservicesConstants.E0000);

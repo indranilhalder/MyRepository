@@ -2811,6 +2811,9 @@ public class UsersController extends BaseCommerceController
 				newAddress.setLine1(line1);
 				newAddress.setTown(town);
 				newAddress.setPostalCode(postalCode);
+				newAddress.setBillingAddress(false);
+				newAddress.setShippingAddress(true);
+				newAddress.setVisibleInAddressBook(true);
 				newAddress.setAddressType(addressType);
 				newAddress.setPhone(phone);
 				newAddress.setState(state);
@@ -3833,7 +3836,8 @@ public class UsersController extends BaseCommerceController
 		{
 			//currentUser = mplPaymentWebFacade.getCustomer(userId);
 			final String userIdLwCase = userId.toLowerCase(); //INC144318796
-			currentUser = mplPaymentWebFacade.getCustomer(userIdLwCase);
+			//currentUser = mplPaymentWebFacade.getCustomer(userIdLwCase);
+			currentUser = extUserService.getUserForUid(userIdLwCase); // TPR 7854
 
 			final String authorization = httpRequest.getHeader("Authorization");
 			String username = null;
@@ -7400,7 +7404,8 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String platform, @RequestParam(required = false) final String bankName,
 			@RequestBody(required = false) final InventoryReservListRequestWsDTO item,
 			@RequestParam(required = false) final String token, @RequestParam(required = false) final String cardRefNo,
-			@RequestParam(required = false) final String cardFingerPrint) throws EtailNonBusinessExceptions
+			@RequestParam(required = false) final String cardFingerPrint, @RequestParam(required = false) final String juspayUrl)
+			throws EtailNonBusinessExceptions
 	{
 		OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
 		String uid = "";
@@ -7485,10 +7490,16 @@ public class UsersController extends BaseCommerceController
 			}
 			else
 			{
-				juspayReturnUrl = !getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty()
-								? getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
-								: NO_JUSPAY_URL;
+				if (StringUtils.isEmpty(juspayUrl))
+				{
+					juspayReturnUrl = !getConfigurationService().getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
+							.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL) : NO_JUSPAY_URL;
+				}
+				else
+				{
+					juspayReturnUrl = juspayUrl;
+				}
 			}
 
 			returnUrlBuilder.append(juspayReturnUrl);
@@ -7754,11 +7765,17 @@ public class UsersController extends BaseCommerceController
 						}
 						else
 						{
-							juspayReturnUrl = !getConfigurationService().getConfiguration()
-									.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty()
-											? getConfigurationService().getConfiguration()
-													.getString(MarketplacecommerceservicesConstants.RETURNURL)
-											: NO_JUSPAY_URL;
+							if (StringUtils.isEmpty(juspayUrl))
+							{
+								juspayReturnUrl = !getConfigurationService().getConfiguration()
+										.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
+										.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL) : NO_JUSPAY_URL;
+							}
+							else
+							{
+								juspayReturnUrl = juspayUrl;
+							}
+
 						}
 
 						if (null != cart.getSplitModeInfo()
@@ -10835,8 +10852,9 @@ public class UsersController extends BaseCommerceController
 		OrderData orderDetails = null;
 		try
 		{
-			final int pageSizeConFig = configurationService.getConfiguration()
-					.getInt(MarketplacecommerceservicesConstants.WEBFORM_ORDER_HISTORY_PAGESIZE, 5);
+			final int pageSizeConFig = configurationService.getConfiguration().getInt(
+					MarketplacecommerceservicesConstants.WEBFORM_ORDER_HISTORY_PAGESIZE, 5);
+
 			//SDI-5991
 			final PageableData pageableData = createPageableData(currentPage, pageSizeConFig, sort, showMode);
 			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = getMplOrderFacade()
@@ -11495,9 +11513,12 @@ public class UsersController extends BaseCommerceController
 					{
 						customerToSave.setNickName(null);
 					}
+					LOG.debug("Update customer profile mobile no::::::mobilenumber" + mobilenumber
+							+ "::::::customerToSave.getMobileNumber()" + customerToSave.getMobileNumber());
 					if (StringUtils.isNotEmpty(mobilenumber)
-							&& (StringUtils.length(mobilenumber) == MarketplacecommerceservicesConstants.MOBLENGTH
-									&& mobilenumber.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX)))
+							&& !mobilenumber.equalsIgnoreCase(customerToSave.getMobileNumber())
+							&& (StringUtils.length(mobilenumber) == MarketplacecommerceservicesConstants.MOBLENGTH && mobilenumber
+									.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX)))
 					{
 						registration.setLogin(mobilenumber);
 						if (registerCustomerFacade.checkMobileNumberUnique(registration))
@@ -11511,19 +11532,21 @@ public class UsersController extends BaseCommerceController
 											mobilenumber);
 									sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
 											MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
-													MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otpassword),
-											mobilenumber);
+													MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otpassword), mobilenumber);
+									updateCustomerDetailError.setStatus("OTP SENT TO MOBILE NUMBER: PLEASE VALIDATE");
+									return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
+
 								}
 								else
 								{
-									if (mobileUserService.validateOtp(userId, otp, OTPTypeEnum.REG))
+									if (mobileUserService.validateOtp(mobilenumber, otp, OTPTypeEnum.REG))
 									{
 										customerToSave.setMobileNumber(mobilenumber);
 									}
 									else
 									{
-										updateCustomerDetailError.setStatus("Unable to set Mobile Number");
-										throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
+										updateCustomerDetailError.setStatus("Unable to validate Otp");
+										return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
 									}
 								}
 							}

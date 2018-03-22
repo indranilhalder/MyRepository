@@ -337,7 +337,7 @@
 	<property name="customerReviewService" ref="mplCustomerReviewService"/>
 	<property name="customerReviewConverter" ref="customerReviewConverter"/>
 	<!-- for memcache in pdp new ui/ux -->
-	<property name="isCacheEnabled" value="#{configurationService.configuration.getProperty('pdp.memcache.enabled')}" />
+	<!-- <property name="isCacheEnabled" value="#{configurationService.configuration.getProperty('pdp.memcache.enabled')}" /> -->
 	<!-- for memcache in pdp new ui/ux -->
 	<property name="redirectHandlers">
 		<util:map key-type="de.hybris.platform.solrfacetsearch.enums.KeywordRedirectMatchType" map-class="java.util.HashMap">

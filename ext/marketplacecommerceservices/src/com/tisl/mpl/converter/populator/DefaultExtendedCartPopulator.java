@@ -10,6 +10,7 @@ import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.promotions.PromotionsService;
@@ -39,6 +40,8 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 
 /**
@@ -72,14 +75,13 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				/* TPR-928 */
 				final DecimalFormat formatter = new DecimalFormat("0.00");
 				//Defect-Fix ProductLevelDiscounts were Not Considered
-				if (target != null
-						&& (target.getOrderDiscounts().getDoubleValue().doubleValue() > 0.0 || (target.getProductDiscounts() != null && target
-								.getProductDiscounts().getDoubleValue().doubleValue() > 0.0)))
+				if (target != null && (target.getOrderDiscounts().getDoubleValue().doubleValue() > 0.0
+						|| (target.getProductDiscounts() != null && target.getProductDiscounts().getDoubleValue().doubleValue() > 0.0)))
 				{
 
-					final String formate = formatter.format(100 * ((target.getOrderDiscounts().getDoubleValue().doubleValue() + target
-							.getProductDiscounts().getDoubleValue().doubleValue()) / (target.getSubTotal().getDoubleValue()
-							.doubleValue())));
+					final String formate = formatter.format(100 * ((target.getOrderDiscounts().getDoubleValue().doubleValue()
+							+ target.getProductDiscounts().getDoubleValue().doubleValue())
+							/ (target.getSubTotal().getDoubleValue().doubleValue())));
 
 					target.setDiscountPercentage(formate);
 
@@ -116,7 +118,8 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 
 						if (promotionResultModel.getCertainty().floatValue() == 1.0F
 								&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel
+										|| promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
 						{
 							//isShippingPromoApplied = true;
 							break;
@@ -140,6 +143,21 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				if (null != source.getTotalPriceWithConv())
 				{
 					target.setTotalPriceWithConvCharge(createPrice(source, source.getTotalPriceWithConv()));
+				}
+				if (null != source.getTotalDiscounts())
+				{
+					if (source.getStore() != null && StringUtil.isNotEmpty(source.getStore().getUid()))
+					{
+						if (MarketplacecommerceservicesConstants.LUXURY_PREFIX.equalsIgnoreCase(source.getStore().getUid()))
+						{
+
+							final double productsDiscountsAmount = getProductsDiscountsAmount(source);
+							final double orderDiscountsAmount = getOrderDiscountAmount(source);
+
+							target.setTotalDiscounts(
+									createPrice(source, Double.valueOf(productsDiscountsAmount + orderDiscountsAmount)));
+						}
+					}
 				}
 				else
 				{
@@ -168,6 +186,28 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 		{
 			LOG.error("Exception in DefaultExtendedCartPopulator due to ", ex);
 		}
+	}
+
+	protected double getOrderDiscountAmount(final AbstractOrderModel source)
+	{
+		double discounts = 0.0d;
+		final List<DiscountModel> discountList = source.getDiscounts(); // discounts on the cart itself
+		if (discountList != null && !discountList.isEmpty())
+		{
+			for (final DiscountModel discount : discountList)
+			{
+				final Double value = discount.getValue();
+				if (!discount.getItemtype().contains("Voucher"))
+				{
+					if (value.doubleValue() > 0.0d)
+					{
+						discounts += value.doubleValue();
+					}
+				}
+			}
+		}
+
+		return discounts;
 	}
 
 	/**

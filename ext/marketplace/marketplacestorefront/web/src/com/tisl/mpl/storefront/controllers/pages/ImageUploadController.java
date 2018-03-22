@@ -7,7 +7,9 @@ import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLo
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.media.MediaFolderModel;
+import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.impex.jalo.ImpExException;
@@ -15,9 +17,9 @@ import de.hybris.platform.impex.jalo.Importer;
 import de.hybris.platform.impex.jalo.imp.DefaultDumpHandler;
 import de.hybris.platform.impex.jalo.media.DefaultMediaDataHandler;
 import de.hybris.platform.impex.jalo.media.MediaDataTranslator;
-import de.hybris.platform.jalo.media.Media;
-import de.hybris.platform.jalo.media.MediaManager;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.media.impl.MediaDao;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.CSVReader;
 
@@ -31,6 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -55,6 +58,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tis.mpl.facade.imageupload.MplImageUploadFacade;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -85,9 +89,45 @@ public class ImageUploadController extends AbstractMplSearchPageController
 	@Autowired
 	private UserService userService;
 
+	@Resource(name = "mediaDao")
+	private MediaDao mediaDao;
+
+
+
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
+
+	/**
+	 * @return the sessionService
+	 */
+	@Override
+	public SessionService getSessionService()
+	{
+		return sessionService;
+	}
+
+	/**
+	 * @param sessionService
+	 *           the sessionService to set
+	 */
+	public void setSessionService(final SessionService sessionService)
+	{
+		this.sessionService = sessionService;
+	}
+
+	private static final String REDIRECTURL = "/my-account";
+	private static final String TEMPIMAGESDIR = "\\tempImages";
+	private static final String PARAFOLDER_NAME = "folderName";
+	public static final String PAGEID = "imageUpload";
+	public static final String UPLOAD_FILE_PATH = "mpl.bulkimage.uploadpath";
 	private static final String CATALOG_DATA = "mplContentCatalog";
 	private static final String CATALOG_VERSION_DATA = "Online";
+	private static final String CATALOG_VERSION_DATA_STAGED = "Staged";
 	private static final String siteResource = "file:/";
+	private static final String IMAGESFOLDER_NAME = "images";
+	public static final String CONTEXT_PARAM_MARKERS = "//";
+	private static final String URL_SEPARATOR = "/";
+
 	private static final Logger LOG = LoggerFactory.getLogger(ImageUploadController.class);
 
 	private static final String IMPORT_DATA = "$catalogversion=catalogversion(catalog(id[default='" + CATALOG_DATA
@@ -95,15 +135,21 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			+ CATALOG_VERSION_DATA + "'] \n"
 			+ "INSERT_UPDATE Media;code[unique=true];$catalogversion;mime[default='image/jpeg'];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];folder(qualifier)[default='root']\n";
 
+	private static final String IMPORT_DATA_STAGED = "$catalogversion=catalogversion(catalog(id[default='" + CATALOG_DATA
+			+ "']),version[default='" + CATALOG_VERSION_DATA_STAGED + "'])" + "[unique=true,default='" + CATALOG_DATA + ":"
+			+ CATALOG_VERSION_DATA_STAGED + "'] \n"
+			+ "INSERT_UPDATE Media;code[unique=true];$catalogversion;mime[default='image/jpeg'];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];folder(qualifier)[default='root']\n";
+
+
 	@RequestMapping(value = "/images", method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String getImageUploaded(final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
 	{
 		final List<MediaFolderModel> mediaFolder = getMediaFolderList();
-		storeCmsPageInModel(model, getContentPageForLabelOrId("imageUpload"));
-		setUpMetaDataForContentPage(model, getContentPageForLabelOrId("imageUpload"));
+		storeCmsPageInModel(model, getContentPageForLabelOrId(PAGEID));
+		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(PAGEID));
 		model.addAttribute("mediaFolderList", mediaFolder);
-		model.addAttribute(ModelAttributetConstants.BREADCRUMBS, accountBreadcrumbBuilder.getBreadcrumbs("imageUpload"));
+		model.addAttribute(ModelAttributetConstants.BREADCRUMBS, accountBreadcrumbBuilder.getBreadcrumbs(PAGEID));
 		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
 		boolean userAccessCheck = false;
 		final UserModel userModel = userService.getCurrentUser();
@@ -128,8 +174,8 @@ public class ImageUploadController extends AbstractMplSearchPageController
 
 		LOG.error("USER IS NOT ADMIN");
 		GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-				"User " + userModel.getUid() + " does not Admin role for access");
-		return MarketplacecheckoutaddonConstants.REDIRECT + "/my-account";
+				null != userModel.getName() ? userModel.getName() : userModel.getUid() + " does not have admin role for access");
+		return MarketplacecheckoutaddonConstants.REDIRECT + REDIRECTURL;
 
 	}
 
@@ -161,16 +207,19 @@ public class ImageUploadController extends AbstractMplSearchPageController
 	{
 
 
-		final JSONArray ja = new JSONArray();
-		final StringBuilder stringBuilder = new StringBuilder();
+		final JSONArray returnObject = new JSONArray();
+		//final StringBuilder stringBuilder = new StringBuilder();
 		final List<String> list = new ArrayList<String>();
 		String fileUploadLocation = null;
 		String uploadFolderName = StringUtils.EMPTY;
+
 		try
 		{
+			final String mediaHostName = configurationService.getConfiguration().getString(MarketplaceCoreConstants.MEDIA_HOST_NAME);
+
 			if (null != configurationService)
 			{
-				fileUploadLocation = configurationService.getConfiguration().getString("mpl.bulkimage.uploadpath");
+				fileUploadLocation = (configurationService.getConfiguration().getString(UPLOAD_FILE_PATH) + TEMPIMAGESDIR).toString();
 				if (null != fileUploadLocation && !fileUploadLocation.isEmpty())
 				{
 					final Path path = Paths.get(fileUploadLocation);
@@ -189,9 +238,9 @@ public class ImageUploadController extends AbstractMplSearchPageController
 					}
 				}
 			}
-			if (null != request.getParameterValues("folderName"))
+			if (null != request.getParameterValues(PARAFOLDER_NAME))
 			{
-				uploadFolderName = request.getParameterValues("folderName")[0];
+				uploadFolderName = request.getParameterValues(PARAFOLDER_NAME)[0];
 			}
 			else
 			{
@@ -200,6 +249,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			//File f = new File("");
 			for (final MultipartFile files : file)
 			{
+				final StringBuilder stringBuilder = new StringBuilder();
 				if (files.isEmpty())
 				{
 					continue; //next pls
@@ -207,70 +257,108 @@ public class ImageUploadController extends AbstractMplSearchPageController
 				try
 				{
 					final byte[] bytes = files.getBytes();
-					final Path path = Paths.get(fileUploadLocation + "/" + files.getOriginalFilename());
+					final Path path = Paths.get(fileUploadLocation + "\\" + files.getOriginalFilename());
 					//f = new File(fileUploadLocation + files.getOriginalFilename());
 					Files.write(path, bytes);
-					stringBuilder.append(
-							";" + files.getOriginalFilename() + ";;image/jpg;;" + siteResource + path + ";" + uploadFolderName + ";/n");
+					final String fileExtension[] = files.getOriginalFilename().toString().split("\\.");
+					stringBuilder.append(";" + files.getOriginalFilename() + ";;image/" + fileExtension[1] + ";;" + siteResource + path
+							+ ";" + uploadFolderName + ";/n");
 					LOG.info("Upload File Path" + path);
+
+
+
+					final InputStream inputStreamStaged = new ByteArrayInputStream(
+							(IMPORT_DATA_STAGED + stringBuilder.toString()).getBytes());
+					final InputStream inputStream = new ByteArrayInputStream((IMPORT_DATA + stringBuilder.toString()).getBytes());
+
+					//create stream reader
+					CSVReader readerStaged = null;
+					CSVReader reader = null;
+
+					readerStaged = new CSVReader(inputStreamStaged, "UTF-8");
+					reader = new CSVReader(inputStream, "UTF-8");
+
+					//final String imageName[] = files.getOriginalFilename().toString().split("\\.");
+					getSessionService().setAttribute("uploadImageName", fileExtension[0]);
+
+					// import
+					MediaDataTranslator.setMediaDataHandler(new DefaultMediaDataHandler());
+					Importer importerStaged = null;
+					Importer importer = null;
+
+					//ImpExException error = null;
+					try
+					{
+						importerStaged = new Importer(readerStaged);
+						importerStaged.getReader().enableCodeExecution(true);
+						importerStaged.setMaxPass(-1);
+						importerStaged.setDumpHandler(new FirstLinesDumpReader());
+						importerStaged.importAll();
+
+						importer = new Importer(reader);
+						importer.getReader().enableCodeExecution(true);
+						importer.setMaxPass(-1);
+						importer.setDumpHandler(new FirstLinesDumpReader());
+						importer.importAll();
+					}
+					catch (final ImpExException e)
+					{
+						path.toFile().delete();
+						getSessionService().removeAttribute("uploadImageName");
+						e.printStackTrace();
+					}
+					path.toFile().delete();
+					getSessionService().removeAttribute("uploadImageName");
 					list.add(files.getOriginalFilename());
 				}
 				catch (final IOException e)
 				{
-					e.printStackTrace();
+					LOG.error("Error while loading Impex for Image Upload Controller: " + e.getMessage());
 				}
-			}
-			final InputStream inputStream = new ByteArrayInputStream((IMPORT_DATA + stringBuilder.toString()).getBytes());
-
-			//create stream reader
-			CSVReader reader = null;
-
-			reader = new CSVReader(inputStream, "UTF-8");
-
-			// import
-			MediaDataTranslator.setMediaDataHandler(new DefaultMediaDataHandler());
-			Importer importer = null;
-			//ImpExException error = null;
-			try
-			{
-				importer = new Importer(reader);
-				importer.getReader().enableCodeExecution(true);
-				importer.setMaxPass(-1);
-				importer.setDumpHandler(new FirstLinesDumpReader());
-				importer.importAll();
-			}
-			catch (final ImpExException e)
-			{
-				e.printStackTrace();
 			}
 			for (final String object : list)
 			{
 				final org.json.simple.JSONObject jObject = new org.json.simple.JSONObject();
-				final Media mediaData = getMediaByCode(object);
-				jObject.put("imageName", mediaData.getCode());
-				final String array[] = mediaData.getURL().toString().split("\\.");
-				jObject.put("imageUrl", array[0] + "/" + mediaData.getCode());
-				jObject.put("size", mediaData.getSize());
-				jObject.put("creationTime", mediaData.getCreationTime());
-				ja.add(jObject);
+				//final Media mediaData = getMediaByCode(object);
+				final List<MediaModel> mediaModel = mediaDao.findMediaByCode(object);
+				for (final MediaModel mediaData : mediaModel)
+				{
+					if (mediaData.getCatalogVersion().getVersion().equalsIgnoreCase("Online"))
+					{
+						jObject.put("imageName", mediaData.getCode());
+						if (!uploadFolderName.equalsIgnoreCase(IMAGESFOLDER_NAME))
+						{
+							final StringBuilder sb = new StringBuilder(
+									CONTEXT_PARAM_MARKERS + mediaHostName + URL_SEPARATOR + "medias/");
+							sb.append(MarketplaceCoreConstants.SYSTEM).append(getTenantId()).append(URL_SEPARATOR);
+							sb.append(mediaData.getLocation());
+							LOG.debug("getUrlForMedia - " + sb.toString());
+
+							jObject.put("imageUrl", sb.toString());
+						}
+						else
+						{
+							jObject.put("imageUrl", mediaData.getURL());
+						}
+						jObject.put("size", mediaData.getSize());
+						jObject.put("creationTime", new Date());
+						returnObject.add(jObject);
+					}
+
+				}
 			}
-			// failure handling
-			if (importer.hasUnresolvedLines())
-			{
-				LOG.info("Import has " + importer.getDumpedLineCountPerPass() + "+unresolved lines, first lines are:\n"
-						+ importer.getDumpHandler().getDumpAsString());
-			}
-			return ja;
+
+			return returnObject;
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			LOG.error("Error accured in ImageUploadController: " + e.getMessage());
 		}
 		finally
 		{
 			MediaDataTranslator.unsetMediaDataHandler();
 		}
-		return ja;
+		return returnObject;
 	}
 
 	private static class FirstLinesDumpReader extends DefaultDumpHandler
@@ -299,11 +387,9 @@ public class ImageUploadController extends AbstractMplSearchPageController
 		}
 	}
 
-	private Media getMediaByCode(final String mediaCode)
+	protected String getTenantId()
 	{
-		return (Media) MediaManager.getInstance().getMediaByCode(mediaCode).iterator().next();
+		return Registry.getCurrentTenantNoFallback().getTenantID();
 	}
-
-
 
 }

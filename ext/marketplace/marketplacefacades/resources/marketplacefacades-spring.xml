@@ -2091,6 +2091,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultEndpointSlaveUrlPopulator" alias="endpointSlaveUrlPopulator" />
 	<bean id="defaultEndpointSlaveUrlPopulator" class="com.tisl.mpl.facade.search.populator.DefaultEndpointSlaveUrlPopulator" />
 	
+
 	<!-- mplWalletFacade EGV -->
 		<bean id="mplWalletFacade" class="com.tisl.mpl.facades.wallet.impl.MplWalletFacadeImpl" >
 <!--      	<property name="mplWalletServices" ref="mplWalletServices" /> -->
@@ -2182,8 +2183,26 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<!--NU-50 end  -->
 	
 	<bean id="mplImageUploadFacade"
-		class="com.tis.mpl.facade.imageupload.impl.MplImageUploadFacadeImpl">
-		<property name="imageUploadService" ref="imageUploadService"></property>
+	class="com.tis.mpl.facade.imageupload.impl.MplImageUploadFacadeImpl">
+	<property name="imageUploadService" ref="imageUploadService"></property>
+</bean>
+	<!-- <bean id="ampMenifestJsonPopulator"
+			class="com.tisl.mpl.facades.populators.AmpMenifestPopulator">
+	</bean> -->
+	<alias name="defaultHomePageTypesConverter" alias="homePageTypesConverter" />
+	<bean id="defaultHomePageTypesConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass"
+			value="com.tisl.lux.facades.homepagetypes.data.HomePageTypesData" />
+		<property name="populators">
+			<list>
+				<ref bean="homePageTypesPopulators" />
+			</list>
+		</property>
 	</bean>
+	<bean id="homePageTypesPopulators"
+		class="com.tils.luxury.populator.HomePageTypesPopulators"></bean>
+
+	<alias name="defaultHomePageTypesFacadeImpl" alias="homePageTypesFacade" />
+	<bean id="defaultHomePageTypesFacadeImpl" class="com.tisl.luxury.facade.impl.HomePageTypesFacadeImpl"></bean>
 </beans>
 

@@ -84,6 +84,7 @@ public final class ModelAttributetConstants
 	public static final String UPDATE_EMAIL_FORM = "updateEmailForm";
 	public static final String CHK_EMAIL = "chkEmail";
 	public static final String EMAIL = "email";
+	public static final String MOBILE = "mobile";
 	public static final String GENDER_DATA = "genderData";
 	public static final String MPL_CUSTOMER_PROFILE_FORM = "mplCustomerProfileForm";
 	public static final String TITLE_DATA = "titleData";

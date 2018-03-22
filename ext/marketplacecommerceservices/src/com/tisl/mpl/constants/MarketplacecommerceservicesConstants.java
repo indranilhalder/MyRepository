@@ -15,6 +15,7 @@ package com.tisl.mpl.constants;
 
 import java.util.Date;
 
+
 import com.tisl.mpl.core.model.FreebieDetailModel;
 import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 
@@ -2507,7 +2508,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "Use OTP {1} to buy your Gift Card/CLiQ Cash. Valid for 2 minutes only. For security reasons, do not share this number with anyone. Call us on {2} for queries.";
 	public static final String INVALID_WALLET_OTP = "INVALID";
 	public static final String WALLET_ACTIVATED_MESSAGE = "your wallet activated  successfully";
-	public static final String SMS_MESSAGE_ORDER_PLACED_FROM_WALLET= "Your Tata Cliq Gift card {0} has been redeemed for Rs. {1}. The remaining balance is Rs.{2}";
+	public static final String SMS_MESSAGE_ORDER_PLACED_FROM_WALLET = "Your Tata Cliq Gift card {0} has been redeemed for Rs. {1}. The remaining balance is Rs.{2}";
 
 	//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
 	public static final String BANNERURLLINK = "bannerUrlLink".intern();
@@ -2538,6 +2539,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NU550 = "NU550";
 
 	public static final String NU005 = "NU005";
+	public static final String NU008 = "NU008";
 
 	public static final String SORT = "sort";
 	public static final String BY_RATING = "byRating";
@@ -2569,4 +2571,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FPC_QUERY_REFUNDENTRY = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:auditId} = ?auditId";
 	public static final String FPC_QUERY_REFUNDENTRIES = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:isExpired} = ?expiredFlag";
 	public static final String FPC_QUERY_PARENTORDER = "SELECT {ord:pk} FROM {Order AS ord} WHERE{ord:guid} = ?guid AND {ord:type}  = ?orderType";
+	
+	public static final String LUX_IMPORT_CATALOG_ID = "luxProductCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_ID = "luxContentCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_VERSION = "Online";
+	public static final String LUXURY_PREFIX = "lux";
+	public static final String TATACLIQ = "tatacliq";
+	public static final String LUXURY_SITE_URL = "luxury.tatacliq.com";
 }

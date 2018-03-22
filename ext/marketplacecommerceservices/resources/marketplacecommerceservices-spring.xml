@@ -2623,6 +2623,7 @@
 		<property name="modelService" ref="modelService" />
 	</bean>
 	
+
 	<!-- Caching of Coupon Call on Cart Page -->
 	<bean id="mplDisplayCouponCachingStrategy"
 		class="com.tisl.mpl.cache.strategy.impl.MplDisplayCouponCachingStrategyImpl"
@@ -2630,4 +2631,13 @@
 		<property name="memCacheEnabled" value="${promotion.memcache.enabled}" />
 	</bean>
 	<!-- Caching of Coupon Call on Cart Page Ends -->
+
+		<alias name="defaultHomePageTypesDaoImpl" alias="homePageTypesDao" />
+	<bean id="defaultHomePageTypesDaoImpl" class="com.tils.luxury.dao.impl.HomePageTypesDaoImpl">
+	</bean>
+
+	<alias name="defaultHomePageTypesServiceImpl" alias="homePageTypesService" />
+	<bean id="defaultHomePageTypesServiceImpl"
+		class="com.tils.luxury.service.impl.HomePageTypesServiceImpl"></bean>
+	
 </beans>

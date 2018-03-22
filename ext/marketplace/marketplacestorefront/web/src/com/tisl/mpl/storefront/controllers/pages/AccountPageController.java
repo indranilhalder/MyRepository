@@ -145,6 +145,7 @@ import com.granule.json.JSONObject;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
+import com.tisl.luxury.facade.HomePageTypesFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
@@ -260,7 +261,7 @@ import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
 public class AccountPageController extends AbstractMplSearchPageController
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final String CLIQ_CASH = "Cliq Cash";
 	// Internal Redirects
@@ -462,6 +463,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@Autowired
 	private CatalogUtils catalogUtils;
+
+	@Resource
+	private HomePageTypesFacade homePageTypesFacade;
 
 	//sonar issue fixed
 	/*
@@ -798,11 +802,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 								+ orderHistoryData.getCode());
 						//setting cancel product for BOGO
 
-						 if(null!= orderEntryData.getOrderLineId()){
-						cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
-								orderEntryData.getOrderLineId());
-						currentProductMap.put(subOrder.getCode() + orderEntryData.getOrderLineId(), cancelProduct);
-                        }
+						if (null != orderEntryData.getOrderLineId())
+						{
+							cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
+									orderEntryData.getOrderLineId());
+							currentProductMap.put(subOrder.getCode() + orderEntryData.getOrderLineId(), cancelProduct);
+						}
 
 						//TPR-6013
 						final OrderModel subOrderModel = orderModelService.getOrder(subOrder.getCode());
@@ -883,10 +888,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 				formattedOrderDate = getFormattedDate(orderDetails.getCreated());
 				orderFormattedDateMap.put(orderDetails.getCode(), formattedOrderDate);
 				orderDataList.add(orderDetails);
-				if( null !=  orderDetails.getStatus()){
-				if(orderDetails.getStatus().equals(de.hybris.platform.core.enums.OrderStatus.REDEEMED)){
-					orderForEGVMap.put(orderDetails.getCode(), "REDEEMED");
-				}
+				if (null != orderDetails.getStatus())
+				{
+					if (orderDetails.getStatus().equals(de.hybris.platform.core.enums.OrderStatus.REDEEMED))
+					{
+						orderForEGVMap.put(orderDetails.getCode(), "REDEEMED");
+					}
 				}
 			}
 			LOG.debug("Step16-************************Order History: Finished:");
@@ -1099,8 +1106,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						&& null != orderModel.getPaymentTransactions().get(0)
 						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions().get(0).getEntries())
 						&& null != orderModel.getPaymentTransactions().get(0).getEntries().get(0)
-						&& null != orderModel.getModeOfOrderPayment()
-						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("paytm"))
+						&& null != orderModel.getModeOfOrderPayment() && orderModel.getModeOfOrderPayment().equalsIgnoreCase("paytm"))
 				{
 					paytmTransactionId = orderModel.getPaymentTransactions().get(0).getEntries().get(0).getRequestId();
 				}
@@ -3269,6 +3275,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
 			model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
 
+			model.addAttribute("homePageTypes", homePageTypesFacade.getHomePageType());
+
 			final List<DayData> dayList = mplCustomerProfileFacade.getDayList();
 			final List<MonthData> monthList = mplCustomerProfileFacade.getMonthList();
 			final List<YearData> yearList = mplCustomerProfileFacade.getYearList();
@@ -3312,6 +3320,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 			mplCustomerProfileForm.setLastName(customerProfileData.getLastName().trim());
 			mplCustomerProfileForm.setNickName(customerProfileData.getNickName());
 			mplCustomerProfileForm.setMobileNumber(customerProfileData.getMobileNumber());
+
+
+
+
+
+			mplCustomerProfileForm.setHomePrefrence(customerProfileData.getHomePagePrefernce());
 			if (!StringUtils.isEmpty(customerProfileData.getGender()))
 			{
 				mplCustomerProfileForm.setGender(customerProfileData.getGender().toUpperCase());
@@ -3322,7 +3336,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.MPL_CUSTOMER_PROFILE_FORM, mplCustomerProfileForm);
 
 			//EGV Wallet Create
-		   walletActivateCheck(model);
+			walletActivateCheck(model);
 
 			// update password
 			final UpdatePasswordForm updatePasswordForm = new UpdatePasswordForm();
@@ -3428,7 +3442,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final String profileUpdateUrl = urlForEmailContext(request, specificUrl);
 			//TPR-6013
 			//EGV Wallet Create
-		   walletActivateCheck(model);
+			walletActivateCheck(model);
 			if (null != mplCustomerProfileForm && null != mplCustomerProfileForm.getDateOfBrithPicker()
 					&& mplCustomerProfileForm.getDateOfBrithPicker().contains(ModelAttributetConstants.DASH))
 			{
@@ -3507,9 +3521,37 @@ public class AccountPageController extends AbstractMplSearchPageController
 				mplCustomerProfileData.setUid(currentCustomerData.getUid());
 				mplCustomerProfileData.setDisplayUid(currentCustomerData.getDisplayUid());
 				mplCustomerProfileData.setMobileNumber(mplCustomerProfileForm.getMobileNumber().trim());
+
+				//				try
+				//				{
+				//					//to-do for unique mobile number
+				//					if (StringUtils.isNotEmpty(customerProfileData.getMobileNumber()))
+				//					{
+				//						final ExtRegisterData registration = new ExtRegisterData();
+				//						registration.setLogin(customerProfileData.getMobileNumber());
+				//						if (!registerCustomerFacade.checkMobileNumberUnique(registration))
+				//						{
+				//							throw new DuplicateUidException(MarketplacecommerceservicesConstants.NU003);
+				//						}
+				//					}
+				//				}
+				//				catch (final DuplicateUidException ex)
+				//				{
+				//
+				//					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex,
+				//							MarketplacecommerceservicesConstants.NU003));
+				//					bindingResult.rejectValue(ModelAttributetConstants.MOBILE, MessageConstants.MOBILE_ERROR_ACCOUNT_EXISTS_TITLE);
+				//					GlobalMessages.addErrorMessage(model, MessageConstants.FORM_GLOBAL_ERROR);
+				//				}
+				//				//to-do for unique mobile number
+
+
+
+
 				mplCustomerProfileData.setDateOfAnniversary(mplCustomerProfileForm.getDateOfAnniversary().trim());
 				mplCustomerProfileData.setDateOfBirth(mplCustomerProfileForm.getDateOfBirth().trim());
 				mplCustomerProfileData.setEmailId(mplCustomerProfileForm.getEmailId().trim().toLowerCase());
+				mplCustomerProfileData.setHomePagePrefernce(mplCustomerProfileForm.getHomePrefrence());
 
 				if (null != mplCustomerProfileForm.getGender())
 				{
@@ -3560,13 +3602,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 						}
 						else
 						{
-						mplCustomerProfileFacade.updateCustomerProfile(mplCustomerProfileData);
-						mplCustomerProfileFacade.checkChangesForSendingEmail(preSavedDetailMap, currentEmail, profileUpdateUrl);
-						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
-								MessageConstants.TEXT_ACCOUNT_PROFILE_CONFIRMATION_UPDATED, null);
+							mplCustomerProfileFacade.updateCustomerProfile(mplCustomerProfileData);
+							mplCustomerProfileFacade.checkChangesForSendingEmail(preSavedDetailMap, currentEmail, profileUpdateUrl);
+							GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
+									MessageConstants.TEXT_ACCOUNT_PROFILE_CONFIRMATION_UPDATED, null);
+						}
+						setHeaderNameInSession(mplCustomerProfileData, session);
 					}
-					setHeaderNameInSession(mplCustomerProfileData, session);
-				}
 				}
 				catch (final DuplicateUidException e)
 				{
@@ -8467,7 +8509,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 
 	}
-	  /*EGV changes for email*/
+
+	/* EGV changes for email */
 	@RequestMapping(value = RequestMappingUrlConstants.SEND_NOTIFICATION_EGV_ORDER, method = RequestMethod.POST)
 	@ResponseBody
 	@Post
@@ -8479,62 +8522,67 @@ public class AccountPageController extends AbstractMplSearchPageController
 			mplOrderFacade.sendNotificationEGVOrder(orderId);
 		}
 	}
-	
-	
+
+
 	@RequestMapping(value = RequestMappingUrlConstants.GET_ORDER_STATEMENT, method = RequestMethod.GET)
-	public String getOrderStatement(@RequestParam(value = "orderId") final String orderId,Model model)
+	public String getOrderStatement(@RequestParam(value = "orderId") final String orderId, final Model model)
 	{
-		
-		System.out.println("Get Statement for order"+orderId);
-		
-		OrderModel orderModel = orderModelService.getOrderModel(orderId); 
-		OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
-		
-		
-		if("Juspay".equalsIgnoreCase(orderModel.getSplitModeInfo())){
+
+		System.out.println("Get Statement for order" + orderId);
+
+		final OrderModel orderModel = orderModelService.getOrderModel(orderId);
+		final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+
+
+		if ("Juspay".equalsIgnoreCase(orderModel.getSplitModeInfo()))
+		{
 			boolean isCanAndReturn = false;
-			if(CollectionUtils.isNotEmpty(orderDetail.getSellerOrderList())){
-			for (OrderData sellerOrder : orderDetail.getSellerOrderList())
+			if (CollectionUtils.isNotEmpty(orderDetail.getSellerOrderList()))
 			{
-				for (OrderEntryData entry : sellerOrder.getEntries())
+				for (final OrderData sellerOrder : orderDetail.getSellerOrderList())
 				{
-					for (OrderModel chaildOrder : orderModel.getChildOrders())
+					for (final OrderEntryData entry : sellerOrder.getEntries())
 					{
-						if(CollectionUtils.isNotEmpty(chaildOrder.getHistoryEntries())){
-						for (OrderHistoryEntryModel orderHistoryEntryModel : chaildOrder.getHistoryEntries())
+						for (final OrderModel chaildOrder : orderModel.getChildOrders())
 						{
-							if ((StringUtils.isNotEmpty(orderHistoryEntryModel.getLineId())
-									&& entry.getOrderLineId().equalsIgnoreCase(orderHistoryEntryModel.getLineId()))
-									&& "REFUND_INITIATED".equalsIgnoreCase(orderHistoryEntryModel.getDescription()))
+							if (CollectionUtils.isNotEmpty(chaildOrder.getHistoryEntries()))
 							{
-								entry.setIsCanAndReturn(true);
-								isCanAndReturn = true;
+								for (final OrderHistoryEntryModel orderHistoryEntryModel : chaildOrder.getHistoryEntries())
+								{
+									if ((StringUtils.isNotEmpty(orderHistoryEntryModel.getLineId()) && entry.getOrderLineId()
+											.equalsIgnoreCase(orderHistoryEntryModel.getLineId()))
+											&& "REFUND_INITIATED".equalsIgnoreCase(orderHistoryEntryModel.getDescription()))
+									{
+										entry.setIsCanAndReturn(true);
+										isCanAndReturn = true;
+										break;
+									}
+								}
+							}
+							if (isCanAndReturn)
+							{
+								isCanAndReturn = false;
 								break;
 							}
+							else
+							{
+								entry.setIsCanAndReturn(false);
+							}
 						}
-						}
-						if (isCanAndReturn)
-						{
-							isCanAndReturn = false;
-							break;
-						}
-						else
-						{
-							entry.setIsCanAndReturn(false);
-						}
-					}
 
+					}
 				}
 			}
-			}
 			model.addAttribute("juspayMode", Boolean.TRUE);
-		}else{
+		}
+		else
+		{
 			model.addAttribute("juspayMode", Boolean.FALSE);
 		}
-		
+
 		if (CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 		{
-			for (PaymentTransactionModel paymentTransactionModel : orderModel.getPaymentTransactions())
+			for (final PaymentTransactionModel paymentTransactionModel : orderModel.getPaymentTransactions())
 			{
 				if (CLIQ_CASH.equalsIgnoreCase(paymentTransactionModel.getPaymentProvider()))
 				{
@@ -8546,31 +8594,29 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 		}
-		model.addAttribute("orderDetail",orderDetail);
-		
+		model.addAttribute("orderDetail", orderDetail);
+
 		return ControllerConstants.Views.Pages.Account.GET_Statement_Page;
 	}
-	
-	private BigDecimal roundBigDecimal(final BigDecimal input){
+
+	private BigDecimal roundBigDecimal(final BigDecimal input)
+	{
 		try
 		{
-	    return input.round(
-	        new MathContext(
-	            input.toBigInteger().toString().length(),
-	            RoundingMode.HALF_UP
-	        )
-	    );
-		}catch(Exception excepton){
-			LOG.error("Error While Getting amount"+excepton.getMessage());
+			return input.round(new MathContext(input.toBigInteger().toString().length(), RoundingMode.HALF_UP));
+		}
+		catch (final Exception excepton)
+		{
+			LOG.error("Error While Getting amount" + excepton.getMessage());
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value = RequestMappingUrlConstants.QC_MOBILE_VALIDATION, method = RequestMethod.POST)
 	@ResponseBody
 	@Post
 	public String qcMobileValidation(@RequestParam(value = "mobileNo") final String mobileNo,
-		   @RequestParam(value = "firstName") final String firstName, @RequestParam(value = "lastName") final String lastName)
+			@RequestParam(value = "firstName") final String firstName, @RequestParam(value = "lastName") final String lastName)
 	{
 		return mplWalletFacade.qcValidationMobileNo(mobileNo, firstName, lastName);
 	}
@@ -8598,17 +8644,18 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return "OTPERROR";
 		}
 	}
+
 	//EGV WALLET ACTIVE CHECK
 	private void walletActivateCheck(final Model model)
-	 {
-	  final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
-	  if (customer.getIsWalletActivated() != null && customer.getIsWalletActivated().booleanValue())
-	  {
-	   model.addAttribute("isWalletActivated", Boolean.TRUE);
-	  }
-	  else
-	  {
-	   model.addAttribute("isWalletActivated", Boolean.FALSE);
-	  }
-	 }
+	{
+		final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+		if (customer.getIsWalletActivated() != null && customer.getIsWalletActivated().booleanValue())
+		{
+			model.addAttribute("isWalletActivated", Boolean.TRUE);
+		}
+		else
+		{
+			model.addAttribute("isWalletActivated", Boolean.FALSE);
+		}
+	}
 }

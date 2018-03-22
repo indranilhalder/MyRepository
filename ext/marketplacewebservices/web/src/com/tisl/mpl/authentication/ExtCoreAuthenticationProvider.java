@@ -94,7 +94,7 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 
 	/*
 	 * To authenticate users
-	 * 
+	 *
 	 * @see de.hybris.platform.spring.security.CoreAuthenticationProvider#authenticate(org.springframework.security.core.
 	 * Authentication)
 	 */
@@ -109,7 +109,7 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			String tamperCheck = null;
 
 			String testingParamValue = null;
-			//	String socialUserId = null;
+			String isPwa = null;
 			String socialChannel = null;
 
 			if (null != authentication.getDetails())
@@ -130,11 +130,11 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 							testingParamValue = entry.getValue();
 							tamperCheck = "Y";
 						}
-						//						if (null != entry.getKey() && entry.getKey().equalsIgnoreCase("userId_param") && null != entry.getValue())
-						//						{
-						//							socialUserId = entry.getValue();
-						//							tamperCheck = "Y";
-						//						}
+						if (null != entry.getKey() && entry.getKey().equalsIgnoreCase("isPwa") && null != entry.getValue())
+						{
+							isPwa = entry.getValue();
+							tamperCheck = "Y";
+						}
 						if (null != entry.getKey() && entry.getKey().equalsIgnoreCase("social_channel") && null != entry.getValue())
 						{
 							socialChannel = entry.getValue();
@@ -149,35 +149,45 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 					configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.MASTER_SOCIAL_AUTH_ENABLE))
 					.equals(Boolean.TRUE))
 			{
-				if (null != tamperCheck && tamperCheck.equalsIgnoreCase("Y"))
+				if (StringUtils.isNotEmpty(isPwa))
 				{
-					isSocialMedia = true;
-					try
+					if (null != tamperCheck && tamperCheck.equalsIgnoreCase("Y"))
 					{
-						if (socialChannel.equalsIgnoreCase("G"))
+						isSocialMedia = true;
+						try
 						{
-							if (!socialLoginValidationService.checkGoogleAccessToken(testingParamValue, userName))
+							if (socialChannel.equalsIgnoreCase("G"))
+							{
+								if (!socialLoginValidationService.checkGoogleAccessToken(testingParamValue, userName))
+								{
+									throw new AuthChallengeException();
+								}
+							}
+							else if (socialChannel.equalsIgnoreCase("F"))
+							{
+								if (!socialLoginValidationService.checkFacebookAccessToken(testingParamValue, userName))
+								{
+									throw new AuthChallengeException();
+								}
+							}
+							else
 							{
 								throw new AuthChallengeException();
 							}
 						}
-						else if (socialChannel.equalsIgnoreCase("F"))
+						catch (final AuthChallengeException authChallengeException)
 						{
-							if (!socialLoginValidationService.checkFacebookAccessToken(testingParamValue, userName))
-							{
-								throw new AuthChallengeException();
-							}
-						}
-						else
-						{
-							throw new AuthChallengeException();
+							LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-" + userName);
+							throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
+									"Social token validation failed"), authChallengeException);
 						}
 					}
-					catch (final AuthChallengeException authChallengeException)
+				}
+				else
+				{
+					if (null != isSocialMediaInput && isSocialMediaInput.equalsIgnoreCase("Y"))
 					{
-						LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-" + userName);
-						throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
-								"Social token validation failed"), authChallengeException);
+						isSocialMedia = true;
 					}
 				}
 			}
@@ -223,14 +233,13 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			{
 				custModel = extUserService.getUserForUid(StringUtils.lowerCase(authentication.getName()));
 			}
-
 			boolean userRegisteredBySocialMedia = false;
 			if (null != custModel.getCustomerRegisteredBySocialMedia())
 			{
 				userRegisteredBySocialMedia = custModel.getCustomerRegisteredBySocialMedia().booleanValue();
 			}
 			boolean isSocial = false;
-			if (isSocialMedia || userRegisteredBySocialMedia)
+			if (isSocialMedia && userRegisteredBySocialMedia)
 			{
 				isSocial = true;
 			}
@@ -297,7 +306,7 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 	 * user) { final UsernamePasswordAuthenticationToken result = new
 	 * UsernamePasswordAuthenticationToken(user.getUsername(), authentication.getCredentials(), user.getAuthorities());
 	 * if (null != authentication.getDetails()) { result.setDetails(authentication.getDetails()); }
-	 * 
+	 *
 	 * return result; }
 	 */
 
