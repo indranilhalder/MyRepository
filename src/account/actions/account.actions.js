@@ -349,7 +349,7 @@ export function removeAddress(addressId) {
     let addressObject = new FormData();
 
     addressObject.append("addressId", addressId);
-    addressObject.append("emailId", "aakarsh@xelpmoc.in");
+    addressObject.append("emailId", "");
 
     dispatch(removeAddressRequest());
     try {
