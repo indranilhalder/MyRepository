@@ -69,29 +69,12 @@ export default class ReturnModes extends React.Component {
       secondaryReasons: null
     };
   }
-  handleContinue() {
-    if (this.props.onContinue) {
-      this.props.onContinue();
+  handleSelect(val) {
+    if (this.props.selectMode) {
+      this.props.selectMode(val);
     }
   }
-  onChangePrimary(code) {
-    this.setState({
-      secondaryReasons: data.returnReasonMap
-        .filter(val => {
-          return val.parentReasonCode === code;
-        })
-        .map(val => {
-          return val.subReasons.map(value => {
-            return { value: value.subReasonCode, label: value.subReturnReason };
-          });
-        })[0]
-    });
-  }
-  onChangeSecondary(code) {
-    if (this.props.onChangeSecondary) {
-      this.props.onChangeSecondary(code);
-    }
-  }
+
   handleCancel() {
     if (this.props.onCancel) {
       this.props.onCancel();
@@ -131,6 +114,9 @@ export default class ReturnModes extends React.Component {
               <SelectReturnDate
                 label="Return to store"
                 selected={this.props.selectedMode === QUICK_DROP}
+                selectItem={() => {
+                  this.handleSelect(QUICK_DROP);
+                }}
               />
             </div>
           )}
@@ -138,6 +124,9 @@ export default class ReturnModes extends React.Component {
             <div className={styles.check}>
               <SelectReturnDate
                 label="Tata CliQ Pick Up"
+                selectItem={() => {
+                  this.handleSelect(SCHEDULED_PICKUP);
+                }}
                 selected={this.props.selectedMode === SCHEDULED_PICKUP}
               />
             </div>
@@ -145,6 +134,9 @@ export default class ReturnModes extends React.Component {
           {data.returnModes.selfCourier && (
             <div className={styles.check}>
               <SelectReturnDate
+                selectItem={() => {
+                  this.handleSelect(SELF_COURIER);
+                }}
                 label="Self Courier"
                 selected={this.props.selectedMode === SELF_COURIER}
               />
@@ -156,6 +148,7 @@ export default class ReturnModes extends React.Component {
   }
 }
 
-ReturnModes.PropTypes = {
-  selectedMode: PropTypes.oneOf([])
+ReturnModes.propTypes = {
+  selectedMode: PropTypes.oneOf([QUICK_DROP, SCHEDULED_PICKUP, SELF_COURIER]),
+  selectMode: PropTypes.func
 };
