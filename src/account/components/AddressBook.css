@@ -1,8 +1,13 @@
 .base {
   width: 100%;
-  height: auto;
-  background: #fff;
+  background: #ececec;
   display: inline-block;
+  height: 100vh;
+}
+.addressBlock {
+  background: #fff;
+  margin: 10px;
+  border-radius: 4px;
 }
 .addressHolder {
   width: 100%;
@@ -38,4 +43,10 @@
   height: auto;
   padding: 15px;
   display: inline-block;
+}
+.button {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  bottom: 0;
 }
