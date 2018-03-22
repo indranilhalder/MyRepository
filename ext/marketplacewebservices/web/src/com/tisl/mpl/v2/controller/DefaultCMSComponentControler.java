@@ -3535,7 +3535,7 @@ public class DefaultCMSComponentControler
 	public String stringUtil(final String number)
 	{
 		String intStr = new String();
-		if (number.contains("\\."))
+		if (number.contains("."))
 		{
 			final String[] arrOfStr = number.split("\\.");
 			intStr = arrOfStr[0];
