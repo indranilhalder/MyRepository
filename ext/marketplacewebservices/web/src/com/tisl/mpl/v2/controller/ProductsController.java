@@ -138,6 +138,7 @@ import com.tisl.mpl.wsdto.ProductInfoWSDTO;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPagefacateWsDTO;
 import com.tisl.mpl.wsdto.SizeGuideWsDTO;
+import com.tisl.wsdto.SeoContentData;
 
 
 /**
@@ -1987,6 +1988,8 @@ public class ProductsController extends BaseController
 				{
 					productSearchPage.setSorts(sortingvalues.getSorts());
 				}
+
+				//added for applied filter and applied sort section
 				if (null != sortingvalues.getCurrentQuery())
 				{
 					final SearchStateWsDTO currentQuery = new SearchStateWsDTO();
@@ -2022,6 +2025,39 @@ public class ProductsController extends BaseController
 				}
 
 			}
+			//Added for PLP SEO--start
+			if (null != sortingvalues.getCurrentQuery() && null != sortingvalues.getCurrentQuery().getQuery()
+					&& StringUtils.isNotEmpty(sortingvalues.getCurrentQuery().getQuery().getValue()))
+			{
+				final String query = sortingvalues.getCurrentQuery().getQuery().getValue();
+				final String[] arr = query.split(":");
+				String categorycode = "";
+				if (arr.length > 0)
+				{
+					for (int i = 0; i < arr.length; i++)
+					{
+						if (arr[i].equalsIgnoreCase("category"))
+						{
+							if (StringUtils.isNotEmpty(arr[i + 1]))
+							{
+								categorycode = arr[i + 1];
+								break;
+							}
+						}
+					}
+				}
+
+				if (StringUtils.isNotEmpty(categorycode))
+				{
+					final SeoContentData seoContentData = searchSuggestUtilityMethods.getSeoData(categorycode);
+					if (null != seoContentData)
+					{
+						productSearchPage.setSeo(seoContentData);
+					}
+				}
+			}
+			//Added for PLP SEO--end
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
