@@ -1,5 +1,6 @@
 import * as accountActions from "../actions/account.actions";
 import * as cartActions from "../../cart/actions/cart.actions";
+import { SUCCESS } from "../../lib/constants";
 
 const account = (
   state = {
@@ -41,11 +42,45 @@ const account = (
     userAddressError: null,
 
     removeAddressStatus: null,
-    removeAddressError: null
+    removeAddressError: null,
+
+    returnProductDetails: null,
+
+    returnRequest: null
   },
   action
 ) => {
   switch (action.type) {
+    case accountActions.GET_RETURN_REQUEST:
+    case accountActions.RETURN_PRODUCT_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+    case accountActions.GET_RETURN_REQUEST_SUCCESS:
+      return Object.assign({}, state, {
+        status: SUCCESS,
+        loading: false,
+        returnRequest: action.returnRequest
+      });
+    case accountActions.GET_RETURN_REQUEST_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        error: action.error
+      });
+    case accountActions.RETURN_PRODUCT_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.state,
+        returnProductDetails: action.returnProductDetails
+      });
+    case accountActions.RETURN_PRODUCT_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.status
+      });
+
     case accountActions.GET_SAVED_CARD_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
