@@ -1381,7 +1381,7 @@ public class OrdersController extends BaseCommerceController
 				final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 				final CurrencyModel currency = commonI18NService.getCurrency(INR);
 
-				final PriceWsPwaDTO pricePwa = mplPaymentWebFacade.configureCartAmtPwaWithDelCharge(orderCode);
+				final PriceWsPwaDTO pricePwa = mplPaymentWebFacade.configureCartAmountPwa(orderCode);
 				orderTrackingWsDTO.setOrderAmount(pricePwa);
 
 				//				final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
@@ -1650,7 +1650,7 @@ public class OrdersController extends BaseCommerceController
 					}
 					if (isPwa)
 					{
-						final PriceWsPwaDTO pricePwa = mplPaymentWebFacade.configureCartAmtPwaWithDelCharge(orderData.getCode());
+						final PriceWsPwaDTO pricePwa = mplPaymentWebFacade.configureCartAmountPwa(orderData.getCode());
 						order.setOrderAmount(pricePwa);
 
 						//						final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();

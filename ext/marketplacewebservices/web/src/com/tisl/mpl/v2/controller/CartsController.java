@@ -2798,7 +2798,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 *
+			 * 
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -3519,7 +3519,7 @@ public class CartsController extends BaseCommerceController
 
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
 					applycouponDto.setCartAmount(pricePwa);
 
 					//					final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
@@ -3563,7 +3563,7 @@ public class CartsController extends BaseCommerceController
 				}
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(orderModel);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
 					applycouponDto.setCartAmount(pricePwa);
 
 					//					final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
@@ -3705,7 +3705,7 @@ public class CartsController extends BaseCommerceController
 					applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(cartModel));
 					if (isPwa)
 					{
-						final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel);
+						final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
 						applycouponDto.setCartAmount(pricePwa);
 
 						//						final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
@@ -3759,7 +3759,7 @@ public class CartsController extends BaseCommerceController
 				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(orderModel);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
 					applycouponDto.setCartAmount(pricePwa);
 
 					//					final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
@@ -3925,7 +3925,7 @@ public class CartsController extends BaseCommerceController
 
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
 					releaseCouponDto.setCartAmount(pricePwa);
 
 					//					final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
@@ -3977,7 +3977,7 @@ public class CartsController extends BaseCommerceController
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(orderModel);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
 					releaseCouponDto.setCartAmount(pricePwa);
 
 					//					final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
@@ -4108,7 +4108,7 @@ public class CartsController extends BaseCommerceController
 									.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 					if (isPwa)
 					{
-						final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel);
+						final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
 						releaseCouponDto.setCartAmount(pricePwa);
 
 						//						final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
@@ -4156,7 +4156,7 @@ public class CartsController extends BaseCommerceController
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(orderModel);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
 					releaseCouponDto.setCartAmount(pricePwa);
 
 					//					final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
@@ -4979,7 +4979,7 @@ public class CartsController extends BaseCommerceController
 					.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 			applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(cartModel));
 
-			final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel);
+			final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
 			applycouponDto.setCartAmount(pricePwa);
 
 			//				final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
@@ -5084,7 +5084,7 @@ public class CartsController extends BaseCommerceController
 			releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 					.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 
-			final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel);
+			final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
 			releaseCouponDto.setCartAmount(pricePwa);
 
 			//				final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();

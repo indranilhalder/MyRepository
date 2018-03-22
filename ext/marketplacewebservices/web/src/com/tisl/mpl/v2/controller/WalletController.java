@@ -173,7 +173,7 @@ public class WalletController
 				applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, totalWalletAmount);
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cart);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cart);
 					applyCliqCashWsDto.setCartAmount(pricePwa);
 
 					//					final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);
@@ -199,7 +199,7 @@ public class WalletController
 				applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, totalWalletAmount);
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(orderModel);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
 					applyCliqCashWsDto.setCartAmount(pricePwa);
 
 					//					final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
@@ -324,7 +324,7 @@ public class WalletController
 				removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, cart);
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(orderModel);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
 					removeCliqCashWsDto.setCartAmount(pricePwa);
 
 					//					final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);
@@ -400,7 +400,7 @@ public class WalletController
 				removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, orderModel);
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(orderModel);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
 					removeCliqCashWsDto.setCartAmount(pricePwa);
 
 					//					final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);

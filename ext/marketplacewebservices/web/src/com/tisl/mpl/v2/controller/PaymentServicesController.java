@@ -420,7 +420,7 @@ public class PaymentServicesController extends BaseController
 							promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, cart, userId, bankName);
 							if (isPwa)
 							{
-								final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cart);
+								final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cart);
 								promoPriceData.setCartAmount(pricePwa);
 
 								//								final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);

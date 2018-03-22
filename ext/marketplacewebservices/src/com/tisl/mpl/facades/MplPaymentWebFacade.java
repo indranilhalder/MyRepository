@@ -184,5 +184,5 @@ public interface MplPaymentWebFacade
 	public void saveTPWalletPaymentInfoMobile(AbstractOrderModel cart, final String refernceCode, Map<String, Double> paymentMode,
 			String amount);
 
-	public PriceWsPwaDTO configureCartAmtPwaWithDelCharge(final String code);
+	public PriceWsPwaDTO configureCartAmountPwa(final String code);
 }

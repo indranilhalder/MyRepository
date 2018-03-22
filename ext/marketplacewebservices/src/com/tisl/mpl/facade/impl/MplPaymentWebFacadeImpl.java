@@ -837,7 +837,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -879,7 +879,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 				cartDetailsData.setCartGuid(cartModel.getGuid());
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
 					cartDetailsData.setCartAmount(pricePwa);
 
 					//					final Double mrp = mplCartWebService.calculateCartTotalMrp(cartModel);
@@ -911,7 +911,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			cartDetailsData.setCartGuid(cartGuId);
 			if (isPwa)
 			{
-				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmtPwaWithDelCharge(cartModel);
+				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
 				cartDetailsData.setCartAmount(pricePwa);
 
 				//				final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
@@ -1284,7 +1284,8 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	}
 
 	//Added for NU- starts
-	public PriceWsPwaDTO configureCartAmtPwaWithDelCharge(final String code)
+	@Override
+	public PriceWsPwaDTO configureCartAmountPwa(final String code)
 	{
 		PriceWsPwaDTO priceWsPwaDTO = new PriceWsPwaDTO();
 		if (code != null)
@@ -1294,7 +1295,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 					.getOrderDetailsForGUID(code, baseStoreModel) : getCustomerAccountService().getOrderForCode(
 					(CustomerModel) getUserService().getCurrentUser(), code, baseStoreModel);
 
-			priceWsPwaDTO = mplCartWebService.configureCartAmtPwaWithDelCharge(orderModel);
+			priceWsPwaDTO = mplCartWebService.configureCartAmountPwa(orderModel);
 		}
 		return priceWsPwaDTO;
 	}
