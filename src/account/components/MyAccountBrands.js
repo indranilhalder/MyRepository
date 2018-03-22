@@ -26,6 +26,10 @@ export default class MyAccountBrands extends React.Component {
   renderToBLP() {
     this.props.history.push(DEFAULT_BRANDS_LANDING_PAGE);
   }
+  followAndUnFollow(brandId, followStatus) {
+    console.log(brandId, followStatus);
+    this.props.followAndUnFollowBrand(brandId, followStatus);
+  }
   renderLoader() {
     return <MDSpinner />;
   }
@@ -49,7 +53,12 @@ export default class MyAccountBrands extends React.Component {
         />
         {this.props.followedBrands && (
           <div className={styles.brandsHolder}>
-            <BrandEdit data={this.props.followedBrands} />
+            <BrandEdit
+              data={this.props.followedBrands}
+              onClick={(brandId, followStatus) =>
+                this.followAndUnFollow(brandId, followStatus)
+              }
+            />
           </div>
         )}
       </div>
