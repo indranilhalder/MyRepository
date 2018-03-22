@@ -126,7 +126,13 @@ export default class ModalRoot extends React.Component {
         />
       ),
       SizeGuide: <SizeGuideModal closeModal={() => this.handleClose()} />,
-      EmiModal: <EmiModal />
+      EmiModal: <EmiModal />,
+      OtpLoginModal: (
+        <OtpVerification
+          submitOtp={val => this.props.loginUser(val)}
+          {...this.props.ownProps}
+        />
+      )
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];

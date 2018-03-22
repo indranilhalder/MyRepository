@@ -36,7 +36,7 @@ export default class OrderViewPaymentDetails extends React.Component {
           )}
         </div>
         <div className={styles.totalHolder}>
-          <div className={styles.labelTextTotal}>Total</div>
+          <div className={styles.labelTextTotal}>Total Amount</div>
           {this.props.Total && (
             <div className={styles.infoTextTotal}>{`Rs. ${
               this.props.Total

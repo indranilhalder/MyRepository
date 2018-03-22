@@ -131,16 +131,18 @@ export function loginUser(userLoginDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(loginUserRequest());
     try {
-      const result = await api.post(
-        `${LOGIN_PATH}/${
-          userLoginDetails.username
-        }/customerLogin?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&password=${userLoginDetails.password}&isPwa=true`
-      );
+      let url = `${LOGIN_PATH}/${
+        userLoginDetails.username
+      }/customerLogin?access_token=${
+        JSON.parse(customerCookie).access_token
+      }&password=${userLoginDetails.password}&isPwa=true`;
+      if (userLoginDetails.otp) {
+        url = `${url}&otp=${userLoginDetails.otp}`;
+      }
+      const result = await api.post(url);
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.errorCode) {
+        throw new Error(`${resultJson.status}`);
       }
 
       return dispatch(loginUserSuccess(resultJson));

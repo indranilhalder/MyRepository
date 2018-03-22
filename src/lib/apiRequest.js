@@ -70,7 +70,6 @@ export async function postAdobeTargetUrl(
 
 export async function post(path, postData, doNotUserApiSuffix: true) {
   const url = `${API_URL_ROOT}/${path}`;
-
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify(postData),
@@ -171,5 +170,12 @@ export async function postJusPay(path, postData) {
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify(postData)
+  });
+}
+
+export async function postFormData(url, payload) {
+  return await fetch(`${API_URL_ROOT}/${url}`, {
+    method: "POST",
+    body: payload
   });
 }

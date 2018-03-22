@@ -41,7 +41,9 @@ export const GET_ITEMS_FAILURE = "GET_SALE_ITEMS_FAILURE";
 
 const ADOBE_TARGET_DELAY = 1500;
 
-const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1";
+const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1"; // for local/devxelp/uat2tmpprod
+const ADOBE_TARGET_PRODUCTION_HOME_FEED_MBOX_NAME = "PROD_Mobile_Homepage_Mbox";
+const ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME = "UAT_Mobile_Homepage_Mbox";
 
 export function getItemsRequest(positionInFeed) {
   return {
@@ -212,12 +214,19 @@ export function homeFeed(brandIdOrCategoryId: null) {
           dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
         }
       } else {
-        url = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
+        let mbox = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
+
+        if (process.env.REACT_APP_STAGE === "production") {
+          mbox = ADOBE_TARGET_PRODUCTION_HOME_FEED_MBOX_NAME;
+        } else if (process.env.REACT_APP_STAGE === "p2") {
+          mbox = ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME;
+        }
+
         let mcvId = null;
         if (window._satellite) {
           mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
         }
-        result = await api.postAdobeTargetUrl(null, url, mcvId, null, true);
+        result = await api.postAdobeTargetUrl(null, mbox, mcvId, null, true);
         feedTypeRequest = HOME_FEED_TYPE;
         resultJson = await result.json();
       }
