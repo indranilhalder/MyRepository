@@ -6,7 +6,7 @@ import styles from "./SavedCard.css";
 export default class SavedCard extends React.Component {
   onChangeCvv(val) {
     if (this.props.onChangeCvv) {
-      this.props.onChangeCvv(val);
+      this.props.onChangeCvv(val, this.props.cardNumber);
     }
   }
   render() {

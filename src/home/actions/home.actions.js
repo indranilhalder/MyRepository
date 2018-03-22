@@ -7,6 +7,7 @@ import {
   HOME_FEED_TYPE
 } from "../../lib/constants";
 import each from "lodash/each";
+import delay from "lodash/delay";
 import {
   MSD_NUM_RESULTS,
   MAD_UUID,
@@ -14,6 +15,7 @@ import {
   MSD_WIDGET_PLATFORM,
   MSD_API_KEY
 } from "../../lib/config.js";
+
 export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
 export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
@@ -21,6 +23,9 @@ export const HOME_FEED_NULL_DATA_SUCCESS = "HOME_FEED_NULL_DATA_SUCCESS";
 export const COMPONENT_DATA_REQUEST = "COMPONENT_DATA_REQUEST";
 export const COMPONENT_DATA_SUCCESS = "COMPONENT_DATA_SUCCESS";
 export const COMPONENT_DATA_FAILURE = "COMPONENT_DATA_FAILURE";
+export const COMPONENT_BACK_UP_REQUEST = "COMPONENT_BACK_UP_REQUEST";
+export const COMPONENT_BACK_UP_SUCCESS = "COMPONENT_BACK_UP_SUCCESS";
+export const COMPONENT_BACK_UP_FAILURE = "COMPONENT_BACK_UP_FAILURE";
 export const SINGLE_SELECT_REQUEST = "SINGLE_SELECT_REQUEST";
 export const SINGLE_SELECT_SUCCESS = "SINGLE_SELECT_SUCCESS";
 export const SINGLE_SELECT_FAILURE = "SINGLE_SELECT_FAILURE";
@@ -33,7 +38,12 @@ export const MULTI_SELECT_SUBMIT_PATH = "submitMultiSelectQuestion";
 export const GET_ITEMS_REQUEST = "GET_SALE_ITEMS_REQUEST";
 export const GET_ITEMS_SUCCESS = "GET_SALE_ITEMS_SUCCESS";
 export const GET_ITEMS_FAILURE = "GET_SALE_ITEMS_FAILURE";
-const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1";
+
+const ADOBE_TARGET_DELAY = 1500;
+
+const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1"; // for local/devxelp/uat2tmpprod
+const ADOBE_TARGET_PRODUCTION_HOME_FEED_MBOX_NAME = "PROD_Mobile_Homepage_Mbox";
+const ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME = "UAT_Mobile_Homepage_Mbox";
 
 export function getItemsRequest(positionInFeed) {
   return {
@@ -204,8 +214,19 @@ export function homeFeed(brandIdOrCategoryId: null) {
           dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
         }
       } else {
-        url = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
-        result = await api.postAdobeTargetUrl(null, url, null, null, true);
+        let mbox = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
+
+        if (process.env.REACT_APP_STAGE === "production") {
+          mbox = ADOBE_TARGET_PRODUCTION_HOME_FEED_MBOX_NAME;
+        } else if (process.env.REACT_APP_STAGE === "p2") {
+          mbox = ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME;
+        }
+
+        let mcvId = null;
+        if (window._satellite) {
+          mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
+        }
+        result = await api.postAdobeTargetUrl(null, mbox, mcvId, null, true);
         feedTypeRequest = HOME_FEED_TYPE;
         resultJson = await result.json();
       }
@@ -221,6 +242,52 @@ export function homeFeed(brandIdOrCategoryId: null) {
     }
   };
 }
+
+export function getComponentDataBackUpRequest(positionInFeed) {
+  return {
+    type: COMPONENT_BACK_UP_REQUEST,
+    positionInFeed,
+    status: REQUESTING
+  };
+}
+
+export function getComponentDataBackUpFailure(positionInFeed, error) {
+  return {
+    type: COMPONENT_BACK_UP_FAILURE,
+    positionInFeed,
+    error,
+    status: ERROR
+  };
+}
+
+export function getComponentDataBackUpSuccess(positionInFeed, data) {
+  return {
+    type: COMPONENT_BACK_UP_SUCCESS,
+    positionInFeed,
+    status: SUCCESS,
+    data
+  };
+}
+
+export function getComponentDataBackUp(url, positionInFeed) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(getComponentDataBackUpRequest(positionInFeed));
+    try {
+      const result = await api.getWithoutApiUrlRoot(url);
+      const resultJson = await result.json();
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+
+      let parsedResultJson = resultJson;
+      parsedResultJson = parsedResultJson.items[0];
+      dispatch(getComponentDataBackUpSuccess(positionInFeed, parsedResultJson));
+    } catch (e) {
+      dispatch(getComponentDataBackUpFailure(positionInFeed, e.message));
+    }
+  };
+}
+
 export function componentDataRequest(positionInFeed) {
   return {
     type: COMPONENT_DATA_REQUEST,
@@ -228,6 +295,7 @@ export function componentDataRequest(positionInFeed) {
     positionInFeed
   };
 }
+
 export function componentDataSuccess(data, positionInFeed, isMsd: false) {
   return {
     type: COMPONENT_DATA_SUCCESS,
@@ -245,7 +313,12 @@ export function componentDataFailure(positionInFeed, error) {
     error
   };
 }
-export function getComponentData(positionInFeed, fetchURL, postParams: null) {
+export function getComponentData(
+  positionInFeed,
+  fetchURL,
+  postParams: null,
+  backUpUrl
+) {
   return async (dispatch, getState, { api }) => {
     dispatch(componentDataRequest(positionInFeed));
     try {
@@ -259,6 +332,7 @@ export function getComponentData(positionInFeed, fetchURL, postParams: null) {
           mad_uuid: MAD_UUID,
           widget_list: MSD_WIDGET_LIST //TODO this is going to change.
         };
+
         result = await api.postMsd(fetchURL, postData, true);
         let resultJson = await result.json();
 
@@ -267,10 +341,21 @@ export function getComponentData(positionInFeed, fetchURL, postParams: null) {
         }
         dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
+        delay(() => {
+          const isFetchUrlDataLoading = getState().home.homeFeed[positionInFeed]
+            .loading;
+          if (isFetchUrlDataLoading && backUpUrl) {
+            dispatch(getComponentDataBackUp(backUpUrl, positionInFeed));
+          }
+        }, ADOBE_TARGET_DELAY);
+        let mcvId = null;
+        if (window._satellite) {
+          mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
+        }
         result = await api.postAdobeTargetUrl(
           fetchURL,
           postParams && postParams.mbox ? postParams.mbox : null,
-          null,
+          mcvId,
           null,
           false
         );

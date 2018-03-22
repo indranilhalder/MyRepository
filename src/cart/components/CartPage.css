@@ -14,13 +14,18 @@
 }
 .search {
   composes: cartItem;
+  margin-bottom: 0;
   padding: 20px;
 }
 .content {
   width: 100%;
   height: auto;
-  padding: 0 20px;
-  margin-bottom: 20px;
+  padding: 20px 20px 0 20px;
+}
+.disabled {
+  composes: content;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .offer {

@@ -2,6 +2,18 @@ import React from "react";
 import Grid from "../../general/components/Grid";
 import ProfileMenu from "./ProfileMenu";
 import PropTypes from "prop-types";
+import {
+  MY_ACCOUNT_PAGE,
+  MY_ACCOUNT_ORDERS_PAGE,
+  MY_ACCOUNT_GIFT_CARD_PAGE,
+  MY_ACCOUNT_SAVED_CARDS_PAGE,
+  ACCOUNT_SAVED_CARD_ROUTER,
+  MY_ACCOUNT_ADDRESS_PAGE,
+  MY_ACCOUNT_BRANDS_PAGE,
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE,
+  MY_ACCOUNT_ALERTS_PAGE,
+  MY_ACCOUNT_CLIQ_CASH_PAGE
+} from "../../lib/constants";
 import styles from "./ProfileMenuGrid.css";
 import savedList from "../../general/components/img/savewhite.svg";
 import addressBook from "../../general/components/img/addressbookwhite.svg";
@@ -13,22 +25,42 @@ import cliqCash from "../../general/components/img/cliqCash.svg";
 import giftCards from "../../general/components/img/giftCards.svg";
 import settings from "../../general/components/img/settings.svg";
 export default class ProfileMenuGrid extends React.Component {
-  onSave(value) {
-    if (this.props.onSave) {
-      this.props.onSave(value);
+  onRender(value) {
+    if (value) {
+      this.props.history.push(`${MY_ACCOUNT_PAGE}${value}`);
     }
   }
   render() {
     const data = [
-      { image: savedList, text: "Saved List" },
-      { image: addressBook, text: "Address Book" },
-      { image: brands, text: "Brands" },
-      { image: orderHistory, text: "Order History" },
-      { image: savedPayments, text: "Saved Payments" },
-      { image: alertsCoupons, text: "Alerts & Coupons" },
-      { image: giftCards, text: "Gift Card" },
-      { image: cliqCash, text: "Cliq Cash" },
-      { image: settings, text: "Settings" }
+      {
+        image: savedList,
+        text: "Saved List",
+        url: ACCOUNT_SAVED_CARD_ROUTER
+      },
+      {
+        image: addressBook,
+        text: "Address Book",
+        url: MY_ACCOUNT_ADDRESS_PAGE
+      },
+      { image: brands, text: "Brands", url: MY_ACCOUNT_BRANDS_PAGE },
+      {
+        image: orderHistory,
+        text: "Order History",
+        url: MY_ACCOUNT_ORDERS_PAGE
+      },
+      {
+        image: savedPayments,
+        text: "Saved Payments",
+        url: MY_ACCOUNT_SAVED_CARDS_PAGE
+      },
+      {
+        image: alertsCoupons,
+        text: "Alerts & Coupons",
+        url: MY_ACCOUNT_ALERTS_PAGE
+      },
+      { image: giftCards, text: "Gift Card", url: MY_ACCOUNT_GIFT_CARD_PAGE },
+      { image: cliqCash, text: "Cliq Cash", url: MY_ACCOUNT_CLIQ_CASH_PAGE },
+      { image: settings, text: "Settings", url: MY_ACCOUNT_UPDATE_PROFILE_PAGE }
     ];
 
     return (
@@ -40,7 +72,7 @@ export default class ProfileMenuGrid extends React.Component {
                 image={datum.image}
                 text={datum.text}
                 key={i}
-                onSave={value => this.onSave(value)}
+                onSave={() => this.onRender(datum.url)}
               />
             );
           })}

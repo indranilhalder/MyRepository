@@ -8,7 +8,8 @@ import {
 } from "../../auth/actions/user.actions";
 import {
   generateCartIdForLoggedInUser,
-  generateCartIdForAnonymous
+  generateCartIdForAnonymous,
+  mergeCartId
 } from "../../cart/actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import App from "../../App.js";
@@ -24,24 +25,25 @@ const mapDispatchToProps = dispatch => {
     googlePlusLogin: type => {
       dispatch(googlePlusLogin(type));
     },
-    getGlobalAccessToken: () => {
-      dispatch(getGlobalAccessToken());
+    getGlobalAccessToken: async () => {
+      return await dispatch(getGlobalAccessToken());
     },
-    refreshToken: () => {
-      dispatch(refreshToken());
+    refreshToken: async () => {
+      return dispatch(refreshToken());
     },
-    generateCartIdForLoggedInUser: () => {
-      dispatch(generateCartIdForLoggedInUser());
+    generateCartIdForLoggedInUser: async () => {
+      return dispatch(generateCartIdForLoggedInUser());
     },
-    generateCartIdForAnonymous: () => {
-      dispatch(generateCartIdForAnonymous());
+    generateCartIdForAnonymous: async () => {
+      return dispatch(generateCartIdForAnonymous());
     }
   };
 };
 
 const mapStateToProps = state => {
   return {
-    modalStatus: state.modal.modalDisplayed
+    modalStatus: state.modal.modalDisplayed,
+    cart: state.cart
   };
 };
 

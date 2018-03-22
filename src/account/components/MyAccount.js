@@ -1,0 +1,110 @@
+import React from "react";
+import PropTypes from "prop-types";
+import InformationHeader from "../../general/components/InformationHeader.js";
+import AllOrderContainer from "../containers/AllOrderContainer";
+import UserCoupons from "./UserCoupons";
+import UserAlerts from "./UserAlerts";
+import ProfileMenuGrid from "../../blp/components/ProfileMenuGrid.js";
+import AccountSetting from "./AccountSetting.js";
+import TabHolder from "./TabHolder";
+import TabData from "./TabData";
+import styles from "./MyAccount.css";
+import {
+  MY_ACCOUNT_PAGE,
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE,
+  LOGGED_IN_USER_DETAILS,
+  CUSTOMER_ACCESS_TOKEN,
+  LOGIN_PATH
+} from "../../lib/constants";
+import * as Cookie from "../../lib/Cookie";
+
+export default class MyAccount extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isSelected: 0
+    };
+  }
+  tabSelect(val) {
+    this.setState({ isSelected: val });
+  }
+  renderToAccountSetting() {
+    this.props.history.push(
+      `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`
+    );
+  }
+  componentDidMount() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+    if (userDetails && customerCookie) {
+      this.props.getUserDetails();
+      this.props.getUserCoupons();
+      this.props.getUserAlerts();
+    } else {
+      this.props.history.push(LOGIN_PATH);
+    }
+  }
+  render() {
+    return (
+      <div className={styles.base}>
+        <ProfileMenuGrid {...this.props} />
+        <div className={styles.accountHolder}>
+          <AccountSetting
+            image="http://tong.visitkorea.or.kr/cms/resource/58/1016958_image2_1.jpg"
+            onClick={() => this.renderToAccountSetting()}
+            heading={
+              this.props.userDetails &&
+              this.props.userDetails.firstName &&
+              `${this.props.userDetails.firstName} ${
+                this.props.userDetails.lastName
+              }`
+            }
+          />
+        </div>
+        <div className={styles.tabHolder}>
+          <TabHolder>
+            <TabData
+              width="40%"
+              label="Recent Orders "
+              selected={this.state.isSelected === 0}
+              selectItem={() => this.tabSelect(0)}
+            />
+            <TabData
+              width="40%"
+              label="Alerts "
+              selected={this.state.isSelected === 1}
+              selectItem={() => this.tabSelect(1)}
+            />
+            <TabData
+              width="40%"
+              label="Coupons "
+              selected={this.state.isSelected === 2}
+              selectItem={() => this.tabSelect(2)}
+            />
+          </TabHolder>
+        </div>
+        <div className={styles.dataHolder}>
+          {this.state.isSelected === 0 && (
+            <div className={styles.ordersHolder}>
+              <div className={styles.recentOrderHolder}>
+                <AllOrderContainer />
+              </div>
+            </div>
+          )}
+
+          {this.state.isSelected === 1 && (
+            <div className={styles.alertsHolder}>
+              <UserAlerts userAlerts={this.props.userAlerts} />
+            </div>
+          )}
+          {this.state.isSelected === 2 && (
+            <div className={styles.couponHolder}>
+              <UserCoupons userCoupons={this.props.userCoupons} />
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+}

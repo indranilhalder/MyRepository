@@ -1,8 +1,23 @@
 import "isomorphic-fetch";
 import * as Cookie from "./Cookie";
 import { LOGGED_IN_USER_DETAILS } from "./constants.js";
-export const API_URL_ROOT =
-  "https://uat2.tataunistore.com/marketplacewebservices";
+let API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
+export let TATA_CLIQ_ROOT = /https?:[\/]{2}\S*?(\/\S*)/;
+
+if (
+  process.env.REACT_APP_STAGE === "devxelp" ||
+  process.env.REACT_APP_STAGE === "uat2" ||
+  process.env.REACT_APP_STAGE === "local"
+) {
+  API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
+} else if (process.env.REACT_APP_STAGE === "tmpprod") {
+  API_URL_ROOT = "https://tmppprd.tataunistore.com/marketplacewebservices";
+} else if (process.env.REACT_APP_STAGE === "production") {
+  API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
+} else if (process.env.REACT_APP_STAGE == "p2") {
+  API_URL_ROOT = "https://p2.tatacliq.com/marketplacewebservices";
+}
+
 export const API_URL_ROOT_DUMMY =
   "https://www.tatacliq.com/marketplacewebservices";
 // export const API_URL_ROOT = API_URL_ROOT_DUMMY;
@@ -13,7 +28,6 @@ export const JUS_PAY_API_URL_ROOT = "https://sandbox.juspay.in";
 
 const API_URL_ROOT_SUFFIX = "?isPwa=true";
 
-export const TATA_CLIQ_ROOT = "http://uat2.tataunistore.com:3000";
 export const API_MSD_URL_ROOT = "https://ap-southeast-1-api.madstreetden.com";
 
 export async function postAdobeTargetUrl(
@@ -56,13 +70,20 @@ export async function postAdobeTargetUrl(
 
 export async function post(path, postData, doNotUserApiSuffix: true) {
   const url = `${API_URL_ROOT}/${path}`;
-
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify(postData),
     headers: {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#"),
       "Content-Type": "application/json"
+    }
+  });
+}
+
+export async function getWithoutApiUrlRoot(url) {
+  return await fetch(url, {
+    headers: {
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
 }
@@ -149,5 +170,12 @@ export async function postJusPay(path, postData) {
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify(postData)
+  });
+}
+
+export async function postFormData(url, payload) {
+  return await fetch(`${API_URL_ROOT}/${url}`, {
+    method: "POST",
+    body: payload
   });
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./SearchPage.css";
-import BrandHeader from "../../blp/components/BrandHeader";
+import SearchHeader from "./SearchHeader";
 import SearchResultItem from "./SearchResultItem";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 export default class SearchPage extends React.Component {
@@ -10,11 +10,13 @@ export default class SearchPage extends React.Component {
       showResults: false
     };
   }
+
   handleSearchClick(val) {
     this.setState({ showResults: val });
   }
-  handleItemClick(webURL) {
-    const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "");
+
+  handleCategoryClick(webURL) {
+    const urlSuffix = `c-${webURL.toLowerCase()}`.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   }
   handleSearch(val) {
@@ -22,16 +24,26 @@ export default class SearchPage extends React.Component {
       this.props.getSearchResults(val);
     }
   }
+  handleBackClick() {
+    if (this.props.onBack) {
+      this.props.onBack();
+    }
+  }
   render() {
     const data = this.props.searchResult;
     return (
       <div className={styles.base}>
         <div className={styles.searchBar}>
-          <BrandHeader
+          <SearchHeader
             onSearchClick={val => {
               this.handleSearchClick(val);
             }}
             onSearch={val => this.handleSearch(val)}
+            onClickBack={() => {
+              this.handleBackClick();
+            }}
+            canGoBack={this.props.canGoBack}
+            text={this.props.header}
           />
         </div>
         {this.state.showResults && (
@@ -45,7 +57,7 @@ export default class SearchPage extends React.Component {
                     text={val.categoryName}
                     value={val.categoryCode}
                     onClick={() => {
-                      this.handleItemClick(val.categoryCode);
+                      this.handleCategoryClick(val.categoryCode);
                     }}
                   />
                 );
@@ -59,7 +71,7 @@ export default class SearchPage extends React.Component {
                     text={val.categoryName}
                     value={val.categoryCode}
                     onClick={() => {
-                      this.handleItemClick(val.categoryCode);
+                      this.handleCategoryClick(val.categoryCode);
                     }}
                   />
                 );

@@ -6,16 +6,25 @@ import {
   resetPassword,
   otpVerification,
   forgotPassword,
-  forgotPasswordOtpVerification
+  signUpUser,
+  forgotPasswordOtpVerification,
+  loginUser,
+  loginUserRequest,
+  customerAccessToken
 } from "../../auth/actions/user.actions";
+import { SUCCESS } from "../../lib/constants";
 
 import {
   applyBankOffer,
   releaseBankOffer,
   applyUserCoupon,
   releaseUserCoupon,
-  getUserAddress
+  getUserAddress,
+  mergeCartId,
+  generateCartIdForLoggedInUser,
+  getCartId
 } from "../../cart/actions/cart.actions";
+
 const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
@@ -33,8 +42,41 @@ const mapDispatchToProps = dispatch => {
     hideModal: () => {
       dispatch(modalActions.hideModal());
     },
-    otpVerification: (otpDetails, userDetails) => {
-      dispatch(otpVerification(otpDetails, userDetails));
+    loginUser: async userDetails => {
+      const loginResponse = await dispatch(loginUser(userDetails));
+      if (loginResponse.status === SUCCESS) {
+        dispatch(modalActions.hideModal());
+      }
+    },
+    otpVerification: async (otpDetails, userDetails) => {
+      const otpResponse = await dispatch(
+        otpVerification(otpDetails, userDetails)
+      );
+      const customerAccessResponse = await dispatch(
+        customerAccessToken(userDetails)
+      );
+      if (customerAccessResponse.status === SUCCESS) {
+        if (otpResponse.status === SUCCESS) {
+          const loginUserResponse = await dispatch(loginUser(userDetails));
+          if (loginUserResponse.status === SUCCESS) {
+            const cartVal = await dispatch(getCartId());
+            if (
+              cartVal.status === SUCCESS &&
+              cartVal.cartDetails.guid &&
+              cartVal.cartDetails.code
+            ) {
+              // This is the anonymous case
+              // And I have an existing cart that needs to be merged.
+              dispatch(mergeCartId(cartVal.cartDetails.guid));
+            } else {
+              const createdCartVal = await dispatch(
+                generateCartIdForLoggedInUser()
+              );
+              dispatch(mergeCartId(createdCartVal.cartDetails.guid));
+            }
+          }
+        }
+      }
     },
     resetPassword: userDetails => {
       dispatch(resetPassword(userDetails));
@@ -45,7 +87,9 @@ const mapDispatchToProps = dispatch => {
     forgotPasswordOtpVerification: (otpDetails, userDetails) => {
       dispatch(forgotPasswordOtpVerification(otpDetails, userDetails));
     },
-
+    resendOTP: userObj => {
+      dispatch(signUpUser(userObj));
+    },
     applyBankOffer: couponCode => {
       dispatch(applyBankOffer(couponCode));
     },

@@ -1,5 +1,7 @@
 import React from "react";
+import cloneDeep from "lodash/cloneDeep";
 import PropTypes from "prop-types";
+import DummyTab from "./DummyTab";
 import ConfirmAddress from "./ConfirmAddress";
 import Checkout from "./Checkout";
 import AddDeliveryAddress from "./AddDeliveryAddress";
@@ -15,10 +17,15 @@ import GridSelect from "../../general/components/GridSelect";
 import filter from "lodash/filter";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString from "query-string";
+import PiqPage from "./PiqPage";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  CART_DETAILS_FOR_LOGGED_IN_USER
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  COLLECT,
+  PRODUCT_CART_ROUTER,
+  PAYMENT_MODE_TYPE
+
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
@@ -37,7 +44,14 @@ class CheckOutPage extends React.Component {
     appliedCoupons: false,
     paymentModeSelected: null,
     orderConfirmation: false,
-    orderId: ""
+    showCliqAndPiq: false,
+    showPickupPerson: false,
+    selectedSlaveId: null,
+    ussIdAndDeliveryModesObj: {}, // this object we are using for check when user will continue after  delivery mode then we ll check for all products we selected delivery mode or not
+    selectedProductsUssIdForCliqAndPiq: null,
+    orderId: "",
+    savedCardDetails: "",
+    binValidationCOD: false
   };
 
   renderLoader() {
@@ -54,43 +68,70 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  handleSelectDeliveryMode(code, id, cartId) {
-    let deliveryModesUssId = `"${id}":"${code}"`;
-
-    if (this.state.deliverModeUssId) {
-      this.setState({
-        deliverModeUssId: `${this.state.deliverModeUssId},${deliveryModesUssId}`
-      });
-    } else {
-      this.setState({
-        deliverModeUssId: `${deliveryModesUssId}`
-      });
+  handleSelectDeliveryMode(deliveryMode, ussId, cartId) {
+    let newDeliveryObj = {};
+    newDeliveryObj[ussId] = deliveryMode;
+    let currentSelectedDeliveryModes = cloneDeep(
+      this.state.ussIdAndDeliveryModesObj
+    );
+    if (!currentSelectedDeliveryModes[ussId]) {
+      Object.assign(currentSelectedDeliveryModes, newDeliveryObj);
+      this.setState({ ussIdAndDeliveryModesObj: currentSelectedDeliveryModes });
     }
   }
 
-  getAllStores = val => {
-    this.props.getAllStoresCNC(this.props.location.state.pinCode);
-    this.props.addStoreCNC("273544ASB001", "273544 - 110003");
-    this.props.addPickupPersonCNC("7503721061", "Suraj Kumars");
+  getAllStores = selectedProductsUssIdForCliqAndPiq => {
+    this.setState({ showCliqAndPiq: true, selectedProductsUssIdForCliqAndPiq });
+    this.props.getAllStoresCNC(this.state.selectedAddress.postalCode);
   };
-
+  togglePickupPersonForm() {
+    this.setState(prevState => ({
+      showPickupPerson: !prevState.showPickupPerson
+    }));
+  }
+  addStoreCNC(selectedSlaveId) {
+    this.handleSelectDeliveryMode(
+      COLLECT,
+      this.state.selectedProductsUssIdForCliqAndPiq
+    );
+    this.togglePickupPersonForm();
+    this.setState({ selectedSlaveId });
+    this.props.addStoreCNC(
+      this.state.selectedProductsUssIdForCliqAndPiq,
+      selectedSlaveId
+    );
+  }
+  addPickupPersonCNC(mobile, name) {
+    this.setState({ showCliqAndPiq: false });
+    this.props.addPickupPersonCNC(mobile, name);
+  }
+  removeCliqAndPiq() {
+    this.setState({ showCliqAndPiq: false });
+  }
   renderCheckoutAddress = () => {
     const cartData = this.props.cart;
     return (
-      <ConfirmAddress
-        address={cartData.userAddress.addresses.map(address => {
-          return {
-            addressTitle: address.addressType,
-            addressDescription: `${address.line1} ${address.town} ${
-              address.city
-            }, ${address.state} ${address.postalCode}`,
-            value: address.id,
-            selected: address.defaultAddress
-          };
-        })}
-        onNewAddress={() => this.addNewAddress()}
-        onSelectAddress={address => this.onSelectAddress(address)}
-      />
+      <div className={styles.addInitialAddAddress}>
+        <ConfirmAddress
+          address={
+            cartData.userAddress.addresses &&
+            cartData.userAddress.addresses.map(address => {
+              return {
+                addressTitle: address.addressType,
+                addressDescription: `${address.line1} ${address.town} ${
+                  address.city
+                }, ${address.state} ${address.postalCode}`,
+                value: address.id,
+                selected: address.defaultAddress
+              };
+            })
+          }
+          onNewAddress={() => this.addNewAddress()}
+          onSelectAddress={address => this.onSelectAddress(address)}
+        />
+        <DummyTab title="Delivery Mode" number={2} />
+        <DummyTab title="Payment Method" number={3} />
+      </div>
     );
   };
   renderDeliverModes = () => {
@@ -113,6 +154,7 @@ class CheckOutPage extends React.Component {
                   deliveryInformation={val.elligibleDeliveryMode}
                   showDelivery={true}
                   deliveryInfoToggle={false}
+                  productIsServiceable={val.pinCodeResponse}
                   selectDeliveryMode={code =>
                     this.handleSelectDeliveryMode(
                       code,
@@ -120,7 +162,7 @@ class CheckOutPage extends React.Component {
                       this.state.cartId
                     )
                   }
-                  onPiq={val => this.getAllStores(val)}
+                  onPiq={() => this.getAllStores(val.USSID)}
                 />
               </div>
             );
@@ -128,7 +170,55 @@ class CheckOutPage extends React.Component {
       </div>
     );
   };
+  renderCliqAndPiq() {
+    let currentSelectedProduct = this.props.cart.cartDetailsCNC.products.find(
+      product => {
+        return product.USSID === this.state.selectedProductsUssIdForCliqAndPiq;
+      }
+    );
+    const firstSlaveData =
+      currentSelectedProduct.pinCodeResponse.validDeliveryModes;
+    const someData = firstSlaveData
+      .map(slaves => {
+        return slaves.CNCServiceableSlavesData.map(slave => {
+          return slave.serviceableSlaves.map(serviceableSlave => {
+            return serviceableSlave;
+          });
+        });
+      })
+      .map(val => {
+        return val.map(v => {
+          return v;
+        });
+      });
 
+    const allStoreIds = [].concat
+      .apply([], [].concat.apply([], someData))
+      .map(store => {
+        return store.slaveId;
+      });
+    const availableStores = this.props.cart.storeDetails
+      ? this.props.cart.storeDetails.filter(val => {
+          return allStoreIds.includes(val.slaveId);
+        })
+      : [];
+    return (
+      <PiqPage
+        availableStores={availableStores}
+        selectedSlaveId={this.state.selectedSlaveId}
+        numberOfStores={availableStores.length}
+        showPickupPerson={this.state.showPickupPerson}
+        productName={currentSelectedProduct.productName}
+        productColour={currentSelectedProduct.color}
+        hidePickupPersonDetail={() => this.togglePickupPersonForm()}
+        addStoreCNC={slavesId => this.addStoreCNC(slavesId)}
+        addPickupPersonCNC={(mobile, name) =>
+          this.addPickupPersonCNC(mobile, name)
+        }
+        goBack={() => this.removeCliqAndPiq()}
+      />
+    );
+  }
   renderPaymentModes = () => {
     if (this.state.paymentMethod) {
       return <div>Payment Modes Expand</div>;
@@ -161,19 +251,37 @@ class CheckOutPage extends React.Component {
     );
   };
 
+  renderInitialAddAddressForm() {
+    return (
+      <div className={styles.addInitialAddAddress}>
+        <AddDeliveryAddress
+          addUserAddress={address => this.addAddress(address)}
+          {...this.state}
+          onChange={val => this.onChange(val)}
+        />
+        <DummyTab title="Delivery Mode" number={2} />
+        <DummyTab title="Payment Method" number={3} />
+      </div>
+    );
+  }
   changeDeliveryAddress = () => {
     this.setState({ confirmAddress: false });
   };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.cart.justPayPaymentDetails !== null) {
-      window.location.replace(
-        nextProps.cart.justPayPaymentDetails.payment.authentication.url
-      );
+      if (nextProps.cart.justPayPaymentDetails.payment) {
+        window.location.replace(
+          nextProps.cart.justPayPaymentDetails.payment.authentication.url
+        );
+      }
     }
     if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
       Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       this.setState({ orderConfirmation: true });
+    }
+    if (nextProps.cart.binValidationCODStatus === SUCCESS) {
+      this.setState({ binValidationCOD: true });
     }
   }
 
@@ -190,6 +298,13 @@ class CheckOutPage extends React.Component {
   }
 
   componentDidMount() {
+    if (
+      !this.props.history.location.state ||
+      !this.props.history.location.state.isRequestComeThrowMyBag
+    ) {
+      this.props.history.push(PRODUCT_CART_ROUTER);
+      return true;
+    }
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
@@ -198,13 +313,15 @@ class CheckOutPage extends React.Component {
       this.setState({ orderId: orderId });
       if (this.props.updateTransactionDetails) {
         let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-        let cartId = JSON.parse(cartDetails).guid;
-        if (cartId) {
-          this.props.updateTransactionDetails(
-            this.state.paymentModeSelected,
-            orderId,
-            cartId
-          );
+        if (cartDetails) {
+          let cartId = JSON.parse(cartDetails).guid;
+          if (cartId) {
+            this.props.updateTransactionDetails(
+              localStorage.getItem(PAYMENT_MODE_TYPE),
+              orderId,
+              cartId
+            );
+          }
         }
       }
     } else {
@@ -215,15 +332,18 @@ class CheckOutPage extends React.Component {
           CART_DETAILS_FOR_LOGGED_IN_USER
         );
 
-        this.props.getCartDetailsCNC(
-          JSON.parse(userDetails).customerInfo.mobileNumber,
-          JSON.parse(customerCookie).access_token,
-          JSON.parse(cartDetailsLoggedInUser).code,
-          this.props.location.state.pinCode,
-          false
-        );
+        if (userDetails && customerCookie && cartDetailsLoggedInUser) {
+          this.props.getCartDetailsCNC(
+            JSON.parse(userDetails).userName,
+            JSON.parse(customerCookie).access_token,
+            JSON.parse(cartDetailsLoggedInUser).code,
+            this.props.location.state.pinCode,
+            false
+          );
+        }
         this.props.getUserAddress(this.props.location.state.pinCode);
         this.props.getPaymentModes();
+        this.props.getCODEligibility();
         this.props.getNetBankDetails();
         this.props.getEmiBankDetails(this.props.location.state.productValue);
       }
@@ -237,11 +357,19 @@ class CheckOutPage extends React.Component {
         return address.id === selectedAddress[0];
       }
     );
-
-    this.setState({ confirmAddress: false });
-    this.setState({ addressId: addressSelected });
+    // here we are checking the if user selected any address then setting our state
+    // and in else condition if user deselect then this function will again call and
+    //  then we are resetting the previous selected address
+    if (selectedAddress[0]) {
+      this.setState({
+        confirmAddress: false,
+        selectedAddress: addressSelected[0]
+      });
+      this.setState({ addressId: addressSelected });
+    } else {
+      this.setState({ addressId: null, selectedAddress: null });
+    }
   }
-
   changeDeliveryModes = () => {
     this.setState({ deliverMode: false });
   };
@@ -253,24 +381,50 @@ class CheckOutPage extends React.Component {
     if (!this.state.confirmAddress) {
       this.props.addAddressToCart(
         this.state.addressId[0].id,
-        this.props.location.state.pinCode
+        this.state.selectedAddress.postalCode
       );
       this.setState({ confirmAddress: true });
     }
     if (!this.state.deliverMode && this.state.confirmAddress) {
       if (this.props.selectDeliveryMode) {
         this.props.selectDeliveryMode(
-          this.state.deliverModeUssId,
-          this.props.location.state.pinCode
+          this.state.ussIdAndDeliveryModesObj,
+          this.state.selectedAddress.postalCode
         );
+        // this.props.getOrderSummary(this.state.selectedAddress.postalCode);
       }
       this.setState({ deliverMode: true });
+    }
+
+    if (this.state.savedCardDetails !== "") {
+      this.props.softReservationPaymentForSavedCard(
+        this.state.savedCardDetails,
+        this.state.addressId[0],
+        this.state.paymentModeSelected
+      );
+    }
+
+    if (this.state.binValidationCOD) {
+      this.softReservationForCODPayment();
     }
   };
 
   addAddress = address => {
     if (this.props.addUserAddress) {
-      this.props.addUserAddress(address);
+      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+      let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+      let cartDetailsLoggedInUser = Cookie.getCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER
+      );
+      let getCartDetailCNCObj = {
+        userId: JSON.parse(userDetails).userName,
+        accessToken: JSON.parse(customerCookie).access_token,
+        cartId: JSON.parse(cartDetailsLoggedInUser).code,
+        pinCode: address.postalCode,
+        isSoftReservation: false
+      };
+      this.props.addUserAddress(address, getCartDetailCNCObj);
+
       this.setState({ addNewAddress: false });
     }
   };
@@ -299,13 +453,33 @@ class CheckOutPage extends React.Component {
   };
 
   binValidation = (paymentMode, binNo) => {
+    localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
     this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidation(paymentMode, binNo);
   };
 
+  binValidationForCOD = paymentMode => {
+    localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
+    this.setState({ paymentModeSelected: paymentMode });
+    this.props.binValidationForCOD(paymentMode);
+  };
+
   binValidationForNetBank = (paymentMode, bankName) => {
+    localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
     this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidationForNetBanking(paymentMode, bankName);
+  };
+
+  binValidationForSavedCard = cardDetails => {
+    this.setState({
+      paymentModeSelected: `${cardDetails.cardType} Card`
+    });
+    localStorage.setItem(PAYMENT_MODE_TYPE, `${cardDetails.cardType} Card`);
+    this.setState({ savedCardDetails: cardDetails });
+    this.props.binValidation(
+      `${cardDetails.cardType} Card`,
+      cardDetails.cardISIN
+    );
   };
 
   softReservationForPayment = cardDetails => {
@@ -335,21 +509,25 @@ class CheckOutPage extends React.Component {
     this.props.history.index = 0;
     this.props.history.push(HOME_ROUTER);
   };
+
+  softReservationForCODPayment = () => {
+    this.props.softReservationForCODPayment(this.props.location.state.pinCode);
+  };
+
   render() {
     if (this.props.cart.loading) {
-      return <div>{this.renderLoader()}</div>;
+      return <div className={styles.base}>{this.renderLoader()}</div>;
     }
     const cartData = this.props.cart;
-    if (
-      (this.state.addNewAddress || !cartData.userAddress) &&
-      !this.state.orderConfirmation
-    ) {
+    if (this.state.addNewAddress && !this.state.orderConfirmation) {
       return (
-        <AddDeliveryAddress
-          addUserAddress={address => this.addAddress(address)}
-          {...this.state}
-          onChange={val => this.onChange(val)}
-        />
+        <div className={styles.base}>
+          <AddDeliveryAddress
+            addUserAddress={address => this.addAddress(address)}
+            {...this.state}
+            onChange={val => this.onChange(val)}
+          />
+        </div>
       );
     } else if (
       !this.state.addNewAddress &&
@@ -357,23 +535,27 @@ class CheckOutPage extends React.Component {
       !this.state.orderConfirmation
     ) {
       return (
-        <div>
-          {cartData.userAddress &&
-            !this.state.confirmAddress &&
-            this.renderCheckoutAddress()}
+        <div className={styles.base}>
+          {!this.state.confirmAddress &&
+            (cartData.userAddress && cartData.userAddress.addresses
+              ? this.renderCheckoutAddress()
+              : this.renderInitialAddAddressForm())}
 
-          {this.state.confirmAddress && (
-            <DeliveryAddressSet
-              addressType={this.state.addressId[0].addressType}
-              address={this.state.addressId[0].line1}
-              changeDeliveryAddress={() => this.changeDeliveryAddress()}
-            />
-          )}
+          {this.state.confirmAddress &&
+            !this.state.showCliqAndPiq && (
+              <DeliveryAddressSet
+                addressType={this.state.addressId[0].addressType}
+                address={this.state.addressId[0].line1}
+                changeDeliveryAddress={() => this.changeDeliveryAddress()}
+              />
+            )}
 
           {this.props.cart.cartDetailsCNC &&
             this.state.confirmAddress &&
             !this.state.deliverMode &&
-            this.renderDeliverModes()}
+            (this.state.showCliqAndPiq
+              ? this.renderCliqAndPiq()
+              : this.renderDeliverModes())}
 
           {this.state.deliverMode && (
             <DeliveryModeSet
@@ -396,36 +578,47 @@ class CheckOutPage extends React.Component {
                 binValidation={(paymentMode, binNo) =>
                   this.binValidation(paymentMode, binNo)
                 }
-                binValidationForNetBank={(paymentMode, bankName) =>
-                  this.binValidationForNetBank(paymentMode, bankName)
+                binValidationForCOD={paymentMode =>
+                  this.binValidationForCOD(paymentMode)
                 }
                 softReservationForPayment={cardDetails =>
                   this.softReservationForPayment(cardDetails)
                 }
+                softReservationForCODPayment={() =>
+                  this.softReservationForCODPayment()
+                }
+                binValidationForNetBank={(paymentMode, bankName) =>
+                  this.binValidationForNetBank(paymentMode, bankName)
+                }
                 softReservationPaymentForNetBanking={bankName =>
                   this.softReservationPaymentForNetBanking(bankName)
+                }
+                binValidationForSavedCard={cardDetails =>
+                  this.binValidationForSavedCard(cardDetails)
                 }
               />
             )}
 
-          {this.props.cart.cartDetailsCNC && (
-            <Checkout
-              amount={this.props.cart.cartDetailsCNC.totalPrice}
-              totalDiscount={
-                this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
-                  .formattedValue
-              }
-              bagTotal={
-                this.props.cart.cartDetailsCNC.cartAmount.bagTotal
-                  .formattedValue
-              }
-              tax={this.props.tax}
-              offers={this.props.offers}
-              delivery={this.props.delivery}
-              payable={this.props.cart.cartDetailsCNC.totalPrice}
-              onCheckout={this.handleSubmit}
-            />
-          )}
+          {this.props.cart.cartDetailsCNC &&
+          this.props.cart.cartDetailsCNC.cartAmount &&
+          !this.state.showCliqAndPiq && ( //adding this condition for we don;t have to show footer and header on cliq and piq window
+              <Checkout
+                amount={this.props.cart.cartDetailsCNC.totalPrice}
+                totalDiscount={
+                  this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
+                    .formattedValue
+                }
+                bagTotal={
+                  this.props.cart.cartDetailsCNC.cartAmount.bagTotal
+                    .formattedValue
+                }
+                tax={this.props.tax}
+                offers={this.props.offers}
+                delivery={this.props.delivery}
+                payable={this.props.cart.cartDetailsCNC.totalPrice}
+                onCheckout={this.handleSubmit}
+              />
+            )}
         </div>
       );
     } else if (this.state.orderConfirmation) {

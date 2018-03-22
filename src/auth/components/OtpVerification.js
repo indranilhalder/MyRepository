@@ -21,17 +21,26 @@ export default class OtpVerification extends React.Component {
   };
   resendOtp = () => {
     if (this.props.resendOtp) {
-      this.props.resendOtp();
+      this.props.resendOtp(this.props.userObj);
     }
   };
   onSubmitOtp = () => {
     if (this.props.submitOtp) {
-      this.props.submitOtp(this.state.otp);
+      if (this.props.username && this.props.password) {
+        this.props.submitOtp({
+          username: this.props.username,
+          password: this.props.password,
+          otp: this.state.otp
+        });
+      } else {
+        this.props.submitOtp(this.state.otp);
+      }
     }
   };
   handleOtpInput(val) {
     this.setState({ otp: val });
   }
+
   render() {
     return (
       <AuthPopUp>
@@ -61,7 +70,7 @@ export default class OtpVerification extends React.Component {
                 height={30}
                 textStyle={{ color: "#212121", fontSize: 14 }}
                 label={"Resend OTP"}
-                onClick={() => this.callVerify()}
+                onClick={() => this.resendOtp()}
               />
             </div>
 
@@ -148,5 +157,6 @@ OtpVerification.propTypes = {
 };
 
 OtpVerification.defaultProps = {
-  mobileNumber: ""
+  mobileNumber: "",
+  userDetails: null
 };

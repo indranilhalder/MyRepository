@@ -2,7 +2,6 @@ import React from "react";
 import FilterContainer from "../containers/FilterContainer";
 import ProductGrid from "./ProductGrid";
 import PlpMobileFooter from "./PlpMobileFooter";
-import InformationHeader from "../../general/components/InformationHeader";
 import styles from "./Plp.css";
 import throttle from "lodash/throttle";
 
@@ -102,9 +101,6 @@ export default class Plp extends React.Component {
     return (
       this.props.productListings && (
         <div className={styles.base}>
-          <div className={styles.pageHeader}>
-            <InformationHeader goBack={this.backPage} text="Product listing" />
-          </div>
           <div className={styles.main}>
             <ProductGrid
               history={this.props.history}

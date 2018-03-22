@@ -3,7 +3,7 @@ import styles from "./InformationHeader.css";
 import { CircleButton, Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import iconImageURL from "./img/arrowBack.svg";
-import iconSearchURL from "./img/Search.svg";
+import SearchContainer from "../../search/SearchContainer.js";
 export default class InformationHeader extends React.Component {
   handleClick() {
     if (this.props.goBack) {
@@ -25,7 +25,7 @@ export default class InformationHeader extends React.Component {
                 color={"rgba(0,0,0,0)"}
                 size={50}
                 onClick={() => this.handleClick()}
-                icon={<Icon image={iconImageURL} size={22} />}
+                icon={<Icon image={iconImageURL} size={16} />}
               />
             )}
           </div>
@@ -34,14 +34,6 @@ export default class InformationHeader extends React.Component {
             {this.props.count && (
               <span className={styles.span}>({this.props.count})</span>
             )}
-          </div>
-          <div className={styles.searchButtonHolder}>
-            <CircleButton
-              color={"rgba(0,0,0,0)"}
-              size={50}
-              onClick={() => this.onSearch()}
-              icon={<Icon image={iconSearchURL} size={22} />}
-            />
           </div>
         </div>
       </div>

@@ -28,3 +28,14 @@
   display: inline-block;
   font-family: regular;
 }
+
+.serviceAvailabilityText {
+  width: 100%;
+  height: auto;
+  color: #e81e1e;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 3px;
+  display: inline-block;
+  font-family: regular;
+}

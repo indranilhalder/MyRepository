@@ -1,0 +1,33 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 12px;
+  border-radius: 4px;
+  display: inline-block;
+  background: #ececec;
+}
+.orderIdHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 25px;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+  display: inline-block;
+}
+.order {
+  margin-bottom: 15px;
+  background: #fff;
+  padding: 12px;
+}
+.payment {
+  border-top: 1px solid #ececec;
+}
+.orderStatusVertical {
+  border-top: 1px solid #ececec;
+  padding: 30px 0px;
+  border-bottom: 1px solid #ececec;
+}

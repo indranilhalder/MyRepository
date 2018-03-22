@@ -21,9 +21,19 @@ import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryW
 import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
+import MobileFooter from "./general/components/MobileFooter.js";
+
+// importing All container for my Accounts
+import MyAccountContainer from "./account/containers/MyAccountContainer";
+import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
+
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
-
+import HeaderWrapper from "./general/components/HeaderWrapper.js";
+import AllOrderContainer from "./account/containers/AllOrderContainer";
+import SavedCardContainer from "./account/containers/SavedCardContainer.js";
+import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
+import AddressBookContainer from "./account/containers/AddressBookContainer.js";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -57,38 +67,23 @@ import {
   BRAND_PAGE,
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
-  CATEGORY_PAGE_WITH_SLUG
+  CATEGORY_PAGE_WITH_SLUG,
+  ORDER_PAGE,
+  MY_ACCOUNT_PAGE,
+  MY_ACCOUNT_SAVED_CARDS_PAGE,
+  MY_ACCOUNT_ADDRESS_PAGE,
+  MY_ACCOUNT_ALERTS_PAGE,
+  MY_ACCOUNT_COUPON_PAGE,
+  ACCOUNT_SAVED_CARD_ROUTER,
+  ORDER_PREFIX
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
-const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={props =>
-      auth.isAuthenticated === true ? (
-        <Component {...props} />
-      ) : (
-        <Redirect
-          to={{
-            pathname: { MAIN_ROUTER }
-          }}
-        />
-      )
-    }
-  />
-);
 
 const auth = {
   isAuthenticated: false
 };
 class App extends Component {
-  componentDidUpdate() {
-    this.getAccessToken();
-  }
-
-  componentDidMount() {
-    this.getAccessToken();
-  }
-  getAccessToken = () => {
+  async componentDidMount() {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
@@ -96,25 +91,23 @@ class App extends Component {
     let cartDetailsForLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
+
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
-    if (!globalAccessToken) {
-      this.props.getGlobalAccessToken();
-      if (!cartIdForAnonymous) {
-        this.props.generateCartIdForAnonymous();
-      }
+    // Case 1. THe user is not logged in.
+
+    if (!globalAccessToken && !this.props.cart.loading) {
+      await this.props.getGlobalAccessToken();
+      globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     }
 
     if (!customerAccessToken && localStorage.getItem(REFRESH_TOKEN)) {
-      this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
-      if (!loggedInUserDetails) {
-        this.props.generateCartIdForLoggedInUser();
-      }
+      await this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
+      customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     }
 
     if (customerAccessToken) {
-      auth.isAuthenticated = true;
-      if (!cartDetailsForLoggedInUser) {
+      if (!cartDetailsForLoggedInUser && !this.props.cart.loading) {
         this.props.generateCartIdForLoggedInUser();
       }
     } else {
@@ -122,7 +115,7 @@ class App extends Component {
         this.props.generateCartIdForAnonymous();
       }
     }
-  };
+  }
 
   renderLoader() {
     return (
@@ -138,114 +131,143 @@ class App extends Component {
       className = AppStyles.blur;
     }
     return (
-      <div className={className}>
-        <Switch>
-          <Route
-            exact
-            path={LOGIN_PATH}
-            render={routeProps => (
-              <LoginContainer {...routeProps} {...this.props} />
-            )}
-          />
-          <Route
-            exact
-            path={SIGN_UP_PATH}
-            render={routeProps => (
-              <SignUpContainer {...routeProps} {...this.props} />
-            )}
-          />
+      <React.Fragment>
+        <div className={className}>
+          <HeaderWrapper />
+          <Switch>
+            <Route
+              exact
+              path={LOGIN_PATH}
+              render={routeProps => (
+                <LoginContainer {...routeProps} {...this.props} />
+              )}
+            />
+            <Route
+              exact
+              path={SIGN_UP_PATH}
+              render={routeProps => (
+                <SignUpContainer {...routeProps} {...this.props} />
+              )}
+            />
+            <Route path={ORDER_PAGE} component={AllOrderContainer} />
+            <Route
+              exact
+              path={MY_ACCOUNT_PAGE}
+              component={MyAccountContainer}
+            />
+            <Route
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_SAVED_CARDS_PAGE}`}
+              component={SavedCardContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ALERTS_PAGE}`}
+              component={UserAlertsAndCouponsContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`}
+              component={UserAlertsAndCouponsContainer}
+            />
+            <Route
+              exact
+              path={BRAND_PAGE}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+            <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
+            <Route
+              exact
+              path={CATEGORY_PAGE}
+              component={PlpBrandCategoryWrapperContainer}
+            />
 
-          <Route
-            exact
-            path={BRAND_PAGE}
-            component={PlpBrandCategoryWrapperContainer}
-          />
+            <Route
+              exact
+              path={BRAND_PAGE_WITH_SLUG}
+              component={PlpBrandCategoryWrapperContainer}
+            />
 
-          <Route
-            exact
-            path={CATEGORY_PAGE}
-            component={PlpBrandCategoryWrapperContainer}
-          />
+            <Route
+              strict
+              path={CATEGORY_PAGE_WITH_SLUG}
+              component={PlpBrandCategoryWrapperContainer}
+            />
 
-          <Route
-            exact
-            path={BRAND_PAGE_WITH_SLUG}
-            component={PlpBrandCategoryWrapperContainer}
-          />
+            <Route
+              path={PRODUCT_DESCRIPTION_REVIEWS}
+              component={ProductReviewContainer}
+            />
+            <Route
+              path={PRODUCT_OTHER_SELLER_ROUTER}
+              component={ProductSellerContainer}
+            />
+            <Route
+              exact
+              path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
+              component={ProductDescriptionPageWrapperContainer}
+            />
 
-          <Route
-            strict
-            path={CATEGORY_PAGE_WITH_SLUG}
-            component={PlpBrandCategoryWrapperContainer}
-          />
+            <Route
+              exact
+              path={PRODUCT_LISTINGS}
+              component={ProductListingsContainer}
+            />
 
-          <Route
-            path={PRODUCT_DESCRIPTION_REVIEWS}
-            component={ProductReviewContainer}
-          />
-          <Route
-            path={PRODUCT_OTHER_SELLER_ROUTER}
-            component={ProductSellerContainer}
-          />
-          <Route
-            exact
-            path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
-            component={ProductDescriptionPageWrapperContainer}
-          />
+            <Route exact path={HOME_ROUTER} component={HomeContainer} />
+            <Route
+              exact
+              path={MAIN_ROUTER}
+              render={routeProps => <Auth {...routeProps} {...this.props} />}
+            />
 
-          <Route
-            exact
-            path={PRODUCT_LISTINGS}
-            component={ProductListingsContainer}
-          />
+            <Route
+              exact
+              path={PRODUCT_FILTER_ROUTER}
+              component={FilterContainer}
+            />
+            <Route
+              exact
+              path={BRAND_LANDING_PAGE}
+              component={BrandLandingPageContainer}
+            />
+            <Route
+              exact
+              path={PRODUCT_DELIVERY_ADDRESSES}
+              component={CheckoutAddressContainer}
+            />
+            <Route
+              exact
+              path={PRODUCT_CART_DELIVERY_MODES}
+              component={DeliveryModesContainer}
+            />
+            <Route
+              exact
+              path={ORDER_SUMMARY_ROUTER}
+              component={DisplayOrderSummaryContainer}
+            />
+            <Route path={CHECKOUT_ROUTER} component={CheckOutContainer} />
+            <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
+            <Route
+              exact
+              path={DEFAULT_BRANDS_LANDING_PAGE}
+              component={BrandsLandingPageDefaultContainer}
+            />
+            <Route
+              exact
+              path={CATEGORIES_LANDING_PAGE}
+              component={CategoriesPageContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_PAGE}`}
+              component={AddressBookContainer}
+            />
+          </Switch>
+          <MobileFooter />
 
-          <Route exact path={HOME_ROUTER} component={HomeContainer} />
-          <Route
-            exact
-            path={MAIN_ROUTER}
-            render={routeProps => <Auth {...routeProps} {...this.props} />}
-          />
-
-          <Route
-            exact
-            path={PRODUCT_FILTER_ROUTER}
-            component={FilterContainer}
-          />
-          <Route
-            exact
-            path={BRAND_LANDING_PAGE}
-            component={BrandLandingPageContainer}
-          />
-          <Route
-            exact
-            path={PRODUCT_DELIVERY_ADDRESSES}
-            component={CheckoutAddressContainer}
-          />
-          <Route
-            exact
-            path={PRODUCT_CART_DELIVERY_MODES}
-            component={DeliveryModesContainer}
-          />
-          <Route
-            exact
-            path={ORDER_SUMMARY_ROUTER}
-            component={DisplayOrderSummaryContainer}
-          />
-          <Route path={CHECKOUT_ROUTER} component={CheckOutContainer} />
-          <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
-          <Route
-            exact
-            path={DEFAULT_BRANDS_LANDING_PAGE}
-            component={BrandsLandingPageDefaultContainer}
-          />
-          <Route
-            exact
-            path={CATEGORIES_LANDING_PAGE}
-            component={CategoriesPageContainer}
-          />
-        </Switch>
-        <ModalContainer />
-      </div>
+          <ModalContainer />
+        </div>
+      </React.Fragment>
     );
   }
 }

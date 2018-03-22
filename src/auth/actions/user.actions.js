@@ -131,20 +131,23 @@ export function loginUser(userLoginDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(loginUserRequest());
     try {
-      const result = await api.post(
-        `${LOGIN_PATH}/${
-          userLoginDetails.username
-        }/customerLogin?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&password=${userLoginDetails.password}&isPwa=true`
-      );
-      const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      let url = `${LOGIN_PATH}/${
+        userLoginDetails.username
+      }/customerLogin?access_token=${
+        JSON.parse(customerCookie).access_token
+      }&password=${userLoginDetails.password}&isPwa=true`;
+      if (userLoginDetails.otp) {
+        url = `${url}&otp=${userLoginDetails.otp}`;
       }
-      dispatch(loginUserSuccess(resultJson));
+      const result = await api.post(url);
+      const resultJson = await result.json();
+      if (resultJson.errorCode) {
+        throw new Error(`${resultJson.status}`);
+      }
+
+      return dispatch(loginUserSuccess(resultJson));
     } catch (e) {
-      dispatch(loginUserFailure(e.message));
+      return dispatch(loginUserFailure(e.message));
     }
   };
 }
@@ -236,10 +239,9 @@ export function otpVerification(otpDetails, userDetails) {
         throw new Error(`${resultJson.message}`);
       }
       dispatch(hideModal());
-      dispatch(otpVerificationSuccess(resultJson));
-      dispatch(customerAccessToken(userDetails));
+      return dispatch(otpVerificationSuccess(resultJson));
     } catch (e) {
-      dispatch(otpVerificationFailure(e.message));
+      return dispatch(otpVerificationFailure(e.message));
     }
   };
 }
@@ -405,9 +407,9 @@ export function getGlobalAccessToken() {
         throw new Error(`${resultJson.errors[0].message}`);
       }
 
-      dispatch(globalAccessTokenSuccess(resultJson));
+      return dispatch(globalAccessTokenSuccess(resultJson));
     } catch (e) {
-      dispatch(globalAccessTokenFailure(e.message));
+      return dispatch(globalAccessTokenFailure(e.message));
     }
   };
 }
@@ -449,9 +451,9 @@ export function refreshToken() {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-      dispatch(refreshTokenSuccess(resultJson));
+      return dispatch(refreshTokenSuccess(resultJson));
     } catch (e) {
-      dispatch(refreshTokenFailure(e.message));
+      return dispatch(refreshTokenFailure(e.message));
     }
   };
 }
@@ -495,10 +497,10 @@ export function customerAccessToken(userDetails) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
       // TODO: dispatch a modal here
-      dispatch(customerAccessTokenSuccess(resultJson));
-      dispatch(loginUser(userDetails));
+      return dispatch(customerAccessTokenSuccess(resultJson));
+      // dispatch(loginUser(userDetails));
     } catch (e) {
-      dispatch(customerAccessTokenFailure(e.message));
+      return dispatch(customerAccessTokenFailure(e.message));
     }
   };
 }

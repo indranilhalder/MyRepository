@@ -1,0 +1,38 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+
+.accountHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 15px;
+  background: #ececec;
+}
+.tabHolder {
+  width: 100%;
+  height: 60px;
+  background: #fff;
+}
+.dataHolder {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  background: #ececec;
+}
+.ordersHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.recentOrderHolder {
+  composes: ordersHolder;
+  margin-bottom: 10px;
+}
+.alertsHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}

@@ -4,6 +4,10 @@
   padding: 20px 0px;
   background-color: #ececec;
 }
+.noBackground {
+  composes: base;
+  background-color: transparent;
+}
 .header {
   width: 100%;
   height: auto;
