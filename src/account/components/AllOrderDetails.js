@@ -54,18 +54,12 @@ export default class AllOrderDetails extends React.Component {
                       orderId={orderDetails.orderId}
                     />
                   </div>
-                  {orderDetails.products &&
-                    orderDetails.products.map((products, j) => {
-                      return (
-                        <OrderCard
-                          key={j}
-                          imageUrl={products.imageURL}
-                          price={products.price}
-                          discountPrice={""}
-                          productName={products.productName}
-                        />
-                      );
-                    })}
+                  <OrderCard
+                    imageUrl={orderDetails.products[0].imageURL}
+                    price={orderDetails.products[0].price}
+                    discountPrice={""}
+                    productName={orderDetails.products[0].productName}
+                  />
                   <PriceAndLink
                     onViewDetails={() =>
                       this.onViewDetails(orderDetails.orderId)
