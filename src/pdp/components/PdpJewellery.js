@@ -790,13 +790,7 @@ please try another pincode">
               </PdpLink>
             </div>
           )}
-          {/* {productData.fineJewelleryClassificationList && (
-            <div className={styles.details}>
-              <ProductDetails
-                data={productData.fineJewelleryClassificationList}
-              />
-            </div>
-          )} */}
+
           <div className={styles.separator}>
             <RatingAndTextLink
               onClick={this.goToReviewPage}
