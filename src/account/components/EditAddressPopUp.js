@@ -12,38 +12,39 @@ let addressDetails;
 export default class EditAddressPopUp extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      countryIso: "",
-      addressType: "",
-      phone: "",
-      firstName: "",
-      lastName: "",
-      postalCode: "",
-      line1: "",
-      state: "",
-      emailId: "",
-      line2: "",
-      line3: "",
-      town: "",
-      addressId: ""
-    };
-  }
-  componentDidMount = () => {
     addressDetails = this.props.location.state.addressDetails;
-    this.setState({
+    this.state = {
       countryIso: addressDetails.country.isocode,
+      addressType: addressDetails.addressType,
+      phone: addressDetails.phone,
       firstName: addressDetails.firstName,
       lastName: addressDetails.lastName,
-      phone: addressDetails.phone,
-      line1: addressDetails.line1,
-      line2: addressDetails.line2,
       postalCode: addressDetails.postalCode,
+      line1: addressDetails.line1,
       state: addressDetails.state,
-      addressId: addressDetails.id,
+      emailId: "",
+      line2: addressDetails.line2,
+      line3: "",
       town: addressDetails.town,
-      addressType: addressDetails.addressType
-    });
-  };
+      addressId: addressDetails.id
+    };
+  }
+  // componentDidMount = () => {
+  //   addressDetails = this.props.location.state.addressDetails;
+  //   this.setState({
+  //     countryIso: addressDetails.country.isocode,
+  //     firstName: addressDetails.firstName,
+  //     lastName: addressDetails.lastName,
+  //     phone: addressDetails.phone,
+  //     line1: addressDetails.line1,
+  //     line2: addressDetails.line2,
+  //     postalCode: addressDetails.postalCode,
+  //     state: addressDetails.state,
+  //     addressId: addressDetails.id,
+  //     town: addressDetails.town,
+  //     addressType: addressDetails.addressType
+  //   });
+  // };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.editAddressStatus === SUCCESS) {
@@ -111,7 +112,7 @@ export default class EditAddressPopUp extends React.Component {
           </div>
           <div className={styles.container}>
             <SelectBoxMobile
-              value={this.props.location.state.addressDetails.state}
+              value={this.state.state}
               arrowColour="black"
               height={33}
               options={[{ value: this.state.state, label: this.state.state }]}
@@ -120,7 +121,7 @@ export default class EditAddressPopUp extends React.Component {
           </div>
           <div className={styles.container}>
             <SelectBoxMobile
-              value={this.props.location.state.addressDetails.country.isocode}
+              value={this.state.countryIso}
               arrowColour="black"
               height={33}
               options={[
