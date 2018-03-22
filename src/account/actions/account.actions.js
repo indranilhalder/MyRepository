@@ -87,10 +87,27 @@ export function returnProductDetailsFailure(error) {
   };
 }
 
+// {{root_url}}/marketplacewebservices/v2/mpl/users/{{username}}/newReturnProductDetails?access_token={{customer_access_token}}&isPwa=true
+
 export function returnProductDetails() {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(returnProductDetailsRequest());
     try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/newReturnProductDetails?access_token=${JSON.parse(
+          customerCookie
+        )}&isPwa=true`
+      );
+
+      const resultJson = await result.json();
+      if (resultJson.errors) {
+        throw new Error(resultJson.errors[0].message);
+      }
+      dispatch(returnProductDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(returnProductDetailsFailure(e.message));
     }
@@ -140,8 +157,15 @@ export function getReturnRequest(orderCode, transactionId) {
           JSON.parse(userDetails).userName
         }&orderCode=${orderCode}&transactionId=${transactionId}`
       );
+
+      const resultJson = await result.json();
+      if (resultJson.errors) {
+        throw new Error(resultJson.errors[0].message);
+      }
+
+      dispatch(getReturnRequestSuccess(resultJson));
     } catch (e) {
-      dispatch(getReturnRequestFailure);
+      dispatch(getReturnRequestFailure(e.message));
     }
   };
 }
