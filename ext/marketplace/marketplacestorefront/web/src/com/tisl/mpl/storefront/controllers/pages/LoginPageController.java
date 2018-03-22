@@ -21,6 +21,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.LoginForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -461,6 +462,10 @@ public class LoginPageController extends AbstractLoginPageController
 			getRegisterPageValidator().validate(form, bindingResult);
 			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
 			/** Added for UF-93 for Remember Me functionality **/
+			//SDI-6073
+			final String rememberMeEnabled = configurationService.getConfiguration().getString("rememberMe.enabled");
+			model.addAttribute("rememberMeEnabled", rememberMeEnabled);
+			//SDI-6073
 			String rememberMe = "false";
 			if (null != request.getParameter("j_RememberMe"))
 			{

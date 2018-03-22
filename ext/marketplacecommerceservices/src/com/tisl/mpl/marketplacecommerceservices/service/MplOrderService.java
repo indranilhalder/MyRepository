@@ -126,5 +126,7 @@ public interface MplOrderService
 	
 	//CAR-362 or SDI-5941
 	SearchPageData<OrderModel> getPagedFilteredParentOrderHistoryWebForm(CustomerModel paramCustomerModel,BaseStoreModel paramBaseStoreModel, PageableData paramPageableData, Date fromDate);
-
+	
+	//changes for SDI 6152
+	public ProductModel findProductsByCodewithCatalog(final String productCode,final String catalogCode);
 }
