@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import OrderReturn from "../../account/components/OrderReturn";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
-import filter from "lodash/filter";
 import { SUCCESS } from "../../lib/constants";
 const CANCEL_TEXT = "Cancel";
 const SAVE_CHANGES = "Save changes";
@@ -52,10 +51,8 @@ export default class EditAddressPopUp extends React.Component {
     }
   }
   onChange(val) {
+    console.log(val);
     this.setState(val);
-  }
-  cancelAddress() {
-    this.props.history.goBack();
   }
 
   editAddress(val) {
@@ -118,7 +115,8 @@ export default class EditAddressPopUp extends React.Component {
               value={this.props.location.state.addressDetails.state}
               arrowColour="black"
               height={33}
-              onChange={state => this.onChange({})}
+              options={[{ value: this.state.state, label: this.state.state }]}
+              onChange={state => this.onChange({ state })}
             />
           </div>
           <div className={styles.container}>
@@ -126,6 +124,12 @@ export default class EditAddressPopUp extends React.Component {
               value={this.props.location.state.addressDetails.country.isocode}
               arrowColour="black"
               height={33}
+              options={[
+                {
+                  value: this.state.countryIso,
+                  label: this.state.countryIso
+                }
+              ]}
               onChange={countryIso => this.onChange({ countryIso })}
             />
           </div>
