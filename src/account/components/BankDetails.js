@@ -49,6 +49,7 @@ export default class BankDetails extends React.Component {
               value={this.props.mode}
               arrowColour="grey"
               height={33}
+              options={this.props.refundModes}
               onChange={mode => this.onChange({ mode })}
             />
           </div>
@@ -82,6 +83,9 @@ BankDetails.propTypes = {
   mode: PropTypes.string,
   bankName: PropTypes.string,
   code: PropTypes.string,
+  refundModes: PropTypes.arrayOf([
+    PropTypes.shape({ value: PropTypes.string, label: PropTypes.string })
+  ]),
   onChange: PropTypes.func
 };
 BankDetails.defaultProps = {
