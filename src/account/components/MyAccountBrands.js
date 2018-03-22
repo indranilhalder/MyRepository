@@ -1,16 +1,14 @@
 import React from "react";
-// import ShopByBrandLists from "../../blp/components/ShopByBrandLists";
-// import Button from "../../general/components/Button";
 import MoreBrands from "../../blp/components/MoreBrands";
 import BrandEdit from "../../blp/components/BrandEdit";
 import ProfilePicture from "../../blp/components/ProfilePicture";
 import * as styles from "./MyAccountBrands.css";
 import MDSpinner from "react-md-spinner";
 import {
-  MY_ACCOUNT_PAGE,
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
-  LOGIN_PATH
+  LOGIN_PATH,
+  DEFAULT_BRANDS_LANDING_PAGE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
@@ -25,41 +23,35 @@ export default class MyAccountBrands extends React.Component {
       this.props.history.push(LOGIN_PATH);
     }
   }
+  renderToBLP() {
+    this.props.history.push(DEFAULT_BRANDS_LANDING_PAGE);
+  }
   renderLoader() {
     return <MDSpinner />;
   }
 
   render() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     if (this.props.loading) {
       return this.renderLoader();
     }
-    console.log(this.props);
     return (
       <div className={styles.base}>
         {/* we need to show this when we ll state getting profile image */}
         {/* <div className={styles.imageHolder}>
-          <ProfilePicture firstName="aakarsh" lastName="Yadav" edit={false} />
+          <ProfilePicture firstName={JSON.parse(userDetails).firstName} lastName="Yadav" edit={false} />
         </div> */}
-
         <MoreBrands
-          height={40}
           width={170}
           type="primary"
           label="More Brands"
+          onClick={() => this.renderToBLP()}
         />
-
         {this.props.followedBrands && (
-          <BrandEdit data={this.props.followedBrands} />
-        )}
-        {/* <div className={styles.followedBrandsTextHolder}>
-          <div className={styles.followedBrandsTextHeader}>Follow Brands</div>
-          <div className={styles.followedBrandsTextSubHeader}>
-            (Long press to visit or remove brands)
+          <div className={styles.brandsHolder}>
+            <BrandEdit data={this.props.followedBrands} />
           </div>
-        </div>
-        <div className={styles.followedBrandsHolder}>
-          <ShopByBrandLists />
-        </div> */}
+        )}
       </div>
     );
   }

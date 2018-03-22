@@ -30,6 +30,7 @@ export default class BrandEdit extends React.Component {
         <div className={styles.followedBrand}>
           <FollowedBrand
             header={this.props.header}
+            subHeader={this.props.subHeader}
             onClick={() => this.onShowDelete()}
             btnText={this.state.label}
           />
@@ -38,7 +39,7 @@ export default class BrandEdit extends React.Component {
           {this.props.data.map((val, i) => {
             return (
               <BrandsToolTip
-                logo={val.logo}
+                logo={val.imageURL}
                 onDelete={this.state.onDelete}
                 key={i}
                 onClick={() => this.onClickButton(val.value)}
@@ -63,5 +64,6 @@ BrandEdit.propTypes = {
 };
 BrandEdit.defaultProps = {
   btnText: "Edit",
-  header: "Followed Brands"
+  header: "Followed Brands",
+  subHeader: "(Long press to visit or remove brands)"
 };
