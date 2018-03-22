@@ -13,13 +13,28 @@ const mapDispatchToProps = dispatch => {
       dispatch(getFollowedBrands());
     },
     followAndUnFollowBrand: (brandId, followStatus) => {
-      dispatch(followAndUnFollowBrandInCommerce(brandId, followStatus))
-        .then(() =>
-          dispatch(
-            followAndUnFollowBrandInFeedBackInCommerceApi(brandId, followStatus)
-          )
-        )
-        .then(() => dispatch(getFollowedBrands()));
+      try {
+        dispatch(followAndUnFollowBrandInCommerce(brandId, followStatus))
+          .then((err, data) => {
+            if (err) {
+              throw new Error(err);
+            }
+            dispatch(
+              followAndUnFollowBrandInFeedBackInCommerceApi(
+                brandId,
+                followStatus
+              )
+            );
+          })
+          .then((err, res) => {
+            if (err) {
+              throw new Error(err);
+            }
+            dispatch(getFollowedBrands());
+          });
+      } catch (e) {
+        console.log(e.message);
+      }
     }
   };
 };

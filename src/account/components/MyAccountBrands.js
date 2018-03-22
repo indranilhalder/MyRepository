@@ -1,17 +1,20 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { Redirect } from "react-router-dom";
 import MoreBrands from "../../blp/components/MoreBrands";
 import BrandEdit from "../../blp/components/BrandEdit";
 import ProfilePicture from "../../blp/components/ProfilePicture";
 import * as styles from "./MyAccountBrands.css";
 import MDSpinner from "react-md-spinner";
 import {
+  TRUE,
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
   LOGIN_PATH,
   DEFAULT_BRANDS_LANDING_PAGE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-const TRUE = "true";
+
 export default class MyAccountBrands extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -20,10 +23,13 @@ export default class MyAccountBrands extends React.Component {
     if (userDetails && customerCookie) {
       this.props.getFollowedBrands();
     } else {
-      this.props.history.push(LOGIN_PATH);
+      this.navigateToLogin();
     }
   }
-  renderToBLP() {
+  navigateToLogin() {
+    return <Redirect to={LOGIN_PATH} />;
+  }
+  navigateToBLP() {
     this.props.history.push(DEFAULT_BRANDS_LANDING_PAGE);
   }
   followAndUnFollow(brandId, followStatus) {
@@ -60,7 +66,7 @@ export default class MyAccountBrands extends React.Component {
           width={170}
           type="primary"
           label="More Brands"
-          onClick={() => this.renderToBLP()}
+          onClick={() => this.navigateToBLP()}
         />
         {followedBrands && (
           <div className={styles.brandsHolder}>
@@ -76,3 +82,7 @@ export default class MyAccountBrands extends React.Component {
     );
   }
 }
+MyAccountBrands.propTypes = {
+  loading: PropTypes.bool,
+  followedBrands: PropTypes.array
+};

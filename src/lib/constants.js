@@ -103,3 +103,5 @@ export const SHORT_COLLECT = "CNC";
 
 export const FOLLOW = "Follow";
 export const FOLLOWING = "Following";
+
+export const TRUE = "true";

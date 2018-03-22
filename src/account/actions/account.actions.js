@@ -535,7 +535,10 @@ export function getFollowedBrands() {
     msdFormData.append("details", true);
     msdFormData.append("widget_list", WIDGETS_LIST_FOR_BRANDS);
     try {
-      const result = await api.postMsdData(`widgets`, msdFormData);
+      const result = await api.postMsd(
+        `https://ap-southeast-1-api.madstreetden.com/widgets`,
+        msdFormData
+      );
       const resultJson = await result.json();
       if (
         resultJson.errors ||
@@ -627,11 +630,11 @@ export function followAndUnFollowBrandInFeedBackInCommerceApi(
   brandId,
   followStatus
 ) {
-  const msvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
+  const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
   const followedText = followStatus ? UNFOLLOW : FOLLOW;
   const updatedBrandObj = {
     api_key: API_KEY_FOR_MSD,
-    mad_uuid: msvId,
+    mad_uuid: mcvId,
     data: [
       {
         fields: "brand",

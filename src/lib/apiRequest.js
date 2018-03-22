@@ -182,12 +182,6 @@ export async function postFormData(url, payload) {
 
 // this function is using in follow and un follow brands
 // because there we have to send payload in formData or Row Data format in msd api
-export async function postMsdData(url, payload) {
-  return await fetch(`${API_MSD_URL_ROOT}/${url}`, {
-    method: "POST",
-    body: payload
-  });
-}
 
 export async function postMsdRowData(url, payload) {
   return await fetch(`${API_MSD_URL_ROOT}/${url}`, {
