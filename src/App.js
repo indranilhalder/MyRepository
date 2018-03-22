@@ -60,13 +60,13 @@ import {
   DEFAULT_BRANDS_LANDING_PAGE,
   CATEGORIES_LANDING_PAGE,
   BRAND_PAGE,
+  ORDER_PREFIX,
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
   ORDER_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
-  MY_ACCOUNT_PAGE,
-  ORDER_PREFIX
+  MY_ACCOUNT_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
