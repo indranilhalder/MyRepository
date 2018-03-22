@@ -86,6 +86,10 @@ export default class PaymentCardWrapper extends React.Component {
                   this.props.cart.paymentModes.cliqCash.totalCliqCashBalance
                     .formattedValue
                 }
+                value={
+                  this.props.cart.paymentModes.cliqCash.totalCliqCashBalance
+                    .value
+                }
                 onToggle={i => this.handleClick(i)}
               />
             </div>

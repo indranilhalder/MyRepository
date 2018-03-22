@@ -9,24 +9,28 @@ export default class CliqCashToggle extends React.Component {
     }
   }
   render() {
-    return (
-      <div className={styles.base}>
-        <div className={styles.cashBalanceTextHolder}>
-          <div className={styles.casBalanceText}>{this.props.cashText}</div>
-          <div className={styles.cashRupyText}>{`Rs. ${
-            this.props.price
-          } available`}</div>
-        </div>
-        <div className={styles.toggleButtonHolder}>
-          <div className={styles.toggleButton}>
-            <Toggle
-              active={this.props.active}
-              onToggle={val => this.onToggle(val)}
-            />
+    if (this.props.value !== 0) {
+      return (
+        <div className={styles.base}>
+          <div className={styles.cashBalanceTextHolder}>
+            <div className={styles.casBalanceText}>{this.props.cashText}</div>
+            <div className={styles.cashRupyText}>{`Rs. ${
+              this.props.price
+            } available`}</div>
+          </div>
+          <div className={styles.toggleButtonHolder}>
+            <div className={styles.toggleButton}>
+              <Toggle
+                active={this.props.active}
+                onToggle={val => this.onToggle(val)}
+              />
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return null;
+    }
   }
 }
 CliqCashToggle.propTypes = {
