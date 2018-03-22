@@ -1,45 +1,81 @@
 import React from "react";
 import styles from "./AddressBook.css";
-import OrderReturn from "./OrderReturn.js";
-import PropTypes from "prop-types";
+import Button from "../../general/components/Button.js";
+import AddressItemFooter from "./AddressItemFooter.js";
+import MDSpinner from "react-md-spinner";
+const ADDRESS_BOOK_HEADER = "Add a new address";
+const DELETE_LABEL = "Delete";
+const EDIT_LABEL = "Edit";
 export default class AddressBook extends React.Component {
-  deleteItem() {
-    if (this.props.deleteItem) {
-      this.props.deleteItem();
-    }
+  componentDidMount() {
+    this.props.getUserAddress();
   }
-  onEdit() {
-    if (this.props.onEdit) {
-      this.props.onEdit();
+
+  removeAddress = addressId => {
+    if (this.props.removeAddress) {
+      this.props.removeAddress(addressId);
     }
-  }
-  render() {
+  };
+
+  renderLoader = () => {
+    return (
+      <div className={styles.loadingIndicator}>
+        <MDSpinner />
+      </div>
+    );
+  };
+
+  renderAddressBook = () => {
     return (
       <div className={styles.base}>
-        <div className={styles.addressHolder}>
-          <div className={styles.name}>{this.props.name}</div>
-          <div className={styles.address}>{this.props.address}</div>
-          <div className={styles.phoneNumber}>{`Ph. ${
-            this.props.phoneNumber
-          }`}</div>
-        </div>
-        <div className={styles.actionHolder}>
-          <OrderReturn
-            replaceItem={() => this.deleteItem()}
-            buttonLabel="Delete"
-            underlineButtonLabel="Edit"
-            writeReview={() => this.onEdit()}
-            isEditable={true}
+        {this.props.userAddress &&
+          this.props.userAddress.addresses.map(address => {
+            return (
+              <div className={styles.addressBlock}>
+                <div className={styles.addressHolder}>
+                  <div className={styles.name}>{`${address.firstName} ${
+                    address.lastName
+                  }`}</div>
+                  <div className={styles.address}>{address.line1}</div>
+                  <div className={styles.phoneNumber}>{`Ph. ${
+                    address.phone
+                  }`}</div>
+                </div>
+                <div className={styles.actionHolder}>
+                  <AddressItemFooter
+                    buttonLabel={DELETE_LABEL}
+                    underlineButtonLabel={EDIT_LABEL}
+                    editAddress={() =>
+                      this.setState({
+                        isEditable: true,
+                        editableAddressId: address.id
+                      })
+                    }
+                    removeAddress={() => this.removeAddress(address.id)}
+                    isEditable={true}
+                  />
+                </div>
+              </div>
+            );
+          })}
+
+        <div className={styles.button}>
+          <Button
+            type="hollow"
+            height={40}
+            label={ADDRESS_BOOK_HEADER}
+            width={200}
+            textStyle={{ color: "#212121", fontSize: 14 }}
+            onClick={() => this.setState({ addNewAddress: true })}
           />
         </div>
       </div>
     );
+  };
+  render() {
+    if (this.props.renderLoader) {
+      return this.renderLoader();
+    }
+    return this.renderAddressBook();
   }
 }
-AddressBook.propTypes = {
-  name: PropTypes.string,
-  address: PropTypes.string,
-  phoneNumber: PropTypes.string,
-  deleteItem: PropTypes.func,
-  onEdit: PropTypes.func
-};
