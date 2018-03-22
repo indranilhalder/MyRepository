@@ -525,8 +525,7 @@ export function getFollowedBrandsFailure(error) {
 }
 
 export function getFollowedBrands() {
-  // const msvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
-  const msvId = "30544430396817293884553316383600718312";
+  const msvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
   return async (dispatch, getState, { api }) => {
     dispatch(getFollowedBrandsRequest());
     let msdFormData = new FormData();
@@ -628,8 +627,7 @@ export function followAndUnFollowBrandInFeedBackInCommerceApi(
   brandId,
   followStatus
 ) {
-  // const msvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
-  const msvId = "30544430396817293884553316383600718312";
+  const msvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
   const followedText = followStatus ? UNFOLLOW : FOLLOW;
   const updatedBrandObj = {
     api_key: API_KEY_FOR_MSD,
