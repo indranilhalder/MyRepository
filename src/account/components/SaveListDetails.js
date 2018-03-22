@@ -1,5 +1,4 @@
 import React from "react";
-import SearchHeader from "../../search/components/SearchHeader";
 import SaveListCard from "../../blp/components/SaveListCard";
 import styles from "./SaveListDetails.css";
 import PropTypes from "prop-types";

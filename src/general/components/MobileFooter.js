@@ -19,8 +19,7 @@ import {
   DEFAULT_BRANDS_LANDING_PAGE,
   CATEGORIES_LANDING_PAGE,
   PRODUCT_CART_DELIVERY_MODES,
-  MY_ACCOUNT_PAGE,
-  SAVE_LIST_PAGE
+  MY_ACCOUNT_PAGE
 } from "../../../src/lib/constants";
 import { CATEGORY_REGEX } from "../../plp/components/PlpBrandCategoryWrapper";
 const HOME = "home";

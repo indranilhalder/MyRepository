@@ -26,9 +26,9 @@ export const GET_ALL_ORDERS_REQUEST = "GET_ALL_ORDERS_REQUEST";
 export const GET_ALL_ORDERS_SUCCESS = "GET_ALL_ORDERS_SUCCESS";
 export const GET_ALL_ORDERS_FAILURE = "GET_ALL_ORDERS_FAILURE";
 
-export const GET_WISHLIST_REQUEST = "GET_WISHLIST_REQUEST";
-export const GET_WISHLIST_SUCCESS = "GET_WISHLIST_SUCCESS";
-export const GET_WISHLIST_FAILURE = "GET_WISHLIST_FAILURE";
+export const FETCH_ORDER_DETAILS_REQUEST = "FETCH_ORDER_DETAILS_REQUEST";
+export const FETCH_ORDER_DETAILS_SUCCESS = "FETCH_ORDER_DETAILS_SUCCESS";
+export const FETCH_ORDER_DETAILS_FAILURE = "FETCH_ORDER_DETAILS_FAILURE";
 
 export const GET_USER_COUPON_REQUEST = "GET_USER_COUPON_REQUEST";
 export const GET_USER_COUPON_SUCCESS = "GET_USER_COUPON_SUCCESS";
@@ -37,6 +37,18 @@ export const GET_USER_COUPON_FAILURE = "GET_USER_COUPON_FAILURE";
 export const GET_USER_ALERTS_REQUEST = "GET_USER_ALERTS_REQUEST";
 export const GET_USER_ALERTS_SUCCESS = "GET_USER_ALERTS_SUCCESS";
 export const GET_USER_ALERTS_FAILURE = "GET_USER_ALERTS_FAILURE";
+
+export const SEND_INVOICE_REQUEST = "SEND_INVOICE_REQUEST";
+export const SEND_INVOICE_SUCCESS = "SEND_INVOICE_SUCCESS";
+export const SEND_INVOICE_FAILURE = "SEND_INVOICE_FAILURE";
+
+export const REMOVE_ADDRESS_REQUEST = "REMOVE_ADDRESS_REQUEST";
+export const REMOVE_ADDRESS_SUCCESS = "REMOVE_ADDRESS_SUCCESS";
+export const REMOVE_ADDRESS_FAILURE = "REMOVE_ADDRESS_FAILURE";
+
+export const GET_WISHLIST_REQUEST = "GET_WISHLIST_REQUEST";
+export const GET_WISHLIST_SUCCESS = "GET_WISHLIST_SUCCESS";
+export const GET_WISHLIST_FAILURE = "GET_WISHLIST_FAILURE";
 
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
@@ -320,6 +332,158 @@ export function getUserAlerts() {
     }
   };
 }
+
+export function removeAddressRequest() {
+  return {
+    type: REMOVE_ADDRESS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function removeAddressSuccess() {
+  return {
+    type: REMOVE_ADDRESS_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function removeAddressFailure(error) {
+  return {
+    type: REMOVE_ADDRESS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function removeAddress(addressId) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let addressObject = new FormData();
+
+    addressObject.append("addressId", addressId);
+    addressObject.append("emailId", "");
+
+    dispatch(removeAddressRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/removeAddress?isPwa=true&platformNumber=2&access_token=${
+          JSON.parse(customerCookie).access_token
+        }`,
+        addressObject
+      );
+      const resultJson = await result.json();
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(removeAddressSuccess());
+    } catch (e) {
+      dispatch(removeAddressFailure(e.message));
+    }
+  };
+}
+
+export function fetchOrderDetailsRequest() {
+  return {
+    type: FETCH_ORDER_DETAILS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function fetchOrderDetailsSuccess(fetchOrderDetails) {
+  return {
+    type: FETCH_ORDER_DETAILS_SUCCESS,
+    status: SUCCESS,
+    fetchOrderDetails
+  };
+}
+
+export function fetchOrderDetailsFailure(error) {
+  return {
+    type: FETCH_ORDER_DETAILS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function fetchOrderDetails(orderId) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(fetchOrderDetailsRequest());
+    try {
+      const result = await api.get(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/getSelectedOrder/${orderId}?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`
+      );
+      const resultJson = await result.json();
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(fetchOrderDetailsSuccess(resultJson));
+    } catch (e) {
+      dispatch(fetchOrderDetailsFailure(e.message));
+    }
+  };
+}
+
+export function sendInvoiceRequest() {
+  return {
+    type: SEND_INVOICE_REQUEST,
+    status: REQUESTING
+  };
+}
+export function sendInvoiceSuccess(sendInvoice) {
+  return {
+    type: SEND_INVOICE_SUCCESS,
+    status: SUCCESS,
+    sendInvoice
+  };
+}
+
+export function sendInvoiceFailure(error) {
+  return {
+    type: SEND_INVOICE_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function sendInvoice(lineID, orderNumber) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(sendInvoiceRequest());
+    try {
+      const result = await api.get(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/sendInvoice?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&orderNumber=${orderNumber}&lineID=${lineID}`
+      );
+      const resultJson = await result.json();
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(sendInvoiceSuccess(resultJson));
+    } catch (e) {
+      dispatch(sendInvoiceFailure(e.message));
+    }
+  };
+}
+
 export function getWishlistRequest() {
   return {
     type: GET_WISHLIST_REQUEST,
@@ -348,7 +512,7 @@ export function getWishList() {
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     dispatch(getWishlistRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
         }/getAllWishlist?access_token=${

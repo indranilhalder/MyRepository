@@ -50,7 +50,10 @@ export const PRODUCT_CART_ROUTER = "/cart";
 export const ORDER_SUMMARY_ROUTER = "/orderSummary";
 export const CHECKOUT_ROUTER = "/checkout";
 export const ACCOUNT_SAVED_CARD_ROUTER = "/savedCards";
-
+export const MY_ACCOUNT = "/my-account";
+export const ORDER_PREFIX = "/my-account/order/(.*)";
+export const ORDER_CODE = "orderCode";
+export const ORDER = "/order";
 // MyAccount Routes
 export const MY_ACCOUNT_PAGE = "/myAccount";
 export const MY_ACCOUNT_WISHLIST_PAGE = "/wishList";

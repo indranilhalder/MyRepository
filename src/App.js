@@ -30,9 +30,11 @@ import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCou
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
-import GetAllOrderContainer from "./account/containers/GetAllOrderContainer";
+import AllOrderContainer from "./account/containers/AllOrderContainer";
+import SavedCardContainer from "./account/containers/SavedCardContainer.js";
+import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
+import AddressBookContainer from "./account/containers/AddressBookContainer.js";
 import SaveListContainer from "./account/containers/SaveListContainer";
-import SavedCardContainer from "./account/containers/SavedCardContainer";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -70,9 +72,12 @@ import {
   ORDER_PAGE,
   SAVE_LIST_PAGE,
   MY_ACCOUNT_PAGE,
-  ACCOUNT_SAVED_CARD_ROUTER,
+  MY_ACCOUNT_SAVED_CARDS_PAGE,
+  MY_ACCOUNT_ADDRESS_PAGE,
   MY_ACCOUNT_ALERTS_PAGE,
-  MY_ACCOUNT_COUPON_PAGE
+  MY_ACCOUNT_COUPON_PAGE,
+  ACCOUNT_SAVED_CARD_ROUTER,
+  ORDER_PREFIX
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -146,16 +151,15 @@ class App extends Component {
                 <SignUpContainer {...routeProps} {...this.props} />
               )}
             />
-            <Route path={ORDER_PAGE} component={GetAllOrderContainer} />
             <Route path={SAVE_LIST_PAGE} component={SaveListContainer} />
-
+            <Route path={ORDER_PAGE} component={AllOrderContainer} />
             <Route
               exact
               path={MY_ACCOUNT_PAGE}
               component={MyAccountContainer}
             />
             <Route
-              path={`${MY_ACCOUNT_PAGE}${ACCOUNT_SAVED_CARD_ROUTER}`}
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_SAVED_CARDS_PAGE}`}
               component={SavedCardContainer}
             />
             <Route
@@ -173,7 +177,7 @@ class App extends Component {
               path={BRAND_PAGE}
               component={PlpBrandCategoryWrapperContainer}
             />
-
+            <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
             <Route
               exact
               path={CATEGORY_PAGE}
@@ -255,6 +259,11 @@ class App extends Component {
               exact
               path={CATEGORIES_LANDING_PAGE}
               component={CategoriesPageContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_PAGE}`}
+              component={AddressBookContainer}
             />
           </Switch>
           <MobileFooter />

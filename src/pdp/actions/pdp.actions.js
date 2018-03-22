@@ -293,14 +293,18 @@ export function removeProductFromWishList(productDetails) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const removeProductFromWishListObject = new FormData();
+    removeProductFromWishListObject.append("USSID", productDetails.USSID);
+    removeProductFromWishListObject.append("wishlistName", MY_WISH_LIST);
     dispatch(removeProductFromWishListRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${PRODUCT_DETAILS_PATH}/${
           JSON.parse(userDetails).userName
         }/removeProductFromWishlist?&access_token=${
           JSON.parse(customerCookie).access_token
-        }&USSID=${productDetails.USSID}&wishlistName=${MY_WISH_LIST}`
+        }`,
+        removeProductFromWishListObject
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {

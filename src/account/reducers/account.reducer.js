@@ -1,4 +1,5 @@
 import * as accountActions from "../actions/account.actions";
+import * as cartActions from "../../cart/actions/cart.actions";
 
 const account = (
   state = {
@@ -10,9 +11,15 @@ const account = (
     orderDetailsStatus: null,
     orderDetailsError: null,
 
+    fetchOrderDetails: null,
+    fetchOrderDetailsStatus: null,
+    fetchOrderDetailsError: null,
+    loadingForFetchOrderDetails: false,
+
     wishlist: null,
     wishlistStatus: null,
     wishlistError: null,
+    loadingForWishlist: false,
 
     userDetails: null,
     userDetailsStatus: null,
@@ -27,7 +34,19 @@ const account = (
     userAlerts: null,
     userAlertsStatus: null,
     userAlertsError: null,
-    loadingForUserAlerts: false
+    loadingForUserAlerts: false,
+
+    sendInvoice: null,
+    sendInvoiceStatus: null,
+    sendInvoiceError: null,
+    loadingForSendInvoice: false,
+
+    userAddress: null,
+    userAddressStatus: null,
+    userAddressError: null,
+
+    removeAddressStatus: null,
+    removeAddressError: null
   },
   action
 ) => {
@@ -93,21 +112,21 @@ const account = (
     case accountActions.GET_WISHLIST_REQUEST:
       return Object.assign({}, state, {
         wishlistStatus: action.status,
-        loading: true
+        loadingForWishlist: true
       });
 
     case accountActions.GET_WISHLIST_SUCCESS:
       return Object.assign({}, state, {
         wishlistStatus: action.status,
         wishlist: action.wishlist,
-        loading: false
+        loadingForWishlist: false
       });
 
     case accountActions.GET_WISHLIST_FAILURE:
       return Object.assign({}, state, {
         wishlistStatus: action.status,
         wishlistError: action.error,
-        loading: false
+        loaloadingForWishlistding: false
       });
     case accountActions.GET_USER_DETAILS_REQUEST:
       return Object.assign({}, state, {
@@ -166,6 +185,84 @@ const account = (
         userAlertsStatus: action.status,
         userAlertsError: action.error,
         loadingForUserAlerts: false
+      });
+
+    case accountActions.FETCH_ORDER_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        fetchOrderDetailsStatus: action.status,
+        loadingForFetchOrderDetails: true
+      });
+
+    case accountActions.FETCH_ORDER_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        fetchOrderDetailsStatus: action.status,
+        fetchOrderDetails: action.fetchOrderDetails,
+        loadingForFetchOrderDetails: false
+      });
+
+    case accountActions.FETCH_ORDER_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        fetchOrderDetailsStatus: action.status,
+        fetchOrderDetailsError: action.error,
+        loadingForFetchOrderDetails: false
+      });
+
+    case accountActions.SEND_INVOICE_REQUEST:
+      return Object.assign({}, state, {
+        sendInvoiceStatus: action.status,
+        loadingForSendInvoice: true
+      });
+
+    case accountActions.SEND_INVOICE_SUCCESS:
+      return Object.assign({}, state, {
+        sendInvoiceStatus: action.status,
+        sendInvoice: action.sendInvoice,
+        loadingForSendInvoice: false
+      });
+
+    case accountActions.SEND_INVOICE_FAILURE:
+      return Object.assign({}, state, {
+        sendInvoiceStatus: action.status,
+        sendInvoiceError: action.error,
+        loadingForSendInvoice: false
+      });
+    case cartActions.GET_USER_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        userAddressStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.GET_USER_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        userAddressStatus: action.status,
+        userAddress: action.userAddress,
+        loading: false
+      });
+
+    case cartActions.GET_USER_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        userAddressStatus: action.status,
+        userAddressError: action.error,
+        loading: false
+      });
+
+    case accountActions.REMOVE_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        removeAddressStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.REMOVE_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        removeAddressStatus: action.status,
+        loading: false
+      });
+
+    case accountActions.REMOVE_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        removeAddressStatus: action.status,
+        removeAddressError: action.error,
+        loading: false
       });
 
     default:
