@@ -9,7 +9,8 @@ import {
   GLOBAL_ACCESS_TOKEN,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
-  ANONYMOUS_USER
+  ANONYMOUS_USER,
+  LOGIN_PATH
 } from "../../lib/constants";
 
 import * as Cookie from "../../lib/Cookie";
@@ -18,7 +19,13 @@ const PRODUCT_QUANTITY = "1";
 
 export default class SaveListDetails extends React.Component {
   componentDidMount() {
-    this.props.getWishList();
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (userDetails && customerCookie) {
+      this.props.getWishList();
+    } else {
+      this.props.history.push(LOGIN_PATH);
+    }
   }
   addToBagItem(ussid, productcode) {
     const productDetails = {};
@@ -89,7 +96,6 @@ export default class SaveListDetails extends React.Component {
   }
 }
 SaveListDetails.propTypes = {
-  text: PropTypes.string,
   profile: PropTypes.objectOf(
     PropTypes.shape({
       wishlist: PropTypes.arrayOf(
@@ -99,7 +105,9 @@ SaveListDetails.propTypes = {
               productBrand: PropTypes.string,
               productName: PropTypes.string,
               imageURL: PropTypes.string,
-              date: PropTypes.string
+              date: PropTypes.string,
+              productcode: PropTypes.string,
+              USSID: PropTypes.string
             })
           )
         })
@@ -108,7 +116,4 @@ SaveListDetails.propTypes = {
   ),
   addProductToWishList: PropTypes.func,
   removeProductFromWishList: PropTypes.func
-};
-SaveListDetails.defaultProps = {
-  text: "Saved List"
 };

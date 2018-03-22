@@ -16,7 +16,9 @@ const mapDispatchToProps = dispatch => {
       dispatch(addProductToCart(userId, cartId, accessToken, productDetails));
     },
     removeProductFromWishList: productDetails => {
-      dispatch(removeProductFromWishList(productDetails));
+      dispatch(removeProductFromWishList(productDetails)).then(() =>
+        dispatch(getWishList())
+      );
     }
   };
 };
