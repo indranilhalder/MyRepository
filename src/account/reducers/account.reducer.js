@@ -11,6 +11,11 @@ const account = (
     orderDetailsStatus: null,
     orderDetailsError: null,
 
+    fetchOrderDetails: null,
+    fetchOrderDetailsStatus: null,
+    fetchOrderDetailsError: null,
+    loadingForFetchOrderDetails: false,
+
     userDetails: null,
     userDetailsStatus: null,
     userDetailsError: null,
@@ -25,6 +30,11 @@ const account = (
     userAlertsStatus: null,
     userAlertsError: null,
     loadingForUserAlerts: false,
+
+    sendInvoice: null,
+    sendInvoiceStatus: null,
+    sendInvoiceError: null,
+    loadingForSendInvoice: false,
 
     userAddress: null,
     userAddressStatus: null,
@@ -153,6 +163,45 @@ const account = (
         loadingForUserAlerts: false
       });
 
+    case accountActions.FETCH_ORDER_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        fetchOrderDetailsStatus: action.status,
+        loadingForFetchOrderDetails: true
+      });
+
+    case accountActions.FETCH_ORDER_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        fetchOrderDetailsStatus: action.status,
+        fetchOrderDetails: action.fetchOrderDetails,
+        loadingForFetchOrderDetails: false
+      });
+
+    case accountActions.FETCH_ORDER_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        fetchOrderDetailsStatus: action.status,
+        fetchOrderDetailsError: action.error,
+        loadingForFetchOrderDetails: false
+      });
+
+    case accountActions.SEND_INVOICE_REQUEST:
+      return Object.assign({}, state, {
+        sendInvoiceStatus: action.status,
+        loadingForSendInvoice: true
+      });
+
+    case accountActions.SEND_INVOICE_SUCCESS:
+      return Object.assign({}, state, {
+        sendInvoiceStatus: action.status,
+        sendInvoice: action.sendInvoice,
+        loadingForSendInvoice: false
+      });
+
+    case accountActions.SEND_INVOICE_FAILURE:
+      return Object.assign({}, state, {
+        sendInvoiceStatus: action.status,
+        sendInvoiceError: action.error,
+        loadingForSendInvoice: false
+      });
     case cartActions.GET_USER_ADDRESS_REQUEST:
       return Object.assign({}, state, {
         userAddressStatus: action.status,

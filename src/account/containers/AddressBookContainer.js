@@ -12,7 +12,7 @@ const mapDispatchToProps = dispatch => {
     removeAddress: addressId => {
       dispatch(removeAddress(addressId));
     }
-};
+  };
 };
 
 const mapStateToProps = state => {
