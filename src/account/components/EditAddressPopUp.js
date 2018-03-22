@@ -29,22 +29,6 @@ export default class EditAddressPopUp extends React.Component {
       addressId: addressDetails.id
     };
   }
-  // componentDidMount = () => {
-  //   addressDetails = this.props.location.state.addressDetails;
-  //   this.setState({
-  //     countryIso: addressDetails.country.isocode,
-  //     firstName: addressDetails.firstName,
-  //     lastName: addressDetails.lastName,
-  //     phone: addressDetails.phone,
-  //     line1: addressDetails.line1,
-  //     line2: addressDetails.line2,
-  //     postalCode: addressDetails.postalCode,
-  //     state: addressDetails.state,
-  //     addressId: addressDetails.id,
-  //     town: addressDetails.town,
-  //     addressType: addressDetails.addressType
-  //   });
-  // };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.editAddressStatus === SUCCESS) {
