@@ -7,7 +7,8 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
-  GLOBAL_ACCESS_TOKEN
+  GLOBAL_ACCESS_TOKEN,
+  PLAT_FORM_NUMBER
 } from "../../lib/constants";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
@@ -37,6 +38,10 @@ export const GET_USER_ALERTS_FAILURE = "GET_USER_ALERTS_FAILURE";
 export const REMOVE_ADDRESS_REQUEST = "REMOVE_ADDRESS_REQUEST";
 export const REMOVE_ADDRESS_SUCCESS = "REMOVE_ADDRESS_SUCCESS";
 export const REMOVE_ADDRESS_FAILURE = "REMOVE_ADDRESS_FAILURE";
+
+export const EDIT_ADDRESS_REQUEST = "EDIT_ADDRESS_REQUEST";
+export const EDIT_ADDRESS_SUCCESS = "EDIT_ADDRESS_SUCCESS";
+export const EDIT_ADDRESS_FAILURE = "EDIT_ADDRESS_FAILURE";
 
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
@@ -368,6 +373,70 @@ export function removeAddress(addressId) {
       dispatch(removeAddressSuccess());
     } catch (e) {
       dispatch(removeAddressFailure(e.message));
+    }
+  };
+}
+
+export function editAddressRequest() {
+  return {
+    type: EDIT_ADDRESS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function editAddressSuccess(addressDetails) {
+  return {
+    type: EDIT_ADDRESS_SUCCESS,
+    status: SUCCESS,
+    addressDetails
+  };
+}
+
+export function editAddressFailure(error) {
+  return {
+    type: EDIT_ADDRESS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function editAddress(addressDetails) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(editAddressRequest());
+    let addressObject = new FormData();
+    addressObject.append("countryIso", addressDetails.countryIso);
+    addressObject.append("addressType", addressDetails.addressType);
+    addressObject.append("phone", addressDetails.phone);
+    addressObject.append("firstName", addressDetails.firstName);
+    addressObject.append("lastName", addressDetails.lastName);
+    addressObject.append("postalCode", addressDetails.postalCode);
+    addressObject.append("line1", addressDetails.line1);
+    addressObject.append("line2", addressDetails.line2);
+    addressObject.append("line3", addressDetails.line3);
+    addressObject.append("state", addressDetails.state);
+    addressObject.append("town", addressDetails.town);
+    addressObject.append("defaultFlag", true);
+    addressObject.append("addressId", addressDetails.addressId);
+    addressObject.append("emailId", "");
+
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/editAddress?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&pageSize=${PAGE_SIZE}&isPwa=true&platformNumber=${PLAT_FORM_NUMBER}`,
+        addressObject
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(editAddressSuccess(resultJson));
+    } catch (e) {
+      dispatch(editAddressFailure(e.message));
     }
   };
 }

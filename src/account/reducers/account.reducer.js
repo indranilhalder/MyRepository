@@ -31,7 +31,13 @@ const account = (
     userAddressError: null,
 
     removeAddressStatus: null,
-    removeAddressError: null
+    removeAddressError: null,
+
+    editAddressStatus: null,
+    editAddressError: null,
+
+    addUserAddressStatus: null,
+    addUserAddressError: null
   },
   action
 ) => {
@@ -189,6 +195,44 @@ const account = (
       return Object.assign({}, state, {
         removeAddressStatus: action.status,
         removeAddressError: action.error,
+        loading: false
+      });
+
+    case accountActions.EDIT_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.EDIT_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        loading: false
+      });
+
+    case accountActions.EDIT_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        editAddressError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_USER_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        addUserAddressError: action.error,
         loading: false
       });
 
