@@ -46,6 +46,10 @@ export const REMOVE_ADDRESS_REQUEST = "REMOVE_ADDRESS_REQUEST";
 export const REMOVE_ADDRESS_SUCCESS = "REMOVE_ADDRESS_SUCCESS";
 export const REMOVE_ADDRESS_FAILURE = "REMOVE_ADDRESS_FAILURE";
 
+export const GET_FOLLOWED_BRANDS_REQUEST = "GET_FOLLOWED_BRANDS_REQUEST";
+export const GET_FOLLOWED_BRANDS_SUCCESS = "GET_FOLLOWED_BRANDS_SUCCESS";
+export const GET_FOLLOWED_BRANDS_FAILURE = "GET_FOLLOWED_BRANDS_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const USER_PATH = "v2/mpl/users";
@@ -475,6 +479,49 @@ export function sendInvoice(lineID, orderNumber) {
       dispatch(sendInvoiceSuccess(resultJson));
     } catch (e) {
       dispatch(sendInvoiceFailure(e.message));
+    }
+  };
+}
+
+export function getFollowedBrandsRequest() {
+  return {
+    type: GET_FOLLOWED_BRANDS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getFollowedBrandsSuccess(followedBrands) {
+  return {
+    type: GET_FOLLOWED_BRANDS_SUCCESS,
+    status: SUCCESS,
+    followedBrands
+  };
+}
+
+export function getFollowedBrandsFailure(error) {
+  return {
+    type: GET_FOLLOWED_BRANDS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getFollowedBrands() {
+  return async (dispatch, getState, { api }) => {
+    dispatch(getFollowedBrandsRequest());
+    try {
+      const result = await api.postMsd(`widgets`);
+      const resultJson = await result.json();
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+
+      dispatch(getFollowedBrandsSuccess(resultJson.data[0]));
+    } catch (e) {
+      dispatch(getFollowedBrandsFailure(e.message));
     }
   };
 }

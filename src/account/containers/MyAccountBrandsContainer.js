@@ -1,29 +1,18 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MyAccountBrands from "../components/MyAccountBrands";
-import {
-  getUserDetails,
-  getUserCoupons,
-  getUserAlerts
-} from "../actions/account.actions";
+import { getFollowedBrands } from "../actions/account.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    getUserDetails: () => {
-      dispatch(getUserDetails());
-    },
-    getUserCoupons: () => {
-      dispatch(getUserCoupons());
-    },
-    getUserAlerts: () => {
-      dispatch(getUserAlerts());
+    getFollowedBrands: () => {
+      dispatch(getFollowedBrands());
     }
   };
 };
 const mapStateToProps = state => {
   return {
-    userDetails: state.profile.userDetails,
-    userCoupons: state.profile.userCoupons,
-    userAlerts: state.profile.userAlerts
+    followedBrands: state.profile.followedBrands,
+    loading: state.profile.loadingForFollowedBrands
   };
 };
 const MyAccountBrandsContainer = withRouter(
