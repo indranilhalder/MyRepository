@@ -22,7 +22,11 @@ import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryC
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
 import MobileFooter from "./general/components/MobileFooter.js";
+
+// importing All container for my Accounts
 import MyAccountContainer from "./account/containers/MyAccountContainer";
+import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
+
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
@@ -60,13 +64,15 @@ import {
   DEFAULT_BRANDS_LANDING_PAGE,
   CATEGORIES_LANDING_PAGE,
   BRAND_PAGE,
-  ORDER_PREFIX,
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
   ORDER_PAGE,
+  MY_ACCOUNT_PAGE,
+  ORDER_PREFIX,
   ACCOUNT_SAVED_CARD_ROUTER,
-  MY_ACCOUNT_PAGE
+  MY_ACCOUNT_ALERTS_PAGE,
+  MY_ACCOUNT_COUPON_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -149,6 +155,16 @@ class App extends Component {
             <Route
               path={`${MY_ACCOUNT_PAGE}${ACCOUNT_SAVED_CARD_ROUTER}`}
               component={SavedCardContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ALERTS_PAGE}`}
+              component={UserAlertsAndCouponsContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`}
+              component={UserAlertsAndCouponsContainer}
             />
             <Route
               exact
