@@ -4,6 +4,7 @@ import {
   returnProductDetails
 } from "../actions/account.actions.js";
 import { connect } from "react-redux";
+import ReturnReasonAndModeOfReturn from "../components/ReturnReasonAndModeOfReturn";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -19,12 +20,11 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    returnProductDetails: state.account.returnProductDetails,
-    returnRequest: state.account.returnRequest
+    returnProductDetails: state.account
   };
 };
 
 const ReturnReasonAndModeOfReturnContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)
+  connect(mapStateToProps, mapDispatchToProps)(ReturnReasonAndModeOfReturn)
 );
 export default ReturnReasonAndModeOfReturnContainer;

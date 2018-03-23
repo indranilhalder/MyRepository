@@ -87,24 +87,33 @@ export function returnProductDetailsFailure(error) {
   };
 }
 
-// {{root_url}}/marketplacewebservices/v2/mpl/users/{{username}}/newReturnProductDetails?access_token={{customer_access_token}}&isPwa=true
-
 export function returnProductDetails() {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
+    let returnProductFormData = new FormData();
+    returnProductFormData.append("transactionId", "273570000120025");
+    returnProductFormData.append("returnCancelFlag", "R");
+    returnProductFormData.append("orderCode", "180314-000-111548");
+
     dispatch(returnProductDetailsRequest());
     try {
       const result = await api.postFormData(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
-        }/newReturnProductDetails?access_token=${JSON.parse(
-          customerCookie
-        )}&isPwa=true`
+        }/newReturnProductDetails?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true`,
+        returnProductFormData
       );
 
       const resultJson = await result.json();
-      if (resultJson.errors) {
+      console.log(resultJson);
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE
+      ) {
         throw new Error(resultJson.errors[0].message);
       }
       dispatch(returnProductDetailsSuccess(resultJson));
@@ -139,8 +148,6 @@ export function getReturnRequestFailure(error) {
   };
 }
 
-//{{root_url}}/marketplacewebservices/v2/mpl/users/{{username}}/returnRequest?access_token={{customer_access_token}}&channel=mobile&loginId={{username}}&orderCode=180314-000-111548&transactionId=273570000120027
-
 export function getReturnRequest(orderCode, transactionId) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -155,7 +162,7 @@ export function getReturnRequest(orderCode, transactionId) {
           JSON.parse(customerCookie).access_token
         }&channel=mobile&loginId=${
           JSON.parse(userDetails).userName
-        }&orderCode=${orderCode}&transactionId=${transactionId}`
+        }&orderCode=180314-000-111548&transactionId=273570000120027`
       );
 
       const resultJson = await result.json();
