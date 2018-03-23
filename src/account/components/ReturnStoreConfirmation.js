@@ -61,7 +61,10 @@ const data = {
 export default class ReturnsStoreConfirmation extends React.Component {
   render() {
     return (
-      <ReturnsFrame headerText="Return to store">
+      <ReturnsFrame
+        headerText="Return to store"
+        onContinue={this.props.onContinue}
+      >
         <OrderReturnAddressDetails />
         <div className={styles.card}>
           <OrderCard

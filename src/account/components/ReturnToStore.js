@@ -16,9 +16,23 @@ export default class ReturnToStore extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        {/* <PiqPage /> */}
-        <ReturnBankForm onChange={data => this.onChangeBankDetail(data)} />
-        <ReturnStoreConfirmation />
+        {this.state.currentActive === 0 && (
+          <PiqPage
+            {...this.props}
+            addStoreCNC={() => this.setState({ currentActive: 1 })}
+          />
+        )}
+        {this.state.currentActive === 1 && (
+          <ReturnBankForm
+            onChange={data => this.onChangeBankDetail(data)}
+            onContinue={() => this.setState({ currentActive: 2 })}
+          />
+        )}
+        {this.state.currentActive === 2 && (
+          <ReturnStoreConfirmation
+            onContinue={() => this.setState({ currentActive: 2 })}
+          />
+        )}
       </div>
     );
   }
