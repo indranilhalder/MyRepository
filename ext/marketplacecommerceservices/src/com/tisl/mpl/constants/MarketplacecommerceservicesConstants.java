@@ -13,12 +13,6 @@
  */
 package com.tisl.mpl.constants;
 
-import java.util.Date;
-
-
-import com.tisl.mpl.core.model.FreebieDetailModel;
-import com.tisl.mpl.core.model.ProductFreebieDetailModel;
-
 import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -26,6 +20,12 @@ import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReturnOrderModel;
+
+import java.util.Date;
+
+import com.tisl.mpl.core.model.FreebieDetailModel;
+import com.tisl.mpl.core.model.ProductFreebieDetailModel;
+
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 
@@ -134,6 +134,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TRUE_UPPER = "TRUE";
 	public static final String ZERO = "0";
 	public static final String LINK_PASSWORD_CHANGE = "/login/pw/change";
+	
 	//Sonar Fix Jewellery
 	public static final String STONE = "Stone";
 	public static final String SIZE = "size";
@@ -215,6 +216,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static Date EMPTYDATE = null;
 	//PAYMENT SERVICE
 	public static final String MPLPAYMENTSERVICE = "mplPaymentService";
+	public static final String SDPFIFTEENLOG = "sdp.fifteen.log";
 	//public static final String CALLINGPAYUSERVICE =
 	//"Calling PAYU service:::::::";
 	//public static final String ORDERAMOUNT = "Amount of Order::::";
@@ -400,16 +402,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CURRENTDELIVERYCHARGE = "currDelCharge".intern();
 
 	public static final String SUCCESS_FLAG = "Success";
-
-	public static final String MESSAGE1_FLAG = "Address attached to order successfully";
-
 	public static final String ERROR_FLAG = "Failure";
-
-	public static final String ERROR_Message = "Unable to attach address with order. Please try again";
-
-
-	public static final String B00019 = "B00019";
-
 	public static final String BAD_CREDENTIALS = "Bad credentials";
 	public static final String CREDENTIALS_EXP = "User credentials have expired";
 	public static final String uusid = "uusid";
@@ -547,7 +540,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String OTP_EXPIRY_MESSAGE = "Sorry! This OTP has expired.";
 	public static final String INVALID_OTP = "The OTP entered is incorrect or invalid."; //UF-277
 	public static final String OTPERROR = "Please Enter valid OTP";
-	public static final String MOBILE_REGEX = "^[6-9][0-9]{9}$";
+	public static final String MOBILE_REGEX = "^[0-9]*$";
 	public static final String NAME_REGEX = "[a-zA-Z]+\\.?";
 	public static final int SHOP_BY_LOOK_PAGE_SIZE = 2;
 
@@ -842,8 +835,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B0013 = "B0013";
 	public static final String B0014 = "B0014";
 	public static final String B0015 = "B0015";
-	public static final String B0016 = "B0016";
-	public static final String B0017 = "B0017";
 	//My Account Constants ends
 
 	//Mobile web service error codes starts
@@ -1097,7 +1088,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B5006 = "B5004";
 	public static final String B5007 = "B5004";
 	// Codes For EGV Functionaity END
-
+	
 	public static final String B5010 = "B5010";
 	public static final String B5011 = "B5011";
 	public static final String B5012 = "B5012";
@@ -1114,8 +1105,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B5023 = "B5023";
 	public static final String B5024 = "B5024";
 	public static final String B5025 = "B5025";
-
-
+	
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
 	public static final String ORDER_ERROR = "B8000";
@@ -2042,6 +2032,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LUXURY = "luxury";
 	public static final String MSH = "MSH";
 	public static final String LSH = "LSH";
+	public static final String ISH = "ISH";
 
 	public static final String LUX_SALESCATEGORYTYPE = "luxury.salescategory.code";
 
@@ -2384,29 +2375,30 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
 
+
 	// EGV  changes Start
 
-	public static final String BUCKET_NAME_PROMOTON = "PROMOTION";
-	public static final String QC_REFUND_TYPE_CANCEL = "CANCEL";
-	public static final String QC_REFUND_TYPE_RETURN = "RETURN";
-	public static final String QC_REFUND_TYPE_REFUND = "REFUND";
+		public static final String BUCKET_NAME_PROMOTON = "PROMOTION";
+		public static final String QC_REFUND_TYPE_CANCEL = "CANCEL";
+		public static final String QC_REFUND_TYPE_RETURN = "RETURN";
+		public static final String QC_REFUND_TYPE_REFUND = "REFUND";
+		
+		
+		public static final String QC_PAYMENT_FAIL_HEADER = "Customer Name,Customer Email,AMount,Bucket Name".intern();
+		public static final String QC_PAYMENT_FAIL_FILE_LOCATION = "mpl.egv.QcPaymentFailLocation".intern();
+		public static final String QC_PAYMENT_FAIL_PATH = "${HYBRIS_DATA_DIR}/feed/report/qcPaymentFail".intern();
+		public static final String QC_PAYMENT_FAIL_NAME = "qcPaymentFail".intern();
+		// EGV Changes End
+		public static final String RMSVERIFICATIONFAILEDSTATUS = "status".trim();
+		
+		public static final String WALLETAPPORTIONINFOSTATUS = "status".trim();
+		
+		public static final String WALLETAPPORTIONINFOTYPE = "type".trim();
+		
+		public static final String RMSVERIFICATIONFAILEDQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {o.type}=?type and {os.code}=?status";
 
-
-	public static final String QC_PAYMENT_FAIL_HEADER = "Customer Name,Customer Email,AMount,Bucket Name".intern();
-	public static final String QC_PAYMENT_FAIL_FILE_LOCATION = "mpl.egv.QcPaymentFailLocation".intern();
-	public static final String QC_PAYMENT_FAIL_PATH = "${HYBRIS_DATA_DIR}/feed/report/qcPaymentFail".intern();
-	public static final String QC_PAYMENT_FAIL_NAME = "qcPaymentFail".intern();
-	// EGV Changes End
-	public static final String RMSVERIFICATIONFAILEDSTATUS = "status".trim();
-
-	public static final String WALLETAPPORTIONINFOSTATUS = "status".trim();
-
-	public static final String WALLETAPPORTIONINFOTYPE = "type".trim();
-
-	public static final String RMSVERIFICATIONFAILEDQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {o.type}=?type and {os.code}=?status";
-
-	public static final String PAYMENT_MODE_SPLIT = "split".trim();
-	public static final String PAYMENT_MODE_LIQ_CASH = "cliqcash".trim();
+		public static final String PAYMENT_MODE_SPLIT = "split".trim();
+		public static final String PAYMENT_MODE_LIQ_CASH = "cliqcash".trim();
 
 
 	public static final String REFUNDCLEAR_SKIPTIME = "marketplace.RefundClear.skipTime".intern();
@@ -2465,14 +2457,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SELLERVIOLATION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart"
 			.intern();
-	public static final String TIMEOUT_FOR_OTP = "timeout.for.otp".intern();
-	public static final String PROFILE_UPDATE_SUCCESS = "Profile updated successfully";
-	public static final String PROFILE_UPDATE_FAIL = "Profile data is not updated";
-
 	public static final String AMP_SERVICEWORKER_QUERY = "select pk from {AmpServiceworker}";
 	public static final String AMP_MENIFEST_JSON_QUERY = "select pk from {AmpMenifest}";
 	//CAR-330
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
+	public static final String LUX_IMPORT_CATALOG_ID = "luxProductCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_ID = "luxContentCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_VERSION = "Online";
+
 	//UBI-605
 	public static final String LANDING_PAGE_BY_CATEGORY_CODE_QUERY = "select pk from {ContentPage} where {categoryAssociated} IN ({{select {c.pk} from {Category as c JOIN Catalogversion as cv ON {c.catalogversion}={cv.pk}} WHERE {c.code} = ?categoryCode AND {cv.version} = ?catalogVersion}})";
 
@@ -2482,33 +2474,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FPC_TAT_ENABLED = "mpl.forwardpaymentcleanup.tat.enabled";
 	public static final String FPC_TAT_DURATION = "mpl.forwardpaymentcleanup.tat.duration";
 	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
-
-	public static final String NU000 = "NU000";
-	public static final String OTP_TIME = "otp.time.value".intern();
-	public static final String NU001 = "NU001";
-	public static final String NU002 = "NU002";
-	//NU-47
-	public static final String B001122 = "B001122";
-
-	public static final String NU003 = "NU003";
-	public static final String NU004 = "NU004";
-
-	// Adding for AddAddressNew
-	public static final String SUCCESS_MSG_Add_Address = "Address added successfuly";
-	public static final String ERROR_MSG_Add_Address = "Incorrect input. Address not saved";
-	public static final String B0099008 = "B0099008";
-	public static final String B0099009 = "B0099009";
-
-	public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled";
-	public static final String SOCIAL_AUTH_FB_TOKEN = "marketplace.socialAuth.fb.adminToken";
-
 	public static final String MANUAL_REFUND_CHECK_ENABLED = "marketplace.RefundClear.manualrefundcheck.enabled".intern();
-
 	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
 	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "Use OTP {1} to buy your Gift Card/CLiQ Cash. Valid for 2 minutes only. For security reasons, do not share this number with anyone. Call us on {2} for queries.";
 	public static final String INVALID_WALLET_OTP = "INVALID";
 	public static final String WALLET_ACTIVATED_MESSAGE = "your wallet activated  successfully";
-	public static final String SMS_MESSAGE_ORDER_PLACED_FROM_WALLET = "Your Tata Cliq Gift card {0} has been redeemed for Rs. {1}. The remaining balance is Rs.{2}";
+	public static final String SMS_MESSAGE_ORDER_PLACED_FROM_WALLET= "Your Tata Cliq Gift card {0} has been redeemed for Rs. {1}. The remaining balance is Rs.{2}";
 
 	//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
 	public static final String BANNERURLLINK = "bannerUrlLink".intern();
@@ -2525,40 +2496,16 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SPLIT = "split".intern();
 	public static final String B5026 = "B5026";
 	public static final String B5027 = "B5027";
-
+	public static final String LUXURY_PREFIX = "lux";
+	public static final String TATACLIQ = "tatacliq";
+	public static final String LUXURY_SITE_URL = "luxury.tatacliq.com";
 	//Report for bulk cancellation
 	/*
 	 * public static final String DATA_FOR_BULK_CANCELLATION_PROCESS =
 	 * "select {bc.pk} from {BulkCancellationProcess as bc} where {bc.loadstatus}='0'"; public static final String
 	 * bulk_cancellation_report_path = "bulk.cancellation.report.path";
 	 */
-	public static final String NU150 = "NU150";
-	public static final String NU250 = "NU250";
-	public static final String NU350 = "NU350";
-	public static final String NU450 = "NU450";
-	public static final String NU550 = "NU550";
-
-	public static final String NU005 = "NU005";
-	public static final String NU008 = "NU008";
-
-	public static final String SORT = "sort";
-	public static final String BY_RATING = "byRating";
-	public static final String LATESTOTPMOBILEQUERY_WITHOUT_EXPIRY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.mobileNo}=?mobileNo and {o.otptype}=?OTPType order by {creationtime} desc fetch first 1 rows only";
-	public static final String LATESTOTPEMAILQUERY_WITHOUT_EXPIRY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType  order by {creationtime} desc fetch first 1 rows only";
-
-	//NU-61
-
-	public static final String MPLPRODUCTVALUE = "productValue".intern();
-	public static final String EMIBANKSQUERYPRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk}  order by {m.bankname}"
-			.intern();
-	public static final String EMIBANK_FOR_BANKNAMES_QUERY_PRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName order by {m.bankname}"
-			.intern();
-	//NU-56
-	public static final String SUCCESS_MSG_CUST_EXP = "Thank you for sharing your valuable feedback.";
-	public static final String SUCCESS_FLAG_CUST_EXP = "Success";
-	public static final String ERROR_FLAG_CUST_EXP = "Failure";
-	public static final String ERROR_Message_response = "Some issue occurred, please try again";
-	public static final String B009900 = "B009900";
+	 
 	public static final String PENDING_VBV = "PENDING_VBV";
 	public static final String FPC_REFUND_TYPES = "mpl.forwardpaymentcleanup.refund.types";
 	public static final String FPC_QUERY_MPLCONFIG = "SELECT {mcf:pk} FROM {MplConfiguration AS mcf} WHERE{mcf:mplConfigCode} = ?code";
@@ -2571,11 +2518,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FPC_QUERY_REFUNDENTRY = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:auditId} = ?auditId";
 	public static final String FPC_QUERY_REFUNDENTRIES = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:isExpired} = ?expiredFlag";
 	public static final String FPC_QUERY_PARENTORDER = "SELECT {ord:pk} FROM {Order AS ord} WHERE{ord:guid} = ?guid AND {ord:type}  = ?orderType";
-	
-	public static final String LUX_IMPORT_CATALOG_ID = "luxProductCatalog";
-	public static final String LUX_IMPORT_CONTENT_CATALOG_ID = "luxContentCatalog";
-	public static final String LUX_IMPORT_CONTENT_CATALOG_VERSION = "Online";
-	public static final String LUXURY_PREFIX = "lux";
-	public static final String TATACLIQ = "tatacliq";
-	public static final String LUXURY_SITE_URL = "luxury.tatacliq.com";
+
+	//changes for SDI 6152--starts
+	public static final String LUXURY_CATALOG_ID = "luxProductCatalog";
 }

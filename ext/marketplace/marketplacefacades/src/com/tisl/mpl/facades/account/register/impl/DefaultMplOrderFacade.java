@@ -83,7 +83,6 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO;
-import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 
@@ -351,8 +350,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			LOG.debug(">> Web Form Order History duration From Date : " + fromDate);
 
 
-			final SearchPageData<OrderModel> orderResults = mplOrderService.getPagedFilteredParentOrderHistoryWebForm(
-					currentCustomer, currentBaseStore, pageableData, fromDate);
+			final SearchPageData<OrderModel> orderResults = mplOrderService
+					.getPagedFilteredParentOrderHistoryWebForm(currentCustomer, currentBaseStore, pageableData, fromDate);
 			return convertPageData(orderResults, orderHistoryConverter);
 		}
 		catch (final Exception ex)
@@ -610,24 +609,23 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		{
 
 			//TISEE-1067
-			if (null != orderEntryData.getConsignment()
-					&& orderEntryData.getConsignment().getStatus() != null
+			if (null != orderEntryData.getConsignment() && orderEntryData.getConsignment().getStatus() != null
 					&& (orderEntryData.getConsignment().getStatus().getCode()
-							.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || orderEntryData.getConsignment()
-							.getStatus().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
+							|| orderEntryData.getConsignment().getStatus().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
 			{
 				consignmentModel = mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
 				//TISPT-194
 				//		final String tranSactionId = orderEntryData.getTransactionId();
 				//TISEE-1067
-				if (null != consignmentModel
-						&& null != consignmentModel.getInvoice()
-						&& null != consignmentModel.getInvoice().getInvoiceUrl()
-						&& null != orderEntryData.getConsignment()
+				if (null != consignmentModel && null != consignmentModel.getInvoice()
+						&& null != consignmentModel.getInvoice().getInvoiceUrl() && null != orderEntryData.getConsignment()
 						&& orderEntryData.getConsignment().getStatus() != null
 						&& (orderEntryData.getConsignment().getStatus().getCode()
-								.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || orderEntryData.getConsignment()
-								.getStatus().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
+								|| orderEntryData.getConsignment().getStatus().getCode()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
 				{
 					orderEntryData.setShowInvoiceStatus(true);
 				}
@@ -660,8 +658,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		if ((MarketplacecommerceservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productModel.getProductCategoryType()))
 
 		{
-			final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntryData
-					.getSelectedUssid());
+			final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+					.getJewelleryInfoByUssid(orderEntryData.getSelectedUssid());
 			ussid = jewelleryInfo.get(0).getPCMUSSID();
 			//sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
 			//added for jewellery
@@ -702,15 +700,15 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			{
 				if (subOrder.getStatus() != null)
 				{
-					orderEntryData.setItemCancellationStatus(checkCancelStatus(subOrder.getStatus().getCode(),
-							MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS));
+					orderEntryData.setItemCancellationStatus(
+							checkCancelStatus(subOrder.getStatus().getCode(), MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS));
 				}
 			}
 			else if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
 			{
 				final String consignmentStatus = orderEntryData.getConsignment().getStatus().getCode();
-				orderEntryData.setItemCancellationStatus(checkCancelStatus(consignmentStatus,
-						MarketplacecommerceservicesConstants.CANCEL_STATUS));
+				orderEntryData.setItemCancellationStatus(
+						checkCancelStatus(consignmentStatus, MarketplacecommerceservicesConstants.CANCEL_STATUS));
 			}
 
 			LOG.debug("Step 6************************Order History:  setting setItemReturnStatus for " + subOrder.getCode());
@@ -733,11 +731,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(),
 							sDate);
 					final int actualReturnWindow = Integer.parseInt(richAttributeModel.get(0).getReturnWindow());
-					if (null != orderEntryData.getConsignment()
-							&& null != orderEntryData.getConsignment().getStatus()
+					if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus()
 							&& (orderEntryData.getConsignment().getStatus().getCode()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || orderEntryData.getConsignment()
-									.getStatus().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.COLLECTED))
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
+									|| orderEntryData.getConsignment().getStatus().getCode()
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.COLLECTED))
 							&& returnWindow <= actualReturnWindow)
 					{
 						orderEntryData.setItemReturnStatus(true);
@@ -821,8 +819,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 						+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
 				if (!checkCancelStatus(orderData.getStatus().getCode(), MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS))
 				{
-					LOG.debug(" >> isChildCancelleable >>order: Consignemnt is null or empty : Setting cancel status to true for  Order code :"
-							+ orderData.getCode() + MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
+					LOG.debug(
+							" >> isChildCancelleable >>order: Consignemnt is null or empty : Setting cancel status to true for  Order code :"
+									+ orderData.getCode() + MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
 					isCheckChildCancellable = false;
 					break;
 				}
@@ -832,14 +831,14 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 				for (final ConsignmentEntryModel consignmentEntryModel : subEntryModel.getConsignmentEntries())
 				{
 					final ConsignmentModel cosignmentModel = consignmentEntryModel.getConsignment();
-					if (cosignmentModel != null
-							&& cosignmentModel.getStatus() != null
-							&& cosignmentModel.getStatus().getCode() != null
+					if (cosignmentModel != null && cosignmentModel.getStatus() != null && cosignmentModel.getStatus().getCode() != null
 							&& !checkCancelStatus(cosignmentModel.getStatus().getCode(),
 									MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS))
 					{
-						LOG.debug(" >> isChildCancelleable >> order: Consignemnt is null or empty : Setting cancel status to true for  Order code :"
-								+ orderData.getCode() + MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
+						LOG.debug(
+								" >> isChildCancelleable >> order: Consignemnt is null or empty : Setting cancel status to true for  Order code :"
+										+ orderData.getCode() + MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS
+										+ consignmentStatus);
 						isCheckChildCancellable = false;
 						break;
 					}
@@ -898,9 +897,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 				{
 					for (final AbstractOrderEntryModel entry : childOrders.getEntries())
 					{
-						if (null != entry
-								&& entry.getMplDeliveryMode().getDeliveryMode().getCode()
-										.equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+						if (null != entry && entry.getMplDeliveryMode().getDeliveryMode().getCode()
+								.equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
 						{
 							final SendTicketRequestData ticket = new SendTicketRequestData();
 							final CustomerData customerData = customerFacade.getCurrentCustomer();
@@ -1016,8 +1014,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 						LOG.debug("Consignment Entries Null" + e);
 					}
 					if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
-							.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
-							&& entry.getQuantity().intValue() > 0 && checkStastus(orderStatus))
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) && entry.getQuantity().intValue() > 0
+							&& checkStastus(orderStatus))
 
 
 					{
@@ -1241,13 +1239,14 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	public OrderModel getOrder(final String orderCode)
 	{
 		final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore(); //TISPT-175 --- baseStore model : reduce same call from two places
-		final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout() ? getCustomerAccountService()
-				.getOrderDetailsForGUID(orderCode, baseStoreModel) : getCustomerAccountService().getOrderForCode(
-				(CustomerModel) getUserService().getCurrentUser(), orderCode, baseStoreModel); //TISPT-175 --- order model : reduce same call from two places
+		final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout()
+				? getCustomerAccountService().getOrderDetailsForGUID(orderCode, baseStoreModel)
+				: getCustomerAccountService().getOrderForCode((CustomerModel) getUserService().getCurrentUser(), orderCode,
+						baseStoreModel); //TISPT-175 --- order model : reduce same call from two places
 		if (orderModel == null)
 		{
-			throw new UnknownIdentifierException("Order with orderGUID " + orderCode
-					+ " not found for current user in current BaseStore");
+			throw new UnknownIdentifierException(
+					"Order with orderGUID " + orderCode + " not found for current user in current BaseStore");
 		}
 
 		return orderModel;
@@ -1327,12 +1326,12 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 									final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
 									customerOrderInfoWsDTO.setTransactionId(null != entry.getTransactionID() ? entry.getTransactionID()
 											: MarketplacecommerceservicesConstants.NULL_VALUE);
-									customerOrderInfoWsDTO.setProductName(null != entry.getProduct().getName() ? entry.getProduct()
-											.getName() : MarketplacecommerceservicesConstants.NULL_VALUE);
+									customerOrderInfoWsDTO.setProductName(null != entry.getProduct().getName()
+											? entry.getProduct().getName() : MarketplacecommerceservicesConstants.NULL_VALUE);
 									if (StringUtils.isNotEmpty(entry.getProduct().getCode()))
 									{
-										customerOrderInfoWsDTO.setL4CategoryName(mplOrderService.getL4CategoryNameOfProduct(entry
-												.getProduct().getCode()));
+										customerOrderInfoWsDTO
+												.setL4CategoryName(mplOrderService.getL4CategoryNameOfProduct(entry.getProduct().getCode()));
 									}
 									else
 									{
@@ -1431,10 +1430,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							{
 								customerOrderInfoWsDTO.setEdd(MarketplacecommerceservicesConstants.NULL_VALUE);
 							}
-							customerOrderInfoWsDTO.setApportionedPrice(null != entry.getNetAmountAfterAllDisc() ? entry
-									.getNetAmountAfterAllDisc().toString() : MarketplacecommerceservicesConstants.NULL_VALUE);
-							customerOrderInfoWsDTO.setShippingType(null != entry.getFulfillmentType() ? entry.getFulfillmentType()
-									.toString().toUpperCase() : MarketplacecommerceservicesConstants.NULL_VALUE);
+							customerOrderInfoWsDTO.setApportionedPrice(null != entry.getNetAmountAfterAllDisc()
+									? entry.getNetAmountAfterAllDisc().toString() : MarketplacecommerceservicesConstants.NULL_VALUE);
+							customerOrderInfoWsDTO.setShippingType(
+									null != entry.getFulfillmentType() ? entry.getFulfillmentType().toString().toUpperCase()
+											: MarketplacecommerceservicesConstants.NULL_VALUE);
 							if (null != entry.getMplDeliveryMode() && null != entry.getMplDeliveryMode().getDeliveryMode()
 									&& StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDeliveryMode().getCode()))
 							{
@@ -1453,15 +1453,14 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 								final PaymentTransactionEntryModel pt = paytmentry.get(paytmentry.size() - 1);
 
-								customerOrderInfoWsDTO.setTransactionStatusDetails(null != pt.getTransactionStatusDetails() ? pt
-										.getTransactionStatusDetails() : MarketplacecommerceservicesConstants.NULL_VALUE);//Transaction status details
+								customerOrderInfoWsDTO.setTransactionStatusDetails(null != pt.getTransactionStatusDetails()
+										? pt.getTransactionStatusDetails() : MarketplacecommerceservicesConstants.NULL_VALUE);//Transaction status details
 
 								customerOrderInfoWsDTO.setTransactionStatus(null != pt.getTransactionStatus() ? pt.getTransactionStatus()
 										: MarketplacecommerceservicesConstants.NULL_VALUE);//Transaction Status
 
-								if (null != pt.getTransactionStatusDetails()
-										&& pt.getTransactionStatusDetails().equalsIgnoreCase(
-												MarketplacecommerceservicesConstants.REFUND_SUCCESSFUL_))
+								if (null != pt.getTransactionStatusDetails() && pt.getTransactionStatusDetails()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_SUCCESSFUL_))
 								{
 									customerOrderInfoWsDTO.setRefundDate(formatter.format(pt.getTime()));
 								}
@@ -1497,8 +1496,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								customerOrderInfoWsDTO.setTransactionCreationDate(MarketplacecommerceservicesConstants.NULL_VALUE);
 							}
 
-							customerOrderInfoWsDTO.setOrderStatus(null != orderModel.getStatus().getCode() ? orderModel.getStatus()
-									.getCode() : MarketplacecommerceservicesConstants.NULL_VALUE);//Order Status
+							customerOrderInfoWsDTO.setOrderStatus(null != orderModel.getStatus().getCode()
+									? orderModel.getStatus().getCode() : MarketplacecommerceservicesConstants.NULL_VALUE);//Order Status
 
 							if (null != orderModel.getModifiedtime())
 							{
@@ -1513,16 +1512,16 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							{
 								for (final ConsignmentEntryModel consg : entry.getConsignmentEntries())
 								{
-									customerOrderInfoWsDTO.setCarrierName(null != consg.getConsignment().getCarrier() ? consg
-											.getConsignment().getCarrier() : MarketplacecommerceservicesConstants.NULL_VALUE);//Carrier Name
+									customerOrderInfoWsDTO.setCarrierName(null != consg.getConsignment().getCarrier()
+											? consg.getConsignment().getCarrier() : MarketplacecommerceservicesConstants.NULL_VALUE);//Carrier Name
 								}
 							}
 							else
 							{
 								customerOrderInfoWsDTO.setCarrierName(MarketplacecommerceservicesConstants.NULL_VALUE);
 							}
-							customerOrderInfoWsDTO.setPaymentMode(null != orderModel.getModeOfOrderPayment() ? orderModel
-									.getModeOfOrderPayment() : MarketplacecommerceservicesConstants.NULL_VALUE);
+							customerOrderInfoWsDTO.setPaymentMode(null != orderModel.getModeOfOrderPayment()
+									? orderModel.getModeOfOrderPayment() : MarketplacecommerceservicesConstants.NULL_VALUE);
 							//SDI-1193 starts
 							if (CollectionUtils.isNotEmpty(orderModel.getConsignments()))
 							{
@@ -1720,20 +1719,21 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 												LOG.debug("**********inside return entry loop*********");
 												if (rte.getOrderEntry().getTransactionID().equalsIgnoreCase(transactionId))
 												{
-													LOG.debug("**********fetching return request and return entry details for matching transaction id*********");
-													customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason() ? rq
-															.getRejectionReason() : MarketplacecommerceservicesConstants.NULL_VALUE);//QC rejection reason
+													LOG.debug(
+															"**********fetching return request and return entry details for matching transaction id*********");
+													customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason()
+															? rq.getRejectionReason() : MarketplacecommerceservicesConstants.NULL_VALUE);//QC rejection reason
 													LOG.debug("**********QC rejection reason setting done*********");
-													customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn() ? rq.getTypeofreturn()
-															.toString() : MarketplacecommerceservicesConstants.NULL_VALUE);//Type of Return
+													customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn()
+															? rq.getTypeofreturn().toString() : MarketplacecommerceservicesConstants.NULL_VALUE);//Type of Return
 													LOG.debug("**********Type of Return setting done*********");
-													customerOrderInfoWsDTO.setReturnRequestStatus(null != rte.getStatus() ? rte.getStatus()
-															.toString() : MarketplacecommerceservicesConstants.NULL_VALUE);//Return request status
+													customerOrderInfoWsDTO.setReturnRequestStatus(null != rte.getStatus()
+															? rte.getStatus().toString() : MarketplacecommerceservicesConstants.NULL_VALUE);//Return request status
 													LOG.debug("**********Return request status setting done*********");
 													if (null != rte.getCreationtime())
 													{
-														customerOrderInfoWsDTO.setReturnRequestTimestamp(formatter.format((rte
-																.getCreationtime())));//Return timeStamp
+														customerOrderInfoWsDTO
+																.setReturnRequestTimestamp(formatter.format((rte.getCreationtime())));//Return timeStamp
 														LOG.debug("**********Return timeStamp setting done*********");
 													}
 													else
@@ -1824,15 +1824,15 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		{
 			if (null != orderModel)
 			{
-				orderInfoWsDTO.setOrderTotal(null != orderModel.getTotalPriceWithConv() ? orderModel.getTotalPriceWithConv()
-						.toString() : MarketplacecommerceservicesConstants.NULL_VALUE);
+				orderInfoWsDTO.setOrderTotal(null != orderModel.getTotalPriceWithConv()
+						? orderModel.getTotalPriceWithConv().toString() : MarketplacecommerceservicesConstants.NULL_VALUE);
 				if (null != orderModel.getPaymentAddress() && StringUtils.isNotEmpty(orderModel.getPaymentAddress().getFirstname())
 						&& (StringUtils.isNotEmpty(orderModel.getPaymentAddress().getLastname())))
 				{
 					custFirstName = new StringBuilder(orderModel.getPaymentAddress().getFirstname());
 					custLastName = new StringBuilder(orderModel.getPaymentAddress().getLastname());
-					orderInfoWsDTO.setCustName(custFirstName.append(MarketplacecommerceservicesConstants.EMPTY_SPACE)
-							.append(custLastName).toString());
+					orderInfoWsDTO.setCustName(
+							custFirstName.append(MarketplacecommerceservicesConstants.EMPTY_SPACE).append(custLastName).toString());
 				}
 				else if (null != orderModel.getDeliveryAddress()
 						&& StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getFirstname())
@@ -1840,8 +1840,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 				{
 					custFirstName = new StringBuilder(orderModel.getDeliveryAddress().getFirstname());
 					custLastName = new StringBuilder(orderModel.getDeliveryAddress().getLastname());
-					orderInfoWsDTO.setCustName(custFirstName.append(MarketplacecommerceservicesConstants.EMPTY_SPACE)
-							.append(custLastName).toString());
+					orderInfoWsDTO.setCustName(
+							custFirstName.append(MarketplacecommerceservicesConstants.EMPTY_SPACE).append(custLastName).toString());
 				}
 				else if (StringUtils.isNotEmpty(orderModel.getPickupPersonName()))
 				{
@@ -1892,12 +1892,13 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							for (final AbstractOrderEntryModel entry : orderEntryModel)
 							{
 								final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
-								customerOrderInfoWsDTO.setApportionedPrice((null != entry.getNetAmountAfterAllDisc() ? entry
-										.getNetAmountAfterAllDisc().toString() : MarketplacecommerceservicesConstants.NULL_VALUE));
+								customerOrderInfoWsDTO.setApportionedPrice((null != entry.getNetAmountAfterAllDisc()
+										? entry.getNetAmountAfterAllDisc().toString() : MarketplacecommerceservicesConstants.NULL_VALUE));
 								customerOrderInfoWsDTO.setSellerName(null != entry.getSellerInfo() ? entry.getSellerInfo()
 										: MarketplacecommerceservicesConstants.NULL_VALUE);
-								customerOrderInfoWsDTO.setShippingType(null != entry.getFulfillmentType() ? entry.getFulfillmentType()
-										.toString().toUpperCase() : MarketplacecommerceservicesConstants.NULL_VALUE);
+								customerOrderInfoWsDTO.setShippingType(
+										null != entry.getFulfillmentType() ? entry.getFulfillmentType().toString().toUpperCase()
+												: MarketplacecommerceservicesConstants.NULL_VALUE);
 								customerOrderInfoWsDTO.setTransactionId(null != entry.getTransactionID() ? entry.getTransactionID()
 										: MarketplacecommerceservicesConstants.NULL_VALUE);
 								customerOrderInfoWsDTO.setProductName(null != entry.getProduct().getName() ? entry.getProduct().getName()
@@ -2007,8 +2008,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		if (orderModel == null)
 		{
 			LOG.debug("Couldn't found order id DB for :" + orderNumber);
-			throw new UnknownIdentifierException("Order with orderGUID " + orderNumber
-					+ " not found for current user in current BaseStore");
+			throw new UnknownIdentifierException(
+					"Order with orderGUID " + orderNumber + " not found for current user in current BaseStore");
 		}
 		LOG.debug("Order found for given order id :" + orderNumber);
 		return orderModel;
@@ -2082,26 +2083,17 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		this.configurationService = configurationService;
 	}
 
-	/**
-	 * Added for NU-56
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getProductForCode(java.lang.String, java.lang.String)
 	 */
+	//changes for SDI 6152
 	@Override
-	public OrderDataWsDTO orderExperience(final String orderId, final Double ratings)
+	public ProductModel getProductForCode(final String productCode,final String catalogCode)
 	{
-		OrderDataWsDTO result = new OrderDataWsDTO();
-		try
-		{
-
-			result = mplOrderService.orderExperience(orderId, ratings);
-			return result;
-
-		}
-
-		catch (final Exception ex)
-		{
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B009900);
-		}
-
+		final ProductModel products = mplOrderService.findProductsByCodewithCatalog(productCode,catalogCode);
+		return products;
 	}
 
 
