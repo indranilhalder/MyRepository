@@ -117,6 +117,17 @@ if (
     "6LfpAk0UAAAAACmNvkmNNTiHlgAcu0DxKXC9oESm";
 }
 
+// jus pay urls
+
+if (
+  process.env.REACT_APP_STAGE === "production" ||
+  process.env.REACT_APP_STAGE === "p2"
+) {
+  process.env.JUS_PAY_API_URL_ROOT = "https://api.juspay.in";
+} else {
+  process.env.JUS_PAY_API_URL_ROOT = "https://sandbox.juspay.in";
+}
+
 function getClientEnvironment(publicUrl) {
   const raw = Object.keys(process.env)
     .filter(key => REACT_APP.test(key))
