@@ -25,7 +25,6 @@ import {
   COLLECT,
   PRODUCT_CART_ROUTER,
   PAYMENT_MODE_TYPE
-
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
@@ -298,13 +297,13 @@ class CheckOutPage extends React.Component {
   }
 
   componentDidMount() {
-    if (
-      !this.props.history.location.state ||
-      !this.props.history.location.state.isRequestComeThrowMyBag
-    ) {
-      this.props.history.push(PRODUCT_CART_ROUTER);
-      return true;
-    }
+    // if (
+    //   !this.props.history.location.state ||
+    //   !this.props.history.location.state.isRequestComeThrowMyBag
+    // ) {
+    //   this.props.history.push(PRODUCT_CART_ROUTER);
+    //   return true;
+    // }
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;

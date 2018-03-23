@@ -11,7 +11,9 @@ export default class FollowedBrand extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.heading}>{this.props.header}</div>
+        <div className={styles.headerHolder}>
+          <div className={styles.heading}>{this.props.header}</div>
+        </div>
         <div className={styles.buttonHolder}>
           <div className={styles.button}>
             <Button
@@ -41,6 +43,7 @@ FollowedBrand.propTypes = {
   fontFamily: PropTypes.string,
   borderColor: PropTypes.string,
   header: PropTypes.string,
+  subHeader: PropTypes.string,
   color: PropTypes.string
 };
 FollowedBrand.defaultProps = {
