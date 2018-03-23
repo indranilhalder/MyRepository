@@ -640,9 +640,8 @@ export function followAndUnFollowBrandInFeedBackInCommerceApi(
   brandId,
   followStatus
 ) {
-  // const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
+  const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
 
-  const mcvId = "82035857233048262510496489363611429421";
   const followedText = followStatus ? UNFOLLOW : FOLLOW;
   const updatedBrandObj = {
     api_key: API_KEY_FOR_MSD,
