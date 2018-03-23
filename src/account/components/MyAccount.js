@@ -47,7 +47,6 @@ export default class MyAccount extends React.Component {
     return <Redirect to={LOGIN_PATH} />;
   }
   render() {
-
     const userDetailsCookie = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const userDetails = JSON.parse(userDetailsCookie);
 
