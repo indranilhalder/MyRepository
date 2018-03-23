@@ -87,7 +87,6 @@ export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
-export const ORDER_PAGE = "/orders";
 
 export const SAVE_LIST_PAGE = "/default/wishList";
 export const PAYMENT_MODE_TYPE = "paymentMode";

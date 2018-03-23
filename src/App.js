@@ -69,7 +69,7 @@ import {
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
-  ORDER_PAGE,
+  MY_ACCOUNT_ORDERS_PAGE,
   SAVE_LIST_PAGE,
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_SAVED_CARDS_PAGE,
@@ -157,7 +157,7 @@ class App extends Component {
               component={SaveListContainer}
             />
             <Route
-              path={`${MY_ACCOUNT_PAGE}${ORDER_PAGE}`}
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ORDERS_PAGE}`}
               component={AllOrderContainer}
             />
             <Route
