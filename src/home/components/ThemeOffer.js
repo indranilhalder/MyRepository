@@ -42,9 +42,12 @@ export default class ThemeOffer extends React.Component {
     if (feedComponentData.items) {
       items = feedComponentData.items.map(transformData);
     }
-    const offers = feedComponentData.offers.map(offer => {
-      return transformData(offer);
-    });
+    let offers = [];
+    if (feedComponentData.offers) {
+      offers = feedComponentData.offers.map(offer => {
+        return transformData(offer);
+      });
+    }
     themeData = concat(offers, items);
 
     return (

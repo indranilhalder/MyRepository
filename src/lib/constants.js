@@ -1,4 +1,6 @@
 export const SUCCESS = "success";
+export const SUCCESS_UPPERCASE = "SUCCESS";
+export const SUCCESS_CAMEL_CASE = "Success";
 export const REQUESTING = "requesting";
 export const ERROR = "error";
 export const FAILURE = "Failure";
@@ -55,9 +57,9 @@ export const ORDER_PREFIX = "/my-account/order/(.*)";
 export const ORDER_CODE = "orderCode";
 export const ORDER = "/order";
 // MyAccount Routes
-export const MY_ACCOUNT_PAGE = "/myAccount";
+export const MY_ACCOUNT_PAGE = "/my-account";
 export const MY_ACCOUNT_WISHLIST_PAGE = "/wishList";
-export const MY_ACCOUNT_ORDERS_PAGE = "/orders";
+export const MY_ACCOUNT_ORDERS_PAGE = "/order";
 export const MY_ACCOUNT_GIFT_CARD_PAGE = "/giftCard";
 export const MY_ACCOUNT_SAVED_CARDS_PAGE = "/payment-details";
 export const MY_ACCOUNT_ADDRESS_PAGE = "/address-book";
@@ -86,8 +88,9 @@ export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
 export const ORDER_PAGE = "/allOrders";
-export const PAYMENT_MODE_TYPE = "paymentMode";
 
+export const SAVE_LIST_PAGE = "/default/wishList";
+export const PAYMENT_MODE_TYPE = "paymentMode";
 // fetching feed information contant
 export const BLP_OR_CLP_FEED_TYPE = "blpOrClp";
 export const HOME_FEED_TYPE = "home";
@@ -103,3 +106,5 @@ export const SHORT_COLLECT = "CNC";
 
 export const FOLLOW = "Follow";
 export const FOLLOWING = "Following";
+
+export const TRUE = "true";

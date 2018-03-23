@@ -26,11 +26,7 @@ const user = (
 
     case userActions.LOGIN_USER_SUCCESS:
       let userDetails = {};
-      if (action.user.customerInfo.emailId) {
-        userDetails.userName = action.user.customerInfo.emailId;
-      } else {
-        userDetails.userName = action.user.customerInfo.mobileNumber;
-      }
+      userDetails.userName = action.userName;
       userDetails.customerId = action.user.customerId;
       userDetails.dateOfBirth = action.user.customerInfo.dateOfBirth;
       userDetails.firstName = action.user.customerInfo.firstName;
@@ -79,11 +75,7 @@ const user = (
 
     case userActions.OTP_VERIFICATION_SUCCESS:
       userDetails = {};
-      if (action.user.customerInfo.mobileNumber !== "") {
-        userDetails.userName = action.user.customerInfo.mobileNumber;
-      } else {
-        userDetails.userName = action.user.customerInfo.emailId;
-      }
+      userDetails.userName = action.userName;
       userDetails.customerId = action.user.customerInfo.customerId;
       userDetails.dateOfBirth = action.user.customerInfo.dateOfBirth;
       userDetails.firstName = action.user.customerInfo.firstName;
