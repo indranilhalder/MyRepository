@@ -1,6 +1,7 @@
 import React from "react";
 import ReturnsFrame from "./ReturnsFrame";
 import OrderCard from "./OrderCard";
+import PropTypes from "prop-types";
 import ReturnsToBank from "./ReturnsToBank";
 import OrderReturnAddressDetails from "./OrderReturnAddressDetails";
 import OrderReturnDateAndTimeDetails from "./OrderReturnDateAndTimeDetails";
@@ -110,3 +111,21 @@ export default class ReturnSummary extends React.Component {
     );
   }
 }
+ReturnSummary.propTypes = {
+  onChangeAddress: PropTypes.func,
+  onContinue: PropTypes.func,
+  data: PropTypes.shape({
+    addressType: PropTypes.string,
+    address1: PropTypes.string,
+    address2: PropTypes.string,
+    orderProductWsDTO: PropTypes.arrayOf([
+      PropTypes.shape({
+        imageURL: PropTypes.string,
+        productName: PropTypes.string,
+        productBrand: PropTypes.string,
+        price: PropTypes.string,
+        quantity: PropTypes.string
+      })
+    ])
+  })
+};
