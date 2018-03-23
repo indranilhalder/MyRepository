@@ -1878,6 +1878,7 @@ export function createJusPayOrder(
   cardDetails,
   paymentMode
 ) {
+  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -1901,7 +1902,7 @@ export function createJusPayOrder(
           address.state
         }&pincode=${
           address.postalCode
-        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2`,
+        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}`,
         cartItem
       );
       const resultJson = await result.json();
@@ -1922,6 +1923,7 @@ export function createJusPayOrder(
 }
 
 export function createJusPayOrderForNetBanking(bankName, pinCode, cartItem) {
+  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -1935,7 +1937,7 @@ export function createJusPayOrderForNetBanking(bankName, pinCode, cartItem) {
           JSON.parse(userDetails).userName
         }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }`,
+        }&juspayUrl=${jusPayUrl}`,
         cartItem
       );
       const resultJson = await result.json();
@@ -1953,6 +1955,7 @@ export function createJusPayOrderForNetBanking(bankName, pinCode, cartItem) {
 }
 
 export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
+  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -1972,7 +1975,7 @@ export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
           cardDetails.cardReferenceNumber
         }&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }`,
+        }&juspayUrl=${jusPayUrl}`,
         cartItem
       );
       const resultJson = await result.json();
