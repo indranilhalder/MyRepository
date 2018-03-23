@@ -53,6 +53,7 @@ export const UPDATE_PROFILE_REQUEST = "UPDATE_PROFILE_REQUEST";
 export const UPDATE_PROFILE_SUCCESS = "UPDATE_PROFILE_SUCCESS";
 export const UPDATE_PROFILE_FAILURE = "UPDATE_PROFILE_FAILURE";
 
+export const LOG_OUT_ACCOUNT = "LOG_OUT_ACCOUNT";
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const USER_PATH = "v2/mpl/users";
@@ -492,11 +493,18 @@ export function updateProfileRequest() {
     status: REQUESTING
   };
 }
-export function updateProfileSuccess(sendInvoice) {
+
+export function logoutUser() {
+  return {
+    type: LOG_OUT_ACCOUNT
+  };
+}
+
+export function updateProfileSuccess(userDetails) {
   return {
     type: UPDATE_PROFILE_SUCCESS,
     status: SUCCESS,
-    sendInvoice
+    userDetails
   };
 }
 
@@ -528,11 +536,11 @@ export function updateProfile(accountDetails, otp) {
         accountDetails.mobileNumber
       }&emailId=${accountDetails.emailId}`;
       if (otp) {
-        updateProfileUrl = `updateProfileUrl&otp=${otp}`;
+        updateProfileUrl = `${updateProfileUrl}&otp=${otp}`;
       }
       const result = await api.post(updateProfileUrl);
       const resultJson = await result.json();
-      console.log(resultJson);
+
       if (
         resultJson.errors ||
         resultJson.status === FAILURE_UPPERCASE ||
@@ -540,12 +548,17 @@ export function updateProfile(accountDetails, otp) {
       ) {
         throw new Error(`${resultJson.message}`);
       }
+
       if (resultJson.status === "OTP SENT TO MOBILE NUMBER: PLEASE VALIDATE") {
         dispatch(showModal(UPDATE_PROFILE_OTP_VERIFICATION, accountDetails));
+      } else {
+        if (otp) {
+          dispatch(logoutUser());
+        } else {
+          dispatch(updateProfileSuccess(resultJson));
+        }
       }
-      dispatch(updateProfileSuccess(resultJson));
     } catch (e) {
-      console.log(e.message);
       dispatch(updateProfileFailure(e.message));
     }
   };

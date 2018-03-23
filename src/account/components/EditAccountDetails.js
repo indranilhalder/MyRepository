@@ -8,13 +8,14 @@ import ShopByBrandLists from "../../blp/components/ShopByBrandLists.js";
 import CheckboxAndText from "../../cart/components/CheckboxAndText.js";
 import AccountFooter from "./AccountFooter.js";
 import moment from "moment";
-
+import { LOG_OUT_ACCOUNT } from "../actions/account.actions.js";
+import * as Cookie from "../../lib/Cookie";
 import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
   LOGIN_PATH
 } from "../../lib/constants";
-import * as Cookie from "../../lib/Cookie";
+
 export default class EditAccountDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -40,7 +41,6 @@ export default class EditAccountDetails extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.userDetails !== this.props.userDetails) {
       if (nextProps.userDetails) {
-        console.log(nextProps.userDetails);
         this.setState({
           firstName: nextProps.userDetails.firstName,
           lastName: nextProps.userDetails.lastName,
@@ -51,6 +51,9 @@ export default class EditAccountDetails extends React.Component {
         });
       }
     }
+    if (nextProps.type === LOG_OUT_ACCOUNT) {
+      this.props.history.push(LOGIN_PATH);
+    }
   }
 
   onChange(val) {
@@ -58,16 +61,17 @@ export default class EditAccountDetails extends React.Component {
   }
   onChangeDateOfBirth = val => {
     let dateOfBirth = moment(val).format("DD/MM/YYYY");
-    console.log(dateOfBirth);
     this.setState({ dateOfBirth: dateOfBirth });
   };
   updateProfile = () => {
     if (this.props.updateProfile) {
-      console.log(this.props);
       this.props.updateProfile(this.state);
     }
   };
 
+  cancel = () => {
+    this.props.history.goBack();
+  };
   render() {
     let userDetails = this.props.userDetails;
     if (userDetails) {
@@ -128,7 +132,10 @@ export default class EditAccountDetails extends React.Component {
           <div className={styles.sendNotification}>
             <CheckboxAndText label="Send Me Notifications" selected={false} />
           </div>
-          <AccountFooter update={() => this.updateProfile()} />
+          <AccountFooter
+            cancel={() => this.cancel()}
+            update={() => this.updateProfile()}
+          />
         </div>
       );
     } else {
@@ -138,14 +145,8 @@ export default class EditAccountDetails extends React.Component {
 }
 EditAccountDetails.propTypes = {
   emailId: PropTypes.string,
-  phoneNumber: PropTypes.string,
-  userName: PropTypes.string,
+  mobileNumber: PropTypes.string,
+  firstName: PropTypes.string,
   gender: PropTypes.string,
   onChange: PropTypes.func
-};
-EditAccountDetails.defaultProps = {
-  phoneNumber: "7358082465",
-  emailId: "ananya_patel@123.com",
-  userName: "Anaya Patel",
-  gender: "Male"
 };

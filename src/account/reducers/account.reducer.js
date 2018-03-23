@@ -1,11 +1,17 @@
 import * as accountActions from "../actions/account.actions";
 import * as cartActions from "../../cart/actions/cart.actions";
+import * as Cookie from "../../lib/Cookie.js";
+import {
+  LOGGED_IN_USER_DETAILS,
+  CUSTOMER_ACCESS_TOKEN
+} from "../../lib/constants.js";
 
 const account = (
   state = {
     status: null,
     error: null,
     loading: false,
+    type: null,
     savedCards: null,
     orderDetails: null,
     orderDetailsStatus: null,
@@ -41,7 +47,10 @@ const account = (
     userAddressError: null,
 
     removeAddressStatus: null,
-    removeAddressError: null
+    removeAddressError: null,
+
+    updateProfileStatus: null,
+    updateProfileError: null
   },
   action
 ) => {
@@ -239,6 +248,33 @@ const account = (
         removeAddressStatus: action.status,
         removeAddressError: action.error,
         loading: false
+      });
+
+    case accountActions.UPDATE_PROFILE_REQUEST:
+      return Object.assign({}, state, {
+        updateProfileStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.UPDATE_PROFILE_SUCCESS:
+      return Object.assign({}, state, {
+        updateProfileStatus: action.status,
+        userDetails: action.userDetails,
+        loading: false
+      });
+
+    case accountActions.UPDATE_PROFILE_FAILURE:
+      return Object.assign({}, state, {
+        updateProfileStatus: action.status,
+        updateProfileError: action.error,
+        loading: false
+      });
+
+    case accountActions.LOG_OUT_ACCOUNT:
+      Cookie.deleteCookie(LOGGED_IN_USER_DETAILS);
+      Cookie.deleteCookie(CUSTOMER_ACCESS_TOKEN);
+      return Object.assign({}, state, {
+        type: action.type
       });
 
     default:

@@ -16,7 +16,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    userDetails: state.profile.userDetails
+    userDetails: state.profile.userDetails,
+    type: state.profile.type
   };
 };
 
