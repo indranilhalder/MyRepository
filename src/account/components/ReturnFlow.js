@@ -15,25 +15,7 @@ export default class ReturnFlow extends React.Component {
     this.props.getReturnRequest();
   }
 
-  renderReturnReason = () => {
-    return (
-      <div>
-        <ReturnReasonForm onContinue={() => this.addReasonForReturn()} />
-      </div>
-    );
-  };
-
-  goToReturnMode = val => {};
-  renderReturnModes = () => {
-    return (
-      <div>
-        <ReturnModes selectMode={val => this.goToReturnMode(val)} />
-      </div>
-    );
-  };
-
   render() {
-    console.log(this.props);
     return (
       <React.Fragment>
         <Route

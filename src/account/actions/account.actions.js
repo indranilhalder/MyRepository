@@ -125,6 +125,7 @@ export function returnProductDetailsFailure(error) {
 }
 
 export function returnProductDetails() {
+  console.log("COmes in return");
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -192,7 +193,7 @@ export function getReturnRequest(orderCode, transactionId) {
     dispatch(getReturnRequestRequest());
 
     try {
-      const result = api.get(
+      const result = await api.get(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
         }/returnRequest?access_token=${
@@ -206,7 +207,6 @@ export function getReturnRequest(orderCode, transactionId) {
       if (resultJson.errors) {
         throw new Error(resultJson.errors[0].message);
       }
-
       dispatch(getReturnRequestSuccess(resultJson));
     } catch (e) {
       dispatch(getReturnRequestFailure(e.message));

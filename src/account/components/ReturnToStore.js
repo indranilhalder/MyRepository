@@ -1,6 +1,7 @@
 import React from "react";
 import PiqPage from "../../cart/components/PiqPage";
 import ReturnBankForm from "./ReturnBankForm";
+import MDSpinner from "react-md-spinner";
 import ReturnStoreConfirmation from "./ReturnStoreConfirmation.js";
 import * as styles from "./ReturnToStore.css";
 import {
@@ -39,11 +40,20 @@ export default class ReturnToStore extends React.Component {
   navigateToFinalSubmit() {
     // submit form here
   }
+  renderLoader() {
+    return <MDSpinner />;
+  }
+
   render() {
+    if (!this.props.returnRequest) {
+      return this.renderLoader();
+    }
     const { pathname } = this.props.location;
     const renderStoresMap = (
       <PiqPage
         {...this.props}
+        availableStores={this.props.returnRequest.returnStoreDetailsList}
+        numberOfStores={this.props.returnRequest.returnStoreDetailsList.length}
         addStoreCNC={storeId => this.setStore(storeId)}
       />
     );
