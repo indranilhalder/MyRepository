@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.jalo;
 
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrder;
@@ -33,8 +34,6 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
 
@@ -45,28 +44,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromotionOrderEntryAdjustAction
 {
 	private final static Logger log = Logger.getLogger(CustomPromotionOrderEntryAdjustAction.class.getName());
-
-	//SDP-15 starts here
-	@Autowired
-	private ConfigurationService configurationService;
-
-	/**
-	 * @return the configurationService
-	 */
-	public ConfigurationService getConfigurationService()
-	{
-		return configurationService;
-	}
-
-	/**
-	 * @param configurationService
-	 *           the configurationService to set
-	 */
-	public void setConfigurationService(final ConfigurationService configurationService)
-	{
-		this.configurationService = configurationService;
-	}
-	//SDP-15 ends here
+	
 	/**
 	 * @Description : This method is called when promotion is applied
 	 * @param : ctx
@@ -457,13 +435,9 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 						Double.valueOf(percentageDiscount));
 			}
 
-			//SDP-15 logs added
-			String sdpLogFlag = null;
-			if(StringUtils.isNotEmpty(configurationService.getConfiguration().getString("sdp.fifteen.log")))
-			{
-			sdpLogFlag = configurationService.getConfiguration().getString("sdp.fifteen.log");
-			}
-			if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+			//SDP-15 logs added			
+			String islogToAppend = getConfigurationService().getConfiguration().getString("sdp.fifteen.log","FALSE");			
+			if(StringUtils.isNotEmpty(islogToAppend) && islogToAppend.equalsIgnoreCase("TRUE"))
 			{
 			StringBuilder logMessage = new StringBuilder("percentageDiscount:").append(percentageDiscount);
 			logMessage.append(", orderEntryAdjustment:").append(orderEntryAdjustment);
@@ -490,6 +464,15 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 
 		return needsCalc;
 	}
+	
+	//SDP-15 starts here
+	protected ConfigurationService getConfigurationService()
+		{
+			return Registry.getApplicationContext().getBean("configurationService", ConfigurationService.class);
+		}
+	
+	//SDP-15 ends here
+	
 	//	protected DefaultPromotionManager getDefaultPromotionsManager()
 	//	{
 	//		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
