@@ -276,7 +276,6 @@ class CheckOutPage extends React.Component {
       }
     }
     if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
-      Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       this.setState({ orderConfirmation: true });
     }
     if (nextProps.cart.binValidationCODStatus === SUCCESS) {
