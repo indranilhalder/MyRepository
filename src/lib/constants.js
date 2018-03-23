@@ -57,9 +57,9 @@ export const ORDER_PREFIX = "/my-account/order/(.*)";
 export const ORDER_CODE = "orderCode";
 export const ORDER = "/order";
 // MyAccount Routes
-export const MY_ACCOUNT_PAGE = "/myAccount";
+export const MY_ACCOUNT_PAGE = "/my-account";
 export const MY_ACCOUNT_WISHLIST_PAGE = "/wishList";
-export const MY_ACCOUNT_ORDERS_PAGE = "/orders";
+export const MY_ACCOUNT_ORDERS_PAGE = "/order";
 export const MY_ACCOUNT_GIFT_CARD_PAGE = "/giftCard";
 export const MY_ACCOUNT_SAVED_CARDS_PAGE = "/payment-details";
 export const MY_ACCOUNT_ADDRESS_PAGE = "/address-book";

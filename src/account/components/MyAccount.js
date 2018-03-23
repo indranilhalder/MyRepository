@@ -39,7 +39,6 @@ export default class MyAccount extends React.Component {
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
     if (userDetails && customerCookie) {
-      this.props.getUserDetails();
       this.props.getUserCoupons();
       this.props.getUserAlerts();
     }
@@ -48,12 +47,16 @@ export default class MyAccount extends React.Component {
     return <Redirect to={LOGIN_PATH} />;
   }
   render() {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+    const userDetailsCookie = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const userDetails = JSON.parse(userDetailsCookie);
+
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
     if (!userDetails || !customerCookie) {
       return this.navigateToLogin();
     }
+
     return (
       <div className={styles.base}>
         <ProfileMenuGrid {...this.props} />
@@ -62,11 +65,9 @@ export default class MyAccount extends React.Component {
             image="http://tong.visitkorea.or.kr/cms/resource/58/1016958_image2_1.jpg"
             onClick={() => this.renderToAccountSetting()}
             heading={
-              this.props.userDetails &&
-              this.props.userDetails.firstName &&
-              `${this.props.userDetails.firstName} ${
-                this.props.userDetails.lastName
-              }`
+              userDetails &&
+              userDetails.firstName &&
+              `${userDetails.firstName} ${userDetails.lastName}`
             }
           />
         </div>
