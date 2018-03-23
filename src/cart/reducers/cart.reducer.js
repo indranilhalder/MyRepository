@@ -5,6 +5,7 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS
 } from "../../lib/constants";
+
 const cart = (
   state = {
     status: null,
@@ -666,12 +667,14 @@ const cart = (
       });
 
     case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_REQUEST:
+      Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         loading: true
       });
 
     case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_SUCCESS: {
+      // here is where I need to destroy the cart details
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetails: action.justPayPaymentDetails,
