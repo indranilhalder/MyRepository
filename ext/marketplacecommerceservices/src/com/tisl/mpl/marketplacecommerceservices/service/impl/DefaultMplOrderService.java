@@ -48,6 +48,22 @@ import com.tisl.mpl.xml.pojo.AWBStatusResponse;
 import com.tisl.mpl.xml.pojo.AWBStatusResponse.AWBResponseInfo;
 import com.tisl.mpl.xml.pojo.AWBStatusResponse.AWBResponseInfo.StatusRecords;
 
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentModel;
+import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.servicelayer.util.ServicesUtil;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.util.localization.Localization;
 
 /**
  *
@@ -67,7 +83,10 @@ public class DefaultMplOrderService implements MplOrderService
 	private MplProductDao productDao;
 	@Autowired
 	private SellerBasedPromotionService sellerBasedPromotionService;
-
+	@Resource(name = "modelService")
+	private ModelService modelService;
+	@Resource
+	private UserService userService;
 	private final static Logger LOG = Logger.getLogger(DefaultMplOrderService.class);
 
 	/**
@@ -522,4 +541,47 @@ public class DefaultMplOrderService implements MplOrderService
 
 		return products.get(0);
 	}
+	
+	/**
+	 * Added for NU-56
+	 */
+	@Override
+	public OrderDataWsDTO orderExperience(final String orderId, final Double ratings)
+	{
+		final OrderDataWsDTO result = new OrderDataWsDTO();
+		final OrderModel orderModelRatings = getOrderByParentOrderId(orderId);
+
+		try
+		{
+			if (null != orderModelRatings && null != orderModelRatings.getUser())
+			{
+				final String ordercustId = orderModelRatings.getUser().getUid();
+
+				/* for getting the logged in user */
+				final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+
+				final String custId = customer.getUid();
+				if (ordercustId.equals(custId))
+				{
+					orderModelRatings.setRatings(ratings);
+					modelService.save(orderModelRatings);
+					result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG_CUST_EXP);
+					result.setMessage(MarketplacecommerceservicesConstants.SUCCESS_MSG_CUST_EXP);
+				}
+				else
+				{
+					result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG_CUST_EXP);
+					result.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B0099008));
+					result.setErrorCode(MarketplacecommerceservicesConstants.B0099008);
+				}
+			}
+		}
+		catch (final ModelSavingException me)
+		{
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			result.setMessage(me.getMessage());
+			result.setErrorCode(MarketplacecommerceservicesConstants.B0099008);
+		}
+		return result;
+}
 }

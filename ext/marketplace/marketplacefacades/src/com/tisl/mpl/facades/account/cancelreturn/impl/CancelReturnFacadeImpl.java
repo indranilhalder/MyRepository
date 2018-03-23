@@ -206,8 +206,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 *
 	 */
 	private static final String COD = "COD";
-
-
+	private static final String Split = "Split";
+	private static final String CliqCash = "CliqCash";
+	private static final String PENDING = "PENDING";
+	private static final String SUCCESS = "SUCCESS";
 	@Resource
 	private MplOrderService mplOrderService;
 	@Resource
@@ -955,7 +957,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						 */
 
 
-						if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
+						if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase(Split))
 						{
 
 							double refundAmountForQc = 0.0D;
@@ -2075,7 +2077,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge().doubleValue();
 			}
 
-			if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
+			if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase(Split))
 			{
 				//call for Juspay
 				refundAmount = calculateSplitJuspayRefundAmount(orderEntry);
@@ -2084,7 +2086,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				refundAmountForQc = calculateSplitQcRefundAmount(orderEntry);
 
 			}
-			else if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+			else if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase(CliqCash))
 			{
 
 				//call for QuckCilver
@@ -2231,7 +2233,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				walletId = customerModel.getCustomerWalletDetail().getWalletId();
 			}
-			if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
+			if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase(Split))
 			{
 				final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = cancelOrderEntryForQcPaymentMode(
 						transactionId, walletId);
@@ -2245,7 +2247,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					LOG.error("Juspay giving Exception for  Order Id :" + subOrderModel.getParentReference().getCode());
 				}
 			}
-			else if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+			else if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase(CliqCash))
 			{
 				try
 				{
@@ -2412,13 +2414,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		walletApportionReturnModel.setWalletCardList(walletCardApportionDetailModelList);
 		walletApportionReturnModel.setTransactionId(transactionId);
 		walletApportionReturnModel.setType("CANCEL");
-		if (qcResponseStatus.contains("PENDING"))
+		if (qcResponseStatus.contains(PENDING))
 		{
-			walletApportionReturnModel.setStatus("PENDING");
+			walletApportionReturnModel.setStatus(PENDING);
 		}
 		else
 		{
-			walletApportionReturnModel.setStatus("SUCCESS");
+			walletApportionReturnModel.setStatus(SUCCESS);
 		}
 
 		modelService.save(walletApportionReturnModel);
@@ -2516,8 +2518,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
 								//TISPRO-216 Ends
 
-								if (null != subOrderModel.getSplitModeInfo()
-										&& subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
+								if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase(Split))
 								{
 									returnModel = constructQuickCilverOrderEntryForSplit(walletCardApportionDetailModelList, transactionId,
 											subOrderModel, orderEntry);
@@ -2529,7 +2530,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 								{
 									newStatus = ConsignmentStatus.ORDER_CANCELLED;
 								}
-								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING"))
+								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), PENDING))
 								{
 									newStatus = ConsignmentStatus.REFUND_INITIATED;
 									final RefundTransactionMappingModel refundTransactionMappingModel = modelService
@@ -4173,7 +4174,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					 */
 
 
-					if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
+					if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase(Split))
 					{
 
 						double refundAmountForQc = 0.0D;
@@ -4187,7 +4188,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(refundAmountForJuspay)));
 						refundEntryModel.setAmountForQc(NumberUtils.createDouble(Double.toString(refundAmountForQc)));
 					}
-					else if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+					else if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase(CliqCash))
 					{
 						double refundAmountForQc = 0.0D;
 						//call for QuckCilver
@@ -4687,7 +4688,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						 */
 
 
-						if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
+						if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase(Split))
 						{
 
 							double refundAmountForQc = 0.0D;
@@ -4702,7 +4703,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 							refundEntryModel.setAmountForQc(NumberUtils.createDouble(Double.toString(refundAmountForQc)));
 						}
 						else if (null != subOrderModel.getSplitModeInfo()
-								&& subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+								&& subOrderModel.getSplitModeInfo().equalsIgnoreCase(CliqCash))
 						{
 							double refundAmountForQc = 0.0D;
 							//call for QuckCilver
@@ -5697,11 +5698,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			}
 			if (StringUtils.equalsIgnoreCase(response.getResponseCode().toString(), "0"))
 			{
-				walletCardApportionDetailModel.setTrnsStatus("SUCCESS");
+				walletCardApportionDetailModel.setTrnsStatus(SUCCESS);
 			}
 			else
 			{
-				walletCardApportionDetailModel.setTrnsStatus("PENDING");
+				walletCardApportionDetailModel.setTrnsStatus(PENDING);
 			}
 			walletCardApportionDetailModel.setTransactionId(response.getTransactionId().toString());
 			walletCardApportionDetailModel.setQcApportionValue(walletObject.getQcApportionValue());
@@ -5711,7 +5712,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		else
 		{
-			walletCardApportionDetailModel.setTrnsStatus("SUCCESS");
+			walletCardApportionDetailModel.setTrnsStatus(SUCCESS);
 			walletCardApportionDetailModel.setTransactionId("0");
 			walletCardApportionDetailModel.setQcApportionValue("0");
 			walletCardApportionDetailModel.setQcDeliveryValue("0");
@@ -5745,7 +5746,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		{
 			for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
 			{
-				if ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
+				if (SUCCESS.equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
 						|| "ACCEPTED".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()))
 				{
 					model = paymentTransactionEntry.getPaymentMode();
@@ -5817,13 +5818,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				walletApportionReturnModel.setWalletCardList(walletCardApportionDetailModelList);
 				walletApportionReturnModel.setTransactionId(transactionId);
 				walletApportionReturnModel.setType("CANCEL");
-				if (qcResponseStatus.contains("PENDING"))
+				if (qcResponseStatus.contains(PENDING))
 				{
-					walletApportionReturnModel.setStatusForQc("PENDING");
+					walletApportionReturnModel.setStatusForQc(PENDING);
 				}
 				else
 				{
-					walletApportionReturnModel.setStatusForQc("SUCCESS");
+					walletApportionReturnModel.setStatusForQc(SUCCESS);
 				}
 				modelService.save(walletApportionReturnModel);
 				abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionReturnModel);
@@ -5859,21 +5860,21 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		returnModel.setOrderId(orderEntry.getOrder().getCode());
 		returnModel.setType("CANCEL");
-		if (qcResponseStatus.contains("PENDING"))
+		if (qcResponseStatus.contains(PENDING))
 		{
-			returnModel.setStatusForQc("PENDING");
+			returnModel.setStatusForQc(PENDING);
 		}
 		else
 		{
-			returnModel.setStatusForQc("SUCCESS");
+			returnModel.setStatusForQc(SUCCESS);
 		}
 		if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), MarketplacecommerceservicesConstants.SUCCESS))
 		{
-			returnModel.setStatus("SUCCESS");
+			returnModel.setStatus(SUCCESS);
 		}
-		else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING"))
+		else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), PENDING))
 		{
-			returnModel.setStatus("PENDING");
+			returnModel.setStatus(PENDING);
 		}
 
 		System.out.println("Before Saving Juspay Response is :" + returnModel.getJuspayApportionValue());

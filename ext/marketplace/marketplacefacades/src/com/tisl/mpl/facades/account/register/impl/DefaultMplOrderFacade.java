@@ -83,6 +83,7 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO;
+import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 
@@ -2096,5 +2097,26 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		return products;
 	}
 
+	/**
+	 * Added for NU-56
+	 */
+	@Override
+	public OrderDataWsDTO orderExperience(final String orderId, final Double ratings)
+	{
+		OrderDataWsDTO result = new OrderDataWsDTO();
+		try
+		{
+
+			result = mplOrderService.orderExperience(orderId, ratings);
+			return result;
+
+		}
+
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B009900);
+		}
+
+	}
 
 }
