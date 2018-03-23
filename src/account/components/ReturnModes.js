@@ -1,7 +1,7 @@
 import React from "react";
 import OrderCard from "./OrderCard";
-import UnderLinedButton from "../../general/components/UnderLinedButton";
 import SelectReturnDate from "./SelectReturnDate";
+import ReturnsFrame from "./ReturnsFrame";
 import PropTypes from "prop-types";
 import styles from "./ReturnModes.css";
 const QUICK_DROP = "quickDrop";
@@ -82,17 +82,10 @@ export default class ReturnModes extends React.Component {
   }
   render() {
     return (
-      <div className={styles.base}>
-        <div className={styles.header}>
-          Select mode of return
-          <div className={styles.cancel}>
-            <UnderLinedButton
-              label="Cancel"
-              color="#ff1744"
-              onClick={() => this.handleCancel()}
-            />
-          </div>
-        </div>
+      <ReturnsFrame
+        headerText="Select mode of return"
+        onCancel={() => this.onCancel()}
+      >
         <div className={styles.content}>
           <div className={styles.card}>
             <OrderCard
@@ -110,40 +103,34 @@ export default class ReturnModes extends React.Component {
             </OrderCard>
           </div>
           {data.returnModes.quickDrop && (
-            <div className={styles.check}>
-              <SelectReturnDate
-                label="Return to store"
-                selected={this.props.selectedMode === QUICK_DROP}
-                selectItem={() => {
-                  this.handleSelect(QUICK_DROP);
-                }}
-              />
-            </div>
+            <SelectReturnDate
+              label="Return to store"
+              selected={this.props.selectedMode === QUICK_DROP}
+              selectItem={() => {
+                this.handleSelect(QUICK_DROP);
+              }}
+            />
           )}
           {data.returnModes.schedulePickup && (
-            <div className={styles.check}>
-              <SelectReturnDate
-                label="Tata CliQ Pick Up"
-                selectItem={() => {
-                  this.handleSelect(SCHEDULED_PICKUP);
-                }}
-                selected={this.props.selectedMode === SCHEDULED_PICKUP}
-              />
-            </div>
+            <SelectReturnDate
+              label="Tata CliQ Pick Up"
+              selectItem={() => {
+                this.handleSelect(SCHEDULED_PICKUP);
+              }}
+              selected={this.props.selectedMode === SCHEDULED_PICKUP}
+            />
           )}
           {data.returnModes.selfCourier && (
-            <div className={styles.check}>
-              <SelectReturnDate
-                selectItem={() => {
-                  this.handleSelect(SELF_COURIER);
-                }}
-                label="Self Courier"
-                selected={this.props.selectedMode === SELF_COURIER}
-              />
-            </div>
+            <SelectReturnDate
+              selectItem={() => {
+                this.handleSelect(SELF_COURIER);
+              }}
+              label="Self Courier"
+              selected={this.props.selectedMode === SELF_COURIER}
+            />
           )}
         </div>
-      </div>
+      </ReturnsFrame>
     );
   }
 }
