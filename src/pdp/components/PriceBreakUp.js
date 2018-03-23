@@ -1,9 +1,9 @@
 import React from "react";
 import Accordion from "../../general/components/Accordion";
+import PropTypes from "prop-types";
 import styles from "./ProductFeatures.css";
 export default class PriceBreakUp extends React.Component {
   render() {
-    console.log(this.props);
     return (
       <Accordion
         text="Price breakup"
@@ -26,3 +26,12 @@ export default class PriceBreakUp extends React.Component {
     );
   }
 }
+PriceBreakUp.propTypes = {
+  isOpen: PropTypes.bool,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      price: PropTypes.shape({ formattedValue: PropTypes.string })
+    })
+  )
+};

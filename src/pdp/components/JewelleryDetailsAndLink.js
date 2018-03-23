@@ -20,7 +20,6 @@ export default class JewelleryDetailsAndLink extends React.Component {
     }
   }
   render() {
-    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.linkHolder}>

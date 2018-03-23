@@ -59,8 +59,6 @@ export default class JewelleryCertification extends React.Component {
         <div className={styles.header}>Certified by -</div>
         <div className={styles.logo}>
           {this.props.certifications.map(val => {
-            console.log(val);
-            console.log(this.getCertificationImage(val));
             return (
               <div className={styles.logoHolder}>
                 <Logo image={this.getCertificationImage(val)} />{" "}
@@ -72,3 +70,20 @@ export default class JewelleryCertification extends React.Component {
     );
   }
 }
+
+JewelleryCertification.propTypes = {
+  certifications: PropTypes.arrayOf(
+    PropTypes.oneOf([
+      "Orra",
+      "Platinum",
+      "EGL",
+      "Carat Lane",
+      "Tanishq",
+      "IGI",
+      "GSI",
+      "GIA",
+      "BSI",
+      "SGL"
+    ])
+  )
+};
