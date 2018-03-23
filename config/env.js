@@ -60,10 +60,26 @@ if (process.env.NODE_ENV !== "development") {
   process.env.REACT_APP_FACEBOOK_CLIENT_ID = "1444012285724567";
   process.env.REACT_APP_RECAPTCHA_SITE_KEY =
     "6LfpAk0UAAAAACmNvkmNNTiHlgAcu0DxKXC9oESm";
-  process.env.REACT_APP_RECAPTCHA_SECRET_KEY =
-    "6LfpAk0UAAAAAJkyk-73xj7GEtIBw3KMD6vpXqJW";
   process.env.REACT_APP_MSD_API_KEY = "a7e46b8a87c52ab85d352e9";
 }
+
+if (
+  process.env.REACT_APP_STAGE === "production" ||
+  process.env.REACT_APP_STAGE === "p2"
+) {
+  process.env.REACT_APP_RECAPTCHA_SITE_KEY =
+    "6LcQ0BQTAAAAALUu7TCdIkQidudN266V_dhaEs-1";
+} else if (process.env.REACT_APP_STAGE === "uat2") {
+  process.env.REACT_APP_RECAPTCHA_SITE_KEY =
+    "6Lec7BUUAAAAAL8HzkX7KJdtLHBpxvb8jFwehZGz";
+} else if (process.env.REACT_APP_STAGE === "tmpprod") {
+  process.env.REACT_APP_RECAPTCHA_SITE_KEY =
+    "6Lec7BUUAAAAAL8HzkX7KJdtLHBpxvb8jFwehZGz";
+} else {
+  process.env.REACT_APP_RECAPTCHA_SITE_KEY =
+    "6LfpAk0UAAAAACmNvkmNNTiHlgAcu0DxKXC9oESm";
+}
+
 function getClientEnvironment(publicUrl) {
   const raw = Object.keys(process.env)
     .filter(key => REACT_APP.test(key))
