@@ -58,9 +58,8 @@
 }
 .deliveredProcesesAndTime {
   width: 100%;
-  height: 20px;
+  height: auto;
   display: inline-block;
-  line-height: 20px;
 }
 .processNameHolder {
   width: 40%;
