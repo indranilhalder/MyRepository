@@ -24,7 +24,7 @@ const mapStateToProps = state => {
   };
 };
 
-const ReturnFlowContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ReturnFlow)
+const ReturnFlowContainer = connect(mapStateToProps, mapDispatchToProps)(
+  ReturnFlow
 );
 export default ReturnFlowContainer;

@@ -2,6 +2,7 @@ import React from "react";
 import { Route } from "react-router-dom";
 import ReturnReasonForm from "./ReturnReasonForm.js";
 import ReturnModes from "./ReturnModes.js";
+import ReturnToStoreContainer from "../containers/ReturnToStoreContainer";
 import {
   RETURNS,
   RETURNS_REASON,
@@ -15,6 +16,7 @@ export default class ReturnFlow extends React.Component {
   componentDidMount() {
     this.props.returnProductDetails();
     this.props.getReturnRequest();
+    console.log("COMPONENT DID MOUNT");
   }
 
   renderReturnReason = () => {
@@ -52,17 +54,17 @@ export default class ReturnFlow extends React.Component {
         <Route
           exact
           path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_MAP}`}
-          component={ReturnReasonForm}
+          component={ReturnToStoreContainer}
         />
         <Route
           exact
           path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_BANK_FORM}`}
-          component={ReturnReasonForm}
+          component={ReturnToStoreContainer}
         />
         <Route
           exact
           path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_FINAL}`}
-          component={ReturnReasonForm}
+          component={ReturnToStoreContainer}
         />
         {/* end of need to call return bia store pick up  routes */}
       </React.Fragment>
