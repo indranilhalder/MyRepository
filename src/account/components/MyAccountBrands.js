@@ -22,8 +22,6 @@ export default class MyAccountBrands extends React.Component {
 
     if (userDetails && customerCookie) {
       this.props.getFollowedBrands();
-    } else {
-      this.navigateToLogin();
     }
   }
   navigateToLogin() {
@@ -43,8 +41,13 @@ export default class MyAccountBrands extends React.Component {
 
   render() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
     if (this.props.loading) {
       return this.renderLoader();
+    }
+    if (!userDetails || !customerCookie) {
+      return this.navigateToLogin();
     }
     let followedBrands = [];
     if (this.props.followedBrands) {

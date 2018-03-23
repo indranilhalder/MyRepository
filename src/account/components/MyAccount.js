@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Redirect } from "react-router-dom";
 import InformationHeader from "../../general/components/InformationHeader.js";
 import AllOrderContainer from "../containers/AllOrderContainer";
 import UserCoupons from "./UserCoupons";
@@ -41,11 +42,18 @@ export default class MyAccount extends React.Component {
       this.props.getUserDetails();
       this.props.getUserCoupons();
       this.props.getUserAlerts();
-    } else {
-      this.props.history.push(LOGIN_PATH);
     }
   }
+  navigateToLogin() {
+    return <Redirect to={LOGIN_PATH} />;
+  }
   render() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+    if (!userDetails || !customerCookie) {
+      return this.navigateToLogin();
+    }
     return (
       <div className={styles.base}>
         <ProfileMenuGrid {...this.props} />
