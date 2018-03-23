@@ -6,7 +6,7 @@ import {
   followAndUnFollowBrandInCommerce,
   followAndUnFollowBrandInFeedBackInCommerceApi
 } from "../actions/account.actions";
-
+import { SUCCESS, REQUESTING, ERROR, FAILURE } from "../../lib/constants";
 const mapDispatchToProps = dispatch => {
   return {
     getFollowedBrands: () => {
@@ -15,22 +15,24 @@ const mapDispatchToProps = dispatch => {
     followAndUnFollowBrand: (brandId, followStatus) => {
       try {
         dispatch(followAndUnFollowBrandInCommerce(brandId, followStatus))
-          .then((err, data) => {
-            if (err) {
-              throw new Error(err);
+          .then(response => {
+            if (response.status === SUCCESS) {
+              return dispatch(
+                followAndUnFollowBrandInFeedBackInCommerceApi(
+                  brandId,
+                  followStatus
+                )
+              );
+            } else {
+              return response;
             }
-            dispatch(
-              followAndUnFollowBrandInFeedBackInCommerceApi(
-                brandId,
-                followStatus
-              )
-            );
           })
-          .then((err, res) => {
-            if (err) {
-              throw new Error(err);
+          .then(response => {
+            if (response.status === SUCCESS) {
+              return dispatch(getFollowedBrands());
+            } else {
+              return response;
             }
-            dispatch(getFollowedBrands());
           });
       } catch (e) {
         console.log(e.message);
