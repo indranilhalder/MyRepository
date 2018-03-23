@@ -5,58 +5,6 @@ import TextArea from "../../general/components/TextArea";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
 import styles from "./ReturnReasonForm.css";
-const data = {
-  type: "returnRequestDTO",
-  orderProductWsDTO: [
-    {
-      USSID: "273570HMAIBSSZ06",
-      imageURL:
-        "//pcmuat2.tataunistore.com/images/97Wx144H/MP000000000113801_97Wx144H_20171102155229.jpeg",
-      price: "778.0",
-      productBrand: "Red Rose",
-      productColour: "Red",
-      productName: "Infants Boys Clothing Shirts",
-      productSize: "M",
-      productcode: "MP000000000113801",
-      sellerID: "273570",
-      sellerName: "Saravanan",
-      sellerorderno: "180314-000-111548",
-      transactionId: "273570000120027"
-    }
-  ],
-  returnModes: {
-    quickDrop: true,
-    schedulePickup: true,
-    selfCourier: false
-  },
-  returnReasonMap: [
-    {
-      parentReasonCode: "JEW100",
-      parentReturnReason: "Dummy reason 1",
-      subReasons: [
-        {
-          subReasonCode: "JEW1S1",
-          subReturnReason: "Sub reason 11"
-        },
-        {
-          subReasonCode: "JEW1S2",
-          subReturnReason: "Sub reason 12"
-        }
-      ]
-    },
-    {
-      parentReasonCode: "JEW200",
-      parentReturnReason: "Dummy reason 2",
-      subReasons: [
-        {
-          subReasonCode: "JEW2S2",
-          subReturnReason: "Sub reason 21"
-        }
-      ]
-    }
-  ],
-  showReverseSealFrJwlry: "no"
-};
 
 export default class ReturnReasonForm extends React.Component {
   constructor(props) {
@@ -72,17 +20,9 @@ export default class ReturnReasonForm extends React.Component {
     }
   }
   onChangePrimary(code) {
-    this.setState({
-      secondaryReasons: data.returnReasonMap
-        .filter(val => {
-          return val.parentReasonCode === code;
-        })
-        .map(val => {
-          return val.subReasons.map(value => {
-            return { value: value.subReasonCode, label: value.subReturnReason };
-          });
-        })[0]
-    });
+    if (this.props.onChangePrimary) {
+      this.props.onChangePrimary(code);
+    }
   }
   onChangeSecondary(code) {
     if (this.props.onChangeSecondary) {
@@ -94,7 +34,13 @@ export default class ReturnReasonForm extends React.Component {
       this.props.onCancel();
     }
   }
+  handleChange(val) {
+    if (this.props.onChange) {
+      this.props.onChange(val);
+    }
+  }
   render() {
+    const { productInfo } = this.props;
     return (
       <div className={styles.base}>
         <div className={styles.header}>
@@ -109,25 +55,21 @@ export default class ReturnReasonForm extends React.Component {
         </div>
         <div className={styles.content}>
           <OrderCard
-            productImage={data.orderProductWsDTO[0].imageURL}
-            productName={`${data.orderProductWsDTO[0].productBrand} ${
-              data.orderProductWsDTO[0].productName
-            }`}
-            price={data.orderProductWsDTO[0].price}
+            productImage={productInfo.product.imageURL}
+            productName={productInfo.product.name}
+            price={productInfo.totalPrice.value}
           >
-            {data.orderProductWsDTO[0].quantity && (
-              <div className={styles.quantity}>
-                Qty {data.orderProductWsDTO[0].quantity}
-              </div>
+            {productInfo.quantity && (
+              <div className={styles.quantity}>Qty {productInfo.quantity}</div>
             )}
           </OrderCard>
           <div className={styles.select}>
             <SelectBoxMobile
               label="Select a reason"
-              options={data.returnReasonMap.map((val, i) => {
+              options={this.props.optionsForReason.map((val, i) => {
                 return {
-                  value: val.parentReasonCode,
-                  label: val.parentReturnReason
+                  value: val.code,
+                  label: val.reasonDescription
                 };
               })}
               onChange={val => this.onChangePrimary(val)}
@@ -138,12 +80,12 @@ export default class ReturnReasonForm extends React.Component {
               <SelectBoxMobile
                 label="Select a reason"
                 options={this.state.secondaryReasons}
-                onChange={val => this.onChangeSecondary()}
+                onChange={val => this.onChangeSecondary(val)}
               />
             </div>
           )}
           <div className={styles.textArea}>
-            <TextArea onChange={val => this.handleChange()} />
+            <TextArea onChange={val => this.handleChange(val)} />
           </div>
         </div>
         <div className={styles.buttonHolder}>
@@ -152,7 +94,7 @@ export default class ReturnReasonForm extends React.Component {
               width={175}
               type="primary"
               label="Continue"
-              onClick={this.handleContinue()}
+              onClick={() => this.handleContinue()}
             />
           </div>
         </div>

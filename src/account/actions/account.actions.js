@@ -185,7 +185,7 @@ export function getReturnRequest(orderCode, transactionId) {
     dispatch(getReturnRequestRequest());
 
     try {
-      const result = api.get(
+      const result = await api.get(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
         }/returnRequest?access_token=${

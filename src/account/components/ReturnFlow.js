@@ -1,7 +1,7 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import ReturnReasonForm from "./ReturnReasonForm.js";
-import ReturnModes from "./ReturnModes.js";
+
+import ReturnReasonAndModesContainer from "../containers/ReturnReasonAndModesContainer";
 import {
   RETURNS,
   RETURNS_REASON,
@@ -9,7 +9,8 @@ import {
   RETURNS_STORE_MAP,
   RETURNS_STORE_BANK_FORM,
   RETURNS_STORE_FINAL,
-  RETURN_TO_STORE
+  RETURN_TO_STORE,
+  RETURN_LANDING
 } from "../../lib/constants";
 export default class ReturnFlow extends React.Component {
   componentDidMount() {
@@ -17,54 +18,13 @@ export default class ReturnFlow extends React.Component {
     this.props.getReturnRequest();
   }
 
-  renderReturnReason = () => {
-    return (
-      <div>
-        <ReturnReasonForm onContinue={() => this.addReasonForReturn()} />
-      </div>
-    );
-  };
-
-  goToReturnMode = val => {};
-  renderReturnModes = () => {
-    return (
-      <div>
-        <ReturnModes selectMode={val => this.goToReturnMode(val)} />
-      </div>
-    );
-  };
-
   render() {
-    console.log(this.props);
     return (
       <React.Fragment>
         <Route
-          exact
-          path={`${RETURNS}${RETURNS_REASON}`}
-          component={ReturnReasonForm}
+          path={`${RETURNS}${RETURN_LANDING}`}
+          component={ReturnReasonAndModesContainer}
         />
-        <Route
-          exact
-          path={`${RETURNS}${RETURNS_MODES}`}
-          component={ReturnModes}
-        />
-        {/* need to call return bia store pick up  routes change component according to route */}
-        <Route
-          exact
-          path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_MAP}`}
-          component={ReturnReasonForm}
-        />
-        <Route
-          exact
-          path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_BANK_FORM}`}
-          component={ReturnReasonForm}
-        />
-        <Route
-          exact
-          path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_FINAL}`}
-          component={ReturnReasonForm}
-        />
-        {/* end of need to call return bia store pick up  routes */}
       </React.Fragment>
     );
   }
