@@ -2,19 +2,33 @@
   width: 100%;
   height: auto;
   background-color: #ececec;
-  padding: 10px 0px;
+  padding: 15px;
+  display: inline-block;
+}
+.headerHolder {
+  width: 75%;
+  height: auto;
+  float: left;
   display: inline-block;
 }
 .heading {
-  width: 50%;
+  width: 100%;
   height: auto;
   font-family: semibold;
   font-size: 16px;
   float: left;
   display: inline-block;
 }
+.subHeading {
+  width: 100%;
+  height: auto;
+  font-family: regular;
+  font-size: 14px;
+  float: left;
+  display: inline-block;
+}
 .buttonHolder {
-  width: 50%;
+  width: 25%;
   height: auto;
   text-align: right;
   display: inline-block;
