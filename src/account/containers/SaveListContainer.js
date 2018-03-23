@@ -6,7 +6,7 @@ import {
   removeProductFromWishList,
   addProductToCart
 } from "../../pdp/actions/pdp.actions";
-
+import { FAILURE, FAILURE_UPPERCASE } from "../../lib/constants";
 const mapDispatchToProps = dispatch => {
   return {
     getWishList: () => {
@@ -16,13 +16,15 @@ const mapDispatchToProps = dispatch => {
       dispatch(addProductToCart(userId, cartId, accessToken, productDetails));
     },
     removeProductFromWishList: productDetails => {
-      dispatch(removeProductFromWishList(productDetails)).then(() =>
-        dispatch(getWishList())
-      );
+      dispatch(removeProductFromWishList(productDetails)).then(error => {
+        if (error || error === FAILURE || error === FAILURE_UPPERCASE) {
+          throw new Error(error);
+        }
+        dispatch(getWishList());
+      });
     }
   };
 };
-
 const mapStateToProps = state => {
   return {
     wishList: state.profile.wishlist
