@@ -84,7 +84,7 @@ export default class AwbForm extends React.Component {
           <div className={styles.fileUploadHolder}>
             <div className={styles.pathUploadHolder}>{this.state.value}</div>
             <div className={styles.fileHolder}>
-              Browser
+              Browse
               <input
                 type="file"
                 className={styles.file}
