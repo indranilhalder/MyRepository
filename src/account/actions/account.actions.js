@@ -94,7 +94,6 @@ export const PLATFORM_NUMBER = 2;
 export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
 
-
 export function returnProductDetailsRequest() {
   return {
     type: RETURN_PRODUCT_DETAILS_REQUEST,
@@ -208,7 +207,6 @@ export function getReturnRequest(orderCode, transactionId) {
   };
 }
 
-=======
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
 
 const API_KEY_FOR_MSD = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";

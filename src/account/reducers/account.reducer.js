@@ -49,16 +49,14 @@ const account = (
     removeAddressStatus: null,
     removeAddressError: null,
 
-
     returnProductDetails: null,
 
-    returnRequest: null
+    returnRequest: null,
 
     followedBrands: null,
     followedBrandsStatus: null,
     followedBrandsError: null,
     loadingForFollowedBrands: false
-
   },
   action
 ) => {
