@@ -15,6 +15,7 @@ import {
 // prettier-ignore
 const typeComponentMapping = {
   "Electronics": props => <PdpElectronics {...props} />,
+  "Watches":props =><PdpElectronics {...props} />,
   "FashionJewellery":props => <PdpJewellery {...props} />,
   "Clothing":props => <PdpApparel {...props} />,
   "HomeFurnishing":props => <PdpHome {...props} />
@@ -96,6 +97,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     if (!this.props.loading && this.props.productDetails) {
       return (
         <div>
