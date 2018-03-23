@@ -211,13 +211,13 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			{
 				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-" + userName);
 				throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
-						"Email id does not exist"), notFound);
+						"Email ID or phone number does not exist"), notFound);
 			}
 			catch (final DataIntegrityViolationException dataIntegrity)
 			{
 				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-" + userName);
 				throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
-						"Email id does not exist"), dataIntegrity);
+						"Email ID or phone number does not exist"), dataIntegrity);
 			}
 			getPreAuthenticationChecks().check(userDetails);
 			final UserModel userModel = extUserService.getUserForUIDAccessToken(StringUtils.lowerCase(userName));
