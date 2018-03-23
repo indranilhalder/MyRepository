@@ -3,8 +3,13 @@ import Accordion from "../../general/components/Accordion";
 import styles from "./ProductFeatures.css";
 export default class PriceBreakUp extends React.Component {
   render() {
+    console.log(this.props);
     return (
-      <Accordion text="Price breakup" headerFontSize={16}>
+      <Accordion
+        text="Price breakup"
+        headerFontSize={16}
+        isOpen={this.props.isOpen}
+      >
         <div className={styles.holder}>
           {this.props.data.map(val => {
             return (

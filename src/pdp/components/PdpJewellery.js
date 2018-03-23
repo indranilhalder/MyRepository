@@ -9,6 +9,7 @@ import SizeSelector from "./SizeSelector";
 import PriceBreakUp from "./PriceBreakUp";
 import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
+
 import ProductDetails from "./ProductDetails";
 import JewelleryClassification from "./JewelleryClassification";
 import RatingAndTextLink from "./RatingAndTextLink";
@@ -16,7 +17,8 @@ import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
-import Logo from "../../general/components/Logo.js";
+import JewelleryCertification from "./JewelleryCertification.js";
+import { HashLink as Link } from "react-router-hash-link";
 import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
 import PDPRecommendedSections from "./PDPRecommendedSections.js";
@@ -41,7 +43,7 @@ const data = {
   allOOStock: false,
   brandInfo: "Fine Jewellery Brand",
   brandName: "Tanishq",
-  certificationMapFrJwlry: ["AGL"],
+  certificationMapFrJwlry: ["GSI", "GIA"],
   deliveryModesATP: [
     {
       key: "home-delivery",
@@ -534,6 +536,12 @@ const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
 const PRODUCT_QUANTITY = "1";
 export default class PdpJewellery extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showPriceBreakUp: false
+    };
+  }
   visitBrand() {
     if (this.props.visitBrandStore) {
       this.props.visitBrandStore();
@@ -636,7 +644,9 @@ export default class PdpJewellery extends React.Component {
       );
     }
   };
-
+  showPriceBreakUp() {
+    this.setState({ showPriceBreakUp: true });
+  }
   showEmiModal = () => {
     const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -667,6 +677,7 @@ export default class PdpJewellery extends React.Component {
   }
   render() {
     console.log(data.priceBreakUpDetailsMap);
+    console.log(this.props);
     // const productData = this.props.productDetails;
     const productData = data;
     const mobileGalleryImages = productData.galleryImagesList
@@ -702,10 +713,10 @@ export default class PdpJewellery extends React.Component {
           addProductToWishList={() => this.addToWishList()}
           showPincodeModal={() => this.showPincodeModal()}
         >
-          <ProductGalleryMobile isElectronics={true}>
+          <ProductGalleryMobile paddingBottom="114">
             {mobileGalleryImages.map((val, idx) => {
               return (
-                <Image image={val} key={idx} color="#f5f5f5" fit="contain" />
+                <Image image={val} key={idx} color="#ffffff" fit="contain" />
               );
             })}
           </ProductGalleryMobile>
@@ -723,7 +734,11 @@ export default class PdpJewellery extends React.Component {
               price={productData.mrp}
               discountPrice={productData.winningSellerMOP}
               discount={productData.discount}
-              showPriceBreakUp={productData.priceBreakUpDetailsMap}
+              hasPriceBreakUp={productData.priceBreakUpDetailsMap}
+              history={this.props.history}
+              showPriceBreakUp={() => {
+                this.showPriceBreakUp();
+              }}
             />
           </div>
           {productData.isEMIEligible === "Y" && (
@@ -765,6 +780,11 @@ export default class PdpJewellery extends React.Component {
               />
             </React.Fragment>
           )}
+          {productData.certificationMapFrJwlry && (
+            <JewelleryCertification
+              certifications={productData.certificationMapFrJwlry}
+            />
+          )}
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.pinCode ? (
             <PdpPincode
@@ -801,20 +821,24 @@ please try another pincode">
             />
           </div>
 
-          {productData.fineJewelleryClassificationList && (
-            <div className={styles.details}>
-              <PriceBreakUp data={productData.priceBreakUpDetailsMap} />
+          <div className={styles.details} id="priceBreakup">
+            {productData.priceBreakUpDetailsMap && (
+              <PriceBreakUp
+                data={productData.priceBreakUpDetailsMap}
+                isOpen={this.state.showPriceBreakUp}
+              />
+            )}
+            {productData.fineJewelleryClassificationList && (
               <JewelleryClassification
                 data={productData.fineJewelleryClassificationList}
               />
-            </div>
-          )}
+            )}
+          </div>
           {productData.APlusContent && (
             <AllDescription
               productContent={productData.APlusContent.productContent}
             />
           )}
-
           <PDPRecommendedSections
             msdItems={this.props.msdItems}
             productData={productData}

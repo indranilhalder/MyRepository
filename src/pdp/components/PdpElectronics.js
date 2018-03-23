@@ -207,7 +207,7 @@ export default class PdpElectronics extends React.Component {
           addProductToWishList={() => this.addToWishList()}
           showPincodeModal={() => this.showPincodeModal()}
         >
-          <ProductGalleryMobile isElectronics={true}>
+          <ProductGalleryMobile paddingBottom="89.4">
             {mobileGalleryImages.map((val, idx) => {
               return (
                 <Image image={val} key={idx} color="#f5f5f5" fit="contain" />
