@@ -728,7 +728,7 @@ export function getWishList() {
         throw new Error(`${resultJson.errors[0].message}`);
       }
     } catch (e) {
-      dispatch(getWishlistFailure(e.message));
+      return dispatch(getWishlistFailure(e.message));
     }
   };
 }

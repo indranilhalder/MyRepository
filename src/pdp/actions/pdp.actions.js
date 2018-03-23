@@ -319,7 +319,7 @@ export function removeProductFromWishList(productDetails) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
     } catch (e) {
-      dispatch(removeProductFromWishListFailure(e.message));
+      return dispatch(removeProductFromWishListFailure(e.message));
     }
   };
 }
