@@ -70,29 +70,37 @@ export default class OrderDetails extends React.Component {
                     Total={orderDetails.totalOrderAmount}
                   />
                 </div>
+
                 <OrderPaymentMethod
-                  phoneNumber={orderDetails.billingAddress.phone}
+                  phoneNumber={
+                    orderDetails.billingAddress &&
+                    orderDetails.billingAddress.phone
+                  }
                   paymentMethod={orderDetails.paymentMethod}
                   isInvoiceAvailable={products.isInvoiceAvailable}
                   request={() =>
                     this.requestInvoice(products.USSID, products.sellerorderno)
                   }
                 />
-                <OrderDelivered
-                  deliveredAddress={`${
-                    orderDetails.billingAddress.addressLine1
-                  } ${orderDetails.billingAddress.town} ${
-                    orderDetails.billingAddress.state
-                  } ${orderDetails.billingAddress.postalcode}`}
-                />
-                <div className={styles.orderStatusVertical}>
-                  <OrderStatusVertical
-                    statusMessageList={
-                      products.statusDisplayMsg[0].value.statusList[0]
-                        .statusMessageList
-                    }
+                {orderDetails.billingAddress && (
+                  <OrderDelivered
+                    deliveredAddress={`${
+                      orderDetails.billingAddress.addressLine1
+                    } ${orderDetails.billingAddress.town} ${
+                      orderDetails.billingAddress.state
+                    } ${orderDetails.billingAddress.postalcode}`}
                   />
-                </div>
+                )}
+                {products.statusDisplayMsg && (
+                  <div className={styles.orderStatusVertical}>
+                    <OrderStatusVertical
+                      statusMessageList={
+                        products.statusDisplayMsg[0].value.statusList[0]
+                          .statusMessageList
+                      }
+                    />
+                  </div>
+                )}
                 <div className={styles.buttonHolder}>
                   <OrderReturn
                     buttonLabel={
