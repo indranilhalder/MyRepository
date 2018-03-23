@@ -25,7 +25,8 @@
 									<%-- <div class="returnPayment">${subOrder.mplPaymentInfo.paymentOption}</div> --%>
 									<c:choose>
 									<c:when test="${subOrder.mplPaymentInfo.paymentOption eq 'COD'}">
-									<div class="returnPayment">Cheque/NEFT</div>
+									<!-- <div class="returnPayment">Cheque/NEFT</div> commented for SDI-6417-->
+									<div class="returnPayment">NEFT</div>
 									<span class="returnPaymentMessage"><spring:theme code="text.order.returns.codpaymentmessage" arguments="${subOrder.mplPaymentInfo.paymentOption}"/></span>
 									</c:when>
 									<c:otherwise>
@@ -109,7 +110,7 @@
 									<form:select name="size" class="refundMode" path="refundMode" value="${customerBankDetails.transactionType}">
 										    <form:option value="N">NEFT</form:option>
 											<form:option value="R">RTGS</form:option>
-											<form:option value="C">CHEQUE</form:option>
+											<%-- <form:option value="C">CHEQUE</form:option> commented for SDI-6417 --%>	
 											<form:option value="B">Bank Transfer</form:option>						
 									</form:select>
 								</div>

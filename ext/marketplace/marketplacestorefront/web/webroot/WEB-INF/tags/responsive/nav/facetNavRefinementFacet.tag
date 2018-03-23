@@ -33,6 +33,7 @@ function navigateToPage(queryString,textString)
 <c:if test="${facetData.code ne 'snsCategory' && facetData.code ne 'micrositeSnsCategory'}">
 <c:if test="${facetData.code ne 'deptType'}">
 <c:if test="${facetData.code ne 'sellerId'}">
+<c:if test="${facetData.code ne 'collectionIds'}"> <!-- SDI-6546 -->
 <c:if test="${facetData.code ne 'allMobilePromotions'}">
 <c:if test="${facetData.code ne 'allCategories'}">
 <c:if test="${facetData.code ne 'isOffersExisting'}">
@@ -693,6 +694,7 @@ function navigateToPage(queryString,textString)
 			</c:if>
 			</c:if>
 			</c:if>
+</c:if>
 </c:if>
 </c:if>
 </div>
