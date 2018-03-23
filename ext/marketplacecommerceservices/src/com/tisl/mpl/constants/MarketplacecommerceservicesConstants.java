@@ -408,7 +408,16 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CURRENTDELIVERYCHARGE = "currDelCharge".intern();
 
 	public static final String SUCCESS_FLAG = "Success";
+
+	public static final String MESSAGE1_FLAG = "Address attached to order successfully";
+
 	public static final String ERROR_FLAG = "Failure";
+
+	public static final String ERROR_Message = "Unable to attach address with order. Please try again";
+
+
+	public static final String B00019 = "B00019";
+
 	public static final String BAD_CREDENTIALS = "Bad credentials";
 	public static final String CREDENTIALS_EXP = "User credentials have expired";
 	public static final String uusid = "uusid";
@@ -2579,6 +2588,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//changes for SDI 6152--starts
 	public static final String LUXURY_CATALOG_ID = "luxProductCatalog";
-	public static final String MESSAGE1_FLAG = "Address attached to order successfully";
 
 }
