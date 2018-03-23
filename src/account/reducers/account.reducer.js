@@ -17,6 +17,11 @@ const account = (
     fetchOrderDetailsError: null,
     loadingForFetchOrderDetails: false,
 
+    wishlist: null,
+    wishlistStatus: null,
+    wishlistError: null,
+    loadingForWishlist: false,
+
     userDetails: null,
     userDetailsStatus: null,
     userDetailsError: null,
@@ -45,8 +50,12 @@ const account = (
     removeAddressError: null,
 
     returnProductDetails: null,
+    returnRequest: null,
 
-    returnRequest: null
+    followedBrands: null,
+    followedBrandsStatus: null,
+    followedBrandsError: null,
+    loadingForFollowedBrands: false
   },
   action
 ) => {
@@ -139,6 +148,25 @@ const account = (
         orderDetailsError: action.error,
         loading: false
       });
+    case accountActions.GET_WISHLIST_REQUEST:
+      return Object.assign({}, state, {
+        wishlistStatus: action.status,
+        loadingForWishlist: true
+      });
+
+    case accountActions.GET_WISHLIST_SUCCESS:
+      return Object.assign({}, state, {
+        wishlistStatus: action.status,
+        wishlist: action.wishlist,
+        loadingForWishlist: false
+      });
+
+    case accountActions.GET_WISHLIST_FAILURE:
+      return Object.assign({}, state, {
+        wishlistStatus: action.status,
+        wishlistError: action.error,
+        loaloadingForWishlistding: false
+      });
     case accountActions.GET_USER_DETAILS_REQUEST:
       return Object.assign({}, state, {
         userDetailsStatus: action.status,
@@ -196,6 +224,25 @@ const account = (
         userAlertsStatus: action.status,
         userAlertsError: action.error,
         loadingForUserAlerts: false
+      });
+    case accountActions.GET_FOLLOWED_BRANDS_REQUEST:
+      return Object.assign({}, state, {
+        followedBrandsStatus: action.status,
+        loadingForFollowedBrands: true
+      });
+
+    case accountActions.GET_FOLLOWED_BRANDS_SUCCESS:
+      return Object.assign({}, state, {
+        followedBrandsStatus: action.status,
+        followedBrands: action.followedBrands,
+        loadingForFollowedBrands: false
+      });
+
+    case accountActions.GET_FOLLOWED_BRANDS_FAILURE:
+      return Object.assign({}, state, {
+        followedBrandsStatus: action.status,
+        followedBrandsError: action.error,
+        loadingForFollowedBrands: false
       });
 
     case accountActions.FETCH_ORDER_DETAILS_REQUEST:

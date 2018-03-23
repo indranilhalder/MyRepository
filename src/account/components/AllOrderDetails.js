@@ -7,7 +7,16 @@ import OrderDelivered from "./OrderDelivered.js";
 import PropTypes from "prop-types";
 import Button from "../../general/components/Button";
 import moment from "moment";
-import { MY_ACCOUNT, ORDER, ORDER_CODE } from "../../lib/constants";
+import { Redirect } from "react-router-dom";
+import * as Cookie from "../../lib/Cookie";
+import {
+  MY_ACCOUNT,
+  ORDER,
+  ORDER_CODE,
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  LOGIN_PATH
+} from "../../lib/constants";
 import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 export default class AllOrderDetails extends React.Component {
@@ -15,7 +24,11 @@ export default class AllOrderDetails extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   componentDidMount() {
-    this.props.getAllOrdersDetails();
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (userDetails && customerCookie) {
+      this.props.getAllOrdersDetails();
+    }
   }
   renderToContinueShopping() {
     this.props.history.push(HOME_ROUTER);
@@ -38,7 +51,15 @@ export default class AllOrderDetails extends React.Component {
       </div>
     );
   }
+  navigateToLogin() {
+    return <Redirect to={LOGIN_PATH} />;
+  }
   render() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (!userDetails || !customerCookie) {
+      return this.navigateToLogin();
+    }
     const orderDetails = this.props.profile.orderDetails;
     return (
       <div className={styles.base}>
@@ -55,10 +76,15 @@ export default class AllOrderDetails extends React.Component {
                     />
                   </div>
                   <OrderCard
-                    imageUrl={orderDetails.products[0].imageURL}
+                    imageUrl={
+                      orderDetails.products && orderDetails.products[0].imageURL
+                    }
                     price={orderDetails.totalOrderAmount}
                     discountPrice={""}
-                    productName={orderDetails.products[0].productName}
+                    productName={
+                      orderDetails.products &&
+                      orderDetails.products[0].productName
+                    }
                   />
                   <PriceAndLink
                     onViewDetails={() =>
@@ -66,13 +92,15 @@ export default class AllOrderDetails extends React.Component {
                     }
                     price={orderDetails.totalOrderAmount}
                   />
-                  <OrderDelivered
-                    deliveredAddress={`${
-                      orderDetails.billingAddress.addressLine1
-                    } ${orderDetails.billingAddress.town} ${
-                      orderDetails.billingAddress.state
-                    } ${orderDetails.billingAddress.postalcode}`}
-                  />
+                  {orderDetails.billingAddress && (
+                    <OrderDelivered
+                      deliveredAddress={`${
+                        orderDetails.billingAddress.addressLine1
+                      } ${orderDetails.billingAddress.town} ${
+                        orderDetails.billingAddress.state
+                      } ${orderDetails.billingAddress.postalcode}`}
+                    />
+                  )}
                 </div>
               );
             })

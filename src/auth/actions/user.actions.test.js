@@ -73,7 +73,12 @@ describe("User Actions", () => {
 
     const expectedActions = [
       { type: userActions.LOGIN_USER_REQUEST, status: REQUESTING },
-      { type: userActions.LOGIN_USER_SUCCESS, user: userMock, status: SUCCESS }
+      {
+        type: userActions.LOGIN_USER_SUCCESS,
+        user: userMock,
+        status: SUCCESS,
+        userName: "test@xelpmoc.in"
+      }
     ];
 
     return store.dispatch(userActions.loginUser(inputDetails)).then(() => {
