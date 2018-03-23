@@ -57,7 +57,7 @@ export const ORDER_PREFIX = "/my-account/order/(.*)";
 export const ORDER_CODE = "orderCode";
 export const ORDER = "/order";
 // MyAccount Routes
-export const MY_ACCOUNT_PAGE = "/myAccount";
+export const MY_ACCOUNT_PAGE = "/my-account";
 export const MY_ACCOUNT_WISHLIST_PAGE = "/wishList";
 export const MY_ACCOUNT_ORDERS_PAGE = "/orders";
 export const MY_ACCOUNT_GIFT_CARD_PAGE = "/giftCard";
@@ -87,9 +87,9 @@ export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
-export const ORDER_PAGE = "/allOrders";
-export const PAYMENT_MODE_TYPE = "paymentMode";
 
+export const SAVE_LIST_PAGE = "/default/wishList";
+export const PAYMENT_MODE_TYPE = "paymentMode";
 // fetching feed information contant
 export const BLP_OR_CLP_FEED_TYPE = "blpOrClp";
 export const HOME_FEED_TYPE = "home";

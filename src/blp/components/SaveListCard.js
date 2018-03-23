@@ -30,18 +30,22 @@ export default class SaveListCard extends React.Component {
             price={this.props.price}
           />
           <div className={styles.rating}>
-            <StarRating averageRating={this.props.averageRating}>
-              {this.props.totalNoOfReviews && (
+            {this.props.totalNoOfReviews && (
+              <StarRating averageRating={this.props.averageRating}>
                 <div className={styles.noOfReviews}>{`(${
                   this.props.totalNoOfReviews
                 })`}</div>
-              )}
-            </StarRating>
+              </StarRating>
+            )}
           </div>
         </div>
         <div className={styles.textContainer}>
-          <div className={styles.text}>{this.props.text}</div>
-          <div className={styles.offers}>{this.props.offers}</div>
+          <div className={styles.text}>{`Get it by ${this.props.day} , ${
+            this.props.date
+          }`}</div>
+          <div className={styles.offers}>{`${this.props.offer} offers from Rs.${
+            this.props.offerPrice
+          }`}</div>
         </div>
         <div className={styles.footer}>
           <OrderReturn
@@ -50,6 +54,7 @@ export default class SaveListCard extends React.Component {
             underlineButtonLabel={this.props.underlineButtonLabel}
             buttonLabel={this.props.buttonLabel}
             underlineButtonColour={this.props.underlineButtonColour}
+            isEditable={this.props.isEditable}
           />
         </div>
       </div>
@@ -58,11 +63,11 @@ export default class SaveListCard extends React.Component {
 }
 SaveListCard.propTypes = {
   text: PropTypes.string,
-  offers: PropTypes.string,
+  offers: PropTypes.number,
   image: PropTypes.string,
   productName: PropTypes.string,
   averageRating: PropTypes.number,
-  price: PropTypes.string,
+  price: PropTypes.number,
   totalNoOfReviews: PropTypes.string,
   productMaterial: PropTypes.string,
   removeItem: PropTypes.func,
@@ -74,5 +79,6 @@ SaveListCard.propTypes = {
 SaveListCard.defaultProps = {
   underlineButtonLabel: "Add to bag",
   buttonLabel: "Remove",
-  underlineButtonColour: "#ff1744"
+  underlineButtonColour: "#ff1744",
+  isEditable: true
 };

@@ -53,6 +53,10 @@ export const REMOVE_ADDRESS_REQUEST = "REMOVE_ADDRESS_REQUEST";
 export const REMOVE_ADDRESS_SUCCESS = "REMOVE_ADDRESS_SUCCESS";
 export const REMOVE_ADDRESS_FAILURE = "REMOVE_ADDRESS_FAILURE";
 
+export const GET_WISHLIST_REQUEST = "GET_WISHLIST_REQUEST";
+export const GET_WISHLIST_SUCCESS = "GET_WISHLIST_SUCCESS";
+export const GET_WISHLIST_FAILURE = "GET_WISHLIST_FAILURE";
+
 export const GET_FOLLOWED_BRANDS_REQUEST = "GET_FOLLOWED_BRANDS_REQUEST";
 export const GET_FOLLOWED_BRANDS_SUCCESS = "GET_FOLLOWED_BRANDS_SUCCESS";
 export const GET_FOLLOWED_BRANDS_FAILURE = "GET_FOLLOWED_BRANDS_FAILURE";
@@ -73,6 +77,7 @@ export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_FAILURE =
 
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
+export const PLATFORM_NUMBER = 2;
 export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
 
@@ -674,6 +679,56 @@ export function followAndUnFollowBrandInFeedBackInCommerceApi(
       }
     } catch (e) {
       return dispatch(followAndUnFollowBrandInFeedBackFailure(e.message));
+    }
+  };
+}
+export function getWishlistRequest() {
+  return {
+    type: GET_WISHLIST_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getWishlistSuccess(wishlist) {
+  return {
+    type: GET_WISHLIST_SUCCESS,
+    status: SUCCESS,
+    wishlist
+  };
+}
+
+export function getWishlistFailure(error) {
+  return {
+    type: GET_WISHLIST_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getWishList() {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(getWishlistRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/getAllWishlist?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=${PLATFORM_NUMBER}`
+      );
+      const resultJson = await result.json();
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        return dispatch(getWishlistSuccess(resultJson.wishList[0])); //we sre getting response wishlit[0]
+      } else {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+    } catch (e) {
+      return dispatch(getWishlistFailure(e.message));
     }
   };
 }

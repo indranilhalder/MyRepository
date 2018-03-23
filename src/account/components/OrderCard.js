@@ -46,6 +46,6 @@ OrderCard.propTypes = {
   productImage: PropTypes.string,
   productName: PropTypes.string,
   price: PropTypes.number,
-  discountPrice: PropTypes.number,
+  discountPrice: PropTypes.string,
   isSelect: PropTypes.bool
 };

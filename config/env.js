@@ -60,10 +60,74 @@ if (process.env.NODE_ENV !== "development") {
   process.env.REACT_APP_FACEBOOK_CLIENT_ID = "1444012285724567";
   process.env.REACT_APP_RECAPTCHA_SITE_KEY =
     "6LfpAk0UAAAAACmNvkmNNTiHlgAcu0DxKXC9oESm";
-  process.env.REACT_APP_RECAPTCHA_SECRET_KEY =
-    "6LfpAk0UAAAAAJkyk-73xj7GEtIBw3KMD6vpXqJW";
   process.env.REACT_APP_MSD_API_KEY = "a7e46b8a87c52ab85d352e9";
 }
+
+// Rules are different for google, facebook, captcha, so they exist in different if statements, just for clarity.
+
+if (
+  process.env.REACT_APP_STAGE === "devxelp" ||
+  process.env.REACT_APP_STAGE === "uat2" ||
+  process.env.REACT_APP_STAGE === "tmpprod"
+) {
+  process.env.REACT_APP_FACEBOOK_CLIENT_ID = "552270434933633";
+} else if (
+  process.env.REACT_APP_STAGE === "p2" ||
+  process.env.REACT_APP_STAGE === "production"
+) {
+  process.env.REACT_APP_FACEBOOK_CLIENT_ID = "484004418446735";
+} else if (process.env.REACT_APP_STAGE === "local") {
+  process.env.REACT_APP_FACEBOOK_CLIENT_ID = "1444012285724567";
+}
+
+if (process.env.REACT_APP_STAGE === "devxelp") {
+  process.env.REACT_APP_GOOGLE_CLIENT_ID =
+    "970557259016-70rgadfp6vrjm445jbadbel2rg2p90gn.apps.googleusercontent.com";
+} else if (process.env.REACT_APP_STAGE === "uat2") {
+  process.env.REACT_APP_GOOGLE_CLIENT_ID =
+    "970557259016-cogplqj21kjv34vld1obo0336cov2a38.apps.googleusercontent.com";
+} else if (process.env.REACT_APP_STAGE === "p2") {
+  process.env.REACT_APP_GOOGLE_CLIENT_ID =
+    "742445068598-kmlgng78u9jacghfitar82vjjmsg78q5.apps.googleusercontent.com";
+} else if (process.env.REACT_APP_STAGE === "production") {
+  process.env.REACT_APP_GOOGLE_CLIENT_ID =
+    "742445068598-2t1f67127eqan2jjt4t7kagofp8rbchl.apps.googleusercontent.com";
+} else if (process.env.REACT_APP_STAGE === "tmpprod") {
+  process.env.REACT_APP_GOOGLE_CLIENT_ID =
+    "970557259016-ek8mgjvai8eik30oes66g9c44gpmajrp.apps.googleusercontent.com";
+} else {
+  process.env.REACT_APP_GOOGLE_CLIENT_ID =
+    "367761167032-apbr4v0nndom1cafs9inrrnkk7iag5be.apps.googleusercontent.com";
+}
+
+if (
+  process.env.REACT_APP_STAGE === "production" ||
+  process.env.REACT_APP_STAGE === "p2"
+) {
+  process.env.REACT_APP_RECAPTCHA_SITE_KEY =
+    "6LcQ0BQTAAAAALUu7TCdIkQidudN266V_dhaEs-1";
+} else if (process.env.REACT_APP_STAGE === "uat2") {
+  process.env.REACT_APP_RECAPTCHA_SITE_KEY =
+    "6Lec7BUUAAAAAL8HzkX7KJdtLHBpxvb8jFwehZGz";
+} else if (process.env.REACT_APP_STAGE === "tmpprod") {
+  process.env.REACT_APP_RECAPTCHA_SITE_KEY =
+    "6Lec7BUUAAAAAL8HzkX7KJdtLHBpxvb8jFwehZGz";
+} else {
+  process.env.REACT_APP_RECAPTCHA_SITE_KEY =
+    "6LfpAk0UAAAAACmNvkmNNTiHlgAcu0DxKXC9oESm";
+}
+
+// jus pay urls
+
+if (
+  process.env.REACT_APP_STAGE === "production" ||
+  process.env.REACT_APP_STAGE === "p2"
+) {
+  process.env.JUS_PAY_API_URL_ROOT = "https://api.juspay.in";
+} else {
+  process.env.JUS_PAY_API_URL_ROOT = "https://sandbox.juspay.in";
+}
+
 function getClientEnvironment(publicUrl) {
   const raw = Object.keys(process.env)
     .filter(key => REACT_APP.test(key))

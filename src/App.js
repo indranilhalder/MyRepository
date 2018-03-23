@@ -34,6 +34,7 @@ import AllOrderContainer from "./account/containers/AllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
 import AddressBookContainer from "./account/containers/AddressBookContainer.js";
+import SaveListContainer from "./account/containers/SaveListContainer";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -68,7 +69,8 @@ import {
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
-  ORDER_PAGE,
+  MY_ACCOUNT_ORDERS_PAGE,
+  SAVE_LIST_PAGE,
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_SAVED_CARDS_PAGE,
   MY_ACCOUNT_ADDRESS_PAGE,
@@ -150,7 +152,14 @@ class App extends Component {
                 <SignUpContainer {...routeProps} {...this.props} />
               )}
             />
-            <Route path={ORDER_PAGE} component={AllOrderContainer} />
+            <Route
+              path={`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`}
+              component={SaveListContainer}
+            />
+            <Route
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ORDERS_PAGE}`}
+              component={AllOrderContainer}
+            />
             <Route
               exact
               path={MY_ACCOUNT_PAGE}
