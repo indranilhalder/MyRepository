@@ -2584,14 +2584,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	
 	public static final String SDPFIFTEENLOG = "sdp.fifteen.log";
 	public static final String ISH = "ISH";
-	public static final String PAYMENT_MODE_SPLIT = "split".trim();
-	public static final String PAYMENT_MODE_LIQ_CASH = "cliqcash".trim();
-	public static final String LUX_IMPORT_CATALOG_ID = "luxProductCatalog";
-	public static final String LUX_IMPORT_CONTENT_CATALOG_ID = "luxContentCatalog";
-	public static final String LUX_IMPORT_CONTENT_CATALOG_VERSION = "Online";
-	public static final String LUXURY_PREFIX = "lux";
-	public static final String TATACLIQ = "tatacliq";
-	public static final String LUXURY_SITE_URL = "luxury.tatacliq.com";
 	public static final String LUXURY_CATALOG_ID = "luxProductCatalog";
 }
 
