@@ -62,19 +62,11 @@ const data = {
 };
 
 export default class ReturnModes extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      displaySecondary: false,
-      secondaryReasons: null
-    };
-  }
   handleSelect(val) {
     if (this.props.selectMode) {
       this.props.selectMode(val);
     }
   }
-
   handleCancel() {
     if (this.props.onCancel) {
       this.props.onCancel();
@@ -84,7 +76,7 @@ export default class ReturnModes extends React.Component {
     return (
       <ReturnsFrame
         headerText="Select mode of return"
-        onCancel={() => this.onCancel()}
+        onCancel={() => this.handleCancel()}
       >
         <div className={styles.content}>
           <div className={styles.card}>
