@@ -47,12 +47,12 @@ export default class MyAccount extends React.Component {
     return <Redirect to={LOGIN_PATH} />;
   }
   render() {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const userDetailsCookie = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    if (!userDetails || !customerCookie) {
+    if (!userDetailsCookie || !customerCookie) {
       return this.navigateToLogin();
     }
-
+    const userDetails = JSON.parse(userDetailsCookie);
     return (
       <div className={styles.base}>
         <ProfileMenuGrid {...this.props} />
