@@ -3,14 +3,19 @@ import PiqPage from "../../cart/components/PiqPage";
 import ReturnBankForm from "./ReturnBankForm";
 import ReturnStoreConfirmation from "./ReturnStoreConfirmation.js";
 import * as styles from "./ReturnToStore.css";
-import { Route } from "react-router-dom";
-const REG_X_FOR_STORE_PICKUP = /storePick/;
-const REG_X_FOR_BANKING_FORM = /bankDetail/;
-const REG_X_FOR_FINAL_SUBMIT = /submit/;
+import {
+  RETURN_PREFIX,
+  RETURN_TO_STORE,
+  RETURNS_STORE_MAP,
+  RETURNS_STORE_BANK_FORM,
+  RETURNS_STORE_FINAL
+} from "../../lib/constants";
+const REG_X_FOR_STORE_PICKUP = /storePick/i;
+const REG_X_FOR_BANKING_FORM = /bankDetail/i;
+const REG_X_FOR_FINAL_SUBMIT = /submit/i;
 export default class ReturnToStore extends React.Component {
   constructor() {
     super();
-    console.log("REBUILDING");
     this.state = {
       currentActive: 0,
       storeId: null
@@ -21,35 +26,43 @@ export default class ReturnToStore extends React.Component {
   }
   setStore(storeId) {
     this.setState({ storeId }, () => {
-      this.props.history.replace("/returns/543454jkl345/store/bankDetail");
+      this.props.history.push(
+        `${RETURN_PREFIX}/3435345${RETURN_TO_STORE}${RETURNS_STORE_BANK_FORM}`
+      );
     });
   }
+  navigateToShowInitiateReturn() {
+    this.props.history.push(
+      `${RETURN_PREFIX}/3435345${RETURN_TO_STORE}${RETURNS_STORE_FINAL}`
+    );
+  }
+  navigateToFinalSubmit() {
+    // submit form here
+  }
   render() {
-    console.log(this.state);
-    console.log(this.props.history);
     const { pathname } = this.props.location;
-    console.log(pathname.match(REG_X_FOR_STORE_PICKUP));
-    const test = (
+    const renderStoresMap = (
       <PiqPage
         {...this.props}
         addStoreCNC={storeId => this.setStore(storeId)}
       />
     );
-    const test2 = (
+    const renderBankingForm = (
       <ReturnBankForm
         onChange={data => this.onChangeBankDetail(data)}
-        onContinue={() => this.setState({ currentActive: 2 })}
+        onContinue={() => this.navigateToShowInitiateReturn()}
+      />
+    );
+    const renderFinalSubmit = (
+      <ReturnStoreConfirmation
+        onContinue={() => this.navigateToFinalSubmit()}
       />
     );
     return (
       <div className={styles.base}>
-        <Route path="/storepick" component={test} />
-        <Route path="/bankingForm" component={test2} />
-        {pathname.match(REG_X_FOR_FINAL_SUBMIT) && (
-          <ReturnStoreConfirmation
-            onContinue={() => this.setState({ currentActive: 2 })}
-          />
-        )}
+        {pathname.match(REG_X_FOR_STORE_PICKUP) && renderStoresMap}
+        {pathname.match(REG_X_FOR_BANKING_FORM) && renderBankingForm}
+        {pathname.match(REG_X_FOR_FINAL_SUBMIT) && renderFinalSubmit}
       </div>
     );
   }

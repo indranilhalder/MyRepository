@@ -71,6 +71,7 @@ export const MY_ACCOUNT_CART_PAGE = "/cart";
 export const MY_ACCOUNT_CLIQ_CASH_PAGE = "/cliq-cash";
 
 //returns
+export const RETURN_PREFIX = "/returns";
 export const RETURNS = "/returns/(.*)";
 export const RETURNS_REASON = "/reason";
 export const RETURNS_MODES = "/modes";

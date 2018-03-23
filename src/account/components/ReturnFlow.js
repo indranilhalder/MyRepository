@@ -7,16 +7,12 @@ import {
   RETURNS,
   RETURNS_REASON,
   RETURNS_MODES,
-  RETURNS_STORE_MAP,
-  RETURNS_STORE_BANK_FORM,
-  RETURNS_STORE_FINAL,
   RETURN_TO_STORE
 } from "../../lib/constants";
 export default class ReturnFlow extends React.Component {
   componentDidMount() {
     this.props.returnProductDetails();
     this.props.getReturnRequest();
-    console.log("COMPONENT DID MOUNT");
   }
 
   renderReturnReason = () => {
@@ -50,23 +46,10 @@ export default class ReturnFlow extends React.Component {
           path={`${RETURNS}${RETURNS_MODES}`}
           component={ReturnModes}
         />
-        {/* need to call return bia store pick up  routes change component according to route */}
         <Route
-          exact
-          path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_MAP}`}
+          path={`${RETURNS}${RETURN_TO_STORE}`}
           component={ReturnToStoreContainer}
         />
-        <Route
-          exact
-          path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_BANK_FORM}`}
-          component={ReturnToStoreContainer}
-        />
-        <Route
-          exact
-          path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_FINAL}`}
-          component={ReturnToStoreContainer}
-        />
-        {/* end of need to call return bia store pick up  routes */}
       </React.Fragment>
     );
   }

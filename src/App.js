@@ -161,10 +161,7 @@ class App extends Component {
               )}
             />
             <Route path={RETURNS} component={ReturnFlowContainer} />
-            {/* <Route
-              path="/return/543454jkl345/cliqAndPiq"
-              component={ReturnToStoreContainer}
-            /> */}
+
             <Route
               path={`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`}
               component={SaveListContainer}
