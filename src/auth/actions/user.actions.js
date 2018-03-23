@@ -621,7 +621,7 @@ export function googlePlusLogin(type) {
             });
           });
         },
-        clientid: config.google,
+        clientid: process.env.REACT_APP_GOOGLE_CLIENT_ID,
         cookiepolicy: COOKIE_POLICY,
         requestvisibleactions: REQUEST_VISIBLE_ACTIONS,
         scope: SCOPE

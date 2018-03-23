@@ -63,6 +63,43 @@ if (process.env.NODE_ENV !== "development") {
   process.env.REACT_APP_MSD_API_KEY = "a7e46b8a87c52ab85d352e9";
 }
 
+// Rules are different for google, facebook, captcha, so they exist in different if statements, just for clarity.
+
+if (
+  process.env.REACT_APP_STAGE === "devxelp" ||
+  process.env.REACT_APP_STAGE === "uat2" ||
+  process.env.REACT_APP_STAGE === "tmpprod"
+) {
+  process.env.REACT_APP_FACEBOOK_CLIENT_ID = "552270434933633";
+} else if (
+  process.env.REACT_APP_STAGE === "p2" ||
+  process.env.REACT_APP_STAGE === "production"
+) {
+  process.env.REACT_APP_FACEBOOK_CLIENT_ID = "484004418446735";
+} else if (process.env.REACT_APP_STAGE === "local") {
+  process.env.REACT_APP_FACEBOOK_CLIENT_ID = "1444012285724567";
+}
+
+if (process.env.REACT_APP_STAGE === "devxelp") {
+  process.env.REACT_APP_GOOGLE_CLIENT_ID =
+    "970557259016-70rgadfp6vrjm445jbadbel2rg2p90gn.apps.googleusercontent.com";
+} else if (process.env.REACT_APP_STAGE === "uat2") {
+  process.env.REACT_APP_GOOGLE_CLIENT_ID =
+    "970557259016-cogplqj21kjv34vld1obo0336cov2a38.apps.googleusercontent.com";
+} else if (process.env.REACT_APP_STAGE === "p2") {
+  process.env.REACT_APP_GOOGLE_CLIENT_ID =
+    "742445068598-kmlgng78u9jacghfitar82vjjmsg78q5.apps.googleusercontent.com";
+} else if (process.env.REACT_APP_STAGE === "production") {
+  process.env.REACT_APP_GOOGLE_CLIENT_ID =
+    "742445068598-2t1f67127eqan2jjt4t7kagofp8rbchl.apps.googleusercontent.com";
+} else if (process.env.REACT_APP_STAGE === "tmpprod") {
+  process.env.REACT_APP_GOOGLE_CLIENT_ID =
+    "970557259016-ek8mgjvai8eik30oes66g9c44gpmajrp.apps.googleusercontent.com";
+} else {
+  process.env.REACT_APP_GOOGLE_CLIENT_ID =
+    "367761167032-apbr4v0nndom1cafs9inrrnkk7iag5be.apps.googleusercontent.com";
+}
+
 if (
   process.env.REACT_APP_STAGE === "production" ||
   process.env.REACT_APP_STAGE === "p2"

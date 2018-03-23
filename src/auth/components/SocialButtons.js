@@ -22,9 +22,11 @@ const SIGN_UP_TEXT = "Sign Up with your social account";
 export default class SocialButtons extends Component {
   componentDidMount() {
     //load FaceBook Sdk
+    console.log("SOCIAL BUTTONS LOGIN");
+    console.log(process.env.REACT_APP_FACEBOOK_CLIENT_ID);
     window.fbAsyncInit = () => {
       window.FB.init({
-        appId: config.facebook,
+        appId: process.env.REACT_APP_FACEBOOK_CLIENT_ID,
         cookie: true,
         xfbml: true,
         version: FACEBOOK_VERSION
@@ -56,7 +58,7 @@ export default class SocialButtons extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.user) {
       if (nextProps.user.isLoggedIn === true) {
-        this.props.history.push("/home");
+        this.props.history.push("/");
       }
     }
   }
