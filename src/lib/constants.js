@@ -59,7 +59,7 @@ export const ORDER = "/order";
 // MyAccount Routes
 export const MY_ACCOUNT_PAGE = "/my-account";
 export const MY_ACCOUNT_WISHLIST_PAGE = "/wishList";
-export const MY_ACCOUNT_ORDERS_PAGE = "/order";
+export const MY_ACCOUNT_ORDERS_PAGE = "/orders";
 export const MY_ACCOUNT_GIFT_CARD_PAGE = "/giftCard";
 export const MY_ACCOUNT_SAVED_CARDS_PAGE = "/payment-details";
 export const MY_ACCOUNT_ADDRESS_PAGE = "/address-book";
@@ -87,7 +87,7 @@ export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
-export const ORDER_PAGE = "/order";
+export const ORDER_PAGE = "/orders";
 
 export const SAVE_LIST_PAGE = "/default/wishList";
 export const PAYMENT_MODE_TYPE = "paymentMode";
