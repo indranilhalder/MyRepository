@@ -41,7 +41,12 @@ const account = (
     userAddressError: null,
 
     removeAddressStatus: null,
-    removeAddressError: null
+    removeAddressError: null,
+
+    followedBrands: null,
+    followedBrandsStatus: null,
+    followedBrandsError: null,
+    loadingForFollowedBrands: false
   },
   action
 ) => {
@@ -161,6 +166,25 @@ const account = (
         userAlertsStatus: action.status,
         userAlertsError: action.error,
         loadingForUserAlerts: false
+      });
+    case accountActions.GET_FOLLOWED_BRANDS_REQUEST:
+      return Object.assign({}, state, {
+        followedBrandsStatus: action.status,
+        loadingForFollowedBrands: true
+      });
+
+    case accountActions.GET_FOLLOWED_BRANDS_SUCCESS:
+      return Object.assign({}, state, {
+        followedBrandsStatus: action.status,
+        followedBrands: action.followedBrands,
+        loadingForFollowedBrands: false
+      });
+
+    case accountActions.GET_FOLLOWED_BRANDS_FAILURE:
+      return Object.assign({}, state, {
+        followedBrandsStatus: action.status,
+        followedBrandsError: action.error,
+        loadingForFollowedBrands: false
       });
 
     case accountActions.FETCH_ORDER_DETAILS_REQUEST:

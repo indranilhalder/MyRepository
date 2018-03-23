@@ -15,15 +15,15 @@ export default class MoreBrands extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.headerText}>
-          See the latest products from your favourite Brand.
+          See the latest products from your favorite Brand.
         </div>
         <div className={styles.buttonHolder}>
           <div className={styles.button}>
             <ButtonWithIcon
               backgroundColor="#ff1744"
               height={40}
-              label="Checkout"
-              width={150}
+              label={this.props.label}
+              width={this.props.width}
               textStyle={{ color: "#FFF", fontSize: 14 }}
               onClick={() => this.handleClick()}
               icon={{
@@ -39,3 +39,11 @@ export default class MoreBrands extends React.Component {
     );
   }
 }
+MoreBrands.propTypes = {
+  label: PropTypes.string,
+  width: PropTypes.number
+};
+MoreBrands.defaultProps = {
+  label: "Checkout",
+  width: 150
+};
