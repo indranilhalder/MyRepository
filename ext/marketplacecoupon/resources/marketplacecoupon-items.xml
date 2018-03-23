@@ -422,6 +422,17 @@
 					<persistence type="property" />
                  </attribute>
                  <!-- TPR-7408 ends here -->
+                 <attribute qualifier="visibility" type="boolean">
+					<description>Determines if the Coupon will be visible to User</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="isUserRestricted" type="boolean">
+					<description>Determines if the Coupon is User Restricted</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+					<defaultvalue>false</defaultvalue>
+				</attribute>
 			</attributes>
 		</itemtype>
 		

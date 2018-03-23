@@ -7,7 +7,9 @@ import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLo
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.media.MediaFolderModel;
+import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.impex.jalo.ImpExException;
@@ -15,9 +17,9 @@ import de.hybris.platform.impex.jalo.Importer;
 import de.hybris.platform.impex.jalo.imp.DefaultDumpHandler;
 import de.hybris.platform.impex.jalo.media.DefaultMediaDataHandler;
 import de.hybris.platform.impex.jalo.media.MediaDataTranslator;
-import de.hybris.platform.jalo.media.Media;
-import de.hybris.platform.jalo.media.MediaManager;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.media.impl.MediaDao;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.CSVReader;
 
@@ -31,6 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -55,6 +58,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tis.mpl.facade.imageupload.MplImageUploadFacade;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -85,8 +89,34 @@ public class ImageUploadController extends AbstractMplSearchPageController
 	@Autowired
 	private UserService userService;
 
+	@Resource(name = "mediaDao")
+	private MediaDao mediaDao;
+
+
+
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
+
+	/**
+	 * @return the sessionService
+	 */
+	@Override
+	public SessionService getSessionService()
+	{
+		return sessionService;
+	}
+
+	/**
+	 * @param sessionService
+	 *           the sessionService to set
+	 */
+	public void setSessionService(final SessionService sessionService)
+	{
+		this.sessionService = sessionService;
+	}
+
 	private static final String REDIRECTURL = "/my-account";
-	private static final String TEMPIMAGESDIR = "/tempImages";
+	private static final String TEMPIMAGESDIR = "\\tempImages";
 	private static final String PARAFOLDER_NAME = "folderName";
 	public static final String PAGEID = "imageUpload";
 	public static final String UPLOAD_FILE_PATH = "mpl.bulkimage.uploadpath";
@@ -94,6 +124,10 @@ public class ImageUploadController extends AbstractMplSearchPageController
 	private static final String CATALOG_VERSION_DATA = "Online";
 	private static final String CATALOG_VERSION_DATA_STAGED = "Staged";
 	private static final String siteResource = "file:/";
+	private static final String IMAGESFOLDER_NAME = "images";
+	public static final String CONTEXT_PARAM_MARKERS = "//";
+	private static final String URL_SEPARATOR = "/";
+
 	private static final Logger LOG = LoggerFactory.getLogger(ImageUploadController.class);
 
 	private static final String IMPORT_DATA = "$catalogversion=catalogversion(catalog(id[default='" + CATALOG_DATA
@@ -178,8 +212,11 @@ public class ImageUploadController extends AbstractMplSearchPageController
 		final List<String> list = new ArrayList<String>();
 		String fileUploadLocation = null;
 		String uploadFolderName = StringUtils.EMPTY;
+
 		try
 		{
+			final String mediaHostName = configurationService.getConfiguration().getString(MarketplaceCoreConstants.MEDIA_HOST_NAME);
+
 			if (null != configurationService)
 			{
 				fileUploadLocation = (configurationService.getConfiguration().getString(UPLOAD_FILE_PATH) + TEMPIMAGESDIR).toString();
@@ -220,12 +257,14 @@ public class ImageUploadController extends AbstractMplSearchPageController
 				try
 				{
 					final byte[] bytes = files.getBytes();
-					final Path path = Paths.get(fileUploadLocation + "/" + files.getOriginalFilename());
+					final Path path = Paths.get(fileUploadLocation + "\\" + files.getOriginalFilename());
 					//f = new File(fileUploadLocation + files.getOriginalFilename());
 					Files.write(path, bytes);
-					stringBuilder.append(
-							";" + files.getOriginalFilename() + ";;image/jpg;;" + siteResource + path + ";" + uploadFolderName + ";/n");
+					final String fileExtension[] = files.getOriginalFilename().toString().split("\\.");
+					stringBuilder.append(";" + files.getOriginalFilename() + ";;image/" + fileExtension[1] + ";;" + siteResource + path
+							+ ";" + uploadFolderName + ";/n");
 					LOG.info("Upload File Path" + path);
+
 
 
 					final InputStream inputStreamStaged = new ByteArrayInputStream(
@@ -238,6 +277,9 @@ public class ImageUploadController extends AbstractMplSearchPageController
 
 					readerStaged = new CSVReader(inputStreamStaged, "UTF-8");
 					reader = new CSVReader(inputStream, "UTF-8");
+
+					//final String imageName[] = files.getOriginalFilename().toString().split("\\.");
+					getSessionService().setAttribute("uploadImageName", fileExtension[0]);
 
 					// import
 					MediaDataTranslator.setMediaDataHandler(new DefaultMediaDataHandler());
@@ -261,10 +303,12 @@ public class ImageUploadController extends AbstractMplSearchPageController
 					}
 					catch (final ImpExException e)
 					{
+						path.toFile().delete();
+						getSessionService().removeAttribute("uploadImageName");
 						e.printStackTrace();
 					}
-
-
+					path.toFile().delete();
+					getSessionService().removeAttribute("uploadImageName");
 					list.add(files.getOriginalFilename());
 				}
 				catch (final IOException e)
@@ -275,14 +319,33 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			for (final String object : list)
 			{
 				final org.json.simple.JSONObject jObject = new org.json.simple.JSONObject();
-				final Media mediaData = getMediaByCode(object);
-				System.out.println("**************  mediaData.getCode()" + mediaData.getCode());
-				jObject.put("imageName", mediaData.getCode());
-				final String array[] = mediaData.getURL().toString().split("\\.");
-				jObject.put("imageUrl", array[0] + "/" + mediaData.getCode());
-				jObject.put("size", mediaData.getSize());
-				jObject.put("creationTime", mediaData.getCreationTime());
-				returnObject.add(jObject);
+				//final Media mediaData = getMediaByCode(object);
+				final List<MediaModel> mediaModel = mediaDao.findMediaByCode(object);
+				for (final MediaModel mediaData : mediaModel)
+				{
+					if (mediaData.getCatalogVersion().getVersion().equalsIgnoreCase("Online"))
+					{
+						jObject.put("imageName", mediaData.getCode());
+						if (!uploadFolderName.equalsIgnoreCase(IMAGESFOLDER_NAME))
+						{
+							final StringBuilder sb = new StringBuilder(
+									CONTEXT_PARAM_MARKERS + mediaHostName + URL_SEPARATOR + "medias/");
+							sb.append(MarketplaceCoreConstants.SYSTEM).append(getTenantId()).append(URL_SEPARATOR);
+							sb.append(mediaData.getLocation());
+							LOG.debug("getUrlForMedia - " + sb.toString());
+
+							jObject.put("imageUrl", sb.toString());
+						}
+						else
+						{
+							jObject.put("imageUrl", mediaData.getURL());
+						}
+						jObject.put("size", mediaData.getSize());
+						jObject.put("creationTime", new Date());
+						returnObject.add(jObject);
+					}
+
+				}
 			}
 
 			return returnObject;
@@ -324,9 +387,9 @@ public class ImageUploadController extends AbstractMplSearchPageController
 		}
 	}
 
-	private Media getMediaByCode(final String mediaCode)
+	protected String getTenantId()
 	{
-		return (Media) MediaManager.getInstance().getMediaByCode(mediaCode).iterator().next();
+		return Registry.getCurrentTenantNoFallback().getTenantID();
 	}
 
 }
