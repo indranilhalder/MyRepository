@@ -546,7 +546,7 @@ export function getFollowedBrands() {
     msdFormData.append("details", true);
     msdFormData.append("widget_list", WIDGETS_LIST_FOR_BRANDS);
     try {
-      const result = await api.postMsd(`/widgets`, msdFormData);
+      const result = await api.postMsd(`${MSD_ROOT_PATH}/widgets`, msdFormData);
       const resultJson = await result.json();
       if (
         resultJson.errors ||
