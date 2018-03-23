@@ -239,8 +239,14 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 	{
 		try
 		{
-			final long startTime = System.currentTimeMillis();
-			LOG.debug("Entering Dao getBankDetailsforEMI()=======" + System.currentTimeMillis());
+			if (LOG.isDebugEnabled())
+			{
+				final long startTime = System.currentTimeMillis();
+				LOG.debug("Entering Dao getBankDetailsforEMI()=======startTime::" + startTime);
+			}
+
+			//final long startTime = System.currentTimeMillis();
+			//LOG.debug("Entering Dao getBankDetailsforEMI()=======" + System.currentTimeMillis());
 
 			FlexibleSearchQuery bankListQuery = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.EMPTY);
 			if (emiBankName == null)
@@ -261,8 +267,14 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			}
 
 			final List<EMIBankModel> emiBankList = flexibleSearchService.<EMIBankModel> search(bankListQuery).getResult();
-			final long endTime = System.currentTimeMillis();
-			LOG.debug("Exiting Dao getBankDetailsforEMI()=======" + (endTime - startTime));
+			if (LOG.isDebugEnabled())
+			{
+				final long endTime = System.currentTimeMillis();
+				LOG.debug("Exiting Dao getBankDetailsforEMI()=======endTime:::" + endTime);
+				//LOG.debug("Time taken=======" + (endTime - startTime));
+			}
+			//final long endTime = System.currentTimeMillis();
+			//LOG.debug("Exiting Dao getBankDetailsforEMI()=======" + (endTime - startTime));
 			return emiBankList;
 		}
 		catch (final FlexibleSearchException e)
@@ -363,11 +375,11 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -664,7 +676,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169 --- Exception fixed for PMD and TPR-629
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
 	 */
 	@Override

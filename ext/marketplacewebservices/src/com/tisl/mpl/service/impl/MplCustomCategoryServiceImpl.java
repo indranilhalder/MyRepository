@@ -322,7 +322,11 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 			{
 				departmentList = shopByDeptComponent.getComponents();
 			}
-
+			
+			//IQA code Review fix
+			if(null!=departmentList && CollectionUtils.isNotEmpty(departmentList))
+			{
+			
 			for (final NavigationBarComponentModel dept : departmentList)
 			{
 				final CMSLinkComponentModel superNode = dept.getLink();
@@ -458,6 +462,8 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 				deptDataList.add(deptData);
 			}
+			
+		}
 
 			if (null != modifiedTime && !StringUtils.isEmpty(modifiedTime.toString()))
 			{

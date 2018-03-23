@@ -62,7 +62,7 @@ public class MplFollowedBrandServiceImpl implements MplFollowedBrandService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.brand.MplFollowedBrandService#getFollowedBrands(java.lang.String)
 	 */
@@ -77,7 +77,7 @@ public class MplFollowedBrandServiceImpl implements MplFollowedBrandService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.brand.MplFollowedBrandService#updateFollowedBrands(java.lang.
 	 * String, java.lang.String, java.lang.String)
@@ -88,6 +88,7 @@ public class MplFollowedBrandServiceImpl implements MplFollowedBrandService
 		// YTODO Auto-generated method stub
 		List<BrandMasterModel> brandList = null;
 		Set<BrandMasterModel> brandSetModify = null;
+		Set<BrandMasterModel> brandSetModifyVar = null;
 		FollowedBrandMcvidModel followedBrandModel = new FollowedBrandMcvidModel();
 		boolean status = false;
 
@@ -106,10 +107,14 @@ public class MplFollowedBrandServiceImpl implements MplFollowedBrandService
 				{
 					followedBrandModel = listOfMcvIDbrands.get(0);
 
-					if (null != followedBrandModel && CollectionUtils.isNotEmpty(followedBrandModel.getBrandList()))
+					brandSetModifyVar = new HashSet<BrandMasterModel>();
+
+					//if (null != followedBrandModel && CollectionUtils.isNotEmpty(followedBrandModel.getBrandList()))
+					if (null != followedBrandModel && CollectionUtils.isNotEmpty(brandSetModifyVar))
 					{
 
-						brandSetModify = new HashSet<BrandMasterModel>(followedBrandModel.getBrandList());
+						//brandSetModify = new HashSet<BrandMasterModel>(followedBrandModel.getBrandList());
+						brandSetModify = new HashSet<BrandMasterModel>(brandSetModifyVar);
 
 					}
 					if (CollectionUtils.isNotEmpty(brandSetModify))
@@ -181,7 +186,7 @@ public class MplFollowedBrandServiceImpl implements MplFollowedBrandService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.brand.MplFollowedBrandService#getUserFollowedMcvIds(java.lang
 	 * .String)

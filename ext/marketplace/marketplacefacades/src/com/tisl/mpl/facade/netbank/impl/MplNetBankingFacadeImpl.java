@@ -15,6 +15,7 @@ import java.util.Comparator;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -27,6 +28,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.EMIBankWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
+
 import de.hybris.platform.util.localization.Localization;
 
 
@@ -223,7 +225,11 @@ public class MplNetBankingFacadeImpl implements MplNetBankingFacade
 								}
 
 								final List<EMITermRateDataForMobile> emiTermBankList = getBankTerms(eMIBankWsDTO.getEmiBank(), productValue);
+								//IQA code Review fix
+								//if(null!=emiTermBankList && emiTermBankList.size()>0)
+								if(null!=emiTermBankList && CollectionUtils.isNotEmpty(emiTermBankList))
 
+								{
 
 								for (final EMITermRateDataForMobile emilist : emiTermBankList)
 								{
@@ -253,6 +259,8 @@ public class MplNetBankingFacadeImpl implements MplNetBankingFacade
 								}
 								eMIBankWsDTO.setEmitermsrate(emiBankmobileWsListDTO);
 								emiBankWsListDTO.add(eMIBankWsDTO);
+							   }
+
 							}
 							final Comparator<EMIBankWsDTO> byName = (final EMIBankWsDTO o1, final EMIBankWsDTO o2) -> o1.getEmiBank()
 									.compareTo(o2.getEmiBank());

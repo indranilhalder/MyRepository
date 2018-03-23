@@ -538,28 +538,33 @@ public class CartsController extends BaseCommerceController
 			{
 				cartsList = cartDataList.getCarts();
 			}
-			for (final CartData cartData : cartsList)
+			//IQA code Review fix
+			if (null != cartsList && CollectionUtils.isNotEmpty(cartsList))
 			{
-				if (null != cartData)
+
+				for (final CartData cartData : cartsList)
 				{
-					if (StringUtils.isNotEmpty(cartData.getCode()))
+					if (null != cartData)
 					{
-						response.setCode(cartData.getCode());
-					}
-					if (StringUtils.isNotEmpty(cartData.getGuid()))
-					{
-						response.setGuid(cartData.getGuid());
-					}
-					for (final OrderEntryData entry : cartData.getEntries())
-					{
-						if (!entry.isGiveAway())
+						if (StringUtils.isNotEmpty(cartData.getCode()))
 						{
-							count++;
+							response.setCode(cartData.getCode());
 						}
+						if (StringUtils.isNotEmpty(cartData.getGuid()))
+						{
+							response.setGuid(cartData.getGuid());
+						}
+						for (final OrderEntryData entry : cartData.getEntries())
+						{
+							if (!entry.isGiveAway())
+							{
+								count++;
+							}
+						}
+						response.setCount(String.valueOf(count));
 					}
-					response.setCount(String.valueOf(count));
+					break;
 				}
-				break;
 			}
 			if (isPwa)
 			{
@@ -2800,7 +2805,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
