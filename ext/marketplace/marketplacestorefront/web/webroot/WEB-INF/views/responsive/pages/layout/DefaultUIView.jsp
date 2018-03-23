@@ -264,7 +264,9 @@ th {
 										<tr>
 											<td>${flashsalesitemElements.title}</td>
 											<td><a href="${flashsalesitemElements.webURL}">${flashsalesitemElements.webURL}</a></td>
+											<c:if test="flashsalesitemElements.ProductCode">
 											<td>${flashsalesitemElements.ProductCode.code}</td>
+											</c:if>
 										</tr>
 									</c:if>
 								</div>
@@ -361,7 +363,9 @@ th {
 										<tr>
 											<td>${bannerProdCarouselElement.title}</td>
 											<td><a href="${bannerProdCarouselElement.webURL}">${bannerProdCarouselElement.webURL}</a></td>
+											<c:if test="bannerProdCarouselElement.ProductCode">
 											<td>${bannerProdCarouselElement.ProductCode.code}</td>
+											</c:if>
 										</tr>
 									</c:if>
 								</div>
@@ -423,7 +427,9 @@ th {
 										<tr>
 											<td>${videoProductCarouselElement.title}</td>
 											<td><a href="${videoProductCarouselElement.webURL}">${videoProductCarouselElement.webURL}</a></td>
+											<c:if test="videoProductCarouselElement.ProductCode">
 											<td>${videoProductCarouselElement.ProductCode.code}</td>
+											</c:if>
 										</tr>
 									</c:if>
 								</div>
@@ -501,7 +507,9 @@ th {
 										<tr>
 											<td>${themeOffersItemsElement.title}</td>
 											<td><a href="${themeOffersItemsElement.webURL}">${themeOffersItemsElement.webURL}</a></td>
+											<c:if test="themeOffersItemsElement.ProductCode">
 											<td>${themeOffersItemsElement.ProductCode.code}</td>
+											</c:if>
 										</tr>
 									</c:if>
 								</div>
@@ -553,7 +561,9 @@ th {
 										<tr>
 											<td><a href="${themeProductWidgetElement.webURL}">${themeProductWidgetElement.webURL}</a></td>
 											<td>${themeProductWidgetElement.title}</td>
+											<c:if test="themeProductWidgetElement.ProductCode">
 											<td>${themeProductWidgetElement.ProductCode.code}</td>
+											</c:if>
 										</tr>
 									</c:if>
 								</div>
@@ -634,7 +644,9 @@ th {
 										<tr>
 											<td><a href="${automatedBrandProductCarElement.webURL}">${automatedBrandProductCarElement.webURL}</a></td>
 											<td>${automatedBrandProductCarElement.title}</td>
+											<c:if test="automatedBrandProductCarElement.ProductCode">
 											<td>${automatedBrandProductCarElement.ProductCode.code}</td>
+											</c:if>
 										</tr>
 									</c:if>
 								</div>
@@ -825,7 +837,9 @@ th {
 										<tr>
 											<td><a href="${curatedProductsWidgetElement.webURL}">${curatedProductsWidgetElement.webURL}</a></td>
 											<td>${curatedProductsWidgetElement.title}</td>
+											<c:if test="curatedProductsWidgetElement.ProductCode">
 											<td>${curatedProductsWidgetElement.ProductCode.code}</td>
+											</c:if>
 											<td>${curatedProductsWidgetElement.description}</td>
 										</tr>
 									</c:if>
@@ -1023,7 +1037,9 @@ th {
 										<tr>
 											<td>${autoProductRecommendationElement.title}</td>
 											<td><a href="${autoProductRecommendationElement.webURL}">${autoProductRecommendationElement.webURL}</a></td>
+											<c:if test="autoProductRecommendationElement.ProductCode">
 											<td>${autoProductRecommendationElement.ProductCode.code}</td>
+											</c:if>
 										</tr>
 									</c:if>
 								</div>
