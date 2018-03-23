@@ -4,6 +4,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import SelectReturnDate from "./SelectReturnDate";
 import PropTypes from "prop-types";
 import styles from "./ReturnModes.css";
+import GridSelect from "../../general/components/GridSelect";
 const QUICK_DROP = "quickDrop";
 const SCHEDULED_PICKUP = "schedulePickup";
 const SELF_COURIER = "selfCourier";
@@ -109,6 +110,7 @@ export default class ReturnModes extends React.Component {
               )}
             </OrderCard>
           </div>
+
           {data.returnModes.quickDrop && (
             <div className={styles.check}>
               <SelectReturnDate
