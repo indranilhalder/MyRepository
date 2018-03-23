@@ -2,15 +2,16 @@
   width: 100%;
   height: auto;
   background-color: #ececec;
-  padding: 15px;
+  padding: 15px 0;
   display: inline-block;
 }
 .detailsContainer {
-  width: 65%;
+  width: 60%;
   height: auto;
   padding-bottom: 1px;
   display: inline-block;
   text-align: left;
+  vertical-align: top;
 }
 .productName {
   font-size: 16px;
@@ -21,7 +22,8 @@
 .productDescription {
   padding-top: 10px;
   font-family: regular;
-  font-size: 14px;
+  font-size: 16px;
+  line-height: 22px;
 }
 .productMaterial {
   padding-top: 3px;
@@ -29,10 +31,11 @@
   font-size: 14px;
 }
 .priceContainer {
-  width: 35%;
+  width: 40%;
   height: auto;
   display: inline-block;
   text-align: right;
+  vertical-align: top;
 }
 .price {
   font-size: 16px;
@@ -67,11 +70,13 @@
 .button {
   padding-top: 3px;
   font-size: 14px;
+  margin-top: 20px;
   width: 90px;
   display: inline-block;
 }
 .textHolder {
   composes: linkHolder;
+  margin-top: 20px;
 }
 .informationText {
   width: 100%;
