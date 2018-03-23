@@ -137,20 +137,26 @@ function constructDepartmentHierarchy(inputArray) {
 				}
 				else{
 					//Changes Added for TOR-488
-					//$('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
+					
+					
+					$('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
+					
+					
 					//$('#searchCategoryTree').val(node.categoryCode);
 					// alert($('#q').val());
 					 //TISQAEE-14
-					 if($('#q').val().indexOf(node.categoryCode)==-1){
+					
+					//if($('#q').val().indexOf(node.categoryCode)==-1){
 						//INC_11754 start
-						 if(node.categoryCode.indexOf($('#searchCategory').val())==-1){
-							 $('#q').val(searchQuery +":category:" + node.categoryCode);
-						 }else{			
-						 	 $('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
-						 }
+					//	 if(node.categoryCode.indexOf($('#searchCategory').val())==-1){
+					//		 $('#q').val(searchQuery +":category:" + node.categoryCode);
+					//	 }else{			
+					//	 	 $('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
+					//	 }
 						 //INC_11754 end
-					 }
-					 //$('#searchCategoryTree').val(node.categoryCode);
+					// }
+					
+					//$('#searchCategoryTree').val(node.categoryCode);
 					
 				} 
 				
