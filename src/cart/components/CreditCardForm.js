@@ -7,6 +7,7 @@ import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
 import informationIcon from "../../general/components/img/Info-grey.svg";
 import Button from "../../general/components/Button";
 import CheckBox from "../../general/components/CheckBox.js";
+import { DEFAULT_PIN_CODE_LOCAL_STORAGE } from "../../lib/constants.js";
 const MERCHANT_ID = "tul_uat2";
 
 const MINIMUM_YEARS_TO_SHOW = 0;
@@ -15,14 +16,40 @@ const MAXIMUM_YEARS_TO_SHOW = 9;
 export default class CreditCardForm extends React.Component {
   constructor(props) {
     super(props);
+
+    this.expiryYearObject = [];
+    const currentYear = new Date().getFullYear();
+    for (let i = MINIMUM_YEARS_TO_SHOW; i <= MAXIMUM_YEARS_TO_SHOW; i++) {
+      this.expiryYearObject.push({
+        label: currentYear + i,
+        value: currentYear + i
+      });
+    }
+
+    this.monthOptions = [
+      { label: "1", value: 1 },
+      { label: "2", value: 2 },
+      { label: "3", value: 3 },
+      { label: "4", value: 4 },
+      { label: "5", value: 5 },
+      { label: "6", value: 6 },
+      { label: "7", value: 7 },
+      { label: "8", value: 8 },
+      { label: "9", value: 9 },
+      { label: "10", value: 10 },
+      { label: "11", value: 11 },
+      { label: "12", value: 12 }
+    ];
     this.state = {
       selected: false,
       cardNumberValue: props.cardNumberValue ? props.cardNumberValue : "",
       cardNameValue: props.cardNameValue ? props.cardNameValue : "",
       cardCvvValue: props.cardCvvValue ? props.cardCvvValue : "",
-      ExpiryMonth: props.ExpiryMonth ? props.ExpiryMonth : "",
-      ExpiryYear: props.ExpiryYear ? props.ExpiryYear : "",
-      value: props.value ? props.value : ""
+      ExpiryMonth: props.ExpiryMonth ? props.ExpiryMonth : "1",
+      ExpiryYear: props.ExpiryYear ? props.ExpiryYear : "2018",
+      value: props.value ? props.value : "",
+      monthValue: this.monthOptions[0].label,
+      yearValue: "" + this.expiryYearObject[0].label
     };
   }
   onSaveData() {
@@ -70,6 +97,7 @@ export default class CreditCardForm extends React.Component {
 
   payBill = cardDetails => {
     let cardValues = {};
+    console.log("CARD DETAILS");
     cardValues.cardNumber = this.state.cardNumberValue;
     cardValues.cardName = this.state.cardNameValue;
     cardValues.cvvNumber = this.state.cardCvvValue;
@@ -77,22 +105,19 @@ export default class CreditCardForm extends React.Component {
     cardValues.yearValue = this.state.yearValue;
     cardValues.selected = this.state.selected;
     cardValues.merchant_id = MERCHANT_ID;
-    this.props.softReservationForPayment(cardValues);
+    cardValues.pincode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+    console.log(cardValues);
+
+    // this.props.softReservationForPayment(cardValues);
   };
 
   render() {
-    const expiryYearObject = [];
-    const currentYear = new Date().getFullYear();
-    for (let i = MINIMUM_YEARS_TO_SHOW; i <= MAXIMUM_YEARS_TO_SHOW; i++) {
-      expiryYearObject.push({ label: currentYear + i, value: currentYear + i });
-    }
-
     return (
       <div className={styles.base}>
         <div className={styles.cardDetails}>
           <div className={styles.content}>
             <Input2
-              placeholder={this.props.placeholder}
+              placeholder="Card Number"
               cardNumberValue={
                 this.props.cardNumberValue
                   ? this.props.cardNumberValue
@@ -107,7 +132,7 @@ export default class CreditCardForm extends React.Component {
 
           <div className={styles.content}>
             <Input2
-              placeholder={this.props.placeHolderCardName}
+              placeholder="John Doe"
               boxy={true}
               cardNameValue={
                 this.props.cardNameValue
@@ -125,27 +150,14 @@ export default class CreditCardForm extends React.Component {
                 theme="hollowBox"
                 value="Expiry Month"
                 onChange={changedValue => this.monthChange(changedValue)}
-                options={[
-                  { label: "1", value: 1 },
-                  { label: "2", value: 2 },
-                  { label: "3", value: 3 },
-                  { label: "4", value: 4 },
-                  { label: "5", value: 5 },
-                  { label: "6", value: 6 },
-                  { label: "7", value: 7 },
-                  { label: "8", value: 8 },
-                  { label: "9", value: 9 },
-                  { label: "10", value: 10 },
-                  { label: "11", value: 11 },
-                  { label: "12", value: 12 }
-                ]}
+                options={this.monthOptions}
                 textStyle={{ fontSize: 14 }}
               />
             </div>
             <div className={styles.dropDownBox}>
               <SelectBoxMobile
                 theme="hollowBox"
-                options={expiryYearObject}
+                options={this.expiryYearObject}
                 value="Expiry year"
                 onChange={expiryYear => this.onYearChange(expiryYear)}
               />
