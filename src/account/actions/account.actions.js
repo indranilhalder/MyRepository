@@ -535,9 +535,8 @@ export function getFollowedBrandsFailure(error) {
 }
 
 export function getFollowedBrands() {
-  // const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
+  const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
 
-  const mcvId = "82035857233048262510496489363611429421";
   return async (dispatch, getState, { api }) => {
     dispatch(getFollowedBrandsRequest());
     let msdFormData = new FormData();
