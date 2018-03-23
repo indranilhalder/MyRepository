@@ -25,7 +25,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    profile: state.profile
+    wishList: state.profile.wishlist
   };
 };
 

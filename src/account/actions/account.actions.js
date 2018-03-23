@@ -520,7 +520,11 @@ export function getWishList() {
         }&isPwa=true&platformNumber=${PLATFORM_NUMBER}`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
       dispatch(getWishlistSuccess(resultJson.wishList[0])); //we sre getting response wishlit[0]

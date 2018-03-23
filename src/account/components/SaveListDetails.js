@@ -2,6 +2,7 @@ import React from "react";
 import SaveListCard from "../../blp/components/SaveListCard";
 import styles from "./SaveListDetails.css";
 import PropTypes from "prop-types";
+import { Redirect } from "react-router-dom";
 import moment from "moment";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -12,20 +13,28 @@ import {
   ANONYMOUS_USER,
   LOGIN_PATH
 } from "../../lib/constants";
-
 import * as Cookie from "../../lib/Cookie";
 const dateFormat = "MMMM DD YYYY";
 const PRODUCT_QUANTITY = "1";
 
 export default class SaveListDetails extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      customerLogin: true
+    };
+  }
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (userDetails && customerCookie) {
       this.props.getWishList();
     } else {
-      this.props.history.push(LOGIN_PATH);
+      this.setState({ customerLogin: false });
     }
+  }
+  navigateToLogin() {
+    return <Redirect to={LOGIN_PATH} />;
   }
   addToBagItem(ussid, productcode) {
     const productDetails = {};
@@ -67,49 +76,47 @@ export default class SaveListDetails extends React.Component {
     }
   }
   render() {
-    const wishList = this.props.profile.wishlist;
+    const wishList = this.props.wishList;
     return (
       <div className={styles.base}>
-        {wishList &&
-          wishList.products.map((val, i) => {
+        {this.state.customerLogin &&
+          wishList &&
+          wishList.products.map((product, i) => {
             return (
               <div className={styles.listCardHolder} key={i}>
                 <SaveListCard
-                  productName={val.productBrand}
-                  productMaterial={val.productName}
-                  price={val.mrp && val.mrp.value}
-                  date={moment(val.date).format(dateFormat)}
+                  productName={product.productBrand}
+                  productMaterial={product.productName}
+                  price={product.mrp && product.mrp.value}
+                  date={moment(product.date).format(dateFormat)}
                   day=""
                   offer=""
-                  offerPrice={val.mop && val.mop.value}
-                  image={val.imageURL}
+                  offerPrice={product.mop && product.mop.value}
+                  image={product.imageURL}
                   addToBagItem={() =>
-                    this.addToBagItem(val.USSID, val.productcode)
+                    this.addToBagItem(product.USSID, product.productcode)
                   }
-                  removeItem={() => this.removeItem(val.USSID)}
+                  removeItem={productUssid => this.removeItem(product.USSID)}
                 />
               </div>
             );
           })}
+        {!this.state.customerLogin && this.navigateToLogin()}
       </div>
     );
   }
 }
 SaveListDetails.propTypes = {
-  profile: PropTypes.objectOf(
+  wishList: PropTypes.arrayOf(
     PropTypes.shape({
-      wishlist: PropTypes.arrayOf(
+      products: PropTypes.arrayOf(
         PropTypes.shape({
-          products: PropTypes.arrayOf(
-            PropTypes.shape({
-              productBrand: PropTypes.string,
-              productName: PropTypes.string,
-              imageURL: PropTypes.string,
-              date: PropTypes.string,
-              productcode: PropTypes.string,
-              USSID: PropTypes.string
-            })
-          )
+          productBrand: PropTypes.string,
+          productName: PropTypes.string,
+          imageURL: PropTypes.string,
+          date: PropTypes.string,
+          productcode: PropTypes.string,
+          USSID: PropTypes.string
         })
       )
     })
