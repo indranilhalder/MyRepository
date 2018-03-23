@@ -3,6 +3,8 @@ import {
   REQUESTING,
   ERROR,
   GLOBAL_ACCESS_TOKEN,
+  SUCCESS_UPPERCASE,
+  SUCCESS_CAMEL_CASE,
   DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
@@ -291,16 +293,33 @@ export function removeProductFromWishListFailure(error) {
 
 export function removeProductFromWishList(productDetails) {
   return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const removeProductFromWishListObject = new FormData();
+    removeProductFromWishListObject.append("USSID", productDetails.USSID);
+    removeProductFromWishListObject.append("wishlistName", MY_WISH_LIST);
     dispatch(removeProductFromWishListRequest());
     try {
-      const result = await api.postMock(REMOVE_FROM_WISH_LIST);
+      const result = await api.postFormData(
+        `${PRODUCT_DETAILS_PATH}/${
+          JSON.parse(userDetails).userName
+        }/removeProductFromWishlist?&access_token=${
+          JSON.parse(customerCookie).access_token
+        }`,
+        removeProductFromWishListObject
+      );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        return dispatch(removeProductFromWishListSuccess());
+      } else {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
-      dispatch(removeProductFromWishListSuccess());
     } catch (e) {
-      dispatch(removeProductFromWishListFailure(e.message));
+      return dispatch(removeProductFromWishListFailure(e.message));
     }
   };
 }
