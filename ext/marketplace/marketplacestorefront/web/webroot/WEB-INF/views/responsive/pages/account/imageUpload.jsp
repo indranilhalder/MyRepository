@@ -72,7 +72,7 @@ th {
 	     var markup = "<tr>";
 	         markup += "<td class='img-preview' ><img class='imageUpload' src='" +filename + "'></td>";
 	         markup += "<td class='img-url'>" + code + "</td>";
-	         markup += "<td class='img-url'><a target='_blank' href='" +filename + "'>" + filename + "</a></td>";
+	         markup += "<td class='img-url'><a target='_blank' href='" +filename + "'>https:" + filename + "</a></td>";
 	         markup += "<td>" + (size/1000).toFixed(2) + "kB </td>";
 	         markup += "<td>" + date + "</td>";
 	         markup += "</tr>";

@@ -1855,7 +1855,8 @@ function savedCreditCardRadioChange(radioId){
 	// TISEE-5555
 	$('.security_code_hide').prop('disabled', true);
 	$('.security_code').prop('disabled', false); 
-	if($(".card_bank").val()=="AMEX")
+	//if($(".card_bank").val()=="AMEX")
+	if($(".card_brand").val()=="AMEX") //SDI-7093
 	{
 		$(".security_code").attr('maxlength','4');
 	}
@@ -10047,7 +10048,10 @@ function removeAppliedVoucher(){
 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
 		type: "POST",
 		cache: false,
-		data: { 'couponCode' : couponCode , 'guid' : guid},
+		data: { 'couponCode' : couponCode , 'guid' : guid},		
+		beforeSend: function() {//SDI-6686:Total price mismatch in Production after release the coupon
+			ACC.singlePageCheckout.showAjaxLoader();
+	    },	    
 		success : function(response) {
 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 			if(document.getElementById("outstanding-amount")!=null)
@@ -10095,6 +10099,7 @@ function removeAppliedVoucher(){
 		error : function(resp) {
 		},
 		complete : function(data){
+			ACC.singlePageCheckout.hideAjaxLoader();//SDI-6686:Total price mismatch in Production after release the coupon
 			if (usedCliqCashFlag == true){
 				useWalletForPaymentAjax();
 			}
@@ -12369,7 +12374,7 @@ function placeAnOrder(dataString){
 
 	}
 	else if(modeofPayment == 'COD') {
-		if(!$("#g-recaptcha-response").val()){
+		if(!$("[id^='g-recaptcha-response']").val()){
 			$('#captchaError').html("<font color='red'>Please verify that you are not a robot! </font>");
 			hideloaderAndEnableButton();
 			return false;

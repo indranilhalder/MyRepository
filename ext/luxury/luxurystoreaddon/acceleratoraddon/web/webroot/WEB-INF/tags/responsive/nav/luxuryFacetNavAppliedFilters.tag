@@ -5,8 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 
-<%-- <c:url value="/page-0" var="queryUrl"/> --%>
-<c:url value="/" var="queryUrl"/>
+<c:url value="" var="queryUrl"/>
 <c:url value="/search/?text=${searchPageData.freeTextSearch}&searchCategory=${searchCategory}" var="resetQueryUrlSearch"/>
 <div class="filter-box">
 	<div class="filter-choosed">

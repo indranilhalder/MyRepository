@@ -5783,7 +5783,7 @@ label[for='priority_paytm'] img {
 	display: inline;
 	float: left;
 	width: 268px;
-	height: 250px;		/* modified for TISUST-6349 */	/* modified for TISUST-6383 */
+	height: 90px;		/* modified for TISUST-6349 */	/* modified for TISUST-6383 */ /* modified for SDI-6591 */
 	border: solid 1px #dddddd;
 	margin: 6px 19px 6px 0px;
 	padding: 7px;
@@ -5805,7 +5805,10 @@ label[for='priority_paytm'] img {
 }
 .max-min-value {
 	position: absolute;
-	bottom: -10px;
+	/* start change for TISUAT-6528 */
+	top: 67px;
+	/* bottom: -10px; */
+	/* end change for TISUAT-6528 */
 }
 .offer_heading {
 	font-size: 16px;
@@ -6196,7 +6199,7 @@ span#offer_section_responsive_error_msg {
 	}
 	/* start TISUAT-6383 */
 	.offerui li {
-		height: 200px;
+		height: 85px;	/* modified for SDI-6591 */
 	}
 	.offer_des {
 		margin: 5px 0 0 18px;
@@ -6220,12 +6223,12 @@ span#offer_section_responsive_error_msg {
 		max-width: 80% !important;
 	}
 	#paymentoffersPopup .offerui li {
-		height: 300px;
+		height: 90px;		/* modified for SDI-6591 */
 	}
 	/* end TISUAT-6383 */	
 }
 #paymentoffersPopup .offerui li {
-	height: 300px;
+	height: 95px;		/* modified for SDI-6591 */
 }
 
 

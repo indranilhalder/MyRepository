@@ -101,7 +101,7 @@
 					$("#captchaError").empty();
 
 					$("#paymentButtonId").click(function(){	
-						if(!$("#g-recaptcha-response").val()){
+						if(!$("[id^='g-recaptcha-response']").val()){
 						//	alert("TWO=>"+$("#g-recaptcha-response").val());
 							$('#captchaError').html("<font color='red'>Please verify that you are not a robot! </font>")
 							return false;

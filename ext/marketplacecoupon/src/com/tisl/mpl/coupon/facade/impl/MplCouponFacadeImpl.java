@@ -1024,9 +1024,25 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	public void releaseVoucher(final String voucherCode, final CartModel cartModel, final OrderModel orderModel)
 			throws VoucherOperationException
 	{
-		getMplVoucherService().releaseVoucher(voucherCode, cartModel, orderModel);
-	}
+		//getMplVoucherService().releaseVoucher(voucherCode, cartModel, orderModel);
+		if (null != cartModel)
+		{
+			synchronized (cartModel)
+			{
+				getMplVoucherService().releaseVoucher(voucherCode, cartModel, null);
+				recalculateCartForCoupon(cartModel, null);
+			}
 
+		}
+		else if (null != orderModel)
+		{
+			synchronized (orderModel)
+			{
+				getMplVoucherService().releaseVoucher(voucherCode, null, orderModel);
+				recalculateCartForCoupon(null, orderModel);
+			}
+		}
+	}
 
 
 	/**

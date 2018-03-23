@@ -116,7 +116,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 	}
 
 	private static final String REDIRECTURL = "/my-account";
-	private static final String TEMPIMAGESDIR = "\\tempImages";
+	private static final String TEMPIMAGESDIR = "/tempImages";
 	private static final String PARAFOLDER_NAME = "folderName";
 	public static final String PAGEID = "imageUpload";
 	public static final String UPLOAD_FILE_PATH = "mpl.bulkimage.uploadpath";
@@ -257,7 +257,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 				try
 				{
 					final byte[] bytes = files.getBytes();
-					final Path path = Paths.get(fileUploadLocation + "\\" + files.getOriginalFilename());
+					final Path path = Paths.get(fileUploadLocation + "/" + files.getOriginalFilename());
 					//f = new File(fileUploadLocation + files.getOriginalFilename());
 					Files.write(path, bytes);
 					final String fileExtension[] = files.getOriginalFilename().toString().split("\\.");
