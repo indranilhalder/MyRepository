@@ -239,9 +239,11 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 	{
 		try
 		{
+			long startTime = 0;
+			long endTime = 0;
 			if (LOG.isDebugEnabled())
 			{
-				final long startTime = System.currentTimeMillis();
+				startTime = System.currentTimeMillis();
 				LOG.debug("Entering Dao getBankDetailsforEMI()=======startTime::" + startTime);
 			}
 
@@ -269,9 +271,9 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			final List<EMIBankModel> emiBankList = flexibleSearchService.<EMIBankModel> search(bankListQuery).getResult();
 			if (LOG.isDebugEnabled())
 			{
-				final long endTime = System.currentTimeMillis();
+				endTime = System.currentTimeMillis();
 				LOG.debug("Exiting Dao getBankDetailsforEMI()=======endTime:::" + endTime);
-				//LOG.debug("Time taken=======" + (endTime - startTime));
+				LOG.debug("Time taken=======" + (endTime - startTime));
 			}
 			//final long endTime = System.currentTimeMillis();
 			//LOG.debug("Exiting Dao getBankDetailsforEMI()=======" + (endTime - startTime));

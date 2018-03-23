@@ -88,7 +88,6 @@ public class MplFollowedBrandServiceImpl implements MplFollowedBrandService
 		// YTODO Auto-generated method stub
 		List<BrandMasterModel> brandList = null;
 		Set<BrandMasterModel> brandSetModify = null;
-		Set<BrandMasterModel> brandSetModifyVar = null;
 		FollowedBrandMcvidModel followedBrandModel = new FollowedBrandMcvidModel();
 		boolean status = false;
 
@@ -107,14 +106,12 @@ public class MplFollowedBrandServiceImpl implements MplFollowedBrandService
 				{
 					followedBrandModel = listOfMcvIDbrands.get(0);
 
-					brandSetModifyVar = new HashSet<BrandMasterModel>();
-
 					//if (null != followedBrandModel && CollectionUtils.isNotEmpty(followedBrandModel.getBrandList()))
-					if (null != followedBrandModel && CollectionUtils.isNotEmpty(brandSetModifyVar))
+					if (null != followedBrandModel)
 					{
 
-						//brandSetModify = new HashSet<BrandMasterModel>(followedBrandModel.getBrandList());
-						brandSetModify = new HashSet<BrandMasterModel>(brandSetModifyVar);
+						brandSetModify = new HashSet<BrandMasterModel>(followedBrandModel.getBrandList());
+
 
 					}
 					if (CollectionUtils.isNotEmpty(brandSetModify))
