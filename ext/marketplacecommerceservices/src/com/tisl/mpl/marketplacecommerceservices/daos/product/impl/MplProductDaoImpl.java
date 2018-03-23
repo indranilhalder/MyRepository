@@ -422,4 +422,47 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 			return new ArrayList<String>();
 		}
 	}
+
+	//changes for SDI 6152
+	@Override
+	public List<ProductModel> findProductsByCodewithCatalog(String productCode, String catalogCode)
+	{
+		List<ProductModel> productList = null;
+		final StringBuilder stringBuilder = new StringBuilder(70);
+		final CatalogVersionModel catalogVersion =catalogVersionService.getCatalogVersion(catalogCode, "Online");
+
+		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ");
+		stringBuilder.append(FROM_STRING).append(ProductModel._TYPECODE).append(AS_P);
+		stringBuilder.append(MarketplacecommerceservicesConstants.QUERYJOIN).append(SellerInformationModel._TYPECODE).append(AS_S);
+		stringBuilder.append(ON_S).append(SellerInformationModel.PRODUCTSOURCE).append(BRACET_P).append(ProductModel.PK)
+				.append("} } ");
+		final String inPart = P + ProductModel.CODE + CODE_STRING + ProductModel.CATALOGVERSION + "} = ?catalogVersion";
+		stringBuilder.append("WHERE ").append(inPart);
+		LOG.debug(stringBuilder);
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
+		query.addQueryParameter(CODE, productCode);
+		query.addQueryParameter(CATALOG_VERSION_KEY, catalogVersion);
+		query.setResultClassList(Collections.singletonList(ProductModel.class));
+
+		//disabling search restriction and then enabling once again
+		SearchResult<ProductModel> searchResult = null;
+		try
+		{
+			searchResult = getFlexibleSearchService().search(query);
+			if (null != searchResult && null != searchResult.getResult() && searchResult.getResult().isEmpty())
+			{
+				searchRestrictionService.disableSearchRestrictions();
+				searchResult = getFlexibleSearchService().search(query);
+			}
+		}
+
+		finally
+		{
+			searchRestrictionService.enableSearchRestrictions();
+		}
+
+		productList = searchResult.getResult();
+		//return searchResult.getResult();
+		return productList;
+	}
 }

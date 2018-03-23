@@ -483,6 +483,34 @@ function innerLazyLoad(options) {
     	$('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').html(gridHTML);
         $("img.lazy").lazyload();
     }
+
+    /* Load wishlist */
+	$.ajax({
+        url: ACC.config.encodedContextPath + "/headerWishlist",
+        type: 'GET',
+        //data: "&productCount=" + $(this).attr("data-count"),
+        data: "&productCount=" + $('li.wishlist').find('a').attr("data-count"),
+        success: function(html) {
+        	/*alert("ready");*/
+            $("div.wishlist-info").html(html);
+            var wlCode = [];
+			$(".wlCode").each(function(){
+				wlCode.push($(this).text().trim());
+			});
+			$(".plpWlcode").each(function(){
+				var productURL = $(this).text(), n = productURL.lastIndexOf("-"), productCode=productURL.substring(n+1, productURL.length);
+				//wlPlpCode.push(productCode.toUpperCase());
+				
+				for(var i = 0; i < wlCode.length; i++) {
+					if(productCode.toUpperCase() == wlCode[i]) {
+						console.log("Controle Inside");
+						$(this).siblings(".plp-wishlist").addClass("added");
+					}
+				}
+			});
+        }
+    });
+	/* Load wishlist ends*/
 }
 
 function getProductSetData(pageNoPagination) {

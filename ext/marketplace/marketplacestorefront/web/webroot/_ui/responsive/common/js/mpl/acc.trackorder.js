@@ -56,7 +56,7 @@ function viewOrderStatus(event) {
 	} else if (!$("#TrackOrderdId").val()) {
 		$(".orderError").fadeIn(100).text("Please enter correct order id.");
 		return false;
-	} else if(!$("#g-recaptcha-response").val()){
+	} else if(!$("[id^='g-recaptcha-response']").val()){
 		$('.trackCaptchaError').fadeIn(100).text("Please verify that you are not a robot!")
 		return false;
 	
@@ -64,7 +64,7 @@ function viewOrderStatus(event) {
 		// alert("Move to Order Tracking Page");
 		var orderId =$("#TrackOrderdId").val();
 		var emailId = $("#TrackEmailId").val();
-		var captchaCode= $("#g-recaptcha-response").val();
+		var captchaCode= $("[id^='g-recaptcha-response']").val();
 		$.ajax({
 			url : ACC.config.encodedContextPath
 					+ "/trackOrder/anonymousTrack",
