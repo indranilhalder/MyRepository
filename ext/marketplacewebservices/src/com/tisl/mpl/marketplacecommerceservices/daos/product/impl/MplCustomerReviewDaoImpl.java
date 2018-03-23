@@ -88,6 +88,7 @@ public class MplCustomerReviewDaoImpl extends DefaultCustomerReviewDao implement
 	@Override
 	public List<List<Object>> getGroupByRatingsForProd(final ProductModel product, final LanguageModel language)
 	{
+		List<List<Object>> output = null;
 		//		final String query = "SELECT {" + CustomerReviewModel.RATING + "},COUNT({" + CustomerReviewModel.RATING + "}),( COUNT({"
 		//				+ CustomerReviewModel.RATING + "})*100/(SELECT COUNT(1) FROM {" + "CustomerReview" + "} WHERE {" + "product"
 		//				+ "}=?product AND {" + "language" + "}=?language)) FROM {" + "CustomerReview" + "} WHERE {" + "product"
@@ -100,12 +101,17 @@ public class MplCustomerReviewDaoImpl extends DefaultCustomerReviewDao implement
 		fsQuery.setResultClassList(Arrays.asList(Double.class, Integer.class, Float.class));
 
 		final SearchResult searchResult = getFlexibleSearchService().search(fsQuery);
-		return searchResult.getResult();
+		//IQA code Review fix
+		if (null != searchResult && CollectionUtils.isNotEmpty(searchResult.getResult()))
+		{
+			output = searchResult.getResult();
+		}
+		return output;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplCustomerReviewDao#reviewApplicableForGivenCustomer(de
 	 * .hybris.platform.core.model.user.UserModel, de.hybris.platform.core.model.product.ProductModel)
