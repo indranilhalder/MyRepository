@@ -29,10 +29,11 @@ export default class ReturnReasonAndModeOfReturn extends React.Component {
     );
   };
 
+  goToReturnMode = val => {};
   renderReturnModes = () => {
     return (
       <div>
-        <ReturnModes selectMode={val => console.log(val)} />
+        <ReturnModes selectMode={val => this.goToReturnMode(val)} />
       </div>
     );
   };
