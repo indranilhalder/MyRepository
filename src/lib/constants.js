@@ -1,4 +1,6 @@
 export const SUCCESS = "success";
+export const SUCCESS_UPPERCASE = "SUCCESS";
+export const SUCCESS_CAMEL_CASE = "Success";
 export const REQUESTING = "requesting";
 export const ERROR = "error";
 export const FAILURE = "Failure";
@@ -104,3 +106,5 @@ export const SHORT_COLLECT = "CNC";
 
 export const FOLLOW = "Follow";
 export const FOLLOWING = "Following";
+
+export const TRUE = "true";
