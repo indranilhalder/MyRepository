@@ -1,8 +1,7 @@
 import { connect } from "react-redux";
 import { getAllOrdersDetails } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
-import GetAllOrderDetails from "../components/GetAllOrderDetails";
-
+import AllOrderDetails from "../components/AllOrderDetails";
 const mapDispatchToProps = dispatch => {
   return {
     getAllOrdersDetails: () => {
@@ -10,15 +9,14 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-
 const mapStateToProps = state => {
   return {
     profile: state.profile
   };
 };
 
-const GetAllOrderContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(GetAllOrderDetails)
+const AllOrderContainer = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AllOrderDetails)
 );
 
-export default GetAllOrderContainer;
+export default AllOrderContainer;
