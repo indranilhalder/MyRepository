@@ -997,11 +997,11 @@ th {
 							</tr>
 							<tr>
 								<td><a href="${feature.fetchURL}">
-										${feature.fetchURL}"></a></td>
+										${feature.fetchURL}</a></td>
 							</tr>
 							<tr>
 								<td><a href="${feature.backupURL}">
-										${feature.backupURL}"></a></td>
+										${feature.backupURL}</a></td>
 							</tr>
 							<tr>
 								<td>${feature.widgetPlatform}</td>
