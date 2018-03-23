@@ -18,19 +18,11 @@ const dateFormat = "MMMM DD YYYY";
 const PRODUCT_QUANTITY = "1";
 
 export default class SaveListDetails extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      customerLogin: true
-    };
-  }
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (userDetails && customerCookie) {
       this.props.getWishList();
-    } else {
-      this.setState({ customerLogin: false });
     }
   }
   navigateToLogin() {
@@ -76,11 +68,15 @@ export default class SaveListDetails extends React.Component {
     }
   }
   render() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (!userDetails || !customerCookie) {
+      return this.navigateToLogin();
+    }
     const wishList = this.props.wishList;
     return (
       <div className={styles.base}>
-        {this.state.customerLogin &&
-          wishList &&
+        {wishList &&
           wishList.products.map((product, i) => {
             return (
               <div className={styles.listCardHolder} key={i}>
@@ -101,7 +97,6 @@ export default class SaveListDetails extends React.Component {
               </div>
             );
           })}
-        {!this.state.customerLogin && this.navigateToLogin()}
       </div>
     );
   }

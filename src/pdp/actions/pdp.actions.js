@@ -3,6 +3,8 @@ import {
   REQUESTING,
   ERROR,
   GLOBAL_ACCESS_TOKEN,
+  SUCCESS_UPPERCASE,
+  SUCCESS_CAMEL_CASE,
   DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
@@ -307,10 +309,15 @@ export function removeProductFromWishList(productDetails) {
         removeProductFromWishListObject
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        return dispatch(removeProductFromWishListSuccess());
+      } else {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
-      dispatch(removeProductFromWishListSuccess());
     } catch (e) {
       dispatch(removeProductFromWishListFailure(e.message));
     }
