@@ -153,7 +153,10 @@ class App extends Component {
                 <SignUpContainer {...routeProps} {...this.props} />
               )}
             />
-            <Route path={SAVE_LIST_PAGE} component={SaveListContainer} />
+            <Route
+              path={`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`}
+              component={SaveListContainer}
+            />
             <Route
               exact
               path={MY_ACCOUNT_PAGE}

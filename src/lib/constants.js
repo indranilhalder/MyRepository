@@ -89,7 +89,7 @@ export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
 export const ORDER_PAGE = "/allOrders";
 
-export const SAVE_LIST_PAGE = "/my-account/default/wishList";
+export const SAVE_LIST_PAGE = "/default/wishList";
 export const PAYMENT_MODE_TYPE = "paymentMode";
 // fetching feed information contant
 export const BLP_OR_CLP_FEED_TYPE = "blpOrClp";
