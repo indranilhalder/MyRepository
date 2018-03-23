@@ -3,11 +3,6 @@ import styles from "./OrderReturnAddressDetails.css";
 import PropTypes from "prop-types";
 import CheckBox from "../../general/components/CheckBox.js";
 export default class OrderReturnAddressDetails extends React.Component {
-  onCancel() {
-    if (this.props.selectItem) {
-      this.props.selectItem();
-    }
-  }
   render() {
     return (
       <div className={this.props.isSelect ? styles.withCheckbox : styles.base}>
@@ -33,6 +28,5 @@ OrderReturnAddressDetails.propTypes = {
   address: PropTypes.string,
   subAddress: PropTypes.string,
   addressType: PropTypes.string,
-  isSelect: PropTypes.bool,
-  selectItem: PropTypes.func
+  isSelect: PropTypes.bool
 };

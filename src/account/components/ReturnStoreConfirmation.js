@@ -3,6 +3,7 @@ import ReturnsFrame from "./ReturnsFrame";
 import OrderCard from "./OrderCard";
 import ReturnsToBank from "./ReturnsToBank";
 import OrderReturnAddressDetails from "./OrderReturnAddressDetails";
+import PropTypes from "prop-types";
 import styles from "./ReturnStoreConfirmation.css";
 const data = {
   type: "returnRequestDTO",
@@ -60,7 +61,10 @@ const data = {
 export default class ReturnsStoreConfirmation extends React.Component {
   render() {
     return (
-      <ReturnsFrame headerText="Return to store">
+      <ReturnsFrame
+        headerText="Return to store"
+        onContinue={this.props.onContinue}
+      >
         <OrderReturnAddressDetails />
         <div className={styles.card}>
           <OrderCard
@@ -80,3 +84,17 @@ export default class ReturnsStoreConfirmation extends React.Component {
     );
   }
 }
+ReturnsStoreConfirmation.propTypes = {
+  onContinue: PropTypes.func,
+  data: PropTypes.shape({
+    orderProductWsDTO: PropTypes.arrayOf([
+      PropTypes.shape({
+        imageURL: PropTypes.string,
+        productName: PropTypes.string,
+        productBrand: PropTypes.string,
+        price: PropTypes.string,
+        quantity: PropTypes.string
+      })
+    ])
+  })
+};
