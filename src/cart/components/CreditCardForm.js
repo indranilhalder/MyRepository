@@ -97,7 +97,6 @@ export default class CreditCardForm extends React.Component {
 
   payBill = cardDetails => {
     let cardValues = {};
-    console.log("CARD DETAILS");
     cardValues.cardNumber = this.state.cardNumberValue;
     cardValues.cardName = this.state.cardNameValue;
     cardValues.cvvNumber = this.state.cardCvvValue;
@@ -106,9 +105,7 @@ export default class CreditCardForm extends React.Component {
     cardValues.selected = this.state.selected;
     cardValues.merchant_id = MERCHANT_ID;
     cardValues.pincode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-    console.log(cardValues);
-
-    // this.props.softReservationForPayment(cardValues);
+    this.props.softReservationForPayment(cardValues);
   };
 
   render() {
