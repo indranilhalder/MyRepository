@@ -7,7 +7,6 @@ import styles from "./ReturnModes.css";
 const QUICK_DROP = "quickDrop";
 const SCHEDULED_PICKUP = "schedulePickup";
 const SELF_COURIER = "selfCourier";
-
 const data = {
   type: "returnRequestDTO",
   orderProductWsDTO: [
@@ -60,7 +59,6 @@ const data = {
   ],
   showReverseSealFrJwlry: "no"
 };
-
 export default class ReturnModes extends React.Component {
   handleSelect(val) {
     if (this.props.selectMode) {
@@ -126,7 +124,6 @@ export default class ReturnModes extends React.Component {
     );
   }
 }
-
 ReturnModes.propTypes = {
   selectedMode: PropTypes.oneOf([QUICK_DROP, SCHEDULED_PICKUP, SELF_COURIER]),
   selectMode: PropTypes.func

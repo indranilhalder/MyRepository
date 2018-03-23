@@ -79,6 +79,11 @@ export const RETURNS_CLIQPIQ_ADDRESS = "/cliqAndPiq/address";
 export const RETURNS_CLIQPIQ_DATE = "/cliqAndPiq/date";
 export const RETURNS_CLIQPIQ_TIME = "/cliqAndPiq/time";
 
+export const RETURN_TO_STORE = "/store";
+export const RETURNS_STORE_MAP = "/storePick";
+export const RETURNS_STORE_BANK_FORM = "/bankDetail";
+export const RETURNS_STORE_FINAL = "/submit";
+
 export const CLIQ_AND_PIQ = "/select-stores";
 export const PRODUCT_CART_DELIVERY_MODES = "/deliveryModes";
 export const PRODUCT_DELIVERY_ADDRESSES = "/deliveryAddress";

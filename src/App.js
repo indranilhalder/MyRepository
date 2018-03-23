@@ -38,8 +38,10 @@ import AllOrderContainer from "./account/containers/AllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
 import AddressBookContainer from "./account/containers/AddressBookContainer.js";
-import ReturnReasonAndModeOfReturnContainer from "./account/containers/ReturnReasonAndModeOfReturnContainer.js";
+
+import ReturnFlowContainer from "./account/containers/ReturnFlowContainer.js";
 import SaveListContainer from "./account/containers/SaveListContainer";
+
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -158,6 +160,7 @@ class App extends Component {
                 <SignUpContainer {...routeProps} {...this.props} />
               )}
             />
+            <Route path={RETURNS} component={ReturnFlowContainer} />
             <Route
               path="/return/543454jkl345/cliqAndPiq"
               component={ReturnToStoreContainer}
@@ -287,10 +290,6 @@ class App extends Component {
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_PAGE}`}
               component={AddressBookContainer}
-            />
-            <Route
-              path={RETURNS}
-              component={ReturnReasonAndModeOfReturnContainer}
             />
           </Switch>
           <MobileFooter />
