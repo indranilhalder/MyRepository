@@ -27,6 +27,9 @@ import MobileFooter from "./general/components/MobileFooter.js";
 import MyAccountContainer from "./account/containers/MyAccountContainer";
 import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
 
+// importing all containers for the return flow
+import ReturnToStoreContainer from "./account/containers/ReturnToStoreContainer";
+
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
@@ -150,6 +153,10 @@ class App extends Component {
               render={routeProps => (
                 <SignUpContainer {...routeProps} {...this.props} />
               )}
+            />
+            <Route
+              path="/return/543454jkl345/cliqAndPiq"
+              component={ReturnToStoreContainer}
             />
             <Route path={ORDER_PAGE} component={AllOrderContainer} />
             <Route
