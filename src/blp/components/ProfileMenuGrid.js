@@ -7,12 +7,12 @@ import {
   MY_ACCOUNT_ORDERS_PAGE,
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_SAVED_CARDS_PAGE,
-  ACCOUNT_SAVED_CARD_ROUTER,
   MY_ACCOUNT_ADDRESS_PAGE,
   MY_ACCOUNT_BRANDS_PAGE,
   MY_ACCOUNT_UPDATE_PROFILE_PAGE,
   MY_ACCOUNT_ALERTS_PAGE,
-  MY_ACCOUNT_CLIQ_CASH_PAGE
+  MY_ACCOUNT_CLIQ_CASH_PAGE,
+  SAVE_LIST_PAGE
 } from "../../lib/constants";
 import styles from "./ProfileMenuGrid.css";
 import savedList from "../../general/components/img/savewhite.svg";
@@ -35,7 +35,7 @@ export default class ProfileMenuGrid extends React.Component {
       {
         image: savedList,
         text: "Saved List",
-        url: ACCOUNT_SAVED_CARD_ROUTER
+        url: SAVE_LIST_PAGE
       },
       {
         image: addressBook,

@@ -26,7 +26,7 @@ import MobileFooter from "./general/components/MobileFooter.js";
 // importing All container for my Accounts
 import MyAccountContainer from "./account/containers/MyAccountContainer";
 import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
-
+import MyAccountBrandsContainer from "./account/containers/MyAccountBrandsContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
@@ -34,7 +34,10 @@ import AllOrderContainer from "./account/containers/AllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
 import AddressBookContainer from "./account/containers/AddressBookContainer.js";
+
 import ReturnReasonAndModeOfReturnContainer from "./account/containers/ReturnReasonAndModeOfReturnContainer.js";
+import SaveListContainer from "./account/containers/SaveListContainer";
+
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -69,12 +72,14 @@ import {
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
-  ORDER_PAGE,
+  MY_ACCOUNT_ORDERS_PAGE,
+  SAVE_LIST_PAGE,
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_SAVED_CARDS_PAGE,
   MY_ACCOUNT_ADDRESS_PAGE,
   MY_ACCOUNT_ALERTS_PAGE,
   MY_ACCOUNT_COUPON_PAGE,
+  MY_ACCOUNT_BRANDS_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
   ORDER_PREFIX,
   RETURNS
@@ -151,7 +156,14 @@ class App extends Component {
                 <SignUpContainer {...routeProps} {...this.props} />
               )}
             />
-            <Route path={ORDER_PAGE} component={AllOrderContainer} />
+            <Route
+              path={`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`}
+              component={SaveListContainer}
+            />
+            <Route
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ORDERS_PAGE}`}
+              component={AllOrderContainer}
+            />
             <Route
               exact
               path={MY_ACCOUNT_PAGE}
@@ -170,6 +182,12 @@ class App extends Component {
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`}
               component={UserAlertsAndCouponsContainer}
+            />
+
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_BRANDS_PAGE}`}
+              component={MyAccountBrandsContainer}
             />
             <Route
               exact

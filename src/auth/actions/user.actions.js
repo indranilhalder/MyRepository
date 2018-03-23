@@ -110,11 +110,12 @@ export function loginUserRequest() {
   };
 }
 
-export function loginUserSuccess(user) {
+export function loginUserSuccess(user, userName) {
   return {
     type: LOGIN_USER_SUCCESS,
     status: SUCCESS,
-    user
+    user,
+    userName
   };
 }
 
@@ -145,7 +146,7 @@ export function loginUser(userLoginDetails) {
         throw new Error(`${resultJson.status}`);
       }
 
-      return dispatch(loginUserSuccess(resultJson));
+      return dispatch(loginUserSuccess(resultJson, userLoginDetails.username));
     } catch (e) {
       return dispatch(loginUserFailure(e.message));
     }
@@ -207,11 +208,12 @@ export function otpVerificationRequest() {
     status: REQUESTING
   };
 }
-export function otpVerificationSuccess(user) {
+export function otpVerificationSuccess(user, userName) {
   return {
     type: OTP_VERIFICATION_SUCCESS,
     status: SUCCESS,
-    user
+    user,
+    userName
   };
 }
 
@@ -239,7 +241,7 @@ export function otpVerification(otpDetails, userDetails) {
         throw new Error(`${resultJson.message}`);
       }
       dispatch(hideModal());
-      return dispatch(otpVerificationSuccess(resultJson));
+      return dispatch(otpVerificationSuccess(resultJson, userDetails.username));
     } catch (e) {
       return dispatch(otpVerificationFailure(e.message));
     }
