@@ -13,7 +13,6 @@ export default class FollowedBrand extends React.Component {
       <div className={styles.base}>
         <div className={styles.headerHolder}>
           <div className={styles.heading}>{this.props.header}</div>
-          <div className={styles.subHeading}>{this.props.subHeader}</div>
         </div>
         <div className={styles.buttonHolder}>
           <div className={styles.button}>

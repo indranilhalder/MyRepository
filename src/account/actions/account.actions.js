@@ -75,8 +75,11 @@ export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
+
+export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
+
 const API_KEY_FOR_MSD = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
-const NUMBER_OF_RESULTS_FOR_BRNADS = [25];
+const NUMBER_OF_RESULTS_FOR_BRANDS = [25];
 const WIDGETS_LIST_FOR_BRANDS = [112];
 const CARD_TYPE = "BOTH";
 const FOLLOW = "follow";
@@ -532,21 +535,19 @@ export function getFollowedBrandsFailure(error) {
 }
 
 export function getFollowedBrands() {
-  const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
+  // const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
 
+  const mcvId = "82035857233048262510496489363611429421";
   return async (dispatch, getState, { api }) => {
     dispatch(getFollowedBrandsRequest());
     let msdFormData = new FormData();
     msdFormData.append("api_key", API_KEY_FOR_MSD);
-    msdFormData.append("num_results", NUMBER_OF_RESULTS_FOR_BRNADS);
+    msdFormData.append("num_results", NUMBER_OF_RESULTS_FOR_BRANDS);
     msdFormData.append("mad_uuid", mcvId);
     msdFormData.append("details", true);
     msdFormData.append("widget_list", WIDGETS_LIST_FOR_BRANDS);
     try {
-      const result = await api.postMsd(
-        `https://ap-southeast-1-api.madstreetden.com/widgets`,
-        msdFormData
-      );
+      const result = await api.postMsd(`/widgets`, msdFormData);
       const resultJson = await result.json();
       if (
         resultJson.errors ||
@@ -640,8 +641,9 @@ export function followAndUnFollowBrandInFeedBackInCommerceApi(
   brandId,
   followStatus
 ) {
-  const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
+  // const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
 
+  const mcvId = "82035857233048262510496489363611429421";
   const followedText = followStatus ? UNFOLLOW : FOLLOW;
   const updatedBrandObj = {
     api_key: API_KEY_FOR_MSD,
@@ -657,7 +659,10 @@ export function followAndUnFollowBrandInFeedBackInCommerceApi(
   return async (dispatch, getState, { api }) => {
     dispatch(followAndUnFollowBrandInFeedBackRequest());
     try {
-      const result = await api.postMsdRowData("feedback", updatedBrandObj);
+      const result = await api.postMsdRowData(
+        `${MSD_ROOT_PATH}/feedback`,
+        updatedBrandObj
+      );
       const resultJson = await result.json();
 
       if (
