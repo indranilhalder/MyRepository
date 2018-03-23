@@ -1,4 +1,11 @@
-import { SUCCESS, REQUESTING, ERROR, FAILURE } from "../../lib/constants";
+import {
+  SUCCESS,
+  SUCCESS_UPPERCASE,
+  SUCCESS_CAMEL_CASE,
+  REQUESTING,
+  ERROR,
+  FAILURE
+} from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -46,11 +53,37 @@ export const REMOVE_ADDRESS_REQUEST = "REMOVE_ADDRESS_REQUEST";
 export const REMOVE_ADDRESS_SUCCESS = "REMOVE_ADDRESS_SUCCESS";
 export const REMOVE_ADDRESS_FAILURE = "REMOVE_ADDRESS_FAILURE";
 
+export const GET_FOLLOWED_BRANDS_REQUEST = "GET_FOLLOWED_BRANDS_REQUEST";
+export const GET_FOLLOWED_BRANDS_SUCCESS = "GET_FOLLOWED_BRANDS_SUCCESS";
+export const GET_FOLLOWED_BRANDS_FAILURE = "GET_FOLLOWED_BRANDS_FAILURE";
+
+export const FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_REQUEST =
+  "FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_REQUEST";
+export const FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_SUCCESS =
+  "FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_SUCCESS";
+export const FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_FAILURE =
+  "FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_FAILURE";
+
+export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_REQUEST =
+  "FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_REQUEST";
+export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_SUCCESS =
+  "FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_SUCCESS";
+export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_FAILURE =
+  "FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const USER_PATH = "v2/mpl/users";
-const CARD_TYPE = "BOTH";
+export const PRODUCT_PATH = "v2/mpl/products";
 
+export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
+
+const API_KEY_FOR_MSD = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
+const NUMBER_OF_RESULTS_FOR_BRANDS = [25];
+const WIDGETS_LIST_FOR_BRANDS = [112];
+const CARD_TYPE = "BOTH";
+const FOLLOW = "follow";
+const UNFOLLOW = "unfollow";
 export function getSavedCardRequest() {
   return {
     type: GET_SAVED_CARD_REQUEST,
@@ -475,6 +508,172 @@ export function sendInvoice(lineID, orderNumber) {
       dispatch(sendInvoiceSuccess(resultJson));
     } catch (e) {
       dispatch(sendInvoiceFailure(e.message));
+    }
+  };
+}
+
+export function getFollowedBrandsRequest() {
+  return {
+    type: GET_FOLLOWED_BRANDS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getFollowedBrandsSuccess(followedBrands) {
+  return {
+    type: GET_FOLLOWED_BRANDS_SUCCESS,
+    status: SUCCESS,
+    followedBrands
+  };
+}
+
+export function getFollowedBrandsFailure(error) {
+  return {
+    type: GET_FOLLOWED_BRANDS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getFollowedBrands() {
+  const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
+
+  return async (dispatch, getState, { api }) => {
+    dispatch(getFollowedBrandsRequest());
+    let msdFormData = new FormData();
+    msdFormData.append("api_key", API_KEY_FOR_MSD);
+    msdFormData.append("num_results", NUMBER_OF_RESULTS_FOR_BRANDS);
+    msdFormData.append("mad_uuid", mcvId);
+    msdFormData.append("details", true);
+    msdFormData.append("widget_list", WIDGETS_LIST_FOR_BRANDS);
+    try {
+      const result = await api.postMsd(`${MSD_ROOT_PATH}/widgets`, msdFormData);
+      const resultJson = await result.json();
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+
+      dispatch(getFollowedBrandsSuccess(resultJson.data[0]));
+    } catch (e) {
+      dispatch(getFollowedBrandsFailure(e.message));
+    }
+  };
+}
+
+// this follow and unfollow function is for just follow and unfollow brand we don't need to
+// update any reducer data for brand following status. because after follow and un follow we need to hit
+// all brands for user that will return again followed brands
+export function followAndUnFollowBrandInCommerceRequest() {
+  return {
+    type: FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function followAndUnFollowBrandInCommerceSuccess() {
+  return {
+    type: FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_SUCCESS,
+    status: SUCCESS
+  };
+}
+export function followAndUnFollowBrandInCommerceFailure(error) {
+  return {
+    type: FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function followAndUnFollowBrandInCommerce(brandId, followStatus) {
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(followAndUnFollowBrandInCommerceRequest());
+    try {
+      const updatedFollowStatus = !followStatus;
+      const result = await api.post(
+        `${PRODUCT_PATH}/${
+          JSON.parse(customerCookie).access_token
+        }/updateFollowedBrands?brands=${brandId}&follow=${updatedFollowStatus}&isPwa=true`
+      );
+      const resultJson = await result.json();
+
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        return dispatch(followAndUnFollowBrandInCommerceSuccess());
+      } else {
+        throw new Error(`${resultJson.message}`);
+      }
+    } catch (e) {
+      return dispatch(followAndUnFollowBrandInCommerceFailure(e.message));
+    }
+  };
+}
+
+export function followAndUnFollowBrandInFeedBackRequest() {
+  return {
+    type: FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function followAndUnFollowBrandInFeedBackSuccess() {
+  return {
+    type: FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_SUCCESS,
+    status: SUCCESS
+  };
+}
+export function followAndUnFollowBrandInFeedBackFailure(error) {
+  return {
+    type: FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function followAndUnFollowBrandInFeedBackInCommerceApi(
+  brandId,
+  followStatus
+) {
+  const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
+
+  const followedText = followStatus ? UNFOLLOW : FOLLOW;
+  const updatedBrandObj = {
+    api_key: API_KEY_FOR_MSD,
+    mad_uuid: mcvId,
+    data: [
+      {
+        fields: "brand",
+        values: [brandId],
+        action: followedText
+      }
+    ]
+  };
+  return async (dispatch, getState, { api }) => {
+    dispatch(followAndUnFollowBrandInFeedBackRequest());
+    try {
+      const result = await api.postMsdRowData(
+        `${MSD_ROOT_PATH}/feedback`,
+        updatedBrandObj
+      );
+      const resultJson = await result.json();
+
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        return dispatch(followAndUnFollowBrandInFeedBackSuccess());
+      } else {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+    } catch (e) {
+      return dispatch(followAndUnFollowBrandInFeedBackFailure(e.message));
     }
   };
 }

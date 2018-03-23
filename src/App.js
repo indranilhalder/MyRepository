@@ -26,7 +26,7 @@ import MobileFooter from "./general/components/MobileFooter.js";
 // importing All container for my Accounts
 import MyAccountContainer from "./account/containers/MyAccountContainer";
 import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
-
+import MyAccountBrandsContainer from "./account/containers/MyAccountBrandsContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
@@ -74,6 +74,7 @@ import {
   MY_ACCOUNT_ADDRESS_PAGE,
   MY_ACCOUNT_ALERTS_PAGE,
   MY_ACCOUNT_COUPON_PAGE,
+  MY_ACCOUNT_BRANDS_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
   ORDER_PREFIX,
   MY_ACCOUNT_ORDERS_PAGE
@@ -172,6 +173,12 @@ class App extends Component {
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`}
               component={UserAlertsAndCouponsContainer}
+            />
+
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_BRANDS_PAGE}`}
+              component={MyAccountBrandsContainer}
             />
             <Route
               exact
