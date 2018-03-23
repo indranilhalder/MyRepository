@@ -94,15 +94,18 @@ export default class AwbForm extends React.Component {
           </div>
         </div>
         <div className={styles.buttonHolder}>
-          <div className={styles.doItLaterHolder}>
-            <UnderLinedButton
-              size="14px"
-              fontFamily="regular"
-              color="#000"
-              label="Do it later"
-              onClick={() => this.updateLater()}
-            />
-          </div>
+          {this.props.updateLater && (
+            <div className={styles.doItLaterHolder}>
+              <UnderLinedButton
+                size="14px"
+                fontFamily="regular"
+                color="#000"
+                label="Do it later"
+                onClick={() => this.updateLater()}
+              />
+            </div>
+          )}
+
           <div className={styles.updateHolder}>
             <UnderLinedButton
               size="14px"
