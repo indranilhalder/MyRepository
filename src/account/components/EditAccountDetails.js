@@ -6,6 +6,8 @@ import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 import MobileDatePicker from "../../general/components/MobileDatePicker";
 import ShopByBrandLists from "../../blp/components/ShopByBrandLists.js";
 import CheckboxAndText from "../../cart/components/CheckboxAndText.js";
+import AccountFooter from "./AccountFooter.js";
+import moment from "moment";
 
 import {
   LOGGED_IN_USER_DETAILS,
@@ -28,7 +30,6 @@ export default class EditAccountDetails extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
     if (userDetails && customerCookie) {
       this.props.getUserDetails();
     } else {
@@ -39,6 +40,7 @@ export default class EditAccountDetails extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.userDetails !== this.props.userDetails) {
       if (nextProps.userDetails) {
+        console.log(nextProps.userDetails);
         this.setState({
           firstName: nextProps.userDetails.firstName,
           lastName: nextProps.userDetails.lastName,
@@ -54,11 +56,19 @@ export default class EditAccountDetails extends React.Component {
   onChange(val) {
     this.setState(val);
   }
-  updateProfile = accountDetails => {};
+  onChangeDateOfBirth = val => {
+    let dateOfBirth = moment(val).format("DD/MM/YYYY");
+    console.log(dateOfBirth);
+    this.setState({ dateOfBirth: dateOfBirth });
+  };
+  updateProfile = () => {
+    if (this.props.updateProfile) {
+      console.log(this.props);
+      this.props.updateProfile(this.state);
+    }
+  };
 
   render() {
-    console.log(this.state);
-    console.log(this.props.userDetails);
     let userDetails = this.props.userDetails;
     if (userDetails) {
       return (
@@ -106,12 +116,19 @@ export default class EditAccountDetails extends React.Component {
             </div>
             <div className={styles.container}>
               <MobileDatePicker
-                onChange={dateOfBirth => this.onChange({ dateOfBirth })}
+                onChange={dateOfBirth =>
+                  this.onChangeDateOfBirth({ dateOfBirth })
+                }
               />
             </div>
           </div>
-          <ShopByBrandLists brandList={"Change Password"} />
-          <CheckboxAndText label="Send Me Notifications" selected={false} />
+          <div className={styles.changePassword}>
+            <ShopByBrandLists brandList={"Change Password"} />
+          </div>
+          <div className={styles.sendNotification}>
+            <CheckboxAndText label="Send Me Notifications" selected={false} />
+          </div>
+          <AccountFooter update={() => this.updateProfile()} />
         </div>
       );
     } else {

@@ -9,7 +9,10 @@ import {
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   GLOBAL_ACCESS_TOKEN
 } from "../../lib/constants";
-
+import {
+  showModal,
+  UPDATE_PROFILE_OTP_VERIFICATION
+} from "../../general/modal.actions.js";
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
 export const GET_USER_DETAILS_FAILURE = "GET_USER_DETAILS_FAILURE";
@@ -505,37 +508,45 @@ export function updateProfileFailure(error) {
   };
 }
 
-export function updateProfile(accountDetails) {
+export function updateProfile(accountDetails, otp) {
+  console.log(accountDetails);
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
-    dispatch(sendInvoiceRequest());
+    dispatch(updateProfileRequest());
+    let updateProfileUrl;
     try {
-      const result = await api.get(
-        `${USER_PATH}/${
-          JSON.parse(userDetails).userName
-        }/updateprofile?isPwa=true&access_token=${
-          JSON.parse(customerCookie).access_token
-        }&ProfileDataRequired=true&firstName=${
-          accountDetails.firstName
-        }&lastName=${accountDetails.lastname}&dateOfBirth=${
-          accountDetails.dateOfBirth
-        }&gender=${accountDetails.gender}&mobilenumber=${
-          accountDetails.phoneNumber
-        }&emailId=${accountDetails.emailId}
-`
-      );
+      updateProfileUrl = `${USER_PATH}/${
+        JSON.parse(userDetails).userName
+      }/updateprofile?isPwa=true&access_token=${
+        JSON.parse(customerCookie).access_token
+      }&ProfileDataRequired=true&firstName=${
+        accountDetails.firstName
+      }&lastName=${accountDetails.lastName}&dateOfBirth=${
+        accountDetails.dateOfBirth
+      }&gender=${accountDetails.gender}&mobilenumber=${
+        accountDetails.mobileNumber
+      }&emailId=${accountDetails.emailId}`;
+      if (otp) {
+        updateProfileUrl = `updateProfileUrl&otp=${otp}`;
+      }
+      const result = await api.post(updateProfileUrl);
       const resultJson = await result.json();
+      console.log(resultJson);
       if (
         resultJson.errors ||
         resultJson.status === FAILURE_UPPERCASE ||
         resultJson.status === FAILURE
       ) {
-        throw new Error(`${resultJson.errors[0].message}`);
+        throw new Error(`${resultJson.message}`);
       }
-      dispatch(sendInvoiceSuccess(resultJson));
+      if (resultJson.status === "OTP SENT TO MOBILE NUMBER: PLEASE VALIDATE") {
+        dispatch(showModal(UPDATE_PROFILE_OTP_VERIFICATION, accountDetails));
+      }
+      dispatch(updateProfileSuccess(resultJson));
     } catch (e) {
-      dispatch(sendInvoiceFailure(e.message));
+      console.log(e.message);
+      dispatch(updateProfileFailure(e.message));
     }
   };
 }

@@ -13,6 +13,7 @@ import {
   customerAccessToken
 } from "../../auth/actions/user.actions";
 import { SUCCESS } from "../../lib/constants";
+import { updateProfile } from "../../account/actions/account.actions.js";
 
 import {
   applyBankOffer,
@@ -104,6 +105,9 @@ const mapDispatchToProps = dispatch => {
     },
     getUserAddress: () => {
       dispatch(getUserAddress());
+    },
+    updateProfile: (accountDetails, otp) => {
+      dispatch(updateProfile(accountDetails, otp));
     }
   };
 };
