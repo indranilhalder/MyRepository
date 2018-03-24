@@ -827,8 +827,8 @@ export function generateCartIdForLoggedInUser() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
 
       return dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
@@ -942,6 +942,9 @@ export function getOrderSummary(pincode) {
 export function getCartId() {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  console.log("CUSTOMER COOKIE");
+  console.log(customerCookie);
+  console.log(userDetails);
 
   return async (dispatch, getState, { api }) => {
     dispatch(getCartIdRequest());
@@ -955,8 +958,10 @@ export function getCartId() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      console.log("GET CART ID");
+      console.log(resultJson);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
       return dispatch(getCartIdSuccess(resultJson));
     } catch (e) {

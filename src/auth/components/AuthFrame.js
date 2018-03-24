@@ -3,7 +3,7 @@ import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import tataLogo from "./img/tata_Logo.svg";
 import { default as styles } from "./AuthFrame.css";
-import SocialButtons from "./SocialButtons.js";
+import SocialButtonsContainer from "../containers/SocialButtonsContainer.js";
 
 export default class AuthFrame extends React.Component {
   render() {
@@ -17,7 +17,7 @@ export default class AuthFrame extends React.Component {
         {this.props.children}
         {this.props.showSocialButtons && (
           <div className={styles.socialButtons}>
-            <SocialButtons {...this.props} />
+            <SocialButtonsContainer />
           </div>
         )}
 
