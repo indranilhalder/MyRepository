@@ -7,6 +7,8 @@ import {
   socialMediaLogin,
   FACEBOOK_PLATFORM,
   SOCIAL_CHANNEL_FACEBOOK,
+  GOOGLE_PLUS_PLATFORM,
+  SOCIAL_CHANNEL_GOOGLE_PLUS,
   loginUser,
   loginUserRequest,
   customerAccessToken,
@@ -80,8 +82,66 @@ const mapDispatchToProps = dispatch => {
         }
       }
     },
-    googlePlusLogin: type => {
-      dispatch(googlePlusLogin(type));
+    googlePlusLogin: async isSignUp => {
+      const googlePlusResponse = await dispatch(googlePlusLogin(isSignUp));
+      if (googlePlusResponse.status && googlePlusResponse.status !== SUCCESS) {
+        return;
+      }
+      if (isSignUp) {
+        const signUpResponse = await dispatch(
+          socialMediaRegistration(
+            googlePlusResponse.emails[0].value,
+            googlePlusResponse.emails[0].value,
+            googlePlusResponse.id,
+            GOOGLE_PLUS_PLATFORM,
+            SOCIAL_CHANNEL_GOOGLE_PLUS
+          )
+        );
+
+        if (signUpResponse.status !== SUCCESS) {
+          // TODO toast
+          return;
+        }
+      }
+
+      const customerAccessTokenActionResponse = await dispatch(
+        generateCustomerLevelAccessTokenForSocialMedia(
+          googlePlusResponse.emails[0].value,
+          googlePlusResponse.id,
+          googlePlusResponse.accessToken,
+          GOOGLE_PLUS_PLATFORM,
+          SOCIAL_CHANNEL_GOOGLE_PLUS
+        )
+      );
+
+      if (customerAccessTokenActionResponse.status === SUCCESS) {
+        const loginUserResponse = await dispatch(
+          socialMediaLogin(
+            googlePlusResponse.emails[0].value,
+            GOOGLE_PLUS_PLATFORM,
+            customerAccessTokenActionResponse.customerAccessTokenDetails
+              .access_token
+          )
+        );
+
+        if (loginUserResponse.status === SUCCESS) {
+          const cartVal = await dispatch(getCartId());
+          if (
+            cartVal.status === SUCCESS &&
+            cartVal.cartDetails.guid &&
+            cartVal.cartDetails.code
+          ) {
+            dispatch(mergeCartId(cartVal.cartDetails.guid));
+          } else {
+            const createdCartVal = await dispatch(
+              generateCartIdForLoggedInUser()
+            );
+            if (isSignUp) {
+              dispatch(mergeCartId(createdCartVal.cartDetails.guid));
+            }
+          }
+        }
+      }
     }
   };
 };
