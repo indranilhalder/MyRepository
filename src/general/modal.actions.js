@@ -11,6 +11,7 @@ export const ADDRESS = "Address";
 export const EMI_MODAL = "EmiModal";
 export const BANK_OFFERS = "BankOffers";
 export const OTP_LOGIN_MODAL = "OtpLoginModal";
+export const UPDATE_REFUND_DETAILS_POPUP = "UpdateRefundDetailsPopup";
 
 export function showModal(type, ownProps) {
   return {

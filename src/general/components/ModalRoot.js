@@ -10,6 +10,7 @@ import SizeGuideModal from "../../pdp/components/SizeGuideModal";
 import EmiModal from "../../pdp/containers/EmiListContainer";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
 import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
+import UpdateRefundDetailsPopup from "../../account/components/UpdateRefundDetailsPopup.js";
 
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
@@ -34,7 +35,11 @@ export default class ModalRoot extends React.Component {
       this.props.hideModal();
     }
   }
-
+  onUpdate(val) {
+    if (this.props.onUpdate) {
+      this.props.onUpdate(val);
+    }
+  }
   submitOtp(otpDetails) {
     this.props.otpVerification(otpDetails, this.props.ownProps);
     this.props.hideModal();
@@ -94,6 +99,12 @@ export default class ModalRoot extends React.Component {
         <OtpVerification
           closeModal={() => this.handleClose()}
           submitOtp={otpDetails => this.submitOtpForgotPassword(otpDetails)}
+        />
+      ),
+      UpdateRefundDetailsPopup: (
+        <UpdateRefundDetailsPopup
+          closeModal={() => this.handleClose()}
+          onUpdate={val => this.onUpdate(val)}
         />
       ),
       Sort: <Sort />,
