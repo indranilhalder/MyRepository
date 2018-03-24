@@ -33,7 +33,12 @@ const mapDispatchToProps = dispatch => {
             SOCIAL_CHANNEL_FACEBOOK
           )
         );
-      } // TODO deal with error
+
+        if (signUpResponse.status !== SUCCESS) {
+          //TODO dispatch toast here.
+          return;
+        }
+      }
 
       const customerAccessTokenActionResponse = await dispatch(
         generateCustomerLevelAccessTokenForSocialMedia(
