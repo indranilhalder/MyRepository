@@ -64,7 +64,7 @@ export default class ReturnReasonAndModes extends React.Component {
     }
 
     const { pathname } = this.props.location;
-    console.log(this.props);
+
     const renderReasonForm = (
       <ReturnReasonForm
         returnProductDetails={this.props.returnProductDetails}

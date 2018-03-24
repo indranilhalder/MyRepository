@@ -41,7 +41,6 @@ export default class ReturnFlow extends React.Component {
   }
 
   onChangeReasonAndMode(val) {
-    console.log(val);
     this.setState(val);
   }
   navigateToShowInitiateReturn() {
@@ -55,8 +54,6 @@ export default class ReturnFlow extends React.Component {
     });
   }
   render() {
-    console.log(this.props);
-    console.log(this.state);
     const renderReasonAndMode = (
       <ReturnReasonAndModes
         {...this.state}

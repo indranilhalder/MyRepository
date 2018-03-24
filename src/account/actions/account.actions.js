@@ -354,7 +354,6 @@ export function returnInitialForQuickDropFailure(error) {
 }
 
 export function returnInitialForQuickDrop(productObj) {
-  console.log(productObj);
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -376,13 +375,12 @@ export function returnInitialForQuickDrop(productObj) {
       );
 
       const resultJson = await result.json();
-      console.log(resultJson);
+
       if (resultJson.errors) {
         throw new Error(resultJson.errors[0].message);
       }
       dispatch(returnInitialForQuickDropSuccess(resultJson));
     } catch (e) {
-      console.log(e.message);
       dispatch(returnInitialForQuickDropFailure(e.message));
     }
   };

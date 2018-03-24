@@ -27,9 +27,6 @@ import MobileFooter from "./general/components/MobileFooter.js";
 import MyAccountContainer from "./account/containers/MyAccountContainer";
 import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
 
-// importing all containers for the return flow
-import ReturnToStoreContainer from "./account/containers/ReturnToStoreContainer";
-
 import MyAccountBrandsContainer from "./account/containers/MyAccountBrandsContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";

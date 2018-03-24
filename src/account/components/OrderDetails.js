@@ -71,7 +71,6 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
-    console.log(this.props);
     return (
       <div className={styles.base}>
         {orderDetails &&
