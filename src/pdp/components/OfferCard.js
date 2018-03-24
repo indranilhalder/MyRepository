@@ -17,15 +17,17 @@ export default class OfferCard extends React.Component {
       <div className={styles.base}>
         <div className={styles.headingText}>
           {this.props.heading}
-          <div className={styles.iconHolder}>
-            <div className={styles.timer}>
-              {" "}
-              <TimerCounter endTime={this.props.endTime} />
+          {this.props.validTill && (
+            <div className={styles.iconHolder}>
+              <div className={styles.timer}>
+                {" "}
+                <TimerCounter endTime={this.props.endTime} />
+              </div>
+              <div className={styles.timerHolder}>
+                <Icon image={ClockImage} size={this.props.size} />
+              </div>
             </div>
-            <div className={styles.timerHolder}>
-              <Icon image={ClockImage} size={this.props.size} />
-            </div>
-          </div>
+          )}
         </div>
         <div
           className={styles.description}
