@@ -18,6 +18,7 @@ const typeComponentMapping = {
   "Watches":props =><PdpElectronics {...props} />,
   "FashionJewellery":props => <PdpJewellery {...props} />,
   "Clothing":props => <PdpApparel {...props} />,
+  "Footwear":props => <PdpApparel {...props} />,
   "HomeFurnishing":props => <PdpHome {...props} />
 };
 

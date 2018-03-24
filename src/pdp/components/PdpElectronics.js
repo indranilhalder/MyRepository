@@ -260,11 +260,12 @@ export default class PdpElectronics extends React.Component {
             </div>
           )}
 
-          {productData.productOfferPromotion && (
+          {productData.potentialPromotions && (
             <OfferCard
-              endTime={productData.productOfferPromotion[0].validTill.date}
-              heading={productData.productOfferPromotion[0].promotionTitle}
-              description={productData.productOfferPromotion[0].promotionDetail}
+              endTime={productData.potentialPromotions.endDate}
+              startDate={productData.potentialPromotions.startDate}
+              heading={productData.potentialPromotions.title}
+              description={productData.potentialPromotions.description}
               onClick={this.goToCouponPage}
             />
           )}
