@@ -44,6 +44,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.model.BuyAandBgetCModel;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.service.MplAwbStatusService;
+import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.xml.pojo.AWBStatusResponse;
 import com.tisl.mpl.xml.pojo.AWBStatusResponse.AWBResponseInfo;
 import com.tisl.mpl.xml.pojo.AWBStatusResponse.AWBResponseInfo.StatusRecords;
