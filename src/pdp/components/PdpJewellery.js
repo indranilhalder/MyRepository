@@ -1,24 +1,24 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
+import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import { Image } from "xelpmoc-core";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
+import PriceBreakUp from "./PriceBreakUp";
 import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
+
 import ProductDetails from "./ProductDetails";
-import ProductFeatures from "./ProductFeatures";
+import JewelleryClassification from "./JewelleryClassification";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
-import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
-import Logo from "../../general/components/Logo.js";
-import Carousel from "../../general/components/Carousel.js";
-import ProductModule from "../../general/components/ProductModule.js";
-import Button from "../../general/components/Button.js";
+import JewelleryCertification from "./JewelleryCertification.js";
+import { HashLink as Link } from "react-router-hash-link";
 import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
 import PDPRecommendedSections from "./PDPRecommendedSections.js";
@@ -41,7 +41,13 @@ import {
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
 const PRODUCT_QUANTITY = "1";
-export default class PdpElectronics extends React.Component {
+export default class PdpJewellery extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showPriceBreakUp: false
+    };
+  }
   visitBrand() {
     if (this.props.visitBrandStore) {
       this.props.visitBrandStore();
@@ -144,7 +150,9 @@ export default class PdpElectronics extends React.Component {
       );
     }
   };
-
+  showPriceBreakUp() {
+    this.setState({ showPriceBreakUp: true });
+  }
   showEmiModal = () => {
     const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -208,46 +216,33 @@ export default class PdpElectronics extends React.Component {
           addProductToWishList={() => this.addToWishList()}
           showPincodeModal={() => this.showPincodeModal()}
         >
-          <ProductGalleryMobile
-            paddingBottom={
-              productData.rootCategory === "Watches" ? "114" : "89.4"
-            }
-          >
+          <ProductGalleryMobile paddingBottom="114">
             {mobileGalleryImages.map((val, idx) => {
               return (
-                <Image
-                  image={val}
-                  key={idx}
-                  color={
-                    productData.rootCategory === "Watches"
-                      ? "#ffffff"
-                      : "#f5f5f5"
-                  }
-                  fit="contain"
-                />
+                <Image image={val} key={idx} color="#ffffff" fit="contain" />
               );
             })}
           </ProductGalleryMobile>
           <div className={styles.content}>
-            {productData.rootCategory !== "Watches" && (
-              <ProductDetailsMainCard
-                productName={productData.brandName}
-                productDescription={productData.productName}
-                price={productData.mrp}
-                discountPrice={productData.winningSellerMOP}
-                averageRating={productData.averageRating}
-              />
-            )}
-            {productData.rootCategory === "Watches" && (
-              <JewelleryDetailsAndLink
-                productName={productData.brandName}
-                productDescription={productData.productName}
-                price={productData.winningSellerMOP}
-                discountPrice={productData.mrp}
-                averageRating={productData.averageRating}
-                discount={productData.discount}
-              />
-            )}
+            {/* <ProductDetailsMainCard
+              productName={productData.brandName}
+              productDescription={productData.productName}
+              price={productData.mrp}
+              discountPrice={productData.winningSellerMOP}
+              averageRating={productData.averageRating}
+            /> */}
+            <JewelleryDetailsAndLink
+              productName={productData.brandName}
+              productDescription={productData.productName}
+              price={productData.mrp}
+              discountPrice={productData.winningSellerMOP}
+              discount={productData.discount}
+              hasPriceBreakUp={productData.priceBreakUpDetailsMap}
+              history={this.props.history}
+              showPriceBreakUp={() => {
+                this.showPriceBreakUp();
+              }}
+            />
           </div>
           {productData.isEMIEligible === "Y" && (
             <div className={styles.separator}>
@@ -285,8 +280,14 @@ export default class PdpElectronics extends React.Component {
                 data={productData.variantOptions.map(value => {
                   return value.sizelink;
                 })}
+                headerText="Select a variant"
               />
             </React.Fragment>
+          )}
+          {productData.certificationMapFrJwlry && (
+            <JewelleryCertification
+              certifications={productData.certificationMapFrJwlry}
+            />
           )}
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.pinCode ? (
@@ -315,11 +316,7 @@ please try another pincode">
               </PdpLink>
             </div>
           )}
-          {productData.details && (
-            <div className={styles.details}>
-              <ProductDetails data={productData.details} />
-            </div>
-          )}
+
           <div className={styles.separator}>
             <RatingAndTextLink
               onClick={this.goToReviewPage}
@@ -327,17 +324,25 @@ please try another pincode">
               numberOfReview={productData.numberOfReviews}
             />
           </div>
-          {productData.classifications && (
-            <div className={styles.details}>
-              <ProductFeatures features={productData.classifications} />
-            </div>
-          )}
+
+          <div className={styles.details} id="priceBreakup">
+            {productData.priceBreakUpDetailsMap && (
+              <PriceBreakUp
+                data={productData.priceBreakUpDetailsMap}
+                isOpen={this.state.showPriceBreakUp}
+              />
+            )}
+            {productData.fineJewelleryClassificationList && (
+              <JewelleryClassification
+                data={productData.fineJewelleryClassificationList}
+              />
+            )}
+          </div>
           {productData.APlusContent && (
             <AllDescription
               productContent={productData.APlusContent.productContent}
             />
           )}
-
           <PDPRecommendedSections
             msdItems={this.props.msdItems}
             productData={productData}

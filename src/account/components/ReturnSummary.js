@@ -1,12 +1,16 @@
 import React from "react";
 import ReturnsFrame from "./ReturnsFrame";
 import OrderCard from "./OrderCard";
+import PropTypes from "prop-types";
 import ReturnsToBank from "./ReturnsToBank";
 import OrderReturnAddressDetails from "./OrderReturnAddressDetails";
-import PropTypes from "prop-types";
-import styles from "./ReturnStoreConfirmation.css";
+import OrderReturnDateAndTimeDetails from "./OrderReturnDateAndTimeDetails";
+import styles from "./ReturnSummary.css";
 const data = {
   type: "returnRequestDTO",
+  addressType: "Home",
+  address1: "Lal Bahadur Shastri Marg, Chandan Nagar",
+  address2: "Chandanagar, Hooghly,WestBengal",
   orderProductWsDTO: [
     {
       USSID: "273570HMAIBSSZ06",
@@ -58,14 +62,37 @@ const data = {
   showReverseSealFrJwlry: "no"
 };
 
-export default class ReturnsStoreConfirmation extends React.Component {
+export default class ReturnSummary extends React.Component {
+  onContinue() {
+    if (this.props.onContinue) {
+      this.props.onContinue();
+    }
+  }
+  onChangeAddress() {
+    if (this.props.onChangeAddress) {
+      this.props.onChangeAddress();
+    }
+  }
   render() {
     return (
       <ReturnsFrame
-        headerText="Return to store"
-        onContinue={this.props.onContinue}
+        headerText="Return summary"
+        onContinue={() => this.onContinue()}
       >
-        <OrderReturnAddressDetails />
+        <div className={styles.card}>
+          <OrderReturnAddressDetails
+            addressType={data.addressType}
+            address={data.address1}
+            subAddress={data.address2}
+          />
+          <OrderReturnDateAndTimeDetails
+            date={data.date}
+            time={data.time}
+            underlineButtonLabel="change"
+            onCancel={() => this.onChangeAddress()}
+          />
+        </div>
+
         <div className={styles.card}>
           <OrderCard
             productImage={data.orderProductWsDTO[0].imageURL}
@@ -84,9 +111,13 @@ export default class ReturnsStoreConfirmation extends React.Component {
     );
   }
 }
-ReturnsStoreConfirmation.propTypes = {
+ReturnSummary.propTypes = {
+  onChangeAddress: PropTypes.func,
   onContinue: PropTypes.func,
   data: PropTypes.shape({
+    addressType: PropTypes.string,
+    address1: PropTypes.string,
+    address2: PropTypes.string,
     orderProductWsDTO: PropTypes.arrayOf([
       PropTypes.shape({
         imageURL: PropTypes.string,

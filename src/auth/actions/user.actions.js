@@ -91,8 +91,8 @@ const SCOPE = "https://www.googleapis.com/auth/plus.login email";
 const PLATFORM_NUMBER = "2";
 const CLIENT_ID = "gauravj@dewsolutions.in";
 const CUSTOMER_PROFILE_PATH = "v2/mpl/users";
-const FACEBOOK_PLATFORM = "facebook";
-const GOOGLE_PLUS_PLATFORM = "googleplus";
+export const FACEBOOK_PLATFORM = "facebook";
+export const GOOGLE_PLUS_PLATFORM = "googleplus";
 const FACEBOOK_SCOPE = "email,user_likes";
 const LOCALE = "en_US";
 const FACEBOOK_FIELDS = "name, email";
@@ -100,8 +100,8 @@ const MY_PROFILE = "me";
 const GOOGLE_PLUS = "plus";
 const GOOGLE_PLUS_VERSION = "v1";
 const FAILURE = "Failure";
-const SOCIAL_CHANNEL_GOOGLE_PLUS = "G";
-const SOCIAL_CHANNEL_FACEBOOK = "F";
+export const SOCIAL_CHANNEL_GOOGLE_PLUS = "G";
+export const SOCIAL_CHANNEL_FACEBOOK = "F";
 
 export function loginUserRequest() {
   return {
@@ -522,47 +522,36 @@ export function faceBookLoginFailure(error) {
   };
 }
 
-export function facebookLogin(type) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+export function facebookLogin(isSignUp) {
   return async dispatch => {
     try {
       dispatch(faceBookLoginRequest());
-      window.FB.login(
-        function(resp) {
-          if (resp.authResponse) {
-            window.FB.api(
-              `/${MY_PROFILE}`,
-              { locale: LOCALE, fields: FACEBOOK_FIELDS },
-              function(response) {
-                if (type === SOCIAL_SIGN_UP || !customerCookie) {
-                  dispatch(
-                    socialMediaRegistration(
-                      response.email,
-                      response.id,
-                      resp.authResponse.accessToken,
-                      FACEBOOK_PLATFORM,
-                      SOCIAL_CHANNEL_FACEBOOK
-                    )
-                  );
-                } else {
-                  dispatch(
-                    socialMediaLogin(
-                      response.email,
-                      FACEBOOK_PLATFORM,
-                      JSON.parse(customerCookie).access_token
-                    )
-                  );
-                }
-              }
-            );
-          } else {
-            console.log("User cancelled login or did not fully authorize.");
+      const authResponse = await new Promise((resolve, reject) => {
+        window.FB.login(
+          resp => {
+            if (resp.authResponse) {
+              resolve(resp);
+            } else {
+              console.log("User cancelled login or did not fully authorize.");
+            }
+          },
+          {
+            scope: FACEBOOK_SCOPE
           }
-        },
-        {
-          scope: FACEBOOK_SCOPE
-        }
-      );
+        );
+      });
+
+      const graphResponse = await new Promise((resolve, reject) => {
+        window.FB.api(
+          `/${MY_PROFILE}`,
+          { locale: LOCALE, fields: FACEBOOK_FIELDS },
+          response => {
+            resolve(response);
+          }
+        );
+      });
+
+      return { ...authResponse.authResponse, ...graphResponse };
     } catch (e) {
       dispatch(faceBookLoginFailure(e));
     }
@@ -585,49 +574,40 @@ export function googlePlusLoginFailure(error) {
 }
 
 export function googlePlusLogin(type) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async dispatch => {
     try {
       dispatch(googlePlusLoginRequest());
-      window.gapi.auth.signIn({
-        callback: function(authResponse) {
-          window.gapi.client.load(GOOGLE_PLUS, GOOGLE_PLUS_VERSION, function() {
-            var request = window.gapi.client.plus.people.get({
-              userId: MY_PROFILE
-            });
-            request.execute(function(resp) {
-              if (resp.emails) {
-                let emailAddress = resp.emails[0].value;
-                if (type === SOCIAL_SIGN_UP || !customerCookie) {
-                  dispatch(
-                    socialMediaRegistration(
-                      emailAddress,
-                      emailAddress,
-                      authResponse.id_token,
-                      GOOGLE_PLUS_PLATFORM,
-                      SOCIAL_CHANNEL_GOOGLE_PLUS
-                    )
-                  );
-                } else {
-                  dispatch(
-                    socialMediaLogin(
-                      emailAddress,
-                      GOOGLE_PLUS_PLATFORM,
-                      JSON.parse(customerCookie).access_token
-                    )
-                  );
-                }
+      let accessToken;
+      const googleResponse = await new Promise((resolve, reject) => {
+        window.gapi.auth.signIn({
+          callback: function(authResponse) {
+            window.gapi.client.load(
+              GOOGLE_PLUS,
+              GOOGLE_PLUS_VERSION,
+              function() {
+                var request = window.gapi.client.plus.people.get({
+                  userId: MY_PROFILE
+                });
+                request.execute(function(resp) {
+                  accessToken = authResponse.id_token;
+                  resolve(resp);
+                });
               }
-            });
-          });
-        },
-        clientid: config.google,
-        cookiepolicy: COOKIE_POLICY,
-        requestvisibleactions: REQUEST_VISIBLE_ACTIONS,
-        scope: SCOPE
+            );
+          },
+          clientid: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+          cookiepolicy: COOKIE_POLICY,
+          requestvisibleactions: REQUEST_VISIBLE_ACTIONS,
+          scope: SCOPE
+        });
       });
+      if (googleResponse.code > 400) {
+        throw new Error(`${googleResponse.message}`);
+      }
+
+      return { ...googleResponse, accessToken };
     } catch (e) {
-      dispatch(googlePlusLoginFailure(e));
+      return dispatch(googlePlusLoginFailure(e));
     }
   };
 }
@@ -661,13 +641,13 @@ export function generateCustomerLevelAccessTokenForSocialMedia(
         `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${userName}&social_token=${accessToken}&isSocialMedia=Y&social_channel=${socialChannel}&userId_param=${id}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
-      dispatch(socialMediaLogin(userName, platForm, resultJson.access_token));
-      dispatch(customerAccessTokenSuccess(resultJson));
+
+      return dispatch(customerAccessTokenSuccess(resultJson));
     } catch (e) {
-      dispatch(customerAccessTokenFailure(e.message));
+      return dispatch(customerAccessTokenFailure(e.message));
     }
   };
 }
@@ -684,6 +664,14 @@ export function socialMediaRegistrationFailure(error) {
     type: SOCIAL_MEDIA_REGISTRATION_FAILURE,
     status: ERROR,
     error
+  };
+}
+
+export function socialMediaRegistrationSuccess(user) {
+  return {
+    type: SOCIAL_MEDIA_REGISTRATION_SUCCESS,
+    status: SUCCESS,
+    user
   };
 }
 
@@ -704,20 +692,12 @@ export function socialMediaRegistration(
         }&emailId=${userName}&socialMedia=${platForm}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
       );
       const resultJson = await result.json();
-      dispatch(
-        generateCustomerLevelAccessTokenForSocialMedia(
-          userName,
-          id,
-          accessToken,
-          platForm,
-          socialChannel
-        )
-      );
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
+      return dispatch(socialMediaRegistrationSuccess(resultJson));
     } catch (e) {
-      dispatch(socialMediaRegistrationFailure(e.message));
+      return dispatch(socialMediaRegistrationFailure(e.message));
     }
   };
 }
@@ -745,20 +725,20 @@ export function socialMediaLoginFailure(error) {
   };
 }
 
-export function socialMediaLogin(userName, platform, CustomerAccessToken) {
+export function socialMediaLogin(userName, platform, customerAccessToken) {
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaLoginRequest());
     try {
       const result = await api.post(
-        `${SOCIAL_MEDIA_LOGIN_PATH}/${userName}/loginSocialUser?access_token=${CustomerAccessToken}&emailId=${userName}&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
+        `${SOCIAL_MEDIA_LOGIN_PATH}/${userName}/loginSocialUser?access_token=${customerAccessToken}&emailId=${userName}&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
-      dispatch(socialMediaLoginSuccess(resultJson));
+      return dispatch(socialMediaLoginSuccess(resultJson));
     } catch (e) {
-      dispatch(socialMediaLoginFailure(e.message));
+      return dispatch(socialMediaLoginFailure(e.message));
     }
   };
 }

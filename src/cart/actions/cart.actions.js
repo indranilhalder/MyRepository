@@ -827,8 +827,8 @@ export function generateCartIdForLoggedInUser() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
 
       return dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
@@ -955,8 +955,8 @@ export function getCartId() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
       return dispatch(getCartIdSuccess(resultJson));
     } catch (e) {

@@ -1,6 +1,7 @@
 import React from "react";
 import PdpElectronics from "./PdpElectronics";
 import PdpApparel from "./PdpApparel";
+import PdpJewellery from "./PdpJewellery";
 import PdpHome from "./PdpHome";
 import styles from "./ProductDescriptionPageWrapper.css";
 import ProductDescriptionPage from "./ProductDescriptionPage";
@@ -14,8 +15,10 @@ import {
 // prettier-ignore
 const typeComponentMapping = {
   "Electronics": props => <PdpElectronics {...props} />,
-  "FashionJewellery":props => <ProductDescriptionPage {...props} />,
+  "Watches":props =><PdpElectronics {...props} />,
+  "FashionJewellery":props => <PdpJewellery {...props} />,
   "Clothing":props => <PdpApparel {...props} />,
+  "Footwear":props => <PdpApparel {...props} />,
   "HomeFurnishing":props => <PdpHome {...props} />
 };
 

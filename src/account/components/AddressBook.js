@@ -59,15 +59,17 @@ export default class AddressBook extends React.Component {
             );
           })}
 
-        <div className={styles.button}>
-          <Button
-            type="hollow"
-            height={40}
-            label={ADDRESS_BOOK_HEADER}
-            width={200}
-            textStyle={{ color: "#212121", fontSize: 14 }}
-            onClick={() => this.setState({ addNewAddress: true })}
-          />
+        <div className={styles.buttonHolder}>
+          <div className={styles.button}>
+            <Button
+              type="hollow"
+              height={40}
+              label={ADDRESS_BOOK_HEADER}
+              width={200}
+              textStyle={{ color: "#212121", fontSize: 14 }}
+              onClick={() => this.setState({ addNewAddress: true })}
+            />
+          </div>
         </div>
       </div>
     );

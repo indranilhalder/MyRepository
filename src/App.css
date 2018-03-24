@@ -36,6 +36,10 @@ h3 {
 h4 {
   margin-top: 0;
 }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 .loadingIndicator {
   display: flex;
   align-items: center;
