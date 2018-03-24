@@ -13,6 +13,7 @@ import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
+import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import Logo from "../../general/components/Logo.js";
 import Carousel from "../../general/components/Carousel.js";
@@ -228,13 +229,25 @@ export default class PdpElectronics extends React.Component {
             })}
           </ProductGalleryMobile>
           <div className={styles.content}>
-            <ProductDetailsMainCard
-              productName={productData.brandName}
-              productDescription={productData.productName}
-              price={productData.mrp}
-              discountPrice={productData.winningSellerMOP}
-              averageRating={productData.averageRating}
-            />
+            {productData.rootCategory !== "Watches" && (
+              <ProductDetailsMainCard
+                productName={productData.brandName}
+                productDescription={productData.productName}
+                price={productData.mrp}
+                discountPrice={productData.winningSellerMOP}
+                averageRating={productData.averageRating}
+              />
+            )}
+            {productData.rootCategory === "Watches" && (
+              <JewelleryDetailsAndLink
+                productName={productData.brandName}
+                productDescription={productData.productName}
+                price={productData.mrp}
+                discountPrice={productData.winningSellerMOP}
+                averageRating={productData.averageRating}
+                discount={productData.discount}
+              />
+            )}
           </div>
           {productData.isEMIEligible === "Y" && (
             <div className={styles.separator}>
