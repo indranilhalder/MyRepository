@@ -218,7 +218,7 @@ export default class PdpApparel extends React.Component {
               <OfferCard
                 endTime={productData.potentialPromotions.endDate}
                 startDate={productData.potentialPromotions.startDate}
-                heading={productData.potentialPromotionst.title}
+                heading={productData.potentialPromotions.title}
                 description={productData.potentialPromotions.description}
                 onClick={this.goToCouponPage}
               />
