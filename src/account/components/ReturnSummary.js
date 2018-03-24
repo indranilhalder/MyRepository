@@ -73,21 +73,29 @@ export default class ReturnSummary extends React.Component {
       this.props.onChangeAddress();
     }
   }
+  handleCancel() {
+    if (this.props.onCancel) {
+      this.props.onCancel();
+    }
+  }
   render() {
     return (
       <ReturnsFrame
         headerText="Return summary"
         onContinue={() => this.onContinue()}
+        onCancel={() => this.handleCancel()}
       >
         <div className={styles.card}>
           <OrderReturnAddressDetails
-            addressType={data.addressType}
-            address={data.address1}
-            subAddress={data.address2}
+            addressType={this.props.selectedAddress.addressType}
+            address={this.props.selectedAddress.formattedAddress}
+            subAddress={`${this.props.selectedAddress.state} ${
+              this.props.selectedAddress.city
+            } ${this.props.selectedAddress.postalCode}`}
           />
           <OrderReturnDateAndTimeDetails
-            date={data.date}
-            time={data.time}
+            date={this.props.dateSelected}
+            time={this.props.timeSelected}
             underlineButtonLabel="change"
             onCancel={() => this.onChangeAddress()}
           />

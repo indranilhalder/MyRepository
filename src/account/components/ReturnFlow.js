@@ -2,6 +2,8 @@ import React from "react";
 import cloneDeep from "lodash/cloneDeep";
 import { Route } from "react-router-dom";
 import ReturnReasonForm from "./ReturnReasonForm.js";
+import ReturnCliqAndPiqContainer from "../containers/ReturnCliqAndPiqContainer.js";
+
 import ReturnModes from "./ReturnModes.js";
 import ReturnToStoreContainer from "../containers/ReturnToStoreContainer";
 import ReturnBankForm from "./ReturnBankForm";
@@ -15,7 +17,8 @@ import {
   RETURNS_STORE_FINAL,
   RETURN_TO_STORE,
   RETURN_LANDING,
-  RETURNS_PREFIX
+  RETURNS_PREFIX,
+  RETURN_CLIQ_PIQ
 } from "../../lib/constants";
 
 export default class ReturnFlow extends React.Component {
@@ -66,6 +69,17 @@ export default class ReturnFlow extends React.Component {
           path={`${RETURNS}${RETURN_TO_STORE}`}
           render={() => <ReturnToStoreContainer {...this.state} />}
         />
+        <Route
+          exact
+          path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_FINAL}`}
+          component={ReturnReasonForm}
+        />
+
+        <Route
+          path={`${RETURNS}${RETURN_CLIQ_PIQ}`}
+          component={ReturnCliqAndPiqContainer}
+        />
+        {/* end of need to call return bia store pick up  routes */}
       </React.Fragment>
     );
   }

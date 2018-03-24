@@ -76,6 +76,16 @@ export const GET_FOLLOWED_BRANDS_FAILURE = "GET_FOLLOWED_BRANDS_FAILURE";
 export const QUICK_DROP_STORE_REQUEST = "QUICK_DROP_STORE_REQUEST";
 export const QUICK_DROP_STORE_SUCCESS = "QUICK_DROP_STORE_SUCCESS";
 export const QUICK_DROP_STORE_FAILURE = "QUICK_DROP_STORE_FAILURE";
+export const NEW_RETURN_INITIATE_CLIQ_PIQ_REQUEST =
+  "NEW_RETURN_INITIATE_CLIQ_PIQ_REQUEST";
+export const NEW_RETURN_INITIATE_CLIQ_PIQ_SUCCESS =
+  "NEW_RETURN_INITIATE_CLIQ_PIQ_SUCCESS";
+export const NEW_RETURN_INITIATE_CLIQ_PIQ_FAILURE =
+  "NEW_RETURN_INITIATE_CLIQ_PIQ_FAILURE";
+
+export const RETURN_PIN_CODE_REQUEST = "RETURN_PIN_CODE_REQUEST";
+export const RETURN_PIN_CODE_SUCCESS = "RETURN_PIN_CODE_SUCCESS";
+export const RETURN_PIN_CODE_FAILURE = "RETURN_PIN_CODE_FAILURE";
 
 export const FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_REQUEST =
   "FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_REQUEST";
@@ -205,6 +215,7 @@ export function getReturnRequest(orderCode, transactionId) {
       );
 
       const resultJson = await result.json();
+
       if (resultJson.errors) {
         throw new Error(resultJson.errors[0].message);
       }
@@ -215,13 +226,117 @@ export function getReturnRequest(orderCode, transactionId) {
   };
 }
 
+export function newReturnInitiateForCliqAndPiqRequest() {
+  return {
+    type: NEW_RETURN_INITIATE_CLIQ_PIQ_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function newReturnInitiateForCliqAndPiqSuccess(returnDetails) {
+  return {
+    type: NEW_RETURN_INITIATE_CLIQ_PIQ_SUCCESS,
+    returnDetails,
+    status: SUCCESS
+  };
+}
+
+export function newReturnInitiateForCliqAndPiqFailure(error) {
+  return {
+    type: NEW_RETURN_INITIATE_CLIQ_PIQ_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function newReturnInitiateForCliqAndPiq(returnDetails) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(newReturnInitiateForCliqAndPiqRequest());
+
+    try {
+      const result = await api.post(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/newReturnInitiate?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&channel=mobile`,
+        returnDetails
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(resultJson.errors[0].message);
+      }
+
+      dispatch(newReturnInitiateForCliqAndPiqSuccess(resultJson));
+    } catch (e) {
+      dispatch(newReturnInitiateForCliqAndPiqFailure(e.message));
+    }
+  };
+}
+
+export function returnPInCodeRequest() {
+  return {
+    type: RETURN_PIN_CODE_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function returnPInCodeSuccess(pinCodeDetails) {
+  return {
+    type: RETURN_PIN_CODE_SUCCESS,
+    pinCodeDetails,
+    status: SUCCESS
+  };
+}
+
+export function returnPinCodeFailure(error) {
+  return {
+    type: RETURN_PIN_CODE_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function returnPinCode(productDetails) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(returnPInCodeRequest());
+
+    try {
+      const result = await api.post(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/returnPincode?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&&orderCode=${productDetails.orderCode}&pincode=${
+          productDetails.pinCode
+        }&transactionId=${productDetails.transactionId}`
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(
+          resultJson.returnLogisticsResponseDTO[0].responseMessage
+        );
+      }
+
+      dispatch(returnPInCodeSuccess(resultJson));
+    } catch (e) {
+      dispatch(returnPinCodeFailure(e.message));
+    }
+  };
+}
+
 export function returnInitialForQuickDropRequest() {
   return {
     type: RETURN_INITIAL_REQUEST,
     status: REQUESTING
   };
 }
-
 export function returnInitialForQuickDropSuccess(returnRequest) {
   return {
     type: RETURN_INITIAL_SUCCESS,
