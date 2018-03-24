@@ -192,10 +192,14 @@ export default class ReturnAddressList extends React.Component {
   };
 
   newReturnInitiate = () => {
+    let isCodOrder = "N";
+    if (this.props.returnRequest.codSelfShipData.paymentMode === "COD") {
+      isCodOrder = "Y";
+    }
     let returnCliqAndPiqObject = {};
     returnCliqAndPiqObject.returnReasonCode = "01";
     returnCliqAndPiqObject.refundType = "R";
-    returnCliqAndPiqObject.isCODorder = "N";
+    returnCliqAndPiqObject.isCODorder = isCodOrder;
     returnCliqAndPiqObject.orderCode = this.props.returnProducts.orderProductWsDTO[0].sellerorderno;
     returnCliqAndPiqObject.transactionId = this.props.returnProducts.orderProductWsDTO[0].transactionId;
     returnCliqAndPiqObject.ussid = this.props.returnProducts.orderProductWsDTO[0].USSID;
