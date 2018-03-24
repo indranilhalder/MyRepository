@@ -33,7 +33,8 @@ const mapDispatchToProps = dispatch => {
             SOCIAL_CHANNEL_FACEBOOK
           )
         );
-      }
+      } // TODO deal with error
+
       const customerAccessTokenActionResponse = await dispatch(
         generateCustomerLevelAccessTokenForSocialMedia(
           facebookResponse.email,
@@ -55,19 +56,13 @@ const mapDispatchToProps = dispatch => {
           )
         );
 
-        console.log("LOGIN USER RESPONSE");
-        console.log(loginUserResponse);
-
         if (loginUserResponse.status === SUCCESS) {
           const cartVal = await dispatch(getCartId());
-          console.log("CART VAL");
-          console.log(cartVal);
           if (
             cartVal.status === SUCCESS &&
             cartVal.cartDetails.guid &&
             cartVal.cartDetails.code
           ) {
-            console.log("MERGE CART ID IF");
             dispatch(mergeCartId(cartVal.cartDetails.guid));
           } else {
             const createdCartVal = await dispatch(

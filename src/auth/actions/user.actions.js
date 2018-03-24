@@ -529,8 +529,6 @@ export function facebookLogin(isSignUp) {
       const authResponse = await new Promise((resolve, reject) => {
         window.FB.login(
           resp => {
-            console.log("LOGIN");
-            console.log(resp);
             if (resp.authResponse) {
               resolve(resp);
             } else {
@@ -543,9 +541,6 @@ export function facebookLogin(isSignUp) {
         );
       });
 
-      console.log("AUTH RESPONSE");
-      console.log(authResponse);
-
       const graphResponse = await new Promise((resolve, reject) => {
         window.FB.api(
           `/${MY_PROFILE}`,
@@ -555,9 +550,6 @@ export function facebookLogin(isSignUp) {
           }
         );
       });
-
-      console.log("GRAPH RESPONSE");
-      console.log(graphResponse);
 
       return { ...authResponse.authResponse, ...graphResponse };
     } catch (e) {
@@ -692,8 +684,6 @@ export function socialMediaRegistrationSuccess(user) {
   };
 }
 
-// export function socialMediaRegistrationSuccess()
-
 export function socialMediaRegistration(
   userName,
   id,
@@ -755,8 +745,6 @@ export function socialMediaLogin(userName, platform, customerAccessToken) {
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
-      console.log("SOCIAL MEDIA LOGIN");
-      console.log(resultJson);
       return dispatch(socialMediaLoginSuccess(resultJson));
     } catch (e) {
       return dispatch(socialMediaLoginFailure(e.message));
