@@ -37,6 +37,8 @@ export const GET_USER_ADDRESS_FAILURE = "GET_USER_ADDRESS_FAILURE";
 
 export const ADD_USER_ADDRESS_REQUEST = "ADD_USER_ADDRESS_REQUEST";
 export const ADD_USER_ADDRESS_SUCCESS = "ADD_USER_ADDRESS_SUCCESS";
+export const ADD_NEW_ADDRESS_FOR_USER_ADDRESS_SUCCESS =
+  "ADD_NEW_ADDRESS_FOR_USER_ADDRESS_SUCCESS";
 export const ADD_USER_ADDRESS_FAILURE = "ADD_USER_ADDRESS_FAILURE";
 
 export const ADD_ADDRESS_TO_CART_REQUEST = "ADD_ADDRESS_TO_CART_REQUEST";
@@ -552,6 +554,13 @@ export function addUserAddressSuccess(userAddress) {
   };
 }
 
+export function addNewAddressForUserSuccess(userAddress) {
+  return {
+    type: ADD_NEW_ADDRESS_FOR_USER_ADDRESS_SUCCESS,
+    status: SUCCESS
+  };
+}
+
 export function addUserAddressFailure(error) {
   return {
     type: ADD_USER_ADDRESS_FAILURE,
@@ -560,7 +569,7 @@ export function addUserAddressFailure(error) {
   };
 }
 
-export function addUserAddress(userAddress) {
+export function addUserAddress(userAddress, fromAccount) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
 

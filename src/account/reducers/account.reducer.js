@@ -49,14 +49,18 @@ const account = (
     removeAddressStatus: null,
     removeAddressError: null,
 
-    returnProductDetails: null,
+    returnProducts: null,
 
     returnRequest: null,
 
     followedBrands: null,
     followedBrandsStatus: null,
     followedBrandsError: null,
-    loadingForFollowedBrands: false
+    loadingForFollowedBrands: false,
+
+    returnPinCodeStatus: null,
+    returnPinCodeValues: null,
+    returnPinCodeFailure: null
   },
   action
 ) => {
@@ -83,7 +87,7 @@ const account = (
       return Object.assign({}, state, {
         loading: false,
         status: action.state,
-        returnProductDetails: action.returnProductDetails
+        returnProducts: action.productDetails
       });
     case accountActions.RETURN_PRODUCT_DETAILS_FAILURE:
       return Object.assign({}, state, {
@@ -321,6 +325,44 @@ const account = (
       return Object.assign({}, state, {
         removeAddressStatus: action.status,
         removeAddressError: action.error,
+        loading: false
+      });
+
+    case accountActions.NEW_RETURN_INITIATE_CLIQ_PIQ_REQUEST:
+      return Object.assign({}, state, {
+        returnCliqPiqStatus: action.status,
+        loading: true
+      });
+    case accountActions.NEW_RETURN_INITIATE_CLIQ_PIQ_SUCCESS:
+      return Object.assign({}, state, {
+        returnCliqPiqStatus: action.status,
+        returnCliqPiqDetails: action.returnDetails,
+        loading: false
+      });
+
+    case accountActions.NEW_RETURN_INITIATE_CLIQ_PIQ_FAILURE:
+      return Object.assign({}, state, {
+        returnCliqPiqStatus: action.status,
+        returnCliqPiqError: action.error,
+        loading: false
+      });
+
+    case accountActions.RETURN_PIN_CODE_REQUEST:
+      return Object.assign({}, state, {
+        returnPinCodeStatus: action.status,
+        loading: true
+      });
+    case accountActions.RETURN_PIN_CODE_SUCCESS:
+      return Object.assign({}, state, {
+        returnPinCodeStatus: action.status,
+        returnPinCodeValues: action.returnDetails,
+        loading: false
+      });
+
+    case accountActions.RETURN_PIN_CODE_FAILURE:
+      return Object.assign({}, state, {
+        returnPinCodeStatus: action.status,
+        returnPinCodeFailure: action.error,
         loading: false
       });
 

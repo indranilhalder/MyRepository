@@ -1,6 +1,8 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import ReturnReasonForm from "./ReturnReasonForm.js";
+import ReturnCliqAndPiqContainer from "../containers/ReturnCliqAndPiqContainer.js";
+
 import ReturnModes from "./ReturnModes.js";
 import {
   RETURNS,
@@ -9,7 +11,8 @@ import {
   RETURNS_STORE_MAP,
   RETURNS_STORE_BANK_FORM,
   RETURNS_STORE_FINAL,
-  RETURN_TO_STORE
+  RETURN_TO_STORE,
+  RETURN_CLIQ_PIQ
 } from "../../lib/constants";
 export default class ReturnFlow extends React.Component {
   componentDidMount() {
@@ -63,6 +66,16 @@ export default class ReturnFlow extends React.Component {
           exact
           path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_FINAL}`}
           component={ReturnReasonForm}
+        />
+        <Route
+          exact
+          path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_FINAL}`}
+          component={ReturnReasonForm}
+        />
+
+        <Route
+          path={`${RETURNS}${RETURN_CLIQ_PIQ}`}
+          component={ReturnCliqAndPiqContainer}
         />
         {/* end of need to call return bia store pick up  routes */}
       </React.Fragment>
