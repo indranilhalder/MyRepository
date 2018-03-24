@@ -13,11 +13,13 @@ export default class OfferCard extends React.Component {
     }
   }
   render() {
+    console.log("END TIME");
+    console.log(this.props.endTime);
     return (
       <div className={styles.base}>
         <div className={styles.headingText}>
           {this.props.heading}
-          {this.props.validTill && (
+          {this.props.endTime && (
             <div className={styles.iconHolder}>
               <div className={styles.timer}>
                 {" "}
