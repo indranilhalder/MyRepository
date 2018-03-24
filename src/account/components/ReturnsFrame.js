@@ -35,7 +35,7 @@ export default class ReturnsFrame extends React.Component {
                 width={175}
                 type="primary"
                 label={this.props.buttonText}
-                onClick={this.handleContinue()}
+                onClick={() => this.handleContinue()}
               />
             </div>
           </div>

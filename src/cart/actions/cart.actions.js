@@ -2026,6 +2026,7 @@ export function jusPayPaymentMethodTypeRequest() {
 }
 
 export function jusPayPaymentMethodTypeSuccess(justPayPaymentDetails) {
+  // Here we need to dispatch an action to cre
   return {
     type: JUS_PAY_PAYMENT_METHOD_TYPE_SUCCESS,
     status: SUCCESS,
@@ -2080,7 +2081,12 @@ export function jusPayPaymentMethodType(
       if (resultJson.status === FAILURE) {
         throw new Error(resultJson.error_message);
       }
+
+      // so this happens
+      // here I need to dispatch an action to get a new cart
+      // that cart will be for a logged in user.
       dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+      dispatch(generateCartIdForLoggedInUser());
     } catch (e) {
       dispatch(jusPayPaymentMethodTypeFailure(e.message));
     }
@@ -2107,6 +2113,7 @@ export function jusPayPaymentMethodTypeForSavedCards(
         throw new Error(resultJson.error_message);
       }
       dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+      dispatch(generateCartIdForLoggedInUser());
     } catch (e) {
       dispatch(jusPayPaymentMethodTypeFailure(e.message));
     }
@@ -2128,6 +2135,7 @@ export function jusPayPaymentMethodTypeForNetBanking(juspayOrderId, bankName) {
         throw new Error(resultJson.error_message);
       }
       dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+      dispatch(generateCartIdForLoggedInUser());
     } catch (e) {
       dispatch(jusPayPaymentMethodTypeFailure(e.message));
     }
