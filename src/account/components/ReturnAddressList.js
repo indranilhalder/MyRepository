@@ -238,12 +238,7 @@ export default class ReturnAddressList extends React.Component {
     this.props.history.goBack();
   };
   render() {
-    if (this.props.returnProductDetails) {
-      console.log(this.props.returnProducts);
-    }
-
     const { pathname } = this.props.location;
-
     return (
       <div>
         <React.Fragment>
