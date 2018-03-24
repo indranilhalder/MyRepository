@@ -16,10 +16,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    returnRequest: state.profile.returnRequest,
-    returnProductDetails: state.profile.returnProductDetails
+    ...ownProps
   };
 };
 

@@ -9,6 +9,7 @@ import styles from "./ReturnReasonForm.css";
 export default class ReturnReasonForm extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       displaySecondary: false,
       secondaryReasons: null,
@@ -48,7 +49,9 @@ export default class ReturnReasonForm extends React.Component {
     }
   }
   render() {
+    console.log(this.props);
     const data = this.props.returnProductDetails;
+    console.log(data);
     return (
       <div className={styles.base}>
         <div className={styles.header}>

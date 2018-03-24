@@ -20,8 +20,9 @@ const REG_X_FOR_STORE_PICKUP = /storePick/i;
 const REG_X_FOR_BANKING_FORM = /bankDetail/i;
 const REG_X_FOR_FINAL_SUBMIT = /submit/i;
 export default class ReturnToStore extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.orderCode = props.location.pathname.split("/")[2];
     this.state = {
       currentActive: 0,
       storeId: null
@@ -33,7 +34,9 @@ export default class ReturnToStore extends React.Component {
   setStore(storeId) {
     this.setState({ storeId }, () => {
       this.props.history.push({
-        pathname: `${RETURNS_PREFIX}/3435345${RETURN_TO_STORE}${RETURNS_STORE_BANK_FORM}`,
+        pathname: `${RETURNS_PREFIX}/${
+          this.orderCode
+        }${RETURN_TO_STORE}${RETURNS_STORE_FINAL}`,
         state: {
           isRequestFromFlow: true
         }
@@ -43,21 +46,13 @@ export default class ReturnToStore extends React.Component {
   // i am using this function becasue of on pincide section i don't have any
   // update button we ll change this function when we ll have update button
   getLocation() {
-    if (this.state.pincode) {
+    if (this.state.pincode && this.state.pincode.length === 6) {
       const ussId = this.props.returnProductDetails.orderProductWsDTO[0].USSID;
 
       this.props.quickDropStore(this.state.pincode, ussId);
     }
   }
-  navigateToShowInitiateReturn() {
-    console.log(this.props);
-    this.props.history.push({
-      pathname: `${RETURNS_PREFIX}/3435345${RETURN_TO_STORE}${RETURNS_STORE_FINAL}`,
-      state: {
-        isRequestFromFlow: true
-      }
-    });
-  }
+
   navigateToFinalSubmit() {
     // submit form here
     const product = this.props.returnProductDetails.orderProductWsDTO[0];
@@ -118,21 +113,17 @@ export default class ReturnToStore extends React.Component {
         getLocation={() => this.getLocation()}
       />
     );
-    const renderBankingForm = (
-      <ReturnBankForm
-        onChange={data => this.onChangeBankDetail(data)}
-        onContinue={() => this.navigateToShowInitiateReturn()}
-      />
-    );
+
     const renderFinalSubmit = (
       <ReturnStoreConfirmation
+        {...this.props}
         onContinue={() => this.navigateToFinalSubmit()}
       />
     );
     return (
       <div className={styles.base}>
         {pathname.match(REG_X_FOR_STORE_PICKUP) && renderStoresMap}
-        {pathname.match(REG_X_FOR_BANKING_FORM) && renderBankingForm}
+
         {pathname.match(REG_X_FOR_FINAL_SUBMIT) && renderFinalSubmit}
       </div>
     );

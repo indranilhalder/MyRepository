@@ -9,7 +9,10 @@ import {
   RETURNS_REASON,
   QUICK_DROP,
   RETURN_TO_STORE,
-  RETURNS_STORE_MAP
+  RETURNS_STORE_MAP,
+  RETURN_CLIQ_PIQ,
+  SCHEDULED_PICKUP,
+  RETURN_CLIQ_PIQ_ADDRESS
 } from "../../lib/constants";
 const REG_X_FOR_REASON = /reason/i;
 const REG_X_FOR_MODES = /modes/i;
@@ -19,31 +22,36 @@ export default class ReturnReasonAndModes extends React.Component {
   constructor(props) {
     super();
     this.orderCode = props.location.pathname.split("/")[2];
-    this.state = {
-      reason: null
-    };
   }
   renderLoader() {
     return <MDSpinner />;
   }
   onChange(val) {
-    this.setState(val);
+    if (this.props.onChange) {
+      this.props.onChange(val);
+    }
   }
   renderToModes(data) {
-    // may be we have to hit any api for setting reason here
-    this.setState({
-      comment: data.comment,
-      reasonCode: data.secondaryReasons
-    });
+    this.props.onChange({ data });
     this.props.history.push(
       `${RETURNS_PREFIX}/${this.orderCode}${RETURN_LANDING}${RETURNS_MODES}`
     );
   }
   onSelectMode(mode) {
-    console.log(this.state);
     if (mode === QUICK_DROP) {
       this.props.history.push({
-        pathname: `${RETURNS_PREFIX}/${ORDER_ID}${RETURN_TO_STORE}${RETURNS_STORE_MAP}`,
+        pathname: `${RETURNS_PREFIX}/${
+          this.orderCode
+        }${RETURN_TO_STORE}${RETURNS_STORE_MAP}`,
+        state: {
+          isRequestFromFlow: true
+        }
+      });
+    } else if (mode === SCHEDULED_PICKUP) {
+      this.props.history.push({
+        pathname: `${RETURNS_PREFIX}/${
+          this.orderCode
+        }${RETURN_CLIQ_PIQ}${RETURN_CLIQ_PIQ_ADDRESS}`,
         state: {
           isRequestFromFlow: true
         }
@@ -54,9 +62,9 @@ export default class ReturnReasonAndModes extends React.Component {
     if (!this.props.returnRequest || !this.props.returnProductDetails) {
       return this.renderLoader();
     }
-    console.log(this.props);
+
     const { pathname } = this.props.location;
-    console.log(pathname);
+    console.log(this.props);
     const renderReasonForm = (
       <ReturnReasonForm
         returnProductDetails={this.props.returnProductDetails}

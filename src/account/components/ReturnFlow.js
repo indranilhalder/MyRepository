@@ -1,7 +1,6 @@
 import React from "react";
 import cloneDeep from "lodash/cloneDeep";
 import { Route } from "react-router-dom";
-import ReturnReasonForm from "./ReturnReasonForm.js";
 import ReturnCliqAndPiqContainer from "../containers/ReturnCliqAndPiqContainer.js";
 
 import ReturnModes from "./ReturnModes.js";
@@ -40,7 +39,9 @@ export default class ReturnFlow extends React.Component {
     Object.assign(bankDetail, val);
     this.setState({ bankDetail });
   }
+
   onChangeReasonAndMode(val) {
+    console.log(val);
     this.setState(val);
   }
   navigateToShowInitiateReturn() {
@@ -54,6 +55,8 @@ export default class ReturnFlow extends React.Component {
     });
   }
   render() {
+    console.log(this.props);
+    console.log(this.state);
     const renderReasonAndMode = (
       <ReturnReasonAndModes
         {...this.state}
@@ -80,12 +83,9 @@ export default class ReturnFlow extends React.Component {
 
         <Route
           path={`${RETURNS}${RETURN_TO_STORE}`}
-          render={() => <ReturnToStoreContainer {...this.state} />}
-        />
-        <Route
-          exact
-          path={`${RETURNS}${RETURN_TO_STORE}${RETURNS_STORE_FINAL}`}
-          component={ReturnReasonForm}
+          render={() => (
+            <ReturnToStoreContainer {...this.state} {...this.props} />
+          )}
         />
 
         <Route

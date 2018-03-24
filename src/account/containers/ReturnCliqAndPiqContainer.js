@@ -29,12 +29,13 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
     returnRequest: state.profile.returnRequest,
     returnPinCodeStatus: state.profile.returnPinCodeStatus,
     returnProducts: state.profile.returnProducts,
-    AddUserAddressStatus: state.cart.AddUserAddressStatus
+    AddUserAddressStatus: state.cart.AddUserAddressStatus,
+    ...ownProps
   };
 };
 
