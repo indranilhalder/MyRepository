@@ -9,7 +9,8 @@ import {
   SOCIAL_CHANNEL_FACEBOOK,
   loginUser,
   loginUserRequest,
-  customerAccessToken
+  customerAccessToken,
+  socialMediaRegistration
 } from "../../auth/actions/user.actions";
 import {
   mergeCartId,
@@ -20,8 +21,19 @@ import { SUCCESS } from "../../lib/constants";
 
 const mapDispatchToProps = dispatch => {
   return {
-    facebookLogin: async type => {
-      const facebookResponse = await dispatch(facebookLogin(type));
+    facebookLogin: async isSignUp => {
+      const facebookResponse = await dispatch(facebookLogin(isSignUp));
+      if (isSignUp) {
+        const signUpResponse = await dispatch(
+          socialMediaRegistration(
+            facebookResponse.email,
+            facebookResponse.id,
+            facebookResponse.accessToken,
+            FACEBOOK_PLATFORM,
+            SOCIAL_CHANNEL_FACEBOOK
+          )
+        );
+      }
       const customerAccessTokenActionResponse = await dispatch(
         generateCustomerLevelAccessTokenForSocialMedia(
           facebookResponse.email,
@@ -34,10 +46,6 @@ const mapDispatchToProps = dispatch => {
 
       // now I need to actually login
       if (customerAccessTokenActionResponse.status === SUCCESS) {
-        console.log(
-          customerAccessTokenActionResponse.customerAccessTokenDetails
-            .access_token
-        );
         const loginUserResponse = await dispatch(
           socialMediaLogin(
             facebookResponse.email,
@@ -62,8 +70,12 @@ const mapDispatchToProps = dispatch => {
             console.log("MERGE CART ID IF");
             dispatch(mergeCartId(cartVal.cartDetails.guid));
           } else {
-            console.log("GENERATE CART ID FOR LOGGED IN USER");
-            dispatch(generateCartIdForLoggedInUser());
+            const createdCartVal = await dispatch(
+              generateCartIdForLoggedInUser()
+            );
+            if (isSignUp) {
+              dispatch(mergeCartId(createdCartVal.cartDetails.guid));
+            }
           }
         }
       }
@@ -74,6 +86,14 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const SocialButtonsContainer = connect(null, mapDispatchToProps)(SocialButtons);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    signUp: ownProps.isSignUp
+  };
+};
+
+const SocialButtonsContainer = connect(mapStateToProps, mapDispatchToProps)(
+  SocialButtons
+);
 
 export default SocialButtonsContainer;

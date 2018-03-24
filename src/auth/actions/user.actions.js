@@ -522,13 +522,15 @@ export function faceBookLoginFailure(error) {
   };
 }
 
-export function facebookLogin() {
+export function facebookLogin(isSignUp) {
   return async dispatch => {
     try {
       dispatch(faceBookLoginRequest());
       const authResponse = await new Promise((resolve, reject) => {
         window.FB.login(
           resp => {
+            console.log("LOGIN");
+            console.log(resp);
             if (resp.authResponse) {
               resolve(resp);
             } else {
@@ -541,6 +543,9 @@ export function facebookLogin() {
         );
       });
 
+      console.log("AUTH RESPONSE");
+      console.log(authResponse);
+
       const graphResponse = await new Promise((resolve, reject) => {
         window.FB.api(
           `/${MY_PROFILE}`,
@@ -550,6 +555,9 @@ export function facebookLogin() {
           }
         );
       });
+
+      console.log("GRAPH RESPONSE");
+      console.log(graphResponse);
 
       return { ...authResponse.authResponse, ...graphResponse };
     } catch (e) {
@@ -650,8 +658,8 @@ export function generateCustomerLevelAccessTokenForSocialMedia(
         `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${userName}&social_token=${accessToken}&isSocialMedia=Y&social_channel=${socialChannel}&userId_param=${id}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
 
       return dispatch(customerAccessTokenSuccess(resultJson));
@@ -676,6 +684,16 @@ export function socialMediaRegistrationFailure(error) {
   };
 }
 
+export function socialMediaRegistrationSuccess(user) {
+  return {
+    type: SOCIAL_MEDIA_REGISTRATION_SUCCESS,
+    status: SUCCESS,
+    user
+  };
+}
+
+// export function socialMediaRegistrationSuccess()
+
 export function socialMediaRegistration(
   userName,
   id,
@@ -693,20 +711,12 @@ export function socialMediaRegistration(
         }&emailId=${userName}&socialMedia=${platForm}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
       );
       const resultJson = await result.json();
-      dispatch(
-        generateCustomerLevelAccessTokenForSocialMedia(
-          userName,
-          id,
-          accessToken,
-          platForm,
-          socialChannel
-        )
-      );
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
+      return dispatch(socialMediaRegistrationSuccess(resultJson));
     } catch (e) {
-      dispatch(socialMediaRegistrationFailure(e.message));
+      return dispatch(socialMediaRegistrationFailure(e.message));
     }
   };
 }

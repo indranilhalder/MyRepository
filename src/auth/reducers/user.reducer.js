@@ -278,14 +278,8 @@ const user = (
       });
 
     case userActions.SOCIAL_MEDIA_LOGIN_SUCCESS:
-      console.log("SOCIAL MEDIA LOGIN SUCCESS");
-      console.log(action.user);
-      console.log(action.user.customerInfo);
       userDetails.userName = action.user.customerInfo.emailId;
       userDetails.customerId = action.user.customerId;
-
-      console.log("USER DETAILS");
-      console.log(userDetails);
 
       Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(userDetails));
       return Object.assign({}, state, {
