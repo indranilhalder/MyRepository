@@ -9,6 +9,7 @@ export const SIZE_GUIDE = "SizeGuide";
 export const SORT = "Sort";
 export const ADDRESS = "Address";
 export const EMI_MODAL = "EmiModal";
+export const SIZE_SELECTOR = "SizeSelector";
 export const BANK_OFFERS = "BankOffers";
 export const OTP_LOGIN_MODAL = "OtpLoginModal";
 
