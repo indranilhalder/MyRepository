@@ -1,9 +1,9 @@
 .base {
   width: 100%;
   height: auto;
-  padding: 10px;
   background-color: #fff;
   display: inline-block;
+  border-radius: 4px;
 }
 .header {
   width: 100%;
