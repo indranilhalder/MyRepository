@@ -71,8 +71,9 @@ export const MY_ACCOUNT_CART_PAGE = "/cart";
 export const MY_ACCOUNT_CLIQ_CASH_PAGE = "/cliq-cash";
 
 //returns
-export const RETURN_PREFIX = "/returns";
+export const RETURNS_PREFIX = "/returns";
 export const RETURNS = "/returns/(.*)";
+export const RETURN_LANDING = "/initiate";
 export const RETURNS_REASON = "/reason";
 export const RETURNS_MODES = "/modes";
 
@@ -122,3 +123,7 @@ export const FOLLOW = "Follow";
 export const FOLLOWING = "Following";
 
 export const TRUE = "true";
+
+export const QUICK_DROP = "quickDrop";
+export const SCHEDULED_PICKUP = "schedulePickup";
+export const SELF_COURIER = "selfCourier";

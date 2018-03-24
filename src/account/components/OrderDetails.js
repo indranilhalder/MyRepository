@@ -16,7 +16,10 @@ import {
   ORDER_PREFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  LOGIN_PATH
+  LOGIN_PATH,
+  RETURNS_PREFIX,
+  RETURN_LANDING,
+  RETURNS_REASON
 } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_Returned = "Return Product";
@@ -28,10 +31,10 @@ export default class OrderDetails extends React.Component {
     }
   }
 
-  replaceItem() {
-    if (this.props.replaceItem) {
-      this.props.replaceItem();
-    }
+  replaceItem(orderId) {
+    this.props.history.push(
+      `${RETURNS_PREFIX}/${orderId}${RETURN_LANDING}${RETURNS_REASON}`
+    );
   }
   writeReview() {
     if (this.props.writeReview) {
@@ -60,6 +63,7 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
+
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -130,7 +134,7 @@ export default class OrderDetails extends React.Component {
                         : PRODUCT_Returned
                     }
                     isEditable={true}
-                    replaceItem={() => this.replaceItem()}
+                    replaceItem={() => this.replaceItem(orderDetails.orderId)}
                     writeReview={() => this.writeReview()}
                   />
                 </div>

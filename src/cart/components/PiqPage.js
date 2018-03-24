@@ -80,6 +80,8 @@ export default class PiqPage extends React.Component {
           <SearchLocationByPincode
             header={`${this.props.productName} ${this.props.productColour}`}
             pincode={this.props.pincode}
+            changePincode={pincode => this.props.changePincode(pincode)}
+            getLocation={() => this.props.getLocation()}
           />
         </div>
         <div className={styles.bannerMobileHolder}>

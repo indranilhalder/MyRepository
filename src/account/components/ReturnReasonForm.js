@@ -5,73 +5,23 @@ import TextArea from "../../general/components/TextArea";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
 import styles from "./ReturnReasonForm.css";
-const data = {
-  type: "returnRequestDTO",
-  orderProductWsDTO: [
-    {
-      USSID: "273570HMAIBSSZ06",
-      imageURL:
-        "//pcmuat2.tataunistore.com/images/97Wx144H/MP000000000113801_97Wx144H_20171102155229.jpeg",
-      price: "778.0",
-      productBrand: "Red Rose",
-      productColour: "Red",
-      productName: "Infants Boys Clothing Shirts",
-      productSize: "M",
-      productcode: "MP000000000113801",
-      sellerID: "273570",
-      sellerName: "Saravanan",
-      sellerorderno: "180314-000-111548",
-      transactionId: "273570000120027"
-    }
-  ],
-  returnModes: {
-    quickDrop: true,
-    schedulePickup: true,
-    selfCourier: false
-  },
-  returnReasonMap: [
-    {
-      parentReasonCode: "JEW100",
-      parentReturnReason: "Dummy reason 1",
-      subReasons: [
-        {
-          subReasonCode: "JEW1S1",
-          subReturnReason: "Sub reason 11"
-        },
-        {
-          subReasonCode: "JEW1S2",
-          subReturnReason: "Sub reason 12"
-        }
-      ]
-    },
-    {
-      parentReasonCode: "JEW200",
-      parentReturnReason: "Dummy reason 2",
-      subReasons: [
-        {
-          subReasonCode: "JEW2S2",
-          subReturnReason: "Sub reason 21"
-        }
-      ]
-    }
-  ],
-  showReverseSealFrJwlry: "no"
-};
 
 export default class ReturnReasonForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       displaySecondary: false,
-      secondaryReasons: null
+      secondaryReasons: null,
+      comment: null
     };
   }
   handleContinue() {
     if (this.props.onContinue) {
-      this.props.onContinue();
+      this.props.onContinue(this.state);
     }
   }
   onChangePrimary(code) {
+    const data = this.props.returnProductDetails;
     this.setState({
       secondaryReasons: data.returnReasonMap
         .filter(val => {
@@ -84,6 +34,9 @@ export default class ReturnReasonForm extends React.Component {
         })[0]
     });
   }
+  handleChange(val) {
+    this.setState({ comment: val });
+  }
   onChangeSecondary(code) {
     if (this.props.onChangeSecondary) {
       this.props.onChangeSecondary(code);
@@ -95,6 +48,7 @@ export default class ReturnReasonForm extends React.Component {
     }
   }
   render() {
+    const data = this.props.returnProductDetails;
     return (
       <div className={styles.base}>
         <div className={styles.header}>
@@ -143,7 +97,7 @@ export default class ReturnReasonForm extends React.Component {
             </div>
           )}
           <div className={styles.textArea}>
-            <TextArea onChange={val => this.handleChange()} />
+            <TextArea onChange={val => this.handleChange(val)} />
           </div>
         </div>
         <div className={styles.buttonHolder}>
@@ -152,7 +106,7 @@ export default class ReturnReasonForm extends React.Component {
               width={175}
               type="primary"
               label="Continue"
-              onClick={this.handleContinue()}
+              onClick={() => this.handleContinue()}
             />
           </div>
         </div>

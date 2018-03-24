@@ -1,4 +1,5 @@
 import * as accountActions from "../actions/account.actions";
+import cloneDeep from "lodash/cloneDeep";
 import * as cartActions from "../../cart/actions/cart.actions";
 import { SUCCESS } from "../../lib/constants";
 
@@ -59,6 +60,7 @@ const account = (
   },
   action
 ) => {
+  let currentReturnRequest;
   switch (action.type) {
     case accountActions.GET_RETURN_REQUEST:
     case accountActions.RETURN_PRODUCT_DETAILS_REQUEST:
@@ -79,12 +81,36 @@ const account = (
         error: action.error
       });
     case accountActions.RETURN_PRODUCT_DETAILS_SUCCESS:
+      console.log(action);
       return Object.assign({}, state, {
         loading: false,
         status: action.state,
         returnProductDetails: action.returnProductDetails
       });
     case accountActions.RETURN_PRODUCT_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.status
+      });
+
+    case accountActions.QUICK_DROP_STORE_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true,
+        error: action.error
+      });
+    case accountActions.QUICK_DROP_STORE_SUCCESS:
+      currentReturnRequest = cloneDeep(state.returnRequest);
+      Object.assign(currentReturnRequest, {
+        returnStoreDetailsList: action.addresses
+      });
+
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.state,
+        returnRequest: currentReturnRequest
+      });
+    case accountActions.QUICK_DROP_STORE_FAILURE:
       return Object.assign({}, state, {
         loading: false,
         status: action.status

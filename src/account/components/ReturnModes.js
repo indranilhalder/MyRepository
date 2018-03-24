@@ -4,9 +4,11 @@ import SelectReturnDate from "./SelectReturnDate";
 import ReturnsFrame from "./ReturnsFrame";
 import PropTypes from "prop-types";
 import styles from "./ReturnModes.css";
-const QUICK_DROP = "quickDrop";
-const SCHEDULED_PICKUP = "schedulePickup";
-const SELF_COURIER = "selfCourier";
+import {
+  QUICK_DROP,
+  SCHEDULED_PICKUP,
+  SELF_COURIER
+} from "../../lib/constants";
 const data = {
   type: "returnRequestDTO",
   orderProductWsDTO: [
@@ -71,6 +73,7 @@ export default class ReturnModes extends React.Component {
     }
   }
   render() {
+    const { productInfo } = this.props;
     return (
       <ReturnsFrame
         headerText="Select mode of return"
@@ -79,15 +82,13 @@ export default class ReturnModes extends React.Component {
         <div className={styles.content}>
           <div className={styles.card}>
             <OrderCard
-              productImage={data.orderProductWsDTO[0].imageURL}
-              productName={`${data.orderProductWsDTO[0].productBrand} ${
-                data.orderProductWsDTO[0].productName
-              }`}
-              price={data.orderProductWsDTO[0].price}
+              productImage={productInfo.product.imageURL}
+              productName={productInfo.product.name}
+              price={productInfo.totalPrice.value}
             >
-              {data.orderProductWsDTO[0].quantity && (
+              {productInfo.quantity && (
                 <div className={styles.quantity}>
-                  Qty {data.orderProductWsDTO[0].quantity}
+                  Qty {productInfo.quantity}
                 </div>
               )}
             </OrderCard>

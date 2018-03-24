@@ -37,15 +37,14 @@ export const RETURN_PRODUCT_DETAILS_REQUEST = "RETURN_PRODUCT_DETAILS_REQUEST";
 export const RETURN_PRODUCT_DETAILS_SUCCESS = "RETURN_PRODUCT_DETAILS_SUCCESS";
 export const RETURN_PRODUCT_DETAILS_FAILURE = "RETURN_PRODUCT_DETAILS_FAILURE";
 
+export const RETURN_INITIAL_REQUEST = "RETURN_INITIAL_REQUEST";
+export const RETURN_INITIAL_SUCCESS = "RETURN_INITIAL_SUCCESS";
+export const RETURN_INITIAL_FAILURE = "RETURN_INITIAL_FAILURE";
+
 export const GET_RETURN_REQUEST = "RETURN_REQEUEST";
 export const GET_RETURN_REQUEST_SUCCESS = "GET_RETURN_REQUEST_SUCCESS";
 export const GET_RETURN_REQUEST_FAILURE = "GET_RETURN_REQUEST_FAILURE";
 
-// //*
-//             1. /newProductReturnDetails
-//             2. /returnRequest
-
-// */
 export const FETCH_ORDER_DETAILS_REQUEST = "FETCH_ORDER_DETAILS_REQUEST";
 export const FETCH_ORDER_DETAILS_SUCCESS = "FETCH_ORDER_DETAILS_SUCCESS";
 export const FETCH_ORDER_DETAILS_FAILURE = "FETCH_ORDER_DETAILS_FAILURE";
@@ -73,6 +72,10 @@ export const GET_WISHLIST_FAILURE = "GET_WISHLIST_FAILURE";
 export const GET_FOLLOWED_BRANDS_REQUEST = "GET_FOLLOWED_BRANDS_REQUEST";
 export const GET_FOLLOWED_BRANDS_SUCCESS = "GET_FOLLOWED_BRANDS_SUCCESS";
 export const GET_FOLLOWED_BRANDS_FAILURE = "GET_FOLLOWED_BRANDS_FAILURE";
+
+export const QUICK_DROP_STORE_REQUEST = "QUICK_DROP_STORE_REQUEST";
+export const QUICK_DROP_STORE_SUCCESS = "QUICK_DROP_STORE_SUCCESS";
+export const QUICK_DROP_STORE_FAILURE = "QUICK_DROP_STORE_FAILURE";
 
 export const FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_REQUEST =
   "FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_REQUEST";
@@ -108,11 +111,11 @@ export function returnProductDetailsRequest() {
   };
 }
 
-export function returnProductDetailsSuccess(productDetails) {
+export function returnProductDetailsSuccess(returnProductDetails) {
   return {
     type: RETURN_PRODUCT_DETAILS_SUCCESS,
     status: SUCCESS,
-    productDetails
+    returnProductDetails
   };
 }
 
@@ -125,12 +128,11 @@ export function returnProductDetailsFailure(error) {
 }
 
 export function returnProductDetails() {
-  console.log("COmes in return");
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     let returnProductFormData = new FormData();
-    returnProductFormData.append("transactionId", "273570000120025");
+    returnProductFormData.append("transactionId", "273570000120027");
     returnProductFormData.append("returnCancelFlag", "R");
     returnProductFormData.append("orderCode", "180314-000-111548");
 
@@ -146,7 +148,6 @@ export function returnProductDetails() {
       );
 
       const resultJson = await result.json();
-      console.log(resultJson);
       if (
         resultJson.errors ||
         resultJson.status === FAILURE ||
@@ -210,6 +211,139 @@ export function getReturnRequest(orderCode, transactionId) {
       dispatch(getReturnRequestSuccess(resultJson));
     } catch (e) {
       dispatch(getReturnRequestFailure(e.message));
+    }
+  };
+}
+
+export function returnInitialForQuickDropRequest() {
+  return {
+    type: RETURN_INITIAL_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function returnInitialForQuickDropSuccess(returnRequest) {
+  return {
+    type: RETURN_INITIAL_SUCCESS,
+    returnRequest,
+    status: SUCCESS
+  };
+}
+
+export function returnInitialForQuickDropFailure(error) {
+  return {
+    type: RETURN_INITIAL_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function returnInitialForQuickDrop(productObj) {
+  console.log(productObj);
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(returnInitialForQuickDropRequest());
+    // const initialReturnFormData = new FormData();
+    // initialReturnFormData.append(
+    //   "access_token",
+    //   JSON.parse(customerCookie).access_token
+    // );
+    // initialReturnFormData.append("channel", "mobile");
+    // initialReturnFormData.append("refundType", "R");
+    // initialReturnFormData.append("orderCode", productObj.orderCode);
+    // initialReturnFormData.append("transactionId", productObj.transactionId);
+    // initialReturnFormData.append("ussid", productObj.ussid);
+    // initialReturnFormData.append("transactionType", "01");
+    // initialReturnFormData.append("returnMethod", productObj.returnMethod);
+    // initialReturnFormData.append("storeIds", productObj.storeIds);
+    // initialReturnFormData.append("accountNumber", productObj.accountNumber);
+    // initialReturnFormData.append(
+    //   "reEnterAccountNumber",
+    //   productObj.reEnterAccountNumber
+    // );
+    // initialReturnFormData.append(
+    //   "accountHolderName",
+    //   productObj.accountHolderName
+    // );
+    // initialReturnFormData.append("bankName", productObj.bankName);
+    // initialReturnFormData.append("IFSCCode", productObj.IFSCCode);
+    // initialReturnFormData.append("refundMode", "NEFT");
+    const initialReturnFormData = Object.assign({}, productObj, {
+      channel: "mobile",
+      refundType: "R",
+      transactionType: "01",
+      refundMode: "NEFT"
+    });
+    try {
+      const result = await api.post(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/newReturnInitiate?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`,
+        initialReturnFormData
+      );
+
+      const resultJson = await result.json();
+      console.log(resultJson);
+      if (resultJson.errors) {
+        throw new Error(resultJson.errors[0].message);
+      }
+      dispatch(returnInitialForQuickDropSuccess(resultJson));
+    } catch (e) {
+      console.log(e.message);
+      dispatch(returnInitialForQuickDropFailure(e.message));
+    }
+  };
+}
+
+export function quickDropStoreRequest() {
+  return {
+    type: QUICK_DROP_STORE_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function quickDropStoreSuccess(addresses) {
+  return {
+    type: QUICK_DROP_STORE_SUCCESS,
+    addresses,
+    status: SUCCESS
+  };
+}
+
+export function quickDropStoreFailure(error) {
+  return {
+    type: QUICK_DROP_STORE_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function quickDropStore(pincode, ussId) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(quickDropStoreRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/quickDropStores?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&pincode=${pincode}&&ussid=${ussId}`
+      );
+
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(resultJson.errors[0].message);
+      }
+      dispatch(quickDropStoreSuccess(resultJson.returnStoreDetailsList));
+    } catch (e) {
+      dispatch(quickDropStoreFailure(e.message));
     }
   };
 }
