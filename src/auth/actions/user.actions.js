@@ -551,9 +551,6 @@ export function facebookLogin() {
         );
       });
 
-      console.log("AUTH RESPONSE");
-      console.log(authResponse);
-
       return { ...authResponse.authResponse, ...graphResponse };
     } catch (e) {
       dispatch(faceBookLoginFailure(e));
