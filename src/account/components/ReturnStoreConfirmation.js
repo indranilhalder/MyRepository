@@ -8,9 +8,8 @@ import styles from "./ReturnStoreConfirmation.css";
 
 export default class ReturnsStoreConfirmation extends React.Component {
   render() {
-    console.log(this.props);
     const data = this.props.returnProductDetails;
-    console.log(data);
+
     return (
       <ReturnsFrame
         headerText="Return to store"

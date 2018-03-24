@@ -359,35 +359,10 @@ export function returnInitialForQuickDrop(productObj) {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     dispatch(returnInitialForQuickDropRequest());
-    // const initialReturnFormData = new FormData();
-    // initialReturnFormData.append(
-    //   "access_token",
-    //   JSON.parse(customerCookie).access_token
-    // );
-    // initialReturnFormData.append("channel", "mobile");
-    // initialReturnFormData.append("refundType", "R");
-    // initialReturnFormData.append("orderCode", productObj.orderCode);
-    // initialReturnFormData.append("transactionId", productObj.transactionId);
-    // initialReturnFormData.append("ussid", productObj.ussid);
-    // initialReturnFormData.append("transactionType", "01");
-    // initialReturnFormData.append("returnMethod", productObj.returnMethod);
-    // initialReturnFormData.append("storeIds", productObj.storeIds);
-    // initialReturnFormData.append("accountNumber", productObj.accountNumber);
-    // initialReturnFormData.append(
-    //   "reEnterAccountNumber",
-    //   productObj.reEnterAccountNumber
-    // );
-    // initialReturnFormData.append(
-    //   "accountHolderName",
-    //   productObj.accountHolderName
-    // );
-    // initialReturnFormData.append("bankName", productObj.bankName);
-    // initialReturnFormData.append("IFSCCode", productObj.IFSCCode);
-    // initialReturnFormData.append("refundMode", "NEFT");
     const initialReturnFormData = Object.assign({}, productObj, {
       channel: "mobile",
       refundType: "R",
-      transactionType: "01",
+      transactionType: 1,
       refundMode: "NEFT"
     });
     try {

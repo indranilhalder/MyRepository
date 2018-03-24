@@ -1,23 +1,18 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import PiqPage from "../../cart/components/PiqPage";
-import ReturnBankForm from "./ReturnBankForm";
 import MDSpinner from "react-md-spinner";
 import ReturnStoreConfirmation from "./ReturnStoreConfirmation.js";
 import * as styles from "./ReturnToStore.css";
 import {
   RETURNS_PREFIX,
   RETURN_TO_STORE,
-  RETURNS_STORE_MAP,
-  RETURNS_STORE_BANK_FORM,
   RETURNS_STORE_FINAL,
   RETURN_LANDING,
   RETURNS_REASON,
   QUICK_DROP
 } from "../../lib/constants";
-import { ObjectUnsubscribedError } from "rxjs";
 const REG_X_FOR_STORE_PICKUP = /storePick/i;
-const REG_X_FOR_BANKING_FORM = /bankDetail/i;
 const REG_X_FOR_FINAL_SUBMIT = /submit/i;
 export default class ReturnToStore extends React.Component {
   constructor(props) {
@@ -28,9 +23,7 @@ export default class ReturnToStore extends React.Component {
       storeId: null
     };
   }
-  onChangeBankDetail(val) {
-    this.setState(val);
-  }
+
   setStore(storeId) {
     this.setState({ storeId }, () => {
       this.props.history.push({
@@ -43,7 +36,7 @@ export default class ReturnToStore extends React.Component {
       });
     });
   }
-  // i am using this function becasue of on pincide section i don't have any
+  // i am using this function becasue of on pincode section i don't have any
   // update button we ll change this function when we ll have update button
   getLocation() {
     if (this.state.pincode && this.state.pincode.length === 6) {
@@ -59,19 +52,23 @@ export default class ReturnToStore extends React.Component {
     const productObj = Object.assign(
       {},
       {
-        orderCode: "100011757",
+        orderCode: this.orderCode,
         transactionId: product.transactionId,
         ussid: product.USSID,
-        returnReasonCode: "JEW100",
+        returnReasonCode: "JEW1S1",
         returnMethod: QUICK_DROP,
-        storeIds: this.state.storeId,
-        accountNumber: this.state.accountNumber,
-        reEnterAccountNumber: this.state.reEnterAccountNumber,
-        accountHolderName: this.state.userName,
-        bankName: this.state.bankName,
-        IFSCCode: this.state.code
+        storeIds: this.state.storeId
       }
     );
+    if (this.props.bankDetail.accountNumber) {
+      Object.assign(productObj, {
+        accountNumber: this.props.bankDetail.accountNumber,
+        reEnterAccountNumber: this.props.bankDetail.reEnterAccountNumber,
+        accountHolderName: this.props.bankDetail.userName,
+        bankName: this.props.bankDetail.bankName,
+        IFSCCode: this.props.bankDetail.code
+      });
+    }
     this.props.returnInitialForQuickDrop(productObj);
   }
   renderLoader() {
@@ -80,12 +77,13 @@ export default class ReturnToStore extends React.Component {
   navigateToReturnLanding() {
     return (
       <Redirect
-        to={`${RETURNS_PREFIX}/3435345${RETURN_LANDING}${RETURNS_REASON}`}
+        to={`${RETURNS_PREFIX}/${
+          this.orderCode
+        }${RETURN_LANDING}${RETURNS_REASON}`}
       />
     );
   }
   render() {
-    console.log(this.props);
     if (!this.props.returnRequest || !this.props.returnProductDetails) {
       return this.renderLoader();
     }
@@ -123,7 +121,6 @@ export default class ReturnToStore extends React.Component {
     return (
       <div className={styles.base}>
         {pathname.match(REG_X_FOR_STORE_PICKUP) && renderStoresMap}
-
         {pathname.match(REG_X_FOR_FINAL_SUBMIT) && renderFinalSubmit}
       </div>
     );

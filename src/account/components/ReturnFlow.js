@@ -64,6 +64,12 @@ export default class ReturnFlow extends React.Component {
         onChange={val => this.onChangeReasonAndMode(val)}
       />
     );
+    const renderBankForm = (
+      <ReturnBankForm
+        onChange={val => this.onChangeBankingDetail(val)}
+        onContinue={() => this.navigateToShowInitiateReturn()}
+      />
+    );
     return (
       <React.Fragment>
         <Route
@@ -73,12 +79,7 @@ export default class ReturnFlow extends React.Component {
         <Route
           exact
           path={`${RETURNS}${RETURNS_STORE_BANK_FORM}`}
-          render={() => (
-            <ReturnBankForm
-              onChange={val => this.onChangeBankingDetail(val)}
-              onContinue={() => this.navigateToShowInitiateReturn()}
-            />
-          )}
+          render={() => renderBankForm}
         />
 
         <Route

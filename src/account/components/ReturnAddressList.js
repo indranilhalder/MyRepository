@@ -29,13 +29,18 @@ const ORDER_ID = "345-34534534";
 const PICK_UP_ADDRESS = "Select pick up Address";
 
 export default class ReturnAddressList extends React.Component {
-  state = {
-    selectedAddress: "",
-    addressSelected: false,
-    selectedDate: "",
-    selectedTime: "",
-    addNewAddress: false
-  };
+  constructor(props) {
+    super(props);
+    this.orderCode = props.location.pathname.split("/")[2];
+    this.state = {
+      selectedAddress: "",
+      addressSelected: false,
+      selectedDate: "",
+      selectedTime: "",
+      addNewAddress: false
+    };
+  }
+
   componentDidMount() {
     if (this.props.getReturnRequest) {
       this.props.getReturnRequest("180314-000-111548", "273570000120027");
