@@ -589,6 +589,7 @@ export function googlePlusLogin(type) {
                   userId: MY_PROFILE
                 });
                 request.execute(function(resp) {
+                  accessToken = authResponse.id_token;
                   resolve(resp);
                 });
               }
@@ -600,17 +601,13 @@ export function googlePlusLogin(type) {
           scope: SCOPE
         });
       });
-
-      console.log("TEST");
-      console.log(googleResponse);
-
       if (googleResponse.code > 400) {
         throw new Error(`${googleResponse.message}`);
       }
 
-      return googleResponse;
+      return { ...googleResponse, accessToken };
     } catch (e) {
-      dispatch(googlePlusLoginFailure(e));
+      return dispatch(googlePlusLoginFailure(e));
     }
   };
 }
@@ -685,9 +682,6 @@ export function socialMediaRegistration(
   platForm,
   socialChannel
 ) {
-  console.log("SOCIAL MEDIA REGISTRATIOn");
-  console.log(userName);
-  console.log(id);
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaRegistrationRequest());

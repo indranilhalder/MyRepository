@@ -84,8 +84,9 @@ const mapDispatchToProps = dispatch => {
     },
     googlePlusLogin: async isSignUp => {
       const googlePlusResponse = await dispatch(googlePlusLogin(isSignUp));
-      console.log("GOOGLE PLUS RESPONSE");
-      console.log(googlePlusResponse);
+      if (googlePlusResponse.status && googlePlusResponse.status !== SUCCESS) {
+        return;
+      }
       if (isSignUp) {
         const signUpResponse = await dispatch(
           socialMediaRegistration(
@@ -96,9 +97,6 @@ const mapDispatchToProps = dispatch => {
             SOCIAL_CHANNEL_GOOGLE_PLUS
           )
         );
-
-        console.log("SIGN UP RESPONSE");
-        console.log(signUpResponse);
 
         if (signUpResponse.status !== SUCCESS) {
           // TODO toast
@@ -119,20 +117,15 @@ const mapDispatchToProps = dispatch => {
       if (customerAccessTokenActionResponse.status === SUCCESS) {
         const loginUserResponse = await dispatch(
           socialMediaLogin(
-            googlePlusResponse.email,
+            googlePlusResponse.emails[0].value,
             GOOGLE_PLUS_PLATFORM,
             customerAccessTokenActionResponse.customerAccessTokenDetails
               .access_token
           )
         );
 
-        console.log("LOGIN USER RESPONSE");
-        console.log(loginUserResponse);
-
         if (loginUserResponse.status === SUCCESS) {
           const cartVal = await dispatch(getCartId());
-          console.log("CART VAL");
-          console.log(cartVal);
           if (
             cartVal.status === SUCCESS &&
             cartVal.cartDetails.guid &&
