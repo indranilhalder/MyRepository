@@ -28,7 +28,8 @@ export default class ReturnReasonAndModes extends React.Component {
   onChange(val) {
     this.setState(val);
   }
-  renderToModes() {
+  renderToModes(data) {
+    console.log(data);
     // may be we have to hit any api for setting reason here
     this.props.history.push(
       `${RETURNS_PREFIX}/${ORDER_ID}${RETURN_LANDING}${RETURNS_MODES}`
@@ -42,17 +43,16 @@ export default class ReturnReasonAndModes extends React.Component {
     }
   }
   render() {
-    if (!this.props.returnRequest) {
+    if (!this.props.returnRequest || !this.props.returnProductDetails) {
       return this.renderLoader();
     }
     const { pathname } = this.props.location;
     const renderReasonForm = (
       <ReturnReasonForm
-        productInfo={this.props.returnRequest.returnEntry.orderEntries[0]}
-        optionsForReason={this.props.returnRequest.returnReasonDetailsList}
+        returnProductDetails={this.props.returnProductDetails}
         onChange={comment => this.onChange({ comment })}
         onChangePrimary={reason => this.onChange({ reason })}
-        onContinue={() => this.renderToModes()}
+        onContinue={data => this.renderToModes(data)}
       />
     );
     const renderReturnMode = (

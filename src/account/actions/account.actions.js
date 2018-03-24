@@ -93,6 +93,14 @@ export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
 export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
+export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
+
+const API_KEY_FOR_MSD = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
+const NUMBER_OF_RESULTS_FOR_BRANDS = [25];
+const WIDGETS_LIST_FOR_BRANDS = [112];
+const CARD_TYPE = "BOTH";
+const FOLLOW = "follow";
+const UNFOLLOW = "unfollow";
 
 export function returnProductDetailsRequest() {
   return {
@@ -101,11 +109,11 @@ export function returnProductDetailsRequest() {
   };
 }
 
-export function returnProductDetailsSuccess(productDetails) {
+export function returnProductDetailsSuccess(returnProductDetails) {
   return {
     type: RETURN_PRODUCT_DETAILS_SUCCESS,
     status: SUCCESS,
-    productDetails
+    returnProductDetails
   };
 }
 
@@ -122,7 +130,7 @@ export function returnProductDetails() {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     let returnProductFormData = new FormData();
-    returnProductFormData.append("transactionId", "273570000120025");
+    returnProductFormData.append("transactionId", "273570000120027");
     returnProductFormData.append("returnCancelFlag", "R");
     returnProductFormData.append("orderCode", "180314-000-111548");
 
@@ -207,14 +215,56 @@ export function getReturnRequest(orderCode, transactionId) {
   };
 }
 
-export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
+export function returnInitialRequest() {
+  return {
+    type: GET_RETURN_REQUEST,
+    status: REQUESTING
+  };
+}
 
-const API_KEY_FOR_MSD = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
-const NUMBER_OF_RESULTS_FOR_BRANDS = [25];
-const WIDGETS_LIST_FOR_BRANDS = [112];
-const CARD_TYPE = "BOTH";
-const FOLLOW = "follow";
-const UNFOLLOW = "unfollow";
+export function returnInitialSuccess(returnRequest) {
+  return {
+    type: GET_RETURN_REQUEST_SUCCESS,
+    returnRequest,
+    status: SUCCESS
+  };
+}
+
+export function returnInitialFailure(error) {
+  return {
+    type: GET_RETURN_REQUEST_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function returnInitial(orderCode, transactionId) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(returnInitialRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/returnRequest?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&channel=mobile&loginId=${
+          JSON.parse(userDetails).userName
+        }&orderCode=180314-000-111548&transactionId=273570000120027`
+      );
+
+      const resultJson = await result.json();
+      if (resultJson.errors) {
+        throw new Error(resultJson.errors[0].message);
+      }
+      dispatch(returnInitialSuccess(resultJson));
+    } catch (e) {
+      dispatch(returnInitialFailure(e.message));
+    }
+  };
+}
 
 export function getSavedCardRequest() {
   return {

@@ -10,7 +10,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   console.log(state);
   return {
-    returnRequest: state.profile.returnRequest
+    returnRequest: state.profile.returnRequest,
+    returnProductDetails: state.profile.returnProductDetails
   };
 };
 const ReturnReasonAndModesContainer = connect(

@@ -80,6 +80,7 @@ const account = (
         error: action.error
       });
     case accountActions.RETURN_PRODUCT_DETAILS_SUCCESS:
+      console.log(action);
       return Object.assign({}, state, {
         loading: false,
         status: action.state,

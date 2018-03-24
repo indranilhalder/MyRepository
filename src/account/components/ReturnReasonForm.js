@@ -11,18 +11,31 @@ export default class ReturnReasonForm extends React.Component {
     super(props);
     this.state = {
       displaySecondary: false,
-      secondaryReasons: null
+      secondaryReasons: null,
+      comment: null
     };
   }
   handleContinue() {
     if (this.props.onContinue) {
-      this.props.onContinue();
+      this.props.onContinue(this.state);
     }
   }
   onChangePrimary(code) {
-    if (this.props.onChangePrimary) {
-      this.props.onChangePrimary(code);
-    }
+    const data = this.props.returnProductDetails;
+    this.setState({
+      secondaryReasons: data.returnReasonMap
+        .filter(val => {
+          return val.parentReasonCode === code;
+        })
+        .map(val => {
+          return val.subReasons.map(value => {
+            return { value: value.subReasonCode, label: value.subReturnReason };
+          });
+        })[0]
+    });
+  }
+  handleChange(val) {
+    this.setState({ comment: val });
   }
   onChangeSecondary(code) {
     if (this.props.onChangeSecondary) {
@@ -34,13 +47,9 @@ export default class ReturnReasonForm extends React.Component {
       this.props.onCancel();
     }
   }
-  handleChange(val) {
-    if (this.props.onChange) {
-      this.props.onChange(val);
-    }
-  }
   render() {
-    const { productInfo } = this.props;
+    const data = this.props.returnProductDetails;
+    console.log(data);
     return (
       <div className={styles.base}>
         <div className={styles.header}>
@@ -55,21 +64,25 @@ export default class ReturnReasonForm extends React.Component {
         </div>
         <div className={styles.content}>
           <OrderCard
-            productImage={productInfo.product.imageURL}
-            productName={productInfo.product.name}
-            price={productInfo.totalPrice.value}
+            productImage={data.orderProductWsDTO[0].imageURL}
+            productName={`${data.orderProductWsDTO[0].productBrand} ${
+              data.orderProductWsDTO[0].productName
+            }`}
+            price={data.orderProductWsDTO[0].price}
           >
-            {productInfo.quantity && (
-              <div className={styles.quantity}>Qty {productInfo.quantity}</div>
+            {data.orderProductWsDTO[0].quantity && (
+              <div className={styles.quantity}>
+                Qty {data.orderProductWsDTO[0].quantity}
+              </div>
             )}
           </OrderCard>
           <div className={styles.select}>
             <SelectBoxMobile
               label="Select a reason"
-              options={this.props.optionsForReason.map((val, i) => {
+              options={data.returnReasonMap.map((val, i) => {
                 return {
-                  value: val.code,
-                  label: val.reasonDescription
+                  value: val.parentReasonCode,
+                  label: val.parentReturnReason
                 };
               })}
               onChange={val => this.onChangePrimary(val)}
@@ -80,7 +93,7 @@ export default class ReturnReasonForm extends React.Component {
               <SelectBoxMobile
                 label="Select a reason"
                 options={this.state.secondaryReasons}
-                onChange={val => this.onChangeSecondary(val)}
+                onChange={val => this.onChangeSecondary()}
               />
             </div>
           )}
