@@ -45,7 +45,7 @@ const mapDispatchToProps = dispatch => {
           ) {
             dispatch(mergeCartId(cartVal.cartDetails.guid));
           } else {
-            dispatch(generateCartIdForLoggedInUser());
+            await dispatch(generateCartIdForLoggedInUser());
           }
         } else if (
           loginUserResponse.error === OTP_VERIFICATION_REQUIRED_MESSAGE
