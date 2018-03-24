@@ -16,7 +16,7 @@ export default class SizeSelector extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
-          Select a size
+          {this.props.headerText}
           {this.props.showSizeGuide && (
             <div className={styles.button}>
               <UnderLinedButton
@@ -55,5 +55,9 @@ SizeSelector.propTypes = {
       })
     )
   ),
+  headerText: PropTypes.string,
   textSize: PropTypes.oneOfType([PropTypes.string, PropTypes.string])
+};
+SizeSelector.defaultProps = {
+  headerText: "Select Size"
 };

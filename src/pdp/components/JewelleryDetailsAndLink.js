@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./JewelleryDetailsAndLink.css";
+import { HashLink as Link } from "react-router-hash-link";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 export default class JewelleryDetailsAndLink extends React.Component {
@@ -13,9 +14,9 @@ export default class JewelleryDetailsAndLink extends React.Component {
       this.props.readMore();
     }
   }
-  viewPlans() {
-    if (this.props.viewPlans) {
-      this.props.viewPlans();
+  handlePriceBreakup() {
+    if (this.props.showPriceBreakUp) {
+      this.props.showPriceBreakUp();
     }
   }
   render() {
@@ -52,12 +53,19 @@ export default class JewelleryDetailsAndLink extends React.Component {
                   </div>
                 </div>
               )}
-            <div className={styles.button} onClick={() => this.handleClick()}>
-              <UnderLinedButton
-                label={this.props.label}
-                color={this.props.buttonColour}
-              />
-            </div>
+            {this.props.hasPriceBreakUp && (
+              <div className={styles.button} onClick={() => this.handleClick()}>
+                <Link to="#priceBreakup">
+                  <UnderLinedButton
+                    label={this.props.label}
+                    color="#ff1744"
+                    onClick={() => {
+                      this.handlePriceBreakup();
+                    }}
+                  />
+                </Link>
+              </div>
+            )}
           </div>
         </div>
         <div className={styles.textHolder}>
@@ -72,15 +80,6 @@ export default class JewelleryDetailsAndLink extends React.Component {
               </span>
             </div>
           )}
-          <div className={styles.emiAvailableText}>
-            EMI available on this product,
-            <span
-              className={styles.buttonSpan}
-              onClick={() => this.viewPlans()}
-            >
-              View Plans
-            </span>
-          </div>
         </div>
       </div>
     );
