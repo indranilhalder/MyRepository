@@ -242,8 +242,8 @@ export default class PdpElectronics extends React.Component {
               <JewelleryDetailsAndLink
                 productName={productData.brandName}
                 productDescription={productData.productName}
-                price={productData.mrp}
-                discountPrice={productData.winningSellerMOP}
+                price={productData.winningSellerMOP}
+                discountPrice={productData.mrp}
                 averageRating={productData.averageRating}
                 discount={productData.discount}
               />
