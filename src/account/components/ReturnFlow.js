@@ -7,7 +7,7 @@ import ReturnCliqAndPiqContainer from "../containers/ReturnCliqAndPiqContainer.j
 import ReturnModes from "./ReturnModes.js";
 import ReturnToStoreContainer from "../containers/ReturnToStoreContainer";
 import ReturnBankForm from "./ReturnBankForm";
-import ReturnReasonAndModesContainer from "../containers/ReturnReasonAndModesContainer";
+import ReturnReasonAndModes from "./ReturnReasonAndModes";
 import {
   RETURNS,
   RETURNS_REASON,
@@ -25,18 +25,23 @@ export default class ReturnFlow extends React.Component {
   constructor(props) {
     super(props);
     this.orderCode = props.location.pathname.split("/")[2];
+    this.isCOD = props.location.state && props.location.state.isCOD;
     this.state = {
-      bankDetail: {}
+      bankDetail: {},
+      isCOD: this.isCOD
     };
   }
   componentDidMount() {
-    this.props.returnProductDetails();
+    this.props.returnProductDetailsFunc();
     this.props.getReturnRequest();
   }
-  onChange(val) {
+  onChangeBankingDetail(val) {
     let bankDetail = cloneDeep(this.state.bankDetail);
     Object.assign(bankDetail, val);
     this.setState({ bankDetail });
+  }
+  onChangeReasonAndMode(val) {
+    this.setState(val);
   }
   navigateToShowInitiateReturn() {
     this.props.history.push({
@@ -49,17 +54,25 @@ export default class ReturnFlow extends React.Component {
     });
   }
   render() {
+    const renderReasonAndMode = (
+      <ReturnReasonAndModes
+        {...this.state}
+        {...this.props}
+        onChange={val => this.onChangeReasonAndMode(val)}
+      />
+    );
     return (
       <React.Fragment>
         <Route
           path={`${RETURNS}${RETURN_LANDING}`}
-          component={ReturnReasonAndModesContainer}
+          render={() => renderReasonAndMode}
         />
         <Route
+          exact
           path={`${RETURNS}${RETURNS_STORE_BANK_FORM}`}
           render={() => (
             <ReturnBankForm
-              onChange={val => this.onChange(val)}
+              onChange={val => this.onChangeBankingDetail(val)}
               onContinue={() => this.navigateToShowInitiateReturn()}
             />
           )}

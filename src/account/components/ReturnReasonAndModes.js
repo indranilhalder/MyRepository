@@ -18,6 +18,7 @@ const ORDER_ID = "345-34534534";
 export default class ReturnReasonAndModes extends React.Component {
   constructor(props) {
     super();
+    this.orderCode = props.location.pathname.split("/")[2];
     this.state = {
       reason: null
     };
@@ -29,14 +30,13 @@ export default class ReturnReasonAndModes extends React.Component {
     this.setState(val);
   }
   renderToModes(data) {
-    console.log(data);
     // may be we have to hit any api for setting reason here
     this.setState({
       comment: data.comment,
       reasonCode: data.secondaryReasons
     });
     this.props.history.push(
-      `${RETURNS_PREFIX}/${ORDER_ID}${RETURN_LANDING}${RETURNS_MODES}`
+      `${RETURNS_PREFIX}/${this.orderCode}${RETURN_LANDING}${RETURNS_MODES}`
     );
   }
   onSelectMode(mode) {
@@ -51,11 +51,12 @@ export default class ReturnReasonAndModes extends React.Component {
     }
   }
   render() {
-    console.log(this.state);
     if (!this.props.returnRequest || !this.props.returnProductDetails) {
       return this.renderLoader();
     }
+    console.log(this.props);
     const { pathname } = this.props.location;
+    console.log(pathname);
     const renderReasonForm = (
       <ReturnReasonForm
         returnProductDetails={this.props.returnProductDetails}

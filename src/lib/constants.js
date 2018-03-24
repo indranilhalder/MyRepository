@@ -129,3 +129,5 @@ export const TRUE = "true";
 export const QUICK_DROP = "quickDrop";
 export const SCHEDULED_PICKUP = "schedulePickup";
 export const SELF_COURIER = "selfCourier";
+
+export const PAYMENT_METHOD = "Cash on Delivery";

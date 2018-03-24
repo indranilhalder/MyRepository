@@ -85,11 +85,10 @@ const account = (
         error: action.error
       });
     case accountActions.RETURN_PRODUCT_DETAILS_SUCCESS:
-      console.log(action);
       return Object.assign({}, state, {
         loading: false,
         status: action.state,
-        returnProducts: action.productDetails
+        returnProductDetails: action.returnProductDetails
       });
     case accountActions.RETURN_PRODUCT_DETAILS_FAILURE:
       return Object.assign({}, state, {

@@ -12,7 +12,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(getReturnRequest(orderCode, transactionId));
     },
 
-    returnProductDetails: () => {
+    returnProductDetailsFunc: () => {
       dispatch(returnProductDetails());
     }
   };
@@ -20,7 +20,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    returnProductDetails: state.profile
+    returnRequest: state.profile.returnRequest,
+    returnProductDetails: state.profile.returnProductDetails
   };
 };
 

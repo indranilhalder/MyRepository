@@ -13,6 +13,7 @@ import queryString from "query-string";
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import {
+  PAYMENT_METHOD,
   ORDER_PREFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -31,10 +32,17 @@ export default class OrderDetails extends React.Component {
     }
   }
 
-  replaceItem(orderId) {
-    this.props.history.push(
-      `${RETURNS_PREFIX}/${orderId}${RETURN_LANDING}${RETURNS_REASON}`
-    );
+  replaceItem(orderId, paymentMethod) {
+    let isCOD = false;
+    if (paymentMethod === PAYMENT_METHOD) {
+      isCOD = true;
+    }
+    this.props.history.push({
+      pathname: `${RETURNS_PREFIX}/${orderId}${RETURN_LANDING}${RETURNS_REASON}`,
+      state: {
+        isCOD
+      }
+    });
   }
   writeReview() {
     if (this.props.writeReview) {
@@ -63,7 +71,7 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
-
+    console.log(this.props);
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -134,7 +142,12 @@ export default class OrderDetails extends React.Component {
                         : PRODUCT_Returned
                     }
                     isEditable={true}
-                    replaceItem={() => this.replaceItem(orderDetails.orderId)}
+                    replaceItem={() =>
+                      this.replaceItem(
+                        products.sellerorderno,
+                        orderDetails.paymentMethod
+                      )
+                    }
                     writeReview={() => this.writeReview()}
                   />
                 </div>
