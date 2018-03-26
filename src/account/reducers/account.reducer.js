@@ -51,11 +51,61 @@ const account = (
     followedBrands: null,
     followedBrandsStatus: null,
     followedBrandsError: null,
-    loadingForFollowedBrands: false
+    loadingForFollowedBrands: false,
+
+    giftCards: null,
+    giftCardStatus: null,
+    giftCardsError: null,
+    loadingForGiftCard: false,
+
+    giftCardDetails: null,
+    giftCardDetailsStatus: null,
+    giftCardDetailsError: null,
+    loadingForGiftCardDetails: false
   },
   action
 ) => {
   switch (action.type) {
+    case accountActions.GET_GIFTCARD_REQUEST:
+      return Object.assign({}, state, {
+        giftCardStatus: action.status,
+        loadingForGiftCard: true
+      });
+
+    case accountActions.GET_GIFTCARD_SUCCESS:
+      return Object.assign({}, state, {
+        giftCardStatus: action.status,
+        giftCards: action.giftCards,
+        loadingForGiftCard: false
+      });
+
+    case accountActions.GET_GIFTCARD_FAILURE:
+      return Object.assign({}, state, {
+        giftCardStatus: action.status,
+        giftCardsError: action.error,
+        loadingForGiftCard: false
+      });
+
+    case accountActions.CREATE_GIFT_CARD_REQUEST:
+      return Object.assign({}, state, {
+        giftCardDetailsStatus: action.status,
+        loadingForGiftCardDetails: true
+      });
+
+    case accountActions.CREATE_GIFT_CARD_SUCCESS:
+      return Object.assign({}, state, {
+        giftCardDetailsStatus: action.status,
+        giftCardDetails: action.giftCardDetails,
+        loadingForGiftCardDetails: false
+      });
+
+    case accountActions.CREATE_GIFT_CARD_FAILURE:
+      return Object.assign({}, state, {
+        giftCardDetailsStatus: action.status,
+        giftCardDetailsError: action.error,
+        loadingForGiftCardDetails: false
+      });
+
     case accountActions.GET_SAVED_CARD_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
