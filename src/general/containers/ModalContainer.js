@@ -13,6 +13,10 @@ import {
   customerAccessToken
 } from "../../auth/actions/user.actions";
 import { SUCCESS } from "../../lib/constants";
+import {
+  verifyWalletMobileNumber,
+  checkWalletMobileNumber
+} from "../../account/actions/account.actions.js";
 
 import {
   applyBankOffer,
@@ -104,6 +108,12 @@ const mapDispatchToProps = dispatch => {
     },
     getUserAddress: () => {
       dispatch(getUserAddress());
+    },
+    checkWalletMobileNumber: customerDetails => {
+      dispatch(checkWalletMobileNumber(customerDetails));
+    },
+    verifyWalletMobileNumber: otpDetails => {
+      dispatch(verifyWalletMobileNumber(otpDetails));
     }
   };
 };

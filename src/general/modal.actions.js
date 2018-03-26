@@ -11,6 +11,8 @@ export const ADDRESS = "Address";
 export const EMI_MODAL = "EmiModal";
 export const BANK_OFFERS = "BankOffers";
 export const OTP_LOGIN_MODAL = "OtpLoginModal";
+export const GENERATE_OTP_FOR_CLIQ_CASH="generateOtpForCliqCash"
+export const VERIFY_OTP_FOR_CLIQ_CASH="verifyOtpForCliqCash"
 
 export function showModal(type, ownProps) {
   return {

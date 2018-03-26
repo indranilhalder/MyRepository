@@ -16,6 +16,11 @@ import {
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   GLOBAL_ACCESS_TOKEN
 } from "../../lib/constants";
+import {
+  showModal,
+  GENERATE_OTP_FOR_CLIQ_CASH,
+  VERIFY_OTP_FOR_CLIQ_CASH
+} from "../../general/modal.actions.js";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
@@ -85,6 +90,20 @@ export const GET_USER_CLIQ_CASH_DETAILS_FAILURE =
 export const REDEEM_CLIQ_VOUCHER_REQUEST = "REDEEM_CLIQ_VOUCHER_REQUEST";
 export const REDEEM_CLIQ_VOUCHER_SUCCESS = "REDEEM_CLIQ_VOUCHER_SUCCESS";
 export const REDEEM_CLIQ_VOUCHER_FAILURE = "REDEEM_CLIQ_VOUCHER_FAILURE";
+
+export const CHECK_WALLET_MOBILE_NUMBER_REQUEST =
+  "CHECK_WALLET_MOBILE_NUMBER_REQUEST";
+export const CHECK_WALLET_MOBILE_NUMBER_SUCCESS =
+  "CHECK_WALLET_MOBILE_NUMBER_SUCCESS";
+export const CHECK_WALLET_MOBILE_NUMBER_FAILURE =
+  "CHECK_WALLET_MOBILE_NUMBER_FAILURE";
+
+export const VERIFY_WALLET_MOBILE_NUMBER_REQUEST =
+  "VERIFY_WALLET_MOBILE_NUMBER_REQUEST";
+export const VERIFY_WALLET_MOBILE_NUMBER_SUCCESS =
+  "VERIFY_WALLET_MOBILE_NUMBER_SUCCESS";
+export const VERIFY_WALLET_MOBILE_NUMBER_FAILURE =
+  "VERIFY_WALLET_MOBILE_NUMBER_FAILURE";
 
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
@@ -780,7 +799,6 @@ export function getCliqCashDetails() {
         }&isPwa=true&platformNumber=${PLATFORM_NUMBER}`
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (
         resultJson.status === SUCCESS ||
         resultJson.status === SUCCESS_UPPERCASE ||
@@ -790,6 +808,7 @@ export function getCliqCashDetails() {
       }
       if (resultJson.status === SUCCESS) {
         if (!resultJson.isWalletCreated && resultJson.isWalletOtpVerified) {
+          dispatch(showModal(GENERATE_OTP_FOR_CLIQ_CASH));
         }
       }
       dispatch(getCliqCashSuccess(resultJson));
@@ -850,6 +869,116 @@ export function redeemCliqVoucher() {
       dispatch(redeemCliqVoucherSuccess(resultJson));
     } catch (e) {
       return dispatch(redeemCliqVoucherFailure(e.message));
+    }
+  };
+}
+
+export function checkWalletMobileNumberRequest() {
+  return {
+    type: CHECK_WALLET_MOBILE_NUMBER_REQUEST,
+    status: REQUESTING
+  };
+}
+export function checkMobileNumberSuccess(otpDetails) {
+  return {
+    type: CHECK_WALLET_MOBILE_NUMBER_SUCCESS,
+    status: SUCCESS,
+    otpDetails
+  };
+}
+
+export function checkWalletMobileNumberFailure(error) {
+  return {
+    type: CHECK_WALLET_MOBILE_NUMBER_SUCCESS,
+    status: ERROR,
+    error
+  };
+}
+
+export function checkWalletMobileNumber(customerDetails, isFromAccount) {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+    dispatch(checkWalletMobileNumberRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/checkWalletMobileNumber?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isUpdateProfile=${isFromAccount}`,
+        customerDetails
+      );
+      const resultJson = await result.json();
+      console.log(resultJson);
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+
+      dispatch(showModal(VERIFY_OTP_FOR_CLIQ_CASH));
+      dispatch(checkMobileNumberSuccess(resultJson));
+    } catch (e) {
+      return dispatch(checkWalletMobileNumberFailure(e.message));
+    }
+  };
+}
+
+export function verifyWalletMobileNumberRequest() {
+  return {
+    type: VERIFY_WALLET_MOBILE_NUMBER_REQUEST,
+    status: REQUESTING
+  };
+}
+export function verifyWalletMobileNumberSuccess(otpDetails) {
+  return {
+    type: VERIFY_WALLET_MOBILE_NUMBER_SUCCESS,
+    status: SUCCESS,
+    otpDetails
+  };
+}
+
+export function verifyWalletMobileNumberFailure(error) {
+  return {
+    type: VERIFY_WALLET_MOBILE_NUMBER_SUCCESS,
+    status: ERROR,
+    error
+  };
+}
+
+export function verifyWalletMobileNumber(otpDetails) {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+    dispatch(verifyWalletMobileNumberRequest());
+    try {
+      const result = await api.post(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/verifyWalletOtp?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&firstName=${otpDetails.firstName}&lastName=${
+          otpDetails.lastName
+        }&mobileNumber=${otpDetails.mobileNumber}&otp=${otpDetails.otp}`
+      );
+      const resultJson = await result.json();
+      console.log(resultJson);
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+
+      dispatch(verifyWalletMobileNumberSuccess(resultJson));
+    } catch (e) {
+      return dispatch(verifyWalletMobileNumberFailure(e.message));
     }
   };
 }
