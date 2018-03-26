@@ -1,4 +1,5 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import OrderCard from "./OrderCard";
 import SelectReturnDate from "./SelectReturnDate";
 import ReturnsFrame from "./ReturnsFrame";
@@ -7,60 +8,12 @@ import styles from "./ReturnModes.css";
 import {
   QUICK_DROP,
   SCHEDULED_PICKUP,
-  SELF_COURIER
+  SELF_COURIER,
+  RETURNS_PREFIX,
+  RETURN_LANDING,
+  RETURNS_REASON
 } from "../../lib/constants";
-const data = {
-  type: "returnRequestDTO",
-  orderProductWsDTO: [
-    {
-      USSID: "273570HMAIBSSZ06",
-      imageURL:
-        "//pcmuat2.tataunistore.com/images/97Wx144H/MP000000000113801_97Wx144H_20171102155229.jpeg",
-      price: "778.0",
-      productBrand: "Red Rose",
-      productColour: "Red",
-      productName: "Infants Boys Clothing Shirts",
-      productSize: "M",
-      productcode: "MP000000000113801",
-      sellerID: "273570",
-      sellerName: "Saravanan",
-      sellerorderno: "180314-000-111548",
-      transactionId: "273570000120027"
-    }
-  ],
-  returnModes: {
-    quickDrop: true,
-    schedulePickup: true,
-    selfCourier: false
-  },
-  returnReasonMap: [
-    {
-      parentReasonCode: "JEW100",
-      parentReturnReason: "Dummy reason 1",
-      subReasons: [
-        {
-          subReasonCode: "JEW1S1",
-          subReturnReason: "Sub reason 11"
-        },
-        {
-          subReasonCode: "JEW1S2",
-          subReturnReason: "Sub reason 12"
-        }
-      ]
-    },
-    {
-      parentReasonCode: "JEW200",
-      parentReturnReason: "Dummy reason 2",
-      subReasons: [
-        {
-          subReasonCode: "JEW2S2",
-          subReturnReason: "Sub reason 21"
-        }
-      ]
-    }
-  ],
-  showReverseSealFrJwlry: "no"
-};
+
 export default class ReturnModes extends React.Component {
   handleSelect(val) {
     if (this.props.selectMode) {
@@ -72,8 +25,25 @@ export default class ReturnModes extends React.Component {
       this.props.onCancel();
     }
   }
+  navigateToReturnLanding() {
+    return (
+      <Redirect
+        to={`${RETURNS_PREFIX}/${
+          this.orderCode
+        }${RETURN_LANDING}${RETURNS_REASON}`}
+      />
+    );
+  }
   render() {
+    // Preventing user to open this page direct by hitting URL
+    if (
+      !this.props.location.state ||
+      !this.props.location.state.authorizedRequest
+    ) {
+      return this.navigateToReturnLanding();
+    }
     const { productInfo } = this.props;
+    const data = this.props.returnProductDetails;
     return (
       <ReturnsFrame
         headerText="Select mode of return"

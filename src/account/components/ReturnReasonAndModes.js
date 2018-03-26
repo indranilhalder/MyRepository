@@ -77,6 +77,7 @@ export default class ReturnReasonAndModes extends React.Component {
     }
   }
   render() {
+    console.log(this.props);
     if (!this.props.returnRequest || !this.props.returnProductDetails) {
       return this.renderLoader();
     }
@@ -93,6 +94,7 @@ export default class ReturnReasonAndModes extends React.Component {
     );
     const renderReturnMode = (
       <ReturnModes
+        {...this.props}
         productInfo={this.props.returnRequest.returnEntry.orderEntries[0]}
         selectMode={mode => this.onSelectMode(mode)}
       />

@@ -87,9 +87,10 @@ export default class ReturnToStore extends React.Component {
     if (!this.props.returnRequest || !this.props.returnProductDetails) {
       return this.renderLoader();
     }
+    // Preventing user to open this page direct by hitting URL
     if (
       !this.props.location.state ||
-      !this.props.location.state.isRequestFromFlow
+      !this.props.location.state.authorizedRequest
     ) {
       return this.navigateToReturnLanding();
     }
