@@ -24,7 +24,7 @@ export const API_URL_ROOT_DUMMY =
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
-export const JUS_PAY_API_URL_ROOT = process.env.JUS_PAY_API_URL_ROOT;
+export const JUS_PAY_API_URL_ROOT = process.env.REACT_APP_JUS_PAY_API_URL_ROOT;
 
 const API_URL_ROOT_SUFFIX = "?isPwa=true";
 
