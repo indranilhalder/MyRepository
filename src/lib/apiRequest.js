@@ -24,7 +24,7 @@ export const API_URL_ROOT_DUMMY =
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
-export const JUS_PAY_API_URL_ROOT = "https://sandbox.juspay.in";
+export const JUS_PAY_API_URL_ROOT = process.env.JUS_PAY_API_URL_ROOT;
 
 const API_URL_ROOT_SUFFIX = "?isPwa=true";
 
@@ -177,5 +177,18 @@ export async function postFormData(url, payload) {
   return await fetch(`${API_URL_ROOT}/${url}`, {
     method: "POST",
     body: payload
+  });
+}
+
+// this function is using in follow and un follow brands
+// because there we have to send payload in formData or Row Data format in msd api
+
+export async function postMsdRowData(url, payload) {
+  return await fetch(`${API_MSD_URL_ROOT}/${url}`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json"
+    }
   });
 }

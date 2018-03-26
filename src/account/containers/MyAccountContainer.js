@@ -1,16 +1,9 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MyAccount from "../components/MyAccount";
-import {
-  getUserDetails,
-  getUserCoupons,
-  getUserAlerts
-} from "../actions/account.actions";
+import { getUserCoupons, getUserAlerts } from "../actions/account.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    getUserDetails: () => {
-      dispatch(getUserDetails());
-    },
     getUserCoupons: () => {
       dispatch(getUserCoupons());
     },

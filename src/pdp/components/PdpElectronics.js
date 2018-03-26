@@ -13,6 +13,7 @@ import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
+import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import Logo from "../../general/components/Logo.js";
 import Carousel from "../../general/components/Carousel.js";
@@ -207,21 +208,46 @@ export default class PdpElectronics extends React.Component {
           addProductToWishList={() => this.addToWishList()}
           showPincodeModal={() => this.showPincodeModal()}
         >
-          <ProductGalleryMobile isElectronics={true}>
+          <ProductGalleryMobile
+            paddingBottom={
+              productData.rootCategory === "Watches" ? "114" : "89.4"
+            }
+          >
             {mobileGalleryImages.map((val, idx) => {
               return (
-                <Image image={val} key={idx} color="#f5f5f5" fit="contain" />
+                <Image
+                  image={val}
+                  key={idx}
+                  color={
+                    productData.rootCategory === "Watches"
+                      ? "#ffffff"
+                      : "#f5f5f5"
+                  }
+                  fit="contain"
+                />
               );
             })}
           </ProductGalleryMobile>
           <div className={styles.content}>
-            <ProductDetailsMainCard
-              productName={productData.brandName}
-              productDescription={productData.productName}
-              price={productData.mrp}
-              discountPrice={productData.winningSellerMOP}
-              averageRating={productData.averageRating}
-            />
+            {productData.rootCategory !== "Watches" && (
+              <ProductDetailsMainCard
+                productName={productData.brandName}
+                productDescription={productData.productName}
+                price={productData.mrp}
+                discountPrice={productData.winningSellerMOP}
+                averageRating={productData.averageRating}
+              />
+            )}
+            {productData.rootCategory === "Watches" && (
+              <JewelleryDetailsAndLink
+                productName={productData.brandName}
+                productDescription={productData.productName}
+                price={productData.winningSellerMOP}
+                discountPrice={productData.mrp}
+                averageRating={productData.averageRating}
+                discount={productData.discount}
+              />
+            )}
           </div>
           {productData.isEMIEligible === "Y" && (
             <div className={styles.separator}>
@@ -234,11 +260,12 @@ export default class PdpElectronics extends React.Component {
             </div>
           )}
 
-          {productData.productOfferPromotion && (
+          {productData.potentialPromotions && (
             <OfferCard
-              endTime={productData.productOfferPromotion[0].validTill.date}
-              heading={productData.productOfferPromotion[0].promotionTitle}
-              description={productData.productOfferPromotion[0].promotionDetail}
+              endTime={productData.potentialPromotions.endDate}
+              startDate={productData.potentialPromotions.startDate}
+              heading={productData.potentialPromotions.title}
+              description={productData.potentialPromotions.description}
               onClick={this.goToCouponPage}
             />
           )}

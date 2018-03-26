@@ -2,23 +2,33 @@
   width: 100%;
   height: auto;
   background-color: #ececec;
-  padding: 10px 0px;
-  display: inline-block;
+  padding: 25px 110px 25px 15px;
+  position: relative;
+}
+.headerHolder {
+  width: 100%;
+  height: auto;
 }
 .heading {
-  width: 50%;
+  width: 100%;
   height: auto;
   font-family: semibold;
   font-size: 16px;
-  float: left;
+  color: #000;
+}
+.subHeading {
+  width: 100%;
+  height: auto;
+  font-family: regular;
+  font-size: 14px;
   display: inline-block;
 }
 .buttonHolder {
-  width: 50%;
-  height: auto;
-  text-align: right;
-  display: inline-block;
-}
-.button {
-  display: inline-block;
+  width: 90px;
+  height: 27px;
+  position: absolute;
+  right: 15px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }

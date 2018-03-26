@@ -17,7 +17,6 @@ class Captcha extends Component {
     }
   };
   render() {
-    console.log(env);
     return (
       <Recaptcha
         sitekey={env.REACT_APP_RECAPTCHA_SITE_KEY}

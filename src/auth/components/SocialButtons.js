@@ -24,7 +24,7 @@ export default class SocialButtons extends Component {
     //load FaceBook Sdk
     window.fbAsyncInit = () => {
       window.FB.init({
-        appId: config.facebook,
+        appId: process.env.REACT_APP_FACEBOOK_CLIENT_ID,
         cookie: true,
         xfbml: true,
         version: FACEBOOK_VERSION
@@ -56,19 +56,23 @@ export default class SocialButtons extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.user) {
       if (nextProps.user.isLoggedIn === true) {
-        this.props.history.push("/home");
+        this.props.history.push("/");
       }
     }
   }
 
   facebookLogin = () => {
-    if (this.props.type) {
-      this.props.facebookLogin(this.props.type);
+    if (this.props.signUp) {
+      this.props.facebookLogin(true);
+    } else {
+      this.props.facebookLogin(false);
     }
   };
   googlePlusLogin = () => {
-    if (this.props.type) {
-      this.props.googlePlusLogin(this.props.type);
+    if (this.props.signUp) {
+      this.props.googlePlusLogin(this.props.signUp);
+    } else {
+      this.props.googlePlusLogin(false);
     }
   };
 

@@ -46,6 +46,7 @@
     "react-redux": "^5.0.6",
     "react-responsive": "^4.0.3",
     "react-router-dom": "^4.2.2",
+    "react-router-hash-link": "^1.2.0",
     "react-select": "^1.2.1",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
@@ -60,7 +61,7 @@
   },
   "scripts": {
     "start": "REACT_APP_STAGE=local node -r dotenv/config scripts/start.js",
-    "tmpprod": "REACT_APP_STAGE=local node scrips/build.js",
+    "tmpprod": "REACT_APP_STAGE=tmpprod node scrips/build.js",
     "local": "REACT_APP_STAGE=local node scripts/build.js",
     "dev": "REACT_APP_STAGE=devxelp node scripts/build.js",
     "uat2": "REACT_APP_STAGE=uat2 node scripts/build.js",

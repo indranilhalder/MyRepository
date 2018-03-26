@@ -36,6 +36,7 @@ export default class CourierProduct extends React.Component {
             </div>
           </div>
         )}
+        {this.props.children}
       </div>
     );
   }

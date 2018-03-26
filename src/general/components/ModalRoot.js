@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import ModalPanel from "./ModalPanel";
+import NewPassword from "../../auth/components/NewPassword";
 import RestorePassword from "../../auth/components/RestorePassword";
 import OtpVerification from "../../auth/components/OtpVerification";
 import ConnectDetailsWithModal from "../../home/components/ConnectDetailsWithModal";
@@ -74,12 +75,20 @@ export default class ModalRoot extends React.Component {
   getUserAddress = () => {
     this.props.getUserAddress();
   };
+
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
         <RestorePassword
           handleCancel={() => this.handleClose()}
           handleRestoreClick={userId => this.handleRestoreClick(userId)}
+        />
+      ),
+      NewPassword: (
+        <NewPassword
+          {...this.props.ownProps}
+          handleCancel={() => this.handleClose}
+          onContinue={userDetails => this.resetPassword(userDetails)}
         />
       ),
       SignUpOtpVerification: (
@@ -94,6 +103,8 @@ export default class ModalRoot extends React.Component {
         <OtpVerification
           closeModal={() => this.handleClose()}
           submitOtp={otpDetails => this.submitOtpForgotPassword(otpDetails)}
+          userObj={this.props.ownProps}
+          resendOtp={userName => this.handleRestoreClick(userName)}
         />
       ),
       Sort: <Sort />,
@@ -136,6 +147,7 @@ export default class ModalRoot extends React.Component {
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
+    //let SelectedModal = MODAL_COMPONENTS["NewPassword"];
     const Modal = this.props.modalStatus ? (
       <ModalPanel
         closeModal={() => {

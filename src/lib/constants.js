@@ -1,4 +1,6 @@
 export const SUCCESS = "success";
+export const SUCCESS_UPPERCASE = "SUCCESS";
+export const SUCCESS_CAMEL_CASE = "Success";
 export const REQUESTING = "requesting";
 export const ERROR = "error";
 export const FAILURE = "Failure";
@@ -86,9 +88,9 @@ export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
-export const ORDER_PAGE = "/allOrders";
-export const PAYMENT_MODE_TYPE = "paymentMode";
 
+export const SAVE_LIST_PAGE = "/default/wishList";
+export const PAYMENT_MODE_TYPE = "paymentMode";
 // fetching feed information contant
 export const BLP_OR_CLP_FEED_TYPE = "blpOrClp";
 export const HOME_FEED_TYPE = "home";
@@ -104,4 +106,9 @@ export const SHORT_COLLECT = "CNC";
 
 export const FOLLOW = "Follow";
 export const FOLLOWING = "Following";
+
 export const PLAT_FORM_NUMBER = "2";
+
+
+export const TRUE = "true";
+

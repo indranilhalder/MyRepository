@@ -10,7 +10,14 @@ import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
 import moment from "moment";
 import queryString from "query-string";
-import { ORDER_PREFIX } from "../../lib/constants";
+import { Redirect } from "react-router-dom";
+import * as Cookie from "../../lib/Cookie";
+import {
+  ORDER_PREFIX,
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  LOGIN_PATH
+} from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_Returned = "Return Product";
 const PRODUCT_Cancel = "Cancel Product";
@@ -32,12 +39,26 @@ export default class OrderDetails extends React.Component {
     }
   }
   componentDidMount() {
-    if (this.props.match.path === `${ORDER_PREFIX}`) {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (
+      userDetails &&
+      customerCookie &&
+      this.props.match.path === `${ORDER_PREFIX}`
+    ) {
       const orderId = queryString.parse(this.props.location.search).orderCode;
       this.props.fetchOrderDetails(orderId);
     }
   }
+  navigateToLogin() {
+    return <Redirect to={LOGIN_PATH} />;
+  }
   render() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (!userDetails || !customerCookie) {
+      return this.navigateToLogin();
+    }
     const orderDetails = this.props.orderDetails;
     return (
       <div className={styles.base}>
@@ -70,29 +91,37 @@ export default class OrderDetails extends React.Component {
                     Total={orderDetails.totalOrderAmount}
                   />
                 </div>
+
                 <OrderPaymentMethod
-                  phoneNumber={orderDetails.billingAddress.phone}
+                  phoneNumber={
+                    orderDetails.billingAddress &&
+                    orderDetails.billingAddress.phone
+                  }
                   paymentMethod={orderDetails.paymentMethod}
                   isInvoiceAvailable={products.isInvoiceAvailable}
                   request={() =>
                     this.requestInvoice(products.USSID, products.sellerorderno)
                   }
                 />
-                <OrderDelivered
-                  deliveredAddress={`${
-                    orderDetails.billingAddress.addressLine1
-                  } ${orderDetails.billingAddress.town} ${
-                    orderDetails.billingAddress.state
-                  } ${orderDetails.billingAddress.postalcode}`}
-                />
-                <div className={styles.orderStatusVertical}>
-                  <OrderStatusVertical
-                    statusMessageList={
-                      products.statusDisplayMsg[0].value.statusList[0]
-                        .statusMessageList
-                    }
+                {orderDetails.billingAddress && (
+                  <OrderDelivered
+                    deliveredAddress={`${
+                      orderDetails.billingAddress.addressLine1
+                    } ${orderDetails.billingAddress.town} ${
+                      orderDetails.billingAddress.state
+                    } ${orderDetails.billingAddress.postalcode}`}
                   />
-                </div>
+                )}
+                {products.statusDisplayMsg && (
+                  <div className={styles.orderStatusVertical}>
+                    <OrderStatusVertical
+                      statusMessageList={
+                        products.statusDisplayMsg[0].value.statusList[0]
+                          .statusMessageList
+                      }
+                    />
+                  </div>
+                )}
                 <div className={styles.buttonHolder}>
                   <OrderReturn
                     buttonLabel={
