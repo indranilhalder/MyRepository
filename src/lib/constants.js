@@ -39,7 +39,6 @@ export const BRAND_LANDING_PAGE = "/brand";
 export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "(.*)/p-(.*)";
 export const PRODUCT_DESCRIPTION_REVIEWS = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/product-reviews`;
 export const PRODUCT_OTHER_SELLER_ROUTER = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/viewSellers`;
-export const ERROR_PAGE = "/errorPage";
 export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE = "/(.*)/(p-)(.*)";
 export const PRODUCT_REVIEWS_PATH_SUFFIX = "/product-reviews";
 export const PRODUCT_DESCRIPTION_ROUTER = PRODUCT_DESCRIPTION_PRODUCT_CODE; //TODO remove this
