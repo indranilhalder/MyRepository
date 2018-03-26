@@ -76,12 +76,9 @@ export const GET_FOLLOWED_BRANDS_FAILURE = "GET_FOLLOWED_BRANDS_FAILURE";
 export const QUICK_DROP_STORE_REQUEST = "QUICK_DROP_STORE_REQUEST";
 export const QUICK_DROP_STORE_SUCCESS = "QUICK_DROP_STORE_SUCCESS";
 export const QUICK_DROP_STORE_FAILURE = "QUICK_DROP_STORE_FAILURE";
-export const NEW_RETURN_INITIATE_CLIQ_PIQ_REQUEST =
-  "NEW_RETURN_INITIATE_CLIQ_PIQ_REQUEST";
-export const NEW_RETURN_INITIATE_CLIQ_PIQ_SUCCESS =
-  "NEW_RETURN_INITIATE_CLIQ_PIQ_SUCCESS";
-export const NEW_RETURN_INITIATE_CLIQ_PIQ_FAILURE =
-  "NEW_RETURN_INITIATE_CLIQ_PIQ_FAILURE";
+export const NEW_RETURN_INITIATE_REQUEST = "NEW_RETURN_INITIATE_REQUEST";
+export const NEW_RETURN_INITIATE_SUCCESS = "NEW_RETURN_INITIATE_SUCCESS";
+export const NEW_RETURN_INITIATE_FAILURE = "NEW_RETURN_INITIATE_FAILURE";
 
 export const RETURN_PIN_CODE_REQUEST = "RETURN_PIN_CODE_REQUEST";
 export const RETURN_PIN_CODE_SUCCESS = "RETURN_PIN_CODE_SUCCESS";
@@ -226,24 +223,24 @@ export function getReturnRequest(orderCode, transactionId) {
   };
 }
 
-export function newReturnInitiateForCliqAndPiqRequest() {
+export function newReturnInitiateRequest() {
   return {
-    type: NEW_RETURN_INITIATE_CLIQ_PIQ_REQUEST,
+    type: NEW_RETURN_INITIATE_REQUEST,
     status: REQUESTING
   };
 }
 
-export function newReturnInitiateForCliqAndPiqSuccess(returnDetails) {
+export function newReturnInitiateSuccess(returnDetails) {
   return {
-    type: NEW_RETURN_INITIATE_CLIQ_PIQ_SUCCESS,
+    type: NEW_RETURN_INITIATE_SUCCESS,
     returnDetails,
     status: SUCCESS
   };
 }
 
-export function newReturnInitiateForCliqAndPiqFailure(error) {
+export function newReturnInitiateFailure(error) {
   return {
-    type: NEW_RETURN_INITIATE_CLIQ_PIQ_FAILURE,
+    type: NEW_RETURN_INITIATE_FAILURE,
     error,
     status: FAILURE
   };
@@ -253,7 +250,7 @@ export function newReturnInitial(returnDetails) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    dispatch(newReturnInitiateForCliqAndPiqRequest());
+    dispatch(newReturnInitiateRequest());
 
     try {
       const result = await api.post(
@@ -270,9 +267,9 @@ export function newReturnInitial(returnDetails) {
         throw new Error(resultJson.errors[0].message);
       }
 
-      dispatch(newReturnInitiateForCliqAndPiqSuccess(resultJson));
+      dispatch(newReturnInitiateSuccess(resultJson));
     } catch (e) {
-      dispatch(newReturnInitiateForCliqAndPiqFailure(e.message));
+      dispatch(newReturnInitiateFailure(e.message));
     }
   };
 }
@@ -318,7 +315,10 @@ export function returnPinCode(productDetails) {
       );
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
         throw new Error(
           resultJson.returnLogisticsResponseDTO[0].responseMessage
         );

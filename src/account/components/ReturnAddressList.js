@@ -26,7 +26,6 @@ const REG_X_FOR_ADDRESS = /address/i;
 const REG_X_FOR_DATE_TIME = /dateTime/i;
 const REG_X_FOR_NEW_ADDRESS = /addDeliveryLocation/i;
 const REG_X_FOR_RETURN_SUMMARY = /returnSummary/i;
-const ORDER_ID = "345-34534534";
 const PICK_UP_ADDRESS = "Select pick up Address";
 
 export default class ReturnAddressList extends React.Component {
@@ -35,7 +34,7 @@ export default class ReturnAddressList extends React.Component {
     this.orderCode = props.location.pathname.split("/")[2];
     this.state = {
       selectedAddress: "",
-      addressSelected: false,
+      addressSelectedByUser: false,
       selectedDate: "",
       selectedTime: "",
       addNewAddress: false
@@ -52,14 +51,22 @@ export default class ReturnAddressList extends React.Component {
 
     if (nextProps.returnPinCodeStatus === FAILURE) {
       this.props.history.goBack();
-    } else if (nextProps.returnPinCodeStatus === SUCCESS) {
+    } else if (
+      nextProps.returnPinCodeStatus === SUCCESS &&
+      !this.state.addressSelectedByUser
+    ) {
+      this.setState({ addressSelectedByUser: true });
       this.props.history.push(
-        `${RETURNS_PREFIX}/${ORDER_ID}${RETURN_CLIQ_PIQ}${RETURN_CLIQ_PIQ_DATE}`
+        `${RETURNS_PREFIX}/${
+          this.orderCode
+        }${RETURN_CLIQ_PIQ}${RETURN_CLIQ_PIQ_DATE}`
       );
     }
   }
 
   onSelectAddress(selectedAddress) {
+    console.log(this.props);
+    this.setState({ addressSelectedByUser: false });
     let addressSelected = filter(
       this.props.returnRequest.deliveryAddressesList,
       address => {
@@ -68,9 +75,9 @@ export default class ReturnAddressList extends React.Component {
     );
 
     let productObject = {};
-    productObject.orderCode = "180314-000-111548";
+    productObject.orderCode = this.props.returnProducts.orderProductWsDTO[0].sellerorderno;
     productObject.pinCode = addressSelected[0].postalCode;
-    productObject.transactionId = "273570000120027";
+    productObject.transactionId = this.props.returnProducts.orderProductWsDTO[0].transactionId;
 
     if (this.props.returnPinCode) {
       this.props.returnPinCode(productObject);
@@ -84,7 +91,9 @@ export default class ReturnAddressList extends React.Component {
   addNewAddress = () => {
     this.setState({ addNewAddress: true });
     this.props.history.push(
-      `${RETURNS_PREFIX}/${ORDER_ID}${RETURN_CLIQ_PIQ}${RETURNS_NEW_ADDRESS}`
+      `${RETURNS_PREFIX}/${
+        this.orderCode
+      }${RETURN_CLIQ_PIQ}${RETURNS_NEW_ADDRESS}`
     );
   };
   renderAddress = () => {
@@ -171,7 +180,9 @@ export default class ReturnAddressList extends React.Component {
   onSelectTime = val => {
     this.setState({ selectedTime: val });
     this.props.history.push(
-      `${RETURNS_PREFIX}/${ORDER_ID}${RETURN_CLIQ_PIQ}${RETURN_CLIQ_PIQ_RETURN_SUMMARY}`
+      `${RETURNS_PREFIX}/${
+        this.orderCode
+      }${RETURN_CLIQ_PIQ}${RETURN_CLIQ_PIQ_RETURN_SUMMARY}`
     );
   };
   renderDateTime = () => {

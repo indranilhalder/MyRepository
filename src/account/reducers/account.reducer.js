@@ -60,7 +60,11 @@ const account = (
 
     returnPinCodeStatus: null,
     returnPinCodeValues: null,
-    returnPinCodeFailure: null
+    returnPinCodeFailure: null,
+
+    returnInitiateStatus: null,
+    returnInitiateError: null,
+    returnInitiate: null
   },
   action
 ) => {
@@ -352,22 +356,22 @@ const account = (
         loading: false
       });
 
-    case accountActions.NEW_RETURN_INITIATE_CLIQ_PIQ_REQUEST:
+    case accountActions.NEW_RETURN_INITIATE_REQUEST:
       return Object.assign({}, state, {
-        returnCliqPiqStatus: action.status,
+        returnInitiateStatus: action.status,
         loading: true
       });
-    case accountActions.NEW_RETURN_INITIATE_CLIQ_PIQ_SUCCESS:
+    case accountActions.NEW_RETURN_INITIATE_SUCCESS:
       return Object.assign({}, state, {
-        returnCliqPiqStatus: action.status,
-        returnCliqPiqDetails: action.returnDetails,
+        returnInitiateStatus: action.status,
+        returnInitiate: action.returnDetails,
         loading: false
       });
 
-    case accountActions.NEW_RETURN_INITIATE_CLIQ_PIQ_FAILURE:
+    case accountActions.NEW_RETURN_INITIATE_FAILURE:
       return Object.assign({}, state, {
-        returnCliqPiqStatus: action.status,
-        returnCliqPiqError: action.error,
+        returnInitiateStatus: action.status,
+        returnInitiateError: action.error,
         loading: false
       });
 
