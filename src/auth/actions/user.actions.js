@@ -7,7 +7,8 @@ import {
   showModal,
   SIGN_UP_OTP_VERIFICATION,
   hideModal,
-  FORGOT_PASSWORD_OTP_VERIFICATION
+  FORGOT_PASSWORD_OTP_VERIFICATION,
+  NEW_PASSWORD
 } from "../../general/modal.actions.js";
 import * as Cookie from "../../lib/Cookie";
 import config from "../../lib/config";
@@ -77,7 +78,8 @@ export const FORGOT_PASSWORD_PATH =
   "v2/mpl/forgottenpasswordtokens/customerForgotPassword";
 export const FORGOT_PASSWORD_OTP_VERIFICATION_PATH =
   "v2/mpl/forgottenpasswordtokens/forgotPasswordOTPVerification";
-export const RESET_PASSWORD = "resetpassword";
+export const RESET_PASSWORD =
+  "/v2/mpl/forgottenpasswordtokens/forgotPassword?access_token=";
 export const OTP_VERIFICATION_PATH =
   "/v2/mpl/users/registrationOTPVerification";
 export const TOKEN_PATH = "oauth/token";
@@ -329,7 +331,12 @@ export function forgotPasswordOtpVerification(otpDetails, userDetails) {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-
+      dispatch(
+        showModal(NEW_PASSWORD, {
+          otpDetails: otpDetails,
+          userName: userDetails
+        })
+      );
       dispatch(forgotPasswordOtpVerificationSuccess(resultJson));
     } catch (e) {
       dispatch(forgotPasswordOtpVerificationFailure(e.message));
@@ -358,10 +365,16 @@ export function resetPasswordFailure(error) {
   };
 }
 export function resetPassword(userDetails) {
+  const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(resetPasswordRequest());
     try {
-      const result = await api.post(RESET_PASSWORD, userDetails);
+      const url = `${RESET_PASSWORD}${
+        JSON.parse(globalAccessToken).access_token
+      }&username=${userDetails.username}&newPassword=${
+        userDetails.newPassword
+      }&otp=${userDetails.otp}`;
+      const result = await api.post(url);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);

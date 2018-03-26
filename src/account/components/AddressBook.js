@@ -3,9 +3,15 @@ import styles from "./AddressBook.css";
 import Button from "../../general/components/Button.js";
 import AddressItemFooter from "./AddressItemFooter.js";
 import MDSpinner from "react-md-spinner";
+import {
+  MY_ACCOUNT_PAGE,
+  MY_ACCOUNT_ADDRESS_EDIT_PAGE,
+  MY_ACCOUNT_ADDRESS_ADD_PAGE
+} from "../../lib/constants.js";
 const ADDRESS_BOOK_HEADER = "Add a new address";
 const DELETE_LABEL = "Delete";
 const EDIT_LABEL = "Edit";
+
 export default class AddressBook extends React.Component {
   componentDidMount() {
     this.props.getUserAddress();
@@ -25,6 +31,20 @@ export default class AddressBook extends React.Component {
     );
   };
 
+  editAddress = address => {
+    this.props.history.push({
+      pathname: `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_EDIT_PAGE}`,
+      state: {
+        addressDetails: address
+      }
+    });
+  };
+
+  addAddress = () => {
+    this.props.history.push({
+      pathname: `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_ADD_PAGE}`
+    });
+  };
   renderAddressBook = () => {
     return (
       <div className={styles.base}>
@@ -45,12 +65,7 @@ export default class AddressBook extends React.Component {
                   <AddressItemFooter
                     buttonLabel={DELETE_LABEL}
                     underlineButtonLabel={EDIT_LABEL}
-                    editAddress={() =>
-                      this.setState({
-                        isEditable: true,
-                        editableAddressId: address.id
-                      })
-                    }
+                    editAddress={() => this.editAddress(address)}
                     removeAddress={() => this.removeAddress(address.id)}
                     isEditable={true}
                   />
@@ -59,17 +74,15 @@ export default class AddressBook extends React.Component {
             );
           })}
 
-        <div className={styles.buttonHolder}>
-          <div className={styles.button}>
-            <Button
-              type="hollow"
-              height={40}
-              label={ADDRESS_BOOK_HEADER}
-              width={200}
-              textStyle={{ color: "#212121", fontSize: 14 }}
-              onClick={() => this.setState({ addNewAddress: true })}
-            />
-          </div>
+        <div className={styles.button}>
+          <Button
+            type="hollow"
+            height={40}
+            label={ADDRESS_BOOK_HEADER}
+            width={200}
+            textStyle={{ color: "#212121", fontSize: 14 }}
+            onClick={() => this.addAddress()}
+          />
         </div>
       </div>
     );

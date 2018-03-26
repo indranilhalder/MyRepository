@@ -48,9 +48,16 @@ const account = (
     removeAddressStatus: null,
     removeAddressError: null,
 
+    editAddressStatus: null,
+    editAddressError: null,
+
+    addUserAddressStatus: null,
+    addUserAddressError: null,
+
     followedBrands: null,
     followedBrandsStatus: null,
     followedBrandsError: null,
+
     loadingForFollowedBrands: false,
 
     cliqCashUserDetailsStatus: null,
@@ -67,7 +74,8 @@ const account = (
 
     verifyWalletMobileNumberStatus: null,
     verifyWalletMobileNumberError: null,
-    verifyWalletMobileNumberDetails: null
+    verifyWalletMobileNumberDetails: null,
+    loadingForFollowedBrands: false
   },
   action
 ) => {
@@ -382,6 +390,44 @@ const account = (
       return Object.assign({}, state, {
         verifyWalletMobileNumberStatus: action.status,
         verifyWalletMobileNumberError: action.error,
+        loading: false
+      });
+
+    case accountActions.EDIT_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.EDIT_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        loading: false
+      });
+
+    case accountActions.EDIT_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        editAddressError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_USER_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        addUserAddressError: action.error,
         loading: false
       });
 
