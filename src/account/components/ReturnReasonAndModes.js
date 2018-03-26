@@ -3,6 +3,7 @@ import MDSpinner from "react-md-spinner";
 import ReturnReasonForm from "./ReturnReasonForm.js";
 import ReturnModes from "./ReturnModes.js";
 import {
+  CASH_ON_DELIVERY,
   RETURNS_PREFIX,
   RETURN_LANDING,
   RETURNS_MODES,
@@ -12,7 +13,8 @@ import {
   RETURNS_STORE_MAP,
   RETURN_CLIQ_PIQ,
   SCHEDULED_PICKUP,
-  RETURN_CLIQ_PIQ_ADDRESS
+  RETURN_CLIQ_PIQ_ADDRESS,
+  RETURNS_STORE_BANK_FORM
 } from "../../lib/constants";
 const REG_X_FOR_REASON = /reason/i;
 const REG_X_FOR_MODES = /modes/i;
@@ -33,9 +35,15 @@ export default class ReturnReasonAndModes extends React.Component {
   }
   renderToModes(data) {
     this.props.onChange({ data });
-    this.props.history.push(
-      `${RETURNS_PREFIX}/${this.orderCode}${RETURN_LANDING}${RETURNS_MODES}`
-    );
+    if (this.props.paymentMethod === CASH_ON_DELIVERY) {
+      this.props.history.push(
+        `${RETURNS_PREFIX}/${this.orderCode}${RETURNS_STORE_BANK_FORM}`
+      );
+    } else {
+      this.props.history.push(
+        `${RETURNS_PREFIX}/${this.orderCode}${RETURN_LANDING}${RETURNS_MODES}`
+      );
+    }
   }
   onSelectMode(mode) {
     if (mode === QUICK_DROP) {
