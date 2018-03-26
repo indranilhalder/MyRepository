@@ -1,5 +1,9 @@
 import { connect } from "react-redux";
-import { getUserDetails, updateProfile } from "../actions/account.actions";
+import {
+  getUserDetails,
+  updateProfile,
+  changePassword
+} from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import EditAccountDetails from "../components/EditAccountDetails.js";
 
@@ -10,6 +14,9 @@ const mapDispatchToProps = dispatch => {
     },
     updateProfile: accountDetails => {
       dispatch(updateProfile(accountDetails));
+    },
+    changePassword: passwordDetails => {
+      dispatch(changePassword(passwordDetails));
     }
   };
 };

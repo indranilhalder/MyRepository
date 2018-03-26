@@ -50,7 +50,11 @@ const account = (
     removeAddressError: null,
 
     updateProfileStatus: null,
-    updateProfileError: null
+    updateProfileError: null,
+
+    changePasswordStatus: null,
+    changePasswordError: null,
+    changePasswordDetails: null
   },
   action
 ) => {
@@ -275,6 +279,26 @@ const account = (
       Cookie.deleteCookie(CUSTOMER_ACCESS_TOKEN);
       return Object.assign({}, state, {
         type: action.type
+      });
+
+    case accountActions.CHANGE_PASSWORD_REQUEST:
+      return Object.assign({}, state, {
+        changePasswordStatus: action.status,
+        loading: false
+      });
+
+    case accountActions.CHANGE_PASSWORD_SUCCESS:
+      return Object.assign({}, state, {
+        changePasswordStatus: action.status,
+        changePasswordDetails: action.passwordDetails,
+        loading: false
+      });
+
+    case accountActions.CHANGE_PASSWORD_FAILURE:
+      return Object.assign({}, state, {
+        changePasswordStatus: action.status,
+        changePasswordError: action.error,
+        loading: false
       });
 
     default:

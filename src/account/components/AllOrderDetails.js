@@ -55,10 +55,8 @@ export default class AllOrderDetails extends React.Component {
                     />
                   </div>
                   <OrderCard
-                    imageUrl={orderDetails.products[0].imageURL}
                     price={orderDetails.totalOrderAmount}
                     discountPrice={""}
-                    productName={orderDetails.products[0].productName}
                   />
                   <PriceAndLink
                     onViewDetails={() =>

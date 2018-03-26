@@ -53,10 +53,15 @@ export const UPDATE_PROFILE_REQUEST = "UPDATE_PROFILE_REQUEST";
 export const UPDATE_PROFILE_SUCCESS = "UPDATE_PROFILE_SUCCESS";
 export const UPDATE_PROFILE_FAILURE = "UPDATE_PROFILE_FAILURE";
 
+export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
+export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
+export const CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAILURE";
+
 export const LOG_OUT_ACCOUNT = "LOG_OUT_ACCOUNT";
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const USER_PATH = "v2/mpl/users";
+export const PATH = "v2/mpl";
 const CARD_TYPE = "BOTH";
 
 export function getSavedCardRequest() {
@@ -560,6 +565,60 @@ export function updateProfile(accountDetails, otp) {
       }
     } catch (e) {
       dispatch(updateProfileFailure(e.message));
+    }
+  };
+}
+
+export function changePasswordRequest() {
+  return {
+    type: CHANGE_PASSWORD_REQUEST,
+    status: REQUESTING
+  };
+}
+export function changePasswordSuccess(passwordDetails) {
+  return {
+    type: CHANGE_PASSWORD_SUCCESS,
+    status: SUCCESS,
+    passwordDetails
+  };
+}
+
+export function changePasswordFailure(error) {
+  return {
+    type: CHANGE_PASSWORD_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function changePassword(passwordDetails) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(changePasswordRequest());
+    try {
+      const result = await api.post(
+        `${PATH}/forgottenpasswordtokens/${
+          JSON.parse(userDetails).userName
+        }/resetCustomerPassword?isPwa=true&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&old=${passwordDetails.oldPassword}&newPassword=${
+          passwordDetails.newPassword
+        }`
+      );
+      const resultJson = await result.json();
+
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(`${resultJson.error}`);
+      }
+
+      dispatch(changePasswordSuccess(resultJson));
+    } catch (e) {
+      dispatch(changePasswordFailure(e.message));
     }
   };
 }

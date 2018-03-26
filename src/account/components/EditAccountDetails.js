@@ -9,6 +9,7 @@ import CheckboxAndText from "../../cart/components/CheckboxAndText.js";
 import AccountFooter from "./AccountFooter.js";
 import moment from "moment";
 import { LOG_OUT_ACCOUNT } from "../actions/account.actions.js";
+import ChangePassword from "./ChangePassword.js";
 import * as Cookie from "../../lib/Cookie";
 import {
   LOGGED_IN_USER_DETAILS,
@@ -25,7 +26,8 @@ export default class EditAccountDetails extends React.Component {
       dateOfBirth: "",
       gender: "",
       mobileNumber: "",
-      emailId: ""
+      emailId: "",
+      changePassword: false
     };
   }
   componentDidMount() {
@@ -72,9 +74,18 @@ export default class EditAccountDetails extends React.Component {
   cancel = () => {
     this.props.history.goBack();
   };
+
+  changePassword = passwordDetails => {
+    this.setState({ changePassword: false });
+    this.props.changePassword(passwordDetails);
+  };
+  renderChangePassword = () => {
+    this.setState({ changePassword: true });
+  };
   render() {
+    console.log("test");
     let userDetails = this.props.userDetails;
-    if (userDetails) {
+    if (userDetails && !this.state.changePassword) {
       return (
         <div className={styles.base}>
           <div className={styles.holder}>
@@ -127,7 +138,10 @@ export default class EditAccountDetails extends React.Component {
             </div>
           </div>
           <div className={styles.changePassword}>
-            <ShopByBrandLists brandList={"Change Password"} />
+            <ShopByBrandLists
+              brandList={"Change Password"}
+              onClick={() => this.renderChangePassword()}
+            />
           </div>
           <div className={styles.sendNotification}>
             <CheckboxAndText label="Send Me Notifications" selected={false} />
@@ -137,6 +151,14 @@ export default class EditAccountDetails extends React.Component {
             update={() => this.updateProfile()}
           />
         </div>
+      );
+    } else if (this.state.changePassword) {
+      return (
+        <ChangePassword
+          updatePassword={passwordDetails =>
+            this.changePassword(passwordDetails)
+          }
+        />
       );
     } else {
       return null;
