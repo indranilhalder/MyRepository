@@ -76,7 +76,7 @@ public class MplCustomerReviewPopulator implements Populator<CustomerReviewModel
 		Assert.notNull(target, "Parameter target cannot be null.");
 
 		final UserModel userModel = getUserService().getCurrentUser();
-
+		final UserModel userModelVar = source.getUser();
 		target.setId(source.getPk().getLongValueAsString());
 		target.setComment(source.getComment());
 		target.setDate(source.getCreationtime());
@@ -86,9 +86,14 @@ public class MplCustomerReviewPopulator implements Populator<CustomerReviewModel
 		{
 			target.setAlias(source.getAlias());
 		}
-		else if (source.getUser() != null)
+		//IQA code Review fix
+		//else if (source.getUser() != null)
+		else if (null != userModelVar)
+
 		{
-			final CustomerModel customer = (CustomerModel) source.getUser();
+			//IQA code Review fix
+			//final CustomerModel customer = (CustomerModel) source.getUser();
+			final CustomerModel customer = (CustomerModel) userModelVar;
 			if (StringUtils.isNotBlank(customer.getFirstName()))
 			{
 				target.setAlias(customer.getFirstName());
@@ -105,8 +110,9 @@ public class MplCustomerReviewPopulator implements Populator<CustomerReviewModel
 				}
 			}
 		}
-
-		if (!userModel.getUid().equals("anonymous") && source.getUser().equals(userModel))
+		//IQA code Review fix
+		//if (!userModel.getUid().equals("anonymous") && source.getUser().equals(userModel))
+		if (!userModel.getUid().equals("anonymous") && userModelVar.equals(userModel))
 		{
 			target.setCanEditDelete(true);
 		}
@@ -114,7 +120,8 @@ public class MplCustomerReviewPopulator implements Populator<CustomerReviewModel
 		{
 			target.setCanEditDelete(false);
 		}
-
-		target.setPrincipal(getPrincipalConverter().convert(source.getUser()));
+		//IQA code Review fix
+		//target.setPrincipal(getPrincipalConverter().convert(source.getUser()));
+		target.setPrincipal(getPrincipalConverter().convert(userModelVar));
 	}
 }

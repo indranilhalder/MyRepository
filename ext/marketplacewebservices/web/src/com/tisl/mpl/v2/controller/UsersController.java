@@ -130,6 +130,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -162,6 +163,7 @@ import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.FollowedBrandMcvidModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.EditWishlistNameData;
 import com.tisl.mpl.data.FriendsInviteData;
@@ -511,6 +513,9 @@ public class UsersController extends BaseCommerceController
 	private static final String Followed_Brand_Error = "Followed Brand Error";
 	@Autowired
 	private HttpServletRequest request;
+
+	@Resource(name = "mplCouponFacade")
+	private MplCouponFacade mplCouponFacade;
 
 	/**
 	 * TPR-1372
@@ -7458,8 +7463,9 @@ public class UsersController extends BaseCommerceController
 			final String paymentAddressLine1 = java.net.URLDecoder.decode(addressLine1, UTF);
 			final String paymentAddressLine2 = java.net.URLDecoder.decode(addressLine2, UTF);
 			final String paymentAddressLine3 = java.net.URLDecoder.decode(addressLine3, UTF);
+			customer = extUserService.getUserForUid(userId); // NEWUIUX-971
 
-			customer = extendedUserService.getUserForOriginalUid(userId);
+			//	customer = extendedUserService.getUserForOriginalUid(userId);
 			if (null != customer)
 			{
 				uid = customer.getUid();
@@ -7494,7 +7500,6 @@ public class UsersController extends BaseCommerceController
 				{
 					juspayReturnUrl = juspayUrl;
 				}
-
 			}
 
 			returnUrlBuilder.append(juspayReturnUrl);
@@ -7767,6 +7772,7 @@ public class UsersController extends BaseCommerceController
 							{
 								juspayReturnUrl = juspayUrl;
 							}
+
 						}
 
 						if (null != cart.getSplitModeInfo()
@@ -10849,6 +10855,7 @@ public class UsersController extends BaseCommerceController
 		{
 			final int pageSizeConFig = configurationService.getConfiguration().getInt(
 					MarketplacecommerceservicesConstants.WEBFORM_ORDER_HISTORY_PAGESIZE, 5);
+
 			//SDI-5991
 			final PageableData pageableData = createPageableData(currentPage, pageSizeConFig, sort, showMode);
 			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = getMplOrderFacade()
@@ -11528,12 +11535,14 @@ public class UsersController extends BaseCommerceController
 													MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otpassword), mobilenumber);
 									updateCustomerDetailError.setStatus("OTP SENT TO MOBILE NUMBER: PLEASE VALIDATE");
 									return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
+
 								}
 								else
 								{
 									if (mobileUserService.validateOtp(mobilenumber, otp, OTPTypeEnum.REG))
 									{
 										customerToSave.setMobileNumber(mobilenumber);
+
 									}
 									else
 									{
@@ -11635,6 +11644,10 @@ public class UsersController extends BaseCommerceController
 					if (StringUtils.isNotEmpty(emailid))
 					{
 						customerToSave.setDisplayUid(emailid);
+						if (customerToSave.getEmailId() != null && !customerToSave.getEmailId().contains("@"))
+						{
+							customerToSave.setDisplayUid(mobilenumber);
+						}
 					}
 					else
 					{
@@ -13776,4 +13789,126 @@ public class UsersController extends BaseCommerceController
 		return wlDTO;
 
 	}//End of Get all Wish List data.
+
+
+	/**
+	 * The Method is used to display Coupon Details on Cart Page
+	 *
+	 * @param cartGuid
+	 * @param isPwa
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{userId}/displayCouponOffers", method = RequestMethod.GET, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public MplFinalVisibleCouponsDTO displayCouponOffers(@RequestParam(required = false) final String cartGuid,
+			@RequestParam(required = false) final boolean isPwa)
+	{
+		MplFinalVisibleCouponsDTO dto = new MplFinalVisibleCouponsDTO();
+
+		try
+		{
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
+			if (null == currentCustomer)
+			{
+				throw new AccessDeniedException("Access is Denied");
+			}
+
+
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				final List<CartModel> cartList = new ArrayList<>(currentCustomer.getCarts());
+				boolean allowFlag = false;
+
+				if (CollectionUtils.isNotEmpty(cartList))
+				{
+					for (final CartModel carts : cartList)
+					{
+						if (carts.getGuid().equalsIgnoreCase(cartGuid))
+						{
+							allowFlag = true;
+							break;
+						}
+					}
+
+					if (allowFlag)
+					{
+						dto = mplCouponFacade.getDisplayCouponList(cartGuid, currentCustomer);
+					}
+					else
+					{
+						throw new AccessDeniedException("Access is Denied");
+					}
+				}
+
+			}
+			else
+			{
+				dto = mplCouponFacade.getDisplayCouponList(MarketplacecommerceservicesConstants.EMPTY, currentCustomer);
+			}
+
+			dto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+		} //TPR-799
+		catch (final Exception e)
+		{
+			if (e instanceof AccessDeniedException)
+			{
+				dto.setError("Access is Denied");
+				dto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			else
+			{
+				ExceptionUtil.getCustomizedExceptionTrace(e);
+				dto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+				dto.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+				dto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
+		}
+		return dto;
+	}
+
+
+	/**
+	 * The Method fetches open coupons on Cart
+	 *
+	 * @param isPwa
+	 * @return dto
+	 */
+	@RequestMapping(value =
+	{ "/displayOpenCouponOffers", "/{userId}/displayOpenCouponOffers" }, method = RequestMethod.GET, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public MplFinalVisibleCouponsDTO displayOpenCouponOffers(@RequestParam(required = false) final boolean isPwa)
+	{
+		MplFinalVisibleCouponsDTO dto = new MplFinalVisibleCouponsDTO();
+
+		try
+		{
+			dto = mplCouponFacade.getDisplayOpenCouponList();
+			dto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+		}
+		catch (final Exception e)
+		{
+			if (e instanceof AccessDeniedException)
+			{
+				dto.setError("Access is Denied");
+				dto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			else
+			{
+				ExceptionUtil.getCustomizedExceptionTrace(e);
+				dto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+				dto.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+				dto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
+		}
+		return dto;
+
+	}
+
+
+
 }

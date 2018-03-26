@@ -68,5 +68,8 @@ public interface MplProductDao extends ProductDao
 	 */
 	public List<String> getVariantsForSTWProducts(String productCode);
 
+	//changes for SDI 6152
+	public List<ProductModel> findProductsByCodewithCatalog(String productCode, String catalogCode);
+
 
 }

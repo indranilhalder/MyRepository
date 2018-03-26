@@ -25,6 +25,7 @@ import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.wsdto.MplFinalVisibleCouponsDTO;
 import com.tisl.mpl.wsdto.OfferListWsData;
 
 
@@ -235,6 +236,24 @@ public interface MplCouponFacade
 	 * @return AbstractOrderModel
 	 */
 	AbstractOrderModel removeCartCoupon(AbstractOrderModel orderModel);
+
+
+	/**
+	 * The Method returns Coupon Details to be displayed on Cart Page
+	 *
+	 * @param cartGuid
+	 * @param currentCustomer
+	 */
+	MplFinalVisibleCouponsDTO getDisplayCouponList(String cartGuid, CustomerModel currentCustomer);
+
+
+	/**
+	 * The Method returns Open Coupon Details to be displayed on Cart Page
+	 */
+	MplFinalVisibleCouponsDTO getDisplayOpenCouponList();
+
+
+	boolean releaseCartVoucherInCheckout(CartModel cart) throws VoucherOperationException, EtailNonBusinessExceptions;
 
 
 }

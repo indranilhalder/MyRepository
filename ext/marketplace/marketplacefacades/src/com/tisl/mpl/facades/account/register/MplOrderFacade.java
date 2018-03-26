@@ -226,4 +226,12 @@ public interface MplOrderFacade
 	//CAR-362 or SDI-5941
 	SearchPageData<OrderHistoryData> getPagedFilteredParentOrderHistoryWebForm(PageableData pageableData);
 
+	/**
+	 * @param code
+	 * @param catalogCode
+	 * @return
+	 */
+	//changes for SDI 6152
+	public ProductModel getProductForCode(String code, String catalogCode);
+
 }

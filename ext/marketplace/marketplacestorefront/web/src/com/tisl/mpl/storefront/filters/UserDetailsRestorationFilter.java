@@ -162,6 +162,8 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 							}
 							else if (currCust.getType().toString().equals(MessageConstants.GOOGLE_LOGIN)) // TPR-668
 							{
+								//Fix for SDI-5113
+								userType = MessageConstants.GOOGLEUSER;
 								userLoginType = MessageConstants.GOOGLEUSER;
 							}
 							else
