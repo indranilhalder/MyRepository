@@ -240,14 +240,6 @@ export default class PdpApparel extends React.Component {
           )}
           {productData.variantOptions && (
             <React.Fragment>
-              <ColourSelector
-                data={productData.variantOptions.map(value => {
-                  return value.colorlink;
-                })}
-                history={this.props.history}
-                updateColour={val => {}}
-                getProductSpecification={this.props.getProductSpecification}
-              />
               <SizeSelector
                 history={this.props.history}
                 sizeSelected={this.checkIfSizeSelected()}
@@ -256,6 +248,14 @@ export default class PdpApparel extends React.Component {
                 data={productData.variantOptions.map(value => {
                   return value.sizelink;
                 })}
+              />
+              <ColourSelector
+                data={productData.variantOptions.map(value => {
+                  return value.colorlink;
+                })}
+                history={this.props.history}
+                updateColour={val => {}}
+                getProductSpecification={this.props.getProductSpecification}
               />
             </React.Fragment>
           )}
