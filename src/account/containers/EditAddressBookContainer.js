@@ -6,9 +6,6 @@ import EditAddressPopUp from "../components/EditAddressPopUp.js";
 
 const mapDispatchToProps = dispatch => {
   return {
-    getUserAddress: () => {
-      dispatch(getUserAddress());
-    },
     editAddress: addressDetails => {
       dispatch(editAddress(addressDetails));
     }

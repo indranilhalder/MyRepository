@@ -45,6 +45,10 @@ export default class EditAddressPopUp extends React.Component {
       this.props.editAddress(addressDetails);
     }
   }
+
+  cancelAddress = () => {
+    this.props.history.goBack();
+  };
   render() {
     return (
       <div className={styles.base}>
