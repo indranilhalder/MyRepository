@@ -226,157 +226,53 @@ export function getReturnRequest(orderCode, transactionId) {
   };
 }
 
-export function newReturnInitiateForCliqAndPiqRequest() {
+export function returnInitialRequest() {
   return {
-    type: NEW_RETURN_INITIATE_CLIQ_PIQ_REQUEST,
+    type: GET_RETURN_REQUEST,
     status: REQUESTING
   };
 }
 
-export function newReturnInitiateForCliqAndPiqSuccess(returnDetails) {
+export function returnInitialSuccess(returnRequest) {
   return {
-    type: NEW_RETURN_INITIATE_CLIQ_PIQ_SUCCESS,
-    returnDetails,
+    type: GET_RETURN_REQUEST_SUCCESS,
+    returnRequest,
     status: SUCCESS
   };
 }
 
-export function newReturnInitiateForCliqAndPiqFailure(error) {
+export function returnInitialFailure(error) {
   return {
-    type: NEW_RETURN_INITIATE_CLIQ_PIQ_FAILURE,
+    type: GET_RETURN_REQUEST_FAILURE,
     error,
     status: FAILURE
   };
 }
 
-export function newReturnInitial(returnDetails) {
+export function returnInitial(orderCode, transactionId) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    dispatch(newReturnInitiateForCliqAndPiqRequest());
-
-    try {
-      const result = await api.post(
-        `${USER_PATH}/${
-          JSON.parse(userDetails).userName
-        }/newReturnInitiate?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&channel=mobile`,
-        returnDetails
-      );
-      const resultJson = await result.json();
-
-      if (resultJson.errors) {
-        throw new Error(resultJson.errors[0].message);
-      }
-
-      dispatch(newReturnInitiateForCliqAndPiqSuccess(resultJson));
-    } catch (e) {
-      dispatch(newReturnInitiateForCliqAndPiqFailure(e.message));
-    }
-  };
-}
-
-export function returnPInCodeRequest() {
-  return {
-    type: RETURN_PIN_CODE_REQUEST,
-    status: REQUESTING
-  };
-}
-
-export function returnPInCodeSuccess(pinCodeDetails) {
-  return {
-    type: RETURN_PIN_CODE_SUCCESS,
-    pinCodeDetails,
-    status: SUCCESS
-  };
-}
-
-export function returnPinCodeFailure(error) {
-  return {
-    type: RETURN_PIN_CODE_FAILURE,
-    error,
-    status: FAILURE
-  };
-}
-
-export function returnPinCode(productDetails) {
-  return async (dispatch, getState, { api }) => {
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    dispatch(returnPInCodeRequest());
-
-    try {
-      const result = await api.post(
-        `${USER_PATH}/${
-          JSON.parse(userDetails).userName
-        }/returnPincode?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&&orderCode=${productDetails.orderCode}&pincode=${
-          productDetails.pinCode
-        }&transactionId=${productDetails.transactionId}`
-      );
-      const resultJson = await result.json();
-
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(
-          resultJson.returnLogisticsResponseDTO[0].responseMessage
-        );
-      }
-
-      dispatch(returnPInCodeSuccess(resultJson));
-    } catch (e) {
-      dispatch(returnPinCodeFailure(e.message));
-    }
-  };
-}
-
-export function quickDropStoreRequest() {
-  return {
-    type: QUICK_DROP_STORE_REQUEST,
-    status: REQUESTING
-  };
-}
-
-export function quickDropStoreSuccess(addresses) {
-  return {
-    type: QUICK_DROP_STORE_SUCCESS,
-    addresses,
-    status: SUCCESS
-  };
-}
-
-export function quickDropStoreFailure(error) {
-  return {
-    type: QUICK_DROP_STORE_FAILURE,
-    error,
-    status: FAILURE
-  };
-}
-
-export function quickDropStore(pincode, ussId) {
-  return async (dispatch, getState, { api }) => {
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    dispatch(quickDropStoreRequest());
+    dispatch(returnInitialRequest());
 
     try {
       const result = await api.get(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
-        }/quickDropStores?access_token=${
+        }/returnRequest?access_token=${
           JSON.parse(customerCookie).access_token
-        }&pincode=${pincode}&&ussid=${ussId}`
+        }&channel=mobile&loginId=${
+          JSON.parse(userDetails).userName
+        }&orderCode=180314-000-111548&transactionId=273570000120027`
       );
 
       const resultJson = await result.json();
-
       if (resultJson.errors) {
         throw new Error(resultJson.errors[0].message);
       }
-      dispatch(quickDropStoreSuccess(resultJson.returnStoreDetailsList));
+      dispatch(returnInitialSuccess(resultJson));
     } catch (e) {
-      dispatch(quickDropStoreFailure(e.message));
+      dispatch(returnInitialFailure(e.message));
     }
   };
 }
