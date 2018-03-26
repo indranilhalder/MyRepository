@@ -21,7 +21,7 @@ export default class OtpVerificationWithWhiteBackGround extends React.Component 
     this.setState({ otp: val });
   }
   wrongNumber() {
-    if (this.props.callVerify) {
+    if (this.props.wrongNumber) {
       this.props.wrongNumber();
     }
   }
@@ -73,12 +73,11 @@ export default class OtpVerificationWithWhiteBackGround extends React.Component 
 }
 OtpVerificationWithWhiteBackGround.propTypes = {
   mobileNumber: PropTypes.string,
-  submit: PropTypes.func,
+  wrongNumber: PropTypes.func,
   callVerify: PropTypes.func,
   resendOtp: PropTypes.func
 };
 
 OtpVerificationWithWhiteBackGround.defaultProps = {
-  mobileNumber: "",
-  userDetails: null
+  mobileNumber: ""
 };
