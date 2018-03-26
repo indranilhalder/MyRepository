@@ -10,6 +10,7 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 
+
 <style>
 table {
 	border-collapse: collapse;
@@ -44,7 +45,7 @@ th {
 				<c:if test="${feature.typeCode eq 'HeroBannerComponent'}">
 					<div>
 						<h1>HeroBannerComponent</h1>
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>title</th>
@@ -71,7 +72,7 @@ th {
 				<c:if test="${feature.typeCode eq 'ConnectBannerComponent'}">
 					<div>
 						<h1>ConnectBannerComponent</h1>
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>Sub Type</th>
@@ -92,7 +93,7 @@ th {
 								<td>${feature.btnText}</td>
 								<td><img alt="" src="${feature.iconImageURL.URL}"></td>
 								<td><img alt="" src="${feature.backgroundImageURL.URL}"></td>
-								<td><a href="${feature.webURL}"> ${feature.webURL}"></a></td>
+								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
 								<td>${feature.startHexCode}</td>
 								<td>${feature.endHexCode}</td>
 							</tr>
@@ -104,7 +105,7 @@ th {
 					<div>
 						<h1>OffersWidgetComponent</h1>
 
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>title</th>
@@ -115,7 +116,7 @@ th {
 							</tr>
 						</table>
 
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>Title</th>
@@ -132,7 +133,8 @@ th {
 										<tr>
 											<td>${offersWidgetElement.title}</td>
 											<td><a href="${offersWidgetElement.webURL}">${offersWidgetElement.webURL}</a></td>
-											<td><img alt="" src="${offersWidgetElement.imageURL.URL}"></td>
+											<td><img alt=""
+												src="${offersWidgetElement.imageURL.URL}"></td>
 											<td>${offersWidgetElement.btnText}</td>
 											<td>${offersWidgetElement.discountText}</td>
 										</tr>
@@ -143,11 +145,11 @@ th {
 						<%-- 					</c:if> --%>
 					</div>
 				</c:if>
-				
+
 				<c:if test="${feature.typeCode eq 'SmartFilterWidgetComponent'}">
 					<div>
 						<h1>SmartFilterWidgetComponent</h1>
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>title</th>
@@ -157,7 +159,7 @@ th {
 								<td>${feature.title}</td>
 							</tr>
 						</table>
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>Title</th>
@@ -183,11 +185,11 @@ th {
 						</table>
 					</div>
 				</c:if>
-				
+
 				<c:if test="${feature.typeCode eq 'FlashSalesComponent'}">
 					<div>
 						<h1>FlashSalesComponent</h1>
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>title</th>
@@ -202,30 +204,16 @@ th {
 							</thead>
 							<tr>
 								<td>${feature.title}</td>
-							</tr>
-							<tr>
 								<td>${feature.description}</td>
-							</tr>
-							<tr>
 								<td>${feature.backgroundHexCode}</td>
-							</tr>
-							<tr>
 								<td><img alt="" src="${feature.backgroundImageURL.URL}"></td>
-							</tr>
-							<tr>
 								<td>${feature.startDate}</td>
-							</tr>
-							<tr>
 								<td>${feature.endDate}</td>
-							</tr>
-							<tr>
 								<td>${feature.btnText}</td>
-							</tr>
-							<tr>
-								<td><a href="${feature.webURL}"> ${feature.webURL}"></a></td>
+								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
 							</tr>
 						</table>
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>title</th>
@@ -248,24 +236,25 @@ th {
 								</div>
 							</c:forEach>
 						</table>
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>webURL</th>
 									<th>title</th>
-									<th>ProductCode</th>
+									<th>productCode</th>
 								</tr>
 							</thead>
 							<c:forEach items="${feature.items}" var="flashsalesitemElements">
 								<div>
 									<c:if
 										test="${flashsalesitemElements.typeCode eq 'FlashSalesItemElement'}">
-										
+
 										<tr>
 											<td>${flashsalesitemElements.title}</td>
 											<td><a href="${flashsalesitemElements.webURL}">${flashsalesitemElements.webURL}</a></td>
-											<c:if test="${flashsalesitemElements.ProductCode}">
-											<td>${flashsalesitemElements.ProductCode.code}</td>
+
+											<c:if test="${not empty flashsalesitemElements.productCode}">
+												<td>${flashsalesitemElements.productCode.code}</td>
 											</c:if>
 										</tr>
 									</c:if>
@@ -275,11 +264,11 @@ th {
 
 					</div>
 				</c:if>
-				
+
 				<c:if test="${feature.typeCode eq 'ContentWidgetComponent'}">
 					<div>
 						<h1>ContentWidgetComponent</h1>
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>title</th>
@@ -289,7 +278,7 @@ th {
 								<td>${feature.title}</td>
 							</tr>
 						</table>
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>title</th>
@@ -309,7 +298,7 @@ th {
 											<td><img alt=""
 												src="${contentwidgetElement.imageURL.URL}"></td>
 											<td>${contentwidgetElement.description}</td>
-											<td>${feature.btnText}</td>
+											<td>${contentwidgetElement.btnText}</td>
 										</tr>
 									</c:if>
 								</div>
@@ -321,7 +310,7 @@ th {
 				<c:if test="${feature.typeCode eq 'BannerProductCarouselComponent'}">
 					<div>
 						<h1>BannerProductCarouselComponent</h1>
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>title</th>
@@ -333,26 +322,18 @@ th {
 							</thead>
 							<tr>
 								<td>${feature.title}</td>
-							</tr>
-							<tr>
 								<td><a href="${feature.webURL}">${feature.webURL}</a></td>
-							</tr>
-							<tr>
 								<td><img alt="" src="${feature.imageURL.URL}"></td>
-							</tr>
-							<tr>
 								<td>${feature.description}</td>
-							</tr>
-							<tr>
 								<td>${feature.btnText}</td>
 							</tr>
 						</table>
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>webURL</th>
 									<th>title</th>
-									<th>ProductCode</th>
+									<th>productCode</th>
 								</tr>
 							</thead>
 							<c:forEach items="${feature.items}"
@@ -363,8 +344,9 @@ th {
 										<tr>
 											<td>${bannerProdCarouselElement.title}</td>
 											<td><a href="${bannerProdCarouselElement.webURL}">${bannerProdCarouselElement.webURL}</a></td>
-											<c:if test="${bannerProdCarouselElement.ProductCode}">
-											<td>${bannerProdCarouselElement.ProductCode.code}</td>
+											<c:if
+												test="${not empty bannerProdCarouselElement.productCode}">
+												<td>${bannerProdCarouselElement.productCode.code}</td>
 											</c:if>
 										</tr>
 									</c:if>
@@ -377,7 +359,7 @@ th {
 				<c:if test="${feature.typeCode eq 'VideoProductCarouselComponent'}">
 					<div>
 						<h1>VideoProductCarouselComponent</h1>
-						<table class="">
+						<table class="" border="1">
 							<thead>
 								<tr>
 									<th>title</th>
@@ -385,30 +367,18 @@ th {
 									<th>imageURL</th>
 									<th>description</th>
 									<th>btnText</th>
-									<th>videoURL</th>
 									<th>brandLogo</th>
+									<th>videoURL</th>
 								</tr>
 							</thead>
 							<tr>
 								<td>${feature.title}</td>
-							</tr>
-							<tr>
 								<td><a href="${feature.webURL}">${feature.webURL}</a></td>
-							</tr>
-							<tr>
 								<td><img alt="" src="${feature.imageURL.URL}"></td>
-							</tr>
-							<tr>
 								<td>${feature.description}</td>
-							</tr>
-							<tr>
 								<td>${feature.btnText}</td>
-							</tr>
-							<tr>
 								<td><img alt="" src="${feature.brandLogo.URL}"></td>
-							</tr>
-							<tr>
-								<td><img alt="" src="${feature.videoURL}"></td>
+								<td><a href="${feature.videoURL}">${feature.videoURL}</a></td>
 							</tr>
 						</table>
 						<table class="">
@@ -416,7 +386,7 @@ th {
 								<tr>
 									<th>webURL</th>
 									<th>title</th>
-									<th>ProductCode</th>
+									<th>productCode</th>
 								</tr>
 							</thead>
 							<c:forEach items="${feature.items}"
@@ -427,8 +397,9 @@ th {
 										<tr>
 											<td>${videoProductCarouselElement.title}</td>
 											<td><a href="${videoProductCarouselElement.webURL}">${videoProductCarouselElement.webURL}</a></td>
-											<c:if test="${videoProductCarouselElement.ProductCode}">
-											<td>${videoProductCarouselElement.ProductCode.code}</td>
+											<c:if
+												test="${not empty videoProductCarouselElement.productCode}">
+												<td>${videoProductCarouselElement.productCode.code}</td>
 											</c:if>
 										</tr>
 									</c:if>
@@ -453,17 +424,9 @@ th {
 							</thead>
 							<tr>
 								<td>${feature.title}</td>
-							</tr>
-							<tr>
 								<td>${feature.backgroundHexCode}</td>
-							</tr>
-							<tr>
-								<td><img alt="" src="${feature.backgroundImageURL}"></td>
-							</tr>
-							<tr>
+								<td><img alt="" src="${feature.backgroundImageURL.URL}"></td>
 								<td>${feature.btnText}</td>
-							</tr>
-							<tr>
 								<td><a href="${feature.webURL}">${feature.webURL}</a></td>
 							</tr>
 						</table>
@@ -497,7 +460,7 @@ th {
 								<tr>
 									<th>title</th>
 									<th>webURL</th>
-									<th>ProductCode</th>
+									<th>productCode</th>
 								</tr>
 							</thead>
 							<c:forEach items="${feature.items}" var="themeOffersItemsElement">
@@ -507,8 +470,8 @@ th {
 										<tr>
 											<td>${themeOffersItemsElement.title}</td>
 											<td><a href="${themeOffersItemsElement.webURL}">${themeOffersItemsElement.webURL}</a></td>
-											<c:if test="${themeOffersItemsElement.ProductCode}">
-											<td>${themeOffersItemsElement.ProductCode.code}</td>
+											<c:if test="${not empty themeOffersItemsElement.productCode}">
+												<td>${themeOffersItemsElement.productCode.code}</td>
 											</c:if>
 										</tr>
 									</c:if>
@@ -534,14 +497,8 @@ th {
 							</thead>
 							<tr>
 								<td><img alt="" src="${feature.imageURL.URL}"></td>
-							</tr>
-							<tr>
 								<td><img alt="" src="${feature.brandLogo.URL}"></td>
-							</tr>
-							<tr>
 								<td>${feature.btnText}</td>
-							</tr>
-							<tr>
 								<td>${feature.title}</td>
 							</tr>
 						</table>
@@ -550,7 +507,7 @@ th {
 								<tr>
 									<th>webURL</th>
 									<th>title</th>
-									<th>ProductCode</th>
+									<th>productCode</th>
 								</tr>
 							</thead>
 							<c:forEach items="${feature.items}"
@@ -561,8 +518,9 @@ th {
 										<tr>
 											<td><a href="${themeProductWidgetElement.webURL}">${themeProductWidgetElement.webURL}</a></td>
 											<td>${themeProductWidgetElement.title}</td>
-											<c:if test="${themeProductWidgetElement.ProductCode}">
-											<td>${themeProductWidgetElement.ProductCode.code}</td>
+											<c:if
+												test="${not empty themeProductWidgetElement.productCode}">
+												<td>${themeProductWidgetElement.productCode.code}</td>
 											</c:if>
 										</tr>
 									</c:if>
@@ -592,7 +550,7 @@ th {
 								<td><img alt="" src="${feature.iconImageURL.URL}"></td>
 								<td>${feature.startHexCode}</td>
 								<td>${feature.endHexCode}</td>
-								<td><a href="${feature.webURL}"> ${feature.webURL}"></a></td>
+								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
 							</tr>
 						</table>
 					</div>
@@ -614,17 +572,9 @@ th {
 							</thead>
 							<tr>
 								<td><img alt="" src="${feature.imageURL.URL}"></td>
-							</tr>
-							<tr>
 								<td><img alt="" src="${feature.brandLogo.URL}"></td>
-							</tr>
-							<tr>
 								<td>${feature.btnText}</td>
-							</tr>
-							<tr>
-								<td><a href="${feature.webURL}"> ${feature.webURL}"></a></td>
-							</tr>
-							<tr>
+								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
 								<td>${feature.description}</td>
 							</tr>
 						</table>
@@ -633,7 +583,7 @@ th {
 								<tr>
 									<th>webURL</th>
 									<th>title</th>
-									<th>ProductCode</th>
+									<th>productCode</th>
 								</tr>
 							</thead>
 							<c:forEach items="${feature.items}"
@@ -644,8 +594,9 @@ th {
 										<tr>
 											<td><a href="${automatedBrandProductCarElement.webURL}">${automatedBrandProductCarElement.webURL}</a></td>
 											<td>${automatedBrandProductCarElement.title}</td>
-											<c:if test="${automatedBrandProductCarElement.ProductCode}">
-											<td>${automatedBrandProductCarElement.ProductCode.code}</td>
+											<c:if
+												test="${not empty automatedBrandProductCarElement.productCode}">
+												<td>${automatedBrandProductCarElement.productCode.code}</td>
 											</c:if>
 										</tr>
 									</c:if>
@@ -669,7 +620,7 @@ th {
 							<tr>
 								<td>${feature.title}</td>
 								<td>${feature.startHexCode}</td>
-								<td><a href="${feature.webURL}"> ${feature.webURL}"></a></td>
+								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
 							</tr>
 						</table>
 					</div>
@@ -746,7 +697,7 @@ th {
 										test="${subBrandBannerBLPElement.typeCode eq 'SubBrandBannerBLPElement'}">
 										<tr>
 											<td><a href="${subBrandBannerBLPElement.webURL}">
-													${subBrandBannerBLPElement.webURL}"></a></td>
+													${subBrandBannerBLPElement.webURL}</a></td>
 											<td><img alt=""
 												src="${subBrandBannerBLPElement.imageURL.URL}"></td>
 											<td><img alt=""
@@ -788,7 +739,7 @@ th {
 										<tr>
 											<td>${topCategoriesWidgetElement.title}</td>
 											<td><a href="${topCategoriesWidgetElement.webURL}">
-													${topCategoriesWidgetElement.webURL}"></a></td>
+													${topCategoriesWidgetElement.webURL}</a></td>
 											<td><img alt=""
 												src="${topCategoriesWidgetElement.imageURL.URL}"></td>
 										</tr>
@@ -812,11 +763,7 @@ th {
 							</thead>
 							<tr>
 								<td>${feature.title}</td>
-							</tr>
-							<tr>
-								<td><a href="${feature.webURL}"> ${feature.webURL}"></a></td>
-							</tr>
-							<tr>
+								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
 								<td>${feature.btnText}</td>
 							</tr>
 						</table>
@@ -825,7 +772,7 @@ th {
 								<tr>
 									<th>webURL</th>
 									<th>title</th>
-									<th>ProductCode</th>
+									<th>productCode</th>
 									<th>description</th>
 								</tr>
 							</thead>
@@ -837,8 +784,9 @@ th {
 										<tr>
 											<td><a href="${curatedProductsWidgetElement.webURL}">${curatedProductsWidgetElement.webURL}</a></td>
 											<td>${curatedProductsWidgetElement.title}</td>
-											<c:if test="${curatedProductsWidgetElement.ProductCode}">
-											<td>${curatedProductsWidgetElement.ProductCode.code}</td>
+											<c:if
+												test="${not empty curatedProductsWidgetElement.productCode}">
+												<td>${curatedProductsWidgetElement.productCode.code}</td>
 											</c:if>
 											<td>${curatedProductsWidgetElement.description}</td>
 										</tr>
@@ -897,17 +845,19 @@ th {
 							<thead>
 								<tr>
 									<th>subType</th>
-									<th>brands</th>
+
 								</tr>
+
 							</thead>
 							<c:forEach items="${feature.items}" var="brandsTabAZElement">
 								<div>
 									<c:if
 										test="${brandsTabAZElement.typeCode eq 'BrandsTabAZElement'}">
 										<tr>
-											<td>${brandsTabAZElement.subType}</td>
-											<td>${brandsTabAZElement.brands}</td>
+											<td style="font-weight: bold;">${brandsTabAZElement.subType}</td>
+
 										</tr>
+										<br>
 									</c:if>
 								</div>
 
@@ -918,7 +868,7 @@ th {
 											<th>brandName</th>
 										</tr>
 									</thead>
-									<c:forEach items="${brandsTabAZElement.items}"
+									<c:forEach items="${brandsTabAZElement.brands}"
 										var="brandTabAZBrandElement">
 										<div>
 											<c:if
@@ -931,9 +881,59 @@ th {
 										</div>
 									</c:forEach>
 								</table>
+
+								<c:forEach items="${brandsTabAZElement.items}"
+									var="brandTabAZHeroBannerElement">
+
+
+									<c:if
+										test="${brandTabAZHeroBannerElement.typeCode eq 'HeroBannerComponent'}">
+										<div>
+												<c:forEach items="${brandTabAZHeroBannerElement.items}"
+													var="heroElements">
+													<c:if
+														test="${not empty heroElements && heroElements.typeCode eq 'HeroBannerElement'}">
+														<h1>HeroBannerComponent oF BrandsTabAZListComponent--  ${brandsTabAZElement.subType}</h1>
+														<table class="">
+														<thead>
+															<tr>
+																<th>title</th>
+																<th>webURL</th>
+																<th>imageURL</th>
+																<th>brandLogo</th>
+															</tr>
+														</thead>
+														
+														<tr>
+															<td>${heroElements.title}</td>
+															<td><a href="${heroElements.webURL}">${heroElements.webURL}</a></td>
+															<td><img alt="" src="${heroElements.imageURL.URL}"></td>
+															<td><img alt="" src="${heroElements.brandLogo.URL}"></td>
+														</tr>
+														
+														</table>
+													</c:if>
+
+												</c:forEach>
+											
+										</div>
+									</c:if>
+
+
+									<div>
+										<c:if
+											test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement'}">
+											<tr>
+												<td><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.webURL}</a></td>
+												<td>${brandTabAZBrandElement.brandName}</td>
+											</tr>
+										</c:if>
+									</div>
+								</c:forEach>
+
 							</c:forEach>
 						</table>
-						
+
 
 					</div>
 				</c:if>
@@ -976,7 +976,7 @@ th {
 										<tr>
 											<td>${landingPageHeaderElement.title}</td>
 											<td><a href="${landingPageHeaderElement.webURL}">
-													${landingPageHeaderElement.webURL}"></a></td>
+													${landingPageHeaderElement.webURL}</a></td>
 											<td><img alt=""
 												src="${landingPageHeaderElement.imageURL.URL}"></td>
 											<td><img alt=""
@@ -1005,19 +1005,10 @@ th {
 							</thead>
 							<tr>
 								<td>${feature.title}</td>
-							</tr>
-							<tr>
 								<td>${feature.btnText}</td>
-							</tr>
-							<tr>
-								<td><a href="${feature.fetchURL}">
-										${feature.fetchURL}</a></td>
-							</tr>
-							<tr>
+								<td><a href="${feature.fetchURL}"> ${feature.fetchURL}</a></td>
 								<td><a href="${feature.backupURL}">
 										${feature.backupURL}</a></td>
-							</tr>
-							<tr>
 								<td>${feature.widgetPlatform}</td>
 							</tr>
 						</table>
@@ -1026,7 +1017,7 @@ th {
 								<tr>
 									<th>title</th>
 									<th>webURL</th>
-									<th>ProductCode</th>
+									<th>productCode</th>
 								</tr>
 							</thead>
 							<c:forEach items="${feature.items}"
@@ -1037,8 +1028,9 @@ th {
 										<tr>
 											<td>${autoProductRecommendationElement.title}</td>
 											<td><a href="${autoProductRecommendationElement.webURL}">${autoProductRecommendationElement.webURL}</a></td>
-											<c:if test="${autoProductRecommendationElement.ProductCode}">
-											<td>${autoProductRecommendationElement.ProductCode.code}</td>
+											<c:if
+												test="${not empty autoProductRecommendationElement.productCode}">
+												<td>${autoProductRecommendationElement.productCode.code}</td>
 											</c:if>
 										</tr>
 									</c:if>
@@ -1094,7 +1086,8 @@ th {
 												test="${landingPageHierarchyElementList.typeCode eq 'LandingPageHierarchyElementList'}">
 												<tr>
 													<td>${landingPageHierarchyElementList.title}</td>
-													<td><a href="${landingPageHierarchyElementList.webURL}">${landingPageHierarchyElementList.webURL}</a></td>
+													<td><a
+														href="${landingPageHierarchyElementList.webURL}">${landingPageHierarchyElementList.webURL}</a></td>
 												</tr>
 											</c:if>
 										</div>
