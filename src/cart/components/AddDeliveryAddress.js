@@ -9,6 +9,7 @@ import CheckboxAndText from "./CheckboxAndText";
 import TextArea from "../../general/components/TextArea.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
+import { SUCCESS } from "../../lib/constants.js";
 const SAVE_TEXT = "Save & Continue";
 const ISO_CODE = "IN";
 export default class AddDeliveryAddress extends React.Component {
@@ -36,6 +37,12 @@ export default class AddDeliveryAddress extends React.Component {
   }
   onChangeDefaultFlag(val) {
     this.setState({ defaultFlag: val.defaultFlag });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.addUserAddressStatus === SUCCESS) {
+      this.props.history.goBack();
+    }
   }
 
   addNewAddress = () => {

@@ -68,7 +68,8 @@ export const MY_ACCOUNT_ALERTS_PAGE = "/alerts";
 export const MY_ACCOUNT_COUPON_PAGE = "/coupons";
 export const MY_ACCOUNT_CART_PAGE = "/cart";
 export const MY_ACCOUNT_CLIQ_CASH_PAGE = "/cliq-cash";
-
+export const MY_ACCOUNT_ADDRESS_EDIT_PAGE = "/address-book/edit";
+export const MY_ACCOUNT_ADDRESS_ADD_PAGE = "/address-book/add";
 export const CLIQ_AND_PIQ = "/select-stores";
 export const PRODUCT_CART_DELIVERY_MODES = "/deliveryModes";
 export const PRODUCT_DELIVERY_ADDRESSES = "/deliveryAddress";
@@ -105,4 +106,8 @@ export const SHORT_COLLECT = "CNC";
 export const FOLLOW = "Follow";
 export const FOLLOWING = "Following";
 
+export const PLAT_FORM_NUMBER = "2";
+
+
 export const TRUE = "true";
+

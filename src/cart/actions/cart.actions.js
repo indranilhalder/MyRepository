@@ -544,11 +544,10 @@ export function addUserAddressRequest(error) {
   };
 }
 
-export function addUserAddressSuccess(userAddress) {
+export function addUserAddressSuccess() {
   return {
     type: ADD_USER_ADDRESS_SUCCESS,
-    status: SUCCESS,
-    userAddress
+    status: SUCCESS
   };
 }
 
