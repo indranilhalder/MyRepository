@@ -19,7 +19,8 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   RETURN_CLIQ_PIQ_RETURN_SUMMARY,
   SUCCESS,
-  FAILURE
+  FAILURE,
+  MY_ACCOUNT
 } from "../../lib/constants";
 const REG_X_FOR_ADDRESS = /address/i;
 const REG_X_FOR_DATE_TIME = /dateTime/i;
@@ -41,13 +42,6 @@ export default class ReturnAddressList extends React.Component {
     };
   }
 
-  componentDidMount() {
-    if (this.props.getReturnRequest) {
-      this.props.getReturnRequest("180314-000-111548", "273570000120027");
-    }
-    this.props.returnProductDetails();
-  }
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.AddUserAddressStatus === SUCCESS) {
       if (this.state.addNewAddress === true) {
@@ -55,6 +49,7 @@ export default class ReturnAddressList extends React.Component {
         this.props.history.goBack();
       }
     }
+
     if (nextProps.returnPinCodeStatus === FAILURE) {
       this.props.history.goBack();
     } else if (nextProps.returnPinCodeStatus === SUCCESS) {
@@ -210,8 +205,8 @@ export default class ReturnAddressList extends React.Component {
     returnCliqAndPiqObject.ussid = this.props.returnProducts.orderProductWsDTO[0].USSID;
     returnCliqAndPiqObject.transactionType = "01";
     returnCliqAndPiqObject.returnMethod = "schedule";
-    returnCliqAndPiqObject.subReasonCode = "JEW2S2";
-    returnCliqAndPiqObject.comment = "Test";
+    returnCliqAndPiqObject.subReasonCode = this.props.data.secondaryReasons[0].value;
+    returnCliqAndPiqObject.comment = this.props.data.comment;
     returnCliqAndPiqObject.addressType = this.state.selectedAddress.addressType;
     returnCliqAndPiqObject.firstName = this.state.selectedAddress.firstName;
     returnCliqAndPiqObject.lastName = this.state.selectedAddress.lastName;
@@ -228,7 +223,7 @@ export default class ReturnAddressList extends React.Component {
     returnCliqAndPiqObject.isDefault = this.state.selectedAddress.returnPinCodeValues;
     returnCliqAndPiqObject.scheduleReturnDate = this.state.selectedDate;
     returnCliqAndPiqObject.scheduleReturnTime = this.state.selectedTime;
-    this.props.newReturnInitiateForCliqAndPiq(returnCliqAndPiqObject);
+    this.props.newReturnInitial(returnCliqAndPiqObject);
   };
   renderReturnSummary = () => {
     return (

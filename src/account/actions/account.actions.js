@@ -249,7 +249,7 @@ export function newReturnInitiateForCliqAndPiqFailure(error) {
   };
 }
 
-export function newReturnInitiateForCliqAndPiq(returnDetails) {
+export function newReturnInitial(returnDetails) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
