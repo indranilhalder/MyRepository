@@ -123,9 +123,9 @@ if (
   process.env.REACT_APP_STAGE === "production" ||
   process.env.REACT_APP_STAGE === "p2"
 ) {
-  process.env.JUS_PAY_API_URL_ROOT = "https://api.juspay.in";
+  process.env.REACT_APP_JUS_PAY_API_URL_ROOT = "https://api.juspay.in";
 } else {
-  process.env.JUS_PAY_API_URL_ROOT = "https://sandbox.juspay.in";
+  process.env.REACT_APP_JUS_PAY_API_URL_ROOT = "https://sandbox.juspay.in";
 }
 
 function getClientEnvironment(publicUrl) {

@@ -11,14 +11,16 @@ import SizeGuideModal from "../../pdp/components/SizeGuideModal";
 import EmiModal from "../../pdp/containers/EmiListContainer";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
 import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
-
+import KycApplicationForm from "../../account/components/KycApplicationForm";
+import KycDetailsPopup from "../../auth/components/KycDetailsPopup";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
     super(props);
     this.el = document.createElement("div");
     this.state = {
-      loggedIn: false
+      loggedIn: false,
+      customerDetails: null
     };
   }
 
@@ -75,6 +77,25 @@ export default class ModalRoot extends React.Component {
   getUserAddress = () => {
     this.props.getUserAddress();
   };
+  generateOtpForEgv = () => {
+    this.props.generateOtpForEgv();
+  };
+  verifyOtp(val) {
+    let customerDetailsWithOtp = {};
+    customerDetailsWithOtp.firstName = this.state.firstName;
+    customerDetailsWithOtp.mobileNumber = this.state.mobileNumber;
+    customerDetailsWithOtp.lastName = this.state.lastName;
+    customerDetailsWithOtp.otp = val.otp;
+    this.props.verifyWallet(customerDetailsWithOtp);
+  }
+  generateOtp(val) {
+    let customerDetails = {};
+    customerDetails.firstName = val.firstName;
+    customerDetails.mobileNumber = val.mobileNumber;
+    customerDetails.lastName = val.lastName;
+    this.setState(customerDetails);
+    this.props.getOtpToActivateWallet(customerDetails);
+  }
 
   render() {
     const MODAL_COMPONENTS = {
@@ -137,6 +158,21 @@ export default class ModalRoot extends React.Component {
         />
       ),
       SizeGuide: <SizeGuideModal closeModal={() => this.handleClose()} />,
+      GenerateOtpForEgv: (
+        <KycApplicationForm
+          closeModal={() => this.handleClose()}
+          generateOtp={val => this.generateOtp(val, this.props.ownProps)}
+          {...this.props.ownProps}
+        />
+      ),
+      verifyOtp: (
+        <KycDetailsPopup
+          closeModal={() => this.handleClose()}
+          mobileNumber={this.state.mobileNumber}
+          submitOtp={val => this.verifyOtp(val, this.props.ownProps)}
+          {...this.props.ownProps}
+        />
+      ),
       EmiModal: <EmiModal />,
       OtpLoginModal: (
         <OtpVerification

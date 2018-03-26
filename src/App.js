@@ -22,7 +22,6 @@ import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryC
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
 import MobileFooter from "./general/components/MobileFooter.js";
-
 // importing All container for my Accounts
 import MyAccountContainer from "./account/containers/MyAccountContainer";
 import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
@@ -34,6 +33,8 @@ import AllOrderContainer from "./account/containers/AllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
 import AddressBookContainer from "./account/containers/AddressBookContainer.js";
+import EditAddressBookContainer from "./account/containers/EditAddressBookContainer.js";
+import AddAddressContainer from "./account/containers/AddAddressContainer.js";
 import SaveListContainer from "./account/containers/SaveListContainer";
 import GiftCardContainer from "./account/containers/GiftCardContainer";
 import {
@@ -79,8 +80,10 @@ import {
   MY_ACCOUNT_COUPON_PAGE,
   MY_ACCOUNT_BRANDS_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
-  ORDER_PREFIX,
-  MY_ACCOUNT_GIFT_CARD_PAGE
+  MY_ACCOUNT_GIFT_CARD_PAGE,
+  MY_ACCOUNT_ADDRESS_EDIT_PAGE,
+  MY_ACCOUNT_ADDRESS_ADD_PAGE,
+  ORDER_PREFIX
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -283,6 +286,16 @@ class App extends Component {
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_PAGE}`}
               component={AddressBookContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_EDIT_PAGE}`}
+              component={EditAddressBookContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_ADD_PAGE}`}
+              component={AddAddressContainer}
             />
           </Switch>
           <MobileFooter />

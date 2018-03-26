@@ -5,8 +5,7 @@ import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import TextArea from "../../general/components/TextArea";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
-import PdfFooter from "../../pdp/components/PdpFooter.js";
-
+import Button from "../../general/components/Button.js";
 export default class GiftCard extends React.Component {
   constructor(props) {
     super(props);
@@ -32,42 +31,23 @@ export default class GiftCard extends React.Component {
       giftCardDetails.mobileNumber = "9769344954";
       this.props.createGiftCardDetails(giftCardDetails);
     }
-    if (this.props.getOtpToActivateWallet) {
-      let customerDetails = {};
-      customerDetails.firstName = "insha";
-      customerDetails.mobileNumber = "9936805071";
-      customerDetails.lastName = "nazeer";
-      // this.props.getOtpToActivateWallet(customerDetails);
-    }
-    if (this.props.verifyWallet) {
-      let customerDetailsWithOtp = {};
-      customerDetailsWithOtp.firstName = "insha";
-      customerDetailsWithOtp.mobileNumber = "9936805071";
-      customerDetailsWithOtp.lastName = "nazeer";
-      customerDetailsWithOtp.otp = "223102";
-      this.props.verifyWallet(customerDetailsWithOtp);
-    }
   }
   selectAmount(val) {
     this.setState({ amountText: val });
   }
-  getQuantity(val) {
-    if (this.props.onChange) {
-      this.props.onChange(val);
-    }
-  }
-  onSave() {
-    if (this.props.onSave) {
-      this.props.onSave();
-    }
-  }
-  onAddToBag(val) {
-    if (this.props.onAddToBag) {
-      this.props.onAddToBag(this.state);
-    }
-  }
+  // onSave() {
+  //   if (this.props.onSave) {
+  //     this.props.onSave();
+  //   }
+  // }
+  // onAddToBag(val) {
+  //   if (this.props.onAddToBag) {
+  //     this.props.onAddToBag(this.state);
+  //   }
+  // }
   render() {
     let giftCards = this.props.giftCardsDetails.giftCards;
+    console.log(giftCards);
     return (
       <div className={styles.base}>
         <div className={styles.giftCardImageHolder}>
@@ -93,7 +73,7 @@ export default class GiftCard extends React.Component {
           <div className={styles.giftCardTextHolder}>
             <div className={styles.infoHeder}>Gift Card</div>
             <div className={styles.infoText}>
-              Enter details for your getOtpToActivateWalletgift card
+              Enter details for your gift card
             </div>
           </div>
           <div className={styles.formCard}>
@@ -182,20 +162,27 @@ export default class GiftCard extends React.Component {
             </div>
             <div className={styles.selectHolder}>
               <div className={styles.labelHeader}>Quantity</div>
-              <SelectBoxMobile
-                value="1"
-                onChange={val => this.getQuantity(val)}
-                options={this.props.quantity}
-              />
+              <SelectBoxMobile value="1" />
             </div>
           </div>
         </div>
-        <div className={styles.footer}>
-          <PdfFooter
-            onSave={() => this.onSave()}
-            onAddToBag={() => this.onAddToBag()}
-          />
-        </div>
+        {giftCards &&
+          giftCards.isWalletCreated &&
+          giftCards.isWalletOtpVerified && (
+            <div className={styles.buttonHolder}>
+              <div className={styles.button}>
+                <Button
+                  type="primary"
+                  backgroundColor="#ff1744"
+                  height={36}
+                  label="Generate OTP"
+                  width={211}
+                  textStyle={{ color: "#FFF", fontSize: 14 }}
+                  onClick={() => this.submitOtp()}
+                />
+              </div>
+            </div>
+          )}
       </div>
     );
   }

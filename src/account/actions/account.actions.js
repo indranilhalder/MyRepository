@@ -14,8 +14,15 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
-  GLOBAL_ACCESS_TOKEN
+  GLOBAL_ACCESS_TOKEN,
+  PLAT_FORM_NUMBER
 } from "../../lib/constants";
+import {
+  showModal,
+  GENERATE_OTP_FOR_EGV,
+  hideModal,
+  VERIFY_OTP
+} from "../../general/modal.actions.js";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
@@ -53,6 +60,9 @@ export const REMOVE_ADDRESS_REQUEST = "REMOVE_ADDRESS_REQUEST";
 export const REMOVE_ADDRESS_SUCCESS = "REMOVE_ADDRESS_SUCCESS";
 export const REMOVE_ADDRESS_FAILURE = "REMOVE_ADDRESS_FAILURE";
 
+export const EDIT_ADDRESS_REQUEST = "EDIT_ADDRESS_REQUEST";
+export const EDIT_ADDRESS_SUCCESS = "EDIT_ADDRESS_SUCCESS";
+export const EDIT_ADDRESS_FAILURE = "EDIT_ADDRESS_FAILURE";
 export const GET_WISHLIST_REQUEST = "GET_WISHLIST_REQUEST";
 export const GET_WISHLIST_SUCCESS = "GET_WISHLIST_SUCCESS";
 export const GET_WISHLIST_FAILURE = "GET_WISHLIST_FAILURE";
@@ -148,6 +158,9 @@ export function getGiftCardDetails() {
         resultJson.status === SUCCESS_UPPERCASE ||
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
+        if (!resultJson.isWalletCreated && !resultJson.isWalletOtpVerified) {
+          dispatch(showModal(GENERATE_OTP_FOR_EGV));
+        }
         return dispatch(giftCardSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.errors[0].message}`);
@@ -241,24 +254,26 @@ export function getOtpToActivateWallet(customerDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(getOtpToActivateWalletRequest());
     try {
-      // const result = await api.post(
-      //   `${USER_PATH}/${
-      //     JSON.parse(userDetails).userName
-      //   }/checkWalletMobileNumber?access_token=${
-      //     JSON.parse(customerCookie).access_token
-      //   }&isUpdateProfile=0`,
-      //   customerDetails
-      // );
-      // const resultJson = await result.json();
-      // if (
-      //   resultJson.status === SUCCESS ||
-      //   resultJson.status === SUCCESS_UPPERCASE ||
-      //   resultJson.status === SUCCESS_CAMEL_CASE
-      // ) {
-      //   return dispatch(getOtpToActivateWalletSuccess(resultJson));
-      // } else {
-      //   throw new Error(`${resultJson.errors[0].message}`);
-      // }
+      const result = await api.post(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/checkWalletMobileNumber?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isUpdateProfile=0`,
+        customerDetails
+      );
+      const resultJson = await result.json();
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        dispatch(hideModal(GENERATE_OTP_FOR_EGV));
+        dispatch(showModal(VERIFY_OTP));
+        return dispatch(getOtpToActivateWalletSuccess(resultJson));
+      } else {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
     } catch (e) {
       dispatch(getOtpToActivateWalletFailure(e.message));
     }
@@ -647,6 +662,28 @@ export function removeAddress(addressId) {
   };
 }
 
+export function editAddressRequest() {
+  return {
+    type: EDIT_ADDRESS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function editAddressSuccess(addressDetails) {
+  return {
+    type: EDIT_ADDRESS_SUCCESS,
+    status: SUCCESS,
+    addressDetails
+  };
+}
+
+export function editAddressFailure(error) {
+  return {
+    type: EDIT_ADDRESS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
 export function fetchOrderDetailsRequest() {
   return {
     type: FETCH_ORDER_DETAILS_REQUEST,
@@ -664,8 +701,51 @@ export function fetchOrderDetailsSuccess(fetchOrderDetails) {
 export function fetchOrderDetailsFailure(error) {
   return {
     type: FETCH_ORDER_DETAILS_FAILURE,
+
     status: ERROR,
     error
+  };
+}
+
+export function editAddress(addressDetails) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(editAddressRequest());
+    let addressObject = new FormData();
+    addressObject.append("countryIso", addressDetails.countryIso);
+    addressObject.append("addressType", addressDetails.addressType);
+    addressObject.append("phone", addressDetails.phone);
+    addressObject.append("firstName", addressDetails.firstName);
+    addressObject.append("lastName", addressDetails.lastName);
+    addressObject.append("postalCode", addressDetails.postalCode);
+    addressObject.append("line1", addressDetails.line1);
+    addressObject.append("line2", addressDetails.line2);
+    addressObject.append("line3", addressDetails.line3);
+    addressObject.append("state", addressDetails.state);
+    addressObject.append("town", addressDetails.town);
+    addressObject.append("defaultFlag", addressDetails.defaultFlag);
+    addressObject.append("addressId", addressDetails.addressId);
+    addressObject.append("emailId", "");
+
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/editAddress?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&pageSize=${PAGE_SIZE}&isPwa=true&platformNumber=${PLAT_FORM_NUMBER}`,
+        addressObject
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(editAddressSuccess(resultJson));
+    } catch (e) {
+      dispatch(editAddressFailure(e.message));
+    }
   };
 }
 
