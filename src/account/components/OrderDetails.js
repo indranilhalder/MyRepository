@@ -13,7 +13,7 @@ import queryString from "query-string";
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import {
-  PAYMENT_METHOD,
+  CASH_ON_DELIVERY,
   ORDER_PREFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -34,13 +34,14 @@ export default class OrderDetails extends React.Component {
 
   replaceItem(orderId, paymentMethod) {
     let isCOD = false;
-    if (paymentMethod === PAYMENT_METHOD) {
+    if (paymentMethod === CASH_ON_DELIVERY) {
       isCOD = true;
     }
     this.props.history.push({
       pathname: `${RETURNS_PREFIX}/${orderId}${RETURN_LANDING}${RETURNS_REASON}`,
       state: {
-        isCOD
+        isCOD,
+        authorizedRequest: true
       }
     });
   }

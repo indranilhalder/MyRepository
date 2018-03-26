@@ -36,13 +36,23 @@ export default class ReturnReasonAndModes extends React.Component {
   renderToModes(data) {
     this.props.onChange({ data });
     if (this.props.paymentMethod === CASH_ON_DELIVERY) {
-      this.props.history.push(
-        `${RETURNS_PREFIX}/${this.orderCode}${RETURNS_STORE_BANK_FORM}`
-      );
+      this.props.history.push({
+        pathname: `${RETURNS_PREFIX}/${
+          this.orderCode
+        }${RETURNS_STORE_BANK_FORM}`,
+        state: {
+          authorizedRequest: true
+        }
+      });
     } else {
-      this.props.history.push(
-        `${RETURNS_PREFIX}/${this.orderCode}${RETURN_LANDING}${RETURNS_MODES}`
-      );
+      this.props.history.push({
+        pathname: `${RETURNS_PREFIX}/${
+          this.orderCode
+        }${RETURN_LANDING}${RETURNS_MODES}`,
+        state: {
+          authorizedRequest: true
+        }
+      });
     }
   }
   onSelectMode(mode) {
@@ -52,7 +62,7 @@ export default class ReturnReasonAndModes extends React.Component {
           this.orderCode
         }${RETURN_TO_STORE}${RETURNS_STORE_MAP}`,
         state: {
-          isRequestFromFlow: true
+          authorizedRequest: true
         }
       });
     } else if (mode === SCHEDULED_PICKUP) {
@@ -61,7 +71,7 @@ export default class ReturnReasonAndModes extends React.Component {
           this.orderCode
         }${RETURN_CLIQ_PIQ}${RETURN_CLIQ_PIQ_ADDRESS}`,
         state: {
-          isRequestFromFlow: true
+          authorizedRequest: true
         }
       });
     }
