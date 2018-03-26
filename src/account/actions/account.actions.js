@@ -483,7 +483,7 @@ export function editAddress(addressDetails) {
     addressObject.append("line3", addressDetails.line3);
     addressObject.append("state", addressDetails.state);
     addressObject.append("town", addressDetails.town);
-    addressObject.append("defaultFlag", true);
+    addressObject.append("defaultFlag", addressDetails.defaultFlag);
     addressObject.append("addressId", addressDetails.addressId);
     addressObject.append("emailId", "");
 

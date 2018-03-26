@@ -26,7 +26,8 @@ export default class EditAddressPopUp extends React.Component {
       line2: addressDetails.line2,
       line3: "",
       town: addressDetails.town,
-      addressId: addressDetails.id
+      addressId: addressDetails.id,
+      defaultFlag: addressDetails.defaultAddress
     };
   }
 
