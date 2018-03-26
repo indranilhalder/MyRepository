@@ -145,7 +145,6 @@ export function getProductDescriptionSuccess(productDescription) {
 }
 
 export function getProductDescriptionFailure(error) {
-  console.log(error);
   return {
     type: PRODUCT_DESCRIPTION_FAILURE,
     status: ERROR,
