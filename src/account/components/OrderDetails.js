@@ -32,7 +32,7 @@ export default class OrderDetails extends React.Component {
     }
   }
 
-  replaceItem(orderId, paymentMethod) {
+  replaceItem(orderId, paymentMethod, transactionId) {
     let isCOD = false;
     if (paymentMethod === CASH_ON_DELIVERY) {
       isCOD = true;
@@ -41,7 +41,8 @@ export default class OrderDetails extends React.Component {
       pathname: `${RETURNS_PREFIX}/${orderId}${RETURN_LANDING}${RETURNS_REASON}`,
       state: {
         isCOD,
-        authorizedRequest: true
+        authorizedRequest: true,
+        transactionId: transactionId
       }
     });
   }
@@ -72,7 +73,7 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
-    console.log(orderDetails);
+
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -146,7 +147,8 @@ export default class OrderDetails extends React.Component {
                     replaceItem={() =>
                       this.replaceItem(
                         products.sellerorderno,
-                        orderDetails.paymentMethod
+                        orderDetails.paymentMethod,
+                        products.transactionId
                       )
                     }
                     writeReview={() => this.writeReview()}

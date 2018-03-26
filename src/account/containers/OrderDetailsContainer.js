@@ -14,7 +14,7 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   return {
-    orderDetails: state.profile.fetchOrderDetails
+    orderDetails: state.profile.fetchOrderDetails,
   };
 };
 

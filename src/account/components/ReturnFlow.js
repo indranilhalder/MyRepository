@@ -19,6 +19,7 @@ import {
   RETURNS_PREFIX,
   RETURN_CLIQ_PIQ
 } from "../../lib/constants";
+const RETURN_FLAG = "R";
 
 export default class ReturnFlow extends React.Component {
   constructor(props) {
@@ -31,8 +32,17 @@ export default class ReturnFlow extends React.Component {
     };
   }
   componentDidMount() {
-    this.props.returnProductDetailsFunc();
-    this.props.getReturnRequest();
+    console.log(this.props);
+    let orderCode = this.orderCode;
+    let transactionId = this.props.location.state.transactionId;
+
+    let productDetails = {};
+    productDetails.transactionId = transactionId;
+    productDetails.returnCancelFlag = RETURN_FLAG;
+    productDetails.orderCode = orderCode;
+
+    this.props.returnProductDetailsFunc(productDetails);
+    this.props.getReturnRequest(orderCode, transactionId);
   }
   onChangeBankingDetail(val) {
     let bankDetail = cloneDeep(this.state.bankDetail);
@@ -54,46 +64,50 @@ export default class ReturnFlow extends React.Component {
     });
   }
   render() {
-    const renderReasonAndMode = (
-      <ReturnReasonAndModes
-        {...this.state}
-        {...this.props}
-        onChange={val => this.onChangeReasonAndMode(val)}
-      />
-    );
-    const renderBankForm = (
-      <ReturnBankForm
-        onChange={val => this.onChangeBankingDetail(val)}
-        onContinue={() => this.navigateToShowInitiateReturn()}
-      />
-    );
-    return (
-      <React.Fragment>
-        <Route
-          path={`${RETURNS}${RETURN_LANDING}`}
-          render={() => renderReasonAndMode}
+    if (this.props.returnRequest && this.props.returnProductDetails) {
+      const renderReasonAndMode = (
+        <ReturnReasonAndModes
+          {...this.state}
+          {...this.props}
+          onChange={val => this.onChangeReasonAndMode(val)}
         />
-        <Route
-          exact
-          path={`${RETURNS}${RETURNS_STORE_BANK_FORM}`}
-          render={() => renderBankForm}
+      );
+      const renderBankForm = (
+        <ReturnBankForm
+          onChange={val => this.onChangeBankingDetail(val)}
+          onContinue={() => this.navigateToShowInitiateReturn()}
         />
+      );
+      return (
+        <React.Fragment>
+          <Route
+            path={`${RETURNS}${RETURN_LANDING}`}
+            render={() => renderReasonAndMode}
+          />
+          <Route
+            exact
+            path={`${RETURNS}${RETURNS_STORE_BANK_FORM}`}
+            render={() => renderBankForm}
+          />
 
-        <Route
-          path={`${RETURNS}${RETURN_TO_STORE}`}
-          render={() => (
-            <ReturnToStoreContainer {...this.state} {...this.props} />
-          )}
-        />
+          <Route
+            path={`${RETURNS}${RETURN_TO_STORE}`}
+            render={() => (
+              <ReturnToStoreContainer {...this.state} {...this.props} />
+            )}
+          />
 
-        <Route
-          path={`${RETURNS}${RETURN_CLIQ_PIQ}`}
-          render={() => (
-            <ReturnCliqAndPiqContainer {...this.state} {...this.props} />
-          )}
-        />
-        {/* end of need to call return bia store pick up  routes */}
-      </React.Fragment>
-    );
+          <Route
+            path={`${RETURNS}${RETURN_CLIQ_PIQ}`}
+            render={() => (
+              <ReturnCliqAndPiqContainer {...this.state} {...this.props} />
+            )}
+          />
+          {/* end of need to call return bia store pick up  routes */}
+        </React.Fragment>
+      );
+    } else {
+      return null;
+    }
   }
 }
