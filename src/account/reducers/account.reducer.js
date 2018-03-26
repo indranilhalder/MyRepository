@@ -60,7 +60,7 @@ const account = (
 
     returnPinCodeStatus: null,
     returnPinCodeValues: null,
-    returnPinCodeFailure: null,
+    returnPinCodeError: null,
 
     returnInitiateStatus: null,
     returnInitiateError: null,
@@ -390,7 +390,7 @@ const account = (
     case accountActions.RETURN_PIN_CODE_FAILURE:
       return Object.assign({}, state, {
         returnPinCodeStatus: action.status,
-        returnPinCodeFailure: action.error,
+        returnPinCodeError: action.error,
         loading: false
       });
 

@@ -20,7 +20,9 @@ import {
   RETURN_CLIQ_PIQ_RETURN_SUMMARY,
   SUCCESS,
   FAILURE,
-  MY_ACCOUNT
+  MY_ACCOUNT,
+  ORDER,
+  ORDER_CODE
 } from "../../lib/constants";
 const REG_X_FOR_ADDRESS = /address/i;
 const REG_X_FOR_DATE_TIME = /dateTime/i;
@@ -48,8 +50,15 @@ export default class ReturnAddressList extends React.Component {
         this.props.history.goBack();
       }
     }
-
+    if (nextProps.returnInitiateStatus === SUCCESS) {
+      this.props.history.push(
+        `${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${this.orderCode}`
+      );
+    } else if (nextProps.returnInitiateStatus === FAILURE) {
+      alert(nextProps.returnInitiateError);
+    }
     if (nextProps.returnPinCodeStatus === FAILURE) {
+      alert(nextProps.returnPinCodeError);
       this.props.history.goBack();
     } else if (
       nextProps.returnPinCodeStatus === SUCCESS &&

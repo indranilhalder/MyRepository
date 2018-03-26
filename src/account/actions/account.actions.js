@@ -265,6 +265,8 @@ export function newReturnInitial(returnDetails) {
 
       if (resultJson.errors) {
         throw new Error(resultJson.errors[0].message);
+      } else if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.status);
       }
 
       dispatch(newReturnInitiateSuccess(resultJson));

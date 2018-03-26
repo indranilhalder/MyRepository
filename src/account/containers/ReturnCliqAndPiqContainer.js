@@ -24,6 +24,9 @@ const mapStateToProps = (state, ownProps) => {
     returnPinCodeStatus: state.profile.returnPinCodeStatus,
     returnProducts: state.profile.returnProductDetails,
     AddUserAddressStatus: state.cart.AddUserAddressStatus,
+    returnInitiateStatus: state.profile.returnInitiateStatus,
+    returnInitiateError: state.profile.returnInitiateError,
+    returnPinCodeError: state.profile.returnPinCodeError,
     ...ownProps
   };
 };
