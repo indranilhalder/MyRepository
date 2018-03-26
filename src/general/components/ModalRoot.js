@@ -75,6 +75,7 @@ export default class ModalRoot extends React.Component {
   getUserAddress = () => {
     this.props.getUserAddress();
   };
+
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -83,7 +84,13 @@ export default class ModalRoot extends React.Component {
           handleRestoreClick={userId => this.handleRestoreClick(userId)}
         />
       ),
-      NewPassword: <NewPassword />,
+      NewPassword: (
+        <NewPassword
+          {...this.props.ownProps}
+          handleCancel={() => this.handleClose}
+          onContinue={userDetails => this.resetPassword(userDetails)}
+        />
+      ),
       SignUpOtpVerification: (
         <OtpVerification
           userObj={this.props.ownProps}
@@ -96,6 +103,8 @@ export default class ModalRoot extends React.Component {
         <OtpVerification
           closeModal={() => this.handleClose()}
           submitOtp={otpDetails => this.submitOtpForgotPassword(otpDetails)}
+          userObj={this.props.ownProps}
+          resendOtp={userName => this.handleRestoreClick(userName)}
         />
       ),
       Sort: <Sort />,

@@ -2,14 +2,16 @@ import React from "react";
 import AuthPopUp from "./AuthPopUp";
 import PropTypes from "prop-types";
 import { Button } from "xelpmoc-core";
-import Input from "../../general/components/Input";
+import PasswordInput from "../../auth/components/PasswordInput";
 import { default as styles } from "./AuthPopUp.css";
 import { default as ownStyles } from "./RestorePassword.css";
+import Error from "../../general/components/Error.js";
 export default class NewPassword extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: ""
+      userId: "",
+      error: false
     };
   }
 
@@ -20,8 +22,21 @@ export default class NewPassword extends React.Component {
   }
 
   handleContinue() {
+    const newPassword = this.state.newPassword;
+    const confirmedPassword = this.state.confirmedPassword;
+    if (newPassword === confirmedPassword) {
+      this.setState({ error: false });
+    } else {
+      this.setState({ error: true });
+    }
     if (this.props.onContinue) {
-      this.props.onContinue(this.state.newPassword, this.state.oldPassword);
+      if (newPassword === confirmedPassword) {
+        this.props.onContinue({
+          newPassword: this.state.newPassword,
+          username: this.props.userName,
+          otp: this.props.otpDetails
+        });
+      }
     }
   }
   render() {
@@ -32,19 +47,22 @@ export default class NewPassword extends React.Component {
           Please enter your Email or phone number to restore the password
         </div> */}
         <div className={styles.input}>
-          <Input
+          <PasswordInput
             hollow={true}
             placeholder="New password"
             onChange={val => this.setState({ newPassword: val })}
           />
         </div>
         <div className={styles.input}>
-          <Input
+          <PasswordInput
             hollow={true}
-            placeholder="Old password"
-            onChange={val => this.setState({ oldPassword: val })}
+            type="password"
+            placeholder="Confirm Password"
+            onChange={val => this.setState({ confirmedPassword: val })}
           />
         </div>
+        <Error message="Passwords must match" show={this.state.error} />
+
         <div className={styles.button}>
           <div className={ownStyles.submit}>
             <Button
