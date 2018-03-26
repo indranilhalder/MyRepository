@@ -28,10 +28,16 @@ export default class ReturnReasonForm extends React.Component {
         .filter(val => {
           return val.parentReasonCode === code;
         })
+
         .map(val => {
-          return val.subReasons.map(value => {
-            return { value: value.subReasonCode, label: value.subReturnReason };
-          });
+          if (val.subReasons) {
+            return val.subReasons.map(value => {
+              return {
+                value: value.subReasonCode,
+                label: value.subReturnReason
+              };
+            });
+          }
         })[0]
     });
   }

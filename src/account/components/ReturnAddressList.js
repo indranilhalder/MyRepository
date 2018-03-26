@@ -228,7 +228,7 @@ export default class ReturnAddressList extends React.Component {
     returnCliqAndPiqObject.ussid = this.props.returnProducts.orderProductWsDTO[0].USSID;
     returnCliqAndPiqObject.transactionType = "01";
     returnCliqAndPiqObject.returnMethod = "schedule";
-    returnCliqAndPiqObject.subReasonCode = this.props.data.secondaryReasons[0].value;
+    returnCliqAndPiqObject.subReasonCode = "JEW1S1";
     returnCliqAndPiqObject.comment = this.props.data.comment;
     returnCliqAndPiqObject.addressType = this.state.selectedAddress.addressType;
     returnCliqAndPiqObject.firstName = this.state.selectedAddress.firstName;
