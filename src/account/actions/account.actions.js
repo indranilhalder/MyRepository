@@ -134,14 +134,17 @@ export function returnProductDetailsFailure(error) {
   };
 }
 
-export function returnProductDetails() {
+export function returnProductDetails(productDetails) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     let returnProductFormData = new FormData();
-    returnProductFormData.append("transactionId", "273570000120027");
-    returnProductFormData.append("returnCancelFlag", "R");
-    returnProductFormData.append("orderCode", "180314-000-111548");
+    returnProductFormData.append("transactionId", productDetails.transactionId);
+    returnProductFormData.append(
+      "returnCancelFlag",
+      productDetails.returnCancelFlag
+    );
+    returnProductFormData.append("orderCode", productDetails.orderCode);
 
     dispatch(returnProductDetailsRequest());
     try {
@@ -208,7 +211,7 @@ export function getReturnRequest(orderCode, transactionId) {
           JSON.parse(customerCookie).access_token
         }&channel=mobile&loginId=${
           JSON.parse(userDetails).userName
-        }&orderCode=180314-000-111548&transactionId=273570000120027`
+        }&orderCode=${orderCode}&transactionId=${transactionId}`
       );
 
       const resultJson = await result.json();

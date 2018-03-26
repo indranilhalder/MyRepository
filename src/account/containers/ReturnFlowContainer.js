@@ -12,8 +12,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(getReturnRequest(orderCode, transactionId));
     },
 
-    returnProductDetailsFunc: () => {
-      dispatch(returnProductDetails());
+    returnProductDetailsFunc: productDetails => {
+      dispatch(returnProductDetails(productDetails));
     }
   };
 };

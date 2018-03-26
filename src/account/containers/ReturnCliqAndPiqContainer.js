@@ -27,6 +27,7 @@ const mapStateToProps = (state, ownProps) => {
     returnInitiateStatus: state.profile.returnInitiateStatus,
     returnInitiateError: state.profile.returnInitiateError,
     returnPinCodeError: state.profile.returnPinCodeError,
+    orderDetails: state.profile.fetchOrderDetails,
     ...ownProps
   };
 };

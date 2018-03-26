@@ -254,6 +254,9 @@ export default class ReturnAddressList extends React.Component {
         dateSelected={this.state.dateSelected}
         timeSelected={this.state.timeSelected}
         onChangeAddress={() => this.cancel()}
+        returnProducts={this.props.returnProducts}
+        returnRequest={this.props.returnRequest}
+        orderDetails={this.props.orderDetails}
       />
     );
   };
@@ -262,18 +265,22 @@ export default class ReturnAddressList extends React.Component {
     this.props.history.goBack();
   };
   render() {
-    const { pathname } = this.props.location;
-    return (
-      <div>
-        <React.Fragment>
-          {pathname.match(REG_X_FOR_ADDRESS) && this.renderAddress()}
-          {pathname.match(REG_X_FOR_DATE_TIME) && this.renderDateTime()}
-          {pathname.match(REG_X_FOR_NEW_ADDRESS) && this.renderNewAddress()}
-          {pathname.match(REG_X_FOR_RETURN_SUMMARY) &&
-            this.renderReturnSummary()}
-        </React.Fragment>
-      </div>
-    );
+    if (this.props.returnRequest && this.props.returnProducts) {
+      const { pathname } = this.props.location;
+      return (
+        <div>
+          <React.Fragment>
+            {pathname.match(REG_X_FOR_ADDRESS) && this.renderAddress()}
+            {pathname.match(REG_X_FOR_DATE_TIME) && this.renderDateTime()}
+            {pathname.match(REG_X_FOR_NEW_ADDRESS) && this.renderNewAddress()}
+            {pathname.match(REG_X_FOR_RETURN_SUMMARY) &&
+              this.renderReturnSummary()}
+          </React.Fragment>
+        </div>
+      );
+    } else {
+      return null;
+    }
   }
 }
 ReturnAddressList.propTypes = {

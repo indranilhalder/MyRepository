@@ -46,7 +46,7 @@ export default class ReturnToStore extends React.Component {
     }
   }
 
-  navigateToFinalSubmit() {
+  finalSubmit() {
     // submit form here
     const product = this.props.returnProductDetails.orderProductWsDTO[0];
     const productObj = Object.assign(
@@ -116,7 +116,7 @@ export default class ReturnToStore extends React.Component {
     const renderFinalSubmit = (
       <ReturnStoreConfirmation
         {...this.props}
-        onContinue={() => this.navigateToFinalSubmit()}
+        onContinue={() => this.finalSubmit()}
       />
     );
     return (

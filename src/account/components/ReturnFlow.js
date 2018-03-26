@@ -7,6 +7,7 @@ import ReturnModes from "./ReturnModes.js";
 import ReturnToStoreContainer from "../containers/ReturnToStoreContainer";
 import ReturnBankForm from "./ReturnBankForm";
 import ReturnReasonAndModes from "./ReturnReasonAndModes";
+import MDSpinner from "react-md-spinner";
 import SelfCourierContainer from "../containers/SelfCourierContainer";
 import {
   RETURNS,
@@ -21,6 +22,7 @@ import {
   RETURN_CLIQ_PIQ,
   RETURNS_SELF_COURIER
 } from "../../lib/constants";
+const RETURN_FLAG = "R";
 
 export default class ReturnFlow extends React.Component {
   constructor(props) {
@@ -33,8 +35,16 @@ export default class ReturnFlow extends React.Component {
     };
   }
   componentDidMount() {
-    this.props.returnProductDetailsFunc();
-    this.props.getReturnRequest();
+    let orderCode = this.orderCode;
+    let transactionId = this.props.location.state.transactionId;
+
+    let productDetails = {};
+    productDetails.transactionId = transactionId;
+    productDetails.returnCancelFlag = RETURN_FLAG;
+    productDetails.orderCode = orderCode;
+
+    this.props.returnProductDetailsFunc(productDetails);
+    this.props.getReturnRequest(orderCode, transactionId);
   }
   onChangeBankingDetail(val) {
     let bankDetail = cloneDeep(this.state.bankDetail);
@@ -55,7 +65,13 @@ export default class ReturnFlow extends React.Component {
       }
     });
   }
+  renderLoader() {
+    return <MDSpinner />;
+  }
   render() {
+    if (!this.props.returnRequest || !this.props.returnProductDetails) {
+      return this.renderLoader();
+    }
     return (
       <React.Fragment>
         <Route
