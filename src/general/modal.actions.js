@@ -12,6 +12,7 @@ export const EMI_MODAL = "EmiModal";
 export const SIZE_SELECTOR = "SizeSelector";
 export const BANK_OFFERS = "BankOffers";
 export const OTP_LOGIN_MODAL = "OtpLoginModal";
+export const NEW_PASSWORD = "NewPassword";
 
 export function showModal(type, ownProps) {
   return {

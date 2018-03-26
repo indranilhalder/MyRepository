@@ -116,7 +116,7 @@ export default class OtpVerification extends React.Component {
               />
             </div>
             <div className={ownStyles.buttonHolder}>
-              <div className={ownStyles.left}>
+              {/* <div className={ownStyles.left}>
                 <Button
                   backgroundColor={"transparent"}
                   height={30}
@@ -124,7 +124,7 @@ export default class OtpVerification extends React.Component {
                   label={"Call to verify"}
                   onClick={() => this.callVerify()}
                 />
-              </div>
+              </div> */}
               <div className={ownStyles.right}>
                 <Button
                   backgroundColor={"transparent"}

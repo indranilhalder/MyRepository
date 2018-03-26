@@ -18,7 +18,9 @@ const typeComponentMapping = {
   "Watches":props =><PdpElectronics {...props} />,
   "FashionJewellery":props => <PdpJewellery {...props} />,
   "Clothing":props => <PdpApparel {...props} />,
-  "HomeFurnishing":props => <PdpHome {...props} />
+  "Footwear":props => <PdpApparel {...props} />,
+  "HomeFurnishing":props => <PdpHome {...props} />,
+  "FineJewellery": props => <PdpJewellery {...props} />,
 };
 
 const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
@@ -81,12 +83,12 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   renderRootCategory = datumType => {
-    return (
-      <React.Fragment>
-        {typeComponentMapping[datumType] &&
-          typeComponentMapping[datumType]({ ...this.props })}
-      </React.Fragment>
-    );
+    let pdpToRender = typeComponentMapping[datumType];
+    if (!pdpToRender) {
+      pdpToRender = typeComponentMapping["Clothing"];
+    }
+
+    return <React.Fragment>{pdpToRender({ ...this.props })}</React.Fragment>;
   };
   renderLoader() {
     return (

@@ -214,13 +214,12 @@ export default class PdpApparel extends React.Component {
               </div>
             )}
 
-            {productData.productOfferMsg && (
+            {productData.potentialPromotions && (
               <OfferCard
-                endTime={productData.productOfferMsg[0].validTill.date}
-                heading={productData.productOfferMsg[0].promotionTitle}
-                description={
-                  productData.productOfferPromotion[0].promotionDetail
-                }
+                endTime={productData.potentialPromotions.endDate}
+                startDate={productData.potentialPromotions.startDate}
+                heading={productData.potentialPromotions.title}
+                description={productData.potentialPromotions.description}
                 onClick={this.goToCouponPage}
               />
             )}

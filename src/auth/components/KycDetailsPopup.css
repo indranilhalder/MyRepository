@@ -1,0 +1,60 @@
+.base {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  padding: 27px 35px;
+}
+.header {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  font-family: semibold;
+  font-size: 14px;
+}
+.iconHolder {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+  padding-top: 35px;
+}
+.content {
+  font-size: 14px;
+  font-family: regular;
+  padding-top: 20px;
+  margin-bottom: 35px;
+  text-align: center;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding-top: 15px;
+}
+.number {
+  font-size: 14px;
+  font-family: semibold;
+}
+.leftButton {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+  text-align: left;
+}
+.rightButton {
+  display: inline-block;
+  margin-left: auto;
+  width: 50%;
+  text-align: right;
+  vertical-align: top;
+}
+.time {
+  font-size: 12px;
+  font-family: regular;
+  text-align: right;
+  margin-right: 15px;
+}
+.span {
+  text-decoration-line: underline;
+  text-underline-position: under;
+  margin-left: 2px;
+}
