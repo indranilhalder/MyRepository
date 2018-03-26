@@ -61,6 +61,10 @@ export const GET_FOLLOWED_BRANDS_REQUEST = "GET_FOLLOWED_BRANDS_REQUEST";
 export const GET_FOLLOWED_BRANDS_SUCCESS = "GET_FOLLOWED_BRANDS_SUCCESS";
 export const GET_FOLLOWED_BRANDS_FAILURE = "GET_FOLLOWED_BRANDS_FAILURE";
 
+export const GET_GIFTCARD_REQUEST = "GET_GIFTCARD_REQUEST";
+export const GET_GIFTCARD_SUCCESS = "GET_GIFTCARD_SUCCESS";
+export const GET_GIFTCARD_FAILURE = "GET_GIFTCARD_FAILURE";
+
 export const FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_REQUEST =
   "FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_REQUEST";
 export const FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_SUCCESS =
@@ -75,11 +79,16 @@ export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_SUCCESS =
 export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_FAILURE =
   "FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_FAILURE";
 
+export const CREATE_GIFT_CARD_REQUEST = "CREATE_GIFT_CARD_REQUEST";
+export const CREATE_GIFT_CARD_SUCCESS = "CREATE_GIFT_CARD_SUCCESS";
+export const CREATE_GIFT_CARD_FAILURE = "CREATE_GIFT_CARD_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
 export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
+export const ROOT_URL = "v2/mpl/products";
 
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
 
@@ -89,6 +98,105 @@ const WIDGETS_LIST_FOR_BRANDS = [112];
 const CARD_TYPE = "BOTH";
 const FOLLOW = "follow";
 const UNFOLLOW = "unfollow";
+
+export function giftCardRequest() {
+  return {
+    type: GET_GIFTCARD_REQUEST,
+    status: REQUESTING
+  };
+}
+export function giftCardSuccess(giftCards) {
+  return {
+    type: GET_GIFTCARD_SUCCESS,
+    status: SUCCESS,
+    giftCards
+  };
+}
+export function giftCardFailure(error) {
+  return {
+    type: GET_GIFTCARD_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function getGiftCardDetails() {
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(giftCardRequest());
+    try {
+      const result = await api.get(
+        `${PRODUCT_PATH}/egvProductInfo?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`
+      );
+      const resultJson = await result.json();
+
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        return dispatch(giftCardSuccess(resultJson));
+      } else {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+    } catch (e) {
+      dispatch(giftCardFailure(e.message));
+    }
+  };
+}
+////create gift card
+
+export function createGiftCardRequest() {
+  return {
+    type: CREATE_GIFT_CARD_REQUEST,
+    status: REQUESTING
+  };
+}
+export function createGiftCardSuccess(giftCardDetails) {
+  return {
+    type: CREATE_GIFT_CARD_SUCCESS,
+    status: SUCCESS,
+    giftCardDetails
+  };
+}
+
+export function createGiftCardFailure(error) {
+  return {
+    type: CREATE_GIFT_CARD_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function createGiftCardDetails(giftCardDetails) {
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(createGiftCardRequest());
+    try {
+      const result = await api.post(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/createElectronicsGiftCardCartGuid?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`,
+        giftCardDetails
+      );
+      const resultJson = await result.json();
+      console.log(resultJson);
+      if (resultJson.errors) {
+        throw new Error(resultJson.errors[0].message);
+      }
+      dispatch(createGiftCardSuccess(resultJson));
+    } catch (e) {
+      dispatch(createGiftCardFailure(e.message));
+    }
+  };
+}
+
+//////
+
 export function getSavedCardRequest() {
   return {
     type: GET_SAVED_CARD_REQUEST,

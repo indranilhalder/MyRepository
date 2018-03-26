@@ -4,9 +4,9 @@ import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import TextArea from "../../general/components/TextArea";
-import giftCardImage from "../../general/components/img/giftcard.png";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
 import PdfFooter from "../../pdp/components/PdpFooter.js";
+
 export default class GiftCard extends React.Component {
   constructor(props) {
     super(props);
@@ -16,6 +16,22 @@ export default class GiftCard extends React.Component {
       message: this.props.message ? this.props.message : "",
       amountText: this.props.amountText ? this.props.amountText : ""
     };
+  }
+  componentDidMount() {
+    if (this.props.getGiftCardDetails) {
+      this.props.getGiftCardDetails();
+    }
+    if (this.props.createGiftCardDetails) {
+      let giftCardDetails = {};
+      giftCardDetails.from = "ajkdnf";
+      giftCardDetails.quantity = "1";
+      giftCardDetails.messageOnCard = "Ksjdbfkjsd";
+      giftCardDetails.productID = "MP000000000127263";
+      giftCardDetails.priceSelectedByUserPerQuantity = "10000";
+      giftCardDetails.receiverEmailID = "cdoshi@tataunistore.com";
+      giftCardDetails.mobileNumber = "9769344954";
+      this.props.createGiftCardDetails(giftCardDetails);
+    }
   }
   selectAmount(val) {
     this.setState({ amountText: val });
@@ -36,12 +52,18 @@ export default class GiftCard extends React.Component {
     }
   }
   render() {
+    // console.log(this.props.giftCards);
     return (
       <div className={styles.base}>
         <div className={styles.giftCardImageHolder}>
-          <div className={styles.giftCradImage}>
-            <Image image={this.props.giftCardImage} fit="cover" />
-          </div>
+          {this.props.giftCards && (
+            <div className={styles.giftCradImage}>
+              <Image
+                image={this.props.giftCards.giftCartImageUrl}
+                fit="cover"
+              />
+            </div>
+          )}
         </div>
         <div className={styles.giftCardDataHolder}>
           <div className={styles.displayMessageHolder}>
@@ -68,19 +90,24 @@ export default class GiftCard extends React.Component {
               <div className={styles.labelHeader}>
                 Select Amount from below{" "}
               </div>
-              <div className={styles.amountHolder}>
-                {this.props.amountData &&
-                  this.props.amountData.map((val, i) => {
-                    return (
-                      <div
-                        className={styles.amountSelect}
-                        onClick={() => this.selectAmount(val.amount)}
-                      >
-                        {val.amount}
-                      </div>
-                    );
-                  })}
-              </div>
+              {this.props.giftCards && (
+                <div className={styles.amountHolder}>
+                  {this.props.giftCards &&
+                    this.props.giftCards.amountOptions &&
+                    this.props.giftCards.amountOptions.options.map((val, i) => {
+                      return (
+                        <div
+                          className={styles.amountSelect}
+                          onClick={() =>
+                            this.selectAmount(val.formattedValueNoDecimal)
+                          }
+                        >
+                          {val.formattedValueNoDecimal}
+                        </div>
+                      );
+                    })}
+                </div>
+              )}
             </div>
             <div className={styles.inputHolder}>
               <div className={styles.labelHeader}>Or</div>
@@ -173,6 +200,4 @@ GiftCard.propTypes = {
     })
   )
 };
-GiftCard.defaultProps = {
-  giftCardImage: giftCardImage
-};
+GiftCard.defaultProps = {};
