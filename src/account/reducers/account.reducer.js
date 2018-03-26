@@ -51,7 +51,15 @@ const account = (
     followedBrands: null,
     followedBrandsStatus: null,
     followedBrandsError: null,
-    loadingForFollowedBrands: false
+    loadingForFollowedBrands: false,
+
+    cliqCashUserDetailsStatus: null,
+    cliqCashUserDetailsError: null,
+    cliqCashUserDetails: null,
+
+    cliqCashVoucherDetailsStatus: null,
+    cliqCashVoucherDetailsError: null,
+    cliqCashVoucherDetails: null
   },
   action
 ) => {
@@ -289,6 +297,45 @@ const account = (
         loading: false
       });
 
+    case accountActions.GET_USER_CLIQ_CASH_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        cliqCashUserDetailsStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.GET_USER_CLIQ_CASH_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        cliqCashUserDetailsStatus: action.status,
+        cliqCashUserDetails: action.cliqCashUserDetails,
+        loading: false
+      });
+
+    case accountActions.GET_USER_CLIQ_CASH_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        cliqCashUserDetailsStatus: action.status,
+        cliqCashUserDetailsError: action.error,
+        loading: false
+      });
+
+    case accountActions.REDEEM_CLIQ_VOUCHER_REQUEST:
+      return Object.assign({}, state, {
+        cliqCashVoucherDetailsStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.REDEEM_CLIQ_VOUCHER_SUCCESS:
+      return Object.assign({}, state, {
+        cliqCashVoucherDetailsStatus: action.status,
+        cliqCashVoucherDetails: action.cliqCashVoucherDetails,
+        loading: false
+      });
+
+    case accountActions.REDEEM_CLIQ_VOUCHER_FAILURE:
+      return Object.assign({}, state, {
+        cliqCashVoucherDetailsStatus: action.status,
+        cliqCashVoucherDetailsError: action.error,
+        loading: false
+      });
     default:
       return state;
   }

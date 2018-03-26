@@ -75,6 +75,17 @@ export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_SUCCESS =
 export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_FAILURE =
   "FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_FAILURE";
 
+export const GET_USER_CLIQ_CASH_DETAILS_REQUEST =
+  "GET_USER_CLIQ_CASH_DETAILS_REQUEST";
+export const GET_USER_CLIQ_CASH_DETAILS_SUCCESS =
+  "GET_USER_CLIQ_CASH_DETAILS_SUCCESS";
+export const GET_USER_CLIQ_CASH_DETAILS_FAILURE =
+  "GET_USER_CLIQ_CASH_DETAILS_FAILURE";
+
+export const REDEEM_CLIQ_VOUCHER_REQUEST = "REDEEM_CLIQ_VOUCHER_REQUEST";
+export const REDEEM_CLIQ_VOUCHER_SUCCESS = "REDEEM_CLIQ_VOUCHER_SUCCESS";
+export const REDEEM_CLIQ_VOUCHER_FAILURE = "REDEEM_CLIQ_VOUCHER_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -729,6 +740,116 @@ export function getWishList() {
       }
     } catch (e) {
       return dispatch(getWishlistFailure(e.message));
+    }
+  };
+}
+
+export function getCliqCashRequest() {
+  return {
+    type: GET_USER_CLIQ_CASH_DETAILS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getCliqCashSuccess(cliqCashDetails) {
+  return {
+    type: GET_USER_CLIQ_CASH_DETAILS_SUCCESS,
+    status: SUCCESS,
+    cliqCashDetails
+  };
+}
+
+export function getCliqCashFailure(error) {
+  return {
+    type: GET_USER_CLIQ_CASH_DETAILS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getCliqCashDetails() {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(getCliqCashRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/cliqcash/getUserCliqCashDetails?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=${PLATFORM_NUMBER}`
+      );
+      const resultJson = await result.json();
+      console.log(resultJson);
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      if (resultJson.status === SUCCESS) {
+        if (!resultJson.isWalletCreated && resultJson.isWalletOtpVerified) {
+        }
+      }
+      dispatch(getCliqCashSuccess(resultJson));
+    } catch (e) {
+      return dispatch(getCliqCashFailure(e.message));
+    }
+  };
+}
+
+export function redeemCliqVoucherRequest() {
+  return {
+    type: REDEEM_CLIQ_VOUCHER_REQUEST,
+    status: REQUESTING
+  };
+}
+export function redeemCliqVoucherSuccess(cliqCashVoucherDetails) {
+  return {
+    type: REDEEM_CLIQ_VOUCHER_SUCCESS,
+    status: SUCCESS,
+    cliqCashVoucherDetails
+  };
+}
+
+export function redeemCliqVoucherFailure(error) {
+  return {
+    type: REDEEM_CLIQ_VOUCHER_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function redeemCliqVoucher() {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(redeemCliqVoucherRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/cliqcash/redeemCliqVoucher?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=&couponCode=4000162016938599&passKey=141350`
+      );
+      const resultJson = await result.json();
+      console.log(resultJson);
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      if (resultJson.status === SUCCESS) {
+        if (!resultJson.isWalletCreated && resultJson.isWalletOtpVerified) {
+        }
+      }
+      dispatch(redeemCliqVoucherSuccess(resultJson));
+    } catch (e) {
+      return dispatch(redeemCliqVoucherFailure(e.message));
     }
   };
 }

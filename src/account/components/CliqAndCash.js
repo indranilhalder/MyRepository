@@ -15,6 +15,12 @@ export default class CliqAndCash extends React.Component {
       pinNumber: this.props.pinNumber ? this.props.cardNumber : ""
     };
   }
+
+  componentDidMount() {
+    if (this.props.getCliqCashDetails) {
+      this.props.getCliqCashDetails();
+    }
+  }
   gitCard() {
     if (this.props.gitCard) {
       this.props.gitCard();

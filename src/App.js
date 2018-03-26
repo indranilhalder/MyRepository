@@ -35,6 +35,7 @@ import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
 import AddressBookContainer from "./account/containers/AddressBookContainer.js";
 import SaveListContainer from "./account/containers/SaveListContainer";
+import CliqCashContainer from "./account/containers/CliqCashContainer.js";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -78,7 +79,8 @@ import {
   MY_ACCOUNT_COUPON_PAGE,
   MY_ACCOUNT_BRANDS_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
-  ORDER_PREFIX
+  ORDER_PREFIX,
+  MY_ACCOUNT_CLIQ_CASH_PAGE
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -178,6 +180,12 @@ class App extends Component {
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`}
               component={UserAlertsAndCouponsContainer}
+            />
+
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_CLIQ_CASH_PAGE}`}
+              component={CliqCashContainer}
             />
 
             <Route
