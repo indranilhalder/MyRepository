@@ -212,8 +212,12 @@ export default class ReturnAddressList extends React.Component {
 
   newReturnInitiate = () => {
     let isCodOrder = "N";
+    let reverseSealAvailable = "N";
     if (this.props.returnRequest.codSelfShipData.paymentMode === "COD") {
       isCodOrder = "Y";
+    }
+    if (this.props.orderDetails.resendAvailable) {
+      reverseSealAvailable = "Y";
     }
     let returnCliqAndPiqObject = {};
     returnCliqAndPiqObject.returnReasonCode = "01";
@@ -238,7 +242,7 @@ export default class ReturnAddressList extends React.Component {
     returnCliqAndPiqObject.city = this.state.selectedAddress.town;
     returnCliqAndPiqObject.state = this.state.selectedAddress.state;
     returnCliqAndPiqObject.country = this.state.selectedAddress.country.name;
-    returnCliqAndPiqObject.reverseSealAvailable = "N";
+    returnCliqAndPiqObject.reverseSealAvailable = reverseSealAvailable;
     returnCliqAndPiqObject.isDefault = this.state.selectedAddress.returnPinCodeValues;
     returnCliqAndPiqObject.scheduleReturnDate = this.state.selectedDate;
     returnCliqAndPiqObject.scheduleReturnTime = this.state.selectedTime;
