@@ -74,7 +74,6 @@ export default class ReturnAddressList extends React.Component {
   }
 
   onSelectAddress(selectedAddress) {
-    console.log(this.props);
     this.setState({ addressSelectedByUser: false });
     let addressSelected = filter(
       this.props.returnRequest.deliveryAddressesList,
