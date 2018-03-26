@@ -24,7 +24,7 @@ export default class ReturnToStore extends React.Component {
     };
   }
 
-  setStore(storeId) {
+  selectStore(storeId) {
     this.setState({ storeId }, () => {
       this.props.history.push({
         pathname: `${RETURNS_PREFIX}/${
@@ -107,7 +107,7 @@ export default class ReturnToStore extends React.Component {
         availableStores={this.props.returnRequest.returnStoreDetailsList}
         numberOfStores={this.props.returnRequest.returnStoreDetailsList.length}
         pincode={this.state.pincode}
-        addStoreCNC={storeId => this.setStore(storeId)}
+        addStoreCNC={storeId => this.selectStore(storeId)}
         changePincode={pincode => this.setState({ pincode })}
         getLocation={() => this.getLocation()}
       />

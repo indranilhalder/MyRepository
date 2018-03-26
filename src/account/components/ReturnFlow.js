@@ -7,6 +7,7 @@ import ReturnModes from "./ReturnModes.js";
 import ReturnToStoreContainer from "../containers/ReturnToStoreContainer";
 import ReturnBankForm from "./ReturnBankForm";
 import ReturnReasonAndModes from "./ReturnReasonAndModes";
+import SelfCourierContainer from "../containers/SelfCourierContainer";
 import {
   RETURNS,
   RETURNS_REASON,
@@ -17,7 +18,8 @@ import {
   RETURN_TO_STORE,
   RETURN_LANDING,
   RETURNS_PREFIX,
-  RETURN_CLIQ_PIQ
+  RETURN_CLIQ_PIQ,
+  RETURNS_SELF_COURIER
 } from "../../lib/constants";
 
 export default class ReturnFlow extends React.Component {
@@ -54,44 +56,46 @@ export default class ReturnFlow extends React.Component {
     });
   }
   render() {
-    const renderReasonAndMode = (
-      <ReturnReasonAndModes
-        {...this.state}
-        {...this.props}
-        onChange={val => this.onChangeReasonAndMode(val)}
-      />
-    );
-    const renderBankForm = (
-      <ReturnBankForm
-        onChange={val => this.onChangeBankingDetail(val)}
-        onContinue={() => this.navigateToShowInitiateReturn()}
-      />
-    );
     return (
       <React.Fragment>
         <Route
           path={`${RETURNS}${RETURN_LANDING}`}
-          render={() => renderReasonAndMode}
+          render={() => (
+            <ReturnReasonAndModes
+              {...this.state}
+              {...this.props}
+              onChange={val => this.onChangeReasonAndMode(val)}
+            />
+          )}
         />
         <Route
           exact
           path={`${RETURNS}${RETURNS_STORE_BANK_FORM}`}
-          render={() => renderBankForm}
+          render={() => (
+            <ReturnBankForm
+              onChange={val => this.onChangeBankingDetail(val)}
+              onContinue={() => this.navigateToShowInitiateReturn()}
+            />
+          )}
         />
-
         <Route
           path={`${RETURNS}${RETURN_TO_STORE}`}
           render={() => (
             <ReturnToStoreContainer {...this.state} {...this.props} />
           )}
         />
-
         <Route
           path={`${RETURNS}${RETURN_CLIQ_PIQ}`}
           render={() => (
             <ReturnCliqAndPiqContainer {...this.state} {...this.props} />
           )}
         />
+        <Route
+          exact
+          path={`${RETURNS}${RETURNS_SELF_COURIER}`}
+          render={() => <SelfCourierContainer {...this.state} />}
+        />
+
         {/* end of need to call return bia store pick up  routes */}
       </React.Fragment>
     );

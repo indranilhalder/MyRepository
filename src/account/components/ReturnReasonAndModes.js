@@ -14,12 +14,12 @@ import {
   RETURN_CLIQ_PIQ,
   SCHEDULED_PICKUP,
   RETURN_CLIQ_PIQ_ADDRESS,
-  RETURNS_STORE_BANK_FORM
+  RETURNS_STORE_BANK_FORM,
+  SELF_COURIER
 } from "../../lib/constants";
 const REG_X_FOR_REASON = /reason/i;
 const REG_X_FOR_MODES = /modes/i;
 
-const ORDER_ID = "345-34534534";
 export default class ReturnReasonAndModes extends React.Component {
   constructor(props) {
     super();
@@ -74,10 +74,18 @@ export default class ReturnReasonAndModes extends React.Component {
           authorizedRequest: true
         }
       });
+    } else if (mode === SELF_COURIER) {
+      this.props.history.push({
+        pathname: `${RETURNS_PREFIX}/${
+          this.orderCode
+        }${RETURN_CLIQ_PIQ}${RETURN_CLIQ_PIQ_ADDRESS}`,
+        state: {
+          authorizedRequest: true
+        }
+      });
     }
   }
   render() {
-    console.log(this.props);
     if (!this.props.returnRequest || !this.props.returnProductDetails) {
       return this.renderLoader();
     }
