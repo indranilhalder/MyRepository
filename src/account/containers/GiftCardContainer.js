@@ -3,7 +3,9 @@ import { withRouter } from "react-router-dom";
 import GiftCard from "../components/GiftCard.js";
 import {
   getGiftCardDetails,
-  createGiftCardDetails
+  createGiftCardDetails,
+  getOtpToActivateWallet,
+  verifyWallet
 } from "../actions/account.actions";
 
 const mapDispatchToProps = dispatch => {
@@ -14,6 +16,12 @@ const mapDispatchToProps = dispatch => {
 
     createGiftCardDetails: giftCardDetails => {
       dispatch(createGiftCardDetails(giftCardDetails));
+    },
+    getOtpToActivateWallet: customerDetails => {
+      dispatch(getOtpToActivateWallet(customerDetails));
+    },
+    verifyWallet: customerDetailsWithOtp => {
+      dispatch(verifyWallet(customerDetailsWithOtp));
     }
   };
 };
@@ -21,7 +29,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   console.log(state.profile);
   return {
-    giftCards: state.profile.giftCards
+    giftCardsDetails: state.profile
   };
 };
 

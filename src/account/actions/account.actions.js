@@ -83,6 +83,17 @@ export const CREATE_GIFT_CARD_REQUEST = "CREATE_GIFT_CARD_REQUEST";
 export const CREATE_GIFT_CARD_SUCCESS = "CREATE_GIFT_CARD_SUCCESS";
 export const CREATE_GIFT_CARD_FAILURE = "CREATE_GIFT_CARD_FAILURE";
 
+export const GET_OTP_TO_ACTIVATE_WALLET_REQUEST =
+  "GET_OTP_TO_ACTIVATE_WALLET_REQUEST";
+export const GET_OTP_TO_ACTIVATE_WALLET_SUCCESS =
+  "GET_OTP_TO_ACTIVATE_WALLET_SUCCESS";
+export const GET_OTP_TO_ACTIVATE_WALLET_FAILURE =
+  "GET_OTP_TO_ACTIVATE_WALLET_FAILURE";
+
+export const VERIFY_WALLET_REQUEST = "VERIFY_WALLET_REQUEST";
+export const VERIFY_WALLET_SUCCESS = "VERIFY_WALLET_SUCCESS";
+export const VERIFY_WALLET_FAILURE = "VERIFY_WALLET_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -99,6 +110,7 @@ const CARD_TYPE = "BOTH";
 const FOLLOW = "follow";
 const UNFOLLOW = "unfollow";
 
+//get egv product info
 export function giftCardRequest() {
   return {
     type: GET_GIFTCARD_REQUEST,
@@ -145,7 +157,8 @@ export function getGiftCardDetails() {
     }
   };
 }
-////create gift card
+
+//create gift card
 
 export function createGiftCardRequest() {
   return {
@@ -184,18 +197,127 @@ export function createGiftCardDetails(giftCardDetails) {
         giftCardDetails
       );
       const resultJson = await result.json();
-      console.log(resultJson);
-      if (resultJson.errors) {
-        throw new Error(resultJson.errors[0].message);
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        return dispatch(createGiftCardSuccess(resultJson));
+      } else {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
-      dispatch(createGiftCardSuccess(resultJson));
     } catch (e) {
       dispatch(createGiftCardFailure(e.message));
     }
   };
 }
+//get otp to activate wallet
 
-//////
+export function getOtpToActivateWalletRequest() {
+  return {
+    type: GET_OTP_TO_ACTIVATE_WALLET_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getOtpToActivateWalletSuccess(getOtpToActivateWallet) {
+  return {
+    type: GET_OTP_TO_ACTIVATE_WALLET_SUCCESS,
+    status: SUCCESS,
+    getOtpToActivateWallet
+  };
+}
+
+export function getOtpToActivateWalletFailure(error) {
+  return {
+    type: GET_OTP_TO_ACTIVATE_WALLET_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getOtpToActivateWallet(customerDetails) {
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(getOtpToActivateWalletRequest());
+    try {
+      // const result = await api.post(
+      //   `${USER_PATH}/${
+      //     JSON.parse(userDetails).userName
+      //   }/checkWalletMobileNumber?access_token=${
+      //     JSON.parse(customerCookie).access_token
+      //   }&isUpdateProfile=0`,
+      //   customerDetails
+      // );
+      // const resultJson = await result.json();
+      // if (
+      //   resultJson.status === SUCCESS ||
+      //   resultJson.status === SUCCESS_UPPERCASE ||
+      //   resultJson.status === SUCCESS_CAMEL_CASE
+      // ) {
+      //   return dispatch(getOtpToActivateWalletSuccess(resultJson));
+      // } else {
+      //   throw new Error(`${resultJson.errors[0].message}`);
+      // }
+    } catch (e) {
+      dispatch(getOtpToActivateWalletFailure(e.message));
+    }
+  };
+}
+
+//verify wallet
+
+export function verifyWalletRequest() {
+  return {
+    type: VERIFY_WALLET_REQUEST,
+    status: REQUESTING
+  };
+}
+export function verifyWalletSuccess(verifyWallet) {
+  return {
+    type: VERIFY_WALLET_SUCCESS,
+    status: SUCCESS,
+    verifyWallet
+  };
+}
+
+export function verifyWalletFailure(error) {
+  return {
+    type: VERIFY_WALLET_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function verifyWallet(customerDetailsWithOtp) {
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(verifyWalletRequest());
+    try {
+      const result = await api.post(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/verifyWalletOtp?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&otp=${customerDetailsWithOtp.otp}`,
+        customerDetailsWithOtp
+      );
+      const resultJson = await result.json();
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        return dispatch(verifyWalletSuccess(resultJson));
+      } else {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+    } catch (e) {
+      dispatch(verifyWalletFailure(e.message));
+    }
+  };
+}
 
 export function getSavedCardRequest() {
   return {

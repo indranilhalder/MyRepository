@@ -32,6 +32,21 @@ export default class GiftCard extends React.Component {
       giftCardDetails.mobileNumber = "9769344954";
       this.props.createGiftCardDetails(giftCardDetails);
     }
+    if (this.props.getOtpToActivateWallet) {
+      let customerDetails = {};
+      customerDetails.firstName = "insha";
+      customerDetails.mobileNumber = "9936805071";
+      customerDetails.lastName = "nazeer";
+      // this.props.getOtpToActivateWallet(customerDetails);
+    }
+    if (this.props.verifyWallet) {
+      let customerDetailsWithOtp = {};
+      customerDetailsWithOtp.firstName = "insha";
+      customerDetailsWithOtp.mobileNumber = "9936805071";
+      customerDetailsWithOtp.lastName = "nazeer";
+      customerDetailsWithOtp.otp = "223102";
+      this.props.verifyWallet(customerDetailsWithOtp);
+    }
   }
   selectAmount(val) {
     this.setState({ amountText: val });
@@ -52,16 +67,13 @@ export default class GiftCard extends React.Component {
     }
   }
   render() {
-    // console.log(this.props.giftCards);
+    let giftCards = this.props.giftCardsDetails.giftCards;
     return (
       <div className={styles.base}>
         <div className={styles.giftCardImageHolder}>
-          {this.props.giftCards && (
+          {giftCards && (
             <div className={styles.giftCradImage}>
-              <Image
-                image={this.props.giftCards.giftCartImageUrl}
-                fit="cover"
-              />
+              <Image image={giftCards.giftCartImageUrl} fit="cover" />
             </div>
           )}
         </div>
@@ -81,7 +93,7 @@ export default class GiftCard extends React.Component {
           <div className={styles.giftCardTextHolder}>
             <div className={styles.infoHeder}>Gift Card</div>
             <div className={styles.infoText}>
-              Enter details for your gift card
+              Enter details for your getOtpToActivateWalletgift card
             </div>
           </div>
           <div className={styles.formCard}>
@@ -90,11 +102,11 @@ export default class GiftCard extends React.Component {
               <div className={styles.labelHeader}>
                 Select Amount from below{" "}
               </div>
-              {this.props.giftCards && (
+              {giftCards && (
                 <div className={styles.amountHolder}>
-                  {this.props.giftCards &&
-                    this.props.giftCards.amountOptions &&
-                    this.props.giftCards.amountOptions.options.map((val, i) => {
+                  {giftCards &&
+                    giftCards.amountOptions &&
+                    giftCards.amountOptions.options.map((val, i) => {
                       return (
                         <div
                           className={styles.amountSelect}

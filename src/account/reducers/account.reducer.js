@@ -61,7 +61,17 @@ const account = (
     giftCardDetails: null,
     giftCardDetailsStatus: null,
     giftCardDetailsError: null,
-    loadingForGiftCardDetails: false
+    loadingForGiftCardDetails: false,
+
+    getOtpToActivateWallet: null,
+    getOtpToActivateWalletStatus: null,
+    getOtpToActivateWalletError: null,
+    loadingForGrtOtpToActivateWallet: false,
+
+    verifyWallet: null,
+    verifyWalletStatus: null,
+    verifyWalletError: null,
+    loadingForverifyWallet: false
   },
   action
 ) => {
@@ -104,6 +114,46 @@ const account = (
         giftCardDetailsStatus: action.status,
         giftCardDetailsError: action.error,
         loadingForGiftCardDetails: false
+      });
+
+    case accountActions.GET_OTP_TO_ACTIVATE_WALLET_REQUEST:
+      return Object.assign({}, state, {
+        getOtpToActivateWalletStatus: action.status,
+        loadingForGrtOtpToActivateWallet: true
+      });
+
+    case accountActions.GET_OTP_TO_ACTIVATE_WALLET_SUCCESS:
+      return Object.assign({}, state, {
+        getOtpToActivateWalletStatus: action.status,
+        getOtpToActivateWallet: action.getOtpToActivateWallet,
+        loadingForGrtOtpToActivateWallet: false
+      });
+
+    case accountActions.GET_OTP_TO_ACTIVATE_WALLET_FAILURE:
+      return Object.assign({}, state, {
+        getOtpToActivateWalletStatus: action.status,
+        getOtpToActivateWalletError: action.error,
+        loadingForGrtOtpToActivateWallet: false
+      });
+
+    case accountActions.VERIFY_WALLET_REQUEST:
+      return Object.assign({}, state, {
+        verifyWalletStatus: action.status,
+        loadingForverifyWallet: true
+      });
+
+    case accountActions.VERIFY_WALLET_SUCCESS:
+      return Object.assign({}, state, {
+        verifyWalletStatus: action.status,
+        verifyWallet: action.verifyWallet,
+        loadingForverifyWallet: false
+      });
+
+    case accountActions.VERIFY_WALLET_FAILURE:
+      return Object.assign({}, state, {
+        verifyWalletStatus: action.status,
+        verifyWalletError: action.error,
+        loadingForverifyWallet: false
       });
 
     case accountActions.GET_SAVED_CARD_REQUEST:
