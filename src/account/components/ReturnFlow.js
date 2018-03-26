@@ -32,7 +32,6 @@ export default class ReturnFlow extends React.Component {
     };
   }
   componentDidMount() {
-    console.log(this.props);
     let orderCode = this.orderCode;
     let transactionId = this.props.location.state.transactionId;
 
