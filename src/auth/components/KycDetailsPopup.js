@@ -3,9 +3,9 @@ import { Icon } from "xelpmoc-core";
 import ColourButton from "../../general/components/ColourButton";
 import PropTypes from "prop-types";
 import lockBlackIcon from "./img/lockBlackIcon.svg";
-import Styles from "./OtpVerificationWithWhiteBackGround.css";
+import Styles from "./KycDetailsPopup.css";
 import Input2 from "../../general/components/Input2";
-export default class OtpVerificationWithWhiteBackGround extends React.Component {
+export default class KycDetailsPopup extends React.Component {
   callVerify() {
     if (this.props.callVerify) {
       this.props.callVerify();
@@ -71,13 +71,13 @@ export default class OtpVerificationWithWhiteBackGround extends React.Component 
     );
   }
 }
-OtpVerificationWithWhiteBackGround.propTypes = {
+KycDetailsPopup.propTypes = {
   mobileNumber: PropTypes.string,
   wrongNumber: PropTypes.func,
   callVerify: PropTypes.func,
   resendOtp: PropTypes.func
 };
 
-OtpVerificationWithWhiteBackGround.defaultProps = {
+KycDetailsPopup.defaultProps = {
   mobileNumber: ""
 };
