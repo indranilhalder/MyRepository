@@ -1,0 +1,20 @@
+.base {
+  width: 100%;
+  height: calc(100vh - 50px);
+  position: relative;
+  background: url(../../auth/components/img/background.jpg)no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.error {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: semibold;
+  font-size: 18px;
+  color: #fff;
+  text-align: center;
+}

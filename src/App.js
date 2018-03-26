@@ -22,7 +22,7 @@ import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryC
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
 import MobileFooter from "./general/components/MobileFooter.js";
-
+import ErrorPage from "./general/components/ErrorPage.js";
 // importing All container for my Accounts
 import MyAccountContainer from "./account/containers/MyAccountContainer";
 import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
@@ -78,6 +78,7 @@ import {
   MY_ACCOUNT_COUPON_PAGE,
   MY_ACCOUNT_BRANDS_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
+  ERROR_PAGE,
   ORDER_PREFIX
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
@@ -278,6 +279,7 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_PAGE}`}
               component={AddressBookContainer}
             />
+            <Route exact path={ERROR_PAGE} component={ErrorPage} />
           </Switch>
           <MobileFooter />
 

@@ -5,12 +5,14 @@ import PdpJewellery from "./PdpJewellery";
 import PdpHome from "./PdpHome";
 import styles from "./ProductDescriptionPageWrapper.css";
 import ProductDescriptionPage from "./ProductDescriptionPage";
+import { Redirect } from "react-router";
 import MDSpinner from "react-md-spinner";
 import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   UPDATE_PDP_REDUCER_FOR_DELIVERY_OPTION,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  ERROR_PAGE
 } from "../../lib/constants";
 // prettier-ignore
 const typeComponentMapping = {
@@ -99,12 +101,17 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     if (!this.props.loading && this.props.productDetails) {
-      return (
-        <div>
-          {this.renderRootCategory(this.props.productDetails.rootCategory)}
-        </div>
-      );
+      if (this.props.productDetails.error) {
+        return <Redirect to={ERROR_PAGE} />;
+      } else {
+        return (
+          <div>
+            {this.renderRootCategory(this.props.productDetails.rootCategory)}
+          </div>
+        );
+      }
     } else {
       return this.renderLoader();
     }
