@@ -31,7 +31,7 @@ export default class ReturnToStore extends React.Component {
           this.orderCode
         }${RETURN_TO_STORE}${RETURNS_STORE_FINAL}`,
         state: {
-          isRequestFromFlow: true
+          authorizedRequest: true
         }
       });
     });

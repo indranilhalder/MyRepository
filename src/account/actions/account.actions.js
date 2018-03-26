@@ -76,12 +76,9 @@ export const GET_FOLLOWED_BRANDS_FAILURE = "GET_FOLLOWED_BRANDS_FAILURE";
 export const QUICK_DROP_STORE_REQUEST = "QUICK_DROP_STORE_REQUEST";
 export const QUICK_DROP_STORE_SUCCESS = "QUICK_DROP_STORE_SUCCESS";
 export const QUICK_DROP_STORE_FAILURE = "QUICK_DROP_STORE_FAILURE";
-export const NEW_RETURN_INITIATE_CLIQ_PIQ_REQUEST =
-  "NEW_RETURN_INITIATE_CLIQ_PIQ_REQUEST";
-export const NEW_RETURN_INITIATE_CLIQ_PIQ_SUCCESS =
-  "NEW_RETURN_INITIATE_CLIQ_PIQ_SUCCESS";
-export const NEW_RETURN_INITIATE_CLIQ_PIQ_FAILURE =
-  "NEW_RETURN_INITIATE_CLIQ_PIQ_FAILURE";
+export const NEW_RETURN_INITIATE_REQUEST = "NEW_RETURN_INITIATE_REQUEST";
+export const NEW_RETURN_INITIATE_SUCCESS = "NEW_RETURN_INITIATE_SUCCESS";
+export const NEW_RETURN_INITIATE_FAILURE = "NEW_RETURN_INITIATE_FAILURE";
 
 export const RETURN_PIN_CODE_REQUEST = "RETURN_PIN_CODE_REQUEST";
 export const RETURN_PIN_CODE_SUCCESS = "RETURN_PIN_CODE_SUCCESS";
@@ -226,53 +223,215 @@ export function getReturnRequest(orderCode, transactionId) {
   };
 }
 
-export function returnInitialRequest() {
+export function newReturnInitiateRequest() {
   return {
-    type: GET_RETURN_REQUEST,
+    type: NEW_RETURN_INITIATE_REQUEST,
     status: REQUESTING
   };
 }
 
-export function returnInitialSuccess(returnRequest) {
+export function newReturnInitiateSuccess(returnDetails) {
   return {
-    type: GET_RETURN_REQUEST_SUCCESS,
-    returnRequest,
+    type: NEW_RETURN_INITIATE_SUCCESS,
+    returnDetails,
     status: SUCCESS
   };
 }
 
-export function returnInitialFailure(error) {
+export function newReturnInitiateFailure(error) {
   return {
-    type: GET_RETURN_REQUEST_FAILURE,
+    type: NEW_RETURN_INITIATE_FAILURE,
     error,
     status: FAILURE
   };
 }
 
-export function returnInitial(orderCode, transactionId) {
+export function newReturnInitial(returnDetails) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    dispatch(returnInitialRequest());
+    dispatch(newReturnInitiateRequest());
+
+    try {
+      const result = await api.post(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/newReturnInitiate?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&channel=mobile`,
+        returnDetails
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(resultJson.errors[0].message);
+      }
+
+      dispatch(newReturnInitiateSuccess(resultJson));
+    } catch (e) {
+      dispatch(newReturnInitiateFailure(e.message));
+    }
+  };
+}
+
+export function returnPInCodeRequest() {
+  return {
+    type: RETURN_PIN_CODE_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function returnPInCodeSuccess(pinCodeDetails) {
+  return {
+    type: RETURN_PIN_CODE_SUCCESS,
+    pinCodeDetails,
+    status: SUCCESS
+  };
+}
+
+export function returnPinCodeFailure(error) {
+  return {
+    type: RETURN_PIN_CODE_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function returnPinCode(productDetails) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(returnPInCodeRequest());
+
+    try {
+      const result = await api.post(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/returnPincode?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&&orderCode=${productDetails.orderCode}&pincode=${
+          productDetails.pinCode
+        }&transactionId=${productDetails.transactionId}`
+      );
+      const resultJson = await result.json();
+
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(
+          resultJson.returnLogisticsResponseDTO[0].responseMessage
+        );
+      }
+
+      dispatch(returnPInCodeSuccess(resultJson));
+    } catch (e) {
+      dispatch(returnPinCodeFailure(e.message));
+    }
+  };
+}
+
+export function returnInitialForQuickDropRequest() {
+  return {
+    type: RETURN_INITIAL_REQUEST,
+    status: REQUESTING
+  };
+}
+export function returnInitialForQuickDropSuccess(returnRequest) {
+  return {
+    type: RETURN_INITIAL_SUCCESS,
+    returnRequest,
+    status: SUCCESS
+  };
+}
+
+export function returnInitialForQuickDropFailure(error) {
+  return {
+    type: RETURN_INITIAL_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function returnInitialForQuickDrop(productObj) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(returnInitialForQuickDropRequest());
+    const initialReturnFormData = Object.assign({}, productObj, {
+      channel: "mobile",
+      refundType: "R",
+      transactionType: 1,
+      refundMode: "NEFT"
+    });
+    try {
+      const result = await api.post(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/newReturnInitiate?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`,
+        initialReturnFormData
+      );
+
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(resultJson.errors[0].message);
+      }
+      dispatch(returnInitialForQuickDropSuccess(resultJson));
+    } catch (e) {
+      dispatch(returnInitialForQuickDropFailure(e.message));
+    }
+  };
+}
+
+export function quickDropStoreRequest() {
+  return {
+    type: QUICK_DROP_STORE_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function quickDropStoreSuccess(addresses) {
+  return {
+    type: QUICK_DROP_STORE_SUCCESS,
+    addresses,
+    status: SUCCESS
+  };
+}
+
+export function quickDropStoreFailure(error) {
+  return {
+    type: QUICK_DROP_STORE_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function quickDropStore(pincode, ussId) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(quickDropStoreRequest());
 
     try {
       const result = await api.get(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
-        }/returnRequest?access_token=${
+        }/quickDropStores?access_token=${
           JSON.parse(customerCookie).access_token
-        }&channel=mobile&loginId=${
-          JSON.parse(userDetails).userName
-        }&orderCode=180314-000-111548&transactionId=273570000120027`
+        }&pincode=${pincode}&&ussid=${ussId}`
       );
 
       const resultJson = await result.json();
+
       if (resultJson.errors) {
         throw new Error(resultJson.errors[0].message);
       }
-      dispatch(returnInitialSuccess(resultJson));
+      dispatch(quickDropStoreSuccess(resultJson.returnStoreDetailsList));
     } catch (e) {
-      dispatch(returnInitialFailure(e.message));
+      dispatch(quickDropStoreFailure(e.message));
     }
   };
 }

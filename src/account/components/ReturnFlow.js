@@ -49,7 +49,7 @@ export default class ReturnFlow extends React.Component {
         this.orderCode
       }${RETURN_LANDING}${RETURNS_MODES}`,
       state: {
-        isRequestFromFlow: true
+        authorizedRequest: true
       }
     });
   }

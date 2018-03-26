@@ -352,25 +352,6 @@ const account = (
         loading: false
       });
 
-    case accountActions.NEW_RETURN_INITIATE_CLIQ_PIQ_REQUEST:
-      return Object.assign({}, state, {
-        returnCliqPiqStatus: action.status,
-        loading: true
-      });
-    case accountActions.NEW_RETURN_INITIATE_CLIQ_PIQ_SUCCESS:
-      return Object.assign({}, state, {
-        returnCliqPiqStatus: action.status,
-        returnCliqPiqDetails: action.returnDetails,
-        loading: false
-      });
-
-    case accountActions.NEW_RETURN_INITIATE_CLIQ_PIQ_FAILURE:
-      return Object.assign({}, state, {
-        returnCliqPiqStatus: action.status,
-        returnCliqPiqError: action.error,
-        loading: false
-      });
-
     case accountActions.RETURN_PIN_CODE_REQUEST:
       return Object.assign({}, state, {
         returnPinCodeStatus: action.status,
