@@ -57,7 +57,11 @@ export default class ReturnToStore extends React.Component {
         ussid: product.USSID,
         returnReasonCode: "JEW1S1",
         returnMethod: QUICK_DROP,
-        storeIds: this.state.storeId
+        storeIds: this.state.storeId,
+        channel: "mobile",
+        refundType: "R",
+        transactionType: 1,
+        refundMode: "NEFT"
       }
     );
     if (this.props.bankDetail.accountNumber) {
@@ -69,7 +73,7 @@ export default class ReturnToStore extends React.Component {
         IFSCCode: this.props.bankDetail.code
       });
     }
-    this.props.returnInitialForQuickDrop(productObj);
+    this.props.newReturnInitial(productObj);
   }
   renderLoader() {
     return <MDSpinner />;
