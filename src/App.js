@@ -22,7 +22,6 @@ import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryC
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
 import MobileFooter from "./general/components/MobileFooter.js";
-
 // importing All container for my Accounts
 import MyAccountContainer from "./account/containers/MyAccountContainer";
 import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
