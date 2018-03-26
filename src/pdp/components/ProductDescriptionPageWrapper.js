@@ -101,7 +101,6 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     if (!this.props.loading && this.props.productDetails) {
       if (this.props.productDetails.error) {
         return <Redirect to={ERROR_PAGE} />;
