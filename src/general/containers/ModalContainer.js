@@ -12,7 +12,7 @@ import {
   loginUserRequest,
   customerAccessToken
 } from "../../auth/actions/user.actions";
-import { SUCCESS, FAILURE, ERROR, HOME_ROUTER } from "../../lib/constants";
+import { SUCCESS } from "../../lib/constants";
 
 import {
   applyBankOffer,
@@ -34,7 +34,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
   return {
     showModal: (type, ownProps = null) => {
       dispatch(modalActions.showModal(type, ownProps));
@@ -79,18 +79,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }
     },
     resetPassword: userDetails => {
-      try {
-        dispatch(resetPassword(userDetails)).then(response => {
-          if (response.state === ERROR) {
-            throw new Error("Error in resting password");
-          }
-
-          ownProps.history.push(HOME_ROUTER);
-        });
-      } catch (e) {
-        // we need to show toast for Password change failure
-        console.log(e.message);
-      }
+      dispatch(resetPassword(userDetails));
     },
     forgotPassword: userDetails => {
       dispatch(forgotPassword(userDetails));
