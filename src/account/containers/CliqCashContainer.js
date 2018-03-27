@@ -11,7 +11,7 @@ const mapDispatchToProps = dispatch => {
     getCliqCashDetails: () => {
       dispatch(getCliqCashDetails());
     },
-    redeemCliqVoucher: (cliqCahDetails) => {
+    redeemCliqVoucher: cliqCahDetails => {
       dispatch(redeemCliqVoucher(cliqCahDetails));
     }
   };
@@ -19,8 +19,9 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    userAddress: state.profile.userAddress,
-    removeAddressStatus: state.profile.removeAddressStatus
+    cliqCashUserDetails: state.profile.cliqCashUserDetails,
+    cliqCashVoucherDetailsStatus: state.profile.cliqCashVoucherDetailsStatus,
+    cliqCashVoucherDetails: state.profile.cliqCashVoucherDetails
   };
 };
 

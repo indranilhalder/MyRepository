@@ -322,7 +322,7 @@ const account = (
     case accountActions.GET_USER_CLIQ_CASH_DETAILS_SUCCESS:
       return Object.assign({}, state, {
         cliqCashUserDetailsStatus: action.status,
-        cliqCashUserDetails: action.cliqCashUserDetails,
+        cliqCashUserDetails: action.cliqCashDetails,
         loading: false
       });
 
