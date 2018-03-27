@@ -61,12 +61,19 @@ export default class CliqAndCash extends React.Component {
             <Logo image={cliqCashIcon} />
           </div>
           <div className={styles.cliqCashBalanceHolder}>
-            <div className={styles.balance}>{`Rs. ${
-              this.props.cliqCashUserDetails.totalCliqCashBalance.formattedValue
-            }`}</div>
-            <div className={styles.expiredBalanceText}>{`Balance as of ${moment(
-              this.props.cliqCashUserDetails.balanceClearedAsOf
-            ).format("DD/MM/YYYY, hh:mm")} Hrs`}</div>
+            {this.props.cliqCashUserDetails.totalCliqCashBalance && (
+              <div className={styles.balance}>{`Rs. ${
+                this.props.cliqCashUserDetails.totalCliqCashBalance
+                  .formattedValue
+              }`}</div>
+            )}
+            {this.props.cliqCashUserDetails.balanceClearedAsOf && (
+              <div
+                className={styles.expiredBalanceText}
+              >{`Balance as of ${moment(
+                this.props.cliqCashUserDetails.balanceClearedAsOf
+              ).format("DD/MM/YYYY, hh:mm")} Hrs`}</div>
+            )}
             <div className={styles.informationText}>
               Once you validate your gift card, the value will automatically be
               added to your CLiQ Cash

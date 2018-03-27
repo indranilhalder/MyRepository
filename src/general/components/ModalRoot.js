@@ -93,6 +93,17 @@ export default class ModalRoot extends React.Component {
       this.props.verifyWalletMobileNumber(kycDetails);
     }
   };
+
+  resendOtp = () => {
+    if (this.props.checkWalletMobileNumber) {
+      let kycDetails = {};
+      kycDetails.firstName = this.props.ownProps.firstName;
+      kycDetails.lastName = this.props.ownProps.lastName;
+      kycDetails.mobileNumber = this.props.ownProps.mobileNumber;
+      this.props.checkWalletMobileNumber(kycDetails);
+    }
+  };
+
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -165,6 +176,7 @@ export default class ModalRoot extends React.Component {
           closeModal={() => this.handleClose()}
           verifyOtp={otpDetails => this.verifyOtpForCliqCash(otpDetails)}
           {...this.props.ownProps}
+          resendOtp={() => this.resendOtp()}
         />
       ),
       SizeGuide: <SizeGuideModal closeModal={() => this.handleClose()} />,
