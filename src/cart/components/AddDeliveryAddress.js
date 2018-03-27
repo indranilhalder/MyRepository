@@ -35,8 +35,10 @@ export default class AddDeliveryAddress extends React.Component {
   onChange(val) {
     this.setState(val);
   }
-  onChangeDefaultFlag(val) {
-    this.setState({ defaultFlag: val.defaultFlag });
+  onChangeDefaultFlag() {
+    this.setState(prevState => ({
+      defaultFlag: !prevState.defaultFlag
+    }));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -52,7 +54,7 @@ export default class AddDeliveryAddress extends React.Component {
     addressDetails.addressType = this.state.addressType;
     addressDetails.phone = this.state.phone;
     addressDetails.firstName = this.state.firstName;
-    addressDetails.lastName = this.state.firstName;
+    addressDetails.lastName = "";
     addressDetails.postalCode = this.state.postalCode;
     addressDetails.line1 = this.state.line1;
     addressDetails.state = this.state.state;
@@ -204,11 +206,8 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.defaultText}>
           <CheckboxAndText
             label="Make this default address"
-            selectItem={() =>
-              this.onChangeDefaultFlag({
-                defaultAddress: !this.props.defaultAddress
-              })
-            }
+            selected={this.state.defaultFlag}
+            selectItem={() => this.onChangeDefaultFlag()}
           />
         </div>
         <Button
