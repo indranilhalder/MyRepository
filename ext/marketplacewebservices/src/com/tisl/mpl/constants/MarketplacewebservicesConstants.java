@@ -701,4 +701,5 @@ public class MarketplacewebservicesConstants
 
 	//nocostemi
 	public static final String NOCOSTEMICHECK = "/noCostEmiCheck";
+	public static final String NOCOSTEMITNC = "/noCostEmiTnc";
 }

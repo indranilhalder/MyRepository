@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.NoCostEMIBankModel;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.MplPromoPriceWsDTO;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -837,7 +838,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1298,6 +1299,18 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			priceWsPwaDTO = mplCartWebService.configureCartAmountPwa(orderModel);
 		}
 		return priceWsPwaDTO;
+	}
+
+	/**
+	 * NU-351 - Code to fetch NoCostEMIBankModel by pk
+	 * 
+	 * @param pk
+	 * @return NoCostEMIBankModel
+	 */
+	@Override
+	public NoCostEMIBankModel getNoCostEMIBankByPk(final String pk)
+	{
+		return getMplPaymentWebService().getNoCostEMIBankByPk(pk);
 	}
 
 	protected CheckoutCustomerStrategy getCheckoutCustomerStrategy()

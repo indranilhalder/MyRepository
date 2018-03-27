@@ -16769,7 +16769,7 @@
 					</attribute>
 					<attribute qualifier="code" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers read="true" optional="false" unique="true" write="false" initial="true"/>
+						<modifiers read="true" optional="false" unique="true"/>
 						<description>Bank code</description>
 					</attribute>
 					<attribute qualifier="enable" type="boolean">

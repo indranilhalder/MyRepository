@@ -4885,5 +4885,10 @@
 		<property name="isNoCostEMIEligible" type="boolean" />
 	</bean>
 	
+	<!-- No Cost EMI -->
+	<bean class="com.tisl.wsdto.MplNoCostEMITermsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="termsAndCondition" type="String" />
+		<property name="code" type="String" />
+	</bean>
 	 
 </beans>
