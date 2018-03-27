@@ -46,12 +46,12 @@ export function applySortToUrl(query, url, sortValue) {
     if (CATEGORY_REGEX.test(url)) {
       match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
       match = match.replace(BRAND_CATEGORY_PREFIX, "");
-      newQuery = `:${sortValue}:category:${match[1].toUpperCase()}`;
+      newQuery = `:${sortValue}:category:${match.toUpperCase()}`;
     }
     if (BRAND_REGEX.test(url)) {
       match = BRAND_CAPTURE_REGEX.exec(url)[0];
       match = match.replace(BRAND_CATEGORY_PREFIX, "");
-      newQuery = `:${sortValue}:category:${match[1].toUpperCase()}`;
+      newQuery = `:${sortValue}:category:${match.toUpperCase()}`;
     }
   } else {
     const existingSort = getSortFromQuery(query);
