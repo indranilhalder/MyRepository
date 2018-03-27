@@ -26,6 +26,7 @@
   padding-top: 20px;
   margin-bottom: 35px;
   text-align: center;
+  line-height: 25px;
 }
 .buttonHolder {
   width: 100%;
@@ -46,7 +47,7 @@
 .rightButton {
   display: inline-block;
   margin-left: auto;
-  width: 100%;
+  width: 50%;
   text-align: right;
   vertical-align: top;
 }

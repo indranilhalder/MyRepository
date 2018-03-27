@@ -55,25 +55,15 @@ export default class KycDetailsPopup extends React.Component {
           />
         </div>
         <div className={Styles.buttonHolder}>
+          <div className={Styles.leftButton}>
+            <ColourButton label={"Submit"} onClick={() => this.submitOtp()} />
+          </div>
           <div className={Styles.rightButton}>
             <ColourButton
               label={"Resend OTP"}
               onClick={() => this.resendOtp()}
             />
             <div className={Styles.time}>30 sec</div>
-          </div>
-        </div>
-        <div className={Styles.button}>
-          <div className={Styles.buttonWithText}>
-            <Button
-              type="primary"
-              backgroundColor="#ff1744"
-              height={36}
-              label="Submit OTP"
-              width={211}
-              textStyle={{ color: "#FFF", fontSize: 14 }}
-              onClick={() => this.submitOtp()}
-            />
           </div>
         </div>
       </div>
