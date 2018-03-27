@@ -101,8 +101,8 @@ const mapDispatchToProps = dispatch => {
     softReservation: (pinCode, payload) => {
       dispatch(softReservation(pinCode, payload));
     },
-    getPaymentModes: () => {
-      dispatch(getPaymentModes());
+    getPaymentModes: (cartGuId) => {
+      dispatch(getPaymentModes(cartGuId));
     },
     showCouponModal: data => {
       dispatch(showModal(BANK_OFFERS, data));
