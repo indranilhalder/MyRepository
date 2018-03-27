@@ -160,3 +160,12 @@
   margin-bottom: 20px;
   padding: 12px;
 }
+.quantityValue {
+  border: 1px solid #ececec;
+  padding: 10px;
+  width: 40%;
+  height: auto;
+  display: inline-block;
+  margin: auto;
+  text-align: center;
+}

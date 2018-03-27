@@ -158,7 +158,7 @@ export default class GiftCard extends React.Component {
             </div>
             <div className={styles.selectHolder}>
               <div className={styles.labelHeader}>Quantity</div>
-              <SelectBoxMobile value="1" />
+              <div className={styles.quantityValue}>1</div>
             </div>
           </div>
         </div>
