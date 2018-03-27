@@ -12,7 +12,10 @@ export default class SizeSelector extends React.Component {
     }
   }
   updateSize(productUrl) {
-    this.props.history.push(`${productUrl}?selectedSize=true`);
+    this.props.history.push({
+      pathname: `${productUrl}`,
+      state: { isSizeSelected: true }
+    });
     if (this.props.closeModal) {
       this.props.closeModal();
     }

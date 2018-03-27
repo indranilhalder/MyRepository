@@ -160,7 +160,7 @@ export default class PdpApparel extends React.Component {
     }
   }
   checkIfSizeSelected = () => {
-    if (this.props.location.search === "?selectedSize=true") {
+    if (this.props.location.state && this.props.location.state.isSizeSelected) {
       return true;
     } else {
       return false;
