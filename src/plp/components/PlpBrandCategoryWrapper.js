@@ -6,7 +6,8 @@ import { BLP_OR_CLP_FEED_TYPE } from "../../lib/constants";
 
 export const CATEGORY_REGEX = /c-msh*/;
 export const BRAND_REGEX = /c-mbh*/;
-export const CAPTURE_REGEX = /c-(.*)/;
+export const CATEGORY_CAPTURE_REGEX = /c-msh(.*)/;
+export const BRAND_CAPTURE_REGEX = /c-mbh(.*)/;
 
 export default class PlpBrandCategoryWrapper extends React.Component {
   constructor(props) {
@@ -18,9 +19,19 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   }
 
   componentWillMount() {
-    const categoryOrBrandId = this.props.location.pathname.match(
-      CAPTURE_REGEX
-    )[1];
+    const url = this.props.location.pathname;
+    let categoryOrBrandId = null;
+
+    if (CATEGORY_REGEX.test(url)) {
+      categoryOrBrandId = url.match(CATEGORY_CAPTURE_REGEX)[0];
+    }
+
+    if (BRAND_REGEX.test(url)) {
+      categoryOrBrandId = url.match(BRAND_CAPTURE_REGEX)[0];
+    }
+
+    categoryOrBrandId = categoryOrBrandId.replace("c-", "");
+
     this.props.homeFeed(categoryOrBrandId);
   }
 
@@ -33,14 +44,20 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     let match;
     let searchText;
     if (CATEGORY_REGEX.test(url)) {
-      match = CAPTURE_REGEX.exec(url)[1];
+      match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
+      match = match.replace("c-", "");
+
       match = match.toUpperCase();
+
       searchText = `:relevance:category:${match}`;
     }
 
     if (BRAND_REGEX.test(url)) {
-      match = CAPTURE_REGEX.exec(url)[1];
+      match = BRAND_CAPTURE_REGEX.exec(url)[0];
+      match = match.replace("c-", "");
+
       match = match.toUpperCase();
+
       searchText = `:relevance:brand:${match}`;
     }
 

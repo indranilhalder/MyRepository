@@ -2,7 +2,8 @@ import { getSortFromQuery, insertSubStringAt } from "./FilterUtils.js";
 import {
   CATEGORY_REGEX,
   BRAND_REGEX,
-  CAPTURE_REGEX
+  CATEGORY_CAPTURE_REGEX,
+  BRAND_CAPTURE_REGEX
 } from "./PlpBrandCategoryWrapper";
 
 /*
@@ -37,15 +38,18 @@ What do I want to do?
 export function applySortToUrl(query, url, sortValue) {
   let newQuery = "";
   let newUrl = `/search/?q=`;
+  let match;
   if (query.length === 0) {
     // dealing with a brand or category landing page.
 
     if (CATEGORY_REGEX.test(url)) {
-      const match = CAPTURE_REGEX.exec(url);
+      match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
+      match = match.replace("c-", "");
       newQuery = `:${sortValue}:category:${match[1].toUpperCase()}`;
     }
     if (BRAND_REGEX.test(url)) {
-      const match = CAPTURE_REGEX.exec(url);
+      match = BRAND_CAPTURE_REGEX.exec(url)[0];
+      match = match.replace("c-", "");
       newQuery = `:${sortValue}:category:${match[1].toUpperCase()}`;
     }
   } else {

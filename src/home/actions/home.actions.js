@@ -238,6 +238,8 @@ export function homeFeed(brandIdOrCategoryId: null) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson}`);
       }
+      console.log("RESULT JSON");
+      console.log(resultJson);
 
       let parsedResultJson = JSON.parse(resultJson.content);
       parsedResultJson = parsedResultJson.items;
