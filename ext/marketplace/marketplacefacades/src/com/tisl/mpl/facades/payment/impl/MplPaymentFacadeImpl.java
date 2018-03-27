@@ -3903,4 +3903,17 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		getModelService().save(orderToBeUpdated);
 		getModelService().refresh(orderToBeUpdated);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#isNoCostEmiAvailable(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean isNoCostEmiAvailable(final String productCode, final String sellerId) throws EtailNonBusinessExceptions
+	{
+		return getMplPaymentService().isNoCostEmiAvailable(productCode, sellerId);
+	}
+
+
 }

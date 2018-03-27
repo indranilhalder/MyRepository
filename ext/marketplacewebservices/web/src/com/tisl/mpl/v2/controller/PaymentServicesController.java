@@ -95,6 +95,7 @@ import com.tisl.mpl.wsdto.PaymentServiceWsDTO;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
 import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
+import com.tisl.mpl.wsdto.mplNoCostEMIEligibilityDTO;
 
 
 /**
@@ -2150,6 +2151,107 @@ public class PaymentServicesController extends BaseController
 		}
 		return paymentModesData;
 	}
+
+	/**
+	 * This method Provided no cost emi available or not
+	 *
+	 * @param cartGuid
+	 * @return MplSavedCardDTO
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.NOCOSTEMICHECK, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
+	@ResponseBody
+	public mplNoCostEMIEligibilityDTO noCostEmiCheck(@RequestParam(required = false) final String cartGuid)
+	{
+		LOG.debug("cart guid ----" + cartGuid);
+		boolean emiFlag = false;
+		final mplNoCostEMIEligibilityDTO noCostEmiWsDTO = new mplNoCostEMIEligibilityDTO();
+		try
+		{
+
+
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				final CartModel cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+				{
+					for (final AbstractOrderEntryModel itemEntry : cartModel.getEntries())
+					{
+						if (null != itemEntry)
+						{
+							final String productCode = itemEntry.getProduct().getCode();
+							final String ussid = itemEntry.getSelectedUSSID();
+							String sellerId = null;
+							if (StringUtils.isNotEmpty(ussid))
+							{
+								sellerId = ussid.substring(0, 6);
+							}
+
+							if (StringUtils.isNotEmpty(productCode) && StringUtils.isNotEmpty(sellerId))
+							{
+								LOG.debug("product seller id ----" + sellerId);
+								LOG.debug("product listing id ----" + productCode);
+
+								emiFlag = getMplPaymentFacade().isNoCostEmiAvailable(productCode, sellerId);
+
+								if (emiFlag)
+								{
+									break;
+								}
+
+							}
+
+
+
+						}
+					}
+				}
+
+			}
+			noCostEmiWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+		}
+		catch (final EtailNonBusinessExceptions ex)
+		{
+			// Error message for EtailNonBusinessExceptions Exceptions
+			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+			if (null != ex.getErrorMessage())
+			{
+				noCostEmiWsDTO.setError(ex.getErrorMessage());
+				noCostEmiWsDTO.setErrorCode(ex.getErrorCode());
+			}
+			noCostEmiWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		catch (final EtailBusinessExceptions ex)
+		{
+			// Error message for EtailBusinessExceptions Exceptions
+			ExceptionUtil.etailBusinessExceptionHandler(ex, null);
+			if (null != ex.getErrorMessage())
+			{
+				noCostEmiWsDTO.setError(ex.getErrorMessage());
+				noCostEmiWsDTO.setErrorCode(ex.getErrorCode());
+			}
+			noCostEmiWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception ex)
+		{
+			// Error message for All Exceptions
+			if (null != ex.getMessage())
+			{
+				noCostEmiWsDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9047));
+				noCostEmiWsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9047);
+			}
+			noCostEmiWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		noCostEmiWsDTO.setIsNoCostEMIEligible(emiFlag);
+		return noCostEmiWsDTO;
+
+	}
+
+
+
 
 	//Commenting due to SONAR Fix
 	//	/**

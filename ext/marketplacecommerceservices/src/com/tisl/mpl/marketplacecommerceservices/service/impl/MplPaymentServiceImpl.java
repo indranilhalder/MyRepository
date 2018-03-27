@@ -6021,5 +6021,11 @@ private WalletApportionReturnInfoModel constructQuickCilverOrderEntryForSplit(fi
 	
 		return walletApportionReturnModel;
 	}
+   @Override
+   public boolean isNoCostEmiAvailable(String productCode, String sellerId)
+   {
+   	// YTODO Auto-generated method stub
+   	return getMplPaymentDao().isNoCostEmiAvailable(productCode, sellerId); 
+   }
 	
 }

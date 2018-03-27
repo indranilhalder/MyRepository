@@ -2585,5 +2585,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SDPFIFTEENLOG = "sdp.fifteen.log";
 	public static final String ISH = "ISH";
 	public static final String LUXURY_CATALOG_ID = "luxProductCatalog";
+	//no cost emi
+	public static final String NOCOSTEMIQUERY = "SELECT count(*) FROM {ProductOfferDetail as prodOffrDet} WHERE {prodOffrDet.isNoCostEmi} = 1 AND {prodOffrDet.productId}= ?productId AND {prodOffrDet.sellerId}= ?sellerId AND {prodOffrDet.offerStartDate} <= ?sysdate AND {prodOffrDet.offerEndDate} >= ?sysdate"
+			.intern();
+	public static final String OFFERSELLERID = "sellerId".intern();
+
+
+	
 }
 

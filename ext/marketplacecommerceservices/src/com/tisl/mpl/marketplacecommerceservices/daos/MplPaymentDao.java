@@ -188,5 +188,7 @@ public interface MplPaymentDao
 	 * @return
 	 */
 	List<EMIBankModel> getBankDetailsforEMI(Double productValue, String emiBankName);
+	
+	boolean isNoCostEmiAvailable(String productCode, String sellerId);
 
 }

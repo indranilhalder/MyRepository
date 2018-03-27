@@ -11479,6 +11479,26 @@
 						<modifiers read="true" write="true" unique="false"
 							optional="true" />
 					</attribute>
+					<!-- no cost emi -->
+					<attribute qualifier="isNoCostEmi" autocreate="true"
+						type="java.lang.Boolean" generate="true">
+						<description>No Cost Emi Available</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers optional="false" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='offerStartDate' type="java.util.Date"
+						generate="true">
+						<description>Date on which the no cost emi promotion would start</description>
+						<modifiers read="true" write="true" optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='offerEndDate' type="java.util.Date"
+						generate="true">
+						<description>Date on which the no cost emi promotion would end</description>
+						<modifiers read="true" write="true" optional="false" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 				<indexes>
 					<index name="productId_Index">

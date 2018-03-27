@@ -14,6 +14,8 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.store.BaseStoreModel;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -868,5 +870,50 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			throw new EtailNonBusinessExceptions(ex);
 		}
 
+	}
+	@Override
+	public boolean isNoCostEmiAvailable(String productId, String sellerId)
+	{
+		boolean isNoCostEmiAvailable = false;
+		try
+		{
+			
+		  final String queryString = MarketplacecommerceservicesConstants.NOCOSTEMIQUERY;
+			LOG.debug("queryString: " + queryString);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+			query.addQueryParameter(MarketplacecommerceservicesConstants.OFFERPRODUCTID, productId);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.OFFERSELLERID, sellerId);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.SYSDATE, new Date());		
+
+			List resultClassList = new ArrayList();
+			resultClassList.add(Integer.class);
+			query.setResultClassList(resultClassList);
+			//flexExchangeL3Query.setResultClassList(Arrays.asList(String.class));
+
+			//LOG.debug(logQuery + flexExchangeL3Query.getQuery() + logQueryParam + flexExchangeL3Query.getQueryParameters());
+			final List<Integer> emiListcount = flexibleSearchService.<Integer> search(query).getResult();
+
+			if (CollectionUtils.isNotEmpty(emiListcount))
+			{
+				if (emiListcount.get(0).intValue() > 0)
+				{
+					isNoCostEmiAvailable = true;
+				}
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return isNoCostEmiAvailable;
 	}
 }

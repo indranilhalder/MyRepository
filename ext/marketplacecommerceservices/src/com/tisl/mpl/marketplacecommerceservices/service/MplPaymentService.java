@@ -498,4 +498,6 @@ public interface MplPaymentService
 	 */
 
 	List<EMIBankModel> getBankDetailsforEMI(Double productValue) throws EtailNonBusinessExceptions;
+	
+	public boolean isNoCostEmiAvailable(String productCode, String sellerId);
 }

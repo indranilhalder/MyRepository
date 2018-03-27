@@ -4880,5 +4880,10 @@
 		<property name="breadcrumbs" type="java.util.List&lt;com.tisl.mpl.wsdto.BreadcrumbListWsDTO>" />
 	</bean>
 	
+		<!-- no cost emi -->
+	<bean class="com.tisl.mpl.wsdto.mplNoCostEMIEligibilityDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="isNoCostEMIEligible" type="boolean" />
+	</bean>
+	
 	 
 </beans>
