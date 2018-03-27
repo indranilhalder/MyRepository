@@ -94,25 +94,29 @@ export default class PdpJewellery extends React.Component {
     );
 
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (userDetails) {
-      if (
-        cartDetailsLoggedInUser !== undefined &&
-        customerCookie !== undefined
-      ) {
+    if (this.checkIfSizeSelected()) {
+      if (userDetails) {
+        if (
+          cartDetailsLoggedInUser !== undefined &&
+          customerCookie !== undefined
+        ) {
+          this.props.addProductToCart(
+            JSON.parse(userDetails).userName,
+            JSON.parse(cartDetailsLoggedInUser).code,
+            JSON.parse(customerCookie).access_token,
+            productDetails
+          );
+        }
+      } else if (cartDetailsAnonymous) {
         this.props.addProductToCart(
-          JSON.parse(userDetails).userName,
-          JSON.parse(cartDetailsLoggedInUser).code,
-          JSON.parse(customerCookie).access_token,
+          ANONYMOUS_USER,
+          JSON.parse(cartDetailsAnonymous).guid,
+          JSON.parse(globalCookie).access_token,
           productDetails
         );
       }
-    } else if (cartDetailsAnonymous) {
-      this.props.addProductToCart(
-        ANONYMOUS_USER,
-        JSON.parse(cartDetailsAnonymous).guid,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
+    } else {
+      this.showSizeSelector();
     }
   };
 
@@ -158,11 +162,29 @@ export default class PdpJewellery extends React.Component {
   showEmiModal = () => {
     const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-
     const globalAccessToken = JSON.parse(globalCookie).access_token;
     this.props.getPdpEmi(globalAccessToken, cartValue);
     this.props.getEmiTerms(globalAccessToken, cartValue);
     this.props.showEmiModal();
+  };
+  showSizeSelector = () => {
+    if (this.props.showSizeSelector && this.props.productDetails) {
+      this.props.showSizeSelector({
+        sizeSelected: this.checkIfSizeSelected(),
+        productId: this.props.productDetails.productListingId,
+        showSizeGuide: this.props.showSizeGuide,
+        data: this.props.productDetails.variantOptions.map(value => {
+          return value.sizelink;
+        })
+      });
+    }
+  };
+  checkIfSizeSelected = () => {
+    if (this.props.location.state && this.props.location.state.isSizeSelected) {
+      return true;
+    } else {
+      return false;
+    }
   };
   renderDeliveryOptions(productData) {
     const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
@@ -228,18 +250,11 @@ export default class PdpJewellery extends React.Component {
             })}
           </ProductGalleryMobile>
           <div className={styles.content}>
-            {/* <ProductDetailsMainCard
-              productName={productData.brandName}
-              productDescription={productData.productName}
-              price={productData.mrp}
-              discountPrice={productData.winningSellerMOP}
-              averageRating={productData.averageRating}
-            /> */}
             <JewelleryDetailsAndLink
               productName={productData.brandName}
               productDescription={productData.productName}
-              price={productData.mrp}
-              discountPrice={productData.winningSellerMOP}
+              price={productData.winningSellerMOP}
+              discountPrice={productData.mrp}
               discount={productData.discount}
               hasPriceBreakUp={productData.priceBreakUpDetailsMap}
               history={this.props.history}
@@ -271,6 +286,15 @@ export default class PdpJewellery extends React.Component {
 
           {productData.variantOptions && (
             <React.Fragment>
+              <SizeSelector
+                history={this.props.history}
+                sizeSelected={this.checkIfSizeSelected()}
+                productId={productData.productListingId}
+                showSizeGuide={this.props.showSizeGuide}
+                data={productData.variantOptions.map(value => {
+                  return value.sizelink;
+                })}
+              />
               <ColourSelector
                 data={productData.variantOptions.map(value => {
                   return value.colorlink;
@@ -278,13 +302,6 @@ export default class PdpJewellery extends React.Component {
                 history={this.props.history}
                 updateColour={val => {}}
                 getProductSpecification={this.props.getProductSpecification}
-              />
-              <SizeSelector
-                showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
-                headerText="Select a variant"
               />
             </React.Fragment>
           )}

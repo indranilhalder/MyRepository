@@ -189,11 +189,16 @@ export default class PdpElectronics extends React.Component {
         return image[0].value;
       });
     let otherSellersText;
-    const validSellersCount = productData.otherSellers.filter(val => {
-      return val.availableStock !== "0";
-    }).length;
 
-    if (productData.otherSellers && validSellersCount > 0) {
+    if (
+      productData.otherSellers &&
+      productData.otherSellers.filter(val => {
+        return val.availableStock !== "0";
+      }).length > 0
+    ) {
+      const validSellersCount = productData.otherSellers.filter(val => {
+        return val.availableStock !== "0";
+      }).length;
       otherSellersText = (
         <span>
           Sold by{" "}
@@ -279,6 +284,12 @@ export default class PdpElectronics extends React.Component {
 
           {productData.variantOptions && (
             <React.Fragment>
+              <SizeSelector
+                showSizeGuide={this.props.showSizeGuide}
+                data={productData.variantOptions.map(value => {
+                  return value.sizelink;
+                })}
+              />
               <ColourSelector
                 data={productData.variantOptions.map(value => {
                   return value.colorlink;
@@ -286,12 +297,6 @@ export default class PdpElectronics extends React.Component {
                 history={this.props.history}
                 updateColour={val => {}}
                 getProductSpecification={this.props.getProductSpecification}
-              />
-              <SizeSelector
-                showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
               />
             </React.Fragment>
           )}
