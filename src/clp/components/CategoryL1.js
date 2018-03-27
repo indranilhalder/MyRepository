@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import styles from "./CategoryL1.css";
 export default class CategoryL1 extends React.Component {
   handleViewAll() {
-    console.log("clicking");
     if (this.props.onViewAll) {
       this.props.onViewAll();
     }
