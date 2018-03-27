@@ -17,6 +17,7 @@ import {
   ADDRESS,
   PRODUCT_COUPONS,
   SIZE_GUIDE,
+  SIZE_SELECTOR,
   EMI_MODAL
 } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -39,6 +40,9 @@ const mapDispatchToProps = dispatch => {
 
     showAddress: data => {
       dispatch(showModal(ADDRESS, data));
+    },
+    showSizeSelector: data => {
+      dispatch(showModal(SIZE_SELECTOR, data));
     },
 
     getProductSizeGuide: () => {

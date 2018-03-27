@@ -79,7 +79,14 @@ const account = (
     verifyWallet: null,
     verifyWalletStatus: null,
     verifyWalletError: null,
-    loadingForverifyWallet: false
+    loadingForverifyWallet: false,
+
+    loadingForFollowedBrands: false,
+    getPinCodeDetails: null,
+    getPinCodeStatus: null,
+    getPinCodeError: null
+
+
   },
   action
 ) => {
@@ -443,6 +450,22 @@ const account = (
         loading: false
       });
 
+    case accountActions.GET_PIN_CODE_REQUEST:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status
+      });
+
+    case accountActions.GET_PIN_CODE_SUCCESS:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status,
+        getPinCodeDetails: action.pinCode
+      });
+
+    case accountActions.GET_PIN_CODE_FAILURE:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status,
+        getPinCodeError: action.error
+      });
     default:
       return state;
   }
