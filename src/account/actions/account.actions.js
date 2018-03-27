@@ -907,9 +907,10 @@ export function redeemCliqVoucherSuccess(cliqCashVoucherDetails) {
 }
 
 export function redeemCliqVoucherFailure(error) {
+  console.log(error);
   return {
     type: REDEEM_CLIQ_VOUCHER_FAILURE,
-    status: ERROR,
+    status: FAILURE,
     error
   };
 }

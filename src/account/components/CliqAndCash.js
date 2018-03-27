@@ -12,15 +12,19 @@ import moment from "moment";
 import {
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_PAGE,
-  SUCCESS
+  SUCCESS,
+  FAILURE
 } from "../../lib/constants.js";
+const DATE_FORMAT = "DD/MM/YYYY, hh:mm";
 export default class CliqAndCash extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       cardNumber: this.props.cardNumber ? this.props.cardNumber : "",
       pinNumber: this.props.pinNumber ? this.props.cardNumber : "",
-      cliqCashUpdate: false
+      cliqCashUpdate: false,
+      error: false,
+      errorMessage: ""
     };
   }
 
@@ -30,6 +34,14 @@ export default class CliqAndCash extends React.Component {
       this.state.cliqCashUpdate === true
     ) {
       this.setState({ cardNumber: "", pinNumber: "", cliqCashUpdate: false });
+    }
+    if (nextProps.cliqCashVoucherDetailsStatus === FAILURE) {
+      this.setState({
+        error: true,
+        errorMessage: nextProps.cliqCashVoucherDetailsError,
+        cardNumber: "",
+        pinNumber: ""
+      });
     }
   }
   componentDidMount() {
@@ -57,6 +69,7 @@ export default class CliqAndCash extends React.Component {
     if (this.props.cliqCashUserDetails) {
       return (
         <div className={styles.base}>
+          <Error message={this.state.errorMessage} show={this.state.error} />
           <div className={styles.logoHolder}>
             <Logo image={cliqCashIcon} />
           </div>
@@ -72,7 +85,7 @@ export default class CliqAndCash extends React.Component {
                 className={styles.expiredBalanceText}
               >{`Balance as of ${moment(
                 this.props.cliqCashUserDetails.balanceClearedAsOf
-              ).format("DD/MM/YYYY, hh:mm")} Hrs`}</div>
+              ).format(DATE_FORMAT)} Hrs`}</div>
             )}
             <div className={styles.informationText}>
               Once you validate your gift card, the value will automatically be

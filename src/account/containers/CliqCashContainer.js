@@ -21,7 +21,8 @@ const mapStateToProps = state => {
   return {
     cliqCashUserDetails: state.profile.cliqCashUserDetails,
     cliqCashVoucherDetailsStatus: state.profile.cliqCashVoucherDetailsStatus,
-    cliqCashVoucherDetails: state.profile.cliqCashVoucherDetails
+    cliqCashVoucherDetails: state.profile.cliqCashVoucherDetails,
+    cliqCashVoucherDetailsError: state.profile.cliqCashVoucherDetailsError
   };
 };
 
