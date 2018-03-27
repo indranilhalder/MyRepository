@@ -109,7 +109,6 @@ export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
 export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
-export const ROOT_URL = "v2/mpl/products";
 
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
 
@@ -319,6 +318,7 @@ export function verifyWallet(customerDetailsWithOtp) {
         customerDetailsWithOtp
       );
       const resultJson = await result.json();
+      console.log(resultJson);
       if (
         resultJson.status === SUCCESS ||
         resultJson.status === SUCCESS_UPPERCASE ||
