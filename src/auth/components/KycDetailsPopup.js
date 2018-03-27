@@ -64,10 +64,7 @@ export default class KycDetailsPopup extends React.Component {
         </div>
         <div className={Styles.buttonHolder}>
           <div className={Styles.leftButton}>
-            <ColourButton
-              label={"Call to verify"}
-              onClick={() => this.verifyOtp()}
-            />
+            <ColourButton label={"Submit"} onClick={() => this.verifyOtp()} />
           </div>
           <div className={Styles.rightButton}>
             <ColourButton
