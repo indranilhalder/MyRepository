@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.CustomerOldEmailDetailsModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -57,21 +59,23 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 		final List<CustomerModel> resList;
 		final Map parameters = new HashMap();
 
-		if (ANNONYMOUS.equals(uid))
+		if (null != uid && StringUtils.isNotEmpty(uid))
 		{
-			parameters.put(CustomerModel.UID, uid);
-		}
-		else
-		{
-			if (uid.contains("@"))
+			if (ANNONYMOUS.equals(uid))
 			{
-				parameters.put(CustomerModel.ORIGINALUID, uid);
+				parameters.put(CustomerModel.UID, uid);
 			}
-			else if (uid.length() == 10 && (uid.startsWith("9") || uid.startsWith("8") || uid.startsWith("7")))
+			else
 			{
-				parameters.put(CustomerModel.MOBILENUMBER, uid);
+				if (uid.contains("@"))
+				{
+					parameters.put(CustomerModel.ORIGINALUID, uid);
+				}
+				else if (uid.length() == 10 && (uid.startsWith("9") || uid.startsWith("8") || uid.startsWith("7")))
+				{
+					parameters.put(CustomerModel.MOBILENUMBER, uid);
+				}
 			}
-
 		}
 
 		resList = find(parameters);
@@ -83,7 +87,7 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 		}
 		return resList.isEmpty() ? null : resList.get(0);
 	}
-	
+
 	@Override
 	public CustomerModel findUserByWalletMobileNumber(final String mobileNumber)
 	{
@@ -100,11 +104,17 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 	@Override
 	public UserModel findUserByEmailId(final String uid)
 	{
-		final List resList = find(Collections.singletonMap("uid", uid));
-		if (resList.size() > 1)
+		List resList = null;
+		if (null != uid && StringUtils.isNotEmpty(uid))
 		{
-			throw new AmbiguousIdentifierException(MarketplacecommerceservicesConstants.FOUND + resList.size()
-					+ " users with the unique uid '" + uid + "'");
+			resList = find(Collections.singletonMap("uid", uid));
+
+
+			if (resList.size() > 1)
+			{
+				throw new AmbiguousIdentifierException(MarketplacecommerceservicesConstants.FOUND + resList.size()
+						+ " users with the unique uid '" + uid + "'");
+			}
 		}
 		return ((resList.isEmpty()) ? null : (UserModel) resList.get(0));
 	}
