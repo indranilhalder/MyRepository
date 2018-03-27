@@ -7,6 +7,11 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button.js";
 import cliqCashIcon from "./img/cliqcash.png";
 import styles from "./CliqAndCash.css";
+import Error from "../../general/components/Error.js";
+import {
+  MY_ACCOUNT_GIFT_CARD_PAGE,
+  MY_ACCOUNT_PAGE
+} from "../../lib/constants.js";
 export default class CliqAndCash extends React.Component {
   constructor(props) {
     super(props);
@@ -26,11 +31,17 @@ export default class CliqAndCash extends React.Component {
       this.props.gitCard();
     }
   }
-  addBalance(val) {
-    if (this.props.addBalance) {
-      this.props.addBalance(this.state);
+  redeemCliqVoucher() {
+    if (this.state.cardNumber && this.state.pinNumber) {
+      if (this.props.redeemCliqVoucher) {
+        this.props.redeemCliqVoucher(this.state);
+      }
     }
   }
+
+  buyNewGiftCard = () => {
+    this.props.history.push(`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_GIFT_CARD_PAGE}`);
+  };
   render() {
     return (
       <div className={styles.base}>
@@ -96,7 +107,7 @@ export default class CliqAndCash extends React.Component {
                 fontFamily="regular"
                 color="#000000"
                 label="Buy new Gift Card"
-                onClick={() => this.gitCard()}
+                onClick={() => this.buyNewGiftCard()}
               />
             </div>
           )}
@@ -109,7 +120,7 @@ export default class CliqAndCash extends React.Component {
               label="Add Balance"
               width={120}
               textStyle={{ color: "#FFF", fontSize: 14 }}
-              onClick={() => this.addBalance()}
+              onClick={() => this.redeemCliqVoucher()}
             />
           </div>
         </div>

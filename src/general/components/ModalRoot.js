@@ -11,6 +11,8 @@ import SizeGuideModal from "../../pdp/components/SizeGuideModal";
 import EmiModal from "../../pdp/containers/EmiListContainer";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
 import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
+import KycDetailsPopup from "../../auth/components/KycDetailsPopup.js";
+import KycApplicationForm from "../../account/components/KycApplicationForm.js";
 
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
@@ -76,6 +78,21 @@ export default class ModalRoot extends React.Component {
     this.props.getUserAddress();
   };
 
+  generateOtpForCliqCash = kycDetails => {
+    if (this.props.checkWalletMobileNumber) {
+      this.props.checkWalletMobileNumber(kycDetails);
+    }
+  };
+  verifyOtpForCliqCash = otpDetails => {
+    let kycDetails = {};
+    kycDetails.firstName = this.props.ownProps.firstName;
+    kycDetails.lastName = this.props.ownProps.lastName;
+    kycDetails.mobileNumber = this.props.ownProps.mobileNumber;
+    kycDetails.otp = otpDetails;
+    if (this.props.verifyWalletMobileNumber) {
+      this.props.verifyWalletMobileNumber(kycDetails);
+    }
+  };
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -133,6 +150,20 @@ export default class ModalRoot extends React.Component {
           closeModal={() => this.handleClose()}
           applyBankOffer={couponCode => this.applyBankOffer(couponCode)}
           releaseBankOffer={couponCode => this.releaseBankOffer(couponCode)}
+          {...this.props.ownProps}
+        />
+      ),
+      generateOtpForCliqCash: (
+        <KycApplicationForm
+          closeModal={() => this.handleClose()}
+          generateOtp={KycDetails => this.generateOtpForCliqCash(KycDetails)}
+          {...this.props.ownProps}
+        />
+      ),
+      verifyOtpForCliqCash: (
+        <KycDetailsPopup
+          closeModal={() => this.handleClose()}
+          verifyOtp={otpDetails => this.verifyOtpForCliqCash(otpDetails)}
           {...this.props.ownProps}
         />
       ),

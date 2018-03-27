@@ -6,6 +6,12 @@ import lockBlackIcon from "./img/lockBlackIcon.svg";
 import Styles from "./KycDetailsPopup.css";
 import Input2 from "../../general/components/Input2";
 export default class KycDetailsPopup extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      otp: this.props.otp ? this.props.otp : ""
+    };
+  }
   callVerify() {
     if (this.props.callVerify) {
       this.props.callVerify();
@@ -25,6 +31,10 @@ export default class KycDetailsPopup extends React.Component {
       this.props.wrongNumber();
     }
   }
+
+  verifyOtp = otpDetails => {
+    this.props.verifyOtp(this.state.otp);
+  };
   render() {
     return (
       <div className={Styles.base}>
@@ -56,7 +66,7 @@ export default class KycDetailsPopup extends React.Component {
           <div className={Styles.leftButton}>
             <ColourButton
               label={"Call to verify"}
-              onClick={() => this.callVerify()}
+              onClick={() => this.verifyOtp()}
             />
           </div>
           <div className={Styles.rightButton}>

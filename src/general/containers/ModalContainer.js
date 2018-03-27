@@ -110,7 +110,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(getUserAddress());
     },
     checkWalletMobileNumber: customerDetails => {
-      dispatch(checkWalletMobileNumber(customerDetails));
+      dispatch(checkWalletMobileNumber(customerDetails, false));
     },
     verifyWalletMobileNumber: otpDetails => {
       dispatch(verifyWalletMobileNumber(otpDetails));

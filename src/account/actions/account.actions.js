@@ -860,7 +860,7 @@ export function getCliqCashDetails() {
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     dispatch(getCliqCashRequest());
     try {
-      const result = await api.postFormData(
+      const result = await api.post(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
         }/cliqcash/getUserCliqCashDetails?access_token=${
@@ -869,17 +869,21 @@ export function getCliqCashDetails() {
       );
       const resultJson = await result.json();
       if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.errors
       ) {
-        throw new Error(`${resultJson.errors[0].message}`);
-      }
-      if (resultJson.status === SUCCESS) {
-        if (!resultJson.isWalletCreated && resultJson.isWalletOtpVerified) {
-          dispatch(showModal(GENERATE_OTP_FOR_CLIQ_CASH));
+        if (resultJson.errors) {
+          throw new Error(`${resultJson.errors[0].message}`);
+        } else {
+          throw new Error(`${resultJson.error}`);
         }
       }
+
+      if (!resultJson.isWalletCreated && !resultJson.isWalletOtpVerified) {
+        dispatch(showModal(GENERATE_OTP_FOR_CLIQ_CASH));
+      }
+
       dispatch(getCliqCashSuccess(resultJson));
     } catch (e) {
       return dispatch(getCliqCashFailure(e.message));
@@ -909,7 +913,7 @@ export function redeemCliqVoucherFailure(error) {
   };
 }
 
-export function redeemCliqVoucher() {
+export function redeemCliqVoucher(cliqCashDetails) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -920,21 +924,23 @@ export function redeemCliqVoucher() {
           JSON.parse(userDetails).userName
         }/cliqcash/redeemCliqVoucher?access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=&couponCode=4000162016938599&passKey=141350`
+        }&cartGuid=&couponCode=${cliqCashDetails.cardNumber}&passKey=${
+          cliqCashDetails.pinNumber
+        }`
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.errors
       ) {
-        throw new Error(`${resultJson.errors[0].message}`);
-      }
-      if (resultJson.status === SUCCESS) {
-        if (!resultJson.isWalletCreated && resultJson.isWalletOtpVerified) {
+        if (resultJson.errors) {
+          throw new Error(`${resultJson.errors[0].message}`);
+        } else {
+          throw new Error(`${resultJson.error}`);
         }
       }
+
       dispatch(redeemCliqVoucherSuccess(resultJson));
     } catch (e) {
       return dispatch(redeemCliqVoucherFailure(e.message));
@@ -971,7 +977,7 @@ export function checkWalletMobileNumber(customerDetails, isFromAccount) {
 
     dispatch(checkWalletMobileNumberRequest());
     try {
-      const result = await api.postFormData(
+      const result = await api.post(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
         }/checkWalletMobileNumber?access_token=${
@@ -980,16 +986,15 @@ export function checkWalletMobileNumber(customerDetails, isFromAccount) {
         customerDetails
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.errors
       ) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
 
-      dispatch(showModal(VERIFY_OTP_FOR_CLIQ_CASH));
+      dispatch(showModal(VERIFY_OTP_FOR_CLIQ_CASH, customerDetails));
       dispatch(checkMobileNumberSuccess(resultJson));
     } catch (e) {
       return dispatch(checkWalletMobileNumberFailure(e.message));
@@ -1036,11 +1041,10 @@ export function verifyWalletMobileNumber(otpDetails) {
         }&mobileNumber=${otpDetails.mobileNumber}&otp=${otpDetails.otp}`
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.error
       ) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
