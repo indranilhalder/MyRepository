@@ -1,7 +1,7 @@
 .base {
   width: 100%;
   height: auto;
-  padding: 0 100px 0 20px;
+  padding: 0 130px 0 20px;
   position: relative;
   margin-bottom: 20px;
 }
@@ -17,7 +17,7 @@
   color: #000000;
 }
 .buttonHolder {
-  width: 100px;
+  width: 120px;
   height: auto;
   top: 0;
   right: 20px;
