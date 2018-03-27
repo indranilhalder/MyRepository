@@ -54,12 +54,10 @@ export default class ModalRoot extends React.Component {
     this.props.forgotPassword(userDetails);
     this.props.hideModal();
   }
-
   submitOtpForgotPassword(otpDetails) {
     this.props.forgotPasswordOtpVerification(otpDetails, this.props.ownProps);
     this.props.hideModal();
   }
-
   applyBankOffer = couponCode => {
     this.props.applyBankOffer(couponCode);
   };
