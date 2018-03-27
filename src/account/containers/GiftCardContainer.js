@@ -18,7 +18,9 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    giftCardsDetails: state.profile.giftCards
+    giftCardsDetails: state.profile.giftCards,
+    giftCardDetailsStatus: state.profile.giftCardDetailsStatus,
+    giftCardDetails: state.profile.giftCardDetails
   };
 };
 

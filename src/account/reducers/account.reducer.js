@@ -1,3 +1,4 @@
+import cloneDeep from "lodash/cloneDeep";
 import * as accountActions from "../actions/account.actions";
 import * as cartActions from "../../cart/actions/cart.actions";
 
@@ -57,7 +58,8 @@ const account = (
     followedBrands: null,
     followedBrandsStatus: null,
     followedBrandsError: null,
-    loadingForFollowedBrands: false,
+     loadingForFollowedBrands: false,
+
 
     giftCards: null,
     giftCardStatus: null,
@@ -383,8 +385,16 @@ const account = (
       });
 
     case accountActions.REMOVE_ADDRESS_SUCCESS:
+      const currentAddresses = cloneDeep(state.userAddress);
+      const indexOfAddressToBeRemove = currentAddresses.addresses.findIndex(
+        address => {
+          return address.id === action.addressId;
+        }
+      );
+      currentAddresses.addresses.splice(indexOfAddressToBeRemove, 1);
       return Object.assign({}, state, {
         removeAddressStatus: action.status,
+        userAddress: currentAddresses,
         loading: false
       });
 

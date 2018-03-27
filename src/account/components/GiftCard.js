@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import TextArea from "../../general/components/TextArea";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
+import { CHECKOUT_ROUTER } from "../../lib/constants.js";
 const PRODUCT_ID = "MP000000000127263";
 const QUANTITY = "1";
 const MOBILE_NUMBER = "999999999";
@@ -25,6 +26,20 @@ export default class GiftCard extends React.Component {
   }
   selectAmount(val, amount) {
     this.setState({ amountText: val, amount: amount });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.giftCardDetailsStatus) {
+      console.log(nextProps.giftCardDetails);
+
+      this.props.history.push({
+        pathname: CHECKOUT_ROUTER,
+        state: {
+          isFromGiftCard: true,
+          egvCartGuid: nextProps.giftCardDetails.egvCartGuid
+        }
+      });
+    }
   }
   onSubmitDetails() {
     if (this.props.createGiftCardDetails) {
