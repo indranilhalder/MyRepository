@@ -399,6 +399,8 @@ const productDescription = (
         }
       );
       Object.assign(newMsdItemsForBrand, { brandDetails });
+      console.log("NEW MSD ITEMS FOR BRAND");
+      console.log(newMsdItemsForBrand);
       return Object.assign({}, state, {
         status: action.status,
         msdItems: newMsdItemsForBrand,
