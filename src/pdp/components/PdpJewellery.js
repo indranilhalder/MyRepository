@@ -35,11 +35,11 @@ import {
   YES,
   NO,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
-  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 
 const DELIVERY_TEXT = "Delivery Options For";
-const PIN_CODE = "110011";
 const PRODUCT_QUANTITY = "1";
 export default class PdpJewellery extends React.Component {
   constructor(props) {
@@ -71,11 +71,13 @@ export default class PdpJewellery extends React.Component {
   };
 
   goToCart = () => {
+    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
     this.props.history.push({
       pathname: PRODUCT_CART_ROUTER,
       state: {
         ProductCode: this.props.productDetails.productListingId,
-        pinCode: PIN_CODE
+        pinCode: defaultPinCode
       }
     });
   };
@@ -163,6 +165,8 @@ export default class PdpJewellery extends React.Component {
     this.props.showEmiModal();
   };
   renderDeliveryOptions(productData) {
+    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
     return (
       productData.eligibleDeliveryModes &&
       productData.eligibleDeliveryModes.map((val, idx) => {
@@ -174,7 +178,7 @@ export default class PdpJewellery extends React.Component {
             type={val.code}
             onClick={() => this.renderAddressModal()}
             deliveryOptions={DELIVERY_TEXT}
-            label={PIN_CODE}
+            label={defaultPinCode}
             showCliqAndPiqButton={false}
           />
         );
