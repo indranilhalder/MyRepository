@@ -1,7 +1,8 @@
 import {
   CATEGORY_REGEX,
   BRAND_REGEX,
-  BRAND_CAPTURE_REGEX
+  BRAND_CAPTURE_REGEX,
+  BRAND_CATEGORY_PREFIX
 } from "./PlpBrandCategoryWrapper.js";
 import { ARRAY_OF_SORTS } from "./Sort.js";
 
@@ -92,7 +93,7 @@ export function createUrlFromQueryAndCategory(query, pathName, val) {
 
     if (BRAND_REGEX.test(pathName)) {
       let brandId = BRAND_CAPTURE_REGEX.exec(pathName)[0];
-      brandId = brandId.replace("c-", "");
+      brandId = brandId.replace(BRAND_CATEGORY_PREFIX, "");
       url = `/search/?q=:category:${val}:brand:${brandId.toUpperCase()}`;
     }
   }

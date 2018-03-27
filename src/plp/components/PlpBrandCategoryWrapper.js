@@ -8,6 +8,7 @@ export const CATEGORY_REGEX = /c-msh*/;
 export const BRAND_REGEX = /c-mbh*/;
 export const CATEGORY_CAPTURE_REGEX = /c-msh(.*)/;
 export const BRAND_CAPTURE_REGEX = /c-mbh(.*)/;
+export const BRAND_CATEGORY_PREFIX = "c-";
 
 export default class PlpBrandCategoryWrapper extends React.Component {
   constructor(props) {
@@ -30,7 +31,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
       categoryOrBrandId = url.match(BRAND_CAPTURE_REGEX)[0];
     }
 
-    categoryOrBrandId = categoryOrBrandId.replace("c-", "");
+    categoryOrBrandId = categoryOrBrandId.replace(BRAND_CATEGORY_PREFIX, "");
 
     this.props.homeFeed(categoryOrBrandId);
   }
@@ -45,7 +46,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     let searchText;
     if (CATEGORY_REGEX.test(url)) {
       match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
-      match = match.replace("c-", "");
+      match = match.replace(BRAND_CATEGORY_PREFIX, "");
 
       match = match.toUpperCase();
 
@@ -54,7 +55,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
 
     if (BRAND_REGEX.test(url)) {
       match = BRAND_CAPTURE_REGEX.exec(url)[0];
-      match = match.replace("c-", "");
+      match = match.replace(BRAND_CATEGORY_PREFIX, "");
 
       match = match.toUpperCase();
 

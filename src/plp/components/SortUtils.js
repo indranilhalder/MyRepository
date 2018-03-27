@@ -3,7 +3,8 @@ import {
   CATEGORY_REGEX,
   BRAND_REGEX,
   CATEGORY_CAPTURE_REGEX,
-  BRAND_CAPTURE_REGEX
+  BRAND_CAPTURE_REGEX,
+  BRAND_CATEGORY_PREFIX
 } from "./PlpBrandCategoryWrapper";
 
 /*
@@ -44,12 +45,12 @@ export function applySortToUrl(query, url, sortValue) {
 
     if (CATEGORY_REGEX.test(url)) {
       match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
-      match = match.replace("c-", "");
+      match = match.replace(BRAND_CATEGORY_PREFIX, "");
       newQuery = `:${sortValue}:category:${match[1].toUpperCase()}`;
     }
     if (BRAND_REGEX.test(url)) {
       match = BRAND_CAPTURE_REGEX.exec(url)[0];
-      match = match.replace("c-", "");
+      match = match.replace(BRAND_CATEGORY_PREFIX, "");
       newQuery = `:${sortValue}:category:${match[1].toUpperCase()}`;
     }
   } else {
