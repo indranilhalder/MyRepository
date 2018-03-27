@@ -14,7 +14,8 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
-  GLOBAL_ACCESS_TOKEN
+  GLOBAL_ACCESS_TOKEN,
+  PLAT_FORM_NUMBER
 } from "../../lib/constants";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
@@ -57,6 +58,10 @@ export const GET_USER_ALERTS_REQUEST = "GET_USER_ALERTS_REQUEST";
 export const GET_USER_ALERTS_SUCCESS = "GET_USER_ALERTS_SUCCESS";
 export const GET_USER_ALERTS_FAILURE = "GET_USER_ALERTS_FAILURE";
 
+export const GET_PIN_CODE_REQUEST = "GET_PIN_CODE_REQUEST";
+export const GET_PIN_CODE_SUCCESS = "GET_PIN_CODE_SUCCESS";
+export const GET_PIN_CODE_FAILURE = "GET_PIN_CODE_FAILURE";
+
 export const SEND_INVOICE_REQUEST = "SEND_INVOICE_REQUEST";
 export const SEND_INVOICE_SUCCESS = "SEND_INVOICE_SUCCESS";
 export const SEND_INVOICE_FAILURE = "SEND_INVOICE_FAILURE";
@@ -65,6 +70,9 @@ export const REMOVE_ADDRESS_REQUEST = "REMOVE_ADDRESS_REQUEST";
 export const REMOVE_ADDRESS_SUCCESS = "REMOVE_ADDRESS_SUCCESS";
 export const REMOVE_ADDRESS_FAILURE = "REMOVE_ADDRESS_FAILURE";
 
+export const EDIT_ADDRESS_REQUEST = "EDIT_ADDRESS_REQUEST";
+export const EDIT_ADDRESS_SUCCESS = "EDIT_ADDRESS_SUCCESS";
+export const EDIT_ADDRESS_FAILURE = "EDIT_ADDRESS_FAILURE";
 export const GET_WISHLIST_REQUEST = "GET_WISHLIST_REQUEST";
 export const GET_WISHLIST_SUCCESS = "GET_WISHLIST_SUCCESS";
 export const GET_WISHLIST_FAILURE = "GET_WISHLIST_FAILURE";
@@ -103,6 +111,10 @@ export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
 export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
+
+export const PIN_PATH = "v2/mpl/";
+
+
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
 
 const API_KEY_FOR_MSD = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
@@ -479,6 +491,51 @@ export function getSavedCardDetails(userId, customerAccessToken) {
     }
   };
 }
+export function getPinCodeRequest() {
+  return {
+    type: GET_PIN_CODE_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getPinCodeSuccess(pinCode) {
+  return {
+    type: GET_PIN_CODE_SUCCESS,
+    status: SUCCESS,
+    pinCode
+  };
+}
+
+export function getPinCodeFailure(error) {
+  return {
+    type: GET_PIN_CODE_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getPinCode(pinCode) {
+  return async (dispatch, getState, { api }) => {
+    const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    dispatch(getPinCodeRequest());
+    try {
+      const result = await api.get(
+        `${PIN_PATH}/getPincodeData?pincode=${pinCode}&access_token=${
+          JSON.parse(globalAccessToken).access_token
+        }`
+      );
+      const resultJson = await result.json();
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE
+      ) {
+        throw new Error(resultJson.errors[0].message);
+      }
+      dispatch(getPinCodeSuccess(resultJson));
+    } catch (e) {
+      dispatch(getPinCodeFailure(e.message));
+    }
+  };
+}
 
 export function removeSavedCardRequest() {
   return {
@@ -722,10 +779,11 @@ export function removeAddressRequest() {
     status: REQUESTING
   };
 }
-export function removeAddressSuccess() {
+export function removeAddressSuccess(addressId) {
   return {
     type: REMOVE_ADDRESS_SUCCESS,
-    status: SUCCESS
+    status: SUCCESS,
+    addressId
   };
 }
 
@@ -760,10 +818,32 @@ export function removeAddress(addressId) {
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
-      dispatch(removeAddressSuccess());
+      dispatch(removeAddressSuccess(addressId));
     } catch (e) {
       dispatch(removeAddressFailure(e.message));
     }
+  };
+}
+
+export function editAddressRequest() {
+  return {
+    type: EDIT_ADDRESS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function editAddressSuccess(addressDetails) {
+  return {
+    type: EDIT_ADDRESS_SUCCESS,
+    status: SUCCESS,
+    addressDetails
+  };
+}
+
+export function editAddressFailure(error) {
+  return {
+    type: EDIT_ADDRESS_FAILURE,
+    status: ERROR,
+    error
   };
 }
 
@@ -784,8 +864,51 @@ export function fetchOrderDetailsSuccess(fetchOrderDetails) {
 export function fetchOrderDetailsFailure(error) {
   return {
     type: FETCH_ORDER_DETAILS_FAILURE,
+
     status: ERROR,
     error
+  };
+}
+
+export function editAddress(addressDetails) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(editAddressRequest());
+    let addressObject = new FormData();
+    addressObject.append("countryIso", addressDetails.countryIso);
+    addressObject.append("addressType", addressDetails.addressType);
+    addressObject.append("phone", addressDetails.phone);
+    addressObject.append("firstName", addressDetails.firstName);
+    addressObject.append("lastName", addressDetails.lastName);
+    addressObject.append("postalCode", addressDetails.postalCode);
+    addressObject.append("line1", addressDetails.line1);
+    addressObject.append("line2", addressDetails.line2);
+    addressObject.append("line3", addressDetails.line3);
+    addressObject.append("state", addressDetails.state);
+    addressObject.append("town", addressDetails.town);
+    addressObject.append("defaultFlag", addressDetails.defaultFlag);
+    addressObject.append("addressId", addressDetails.addressId);
+    addressObject.append("emailId", "");
+
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/editAddress?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&pageSize=${PAGE_SIZE}&isPwa=true&platformNumber=${PLAT_FORM_NUMBER}`,
+        addressObject
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(editAddressSuccess(resultJson));
+    } catch (e) {
+      dispatch(editAddressFailure(e.message));
+    }
   };
 }
 

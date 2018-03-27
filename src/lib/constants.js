@@ -19,8 +19,6 @@ export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
 export const DEFAULT_PIN_CODE_LOCAL_STORAGE = "defaultPinCode";
 
 export const REFRESH_TOKEN = "refresh_token";
-export const BRAND_OR_CATEGORY_LANDING_PAGE =
-  "/:brandOrCategory/:brandOrCategoryId";
 export const BRAND_PAGE = "/c-(mbh.*)";
 export const BRAND_PAGE_WITH_SLUG = `/.*/${BRAND_PAGE}`;
 
@@ -69,6 +67,7 @@ export const MY_ACCOUNT_COUPON_PAGE = "/coupons";
 export const MY_ACCOUNT_CART_PAGE = "/cart";
 export const MY_ACCOUNT_CLIQ_CASH_PAGE = "/cliq-cash";
 
+
 //returns
 export const RETURNS_PREFIX = "/returns";
 export const RETURNS = "/returns/(.*)";
@@ -88,6 +87,8 @@ export const RETURNS_STORE_BANK_FORM = "/bankDetail";
 export const RETURNS_STORE_FINAL = "/submit";
 
 export const RETURNS_SELF_COURIER = "/selfCourier";
+export const MY_ACCOUNT_ADDRESS_EDIT_PAGE = "/address-book/edit";
+export const MY_ACCOUNT_ADDRESS_ADD_PAGE = "/address-book/add";
 
 export const CLIQ_AND_PIQ = "/select-stores";
 export const PRODUCT_CART_DELIVERY_MODES = "/deliveryModes";
@@ -124,6 +125,8 @@ export const SHORT_COLLECT = "CNC";
 
 export const FOLLOW = "Follow";
 export const FOLLOWING = "Following";
+
+export const PLAT_FORM_NUMBER = "2";
 
 export const TRUE = "true";
 

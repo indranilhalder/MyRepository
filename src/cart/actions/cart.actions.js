@@ -1,4 +1,10 @@
-import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
+import {
+  SUCCESS,
+  REQUESTING,
+  ERROR,
+  SUCCESS_CAMEL_CASE,
+  SUCCESS_UPPERCASE
+} from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash/each";
 import {
@@ -546,11 +552,10 @@ export function addUserAddressRequest(error) {
   };
 }
 
-export function addUserAddressSuccess(userAddress) {
+export function addUserAddressSuccess() {
   return {
     type: ADD_USER_ADDRESS_SUCCESS,
-    status: SUCCESS,
-    userAddress
+    status: SUCCESS
   };
 }
 
@@ -2167,12 +2172,15 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
         }&platformNumber=2&isPwa=true&paymentMode=${paymentMode}&juspayOrderID=${juspayOrderID}&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson === SUCCESS_UPPERCASE
+      ) {
+        dispatch(updateTransactionDetailsSuccess(resultJson));
+        dispatch(orderConfirmation(resultJson.orderId));
       }
-
-      dispatch(updateTransactionDetailsSuccess(resultJson));
-      dispatch(orderConfirmation(resultJson.orderId));
+      throw new Error(resultJson.error);
     } catch (e) {
       dispatch(updateTransactionDetailsFailure(e.message));
     }

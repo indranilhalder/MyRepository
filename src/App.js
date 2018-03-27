@@ -35,7 +35,12 @@ import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
 import AddressBookContainer from "./account/containers/AddressBookContainer.js";
 
+
 import ReturnFlowContainer from "./account/containers/ReturnFlowContainer.js";
+
+import EditAddressBookContainer from "./account/containers/EditAddressBookContainer.js";
+import AddAddressContainer from "./account/containers/AddAddressContainer.js";
+
 import SaveListContainer from "./account/containers/SaveListContainer";
 
 import {
@@ -46,7 +51,6 @@ import {
   SIGN_UP_PATH,
   PRODUCT_DELIVERY_ADDRESSES,
   PRODUCT_FILTER_ROUTER,
-  PRODUCT_REVIEWS_PATH_SUFFIX,
   PRODUCT_CART_ROUTER,
   GLOBAL_ACCESS_TOKEN,
   CUSTOMER_ACCESS_TOKEN,
@@ -55,16 +59,11 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   LOGGED_IN_USER_DETAILS,
   PRODUCT_CART_DELIVERY_MODES,
-  SEARCH_RESULTS_PAGE,
-  BRAND_OR_CATEGORY_LANDING_PAGE,
   ORDER_SUMMARY_ROUTER,
   CHECKOUT_ROUTER,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
-  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  PLP_CATEGORY_SEARCH,
   BRAND_LANDING_PAGE,
   PRODUCT_DESCRIPTION_REVIEWS,
-  PRODUCT_SELLER_ROUTER,
   PRODUCT_OTHER_SELLER_ROUTER,
   DEFAULT_BRANDS_LANDING_PAGE,
   CATEGORIES_LANDING_PAGE,
@@ -80,9 +79,15 @@ import {
   MY_ACCOUNT_ALERTS_PAGE,
   MY_ACCOUNT_COUPON_PAGE,
   MY_ACCOUNT_BRANDS_PAGE,
+
   ACCOUNT_SAVED_CARD_ROUTER,
   ORDER_PREFIX,
-  RETURNS
+  RETURNS,
+
+  MY_ACCOUNT_ADDRESS_EDIT_PAGE,
+  MY_ACCOUNT_ADDRESS_ADD_PAGE,
+  ORDER_PREFIX
+
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
@@ -283,6 +288,16 @@ class App extends Component {
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_PAGE}`}
               component={AddressBookContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_EDIT_PAGE}`}
+              component={EditAddressBookContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_ADD_PAGE}`}
+              component={AddAddressContainer}
             />
           </Switch>
           <MobileFooter />

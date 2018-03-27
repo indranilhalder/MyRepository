@@ -1,5 +1,6 @@
 //TODO why are some cookies session and why are some timestamped?
 // What is the difference?
+
 export function createCookie(name, value, days) {
   let expires;
   if (days) {
@@ -20,4 +21,9 @@ export function getCookie(cookieName) {
 export function deleteCookie(cookieName) {
   document.cookie =
     cookieName + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+}
+export function getCookieValue(name) {
+  var b = document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)");
+
+  return b ? b.pop() : "";
 }
