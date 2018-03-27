@@ -1307,8 +1307,6 @@ export function getPaymentModes(pinCode, payload) {
         payload
       );
       const resultJson = await result.json();
-      console.log("RESULT JSON");
-      console.log(resultJson);
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }

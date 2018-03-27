@@ -14,8 +14,6 @@ class ProductListingsPage extends Component {
   }
   getSearchTextFromUrl() {
     const parsedQueryString = queryString.parse(this.props.location.search);
-    console.log("GET SEARCH TEXT FROM URL");
-    console.log(parsedQueryString);
     const searchCategory = parsedQueryString.searchCategory;
     let searchText = parsedQueryString.q;
 
