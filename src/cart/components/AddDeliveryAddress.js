@@ -54,7 +54,7 @@ export default class AddDeliveryAddress extends React.Component {
     addressDetails.addressType = this.state.addressType;
     addressDetails.phone = this.state.phone;
     addressDetails.firstName = this.state.firstName;
-    addressDetails.lastName = this.state.firstName;
+    addressDetails.lastName = "";
     addressDetails.postalCode = this.state.postalCode;
     addressDetails.line1 = this.state.line1;
     addressDetails.state = this.state.state;
