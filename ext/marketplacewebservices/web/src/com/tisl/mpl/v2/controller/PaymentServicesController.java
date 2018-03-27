@@ -536,6 +536,11 @@ public class PaymentServicesController extends BaseController
 					{
 						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
 						promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, orderModel, userId, bankName);
+						if (isPwa)
+						{
+							final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
+							promoPriceData.setCartAmount(pricePwa);
+						}
 					}
 					else
 					{
