@@ -20,9 +20,10 @@ export default class CategoriesPage extends React.Component {
     const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   }
+  handleViewAll(webURL) {
+    this.props.history.replace(webURL);
+  }
   handleOpenL1(val) {
-    console.log(val);
-
     this.setState({ openIndex: val });
   }
   closeItem() {
@@ -46,6 +47,9 @@ export default class CategoriesPage extends React.Component {
                   }}
                   closeItem={() => {
                     this.closeItem();
+                  }}
+                  onViewAll={() => {
+                    this.handleViewAll(categories.webURL);
                   }}
                 >
                   {categories.subCategories &&

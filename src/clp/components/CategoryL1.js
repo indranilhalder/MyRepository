@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import styles from "./CategoryL1.css";
 export default class CategoryL1 extends React.Component {
   handleViewAll() {
-    if (this.props.viewAll) {
-      this.props.viewAll();
+    console.log("clicking");
+    if (this.props.onViewAll) {
+      this.props.onViewAll();
     }
   }
   openItem() {
@@ -23,7 +24,6 @@ export default class CategoryL1 extends React.Component {
     }
   }
   render() {
-    console.log(this.props);
     return (
       <div className={styles.base}>
         {!this.props.isOpen && (
@@ -49,7 +49,7 @@ export default class CategoryL1 extends React.Component {
             <div className={styles.viewButton}>
               <ColourButton
                 label="View all"
-                color="#ff1744"
+                colour="#ff1744"
                 onClick={() => {
                   this.handleViewAll();
                 }}
