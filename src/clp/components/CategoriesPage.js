@@ -6,6 +6,13 @@ import styles from "./CategoriesPage.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 export default class CategoriesPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openIndex: null
+    };
+  }
+
   componentDidMount() {
     this.props.getCategories();
   }
@@ -13,7 +20,16 @@ export default class CategoriesPage extends React.Component {
     const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   }
-
+  handleViewAll(webURL) {
+    const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
+    this.props.history.push(urlSuffix);
+  }
+  handleOpenL1(val) {
+    this.setState({ openIndex: val });
+  }
+  closeItem() {
+    this.setState({ openIndex: null });
+  }
   render() {
     let categoriesData = this.props.categories;
     return (
@@ -21,35 +37,49 @@ export default class CategoriesPage extends React.Component {
         {categoriesData &&
           categoriesData.subCategories &&
           categoriesData.subCategories.map((categories, i) => {
-            return (
-              <CategoryL1
-                label={categories.category_name}
-                key={`${categories.category_name}${i}`}
-              >
-                {categories.subCategories &&
-                  categories.subCategories.map((category, i) => {
-                    return (
-                      <CategoryL2
-                        label={category.category_name}
-                        url={category.webURL}
-                        key={`${category.category_name}${i}`}
-                      >
-                        {category.subCategories &&
-                          category.subCategories.map((subCategory, i) => {
-                            return (
-                              <CategoryL3
-                                onClick={val => this.handleClick(val)}
-                                key={`${subCategory.category_name}${i}`}
-                                label={subCategory.category_name}
-                                url={subCategory.webURL}
-                              />
-                            );
-                          })}
-                      </CategoryL2>
-                    );
-                  })}
-              </CategoryL1>
-            );
+            if (this.state.openIndex === null || this.state.openIndex === i) {
+              return (
+                <CategoryL1
+                  isOpen={this.state.openIndex === i}
+                  label={categories.category_name}
+                  key={`${categories.category_name}${i}`}
+                  openItem={() => {
+                    this.handleOpenL1(i);
+                  }}
+                  closeItem={() => {
+                    this.closeItem();
+                  }}
+                  onViewAll={() => {
+                    this.handleViewAll(categories.webURL);
+                  }}
+                >
+                  {categories.subCategories &&
+                    categories.subCategories.map((category, i) => {
+                      return (
+                        <CategoryL2
+                          label={category.category_name}
+                          url={category.webURL}
+                          key={`${category.category_name}${i}`}
+                        >
+                          {category.subCategories &&
+                            category.subCategories.map((subCategory, i) => {
+                              return (
+                                <CategoryL3
+                                  onClick={val => this.handleClick(val)}
+                                  key={`${subCategory.category_name}${i}`}
+                                  label={subCategory.category_name}
+                                  url={subCategory.webURL}
+                                />
+                              );
+                            })}
+                        </CategoryL2>
+                      );
+                    })}
+                </CategoryL1>
+              );
+            } else {
+              return null;
+            }
           })}
       </div>
     );

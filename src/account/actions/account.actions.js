@@ -376,10 +376,11 @@ export function removeAddressRequest() {
     status: REQUESTING
   };
 }
-export function removeAddressSuccess() {
+export function removeAddressSuccess(addressId) {
   return {
     type: REMOVE_ADDRESS_SUCCESS,
-    status: SUCCESS
+    status: SUCCESS,
+    addressId
   };
 }
 
@@ -414,7 +415,7 @@ export function removeAddress(addressId) {
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
-      dispatch(removeAddressSuccess());
+      dispatch(removeAddressSuccess(addressId));
     } catch (e) {
       dispatch(removeAddressFailure(e.message));
     }
