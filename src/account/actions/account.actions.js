@@ -324,6 +324,8 @@ export function verifyWallet(customerDetailsWithOtp) {
         resultJson.status === SUCCESS_UPPERCASE ||
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
+        dispatch(hideModal(VERIFY_OTP));
+        dispatch(getGiftCardDetails());
         return dispatch(verifyWalletSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.errors[0].message}`);

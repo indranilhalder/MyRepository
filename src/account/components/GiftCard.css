@@ -126,3 +126,37 @@
   bottom: 0;
   z-index: 10;
 }
+.textHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  background-color: #ececec;
+}
+.textHeader {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+  color: #ff1744;
+  font-family: semibold;
+  margin-bottom: 20px;
+}
+.text {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+  font-family: semibold;
+  margin-bottom: 20px;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+  background-color: #ff1744;
+  color: #fff;
+  font-family: semibold;
+  margin-bottom: 20px;
+  padding: 12px;
+}

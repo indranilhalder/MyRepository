@@ -46,7 +46,7 @@
 .rightButton {
   display: inline-block;
   margin-left: auto;
-  width: 50%;
+  width: 100%;
   text-align: right;
   vertical-align: top;
 }
@@ -60,4 +60,14 @@
   text-decoration-line: underline;
   text-underline-position: under;
   margin-left: 2px;
+}
+.button {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+}
+.buttonWithText {
+  display: inline-block;
+  text-align: center;
 }

@@ -3,17 +3,8 @@ import { withRouter } from "react-router-dom";
 import GiftCard from "../components/GiftCard.js";
 import {
   getGiftCardDetails,
-  createGiftCardDetails,
-  getOtpToActivateWallet,
-  verifyWallet
+  createGiftCardDetails
 } from "../actions/account.actions";
-import {
-  showModal,
-  ADDRESS,
-  PRODUCT_COUPONS,
-  SIZE_GUIDE,
-  EMI_MODAL
-} from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getGiftCardDetails: () => {
@@ -27,7 +18,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    giftCardsDetails: state.profile
+    giftCardsDetails: state.profile.giftCards
   };
 };
 

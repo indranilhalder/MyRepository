@@ -13,11 +13,6 @@ export default class KycDetailsPopup extends React.Component {
       otp: this.props.otp ? this.props.otp : ""
     };
   }
-  callVerify() {
-    if (this.props.callVerify) {
-      this.props.callVerify();
-    }
-  }
   resendOtp() {
     if (this.props.resendOtp) {
       this.props.resendOtp();
@@ -60,12 +55,6 @@ export default class KycDetailsPopup extends React.Component {
           />
         </div>
         <div className={Styles.buttonHolder}>
-          <div className={Styles.leftButton}>
-            <ColourButton
-              label={"Call to verify"}
-              onClick={() => this.callVerify()}
-            />
-          </div>
           <div className={Styles.rightButton}>
             <ColourButton
               label={"Resend OTP"}
@@ -74,13 +63,13 @@ export default class KycDetailsPopup extends React.Component {
             <div className={Styles.time}>30 sec</div>
           </div>
         </div>
-        <div className={Styles.buttonHolder}>
-          <div className={Styles.button}>
+        <div className={Styles.button}>
+          <div className={Styles.buttonWithText}>
             <Button
               type="primary"
               backgroundColor="#ff1744"
               height={36}
-              label="Generate OTP"
+              label="Submit OTP"
               width={211}
               textStyle={{ color: "#FFF", fontSize: 14 }}
               onClick={() => this.submitOtp()}
@@ -94,7 +83,6 @@ export default class KycDetailsPopup extends React.Component {
 KycDetailsPopup.propTypes = {
   mobileNumber: PropTypes.string,
   wrongNumber: PropTypes.func,
-  callVerify: PropTypes.func,
   resendOtp: PropTypes.func
 };
 

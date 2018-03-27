@@ -5,7 +5,9 @@ import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import TextArea from "../../general/components/TextArea";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
-import Button from "../../general/components/Button.js";
+const PRODUCT_ID = "MP000000000127263";
+const QUANTITY = "1";
+const MOBILE_NUMBER = "999999999";
 export default class GiftCard extends React.Component {
   constructor(props) {
     super(props);
@@ -20,34 +22,25 @@ export default class GiftCard extends React.Component {
     if (this.props.getGiftCardDetails) {
       this.props.getGiftCardDetails();
     }
+  }
+  selectAmount(val, amount) {
+    this.setState({ amountText: val, amount: amount });
+  }
+  onSubmitDetails() {
     if (this.props.createGiftCardDetails) {
-      let giftCardDetails = {};
-      giftCardDetails.from = "ajkdnf";
-      giftCardDetails.quantity = "1";
-      giftCardDetails.messageOnCard = "Ksjdbfkjsd";
-      giftCardDetails.productID = "MP000000000127263";
-      giftCardDetails.priceSelectedByUserPerQuantity = "10000";
-      giftCardDetails.receiverEmailID = "cdoshi@tataunistore.com";
-      giftCardDetails.mobileNumber = "9769344954";
+      const giftCardDetails = {};
+      giftCardDetails.from = this.state.email;
+      giftCardDetails.quantity = QUANTITY;
+      giftCardDetails.messageOnCard = this.state.message;
+      giftCardDetails.productID = PRODUCT_ID;
+      giftCardDetails.priceSelectedByUserPerQuantity = this.state.amount;
+      giftCardDetails.receiverEmailID = this.state.senderName;
+      giftCardDetails.mobileNumber = MOBILE_NUMBER;
       this.props.createGiftCardDetails(giftCardDetails);
     }
   }
-  selectAmount(val) {
-    this.setState({ amountText: val });
-  }
-  // onSave() {
-  //   if (this.props.onSave) {
-  //     this.props.onSave();
-  //   }
-  // }
-  // onAddToBag(val) {
-  //   if (this.props.onAddToBag) {
-  //     this.props.onAddToBag(this.state);
-  //   }
-  // }
   render() {
-    let giftCards = this.props.giftCardsDetails.giftCards;
-    console.log(giftCards);
+    const giftCards = this.props.giftCardsDetails;
     return (
       <div className={styles.base}>
         <div className={styles.giftCardImageHolder}>
@@ -91,7 +84,10 @@ export default class GiftCard extends React.Component {
                         <div
                           className={styles.amountSelect}
                           onClick={() =>
-                            this.selectAmount(val.formattedValueNoDecimal)
+                            this.selectAmount(
+                              val.formattedValueNoDecimal,
+                              val.value
+                            )
                           }
                         >
                           {val.formattedValueNoDecimal}
@@ -166,21 +162,20 @@ export default class GiftCard extends React.Component {
             </div>
           </div>
         </div>
+        <div className={styles.textHolder}>
+          <div className={styles.textHeader}>QwickCilver</div>
+          <div className={styles.text}>
+            Sold by QwickCilver Solutions pvt ltd
+          </div>
+        </div>
         {giftCards &&
           giftCards.isWalletCreated &&
           giftCards.isWalletOtpVerified && (
-            <div className={styles.buttonHolder}>
-              <div className={styles.button}>
-                <Button
-                  type="primary"
-                  backgroundColor="#ff1744"
-                  height={36}
-                  label="Generate OTP"
-                  width={211}
-                  textStyle={{ color: "#FFF", fontSize: 14 }}
-                  onClick={() => this.submitOtp()}
-                />
-              </div>
+            <div
+              className={styles.buttonHolder}
+              onClick={() => this.onSubmitDetails()}
+            >
+              Buy Now
             </div>
           )}
       </div>
@@ -197,6 +192,7 @@ GiftCard.propTypes = {
     PropTypes.shape({
       value: PropTypes.number
     })
-  )
+  ),
+  getGiftCardDetails: PropTypes.func,
+  createGiftCardDetails: PropTypes.func
 };
-GiftCard.defaultProps = {};
