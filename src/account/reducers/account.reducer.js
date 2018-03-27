@@ -1,3 +1,4 @@
+import cloneDeep from "lodash/cloneDeep";
 import * as accountActions from "../actions/account.actions";
 import cloneDeep from "lodash/cloneDeep";
 import * as cartActions from "../../cart/actions/cart.actions";
@@ -52,6 +53,11 @@ const account = (
 
     returnProductDetails: null,
     returnRequest: null,
+    editAddressStatus: null,
+    editAddressError: null,
+
+    addUserAddressStatus: null,
+    addUserAddressError: null,
 
     followedBrands: null,
     followedBrandsStatus: null,
@@ -64,7 +70,11 @@ const account = (
 
     returnInitiateStatus: null,
     returnInitiateError: null,
-    returnInitiate: null
+    returnInitiate: null,
+    getPinCodeDetails: null,
+    getPinCodeStatus: null,
+    getPinCodeError: null
+
   },
   action
 ) => {
@@ -344,8 +354,16 @@ const account = (
       });
 
     case accountActions.REMOVE_ADDRESS_SUCCESS:
+      const currentAddresses = cloneDeep(state.userAddress);
+      const indexOfAddressToBeRemove = currentAddresses.addresses.findIndex(
+        address => {
+          return address.id === action.addressId;
+        }
+      );
+      currentAddresses.addresses.splice(indexOfAddressToBeRemove, 1);
       return Object.assign({}, state, {
         removeAddressStatus: action.status,
+        userAddress: currentAddresses,
         loading: false
       });
 
@@ -394,6 +412,60 @@ const account = (
         loading: false
       });
 
+    case accountActions.EDIT_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.EDIT_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        loading: false
+      });
+
+    case accountActions.EDIT_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        editAddressError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_USER_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        addUserAddressError: action.error,
+        loading: false
+      });
+
+    case accountActions.GET_PIN_CODE_REQUEST:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status
+      });
+
+    case accountActions.GET_PIN_CODE_SUCCESS:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status,
+        getPinCodeDetails: action.pinCode
+      });
+
+    case accountActions.GET_PIN_CODE_FAILURE:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status,
+        getPinCodeError: action.error
+      });
     default:
       return state;
   }
