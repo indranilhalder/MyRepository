@@ -89,7 +89,6 @@ class ProductSellerPage extends Component {
   };
 
   componentDidMount() {
-    console.log("COMPONENT DID MOUN");
     if (this.props.match.path === PRODUCT_OTHER_SELLER_ROUTER) {
       this.props.getProductDescription(this.props.match.params[1]);
     } else {
@@ -98,7 +97,6 @@ class ProductSellerPage extends Component {
   }
 
   render() {
-    console.log("RIGHT RENDER");
     const mobileGalleryImages =
       this.props.productDetails &&
       this.props.productDetails.galleryImagesList
@@ -123,15 +121,18 @@ class ProductSellerPage extends Component {
               productImage={mobileGalleryImages[0]}
               productName={this.props.productDetails.productName}
               price={this.props.productDetails.mrp}
-              discountPrice={this.props.productDetails.discount}
+              discountPrice={this.props.productDetails.winningSellerMOP}
               averageRating={this.props.productDetails.averageRating}
               totalNoOfReviews={this.props.productDetails.productReviewsCount}
             />
             <div>
               {this.props.productDetails.otherSellers && (
                 <SellerWithMultiSelect limit={1}>
-                  {this.props.productDetails.otherSellers.map(
-                    (value, index) => {
+                  {this.props.productDetails.otherSellers
+                    .filter(val => {
+                      return val.availableStock !== "0";
+                    })
+                    .map((value, index) => {
                       return (
                         <SellerCard
                           heading={value.sellerName}
@@ -147,8 +148,7 @@ class ProductSellerPage extends Component {
                           value={value}
                         />
                       );
-                    }
-                  )}
+                    })}
                 </SellerWithMultiSelect>
               )}
             </div>
