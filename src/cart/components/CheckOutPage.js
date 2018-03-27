@@ -50,8 +50,7 @@ class CheckOutPage extends React.Component {
     selectedProductsUssIdForCliqAndPiq: null,
     orderId: "",
     savedCardDetails: "",
-    binValidationCOD: false,
-    isGiftCard: false
+    binValidationCOD: false
   };
 
   renderLoader() {
@@ -304,61 +303,47 @@ class CheckOutPage extends React.Component {
     //   this.props.history.push(PRODUCT_CART_ROUTER);
     //   return true;
     // }
-    if (this.props.location.state.isFromGiftCard) {
-      this.setState({ isGiftCard: true });
-      let guIdObject = new FormData();
-      guIdObject.append("cartGuid", this.props.location.state.egvCartGuid);
-      this.props.getPaymentModes(guIdObject);
-      this.props.getNetBankDetails();
-    } else {
-      const parsedQueryString = queryString.parse(this.props.location.search);
-      const value = parsedQueryString.status;
-      const orderId = parsedQueryString.order_id;
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    const value = parsedQueryString.status;
+    const orderId = parsedQueryString.order_id;
 
-      if (value === PAYMENT_CHARGED) {
-        this.setState({ orderId: orderId });
-        if (this.props.updateTransactionDetails) {
-          let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-          if (cartDetails) {
-            let cartId = JSON.parse(cartDetails).guid;
-            if (cartId) {
-              this.props.updateTransactionDetails(
-                localStorage.getItem(PAYMENT_MODE_TYPE),
-                orderId,
-                cartId
-              );
-            }
-          }
-        }
-      } else {
-        if (this.props.getCartDetailsCNC) {
-          let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-          let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-          let cartDetailsLoggedInUser = Cookie.getCookie(
-            CART_DETAILS_FOR_LOGGED_IN_USER
-          );
-          let guIdObject = new FormData();
-          guIdObject.append(
-            "cartGuid",
-            JSON.parse(cartDetailsLoggedInUser).guid
-          );
-          this.props.getPaymentModes(guIdObject);
-
-          if (userDetails && customerCookie && cartDetailsLoggedInUser) {
-            this.props.getCartDetailsCNC(
-              JSON.parse(userDetails).userName,
-              JSON.parse(customerCookie).access_token,
-              JSON.parse(cartDetailsLoggedInUser).code,
-              this.props.location.state.pinCode,
-              false
+    if (value === PAYMENT_CHARGED) {
+      this.setState({ orderId: orderId });
+      if (this.props.updateTransactionDetails) {
+        let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+        if (cartDetails) {
+          let cartId = JSON.parse(cartDetails).guid;
+          if (cartId) {
+            this.props.updateTransactionDetails(
+              localStorage.getItem(PAYMENT_MODE_TYPE),
+              orderId,
+              cartId
             );
           }
-          this.props.getUserAddress(this.props.location.state.pinCode);
-
-          this.props.getCODEligibility();
-          this.props.getNetBankDetails();
-          this.props.getEmiBankDetails(this.props.location.state.productValue);
         }
+      }
+    } else {
+      if (this.props.getCartDetailsCNC) {
+        let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+        let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+        let cartDetailsLoggedInUser = Cookie.getCookie(
+          CART_DETAILS_FOR_LOGGED_IN_USER
+        );
+
+        if (userDetails && customerCookie && cartDetailsLoggedInUser) {
+          this.props.getCartDetailsCNC(
+            JSON.parse(userDetails).userName,
+            JSON.parse(customerCookie).access_token,
+            JSON.parse(cartDetailsLoggedInUser).code,
+            this.props.location.state.pinCode,
+            false
+          );
+        }
+        this.props.getUserAddress(this.props.location.state.pinCode);
+        this.props.getPaymentModes();
+        this.props.getCODEligibility();
+        this.props.getNetBankDetails();
+        this.props.getEmiBankDetails(this.props.location.state.productValue);
       }
     }
   }
@@ -549,14 +534,12 @@ class CheckOutPage extends React.Component {
     ) {
       return (
         <div className={styles.base}>
-          {!this.state.isGiftCard &&
-            !this.state.confirmAddress &&
+          {!this.state.confirmAddress &&
             (cartData.userAddress && cartData.userAddress.addresses
               ? this.renderCheckoutAddress()
               : this.renderInitialAddAddressForm())}
 
-          {!this.state.isGiftCard &&
-            this.state.confirmAddress &&
+          {this.state.confirmAddress &&
             !this.state.showCliqAndPiq && (
               <DeliveryAddressSet
                 addressType={this.state.addressId[0].addressType}
@@ -565,31 +548,27 @@ class CheckOutPage extends React.Component {
               />
             )}
 
-          {!this.state.isGiftCard &&
-            this.props.cart.cartDetailsCNC &&
+          {this.props.cart.cartDetailsCNC &&
             this.state.confirmAddress &&
             !this.state.deliverMode &&
             (this.state.showCliqAndPiq
               ? this.renderCliqAndPiq()
               : this.renderDeliverModes())}
 
-          {!this.state.isGiftCard &&
-            this.state.deliverMode && (
-              <DeliveryModeSet
-                productDelivery={this.props.cart.cartDetailsCNC.products}
-                changeDeliveryModes={() => this.changeDeliveryModes()}
-              />
-            )}
+          {this.state.deliverMode && (
+            <DeliveryModeSet
+              productDelivery={this.props.cart.cartDetailsCNC.products}
+              changeDeliveryModes={() => this.changeDeliveryModes()}
+            />
+          )}
 
-          {!this.state.isGiftCard &&
-            !this.state.appliedCoupons &&
+          {!this.state.appliedCoupons &&
             (this.state.confirmAddress && this.state.deliverMode) &&
             this.props.cart.paymentModes &&
             this.renderBankOffers()}
 
-          {(!this.state.paymentMethod &&
-            (this.state.confirmAddress && this.state.deliverMode)) ||
-            (this.state.isGiftCard && (
+          {!this.state.paymentMethod &&
+            (this.state.confirmAddress && this.state.deliverMode) && (
               <PaymentCardWrapper
                 cart={this.props.cart}
                 applyCliqCash={() => this.applyCliqCash()}
@@ -616,7 +595,7 @@ class CheckOutPage extends React.Component {
                   this.binValidationForSavedCard(cardDetails)
                 }
               />
-            ))}
+            )}
 
           {this.props.cart.cartDetailsCNC &&
           this.props.cart.cartDetailsCNC.cartAmount &&

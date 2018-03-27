@@ -64,11 +64,9 @@ export default class ModalRoot extends React.Component {
   releaseBankOffer = couponCode => {
     this.props.releaseBankOffer(couponCode);
   };
-
   applyUserCoupon = couponCode => {
     this.props.applyUserCoupon(couponCode);
   };
-
   releaseUserCoupon = couponCode => {
     this.props.releaseUserCoupon(couponCode);
   };
