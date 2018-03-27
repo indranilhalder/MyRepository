@@ -30,7 +30,9 @@ export default class EditAddressPopUp extends React.Component {
       defaultFlag: addressDetails.defaultAddress
     };
   }
-
+  componentDidMount() {
+    this.props.getPinCode();
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.editAddressStatus === SUCCESS) {
       this.props.history.goBack();

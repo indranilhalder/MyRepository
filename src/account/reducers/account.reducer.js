@@ -48,7 +48,6 @@ const account = (
     removeAddressStatus: null,
     removeAddressError: null,
 
-
     editAddressStatus: null,
     editAddressError: null,
 
@@ -58,8 +57,11 @@ const account = (
     followedBrands: null,
     followedBrandsStatus: null,
     followedBrandsError: null,
-    loadingForFollowedBrands: false
+    loadingForFollowedBrands: false,
 
+    getPinCode: null,
+    getPinCodeStatus: null,
+    getPinCodeError: null
   },
   action
 ) => {
@@ -335,6 +337,25 @@ const account = (
         loading: false
       });
 
+    case accountActions.GET_PIN_CODE_REQUEST:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.GET_PIN_CODE_SUCCESS:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status,
+        getPinCode: action.pinCode,
+        loading: false
+      });
+
+    case accountActions.GET_PIN_CODE_FAILURE:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status,
+        getPinCodeError: action.error,
+        loading: false
+      });
     default:
       return state;
   }
