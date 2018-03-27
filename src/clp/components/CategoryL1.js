@@ -3,20 +3,14 @@ import ColourButton from "../../general/components/ColourButton";
 import PropTypes from "prop-types";
 import styles from "./CategoryL1.css";
 export default class CategoryL1 extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isOpen: false
-    };
-  }
   handleViewAll() {
-    if (this.props.viewAll) {
-      this.props.viewAll();
+    if (this.props.onViewAll) {
+      this.props.onViewAll();
     }
   }
   openItem() {
     if (this.props.children) {
-      this.setState({ isOpen: true });
+      this.props.openItem();
     } else {
       if (this.props.onClick) {
         this.props.onClick(this.props.url);
@@ -24,12 +18,14 @@ export default class CategoryL1 extends React.Component {
     }
   }
   closeItem() {
-    this.setState({ isOpen: false });
+    if (this.props.closeItem) {
+      this.props.closeItem();
+    }
   }
   render() {
     return (
       <div className={styles.base}>
-        {!this.state.isOpen && (
+        {!this.props.isOpen && (
           <div
             className={styles.closedHeader}
             onClick={() => {
@@ -40,7 +36,7 @@ export default class CategoryL1 extends React.Component {
             <div className={styles.arrow} />
           </div>
         )}
-        {this.state.isOpen && (
+        {this.props.isOpen && (
           <div className={styles.openHeader}>
             <div
               className={styles.backArrow}
@@ -52,7 +48,7 @@ export default class CategoryL1 extends React.Component {
             <div className={styles.viewButton}>
               <ColourButton
                 label="View all"
-                color="#ff1744"
+                colour="#ff1744"
                 onClick={() => {
                   this.handleViewAll();
                 }}
@@ -60,7 +56,7 @@ export default class CategoryL1 extends React.Component {
             </div>
           </div>
         )}
-        {this.state.isOpen && (
+        {this.props.isOpen && (
           <div className={styles.content}>{this.props.children}</div>
         )}
       </div>
@@ -68,5 +64,6 @@ export default class CategoryL1 extends React.Component {
   }
 }
 CategoryL1.propTypes = {
-  label: PropTypes.string
+  label: PropTypes.string,
+  isOpen: PropTypes.bool
 };

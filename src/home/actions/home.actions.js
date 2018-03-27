@@ -15,6 +15,7 @@ import {
   MSD_WIDGET_PLATFORM,
   MSD_API_KEY
 } from "../../lib/config.js";
+import { getMcvId } from "../../lib/adobeUtils.js";
 
 export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
@@ -222,18 +223,22 @@ export function homeFeed(brandIdOrCategoryId: null) {
           mbox = ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME;
         }
 
-        let mcvId = null;
-        if (window._satellite) {
-          mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
-        }
-        result = await api.postAdobeTargetUrl(null, mbox, mcvId, null, true);
+        const mcvId = getMcvId();
+        resultJson = await api.postAdobeTargetUrl(
+          null,
+          mbox,
+          mcvId,
+          null,
+          true
+        );
+        resultJson = resultJson[0];
         feedTypeRequest = HOME_FEED_TYPE;
-        resultJson = await result.json();
       }
 
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson}`);
       }
+
       let parsedResultJson = JSON.parse(resultJson.content);
       parsedResultJson = parsedResultJson.items;
       dispatch(homeFeedSuccess(parsedResultJson, feedTypeRequest));
@@ -324,6 +329,7 @@ export function getComponentData(
     try {
       let postData;
       let result;
+      let resultJson;
       if (postParams && postParams.widgetPlatform === MSD_WIDGET_PLATFORM) {
         postData = {
           ...postParams,
@@ -334,7 +340,7 @@ export function getComponentData(
         };
 
         result = await api.postMsd(fetchURL, postData, true);
-        let resultJson = await result.json();
+        resultJson = await result.json();
 
         if (resultJson.errors) {
           throw new Error(`${resultJson.errors[0].message}`);
@@ -348,18 +354,17 @@ export function getComponentData(
             dispatch(getComponentDataBackUp(backUpUrl, positionInFeed));
           }
         }, ADOBE_TARGET_DELAY);
-        let mcvId = null;
-        if (window._satellite) {
-          mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
-        }
-        result = await api.postAdobeTargetUrl(
+
+        const mcvId = getMcvId();
+        resultJson = await api.postAdobeTargetUrl(
           fetchURL,
           postParams && postParams.mbox ? postParams.mbox : null,
           mcvId,
           null,
           false
         );
-        const resultJson = await result.json();
+
+        resultJson = resultJson[0];
         if (resultJson.errors) {
           throw new Error(`${resultJson.errors[0].message}`);
         }
