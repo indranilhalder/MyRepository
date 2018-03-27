@@ -3,12 +3,10 @@ import styles from "./EditAddressPopUp.css";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import OrderReturn from "../../account/components/OrderReturn";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 import { SUCCESS } from "../../lib/constants";
 const CANCEL_TEXT = "Cancel";
 const SAVE_CHANGES = "Save changes";
 let addressDetails;
-let getPinCode;
 export default class EditAddressPopUp extends React.Component {
   constructor(props) {
     super(props);
@@ -42,9 +40,9 @@ export default class EditAddressPopUp extends React.Component {
       });
     }
 
-    // if (nextProps.editAddressStatus === SUCCESS) {
-    //   this.props.history.goBack();
-    // }
+    if (nextProps.editAddressStatus === SUCCESS) {
+      this.props.history.goBack();
+    }
   }
   onChange(val) {
     this.setState(val);
@@ -61,7 +59,6 @@ export default class EditAddressPopUp extends React.Component {
     this.props.history.goBack();
   };
   render() {
-    console.log(this.props.getPinCodeDetails);
     return (
       <div className={styles.base}>
         <div className={styles.holder}>

@@ -166,13 +166,15 @@ export function getPinCode(pinCode) {
     dispatch(getPinCodeRequest());
     try {
       const result = await api.get(
-        `${PIN_PATH}/getPincodeData?pincode=110001&access_token=${
+        `${PIN_PATH}/getPincodeData?pincode=${pinCode}&access_token=${
           JSON.parse(globalAccessToken).access_token
         }`
       );
       const resultJson = await result.json();
-      console.log(resultJson);
-      if (resultJson.errors) {
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE
+      ) {
         throw new Error(resultJson.errors[0].message);
       }
       dispatch(getPinCodeSuccess(resultJson));
