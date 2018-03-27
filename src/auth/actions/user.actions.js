@@ -380,9 +380,9 @@ export function resetPassword(userDetails) {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-      dispatch(resetPasswordSuccess(resultJson));
+      return dispatch(resetPasswordSuccess(resultJson));
     } catch (e) {
-      dispatch(resetPasswordFailure(e.message));
+      return dispatch(resetPasswordFailure(e.message));
     }
   };
 }
