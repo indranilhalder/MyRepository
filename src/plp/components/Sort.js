@@ -1,5 +1,6 @@
 import React from "react";
 import SortTab from "./SortTab.js";
+import InformationHeader from "../../general/components/InformationHeader";
 import PropTypes from "prop-types";
 import styles from "./Sort.css";
 import queryString from "query-string";
@@ -41,6 +42,9 @@ export default class Sort extends React.Component {
     let data = this.props.sortList;
     return (
       <div className={styles.base}>
+        <div className={styles.header}>
+          <InformationHeader text="Sort by" goBack={this.handleCloseClick} />
+        </div>
         {this.props.sortList &&
           this.props.sortList.length > 0 &&
           data.map((datum, i) => {
