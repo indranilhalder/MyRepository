@@ -824,12 +824,12 @@ export function getMsdRequest(productCode) {
       }
 
       if (resultJson.data[0].length > 0) {
-        // dispatch(
-        //   getPdpItems(resultJson.data[0], RECOMMENDED_PRODUCTS_WIDGET_KEY)
-        // );
+        dispatch(
+          getPdpItems(resultJson.data[0], RECOMMENDED_PRODUCTS_WIDGET_KEY)
+        );
       }
       if (resultJson.data[1].length > 0) {
-        // dispatch(getPdpItems(resultJson.data[1], SIMILAR_PRODUCTS_WIDGET_KEY));
+        dispatch(getPdpItems(resultJson.data[1], SIMILAR_PRODUCTS_WIDGET_KEY));
       }
     } catch (e) {
       dispatch(productMsdFailure(e.message));
@@ -928,8 +928,6 @@ export function getPdpItems(itemIds, widgetKey) {
       });
       const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
       const result = await api.get(url);
-      console.log("PDP ITEMS");
-      console.log(result);
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
