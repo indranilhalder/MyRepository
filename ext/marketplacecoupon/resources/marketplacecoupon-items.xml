@@ -670,6 +670,19 @@
 					<persistence type="property"/>
 					<modifiers search="false" optional="false"/>
 				</attribute>
+				<attribute qualifier="tenure" type="java.lang.Integer">
+					<defaultvalue>Integer.valueOf(3)</defaultvalue>
+					<description>Minimum Tenure Value</description>
+					<persistence type="property"/>
+					<modifiers search="false" optional="false"/>
+				</attribute>
+				<attribute autocreate="true"  qualifier="banks"
+					type="BankDataCollection">
+					<description>List of Banks</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
 			</attributes>
 		</itemtype>
 		<!-- No Cost EMI Coupons Ends Here -->

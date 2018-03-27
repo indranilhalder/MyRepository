@@ -5575,6 +5575,8 @@
                      </attribute>
 	                  <attribute name="redemptionQuantityLimit" position="0"/>
 	                  <attribute name="redemptionQuantityLimitPerUser" position="1"/>
+	                  <attribute name="tenure" position="2"/>
+	                  <attribute name="banks" position="3"/>
 	               </listlayout>
 	            </section>
 	         </tab>                  
