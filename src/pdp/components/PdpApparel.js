@@ -79,25 +79,28 @@ export default class PdpApparel extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-
-    if (userDetails) {
-      if (cartDetailsLoggedInUser && customerCookie) {
-        this.props.addProductToCart(
-          JSON.parse(userDetails).userName,
-          JSON.parse(cartDetailsLoggedInUser).code,
-          JSON.parse(customerCookie).access_token,
-          productDetails
-        );
+    if (this.checkIfSizeSelected()) {
+      if (userDetails) {
+        if (cartDetailsLoggedInUser && customerCookie) {
+          this.props.addProductToCart(
+            JSON.parse(userDetails).userName,
+            JSON.parse(cartDetailsLoggedInUser).code,
+            JSON.parse(customerCookie).access_token,
+            productDetails
+          );
+        }
+      } else {
+        if (cartDetailsAnonymous && globalCookie) {
+          this.props.addProductToCart(
+            ANONYMOUS_USER,
+            JSON.parse(cartDetailsAnonymous).guid,
+            JSON.parse(globalCookie).access_token,
+            productDetails
+          );
+        }
       }
     } else {
-      if (cartDetailsAnonymous && globalCookie) {
-        this.props.addProductToCart(
-          ANONYMOUS_USER,
-          JSON.parse(cartDetailsAnonymous).guid,
-          JSON.parse(globalCookie).access_token,
-          productDetails
-        );
-      }
+      this.showSizeSelector();
     }
   };
 
@@ -138,11 +141,30 @@ export default class PdpApparel extends React.Component {
       this.props.showPincodeModal(this.props.match.params[2]);
     }
   }
+  showSizeSelector = () => {
+    if (this.props.showSizeSelector && this.props.productDetails) {
+      this.props.showSizeSelector({
+        sizeSelected: this.checkIfSizeSelected(),
+        productId: this.props.productDetails.productListingId,
+        showSizeGuide: this.props.showSizeGuide,
+        data: this.props.productDetails.variantOptions.map(value => {
+          return value.sizelink;
+        })
+      });
+    }
+  };
   handleShowSizeguide() {
     if (this.props.getProductSizeGuide) {
       this.props.getProductSizeGuide();
     }
   }
+  checkIfSizeSelected = () => {
+    if (this.props.location.state && this.props.location.state.isSizeSelected) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   renderDeliveryOptions(productData) {
     const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 
@@ -220,6 +242,15 @@ export default class PdpApparel extends React.Component {
           )}
           {productData.variantOptions && (
             <React.Fragment>
+              <SizeSelector
+                history={this.props.history}
+                sizeSelected={this.checkIfSizeSelected()}
+                productId={productData.productListingId}
+                showSizeGuide={this.props.showSizeGuide}
+                data={productData.variantOptions.map(value => {
+                  return value.sizelink;
+                })}
+              />
               <ColourSelector
                 data={productData.variantOptions.map(value => {
                   return value.colorlink;
@@ -227,14 +258,6 @@ export default class PdpApparel extends React.Component {
                 history={this.props.history}
                 updateColour={val => {}}
                 getProductSpecification={this.props.getProductSpecification}
-              />
-              <SizeSelector
-                showSizeGuide={
-                  productData.showSizeGuide ? this.props.showSizeGuide : null
-                }
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
               />
             </React.Fragment>
           )}

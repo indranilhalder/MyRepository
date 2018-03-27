@@ -1,5 +1,5 @@
 .base {
-  width: 100%;
+  width: 60px;
   margin: auto;
   padding-bottom: 100%;
   position: relative;
@@ -16,7 +16,6 @@
   bottom: 0;
   margin: auto;
   line-height: 20px;
-  padding-left: 15px;
   display: inline-block;
   background: url(../../general/components/img/3w.svg)no-repeat;
   background-position: center;
@@ -40,7 +39,7 @@
   left: 0;
   top: 0;
   position: absolute;
-  padding: 2px;
+  padding-bottom: 2px;
 }
 .textHolderActive {
   composes: textHolder;
