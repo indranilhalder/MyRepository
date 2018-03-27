@@ -148,6 +148,7 @@ export default class ModalRoot extends React.Component {
       SizeSelector: (
         <SizeSelectModal
           {...this.props.ownProps}
+          history={this.props.history}
           closeModal={() => this.handleClose()}
         />
       )
