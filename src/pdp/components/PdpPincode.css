@@ -1,45 +1,30 @@
 .base {
-  display: flex;
-  display: inline-block;
   width: 100%;
   height: auto;
-  padding: 20px;
+  padding: 0 100px 0 20px;
+  position: relative;
   margin-bottom: 20px;
 }
 .label {
-  width: 60%;
-  height: 22px;
-  display: inline-block;
-  text-align: left;
-  vertical-align: top;
+  width: 100%;
+  height: auto;
   line-height: 25px;
 }
 .labelMessage {
-  width: 60%;
-  height: 22px;
-  display: inline-block;
-  text-align: left;
-  vertical-align: top;
+  width: 100%;
+  height: auto;
   font-size: 14px;
-  font-weight: 300;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
   color: #000000;
 }
 .buttonHolder {
-  width: 40%;
-  height: 22px;
-  display: inline-block;
+  width: 100px;
+  height: auto;
+  top: 0;
+  right: 20px;
   text-align: right;
-  vertical-align: top;
-  position: relative;
+  position: absolute;
 }
 .button {
   width: auto;
-  height: 22px;
-  position: absolute;
-  top: 0;
-  right: 0;
+  display: inline-block;
 }
