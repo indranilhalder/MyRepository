@@ -8,7 +8,7 @@ import { SUCCESS } from "../../lib/constants";
 const CANCEL_TEXT = "Cancel";
 const SAVE_CHANGES = "Save changes";
 let addressDetails;
-
+let getPinCode;
 export default class EditAddressPopUp extends React.Component {
   constructor(props) {
     super(props);
@@ -21,22 +21,30 @@ export default class EditAddressPopUp extends React.Component {
       lastName: addressDetails.lastName,
       postalCode: addressDetails.postalCode,
       line1: addressDetails.line1,
-      state: addressDetails.state,
       emailId: "",
       line2: addressDetails.line2,
       line3: "",
       town: addressDetails.town,
       addressId: addressDetails.id,
-      defaultFlag: addressDetails.defaultAddress
+      defaultFlag: addressDetails.defaultAddress,
+      state: "",
+      cityName: ""
     };
   }
   componentDidMount() {
-    this.props.getPinCode();
+    this.props.getPinCode(this.state.postalCode);
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.editAddressStatus === SUCCESS) {
-      this.props.history.goBack();
+    if (nextProps.getPinCodeDetails) {
+      this.setState({
+        state: nextProps.getPinCodeDetails.state.name,
+        cityName: nextProps.getPinCodeDetails.cityName
+      });
     }
+
+    // if (nextProps.editAddressStatus === SUCCESS) {
+    //   this.props.history.goBack();
+    // }
   }
   onChange(val) {
     this.setState(val);
@@ -53,6 +61,7 @@ export default class EditAddressPopUp extends React.Component {
     this.props.history.goBack();
   };
   render() {
+    console.log(this.props.getPinCodeDetails);
     return (
       <div className={styles.base}>
         <div className={styles.holder}>
@@ -101,29 +110,28 @@ export default class EditAddressPopUp extends React.Component {
               onChange={postalCode => this.onChange({ postalCode })}
             />
           </div>
-          <div className={styles.container}>
-            <SelectBoxMobile
-              value={this.state.state}
-              arrowColour="black"
-              height={33}
-              options={[{ value: this.state.state, label: this.state.state }]}
-              onChange={state => this.onChange({ state })}
-            />
-          </div>
-          <div className={styles.container}>
-            <SelectBoxMobile
-              value={this.state.countryIso}
-              arrowColour="black"
-              height={33}
-              options={[
-                {
-                  value: this.state.countryIso,
-                  label: this.state.countryIso
-                }
-              ]}
-              onChange={countryIso => this.onChange({ countryIso })}
-            />
-          </div>
+          {this.props.getPinCodeDetails && (
+            <div className={styles.container}>
+              <Input2
+                value={this.state.cityName}
+                boxy={true}
+                textStyle={{ fontSize: 14 }}
+                height={33}
+                onChange={cityName => this.onChange({ cityName })}
+              />
+            </div>
+          )}
+          {this.props.getPinCodeDetails && (
+            <div className={styles.container}>
+              <Input2
+                value={this.state.state}
+                boxy={true}
+                textStyle={{ fontSize: 14 }}
+                height={33}
+                onChange={state => this.onChange({ state })}
+              />
+            </div>
+          )}
         </div>
         <div className={styles.buttonHolder}>
           <OrderReturn

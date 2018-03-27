@@ -19,7 +19,8 @@ const mapStateToProps = state => {
   return {
     editAddressStatus: state.profile.editAddressStatus,
     editAddressError: state.profile.editAddressError,
-    getPinCodeStatus: state.profile
+    getPinCodeStatus: state.profile.getPinCodeStatus,
+    getPinCodeDetails: state.profile.getPinCodeDetails
   };
 };
 
