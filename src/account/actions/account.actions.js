@@ -318,7 +318,6 @@ export function verifyWallet(customerDetailsWithOtp) {
         customerDetailsWithOtp
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (
         resultJson.status === SUCCESS ||
         resultJson.status === SUCCESS_UPPERCASE ||
