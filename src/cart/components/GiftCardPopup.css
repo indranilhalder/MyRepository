@@ -1,0 +1,53 @@
+.base {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 50px 25px;
+}
+.giftCardHeading {
+  width: 100%;
+  height: 30px;
+  padding-left: 40px;
+  position: relative;
+  color: #000000;
+  font-size: 16px;
+  line-height: 35px;
+  margin-bottom: 20px;
+  font-family: regular;
+}
+.iconHolder {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.inputHolder {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+}
+.termsAndConditionCheck {
+  width: 100%;
+  height: auto;
+  color: #8d8d8d;
+  font-size: 12px;
+  line-height: 20px;
+  font-family: regular;
+  margin-top: 5px;
+  margin-bottom: 35px;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+}
+.button {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+}
