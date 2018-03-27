@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 
 export default class SizeSelect extends React.Component {
   handleClick() {
-    if (this.props.selectItem) {
-      this.props.selectItem();
+    if (this.props.onSelect) {
+      this.props.onSelect();
     }
   }
   render() {

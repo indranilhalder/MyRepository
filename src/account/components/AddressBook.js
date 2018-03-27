@@ -49,6 +49,7 @@ export default class AddressBook extends React.Component {
     return (
       <div className={styles.base}>
         {this.props.userAddress &&
+          this.props.userAddress.addresses &&
           this.props.userAddress.addresses.map(address => {
             return (
               <div className={styles.addressBlock}>
