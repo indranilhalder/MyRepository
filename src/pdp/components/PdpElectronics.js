@@ -189,11 +189,16 @@ export default class PdpElectronics extends React.Component {
         return image[0].value;
       });
     let otherSellersText;
-    const validSellersCount = productData.otherSellers.filter(val => {
-      return val.availableStock !== "0";
-    }).length;
 
-    if (productData.otherSellers && validSellersCount > 0) {
+    if (
+      productData.otherSellers &&
+      productData.otherSellers.filter(val => {
+        return val.availableStock !== "0";
+      }).length > 0
+    ) {
+      const validSellersCount = productData.otherSellers.filter(val => {
+        return val.availableStock !== "0";
+      }).length;
       otherSellersText = (
         <span>
           Sold by{" "}
