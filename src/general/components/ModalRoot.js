@@ -96,7 +96,13 @@ export default class ModalRoot extends React.Component {
     this.setState(customerDetails);
     this.props.getOtpToActivateWallet(customerDetails);
   }
-
+  resendOtp() {
+    let customerDetails = {};
+    customerDetails.firstName = this.state.firstName;
+    customerDetails.mobileNumber = this.state.mobileNumber;
+    customerDetails.lastName = this.state.lastName;
+    this.props.getOtpToActivateWallet(customerDetails);
+  }
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -170,6 +176,7 @@ export default class ModalRoot extends React.Component {
           closeModal={() => this.handleClose()}
           mobileNumber={this.state.mobileNumber}
           submitOtp={val => this.verifyOtp(val, this.props.ownProps)}
+          resendOtp={val => this.resendOtp(val, this.props.ownProps)}
           {...this.props.ownProps}
         />
       ),
