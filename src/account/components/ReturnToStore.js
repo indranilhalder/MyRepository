@@ -84,6 +84,11 @@ export default class ReturnToStore extends React.Component {
     );
   }
   render() {
+    let noOfStories = 0;
+    if (this.props.returnRequest.returnStoreDetailsList) {
+      noOfStories = this.props.returnRequest.returnStoreDetailsList.length;
+    }
+
     if (!this.props.returnRequest || !this.props.returnProductDetails) {
       return this.renderLoader();
     }
@@ -105,7 +110,7 @@ export default class ReturnToStore extends React.Component {
           this.props.returnProductDetails.orderProductWsDTO[0].productColour
         }
         availableStores={this.props.returnRequest.returnStoreDetailsList}
-        numberOfStores={this.props.returnRequest.returnStoreDetailsList.length}
+        numberOfStores={noOfStories}
         pincode={this.state.pincode}
         addStoreCNC={storeId => this.selectStore(storeId)}
         changePincode={pincode => this.setState({ pincode })}

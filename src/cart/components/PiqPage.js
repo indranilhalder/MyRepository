@@ -13,12 +13,14 @@ export default class PiqPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lat: props.availableStores[0]
-        ? props.availableStores[0].geoPoint.latitude
-        : 22.575229,
-      lng: props.availableStores[0]
-        ? props.availableStores[0].geoPoint.longitude
-        : 88.468341,
+      lat:
+        props.availableStores && props.availableStores[0]
+          ? props.availableStores[0].geoPoint.latitude
+          : 22.575229,
+      lng:
+        props.availableStores && props.availableStores[0]
+          ? props.availableStores[0].geoPoint.longitude
+          : 88.468341,
       position: 0,
       selected: false,
       selectedAddress: "",
@@ -64,15 +66,16 @@ export default class PiqPage extends React.Component {
       <div className={styles.base}>
         <div className={styles.map}>
           <Map lat={this.state.lat} lng={this.state.lng} zoom={16}>
-            {this.props.availableStores.map((val, i) => {
-              return (
-                <MarkerStore
-                  lat={val.geoPoint.latitude}
-                  lng={val.geoPoint.longitude}
-                  image={WestSideIcon}
-                />
-              );
-            })}
+            {this.props.availableStores &&
+              this.props.availableStores.map((val, i) => {
+                return (
+                  <MarkerStore
+                    lat={val.geoPoint.latitude}
+                    lng={val.geoPoint.longitude}
+                    image={WestSideIcon}
+                  />
+                );
+              })}
           </Map>
         </div>
 
@@ -85,61 +88,64 @@ export default class PiqPage extends React.Component {
           />
         </div>
         <div className={styles.bannerMobileHolder}>
-          {this.props.availableStores.length > 1 && (
-            <React.Fragment>
-              {!this.props.showPickupPerson &&
-                this.props.availableStores && (
-                  <BannerMobile
-                    onSwipe={val => this.handleSwipe(val)}
-                    bannerHeight="55vw"
-                  >
-                    {this.props.availableStores.map((val, i) => {
-                      return (
-                        <PickUpLocation
-                          key={i}
-                          address={`${val.address.line1} ${
-                            val.address.line2
-                          }, `}
-                          PickUpKey="Open on: "
-                          workingDays={val.mplWorkingDays}
-                          openingTime={val.mplOpeningTime}
-                          closingTime={val.mplClosingTime}
-                          address2={`${val.returnCity} ${val.returnPin}`}
-                          iconText="C"
-                          headingText={val.displayName}
-                          buttonText="Select"
-                          onClick={() => {
-                            this.selectStore(val.slaveId);
-                          }}
-                        />
-                      );
-                    })}
-                  </BannerMobile>
-                )}
-            </React.Fragment>
-          )}
-          {this.props.availableStores.length === 1 &&
+          {this.props.availableStores &&
+            this.props.availableStores.length > 1 && (
+              <React.Fragment>
+                {!this.props.showPickupPerson &&
+                  this.props.availableStores && (
+                    <BannerMobile
+                      onSwipe={val => this.handleSwipe(val)}
+                      bannerHeight="55vw"
+                    >
+                      {this.props.availableStores.map((val, i) => {
+                        return (
+                          <PickUpLocation
+                            key={i}
+                            address={`${val.address.line1} ${
+                              val.address.line2
+                            }, `}
+                            PickUpKey="Open on: "
+                            workingDays={val.mplWorkingDays}
+                            openingTime={val.mplOpeningTime}
+                            closingTime={val.mplClosingTime}
+                            address2={`${val.returnCity} ${val.returnPin}`}
+                            iconText="C"
+                            headingText={val.displayName}
+                            buttonText="Select"
+                            onClick={() => {
+                              this.selectStore(val.slaveId);
+                            }}
+                          />
+                        );
+                      })}
+                    </BannerMobile>
+                  )}
+              </React.Fragment>
+            )}
+          {this.props.availableStores &&
+            this.props.availableStores.length === 1 &&
             !this.props.showPickupPerson && (
               <div className={styles.singleCardHolder}>
-                {this.props.availableStores.map((val, i) => {
-                  return (
-                    <PickUpLocation
-                      key={i}
-                      address={`${val.address.line1} ${val.address.line2}, `}
-                      PickUpKey="Open on: "
-                      workingDays={val.mplWorkingDays}
-                      openingTime={val.mplOpeningTime}
-                      closingTime={val.mplClosingTime}
-                      address2={`${val.returnCity} ${val.returnPin}`}
-                      iconText="C"
-                      headingText={val.displayName}
-                      buttonText="Select"
-                      onClick={() => {
-                        this.selectStore(val.slaveId);
-                      }}
-                    />
-                  );
-                })}
+                {this.props.availableStores &&
+                  this.props.availableStores.map((val, i) => {
+                    return (
+                      <PickUpLocation
+                        key={i}
+                        address={`${val.address.line1} ${val.address.line2}, `}
+                        PickUpKey="Open on: "
+                        workingDays={val.mplWorkingDays}
+                        openingTime={val.mplOpeningTime}
+                        closingTime={val.mplClosingTime}
+                        address2={`${val.returnCity} ${val.returnPin}`}
+                        iconText="C"
+                        headingText={val.displayName}
+                        buttonText="Select"
+                        onClick={() => {
+                          this.selectStore(val.slaveId);
+                        }}
+                      />
+                    );
+                  })}
               </div>
             )}
           {this.props.showPickupPerson && (
