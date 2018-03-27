@@ -381,8 +381,6 @@ export function getComponentData(
         }
         let parsedResultJson = JSON.parse(resultJson.content);
         parsedResultJson = parsedResultJson.items[0];
-        console.log("RESULT JSON");
-        console.log(parsedResultJson);
         dispatch(componentDataSuccess(parsedResultJson, positionInFeed));
       }
     } catch (e) {
