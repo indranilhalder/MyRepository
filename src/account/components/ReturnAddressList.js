@@ -9,6 +9,7 @@ import ReturnDateTime from "./ReturnDateTime.js";
 import AddDeliveryAddress from "../../cart/components/AddDeliveryAddress.js";
 import * as Cookie from "../../lib/Cookie.js";
 import ReturnSummary from "./ReturnSummary.js";
+import Error from "../../general/components/Error.js";
 import {
   RETURN_CLIQ_PIQ,
   RETURN_CLIQ_PIQ_DATE,
@@ -39,7 +40,9 @@ export default class ReturnAddressList extends React.Component {
       addressSelectedByUser: false,
       selectedDate: "",
       selectedTime: "",
-      addNewAddress: false
+      addNewAddress: false,
+      errorMessage: "",
+      error: false
     };
   }
 
@@ -55,10 +58,16 @@ export default class ReturnAddressList extends React.Component {
         `${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${this.orderCode}`
       );
     } else if (nextProps.returnInitiateStatus === FAILURE) {
-      alert(nextProps.returnInitiateError);
+      this.setState({
+        errorMessage: nextProps.returnInitiateError,
+        error: true
+      });
     }
     if (nextProps.returnPinCodeStatus === FAILURE) {
-      alert(nextProps.returnPinCodeError);
+      this.setState({
+        errorMessage: nextProps.returnPinCodeError,
+        error: true
+      });
       this.props.history.goBack();
     } else if (
       nextProps.returnPinCodeStatus === SUCCESS &&
@@ -213,7 +222,7 @@ export default class ReturnAddressList extends React.Component {
   newReturnInitiate = () => {
     let isCodOrder = "N";
     let reverseSealAvailable = "N";
-    if (this.props.returnRequest.codSelfShipData.paymentMode === "COD") {
+    if (this.props.orderDetails.paymentMethod === "COD") {
       isCodOrder = "Y";
     }
     if (this.props.orderDetails.resendAvailable) {
@@ -272,6 +281,7 @@ export default class ReturnAddressList extends React.Component {
       const { pathname } = this.props.location;
       return (
         <div>
+          <Error message={this.state.errorMessage} show={this.state.error} />
           <React.Fragment>
             {pathname.match(REG_X_FOR_ADDRESS) && this.renderAddress()}
             {pathname.match(REG_X_FOR_DATE_TIME) && this.renderDateTime()}

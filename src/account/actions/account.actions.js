@@ -324,9 +324,7 @@ export function returnPinCode(productDetails) {
         resultJson.status === FAILURE_UPPERCASE ||
         resultJson.status === FAILURE
       ) {
-        throw new Error(
-          resultJson.returnLogisticsResponseDTO[0].responseMessage
-        );
+        throw new Error(resultJson.error);
       }
 
       dispatch(returnPInCodeSuccess(resultJson));
