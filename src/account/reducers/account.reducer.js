@@ -1,6 +1,5 @@
 import cloneDeep from "lodash/cloneDeep";
 import * as accountActions from "../actions/account.actions";
-import cloneDeep from "lodash/cloneDeep";
 import * as cartActions from "../../cart/actions/cart.actions";
 import { SUCCESS } from "../../lib/constants";
 
@@ -74,7 +73,6 @@ const account = (
     getPinCodeDetails: null,
     getPinCodeStatus: null,
     getPinCodeError: null
-
   },
   action
 ) => {
