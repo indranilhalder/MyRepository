@@ -25,6 +25,7 @@ import {
   COLLECT,
   PRODUCT_CART_ROUTER,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  CART_DETAILS_FOR_LOGGED_IN_USER_GU_ID,
   PAYMENT_MODE_TYPE
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
@@ -32,7 +33,6 @@ import MDSpinner from "react-md-spinner";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
-const CLIQ_CASH_MODE = "Cliq Cash";
 
 class CheckOutPage extends React.Component {
   state = {
@@ -273,7 +273,6 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.cart.cliqCashPaymentDetails);
     if (nextProps.cart.cliqCashPaymentDetails) {
       if (
         this.state.isRemainingAmount !==
@@ -334,13 +333,6 @@ class CheckOutPage extends React.Component {
   }
 
   componentDidMount() {
-    // if (
-    //   !this.props.history.location.state ||
-    //   !this.props.history.location.state.isRequestComeThrowMyBag
-    // ) {
-    //   this.props.history.push(PRODUCT_CART_ROUTER);
-    //   return true;
-    // }
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
@@ -348,16 +340,15 @@ class CheckOutPage extends React.Component {
     if (value === PAYMENT_CHARGED) {
       this.setState({ orderId: orderId });
       if (this.props.updateTransactionDetails) {
-        let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-        if (cartDetails) {
-          let cartId = JSON.parse(cartDetails).guid;
-          if (cartId) {
-            this.props.updateTransactionDetails(
-              localStorage.getItem(PAYMENT_MODE_TYPE),
-              orderId,
-              cartId
-            );
-          }
+        let cartId = localStorage.getItem(
+          CART_DETAILS_FOR_LOGGED_IN_USER_GU_ID
+        );
+        if (cartId) {
+          this.props.updateTransactionDetails(
+            localStorage.getItem(PAYMENT_MODE_TYPE),
+            orderId,
+            cartId
+          );
         }
       }
     } else {
@@ -486,7 +477,6 @@ class CheckOutPage extends React.Component {
   };
 
   applyCliqCash = () => {
-    localStorage.setItem(PAYMENT_MODE_TYPE, CLIQ_CASH_MODE);
     this.props.applyCliqCash();
   };
 

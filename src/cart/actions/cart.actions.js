@@ -2094,6 +2094,7 @@ export function createJusPayOrderForCliqCash(pinCode, cartItem) {
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
         dispatch(createJusPayOrderSuccessForCliqCash(resultJson));
+        dispatch(generateCartIdForLoggedInUser());
       } else {
         throw new Error(resultJson.error);
       }
