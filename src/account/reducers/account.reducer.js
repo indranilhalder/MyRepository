@@ -126,7 +126,6 @@ const account = (
         giftCardDetailsError: action.error,
         loadingForGiftCardDetails: false
       });
-
     case accountActions.GET_OTP_TO_ACTIVATE_WALLET_REQUEST:
       return Object.assign({}, state, {
         getOtpToActivateWalletStatus: action.status,
