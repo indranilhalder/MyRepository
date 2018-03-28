@@ -1838,7 +1838,8 @@ export function softReservationForCliqCash(pinCode) {
 
       if (
         resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
       ) {
         dispatch(softReservationForPaymentSuccess(resultJson));
         dispatch(createJusPayOrderForCliqCash(pinCode, productItems));
@@ -2089,7 +2090,8 @@ export function createJusPayOrderForCliqCash(pinCode, cartItem) {
       const resultJson = await result.json();
       if (
         resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
       ) {
         dispatch(createJusPayOrderSuccessForCliqCash(resultJson));
       } else {
