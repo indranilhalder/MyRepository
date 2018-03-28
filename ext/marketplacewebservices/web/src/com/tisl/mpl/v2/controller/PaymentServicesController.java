@@ -66,6 +66,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.core.model.NoCostEMIBankModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.MplPromoPriceWsDTO;
 import com.tisl.mpl.data.SavedCardData;
@@ -96,6 +97,7 @@ import com.tisl.mpl.wsdto.PaymentServiceWsData;
 import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 import com.tisl.mpl.wsdto.mplNoCostEMIEligibilityDTO;
+import com.tisl.wsdto.MplNoCostEMITermsDTO;
 
 
 /**
@@ -2248,6 +2250,80 @@ public class PaymentServicesController extends BaseController
 		noCostEmiWsDTO.setIsNoCostEMIEligible(emiFlag);
 		return noCostEmiWsDTO;
 
+	}
+
+
+	/**
+	 * Method to share terms and conditions for a NoCostEMIBank
+	 *
+	 * @return MplNoCostEMITermsDTO
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "{pk}/" + MarketplacewebservicesConstants.NOCOSTEMITNC, method = RequestMethod.GET, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
+	@ResponseBody
+	public MplNoCostEMITermsDTO getNoCostEmiTnc(@PathVariable final String pk)
+	{
+		LOG.debug("No cost emi-pk ----" + pk);
+		final MplNoCostEMITermsDTO noCostEMITermsDTO = new MplNoCostEMITermsDTO();
+		try
+		{
+
+			final NoCostEMIBankModel noCostEMIBankModel = mplPaymentWebFacade.getNoCostEMIBankByPk(pk);
+			if (noCostEMIBankModel != null)
+			{
+				noCostEMITermsDTO.setCode(noCostEMIBankModel.getPk().toString());
+				final String termsAndCondition = noCostEMIBankModel.getTermsAndCondition();
+				if (StringUtils.isNotEmpty(termsAndCondition))
+				{
+					noCostEMITermsDTO.setTermsAndCondition(termsAndCondition);
+				}
+				else
+				{
+					noCostEMITermsDTO.setTermsAndCondition(StringUtils.EMPTY);
+				}
+				noCostEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			else
+			{
+				noCostEMITermsDTO.setError("Invalid pk for NoCostEMIBankModel");
+				noCostEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+		}
+		catch (final EtailNonBusinessExceptions ex)
+		{
+			// Error message for EtailNonBusinessExceptions Exceptions
+			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+			if (null != ex.getErrorMessage())
+			{
+				noCostEMITermsDTO.setError(ex.getErrorMessage());
+				noCostEMITermsDTO.setErrorCode(ex.getErrorCode());
+			}
+			noCostEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		catch (final EtailBusinessExceptions ex)
+		{
+			// Error message for EtailBusinessExceptions Exceptions
+			ExceptionUtil.etailBusinessExceptionHandler(ex, null);
+			if (null != ex.getErrorMessage())
+			{
+				noCostEMITermsDTO.setError(ex.getErrorMessage());
+				noCostEMITermsDTO.setErrorCode(ex.getErrorCode());
+			}
+			noCostEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception ex)
+		{
+			// Error message for All Exceptions
+			if (null != ex.getMessage())
+			{
+				noCostEMITermsDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9047));
+				noCostEMITermsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9047);
+			}
+			noCostEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return noCostEMITermsDTO;
 	}
 
 

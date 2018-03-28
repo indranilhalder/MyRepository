@@ -11484,19 +11484,19 @@
 						type="java.lang.Boolean" generate="true">
 						<description>No Cost Emi Available</description>
 						<defaultvalue>Boolean.FALSE</defaultvalue>
-						<modifiers optional="false" read="true" write="true" />
+						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier='offerStartDate' type="java.util.Date"
 						generate="true">
 						<description>Date on which the no cost emi promotion would start</description>
-						<modifiers read="true" write="true" optional="false" />
+						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier='offerEndDate' type="java.util.Date"
 						generate="true">
 						<description>Date on which the no cost emi promotion would end</description>
-						<modifiers read="true" write="true" optional="false" />
+						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
@@ -16769,7 +16769,7 @@
 					</attribute>
 					<attribute qualifier="code" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers read="true" optional="false" unique="true" write="false" initial="true"/>
+						<modifiers read="true" optional="false" unique="true"/>
 						<description>Bank code</description>
 					</attribute>
 					<attribute qualifier="enable" type="boolean">
