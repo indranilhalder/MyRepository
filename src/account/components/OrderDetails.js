@@ -13,12 +13,15 @@ import queryString from "query-string";
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
+import { HOME_ROUTER } from "../../lib/constants";
 import {
   ORDER_PREFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   LOGIN_PATH,
-  SHORT_URL_ORDER_DETAIL
+  SHORT_URL_ORDER_DETAIL,
+  SEARCH_RESULTS_PAGE,
+  PRODUCT_REVIEWS_PATH_SUFFIX
 } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_Returned = "Return Product";
@@ -37,10 +40,10 @@ export default class OrderDetails extends React.Component {
       this.props.replaceItem();
     }
   }
-  writeReview() {
-    if (this.props.writeReview) {
-      this.props.writeReview();
-    }
+  writeReview(productCode) {
+    this.props.history.push(
+      `${SEARCH_RESULTS_PAGE}p-${productCode.toLowerCase()}${PRODUCT_REVIEWS_PATH_SUFFIX}`
+    );
   }
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -80,6 +83,7 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
+    console.log(orderDetails);
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -152,7 +156,9 @@ export default class OrderDetails extends React.Component {
                       }
                       isEditable={true}
                       replaceItem={() => this.replaceItem()}
-                      writeReview={() => this.writeReview()}
+                      writeReview={val =>
+                        this.writeReview(products.productcode)
+                      }
                     />
                   </div>
                 )}
