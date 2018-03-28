@@ -125,12 +125,11 @@ const SORT = "byDate";
 const PAGE_VALUE = "0";
 const PAGE_NUMBER = "1";
 const MSD_REQUEST_PATH = "widgets";
-const MSD_ABOUT_BRAND_REQUEST_PATH = "discover";
+const MSD_ABOUT_BRAND_REQUEST_PATH = "widgets";
 const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
 const WIDGET_LIST = [0, 8];
 const WIDGET_LIST_FOR_ABOUT_BRAND = [114];
 const NUMBER_RESULTS = [10, 10];
-const MAD_UUID = "F4B82964-5E08-4531-87AF-7E03E3CD0307";
 
 export function getProductDescriptionRequest() {
   return {
@@ -811,7 +810,6 @@ export function getMsdRequest(productCode) {
     msdRequestObject.append("mad_uuid", getMcvId());
     msdRequestObject.append("details", false);
     msdRequestObject.append("product_id", productCode.toUpperCase());
-
     dispatch(productMsdRequest());
     try {
       const result = await api.postMsd(
@@ -865,18 +863,18 @@ export function pdpAboutBrand(productCode) {
       "widget_list",
       JSON.stringify(WIDGET_LIST_FOR_ABOUT_BRAND)
     );
-    msdRequestObject.append("num_results", NUMBER_RESULTS);
+    msdRequestObject.append("num_results", JSON.stringify(NUMBER_RESULTS));
     msdRequestObject.append("mad_uuid", getMcvId());
     msdRequestObject.append("details", false);
-    msdRequestObject.append("product_id", productCode);
+    msdRequestObject.append("product_id", productCode.toUpperCase());
 
     dispatch(pdpAboutBrandRequest());
 
     try {
       // making call for fetch about brand and their items items
       // url may have to change as per api live get live
-      const result = await api.postMock(
-        MSD_ABOUT_BRAND_REQUEST_PATH,
+      const result = await api.postMsd(
+        `${API_MSD_URL_ROOT}/${MSD_REQUEST_PATH}`,
         msdRequestObject
       );
       const resultJson = await result.json();

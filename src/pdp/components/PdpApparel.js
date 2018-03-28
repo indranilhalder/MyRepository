@@ -317,6 +317,7 @@ export default class PdpApparel extends React.Component {
           )}
           <PDPRecommendedSections
             msdItems={this.props.msdItems}
+            aboutTheBrand={this.props.aboutTheBrand}
             productData={productData}
           />
         </PdpFrame>

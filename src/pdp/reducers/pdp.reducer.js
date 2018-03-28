@@ -7,7 +7,7 @@ const productDescription = (
     status: null,
     error: null,
     loading: false,
-    aboutBrand: null,
+    aboutTheBrand: null,
     productDetails: null,
     isServiceableToPincode: null,
     sizeGuide: {
@@ -389,19 +389,9 @@ const productDescription = (
         loading: false
       });
     case pdpActions.PDP_ABOUT_BRAND_SUCCESS:
-      const newMsdItemsForBrand = cloneDeep(state.msdItems);
-      const brandDetails = Object.assign(
-        {},
-        {
-          isFollowing: action.brandDetails.isFollowing,
-          //we need to change this brand code to brandId once api will fix
-          brandId: action.brandDetails.brandCode
-        }
-      );
-      Object.assign(newMsdItemsForBrand, { brandDetails });
       return Object.assign({}, state, {
         status: action.status,
-        msdItems: newMsdItemsForBrand,
+        aboutTheBrand: action.brandDetails,
         loading: false
       });
 
@@ -411,9 +401,8 @@ const productDescription = (
       });
 
     case pdpActions.FOLLOW_UN_FOLLOW_BRAND_SUCCESS:
-      currentBrandDetails = cloneDeep(state.msdItems);
-      currentBrandDetails.brandDetails.isFollowing =
-        action.brandDetails.isFollowing;
+      currentBrandDetails = cloneDeep(state.aboutTheBrand);
+      currentBrandDetails.isFollowing = action.brandDetails.isFollowing;
       return Object.assign({}, state, {
         status: action.status,
         msdItems: currentBrandDetails

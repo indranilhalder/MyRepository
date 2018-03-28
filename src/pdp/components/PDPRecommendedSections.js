@@ -18,18 +18,15 @@ class PDPRecommendedSections extends React.Component {
     this.props.history.push(url);
   };
   visitBrand() {
-    if (
-      this.props.msdItems.brandDetails &&
-      this.props.msdItems.brandDetails.brandId
-    ) {
-      this.props.history.push(`c-${this.props.msdItems.brandDetails.brandId}`);
+    if (this.props.aboutTheBrand && this.props.aboutTheBrand.brandId) {
+      this.props.history.push(`c-${this.props.aboutTheBrand.brandId}`);
     }
   }
   renderAboutTheBrand() {
     let brandId;
 
-    if (this.props.msdItems.brandDetails) {
-      brandId = this.props.msdItems.brandDetails.brandId;
+    if (this.props.aboutTheBrand) {
+      brandId = this.props.aboutTheBrand.brandId;
     }
     return (
       <React.Fragment>

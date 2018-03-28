@@ -10,7 +10,6 @@ import each from "lodash/each";
 import delay from "lodash/delay";
 import {
   MSD_NUM_RESULTS,
-  MAD_UUID,
   MSD_WIDGET_LIST,
   MSD_WIDGET_PLATFORM,
   MSD_API_KEY
@@ -334,7 +333,7 @@ export function getComponentData(
           ...postParams,
           api_key: MSD_API_KEY,
           num_results: MSD_NUM_RESULTS,
-          mad_uuid: MAD_UUID,
+          mad_uuid: getMcvId(),
           widget_list: MSD_WIDGET_LIST //TODO this is going to change.
         };
 
