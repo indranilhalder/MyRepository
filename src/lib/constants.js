@@ -50,6 +50,7 @@ export const ORDER_SUMMARY_ROUTER = "/orderSummary";
 export const CHECKOUT_ROUTER = "/checkout";
 export const ACCOUNT_SAVED_CARD_ROUTER = "/savedCards";
 export const MY_ACCOUNT = "/my-account";
+export const SHORT_URL_ORDER_DETAIL = "/trackOrder/beforeTrack/:orderCode";
 export const ORDER_PREFIX = "/my-account/order/(.*)";
 export const ORDER_CODE = "orderCode";
 export const ORDER = "/order";
@@ -109,3 +110,7 @@ export const FOLLOWING = "Following";
 export const PLAT_FORM_NUMBER = "2";
 
 export const TRUE = "true";
+export const ON_EXCLUSIVE = "onExclusive";
+export const IS_OFFER_EXISTING = "isOfferExisting";
+export const IS_NEW = "isNew";
+export const DISCOUNT_PERCENT = "discountPercent";

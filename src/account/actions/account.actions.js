@@ -121,6 +121,13 @@ export const VERIFY_WALLET_REQUEST = "VERIFY_WALLET_REQUEST";
 export const VERIFY_WALLET_SUCCESS = "VERIFY_WALLET_SUCCESS";
 export const VERIFY_WALLET_FAILURE = "VERIFY_WALLET_FAILURE";
 
+export const SUBMIT_SELF_COURIER_INFO_REQUEST =
+  "SUBMIT_SELF_COURIER_INFO_REQUEST";
+export const SUBMIT_SELF_COURIER_INFO_SUCCESS =
+  "SUBMIT_SELF_COURIER_INFO_SUCCESS";
+export const SUBMIT_SELF_COURIER_INFO_FAILURE =
+  "SUBMIT_SELF_COURIER_INFO_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -359,6 +366,66 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
       }
     } catch (e) {
       dispatch(verifyWalletFailure(e.message));
+    }
+  };
+}
+//  update refund details
+
+export function submitSelfCourierReturnInfoRequest() {
+  return {
+    type: SUBMIT_SELF_COURIER_INFO_REQUEST,
+    status: REQUESTING
+  };
+}
+export function submitSelfCourierReturnInfoSuccess(updateReturnDetails) {
+  return {
+    type: SUBMIT_SELF_COURIER_INFO_SUCCESS,
+    status: SUCCESS,
+    updateReturnDetails
+  };
+}
+
+export function submitSelfCourierReturnInfoFailure(error) {
+  return {
+    type: SUBMIT_SELF_COURIER_INFO_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function submitSelfCourierReturnInfo(returnDetails) {
+  let returnDetailsObject = new FormData(returnDetails.file);
+  returnDetailsObject.append("awbNumber", returnDetails.awbNumber);
+  returnDetailsObject.append("lpname", returnDetails.lpname);
+  returnDetailsObject.append("amount", returnDetails.amount);
+  returnDetailsObject.append("orderId", returnDetails.orderId);
+  returnDetailsObject.append("transactionId", returnDetails.transactionId);
+  returnDetailsObject.append("file", returnDetails.file);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(submitSelfCourierReturnInfoRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/submitSelfCourierRetrunInfo?channel=mobile&access_token=${
+          JSON.parse(customerCookie).access_token
+        }`,
+        returnDetailsObject
+      );
+      const resultJson = await result.json();
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        dispatch(hideModal());
+        dispatch(submitSelfCourierReturnInfoSuccess(resultJson));
+      } else {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+    } catch (e) {
+      dispatch(submitSelfCourierReturnInfoFailure(e.message));
     }
   };
 }
