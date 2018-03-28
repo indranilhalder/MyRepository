@@ -23,7 +23,9 @@ import {
   FAILURE,
   MY_ACCOUNT,
   ORDER,
-  ORDER_CODE
+  ORDER_CODE,
+  YES,
+  NO
 } from "../../lib/constants";
 const REG_X_FOR_ADDRESS = /address/i;
 const REG_X_FOR_DATE_TIME = /dateTime/i;
@@ -220,10 +222,10 @@ export default class ReturnAddressList extends React.Component {
   };
 
   newReturnInitiate = () => {
-    let isCodOrder = "N";
-    let reverseSealAvailable = "N";
+    let isCodOrder = NO;
+    let reverseSealAvailable = YES;
     if (this.props.orderDetails.paymentMethod === "COD") {
-      isCodOrder = "Y";
+      isCodOrder = YES;
     }
     if (this.props.orderDetails.resendAvailable) {
       reverseSealAvailable = "Y";
@@ -255,6 +257,15 @@ export default class ReturnAddressList extends React.Component {
     returnCliqAndPiqObject.isDefault = this.state.selectedAddress.returnPinCodeValues;
     returnCliqAndPiqObject.scheduleReturnDate = this.state.selectedDate;
     returnCliqAndPiqObject.scheduleReturnTime = this.state.selectedTime;
+    if (isCodOrder === YES) {
+      if (this.props.bankDetail) {
+        returnCliqAndPiqObject.accountNumber = this.props.bankDetail.accountNumber;
+        returnCliqAndPiqObject.reEnterAccountNumber = this.props.bankDetail.reEnterAccountNumber;
+        returnCliqAndPiqObject.accountHolderName = this.props.bankDetail.userName;
+        returnCliqAndPiqObject.bankName = this.props.bankDetail.bankName;
+        returnCliqAndPiqObject.IFSCCode = this.props.bankDetail.code;
+      }
+    }
     this.props.newReturnInitial(returnCliqAndPiqObject);
   };
   renderReturnSummary = () => {
