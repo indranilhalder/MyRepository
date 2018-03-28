@@ -80,6 +80,7 @@ const account = (
     verifyWalletError: null,
     loadingForverifyWallet: false,
 
+    loadingForFollowedBrands: false,
     getPinCodeDetails: null,
     getPinCodeStatus: null,
     getPinCodeError: null
