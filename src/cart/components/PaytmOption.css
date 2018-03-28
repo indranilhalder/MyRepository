@@ -36,7 +36,7 @@
   margin-bottom: 15px;
 }
 .currentBalanceText {
-  width: 70%;
+  width: 60%;
   height: auto;
   color: #000;
   font-size: 14px;
@@ -45,7 +45,7 @@
   vertical-align: top;
 }
 .currentBalanceAmount {
-  width: 30%;
+  width: 40%;
   height: auto;
   display: inline-block;
   vertical-align: top;
