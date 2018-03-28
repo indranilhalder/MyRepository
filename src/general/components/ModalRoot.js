@@ -40,8 +40,15 @@ export default class ModalRoot extends React.Component {
     }
   }
   onUpdate(val) {
-    if (this.props.onUpdate) {
-      this.props.onUpdate(val);
+    if (this.props.submitSelfCourierReturnInfo) {
+      const returnDetails = {};
+      returnDetails.awbNumber = val.awbNumber;
+      returnDetails.lpname = val.logisticsPartner;
+      returnDetails.amount = val.courierCharge;
+      returnDetails.orderId = this.props.ownProps.orderId;
+      returnDetails.transactionId = this.props.ownProps.transactionId;
+      returnDetails.file = val.file;
+      this.props.submitSelfCourierReturnInfo(returnDetails);
     }
   }
   submitOtp(otpDetails) {
@@ -140,6 +147,7 @@ export default class ModalRoot extends React.Component {
         <UpdateRefundDetailsPopup
           closeModal={() => this.handleClose()}
           onUpdate={val => this.onUpdate(val)}
+          {...this.props.ownProps}
         />
       ),
       Sort: <Sort />,

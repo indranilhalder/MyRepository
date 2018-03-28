@@ -82,7 +82,12 @@ const account = (
 
     getPinCodeDetails: null,
     getPinCodeStatus: null,
-    getPinCodeError: null
+    getPinCodeError: null,
+
+    updateReturnDetails: null,
+    updateReturnDetailsStatus: null,
+    updateReturnDetailsError: null,
+    loadingForUpdateReturnDetails: null
   },
   action
 ) => {
@@ -164,6 +169,26 @@ const account = (
         verifyWalletStatus: action.status,
         verifyWalletError: action.error,
         loadingForverifyWallet: false
+      });
+
+    case accountActions.SUBMIT_SELF_COURIER_INFO_REQUEST:
+      return Object.assign({}, state, {
+        updateReturnDetailsStatus: action.status,
+        loadingForUpdateReturnDetails: true
+      });
+
+    case accountActions.SUBMIT_SELF_COURIER_INFO_SUCCESS:
+      return Object.assign({}, state, {
+        updateReturnDetailsStatus: action.status,
+        updateReturnDetails: action.updateReturnDetails,
+        loadingForUpdateReturnDetails: false
+      });
+
+    case accountActions.SUBMIT_SELF_COURIER_INFO_FAILURE:
+      return Object.assign({}, state, {
+        updateReturnDetailsStatus: action.status,
+        updateReturnDetailsError: action.error,
+        loadingForUpdateReturnDetails: false
       });
 
     case accountActions.GET_SAVED_CARD_REQUEST:

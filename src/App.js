@@ -74,6 +74,7 @@ import {
   MY_ACCOUNT_COUPON_PAGE,
   MY_ACCOUNT_BRANDS_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
+  SHORT_URL_ORDER_DETAIL,
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
   MY_ACCOUNT_ADDRESS_ADD_PAGE,
@@ -192,6 +193,10 @@ class App extends Component {
               exact
               path={BRAND_PAGE}
               component={PlpBrandCategoryWrapperContainer}
+            />
+            <Route
+              path={`${SHORT_URL_ORDER_DETAIL}`}
+              component={OrderDetailsContainer}
             />
             <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
             <Route
