@@ -8,7 +8,8 @@ import { Redirect } from "react-router-dom";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  LOGIN_PATH
+  LOGIN_PATH,
+  CHECKOUT_ROUTER
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 const PRODUCT_ID = "MP000000000127263";
@@ -27,6 +28,19 @@ export default class GiftCard extends React.Component {
   componentDidMount() {
     if (this.props.getGiftCardDetails) {
       this.props.getGiftCardDetails();
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.giftCardDetailsStatus) {
+      console.log(nextProps.giftCardDetails);
+
+      this.props.history.push({
+        pathname: CHECKOUT_ROUTER,
+        state: {
+          isFromGiftCard: true,
+          egvCartGuid: nextProps.giftCardDetails.egvCartGuid
+        }
+      });
     }
   }
 

@@ -50,7 +50,8 @@ class CheckOutPage extends React.Component {
     selectedProductsUssIdForCliqAndPiq: null,
     orderId: "",
     savedCardDetails: "",
-    binValidationCOD: false
+    binValidationCOD: false,
+    isGiftCard: false
   };
 
   renderLoader() {
@@ -303,6 +304,7 @@ class CheckOutPage extends React.Component {
     //   this.props.history.push(PRODUCT_CART_ROUTER);
     //   return true;
     // }
+
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
@@ -322,6 +324,12 @@ class CheckOutPage extends React.Component {
           }
         }
       }
+    } else if (this.props.location.state.isFromGiftCard) {
+      this.setState({ isGiftCard: true });
+      let guIdObject = new FormData();
+      guIdObject.append("cartGuid", this.props.location.state.egvCartGuid);
+      this.props.getPaymentModes(guIdObject);
+      this.props.getNetBankDetails();
     } else {
       if (this.props.getCartDetailsCNC) {
         let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -340,7 +348,10 @@ class CheckOutPage extends React.Component {
           );
         }
         this.props.getUserAddress(this.props.location.state.pinCode);
-        this.props.getPaymentModes();
+        let guIdObject = new FormData();
+        guIdObject.append("cartGuid", JSON.parse(cartDetailsLoggedInUser).guid);
+        this.props.getPaymentModes(guIdObject);
+        this.props.getPaymentModes(guIdObject);
         this.props.getCODEligibility();
         this.props.getNetBankDetails();
         this.props.getEmiBankDetails(this.props.location.state.productValue);
@@ -517,7 +528,11 @@ class CheckOutPage extends React.Component {
       return <div className={styles.base}>{this.renderLoader()}</div>;
     }
     const cartData = this.props.cart;
-    if (this.state.addNewAddress && !this.state.orderConfirmation) {
+    if (
+      this.state.addNewAddress &&
+      !this.state.orderConfirmation &&
+      !this.state.isGiftCard
+    ) {
       return (
         <div className={styles.base}>
           <AddDeliveryAddress
@@ -534,12 +549,14 @@ class CheckOutPage extends React.Component {
     ) {
       return (
         <div className={styles.base}>
-          {!this.state.confirmAddress &&
+          {!this.state.isGiftCard &&
+            !this.state.confirmAddress &&
             (cartData.userAddress && cartData.userAddress.addresses
               ? this.renderCheckoutAddress()
               : this.renderInitialAddAddressForm())}
 
-          {this.state.confirmAddress &&
+          {!this.state.isGiftCard &&
+            this.state.confirmAddress &&
             !this.state.showCliqAndPiq && (
               <DeliveryAddressSet
                 addressType={this.state.addressId[0].addressType}
@@ -548,29 +565,35 @@ class CheckOutPage extends React.Component {
               />
             )}
 
-          {this.props.cart.cartDetailsCNC &&
+          {!this.state.isGiftCard &&
+            this.props.cart.cartDetailsCNC &&
             this.state.confirmAddress &&
-            !this.state.deliverMode &&
-            (this.state.showCliqAndPiq
-              ? this.renderCliqAndPiq()
-              : this.renderDeliverModes())}
+            !this.state.deliverMode(
+              this.state.showCliqAndPiq
+                ? this.renderCliqAndPiq()
+                : this.renderDeliverModes()
+            )}
 
-          {this.state.deliverMode && (
-            <DeliveryModeSet
-              productDelivery={this.props.cart.cartDetailsCNC.products}
-              changeDeliveryModes={() => this.changeDeliveryModes()}
-            />
-          )}
+          {this.state.deliverMode &&
+            !this.state.isGiftCard && (
+              <DeliveryModeSet
+                productDelivery={this.props.cart.cartDetailsCNC.products}
+                changeDeliveryModes={() => this.changeDeliveryModes()}
+              />
+            )}
 
           {!this.state.appliedCoupons &&
             (this.state.confirmAddress && this.state.deliverMode) &&
             this.props.cart.paymentModes &&
+            !this.state.isGiftCard &&
             this.renderBankOffers()}
 
-          {!this.state.paymentMethod &&
-            (this.state.confirmAddress && this.state.deliverMode) && (
+          {(!this.state.paymentMethod &&
+            (this.state.confirmAddress && this.state.deliverMode)) ||
+            (this.state.isGiftCard && (
               <PaymentCardWrapper
                 cart={this.props.cart}
+                fromGiftCard={this.state.isGiftCard}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
                 binValidation={(paymentMode, binNo) =>
@@ -595,7 +618,7 @@ class CheckOutPage extends React.Component {
                   this.binValidationForSavedCard(cardDetails)
                 }
               />
-            )}
+            ))}
 
           {this.props.cart.cartDetailsCNC &&
           this.props.cart.cartDetailsCNC.cartAmount &&

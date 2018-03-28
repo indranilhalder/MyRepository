@@ -1295,7 +1295,7 @@ export function paymentModesFailure(error) {
 }
 
 // Action Creator for Soft Reservation
-export function getPaymentModes(pinCode, payload) {
+export function getPaymentModes(guIdDetails) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -1304,13 +1304,13 @@ export function getPaymentModes(pinCode, payload) {
   return async (dispatch, getState, { api }) => {
     dispatch(paymentModesRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/getPaymentModes?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=2&cartGuid=${cartId}`,
-        payload
+        }&isPwa=true&platformNumber=2`,
+        guIdDetails
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
