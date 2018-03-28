@@ -99,17 +99,17 @@ class ProductReviewPage extends Component {
 
   render() {
     if (this.props.productDetails) {
-      let image = find(
-        this.props.productDetails.galleryImagesList[0].galleryImages,
-        galleryImage => {
-          return galleryImage.key === MOBILE_PDP_VIEW;
-        }
-      );
-
-      if (!image) {
-        image = this.props.productDetails.galleryImagesList[0].galleryImages[0]
-          .value;
-      }
+      const mobileGalleryImages =
+        this.props.productDetails &&
+        this.props.productDetails.galleryImagesList
+          .map(galleryImageList => {
+            return galleryImageList.galleryImages.filter(galleryImages => {
+              return galleryImages.key === "product";
+            });
+          })
+          .map(image => {
+            return image[0].value;
+          });
 
       return (
         <PdpFrame
@@ -120,13 +120,12 @@ class ProductReviewPage extends Component {
           <div className={styles.base}>
             <div className={styles.productBackground}>
               <ProductDetailsCard
-                productImage={image}
+                productImage={mobileGalleryImages[0]}
                 productName={this.props.productDetails.productName}
-                productMaterial={this.props.productDetails.productDescription}
-                price={this.props.productDetails.mrp}
-                discountPrice={this.props.productDetails.winningSellerMOP}
+                price={this.props.productDetails.winningSellerMOP}
+                discountPrice={this.props.productDetails.mrp}
                 averageRating={this.props.productDetails.averageRating}
-                totalNoOfReviews={this.props.productDetails.numberOfReviews}
+                totalNoOfReviews={this.props.productDetails.productReviewsCount}
               />
 
               <RatingHolder ratingData={this.props.ratingData} />

@@ -10,6 +10,7 @@ export default class SizeGuideMain extends React.Component {
     this.props.getSizeGuide(this.props.productCode);
   }
   render() {
+    console.log(this.props);
     if (this.props.loading) {
       return (
         <div className={styles.base}>
@@ -30,7 +31,7 @@ export default class SizeGuideMain extends React.Component {
           <div className={styles.sizeList}>
             {this.props.sizeData.sizeGuideList.map((list, i) => {
               return (
-                <Accordion text={list.dimension} key={i}>
+                <Accordion text={list.dimensionSize} key={i}>
                   <SizeGuideElement data={list.dimensionList} />
                 </Accordion>
               );
