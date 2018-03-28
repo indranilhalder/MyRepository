@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="18px" viewBox="0 0 50 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>C8F6955E-C31F-4DD3-93B2-EAE7273DD2E8</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <linearGradient x1="0%" y1="2.83276945e-14%" x2="100%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FF1744" offset="0%"></stop>
+            <stop stop-color="#FF007E" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Revised---Flag-dimensions" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-16.000000, -147.000000)" fill-opacity="0.900000036">
+        <g id="Line-01" transform="translate(16.000000, 137.000000)" fill="url(#linearGradient-1)">
+            <g id="Product-01">
+                <g id="Flag-10%" transform="translate(0.000000, 10.000000)">
+                    <polygon id="Rectangle-43" points="0 0 44.1 0 49.7 8.75 44.1 17.5 0 17.5"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

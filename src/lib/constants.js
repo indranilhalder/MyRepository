@@ -50,6 +50,7 @@ export const ORDER_SUMMARY_ROUTER = "/orderSummary";
 export const CHECKOUT_ROUTER = "/checkout";
 export const ACCOUNT_SAVED_CARD_ROUTER = "/savedCards";
 export const MY_ACCOUNT = "/my-account";
+export const SHORT_URL_ORDER_DETAIL = "/trackOrder/beforeTrack/:orderCode";
 export const ORDER_PREFIX = "/my-account/order/(.*)";
 export const ORDER_CODE = "orderCode";
 export const ORDER = "/order";
@@ -66,7 +67,6 @@ export const MY_ACCOUNT_ALERTS_PAGE = "/alerts";
 export const MY_ACCOUNT_COUPON_PAGE = "/coupons";
 export const MY_ACCOUNT_CART_PAGE = "/cart";
 export const MY_ACCOUNT_CLIQ_CASH_PAGE = "/cliq-cash";
-
 
 //returns
 export const RETURNS_PREFIX = "/returns";
@@ -135,3 +135,7 @@ export const SCHEDULED_PICKUP = "schedulePickup";
 export const SELF_COURIER = "selfCourier";
 
 export const CASH_ON_DELIVERY = "COD";
+export const ON_EXCLUSIVE = "onExclusive";
+export const IS_OFFER_EXISTING = "isOfferExisting";
+export const IS_NEW = "isNew";
+export const DISCOUNT_PERCENT = "discountPercent";
