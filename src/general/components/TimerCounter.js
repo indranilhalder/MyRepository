@@ -22,7 +22,9 @@ export default class Counter extends React.Component {
         match[5]
       }:${match[6]}`;
     }
-    return <Countdown date={new Date(newDateStr)} renderer={renderTimer} />;
+    return newDateStr ? (
+      <Countdown date={new Date(newDateStr)} renderer={renderTimer} />
+    ) : null;
   }
 }
 Counter.propTypes = {

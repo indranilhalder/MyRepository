@@ -102,7 +102,7 @@ class SignUp extends Component {
         showSocialButtons={showSocialButtons}
         footerText={footerText}
         footerClick={footerClick}
-        type={SOCIAL_SIGN_UP}
+        isSignUp={true}
       >
         <div>
           <div>

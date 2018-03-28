@@ -3,18 +3,13 @@ import styles from "./InformationHeader.css";
 import { CircleButton, Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import iconImageURL from "./img/arrowBack.svg";
-import SearchContainer from "../../search/SearchContainer.js";
 export default class InformationHeader extends React.Component {
   handleClick() {
     if (this.props.goBack) {
       this.props.goBack();
     }
   }
-  onSearch() {
-    if (this.props.onSearch) {
-      this.props.onSearch();
-    }
-  }
+
   render() {
     return (
       <div className={styles.base}>

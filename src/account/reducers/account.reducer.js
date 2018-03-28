@@ -1,3 +1,4 @@
+import cloneDeep from "lodash/cloneDeep";
 import * as accountActions from "../actions/account.actions";
 import * as cartActions from "../../cart/actions/cart.actions";
 
@@ -48,14 +49,123 @@ const account = (
     removeAddressStatus: null,
     removeAddressError: null,
 
+    editAddressStatus: null,
+    editAddressError: null,
+
+    addUserAddressStatus: null,
+    addUserAddressError: null,
+
     followedBrands: null,
     followedBrandsStatus: null,
     followedBrandsError: null,
-    loadingForFollowedBrands: false
+    loadingForFollowedBrands: false,
+
+    giftCards: null,
+    giftCardStatus: null,
+    giftCardsError: null,
+    loadingForGiftCard: false,
+
+    giftCardDetails: null,
+    giftCardDetailsStatus: null,
+    giftCardDetailsError: null,
+    loadingForGiftCardDetails: false,
+
+    getOtpToActivateWallet: null,
+    getOtpToActivateWalletStatus: null,
+    getOtpToActivateWalletError: null,
+    loadingForGetOtpToActivateWallet: false,
+
+    verifyWallet: null,
+    verifyWalletStatus: null,
+    verifyWalletError: null,
+    loadingForverifyWallet: false,
+
+    getPinCodeDetails: null,
+    getPinCodeStatus: null,
+    getPinCodeError: null
   },
   action
 ) => {
   switch (action.type) {
+    case accountActions.GET_GIFTCARD_REQUEST:
+      return Object.assign({}, state, {
+        giftCardStatus: action.status,
+        loadingForGiftCard: true
+      });
+
+    case accountActions.GET_GIFTCARD_SUCCESS:
+      return Object.assign({}, state, {
+        giftCardStatus: action.status,
+        giftCards: action.giftCards,
+        loadingForGiftCard: false
+      });
+
+    case accountActions.GET_GIFTCARD_FAILURE:
+      return Object.assign({}, state, {
+        giftCardStatus: action.status,
+        giftCardsError: action.error,
+        loadingForGiftCard: false
+      });
+
+    case accountActions.CREATE_GIFT_CARD_REQUEST:
+      return Object.assign({}, state, {
+        giftCardDetailsStatus: action.status,
+        loadingForGiftCardDetails: true
+      });
+
+    case accountActions.CREATE_GIFT_CARD_SUCCESS:
+      return Object.assign({}, state, {
+        giftCardDetailsStatus: action.status,
+        giftCardDetails: action.giftCardDetails,
+        loadingForGiftCardDetails: false
+      });
+
+    case accountActions.CREATE_GIFT_CARD_FAILURE:
+      return Object.assign({}, state, {
+        giftCardDetailsStatus: action.status,
+        giftCardDetailsError: action.error,
+        loadingForGiftCardDetails: false
+      });
+    case accountActions.GET_OTP_TO_ACTIVATE_WALLET_REQUEST:
+      return Object.assign({}, state, {
+        getOtpToActivateWalletStatus: action.status,
+        loadingForGetOtpToActivateWallet: true
+      });
+
+    case accountActions.GET_OTP_TO_ACTIVATE_WALLET_SUCCESS:
+      return Object.assign({}, state, {
+        getOtpToActivateWalletStatus: action.status,
+        getOtpToActivateWallet: action.getOtpToActivateWallet,
+        loadingForGetOtpToActivateWallet: false
+      });
+
+    case accountActions.GET_OTP_TO_ACTIVATE_WALLET_FAILURE:
+      return Object.assign({}, state, {
+        getOtpToActivateWalletStatus: action.status,
+        getOtpToActivateWalletError: action.error,
+        loadingForGetOtpToActivateWallet: false
+      });
+
+    case accountActions.VERIFY_WALLET_REQUEST:
+      return Object.assign({}, state, {
+        verifyWalletStatus: action.status,
+        loadingForverifyWallet: true
+      });
+
+    case accountActions.VERIFY_WALLET_SUCCESS:
+      return Object.assign({}, state, {
+        verifyWalletStatus: action.status,
+        verifyWallet: action.verifyWallet,
+        loadingForverifyWallet: false
+      });
+
+    case accountActions.VERIFY_WALLET_FAILURE:
+      return Object.assign({}, state, {
+        verifyWalletStatus: action.status,
+        verifyWalletError: action.error,
+        loadingForverifyWallet: false
+      });
+
     case accountActions.GET_SAVED_CARD_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
@@ -277,8 +387,16 @@ const account = (
       });
 
     case accountActions.REMOVE_ADDRESS_SUCCESS:
+      const currentAddresses = cloneDeep(state.userAddress);
+      const indexOfAddressToBeRemove = currentAddresses.addresses.findIndex(
+        address => {
+          return address.id === action.addressId;
+        }
+      );
+      currentAddresses.addresses.splice(indexOfAddressToBeRemove, 1);
       return Object.assign({}, state, {
         removeAddressStatus: action.status,
+        userAddress: currentAddresses,
         loading: false
       });
 
@@ -289,6 +407,60 @@ const account = (
         loading: false
       });
 
+    case accountActions.EDIT_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.EDIT_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        loading: false
+      });
+
+    case accountActions.EDIT_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        editAddressError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_USER_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        addUserAddressError: action.error,
+        loading: false
+      });
+
+    case accountActions.GET_PIN_CODE_REQUEST:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status
+      });
+
+    case accountActions.GET_PIN_CODE_SUCCESS:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status,
+        getPinCodeDetails: action.pinCode
+      });
+
+    case accountActions.GET_PIN_CODE_FAILURE:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status,
+        getPinCodeError: action.error
+      });
     default:
       return state;
   }

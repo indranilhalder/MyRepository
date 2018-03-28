@@ -31,12 +31,12 @@
   color: #ffff;
 }
 .description {
-  width: 70%;
+  width: 100%;
   height: auto;
   font-family: regular;
   font-size: 14px;
-  line-height: 20px;
-  padding-bottom: 15px;
+  line-height: 24px;
+  padding-bottom: 20px;
   color: white;
 }
 .button {

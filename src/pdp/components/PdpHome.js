@@ -28,7 +28,8 @@ import {
   PRODUCT_REVIEWS_PATH_SUFFIX,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  NO
+  NO,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
@@ -36,7 +37,6 @@ import PDPRecommendedSections from "./PDPRecommendedSections.js";
 
 const PRODUCT_QUANTITY = "1";
 const DELIVERY_TEXT = "Delivery Options For";
-const PIN_CODE = "110011";
 export default class PdpApparel extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
@@ -63,11 +63,13 @@ export default class PdpApparel extends React.Component {
     this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
   };
   goToCart = () => {
+    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
     this.props.history.push({
       pathname: PRODUCT_CART_ROUTER,
       state: {
         ProductCode: this.props.productDetails.productListingId,
-        pinCode: PIN_CODE
+        pinCode: defaultPinCode
       }
     });
   };
@@ -150,6 +152,8 @@ export default class PdpApparel extends React.Component {
     }
   }
   renderDeliveryOptions(productData) {
+    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
     return (
       productData.eligibleDeliveryModes &&
       productData.eligibleDeliveryModes.map((val, idx) => {
@@ -161,7 +165,7 @@ export default class PdpApparel extends React.Component {
             type={val.code}
             onClick={() => this.renderAddressModal()}
             deliveryOptions={DELIVERY_TEXT}
-            label={PIN_CODE}
+            label={defaultPinCode}
             showCliqAndPiqButton={false}
           />
         );
@@ -214,13 +218,12 @@ export default class PdpApparel extends React.Component {
               </div>
             )}
 
-            {productData.productOfferMsg && (
+            {productData.potentialPromotions && (
               <OfferCard
-                endTime={productData.productOfferMsg[0].validTill.date}
-                heading={productData.productOfferMsg[0].promotionTitle}
-                description={
-                  productData.productOfferPromotion[0].promotionDetail
-                }
+                endTime={productData.potentialPromotions.endDate}
+                startDate={productData.potentialPromotions.startDate}
+                heading={productData.potentialPromotions.title}
+                description={productData.potentialPromotions.description}
                 onClick={this.goToCouponPage}
               />
             )}
