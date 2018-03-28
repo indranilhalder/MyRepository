@@ -51,6 +51,10 @@ export const GET_USER_ALERTS_REQUEST = "GET_USER_ALERTS_REQUEST";
 export const GET_USER_ALERTS_SUCCESS = "GET_USER_ALERTS_SUCCESS";
 export const GET_USER_ALERTS_FAILURE = "GET_USER_ALERTS_FAILURE";
 
+export const GET_PIN_CODE_REQUEST = "GET_PIN_CODE_REQUEST";
+export const GET_PIN_CODE_SUCCESS = "GET_PIN_CODE_SUCCESS";
+export const GET_PIN_CODE_FAILURE = "GET_PIN_CODE_FAILURE";
+
 export const SEND_INVOICE_REQUEST = "SEND_INVOICE_REQUEST";
 export const SEND_INVOICE_SUCCESS = "SEND_INVOICE_SUCCESS";
 export const SEND_INVOICE_FAILURE = "SEND_INVOICE_FAILURE";
@@ -114,6 +118,7 @@ export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
 export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
+export const PIN_PATH = "v2/mpl/";
 
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
 
@@ -160,6 +165,51 @@ export function getSavedCardDetails(userId, customerAccessToken) {
       dispatch(getSavedCardSuccess(resultJson));
     } catch (e) {
       dispatch(getSavedCardFailure(e.message));
+    }
+  };
+}
+export function getPinCodeRequest() {
+  return {
+    type: GET_PIN_CODE_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getPinCodeSuccess(pinCode) {
+  return {
+    type: GET_PIN_CODE_SUCCESS,
+    status: SUCCESS,
+    pinCode
+  };
+}
+
+export function getPinCodeFailure(error) {
+  return {
+    type: GET_PIN_CODE_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getPinCode(pinCode) {
+  return async (dispatch, getState, { api }) => {
+    const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    dispatch(getPinCodeRequest());
+    try {
+      const result = await api.get(
+        `${PIN_PATH}/getPincodeData?pincode=${pinCode}&access_token=${
+          JSON.parse(globalAccessToken).access_token
+        }`
+      );
+      const resultJson = await result.json();
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE
+      ) {
+        throw new Error(resultJson.errors[0].message);
+      }
+      dispatch(getPinCodeSuccess(resultJson));
+    } catch (e) {
+      dispatch(getPinCodeFailure(e.message));
     }
   };
 }

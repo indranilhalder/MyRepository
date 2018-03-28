@@ -41,7 +41,7 @@ class CuratedProductsComponent extends React.Component {
               return (
                 <ProductModule
                   key={i}
-                  productImage={datum.imageURL}
+                  productImage={datum.image}
                   title={datum.title}
                   price={datum.price}
                   description={datum.description}

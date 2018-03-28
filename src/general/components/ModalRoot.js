@@ -10,6 +10,7 @@ import AddressModalContainer from "../../plp/containers/AddressModalContainer";
 import SizeGuideModal from "../../pdp/components/SizeGuideModal";
 import EmiModal from "../../pdp/containers/EmiListContainer";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
+import SizeSelectModal from "../../pdp/components/SizeSelectModal.js";
 import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
 import KycDetailsPopup from "../../auth/components/KycDetailsPopup.js";
 import KycApplicationForm from "../../account/components/KycApplicationForm.js";
@@ -185,6 +186,13 @@ export default class ModalRoot extends React.Component {
         <OtpVerification
           submitOtp={val => this.props.loginUser(val)}
           {...this.props.ownProps}
+        />
+      ),
+      SizeSelector: (
+        <SizeSelectModal
+          {...this.props.ownProps}
+          history={this.props.history}
+          closeModal={() => this.handleClose()}
         />
       )
     };

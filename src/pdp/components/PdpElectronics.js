@@ -284,6 +284,12 @@ export default class PdpElectronics extends React.Component {
 
           {productData.variantOptions && (
             <React.Fragment>
+              <SizeSelector
+                showSizeGuide={this.props.showSizeGuide}
+                data={productData.variantOptions.map(value => {
+                  return value.sizelink;
+                })}
+              />
               <ColourSelector
                 data={productData.variantOptions.map(value => {
                   return value.colorlink;
@@ -291,12 +297,6 @@ export default class PdpElectronics extends React.Component {
                 history={this.props.history}
                 updateColour={val => {}}
                 getProductSpecification={this.props.getProductSpecification}
-              />
-              <SizeSelector
-                showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
               />
             </React.Fragment>
           )}
