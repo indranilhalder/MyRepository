@@ -12,9 +12,8 @@ import EmiModal from "../../pdp/containers/EmiListContainer";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
 import SizeSelectModal from "../../pdp/components/SizeSelectModal.js";
 import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
-import KycApplicationForm from "../../account/components/KycApplicationForm";
-import KycDetailsPopup from "../../auth/components/KycDetailsPopup";
-import BottomSlideModal from "../../general/components/BottomSlideModal";
+import KycApplicationFormWithBottomSlideModal from "../../account/components/KycApplicationFormWithBottomSlideModal";
+import KycDetailPopUpWithBottomSlideModal from "../../account/components/KycDetailPopUpWithBottomSlideModal";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
@@ -163,24 +162,20 @@ export default class ModalRoot extends React.Component {
       ),
       SizeGuide: <SizeGuideModal closeModal={() => this.handleClose()} />,
       GenerateOtpForEgv: (
-        <BottomSlideModal>
-          <KycApplicationForm
-            closeModal={() => this.handleClose()}
-            generateOtp={val => this.generateOtp(val, this.props.ownProps)}
-            {...this.props.ownProps}
-          />
-        </BottomSlideModal>
+        <KycApplicationFormWithBottomSlideModal
+          closeModal={() => this.handleClose()}
+          generateOtp={val => this.generateOtp(val, this.props.ownProps)}
+          {...this.props.ownProps}
+        />
       ),
       verifyOtp: (
-        <BottomSlideModal>
-          <KycDetailsPopup
-            closeModal={() => this.handleClose()}
-            mobileNumber={this.state.mobileNumber}
-            submitOtp={val => this.verifyOtp(val, this.props.ownProps)}
-            resendOtp={val => this.resendOtp(val, this.props.ownProps)}
-            {...this.props.ownProps}
-          />
-        </BottomSlideModal>
+        <KycDetailPopUpWithBottomSlideModal
+          closeModal={() => this.handleClose()}
+          mobileNumber={this.state.mobileNumber}
+          submitOtp={val => this.verifyOtp(val, this.props.ownProps)}
+          resendOtp={val => this.resendOtp(val, this.props.ownProps)}
+          {...this.props.ownProps}
+        />
       ),
       EmiModal: <EmiModal />,
       OtpLoginModal: (
