@@ -30,7 +30,7 @@ export default class SizeGuideMain extends React.Component {
           <div className={styles.sizeList}>
             {this.props.sizeData.sizeGuideList.map((list, i) => {
               return (
-                <Accordion text={list.dimension} key={i}>
+                <Accordion text={list.dimensionSize} key={i}>
                   <SizeGuideElement data={list.dimensionList} />
                 </Accordion>
               );
