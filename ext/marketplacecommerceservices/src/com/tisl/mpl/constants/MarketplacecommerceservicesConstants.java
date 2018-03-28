@@ -15,7 +15,6 @@ package com.tisl.mpl.constants;
 
 import java.util.Date;
 
-
 import com.tisl.mpl.core.model.FreebieDetailModel;
 import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 
@@ -27,10 +26,7 @@ import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReturnOrderModel;
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
-import java.util.Date;
 
-import com.tisl.mpl.core.model.FreebieDetailModel;
-import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 
 /**
  * Global class for all Marketplacecommerceservices constants. You can add global constants for your extension into this
@@ -1973,6 +1969,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//Added for displaying Non HMC configurable offer messages , TPR-589
 	public static final String PRODUCTOFFERDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} WHERE {prodOffrDet.productId}= ?productId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate"
 			.intern();
+	//no cost emi
+	public static final String PRODUCTOFFERDETMSGQUERYPWA = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate},{prodOffrDet.offerStartDate},{prodOffrDet.offerEndDate},{prodOffrDet.isNoCostEmi} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} WHERE {prodOffrDet.productId}= ?productId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate"
+			.intern();
 
 	public static final String OFFERPRODUCTID = "productId".intern();
 
@@ -1980,6 +1979,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MESSAGEDET = "messageDet".intern();
 	public static final String MESSAGESTARTDATE = "startDate".intern();
 	public static final String MESSAGEENDDATE = "endDate".intern();
+	//no cost emi
+	public static final String OFFERSTARTDATE = "offerStartDate".intern();
+	public static final String OFFERENDDATE = "offerEndDate".intern();
+	public static final String ISNOCOSTEMI = "isNoCostEmi".intern();
 
 	public static final String TERMSANDCONDITIONS = "termsAndConditions".intern();//CAR-327 added
 	public static final String PROMOURL = "promoUrl".intern();
@@ -2574,14 +2577,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FPC_QUERY_REFUNDENTRY = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:auditId} = ?auditId";
 	public static final String FPC_QUERY_REFUNDENTRIES = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:isExpired} = ?expiredFlag";
 	public static final String FPC_QUERY_PARENTORDER = "SELECT {ord:pk} FROM {Order AS ord} WHERE{ord:guid} = ?guid AND {ord:type}  = ?orderType";
-	
+
 	public static final String LUX_IMPORT_CATALOG_ID = "luxProductCatalog";
 	public static final String LUX_IMPORT_CONTENT_CATALOG_ID = "luxContentCatalog";
 	public static final String LUX_IMPORT_CONTENT_CATALOG_VERSION = "Online";
 	public static final String LUXURY_PREFIX = "lux";
 	public static final String TATACLIQ = "tatacliq";
 	public static final String LUXURY_SITE_URL = "luxury.tatacliq.com";
-	
+
 	public static final String SDPFIFTEENLOG = "sdp.fifteen.log";
 	public static final String ISH = "ISH";
 	public static final String LUXURY_CATALOG_ID = "luxProductCatalog";
@@ -2591,6 +2594,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String OFFERSELLERID = "sellerId".intern();
 
 
-	
-}
 
+}

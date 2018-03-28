@@ -6,8 +6,6 @@ package com.tisl.mpl.services;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import de.hybris.bootstrap.annotations.UnitTest;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +18,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.tisl.mpl.marketplacecommerceservices.daos.ProductOfferDetailDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ProductOfferDetailService;
+
+import de.hybris.bootstrap.annotations.UnitTest;
 
 
 /**
@@ -53,7 +53,7 @@ public class ProductOfferDetailServiceImplTest
 
 		final Map<String, Map<String, String>> stockLevelStatMock = new HashMap<String, Map<String, String>>();
 
-		assertNotNull(ProductOfferDetailService.showOfferMessage(productCode));
-		assertEquals(stockLevelStatMock, ProductOfferDetailService.showOfferMessage(productCode));
+		assertNotNull(ProductOfferDetailService.showOfferMessage(productCode, null));
+		assertEquals(stockLevelStatMock, ProductOfferDetailService.showOfferMessage(productCode, null));
 	}
 }
