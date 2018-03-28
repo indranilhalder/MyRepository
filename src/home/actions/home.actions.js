@@ -10,7 +10,6 @@ import each from "lodash/each";
 import delay from "lodash/delay";
 import {
   MSD_NUM_RESULTS,
-  MAD_UUID,
   MSD_WIDGET_LIST,
   MSD_WIDGET_PLATFORM,
   MSD_API_KEY
@@ -223,7 +222,7 @@ export function homeFeed(brandIdOrCategoryId: null) {
           mbox = ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME;
         }
 
-        const mcvId = getMcvId();
+        const mcvId = await getMcvId();
         resultJson = await api.postAdobeTargetUrl(
           null,
           mbox,
@@ -329,12 +328,13 @@ export function getComponentData(
       let postData;
       let result;
       let resultJson;
+      const mcvId = await getMcvId();
       if (postParams && postParams.widgetPlatform === MSD_WIDGET_PLATFORM) {
         postData = {
           ...postParams,
           api_key: MSD_API_KEY,
           num_results: MSD_NUM_RESULTS,
-          mad_uuid: MAD_UUID,
+          mad_uuid: mcvId,
           widget_list: MSD_WIDGET_LIST //TODO this is going to change.
         };
 
@@ -354,7 +354,7 @@ export function getComponentData(
           }
         }, ADOBE_TARGET_DELAY);
 
-        const mcvId = getMcvId();
+        const mcvId = await getMcvId();
         resultJson = await api.postAdobeTargetUrl(
           fetchURL,
           postParams && postParams.mbox ? postParams.mbox : null,
