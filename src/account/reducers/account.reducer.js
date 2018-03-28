@@ -59,7 +59,6 @@ const account = (
     followedBrandsStatus: null,
     followedBrandsError: null,
 
-
     loadingForFollowedBrands: false,
 
     cliqCashUserDetailsStatus: null,
@@ -69,16 +68,6 @@ const account = (
     cliqCashVoucherDetailsStatus: null,
     cliqCashVoucherDetailsError: null,
     cliqCashVoucherDetails: null,
-
-    checkWalletMobileNumberStatus: null,
-    checkWalletMobileNumberError: null,
-    checkWalletMobileNumberDetails: null,
-
-    verifyWalletMobileNumberStatus: null,
-    verifyWalletMobileNumberError: null,
-    verifyWalletMobileNumberDetails: null,
-
-    loadingForFollowedBrands: false,
 
     loadingForFollowedBrands: false,
 
