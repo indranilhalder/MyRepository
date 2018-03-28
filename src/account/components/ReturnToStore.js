@@ -10,17 +10,20 @@ import {
   RETURNS_STORE_FINAL,
   RETURN_LANDING,
   RETURNS_REASON,
-  QUICK_DROP
+  QUICK_DROP,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 const REG_X_FOR_STORE_PICKUP = /storePick/i;
 const REG_X_FOR_FINAL_SUBMIT = /submit/i;
+const defaultPincode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 export default class ReturnToStore extends React.Component {
   constructor(props) {
     super(props);
     this.orderCode = props.location.pathname.split("/")[2];
     this.state = {
       currentActive: 0,
-      storeId: null
+      storeId: null,
+      pincode: defaultPincode
     };
   }
 
