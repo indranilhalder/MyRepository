@@ -24,7 +24,7 @@ export default class ReturnsToBank extends React.Component {
             <div className={styles.circleDesign} />
             <div className={styles.circleDesign} />
           </div>
-          <div className={styles.cardNumber}>{this.props.cardNumber}</div>
+          <div className={styles.cardNumber}>{this.props.cartNumber}</div>
         </div>
         <div className={styles.footerText}>{this.props.footerText}</div>
       </div>

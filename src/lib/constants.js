@@ -67,8 +67,29 @@ export const MY_ACCOUNT_ALERTS_PAGE = "/alerts";
 export const MY_ACCOUNT_COUPON_PAGE = "/coupons";
 export const MY_ACCOUNT_CART_PAGE = "/cart";
 export const MY_ACCOUNT_CLIQ_CASH_PAGE = "/cliq-cash";
+
+//returns
+export const RETURNS_PREFIX = "/returns";
+export const RETURNS = "/returns/(.*)";
+export const RETURN_LANDING = "/initiate";
+export const RETURNS_REASON = "/reason";
+export const RETURNS_MODES = "/modes";
+export const RETURNS_NEW_ADDRESS = "/addDeliveryLocation";
+export const RETURN_CLIQ_PIQ = "/cliqpiq";
+export const RETURN_CLIQ_PIQ_ADDRESS = "/address";
+export const RETURN_CLIQ_PIQ_DATE = "/dateTime";
+
+export const RETURN_CLIQ_PIQ_RETURN_SUMMARY = "/returnSummary";
+
+export const RETURN_TO_STORE = "/store";
+export const RETURNS_STORE_MAP = "/storePick";
+export const RETURNS_STORE_BANK_FORM = "/bankDetail";
+export const RETURNS_STORE_FINAL = "/submit";
+
+export const RETURNS_SELF_COURIER = "/selfCourier";
 export const MY_ACCOUNT_ADDRESS_EDIT_PAGE = "/address-book/edit";
 export const MY_ACCOUNT_ADDRESS_ADD_PAGE = "/address-book/add";
+
 export const CLIQ_AND_PIQ = "/select-stores";
 export const PRODUCT_CART_DELIVERY_MODES = "/deliveryModes";
 export const PRODUCT_DELIVERY_ADDRESSES = "/deliveryAddress";
@@ -108,6 +129,12 @@ export const FOLLOWING = "Following";
 export const PLAT_FORM_NUMBER = "2";
 
 export const TRUE = "true";
+
+export const QUICK_DROP = "quickDrop";
+export const SCHEDULED_PICKUP = "schedulePickup";
+export const SELF_COURIER = "selfCourier";
+
+export const CASH_ON_DELIVERY = "COD";
 export const ON_EXCLUSIVE = "onExclusive";
 export const IS_OFFER_EXISTING = "isOfferExisting";
 export const IS_NEW = "isNew";
