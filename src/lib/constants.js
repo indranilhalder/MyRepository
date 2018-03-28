@@ -107,3 +107,7 @@ export const FOLLOWING = "Following";
 export const PLAT_FORM_NUMBER = "2";
 
 export const TRUE = "true";
+export const ON_EXCLUSIVE = "onExclusive";
+export const IS_OFFER_EXISTING = "isOfferExisting";
+export const IS_NEW = "isNew";
+export const DISCOUNT_PERCENT = "discountPercent";
