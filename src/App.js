@@ -33,13 +33,11 @@ import AllOrderContainer from "./account/containers/AllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
 import AddressBookContainer from "./account/containers/AddressBookContainer.js";
-
 import EditAddressBookContainer from "./account/containers/EditAddressBookContainer.js";
 import AddAddressContainer from "./account/containers/AddAddressContainer.js";
-
 import SaveListContainer from "./account/containers/SaveListContainer";
-
 import CliqCashContainer from "./account/containers/CliqCashContainer.js";
+import GiftCardContainer from "./account/containers/GiftCardContainer";
 
 import {
   HOME_ROUTER,
@@ -77,10 +75,10 @@ import {
   MY_ACCOUNT_ALERTS_PAGE,
   MY_ACCOUNT_COUPON_PAGE,
   MY_ACCOUNT_BRANDS_PAGE,
-
   ACCOUNT_SAVED_CARD_ROUTER,
   MY_ACCOUNT_CLIQ_CASH_PAGE,
-
+  ACCOUNT_SAVED_CARD_ROUTER,
+  MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
   MY_ACCOUNT_ADDRESS_ADD_PAGE,
   ORDER_PREFIX
@@ -184,7 +182,11 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`}
               component={UserAlertsAndCouponsContainer}
             />
-
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_GIFT_CARD_PAGE}`}
+              component={GiftCardContainer}
+            />
             <Route
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_CLIQ_CASH_PAGE}`}

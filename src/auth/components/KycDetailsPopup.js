@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import lockBlackIcon from "./img/lockBlackIcon.svg";
 import Styles from "./KycDetailsPopup.css";
 import Input2 from "../../general/components/Input2";
+import Button from "../../general/components/Button.js";
 export default class KycDetailsPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -12,19 +13,16 @@ export default class KycDetailsPopup extends React.Component {
       otp: this.props.otp ? this.props.otp : ""
     };
   }
-  callVerify() {
-    if (this.props.callVerify) {
-      this.props.callVerify();
-    }
-  }
   resendOtp() {
     if (this.props.resendOtp) {
       this.props.resendOtp();
     }
   }
 
-  handleOtpInput(val) {
-    this.setState({ otp: val });
+  submitOtp() {
+    if (this.props.submitOtp) {
+      this.props.submitOtp(this.state);
+    }
   }
   wrongNumber() {
     if (this.props.wrongNumber) {
@@ -56,15 +54,13 @@ export default class KycDetailsPopup extends React.Component {
             borderColor="#fff"
             placeholder={"Enter 4-digit code"}
             styles={{ color: "#000000" }}
-            onChange={val => {
-              this.handleOtpInput(val);
-            }}
+            onChange={otp => this.setState({ otp })}
             type="number"
           />
         </div>
         <div className={Styles.buttonHolder}>
           <div className={Styles.leftButton}>
-            <ColourButton label={"Submit"} onClick={() => this.verifyOtp()} />
+            <ColourButton label={"Submit"} onClick={() => this.submitOtp()} />
           </div>
           <div className={Styles.rightButton}>
             <ColourButton
@@ -81,7 +77,6 @@ export default class KycDetailsPopup extends React.Component {
 KycDetailsPopup.propTypes = {
   mobileNumber: PropTypes.string,
   wrongNumber: PropTypes.func,
-  callVerify: PropTypes.func,
   resendOtp: PropTypes.func
 };
 

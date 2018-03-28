@@ -28,6 +28,10 @@ import {
   generateCartIdForLoggedInUser,
   getCartId
 } from "../../cart/actions/cart.actions";
+import {
+  getOtpToActivateWallet,
+  verifyWallet
+} from "../../account/actions/account.actions";
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -109,11 +113,19 @@ const mapDispatchToProps = dispatch => {
     getUserAddress: () => {
       dispatch(getUserAddress());
     },
+
     checkWalletMobileNumber: customerDetails => {
       dispatch(checkWalletMobileNumber(customerDetails, false));
     },
     verifyWalletMobileNumber: otpDetails => {
-      dispatch(verifyWalletMobileNumber(otpDetails));
+      dispatch(verifyWalletMobileNumber(otpDetails));},
+
+    getOtpToActivateWallet: customerDetails => {
+      dispatch(getOtpToActivateWallet(customerDetails));
+    },
+    verifyWallet: customerDetailsWithOtp => {
+      dispatch(verifyWallet(customerDetailsWithOtp));
+
     }
   };
 };

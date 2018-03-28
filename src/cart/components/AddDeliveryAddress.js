@@ -210,15 +210,18 @@ export default class AddDeliveryAddress extends React.Component {
             selectItem={() => this.onChangeDefaultFlag()}
           />
         </div>
-        <Button
-          backgroundColor={"#FF1744"}
-          label={SAVE_TEXT}
-          width={150}
-          height={45}
-          borderRadius={22.5}
-          onClick={() => this.addNewAddress()}
-          textStyle={{ color: "#FFF", fontSize: 14 }}
-        />
+        <div className={styles.buttonHolder}>
+          <div className={styles.saveAndContinueButton}>
+            <Button
+              type="primary"
+              label={SAVE_TEXT}
+              width={176}
+              height={38}
+              onClick={() => this.addNewAddress()}
+              textStyle={{ color: "#FFF", fontSize: 14 }}
+            />
+          </div>
+        </div>
       </div>
     );
   }
