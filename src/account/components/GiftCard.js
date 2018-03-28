@@ -91,27 +91,25 @@ export default class GiftCard extends React.Component {
               <div className={styles.labelHeader}>
                 Select Amount from below{" "}
               </div>
-              {giftCards && (
-                <div className={styles.amountHolder}>
-                  {giftCards &&
-                    giftCards.amountOptions &&
-                    giftCards.amountOptions.options.map((val, i) => {
-                      return (
-                        <div
-                          className={styles.amountSelect}
-                          onClick={() =>
-                            this.selectAmount(
-                              val.formattedValueNoDecimal,
-                              val.value
-                            )
-                          }
-                        >
-                          {val.formattedValueNoDecimal}
-                        </div>
-                      );
-                    })}
-                </div>
-              )}
+              <div className={styles.amountHolder}>
+                {giftCards &&
+                  giftCards.amountOptions &&
+                  giftCards.amountOptions.options.map((val, i) => {
+                    return (
+                      <div
+                        className={styles.amountSelect}
+                        onClick={() =>
+                          this.selectAmount(
+                            val.formattedValueNoDecimal,
+                            val.value
+                          )
+                        }
+                      >
+                        {val.formattedValueNoDecimal}
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
             <div className={styles.inputHolder}>
               <div className={styles.labelHeader}>Or</div>

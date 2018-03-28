@@ -272,7 +272,7 @@ export function getOtpToActivateWallet(customerDetails) {
         resultJson.status === SUCCESS_UPPERCASE ||
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
-        dispatch(hideModal(GENERATE_OTP_FOR_EGV));
+        dispatch(hideModal());
         dispatch(showModal(VERIFY_OTP));
         return dispatch(getOtpToActivateWalletSuccess(resultJson));
       } else {
@@ -328,7 +328,7 @@ export function verifyWallet(customerDetailsWithOtp) {
         resultJson.status === SUCCESS_UPPERCASE ||
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
-        dispatch(hideModal(VERIFY_OTP));
+        dispatch(hideModal());
         dispatch(getGiftCardDetails());
         return dispatch(verifyWalletSuccess(resultJson));
       } else {
