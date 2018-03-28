@@ -27,9 +27,11 @@ export default class AwbForm extends React.Component {
     }
   }
   handleChange(event) {
+    let file = event.target.files[0];
     this.setState(
       {
-        value: event.target.value.replace(/^.*\\/, "")
+        value: file.name,
+        file: file
       },
       () => {
         if (this.props.onChange) {
@@ -81,21 +83,23 @@ export default class AwbForm extends React.Component {
             height={35}
           />
         </div>
-        {this.props.isUpload && (
-          <div className={styles.inputHolder}>
-            <div className={styles.fileUploadHolder}>
-              <div className={styles.pathUploadHolder}>{this.state.value}</div>
-              <div className={styles.fileHolder}>
-                Browse
-                <input
-                  type="file"
-                  className={styles.file}
-                  onChange={val => this.handleChange(val)}
-                />
-              </div>
+
+        <div className={styles.inputHolder}>
+          <div className={styles.fileUploadHolder}>
+            <div className={styles.pathUploadHolder}>{this.state.value}</div>
+            <div className={styles.fileHolder}>
+              Browse
+              <input
+                id="fileinput"
+                type="file"
+                className={styles.file}
+                multiple
+                onChange={val => this.handleChange(val)}
+              />
             </div>
           </div>
-        )}
+        </div>
+
         {this.props.isShowButton && (
           <div className={styles.buttonHolder}>
             {this.props.updateLater && (

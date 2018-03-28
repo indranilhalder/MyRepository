@@ -26,7 +26,8 @@ import {
 } from "../../cart/actions/cart.actions";
 import {
   getOtpToActivateWallet,
-  verifyWallet
+  verifyWallet,
+  submitSelfCourierRetrunInfo
 } from "../../account/actions/account.actions";
 
 const mapStateToProps = (state, ownProps) => {
@@ -114,6 +115,9 @@ const mapDispatchToProps = dispatch => {
     },
     verifyWallet: customerDetailsWithOtp => {
       dispatch(verifyWallet(customerDetailsWithOtp));
+    },
+    submitSelfCourierRetrunInfo: returnDetails => {
+      dispatch(submitSelfCourierRetrunInfo(returnDetails));
     }
   };
 };
