@@ -20,14 +20,15 @@ export default class ProductDetailsCard extends React.Component {
             {this.props.price && (
               <span className={styles.onPrice}>Rs {this.props.price}</span>
             )}
-            {this.props.discountPrice && (
-              <del>
-                <span className={styles.deletePrice}>
-                  Rs
-                  {this.props.discountPrice}
-                </span>
-              </del>
-            )}
+            {this.props.discountPrice &&
+              this.props.discountPrice !== this.props.price && (
+                <del>
+                  <span className={styles.deletePrice}>
+                    Rs
+                    {this.props.discountPrice}
+                  </span>
+                </del>
+              )}
           </div>
           <div className={styles.displayRating}>
             {this.props.averageRating && (
