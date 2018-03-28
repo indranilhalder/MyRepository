@@ -12,6 +12,7 @@ import moment from "moment";
 import queryString from "query-string";
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
+import UnderLinedButton from "../../general/components/UnderLinedButton";
 import {
   ORDER_PREFIX,
   CUSTOMER_ACCESS_TOKEN,
@@ -22,6 +23,8 @@ import {
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_Returned = "Return Product";
 const PRODUCT_Cancel = "Cancel Product";
+const AWB_POPUP_TRUE = "Y";
+const AWB_POPUP_FALSE = "N";
 export default class OrderDetails extends React.Component {
   requestInvoice(ussid, sellerOrderNo) {
     if (this.props.sendInvoice) {
@@ -57,6 +60,14 @@ export default class OrderDetails extends React.Component {
     ) {
       const orderCode = this.props.match.params.orderCode;
       this.props.fetchOrderDetails(orderCode);
+    }
+  }
+  updateRefundDetailsPopUp(orderId, transactionId) {
+    const orderDetails = {};
+    orderDetails.orderId = orderId;
+    orderDetails.transactionId = transactionId;
+    if (this.props.showModal) {
+      this.props.showModal(orderDetails);
     }
   }
   navigateToLogin() {
@@ -131,18 +142,57 @@ export default class OrderDetails extends React.Component {
                     />
                   </div>
                 )}
-                <div className={styles.buttonHolder}>
-                  <OrderReturn
-                    buttonLabel={
-                      products.isReturned === false
-                        ? PRODUCT_Cancel
-                        : PRODUCT_Returned
-                    }
-                    isEditable={true}
-                    replaceItem={() => this.replaceItem()}
-                    writeReview={() => this.writeReview()}
-                  />
-                </div>
+                {products.awbPopupLink === AWB_POPUP_FALSE && (
+                  <div className={styles.buttonHolder}>
+                    <OrderReturn
+                      buttonLabel={
+                        products.isReturned === false
+                          ? PRODUCT_Cancel
+                          : PRODUCT_Returned
+                      }
+                      isEditable={true}
+                      replaceItem={() => this.replaceItem()}
+                      writeReview={() => this.writeReview()}
+                    />
+                  </div>
+                )}
+                {products.awbPopupLink === AWB_POPUP_TRUE && (
+                  <div className={styles.buttonHolder}>
+                    <div className={styles.buttonHolderForUpdate}>
+                      <div className={styles.replaceHolder}>
+                        <div
+                          className={styles.replace}
+                          onClick={() =>
+                            this.updateRefundDetailsPopUp(
+                              orderDetails.orderId,
+                              products.transactionId
+                            )
+                          }
+                        >
+                          <UnderLinedButton
+                            label="Update Return Details"
+                            color="#000"
+                          />
+                        </div>
+                      </div>
+                      <div className={styles.reviewHolder}>
+                        <div
+                          className={styles.review}
+                          replaceItem={() => this.replaceItem()}
+                        >
+                          <UnderLinedButton
+                            label={
+                              products.isReturned === false
+                                ? PRODUCT_Cancel
+                                : PRODUCT_Returned
+                            }
+                            color="#ff1744"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}

@@ -4,11 +4,11 @@ import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Input2 from "../../general/components/Input2.js";
 import Button from "../../general/components/Button";
+import ImageUpload from "./ImageUpload";
 export default class AwbForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: this.props.value ? this.props.value : "Upload picture of Receipt",
       awbNumber: this.props.awbNumber ? this.props.awbNumber : "",
       logisticsPartner: this.props.logisticsPartner
         ? this.props.logisticsPartner
@@ -21,22 +21,10 @@ export default class AwbForm extends React.Component {
       this.props.updateLater();
     }
   }
-  onUpdate(val) {
+  onUpdate() {
     if (this.props.onUpdate) {
       this.props.onUpdate(this.state);
     }
-  }
-  handleChange(event) {
-    this.setState(
-      {
-        value: event.target.value.replace(/^.*\\/, "")
-      },
-      () => {
-        if (this.props.onChange) {
-          this.props.onChange(this.state.value);
-        }
-      }
-    );
   }
   render() {
     return (
@@ -81,21 +69,11 @@ export default class AwbForm extends React.Component {
             height={35}
           />
         </div>
-        {this.props.isUpload && (
-          <div className={styles.inputHolder}>
-            <div className={styles.fileUploadHolder}>
-              <div className={styles.pathUploadHolder}>{this.state.value}</div>
-              <div className={styles.fileHolder}>
-                Browse
-                <input
-                  type="file"
-                  className={styles.file}
-                  onChange={val => this.handleChange(val)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
+
+        <div className={styles.inputHolder}>
+          <ImageUpload onChange={file => this.setState({ file })} />
+        </div>
+
         {this.props.isShowButton && (
           <div className={styles.buttonHolder}>
             {this.props.updateLater && (
