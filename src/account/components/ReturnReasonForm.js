@@ -18,12 +18,17 @@ export default class ReturnReasonForm extends React.Component {
   }
   handleContinue() {
     if (this.props.onContinue) {
-      this.props.onContinue(this.state);
+      let reasonAndCommentObj = Object.assign(
+        {},
+        { subReasonCode: this.state.subReasonCode, comment: this.state.comment }
+      );
+      this.props.onContinue(reasonAndCommentObj);
     }
   }
   onChangePrimary(code) {
     const data = this.props.returnProductDetails;
     this.setState({
+      parentReasonCode: code,
       secondaryReasons: data.returnReasonMap
         .filter(val => {
           return val.parentReasonCode === code;
@@ -45,9 +50,7 @@ export default class ReturnReasonForm extends React.Component {
     this.setState({ comment: val });
   }
   onChangeSecondary(code) {
-    if (this.props.onChangeSecondary) {
-      this.props.onChangeSecondary(code);
-    }
+    this.setState({ subReasonCode: code });
   }
   handleCancel() {
     if (this.props.onCancel) {
@@ -56,7 +59,6 @@ export default class ReturnReasonForm extends React.Component {
   }
   render() {
     const data = this.props.returnProductDetails;
-
     return (
       <div className={styles.base}>
         <div className={styles.header}>
@@ -100,7 +102,7 @@ export default class ReturnReasonForm extends React.Component {
               <SelectBoxMobile
                 label="Select a reason"
                 options={this.state.secondaryReasons}
-                onChange={val => this.onChangeSecondary()}
+                onChange={val => this.onChangeSecondary(val)}
               />
             </div>
           )}

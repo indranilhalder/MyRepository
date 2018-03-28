@@ -114,7 +114,6 @@ export const PRODUCT_PATH = "v2/mpl/products";
 
 export const PIN_PATH = "v2/mpl/";
 
-
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
 
 const API_KEY_FOR_MSD = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
@@ -342,61 +341,6 @@ export function returnPinCode(productDetails) {
       dispatch(returnPInCodeSuccess(resultJson));
     } catch (e) {
       dispatch(returnPinCodeFailure(e.message));
-    }
-  };
-}
-
-export function returnInitialForQuickDropRequest() {
-  return {
-    type: RETURN_INITIAL_REQUEST,
-    status: REQUESTING
-  };
-}
-export function returnInitialForQuickDropSuccess(returnRequest) {
-  return {
-    type: RETURN_INITIAL_SUCCESS,
-    returnRequest,
-    status: SUCCESS
-  };
-}
-
-export function returnInitialForQuickDropFailure(error) {
-  return {
-    type: RETURN_INITIAL_FAILURE,
-    error,
-    status: FAILURE
-  };
-}
-
-export function returnInitialForQuickDrop(productObj) {
-  return async (dispatch, getState, { api }) => {
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    dispatch(returnInitialForQuickDropRequest());
-    const initialReturnFormData = Object.assign({}, productObj, {
-      channel: "mobile",
-      refundType: "R",
-      transactionType: 1,
-      refundMode: "NEFT"
-    });
-    try {
-      const result = await api.post(
-        `${USER_PATH}/${
-          JSON.parse(userDetails).userName
-        }/newReturnInitiate?access_token=${
-          JSON.parse(customerCookie).access_token
-        }`,
-        initialReturnFormData
-      );
-
-      const resultJson = await result.json();
-
-      if (resultJson.errors) {
-        throw new Error(resultJson.errors[0].message);
-      }
-      dispatch(returnInitialForQuickDropSuccess(resultJson));
-    } catch (e) {
-      dispatch(returnInitialForQuickDropFailure(e.message));
     }
   };
 }

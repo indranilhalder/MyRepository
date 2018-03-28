@@ -11,7 +11,9 @@ import {
   RETURN_LANDING,
   RETURNS_REASON,
   QUICK_DROP,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  YES,
+  NO
 } from "../../lib/constants";
 const REG_X_FOR_STORE_PICKUP = /storePick/i;
 const REG_X_FOR_FINAL_SUBMIT = /submit/i;
@@ -34,7 +36,7 @@ export default class ReturnToStore extends React.Component {
           this.orderCode
         }${RETURN_TO_STORE}${RETURNS_STORE_FINAL}`,
         state: {
-          isRequestFromFlow: true
+          authorizedRequest: true
         }
       });
     });
@@ -58,7 +60,12 @@ export default class ReturnToStore extends React.Component {
         orderCode: this.orderCode,
         transactionId: product.transactionId,
         ussid: product.USSID,
-        returnReasonCode: "JEW1S1",
+        subReasonCode: this.props.data.subReasonCode,
+        returnReasonCode: "01",
+        comment: this.props.data.comment,
+        transactionType: "01",
+        refundType: "R",
+        isCODorder: this.props.isCOD ? YES : NO,
         returnMethod: QUICK_DROP,
         storeIds: this.state.storeId
       }
@@ -72,7 +79,7 @@ export default class ReturnToStore extends React.Component {
         IFSCCode: this.props.bankDetail.code
       });
     }
-    this.props.returnInitialForQuickDrop(productObj);
+    this.props.newReturnInitial(productObj);
   }
   renderLoader() {
     return <MDSpinner />;
@@ -87,14 +94,6 @@ export default class ReturnToStore extends React.Component {
     );
   }
   render() {
-    let noOfStories = 0;
-    if (this.props.returnRequest.returnStoreDetailsList) {
-      noOfStories = this.props.returnRequest.returnStoreDetailsList.length;
-    }
-
-    if (!this.props.returnRequest || !this.props.returnProductDetails) {
-      return this.renderLoader();
-    }
     // Preventing user to open this page direct by hitting URL
     if (
       !this.props.location.state ||
@@ -102,6 +101,16 @@ export default class ReturnToStore extends React.Component {
     ) {
       return this.navigateToReturnLanding();
     }
+    let noOfStories = 0;
+
+    if (this.props.returnRequest.returnStoreDetailsList) {
+      noOfStories = this.props.returnRequest.returnStoreDetailsList.length;
+    }
+
+    if (!this.props.returnRequest || !this.props.returnProductDetails) {
+      return this.renderLoader();
+    }
+
     const { pathname } = this.props.location;
     const renderStoresMap = (
       <PiqPage
