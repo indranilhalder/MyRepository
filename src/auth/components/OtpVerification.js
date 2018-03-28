@@ -38,7 +38,9 @@ export default class OtpVerification extends React.Component {
     }
   };
   handleOtpInput(val) {
-    this.setState({ otp: val });
+    if (val.length <= 6) {
+      this.setState({ otp: val });
+    }
   }
 
   render() {
@@ -55,9 +57,9 @@ export default class OtpVerification extends React.Component {
             </span>
           </div>
           <div>
-            {" "}
             <Input
-              placeholder={"Enter 4-digit code"}
+              value={this.state.otp}
+              placeholder={"Enter 6-digit code"}
               onChange={val => {
                 this.handleOtpInput(val);
               }}
@@ -110,7 +112,8 @@ export default class OtpVerification extends React.Component {
             </div>
             <div className={ownStyles.input}>
               <Input
-                placeholder={"Enter 4-digit code"}
+                value={this.state.otp}
+                placeholder={"Enter 6-digit code"}
                 onChange={val => {
                   this.handleOtpInput(val);
                 }}

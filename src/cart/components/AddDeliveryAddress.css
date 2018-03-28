@@ -79,3 +79,18 @@
   text-align: left;
   line-height: 25px;
 }
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+  margin: 10px 0px;
+}
+.saveAndContinueButton {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  border-radius: 19px;
+  vertical-align: middle;
+  box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.24), 0 0 6px 0 rgba(0, 0, 0, 0.12);
+}
