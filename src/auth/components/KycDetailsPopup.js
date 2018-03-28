@@ -30,14 +30,11 @@ export default class KycDetailsPopup extends React.Component {
     }
   }
 
-  verifyOtp = otpDetails => {
-    this.props.verifyOtp(this.state.otp);
-  };
   render() {
     return (
       <div className={Styles.base}>
         <div className={Styles.header}>
-          Verify Phone number to complete KYC Details
+          Verify Phone number to complete resendOtp Details
         </div>
         <div className={Styles.iconHolder}>
           <Icon image={lockBlackIcon} size={50} />

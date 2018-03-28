@@ -114,18 +114,11 @@ const mapDispatchToProps = dispatch => {
       dispatch(getUserAddress());
     },
 
-    checkWalletMobileNumber: customerDetails => {
-      dispatch(checkWalletMobileNumber(customerDetails, false));
-    },
-    verifyWalletMobileNumber: otpDetails => {
-      dispatch(verifyWalletMobileNumber(otpDetails));},
-
     getOtpToActivateWallet: customerDetails => {
       dispatch(getOtpToActivateWallet(customerDetails));
     },
     verifyWallet: customerDetailsWithOtp => {
       dispatch(verifyWallet(customerDetailsWithOtp));
-
     }
   };
 };

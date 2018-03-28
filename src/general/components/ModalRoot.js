@@ -84,8 +84,8 @@ export default class ModalRoot extends React.Component {
   };
 
   generateOtpForCliqCash = kycDetails => {
-    if (this.props.checkWalletMobileNumber) {
-      this.props.checkWalletMobileNumber(kycDetails);
+    if (this.props.getOtpToActivateWallet) {
+      this.props.getOtpToActivateWallet(kycDetails);
     }
   };
   verifyOtpForCliqCash = otpDetails => {
@@ -94,8 +94,8 @@ export default class ModalRoot extends React.Component {
     kycDetails.lastName = this.props.ownProps.lastName;
     kycDetails.mobileNumber = this.props.ownProps.mobileNumber;
     kycDetails.otp = otpDetails;
-    if (this.props.verifyWalletMobileNumber) {
-      this.props.verifyWalletMobileNumber(kycDetails);
+    if (this.props.verifyWallet) {
+      this.props.verifyWallet(kycDetails);
     }
   };
 
@@ -202,16 +202,16 @@ export default class ModalRoot extends React.Component {
         />
       ),
       generateOtpForCliqCash: (
-        <KycApplicationForm
+        <KycApplicationFormWithBottomSlideModal
           closeModal={() => this.handleClose()}
           generateOtp={KycDetails => this.generateOtpForCliqCash(KycDetails)}
           {...this.props.ownProps}
         />
       ),
       verifyOtpForCliqCash: (
-        <KycDetailsPopup
+        <KycDetailPopUpWithBottomSlideModal
           closeModal={() => this.handleClose()}
-          verifyOtp={otpDetails => this.verifyOtpForCliqCash(otpDetails)}
+          submitOtp={otpDetails => this.verifyOtpForCliqCash(otpDetails)}
           {...this.props.ownProps}
           resendOtp={() => this.resendOtp()}
         />
