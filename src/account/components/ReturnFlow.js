@@ -20,7 +20,9 @@ import {
   RETURN_LANDING,
   RETURNS_PREFIX,
   RETURN_CLIQ_PIQ,
-  RETURNS_SELF_COURIER
+  RETURNS_SELF_COURIER,
+  MY_ACCOUNT,
+  MY_ACCOUNT_ORDERS_PAGE
 } from "../../lib/constants";
 const RETURN_FLAG = "R";
 
@@ -28,6 +30,9 @@ export default class ReturnFlow extends React.Component {
   constructor(props) {
     super(props);
     this.orderCode = props.location.pathname.split("/")[2];
+    this.transactionId = props.location.state
+      ? props.location.state.transactionId
+      : null;
     this.isCOD = props.location.state && props.location.state.isCOD;
     this.state = {
       bankDetail: {},
@@ -36,7 +41,7 @@ export default class ReturnFlow extends React.Component {
   }
   componentDidMount() {
     let orderCode = this.orderCode;
-    let transactionId = this.props.location.state.transactionId;
+    let transactionId = this.transactionId;
 
     let productDetails = {};
     productDetails.transactionId = transactionId;
@@ -61,14 +66,21 @@ export default class ReturnFlow extends React.Component {
         this.orderCode
       }${RETURN_LANDING}${RETURNS_MODES}`,
       state: {
-        isRequestFromFlow: true
+        authorizedRequest: true
       }
     });
+  }
+  navigateToOrderDetail() {
+    this.props.history.push(`${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}`);
   }
   renderLoader() {
     return <MDSpinner />;
   }
   render() {
+    // if user hit return page by url then i am navigating him on orderDetial page
+    if (!this.transactionId) {
+      this.navigateToOrderDetail();
+    }
     if (!this.props.returnRequest || !this.props.returnProductDetails) {
       return this.renderLoader();
     }

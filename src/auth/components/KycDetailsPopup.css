@@ -23,6 +23,7 @@
   padding-top: 20px;
   margin-bottom: 35px;
   text-align: center;
+  line-height: 25px;
 }
 .buttonHolder {
   width: 100%;
@@ -57,4 +58,14 @@
   text-decoration-line: underline;
   text-underline-position: under;
   margin-left: 2px;
+}
+.button {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+}
+.buttonWithText {
+  display: inline-block;
+  text-align: center;
 }

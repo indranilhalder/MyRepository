@@ -120,8 +120,8 @@ class ProductSellerPage extends Component {
             <ProductDetailsCard
               productImage={mobileGalleryImages[0]}
               productName={this.props.productDetails.productName}
-              price={this.props.productDetails.mrp}
-              discountPrice={this.props.productDetails.winningSellerMOP}
+              price={this.props.productDetails.winningSellerMOP}
+              discountPrice={this.props.productDetails.mrp}
               averageRating={this.props.productDetails.averageRating}
               totalNoOfReviews={this.props.productDetails.productReviewsCount}
             />

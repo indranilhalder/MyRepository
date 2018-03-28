@@ -35,7 +35,7 @@ export default class ReturnReasonAndModes extends React.Component {
   }
   renderToModes(data) {
     this.props.onChange({ data });
-    if (this.props.paymentMethod === CASH_ON_DELIVERY) {
+    if (this.props.isCOD) {
       this.props.history.push({
         pathname: `${RETURNS_PREFIX}/${
           this.orderCode

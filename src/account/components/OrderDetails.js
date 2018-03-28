@@ -32,19 +32,21 @@ export default class OrderDetails extends React.Component {
     }
   }
 
-  replaceItem(orderId, paymentMethod, transactionId) {
-    let isCOD = false;
-    if (paymentMethod === CASH_ON_DELIVERY) {
-      isCOD = true;
-    }
-    this.props.history.push({
-      pathname: `${RETURNS_PREFIX}/${orderId}${RETURN_LANDING}${RETURNS_REASON}`,
-      state: {
-        isCOD,
-        authorizedRequest: true,
-        transactionId: transactionId
+  replaceItem(sellerorderno, paymentMethod, transactionId) {
+    if (sellerorderno) {
+      let isCOD = false;
+      if (paymentMethod === CASH_ON_DELIVERY) {
+        isCOD = true;
       }
-    });
+      this.props.history.push({
+        pathname: `${RETURNS_PREFIX}/${sellerorderno}${RETURN_LANDING}${RETURNS_REASON}`,
+        state: {
+          isCOD,
+          authorizedRequest: true,
+          transactionId: transactionId
+        }
+      });
+    }
   }
   writeReview() {
     if (this.props.writeReview) {
