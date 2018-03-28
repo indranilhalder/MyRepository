@@ -560,4 +560,17 @@ public class DefaultMplOrderService implements MplOrderService
 		}
 		return result;
 }
+	
+	//changes for SDI 6152
+	@Override
+	public ProductModel findProductsByCodewithCatalog(String productCode, String catalogCode)
+	{
+		validateParameterNotNull(productCode, "Parameter code must not be null");
+		final List<ProductModel> products = productDao.findProductsByCodewithCatalog(productCode,catalogCode);
+
+		validateIfSingleResult(products, format("Product with code '%s' not found!", productCode),
+				format("Product code '%s' is not unique, %d products found!", productCode, Integer.valueOf(products.size())));
+
+		return products.get(0);
+	}
 }

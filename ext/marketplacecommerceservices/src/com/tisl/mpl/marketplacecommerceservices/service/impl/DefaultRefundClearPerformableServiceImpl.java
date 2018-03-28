@@ -606,7 +606,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 				else
 				{
 					final List<String> rtmRefundIds = refundClearPerformableDao.fetchRtmRequestIds(juspayRefundIds);
-					if (CollectionUtils.isEmpty(rtmRefundIds))
+					if (CollectionUtils.isNotEmpty(rtmRefundIds))
 					{
 						for (final String juspayRefundId : juspayRefundIds)
 						{

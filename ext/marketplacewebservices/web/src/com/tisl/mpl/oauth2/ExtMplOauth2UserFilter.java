@@ -36,7 +36,7 @@ public class ExtMplOauth2UserFilter extends ClientCredentialsTokenEndpointFilter
 
 	public ExtMplOauth2UserFilter()
 	{
-		this("/oauth/token");
+		this("/oauth/token/test");
 	}
 
 	public ExtMplOauth2UserFilter(final String path)
@@ -67,9 +67,8 @@ public class ExtMplOauth2UserFilter extends ClientCredentialsTokenEndpointFilter
 		String isSocialMedia = request.getParameter("isSocialMedia");
 
 		final String testingParam = request.getParameter("social_token");
-		//final String socialUserId = request.getParameter("userId_param");
 		final String socialChannel = request.getParameter("social_channel");
-
+		final String isPwa = request.getParameter("isPwa");
 
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if ((authentication != null) && (authentication.isAuthenticated()))
@@ -88,7 +87,7 @@ public class ExtMplOauth2UserFilter extends ClientCredentialsTokenEndpointFilter
 				authDetails.put("isSocialMedia", isSocialMedia);
 			}
 			authDetails.put("social_token", testingParam);
-			//authDetails.put("userId_param", socialUserId);
+			authDetails.put("isPwa", isPwa);
 			authDetails.put("social_channel", socialChannel);
 			final ExtAuthentication extAuth = new ExtAuthentication(authentication.getPrincipal(), authentication.getCredentials(),
 					isSocialMedia, authentication.getAuthorities(), authentication.isAuthenticated(), authDetails);

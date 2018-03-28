@@ -79,12 +79,12 @@ public class LuxuryProductCategoryDecorator implements CSVCellDecorator
 
 			}
 		}
-		//if marketplace remove LSH
+		//if marketplace remove LSH and ISH (SDI-6585)
 		else if (luxIndicator.equalsIgnoreCase(MarketplacecommerceservicesConstants.MARKETPLACE))
 		{
 			for (final String category : categoryListLessInvertedcomma)
 			{
-				if (!category.contains(MarketplacecommerceservicesConstants.LSH))
+				if ((!category.contains(MarketplacecommerceservicesConstants.LSH)) && !category.contains(MarketplacecommerceservicesConstants.ISH))
 				{
 					finalCategoryList.add(category);
 				}

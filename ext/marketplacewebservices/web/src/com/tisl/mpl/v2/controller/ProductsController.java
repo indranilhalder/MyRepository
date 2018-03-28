@@ -80,6 +80,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.cache.annotation.Cacheable;
@@ -138,6 +139,7 @@ import com.tisl.mpl.wsdto.ProductInfoWSDTO;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPagefacateWsDTO;
 import com.tisl.mpl.wsdto.SizeGuideWsDTO;
+import com.tisl.wsdto.SeoContentData;
 
 
 /**
@@ -1926,20 +1928,27 @@ public class ProductsController extends BaseController
 			searchState.setQuery(searchQueryData);
 			searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
 					.textSearch(searchState, pageableData);
-			//PR-23 start
-			if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+			//IQA code Review fix
+			if (null != searchPageData)
 			{
-				if (StringUtils.isNotEmpty(searchText))
+				//PR-23 start
+				if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
 				{
-					final String[] elements = searchText.trim().split(BACKSLASH_S);
-
-					if (elements.length >= 2)
+					if (StringUtils.isNotEmpty(searchText))
 					{
-						searchState.setNextSearch(true);
+						final String[] elements = searchText.trim().split(BACKSLASH_S);
+						//IQA code Review fix
+						if (ArrayUtils.isNotEmpty(elements))
+						{
+							if (elements.length >= 2)
+							{
+								searchState.setNextSearch(true);
 
-						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
-								.textSearch(searchState, pageableData);
+								searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+										.textSearch(searchState, pageableData);
 
+							}
+						}
 					}
 				}
 			}
@@ -1987,6 +1996,8 @@ public class ProductsController extends BaseController
 				{
 					productSearchPage.setSorts(sortingvalues.getSorts());
 				}
+
+				//added for applied filter and applied sort section
 				if (null != sortingvalues.getCurrentQuery())
 				{
 					final SearchStateWsDTO currentQuery = new SearchStateWsDTO();
@@ -1995,33 +2006,72 @@ public class ProductsController extends BaseController
 					currentQuery.setQuery(sortingvalues.getCurrentQuery().getQuery());
 
 					currentQuery.setAppliedSort(sortingvalues.getPagination().getSort());
-
+					//IQA code Review fix
 					final String query = sortingvalues.getCurrentQuery().getQuery().getValue();
 
-					final String[] arr = query.split(":");
+					if (null != query && StringUtils.isNotEmpty(query))
+					{
 
-					if (arr.length > 2)
-					{
-						currentQuery.setAppliedFilters(query.substring(query.indexOf(":", query.indexOf(":") + 1) + 1));
-						currentQuery.setSearchQuery(arr[0]);
-					}
-					else if (arr.length == 2 || query.indexOf(":", query.indexOf(":") + 1) == -1)
-					{
-						currentQuery.setSearchQuery(arr[0]);
-						currentQuery.setAppliedFilters(" ");
-					}
-					else if (arr.length == 0)
-					{
-						if (StringUtils.isNotEmpty(query))
+						final String[] arr = query.split(":");
+
+						if (ArrayUtils.isNotEmpty(arr))
 						{
-							currentQuery.setSearchQuery(query);
+							if (arr.length > 2)
+							{
+								currentQuery.setAppliedFilters(query.substring(query.indexOf(":", query.indexOf(":") + 1) + 1));
+								currentQuery.setSearchQuery(arr[0]);
+							}
+							else if (arr.length == 2 || query.indexOf(":", query.indexOf(":") + 1) == -1)
+							{
+								currentQuery.setSearchQuery(arr[0]);
+								currentQuery.setAppliedFilters(" ");
+							}
+							else if (arr.length == 0)
+							{
+								if (StringUtils.isNotEmpty(query))
+								{
+									currentQuery.setSearchQuery(query);
+								}
+							}
 						}
 					}
-
 					productSearchPage.setCurrentQuery(currentQuery);
 				}
 
 			}
+			//Added for PLP SEO--start
+			if (null != sortingvalues.getCurrentQuery() && null != sortingvalues.getCurrentQuery().getQuery()
+					&& StringUtils.isNotEmpty(sortingvalues.getCurrentQuery().getQuery().getValue()))
+			{
+				final String query = sortingvalues.getCurrentQuery().getQuery().getValue();
+				final String[] arr = query.split(":");
+				String categorycode = "";
+				if (arr.length > 0)
+				{
+					for (int i = 0; i < arr.length; i++)
+					{
+						if (arr[i].equalsIgnoreCase("category"))
+						{
+							if (StringUtils.isNotEmpty(arr[i + 1]))
+							{
+								categorycode = arr[i + 1];
+								break;
+							}
+						}
+					}
+				}
+
+				if (StringUtils.isNotEmpty(categorycode))
+				{
+					final SeoContentData seoContentData = searchSuggestUtilityMethods.getSeoData(categorycode);
+					if (null != seoContentData)
+					{
+						productSearchPage.setSeo(seoContentData);
+					}
+				}
+			}
+			//Added for PLP SEO--end
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -2119,7 +2169,7 @@ public class ProductsController extends BaseController
 	}
 
 
-	@RequestMapping(value = "{mcvId}/updateFollowedBrands", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{mcvId}/updateFollowedBrands", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public MplFollowedBrandsWsDto updateFollowedBrands(@PathVariable final String mcvId, final String fields,
 			@RequestParam(required = true) final String brands, @RequestParam(required = true) final boolean follow,

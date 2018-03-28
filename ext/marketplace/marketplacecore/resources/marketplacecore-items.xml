@@ -3768,6 +3768,12 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="IDX_CUSOLDEMAIL_UID">
+						<key attribute="changedOriginalUid" />
+						<key attribute="itemtype" />
+					</index>
+				</indexes>
 			</itemtype>
 
 		</typegroup>
@@ -4020,6 +4026,10 @@
 				<indexes>
 					<index name="ORIGINALUID_IDX" unique="true">
 						<key attribute="originalUid" />
+					</index>
+					<index name="MOBILENUMBER_IDX" unique="false">
+						<key attribute="mobileNumber" />
+						<key attribute="itemtype" />
 					</index>
 				</indexes>
 			</itemtype>

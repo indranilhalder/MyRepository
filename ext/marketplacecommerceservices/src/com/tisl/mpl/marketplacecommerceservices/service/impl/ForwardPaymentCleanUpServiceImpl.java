@@ -782,13 +782,14 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 				if (null != refundResponse.getStatus()
 						&& refundResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 				{
-					if (StringUtils.equals(refundResponse.getUniqueRequestId(), orderStatusResponse.getOrderId()))
+					if (StringUtils.equals(refundResponse.getUniqueRequestId(), orderStatusResponse.getOrderId())
+							|| refundResponse.getUniqueRequestId().contains("rf"))
 					{
-						return MarketplacecommerceservicesConstants.AUTOMATIC;
+						return MarketplacecommerceservicesConstants.MANUAL;
 					}
 					else
 					{
-						return MarketplacecommerceservicesConstants.MANUAL;
+						return MarketplacecommerceservicesConstants.AUTOMATIC;
 					}
 				}
 			}

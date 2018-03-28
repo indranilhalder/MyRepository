@@ -47,7 +47,10 @@ public class SocialLoginValidationServiceImpl implements SocialLoginValidationSe
 		try
 		{
 			result = socialAccessValidationService.verifyFbAccessToken(fbAccessToken, userID);
-			if (result.equalsIgnoreCase("success"))
+
+			//IQA code Review fix
+			if ("success".equalsIgnoreCase(result))
+			//if (result.equalsIgnoreCase("success"))
 			{
 				checkResult = true;
 			}
@@ -70,7 +73,9 @@ public class SocialLoginValidationServiceImpl implements SocialLoginValidationSe
 		try
 		{
 			result = socialAccessValidationService.verifyGoogleAccessToken(googleAccessToken, userID);
-			if (result.equalsIgnoreCase("success"))
+			//IQA code Review fix
+			if ("success".equalsIgnoreCase(result))
+			//if (result.equalsIgnoreCase("success"))
 			{
 				checkResult = true;
 			}

@@ -2080,7 +2080,7 @@
 		<property name="crosssellBanner" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO" />
 		<property name="plpHeroBanner" type="com.tisl.mpl.wsdto.LuxHeroBannerWsDTO" />
 		<!-- Ended -->
-
+        <property name="seo" type="com.tisl.wsdto.SeoContentData" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FacetDataWsDTO">
 		<property name="name" type="String" />
@@ -4587,6 +4587,8 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="totalDiscountAmount"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscountAmount"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.ColorLinkData">
@@ -4826,6 +4828,31 @@
 		<property name="message" type="String" />
 		<property name="status" type="String" />
 	</bean>
+
+	 <!--For Coupon display on Cart Page -->
+	<bean class="com.tisl.mpl.wsdto.MplVisibleCouponsDTO">
+		<property name="couponCode" type="String" />
+		<property name="couponName" type="String" />
+		<property name="description" type="String" />
+		<property name="couponExpiryDate" type="String" />
+		<property name="couponCreationDate" type="String" />
+		<property name="couponType" type="String" />
+		<property name="redemptionQtyLimitPerUser" type="String" />
+		<property name="isPercentage" type="boolean" />
+		<property name="value" type="java.lang.Double" />
+		<property name="maxDiscount" type="java.lang.Double" />
+		<property name="eligibleCartThreshold" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.MplFinalVisibleCouponsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="opencouponsList"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.MplVisibleCouponsDTO>" />
+		<property name="closedcouponsList"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.MplVisibleCouponsDTO>" />
+	</bean>
+	
+	<!--For Coupon display on Cart Page Ends-->
+
 <!-- 	NU-38-Product Capsules -->
 	
 	<bean class="com.tisl.mpl.wsdto.ProductCapsulesDataWsDTO">
@@ -4841,8 +4868,9 @@
 		<property name="delistedMessage" type="String" />
 	</bean>
 	
+
 	<!-- new ui/ux SEO for PDP & PLP -->
-	<bean class="com.tisl.wsdto.SeoContentData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+	<bean class="com.tisl.wsdto.SeoContentData">
 		<property name="title" type="String" />
 		<property name="description" type="String" />
 		<property name="keywords" type="String" />
