@@ -44,6 +44,8 @@ export default class EmiCard extends React.Component {
             <div className={styles.info}>
               <div className={styles.selectBoxMobile}>
                 <SelectBoxMobile
+                  theme="blackBox"
+                  arrowColour="black"
                   options={this.props.options.map(val => {
                     return { label: val.term, value: val.term };
                   })}

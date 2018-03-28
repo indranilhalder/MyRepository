@@ -7,8 +7,17 @@ import styles from "./ProductModule.css";
 import downloadIcon from "./img/download.svg";
 import downloadIconWhite from "./img/downloadWhite.svg";
 import ProductInfo from "./ProductInfo.js";
+import Logo from "./Logo.js";
+import newFlag from "./img/new.svg";
+import offerFlag from "./img/offer.svg";
+import exclusiveFlag from "./img/exclusive.svg";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
-
+import {
+  ON_EXCLUSIVE,
+  DISCOUNT_PERCENT,
+  IS_NEW,
+  IS_OFFER_EXISTING
+} from "../../lib/constants";
 export default class ProductModule extends React.Component {
   onDownload = () => {
     if (this.props.onDownload) {
@@ -39,6 +48,21 @@ export default class ProductModule extends React.Component {
     if (this.props.isWhite) {
       downloadImage = downloadIconWhite;
     }
+    let image;
+    switch (this.props.offer) {
+      case IS_OFFER_EXISTING:
+        image = offerFlag;
+        break;
+      case ON_EXCLUSIVE:
+        image = exclusiveFlag;
+        break;
+      case IS_NEW:
+        image = newFlag;
+        break;
+
+      default:
+        image = null;
+    }
     return (
       <div className={styles.base} onClick={this.onClick}>
         <div
@@ -51,6 +75,14 @@ export default class ProductModule extends React.Component {
           <ProductImage image={this.props.productImage} />
           {this.props.onConnect && (
             <ConnectButton onClick={this.handleConnect} />
+          )}
+          {this.props.offer && (
+            <div className={styles.flagHolder}>
+              <div className={styles.flag}>
+                <Logo image={image} />
+                <div className={styles.flagText}>{this.props.flagText}</div>
+              </div>
+            </div>
           )}
         </div>
         <div

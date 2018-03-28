@@ -17,7 +17,12 @@ export default class EmiModal extends React.Component {
               this.props.emiData.bankList &&
               this.props.emiData.bankList.map((val, i) => {
                 return (
-                  <Accordion text={val.emiBank} key={i}>
+                  <Accordion
+                    text={val.emiBank}
+                    key={i}
+                    offset={20}
+                    activeBackground="#f8f8f8"
+                  >
                     <EmiCard options={val.emitermsrate} />
                   </Accordion>
                 );
