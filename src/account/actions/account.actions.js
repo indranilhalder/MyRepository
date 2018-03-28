@@ -23,6 +23,7 @@ import {
   hideModal,
   VERIFY_OTP
 } from "../../general/modal.actions.js";
+import { getMcvId } from "../../lib/adobeUtils";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
@@ -969,9 +970,9 @@ export function getFollowedBrandsFailure(error) {
 }
 
 export function getFollowedBrands() {
-  const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
-
   return async (dispatch, getState, { api }) => {
+    const mcvId = await getMcvId();
+
     dispatch(getFollowedBrandsRequest());
     let msdFormData = new FormData();
     msdFormData.append("api_key", API_KEY_FOR_MSD);
@@ -1074,12 +1075,10 @@ export function followAndUnFollowBrandInFeedBackInCommerceApi(
   brandId,
   followStatus
 ) {
-  const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
-
   const followedText = followStatus ? UNFOLLOW : FOLLOW;
   const updatedBrandObj = {
     api_key: API_KEY_FOR_MSD,
-    mad_uuid: mcvId,
+    mad_uuid: getMcvId(),
     data: [
       {
         fields: "brand",

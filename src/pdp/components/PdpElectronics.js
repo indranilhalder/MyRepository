@@ -21,7 +21,8 @@ import ProductModule from "../../general/components/ProductModule.js";
 import Button from "../../general/components/Button.js";
 import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
-import PDPRecommendedSections from "./PDPRecommendedSections.js";
+import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
+
 import {
   PRODUCT_SELLER_ROUTER_SUFFIX,
   CUSTOMER_ACCESS_TOKEN,
@@ -350,10 +351,7 @@ please try another pincode">
             />
           )}
 
-          <PDPRecommendedSections
-            msdItems={this.props.msdItems}
-            productData={productData}
-          />
+          <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );
     } else {
