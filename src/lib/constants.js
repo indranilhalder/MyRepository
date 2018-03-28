@@ -80,13 +80,12 @@ export const DELIVERY_RATES = "Delivery Rates & Return Policy";
 export const CASH_TEXT = "Cash on Delivery Available!";
 export const SOCIAL_LOG_IN = "logIn";
 export const SOCIAL_SIGN_UP = "signUp";
-export const CART_DETAILS_FOR_LOGGED_IN_USER = "cartDetails";
+export const OLD_CART_GU_ID = "oldCartGuId";
 export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
-export const CART_DETAILS_FOR_LOGGED_IN_USER_GU_ID="cartDetailsGuId"
+export const CART_DETAILS_FOR_LOGGED_IN_USER = "cartDetails";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
-
 
 export const SAVE_LIST_PAGE = "/default/wishList";
 export const PAYMENT_MODE_TYPE = "paymentMode";

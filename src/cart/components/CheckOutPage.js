@@ -25,7 +25,7 @@ import {
   COLLECT,
   PRODUCT_CART_ROUTER,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
-  CART_DETAILS_FOR_LOGGED_IN_USER_GU_ID,
+  OLD_CART_GU_ID,
   PAYMENT_MODE_TYPE
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
@@ -340,9 +340,7 @@ class CheckOutPage extends React.Component {
     if (value === PAYMENT_CHARGED) {
       this.setState({ orderId: orderId });
       if (this.props.updateTransactionDetails) {
-        let cartId = localStorage.getItem(
-          CART_DETAILS_FOR_LOGGED_IN_USER_GU_ID
-        );
+        let cartId = localStorage.getItem(OLD_CART_GU_ID);
         if (cartId) {
           this.props.updateTransactionDetails(
             localStorage.getItem(PAYMENT_MODE_TYPE),

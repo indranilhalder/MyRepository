@@ -4,7 +4,7 @@ import * as Cookies from "../../lib/Cookie";
 import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
-  CART_DETAILS_FOR_LOGGED_IN_USER_GU_ID
+  OLD_CART_GU_ID
 } from "../../lib/constants";
 
 const cart = (
@@ -600,10 +600,7 @@ const cart = (
     case cartActions.CREATE_JUS_PAY_ORDER_FOR_CLIQ_CASH_SUCCESS: {
       const cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       const cartDetailsGuid = JSON.parse(cartDetails).guid;
-      localStorage.setItem(
-        CART_DETAILS_FOR_LOGGED_IN_USER_GU_ID,
-        cartDetailsGuid
-      );
+      localStorage.setItem(OLD_CART_GU_ID, cartDetailsGuid);
 
       // here is where I need to destroy the cart details
       Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -646,6 +643,7 @@ const cart = (
       });
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_SUCCESS: {
+      localStorage.removeItem(OLD_CART_GU_ID);
       return Object.assign({}, state, {
         jusPayStatus: action.status,
         jusPayDetails: action.jusPayDetails,
@@ -690,10 +688,7 @@ const cart = (
     case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_SUCCESS: {
       const cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       const cartDetailsGuid = JSON.parse(cartDetails).guid;
-      localStorage.setItem(
-        CART_DETAILS_FOR_LOGGED_IN_USER_GU_ID,
-        cartDetailsGuid
-      );
+      localStorage.setItem(OLD_CART_GU_ID, cartDetailsGuid);
 
       // here is where I need to destroy the cart details
       Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
