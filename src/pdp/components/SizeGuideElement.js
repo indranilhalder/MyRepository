@@ -9,7 +9,7 @@ export default class SizeGuideElement extends React.Component {
         {data.map((datum, i) => {
           return (
             <div className={styles.sizeBox} key={i}>
-              <div className={styles.sizeText}>{datum.dimensionSize}</div>
+              <div className={styles.sizeText}>{datum.dimension}</div>
               <div className={styles.sizeNumber}>
                 {datum.dimensionValue}
                 {datum.dimensionUnit}

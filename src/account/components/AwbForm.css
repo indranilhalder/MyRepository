@@ -71,3 +71,18 @@
   border-radius: 2px;
   opacity: 0.7;
 }
+.PopUpbuttonHolder {
+  width: 100%;
+  height: auto;
+  margin-top: 15px;
+  display: inline-block;
+  text-align: left;
+}
+.PopUpbutton {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 18px;
+  box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.24), 0 0 6px 0 rgba(0, 0, 0, 0.12);
+}

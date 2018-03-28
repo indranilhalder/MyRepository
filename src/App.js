@@ -39,8 +39,9 @@ import ReturnFlowContainer from "./account/containers/ReturnFlowContainer.js";
 
 import EditAddressBookContainer from "./account/containers/EditAddressBookContainer.js";
 import AddAddressContainer from "./account/containers/AddAddressContainer.js";
-
 import SaveListContainer from "./account/containers/SaveListContainer";
+import GiftCardContainer from "./account/containers/GiftCardContainer";
+import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
 import {
   HOME_ROUTER,
@@ -81,10 +82,10 @@ import {
   ACCOUNT_SAVED_CARD_ROUTER,
   ORDER_PREFIX,
   RETURNS,
+  MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
   MY_ACCOUNT_ADDRESS_ADD_PAGE
 } from "../src/lib/constants";
-import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
 const auth = {
   isAuthenticated: false
@@ -185,7 +186,11 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`}
               component={UserAlertsAndCouponsContainer}
             />
-
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_GIFT_CARD_PAGE}`}
+              component={GiftCardContainer}
+            />
             <Route
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_BRANDS_PAGE}`}

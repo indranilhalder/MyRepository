@@ -70,6 +70,26 @@ const account = (
     returnInitiateStatus: null,
     returnInitiateError: null,
     returnInitiate: null,
+    giftCards: null,
+    giftCardStatus: null,
+    giftCardsError: null,
+    loadingForGiftCard: false,
+
+    giftCardDetails: null,
+    giftCardDetailsStatus: null,
+    giftCardDetailsError: null,
+    loadingForGiftCardDetails: false,
+
+    getOtpToActivateWallet: null,
+    getOtpToActivateWalletStatus: null,
+    getOtpToActivateWalletError: null,
+    loadingForGetOtpToActivateWallet: false,
+
+    verifyWallet: null,
+    verifyWalletStatus: null,
+    verifyWalletError: null,
+    loadingForverifyWallet: false,
+
     getPinCodeDetails: null,
     getPinCodeStatus: null,
     getPinCodeError: null
@@ -129,6 +149,85 @@ const account = (
       return Object.assign({}, state, {
         loading: false,
         status: action.status
+      });
+
+    case accountActions.GET_GIFTCARD_REQUEST:
+      return Object.assign({}, state, {
+        giftCardStatus: action.status,
+        loadingForGiftCard: true
+      });
+
+    case accountActions.GET_GIFTCARD_SUCCESS:
+      return Object.assign({}, state, {
+        giftCardStatus: action.status,
+        giftCards: action.giftCards,
+        loadingForGiftCard: false
+      });
+
+    case accountActions.GET_GIFTCARD_FAILURE:
+      return Object.assign({}, state, {
+        giftCardStatus: action.status,
+        giftCardsError: action.error,
+        loadingForGiftCard: false
+      });
+
+    case accountActions.CREATE_GIFT_CARD_REQUEST:
+      return Object.assign({}, state, {
+        giftCardDetailsStatus: action.status,
+        loadingForGiftCardDetails: true
+      });
+
+    case accountActions.CREATE_GIFT_CARD_SUCCESS:
+      return Object.assign({}, state, {
+        giftCardDetailsStatus: action.status,
+        giftCardDetails: action.giftCardDetails,
+        loadingForGiftCardDetails: false
+      });
+
+    case accountActions.CREATE_GIFT_CARD_FAILURE:
+      return Object.assign({}, state, {
+        giftCardDetailsStatus: action.status,
+        giftCardDetailsError: action.error,
+        loadingForGiftCardDetails: false
+      });
+    case accountActions.GET_OTP_TO_ACTIVATE_WALLET_REQUEST:
+      return Object.assign({}, state, {
+        getOtpToActivateWalletStatus: action.status,
+        loadingForGetOtpToActivateWallet: true
+      });
+
+    case accountActions.GET_OTP_TO_ACTIVATE_WALLET_SUCCESS:
+      return Object.assign({}, state, {
+        getOtpToActivateWalletStatus: action.status,
+        getOtpToActivateWallet: action.getOtpToActivateWallet,
+        loadingForGetOtpToActivateWallet: false
+      });
+
+    case accountActions.GET_OTP_TO_ACTIVATE_WALLET_FAILURE:
+      return Object.assign({}, state, {
+        getOtpToActivateWalletStatus: action.status,
+        getOtpToActivateWalletError: action.error,
+        loadingForGetOtpToActivateWallet: false
+      });
+
+    case accountActions.VERIFY_WALLET_REQUEST:
+      return Object.assign({}, state, {
+        verifyWalletStatus: action.status,
+        loadingForverifyWallet: true
+      });
+
+    case accountActions.VERIFY_WALLET_SUCCESS:
+      return Object.assign({}, state, {
+        verifyWalletStatus: action.status,
+        verifyWallet: action.verifyWallet,
+        loadingForverifyWallet: false
+      });
+
+    case accountActions.VERIFY_WALLET_FAILURE:
+      return Object.assign({}, state, {
+        verifyWalletStatus: action.status,
+        verifyWalletError: action.error,
+        loadingForverifyWallet: false
       });
 
     case accountActions.GET_SAVED_CARD_REQUEST:
