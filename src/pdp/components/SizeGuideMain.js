@@ -30,7 +30,12 @@ export default class SizeGuideMain extends React.Component {
           <div className={styles.sizeList}>
             {this.props.sizeData.sizeGuideList.map((list, i) => {
               return (
-                <Accordion text={list.dimensionSize} key={i}>
+                <Accordion
+                  text={list.dimensionSize}
+                  key={i}
+                  offset={20}
+                  activeBackground="#f8f8f8"
+                >
                   <SizeGuideElement data={list.dimensionList} />
                 </Accordion>
               );
