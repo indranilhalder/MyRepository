@@ -69,14 +69,7 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   render() {
-    console.log(this.props.isRemainingBalance);
-    console.log(this.state);
     if (this.props.cart.paymentModes) {
-      let cliqCashBalance = 0;
-      if (this.props.cart.paymentModes.cliqCash) {
-        cliqCashBalance = this.props.cart.paymentModes.cliqCash
-          .totalCliqCashBalance.value;
-      }
       return (
         <div className={styles.base}>
           {this.props.isRemainingBalance && this.renderSavedCards()}
@@ -84,8 +77,8 @@ export default class PaymentCardWrapper extends React.Component {
             {" "}
             <CliqCashToggle
               cashText="Use My CLiQ Cash Balance"
-              price={cliqCashBalance}
-              value={cliqCashBalance}
+              price={this.props.cliqCashAmount}
+              value={this.props.cliqCashAmount}
               active={cliqCashToggleState}
               onToggle={val => this.handleClick(val)}
             />

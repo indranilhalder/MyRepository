@@ -50,7 +50,8 @@ class CheckOutPage extends React.Component {
     selectedProductsUssIdForCliqAndPiq: null,
     orderId: "",
     savedCardDetails: "",
-    binValidationCOD: false
+    binValidationCOD: false,
+    isRemainingAmount: true
   };
 
   renderLoader() {
@@ -278,6 +279,10 @@ class CheckOutPage extends React.Component {
     if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
       this.setState({ orderConfirmation: true });
     }
+    if (nextProps.cart.cliqCashJusPayDetails) {
+      this.setState({ orderId: nextProps.cart.cliqCashJusPayDetails.orderId });
+      this.setState({ orderConfirmation: true });
+    }
     if (nextProps.cart.binValidationCODStatus === SUCCESS) {
       this.setState({ binValidationCOD: true });
     }
@@ -401,6 +406,9 @@ class CheckOutPage extends React.Component {
         this.state.paymentModeSelected
       );
     }
+    if (!this.state.isRemainingAmount) {
+      this.props.softReservationForCliqCash(this.props.location.state.pinCode);
+    }
 
     if (this.state.binValidationCOD) {
       this.softReservationForCODPayment();
@@ -443,6 +451,7 @@ class CheckOutPage extends React.Component {
   };
 
   applyCliqCash = () => {
+    localStorage.setItem(PAYMENT_MODE_TYPE, "Cliq Cash");
     this.props.applyCliqCash();
   };
 
@@ -514,16 +523,31 @@ class CheckOutPage extends React.Component {
 
   render() {
     let payableAmount;
-    let isRemainingAmount;
+    let cliqCashAmount;
+
     if (this.props.cart.cliqCashPaymentDetails) {
       payableAmount = this.props.cart.cliqCashPaymentDetails.paybleAmount;
-      isRemainingAmount = this.props.cart.cliqCashPaymentDetails
-        .isRemainingAmount;
+
+      cliqCashAmount = this.props.cart.cliqCashPaymentDetails.cliqCashBalance
+        .value;
+      if (
+        this.state.isRemainingAmount !==
+        this.props.cart.cliqCashPaymentDetails.isRemainingAmount
+      ) {
+        this.setState({
+          isRemainingAmount: this.props.cart.cliqCashPaymentDetails
+            .isRemainingAmount
+        });
+      }
     } else {
       if (this.props.cart.cartDetailsCNC) {
         payableAmount = this.props.cart.cartDetailsCNC.cartAmount.bagTotal
           .formattedValue;
-        isRemainingAmount = true;
+        cliqCashAmount = 0;
+        if (this.props.cart.paymentModes) {
+          cliqCashAmount = this.props.cart.paymentModes.cliqCash
+            .totalCliqCashBalance.value;
+        }
       }
     }
     if (this.props.cart.loading) {
@@ -583,8 +607,9 @@ class CheckOutPage extends React.Component {
           {!this.state.paymentMethod &&
             (this.state.confirmAddress && this.state.deliverMode) && (
               <PaymentCardWrapper
-                isRemainingBalance={isRemainingAmount}
+                isRemainingBalance={this.state.isRemainingAmount}
                 cart={this.props.cart}
+                cliqCashAmount={cliqCashAmount}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
                 binValidation={(paymentMode, binNo) =>
@@ -615,16 +640,14 @@ class CheckOutPage extends React.Component {
             this.props.cart.cartDetailsCNC.cartAmount &&
             !this.state.showCliqAndPiq && (
               <Checkout
-                amount={this.props.cart.cartDetailsCNC.totalPrice}
-                totalDiscount={
-                  this.props.cart.cartDetailsCNC.cartAmount.bagTotal
-                    .formattedValue
+                amount={payableAmount}
+                bagTotal={
+                  this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
                 }
-                bagTotal={payableAmount}
                 tax={this.props.tax}
                 offers={this.props.offers}
                 delivery={this.props.delivery}
-                payable={this.props.cart.cartDetailsCNC.totalPrice}
+                payable={payableAmount}
                 onCheckout={this.handleSubmit}
               />
             )}
@@ -636,7 +659,22 @@ class CheckOutPage extends React.Component {
           {this.props.cart.orderConfirmationDetails && (
             <div>
               <OrderConfirmation
-                orderDetails={this.props.cart.orderConfirmationDetails}
+                orderId={this.props.cart.orderConfirmationDetails.orderRefNo}
+                captureOrderExperience={rating =>
+                  this.captureOrderExperience(rating)
+                }
+                orderStatusMessage={
+                  this.props.cart.orderConfirmationDetails.orderStatusMessage
+                }
+                continueShopping={() => this.continueShopping()}
+              />
+            </div>
+          )}
+          {this.props.cart.cliqCashJusPayDetails && (
+            <div>
+              <OrderConfirmation
+                orderId={this.props.cart.cliqCashJusPayDetails.orderId}
+                orderStatusMessage={this.props.orderConfirmationText}
                 captureOrderExperience={rating =>
                   this.captureOrderExperience(rating)
                 }
@@ -660,4 +698,11 @@ CheckOutPage.propTypes = {
   getAllStoresCNC: PropTypes.func,
   addStoreCNC: PropTypes.func,
   addPickupPersonCNC: PropTypes.func
+};
+
+CheckOutPage.defaultProps = {
+  cartTax: "included",
+  delivery: "Free",
+  offers: "Apply",
+  orderConfirmationText: "Your Order Successfully Placed"
 };

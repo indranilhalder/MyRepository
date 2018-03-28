@@ -66,6 +66,7 @@ const cart = (
     jusPayStatus: null,
     jusPayError: null,
     jusPayDetails: null,
+    cliqCashJusPayDetails: null,
 
     transactionDetailsStatus: null,
     transactionDetailsError: null,
@@ -566,22 +567,22 @@ const cart = (
 
     case cartActions.REMOVE_CLIQ_CASH_REQUEST:
       return Object.assign({}, state, {
-        paymentStatus: action.status,
+        cliqCashPaymentStatus: action.status,
         loading: true
       });
 
     case cartActions.REMOVE_CLIQ_CASH_SUCCESS: {
       return Object.assign({}, state, {
-        paymentStatus: action.status,
-        paymentDetails: action.paymentDetails,
+        cliqCashPaymentStatus: action.status,
+        cliqCashPaymentDetails: action.paymentDetails,
         loading: false
       });
     }
 
     case cartActions.REMOVE_CLIQ_CASH_FAILURE:
       return Object.assign({}, state, {
-        paymentStatus: action.status,
-        paymentStatusError: action.error,
+        cliqCashPaymentStatus: action.status,
+        cliqCashPaymentStatusError: action.error,
         loading: false
       });
 
@@ -595,6 +596,14 @@ const cart = (
       return Object.assign({}, state, {
         jusPayStatus: action.status,
         jusPayDetails: action.jusPayDetails,
+        loading: false
+      });
+    }
+    case cartActions.CREATE_JUS_PAY_ORDER_FOR_CLIQ_CASH_SUCCESS: {
+      Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+      return Object.assign({}, state, {
+        jusPayStatus: action.status,
+        cliqCashJusPayDetails: action.cliqCashJusPayDetails,
         loading: false
       });
     }

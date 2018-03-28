@@ -144,6 +144,8 @@ export const JUS_PAY_TOKENIZE_FAILURE = "JUS_PAY_TOKENIZE_FAILURE";
 
 export const CREATE_JUS_PAY_ORDER_REQUEST = "CREATE_JUS_PAY_ORDER_REQUEST";
 export const CREATE_JUS_PAY_ORDER_SUCCESS = "CREATE_JUS_PAY_ORDER_SUCCESS";
+export const CREATE_JUS_PAY_ORDER_FOR_CLIQ_CASH_SUCCESS =
+  "CREATE_JUS_PAY_ORDER_FOR_CLIQ_CASH_SUCCESS";
 export const CREATE_JUS_PAY_ORDER_FAILURE = "CREATE_JUS_PAY_ORDER_FAILURE";
 
 export const JUS_PAY_PAYMENT_METHOD_TYPE_REQUEST =
@@ -1791,6 +1793,60 @@ export function softReservationPaymentForSavedCard(
   };
 }
 
+export function softReservationForCliqCash(pinCode) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    let productItems = {};
+    let item = [];
+    each(getState().cart.cartDetailsCNC.products, product => {
+      let productDetails = {};
+      productDetails.ussId = product.USSID;
+      productDetails.quantity = product.qtySelectedByUser;
+      productDetails.fulfillmentType = product.fullfillmentType;
+
+      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+      } else if (
+        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+      ) {
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+      }
+      item.push(productDetails);
+      productItems.item = item;
+    });
+
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    let cartId = JSON.parse(cartDetails).guid;
+    dispatch(softReservationForPaymentRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/carts/softReservationForPayment?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartId}&pincode=${pinCode}`,
+        productItems
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
+      }
+      dispatch(softReservationForPaymentSuccess(resultJson));
+      dispatch(createJusPayOrderForCliqCash(pinCode, productItems));
+    } catch (e) {
+      dispatch(softReservationForPaymentFailure(e.message));
+    }
+  };
+}
+
 export function jusPayTokenizeRequest() {
   return {
     type: JUS_PAY_TOKENIZE_REQUEST,
@@ -1864,6 +1920,14 @@ export function createJusPayOrderSuccess(jusPayDetails) {
     type: CREATE_JUS_PAY_ORDER_SUCCESS,
     status: SUCCESS,
     jusPayDetails
+  };
+}
+
+export function createJusPayOrderSuccessForCliqCash(cliqCashJusPayDetails) {
+  return {
+    type: CREATE_JUS_PAY_ORDER_FOR_CLIQ_CASH_SUCCESS,
+    status: SUCCESS,
+    cliqCashJusPayDetails
   };
 }
 
@@ -1994,6 +2058,35 @@ export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
           cardDetails
         )
       );
+    } catch (e) {
+      dispatch(createJusPayOrderFailure(e.message));
+    }
+  };
+}
+
+export function createJusPayOrderForCliqCash(pinCode, cartItem) {
+  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  let cartId = JSON.parse(cartDetails).guid;
+  return async (dispatch, getState, { api }) => {
+    dispatch(createJusPayOrderRequest());
+
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&juspayUrl=${jusPayUrl}`,
+        cartItem
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
+      }
+      dispatch(createJusPayOrderSuccessForCliqCash(resultJson));
     } catch (e) {
       dispatch(createJusPayOrderFailure(e.message));
     }

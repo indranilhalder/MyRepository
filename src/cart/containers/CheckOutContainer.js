@@ -33,7 +33,8 @@ import {
   binValidationForNetBanking,
   softReservationPaymentForNetBanking,
   softReservationPaymentForSavedCard,
-  orderConfirmation
+  orderConfirmation,
+  softReservationForCliqCash
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -161,6 +162,9 @@ const mapDispatchToProps = dispatch => {
       dispatch(
         softReservationPaymentForSavedCard(cardDetails, address, paymentMode)
       );
+    },
+    softReservationForCliqCash: pinCode => {
+      dispatch(softReservationForCliqCash(pinCode));
     }
   };
 };
