@@ -15,10 +15,14 @@ import * as Cookie from "../../lib/Cookie";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import { HOME_ROUTER } from "../../lib/constants";
 import {
+  CASH_ON_DELIVERY,
   ORDER_PREFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   LOGIN_PATH,
+  RETURNS_PREFIX,
+  RETURN_LANDING,
+  RETURNS_REASON,
   SHORT_URL_ORDER_DETAIL,
   SEARCH_RESULTS_PAGE,
   PRODUCT_REVIEWS_PATH_SUFFIX
@@ -35,9 +39,20 @@ export default class OrderDetails extends React.Component {
     }
   }
 
-  replaceItem() {
-    if (this.props.replaceItem) {
-      this.props.replaceItem();
+  replaceItem(sellerorderno, paymentMethod, transactionId) {
+    if (sellerorderno) {
+      let isCOD = false;
+      if (paymentMethod === CASH_ON_DELIVERY) {
+        isCOD = true;
+      }
+      this.props.history.push({
+        pathname: `${RETURNS_PREFIX}/${sellerorderno}${RETURN_LANDING}${RETURNS_REASON}`,
+        state: {
+          isCOD,
+          authorizedRequest: true,
+          transactionId: transactionId
+        }
+      });
     }
   }
   writeReview(productCode) {
@@ -83,6 +98,7 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
+
     return (
       <div className={styles.base}>
         {orderDetails &&
