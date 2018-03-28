@@ -600,7 +600,14 @@ const cart = (
       });
     }
     case cartActions.CREATE_JUS_PAY_ORDER_FOR_CLIQ_CASH_SUCCESS: {
-      Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+      const cartDetails = Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      const cartDetailsGuid = JSON.parse(cartDetails).guid;
+      const newCartDetails = {
+        guid: cartDetailsGuid
+      };
+
+      Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      Cookies.createCookie(CART_DETAILS_FOR_LOGGED_IN_USER, newCartDetails);
       return Object.assign({}, state, {
         jusPayStatus: action.status,
         cliqCashJusPayDetails: action.cliqCashJusPayDetails,
