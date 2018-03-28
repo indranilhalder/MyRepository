@@ -2,7 +2,7 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  padding: 50px 0px 60px 0px;
+  padding: 0px 0px 60px 0px;
 }
 .giftCardImageHolder {
   width: 100%;
@@ -125,4 +125,47 @@
   left: 0;
   bottom: 0;
   z-index: 10;
+}
+.textHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  background-color: #ececec;
+}
+.textHeader {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+  color: #ff1744;
+  font-family: semibold;
+  margin-bottom: 20px;
+}
+.text {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+  font-family: semibold;
+  margin-bottom: 20px;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+  background-color: #ff1744;
+  color: #fff;
+  font-family: semibold;
+  margin-bottom: 20px;
+  padding: 12px;
+}
+.quantityValue {
+  border: 1px solid #ececec;
+  padding: 10px;
+  width: 40%;
+  height: auto;
+  display: inline-block;
+  margin: auto;
+  text-align: center;
 }

@@ -1,6 +1,7 @@
 .base {
   width: 100%;
   height: auto;
+  min-height: calc(100vh - 80px);
   background: #ececec;
   padding-bottom: 60px;
 }

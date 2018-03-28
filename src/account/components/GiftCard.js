@@ -4,9 +4,16 @@ import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import TextArea from "../../general/components/TextArea";
-import giftCardImage from "../../general/components/img/giftcard.png";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
-import PdfFooter from "../../pdp/components/PdpFooter.js";
+import { Redirect } from "react-router-dom";
+import {
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  LOGIN_PATH
+} from "../../lib/constants";
+import * as Cookie from "../../lib/Cookie";
+const PRODUCT_ID = "MP000000000127263";
+const QUANTITY = "1";
+const MOBILE_NUMBER = "999999999";
 export default class GiftCard extends React.Component {
   constructor(props) {
     super(props);
@@ -17,31 +24,47 @@ export default class GiftCard extends React.Component {
       amountText: this.props.amountText ? this.props.amountText : ""
     };
   }
-  selectAmount(val) {
-    this.setState({ amountText: val });
-  }
-  getQuantity(val) {
-    if (this.props.onChange) {
-      this.props.onChange(val);
+  componentDidMount() {
+    if (this.props.getGiftCardDetails) {
+      this.props.getGiftCardDetails();
     }
   }
-  onSave() {
-    if (this.props.onSave) {
-      this.props.onSave();
+
+  selectAmount(val, amount) {
+    this.setState({ amountText: val, amount: amount });
+  }
+
+  onSubmitDetails() {
+    if (this.props.createGiftCardDetails) {
+      const giftCardDetails = {};
+      giftCardDetails.from = this.state.email;
+      giftCardDetails.quantity = QUANTITY;
+      giftCardDetails.messageOnCard = this.state.message;
+      giftCardDetails.productID = PRODUCT_ID;
+      giftCardDetails.priceSelectedByUserPerQuantity = this.state.amount;
+      giftCardDetails.receiverEmailID = this.state.senderName;
+      giftCardDetails.mobileNumber = MOBILE_NUMBER;
+      this.props.createGiftCardDetails(giftCardDetails);
     }
   }
-  onAddToBag(val) {
-    if (this.props.onAddToBag) {
-      this.props.onAddToBag(this.state);
-    }
+  navigateToLogin() {
+    return <Redirect to={LOGIN_PATH} />;
   }
   render() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (!userDetails || !customerCookie) {
+      return this.navigateToLogin();
+    }
+    const giftCards = this.props.giftCardsDetails;
     return (
       <div className={styles.base}>
         <div className={styles.giftCardImageHolder}>
-          <div className={styles.giftCradImage}>
-            <Image image={this.props.giftCardImage} fit="cover" />
-          </div>
+          {giftCards && (
+            <div className={styles.giftCradImage}>
+              <Image image={giftCards.giftCartImageUrl} fit="cover" />
+            </div>
+          )}
         </div>
         <div className={styles.giftCardDataHolder}>
           <div className={styles.displayMessageHolder}>
@@ -69,14 +92,20 @@ export default class GiftCard extends React.Component {
                 Select Amount from below{" "}
               </div>
               <div className={styles.amountHolder}>
-                {this.props.amountData &&
-                  this.props.amountData.map((val, i) => {
+                {giftCards &&
+                  giftCards.amountOptions &&
+                  giftCards.amountOptions.options.map((val, i) => {
                     return (
                       <div
                         className={styles.amountSelect}
-                        onClick={() => this.selectAmount(val.amount)}
+                        onClick={() =>
+                          this.selectAmount(
+                            val.formattedValueNoDecimal,
+                            val.value
+                          )
+                        }
                       >
-                        {val.amount}
+                        {val.formattedValueNoDecimal}
                       </div>
                     );
                   })}
@@ -143,20 +172,26 @@ export default class GiftCard extends React.Component {
             </div>
             <div className={styles.selectHolder}>
               <div className={styles.labelHeader}>Quantity</div>
-              <SelectBoxMobile
-                value="1"
-                onChange={val => this.getQuantity(val)}
-                options={this.props.quantity}
-              />
+              <div className={styles.quantityValue}>1</div>
             </div>
           </div>
         </div>
-        <div className={styles.footer}>
-          <PdfFooter
-            onSave={() => this.onSave()}
-            onAddToBag={() => this.onAddToBag()}
-          />
+        <div className={styles.textHolder}>
+          <div className={styles.textHeader}>QwikCilver</div>
+          <div className={styles.text}>
+            Sold by QwikCilver Solutions pvt ltd
+          </div>
         </div>
+        {giftCards &&
+          giftCards.isWalletCreated &&
+          giftCards.isWalletOtpVerified && (
+            <div
+              className={styles.buttonHolder}
+              onClick={() => this.onSubmitDetails()}
+            >
+              Buy Now
+            </div>
+          )}
       </div>
     );
   }
@@ -171,8 +206,7 @@ GiftCard.propTypes = {
     PropTypes.shape({
       value: PropTypes.number
     })
-  )
-};
-GiftCard.defaultProps = {
-  giftCardImage: giftCardImage
+  ),
+  getGiftCardDetails: PropTypes.func,
+  createGiftCardDetails: PropTypes.func
 };
