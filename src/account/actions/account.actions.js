@@ -265,7 +265,7 @@ export function getOtpToActivateWalletFailure(error) {
   };
 }
 
-export function getOtpToActivateWallet(customerDetails) {
+export function getOtpToActivateWallet(customerDetails, isFromCliqCash) {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
@@ -286,7 +286,12 @@ export function getOtpToActivateWallet(customerDetails) {
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
         dispatch(hideModal());
-        dispatch(showModal(VERIFY_OTP));
+        if (isFromCliqCash) {
+          dispatch(VERIFY_OTP_FOR_CLIQ_CASH);
+        } else {
+          dispatch(showModal(VERIFY_OTP));
+        }
+
         return dispatch(getOtpToActivateWalletSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.errors[0].message}`);
@@ -1167,7 +1172,7 @@ export function getCliqCashDetails() {
 
       dispatch(getCliqCashSuccess(resultJson));
     } catch (e) {
-      return dispatch(getCliqCashFailure(e.message));
+      dispatch(getCliqCashFailure(e.message));
     }
   };
 }
@@ -1225,7 +1230,7 @@ export function redeemCliqVoucher(cliqCashDetails) {
 
       dispatch(redeemCliqVoucherSuccess(resultJson));
     } catch (e) {
-      return dispatch(redeemCliqVoucherFailure(e.message));
+      dispatch(redeemCliqVoucherFailure(e.message));
     }
   };
 }

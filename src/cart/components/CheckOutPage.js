@@ -24,6 +24,7 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   COLLECT,
   PRODUCT_CART_ROUTER,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
   PAYMENT_MODE_TYPE
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
@@ -31,7 +32,9 @@ import MDSpinner from "react-md-spinner";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
-
+const CLIQ_CASH_MODE = "Cliq Cash";
+let payableAmount;
+let cliqCashAmount;
 class CheckOutPage extends React.Component {
   state = {
     confirmAddress: false,
@@ -269,6 +272,22 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.cart.cliqCashPaymentDetails) {
+      payableAmount = this.props.cart.cliqCashPaymentDetails.paybleAmount;
+
+      cliqCashAmount = this.props.cart.cliqCashPaymentDetails.cliqCashBalance
+        .value;
+      if (
+        this.state.isRemainingAmount !==
+        this.props.cart.cliqCashPaymentDetails.isRemainingAmount
+      ) {
+        this.setState({
+          isRemainingAmount: this.props.cart.cliqCashPaymentDetails
+            .isRemainingAmount
+        });
+      }
+    }
+
     if (nextProps.cart.justPayPaymentDetails !== null) {
       if (nextProps.cart.justPayPaymentDetails.payment) {
         window.location.replace(
@@ -407,7 +426,9 @@ class CheckOutPage extends React.Component {
       );
     }
     if (!this.state.isRemainingAmount) {
-      this.props.softReservationForCliqCash(this.props.location.state.pinCode);
+      this.props.softReservationForCliqCash(
+        localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+      );
     }
 
     if (this.state.binValidationCOD) {
@@ -451,7 +472,7 @@ class CheckOutPage extends React.Component {
   };
 
   applyCliqCash = () => {
-    localStorage.setItem(PAYMENT_MODE_TYPE, "Cliq Cash");
+    localStorage.setItem(PAYMENT_MODE_TYPE, CLIQ_CASH_MODE);
     this.props.applyCliqCash();
   };
 
@@ -522,34 +543,16 @@ class CheckOutPage extends React.Component {
   };
 
   render() {
-    let payableAmount;
-    let cliqCashAmount;
-
-    if (this.props.cart.cliqCashPaymentDetails) {
-      payableAmount = this.props.cart.cliqCashPaymentDetails.paybleAmount;
-
-      cliqCashAmount = this.props.cart.cliqCashPaymentDetails.cliqCashBalance
-        .value;
-      if (
-        this.state.isRemainingAmount !==
-        this.props.cart.cliqCashPaymentDetails.isRemainingAmount
-      ) {
-        this.setState({
-          isRemainingAmount: this.props.cart.cliqCashPaymentDetails
-            .isRemainingAmount
-        });
-      }
-    } else {
-      if (this.props.cart.cartDetailsCNC) {
-        payableAmount = this.props.cart.cartDetailsCNC.cartAmount.bagTotal
-          .formattedValue;
-        cliqCashAmount = 0;
-        if (this.props.cart.paymentModes) {
-          cliqCashAmount = this.props.cart.paymentModes.cliqCash
-            .totalCliqCashBalance.value;
-        }
+    if (this.props.cart.cartDetailsCNC) {
+      payableAmount = this.props.cart.cartDetailsCNC.cartAmount.bagTotal
+        .formattedValue;
+      cliqCashAmount = 0;
+      if (this.props.cart.paymentModes) {
+        cliqCashAmount = this.props.cart.paymentModes.cliqCash
+          .totalCliqCashBalance.value;
       }
     }
+
     if (this.props.cart.loading) {
       return <div className={styles.base}>{this.renderLoader()}</div>;
     }

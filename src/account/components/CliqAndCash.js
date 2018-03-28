@@ -16,6 +16,7 @@ import {
   FAILURE
 } from "../../lib/constants.js";
 const DATE_FORMAT = "DD/MM/YYYY, hh:mm";
+const REGULAR_EXPRESSION_PIN_NUMBER = "/^d{6}$/";
 export default class CliqAndCash extends React.Component {
   constructor(props) {
     super(props);
@@ -29,18 +30,10 @@ export default class CliqAndCash extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.cliqCashVoucherDetailsStatus === SUCCESS &&
-      this.state.cliqCashUpdate === true
-    ) {
-      this.setState({ cardNumber: "", pinNumber: "", cliqCashUpdate: false });
-    }
     if (nextProps.cliqCashVoucherDetailsStatus === FAILURE) {
       this.setState({
         error: true,
-        errorMessage: nextProps.cliqCashVoucherDetailsError,
-        cardNumber: "",
-        pinNumber: ""
+        errorMessage: nextProps.cliqCashVoucherDetailsError
       });
     }
   }
@@ -55,7 +48,10 @@ export default class CliqAndCash extends React.Component {
     }
   }
   redeemCliqVoucher() {
-    if (this.state.cardNumber && this.state.pinNumber) {
+    if (
+      this.state.cardNumber &&
+      this.state.pinNumber.match(REGULAR_EXPRESSION_PIN_NUMBER)
+    ) {
       this.setState({ cliqCashUpdate: true });
       if (this.props.redeemCliqVoucher) {
         this.props.redeemCliqVoucher(this.state);
