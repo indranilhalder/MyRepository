@@ -458,46 +458,6 @@ const account = (
         loading: false
       });
 
-    case accountActions.CHECK_WALLET_MOBILE_NUMBER_REQUEST:
-      return Object.assign({}, state, {
-        checkWalletMobileNumberStatus: action.status,
-        loading: true
-      });
-
-    case accountActions.CHECK_WALLET_MOBILE_NUMBER_SUCCESS:
-      return Object.assign({}, state, {
-        checkWalletMobileNumberStatus: action.status,
-        checkWalletMobileNumberDetails: action.cliqCashVoucherDetails,
-        loading: false
-      });
-
-    case accountActions.CHECK_WALLET_MOBILE_NUMBER_FAILURE:
-      return Object.assign({}, state, {
-        checkWalletMobileNumberStatus: action.status,
-        verifyWalletMobileNumberError: action.error,
-        loading: false
-      });
-
-    case accountActions.VERIFY_WALLET_MOBILE_NUMBER_REQUEST:
-      return Object.assign({}, state, {
-        verifyWalletMobileNumberStatus: action.status,
-        loading: true
-      });
-
-    case accountActions.VERIFY_WALLET_MOBILE_NUMBER_SUCCESS:
-      return Object.assign({}, state, {
-        verifyWalletMobileNumberStatus: action.status,
-        verifyWalletMobileNumberDetails: action.cliqCashVoucherDetails,
-        loading: false
-      });
-
-    case accountActions.VERIFY_WALLET_MOBILE_NUMBER_FAILURE:
-      return Object.assign({}, state, {
-        verifyWalletMobileNumberStatus: action.status,
-        verifyWalletMobileNumberError: action.error,
-        loading: false
-      });
-
     case accountActions.EDIT_ADDRESS_REQUEST:
       return Object.assign({}, state, {
         editAddressStatus: action.status,
