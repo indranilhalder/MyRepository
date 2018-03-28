@@ -4,14 +4,13 @@ import Toggle from "../../general/components/Toggle";
 import styles from "./CliqCashToggle.css";
 export default class CliqCashToggle extends React.Component {
   onToggle(val) {
-    if (this.props.value !== 0) {
-      if (this.props.onToggle) {
-        this.props.onToggle(val);
-      }
+    if (this.props.onToggle) {
+      this.props.onToggle(val);
     }
   }
   render() {
     let toggleDisable = this.props.value === 0 ? true : false;
+    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.cashBalanceTextHolder}>

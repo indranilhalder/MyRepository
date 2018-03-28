@@ -119,11 +119,11 @@ const mapDispatchToProps = dispatch => {
     getEmiBankDetails: cartTotalProducts => {
       dispatch(getEmiBankDetails(cartTotalProducts));
     },
-    applyCliqCash: () => {
-      dispatch(applyCliqCash());
+    applyCliqCash: pinCode => {
+      dispatch(applyCliqCash(pinCode));
     },
-    removeCliqCash: () => {
-      dispatch(removeCliqCash());
+    removeCliqCash: pinCode => {
+      dispatch(removeCliqCash(pinCode));
     },
     binValidation: (paymentMode, binNo) => {
       dispatch(binValidation(paymentMode, binNo));

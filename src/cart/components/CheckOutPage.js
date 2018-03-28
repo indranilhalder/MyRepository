@@ -513,6 +513,19 @@ class CheckOutPage extends React.Component {
   };
 
   render() {
+    let payableAmount;
+    let isRemainingAmount;
+    if (this.props.cart.cliqCashPaymentDetails) {
+      payableAmount = this.props.cart.cliqCashPaymentDetails.paybleAmount;
+      isRemainingAmount = this.props.cart.cliqCashPaymentDetails
+        .isRemainingAmount;
+    } else {
+      if (this.props.cart.cartDetailsCNC) {
+        payableAmount = this.props.cart.cartDetailsCNC.cartAmount.bagTotal
+          .formattedValue;
+        isRemainingAmount = true;
+      }
+    }
     if (this.props.cart.loading) {
       return <div className={styles.base}>{this.renderLoader()}</div>;
     }
@@ -570,6 +583,7 @@ class CheckOutPage extends React.Component {
           {!this.state.paymentMethod &&
             (this.state.confirmAddress && this.state.deliverMode) && (
               <PaymentCardWrapper
+                isRemainingBalance={isRemainingAmount}
                 cart={this.props.cart}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
@@ -598,18 +612,15 @@ class CheckOutPage extends React.Component {
             )}
 
           {this.props.cart.cartDetailsCNC &&
-          this.props.cart.cartDetailsCNC.cartAmount &&
-          !this.state.showCliqAndPiq && ( //adding this condition for we don;t have to show footer and header on cliq and piq window
+            this.props.cart.cartDetailsCNC.cartAmount &&
+            !this.state.showCliqAndPiq && (
               <Checkout
                 amount={this.props.cart.cartDetailsCNC.totalPrice}
                 totalDiscount={
-                  this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
-                    .formattedValue
-                }
-                bagTotal={
                   this.props.cart.cartDetailsCNC.cartAmount.bagTotal
                     .formattedValue
                 }
+                bagTotal={payableAmount}
                 tax={this.props.tax}
                 offers={this.props.offers}
                 delivery={this.props.delivery}
