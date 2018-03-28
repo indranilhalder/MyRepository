@@ -21,7 +21,7 @@ export default class ColourSelector extends React.Component {
         className={this.props.noBackground ? styles.noBackground : styles.base}
       >
         <Carousel
-          elementWidthMobile={22}
+          elementWidthMobile="auto"
           limit={1}
           headerComponent={
             <div className={styles.header}>
