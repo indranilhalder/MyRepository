@@ -22,6 +22,8 @@ import {
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_Returned = "Return Product";
 const PRODUCT_Cancel = "Cancel Product";
+const AWB_POPUP_TRUE = "Y";
+const AWB_POPUP_FALSE = "N";
 export default class OrderDetails extends React.Component {
   requestInvoice(ussid, sellerOrderNo) {
     if (this.props.sendInvoice) {
@@ -131,7 +133,7 @@ export default class OrderDetails extends React.Component {
                     />
                   </div>
                 )}
-                {products.awbPopupLink === "N" && (
+                {products.awbPopupLink === AWB_POPUP_FALSE && (
                   <div className={styles.buttonHolder}>
                     <OrderReturn
                       buttonLabel={
@@ -145,9 +147,9 @@ export default class OrderDetails extends React.Component {
                     />
                   </div>
                 )}
-                {products.awbPopupLink === "Y" && (
+                {products.awbPopupLink === AWB_POPUP_TRUE && (
                   <div className={styles.buttonHolder}>
-                    <div className={styles.buttonHolderForUpadte}>
+                    <div className={styles.buttonHolderForUpdate}>
                       <div className={styles.replaceHolder}>
                         <div
                           className={styles.replace}
@@ -159,7 +161,7 @@ export default class OrderDetails extends React.Component {
                           }
                         >
                           <UnderLinedButton
-                            label="Update  Return Details"
+                            label="Update Return Details"
                             color="#000"
                           />
                         </div>

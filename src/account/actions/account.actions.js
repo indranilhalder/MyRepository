@@ -348,13 +348,13 @@ export function verifyWallet(customerDetailsWithOtp) {
 }
 //  update refund details
 
-export function submitSelfCourierRetrunInfoRequest() {
+export function submitSelfCourierReturnInfoRequest() {
   return {
     type: SUBMIT_SELF_COURIER_INFO_REQUEST,
     status: REQUESTING
   };
 }
-export function submitSelfCourierRetrunInfoSuccess(updateReturnDetails) {
+export function submitSelfCourierReturnInfoSuccess(updateReturnDetails) {
   return {
     type: SUBMIT_SELF_COURIER_INFO_SUCCESS,
     status: SUCCESS,
@@ -362,14 +362,14 @@ export function submitSelfCourierRetrunInfoSuccess(updateReturnDetails) {
   };
 }
 
-export function submitSelfCourierRetrunInfoFailure(error) {
+export function submitSelfCourierReturnInfoFailure(error) {
   return {
     type: SUBMIT_SELF_COURIER_INFO_FAILURE,
     status: ERROR,
     error
   };
 }
-export function submitSelfCourierRetrunInfo(returnDetails) {
+export function submitSelfCourierReturnInfo(returnDetails) {
   let returnDetailsObject = new FormData(returnDetails.file);
   returnDetailsObject.append("awbNumber", returnDetails.awbNumber);
   returnDetailsObject.append("lpname", returnDetails.lpname);
@@ -380,7 +380,7 @@ export function submitSelfCourierRetrunInfo(returnDetails) {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
-    dispatch(submitSelfCourierRetrunInfoRequest());
+    dispatch(submitSelfCourierReturnInfoRequest());
     try {
       const result = await api.postFormData(
         `${USER_PATH}/${
@@ -397,12 +397,12 @@ export function submitSelfCourierRetrunInfo(returnDetails) {
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
         dispatch(hideModal());
-        return dispatch(submitSelfCourierRetrunInfoSuccess(resultJson));
+        dispatch(submitSelfCourierReturnInfoSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.errors[0].message}`);
       }
     } catch (e) {
-      dispatch(submitSelfCourierRetrunInfoFailure(e.message));
+      dispatch(submitSelfCourierReturnInfoFailure(e.message));
     }
   };
 }

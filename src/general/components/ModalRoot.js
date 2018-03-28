@@ -40,7 +40,7 @@ export default class ModalRoot extends React.Component {
     }
   }
   onUpdate(val) {
-    if (this.props.submitSelfCourierRetrunInfo) {
+    if (this.props.submitSelfCourierReturnInfo) {
       const returnDetails = {};
       returnDetails.awbNumber = val.awbNumber;
       returnDetails.lpname = val.logisticsPartner;
@@ -48,7 +48,7 @@ export default class ModalRoot extends React.Component {
       returnDetails.orderId = this.props.ownProps.orderId;
       returnDetails.transactionId = this.props.ownProps.transactionId;
       returnDetails.file = val.file;
-      this.props.submitSelfCourierRetrunInfo(returnDetails);
+      this.props.submitSelfCourierReturnInfo(returnDetails);
     }
   }
   submitOtp(otpDetails) {
