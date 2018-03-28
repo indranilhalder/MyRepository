@@ -12,6 +12,7 @@ import EmiModal from "../../pdp/containers/EmiListContainer";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
 import SizeSelectModal from "../../pdp/components/SizeSelectModal.js";
 import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
+import UpdateRefundDetailsPopup from "../../account/components/UpdateRefundDetailsPopup.js";
 import KycApplicationFormWithBottomSlideModal from "../../account/components/KycApplicationFormWithBottomSlideModal";
 import KycDetailPopUpWithBottomSlideModal from "../../account/components/KycDetailPopUpWithBottomSlideModal";
 const modalRoot = document.getElementById("modal-root");
@@ -38,7 +39,11 @@ export default class ModalRoot extends React.Component {
       this.props.hideModal();
     }
   }
-
+  onUpdate(val) {
+    if (this.props.onUpdate) {
+      this.props.onUpdate(val);
+    }
+  }
   submitOtp(otpDetails) {
     this.props.otpVerification(otpDetails, this.props.ownProps);
     this.props.hideModal();
@@ -129,6 +134,12 @@ export default class ModalRoot extends React.Component {
           submitOtp={otpDetails => this.submitOtpForgotPassword(otpDetails)}
           userObj={this.props.ownProps}
           resendOtp={userName => this.handleRestoreClick(userName)}
+        />
+      ),
+      UpdateRefundDetailsPopup: (
+        <UpdateRefundDetailsPopup
+          closeModal={() => this.handleClose()}
+          onUpdate={val => this.onUpdate(val)}
         />
       ),
       Sort: <Sort />,
