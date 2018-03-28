@@ -7,7 +7,6 @@ import styles from "./EmiModal.css";
 const EMI_INFO = "EMI for the product is provided by the following banks";
 export default class EmiModal extends React.Component {
   render() {
-    console.log(this.props);
     return (
       <SlideModal closeModal={this.props.closeModal}>
         <div className={styles.base}>
