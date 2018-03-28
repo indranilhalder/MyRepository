@@ -7,6 +7,7 @@ import styles from "./EmiModal.css";
 const EMI_INFO = "EMI for the product is provided by the following banks";
 export default class EmiModal extends React.Component {
   render() {
+    console.log(this.props);
     return (
       <SlideModal closeModal={this.props.closeModal}>
         <div className={styles.base}>
@@ -17,7 +18,12 @@ export default class EmiModal extends React.Component {
               this.props.emiData.bankList &&
               this.props.emiData.bankList.map((val, i) => {
                 return (
-                  <Accordion text={val.emiBank} key={i}>
+                  <Accordion
+                    text={val.emiBank}
+                    key={i}
+                    offset={20}
+                    activeBackground="#f8f8f8"
+                  >
                     <EmiCard options={val.emitermsrate} />
                   </Accordion>
                 );
