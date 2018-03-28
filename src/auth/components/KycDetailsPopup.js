@@ -34,7 +34,7 @@ export default class KycDetailsPopup extends React.Component {
     return (
       <div className={Styles.base}>
         <div className={Styles.header}>
-          Verify Phone number to complete resendOtp Details
+          Verify Phone number to complete KYC Details
         </div>
         <div className={Styles.iconHolder}>
           <Icon image={lockBlackIcon} size={50} />

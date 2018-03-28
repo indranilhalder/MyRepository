@@ -15,7 +15,7 @@ const typeComponentMapping = {
   "Credit Card": props => <CheckoutCreditCard {...props} />,
     "Debit Card": props => <CheckoutDebitCard {...props} />,
     "Netbanking": props => <CheckoutNetbanking {...props} />,
-
+     "COD": props => <CheckoutCOD {...props}/>,
     "EMI": props => <CheckoutEmi {...props} />,
 };
 

@@ -10,7 +10,7 @@ export default class CliqCashToggle extends React.Component {
   }
   render() {
     let toggleDisable = this.props.value === 0 ? true : false;
-    console.log(this.props);
+
     return (
       <div className={styles.base}>
         <div className={styles.cashBalanceTextHolder}>
