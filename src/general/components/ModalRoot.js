@@ -95,7 +95,7 @@ export default class ModalRoot extends React.Component {
     kycDetails.mobileNumber = this.props.ownProps.mobileNumber;
     kycDetails.otp = otpDetails;
     if (this.props.verifyWallet) {
-      this.props.verifyWallet(kycDetails);
+      this.props.verifyWallet(kycDetails, true);
     }
   };
 

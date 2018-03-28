@@ -321,7 +321,7 @@ export function verifyWalletFailure(error) {
   };
 }
 
-export function verifyWallet(customerDetailsWithOtp) {
+export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
@@ -342,7 +342,12 @@ export function verifyWallet(customerDetailsWithOtp) {
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
         dispatch(hideModal());
-        dispatch(getGiftCardDetails());
+        if (isFromCliqCash) {
+          dispatch(getCliqCashDetails());
+        } else {
+          dispatch(getGiftCardDetails());
+        }
+
         return dispatch(verifyWalletSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.errors[0].message}`);
