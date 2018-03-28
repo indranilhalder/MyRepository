@@ -153,7 +153,12 @@ export default class Carousel extends React.Component {
                       <MediaQuery query="(max-device-width: 1024px)">
                         <div
                           className={styles.element}
-                          style={{ width: `${this.props.elementWidthMobile}%` }}
+                          style={{
+                            width:
+                              this.props.elementWidthMobile === "auto"
+                                ? "auto"
+                                : `${this.props.elementWidthMobile}%`
+                          }}
                         >
                           {child}
                         </div>
@@ -187,7 +192,7 @@ export default class Carousel extends React.Component {
 
 Carousel.propTypes = {
   elementWidthDesktop: PropTypes.number,
-  elementWidthMobile: PropTypes.number,
+  elementWidthMobile: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   buttonText: PropTypes.string,
   header: PropTypes.string,
   isWhite: PropTypes.bool,

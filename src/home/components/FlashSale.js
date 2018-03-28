@@ -89,7 +89,7 @@ export default class FlashSale extends React.Component {
                 <ProductModule
                   key={i}
                   isWhite={true}
-                  productImage={datum.imageURL}
+                  productImage={datum.image}
                   title={datum.title}
                   price={datum.price}
                   description={datum.description}

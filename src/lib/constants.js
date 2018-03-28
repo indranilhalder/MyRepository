@@ -19,8 +19,6 @@ export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
 export const DEFAULT_PIN_CODE_LOCAL_STORAGE = "defaultPinCode";
 
 export const REFRESH_TOKEN = "refresh_token";
-export const BRAND_OR_CATEGORY_LANDING_PAGE =
-  "/:brandOrCategory/:brandOrCategoryId";
 export const BRAND_PAGE = "/c-(mbh.*)";
 export const BRAND_PAGE_WITH_SLUG = `/.*/${BRAND_PAGE}`;
 

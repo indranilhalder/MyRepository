@@ -49,6 +49,7 @@ export default class AddressBook extends React.Component {
     return (
       <div className={styles.base}>
         {this.props.userAddress &&
+          this.props.userAddress.addresses &&
           this.props.userAddress.addresses.map(address => {
             return (
               <div className={styles.addressBlock}>
@@ -73,16 +74,17 @@ export default class AddressBook extends React.Component {
               </div>
             );
           })}
-
-        <div className={styles.button}>
-          <Button
-            type="hollow"
-            height={40}
-            label={ADDRESS_BOOK_HEADER}
-            width={200}
-            textStyle={{ color: "#212121", fontSize: 14 }}
-            onClick={() => this.addAddress()}
-          />
+        <div className={styles.buttonHolder}>
+          <div className={styles.button}>
+            <Button
+              type="hollow"
+              height={40}
+              label={ADDRESS_BOOK_HEADER}
+              width={200}
+              textStyle={{ color: "#212121", fontSize: 14 }}
+              onClick={() => this.addAddress()}
+            />
+          </div>
         </div>
       </div>
     );

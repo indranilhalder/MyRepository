@@ -29,6 +29,7 @@ export default class GiftCard extends React.Component {
       this.props.getGiftCardDetails();
     }
   }
+
   selectAmount(val, amount) {
     this.setState({ amountText: val, amount: amount });
   }
