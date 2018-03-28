@@ -131,6 +131,7 @@
   height: auto;
   display: inline-block;
   background-color: #ececec;
+  padding: 10px 0px;
 }
 .textHeader {
   width: 100%;
@@ -151,14 +152,10 @@
 }
 .buttonHolder {
   width: 100%;
-  height: auto;
-  display: inline-block;
-  text-align: center;
-  background-color: #ff1744;
-  color: #fff;
-  font-family: semibold;
-  margin-bottom: 20px;
-  padding: 12px;
+  height: 60px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
 }
 .quantityValue {
   border: 1px solid #ececec;

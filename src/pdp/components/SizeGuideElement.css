@@ -1,6 +1,7 @@
 .base {
   width: 100%;
   height: auto;
+  padding: 10px 0;
 }
 
 .textBox {
@@ -13,7 +14,7 @@
   display: inline-block;
 }
 .sizeBox {
-  width: 70%;
+  width: 100%;
   height: auto;
   color: #212121;
   font-size: 14px;
@@ -22,20 +23,25 @@
   display: inline-block;
 }
 .sizeText {
-  width: 70%;
+  width: 40%;
   height: auto;
   display: inline-block;
   font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-family: regular;
+  vertical-align: top;
 }
 .sizeNumber {
-  width: 30%;
+  width: 60%;
   height: auto;
   display: inline-block;
   font-size: 14px;
   font-family: regular;
   position: relative;
   line-height: 30px;
+  vertical-align: top;
 }
 .sizeNumber:before {
   content: ": ";
