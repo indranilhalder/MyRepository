@@ -13,10 +13,10 @@ export default class PaytmOption extends React.Component {
       selected: false
     };
   }
-  selectOption() {
+  handleOnSelect() {
     this.setState({ selected: !this.state.selected }, () => {
-      if (this.props.selectOption) {
-        this.props.selectOption(this.state.selected);
+      if (this.props.onSelect) {
+        this.props.onSelect(this.state.selected);
       }
     });
   }
@@ -28,7 +28,7 @@ export default class PaytmOption extends React.Component {
             <div className={styles.eWalletDetailsHolder}>
               <div
                 className={styles.paytmLogoHolder}
-                onClick={() => this.selectOption()}
+                onClick={() => this.handleOnSelect()}
               >
                 <div className={styles.checkboxHolder}>
                   <CheckBox selected={this.state.selected} />
@@ -70,7 +70,7 @@ PaytmOption.propTypes = {
   isPtm: PropTypes.bool,
   insufficientBalance: PropTypes.bool,
   balance: PropTypes.string,
-  selectOption: PropTypes.func
+  onSelect: PropTypes.func
 };
 PaytmOption.defaultProps = {
   isPtm: true
