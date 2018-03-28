@@ -5,9 +5,6 @@
 .bottomHolder {
   width: 100%;
   height: auto;
-  position: absolute;
-  left: 0;
-  bottom: 0;
 }
 .applicationForm {
   width: 100%;

@@ -14,6 +14,7 @@ import SizeSelectModal from "../../pdp/components/SizeSelectModal.js";
 import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
 import KycApplicationForm from "../../account/components/KycApplicationForm";
 import KycDetailsPopup from "../../auth/components/KycDetailsPopup";
+import BottomSlideModal from "../../general/components/BottomSlideModal";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
@@ -162,20 +163,24 @@ export default class ModalRoot extends React.Component {
       ),
       SizeGuide: <SizeGuideModal closeModal={() => this.handleClose()} />,
       GenerateOtpForEgv: (
-        <KycApplicationForm
-          closeModal={() => this.handleClose()}
-          generateOtp={val => this.generateOtp(val, this.props.ownProps)}
-          {...this.props.ownProps}
-        />
+        <BottomSlideModal>
+          <KycApplicationForm
+            closeModal={() => this.handleClose()}
+            generateOtp={val => this.generateOtp(val, this.props.ownProps)}
+            {...this.props.ownProps}
+          />
+        </BottomSlideModal>
       ),
       verifyOtp: (
-        <KycDetailsPopup
-          closeModal={() => this.handleClose()}
-          mobileNumber={this.state.mobileNumber}
-          submitOtp={val => this.verifyOtp(val, this.props.ownProps)}
-          resendOtp={val => this.resendOtp(val, this.props.ownProps)}
-          {...this.props.ownProps}
-        />
+        <BottomSlideModal>
+          <KycDetailsPopup
+            closeModal={() => this.handleClose()}
+            mobileNumber={this.state.mobileNumber}
+            submitOtp={val => this.verifyOtp(val, this.props.ownProps)}
+            resendOtp={val => this.resendOtp(val, this.props.ownProps)}
+            {...this.props.ownProps}
+          />
+        </BottomSlideModal>
       ),
       EmiModal: <EmiModal />,
       OtpLoginModal: (
