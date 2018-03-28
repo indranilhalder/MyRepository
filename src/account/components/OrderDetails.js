@@ -16,7 +16,8 @@ import {
   ORDER_PREFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  LOGIN_PATH
+  LOGIN_PATH,
+  SHORT_URL_ORDER_DETAIL
 } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_Returned = "Return Product";
@@ -47,6 +48,13 @@ export default class OrderDetails extends React.Component {
       this.props.match.path === `${ORDER_PREFIX}`
     ) {
       const orderId = queryString.parse(this.props.location.search).orderCode;
+      this.props.fetchOrderDetails(orderId);
+    } else if (
+      userDetails &&
+      customerCookie &&
+      this.props.match.path === `${SHORT_URL_ORDER_DETAIL}`
+    ) {
+      const orderId = this.props.location.pathname.split("/")[3];
       this.props.fetchOrderDetails(orderId);
     }
   }

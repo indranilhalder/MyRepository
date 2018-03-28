@@ -77,6 +77,7 @@ export default class CartItem extends React.Component {
   };
   render() {
     let isServiceAble = false;
+    console.log(this.props);
     if (this.props.productIsServiceable) {
       if (this.props.productIsServiceable.isServicable === "Y") {
         isServiceAble = true;
