@@ -903,8 +903,9 @@ export function getFollowedBrandsFailure(error) {
 }
 
 export function getFollowedBrands() {
-  const mcvId = getMcvId();
   return async (dispatch, getState, { api }) => {
+    const mcvId = await getMcvId();
+
     dispatch(getFollowedBrandsRequest());
     let msdFormData = new FormData();
     msdFormData.append("api_key", API_KEY_FOR_MSD);
