@@ -42,20 +42,21 @@ export default class OrderDetails extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
     if (
       userDetails &&
       customerCookie &&
       this.props.match.path === `${ORDER_PREFIX}`
     ) {
-      const orderId = queryString.parse(this.props.location.search).orderCode;
-      this.props.fetchOrderDetails(orderId);
+      const orderCode = queryString.parse(this.props.location.search).orderCode;
+      this.props.fetchOrderDetails(orderCode);
     } else if (
       userDetails &&
       customerCookie &&
       this.props.match.path === `${SHORT_URL_ORDER_DETAIL}`
     ) {
-      const orderId = this.props.location.pathname.split("/")[3];
-      this.props.fetchOrderDetails(orderId);
+      const orderCode = this.props.match.params.orderCode;
+      this.props.fetchOrderDetails(orderCode);
     }
   }
   navigateToLogin() {
