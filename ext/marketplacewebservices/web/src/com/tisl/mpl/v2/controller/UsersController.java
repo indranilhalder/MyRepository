@@ -11694,7 +11694,11 @@ public class UsersController extends BaseCommerceController
 					}
 					if (StringUtils.isNotEmpty(customerToSave.getEmailId()))
 					{
-						updateCustomerDetailDto.setEmailId(customerToSave.getEmailId());
+						//NEWUIUX-511
+						if (customerToSave.getEmailId().contains("@"))
+						{
+							updateCustomerDetailDto.setEmailId(customerToSave.getEmailId());
+						}
 					}
 
 					if (StringUtils.isNotEmpty(customerToSave.getMobileNumber()))
