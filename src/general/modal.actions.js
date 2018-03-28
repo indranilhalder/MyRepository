@@ -13,7 +13,8 @@ export const SIZE_SELECTOR = "SizeSelector";
 export const BANK_OFFERS = "BankOffers";
 export const OTP_LOGIN_MODAL = "OtpLoginModal";
 export const NEW_PASSWORD = "NewPassword";
-
+export const GENERATE_OTP_FOR_EGV = "GenerateOtpForEgv";
+export const VERIFY_OTP = "verifyOtp";
 export function showModal(type, ownProps) {
   return {
     type: SHOW_MODAL,
