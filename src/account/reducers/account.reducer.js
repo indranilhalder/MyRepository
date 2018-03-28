@@ -73,14 +73,13 @@ const account = (
     getOtpToActivateWallet: null,
     getOtpToActivateWalletStatus: null,
     getOtpToActivateWalletError: null,
-    loadingForGrtOtpToActivateWallet: false,
+    loadingForGetOtpToActivateWallet: false,
 
     verifyWallet: null,
     verifyWalletStatus: null,
     verifyWalletError: null,
     loadingForverifyWallet: false,
 
-    loadingForFollowedBrands: false,
     getPinCodeDetails: null,
     getPinCodeStatus: null,
     getPinCodeError: null
@@ -131,21 +130,21 @@ const account = (
     case accountActions.GET_OTP_TO_ACTIVATE_WALLET_REQUEST:
       return Object.assign({}, state, {
         getOtpToActivateWalletStatus: action.status,
-        loadingForGrtOtpToActivateWallet: true
+        loadingForGetOtpToActivateWallet: true
       });
 
     case accountActions.GET_OTP_TO_ACTIVATE_WALLET_SUCCESS:
       return Object.assign({}, state, {
         getOtpToActivateWalletStatus: action.status,
         getOtpToActivateWallet: action.getOtpToActivateWallet,
-        loadingForGrtOtpToActivateWallet: false
+        loadingForGetOtpToActivateWallet: false
       });
 
     case accountActions.GET_OTP_TO_ACTIVATE_WALLET_FAILURE:
       return Object.assign({}, state, {
         getOtpToActivateWalletStatus: action.status,
         getOtpToActivateWalletError: action.error,
-        loadingForGrtOtpToActivateWallet: false
+        loadingForGetOtpToActivateWallet: false
       });
 
     case accountActions.VERIFY_WALLET_REQUEST:
