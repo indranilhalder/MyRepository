@@ -179,9 +179,9 @@ export default class GiftCard extends React.Component {
           </div>
         </div>
         <div className={styles.textHolder}>
-          <div className={styles.textHeader}>QwickCilver</div>
+          <div className={styles.textHeader}>QwikCilver</div>
           <div className={styles.text}>
-            Sold by QwickCilver Solutions pvt ltd
+            Sold by QwikCilver Solutions pvt ltd
           </div>
         </div>
         {giftCards &&
