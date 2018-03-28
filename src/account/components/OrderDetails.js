@@ -13,7 +13,6 @@ import queryString from "query-string";
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-import ModalContainer from "../../general/containers/ModalContainer";
 import {
   ORDER_PREFIX,
   CUSTOMER_ACCESS_TOKEN,
