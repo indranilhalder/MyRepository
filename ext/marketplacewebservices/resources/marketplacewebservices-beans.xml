@@ -1154,6 +1154,9 @@
 		<property name="messageID" type="String" />
 		<property name="startDate" type="String" />
 		<property name="endDate" type="String" />
+		<property name="offerStartDate" type="String" />
+		<property name="offerEndDate" type="String" />
+		<property name="isNoCostEmi" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.KnowMoreDTO">

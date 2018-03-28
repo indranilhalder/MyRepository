@@ -33,9 +33,9 @@ public class ProductOfferDetailFacadeImpl implements ProductOfferDetailFacade
 	 * @return message
 	 */
 	@Override
-	public Map<String, Map<String, String>> showOfferMessage(final String productCode)
+	public Map<String, Map<String, String>> showOfferMessage(final String productCode, final Boolean isPwa)
 	{
-		return prodOfferDetService.showOfferMessage(productCode);
+		return prodOfferDetService.showOfferMessage(productCode, isPwa);
 	}
 
 
@@ -46,9 +46,10 @@ public class ProductOfferDetailFacadeImpl implements ProductOfferDetailFacade
 	 * @return freebie message
 	 */
 	@Override
-	public Map<String, String> showFreebieMessage(final String ussId)
-			throws EtailNonBusinessExceptions, FlexibleSearchException, UnknownIdentifierException
+	public Map<String, String> showFreebieMessage(final String ussId) throws EtailNonBusinessExceptions, FlexibleSearchException,
+			UnknownIdentifierException
 	{
 		return prodOfferDetService.showFreebieMessage(ussId);
 	}
+
 }
