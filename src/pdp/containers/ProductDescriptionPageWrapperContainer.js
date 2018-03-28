@@ -68,8 +68,6 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     productDetails: state.productDescription.productDetails,
-    msdItems: state.productDescription.msdItems,
-    aboutTheBrand: state.productDescription.aboutTheBrand,
     loading: state.productDescription.loading
   };
 };

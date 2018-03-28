@@ -14,6 +14,7 @@ import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -32,7 +33,6 @@ import {
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
-import PDPRecommendedSections from "./PDPRecommendedSections.js";
 
 const PRODUCT_QUANTITY = "1";
 const DELIVERY_TEXT = "Delivery Options For";
@@ -315,11 +315,7 @@ export default class PdpApparel extends React.Component {
               productContent={productData.APlusContent.productContent}
             />
           )}
-          <PDPRecommendedSections
-            msdItems={this.props.msdItems}
-            aboutTheBrand={this.props.aboutTheBrand}
-            productData={productData}
-          />
+          <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );
     } else {
