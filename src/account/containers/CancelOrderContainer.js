@@ -17,9 +17,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     getDetailsOfCancelledProduct: cancelProductDetails => {
       dispatch(getDetailsOfCancelledProduct(cancelProductDetails));
     },
-    cancelProduct: async CancelProductDetails => {
+    cancelProduct: async cancelProductDetails => {
       const cancelOrderDetails = await dispatch(
-        cancelProduct(CancelProductDetails)
+        cancelProduct(cancelProductDetails)
       );
       if (cancelOrderDetails.status === SUCCESS) {
         ownProps.history.push(`${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}`);
