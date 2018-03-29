@@ -42,6 +42,7 @@ export default class ThemeOffer extends React.Component {
     if (feedComponentData.items) {
       items = feedComponentData.items.map(transformData);
     }
+
     let offers = [];
     if (feedComponentData.offers) {
       offers = feedComponentData.offers.map(offer => {

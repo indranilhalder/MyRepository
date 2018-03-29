@@ -66,6 +66,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   };
 
   render() {
+    console.log("PLP BRAND CATEGORY WRAPPER RENDER");
     if (
       this.props.homeFeedData.loading ||
       this.props.homeFeedData.feedType === null

@@ -12,7 +12,8 @@ export default class FollowingBrands extends React.Component {
   };
 
   handleClick() {
-    this.props.history.push(PRODUCT_LISTINGS);
+    console.log("HANDLE CLICK");
+    console.log(this.props.feedComponentData);
   }
 
   render() {
@@ -24,8 +25,8 @@ export default class FollowingBrands extends React.Component {
           buttonText="See All"
           seeAll={() => this.handleClick()}
         >
-          {followWidgetData.items &&
-            followWidgetData.items.map((datum, i) => {
+          {followWidgetData.data &&
+            followWidgetData.data.map((datum, i) => {
               return (
                 <BrandImage
                   key={i}

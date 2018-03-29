@@ -45,7 +45,6 @@ import GiftCardContainer from "./account/containers/GiftCardContainer";
 
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
-
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -89,7 +88,11 @@ import {
   SHORT_URL_ORDER_DETAIL,
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
-  MY_ACCOUNT_ADDRESS_ADD_PAGE
+  MY_ACCOUNT_ADDRESS_ADD_PAGE,
+  CATEGORY_PAGE_WITH_QUERY_PARAMS,
+  CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
+  BRAND_PAGE_WITH_QUERY_PARAMS,
+  BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS
 } from "../src/lib/constants";
 
 const auth = {
@@ -212,6 +215,12 @@ class App extends Component {
               path={BRAND_PAGE}
               component={PlpBrandCategoryWrapperContainer}
             />
+
+            <Route
+              exact
+              path={BRAND_PAGE_WITH_QUERY_PARAMS}
+              component={PlpBrandCategoryWrapperContainer}
+            />
             <Route
               path={`${SHORT_URL_ORDER_DETAIL}`}
               component={OrderDetailsContainer}
@@ -225,13 +234,31 @@ class App extends Component {
 
             <Route
               exact
+              path={CATEGORY_PAGE_WITH_QUERY_PARAMS}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
+              exact
               path={BRAND_PAGE_WITH_SLUG}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
+              exact
+              path={BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
 
             <Route
               strict
               path={CATEGORY_PAGE_WITH_SLUG}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
+              exact
+              path={CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
 

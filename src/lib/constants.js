@@ -19,11 +19,15 @@ export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
 export const DEFAULT_PIN_CODE_LOCAL_STORAGE = "defaultPinCode";
 
 export const REFRESH_TOKEN = "refresh_token";
-export const BRAND_PAGE = "/c-(mbh.*)";
-export const BRAND_PAGE_WITH_SLUG = `/.*/${BRAND_PAGE}`;
+export const BRAND_PAGE = "/c-(mbh[a-zA-Z0-9]+)";
+export const BRAND_PAGE_WITH_SLUG = `/:slug/c-(mbh[0-9a-zA-z]+)`;
+export const BRAND_PAGE_WITH_QUERY_PARAMS = `/c-(mbh[0-9a-zA-z]+)?&`;
+export const BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS = `/c-(mbh[0-9a-zA-z]+)?&`;
 
 export const CATEGORY_PAGE = "/c-(msh.*)";
 export const CATEGORY_PAGE_WITH_SLUG = `/:slug/c-(msh.*)`;
+export const CATEGORY_PAGE_WITH_QUERY_PARAMS = `${CATEGORY_PAGE}?&.*`;
+export const CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS = `${CATEGORY_PAGE_WITH_SLUG}?&.*`;
 export const PRODUCT_LISTINGS = "/search/(.*)";
 
 export const PLP_CATEGORY_SEARCH = "/search/?searchCategory=all&text=shirt";
