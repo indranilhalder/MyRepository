@@ -58,7 +58,7 @@ export default class OrderDetails extends React.Component {
   }
   canelItem(transactionId, ussid, orderCode) {
     this.props.history.push({
-      pathname: `${CANCEL}${orderCode}`,
+      pathname: `${CANCEL}/${orderCode}`,
       state: {
         transactionId: transactionId,
         ussid: ussid
