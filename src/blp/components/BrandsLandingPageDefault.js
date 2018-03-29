@@ -56,16 +56,22 @@ export default class BrandsLandingPageDefault extends React.Component {
     if (this.props.loading || !this.props.brandsStores) {
       return this.renderLoader();
     }
-
     const brandsStores = this.props.brandsStores[
       this.props.brandsStores.componentName
     ].items;
     const brandList = map(brandsStores, brandName => {
       return brandName.subType;
     });
-    const currentActiveHeroBanner =
+    let currentActiveHeroBanner = [];
+    if (
+      brandsStores[this.state.currentActiveBrandType].items &&
       brandsStores[this.state.currentActiveBrandType].items[0]
-        .heroBannerComponent.items;
+        .heroBannerComponent
+    ) {
+      currentActiveHeroBanner =
+        brandsStores[this.state.currentActiveBrandType].items[0]
+          .heroBannerComponent.items;
+    }
     let currentActiveBrandList =
       brandsStores[this.state.currentActiveBrandType].brands;
     if (this.state.searchBy) {
