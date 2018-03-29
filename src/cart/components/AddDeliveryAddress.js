@@ -67,15 +67,18 @@ export default class AddDeliveryAddress extends React.Component {
   };
 
   clearAllValue = () => {
-    this.onChange({
-      pinCodeValue: "",
-      fullNameValue: "",
-      phoneNumberValue: "",
-      stateName: "",
-      cityNameValue: "",
-      localityValue: "",
-      landmark: "",
-      titleValue: ""
+    this.setState({
+      postalCode: "",
+      firstName: "",
+      line2: "",
+      town: "",
+      city: "",
+      state: "",
+      phone: "",
+      line1: " ",
+      titleValue: "",
+      addressType: "",
+      defaultFlag: false
     });
   };
 
@@ -124,6 +127,9 @@ export default class AddDeliveryAddress extends React.Component {
           <Input2
             option={this.state.options}
             placeholder="Name*"
+            value={
+              this.props.firstName ? this.props.firstName : this.state.firstName
+            }
             onChange={firstName => this.onChange({ firstName })}
             textStyle={{ fontSize: 14 }}
             height={33}
@@ -195,6 +201,7 @@ export default class AddDeliveryAddress extends React.Component {
             offset={0}
             elementWidthMobile={50}
             onSelect={val => this.onChange({ addressType: val[0] })}
+            selected={this.state.addressType}
           >
             {dataLabel.map((val, i) => {
               return (
