@@ -2582,4 +2582,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ISH = "ISH";
 	public static final String LUXURY_CATALOG_ID = "luxProductCatalog";
 	public static final String NU009 = "NU009";
+	public static final String NU010 = "NU010";
 }
