@@ -49,9 +49,17 @@ class ProductReviewPage extends Component {
       productReview
     );
   };
+  onCancel() {
+    this.setState({ visible: false });
+  }
   renderReviewSection = () => {
     if (this.state.visible) {
-      return <WriteReview onSubmit={this.onSubmit} />;
+      return (
+        <WriteReview
+          onSubmit={this.onSubmit}
+          onCancel={() => this.onCancel()}
+        />
+      );
     }
   };
 
@@ -115,7 +123,7 @@ class ProductReviewPage extends Component {
         <PdpFrame
           addProductToBag={() => this.addProductToBag()}
           addProductToWishList={() => this.addProductToWishList()}
-          gotoPreviousPage={this.goBack}
+          gotoPreviousPage={() => this.goBack()}
         >
           <div className={styles.base}>
             <div className={styles.productBackground}>

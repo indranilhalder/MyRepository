@@ -1,18 +1,25 @@
 .base {
-  width: 100%;
+  width: 85%;
   height: 70px;
   border-radius: 35px;
   background-color: rgba(0, 0, 0, 0.85);
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.5);
-  display: inline-block;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 85px;
+  margin: auto;
 }
 .textHolder {
   width: 100%;
   height: auto;
   font-size: 14px;
   font-family: regular;
-  padding: 22px 58px;
-  display: inline-block;
   color: #fff;
+  line-height: 21px;
   text-align: center;
+  position: absolute;
+  padding: 0 40px;
+  top: 50%;
+  transform: translateY(-50%);
 }
