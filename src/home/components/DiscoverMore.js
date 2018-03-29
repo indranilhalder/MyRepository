@@ -7,6 +7,7 @@ export default class DiscoverMore extends React.Component {
   render() {
     if (this.props.feedComponentData.data) {
       if (this.props.feedComponentData.data.type !== "L1") {
+        console.log("BLARGH");
         return (
           <DiscoverMore500
             feedComponentData={this.props.feedComponentData.data}

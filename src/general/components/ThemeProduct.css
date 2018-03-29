@@ -23,3 +23,15 @@
   font-family: regular;
   padding-top: 5px;
 }
+
+.priceHolder {
+  line-height: 24px;
+}
+.discount {
+  composes: priceHolder;
+}
+
+.priceCancelled {
+  composes: priceHolder;
+  text-decoration: line-through;
+}

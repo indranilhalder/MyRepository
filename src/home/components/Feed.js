@@ -55,16 +55,16 @@ const typeComponentMapping = {
   // ),
   // "Automated Banner Product Carousel Component": props => (
   //   <AutomatedBrandProductCarousel {...props} />
-  // )
+  // ),
   // "Auto Following Brands Component": props => <FollowingBrands {...props} />,
-  // "Flash Sales Component": props => <FlashSale {...props} />, // wired up
-  // "Offers Component": props => <OfferWidget {...props} />, // wired up
-  // "Multipurpose Banner Component": props => <ConnectWidget {...props} />, // modal not working - need to figure out what to show here.
-  // "Multi Click Component": props => <ThemeProductWidget {...props} /> // not wired up for some reason
-  // "Auto Fresh From Brands Component": props => <FollowBase {...props} />, // wired up with clickable url
+  // // "Flash Sales Component": props => <FlashSale {...props} />, // wired up
+  // // "Offers Component": props => <OfferWidget {...props} />, // wired up
+  // // "Multipurpose Banner Component": props => <ConnectWidget {...props} />, // modal not working - need to figure out what to show here.
+  "Multi Click Component": props => <ThemeProductWidget {...props} />
+  // "Auto Fresh From Brands Component": props => <FollowBase {...props} /> // wired up with clickable url
   // "Banner Separator Component": props => <BannerSeparator {...props} />,
-  // "Auto Discover More Component": props => <DiscoverMore {...props} /> // wired up with clickable urls
-  // "Auto Product Recommendation": props => <RecommendationWidget {...props} />,
+  // "Auto Discover More Component": props => <DiscoverMore {...props} />
+  // "Auto Product Recommendation": props => <RecommendationWidget {...props} />
   // "Recently viewed product": props => <RecommendationWidget {...props} />,
   // "Single Banner Component": props => <MonoBanner {...props} />,
   // "Curated Listing Strip Component": props => <LatestCollections {...props} />,

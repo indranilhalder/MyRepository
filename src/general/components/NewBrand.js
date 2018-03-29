@@ -25,6 +25,7 @@ export default class NewBrand extends React.Component {
   }
 
   handleBrandClick = () => {
+    console.log("BRAND CLICK");
     this.props.onClick(this.props.webUrl);
   };
   render() {
