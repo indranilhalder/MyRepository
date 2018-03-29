@@ -32,8 +32,8 @@ export default class ProductDetailsMainCard extends React.Component {
               )}
           </div>
         </div>
-        <div className={styles.ratingHolder}>
-          {this.props.averageRating && (
+        {this.props.averageRating && (
+          <div className={styles.ratingHolder}>
             <StarRating averageRating={this.props.averageRating}>
               {this.props.averageRating && (
                 <div
@@ -47,8 +47,8 @@ export default class ProductDetailsMainCard extends React.Component {
                 <Icon image={arrowIcon} size={15} />
               </div>
             </StarRating>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
   }

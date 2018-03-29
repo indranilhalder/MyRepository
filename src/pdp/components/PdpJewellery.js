@@ -10,7 +10,6 @@ import PriceBreakUp from "./PriceBreakUp";
 import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
 
-import ProductDetails from "./ProductDetails";
 import JewelleryClassification from "./JewelleryClassification";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
@@ -191,20 +190,29 @@ export default class PdpJewellery extends React.Component {
 
     return (
       productData.eligibleDeliveryModes &&
-      productData.eligibleDeliveryModes.map((val, idx) => {
-        return (
-          <DeliveryInformation
-            key={idx}
-            header={val.name}
-            placedTime={val.timeline}
-            type={val.code}
-            onClick={() => this.renderAddressModal()}
-            deliveryOptions={DELIVERY_TEXT}
-            label={defaultPinCode}
-            showCliqAndPiqButton={false}
-          />
-        );
-      })
+      productData.deliveryModesATP &&
+      productData.deliveryModesATP
+        .filter(val => {
+          return productData.eligibleDeliveryModes
+            .map(val => {
+              return val.code;
+            })
+            .includes(val.key);
+        })
+        .map((val, idx) => {
+          return (
+            <DeliveryInformation
+              key={idx}
+              header={val.name}
+              placedTime={val.value}
+              type={val.key}
+              onClick={() => this.renderAddressModal()}
+              deliveryOptions={DELIVERY_TEXT}
+              label={defaultPinCode}
+              showCliqAndPiqButton={false}
+            />
+          );
+        })
     );
   }
   render() {
