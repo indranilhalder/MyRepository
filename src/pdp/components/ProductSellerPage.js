@@ -122,8 +122,13 @@ class ProductSellerPage extends Component {
               productImage={mobileGalleryImages[0]}
               productName={this.props.productDetails.brandName}
               productMaterial={this.props.productDetails.productName}
-              price={this.props.productDetails.winningSellerMOP}
-              discountPrice={this.props.productDetails.mrp}
+              price={
+                this.props.productDetails.winningSellerPrice
+                  .formattedValueNoDecimal
+              }
+              discountPrice={
+                this.props.productDetails.mrpPrice.formattedValueNoDecimal
+              }
               averageRating={this.props.productDetails.averageRating}
               totalNoOfReviews={this.props.productDetails.productReviewsCount}
             />
@@ -132,18 +137,26 @@ class ProductSellerPage extends Component {
                 <SellerWithMultiSelect limit={1}>
                   {this.props.productDetails.otherSellers
                     .filter(val => {
-                      return val.availableStock !== "0";
+                      return (
+                        val.availableStock !== "0" &&
+                        val.availableStock !== "-1"
+                      );
                     })
                     .map((value, index) => {
+                      console.log(value);
                       return (
                         <SellerCard
                           heading={value.sellerName}
                           priceTitle={PRICE_TEXT}
-                          discountPrice={value.sellerMOP}
-                          price={value.sellerMRP}
+                          discountPrice={
+                            value.specialPriceSeller.formattedValueNoDecimal
+                          }
+                          price={value.mrpSeller.formattedValueNoDecimal}
                           offerText={OFFER_AVAILABLE}
                           deliveryText={DELIVERY_INFORMATION_TEXT}
-                          shippingText={value.deliveryModesATP[0].value}
+                          hasCod={value.isCOD === "Y"}
+                          hasEmi={value.isEMIEligible === "Y"}
+                          eligibleDeliveryModes={value.eligibleDeliveryModes}
                           cashText={CASH_TEXT}
                           policyText={DELIVERY_RATES}
                           key={index}

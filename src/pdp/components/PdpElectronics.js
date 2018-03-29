@@ -179,6 +179,7 @@ export default class PdpElectronics extends React.Component {
     );
   }
   render() {
+    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -246,9 +247,12 @@ export default class PdpElectronics extends React.Component {
               <ProductDetailsMainCard
                 productName={productData.brandName}
                 productDescription={productData.productName}
-                price={productData.mrp}
-                discountPrice={productData.winningSellerMOP}
+                price={productData.mrpPrice.formattedValueNoDecimal}
+                discountPrice={
+                  productData.winningSellerPrice.formattedValueNoDecimal
+                }
                 averageRating={productData.averageRating}
+                onClick={this.goToReviewPage}
               />
             )}
             {productData.rootCategory === "Watches" && (
