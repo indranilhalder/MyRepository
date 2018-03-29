@@ -187,7 +187,9 @@ export default class PdpApparel extends React.Component {
     );
   }
   render() {
+    console.log(this.props);
     const productData = this.props.productDetails;
+    console.log(productData.winningSellerPrice.formattedValueNoDecimal);
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -214,8 +216,10 @@ export default class PdpApparel extends React.Component {
             <ProductDetailsMainCard
               productName={productData.brandName}
               productDescription={productData.productName}
-              price={productData.mrp}
-              discountPrice={productData.winningSellerMOP}
+              price={productData.mrpPrice.formattedValueNoDecimal}
+              discountPrice={
+                productData.winningSellerPrice.formattedValueNoDecimal
+              }
               averageRating={productData.averageRating}
               onClick={this.goToReviewPage}
             />

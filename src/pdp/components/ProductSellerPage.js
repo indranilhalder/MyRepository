@@ -97,6 +97,7 @@ class ProductSellerPage extends Component {
   }
 
   render() {
+    console.log(this.props);
     const mobileGalleryImages =
       this.props.productDetails &&
       this.props.productDetails.galleryImagesList
