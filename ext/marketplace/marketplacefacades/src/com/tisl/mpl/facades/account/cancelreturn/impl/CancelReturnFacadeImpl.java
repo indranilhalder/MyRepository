@@ -972,7 +972,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 							refundEntryModel.setAmountForQc(NumberUtils.createDouble(Double.toString(refundAmountForQc)));
 						}
 						else if (null != subOrderModel.getSplitModeInfo()
-								&& subOrderModel.getSplitModeInfo().equalsIgnoreCase(CliqCash))
+								&& subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 						{
 							double refundAmountForQc = 0.0D;
 							//call for QuckCilver
@@ -2314,7 +2314,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 	}
 
-	private List<WalletCardApportionDetailModel> cancelOrderEntryForQcPaymentMode(final String transactionId, final String walletId)
+	private List<WalletCardApportionDetailModel> cancelOrderEntryForQcPaymentMode(final String transactionId,
+			final String walletId)
 	{
 		final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = new ArrayList<WalletCardApportionDetailModel>();
 		QCRedeeptionResponse response = null;
@@ -2518,8 +2519,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 								if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase(Split))
 								{
-									returnModel = constructQuickCilverOrderEntryForSplit(walletCardApportionDetailModelList,
-											transactionId, subOrderModel, orderEntry);
+									returnModel = constructQuickCilverOrderEntryForSplit(walletCardApportionDetailModelList, transactionId,
+											subOrderModel, orderEntry);
 									saveQCandJuspayResponse(orderEntry, paymentTransactionModel, returnModel);
 								}
 

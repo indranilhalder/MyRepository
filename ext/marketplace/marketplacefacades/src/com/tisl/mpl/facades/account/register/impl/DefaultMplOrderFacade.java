@@ -2084,6 +2084,19 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		this.configurationService = configurationService;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getProductForCode(java.lang.String, java.lang.String)
+	 */
+	//changes for SDI 6152
+	@Override
+	public ProductModel getProductForCode(final String productCode,final String catalogCode)
+	{
+		final ProductModel products = mplOrderService.findProductsByCodewithCatalog(productCode,catalogCode);
+		return products;
+	}
+
 	/**
 	 * Added for NU-56
 	 */
@@ -2116,6 +2129,5 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		final ProductModel products = mplOrderService.findProductsByCodewithCatalog(productCode,catalogCode);
 		return products;
 	}
-
 
 }
