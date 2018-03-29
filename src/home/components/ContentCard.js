@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./ContentCard.css";
-import { Image } from "xelpmoc-core";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import PropTypes from "prop-types";
 
@@ -12,9 +11,11 @@ export default class ContentCard extends React.Component {
   }
   render() {
     return (
-      <div className={styles.base}>
+      <div
+        className={styles.base}
+        style={{ backgroundImage: `url(${this.props.image})` }}
+      >
         <div className={styles.content}>
-          <Image image={this.props.image} color="transparent" />
           <div className={styles.overlay}>
             <div className={styles.header}>{this.props.header}</div>
             <div className={styles.label}>
