@@ -659,6 +659,7 @@ const cart = (
     }
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_FAILURE:
+       localStorage.removeItem(OLD_CART_GU_ID);
       return Object.assign({}, state, {
         jusPayStatus: action.status,
         jusPayError: action.error,
@@ -699,6 +700,15 @@ const cart = (
 
       // here is where I need to destroy the cart details
       Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      return Object.assign({}, state, {
+        justPayPaymentDetailsStatus: action.status,
+        justPayPaymentDetails: action.justPayPaymentDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_FOR_GIFT_CARD_SUCCESS: {
+      localStorage.setItem(OLD_CART_GU_ID, action.guId);
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetails: action.justPayPaymentDetails,

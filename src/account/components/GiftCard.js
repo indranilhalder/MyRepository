@@ -39,7 +39,8 @@ export default class GiftCard extends React.Component {
         pathname: CHECKOUT_ROUTER,
         state: {
           isFromGiftCard: true,
-          egvCartGuid: nextProps.giftCardDetails.egvCartGuid
+          egvCartGuid: nextProps.giftCardDetails.egvCartGuid,
+          amount: this.state.amountText
         }
       });
     }
@@ -52,12 +53,12 @@ export default class GiftCard extends React.Component {
   onSubmitDetails() {
     if (this.props.createGiftCardDetails) {
       const giftCardDetails = {};
-      giftCardDetails.from = this.state.email;
+      giftCardDetails.from = this.state.senderName;
       giftCardDetails.quantity = QUANTITY;
       giftCardDetails.messageOnCard = this.state.message;
       giftCardDetails.productID = PRODUCT_ID;
       giftCardDetails.priceSelectedByUserPerQuantity = this.state.amount;
-      giftCardDetails.receiverEmailID = this.state.senderName;
+      giftCardDetails.receiverEmailID = this.state.email;
       giftCardDetails.mobileNumber = MOBILE_NUMBER;
       this.props.createGiftCardDetails(giftCardDetails);
     }

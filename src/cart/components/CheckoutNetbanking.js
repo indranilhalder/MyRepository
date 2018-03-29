@@ -17,6 +17,13 @@ export default class CheckoutNetBanking extends React.Component {
       this.props.softReservationPaymentForNetBanking(cardDetails);
     }
   };
+  createJusPayOrderForGiftCardNetBanking = cardDetails => {
+    console.log(cardDetails);
+    if (this.props.createJusPayOrderForGiftCardNetBanking) {
+      this.props.createJusPayOrderForGiftCardNetBanking(cardDetails);
+    }
+  };
+
   render() {
     let validNetBankingDetails = filter(
       this.props.cart.netBankDetails.bankList,
@@ -36,6 +43,10 @@ export default class CheckoutNetBanking extends React.Component {
           }
           softReservationPaymentForNetBanking={cardDetails =>
             this.softReservationPaymentForNetBanking(cardDetails)
+          }
+          isFromGiftCard={this.props.isFromGiftCard}
+          createJusPayOrderForGiftCardNetBanking={cardDetails =>
+            this.createJusPayOrderForGiftCardNetBanking(cardDetails)
           }
         />
       </ManueDetails>

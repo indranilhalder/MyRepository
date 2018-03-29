@@ -33,7 +33,7 @@ import MDSpinner from "react-md-spinner";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
-
+const NET_BANKING = "NB";
 class CheckOutPage extends React.Component {
   state = {
     confirmAddress: false,
@@ -56,8 +56,8 @@ class CheckOutPage extends React.Component {
     isGiftCard: false,
     isRemainingAmount: true,
     payableAmount: "",
-    cliqCashAmount: ""
-
+    cliqCashAmount: "",
+    bagAmount: ""
   };
 
   renderLoader() {
@@ -285,11 +285,21 @@ class CheckOutPage extends React.Component {
             nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
           payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount,
           cliqCashAmount:
-            nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value
+            nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value,
+          bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
         });
       }
+    } else if (this.state.isGiftCard) {
+      this.setState({
+        isRemainingAmount: "0",
+        payableAmount: this.props.location.state.amount,
+        cliqCashAmount: "0",
+        bagAmount: this.props.location.state.amount
+      });
     } else {
-      if (nextProps.cart.cartDetailsCNC && !this.state.isRemainingAmount) {
+      console.log(nextProps.cart.cartDetailsCNC);
+      if (nextProps.cart.cartDetailsCNC && this.state.isRemainingAmount) {
+        console.log(nextProps.cart.cartDetailsCNC);
         let cliqCashAmount = 0;
         if (nextProps.cart.paymentModes) {
           cliqCashAmount =
@@ -298,7 +308,8 @@ class CheckOutPage extends React.Component {
         this.setState({
           payableAmount:
             nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.formattedValue,
-          cliqCashAmount: cliqCashAmount
+          cliqCashAmount: cliqCashAmount,
+          bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
         });
       }
     }
@@ -342,7 +353,8 @@ class CheckOutPage extends React.Component {
     if (value === PAYMENT_CHARGED) {
       this.setState({ orderId: orderId });
       if (this.props.updateTransactionDetails) {
-        let cartId = localStorage.getItem(OLD_CART_GU_ID);
+        let cartId;
+        cartId = localStorage.getItem(OLD_CART_GU_ID);
         if (cartId) {
           this.props.updateTransactionDetails(
             localStorage.getItem(PAYMENT_MODE_TYPE),
@@ -414,14 +426,18 @@ class CheckOutPage extends React.Component {
     this.setState(val);
   }
   handleSubmit = () => {
-    if (!this.state.confirmAddress) {
+    if (!this.state.confirmAddress && !this.state.isGiftCard) {
       this.props.addAddressToCart(
         this.state.addressId[0].id,
         this.state.selectedAddress.postalCode
       );
       this.setState({ confirmAddress: true });
     }
-    if (!this.state.deliverMode && this.state.confirmAddress) {
+    if (
+      !this.state.deliverMode &&
+      this.state.confirmAddress &&
+      !this.state.isGiftCard
+    ) {
       if (this.props.selectDeliveryMode) {
         this.props.selectDeliveryMode(
           this.state.ussIdAndDeliveryModesObj,
@@ -433,11 +449,18 @@ class CheckOutPage extends React.Component {
     }
 
     if (this.state.savedCardDetails !== "") {
-      this.props.softReservationPaymentForSavedCard(
-        this.state.savedCardDetails,
-        this.state.addressId[0],
-        this.state.paymentModeSelected
-      );
+      if (this.state.isGiftCard) {
+        this.props.createJusPayOrderForGiftCardFromSavedCards(
+          this.state.savedCardDetails,
+          this.props.location.state.egvCartGuid
+        );
+      } else {
+        this.props.softReservationPaymentForSavedCard(
+          this.state.savedCardDetails,
+          this.state.addressId[0],
+          this.state.paymentModeSelected
+        );
+      }
     }
     if (!this.state.isRemainingAmount) {
       this.props.softReservationForCliqCash(
@@ -534,10 +557,29 @@ class CheckOutPage extends React.Component {
 
   softReservationPaymentForNetBanking = bankName => {
     this.props.softReservationPaymentForNetBanking(
+      NET_BANKING,
       this.state.paymentModeSelected,
       bankName,
       this.props.location.state.pinCode
     );
+  };
+
+  jusPayTokenizeForGiftCard = cartDetails => {
+    if (this.props.jusPayTokenizeForGiftCard) {
+      this.props.jusPayTokenizeForGiftCard(
+        cartDetails,
+        this.state.paymentModeSelected,
+        this.props.location.state.egvCartGuid
+      );
+    }
+  };
+  createJusPayOrderForGiftCardNetBanking = bankName => {
+    if (this.props.createJusPayOrderForGiftCardNetBanking) {
+      this.props.createJusPayOrderForGiftCardNetBanking(
+        bankName,
+        this.props.location.state.egvCartGuid
+      );
+    }
   };
 
   captureOrderExperience = rating => {
@@ -575,20 +617,21 @@ class CheckOutPage extends React.Component {
         </div>
       );
     } else if (
-      !this.state.addNewAddress &&
-      this.props.cart &&
-      !this.state.orderConfirmation
+      (!this.state.addNewAddress &&
+        this.props.cart &&
+        !this.state.orderConfirmation) ||
+      this.state.isGiftCard
     ) {
       return (
         <div className={styles.base}>
-          {!this.state.isGiftCard &&
-            !this.state.confirmAddress &&
+          {!this.state.confirmAddress &&
+            !this.state.isGiftCard &&
             (cartData.userAddress && cartData.userAddress.addresses
               ? this.renderCheckoutAddress()
               : this.renderInitialAddAddressForm())}
 
-          {!this.state.isGiftCard &&
-            this.state.confirmAddress &&
+          {this.state.confirmAddress &&
+            !this.state.isGiftCard &&
             !this.state.showCliqAndPiq && (
               <DeliveryAddressSet
                 addressType={this.state.addressId[0].addressType}
@@ -597,14 +640,13 @@ class CheckOutPage extends React.Component {
               />
             )}
 
-          {!this.state.isGiftCard &&
-            this.props.cart.cartDetailsCNC &&
+          {this.props.cart.cartDetailsCNC &&
             this.state.confirmAddress &&
-            !this.state.deliverMode(
-              this.state.showCliqAndPiq
-                ? this.renderCliqAndPiq()
-                : this.renderDeliverModes()
-            )}
+            !this.state.deliverMode &&
+            !this.state.isGiftCard &&
+            (this.state.showCliqAndPiq
+              ? this.renderCliqAndPiq()
+              : this.renderDeliverModes())}
 
           {this.state.deliverMode &&
             !this.state.isGiftCard && (
@@ -620,55 +662,57 @@ class CheckOutPage extends React.Component {
             !this.state.isGiftCard &&
             this.renderBankOffers()}
 
-          {(!this.state.paymentMethod &&
+          {((!this.state.paymentMethod &&
             (this.state.confirmAddress && this.state.deliverMode)) ||
-            (this.state.isGiftCard && (
-              <PaymentCardWrapper
-                isRemainingBalance={this.state.isRemainingAmount}
-                cart={this.props.cart}
-                fromGiftCard={this.state.isGiftCard}
-                cliqCashAmount={this.state.cliqCashAmount}
-                applyCliqCash={() => this.applyCliqCash()}
-                removeCliqCash={() => this.removeCliqCash()}
-                binValidation={(paymentMode, binNo) =>
-                  this.binValidation(paymentMode, binNo)
-                }
-                binValidationForCOD={paymentMode =>
-                  this.binValidationForCOD(paymentMode)
-                }
-                softReservationForPayment={cardDetails =>
-                  this.softReservationForPayment(cardDetails)
-                }
-                softReservationForCODPayment={() =>
-                  this.softReservationForCODPayment()
-                }
-                binValidationForNetBank={(paymentMode, bankName) =>
-                  this.binValidationForNetBank(paymentMode, bankName)
-                }
-                softReservationPaymentForNetBanking={bankName =>
-                  this.softReservationPaymentForNetBanking(bankName)
-                }
-                binValidationForSavedCard={cardDetails =>
-                  this.binValidationForSavedCard(cardDetails)
-                }
-              />
-            ))}
+            this.state.isGiftCard) && (
+            <PaymentCardWrapper
+              isRemainingBalance={this.state.isRemainingAmount}
+              isFromGiftCard={this.state.isGiftCard}
+              cart={this.props.cart}
+              cliqCashAmount={this.state.cliqCashAmount}
+              applyCliqCash={() => this.applyCliqCash()}
+              removeCliqCash={() => this.removeCliqCash()}
+              binValidation={(paymentMode, binNo) =>
+                this.binValidation(paymentMode, binNo)
+              }
+              binValidationForCOD={paymentMode =>
+                this.binValidationForCOD(paymentMode)
+              }
+              softReservationForPayment={cardDetails =>
+                this.softReservationForPayment(cardDetails)
+              }
+              softReservationForCODPayment={() =>
+                this.softReservationForCODPayment()
+              }
+              binValidationForNetBank={(paymentMode, bankName) =>
+                this.binValidationForNetBank(paymentMode, bankName)
+              }
+              softReservationPaymentForNetBanking={bankName =>
+                this.softReservationPaymentForNetBanking(bankName)
+              }
+              binValidationForSavedCard={cardDetails =>
+                this.binValidationForSavedCard(cardDetails)
+              }
+              jusPayTokenizeForGiftCard={cardDetails =>
+                this.jusPayTokenizeForGiftCard(cardDetails)
+              }
+              createJusPayOrderForGiftCardNetBanking={bankName =>
+                this.createJusPayOrderForGiftCardNetBanking(bankName)
+              }
+            />
+          )}
 
-          {this.props.cart.cartDetailsCNC &&
-            this.props.cart.cartDetailsCNC.cartAmount &&
-            !this.state.showCliqAndPiq && (
-              <Checkout
-                amount={this.state.payableAmount}
-                bagTotal={
-                  this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
-                }
-                tax={this.props.tax}
-                offers={this.props.offers}
-                delivery={this.props.delivery}
-                payable={this.state.payableAmount}
-                onCheckout={this.handleSubmit}
-              />
-            )}
+          {(this.state.isGiftCard || !this.state.showCliqAndPiq) && (
+            <Checkout
+              amount={this.state.payableAmount}
+              bagTotal={this.state.bagAmount}
+              tax={this.props.tax}
+              offers={this.props.offers}
+              delivery={this.props.delivery}
+              payable={this.state.payableAmount}
+              onCheckout={this.handleSubmit}
+            />
+          )}
         </div>
       );
     } else if (this.state.orderConfirmation) {
