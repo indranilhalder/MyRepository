@@ -51,7 +51,8 @@ export default class CancelOrder extends React.Component {
     return <MDSpinner />;
   }
   render() {
-    let cancelProductDetails = this.props.cancelProductDetails;
+    let cancelProductDetails = this.props.cancelProductDetailsObj;
+    console.log(cancelProductDetails);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!cancelProductDetails) {

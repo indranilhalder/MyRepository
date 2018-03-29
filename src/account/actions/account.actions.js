@@ -218,7 +218,7 @@ export function cancelProductDetails(cancelProductDetails) {
       const result = await api.postFormData(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
-        }/returnProductDetails?access_token=${
+        }/newReturnProductDetails?access_token=${
           JSON.parse(customerCookie).access_token
         }&isPwa=true&platformNumber=2`,
         cancelProductObject
@@ -283,7 +283,7 @@ export function cancelProduct(cancelProductDetails) {
       const result = await api.postFormData(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
-        }/initiateRefund?access_token=${
+        }/newReturnInitiate?access_token=${
           JSON.parse(customerCookie).access_token
         }&login=${JSON.parse(userDetails).userName}&isPwa=true`,
         cancelProductObject
