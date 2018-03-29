@@ -72,4 +72,19 @@ public interface MplCouponService
 
 	String getVoucherCode(String manuallyselectedvoucher);
 
+	/**
+	 * The Method returns closed voucher details
+	 *
+	 * @param currentCustomer
+	 * @return List<VoucherModel>
+	 */
+	List<VoucherModel> getClosedVoucherList(CustomerModel currentCustomer);
+
+	/**
+	 * The Method return Open Voucher List with Visibility set as 1
+	 *
+	 * @return List<VoucherModel>
+	 */
+	List<VoucherModel> getOpenVoucherList();
+
 }

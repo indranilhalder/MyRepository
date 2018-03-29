@@ -53,6 +53,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.SocialLoginValidationService;
 
@@ -109,7 +110,7 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			String tamperCheck = null;
 
 			String testingParamValue = null;
-			//	String socialUserId = null;
+			String isPwa = null;
 			String socialChannel = null;
 
 			if (null != authentication.getDetails())
@@ -130,11 +131,11 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 							testingParamValue = entry.getValue();
 							tamperCheck = "Y";
 						}
-						//						if (null != entry.getKey() && entry.getKey().equalsIgnoreCase("userId_param") && null != entry.getValue())
-						//						{
-						//							socialUserId = entry.getValue();
-						//							tamperCheck = "Y";
-						//						}
+						if (null != entry.getKey() && entry.getKey().equalsIgnoreCase("isPwa") && null != entry.getValue())
+						{
+							isPwa = entry.getValue();
+							tamperCheck = "Y";
+						}
 						if (null != entry.getKey() && entry.getKey().equalsIgnoreCase("social_channel") && null != entry.getValue())
 						{
 							socialChannel = entry.getValue();
@@ -149,35 +150,45 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 					configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.MASTER_SOCIAL_AUTH_ENABLE))
 					.equals(Boolean.TRUE))
 			{
-				if (null != tamperCheck && tamperCheck.equalsIgnoreCase("Y"))
+				if (StringUtils.isNotEmpty(isPwa))
 				{
-					isSocialMedia = true;
-					try
+					if (null != tamperCheck && tamperCheck.equalsIgnoreCase("Y"))
 					{
-						if (socialChannel.equalsIgnoreCase("G"))
+						isSocialMedia = true;
+						try
 						{
-							if (!socialLoginValidationService.checkGoogleAccessToken(testingParamValue, userName))
+							if (socialChannel.equalsIgnoreCase("G"))
+							{
+								if (!socialLoginValidationService.checkGoogleAccessToken(testingParamValue, userName))
+								{
+									throw new AuthChallengeException();
+								}
+							}
+							else if (socialChannel.equalsIgnoreCase("F"))
+							{
+								if (!socialLoginValidationService.checkFacebookAccessToken(testingParamValue, userName))
+								{
+									throw new AuthChallengeException();
+								}
+							}
+							else
 							{
 								throw new AuthChallengeException();
 							}
 						}
-						else if (socialChannel.equalsIgnoreCase("F"))
+						catch (final AuthChallengeException authChallengeException)
 						{
-							if (!socialLoginValidationService.checkFacebookAccessToken(testingParamValue, userName))
-							{
-								throw new AuthChallengeException();
-							}
-						}
-						else
-						{
-							throw new AuthChallengeException();
+							LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-" + userName);
+							throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
+									"Social token validation failed"), authChallengeException);
 						}
 					}
-					catch (final AuthChallengeException authChallengeException)
+				}
+				else
+				{
+					if (null != isSocialMediaInput && isSocialMediaInput.equalsIgnoreCase("Y"))
 					{
-						LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-" + userName);
-						throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
-								"Social token validation failed"), authChallengeException);
+						isSocialMedia = true;
 					}
 				}
 			}
@@ -189,10 +200,7 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 				}
 			}
 			//New UI/UX changes for social token validation || End
-
-
 			UserDetails userDetails = null;
-
 			try
 			{
 				userDetails = retrieveUser(userName.toLowerCase());
@@ -201,13 +209,19 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			{
 				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-" + userName);
 				throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
-						"Email id does not exist"), notFound);
+						"Email ID or phone number does not exist"), notFound);
 			}
 			catch (final DataIntegrityViolationException dataIntegrity)
 			{
 				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-" + userName);
 				throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
-						"Email id does not exist"), dataIntegrity);
+						"Email ID or phone number does not exist"), dataIntegrity);
+			}
+			catch (final EtailNonBusinessExceptions ex)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "More than 1 user found for " + userName);
+				throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
+						"More than 1 user found for " + userName), ex);
 			}
 			getPreAuthenticationChecks().check(userDetails);
 			final UserModel userModel = extUserService.getUserForUIDAccessToken(StringUtils.lowerCase(userName));
@@ -223,14 +237,13 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			{
 				custModel = extUserService.getUserForUid(StringUtils.lowerCase(authentication.getName()));
 			}
-			//below lines have been commented out for New UI/UX || NEWUIUX-313
-			//boolean userRegisteredBySocialMedia = false;
-			//if (null != custModel.getCustomerRegisteredBySocialMedia())
-			//{
-			//	userRegisteredBySocialMedia = custModel.getCustomerRegisteredBySocialMedia().booleanValue();
-			//}
+			boolean userRegisteredBySocialMedia = false;
+			if (null != custModel.getCustomerRegisteredBySocialMedia())
+			{
+				userRegisteredBySocialMedia = custModel.getCustomerRegisteredBySocialMedia().booleanValue();
+			}
 			boolean isSocial = false;
-			if (isSocialMedia)
+			if (isSocialMedia && userRegisteredBySocialMedia)
 			{
 				isSocial = true;
 			}

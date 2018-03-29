@@ -94,7 +94,7 @@ public class MplFollowedBrandFacadeImpl implements MplFollowedBrandFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.brand.MplFollowedBrandFacade#getFollowedBrands(java.lang.String)
 	 */
 	@Override
@@ -112,7 +112,7 @@ public class MplFollowedBrandFacadeImpl implements MplFollowedBrandFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.brand.MplFollowedBrandFacade#updateFollowedBrands(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -127,7 +127,7 @@ public class MplFollowedBrandFacadeImpl implements MplFollowedBrandFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.brand.MplFollowedBrandFacade#getUserFollowedMcvIds(java.lang.String)
 	 */
 	@Override
@@ -139,7 +139,7 @@ public class MplFollowedBrandFacadeImpl implements MplFollowedBrandFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.brand.MplFollowedBrandFacade#getCustomerFollowedBrands(java.lang.String)
 	 */
 	@Override
@@ -155,22 +155,33 @@ public class MplFollowedBrandFacadeImpl implements MplFollowedBrandFacade
 		{
 			customerModel = extendedUserService.getUserForUid(userId);
 		}
-
-		if (null != customerModel && CollectionUtils.isNotEmpty(customerModel.getFollowedBrandMcvid()))
+		//IQA code Review fix
+		//if (null != customerModel && CollectionUtils.isNotEmpty(customerModel.getFollowedBrandMcvid()))
+		if (null != customerModel)
 		{
 
+			Set<FollowedBrandMcvidModel> followedBrandMcvidModelSet = new HashSet<FollowedBrandMcvidModel>();
+			followedBrandMcvidModelSet = customerModel.getFollowedBrandMcvid();
 
-
-			for (final FollowedBrandMcvidModel followedBrandMcvidModel : customerModel.getFollowedBrandMcvid())
+			if (CollectionUtils.isNotEmpty(followedBrandMcvidModelSet))
 			{
 
-				if (CollectionUtils.isNotEmpty(followedBrandMcvidModel.getBrandList()))
+				//for (final FollowedBrandMcvidModel followedBrandMcvidModel : customerModel.getFollowedBrandMcvid())
+				for (final FollowedBrandMcvidModel followedBrandMcvidModel : followedBrandMcvidModelSet)
 				{
-					allFollowedBrandSet.addAll(new HashSet<BrandMasterModel>(followedBrandMcvidModel.getBrandList()));
+
+					Set<BrandMasterModel> brandMasterModelSet = new HashSet<BrandMasterModel>();
+					brandMasterModelSet = followedBrandMcvidModel.getBrandList();
+
+					//if (CollectionUtils.isNotEmpty(followedBrandMcvidModel.getBrandList()))
+					if (CollectionUtils.isNotEmpty(brandMasterModelSet))
+					{
+						//allFollowedBrandSet.addAll(new HashSet<BrandMasterModel>(followedBrandMcvidModel.getBrandList()));
+						allFollowedBrandSet.addAll(new HashSet<BrandMasterModel>(brandMasterModelSet));
+					}
 				}
+
 			}
-
-
 		}
 
 		if (CollectionUtils.isNotEmpty(allFollowedBrandSet))
@@ -181,5 +192,4 @@ public class MplFollowedBrandFacadeImpl implements MplFollowedBrandFacade
 
 		return followedBrandWsDtoList;
 	}
-
 }

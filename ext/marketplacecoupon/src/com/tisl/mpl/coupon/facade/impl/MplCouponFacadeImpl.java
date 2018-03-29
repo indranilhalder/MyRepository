@@ -4,6 +4,9 @@
 package com.tisl.mpl.coupon.facade.impl;
 
 
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.voucher.VoucherFacade;
 import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
@@ -41,6 +44,7 @@ import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -53,7 +57,9 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.cache.strategy.MplDisplayCouponCachingStrategy;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.coupon.service.MplCouponService;
@@ -67,10 +73,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.ChannelRestrictionModel;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplOrderRestrictionModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerRestrictionModel;
 import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
+import com.tisl.mpl.wsdto.MplFinalVisibleCouponsDTO;
+import com.tisl.mpl.wsdto.MplVisibleCouponsDTO;
 import com.tisl.mpl.wsdto.OfferListWsData;
 import com.tisl.mpl.wsdto.OfferResultWsData;
 
@@ -111,6 +120,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	private Converter<VoucherInvalidationModel, CouponHistoryData> voucherTransactionConverter;
 	@Resource(name = "voucherConverter")
 	private Converter<VoucherModel, VoucherData> voucherConverter;
+
+	@Autowired
+	private MplDisplayCouponCachingStrategy mplDisplayCouponCachingStrategy;
+	@Autowired
+	private PriceDataFactory priceDataFactory;
 
 	private final static String COMMACONSTANT = ",";
 	private final static String DOTCONSTANT = ".";
@@ -1629,7 +1643,9 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					{
 						//Checks if voucherCode is valid
 						validateVoucherCodeParameter(voucherCode);
-						if (!isVoucherCodeValid(voucherCode))
+						voucher = getVoucherService().getVoucher(voucherCode);//PT fix:CAR-377
+
+						if (null == voucher)
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
 						}
@@ -1637,9 +1653,9 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 						//Finds voucherModel for the code and checks whether it is null or voucher discount value is less than 0
 						//						final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
-						voucher = getVoucherService().getVoucher(voucherCode);
+						//voucher = getVoucherService().getVoucher(voucherCode);
 
-						if (voucher == null || (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0))
+						if (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0)
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
 						}
@@ -1744,7 +1760,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					{
 						//Checks if voucherCode is valid
 						validateVoucherCodeParameter(voucherCode);
-						if (!isVoucherCodeValid(voucherCode))
+						voucher = getVoucherService().getVoucher(voucherCode);//PT fix:CAR-377
+						if (null == voucher)
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
 						}
@@ -1752,8 +1769,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 						//Finds voucherModel for the code and checks whether it is null or voucher discount value is less than 0
 						//						final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
-						voucher = getVoucherService().getVoucher(voucherCode);
-						if (voucher == null || (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0))
+
+						if (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0)
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
 						}
@@ -2182,5 +2199,267 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	}
 
 
+
+	/**
+	 * The Method returns Coupon Details to be displayed on Cart Page
+	 *
+	 * @param cartGuid
+	 * @param currentCustomer
+	 */
+	@Override
+	public MplFinalVisibleCouponsDTO getDisplayCouponList(final String cartGuid, final CustomerModel currentCustomer)
+	{
+		List<MplVisibleCouponsDTO> closedVoucherDataList = null;
+		List<MplVisibleCouponsDTO> openVoucherDataList = null;
+		//final List<MplVisibleCouponsDTO> finalVoucherDataList = new ArrayList<>();
+		final MplFinalVisibleCouponsDTO finalDTO = new MplFinalVisibleCouponsDTO();
+
+		final String customerUID = currentCustomer.getUid();
+
+		LOG.debug("Customer UID>>>" + customerUID);
+		try
+		{
+			closedVoucherDataList = mplDisplayCouponCachingStrategy.get(customerUID);
+
+			if (CollectionUtils.isEmpty(closedVoucherDataList))
+			{
+				final List<VoucherModel> closedVoucherList = mplCouponService.getClosedVoucherList(currentCustomer);
+				if (CollectionUtils.isNotEmpty(closedVoucherList))
+				{
+					closedVoucherDataList = populateDataList(closedVoucherList);
+
+					if (StringUtils.isNotEmpty(cartGuid))
+					{
+						mplDisplayCouponCachingStrategy.put(customerUID, closedVoucherDataList);
+					}
+
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Closed Voucher Fetch", exception);
+		}
+
+		try
+		{
+			openVoucherDataList = mplDisplayCouponCachingStrategy.get("OPENCOUPONS");
+
+			if (CollectionUtils.isEmpty(openVoucherDataList))
+			{
+				final List<VoucherModel> openVoucherList = mplCouponService.getOpenVoucherList();
+				if (CollectionUtils.isNotEmpty(openVoucherList))
+				{
+					openVoucherDataList = populateDataList(openVoucherList);
+					mplDisplayCouponCachingStrategy.put("OPENCOUPONS", openVoucherDataList);
+				}
+			}
+
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Open Voucher Fetch", exception);
+		}
+
+
+		if (CollectionUtils.isNotEmpty(closedVoucherDataList))
+		{
+			//finalVoucherDataList.addAll(closedVoucherDataList);
+			finalDTO.setClosedcouponsList(closedVoucherDataList);
+		}
+
+		if (CollectionUtils.isNotEmpty(openVoucherDataList))
+		{
+			//finalVoucherDataList.addAll(openVoucherDataList);
+			finalDTO.setOpencouponsList(openVoucherDataList);
+		}
+
+		//		if (CollectionUtils.isNotEmpty(finalVoucherDataList))
+		//		{
+		//			finalDTO.setCouponsList(finalVoucherDataList);
+		//		}
+
+		return finalDTO;
+	}
+
+	/**
+	 * The Method returns Coupon Details to be displayed on Cart Page
+	 *
+	 */
+	@Override
+	public MplFinalVisibleCouponsDTO getDisplayOpenCouponList()
+	{
+		List<MplVisibleCouponsDTO> openVoucherDataList = null;
+		final MplFinalVisibleCouponsDTO finalDTO = new MplFinalVisibleCouponsDTO();
+
+		try
+		{
+			openVoucherDataList = mplDisplayCouponCachingStrategy.get("OPENCOUPONS");
+
+			if (CollectionUtils.isEmpty(openVoucherDataList))
+			{
+				final List<VoucherModel> openVoucherList = mplCouponService.getOpenVoucherList();
+				if (CollectionUtils.isNotEmpty(openVoucherList))
+				{
+					openVoucherDataList = populateDataList(openVoucherList);
+					mplDisplayCouponCachingStrategy.put("OPENCOUPONS", openVoucherDataList);
+				}
+			}
+
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Open Voucher Fetch", exception);
+		}
+
+		if (CollectionUtils.isNotEmpty(openVoucherDataList))
+		{
+			finalDTO.setOpencouponsList(openVoucherDataList);
+		}
+
+		return finalDTO;
+	}
+
+
+	/**
+	 * The Method populates data in Data Class
+	 *
+	 * @param voucherList
+	 * @return List<MplVisibleCouponsDTO>
+	 */
+	private List<MplVisibleCouponsDTO> populateDataList(final List<VoucherModel> voucherList)
+	{
+		final List<MplVisibleCouponsDTO> voucherDataList = new ArrayList<>();
+
+		for (final VoucherModel oModel : voucherList)
+		{
+			final MplVisibleCouponsDTO dto = new MplVisibleCouponsDTO();
+			//dto.setCouponCode(oModel.getCode());
+			dto.setCouponName(oModel.getName());
+			dto.setDescription(oModel.getDescription());
+			dto.setIsPercentage(((oModel.getAbsolute().booleanValue()) ? (false) : (true)));
+			dto.setValue(oModel.getValue());
+			dto.setDescription(oModel.getDescription());
+
+			if (null != oModel.getMaxDiscountValue())
+			{
+				dto.setMaxDiscount(oModel.getMaxDiscountValue());
+			}
+
+			final List<RestrictionModel> restrictionList = new ArrayList<>(oModel.getRestrictions());
+			if (CollectionUtils.isNotEmpty(restrictionList))
+			{
+				for (final RestrictionModel restriction : restrictionList)
+				{
+					if (restriction instanceof DateRestrictionModel)
+					{
+						final DateRestrictionModel dateRestrictmodel = (DateRestrictionModel) restriction;
+						dto.setCouponCreationDate(dateRestrictmodel.getStartDate().toString());
+						dto.setCouponExpiryDate(dateRestrictmodel.getEndDate().toString());
+					}
+
+					else if (restriction instanceof MplOrderRestrictionModel)
+					{
+						final MplOrderRestrictionModel restrictionModel = (MplOrderRestrictionModel) restriction;
+
+						final PriceData price = priceDataFactory.create(PriceDataType.BUY,
+								BigDecimal.valueOf(restrictionModel.getTotal().doubleValue()), restrictionModel.getCurrency());
+
+						dto.setEligibleCartThreshold(price);
+
+					}
+				}
+			}
+
+			if ((oModel instanceof PromotionVoucherModel) && !(oModel instanceof MplCartOfferVoucherModel))
+			{
+				final PromotionVoucherModel coupon = (PromotionVoucherModel) oModel;
+				dto.setCouponCode(coupon.getVoucherCode());
+				dto.setCouponType("COUPON");
+			}
+			else
+			{
+				dto.setCouponCode(oModel.getCode());
+				dto.setCouponType("BANKCOUPON");
+			}
+
+			voucherDataList.add(dto);
+
+		}
+
+		return voucherDataList;
+	}
+
+
+
+	/**
+	 * @return the mplDisplayCouponCachingStrategy
+	 */
+	public MplDisplayCouponCachingStrategy getMplDisplayCouponCachingStrategy()
+	{
+		return mplDisplayCouponCachingStrategy;
+	}
+
+
+
+	/**
+	 * @param mplDisplayCouponCachingStrategy
+	 *           the mplDisplayCouponCachingStrategy to set
+	 */
+	public void setMplDisplayCouponCachingStrategy(final MplDisplayCouponCachingStrategy mplDisplayCouponCachingStrategy)
+	{
+		this.mplDisplayCouponCachingStrategy = mplDisplayCouponCachingStrategy;
+	}
+
+
+
+	/**
+	 * Releases Cart Voucher from Cart
+	 *
+	 * @param cart
+	 * @throws VoucherOperationException
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public boolean releaseCartVoucherInCheckout(final CartModel cart) throws VoucherOperationException, EtailNonBusinessExceptions
+	{
+
+		final List<DiscountModel> discountList = cart.getDiscounts();
+		boolean recalculateRequired = false;
+		try
+		{
+			if (CollectionUtils.isNotEmpty(discountList))
+			{
+				for (final DiscountModel oModel : discountList)
+				{
+					if (oModel instanceof MplCartOfferVoucherModel)
+					{
+						final MplCartOfferVoucherModel coupon = (MplCartOfferVoucherModel) oModel;
+						getVoucherService().releaseVoucher(coupon.getVoucherCode(), cart);
+						final List<AbstractOrderEntryModel> entryList = cart.getEntries();
+						if (CollectionUtils.isNotEmpty(entryList))
+						{
+							for (final AbstractOrderEntryModel entry : entryList)
+							{
+								entry.setCartCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+								entry.setCartCouponValue(Double.valueOf(0.00D));
+							}
+							if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
+							{
+								getModelService().saveAll(entryList);
+							}
+						}
+					}
+				}
+				recalculateRequired = true;
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception in releaseVoucherInCheckout ", ex); //TISPT-104
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		return recalculateRequired;
+	}
 
 }

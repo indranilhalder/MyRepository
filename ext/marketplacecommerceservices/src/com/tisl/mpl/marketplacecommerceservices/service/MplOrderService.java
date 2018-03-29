@@ -21,13 +21,6 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.store.BaseStoreModel;
 
-import java.util.Date;
-import java.util.List;
-
-import com.tisl.mpl.core.model.CancellationReasonModel;
-import com.tisl.mpl.facades.data.AWBResponseData;
-import com.tisl.mpl.facades.product.data.ReturnReasonData;
-
 
 /**
  * @author TCS
@@ -134,9 +127,6 @@ public interface MplOrderService
 	
 	//CAR-362 or SDI-5941
 	SearchPageData<OrderModel> getPagedFilteredParentOrderHistoryWebForm(CustomerModel paramCustomerModel,BaseStoreModel paramBaseStoreModel, PageableData paramPageableData, Date fromDate);
-	
-	//changes for SDI 6152
-	public ProductModel findProductsByCodewithCatalog(final String productCode,final String catalogCode);
 	/**
 	 * Added for NU-56
 	 * 
@@ -145,5 +135,6 @@ public interface MplOrderService
 	 * @return OrderDataWsDTO
 	 */
 	public OrderDataWsDTO orderExperience(final String orderId, final Double ratings);
-
+	//changes for SDI 6152
+	public ProductModel findProductsByCodewithCatalog(final String productCode,final String catalogCode);
 }

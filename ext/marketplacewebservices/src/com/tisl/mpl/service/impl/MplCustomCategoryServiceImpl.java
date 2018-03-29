@@ -22,6 +22,7 @@ import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
+import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -291,7 +292,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * To get all categories shop by department
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getallCategories()
 	 */
 
@@ -323,140 +324,146 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 				departmentList = shopByDeptComponent.getComponents();
 			}
 
-			for (final NavigationBarComponentModel dept : departmentList)
+			//IQA code Review fix
+			if (null != departmentList && CollectionUtils.isNotEmpty(departmentList))
 			{
-				final CMSLinkComponentModel superNode = dept.getLink();
-				final CMSNavigationNodeModel linkNode = dept.getNavigationNode();
-				deptData = new DepartmentHierarchyData();
-				subDeptDataList = new ArrayList<DepartmentSubHierarchyData>();
 
-				//Super category
-				if (null != modifiedTime && null != dept.getModifiedtime() && dept.getModifiedtime().compareTo(modifiedTime) > 0)
+				for (final NavigationBarComponentModel dept : departmentList)
 				{
-					modifiedTime = dept.getModifiedtime();
-				}
+					final CMSLinkComponentModel superNode = dept.getLink();
+					final CMSNavigationNodeModel linkNode = dept.getNavigationNode();
+					deptData = new DepartmentHierarchyData();
+					subDeptDataList = new ArrayList<DepartmentSubHierarchyData>();
 
-				if (null != superNode.getCategory() && StringUtils.isNotEmpty(superNode.getCategory().getCode()))
-				{
-					deptData.setSuper_category_id(superNode.getCategory().getCode());
-				}
-				if (StringUtils.isNotEmpty(superNode.getLinkName()))
-				{
-					deptData.setSuper_category_name(superNode.getLinkName());
-				}
-
-				//TISQAUAT-613--Start
-				if (StringUtils.isNotEmpty(superNode.getDeeplinkType()))
-				{
-					deptData.setDeepLinkType(superNode.getDeeplinkType());
-				}
-				if (StringUtils.isNotEmpty(superNode.getDeeplinkTypeId()))
-				{
-					deptData.setDeepLinkId(superNode.getDeeplinkTypeId());
-				}
-				if (StringUtils.isNotEmpty(superNode.getDeeplinkTypeVal()))
-				{
-					deptData.setDeepLinkVal(superNode.getDeeplinkTypeVal());
-				}
-				//TISQAUAT-613--End
-
-				//Sub category
-				if (CollectionUtils.isNotEmpty(linkNode.getChildren()))
-				{
-					for (final CMSNavigationNodeModel sublink : linkNode.getChildren())
+					//Super category
+					if (null != modifiedTime && null != dept.getModifiedtime() && dept.getModifiedtime().compareTo(modifiedTime) > 0)
 					{
-						if (CollectionUtils.isNotEmpty(sublink.getLinks()))
+						modifiedTime = dept.getModifiedtime();
+					}
+
+					if (null != superNode.getCategory() && StringUtils.isNotEmpty(superNode.getCategory().getCode()))
+					{
+						deptData.setSuper_category_id(superNode.getCategory().getCode());
+					}
+					if (StringUtils.isNotEmpty(superNode.getLinkName()))
+					{
+						deptData.setSuper_category_name(superNode.getLinkName());
+					}
+
+					//TISQAUAT-613--Start
+					if (StringUtils.isNotEmpty(superNode.getDeeplinkType()))
+					{
+						deptData.setDeepLinkType(superNode.getDeeplinkType());
+					}
+					if (StringUtils.isNotEmpty(superNode.getDeeplinkTypeId()))
+					{
+						deptData.setDeepLinkId(superNode.getDeeplinkTypeId());
+					}
+					if (StringUtils.isNotEmpty(superNode.getDeeplinkTypeVal()))
+					{
+						deptData.setDeepLinkVal(superNode.getDeeplinkTypeVal());
+					}
+					//TISQAUAT-613--End
+
+					//Sub category
+					if (CollectionUtils.isNotEmpty(linkNode.getChildren()))
+					{
+						for (final CMSNavigationNodeModel sublink : linkNode.getChildren())
 						{
-							subDeptData = new DepartmentSubHierarchyData();
-							superSubDeptDataList = new ArrayList<DepartmentSuperSubHierarchyData>();
+							if (CollectionUtils.isNotEmpty(sublink.getLinks()))
+							{
+								subDeptData = new DepartmentSubHierarchyData();
+								superSubDeptDataList = new ArrayList<DepartmentSuperSubHierarchyData>();
 
-							final CMSLinkComponentModel sublinknode = sublink.getLinks().get(0);
+								final CMSLinkComponentModel sublinknode = sublink.getLinks().get(0);
 
-							if (null != modifiedTime && null != sublink.getModifiedtime()
-									&& sublink.getModifiedtime().compareTo(modifiedTime) > 0)
-							{
-								modifiedTime = sublink.getModifiedtime();
-							}
-
-							if (null != sublinknode.getCategory() && StringUtils.isNotEmpty(sublinknode.getCategory().getCode()))
-							{
-								subDeptData.setSub_category_id(sublinknode.getCategory().getCode());
-							}
-							if (StringUtils.isNotEmpty(sublink.getTitle()))
-							{
-								subDeptData.setSub_category_name(sublink.getTitle());
-							}
-							//TISQAUAT-613--Start
-							if (StringUtils.isNotEmpty(sublinknode.getDeeplinkType()))
-							{
-								subDeptData.setDeepLinkType(sublinknode.getDeeplinkType());
-							}
-							if (StringUtils.isNotEmpty(sublinknode.getDeeplinkTypeId()))
-							{
-								subDeptData.setDeepLinkId(sublinknode.getDeeplinkTypeId());
-							}
-							if (StringUtils.isNotEmpty(sublinknode.getDeeplinkTypeVal()))
-							{
-								subDeptData.setDeepLinkVal(sublinknode.getDeeplinkTypeVal());
-							}
-							//TISQAUAT-613--End
-							int count = 0;
-							//Super sub category
-							for (final CMSLinkComponentModel thirdLevelsublink : sublink.getLinks())
-							{
-
-								if (count > 0)
+								if (null != modifiedTime && null != sublink.getModifiedtime()
+										&& sublink.getModifiedtime().compareTo(modifiedTime) > 0)
 								{
-									thirdLevelCat = new DepartmentSuperSubHierarchyData();
-
-									if (null != modifiedTime && null != thirdLevelsublink.getModifiedtime()
-											&& thirdLevelsublink.getModifiedtime().compareTo(modifiedTime) > 0)
-									{
-										modifiedTime = thirdLevelsublink.getModifiedtime();
-									}
-
-									if (null != thirdLevelsublink.getCategory()
-											&& StringUtils.isNotEmpty(thirdLevelsublink.getCategory().getCode()))
-									{
-										thirdLevelCat.setSuper_sub_category_id(thirdLevelsublink.getCategory().getCode());
-									}
-									if (StringUtils.isNotEmpty(thirdLevelsublink.getLinkName()))
-									{
-										thirdLevelCat.setSuper_sub_category_name(thirdLevelsublink.getLinkName());
-									}
-									//TISQAUAT-613--Start
-									if (StringUtils.isNotEmpty(thirdLevelsublink.getDeeplinkType()))
-									{
-										thirdLevelCat.setDeepLinkType(thirdLevelsublink.getDeeplinkType());
-									}
-									if (StringUtils.isNotEmpty(thirdLevelsublink.getDeeplinkTypeId()))
-									{
-										thirdLevelCat.setDeepLinkId(thirdLevelsublink.getDeeplinkTypeId());
-									}
-									if (StringUtils.isNotEmpty(thirdLevelsublink.getDeeplinkTypeVal()))
-									{
-										thirdLevelCat.setDeepLinkVal(thirdLevelsublink.getDeeplinkTypeVal());
-									}
-									//TISQAUAT-613--End
-
-									superSubDeptDataList.add(thirdLevelCat);
+									modifiedTime = sublink.getModifiedtime();
 								}
-								count++;
 
+								if (null != sublinknode.getCategory() && StringUtils.isNotEmpty(sublinknode.getCategory().getCode()))
+								{
+									subDeptData.setSub_category_id(sublinknode.getCategory().getCode());
+								}
+								if (StringUtils.isNotEmpty(sublink.getTitle()))
+								{
+									subDeptData.setSub_category_name(sublink.getTitle());
+								}
+								//TISQAUAT-613--Start
+								if (StringUtils.isNotEmpty(sublinknode.getDeeplinkType()))
+								{
+									subDeptData.setDeepLinkType(sublinknode.getDeeplinkType());
+								}
+								if (StringUtils.isNotEmpty(sublinknode.getDeeplinkTypeId()))
+								{
+									subDeptData.setDeepLinkId(sublinknode.getDeeplinkTypeId());
+								}
+								if (StringUtils.isNotEmpty(sublinknode.getDeeplinkTypeVal()))
+								{
+									subDeptData.setDeepLinkVal(sublinknode.getDeeplinkTypeVal());
+								}
+								//TISQAUAT-613--End
+								int count = 0;
+								//Super sub category
+								for (final CMSLinkComponentModel thirdLevelsublink : sublink.getLinks())
+								{
+
+									if (count > 0)
+									{
+										thirdLevelCat = new DepartmentSuperSubHierarchyData();
+
+										if (null != modifiedTime && null != thirdLevelsublink.getModifiedtime()
+												&& thirdLevelsublink.getModifiedtime().compareTo(modifiedTime) > 0)
+										{
+											modifiedTime = thirdLevelsublink.getModifiedtime();
+										}
+
+										if (null != thirdLevelsublink.getCategory()
+												&& StringUtils.isNotEmpty(thirdLevelsublink.getCategory().getCode()))
+										{
+											thirdLevelCat.setSuper_sub_category_id(thirdLevelsublink.getCategory().getCode());
+										}
+										if (StringUtils.isNotEmpty(thirdLevelsublink.getLinkName()))
+										{
+											thirdLevelCat.setSuper_sub_category_name(thirdLevelsublink.getLinkName());
+										}
+										//TISQAUAT-613--Start
+										if (StringUtils.isNotEmpty(thirdLevelsublink.getDeeplinkType()))
+										{
+											thirdLevelCat.setDeepLinkType(thirdLevelsublink.getDeeplinkType());
+										}
+										if (StringUtils.isNotEmpty(thirdLevelsublink.getDeeplinkTypeId()))
+										{
+											thirdLevelCat.setDeepLinkId(thirdLevelsublink.getDeeplinkTypeId());
+										}
+										if (StringUtils.isNotEmpty(thirdLevelsublink.getDeeplinkTypeVal()))
+										{
+											thirdLevelCat.setDeepLinkVal(thirdLevelsublink.getDeeplinkTypeVal());
+										}
+										//TISQAUAT-613--End
+
+										superSubDeptDataList.add(thirdLevelCat);
+									}
+									count++;
+
+								}
+
+								subDeptData.setSupersubCategories(superSubDeptDataList);
+								subDeptDataList.add(subDeptData);
 							}
+						}
 
-							subDeptData.setSupersubCategories(superSubDeptDataList);
-							subDeptDataList.add(subDeptData);
+						if (!subDeptDataList.isEmpty())
+						{
+							deptData.setSubCategories(subDeptDataList);
 						}
 					}
 
-					if (!subDeptDataList.isEmpty())
-					{
-						deptData.setSubCategories(subDeptDataList);
-					}
+					deptDataList.add(deptData);
 				}
 
-				deptDataList.add(deptData);
 			}
 
 			if (null != modifiedTime && !StringUtils.isEmpty(modifiedTime.toString()))
@@ -666,7 +673,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getAboutusBanner()
 	 */
 	@Override
@@ -738,7 +745,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getHelpnServices()
 	 */
 	@Override
@@ -1243,11 +1250,15 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 		thirdLevelCat = new CategoryHierarchyL3Data();
 		List<CategoryHierarchyL2Data> subDeptDataList = null;
 		List<CategoryHierarchyL3Data> superSubDeptDataList = null;
+		MediaModel mediaModel = null;
+		List<CMSNavigationNodeModel> linkNodeChild = null;
+		List<CMSLinkComponentModel> subLinksNode = null;
 		try
 		{
 			final NavigationBarCollectionComponentModel shopByDeptComponent = getShopByDept();
 
-			if (CollectionUtils.isNotEmpty(shopByDeptComponent.getComponents()))
+			//	if (CollectionUtils.isNotEmpty(shopByDeptComponent.getComponents()))
+			if (null != shopByDeptComponent)
 			{
 				departmentList = shopByDeptComponent.getComponents();
 
@@ -1272,17 +1283,27 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 				{
 					deptData.setCategory_name(superNode.getLinkName());
 				}
-				if (null != linkNode.getMedia() && StringUtils.isNotEmpty(linkNode.getMedia().getUrl()))
+				if (null != linkNode)
 				{
-					imageData.setCategoryImageURl(linkNode.getMedia().getUrl());
+					mediaModel = linkNode.getMedia();
+				}
+				if (null != mediaModel && StringUtils.isNotEmpty(mediaModel.getUrl()))
+				{
+					imageData.setCategoryImageURl(mediaModel.getUrl());
 				}
 
-				//Sub category
-				if (CollectionUtils.isNotEmpty(linkNode.getChildren()))
+				if (null != linkNode)
 				{
-					for (final CMSNavigationNodeModel sublink : linkNode.getChildren())
+					linkNodeChild = linkNode.getChildren();
+				}
+				//Sub category
+				if (CollectionUtils.isNotEmpty(linkNodeChild))
+				{
+					for (final CMSNavigationNodeModel sublink : linkNodeChild)
 					{
-						if (CollectionUtils.isNotEmpty(sublink.getLinks()))
+						subLinksNode = sublink.getLinks();
+
+						if (CollectionUtils.isNotEmpty(subLinksNode))
 						{
 							subDeptData = new CategoryHierarchyL2Data();
 							superSubDeptDataList = new ArrayList<CategoryHierarchyL3Data>();
@@ -1291,13 +1312,13 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 							{
 								subDeptData.setCategory_name(sublink.getTitle());
 							}
-							if (null != (sublink.getLinks().get(0).getUrl()))
+							if (null != (subLinksNode.get(0).getUrl()))
 							{
-								subDeptData.setWebURL(sublink.getLinks().get(0).getUrl()); ///womens-clothing-ethnic-wear-sarees/c-msh1012102
+								subDeptData.setWebURL(subLinksNode.get(0).getUrl()); ///womens-clothing-ethnic-wear-sarees/c-msh1012102
 							}
 							//final int count = 0;
 							//Super sub category
-							for (final CMSLinkComponentModel thirdLevelsublink : sublink.getLinks())
+							for (final CMSLinkComponentModel thirdLevelsublink : subLinksNode)
 							{
 								//if (count > 0)
 								{

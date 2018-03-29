@@ -15,6 +15,7 @@ import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -340,12 +341,16 @@ public class MplPaymentWebDAOImpl implements MplPaymentWebDAO
 
 			LOG.info("**************** getCustomer ******************** : customerList : " + customerList);
 
-			if (null != customerList)
+			//IQA code Review fix
+			//if (null != customerList)
+			if (null != customerList && CollectionUtils.isNotEmpty(customerList))
 			{
 				customer = customerList.get(0);
 				return customer;
 			}
-			if (customerList.size() > 1)
+			//IQA code Review fix
+			//if (customerList.size() > 1)
+			if (CollectionUtils.isNotEmpty(customerList) && customerList.size() > 1)
 			{
 				throw new AmbiguousIdentifierException(MarketplacecommerceservicesConstants.FOUND + customerList.size()
 						+ " users with the unique uid '" + userId + "'");

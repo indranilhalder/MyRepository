@@ -2394,7 +2394,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 								null != cardApportionDetail.getQcSchedulingValue() ? cardApportionDetail.getQcSchedulingValue() : "" + 0);
 						totalQcShippingValue += Double.parseDouble(
 								null != cardApportionDetail.getQcShippingValue() ? cardApportionDetail.getQcShippingValue() : "" + 0);
-
 					}
 				}
 			}
