@@ -16,13 +16,8 @@ export default class Follow extends Component {
   }
 
   handleClick(e) {
-    console.log(e);
-    console.log("FOLLOW CLICK");
-    if (this.props.follow) {
-      this.onFollowClick();
-    } else {
-      this.onUnFollowClick();
-    }
+    e.stopPropagation();
+    this.props.onClick(this.props.follow);
   }
 
   render() {

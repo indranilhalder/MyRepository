@@ -15,7 +15,7 @@ class DiscoverMoreCarousel extends React.Component {
     const discoverMoreCarouselData = this.props.feedComponentData;
     return (
       <div className={styles.base}>
-        <Carousel header={this.props.feedComponentData.title}>
+        <Carousel header={discoverMoreCarouselData.title}>
           {discoverMoreCarouselData.data &&
             discoverMoreCarouselData.data.map((datum, i) => {
               return (

@@ -4,7 +4,8 @@ import {
   ERROR,
   FAILURE,
   BLP_OR_CLP_FEED_TYPE,
-  HOME_FEED_TYPE
+  HOME_FEED_TYPE,
+  DISCOUNT_PERCENT
 } from "../../lib/constants";
 import each from "lodash/each";
 import delay from "lodash/delay";
@@ -44,6 +45,7 @@ const ADOBE_TARGET_DELAY = 1500;
 const MSD_NUM_PRODUCTS = 10;
 const MSD_NUM_RESULTS = 10;
 const MSD_NUM_BRANDS = 1;
+const DISCOVER_MORE_NUM_RESULTS = 3;
 const FOLLOWED_WIDGET_WIDGET_LIST = [112]; // weirdly it's not done.
 const FRESH_FROM_BRANDS_WIDGET_LIST = [111];
 const DISCOVER_MORE_WIDGET_LIST = [110];
@@ -371,6 +373,7 @@ export function getComponentData(
       let postData;
       let result;
       let resultJson;
+      console.log(fetchURL);
 
       if (postParams && postParams.widgetPlatform === MSD_WIDGET_PLATFORM) {
         const widgetSpecificPostData = getMsdPostData(type);
@@ -392,17 +395,36 @@ export function getComponentData(
           postData.append("num_brands", JSON.stringify(MSD_NUM_BRANDS));
         }
 
+        if (type === DISCOVER_MORE) {
+          postData.append(
+            "num_results",
+            JSON.stringify([DISCOVER_MORE_NUM_RESULTS])
+          );
+        }
+
         result = await api.postMsd(fetchURL, postData);
         resultJson = await result.json();
-        console.log("RESULT JSON");
-        console.log(resultJson);
+        // if (resultJson.title) {
+
+        //   resultJson.data[0].title = resultJson.title;
+        // }
+
+        // if (resultJson.type) {
+        //   resultJson.data[0].type = resultJson.type;
+        // }
 
         if (resultJson.errors) {
           throw new Error(`${resultJson.errors[0].message}`);
         }
-        dispatch(
-          componentDataSuccess(resultJson.data[0], positionInFeed, true)
-        );
+
+        console.log("BEFORE");
+        console.log(resultJson);
+        resultJson.data = resultJson.data[0];
+        console.log("RESULT JSON");
+
+        console.log(resultJson);
+
+        dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
         delay(() => {
           const isFetchUrlDataLoading = getState().home.homeFeed[positionInFeed]

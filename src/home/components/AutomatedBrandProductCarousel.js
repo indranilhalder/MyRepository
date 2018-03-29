@@ -46,6 +46,8 @@ export default class AutomatedBrandProductCarousel extends React.Component {
       carouselData = this.props.feedComponentData.items.map(transformData);
     }
 
+    const buttonText = this.props.feedComponentData.btnText;
+
     return componentData ? (
       <FeedComponent
         banner={
@@ -57,7 +59,7 @@ export default class AutomatedBrandProductCarousel extends React.Component {
         }
         backgroundColor="#e4e4e4"
         carouselOptions={{
-          buttonText: "See All",
+          buttonText,
           seeAll: () => {
             this.handleClick();
           }

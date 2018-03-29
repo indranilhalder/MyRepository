@@ -6,17 +6,14 @@ import PropTypes from "prop-types";
 export default class DiscoverMore extends React.Component {
   render() {
     if (this.props.feedComponentData.data) {
-      if (this.props.feedComponentData.data.type !== "L1") {
-        console.log("BLARGH");
+      if (this.props.feedComponentData.category !== "l3") {
         return (
-          <DiscoverMore500
-            feedComponentData={this.props.feedComponentData.data}
-          />
+          <DiscoverMore500 feedComponentData={this.props.feedComponentData} />
         );
       } else {
         return (
           <DiscoverMoreCarousel
-            feedComponentData={this.props.feedComponentData.data}
+            feedComponentData={this.props.feedComponentData}
           />
         );
       }

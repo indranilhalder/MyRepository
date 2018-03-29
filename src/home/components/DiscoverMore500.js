@@ -14,6 +14,7 @@ class DiscoverMore500 extends React.Component {
 
   render() {
     const { feedComponentData } = this.props;
+    console.log("DISCOVER MORE 500 CALLED");
     return (
       <div className={styles.base}>
         <div className={styles.header}>{feedComponentData.title}</div>

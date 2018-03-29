@@ -145,11 +145,16 @@ const home = (
             ...componentData
           };
         } else {
+          if (action.data.type) {
+            action.data.category = action.data.type;
+          }
           componentData = {
+            ...action.data,
             ...homeFeedData[action.positionInFeed],
-            data: action.data,
             ...componentData
           };
+          console.log("COMPONENT DATA");
+          console.log(componentData);
         }
         homeFeedData[action.positionInFeed] = componentData;
         return Object.assign({}, state, {
