@@ -253,8 +253,9 @@ export default class PdpJewellery extends React.Component {
             <JewelleryDetailsAndLink
               productName={productData.brandName}
               productDescription={productData.productName}
-              price={productData.winningSellerMOP}
-              discountPrice={productData.mrp}
+              price={productData.winningSellerPrice.formattedValueNoDecimal}
+              discountPrice={productData.mrpPrice.formattedValueNoDecimal}
+              averageRating={productData.averageRating}
               discount={productData.discount}
               hasPriceBreakUp={productData.priceBreakUpDetailsMap}
               history={this.props.history}
@@ -339,11 +340,13 @@ please try another pincode">
           )}
 
           <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
+            {productData.averageRating && (
+              <RatingAndTextLink
+                onClick={this.goToReviewPage}
+                averageRating={productData.averageRating}
+                numberOfReview={productData.numberOfReviews}
+              />
+            )}
           </div>
 
           <div className={styles.details} id="priceBreakup">

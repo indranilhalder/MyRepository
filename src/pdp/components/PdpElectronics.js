@@ -259,8 +259,8 @@ export default class PdpElectronics extends React.Component {
               <JewelleryDetailsAndLink
                 productName={productData.brandName}
                 productDescription={productData.productName}
-                price={productData.winningSellerMOP}
-                discountPrice={productData.mrp}
+                price={productData.winningSellerPrice.formattedValueNoDecimal}
+                discountPrice={productData.mrpPrice.formattedValueNoDecimal}
                 averageRating={productData.averageRating}
                 discount={productData.discount}
               />
@@ -338,11 +338,13 @@ please try another pincode">
             </div>
           )}
           <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
+            {productData.averageRating && (
+              <RatingAndTextLink
+                onClick={this.goToReviewPage}
+                averageRating={productData.averageRating}
+                numberOfReview={productData.numberOfReviews}
+              />
+            )}
           </div>
           {productData.classifications && (
             <div className={styles.details}>
