@@ -4,6 +4,7 @@
   min-height: calc(100vh - 120px);
   background-color: #ececec;
   padding: 15px;
+  padding-bottom: 70px;
 }
 .header {
   width: 100%;
