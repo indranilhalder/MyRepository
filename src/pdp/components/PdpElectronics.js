@@ -199,7 +199,7 @@ export default class PdpElectronics extends React.Component {
       }).length > 0
     ) {
       const validSellersCount = productData.otherSellers.filter(val => {
-        return val.availableStock !== "0";
+        return val.availableStock !== "0" && val.availableStock !== "-1";
       }).length;
       otherSellersText = (
         <span>
@@ -208,7 +208,7 @@ export default class PdpElectronics extends React.Component {
             {" "}
             {productData.winningSellerName}
           </span>{" "}
-          and {validSellersCount - 1} other seller(s)
+          and {validSellersCount} other seller(s)
         </span>
       );
     }

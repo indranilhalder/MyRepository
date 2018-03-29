@@ -45,17 +45,19 @@ export default class PdpApparel extends React.Component {
   gotoPreviousPage = () => {
     this.props.history.goBack();
   };
-  goToSellerPage = () => {
-    let expressionRuleFirst = "/p-(.*)/(.*)";
-    let expressionRuleSecond = "/p-(.*)";
-    let productId;
-    if (this.props.location.pathname.match(expressionRuleFirst)) {
-      productId = this.props.location.pathname.match(expressionRuleFirst)[1];
-    } else {
-      productId = this.props.location.pathname.match(expressionRuleSecond)[1];
+  goToSellerPage(count) {
+    if (count !== 0) {
+      let expressionRuleFirst = "/p-(.*)/(.*)";
+      let expressionRuleSecond = "/p-(.*)";
+      let productId;
+      if (this.props.location.pathname.match(expressionRuleFirst)) {
+        productId = this.props.location.pathname.match(expressionRuleFirst)[1];
+      } else {
+        productId = this.props.location.pathname.match(expressionRuleSecond)[1];
+      }
+      this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
     }
-    this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
-  };
+  }
   goToCart = () => {
     const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.props.history.push({
@@ -153,6 +155,7 @@ export default class PdpApparel extends React.Component {
       });
     }
   };
+
   handleShowSizeguide() {
     if (this.props.getProductSizeGuide) {
       this.props.getProductSizeGuide();
@@ -167,7 +170,6 @@ export default class PdpApparel extends React.Component {
   };
   renderDeliveryOptions(productData) {
     const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-
     return (
       productData.eligibleDeliveryModes &&
       productData.eligibleDeliveryModes.map((val, idx) => {
@@ -186,6 +188,7 @@ export default class PdpApparel extends React.Component {
       })
     );
   }
+
   render() {
     console.log(this.props);
     const productData = this.props.productDetails;
@@ -199,6 +202,18 @@ export default class PdpApparel extends React.Component {
       .map(image => {
         return image[0].value;
       });
+    let validSellersCount = 0;
+    if (
+      productData.otherSellers &&
+      productData.otherSellers.filter(val => {
+        return val.availableStock !== "0";
+      }).length > 0
+    ) {
+      validSellersCount = productData.otherSellers.filter(val => {
+        return val.availableStock !== "0" && val.availableStock !== "-1";
+      }).length;
+    }
+
     if (productData) {
       return (
         <PdpFrame
@@ -285,15 +300,21 @@ export default class PdpApparel extends React.Component {
             this.renderDeliveryOptions(productData)
           )}
 
-          {productData.otherSellersText && (
+          {productData.winningSellerName && (
             <div className={styles.separator}>
-              <PdpLink onClick={this.goToSellerPage}>
-                <div
-                  className={styles.sellers}
-                  dangerouslySetInnerHTML={{
-                    __html: productData.otherSellersText
-                  }}
-                />
+              <PdpLink onClick={() => this.goToSellerPage(validSellersCount)}>
+                <div className={styles.sellers}>
+                  Sold by{" "}
+                  <span className={styles.winningSellerText}>
+                    {productData.winningSellerName}
+                  </span>
+                  {validSellersCount !== 0 && (
+                    <React.Fragment>
+                      {" "}
+                      and {validSellersCount} other seller(s)
+                    </React.Fragment>
+                  )}
+                </div>
               </PdpLink>
             </div>
           )}
