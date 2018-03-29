@@ -1,0 +1,45 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 25px 15px 85px 15px;
+  background: #ececec;
+}
+.header {
+  width: 100%;
+  font-size: 18px;
+  color: #000000;
+  font-family: semibold;
+  position: relative;
+  padding-right: 60px;
+  margin-bottom: 25px;
+}
+.cancelHolder {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.select {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+.textArea {
+  width: 100%;
+  height: auto;
+}
+.content {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  border-radius: 4px;
+  padding: 15px;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+  text-align: center;
+}
+.button {
+  display: inline-block;
+}
