@@ -201,8 +201,10 @@ export default class PdpApparel extends React.Component {
               <ProductDetailsMainCard
                 productName={productData.brandName}
                 productDescription={productData.productName}
-                price={productData.mrp}
-                discountPrice={productData.winningSellerMOP}
+                price={productData.mrpPrice.formattedValueNoDecimal}
+                discountPrice={
+                  productData.winningSellerPrice.formattedValueNoDecimal
+                }
                 averageRating={productData.averageRating}
                 onClick={this.goToReviewPage}
               />
