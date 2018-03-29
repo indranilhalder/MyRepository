@@ -68,6 +68,12 @@ export default class PaymentCardWrapper extends React.Component {
     }
   };
 
+  addGiftCard = () => {
+    if (this.props.addGiftCard) {
+      this.props.addGiftCard();
+    }
+  };
+
   render() {
     if (this.props.cart.paymentModes) {
       return (
@@ -81,6 +87,8 @@ export default class PaymentCardWrapper extends React.Component {
               value={this.props.cliqCashAmount}
               active={cliqCashToggleState}
               onToggle={val => this.handleClick(val)}
+              isFromGiftCard={this.props.isFromGiftCard}
+              addGiftCard={() => this.addGiftCard()}
             />
           </div>
           {this.props.isRemainingBalance &&

@@ -18,6 +18,7 @@ import filter from "lodash/filter";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString from "query-string";
 import PiqPage from "./PiqPage";
+
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -34,6 +35,8 @@ const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
 const NET_BANKING = "NB";
+const CART_GU_ID = "cartGuid";
+
 class CheckOutPage extends React.Component {
   state = {
     confirmAddress: false,
@@ -176,6 +179,7 @@ class CheckOutPage extends React.Component {
       </div>
     );
   };
+
   renderCliqAndPiq() {
     let currentSelectedProduct = this.props.cart.cartDetailsCNC.products.find(
       product => {
@@ -366,7 +370,7 @@ class CheckOutPage extends React.Component {
     } else if (this.props.location.state.isFromGiftCard) {
       this.setState({ isGiftCard: true });
       let guIdObject = new FormData();
-      guIdObject.append("cartGuid", this.props.location.state.egvCartGuid);
+      guIdObject.append(CART_GU_ID, this.props.location.state.egvCartGuid);
       this.props.getPaymentModes(guIdObject);
       this.props.getNetBankDetails();
     } else {
@@ -388,7 +392,7 @@ class CheckOutPage extends React.Component {
         }
         this.props.getUserAddress(this.props.location.state.pinCode);
         let guIdObject = new FormData();
-        guIdObject.append("cartGuid", JSON.parse(cartDetailsLoggedInUser).guid);
+        guIdObject.append(CART_GU_ID, JSON.parse(cartDetailsLoggedInUser).guid);
         this.props.getPaymentModes(guIdObject);
         this.props.getPaymentModes(guIdObject);
         this.props.getCODEligibility();
@@ -597,6 +601,10 @@ class CheckOutPage extends React.Component {
     this.props.softReservationForCODPayment(this.props.location.state.pinCode);
   };
 
+  addGiftCard = () => {
+    this.props.addGiftCard();
+  };
+
   render() {
     if (this.props.cart.loading) {
       return <div className={styles.base}>{this.renderLoader()}</div>;
@@ -699,6 +707,7 @@ class CheckOutPage extends React.Component {
               createJusPayOrderForGiftCardNetBanking={bankName =>
                 this.createJusPayOrderForGiftCardNetBanking(bankName)
               }
+              addGiftCard={() => this.addGiftCard()}
             />
           )}
 

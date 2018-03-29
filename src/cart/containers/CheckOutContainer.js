@@ -39,7 +39,12 @@ import {
   createJusPayOrderForGiftCardNetBanking,
   createJusPayOrderForGiftCardFromSavedCards
 } from "../actions/cart.actions";
-import { showModal, BANK_OFFERS } from "../../general/modal.actions";
+import {
+  showModal,
+  BANK_OFFERS,
+  GIFT_CARD_MODAL
+} from "../../general/modal.actions";
+
 const mapDispatchToProps = dispatch => {
   return {
     getCartDetailsCNC: (
@@ -187,6 +192,9 @@ const mapDispatchToProps = dispatch => {
     },
     createJusPayOrderForGiftCardFromSavedCards: (cardDetails, guId) => {
       dispatch(createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId));
+    },
+    addGiftCard: () => {
+      dispatch(showModal(GIFT_CARD_MODAL));
     }
   };
 };
