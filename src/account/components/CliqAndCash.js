@@ -17,6 +17,7 @@ import {
 } from "../../lib/constants.js";
 const DATE_FORMAT = "DD/MM/YYYY, hh:mm";
 const REGULAR_EXPRESSION_PIN_NUMBER = "/^d{6}$/";
+const REGULAR_EXPRESSION_VOUCHER_NUMBER = "/^d{12}$/";
 export default class CliqAndCash extends React.Component {
   constructor(props) {
     super(props);
@@ -49,7 +50,7 @@ export default class CliqAndCash extends React.Component {
   }
   redeemCliqVoucher() {
     if (
-      this.state.cardNumber &&
+      this.state.cardNumber.match(REGULAR_EXPRESSION_VOUCHER_NUMBER) &&
       this.state.pinNumber.match(REGULAR_EXPRESSION_PIN_NUMBER)
     ) {
       this.setState({ cliqCashUpdate: true });
