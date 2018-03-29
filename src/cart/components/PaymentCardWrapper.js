@@ -24,7 +24,6 @@ const typeComponentMapping = {
 
 export default class PaymentCardWrapper extends React.Component {
   binValidationForPaytm(val) {
-    console.log("here");
     if (this.props.binValidationForPaytm) {
       this.props.binValidationForPaytm(PAYTM, "", val);
     }

@@ -439,7 +439,7 @@ class CheckOutPage extends React.Component {
     if (this.state.binValidationCOD) {
       this.softReservationForCODPayment();
     }
-    if (this.state.paymentModeSelected === "paytm") {
+    if (this.state.paymentModeSelected === PAYTM) {
       this.softReservationPaymentForWallet(PAYTM);
     }
   };
@@ -467,10 +467,12 @@ class CheckOutPage extends React.Component {
   addNewAddress = () => {
     this.setState({ addNewAddress: true });
   };
-  binValidationForPaytm = (paymentMode, binNo, val) => {
-    localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
-    this.setState({ paymentModeSelected: paymentMode });
-    this.props.binValidation(paymentMode, binNo);
+  binValidationForPaytm = val => {
+    if (val) {
+      localStorage.setItem(PAYMENT_MODE_TYPE, PAYTM);
+      this.setState({ paymentModeSelected: PAYTM });
+      this.props.binValidation(PAYTM, "");
+    }
   };
   applyBankCoupons = val => {
     if (val.length > 0) {
@@ -644,9 +646,7 @@ class CheckOutPage extends React.Component {
                 binValidationForSavedCard={cardDetails =>
                   this.binValidationForSavedCard(cardDetails)
                 }
-                binValidationForPaytm={(paymentMode, binNo, val) =>
-                  this.binValidationForPaytm(paymentMode, binNo, val)
-                }
+                binValidationForPaytm={val => this.binValidationForPaytm(val)}
               />
             )}
 
