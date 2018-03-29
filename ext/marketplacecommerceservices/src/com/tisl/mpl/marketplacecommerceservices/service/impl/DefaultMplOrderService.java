@@ -4,19 +4,6 @@ import static de.hybris.platform.servicelayer.util.ServicesUtil.validateIfSingle
 import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParameterNotNull;
 import static java.lang.String.format;
 
-import de.hybris.platform.commerceservices.search.pagedata.PageableData;
-import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
-import de.hybris.platform.core.enums.OrderStatus;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.ordersplitting.model.ConsignmentModel;
-import de.hybris.platform.promotions.model.AbstractPromotionModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.util.ServicesUtil;
-import de.hybris.platform.store.BaseStoreModel;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,6 +52,7 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.util.localization.Localization;
+
 
 /**
  *
@@ -373,7 +361,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplAwbStatusService#prepAwbStatus(com.tisl.mpl.xml.pojo.AWBStatusResponse)
 	 */
 	@Override
@@ -453,7 +441,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplOrderService#findProductsByCode(java.lang.String)
 	 */
 	@Override
@@ -529,20 +517,7 @@ public class DefaultMplOrderService implements MplOrderService
 	{
 		return mplOrderDao.fetchOrderByTransaction(transactionId);
 	}
-	
-	//changes for SDI 6152
-	@Override
-	public ProductModel findProductsByCodewithCatalog(String productCode, String catalogCode)
-	{
-		validateParameterNotNull(productCode, "Parameter code must not be null");
-		final List<ProductModel> products = productDao.findProductsByCodewithCatalog(productCode,catalogCode);
 
-		validateIfSingleResult(products, format("Product with code '%s' not found!", productCode),
-				format("Product code '%s' is not unique, %d products found!", productCode, Integer.valueOf(products.size())));
-
-		return products.get(0);
-	}
-	
 	/**
 	 * Added for NU-56
 	 */
