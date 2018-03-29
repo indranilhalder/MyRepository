@@ -40,9 +40,12 @@ import ReturnFlowContainer from "./account/containers/ReturnFlowContainer.js";
 import EditAddressBookContainer from "./account/containers/EditAddressBookContainer.js";
 import AddAddressContainer from "./account/containers/AddAddressContainer.js";
 import SaveListContainer from "./account/containers/SaveListContainer";
+import CliqCashContainer from "./account/containers/CliqCashContainer.js";
 import GiftCardContainer from "./account/containers/GiftCardContainer";
+
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 import CancelOrderContainer from "./account/containers/CancelOrderContainer";
+
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -80,6 +83,7 @@ import {
   MY_ACCOUNT_COUPON_PAGE,
   MY_ACCOUNT_BRANDS_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
+  MY_ACCOUNT_CLIQ_CASH_PAGE,
   ORDER_PREFIX,
   RETURNS,
   SHORT_URL_ORDER_DETAIL,
@@ -194,6 +198,12 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_GIFT_CARD_PAGE}`}
               component={GiftCardContainer}
             />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_CLIQ_CASH_PAGE}`}
+              component={CliqCashContainer}
+            />
+
             <Route
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_BRANDS_PAGE}`}
