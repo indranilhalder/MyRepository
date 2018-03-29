@@ -36,7 +36,7 @@ export default class CancelReasonForm extends React.Component {
     const data = this.props.cancelProductDetails;
     return (
       <ReturnsFrame
-        headerText="Select reason for your return"
+        headerText="Select reason for your cancel"
         onContinue={() => this.handleContinue()}
         onCancel={() => this.handleCancel()}
       >

@@ -15,24 +15,24 @@ export default class CancelOrder extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    const CancelProductDetails = {};
-    CancelProductDetails.transactionId = this.props.history.location.state.transactionId;
-    CancelProductDetails.orderCode = this.props.match.params[0];
-    CancelProductDetails.USSID = this.props.history.location.state.ussid;
-    CancelProductDetails.returnCancelFlag = "C";
+    const cancelProductDetails = {};
+    cancelProductDetails.transactionId = this.props.history.location.state.transactionId;
+    cancelProductDetails.orderCode = this.props.match.params[0];
+    cancelProductDetails.USSID = this.props.history.location.state.ussid;
+    cancelProductDetails.returnCancelFlag = "C";
     if (userDetails && customerCookie) {
-      this.props.cancelProductDetails(CancelProductDetails);
+      this.props.getDetailsOfCancelledProduct(cancelProductDetails);
     }
   }
   finalSubmit(reason) {
-    const CancelProductDetails = {};
-    CancelProductDetails.transactionId = this.props.history.location.state.transactionId;
-    CancelProductDetails.orderCode = this.props.match.params[0];
-    CancelProductDetails.USSID = this.props.history.location.state.ussid;
-    CancelProductDetails.ticketTypeCode = "C";
-    CancelProductDetails.reasonCode = reason.cancelReasonCode;
-    CancelProductDetails.refundType = "";
-    this.props.cancelProduct(CancelProductDetails);
+    const cancelProductDetails = {};
+    cancelProductDetails.transactionId = this.props.history.location.state.transactionId;
+    cancelProductDetails.orderCode = this.props.match.params[0];
+    cancelProductDetails.USSID = this.props.history.location.state.ussid;
+    cancelProductDetails.ticketTypeCode = "C";
+    cancelProductDetails.reasonCode = reason.cancelReasonCode;
+    cancelProductDetails.refundType = "";
+    this.props.cancelProduct(cancelProductDetails);
   }
   onCancel() {
     this.props.history.goBack();
@@ -45,7 +45,7 @@ export default class CancelOrder extends React.Component {
     return <MDSpinner />;
   }
   render() {
-    let cancelProductDetails = this.props.cancelProductDetailsObj;
+    let cancelProductDetails = this.props.cancelProductDetails;
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (this.props.loadingForCancelProductDetails) {

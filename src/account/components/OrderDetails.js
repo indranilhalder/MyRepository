@@ -29,8 +29,8 @@ import {
   CANCEL
 } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
-const PRODUCT_Returned = "Return Product";
-const PRODUCT_Cancel = "Cancel Product";
+const PRODUCT_RETURN = "Return Product";
+const PRODUCT_CANCEL = "Cancel Product";
 const AWB_POPUP_TRUE = "Y";
 const AWB_POPUP_FALSE = "N";
 export default class OrderDetails extends React.Component {
@@ -56,7 +56,7 @@ export default class OrderDetails extends React.Component {
       });
     }
   }
-  canelItem(transactionId, ussid, orderCode) {
+  cancelItem(transactionId, ussid, orderCode) {
     this.props.history.push({
       pathname: `${CANCEL}/${orderCode}`,
       state: {
@@ -174,7 +174,7 @@ export default class OrderDetails extends React.Component {
                   <div className={styles.buttonHolder}>
                     {products.isReturned && (
                       <OrderReturn
-                        buttonLabel={PRODUCT_Returned}
+                        buttonLabel={PRODUCT_RETURN}
                         isEditable={true}
                         replaceItem={() =>
                           this.replaceItem(
@@ -190,10 +190,10 @@ export default class OrderDetails extends React.Component {
                     )}
                     {products.cancel && (
                       <OrderReturn
-                        buttonLabel={PRODUCT_Cancel}
+                        buttonLabel={PRODUCT_CANCEL}
                         isEditable={true}
                         replaceItem={() =>
-                          this.canelItem(
+                          this.cancelItem(
                             products.transactionId,
                             products.USSID,
                             products.sellerorderno
@@ -238,7 +238,7 @@ export default class OrderDetails extends React.Component {
                             }
                           >
                             <UnderLinedButton
-                              label={PRODUCT_Returned}
+                              label={PRODUCT_RETURN}
                               color="#ff1744"
                             />
                           </div>
@@ -255,7 +255,7 @@ export default class OrderDetails extends React.Component {
                             }
                           >
                             <UnderLinedButton
-                              label={PRODUCT_Cancel}
+                              label={PRODUCT_CANCEL}
                               color="#ff1744"
                             />
                           </div>

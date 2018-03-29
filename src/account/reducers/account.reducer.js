@@ -647,20 +647,20 @@ const account = (
         getPinCodeStatus: action.status,
         getPinCodeError: action.error
       });
-    case accountActions.CANCEL_PRODUCT_DETAILS_REQUEST:
+    case accountActions.GET_CANCEL_PRODUCT_DETAILS_REQUEST:
       return Object.assign({}, state, {
         cancelProductDetailsStatus: action.status,
         loadingForCancelProductDetails: true
       });
 
-    case accountActions.CANCEL_PRODUCT_DETAILS_SUCCESS:
+    case accountActions.GET_CANCEL_PRODUCT_DETAILS_SUCCESS:
       return Object.assign({}, state, {
         cancelProductDetailsStatus: action.status,
-        cancelProductDetails: action.cancelProductDetails,
+        cancelProductDetails: action.getDetailsOfCancelledProduct,
         loadingForCancelProductDetails: false
       });
 
-    case accountActions.CANCEL_PRODUCT_DETAILS_FAILURE:
+    case accountActions.GET_CANCEL_PRODUCT_DETAILS_FAILURE:
       return Object.assign({}, state, {
         cancelProductDetailsStatus: action.status,
         cancelProductDetailsError: action.error,

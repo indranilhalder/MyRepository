@@ -156,9 +156,12 @@ export const CANCEL_PRODUCT_REQUEST = "CANCEL_PRODUCT_REQUEST";
 export const CANCEL_PRODUCT_SUCCESS = "CANCEL_PRODUCT_SUCCESS";
 export const CANCEL_PRODUCT_FAILURE = "CANCEL_PRODUCT_FAILURE";
 
-export const CANCEL_PRODUCT_DETAILS_REQUEST = "CANCEL_PRODUCT_DETAILS_REQUEST";
-export const CANCEL_PRODUCT_DETAILS_SUCCESS = "CANCEL_PRODUCT_DETAILS_SUCCESS";
-export const CANCEL_PRODUCT_DETAILS_FAILURE = "CANCEL_PRODUCT_DETAILS_FAILURE";
+export const GET_CANCEL_PRODUCT_DETAILS_REQUEST =
+  "GET_CANCEL_PRODUCT_DETAILS_REQUEST";
+export const GET_CANCEL_PRODUCT_DETAILS_SUCCESS =
+  "GET_CANCEL_PRODUCT_DETAILS_SUCCESS";
+export const GET_CANCEL_PRODUCT_DETAILS_FAILURE =
+  "GET_CANCEL_PRODUCT_DETAILS_FAILURE";
 
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
@@ -178,27 +181,29 @@ const FOLLOW = "follow";
 const UNFOLLOW = "unfollow";
 // cencel product
 
-export function cancelProductDetailsRequest() {
+export function getDetailsOfCancelledProductRequest() {
   return {
-    type: CANCEL_PRODUCT_DETAILS_REQUEST,
+    type: GET_CANCEL_PRODUCT_DETAILS_REQUEST,
     status: REQUESTING
   };
 }
-export function cancelProductDetailsSuccess(cancelProductDetails) {
+export function getDetailsOfCancelledProductSuccess(
+  getDetailsOfCancelledProduct
+) {
   return {
-    type: CANCEL_PRODUCT_DETAILS_SUCCESS,
+    type: GET_CANCEL_PRODUCT_DETAILS_SUCCESS,
     status: SUCCESS,
-    cancelProductDetails
+    getDetailsOfCancelledProduct
   };
 }
-export function cancelProductDetailsFailure(error) {
+export function getDetailsOfCancelledProductFailure(error) {
   return {
-    type: CANCEL_PRODUCT_DETAILS_FAILURE,
+    type: GET_CANCEL_PRODUCT_DETAILS_FAILURE,
     status: ERROR,
     error
   };
 }
-export function cancelProductDetails(cancelProductDetails) {
+export function getDetailsOfCancelledProduct(cancelProductDetails) {
   let cancelProductObject = new FormData();
   cancelProductObject.append(
     "transactionId",
@@ -213,7 +218,7 @@ export function cancelProductDetails(cancelProductDetails) {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
-    dispatch(cancelProductDetailsRequest());
+    dispatch(getDetailsOfCancelledProductRequest());
     try {
       const result = await api.postFormData(
         `${USER_PATH}/${
@@ -231,10 +236,10 @@ export function cancelProductDetails(cancelProductDetails) {
       ) {
         throw new Error(`${resultJson.errors[0].message}`);
       } else {
-        return dispatch(cancelProductDetailsSuccess(resultJson));
+        return dispatch(getDetailsOfCancelledProductSuccess(resultJson));
       }
     } catch (e) {
-      dispatch(cancelProductDetailsFailure(e.message));
+      dispatch(getDetailsOfCancelledProductFailure(e.message));
     }
   };
 }

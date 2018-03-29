@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import {
-  cancelProductDetails,
+  getDetailsOfCancelledProduct,
   cancelProduct
 } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
@@ -12,28 +12,24 @@ import {
 } from "../../lib/constants";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    cancelProductDetails: CancelProductDetails => {
-      dispatch(cancelProductDetails(CancelProductDetails));
+    getDetailsOfCancelledProduct: cancelProductDetails => {
+      dispatch(getDetailsOfCancelledProduct(cancelProductDetails));
     },
-    cancelProduct: CancelProductDetails => {
-      try {
-        dispatch(cancelProduct(CancelProductDetails)).then(response => {
-          if (response.status === SUCCESS) {
-            ownProps.history.push(`${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}`);
-          } else {
-            throw new Error("Failed");
-          }
-        });
-      } catch (e) {
-        // showToast Here
-        console.log(e.message);
+    cancelProduct: async CancelProductDetails => {
+      const cancelOrderDetails = await dispatch(
+        cancelProduct(CancelProductDetails)
+      );
+      if (cancelOrderDetails.status === SUCCESS) {
+        ownProps.history.push(`${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}`);
+      } else {
+        // show toast
       }
     }
   };
 };
 const mapStateToProps = state => {
   return {
-    cancelProductDetailsObj: state.profile.cancelProductDetails,
+    cancelProductDetails: state.profile.cancelProductDetails,
     loadingForCancelProductDetails: state.profile.loadingForCancelProductDetails
   };
 };
