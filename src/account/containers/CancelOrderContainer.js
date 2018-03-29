@@ -33,7 +33,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 const mapStateToProps = state => {
   return {
-    cancelProductDetailsObj: state.profile.cancelProductDetails
+    cancelProductDetailsObj: state.profile.cancelProductDetails,
+    loadingForCancelProductDetails: state.profile.loadingForCancelProductDetails
   };
 };
 
