@@ -172,7 +172,7 @@ export default class OrderDetails extends React.Component {
                 )}
                 {products.awbPopupLink === AWB_POPUP_FALSE && (
                   <div className={styles.buttonHolder}>
-                    {products.isReturned ? (
+                    {products.isReturned && (
                       <OrderReturn
                         buttonLabel={PRODUCT_Returned}
                         isEditable={true}
@@ -187,7 +187,8 @@ export default class OrderDetails extends React.Component {
                           this.writeReview(products.productcode)
                         }
                       />
-                    ) : (
+                    )}
+                    {products.cancel && (
                       <OrderReturn
                         buttonLabel={PRODUCT_Cancel}
                         isEditable={true}
@@ -225,19 +226,40 @@ export default class OrderDetails extends React.Component {
                         </div>
                       </div>
                       <div className={styles.reviewHolder}>
-                        <div
-                          className={styles.review}
-                          replaceItem={() => this.replaceItem()}
-                        >
-                          <UnderLinedButton
-                            label={
-                              products.isReturned === false
-                                ? PRODUCT_Cancel
-                                : PRODUCT_Returned
+                        {products.isReturned && (
+                          <div
+                            className={styles.review}
+                            replaceItem={() =>
+                              this.replaceItem(
+                                products.sellerorderno,
+                                orderDetails.paymentMethod,
+                                products.transactionId
+                              )
                             }
-                            color="#ff1744"
-                          />
-                        </div>
+                          >
+                            <UnderLinedButton
+                              label={PRODUCT_Returned}
+                              color="#ff1744"
+                            />
+                          </div>
+                        )}
+                        {products.cancel && (
+                          <div
+                            className={styles.review}
+                            replaceItem={() =>
+                              this.canelItem(
+                                products.transactionId,
+                                products.USSID,
+                                products.sellerorderno
+                              )
+                            }
+                          >
+                            <UnderLinedButton
+                              label={PRODUCT_Cancel}
+                              color="#ff1744"
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

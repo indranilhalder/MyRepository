@@ -61,7 +61,6 @@ const account = (
     followedBrands: null,
     followedBrandsStatus: null,
     followedBrandsError: null,
-
     loadingForFollowedBrands: false,
 
     cliqCashUserDetailsStatus: null,
@@ -71,8 +70,6 @@ const account = (
     cliqCashVoucherDetailsStatus: null,
     cliqCashVoucherDetailsError: null,
     cliqCashVoucherDetails: null,
-
-    loadingForFollowedBrands: false,
 
     returnPinCodeStatus: null,
     returnPinCodeValues: null,

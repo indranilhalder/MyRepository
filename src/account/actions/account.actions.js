@@ -247,11 +247,11 @@ export function cancelProductRequest() {
     status: REQUESTING
   };
 }
-export function cancelProductSuccess(cancelOrder) {
+export function cancelProductSuccess(cancelProduct) {
   return {
     type: CANCEL_PRODUCT_SUCCESS,
     status: SUCCESS,
-    cancelOrder
+    cancelProduct
   };
 }
 export function cancelProductFailure(error) {
