@@ -1,6 +1,7 @@
 import cloneDeep from "lodash/cloneDeep";
 import * as accountActions from "../actions/account.actions";
 import * as cartActions from "../../cart/actions/cart.actions";
+import { SUCCESS } from "../../lib/constants";
 
 const account = (
   state = {
@@ -49,6 +50,8 @@ const account = (
     removeAddressStatus: null,
     removeAddressError: null,
 
+    returnProductDetails: null,
+    returnRequest: null,
     editAddressStatus: null,
     editAddressError: null,
 
@@ -60,6 +63,13 @@ const account = (
     followedBrandsError: null,
     loadingForFollowedBrands: false,
 
+    returnPinCodeStatus: null,
+    returnPinCodeValues: null,
+    returnPinCodeError: null,
+
+    returnInitiateStatus: null,
+    returnInitiateError: null,
+    returnInitiate: null,
     giftCards: null,
     giftCardStatus: null,
     giftCardsError: null,
@@ -91,7 +101,61 @@ const account = (
   },
   action
 ) => {
+  let currentReturnRequest;
   switch (action.type) {
+    case accountActions.GET_RETURN_REQUEST:
+    case accountActions.RETURN_PRODUCT_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+    case accountActions.GET_RETURN_REQUEST_SUCCESS:
+      return Object.assign({}, state, {
+        status: SUCCESS,
+        loading: false,
+        returnRequest: action.returnRequest
+      });
+    case accountActions.GET_RETURN_REQUEST_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        error: action.error
+      });
+    case accountActions.RETURN_PRODUCT_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.state,
+        returnProductDetails: action.returnProductDetails
+      });
+    case accountActions.RETURN_PRODUCT_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.status
+      });
+
+    case accountActions.QUICK_DROP_STORE_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true,
+        error: action.error
+      });
+    case accountActions.QUICK_DROP_STORE_SUCCESS:
+      currentReturnRequest = cloneDeep(state.returnRequest);
+      Object.assign(currentReturnRequest, {
+        returnStoreDetailsList: action.addresses
+      });
+
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.state,
+        returnRequest: currentReturnRequest
+      });
+    case accountActions.QUICK_DROP_STORE_FAILURE:
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.status
+      });
+
     case accountActions.GET_GIFTCARD_REQUEST:
       return Object.assign({}, state, {
         giftCardStatus: action.status,
@@ -429,6 +493,44 @@ const account = (
       return Object.assign({}, state, {
         removeAddressStatus: action.status,
         removeAddressError: action.error,
+        loading: false
+      });
+
+    case accountActions.NEW_RETURN_INITIATE_REQUEST:
+      return Object.assign({}, state, {
+        returnInitiateStatus: action.status,
+        loading: true
+      });
+    case accountActions.NEW_RETURN_INITIATE_SUCCESS:
+      return Object.assign({}, state, {
+        returnInitiateStatus: action.status,
+        returnInitiate: action.returnDetails,
+        loading: false
+      });
+
+    case accountActions.NEW_RETURN_INITIATE_FAILURE:
+      return Object.assign({}, state, {
+        returnInitiateStatus: action.status,
+        returnInitiateError: action.error,
+        loading: false
+      });
+
+    case accountActions.RETURN_PIN_CODE_REQUEST:
+      return Object.assign({}, state, {
+        returnPinCodeStatus: action.status,
+        loading: true
+      });
+    case accountActions.RETURN_PIN_CODE_SUCCESS:
+      return Object.assign({}, state, {
+        returnPinCodeStatus: action.status,
+        returnPinCodeValues: action.returnDetails,
+        loading: false
+      });
+
+    case accountActions.RETURN_PIN_CODE_FAILURE:
+      return Object.assign({}, state, {
+        returnPinCodeStatus: action.status,
+        returnPinCodeError: action.error,
         loading: false
       });
 

@@ -33,7 +33,7 @@ import {
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
-import PDPRecommendedSections from "./PDPRecommendedSections.js";
+import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
 
 const PRODUCT_QUANTITY = "1";
 const DELIVERY_TEXT = "Delivery Options For";
@@ -320,10 +320,7 @@ export default class PdpApparel extends React.Component {
               productContent={productData.APlusContent.productContent}
             />
           )}
-          <PDPRecommendedSections
-            msdItems={this.props.msdItems}
-            productData={productData}
-          />
+          <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );
     } else {

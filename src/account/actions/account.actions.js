@@ -23,6 +23,7 @@ import {
   hideModal,
   VERIFY_OTP
 } from "../../general/modal.actions.js";
+import { getMcvId } from "../../lib/adobeUtils";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
@@ -39,6 +40,18 @@ export const REMOVE_SAVED_CARD_FAILURE = "REMOVE_SAVED_CARD_FAILURE";
 export const GET_ALL_ORDERS_REQUEST = "GET_ALL_ORDERS_REQUEST";
 export const GET_ALL_ORDERS_SUCCESS = "GET_ALL_ORDERS_SUCCESS";
 export const GET_ALL_ORDERS_FAILURE = "GET_ALL_ORDERS_FAILURE";
+
+export const RETURN_PRODUCT_DETAILS_REQUEST = "RETURN_PRODUCT_DETAILS_REQUEST";
+export const RETURN_PRODUCT_DETAILS_SUCCESS = "RETURN_PRODUCT_DETAILS_SUCCESS";
+export const RETURN_PRODUCT_DETAILS_FAILURE = "RETURN_PRODUCT_DETAILS_FAILURE";
+
+export const RETURN_INITIAL_REQUEST = "RETURN_INITIAL_REQUEST";
+export const RETURN_INITIAL_SUCCESS = "RETURN_INITIAL_SUCCESS";
+export const RETURN_INITIAL_FAILURE = "RETURN_INITIAL_FAILURE";
+
+export const GET_RETURN_REQUEST = "RETURN_REQEUEST";
+export const GET_RETURN_REQUEST_SUCCESS = "GET_RETURN_REQUEST_SUCCESS";
+export const GET_RETURN_REQUEST_FAILURE = "GET_RETURN_REQUEST_FAILURE";
 
 export const FETCH_ORDER_DETAILS_REQUEST = "FETCH_ORDER_DETAILS_REQUEST";
 export const FETCH_ORDER_DETAILS_SUCCESS = "FETCH_ORDER_DETAILS_SUCCESS";
@@ -74,6 +87,17 @@ export const GET_WISHLIST_FAILURE = "GET_WISHLIST_FAILURE";
 export const GET_FOLLOWED_BRANDS_REQUEST = "GET_FOLLOWED_BRANDS_REQUEST";
 export const GET_FOLLOWED_BRANDS_SUCCESS = "GET_FOLLOWED_BRANDS_SUCCESS";
 export const GET_FOLLOWED_BRANDS_FAILURE = "GET_FOLLOWED_BRANDS_FAILURE";
+
+export const QUICK_DROP_STORE_REQUEST = "QUICK_DROP_STORE_REQUEST";
+export const QUICK_DROP_STORE_SUCCESS = "QUICK_DROP_STORE_SUCCESS";
+export const QUICK_DROP_STORE_FAILURE = "QUICK_DROP_STORE_FAILURE";
+export const NEW_RETURN_INITIATE_REQUEST = "NEW_RETURN_INITIATE_REQUEST";
+export const NEW_RETURN_INITIATE_SUCCESS = "NEW_RETURN_INITIATE_SUCCESS";
+export const NEW_RETURN_INITIATE_FAILURE = "NEW_RETURN_INITIATE_FAILURE";
+
+export const RETURN_PIN_CODE_REQUEST = "RETURN_PIN_CODE_REQUEST";
+export const RETURN_PIN_CODE_SUCCESS = "RETURN_PIN_CODE_SUCCESS";
+export const RETURN_PIN_CODE_FAILURE = "RETURN_PIN_CODE_FAILURE";
 
 export const GET_GIFTCARD_REQUEST = "GET_GIFTCARD_REQUEST";
 export const GET_GIFTCARD_SUCCESS = "GET_GIFTCARD_SUCCESS";
@@ -120,6 +144,7 @@ export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
 export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
+
 export const PIN_PATH = "v2/mpl/";
 
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
@@ -130,6 +155,278 @@ const WIDGETS_LIST_FOR_BRANDS = [112];
 const CARD_TYPE = "BOTH";
 const FOLLOW = "follow";
 const UNFOLLOW = "unfollow";
+export function returnProductDetailsRequest() {
+  return {
+    type: RETURN_PRODUCT_DETAILS_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function returnProductDetailsSuccess(returnProductDetails) {
+  return {
+    type: RETURN_PRODUCT_DETAILS_SUCCESS,
+    status: SUCCESS,
+    returnProductDetails
+  };
+}
+
+export function returnProductDetailsFailure(error) {
+  return {
+    type: RETURN_PRODUCT_DETAILS_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function returnProductDetails(productDetails) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    let returnProductFormData = new FormData();
+    returnProductFormData.append("transactionId", productDetails.transactionId);
+    returnProductFormData.append(
+      "returnCancelFlag",
+      productDetails.returnCancelFlag
+    );
+    returnProductFormData.append("orderCode", productDetails.orderCode);
+
+    dispatch(returnProductDetailsRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/newReturnProductDetails?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true`,
+        returnProductFormData
+      );
+
+      const resultJson = await result.json();
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE
+      ) {
+        throw new Error(resultJson.errors[0].message);
+      }
+      dispatch(returnProductDetailsSuccess(resultJson));
+    } catch (e) {
+      dispatch(returnProductDetailsFailure(e.message));
+    }
+  };
+}
+
+// This is a crappy name, but the api is called getReturnRequest and that conflicts with our pattern
+// Let's keep the name, because it fits our convention and deal with the awkwardness.
+export function getReturnRequestRequest() {
+  return {
+    type: GET_RETURN_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function getReturnRequestSuccess(returnRequest) {
+  return {
+    type: GET_RETURN_REQUEST_SUCCESS,
+    returnRequest,
+    status: SUCCESS
+  };
+}
+
+export function getReturnRequestFailure(error) {
+  return {
+    type: GET_RETURN_REQUEST_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function getReturnRequest(orderCode, transactionId) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(getReturnRequestRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/returnRequest?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&channel=mobile&loginId=${
+          JSON.parse(userDetails).userName
+        }&orderCode=${orderCode}&transactionId=${transactionId}`
+      );
+
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(resultJson.errors[0].message);
+      }
+      dispatch(getReturnRequestSuccess(resultJson));
+    } catch (e) {
+      dispatch(getReturnRequestFailure(e.message));
+    }
+  };
+}
+
+export function newReturnInitiateRequest() {
+  return {
+    type: NEW_RETURN_INITIATE_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function newReturnInitiateSuccess(returnDetails) {
+  return {
+    type: NEW_RETURN_INITIATE_SUCCESS,
+    returnDetails,
+    status: SUCCESS
+  };
+}
+
+export function newReturnInitiateFailure(error) {
+  return {
+    type: NEW_RETURN_INITIATE_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function newReturnInitial(returnDetails) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(newReturnInitiateRequest());
+
+    try {
+      const result = await api.post(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/newReturnInitiate?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&channel=mobile`,
+        returnDetails
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(resultJson.errors[0].message);
+      } else if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.status);
+      }
+
+      dispatch(newReturnInitiateSuccess(resultJson));
+    } catch (e) {
+      dispatch(newReturnInitiateFailure(e.message));
+    }
+  };
+}
+
+export function returnPInCodeRequest() {
+  return {
+    type: RETURN_PIN_CODE_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function returnPInCodeSuccess(pinCodeDetails) {
+  return {
+    type: RETURN_PIN_CODE_SUCCESS,
+    pinCodeDetails,
+    status: SUCCESS
+  };
+}
+
+export function returnPinCodeFailure(error) {
+  return {
+    type: RETURN_PIN_CODE_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function returnPinCode(productDetails) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(returnPInCodeRequest());
+
+    try {
+      const result = await api.post(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/returnPincode?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&&orderCode=${productDetails.orderCode}&pincode=${
+          productDetails.pinCode
+        }&transactionId=${productDetails.transactionId}`
+      );
+      const resultJson = await result.json();
+
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(resultJson.error);
+      }
+
+      dispatch(returnPInCodeSuccess(resultJson));
+    } catch (e) {
+      dispatch(returnPinCodeFailure(e.message));
+    }
+  };
+}
+
+export function quickDropStoreRequest() {
+  return {
+    type: QUICK_DROP_STORE_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function quickDropStoreSuccess(addresses) {
+  return {
+    type: QUICK_DROP_STORE_SUCCESS,
+    addresses,
+    status: SUCCESS
+  };
+}
+
+export function quickDropStoreFailure(error) {
+  return {
+    type: QUICK_DROP_STORE_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function quickDropStore(pincode, ussId) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(quickDropStoreRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/quickDropStores?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&pincode=${pincode}&&ussid=${ussId}`
+      );
+
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(resultJson.errors[0].message);
+      }
+      dispatch(quickDropStoreSuccess(resultJson.returnStoreDetailsList));
+    } catch (e) {
+      dispatch(quickDropStoreFailure(e.message));
+    }
+  };
+}
 
 //get egv product info
 export function giftCardRequest() {
@@ -969,9 +1266,9 @@ export function getFollowedBrandsFailure(error) {
 }
 
 export function getFollowedBrands() {
-  const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
-
   return async (dispatch, getState, { api }) => {
+    const mcvId = await getMcvId();
+
     dispatch(getFollowedBrandsRequest());
     let msdFormData = new FormData();
     msdFormData.append("api_key", API_KEY_FOR_MSD);
@@ -1074,12 +1371,10 @@ export function followAndUnFollowBrandInFeedBackInCommerceApi(
   brandId,
   followStatus
 ) {
-  const mcvId = window._satellite.getVisitorId().getMarketingCloudVisitorID();
-
   const followedText = followStatus ? UNFOLLOW : FOLLOW;
   const updatedBrandObj = {
     api_key: API_KEY_FOR_MSD,
-    mad_uuid: mcvId,
+    mad_uuid: getMcvId(),
     data: [
       {
         fields: "brand",
