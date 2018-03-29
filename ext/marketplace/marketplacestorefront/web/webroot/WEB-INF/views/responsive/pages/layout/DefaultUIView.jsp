@@ -7,9 +7,13 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
-
+<link href="https://fonts.googleapis.com/css?family=Rubik:400,500"
+	rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="/_ui/responsive/theme-blue/css/slick.css" />
 
 <style>
 table {
@@ -33,116 +37,403 @@ th {
 	height: 30px !important;
 	text-align: center;
 }
+
+/*new css*/
+.wrapper{
+	padding:0;
+}
+.slick-slide{
+height:auto !important;
+}
+body {
+	font-family: 'Rubik', sans-serif;
+}
+
+.pad0 {
+	padding: 0;
+}
+
+.mb40 {
+	margin-bottom: 40px;
+}
+
+.hero-slider .slick-slide {
+	margin: 0 5px;
+	position: relative;
+}
+
+.hero-slider .slick-slide img {
+	width: 100%;
+	height: 190px;
+	margin-top: 10px;
+	display: block;
+	border-radius: 4px;
+}
+
+.hero-slider .slick-current img {
+	width: 100%;
+	height: auto;
+	display: block;
+	margin-top: 0px;
+}
+
+.hero-slider .hero-subsection {
+	position: absolute;
+	top: 40%;
+	left: 0;
+}
+
+.hero-slider .brand-logo {
+	width: auto !important;
+	height: auto !important;
+	margin-left: 15px;
+	border: 1px solid #000;
+}
+
+.hero-slider .banner-title {
+	width: auto;
+	height: auto;
+	margin-left: 15px;
+	margin-top: 10px;
+	font-size: 30px;
+	font-weight: 500;
+	color: #ffffff;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+}
+
+.offer-slider .slick-slide {
+	position: relative;
+}
+
+.offer-slider .slick-slide img {
+	max-width: 100%;
+	border-radius: 4px;
+}
+
+.offer-slider .offer-subsection {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+.offer-slider .shop-now {
+	width: 141px;
+	height: auto;
+	margin: 20px 15px;
+	border: 1px solid #000;
+	border-radius: 100px;
+	border: solid 2px #ffffff;
+	padding: 10px 0;
+	text-align: center;
+	color: #ffffff;
+	display: block;
+	font-size: 14px;
+}
+
+.offer-slider .banner-title {
+	width: auto;
+	height: auto;
+	margin-left: 15px;
+	margin-top: 10px;
+	font-size: 30px;
+	font-weight: 500;
+	color: #ffffff;
+}
+
+.offer-slider .offer {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	width: 78px;
+	height: 78px;
+	background-image: linear-gradient(137deg, #fd2c7a, #ff7255);
+	text-align: center;
+	color: #ffffff;
+	border-radius: 50%;
+}
+
+.offer-slider .offer span {
+	position: absolute;
+	left: 12px;
+	top: 20px;
+	width: 55px;
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.43;
+	letter-spacing: normal;
+}
+
+.offer-widget-title {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: left;
+	color: #212121;
+	margin: 0px 0px 25px 15px;
+}
+
+.flash-sales-widget {
+	background-color: #962343;
+	color: #ffffff;
+	padding: 25px 20px;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.flash-sales-widget-title {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: left;
+	color: #ffffff;
+	text-transform: capitalize;
+}
+
+.flash-sales-widget-timer {
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: right;
+	color: #ffffff;
+}
+
+.flash-sales-widget-text {
+	font-size: 14px;
+	font-weight: normal;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.57;
+	letter-spacing: normal;
+	text-align: left;
+	color: #ffffff;
+	margin: 10px 0 25px 0;
+	width: 195px;
+}
+
+.flash-sales-widget-product:nth-child(even) {
+	padding: 0 12px 0 0;
+}
+
+.flash-sales-widget-product:nth-child(odd) {
+	padding: 0 0 0 12px;
+}
+
+.flash-sales-widget-product img {
+	border-radius: 4px;
+}
+
+.flash-sales-widget-product-offer {
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.43;
+	letter-spacing: normal;
+	color: #ffffff;
+	padding: 0;
+	margin: 15px 0 10px 0;
+}
+
+.flash-sales-widget-product-name {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.57;
+	letter-spacing: normal;
+	text-align: left;
+	color: #ffffff;
+	padding: 0;
+	margin-bottom: 25px;
+}
+
+.flash-sales-widget .shop-all-btn {
+	width: 120px;
+	padding: 8px 0;
+	border-radius: 100px;
+	border: solid 2px #ffffff;
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #ffffff;
+	float: left;
+	margin-bottom: 5px;
+}
+
+.flash-sales-widget .fa-clock-o {
+	font-size: 20px;
+	margin-right: 5px;
+}
+
+.flash-sales-widget-timer .fa-clock-o {
+	font-size: 20px;
+	margin-right: 10px;
+}
+
+.flash-sales-widget-timer .time-digits {
+	float: right;
+	margin-top: 2px;
+}
+
+.connect-banner {
+	width: calc(100% - 30px);
+	margin-left: 15px;
+	margin-right: 15px;
+	border-radius: 4.2px;
+	background-image: -webkit-linear-gradient(202deg, #48dfe6, #4facfe);
+	background-image: -o-linear-gradient(202deg, #48dfe6, #4facfe);
+	background-image: linear-gradient(292deg, #48dfe6, #4facfe);
+	padding: 25px;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.connect-banner-text1 {
+	font-size: 14.3px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+	padding-right: 0;
+}
+
+.connect-banner-text2 {
+	font-size: 12.5px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+	margin: 10px 0 15px 0;
+}
+
+.connect-banner-more {
+	font-size: 12.5px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+	padding-left: 15px;
+	display: inline-block;
+	width: auto;
+}
+
+.connect-banner-more::after {
+	content: "";
+	display: block;
+	width: auto;
+	border: 0.5px solid #fff;
+	margin-top: 2px;
+}
+
+.connect-banner-full-width {
+	background-image: -webkit-linear-gradient(202deg, #48dfe6, #4facfe);
+	background-image: -o-linear-gradient(202deg, #48dfe6, #4facfe);
+	background-image: linear-gradient(292deg, #48dfe6, #4facfe);
+	padding: 25px;
+}
+
+.connect-banner-full-width .connect-banner-text1 {
+	font-size: 16px;
+}
+
+.connect-banner-full-width .connect-banner-more,
+	.connect-banner-full-width .connect-banner-text2 {
+	font-size: 14px;
+}
 </style>
 
 <template:page pageTitle="${pageTitle}">
 	<html>
-
 <div class="sub-brand">
 	<div class="feature-collections">
 		<div class="wrapper background">
 			<cms:pageSlot position="DefaultNewUIContentSlot" var="feature">
 				<c:if test="${feature.typeCode eq 'HeroBannerComponent'}">
-					<div>
-						<h1>HeroBannerComponent</h1>
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-									<th>imageURL</th>
-									<th>brandLogo</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}" var="heroElements">
-								<div>
-									<c:if test="${heroElements.typeCode eq 'HeroBannerElement'}">
-										<tr>
-											<td>${heroElements.title}</td>
-											<td><a href="${heroElements.webURL}">${heroElements.webURL}</a></td>
-											<td><img alt="" src="${heroElements.imageURL.URL}"></td>
-											<td><img alt="" src="${heroElements.brandLogo.URL}"></td>
-										</tr>
-									</c:if>
-								</div>
-							</c:forEach>
-						</table>
+					<div class="hero-slider">
+						<c:forEach items="${feature.items}" var="heroElements">
+							<div>
+								<c:if test="${heroElements.typeCode eq 'HeroBannerElement'}">
+									<a href="${heroElements.webURL}"> <img alt=""
+										src="${heroElements.imageURL.URL}">
+										<div class="hero-subsection">
+											<img class="brand-logo" src="${heroElements.brandLogo.URL}">
+											<div class="banner-title">${heroElements.title}</div>
+										</div>
+									</a>
+								</c:if>
+							</div>
+						</c:forEach>
 					</div>
 				</c:if>
 				<c:if test="${feature.typeCode eq 'ConnectBannerComponent'}">
-					<div>
-						<h1>ConnectBannerComponent</h1>
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>Sub Type</th>
-									<th>Title</th>
-									<th>Description</th>
-									<th>Btn Text</th>
-									<th>Icon Image URL</th>
-									<th>Background Image URL</th>
-									<th>Web URL</th>
-									<th>Start Hex Code</th>
-									<th>End Hex Code</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.subType}</td>
-								<td>${feature.title}</td>
-								<td>${feature.description}</td>
-								<td>${feature.btnText}</td>
-								<td><img alt="" src="${feature.iconImageURL.URL}"></td>
-								<td><img alt="" src="${feature.backgroundImageURL.URL}"></td>
-								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
-								<td>${feature.startHexCode}</td>
-								<td>${feature.endHexCode}</td>
-							</tr>
-						</table>
+
+
+					<div
+						class="col-xs-12 mb40 ${fn:containsIgnoreCase(feature.subType, 'endToEnd') ? 'connect-banner-full-width':'connect-banner'}"
+						style="background-image:url('${feature.backgroundImageURL.URL}') , linear-gradient(292deg, ${feature.startHexCode}, ${feature.endHexCode});">
+						<div class="col-xs-2 pad0">
+							<img src="${feature.iconImageURL.URL}">
+						</div>
+						<div class="col-xs-10 pad0">
+							<div class="col-xs-12 connect-banner-text1">${feature.title}</div>
+							<div class="col-xs-12 connect-banner-text2">${feature.description}</div>
+							<a href="${not empty feature.webURL ? feature.webURL : '#'}" class="connect-banner-more">${feature.btnText}</a>
+						</div>
 					</div>
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'OffersWidgetComponent'}">
+				
+				
 					<div>
 						<h1>OffersWidgetComponent</h1>
 
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>title</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-							</tr>
-						</table>
 
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>Title</th>
-									<th>Web URL</th>
-									<th>Image URL</th>
-									<th>Btn Text</th>
-									<th>Discount Text</th>
-								</tr>
-							</thead>
+						<div class="offer-widget-title">${feature.title}</div>
+						<div class="offer-slider mb40">
 							<c:forEach items="${feature.items}" var="offersWidgetElement">
 								<div>
 									<c:if
 										test="${offersWidgetElement.typeCode eq 'OffersWidgetElement'}">
-										<tr>
-											<td>${offersWidgetElement.title}</td>
-											<td><a href="${offersWidgetElement.webURL}">${offersWidgetElement.webURL}</a></td>
-											<td><img alt=""
-												src="${offersWidgetElement.imageURL.URL}"></td>
-											<td>${offersWidgetElement.btnText}</td>
-											<td>${offersWidgetElement.discountText}</td>
-										</tr>
+										<div>
+											<img src="${offersWidgetElement.imageURL.URL}" />
+											<div class="offer">
+												<span>${offersWidgetElement.discountText}</span>
+											</div>
+											<div class="offer-subsection">
+												<div class="banner-title">${offersWidgetElement.title}</div>
+												<a href="${offersWidgetElement.webURL}" class="shop-now">${offersWidgetElement.btnText}</a>
+											</div>
+										</div>
 									</c:if>
 								</div>
 							</c:forEach>
-						</table>
-						<%-- 					</c:if> --%>
+						</div>
+
 					</div>
 				</c:if>
 
@@ -187,6 +478,53 @@ th {
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'FlashSalesComponent'}">
+					<!--flash sales widget-->
+					<div class="col-xs-12 flash-sales-widget mb40"
+						style="background-image: url('${feature.backgroundImageURL.URL}');">
+						<div class="col-xs-6 pad0 flash-sales-widget-title">${feature.title}</div>
+						<div class="col-xs-6 pad0 flash-sales-widget-timer">
+							<i class="fa fa-clock-o" aria-hidden="true"></i>
+							<div class="time-digits">22 : 48 : 53</div>
+						</div>
+						<div class="col-xs-12 pad0 flash-sales-widget-text">${feature.description}</div>
+						<div class="col-xs-6 flash-sales-widget-product">
+							<a href="#"> <img src="https://via.placeholder.com/148x200"
+								class="img-responsive" />
+								<div class="col-xs-12 flash-sales-widget-product-offer">Under Rs. 999</div>
+								<div class="col-xs-12 flash-sales-widget-product-name">Tommy
+									Hilfiger TH1791163J Watch</div>
+							</a>
+						</div>
+						<div class="col-xs-6 flash-sales-widget-product">
+							<a href="#"> <img src="https://via.placeholder.com/148x200"
+								class="img-responsive" />
+								<div class="col-xs-12 flash-sales-widget-product-offer">Under
+									Rs. 999</div>
+								<div class="col-xs-12 flash-sales-widget-product-name">Tommy
+									Hilfiger TH1791163J Watch</div>
+							</a>
+						</div>
+						<div class="col-xs-6 flash-sales-widget-product">
+							<a href="#"> <img src="https://via.placeholder.com/148x200"
+								class="img-responsive" />
+								<div class="col-xs-12 flash-sales-widget-product-offer">Under
+									Rs. 999</div>
+								<div class="col-xs-12 flash-sales-widget-product-name">Tommy
+									Hilfiger TH1791163J Watch</div>
+							</a>
+						</div>
+						<div class="col-xs-6 flash-sales-widget-product">
+							<a href="#"> <img src="https://via.placeholder.com/148x200"
+								class="img-responsive" />
+								<div class="col-xs-12 flash-sales-widget-product-offer">Under
+									Rs. 999</div>
+								<div class="col-xs-12 flash-sales-widget-product-name">Tommy
+									Hilfiger TH1791163J Watch</div>
+							</a>
+						</div>
+						<a href="#" class="shop-all-btn">Shop all</a>
+					</div>
+					
 					<div>
 						<h1>FlashSalesComponent</h1>
 						<table class="" border="1">
@@ -203,8 +541,8 @@ th {
 								</tr>
 							</thead>
 							<tr>
-								<td>${feature.title}</td>
-								<td>${feature.description}</td>
+<%-- 								<td>${feature.title}</td> --%>
+<%-- 								<td>${feature.description}</td> --%>
 								<td>${feature.backgroundHexCode}</td>
 								<td><img alt="" src="${feature.backgroundImageURL.URL}"></td>
 								<td>${feature.startDate}</td>
@@ -889,12 +1227,13 @@ th {
 									<c:if
 										test="${brandTabAZHeroBannerElement.typeCode eq 'HeroBannerComponent'}">
 										<div>
-												<c:forEach items="${brandTabAZHeroBannerElement.items}"
-													var="heroElements">
-													<c:if
-														test="${not empty heroElements && heroElements.typeCode eq 'HeroBannerElement'}">
-														<h1>HeroBannerComponent oF BrandsTabAZListComponent--  ${brandsTabAZElement.subType}</h1>
-														<table class="">
+											<c:forEach items="${brandTabAZHeroBannerElement.items}"
+												var="heroElements">
+												<c:if
+													test="${not empty heroElements && heroElements.typeCode eq 'HeroBannerElement'}">
+													<h1>HeroBannerComponent oF BrandsTabAZListComponent--
+														${brandsTabAZElement.subType}</h1>
+													<table class="">
 														<thead>
 															<tr>
 																<th>title</th>
@@ -903,19 +1242,19 @@ th {
 																<th>brandLogo</th>
 															</tr>
 														</thead>
-														
+
 														<tr>
 															<td>${heroElements.title}</td>
 															<td><a href="${heroElements.webURL}">${heroElements.webURL}</a></td>
 															<td><img alt="" src="${heroElements.imageURL.URL}"></td>
 															<td><img alt="" src="${heroElements.brandLogo.URL}"></td>
 														</tr>
-														
-														</table>
-													</c:if>
 
-												</c:forEach>
-											
+													</table>
+												</c:if>
+
+											</c:forEach>
+
 										</div>
 									</c:if>
 
@@ -1103,5 +1442,45 @@ th {
 		</div>
 	</div>
 </div>
+<script type="text/javascript"
+	src="_ui/responsive/common/js/mpl/slick.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('.hero-slider').slick({
+			centerMode : true,
+			centerPadding : '60px',
+			slidesToShow : 3,
+			responsive : [ {
+				breakpoint : 480,
+				settings : {
+					arrows : false,
+					centerMode : true,
+					centerPadding : '20px',
+					slidesToShow : 1,
+					useCSS : true,
+					cssEase : 'ease'
+				}
+			} ]
+		});
+
+		$('.offer-slider').slick({
+			centerMode : true,
+			centerPadding : '60px',
+			slidesToShow : 1,
+			responsive : [ {
+				breakpoint : 480,
+				settings : {
+					arrows : false,
+					centerMode : true,
+					centerPadding : '10px',
+					slidesToShow : 1,
+					useCSS : true,
+					cssEase : 'ease'
+				}
+			} ]
+		});
+	});
+</script>
 	</html>
 </template:page>
