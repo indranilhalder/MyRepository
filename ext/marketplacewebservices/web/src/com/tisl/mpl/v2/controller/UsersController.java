@@ -11136,7 +11136,7 @@ public class UsersController extends BaseCommerceController
 					//
 					if (StringUtils.isEmpty(otp))
 					{
-						final String otpassword = otpGenericService.generateOTPForRegister(userId, OTPTypeEnum.REG.getCode(), userId);
+						final String otpassword = otpGenericService.generateOTPForRegister(userId, OTPTypeEnum.LOGIN.getCode(), userId);
 						sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
 								MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
 										MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otpassword), userId);
@@ -11146,11 +11146,15 @@ public class UsersController extends BaseCommerceController
 					}
 					else
 					{
-						final boolean validOtpFlag = mobileUserService.validateOtp(userId, otp, OTPTypeEnum.REG);
+						final boolean validOtpFlag = mobileUserService.validateOtp(userId, otp, OTPTypeEnum.LOGIN);
 						if (validOtpFlag)
 						{
 							customerModel.setOtpVerified(Boolean.TRUE);
 							modelService.save(customerModel);
+						}
+						else
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU009);
 						}
 					}
 				}
