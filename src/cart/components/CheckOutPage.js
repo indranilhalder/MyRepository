@@ -295,9 +295,8 @@ class CheckOutPage extends React.Component {
       }
     } else if (this.state.isGiftCard) {
       this.setState({
-        isRemainingAmount: "0",
+        isRemainingAmount: true,
         payableAmount: this.props.location.state.amount,
-        cliqCashAmount: "0",
         bagAmount: this.props.location.state.amount
       });
     } else {
