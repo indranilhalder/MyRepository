@@ -160,8 +160,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					mplCouponFacade.updatePaymentInfoSession(paymentInfo, cartModel);
 
 					// EGV Changes Start
-					if (cartModel.getTotalPrice().doubleValue() > (null != walletPayableAmount ? walletPayableAmount.doubleValue()
-							: 0.00D))
+					if (cartModel.getTotalPrice()
+							.doubleValue() > (null != walletPayableAmount ? walletPayableAmount.doubleValue() : 0.00D))
 					{
 						if (StringUtils.isNotEmpty(cartCouponCode))
 						{
@@ -174,8 +174,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
 					{
 						//Price data new calculation for 2 decimal values
-						applycouponDto.setCouponDiscount(String.valueOf(data.getCouponDiscount().getValue()
-								.setScale(2, BigDecimal.ROUND_HALF_UP)));
+						applycouponDto.setCouponDiscount(
+								String.valueOf(data.getCouponDiscount().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 						if (null != data.getCouponDiscount())
 						{
 							final BigDecimal couponDiscount = new BigDecimal(data.getCouponDiscount().getValue().doubleValue());
@@ -393,8 +393,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					if (data != null && data.getMbDiscountAftrCVoucher() != null
 							&& data.getMbDiscountAftrCVoucher().getValue() != null)
 					{
-						applycouponDto.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
-								.setScale(2, BigDecimal.ROUND_HALF_UP)));
+						applycouponDto.setDiscount(
+								String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 					}
 
 					applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
@@ -443,8 +443,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 				if (data != null && data.getMbDiscountAftrCVoucher() != null && data.getMbDiscountAftrCVoucher().getValue() != null)
 				{
-					applycouponDto.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
-							.setScale(2, BigDecimal.ROUND_HALF_UP)));
+					applycouponDto.setDiscount(
+							String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 
 				applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(orderModel, orderModel.getTotalPriceWithConv())
@@ -652,8 +652,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 						final boolean applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, null, orderModel);
 						orderModel.setCheckForBankVoucher("false");
 						modelService.save(orderModel);
-						final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(orderModel, null, applyStatus,
-								true, couponCode);
+						final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(orderModel, null, applyStatus, true,
+								couponCode);
 
 						data = newData;
 						//data.setTotalDiscount(newData.getTotalDiscount());
@@ -884,8 +884,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 				if (data.getMbDiscountAftrCVoucher() != null && data.getMbDiscountAftrCVoucher().getValue() != null)
 				{
-					releaseCouponsDTO.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
-							.setScale(2, BigDecimal.ROUND_HALF_UP)));
+					releaseCouponsDTO.setDiscount(
+							String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 
 				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
@@ -922,8 +922,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 				if (data.getMbDiscountAftrCVoucher() != null && data.getMbDiscountAftrCVoucher().getValue() != null)
 				{
-					releaseCouponsDTO.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
-							.setScale(2, BigDecimal.ROUND_HALF_UP)));
+					releaseCouponsDTO.setDiscount(
+							String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 
 				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
@@ -964,6 +964,21 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		releaseCouponsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9508);
 		releaseCouponsDTO.setError(MarketplacewebservicesConstants.COUPONRELISSUE);
 		return releaseCouponsDTO;
+	}
+
+
+	/**
+	 * The Method applies No Cost EMI
+	 *
+	 * @param couponCode
+	 * @param cartModel
+	 * @param orderModel
+	 */
+	@Override
+	public void applyNoCostEMI(final String couponCode, final CartModel cartModel, final OrderModel orderModel)
+	{
+		// YTODO Auto-generated method stub
+
 	}
 
 }
