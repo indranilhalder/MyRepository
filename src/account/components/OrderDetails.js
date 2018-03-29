@@ -176,7 +176,13 @@ export default class OrderDetails extends React.Component {
                       <OrderReturn
                         buttonLabel={PRODUCT_Returned}
                         isEditable={true}
-                        replaceItem={() => this.replaceItem()}
+                        replaceItem={() =>
+                          this.replaceItem(
+                            products.sellerorderno,
+                            orderDetails.paymentMethod,
+                            products.transactionId
+                          )
+                        }
                         writeReview={val =>
                           this.writeReview(products.productcode)
                         }
