@@ -115,10 +115,10 @@ const account = (
     cancelProductDetailsError: null,
     loadingForCancelProductDetails: false,
 
-    cancelOrder: null,
-    cancelOrderStatus: null,
-    cancelOrderError: null,
-    loadingForCancelOrder: false
+    cancelProduct: null,
+    cancelProductStatus: null,
+    cancelProductError: null,
+    loadingForCancelProduct: false
   },
   action
 ) => {
@@ -650,44 +650,43 @@ const account = (
         getPinCodeStatus: action.status,
         getPinCodeError: action.error
       });
-    case accountActions.CANCEL_PRODUCT_REQUEST:
+    case accountActions.CANCEL_PRODUCT_DETAILS_REQUEST:
       return Object.assign({}, state, {
         cancelProductDetailsStatus: action.status,
         loadingForCancelProductDetails: true
       });
 
-    case accountActions.CANCEL_PRODUCT_SUCCESS:
+    case accountActions.CANCEL_PRODUCT_DETAILS_SUCCESS:
       return Object.assign({}, state, {
         cancelProductDetailsStatus: action.status,
         cancelProductDetails: action.cancelProductDetails,
         loadingForCancelProductDetails: false
       });
 
-    case accountActions.CANCEL_PRODUCT_FAILURE:
+    case accountActions.CANCEL_PRODUCT_DETAILS_FAILURE:
       return Object.assign({}, state, {
         cancelProductDetailsStatus: action.status,
         cancelProductDetailsError: action.error,
         loadingForCancelProductDetails: false
       });
 
-    case accountActions.CANCEL_ORDER_REQUEST:
+    case accountActions.CANCEL_PRODUCT_REQUEST:
       return Object.assign({}, state, {
-        cancelOrderStatus: action.status,
-        loadingForCancelOrder: true
+        cancelProductStatus: action.status,
+        loadingForCancelProduct: true
       });
 
-    case accountActions.CANCEL_ORDER_SUCCESS:
+    case accountActions.CANCEL_PRODUCT_SUCCESS:
       return Object.assign({}, state, {
-        cancelOrderStatus: action.status,
-        cancelOrder: action.cancelOrder,
-        loadingForCancelOrder: false
+        cancelProductStatus: action.status,
+        cancelProduct: action.cancelProduct,
+        loadingForCancelProduct: false
       });
-
-    case accountActions.CANCEL_ORDER_FAILURE:
+    case accountActions.CANCEL_PRODUCT_FAILURE:
       return Object.assign({}, state, {
-        cancelOrderStatus: action.status,
-        cancelOrderError: action.error,
-        loadingForCancelOrder: false
+        cancelProductStatus: action.status,
+        cancelProductError: action.error,
+        loadingForCancelProduct: false
       });
 
     default:

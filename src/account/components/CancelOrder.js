@@ -5,11 +5,12 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   LOGIN_PATH,
-  HOME_ROUTER,
+  MY_ACCOUNT,
   MY_ACCOUNT_ORDERS_PAGE
 } from "../../lib/constants";
 import CancelReasonForm from "./CancelReasonForm";
 import PropTypes from "prop-types";
+import MDSpinner from "react-md-spinner";
 export default class CancelOrder extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -20,7 +21,7 @@ export default class CancelOrder extends React.Component {
     CancelProductDetails.USSID = this.props.history.location.state.ussid;
     CancelProductDetails.returnCancelFlag = "C";
     if (userDetails && customerCookie) {
-      this.props.cancelProduct(CancelProductDetails);
+      this.props.cancelProductDetails(CancelProductDetails);
     }
   }
   finalSubmit(reason) {
@@ -31,27 +32,30 @@ export default class CancelOrder extends React.Component {
     CancelProductDetails.ticketTypeCode = "C";
     CancelProductDetails.reasonCode = reason.cancelReasonCode;
     CancelProductDetails.refundType = "";
-    this.props.cancelOrder(CancelProductDetails);
+    this.props.cancelProduct(CancelProductDetails);
   }
   onCancel() {
-    this.props.history.push(HOME_ROUTER);
+    this.props.history.goBack();
   }
   componentWillReceiveProps(nextProps) {
-    if (this.props.cancelOrderStatus) {
-      this.props.history.push({
-        MY_ACCOUNT_ORDERS_PAGE
-      });
+    if (this.props.cancelProductStatus) {
+      this.props.history.push(`{
+        ${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}
+      }`);
     }
   }
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
+  }
+  renderLoader() {
+    return <MDSpinner />;
   }
   render() {
     let cancelProductDetails = this.props.cancelProductDetails;
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!cancelProductDetails) {
-      return <div />;
+      return this.renderLoader();
     }
     if (!userDetails || !customerCookie) {
       return this.navigateToLogin();

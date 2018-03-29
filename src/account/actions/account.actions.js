@@ -156,9 +156,9 @@ export const CANCEL_PRODUCT_REQUEST = "CANCEL_PRODUCT_REQUEST";
 export const CANCEL_PRODUCT_SUCCESS = "CANCEL_PRODUCT_SUCCESS";
 export const CANCEL_PRODUCT_FAILURE = "CANCEL_PRODUCT_FAILURE";
 
-export const CANCEL_ORDER_REQUEST = "CANCEL_ORDER_REQUEST";
-export const CANCEL_ORDER_SUCCESS = "CANCEL_ORDER_SUCCESS";
-export const CANCEL_ORDER_FAILURE = "CANCEL_ORDER_FAILURE";
+export const CANCEL_PRODUCT_DETAILS_REQUEST = "CANCEL_PRODUCT_DETAILS_REQUEST";
+export const CANCEL_PRODUCT_DETAILS_SUCCESS = "CANCEL_PRODUCT_DETAILS_SUCCESS";
+export const CANCEL_PRODUCT_DETAILS_FAILURE = "CANCEL_PRODUCT_DETAILS_FAILURE";
 
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
@@ -178,17 +178,80 @@ const FOLLOW = "follow";
 const UNFOLLOW = "unfollow";
 // cencel product
 
+export function cancelProductDetailsRequest() {
+  return {
+    type: CANCEL_PRODUCT_DETAILS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function cancelProductDetailsSuccess(cancelProductDetails) {
+  return {
+    type: CANCEL_PRODUCT_DETAILS_SUCCESS,
+    status: SUCCESS,
+    cancelProductDetails
+  };
+}
+export function cancelProductDetailsFailure(error) {
+  return {
+    type: CANCEL_PRODUCT_DETAILS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function cancelProductDetails(cancelProductDetails) {
+  let cancelProductObject = new FormData();
+  cancelProductObject.append(
+    "transactionId",
+    cancelProductDetails.transactionId
+  );
+  cancelProductObject.append("orderCode", cancelProductDetails.orderCode);
+  cancelProductObject.append("USSID", cancelProductDetails.USSID);
+  cancelProductObject.append(
+    "returnCancelFlag",
+    cancelProductDetails.returnCancelFlag
+  );
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(cancelProductDetailsRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/returnProductDetails?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2`,
+        cancelProductObject
+      );
+      const resultJson = await result.json();
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.errors
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      } else {
+        return dispatch(cancelProductDetailsSuccess(resultJson));
+      }
+    } catch (e) {
+      dispatch(cancelProductDetailsFailure(e.message));
+    }
+  };
+}
+
+//cancel final order
+
 export function cancelProductRequest() {
   return {
     type: CANCEL_PRODUCT_REQUEST,
     status: REQUESTING
   };
 }
-export function cancelProductSuccess(cancelProductDetails) {
+export function cancelProductSuccess(cancelOrder) {
   return {
     type: CANCEL_PRODUCT_SUCCESS,
     status: SUCCESS,
-    cancelProductDetails
+    cancelOrder
   };
 }
 export function cancelProductFailure(error) {
@@ -199,18 +262,19 @@ export function cancelProductFailure(error) {
   };
 }
 export function cancelProduct(cancelProductDetails) {
-  console.log(cancelProductDetails);
-  let returnDetailsObject = new FormData();
-  returnDetailsObject.append(
+  let cancelProductObject = new FormData();
+  cancelProductObject.append(
     "transactionId",
     cancelProductDetails.transactionId
   );
-  returnDetailsObject.append("orderCode", cancelProductDetails.orderCode);
-  returnDetailsObject.append("USSID", cancelProductDetails.USSID);
-  returnDetailsObject.append(
-    "returnCancelFlag",
-    cancelProductDetails.returnCancelFlag
+  cancelProductObject.append("orderCode", cancelProductDetails.orderCode);
+  cancelProductObject.append("ussid", cancelProductDetails.USSID);
+  cancelProductObject.append(
+    "ticketTypeCode",
+    cancelProductDetails.ticketTypeCode
   );
+  cancelProductObject.append("reasonCode", cancelProductDetails.reasonCode);
+  cancelProductObject.append("refundType", cancelProductDetails.refundType);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
@@ -219,13 +283,12 @@ export function cancelProduct(cancelProductDetails) {
       const result = await api.postFormData(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
-        }/returnProductDetails?access_token=${
+        }/initiateRefund?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=2`,
-        returnDetailsObject
+        }&login=${JSON.parse(userDetails).userName}&isPwa=true`,
+        cancelProductObject
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (
         resultJson.status === FAILURE ||
         resultJson.status === FAILURE_UPPERCASE ||
@@ -237,72 +300,6 @@ export function cancelProduct(cancelProductDetails) {
       }
     } catch (e) {
       dispatch(cancelProductFailure(e.message));
-    }
-  };
-}
-
-//cancel final order
-
-export function cancelOrderRequest() {
-  return {
-    type: CANCEL_ORDER_REQUEST,
-    status: REQUESTING
-  };
-}
-export function cancelOrderSuccess(cancelOrder) {
-  return {
-    type: CANCEL_ORDER_SUCCESS,
-    status: SUCCESS,
-    cancelOrder
-  };
-}
-export function cancelOrderFailure(error) {
-  return {
-    type: CANCEL_ORDER_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-export function cancelOrder(cancelProductDetails) {
-  let returnDetailsObject = new FormData();
-  returnDetailsObject.append(
-    "transactionId",
-    cancelProductDetails.transactionId
-  );
-  returnDetailsObject.append("orderCode", cancelProductDetails.orderCode);
-  returnDetailsObject.append("ussid", cancelProductDetails.USSID);
-  returnDetailsObject.append(
-    "ticketTypeCode",
-    cancelProductDetails.ticketTypeCode
-  );
-  returnDetailsObject.append("reasonCode", cancelProductDetails.reasonCode);
-  returnDetailsObject.append("refundType", cancelProductDetails.refundType);
-  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-  return async (dispatch, getState, { api }) => {
-    dispatch(cancelOrderRequest());
-    try {
-      const result = await api.postFormData(
-        `${USER_PATH}/${
-          JSON.parse(userDetails).userName
-        }/initiateRefund?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&login=${JSON.parse(userDetails).userName}&isPwa=true`,
-        returnDetailsObject
-      );
-      const resultJson = await result.json();
-      console.log(resultJson);
-      if (
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.errors
-      ) {
-        throw new Error(`${resultJson.errors[0].message}`);
-      } else {
-        return dispatch(cancelOrderSuccess(resultJson));
-      }
-    } catch (e) {
-      dispatch(cancelOrderFailure(e.message));
     }
   };
 }
@@ -1693,7 +1690,6 @@ export function redeemCliqVoucherSuccess(cliqCashVoucherDetails) {
 }
 
 export function redeemCliqVoucherFailure(error) {
-  console.log(error);
   return {
     type: REDEEM_CLIQ_VOUCHER_FAILURE,
     status: FAILURE,
