@@ -12,10 +12,12 @@ import {
   LOGIN_PATH,
   CHECKOUT_ROUTER
 } from "../../lib/constants";
+import { SUCCESS } from "../../lib/constants.js";
 import * as Cookie from "../../lib/Cookie";
 const PRODUCT_ID = "MP000000000127263";
 const QUANTITY = "1";
 const MOBILE_NUMBER = "999999999";
+
 export default class GiftCard extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +34,7 @@ export default class GiftCard extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    if (this.props.giftCardDetailsStatus) {
+    if (nextProps.giftCardDetailsStatus === SUCCESS) {
       this.props.history.push({
         pathname: CHECKOUT_ROUTER,
         state: {
