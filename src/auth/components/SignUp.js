@@ -114,6 +114,7 @@ class SignUp extends Component {
                     : this.state.phoneNumberValue
                 }
                 placeholder={"Phone number"}
+                type={"number"}
                 onChange={val => this.onPhoneNumberChange(val)}
               />
             </div>
