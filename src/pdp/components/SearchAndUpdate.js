@@ -14,7 +14,9 @@ export default class SearchAndUpdate extends React.Component {
     };
   }
   getValue(pinCode) {
-    this.setState({ pinCode });
+    if (pinCode.length <= 6) {
+      this.setState({ pinCode });
+    }
   }
   getLocation() {
     if (this.props.getLocation) {
@@ -53,6 +55,7 @@ export default class SearchAndUpdate extends React.Component {
           <div className={styles.inputHolder}>
             <Input2
               boxy={true}
+              value={this.state.pinCode}
               type="number"
               placeholder="Enter a pincode / zipcode"
               onChange={val => this.getValue(val)}

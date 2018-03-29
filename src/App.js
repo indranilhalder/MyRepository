@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ModalContainer from "./general/containers/ModalContainer";
+import ToastContainer from "./general/containers/ToastContainer";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
@@ -320,6 +321,7 @@ class App extends Component {
           <MobileFooter />
 
           <ModalContainer />
+          <ToastContainer />
         </div>
       </React.Fragment>
     );
