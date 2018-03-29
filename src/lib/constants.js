@@ -139,3 +139,6 @@ export const ON_EXCLUSIVE = "onExclusive";
 export const IS_OFFER_EXISTING = "isOfferExisting";
 export const IS_NEW = "isNew";
 export const DISCOUNT_PERCENT = "discountPercent";
+
+export const CANCEL = "/cancel/";
+export const CANCEL_PREFIX = "/cancel/(.*)";

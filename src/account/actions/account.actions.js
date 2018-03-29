@@ -139,6 +139,14 @@ export const SUBMIT_SELF_COURIER_INFO_SUCCESS =
 export const SUBMIT_SELF_COURIER_INFO_FAILURE =
   "SUBMIT_SELF_COURIER_INFO_FAILURE";
 
+export const CANCEL_PRODUCT_REQUEST = "CANCEL_PRODUCT_REQUEST";
+export const CANCEL_PRODUCT_SUCCESS = "CANCEL_PRODUCT_SUCCESS";
+export const CANCEL_PRODUCT_FAILURE = "CANCEL_PRODUCT_FAILURE";
+
+export const CANCEL_ORDER_REQUEST = "CANCEL_ORDER_REQUEST";
+export const CANCEL_ORDER_SUCCESS = "CANCEL_ORDER_SUCCESS";
+export const CANCEL_ORDER_FAILURE = "CANCEL_ORDER_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -155,6 +163,137 @@ const WIDGETS_LIST_FOR_BRANDS = [112];
 const CARD_TYPE = "BOTH";
 const FOLLOW = "follow";
 const UNFOLLOW = "unfollow";
+// cencel product
+
+export function cancelProductRequest() {
+  return {
+    type: CANCEL_PRODUCT_REQUEST,
+    status: REQUESTING
+  };
+}
+export function cancelProductSuccess(cancelProductDetails) {
+  return {
+    type: CANCEL_PRODUCT_SUCCESS,
+    status: SUCCESS,
+    cancelProductDetails
+  };
+}
+export function cancelProductFailure(error) {
+  return {
+    type: CANCEL_PRODUCT_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function cancelProduct(cancelProductDetails) {
+  console.log(cancelProductDetails);
+  let returnDetailsObject = new FormData();
+  returnDetailsObject.append(
+    "transactionId",
+    cancelProductDetails.transactionId
+  );
+  returnDetailsObject.append("orderCode", cancelProductDetails.orderCode);
+  returnDetailsObject.append("USSID", cancelProductDetails.USSID);
+  returnDetailsObject.append(
+    "returnCancelFlag",
+    cancelProductDetails.returnCancelFlag
+  );
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(cancelProductRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/returnProductDetails?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2`,
+        returnDetailsObject
+      );
+      const resultJson = await result.json();
+      console.log(resultJson);
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.errors
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      } else {
+        return dispatch(cancelProductSuccess(resultJson));
+      }
+    } catch (e) {
+      dispatch(cancelProductFailure(e.message));
+    }
+  };
+}
+
+//cancel final order
+
+export function cancelOrderRequest() {
+  return {
+    type: CANCEL_ORDER_REQUEST,
+    status: REQUESTING
+  };
+}
+export function cancelOrderSuccess(cancelOrder) {
+  return {
+    type: CANCEL_ORDER_SUCCESS,
+    status: SUCCESS,
+    cancelOrder
+  };
+}
+export function cancelOrderFailure(error) {
+  return {
+    type: CANCEL_ORDER_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function cancelOrder(cancelProductDetails) {
+  let returnDetailsObject = new FormData();
+  returnDetailsObject.append(
+    "transactionId",
+    cancelProductDetails.transactionId
+  );
+  returnDetailsObject.append("orderCode", cancelProductDetails.orderCode);
+  returnDetailsObject.append("ussid", cancelProductDetails.USSID);
+  returnDetailsObject.append(
+    "ticketTypeCode",
+    cancelProductDetails.ticketTypeCode
+  );
+  returnDetailsObject.append("reasonCode", cancelProductDetails.reasonCode);
+  returnDetailsObject.append("refundType", cancelProductDetails.refundType);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(cancelOrderRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/initiateRefund?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&login=${JSON.parse(userDetails).userName}&isPwa=true`,
+        returnDetailsObject
+      );
+      const resultJson = await result.json();
+      console.log(resultJson);
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.errors
+      ) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      } else {
+        return dispatch(cancelOrderSuccess(resultJson));
+      }
+    } catch (e) {
+      dispatch(cancelOrderFailure(e.message));
+    }
+  };
+}
+
 export function returnProductDetailsRequest() {
   return {
     type: RETURN_PRODUCT_DETAILS_REQUEST,

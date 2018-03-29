@@ -42,7 +42,7 @@ import AddAddressContainer from "./account/containers/AddAddressContainer.js";
 import SaveListContainer from "./account/containers/SaveListContainer";
 import GiftCardContainer from "./account/containers/GiftCardContainer";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
-
+import CancelOrderContainer from "./account/containers/CancelOrderContainer";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -85,7 +85,8 @@ import {
   SHORT_URL_ORDER_DETAIL,
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
-  MY_ACCOUNT_ADDRESS_ADD_PAGE
+  MY_ACCOUNT_ADDRESS_ADD_PAGE,
+  CANCEL_PREFIX
 } from "../src/lib/constants";
 
 const auth = {
@@ -151,6 +152,7 @@ class App extends Component {
                 <LoginContainer {...routeProps} {...this.props} />
               )}
             />
+            <Route path={CANCEL_PREFIX} component={CancelOrderContainer} />
             <Route
               exact
               path={SIGN_UP_PATH}

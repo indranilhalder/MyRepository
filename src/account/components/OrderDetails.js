@@ -25,7 +25,8 @@ import {
   RETURNS_REASON,
   SHORT_URL_ORDER_DETAIL,
   SEARCH_RESULTS_PAGE,
-  PRODUCT_REVIEWS_PATH_SUFFIX
+  PRODUCT_REVIEWS_PATH_SUFFIX,
+  CANCEL
 } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_Returned = "Return Product";
@@ -54,6 +55,16 @@ export default class OrderDetails extends React.Component {
         }
       });
     }
+  }
+  canelItem(transactionId, ussid, orderCode) {
+    console.log(transactionId, ussid, orderCode);
+    this.props.history.push({
+      pathname: `${CANCEL}${orderCode}`,
+      state: {
+        transactionId: transactionId,
+        ussid: ussid
+      }
+    });
   }
   writeReview(productCode) {
     this.props.history.push(
@@ -98,7 +109,7 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
-
+    console.log(orderDetails);
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -163,18 +174,31 @@ export default class OrderDetails extends React.Component {
                 )}
                 {products.awbPopupLink === AWB_POPUP_FALSE && (
                   <div className={styles.buttonHolder}>
-                    <OrderReturn
-                      buttonLabel={
-                        products.isReturned === false
-                          ? PRODUCT_Cancel
-                          : PRODUCT_Returned
-                      }
-                      isEditable={true}
-                      replaceItem={() => this.replaceItem()}
-                      writeReview={val =>
-                        this.writeReview(products.productcode)
-                      }
-                    />
+                    {products.isReturned ? (
+                      <OrderReturn
+                        buttonLabel={PRODUCT_Returned}
+                        isEditable={true}
+                        replaceItem={() => this.replaceItem()}
+                        writeReview={val =>
+                          this.writeReview(products.productcode)
+                        }
+                      />
+                    ) : (
+                      <OrderReturn
+                        buttonLabel={PRODUCT_Cancel}
+                        isEditable={true}
+                        replaceItem={() =>
+                          this.canelItem(
+                            products.transactionId,
+                            products.USSID,
+                            products.sellerorderno
+                          )
+                        }
+                        writeReview={val =>
+                          this.writeReview(products.productcode)
+                        }
+                      />
+                    )}
                   </div>
                 )}
                 {products.awbPopupLink === AWB_POPUP_TRUE && (
