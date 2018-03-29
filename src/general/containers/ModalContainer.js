@@ -110,12 +110,15 @@ const mapDispatchToProps = dispatch => {
     getUserAddress: () => {
       dispatch(getUserAddress());
     },
-    getOtpToActivateWallet: customerDetails => {
-      dispatch(getOtpToActivateWallet(customerDetails));
+
+    getOtpToActivateWallet: (customerDetails, isFromCliqCash) => {
+      dispatch(getOtpToActivateWallet(customerDetails, isFromCliqCash));
     },
-    verifyWallet: customerDetailsWithOtp => {
-      dispatch(verifyWallet(customerDetailsWithOtp));
+
+    verifyWallet: (customerDetailsWithOtp, isFromCliqCash) => {
+      dispatch(verifyWallet(customerDetailsWithOtp, isFromCliqCash));
     },
+
     submitSelfCourierReturnInfo: returnDetails => {
       dispatch(submitSelfCourierReturnInfo(returnDetails));
     }

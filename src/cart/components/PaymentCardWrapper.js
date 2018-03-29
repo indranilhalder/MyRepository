@@ -6,25 +6,20 @@ import CheckoutEmi from "./CheckoutEmi.js";
 import CheckoutCreditCard from "./CheckoutCreditCard.js";
 import CheckoutDebitCard from "./CheckoutDebitCard.js";
 import CheckoutNetbanking from "./CheckoutNetbanking.js";
-
 import CheckoutSavedCard from "./CheckoutSavedCard.js";
-
 import CheckoutCOD from "./CheckoutCOD.js";
+let cliqCashToggleState = false;
 
 // prettier-ignore
 const typeComponentMapping = {
   "Credit Card": props => <CheckoutCreditCard {...props} />,
     "Debit Card": props => <CheckoutDebitCard {...props} />,
     "Netbanking": props => <CheckoutNetbanking {...props} />,
-    "COD": props => <CheckoutCOD {...props}/>,
+     "COD": props => <CheckoutCOD {...props}/>,
     "EMI": props => <CheckoutEmi {...props} />,
 };
 
 export default class PaymentCardWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
   renderPaymentCard = datumType => {
     return (
       <React.Fragment>
@@ -65,6 +60,7 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   handleClick = toggleState => {
+    cliqCashToggleState = toggleState;
     if (toggleState) {
       this.props.applyCliqCash();
     } else {
@@ -74,24 +70,22 @@ export default class PaymentCardWrapper extends React.Component {
 
   render() {
     if (this.props.cart.paymentModes) {
-      let cliqCashBalance = 0;
-      if (this.props.cart.paymentModes.cliqCash) {
-        cliqCashBalance = this.props.cart.paymentModes.cliqCash
-          .totalCliqCashBalance.value;
-      }
       return (
         <div className={styles.base}>
-          {this.renderSavedCards()}
+          {this.props.isRemainingBalance && this.renderSavedCards()}
           <div>
             {" "}
             <CliqCashToggle
               cashText="Use My CLiQ Cash Balance"
-              price={cliqCashBalance}
-              value={cliqCashBalance}
-              onToggle={i => this.handleClick(i)}
+              price={this.props.cliqCashAmount}
+              value={this.props.cliqCashAmount}
+              active={cliqCashToggleState}
+              onToggle={val => this.handleClick(val)}
             />
           </div>
-          {this.props.cart.paymentModes && this.renderPaymentCardsComponents()}
+          {this.props.isRemainingBalance &&
+            this.props.cart.paymentModes &&
+            this.renderPaymentCardsComponents()}
         </div>
       );
     } else {

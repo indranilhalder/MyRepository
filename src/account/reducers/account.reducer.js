@@ -61,6 +61,17 @@ const account = (
     followedBrands: null,
     followedBrandsStatus: null,
     followedBrandsError: null,
+
+    loadingForFollowedBrands: false,
+
+    cliqCashUserDetailsStatus: null,
+    cliqCashUserDetailsError: null,
+    cliqCashUserDetails: null,
+
+    cliqCashVoucherDetailsStatus: null,
+    cliqCashVoucherDetailsError: null,
+    cliqCashVoucherDetails: null,
+
     loadingForFollowedBrands: false,
 
     returnPinCodeStatus: null,
@@ -496,6 +507,46 @@ const account = (
         loading: false
       });
 
+    case accountActions.GET_USER_CLIQ_CASH_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        cliqCashUserDetailsStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.GET_USER_CLIQ_CASH_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        cliqCashUserDetailsStatus: action.status,
+        cliqCashUserDetails: action.cliqCashDetails,
+        loading: false
+      });
+
+    case accountActions.GET_USER_CLIQ_CASH_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        cliqCashUserDetailsStatus: action.status,
+        cliqCashUserDetailsError: action.error,
+        loading: false
+      });
+
+    case accountActions.REDEEM_CLIQ_VOUCHER_REQUEST:
+      return Object.assign({}, state, {
+        cliqCashVoucherDetailsStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.REDEEM_CLIQ_VOUCHER_SUCCESS:
+      return Object.assign({}, state, {
+        cliqCashVoucherDetailsStatus: action.status,
+        cliqCashVoucherDetails: action.cliqCashVoucherDetails,
+        loading: false
+      });
+
+    case accountActions.REDEEM_CLIQ_VOUCHER_FAILURE:
+      return Object.assign({}, state, {
+        cliqCashVoucherDetailsStatus: action.status,
+        cliqCashVoucherDetailsError: action.error,
+           loading: false
+      });
+
     case accountActions.NEW_RETURN_INITIATE_REQUEST:
       return Object.assign({}, state, {
         returnInitiateStatus: action.status,
@@ -531,6 +582,7 @@ const account = (
       return Object.assign({}, state, {
         returnPinCodeStatus: action.status,
         returnPinCodeError: action.error,
+
         loading: false
       });
 
