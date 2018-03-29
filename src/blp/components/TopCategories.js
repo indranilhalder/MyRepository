@@ -4,6 +4,8 @@ import { Image } from "xelpmoc-core";
 import styles from "./TopCategories.css";
 export default class TopCategories extends React.Component {
   render() {
+    console.log("TOP CATEGORIES");
+    console.log(this.props.feedComponentData);
     return (
       <div className={styles.base}>
         <div className={styles.headerText}>Top Categories</div>

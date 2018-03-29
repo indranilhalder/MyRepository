@@ -51,12 +51,15 @@ const FRESH_FROM_BRANDS_WIDGET_LIST = [111];
 const DISCOVER_MORE_WIDGET_LIST = [110];
 const AUTOMATED_BRAND_CAROUSEL_WIDGET_LIST = [113];
 const MULTI_CLICK_COMPONENT_WIDGET_LIST = [115];
+const AUTO_PRODUCT_RECOMMENDATION_COMPONENT_WIDGET_LIST = [11];
 
 const AUTO_FRESH_FROM_BRANDS = "Auto Fresh From Brands Component";
 const DISCOVER_MORE = "Auto Discover More Component";
 const AUTOMATED_BRAND_CAROUSEL = "Automated Banner Product Carousel Component";
 const FOLLOW_WIDGET = "Auto Following Brands Component";
 const MULTI_CLICK_COMPONENT = "Multi Click Component";
+const AUTO_PRODUCT_RECOMMENDATION_COMPONENT =
+  "Auto Product Recommendation Component";
 // TODO Followed Widget
 
 const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1"; // for local/devxelp/uat2tmpprod
@@ -354,6 +357,10 @@ function getMsdPostData(type) {
     return {
       widget_list: MULTI_CLICK_COMPONENT_WIDGET_LIST
     };
+  } else if (type === AUTO_PRODUCT_RECOMMENDATION_COMPONENT) {
+    return {
+      widget_list: AUTO_PRODUCT_RECOMMENDATION_COMPONENT_WIDGET_LIST
+    };
   } else {
     return {
       widget_list: AUTOMATED_BRAND_CAROUSEL_WIDGET_LIST
@@ -395,7 +402,10 @@ export function getComponentData(
           postData.append("num_brands", JSON.stringify(MSD_NUM_BRANDS));
         }
 
-        if (type === DISCOVER_MORE) {
+        if (
+          type === DISCOVER_MORE ||
+          type === AUTO_PRODUCT_RECOMMENDATION_COMPONENT
+        ) {
           postData.append(
             "num_results",
             JSON.stringify([DISCOVER_MORE_NUM_RESULTS])

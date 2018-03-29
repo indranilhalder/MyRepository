@@ -14,14 +14,22 @@ export default class RecommendationWidget extends React.Component {
   }
 
   componentDidUpdate() {
+    console.log("COMPONENT DID UPDATE");
+    console.log(this.props.feedComponentData);
     if (
       this.props.feedComponentData.data &&
-      this.props.feedComponentData.data.data &&
       this.props.feedComponentData.items.length === 0
     ) {
-      const itemIds = this.props.feedComponentData.data.data;
+      const itemIds = this.props.feedComponentData.data;
 
-      this.props.getItems(this.props.positionInFeed, itemIds);
+      console.log("ITEM IDS");
+      console.log(itemIds);
+      this.props.getItems(this.props.positionInFeed, [
+        "MP000000000155861",
+        "MP000000000114700",
+        "MP000000000169248",
+        "MP000000000113243"
+      ]);
     }
   }
 

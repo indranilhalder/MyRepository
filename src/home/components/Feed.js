@@ -28,6 +28,7 @@ import CuratedProductsComponent from "./CuratedProductsComponent";
 import CuratedFeature from "../../blp/components/CuratedFeature";
 import LatestCollections from "../../blp/components/LatestCollections";
 import MonoBanner from "./MonoBanner";
+import TopCategories from "../../blp/components/TopCategories";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
 import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
@@ -41,30 +42,33 @@ const typeKeyMapping = {
 };
 
 const typeComponentMapping = {
-  // "Landing Page Header Component": props => <BrandCardHeader {...props} />,
-  // "Hero Banner Component": props => <HeroBanner {...props} />,
-  // "Theme Offers Component": props => <ThemeOffer {...props} />,
-  // "Auto Product Recommendation Component": props => (
-  //   <RecommendationWidget {...props} />
-  // ),
-  // "Banner Product Carousel Component": props => (
-  //   <BannerProductCarousel {...props} />
-  // ),
-  // "Video Product Carousel Component": props => (
-  //   <VideoProductCarousel {...props} />
-  // ),
-  // "Automated Banner Product Carousel Component": props => (
-  //   <AutomatedBrandProductCarousel {...props} />
-  // ),
+  "Landing Page Header Component": props => <BrandCardHeader {...props} />,
+  "Hero Banner Component": props => <HeroBanner {...props} />,
+  "Theme Offers Component": props => <ThemeOffer {...props} />,
+  "Auto Product Recommendation Component": props => (
+    <RecommendationWidget {...props} />
+  ),
+  "Banner Product Carousel Component": props => (
+    <BannerProductCarousel {...props} />
+  ),
+  "Video Product Carousel Component": props => (
+    <VideoProductCarousel {...props} />
+  ),
+  "Automated Banner Product Carousel Component": props => (
+    <AutomatedBrandProductCarousel {...props} />
+  ),
   // "Auto Following Brands Component": props => <FollowingBrands {...props} />,
   // // // "Flash Sales Component": props => <FlashSale {...props} />, // wired up
-  // // // "Offers Component": props => <OfferWidget {...props} />, // wired up
-  // // // "Multipurpose Banner Component": props => <ConnectWidget {...props} />, // modal not working - need to figure out what to show here.
+  "Offers Component": props => <OfferWidget {...props} /> // wired up
+  // "Multipurpose Banner Component": props => <ConnectWidget {...props} /> // modal not working - need to figure out what to show here.
   // "Multi Click Component": props => <ThemeProductWidget {...props} />,
   // "Auto Fresh From Brands Component": props => <FollowBase {...props} />, // wired up with clickable url
   // "Banner Separator Component": props => <BannerSeparator {...props} />,
-  "Auto Discover More Component": props => <DiscoverMore {...props} />
-  // "Auto Product Recommendation": props => <RecommendationWidget {...props} />
+  // "Auto Discover More Component": props => <DiscoverMore {...props} />,
+  // "Auto Product Recommendation Component": props => (
+  //   <RecommendationWidget {...props} />
+  // ),
+  // "Top Categories Component": props => <TopCategories {...props} />
   // "Recently viewed product": props => <RecommendationWidget {...props} />,
   // "Single Banner Component": props => <MonoBanner {...props} />,
   // "Curated Listing Strip Component": props => <LatestCollections {...props} />,
@@ -94,6 +98,8 @@ class Feed extends Component {
   }
 
   renderFeedComponents() {
+    console.log("HOME FEED DATA");
+    console.log(this.props.homeFeedData);
     return (
       this.props.homeFeedData &&
       this.props.homeFeedData.map((feedDatum, i) => {
