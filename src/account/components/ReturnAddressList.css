@@ -1,0 +1,40 @@
+.base {
+  width: 100%;
+  height: auto;
+  background-color: #ffffff;
+  border-radius: 4px;
+}
+.withCheckbox {
+  composes: base;
+  padding-right: 35px;
+  position: relative;
+}
+.home {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  font-family: semibold;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.addressDetails {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  font-family: regular;
+  font-size: 14px;
+  line-height: normal;
+}
+.address {
+  composes: addressDetails;
+  margin-top: 5px;
+}
+.checkBoxHolder {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 15px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}

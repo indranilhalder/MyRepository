@@ -3,7 +3,8 @@ import cloneDeep from "lodash/cloneDeep";
 import * as Cookies from "../../lib/Cookie";
 import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  CART_DETAILS_FOR_ANONYMOUS
+  CART_DETAILS_FOR_ANONYMOUS,
+  OLD_CART_GU_ID
 } from "../../lib/constants";
 
 const cart = (
@@ -66,6 +67,7 @@ const cart = (
     jusPayStatus: null,
     jusPayError: null,
     jusPayDetails: null,
+    cliqCashJusPayDetails: null,
 
     transactionDetailsStatus: null,
     transactionDetailsError: null,
@@ -116,7 +118,14 @@ const cart = (
 
     updateQuantityLoggedOutStatus: null,
     updateQuantityLoggedOutDetails: null,
-    updateQuantityLoggedOutError: null
+    updateQuantityLoggedOutError: null,
+
+    AddUserAddressStatus: null,
+    AddUserAddressError: null,
+
+    returnCliqPiqStatus: null,
+    returnCliqPiqDetails: null,
+    returnCliqPiqError: null
   },
   action
 ) => {
@@ -302,8 +311,7 @@ const cart = (
 
     case cartActions.GENERATE_CART_ID_REQUEST:
       return Object.assign({}, state, {
-        status: action.status,
-        loading: true
+        status: action.status
       });
 
     case cartActions.GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS:
@@ -322,15 +330,13 @@ const cart = (
         JSON.stringify(action.cartDetails)
       );
       return Object.assign({}, state, {
-        status: action.status,
-        loading: false
+        status: action.status
       });
 
     case cartActions.GENERATE_CART_ID_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
-        error: action.error,
-        loading: false
+        error: action.error
       });
 
     case cartActions.ORDER_SUMMARY_REQUEST:
@@ -566,22 +572,22 @@ const cart = (
 
     case cartActions.REMOVE_CLIQ_CASH_REQUEST:
       return Object.assign({}, state, {
-        paymentStatus: action.status,
+        cliqCashPaymentStatus: action.status,
         loading: true
       });
 
     case cartActions.REMOVE_CLIQ_CASH_SUCCESS: {
       return Object.assign({}, state, {
-        paymentStatus: action.status,
-        paymentDetails: action.paymentDetails,
+        cliqCashPaymentStatus: action.status,
+        cliqCashPaymentDetails: action.paymentDetails,
         loading: false
       });
     }
 
     case cartActions.REMOVE_CLIQ_CASH_FAILURE:
       return Object.assign({}, state, {
-        paymentStatus: action.status,
-        paymentStatusError: action.error,
+        cliqCashPaymentStatus: action.status,
+        cliqCashPaymentStatusError: action.error,
         loading: false
       });
 
@@ -595,6 +601,19 @@ const cart = (
       return Object.assign({}, state, {
         jusPayStatus: action.status,
         jusPayDetails: action.jusPayDetails,
+        loading: false
+      });
+    }
+    case cartActions.CREATE_JUS_PAY_ORDER_FOR_CLIQ_CASH_SUCCESS: {
+      const cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      const cartDetailsGuid = JSON.parse(cartDetails).guid;
+      localStorage.setItem(OLD_CART_GU_ID, cartDetailsGuid);
+
+      // here is where I need to destroy the cart details
+      Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      return Object.assign({}, state, {
+        jusPayStatus: action.status,
+        cliqCashJusPayDetails: action.cliqCashJusPayDetails,
         loading: false
       });
     }
@@ -631,6 +650,7 @@ const cart = (
       });
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_SUCCESS: {
+      localStorage.removeItem(OLD_CART_GU_ID);
       return Object.assign({}, state, {
         jusPayStatus: action.status,
         jusPayDetails: action.jusPayDetails,
@@ -673,6 +693,10 @@ const cart = (
       });
 
     case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_SUCCESS: {
+      const cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      const cartDetailsGuid = JSON.parse(cartDetails).guid;
+      localStorage.setItem(OLD_CART_GU_ID, cartDetailsGuid);
+
       // here is where I need to destroy the cart details
       Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       return Object.assign({}, state, {
@@ -886,6 +910,23 @@ const cart = (
       return Object.assign({}, state, {
         updateQuantityLoggedOutStatus: action.status,
         updateQuantityLoggedOutError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        AddUserAddressStatus: action.status,
+        loading: true
+      });
+    case cartActions.ADD_USER_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        AddUserAddressStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        AddUserAddressStatus: action.status,
         loading: false
       });
 

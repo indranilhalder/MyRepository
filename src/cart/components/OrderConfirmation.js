@@ -13,8 +13,8 @@ export default class OrderConfirmation extends React.Component {
     return (
       <div>
         <OrderBanner
-          headingText={this.props.orderDetails.orderStatusMessage}
-          label={this.props.orderDetails.orderRefNo}
+          headingText={this.props.orderStatusMessage}
+          label={this.props.orderId}
         />
         <RateYourExperienceCard
           captureOrderExperience={rating => this.captureOrderExperience(rating)}

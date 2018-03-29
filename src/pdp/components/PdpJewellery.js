@@ -21,7 +21,7 @@ import JewelleryCertification from "./JewelleryCertification.js";
 import { HashLink as Link } from "react-router-hash-link";
 import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
-import PDPRecommendedSections from "./PDPRecommendedSections.js";
+import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
 import {
   PRODUCT_SELLER_ROUTER_SUFFIX,
   CUSTOMER_ACCESS_TOKEN,
@@ -364,10 +364,7 @@ please try another pincode">
               productContent={productData.APlusContent.productContent}
             />
           )}
-          <PDPRecommendedSections
-            msdItems={this.props.msdItems}
-            productData={productData}
-          />
+          <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );
     } else {

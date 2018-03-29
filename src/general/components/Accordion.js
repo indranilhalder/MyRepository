@@ -22,12 +22,21 @@ export default class Accordion extends React.Component {
   render() {
     let iconActive = styles.icon;
     let activeheader = styles.textBox;
+    let background = "";
     if (this.state.isOpen) {
       iconActive = styles.iconup;
       activeheader = styles.textBoxActive;
+      background = this.props.activeBackground;
     }
+
     return (
-      <div className={styles.base}>
+      <div
+        className={styles.base}
+        style={{
+          padding: `0 ${this.props.offset}px`,
+          backgroundColor: `${background}`
+        }}
+      >
         <div
           className={styles.holder}
           onClick={() => {
@@ -51,9 +60,12 @@ Accordion.propTypes = {
   text: PropTypes.string,
   iconImageURL: PropTypes.string,
   headerFontSize: PropTypes.number,
-  searchImageURL: PropTypes.string
+  offset: PropTypes.number,
+  searchImageURL: PropTypes.string,
+  activeBackground: PropTypes.string
 };
 
 Accordion.defaultProps = {
-  headerFontSize: 14
+  headerFontSize: 14,
+  offset: 0
 };

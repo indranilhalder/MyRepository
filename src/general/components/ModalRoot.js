@@ -12,6 +12,9 @@ import EmiModal from "../../pdp/containers/EmiListContainer";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
 import SizeSelectModal from "../../pdp/components/SizeSelectModal.js";
 import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
+import KycDetailsPopup from "../../auth/components/KycDetailsPopup.js";
+import KycApplicationForm from "../../account/components/KycApplicationForm.js";
+
 import UpdateRefundDetailsPopup from "../../account/components/UpdateRefundDetailsPopup.js";
 import KycApplicationFormWithBottomSlideModal from "../../account/components/KycApplicationFormWithBottomSlideModal";
 import KycDetailPopUpWithBottomSlideModal from "../../account/components/KycDetailPopUpWithBottomSlideModal";
@@ -40,8 +43,15 @@ export default class ModalRoot extends React.Component {
     }
   }
   onUpdate(val) {
-    if (this.props.onUpdate) {
-      this.props.onUpdate(val);
+    if (this.props.submitSelfCourierReturnInfo) {
+      const returnDetails = {};
+      returnDetails.awbNumber = val.awbNumber;
+      returnDetails.lpname = val.logisticsPartner;
+      returnDetails.amount = val.courierCharge;
+      returnDetails.orderId = this.props.ownProps.orderId;
+      returnDetails.transactionId = this.props.ownProps.transactionId;
+      returnDetails.file = val.file;
+      this.props.submitSelfCourierReturnInfo(returnDetails);
     }
   }
   submitOtp(otpDetails) {
@@ -79,6 +89,33 @@ export default class ModalRoot extends React.Component {
   getUserAddress = () => {
     this.props.getUserAddress();
   };
+
+  generateOtpForCliqCash = kycDetails => {
+    if (this.props.getOtpToActivateWallet) {
+      this.props.getOtpToActivateWallet(kycDetails, true);
+    }
+  };
+  verifyOtpForCliqCash = otpDetails => {
+    let kycDetails = {};
+    kycDetails.firstName = this.props.ownProps.firstName;
+    kycDetails.lastName = this.props.ownProps.lastName;
+    kycDetails.mobileNumber = this.props.ownProps.mobileNumber;
+    kycDetails.otp = otpDetails;
+    if (this.props.verifyWallet) {
+      this.props.verifyWallet(kycDetails, true);
+    }
+  };
+
+  resendOtp = () => {
+    if (this.props.getOtpToActivateWallet) {
+      let kycDetails = {};
+      kycDetails.firstName = this.props.ownProps.firstName;
+      kycDetails.lastName = this.props.ownProps.lastName;
+      kycDetails.mobileNumber = this.props.ownProps.mobileNumber;
+      this.props.getOtpToActivateWallet(kycDetails, true);
+    }
+  };
+
   generateOtpForEgv = () => {
     this.props.generateOtpForEgv();
   };
@@ -140,6 +177,7 @@ export default class ModalRoot extends React.Component {
         <UpdateRefundDetailsPopup
           closeModal={() => this.handleClose()}
           onUpdate={val => this.onUpdate(val)}
+          {...this.props.ownProps}
         />
       ),
       Sort: <Sort />,
@@ -169,6 +207,21 @@ export default class ModalRoot extends React.Component {
           applyBankOffer={couponCode => this.applyBankOffer(couponCode)}
           releaseBankOffer={couponCode => this.releaseBankOffer(couponCode)}
           {...this.props.ownProps}
+        />
+      ),
+      generateOtpForCliqCash: (
+        <KycApplicationFormWithBottomSlideModal
+          closeModal={() => this.handleClose()}
+          generateOtp={KycDetails => this.generateOtpForCliqCash(KycDetails)}
+          {...this.props.ownProps}
+        />
+      ),
+      verifyOtpForCliqCash: (
+        <KycDetailPopUpWithBottomSlideModal
+          closeModal={() => this.handleClose()}
+          submitOtp={otpDetails => this.verifyOtpForCliqCash(otpDetails)}
+          {...this.props.ownProps}
+          resendOtp={() => this.resendOtp()}
         />
       ),
       SizeGuide: <SizeGuideModal closeModal={() => this.handleClose()} />,

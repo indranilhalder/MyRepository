@@ -4,6 +4,7 @@ import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import TextArea from "../../general/components/TextArea";
+import FooterButton from "../../general/components/FooterButton.js";
 import { Redirect } from "react-router-dom";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -199,11 +200,17 @@ export default class GiftCard extends React.Component {
         {giftCards &&
           giftCards.isWalletCreated &&
           giftCards.isWalletOtpVerified && (
-            <div
-              className={styles.buttonHolder}
-              onClick={() => this.onSubmitDetails()}
-            >
-              Buy Now
+            <div className={styles.buttonHolder}>
+              <FooterButton
+                backgroundColor="#ff1744"
+                onClick={() => this.onSubmitDetails()}
+                label="Buy Now"
+                labelStyle={{
+                  color: "#fff",
+                  fontSize: 14,
+                  fontFamily: "semibold"
+                }}
+              />
             </div>
           )}
       </div>

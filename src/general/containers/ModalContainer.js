@@ -26,7 +26,8 @@ import {
 } from "../../cart/actions/cart.actions";
 import {
   getOtpToActivateWallet,
-  verifyWallet
+  verifyWallet,
+  submitSelfCourierReturnInfo
 } from "../../account/actions/account.actions";
 
 const mapStateToProps = (state, ownProps) => {
@@ -109,11 +110,17 @@ const mapDispatchToProps = dispatch => {
     getUserAddress: () => {
       dispatch(getUserAddress());
     },
-    getOtpToActivateWallet: customerDetails => {
-      dispatch(getOtpToActivateWallet(customerDetails));
+
+    getOtpToActivateWallet: (customerDetails, isFromCliqCash) => {
+      dispatch(getOtpToActivateWallet(customerDetails, isFromCliqCash));
     },
-    verifyWallet: customerDetailsWithOtp => {
-      dispatch(verifyWallet(customerDetailsWithOtp));
+
+    verifyWallet: (customerDetailsWithOtp, isFromCliqCash) => {
+      dispatch(verifyWallet(customerDetailsWithOtp, isFromCliqCash));
+    },
+
+    submitSelfCourierReturnInfo: returnDetails => {
+      dispatch(submitSelfCourierReturnInfo(returnDetails));
     }
   };
 };

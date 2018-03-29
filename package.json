@@ -60,8 +60,9 @@
     "xelpmoc-core": "^0.2.4"
   },
   "scripts": {
-    "start": "REACT_APP_STAGE=local node -r dotenv/config scripts/start.js",
-    "tmpprod": "REACT_APP_STAGE=tmpprod node scrips/build.js",
+    "start": "REACT_APP_STAGE=p2 node -r dotenv/config scripts/start.js",
+    "stage": "REACT_APP_STAGE=stage node scripts/build.js",
+    "tmpprod": "REACT_APP_STAGE=tmpprod node scripts/build.js",
     "local": "REACT_APP_STAGE=local node scripts/build.js",
     "dev": "REACT_APP_STAGE=devxelp node scripts/build.js",
     "uat2": "REACT_APP_STAGE=uat2 node scripts/build.js",

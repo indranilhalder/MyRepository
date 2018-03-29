@@ -17,8 +17,10 @@ export default class CategoriesPage extends React.Component {
     this.props.getCategories();
   }
   handleClick(webURL) {
-    const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
-    this.props.history.push(urlSuffix);
+    if (webURL) {
+      const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
+    }
   }
   handleViewAll(webURL) {
     const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
