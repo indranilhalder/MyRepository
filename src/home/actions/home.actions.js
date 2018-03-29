@@ -5,7 +5,8 @@ import {
   FAILURE,
   BLP_OR_CLP_FEED_TYPE,
   HOME_FEED_TYPE,
-  DISCOUNT_PERCENT
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS
 } from "../../lib/constants";
 import each from "lodash/each";
 import delay from "lodash/delay";
@@ -14,6 +15,8 @@ import {
   MSD_WIDGET_PLATFORM,
   MSD_API_KEY
 } from "../../lib/config.js";
+import * as Cookie from "../../lib/Cookie";
+
 import { getMcvId } from "../../lib/adobeUtils.js";
 import { getMsdFormData } from "../../lib/msdUtils.js";
 import { getMsdRequest } from "../../pdp/actions/pdp.actions";
@@ -41,6 +44,10 @@ export const GET_ITEMS_REQUEST = "GET_SALE_ITEMS_REQUEST";
 export const GET_ITEMS_SUCCESS = "GET_SALE_ITEMS_SUCCESS";
 export const GET_ITEMS_FAILURE = "GET_SALE_ITEMS_FAILURE";
 
+export const GET_PRODUCT_CAPSULES_REQUEST = "GET_PRODUCT_CAPSULES_REQUEST";
+export const GET_PRODUCT_CAPSULES_SUCCESS = "GET_PRODUCT_CAPSULES_SUCCESS";
+export const GET_PRODUCT_CAPSULES_FAILURE = "GET_PRODUCT_CAPSULES_FAILURE";
+
 const ADOBE_TARGET_DELAY = 1500;
 const MSD_NUM_PRODUCTS = 10;
 const MSD_NUM_RESULTS = 10;
@@ -65,6 +72,56 @@ const AUTO_PRODUCT_RECOMMENDATION_COMPONENT =
 const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1"; // for local/devxelp/uat2tmpprod
 const ADOBE_TARGET_PRODUCTION_HOME_FEED_MBOX_NAME = "PROD_Mobile_Homepage_Mbox";
 const ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME = "UAT_Mobile_Homepage_Mbox";
+
+export function getProductCapsulesRequest() {
+  return {
+    type: GET_PRODUCT_CAPSULES_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function getProductCapsulesSuccess(productCapsules, positionInFeed) {
+  return {
+    type: GET_PRODUCT_CAPSULES_SUCCESS,
+    status: SUCCESS,
+    productCapsules,
+    positionInFeed
+  };
+}
+
+export function getProductCapsulesFailure(error) {
+  return {
+    type: GET_PRODUCT_CAPSULES_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+// {{root_url}}/marketplacewebservices/v2/mpl/users/{{username}}/getProductCapsules?access_token={{customer_access_token}}
+
+export function getProductCapsules(positionInFeed) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(getProductCapsulesRequest());
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    try {
+      const result = await api.post(
+        `v2/mpl/users/${
+          JSON.parse(userDetails).userName
+        }/getProductCapsules?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`
+      );
+      const resultJson = await result.json();
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(getProductCapsulesSuccess(resultJson, positionInFeed));
+    } catch (e) {
+      dispatch(getProductCapsulesFailure(e.message));
+    }
+  };
+}
 
 export function getItemsRequest(positionInFeed) {
   return {
@@ -380,7 +437,6 @@ export function getComponentData(
       let postData;
       let result;
       let resultJson;
-      console.log(fetchURL);
 
       if (postParams && postParams.widgetPlatform === MSD_WIDGET_PLATFORM) {
         const widgetSpecificPostData = getMsdPostData(type);
@@ -414,25 +470,12 @@ export function getComponentData(
 
         result = await api.postMsd(fetchURL, postData);
         resultJson = await result.json();
-        // if (resultJson.title) {
-
-        //   resultJson.data[0].title = resultJson.title;
-        // }
-
-        // if (resultJson.type) {
-        //   resultJson.data[0].type = resultJson.type;
-        // }
 
         if (resultJson.errors) {
           throw new Error(`${resultJson.errors[0].message}`);
         }
 
-        console.log("BEFORE");
-        console.log(resultJson);
         resultJson.data = resultJson.data[0];
-        console.log("RESULT JSON");
-
-        console.log(resultJson);
 
         dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
@@ -453,16 +496,11 @@ export function getComponentData(
           false
         );
 
-        console.log("RESULT JSON");
-        console.log(resultJson);
-
         resultJson = resultJson[0];
         if (resultJson.errors) {
           throw new Error(`${resultJson.errors[0].message}`);
         }
         let parsedResultJson = JSON.parse(resultJson.content);
-        console.log("PARSED RESULT JSON");
-        console.log(parsedResultJson);
         parsedResultJson = parsedResultJson.items[0];
         dispatch(componentDataSuccess(parsedResultJson, positionInFeed));
       }

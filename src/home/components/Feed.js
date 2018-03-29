@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import * as Cookie from "../../lib/Cookie";
+
 import WidgetContainer from "../containers/WidgetContainer";
 import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
@@ -33,8 +35,13 @@ import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
 import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
 import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
-import { CHECKOUT_ROUTER } from "../../lib/constants";
+import {
+  CHECKOUT_ROUTER,
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS
+} from "../../lib/constants";
 import queryString from "query-string";
+import ProductCapsulesContainer from "../containers/ProductCapsulesContainer";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeKeyMapping = {
@@ -42,27 +49,28 @@ const typeKeyMapping = {
 };
 
 const typeComponentMapping = {
-  "Landing Page Header Component": props => <BrandCardHeader {...props} />,
-  "Hero Banner Component": props => <HeroBanner {...props} />,
-  "Theme Offers Component": props => <ThemeOffer {...props} />,
-  "Auto Product Recommendation Component": props => (
-    <RecommendationWidget {...props} />
-  ),
-  "Banner Product Carousel Component": props => (
-    <BannerProductCarousel {...props} />
-  ),
-  "Video Product Carousel Component": props => (
-    <VideoProductCarousel {...props} />
-  ),
-  "Automated Banner Product Carousel Component": props => (
-    <AutomatedBrandProductCarousel {...props} />
-  ),
-  // "Auto Following Brands Component": props => <FollowingBrands {...props} />,
-  // // // "Flash Sales Component": props => <FlashSale {...props} />, // wired up
-  "Offers Component": props => <OfferWidget {...props} /> // wired up
+  "Product Capsules Component": props => <ProductCapsulesContainer {...props} />
+  // "Landing Page Header Component": props => <BrandCardHeader {...props} />
+  // "Hero Banner Component": props => <HeroBanner {...props} /> // no hard coded data
+  // "Theme Offers Component": props => <ThemeOffer {...props} /> // no hard coded data
+  // "Auto Product Recommendation Component": props => (
+  //   <RecommendationWidget {...props} />
+  // ) // no hard coded data
+  // "Banner Product Carousel Component": props => (
+  //   <BannerProductCarousel {...props} />
+  // )
+  // "Video Product Carousel Component": props => (
+  //   <VideoProductCarousel {...props} />
+  // ),
+  // "Automated Banner Product Carousel Component": props => (
+  //   <AutomatedBrandProductCarousel {...props} />
+  // )
+  // "Auto Following Brands Component": props => <FollowingBrands {...props} />
+  // // // // "Flash Sales Component": props => <FlashSale {...props} />, // wired up
+  // "Offers Component": props => <OfferWidget {...props} /> // wired up
   // "Multipurpose Banner Component": props => <ConnectWidget {...props} /> // modal not working - need to figure out what to show here.
   // "Multi Click Component": props => <ThemeProductWidget {...props} />,
-  // "Auto Fresh From Brands Component": props => <FollowBase {...props} />, // wired up with clickable url
+  // "Auto Fresh From Brands Component": props => <FollowBase {...props} /> // wired up with clickable url
   // "Banner Separator Component": props => <BannerSeparator {...props} />,
   // "Auto Discover More Component": props => <DiscoverMore {...props} />,
   // "Auto Product Recommendation Component": props => (
@@ -82,6 +90,15 @@ const typeComponentMapping = {
 
 class Feed extends Component {
   renderFeedComponent(feedDatum, i) {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (
+      feedDatum.type === "Product Capsules Component" &&
+      userDetails &&
+      customerCookie
+    ) {
+      return <ProductCapsulesContainer positionInFeed={i} />;
+    }
     return (
       typeComponentMapping[feedDatum.type] && (
         <WidgetContainer
@@ -98,8 +115,6 @@ class Feed extends Component {
   }
 
   renderFeedComponents() {
-    console.log("HOME FEED DATA");
-    console.log(this.props.homeFeedData);
     return (
       this.props.homeFeedData &&
       this.props.homeFeedData.map((feedDatum, i) => {

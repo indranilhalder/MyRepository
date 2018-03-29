@@ -40,6 +40,9 @@ export default class RecommendationWidget extends React.Component {
       carouselData = feedComponentData.items.map(transformData);
     }
 
+    console.log("FEED COMPONENT DATA");
+    console.log(feedComponentData);
+
     return (
       feedComponentData.items &&
       feedComponentData.items.length > 0 && (
