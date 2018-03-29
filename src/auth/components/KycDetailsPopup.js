@@ -29,6 +29,7 @@ export default class KycDetailsPopup extends React.Component {
       this.props.wrongNumber();
     }
   }
+
   render() {
     return (
       <div className={Styles.base}>

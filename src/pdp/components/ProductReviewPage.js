@@ -121,7 +121,8 @@ class ProductReviewPage extends Component {
             <div className={styles.productBackground}>
               <ProductDetailsCard
                 productImage={mobileGalleryImages[0]}
-                productName={this.props.productDetails.productName}
+                productName={this.props.productDetails.brandName}
+                productMaterial={this.props.productDetails.productName}
                 price={this.props.productDetails.winningSellerMOP}
                 discountPrice={this.props.productDetails.mrp}
                 averageRating={this.props.productDetails.averageRating}

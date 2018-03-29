@@ -33,7 +33,8 @@ import {
   binValidationForNetBanking,
   softReservationPaymentForNetBanking,
   softReservationPaymentForSavedCard,
-  orderConfirmation
+  orderConfirmation,
+  softReservationForCliqCash
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -119,11 +120,11 @@ const mapDispatchToProps = dispatch => {
     getEmiBankDetails: cartTotalProducts => {
       dispatch(getEmiBankDetails(cartTotalProducts));
     },
-    applyCliqCash: () => {
-      dispatch(applyCliqCash());
+    applyCliqCash: pinCode => {
+      dispatch(applyCliqCash(pinCode));
     },
-    removeCliqCash: () => {
-      dispatch(removeCliqCash());
+    removeCliqCash: pinCode => {
+      dispatch(removeCliqCash(pinCode));
     },
     binValidation: (paymentMode, binNo) => {
       dispatch(binValidation(paymentMode, binNo));
@@ -161,6 +162,9 @@ const mapDispatchToProps = dispatch => {
       dispatch(
         softReservationPaymentForSavedCard(cardDetails, address, paymentMode)
       );
+    },
+    softReservationForCliqCash: pinCode => {
+      dispatch(softReservationForCliqCash(pinCode));
     }
   };
 };
