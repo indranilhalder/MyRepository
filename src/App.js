@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ModalContainer from "./general/containers/ModalContainer";
+import ToastContainer from "./general/containers/ToastContainer";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
@@ -44,7 +45,6 @@ import CliqCashContainer from "./account/containers/CliqCashContainer.js";
 import GiftCardContainer from "./account/containers/GiftCardContainer";
 
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
-
 
 import {
   HOME_ROUTER,
@@ -318,6 +318,7 @@ class App extends Component {
           <MobileFooter />
 
           <ModalContainer />
+          <ToastContainer />
         </div>
       </React.Fragment>
     );
