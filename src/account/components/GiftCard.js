@@ -33,8 +33,6 @@ export default class GiftCard extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if (this.props.giftCardDetailsStatus) {
-      console.log(nextProps.giftCardDetails);
-
       this.props.history.push({
         pathname: CHECKOUT_ROUTER,
         state: {

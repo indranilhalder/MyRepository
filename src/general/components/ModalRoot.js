@@ -144,7 +144,6 @@ export default class ModalRoot extends React.Component {
   }
 
   addGiftCard = val => {
-    console.log(val);
     if (this.props.redeemCliqVoucher) {
       this.props.redeemCliqVoucher(val, true);
     }

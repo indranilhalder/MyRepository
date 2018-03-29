@@ -18,7 +18,6 @@ export default class CheckoutNetBanking extends React.Component {
     }
   };
   createJusPayOrderForGiftCardNetBanking = cardDetails => {
-    console.log(cardDetails);
     if (this.props.createJusPayOrderForGiftCardNetBanking) {
       this.props.createJusPayOrderForGiftCardNetBanking(cardDetails);
     }

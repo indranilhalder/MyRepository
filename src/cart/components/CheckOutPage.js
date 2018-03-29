@@ -301,9 +301,7 @@ class CheckOutPage extends React.Component {
         bagAmount: this.props.location.state.amount
       });
     } else {
-      console.log(nextProps.cart.cartDetailsCNC);
       if (nextProps.cart.cartDetailsCNC && this.state.isRemainingAmount) {
-        console.log(nextProps.cart.cartDetailsCNC);
         let cliqCashAmount = 0;
         if (nextProps.cart.paymentModes) {
           cliqCashAmount =
