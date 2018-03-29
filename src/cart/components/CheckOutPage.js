@@ -24,6 +24,8 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   COLLECT,
   PRODUCT_CART_ROUTER,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  OLD_CART_GU_ID,
   PAYMENT_MODE_TYPE
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
@@ -33,6 +35,7 @@ const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
 const WALLET = "WALLET";
 const PAYTM = "PAYTM";
+
 class CheckOutPage extends React.Component {
   state = {
     confirmAddress: false,
@@ -51,7 +54,10 @@ class CheckOutPage extends React.Component {
     selectedProductsUssIdForCliqAndPiq: null,
     orderId: "",
     savedCardDetails: "",
-    binValidationCOD: false
+    binValidationCOD: false,
+    isRemainingAmount: true,
+    payableAmount: "",
+    cliqCashAmount: ""
   };
 
   renderLoader() {
@@ -269,6 +275,34 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.cart.cliqCashPaymentDetails) {
+      if (
+        this.state.isRemainingAmount !==
+        nextProps.cart.cliqCashPaymentDetails.isRemainingAmount
+      ) {
+        this.setState({
+          isRemainingAmount:
+            nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
+          payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount,
+          cliqCashAmount:
+            nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value
+        });
+      }
+    } else {
+      if (nextProps.cart.cartDetailsCNC && !this.state.isRemainingAmount) {
+        let cliqCashAmount = 0;
+        if (nextProps.cart.paymentModes) {
+          cliqCashAmount =
+            nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance.value;
+        }
+        this.setState({
+          payableAmount:
+            nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.formattedValue,
+          cliqCashAmount: cliqCashAmount
+        });
+      }
+    }
+
     if (nextProps.cart.justPayPaymentDetails !== null) {
       if (nextProps.cart.justPayPaymentDetails.payment) {
         window.location.replace(
@@ -277,6 +311,10 @@ class CheckOutPage extends React.Component {
       }
     }
     if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
+      this.setState({ orderConfirmation: true });
+    }
+    if (nextProps.cart.cliqCashJusPayDetails) {
+      this.setState({ orderId: nextProps.cart.cliqCashJusPayDetails.orderId });
       this.setState({ orderConfirmation: true });
     }
     if (nextProps.cart.binValidationCODStatus === SUCCESS) {
@@ -297,13 +335,6 @@ class CheckOutPage extends React.Component {
   }
 
   componentDidMount() {
-    // if (
-    //   !this.props.history.location.state ||
-    //   !this.props.history.location.state.isRequestComeThrowMyBag
-    // ) {
-    //   this.props.history.push(PRODUCT_CART_ROUTER);
-    //   return true;
-    // }
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
@@ -311,16 +342,13 @@ class CheckOutPage extends React.Component {
     if (value === PAYMENT_CHARGED) {
       this.setState({ orderId: orderId });
       if (this.props.updateTransactionDetails) {
-        let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-        if (cartDetails) {
-          let cartId = JSON.parse(cartDetails).guid;
-          if (cartId) {
-            this.props.updateTransactionDetails(
-              localStorage.getItem(PAYMENT_MODE_TYPE),
-              orderId,
-              cartId
-            );
-          }
+        let cartId = localStorage.getItem(OLD_CART_GU_ID);
+        if (cartId) {
+          this.props.updateTransactionDetails(
+            localStorage.getItem(PAYMENT_MODE_TYPE),
+            orderId,
+            cartId
+          );
         }
       }
     } else {
@@ -377,7 +405,6 @@ class CheckOutPage extends React.Component {
     this.setState(val);
   }
   handleSubmit = () => {
-    console.log(this.state);
     if (!this.state.confirmAddress) {
       this.props.addAddressToCart(
         this.state.addressId[0].id,
@@ -401,6 +428,11 @@ class CheckOutPage extends React.Component {
         this.state.savedCardDetails,
         this.state.addressId[0],
         this.state.paymentModeSelected
+      );
+    }
+    if (!this.state.isRemainingAmount) {
+      this.props.softReservationForCliqCash(
+        localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
       );
     }
 
@@ -435,7 +467,11 @@ class CheckOutPage extends React.Component {
   addNewAddress = () => {
     this.setState({ addNewAddress: true });
   };
-
+  binValidationForPaytm = (paymentMode, binNo, val) => {
+    localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
+    this.setState({ paymentModeSelected: paymentMode });
+    this.props.binValidation(paymentMode, binNo);
+  };
   applyBankCoupons = val => {
     if (val.length > 0) {
       this.props.applyBankOffer(val);
@@ -460,7 +496,14 @@ class CheckOutPage extends React.Component {
     this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidation(paymentMode, binNo);
   };
-
+  softReservationPaymentForWallet = bankName => {
+    this.props.softReservationPaymentForNetBanking(
+      WALLET,
+      PAYTM,
+      bankName,
+      this.props.location.state.pinCode
+    );
+  };
   binValidationForCOD = paymentMode => {
     localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
     this.setState({ paymentModeSelected: paymentMode });
@@ -472,12 +515,7 @@ class CheckOutPage extends React.Component {
     this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidationForNetBanking(paymentMode, bankName);
   };
-  binValidationForPaytm = (paymentMode, binNo, val) => {
-    console.log("here");
-    localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
-    this.setState({ paymentModeSelected: paymentMode });
-    this.props.binValidation(paymentMode, binNo);
-  };
+
   binValidationForSavedCard = cardDetails => {
     this.setState({
       paymentModeSelected: `${cardDetails.cardType} Card`
@@ -507,14 +545,6 @@ class CheckOutPage extends React.Component {
     );
   };
 
-  softReservationPaymentForWallet = bankName => {
-    this.props.softReservationPaymentForNetBanking(
-      WALLET,
-      PAYTM,
-      bankName,
-      this.props.location.state.pinCode
-    );
-  };
   captureOrderExperience = rating => {
     if (this.props.captureOrderExperience) {
       this.props.captureOrderExperience(this.state.orderId, rating);
@@ -588,7 +618,9 @@ class CheckOutPage extends React.Component {
           {!this.state.paymentMethod &&
             (this.state.confirmAddress && this.state.deliverMode) && (
               <PaymentCardWrapper
+                isRemainingBalance={this.state.isRemainingAmount}
                 cart={this.props.cart}
+                cliqCashAmount={this.state.cliqCashAmount}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
                 binValidation={(paymentMode, binNo) =>
@@ -619,22 +651,17 @@ class CheckOutPage extends React.Component {
             )}
 
           {this.props.cart.cartDetailsCNC &&
-          this.props.cart.cartDetailsCNC.cartAmount &&
-          !this.state.showCliqAndPiq && ( //adding this condition for we don;t have to show footer and header on cliq and piq window
+            this.props.cart.cartDetailsCNC.cartAmount &&
+            !this.state.showCliqAndPiq && (
               <Checkout
-                amount={this.props.cart.cartDetailsCNC.totalPrice}
-                totalDiscount={
-                  this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
-                    .formattedValue
-                }
+                amount={this.state.payableAmount}
                 bagTotal={
-                  this.props.cart.cartDetailsCNC.cartAmount.bagTotal
-                    .formattedValue
+                  this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
                 }
                 tax={this.props.tax}
                 offers={this.props.offers}
                 delivery={this.props.delivery}
-                payable={this.props.cart.cartDetailsCNC.totalPrice}
+                payable={this.state.payableAmount}
                 onCheckout={this.handleSubmit}
               />
             )}
@@ -646,7 +673,22 @@ class CheckOutPage extends React.Component {
           {this.props.cart.orderConfirmationDetails && (
             <div>
               <OrderConfirmation
-                orderDetails={this.props.cart.orderConfirmationDetails}
+                orderId={this.props.cart.orderConfirmationDetails.orderRefNo}
+                captureOrderExperience={rating =>
+                  this.captureOrderExperience(rating)
+                }
+                orderStatusMessage={
+                  this.props.cart.orderConfirmationDetails.orderStatusMessage
+                }
+                continueShopping={() => this.continueShopping()}
+              />
+            </div>
+          )}
+          {this.props.cart.cliqCashJusPayDetails && (
+            <div>
+              <OrderConfirmation
+                orderId={this.props.cart.cliqCashJusPayDetails.orderId}
+                orderStatusMessage={this.props.orderConfirmationText}
                 captureOrderExperience={rating =>
                   this.captureOrderExperience(rating)
                 }
@@ -670,4 +712,11 @@ CheckOutPage.propTypes = {
   getAllStoresCNC: PropTypes.func,
   addStoreCNC: PropTypes.func,
   addPickupPersonCNC: PropTypes.func
+};
+
+CheckOutPage.defaultProps = {
+  cartTax: "included",
+  delivery: "Free",
+  offers: "Apply",
+  orderConfirmationText: "Your Order Successfully Placed"
 };
