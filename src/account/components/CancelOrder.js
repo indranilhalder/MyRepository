@@ -37,13 +37,7 @@ export default class CancelOrder extends React.Component {
   onCancel() {
     this.props.history.goBack();
   }
-  componentWillReceiveProps(nextProps) {
-    if (this.props.cancelProductStatus) {
-      this.props.history.push(`{
-        ${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}
-      }`);
-    }
-  }
+
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
   }
@@ -51,6 +45,7 @@ export default class CancelOrder extends React.Component {
     return <MDSpinner />;
   }
   render() {
+    console.log(this.props);
     let cancelProductDetails = this.props.cancelProductDetailsObj;
     console.log(cancelProductDetails);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);

@@ -218,7 +218,7 @@ export function cancelProductDetails(cancelProductDetails) {
       const result = await api.postFormData(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
-        }/newReturnProductDetails?access_token=${
+        }/returnProductDetails?access_token=${
           JSON.parse(customerCookie).access_token
         }&isPwa=true&platformNumber=2`,
         cancelProductObject
@@ -283,12 +283,13 @@ export function cancelProduct(cancelProductDetails) {
       const result = await api.postFormData(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
-        }/newReturnInitiate?access_token=${
+        }/initiateRefund?access_token=${
           JSON.parse(customerCookie).access_token
         }&login=${JSON.parse(userDetails).userName}&isPwa=true`,
         cancelProductObject
       );
       const resultJson = await result.json();
+
       if (
         resultJson.status === FAILURE ||
         resultJson.status === FAILURE_UPPERCASE ||
@@ -299,7 +300,7 @@ export function cancelProduct(cancelProductDetails) {
         return dispatch(cancelProductSuccess(resultJson));
       }
     } catch (e) {
-      dispatch(cancelProductFailure(e.message));
+      return dispatch(cancelProductFailure(e.message));
     }
   };
 }

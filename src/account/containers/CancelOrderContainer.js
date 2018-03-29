@@ -5,13 +5,29 @@ import {
 } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import CancelOrder from "../components/CancelOrder";
-const mapDispatchToProps = dispatch => {
+import {
+  SUCCESS,
+  MY_ACCOUNT,
+  MY_ACCOUNT_ORDERS_PAGE
+} from "../../lib/constants";
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     cancelProductDetails: CancelProductDetails => {
       dispatch(cancelProductDetails(CancelProductDetails));
     },
     cancelProduct: CancelProductDetails => {
-      dispatch(cancelProduct(CancelProductDetails));
+      try {
+        dispatch(cancelProduct(CancelProductDetails)).then(response => {
+          if (response.status === SUCCESS) {
+            ownProps.history.push(`${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}`);
+          } else {
+            throw new Error("Failed");
+          }
+        });
+      } catch (e) {
+        // showToast Here
+        console.log(e.message);
+      }
     }
   };
 };
