@@ -6,20 +6,33 @@ import CheckoutEmi from "./CheckoutEmi.js";
 import CheckoutCreditCard from "./CheckoutCreditCard.js";
 import CheckoutDebitCard from "./CheckoutDebitCard.js";
 import CheckoutNetbanking from "./CheckoutNetbanking.js";
-import CheckoutSavedCard from "./CheckoutSavedCard.js";
-import CheckoutCOD from "./CheckoutCOD.js";
-let cliqCashToggleState = false;
+import PaytmOption from "./PaytmOption.js";
 
+import CheckoutSavedCard from "./CheckoutSavedCard.js";
+
+import CheckoutCOD from "./CheckoutCOD.js";
+import { PAYTM } from "../../lib/constants";
 // prettier-ignore
 const typeComponentMapping = {
   "Credit Card": props => <CheckoutCreditCard {...props} />,
     "Debit Card": props => <CheckoutDebitCard {...props} />,
     "Netbanking": props => <CheckoutNetbanking {...props} />,
-     "COD": props => <CheckoutCOD {...props}/>,
+    "COD": props => <CheckoutCOD {...props}/>,
     "EMI": props => <CheckoutEmi {...props} />,
+    "PAYTM": props => <PaytmOption {...props} />,
 };
 
 export default class PaymentCardWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  binValidationForPaytm(val) {
+    console.log("here");
+    if (this.props.binValidationForPaytm) {
+      this.props.binValidationForPaytm(PAYTM, "", val);
+    }
+  }
   renderPaymentCard = datumType => {
     return (
       <React.Fragment>
@@ -60,7 +73,6 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   handleClick = toggleState => {
-    cliqCashToggleState = toggleState;
     if (toggleState) {
       this.props.applyCliqCash();
     } else {
@@ -69,23 +81,26 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   render() {
+    console.log(this.props);
     if (this.props.cart.paymentModes) {
+      let cliqCashBalance = 0;
+      if (this.props.cart.paymentModes.cliqCash) {
+        cliqCashBalance = this.props.cart.paymentModes.cliqCash
+          .totalCliqCashBalance.value;
+      }
       return (
         <div className={styles.base}>
-          {this.props.isRemainingBalance && this.renderSavedCards()}
+          {this.renderSavedCards()}
           <div>
             {" "}
             <CliqCashToggle
               cashText="Use My CLiQ Cash Balance"
-              price={this.props.cliqCashAmount}
-              value={this.props.cliqCashAmount}
-              active={cliqCashToggleState}
-              onToggle={val => this.handleClick(val)}
+              price={cliqCashBalance}
+              value={cliqCashBalance}
+              onToggle={i => this.handleClick(i)}
             />
           </div>
-          {this.props.isRemainingBalance &&
-            this.props.cart.paymentModes &&
-            this.renderPaymentCardsComponents()}
+          {this.props.cart.paymentModes && this.renderPaymentCardsComponents()}
         </div>
       );
     } else {

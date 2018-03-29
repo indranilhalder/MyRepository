@@ -14,9 +14,10 @@ export default class PaytmOption extends React.Component {
     };
   }
   handleOnSelect() {
+    console.log(this.props);
     this.setState({ selected: !this.state.selected }, () => {
-      if (this.props.onSelect) {
-        this.props.onSelect(this.state.selected);
+      if (this.props.binValidationForPaytm) {
+        this.props.binValidationForPaytm(this.state);
       }
     });
   }
