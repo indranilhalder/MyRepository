@@ -118,7 +118,14 @@ const cart = (
 
     updateQuantityLoggedOutStatus: null,
     updateQuantityLoggedOutDetails: null,
-    updateQuantityLoggedOutError: null
+    updateQuantityLoggedOutError: null,
+
+    AddUserAddressStatus: null,
+    AddUserAddressError: null,
+
+    returnCliqPiqStatus: null,
+    returnCliqPiqDetails: null,
+    returnCliqPiqError: null
   },
   action
 ) => {
@@ -903,6 +910,23 @@ const cart = (
       return Object.assign({}, state, {
         updateQuantityLoggedOutStatus: action.status,
         updateQuantityLoggedOutError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        AddUserAddressStatus: action.status,
+        loading: true
+      });
+    case cartActions.ADD_USER_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        AddUserAddressStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        AddUserAddressStatus: action.status,
         loading: false
       });
 

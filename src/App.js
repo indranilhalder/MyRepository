@@ -25,6 +25,7 @@ import MobileFooter from "./general/components/MobileFooter.js";
 // importing All container for my Accounts
 import MyAccountContainer from "./account/containers/MyAccountContainer";
 import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
+
 import MyAccountBrandsContainer from "./account/containers/MyAccountBrandsContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
@@ -33,11 +34,17 @@ import AllOrderContainer from "./account/containers/AllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
 import AddressBookContainer from "./account/containers/AddressBookContainer.js";
+
+import ReturnFlowContainer from "./account/containers/ReturnFlowContainer.js";
+
 import EditAddressBookContainer from "./account/containers/EditAddressBookContainer.js";
 import AddAddressContainer from "./account/containers/AddAddressContainer.js";
 import SaveListContainer from "./account/containers/SaveListContainer";
 import CliqCashContainer from "./account/containers/CliqCashContainer.js";
 import GiftCardContainer from "./account/containers/GiftCardContainer";
+
+import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
+
 
 import {
   HOME_ROUTER,
@@ -76,17 +83,14 @@ import {
   MY_ACCOUNT_COUPON_PAGE,
   MY_ACCOUNT_BRANDS_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
-
   MY_ACCOUNT_CLIQ_CASH_PAGE,
-
+  ORDER_PREFIX,
+  RETURNS,
   SHORT_URL_ORDER_DETAIL,
-
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
-  MY_ACCOUNT_ADDRESS_ADD_PAGE,
-  ORDER_PREFIX
+  MY_ACCOUNT_ADDRESS_ADD_PAGE
 } from "../src/lib/constants";
-import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
 const auth = {
   isAuthenticated: false
@@ -158,6 +162,8 @@ class App extends Component {
                 <SignUpContainer {...routeProps} {...this.props} />
               )}
             />
+            <Route path={RETURNS} component={ReturnFlowContainer} />
+
             <Route
               path={`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`}
               component={SaveListContainer}
