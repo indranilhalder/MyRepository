@@ -19,11 +19,14 @@ import {
 import { homeFeed } from "../../home/actions/home.actions";
 import Login from "../components/Login.js";
 import { SUCCESS } from "../../lib/constants";
-
+import { displayToast } from "../../general/toast.actions";
 export const OTP_VERIFICATION_REQUIRED_MESSAGE = "OTP VERIFICATION REQUIRED";
 
 const mapDispatchToProps = dispatch => {
   return {
+    displayToast: toastMessage => {
+      dispatch(displayToast(toastMessage));
+    },
     onForgotPassword: () => {
       dispatch(showModal(RESTORE_PASSWORD));
     },
