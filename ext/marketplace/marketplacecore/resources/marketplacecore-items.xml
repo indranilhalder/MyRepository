@@ -3098,12 +3098,16 @@
 					</attribute>
 					<!-- No cost emi-Starts -->
 					<attribute qualifier="isStandardEmi" type="java.lang.Boolean">
-						<persistence type="property" />
-						<modifiers optional="true" unique="false" />
+						<description>Flag to indicate if standard emi is enabled.</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" optional="false" />
 					</attribute>
 					<attribute qualifier="isNoCostEmi" type="java.lang.Boolean">
-						<persistence type="property" />
-						<modifiers optional="true" unique="false" />
+						<description>Flag to indicate if no cost emi is enabled.</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" optional="false" />
 					</attribute>
 					<attribute qualifier="noCostEmiTermsAndCondition" type="localized:java.lang.String">
 		 				<description>The message to show configurable no cost emi terms and conditions</description>
