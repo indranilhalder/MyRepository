@@ -153,7 +153,7 @@ export async function postJusPay(path, postData) {
   let url = `${JUS_PAY_API_URL_ROOT}/${path}`;
   return await fetch(url, {
     method: "POST",
-    body: JSON.stringify(postData)
+    body: postData
   });
 }
 
