@@ -641,7 +641,7 @@ class CheckOutPage extends React.Component {
       !this.state.isGiftCard
     ) {
       return (
-        <div className={styles.base}>
+        <div className={styles.addDeliveryAddressHolder}>
           <AddDeliveryAddress
             addUserAddress={address => this.addAddress(address)}
             {...this.state}
@@ -666,11 +666,13 @@ class CheckOutPage extends React.Component {
           {this.state.confirmAddress &&
             !this.state.isGiftCard &&
             !this.state.showCliqAndPiq && (
-              <DeliveryAddressSet
-                addressType={this.state.addressId[0].addressType}
-                address={this.state.addressId[0].line1}
-                changeDeliveryAddress={() => this.changeDeliveryAddress()}
-              />
+              <div className={styles.deliveryAddress}>
+                <DeliveryAddressSet
+                  addressType={this.state.addressId[0].addressType}
+                  address={this.state.addressId[0].line1}
+                  changeDeliveryAddress={() => this.changeDeliveryAddress()}
+                />
+              </div>
             )}
 
           {this.props.cart.cartDetailsCNC &&
@@ -683,10 +685,12 @@ class CheckOutPage extends React.Component {
 
           {this.state.deliverMode &&
             !this.state.isGiftCard && (
-              <DeliveryModeSet
-                productDelivery={this.props.cart.cartDetailsCNC.products}
-                changeDeliveryModes={() => this.changeDeliveryModes()}
-              />
+              <div className={styles.deliveryAddress}>
+                <DeliveryModeSet
+                  productDelivery={this.props.cart.cartDetailsCNC.products}
+                  changeDeliveryModes={() => this.changeDeliveryModes()}
+                />
+              </div>
             )}
 
           {!this.state.appliedCoupons &&
@@ -698,43 +702,45 @@ class CheckOutPage extends React.Component {
           {((!this.state.paymentMethod &&
             (this.state.confirmAddress && this.state.deliverMode)) ||
             this.state.isGiftCard) && (
-            <PaymentCardWrapper
-              isRemainingBalance={this.state.isRemainingAmount}
-              isFromGiftCard={this.state.isGiftCard}
-              cart={this.props.cart}
-              cliqCashAmount={this.state.cliqCashAmount}
-              applyCliqCash={() => this.applyCliqCash()}
-              removeCliqCash={() => this.removeCliqCash()}
-              binValidation={(paymentMode, binNo) =>
-                this.binValidation(paymentMode, binNo)
-              }
-              binValidationForCOD={paymentMode =>
-                this.binValidationForCOD(paymentMode)
-              }
-              softReservationForPayment={cardDetails =>
-                this.softReservationForPayment(cardDetails)
-              }
-              softReservationForCODPayment={() =>
-                this.softReservationForCODPayment()
-              }
-              binValidationForNetBank={(paymentMode, bankName) =>
-                this.binValidationForNetBank(paymentMode, bankName)
-              }
-              softReservationPaymentForNetBanking={bankName =>
-                this.softReservationPaymentForNetBanking(bankName)
-              }
-              binValidationForSavedCard={cardDetails =>
-                this.binValidationForSavedCard(cardDetails)
-              }
-              jusPayTokenizeForGiftCard={cardDetails =>
-                this.jusPayTokenizeForGiftCard(cardDetails)
-              }
-              createJusPayOrderForGiftCardNetBanking={bankName =>
-                this.createJusPayOrderForGiftCardNetBanking(bankName)
-              }
-              addGiftCard={() => this.addGiftCard()}
-              binValidationForPaytm={val => this.binValidationForPaytm(val)}
-            />
+            <div className={styles.paymentCardHolder}>
+              <PaymentCardWrapper
+                isRemainingBalance={this.state.isRemainingAmount}
+                isFromGiftCard={this.state.isGiftCard}
+                cart={this.props.cart}
+                cliqCashAmount={this.state.cliqCashAmount}
+                applyCliqCash={() => this.applyCliqCash()}
+                removeCliqCash={() => this.removeCliqCash()}
+                binValidation={(paymentMode, binNo) =>
+                  this.binValidation(paymentMode, binNo)
+                }
+                binValidationForCOD={paymentMode =>
+                  this.binValidationForCOD(paymentMode)
+                }
+                softReservationForPayment={cardDetails =>
+                  this.softReservationForPayment(cardDetails)
+                }
+                softReservationForCODPayment={() =>
+                  this.softReservationForCODPayment()
+                }
+                binValidationForNetBank={(paymentMode, bankName) =>
+                  this.binValidationForNetBank(paymentMode, bankName)
+                }
+                softReservationPaymentForNetBanking={bankName =>
+                  this.softReservationPaymentForNetBanking(bankName)
+                }
+                binValidationForSavedCard={cardDetails =>
+                  this.binValidationForSavedCard(cardDetails)
+                }
+                jusPayTokenizeForGiftCard={cardDetails =>
+                  this.jusPayTokenizeForGiftCard(cardDetails)
+                }
+                createJusPayOrderForGiftCardNetBanking={bankName =>
+                  this.createJusPayOrderForGiftCardNetBanking(bankName)
+                }
+                addGiftCard={() => this.addGiftCard()}
+                binValidationForPaytm={val => this.binValidationForPaytm(val)}
+              />
+            </div>
           )}
 
           {(this.state.isGiftCard || !this.state.showCliqAndPiq) && (

@@ -20,7 +20,7 @@
 .content {
   width: 100%;
   height: auto;
-  padding: 20px 20px 0 20px;
+  padding: 15px;
 }
 .disabled {
   composes: content;
