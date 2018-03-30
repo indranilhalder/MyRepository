@@ -15,7 +15,9 @@ import {
   FAILURE_UPPERCASE,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  JUS_PAY_PENDING,
+  JUS_PAY_CHARGED
 } from "../../lib/constants";
 export const USER_CART_PATH = "v2/mpl/users";
 export const CART_PATH = "v2/mpl";
@@ -1564,14 +1566,18 @@ export function binValidation(paymentMode, binNo) {
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
+    let paymentTypeObject = new FormData();
+    paymentTypeObject.append("cartGuid", cartId);
+    paymentTypeObject.append("binNo", binNo);
     dispatch(binValidationRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/binValidation?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=2&paymentMode=${paymentMode}&binNo=${binNo}&cartGuid=${cartId}`
+        }&isPwa=true&platformNumber=2&paymentMode=${paymentMode}`,
+        paymentTypeObject
       );
       const resultJson = await result.json();
 
@@ -1592,14 +1598,18 @@ export function binValidationForNetBanking(paymentMode, bankName) {
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
+    let paymentTypeObject = new FormData();
+    paymentTypeObject.append("cartGuid", cartId);
+    paymentTypeObject.append("binNo", "");
     dispatch(binValidationRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/binValidation?channel=mobile&access_token=${
           JSON.parse(customerCookie).access_token
-        }&bankName=${bankName}&binNo=&cartGuid=${cartId}&paymentMode=${paymentMode}`
+        }&bankName=${bankName}&paymentMode=${paymentMode}`,
+        paymentTypeObject
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
@@ -1679,7 +1689,10 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
       );
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
         throw new Error(resultJson.error);
       }
       dispatch(softReservationForPaymentSuccess(resultJson));
@@ -1801,7 +1814,10 @@ export function softReservationPaymentForSavedCard(
       );
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
         throw new Error(resultJson.error);
       }
 
@@ -1903,18 +1919,21 @@ export function jusPayTokenize(
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(jusPayTokenizeRequest());
+    let cardObject = new FormData();
+    cardObject.append("card_exp_month", cardDetails.monthValue);
+    cardObject.append("card_exp_year", cardDetails.yearValue);
+    cardObject.append("card_number", cardDetails.cardNumber);
+    cardObject.append("card_security_code", cardDetails.cvvNumber);
+    cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+    cardObject.append("name_on_card", cardDetails.cardName);
     try {
-      const result = await api.postJusPay(
-        `card/tokenize?card_exp_month=${cardDetails.monthValue}&card_exp_year=${
-          cardDetails.yearValue
-        }&card_number=${cardDetails.cardNumber}&card_security_code=${
-          cardDetails.cvvNumber
-        }&merchant_id=${getState().cart.paymentModes.merchantID}&name_on_card=${
-          cardDetails.cardName
-        }`
-      );
+      const result = await api.postJusPay(`card/tokenize?`, cardObject);
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE ||
+        resultJson.status === ERROR
+      ) {
         throw new Error(resultJson.error);
       }
       dispatch(
@@ -1934,19 +1953,22 @@ export function jusPayTokenize(
 
 export function jusPayTokenizeForGiftCard(cardDetails, paymentMode, guId) {
   return async (dispatch, getState, { api }) => {
+    let cardObject = new FormData();
+    cardObject.append("card_exp_month", cardDetails.monthValue);
+    cardObject.append("card_exp_year", cardDetails.yearValue);
+    cardObject.append("card_number", cardDetails.cardNumber);
+    cardObject.append("card_security_code", cardDetails.cvvNumber);
+    cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+    cardObject.append("name_on_card", cardDetails.cardName);
     dispatch(jusPayTokenizeRequest());
     try {
-      const result = await api.postJusPay(
-        `card/tokenize?card_exp_month=${cardDetails.monthValue}&card_exp_year=${
-          cardDetails.yearValue
-        }&card_number=${cardDetails.cardNumber}&card_security_code=${
-          cardDetails.cvvNumber
-        }&merchant_id=${getState().cart.paymentModes.merchantID}&name_on_card=${
-          cardDetails.cardName
-        }`
-      );
+      const result = await api.postJusPay(`card/tokenize?`, cardObject);
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE ||
+        resultJson.status === ERROR
+      ) {
         throw new Error(resultJson.error);
       }
       dispatch(
@@ -2030,7 +2052,10 @@ export function createJusPayOrder(
         cartItem
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
         throw new Error(resultJson.error);
       }
       dispatch(
@@ -2072,8 +2097,7 @@ export function createJusPayOrderForGiftCard(
 
       if (
         resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE_UPPERCASE
+        resultJson.status === FAILURE
       ) {
         throw new Error(resultJson.error);
       }
@@ -2116,7 +2140,10 @@ export function createJusPayOrderForNetBanking(
       );
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
         throw new Error(resultJson.error);
       }
       dispatch(
@@ -2149,8 +2176,10 @@ export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
         }&juspayUrl=${jusPayUrl}`
       );
       const resultJson = await result.json();
-
-      if (resultJson.status === FAILURE_UPPERCASE) {
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
         throw new Error(resultJson.error);
       }
       dispatch(
@@ -2192,7 +2221,10 @@ export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
       );
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
         throw new Error(resultJson.error);
       }
       dispatch(
@@ -2231,7 +2263,10 @@ export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
       );
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
         throw new Error(resultJson.error);
       }
       dispatch(
@@ -2351,41 +2386,37 @@ export function jusPayPaymentMethodTypeForGiftCard(
   return async (dispatch, getState, { api }) => {
     dispatch(jusPayPaymentMethodTypeRequest());
     try {
-      let url;
+      let cardObject = new FormData();
+      cardObject.append("payment_method_type", "CARD");
+      cardObject.append("redirect_after_payment", "true");
+      cardObject.append("format", "json");
+      cardObject.append("card_exp_month", cardDetails.monthValue);
+      cardObject.append("card_exp_year", cardDetails.yearValue);
+      cardObject.append("card_number", cardDetails.cardNumber);
+      cardObject.append("card_security_code", cardDetails.cvvNumber);
+      cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+      cardObject.append("name_on_card", cardDetails.cardName);
+      cardObject.append("order_id", juspayOrderId);
+      cardObject.append("save_to_locker", "1");
       if (paymentMode === PAYMENT_EMI) {
-        url = `txns?payment_method_type=CARD&redirect_after_payment=true&format=json&card_exp_month=${
-          cardDetails.monthValue
-        }&card_exp_year=${cardDetails.yearValue}&card_number=${
-          cardDetails.cardNumber
-        }&emi_bank=${cardDetails.emi_bank}&emi_tenure=${
-          cardDetails.emi_tenure
-        }&is_emi=${cardDetails.is_emi}&card_security_code=${
-          cardDetails.cvvNumber
-        }&merchant_id=${getState().cart.paymentModes.merchantID}&name_on_card=${
-          cardDetails.cardName
-        }&order_id=${juspayOrderId}&save_to_locker=1`;
-      } else {
-        url = `txns?payment_method_type=CARD&redirect_after_payment=true&format=json&card_exp_month=${
-          cardDetails.monthValue
-        }&card_exp_year=${cardDetails.yearValue}&card_number=${
-          cardDetails.cardNumber
-        }&card_security_code=${cardDetails.cvvNumber}&merchant_id=${
-          getState().cart.paymentModes.merchantID
-        }&name_on_card=${
-          cardDetails.cardName
-        }&order_id=${juspayOrderId}&save_to_locker=true`;
+        cardObject.append("emi_bank", cardDetails.emi_bank);
+        cardObject.append("emi_tenure", cardDetails.emi_tenure);
+        cardObject.append("is_emi", cardDetails.is_emi);
       }
-      const result = await api.postJusPay(url);
+      const result = await api.postJusPay(`txns?`, cardObject);
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === JUS_PAY_PENDING ||
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === JUS_PAY_CHARGED
+      ) {
+        dispatch(jusPayPaymentMethodTypeForGiftCardSuccess(resultJson, guId));
+      } else {
         throw new Error(resultJson.error_message);
       }
-
-      // so this happens
-      // here I need to dispatch an action to get a new cart
-      // that cart will be for a logged in user.
-      dispatch(jusPayPaymentMethodTypeForGiftCardSuccess(resultJson, guId));
     } catch (e) {
       dispatch(jusPayPaymentMethodTypeFailure(e.message));
     }
@@ -2401,42 +2432,39 @@ export function jusPayPaymentMethodType(
   return async (dispatch, getState, { api }) => {
     dispatch(jusPayPaymentMethodTypeRequest());
     try {
-      let url;
+      let cardObject = new FormData();
+      cardObject.append("payment_method_type", "CARD");
+      cardObject.append("redirect_after_payment", "true");
+      cardObject.append("format", "json");
+      cardObject.append("card_exp_month", cardDetails.monthValue);
+      cardObject.append("card_exp_year", cardDetails.yearValue);
+      cardObject.append("card_number", cardDetails.cardNumber);
+      cardObject.append("card_security_code", cardDetails.cvvNumber);
+      cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+      cardObject.append("name_on_card", cardDetails.cardName);
+      cardObject.append("order_id", juspayOrderId);
+      cardObject.append("save_to_locker", "1");
       if (paymentMode === PAYMENT_EMI) {
-        url = `txns?payment_method_type=CARD&redirect_after_payment=true&format=json&card_exp_month=${
-          cardDetails.monthValue
-        }&card_exp_year=${cardDetails.yearValue}&card_number=${
-          cardDetails.cardNumber
-        }&emi_bank=${cardDetails.emi_bank}&emi_tenure=${
-          cardDetails.emi_tenure
-        }&is_emi=${cardDetails.is_emi}&card_security_code=${
-          cardDetails.cvvNumber
-        }&merchant_id=${getState().cart.paymentModes.merchantID}&name_on_card=${
-          cardDetails.cardName
-        }&order_id=${juspayOrderId}&save_to_locker=1`;
-      } else {
-        url = `txns?payment_method_type=CARD&redirect_after_payment=true&format=json&card_exp_month=${
-          cardDetails.monthValue
-        }&card_exp_year=${cardDetails.yearValue}&card_number=${
-          cardDetails.cardNumber
-        }&card_security_code=${cardDetails.cvvNumber}&merchant_id=${
-          getState().cart.paymentModes.merchantID
-        }&name_on_card=${
-          cardDetails.cardName
-        }&order_id=${juspayOrderId}&save_to_locker=true`;
+        cardObject.append("emi_bank", cardDetails.emi_bank);
+        cardObject.append("emi_tenure", cardDetails.emi_tenure);
+        cardObject.append("is_emi", cardDetails.is_emi);
       }
-      const result = await api.postJusPay(url);
+
+      const result = await api.postJusPay(`txns?`, cardObject);
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === JUS_PAY_PENDING ||
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === JUS_PAY_CHARGED
+      ) {
+        dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+        dispatch(generateCartIdForLoggedInUser());
+      } else {
         throw new Error(resultJson.error_message);
       }
-
-      // so this happens
-      // here I need to dispatch an action to get a new cart
-      // that cart will be for a logged in user.
-      dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
-      dispatch(generateCartIdForLoggedInUser());
     } catch (e) {
       dispatch(jusPayPaymentMethodTypeFailure(e.message));
     }
@@ -2449,21 +2477,31 @@ export function jusPayPaymentMethodTypeForSavedCards(
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(jusPayPaymentMethodTypeRequest());
+    let cardObject = new FormData();
+    cardObject.append("payment_method_type", "CARD");
+    cardObject.append("redirect_after_payment", "true");
+    cardObject.append("format", "json");
+    cardObject.append("card_security_code", cardDetails.cvvNumber);
+    cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+    cardObject.append("card_token", cardDetails.cardToken);
+    cardObject.append("order_id", juspayOrderId);
+
     try {
-      const result = await api.postJusPay(
-        `txns?payment_method_type=CARD&redirect_after_payment=true&format=json&card_security_code=${
-          cardDetails.cvvNumber
-        }&card_token=${cardDetails.cardToken}&merchant_id=${
-          getState().cart.paymentModes.merchantID
-        }&order_id=${juspayOrderId}`
-      );
+      const result = await api.postJusPay(`txns?`, cardObject);
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === JUS_PAY_PENDING ||
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === JUS_PAY_CHARGED
+      ) {
+        dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+        dispatch(generateCartIdForLoggedInUser());
+      } else {
         throw new Error(resultJson.error_message);
       }
-      dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
-      dispatch(generateCartIdForLoggedInUser());
     } catch (e) {
       dispatch(jusPayPaymentMethodTypeFailure(e.message));
     }
@@ -2476,21 +2514,31 @@ export function jusPayPaymentMethodTypeForGiftCardFromSavedCards(
   guId
 ) {
   return async (dispatch, getState, { api }) => {
+    let cardObject = new FormData();
+    cardObject.append("payment_method_type", "CARD");
+    cardObject.append("redirect_after_payment", "true");
+    cardObject.append("format", "json");
+    cardObject.append("card_security_code", cardDetails.cvvNumber);
+    cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+    cardObject.append("card_token", cardDetails.cardToken);
+    cardObject.append("order_id", juspayOrderId);
     dispatch(jusPayPaymentMethodTypeRequest());
+
     try {
-      const result = await api.postJusPay(
-        `txns?payment_method_type=CARD&redirect_after_payment=true&format=json&card_security_code=${
-          cardDetails.cvvNumber
-        }&card_token=${cardDetails.cardToken}&merchant_id=${
-          getState().cart.paymentModes.merchantID
-        }&order_id=${juspayOrderId}`
-      );
+      const result = await api.postJusPay(`txns?`, cardObject);
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === JUS_PAY_PENDING ||
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === JUS_PAY_CHARGED
+      ) {
+        dispatch(jusPayPaymentMethodTypeForGiftCardSuccess(resultJson, guId));
+      } else {
         throw new Error(resultJson.error_message);
       }
-      dispatch(jusPayPaymentMethodTypeForGiftCardSuccess(resultJson, guId));
     } catch (e) {
       dispatch(jusPayPaymentMethodTypeFailure(e.message));
     }
@@ -2503,20 +2551,32 @@ export function jusPayPaymentMethodTypeForNetBanking(
   bankName
 ) {
   return async (dispatch, getState, { api }) => {
+    let cardObject = new FormData();
+    cardObject.append("payment_method_type", paymentMethodType);
+    cardObject.append("redirect_after_payment", "true");
+    cardObject.append("format", "json");
+    cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+    cardObject.append("order_id", juspayOrderId);
+    cardObject.append("payment_method", bankName);
+
+    dispatch(jusPayPaymentMethodTypeRequest());
     dispatch(jusPayPaymentMethodTypeRequest());
     try {
-      const result = await api.postJusPay(
-        `txns?payment_method_type=${paymentMethodType}&redirect_after_payment=true&format=json&merchant_id=${
-          getState().cart.paymentModes.merchantID
-        }&order_id=${juspayOrderId}&payment_method=${bankName}`
-      );
+      const result = await api.postJusPay(`txns?`, cardObject);
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === JUS_PAY_PENDING ||
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === JUS_PAY_CHARGED
+      ) {
+        dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+        dispatch(generateCartIdForLoggedInUser());
+      } else {
         throw new Error(resultJson.error_message);
       }
-      dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
-      dispatch(generateCartIdForLoggedInUser());
     } catch (e) {
       dispatch(jusPayPaymentMethodTypeFailure(e.message));
     }
@@ -2529,19 +2589,29 @@ export function jusPayPaymentMethodTypeForGiftCardNetBanking(
   guId
 ) {
   return async (dispatch, getState, { api }) => {
+    let cardObject = new FormData();
+    cardObject.append("payment_method_type", "NB");
+    cardObject.append("redirect_after_payment", "true");
+    cardObject.append("format", "json");
+    cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+    cardObject.append("order_id", juspayOrderId);
+    cardObject.append("payment_method", bankName);
     dispatch(jusPayPaymentMethodTypeRequest());
     try {
-      const result = await api.postJusPay(
-        `txns?payment_method_type=NB&redirect_after_payment=true&format=json&merchant_id=${
-          getState().cart.paymentModes.merchantID
-        }&order_id=${juspayOrderId}&payment_method=${bankName}`
-      );
+      const result = await api.postJusPay(`txns?`, cardObject);
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === JUS_PAY_PENDING ||
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === JUS_PAY_CHARGED
+      ) {
+        dispatch(jusPayPaymentMethodTypeForGiftCardSuccess(resultJson, guId));
+      } else {
         throw new Error(resultJson.error_message);
       }
-      dispatch(jusPayPaymentMethodTypeForGiftCardSuccess(resultJson, guId));
     } catch (e) {
       dispatch(jusPayPaymentMethodTypeFailure(e.message));
     }
@@ -2554,14 +2624,20 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
   return async (dispatch, getState, { api }) => {
+    let paymentObject = new FormData();
+    paymentObject.append("paymentMode", paymentMode);
+    paymentObject.append("juspayOrderID", juspayOrderID);
+    paymentObject.append("cartGuid", cartId);
+
     dispatch(updateTransactionDetailsRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/updateTransactionDetailsforCard?access_token=${
           JSON.parse(customerCookie).access_token
-        }&platformNumber=2&isPwa=true&paymentMode=${paymentMode}&juspayOrderID=${juspayOrderID}&cartGuid=${cartId}`
+        }&platformNumber=2&isPwa=true`,
+        paymentObject
       );
       const resultJson = await result.json();
       if (
@@ -2760,14 +2836,18 @@ export function binValidationForCOD(paymentMode) {
   const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   const cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
+    let paymentTypeObject = new FormData();
+    paymentTypeObject.append("cartGuid", cartId);
+
     dispatch(binValidationForCODRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/binValidation?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=2&paymentMode=${paymentMode}&cartGuid=${cartId}`
+        }&isPwa=true&platformNumber=2&paymentMode=${paymentMode}`,
+        paymentTypeObject
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE_UPPERCASE) {
@@ -2888,7 +2968,10 @@ export function softReservationForCODPayment(pinCode) {
         productItems
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
+      if (
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
         throw new Error(resultJson.error);
       }
       dispatch(updateTransactionDetailsForCOD(CASH_ON_DELIVERY, ""));

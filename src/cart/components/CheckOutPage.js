@@ -383,11 +383,13 @@ class CheckOutPage extends React.Component {
             JSON.parse(userDetails).userName,
             JSON.parse(customerCookie).access_token,
             JSON.parse(cartDetailsLoggedInUser).code,
-            this.props.location.state.pinCode,
+            localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
             false
           );
         }
-        this.props.getUserAddress(this.props.location.state.pinCode);
+        this.props.getUserAddress(
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+        );
         let guIdObject = new FormData();
         guIdObject.append(CART_GU_ID, JSON.parse(cartDetailsLoggedInUser).guid);
         this.props.getPaymentModes(guIdObject);
@@ -548,7 +550,7 @@ class CheckOutPage extends React.Component {
   };
 
   softReservationForPayment = cardDetails => {
-    cardDetails.pinCode = this.props.location.state.pinCode;
+    cardDetails.pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.props.softReservationForPayment(
       cardDetails,
       this.state.addressId[0],
@@ -561,7 +563,7 @@ class CheckOutPage extends React.Component {
       NET_BANKING,
       this.state.paymentModeSelected,
       bankName,
-      this.props.location.state.pinCode
+      localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
     );
   };
 
@@ -584,8 +586,14 @@ class CheckOutPage extends React.Component {
   };
 
   captureOrderExperience = rating => {
+    let orderId;
+    if (this.props.cart.cliqCashJusPayDetails) {
+      orderId = this.props.cart.cliqCashJusPayDetails.orderId;
+    } else {
+      orderId = this.props.cart.orderConfirmationDetails.orderRefNo;
+    }
     if (this.props.captureOrderExperience) {
-      this.props.captureOrderExperience(this.state.orderId, rating);
+      this.props.captureOrderExperience(orderId, rating);
     }
   };
 
@@ -595,7 +603,9 @@ class CheckOutPage extends React.Component {
   };
 
   softReservationForCODPayment = () => {
-    this.props.softReservationForCODPayment(this.props.location.state.pinCode);
+    this.props.softReservationForCODPayment(
+      localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+    );
   };
 
   addGiftCard = () => {

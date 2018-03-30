@@ -315,11 +315,13 @@ const cart = (
       });
 
     case cartActions.GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS:
-      Cookies.createCookie(
-        CART_DETAILS_FOR_LOGGED_IN_USER,
-        JSON.stringify(action.cartDetails)
-      );
-
+      let cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      if (!cartDetails) {
+        Cookies.createCookie(
+          CART_DETAILS_FOR_LOGGED_IN_USER,
+          JSON.stringify(action.cartDetails)
+        );
+      }
       return Object.assign({}, state, {
         status: action.status
       });
@@ -659,7 +661,7 @@ const cart = (
     }
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_FAILURE:
-       localStorage.removeItem(OLD_CART_GU_ID);
+      localStorage.removeItem(OLD_CART_GU_ID);
       return Object.assign({}, state, {
         jusPayStatus: action.status,
         jusPayError: action.error,
