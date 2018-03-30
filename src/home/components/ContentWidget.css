@@ -13,8 +13,6 @@
   right: 0;
   bottom: 0;
   margin: auto;
-  /* transition: z-index 1s step-end;
-  transition-delay: 1s; */
 }
 .card:nth-child(1) {
   transform: scale(0.9) translateX(-30%);
