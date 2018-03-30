@@ -6,7 +6,6 @@ import styles from "./TopCategories.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 export default class TopCategories extends React.Component {
   handleClick(webURL) {
-    console.log(webURL);
     if (webURL) {
       let urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
       this.props.history.push(urlSuffix);
@@ -14,7 +13,6 @@ export default class TopCategories extends React.Component {
   }
   render() {
     const { feedComponentData } = this.props;
-    console.log(feedComponentData);
     return (
       feedComponentData.items && (
         <div className={styles.base}>
