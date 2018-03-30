@@ -12,7 +12,7 @@ import de.hybris.platform.order.exceptions.CalculationException;
 
 import java.util.Map;
 
-import com.tisl.mpl.core.model.NoCostEMIBankModel;
+import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.data.MplPromoPriceWsDTO;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -191,5 +191,5 @@ public interface MplPaymentWebFacade
 	 * @param pk
 	 * @return NoCostEMIBankModel
 	 */
-	NoCostEMIBankModel getNoCostEMIBankByPk(String pk);
+	EMIBankModel getNoCostEMIBankByPk(String pk);
 }

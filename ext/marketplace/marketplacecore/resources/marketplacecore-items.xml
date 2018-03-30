@@ -1506,6 +1506,8 @@
 		</relation>
 		
 	<!-- NU-50 end -->
+	
+		
 	</relations>
 	<itemtypes>
 	
@@ -3094,6 +3096,37 @@
 						<modifiers read="true" write="true" search="false"
 							initial="false" optional="true" partof="true" />
 					</attribute>
+					<!-- No cost emi-Starts -->
+					<attribute qualifier="isStandardEmi" type="java.lang.Boolean">
+						<persistence type="property" />
+						<modifiers optional="true" unique="false" />
+					</attribute>
+					<attribute qualifier="isNoCostEmi" type="java.lang.Boolean">
+						<persistence type="property" />
+						<modifiers optional="true" unique="false" />
+					</attribute>
+					<attribute qualifier="noCostEmiTermsAndCondition" type="localized:java.lang.String">
+		 				<description>The message to show configurable no cost emi terms and conditions</description>
+		 				<modifiers read="true" write="true" />
+		 					<persistence type="property">
+		 						<columntype database="oracle">
+		 							<value>varchar2(2500)</value>	<!-- Changed for PRDI-177 -->
+		 						</columntype>
+		 						<columntype database="mysql">
+		 							<value>text</value>
+		 						</columntype>
+		 						<columntype database="sqlserver">
+									<value>nvarchar(max)</value>
+		 						</columntype>
+		 						<columntype database="hsqldb">
+		 							<value>LONGVARCHAR</value>
+		 						</columntype>
+		 						<columntype>
+		 							<value>varchar</value>
+		 						</columntype>
+		 					</persistence>
+		 			</attribute>
+		 			<!-- No cost emi-Ends -->
 				</attributes>
 			</itemtype>
 
@@ -16756,52 +16789,6 @@
 			
  </typegroup>
 	<!-- NU-50 end -->
-	
-	<typegroup name="NoCostEMI">
-	<itemtype code="NoCostEMIBank" autocreate="true" generate="true"
-				jaloclass="com.tisl.mpl.core.jalo.NoCostEMIBank">
-				<deployment table="MplNoCostEMIBank" typecode="18069" />
-				<attributes>
-					<attribute qualifier="name" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" optional="false"/>
-						<description>Bank display name</description>
-					</attribute>
-					<attribute qualifier="code" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" optional="false" unique="true"/>
-						<description>Bank code</description>
-					</attribute>
-					<attribute qualifier="enable" type="boolean">
-						<modifiers read="true" write="true"/>
-						<description>Enable</description>
-						<defaultvalue>Boolean.FALSE</defaultvalue>
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="termsAndCondition" type="localized:java.lang.String">
-		 				<description>The message to show configurable text in Offer Section</description>
-		 				<modifiers read="true" write="true" />
-		 					<persistence type="property">
-		 						<columntype database="oracle">
-		 							<value>varchar2(2500)</value>	<!-- Changed for PRDI-177 -->
-		 						</columntype>
-		 						<columntype database="mysql">
-		 							<value>text</value>
-		 						</columntype>
-		 						<columntype database="sqlserver">
-									<value>nvarchar(max)</value>
-		 						</columntype>
-		 						<columntype database="hsqldb">
-		 							<value>LONGVARCHAR</value>
-		 						</columntype>
-		 						<columntype>
-		 							<value>varchar</value>
-		 						</columntype>
-		 					</persistence>
-		 			</attribute>
-				</attributes>
-			</itemtype>
-			</typegroup>
 	
   </itemtypes>
 

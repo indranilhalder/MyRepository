@@ -66,7 +66,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
-import com.tisl.mpl.core.model.NoCostEMIBankModel;
+import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.MplPromoPriceWsDTO;
 import com.tisl.mpl.data.SavedCardData;
@@ -2269,11 +2269,11 @@ public class PaymentServicesController extends BaseController
 		try
 		{
 
-			final NoCostEMIBankModel noCostEMIBankModel = mplPaymentWebFacade.getNoCostEMIBankByPk(pk);
+			final EMIBankModel noCostEMIBankModel = mplPaymentWebFacade.getNoCostEMIBankByPk(pk);
 			if (noCostEMIBankModel != null)
 			{
 				noCostEMITermsDTO.setCode(noCostEMIBankModel.getPk().toString());
-				final String termsAndCondition = noCostEMIBankModel.getTermsAndCondition();
+				final String termsAndCondition = noCostEMIBankModel.getNoCostEmiTermsAndCondition();
 				if (StringUtils.isNotEmpty(termsAndCondition))
 				{
 					noCostEMITermsDTO.setTermsAndCondition(termsAndCondition);
