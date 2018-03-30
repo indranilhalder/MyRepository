@@ -10,7 +10,9 @@ import TextArea from "../../general/components/TextArea.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
 import { SUCCESS } from "../../lib/constants.js";
+import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 const SAVE_TEXT = "Save & Continue";
+
 const ISO_CODE = "IN";
 export default class AddDeliveryAddress extends React.Component {
   constructor(props) {
@@ -28,6 +30,7 @@ export default class AddDeliveryAddress extends React.Component {
       line2: "",
       line3: "",
       town: "",
+      salutaion: "",
       defaultFlag: false
     };
   }
@@ -62,6 +65,7 @@ export default class AddDeliveryAddress extends React.Component {
     addressDetails.line2 = this.state.line2;
     addressDetails.line3 = this.state.line3;
     addressDetails.town = this.state.town;
+    addressDetails.salutaion = this.state.salutaion;
     addressDetails.defaultFlag = this.state.defaultFlag;
     this.props.addUserAddress(addressDetails);
   };
@@ -78,11 +82,13 @@ export default class AddDeliveryAddress extends React.Component {
       line1: " ",
       titleValue: "",
       addressType: "",
+      salutaion: "",
       defaultFlag: false
     });
   };
 
   render() {
+    console.log(this.state);
     const dataLabel = [
       {
         label: "Home"
@@ -92,6 +98,17 @@ export default class AddDeliveryAddress extends React.Component {
       },
       {
         label: "Others"
+      }
+    ];
+    const salutaion = [
+      {
+        label: "Mr."
+      },
+      {
+        label: "Mrs."
+      },
+      {
+        label: "Miss."
       }
     ];
     return (
@@ -107,7 +124,6 @@ export default class AddDeliveryAddress extends React.Component {
             placeholder="Enter a pincode/zipcode*"
             onChange={postalCode => this.onChange({ postalCode })}
             textStyle={{ fontSize: 14 }}
-            height={33}
             value={
               this.props.postalCode
                 ? this.props.postalCode
@@ -124,18 +140,34 @@ export default class AddDeliveryAddress extends React.Component {
           />
         </div>
         <div className={styles.content}>
-          <Input2
-            option={this.state.options}
-            placeholder="Name*"
-            value={
-              this.props.firstName ? this.props.firstName : this.state.firstName
-            }
-            onChange={firstName => this.onChange({ firstName })}
-            textStyle={{ fontSize: 14 }}
-            height={33}
-          />
+          <div className={styles.salutation}>
+            <SelectBoxMobile
+              height={33}
+              label={salutaion[0].label}
+              options={salutaion.map((val, i) => {
+                return {
+                  value: val.label,
+                  label: val.label
+                };
+              })}
+              onChange={salutaion => this.onChange({ salutaion })}
+            />
+          </div>
+          <div className={styles.name}>
+            <Input2
+              option={this.state.options}
+              placeholder="Name*"
+              value={
+                this.props.firstName
+                  ? this.props.firstName
+                  : this.state.firstName
+              }
+              onChange={firstName => this.onChange({ firstName })}
+              textStyle={{ fontSize: 14 }}
+              height={33}
+            />
+          </div>
         </div>
-
         <div className={styles.content}>
           <TextArea
             placeholder="Address*"
