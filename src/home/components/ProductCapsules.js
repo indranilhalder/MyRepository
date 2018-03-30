@@ -4,6 +4,12 @@ import ProductCapsuleCircle from "../../general/components/ProductCapsuleCircle"
 import PropTypes from "prop-types";
 import styles from "./ProductCapsules.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+import {
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS
+} from "../../lib/constants";
+import * as Cookie from "../../lib/Cookie";
+
 import MDSpinner from "react-md-spinner";
 export default class ProductCapsules extends React.Component {
   handleClick() {
@@ -19,6 +25,11 @@ export default class ProductCapsules extends React.Component {
   }
 
   render() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (!userDetails || !customerCookie) {
+      return null;
+    }
     if (this.props.productCapsulesLoading) {
       return <MDSpinner />;
     }
@@ -30,8 +41,6 @@ export default class ProductCapsules extends React.Component {
     const productCapsulesData = this.props.feedComponentData;
     const data = this.props.feedComponentData.data;
     let subHeader;
-    console.log("DATA");
-    console.log(data);
     if (data && data.wishlistData) {
       subHeader = `You have ${
         data.wishlistData[0].items.length
@@ -67,9 +76,3 @@ export default class ProductCapsules extends React.Component {
     );
   }
 }
-ProductCapsules.propTypes = {
-  header: PropTypes.string
-};
-ProductCapsules.defaultProps = {
-  header: "Saved products"
-};

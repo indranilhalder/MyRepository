@@ -36,18 +36,16 @@ export default class RecommendationWidget extends React.Component {
   render() {
     let feedComponentData = this.props.feedComponentData;
     let carouselData;
+    console.log("FEED COMPONENT DATA");
+    console.log(feedComponentData);
     if (feedComponentData.items && feedComponentData.items instanceof Array) {
       carouselData = feedComponentData.items.map(transformData);
     }
-
-    console.log("FEED COMPONENT DATA");
-    console.log(feedComponentData);
 
     return (
       feedComponentData.items &&
       feedComponentData.items.length > 0 && (
         <FeedComponent
-          backgroundColor="#e4e4e4"
           carouselOptions={{
             header: this.props.feedComponentData.title,
             buttonText: this.props.feedComponentData.btnText,

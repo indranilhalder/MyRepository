@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import * as Cookie from "../../lib/Cookie";
 
 import WidgetContainer from "../containers/WidgetContainer";
 import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
@@ -35,11 +34,6 @@ import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
 import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
 import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
-import {
-  CHECKOUT_ROUTER,
-  CUSTOMER_ACCESS_TOKEN,
-  LOGGED_IN_USER_DETAILS
-} from "../../lib/constants";
 import queryString from "query-string";
 import ProductCapsulesContainer from "../containers/ProductCapsulesContainer";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
@@ -56,12 +50,12 @@ const typeComponentMapping = {
   // "Auto Product Recommendation Component": props => (
   //   <RecommendationWidget {...props} />
   // ) // no hard coded data
-  "Banner Product Carousel Component": props => (
-    <BannerProductCarousel {...props} />
-  )
+  // "Banner Product Carousel Component": props => (
+  //   <BannerProductCarousel {...props} />
+  // )
   // "Video Product Carousel Component": props => (
   //   <VideoProductCarousel {...props} />
-  // ),
+  // )
   // "Automated Banner Product Carousel Component": props => (
   //   <AutomatedBrandProductCarousel {...props} />
   // )
@@ -69,13 +63,13 @@ const typeComponentMapping = {
   // "Flash Sales Component": props => <FlashSale {...props} /> // wired up
   // "Offers Component": props => <OfferWidget {...props} /> // wired up
   // "Multipurpose Banner Component": props => <ConnectWidget {...props} /> // modal not working - need to figure out what to show here.
-  // "Multi Click Component": props => <ThemeProductWidget {...props} />,
+  // "Multi Click Component": props => <ThemeProductWidget {...props} />
   // "Auto Fresh From Brands Component": props => <FollowBase {...props} /> // wired up with clickable url
   // "Banner Separator Component": props => <BannerSeparator {...props} />,
   // "Auto Discover More Component": props => <DiscoverMore {...props} />,
   // "Auto Product Recommendation Component": props => (
   //   <RecommendationWidget {...props} />
-  // ),
+  // )
   // "Top Categories Component": props => <TopCategories {...props} />
   // "Recently viewed product": props => <RecommendationWidget {...props} />,
   // "Single Banner Component": props => <MonoBanner {...props} />,
@@ -90,13 +84,8 @@ const typeComponentMapping = {
 
 class Feed extends Component {
   renderFeedComponent(feedDatum, i) {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    if (
-      feedDatum.type === "Product Capsules Component" &&
-      userDetails &&
-      customerCookie
-    ) {
+    if (feedDatum.type === "Product Capsules Component") {
+      console.log("WHY IS THIS BEING CALLED");
       return <ProductCapsulesContainer positionInFeed={i} />;
     }
     return (
@@ -115,9 +104,6 @@ class Feed extends Component {
   }
 
   renderFeedComponents() {
-    console.log("RENDER FEED COMPONENT");
-    const types = this.props.homeFeedData.map(datum => datum.type);
-    console.log(types);
     return (
       this.props.homeFeedData &&
       this.props.homeFeedData.map((feedDatum, i) => {

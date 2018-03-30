@@ -49,6 +49,7 @@ export default class ThemeProductWidget extends React.Component {
 
     console.log("WIDGET DATA");
     console.log(widgetData);
+    console.log(items);
 
     return (
       <div
@@ -72,8 +73,6 @@ export default class ThemeProductWidget extends React.Component {
         >
           {items &&
             items.map((datum, i) => {
-              console.log("DATUM");
-              console.log(datum);
               return (
                 <ThemeProduct
                   image={datum.image}

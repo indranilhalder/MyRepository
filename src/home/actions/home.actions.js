@@ -480,6 +480,7 @@ export function getComponentData(
         dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
         delay(() => {
+          console.log("DELAY");
           const isFetchUrlDataLoading = getState().home.homeFeed[positionInFeed]
             .loading;
           if (isFetchUrlDataLoading && backUpUrl) {
