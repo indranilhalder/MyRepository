@@ -67,7 +67,7 @@ const typeComponentMapping = {
   // )
   // "Auto Following Brands Component": props => <FollowingBrands {...props} />
   // // // // "Flash Sales Component": props => <FlashSale {...props} />, // wired up
-  // "Offers Component": props => <OfferWidget {...props} /> // wired up
+  "Offers Component": props => <OfferWidget {...props} /> // wired up
   // "Multipurpose Banner Component": props => <ConnectWidget {...props} /> // modal not working - need to figure out what to show here.
   // "Multi Click Component": props => <ThemeProductWidget {...props} />,
   // "Auto Fresh From Brands Component": props => <FollowBase {...props} /> // wired up with clickable url
@@ -76,7 +76,7 @@ const typeComponentMapping = {
   // "Auto Product Recommendation Component": props => (
   //   <RecommendationWidget {...props} />
   // ),
-  "Top Categories Component": props => <TopCategories {...props} />
+  // "Top Categories Component": props => <TopCategories {...props} />
   // "Recently viewed product": props => <RecommendationWidget {...props} />,
   // "Single Banner Component": props => <MonoBanner {...props} />,
   // "Curated Listing Strip Component": props => <LatestCollections {...props} />,
@@ -115,6 +115,9 @@ class Feed extends Component {
   }
 
   renderFeedComponents() {
+    console.log("RENDER FEED COMPONENT");
+    const types = this.props.homeFeedData.map(datum => datum.type);
+    console.log(types);
     return (
       this.props.homeFeedData &&
       this.props.homeFeedData.map((feedDatum, i) => {

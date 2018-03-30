@@ -18,9 +18,15 @@ export default class ConnectWidget extends React.Component {
     if (this.props.feedComponentData["sub-type"] === "bannerInCard") {
       className = styles.inCard;
     }
-    console.log(this.props.feedComponentData);
     return (
-      <div className={styles.holder}>
+      <div
+        className={styles.holder}
+        style={{
+          backgroundImage: `linear-gradient(165deg, ${
+            this.props.feedComponentData.startHexCode
+          } ,${this.props.feedComponentData.endHexCode})`
+        }}
+      >
         <MediaQuery query="(min-device-width: 1025px)">
           <ConnectBaseWidget {...this.props.feedComponentData} />
         </MediaQuery>
@@ -29,14 +35,17 @@ export default class ConnectWidget extends React.Component {
             <div
               className={styles.buffer}
               style={{
-                backgroundImage: `linear-gradient(165deg, ${
-                  this.props.feedComponentData.startHexCode
-                } ,${this.props.feedComponentData.endHexCode})`
+                backgroundImage: `url(${
+                  this.props.feedComponentData.backgroundImageURL
+                }`
               }}
             >
               <div className={styles.content}>
                 <div className={styles.icon}>
-                  <Icon image={iconImageURL} size={40} />
+                  <Icon
+                    image={this.props.feedComponentData.iconImageURL}
+                    size={40}
+                  />
                 </div>
                 <div className={styles.connectBox}>
                   {this.props.feedComponentData.title}
