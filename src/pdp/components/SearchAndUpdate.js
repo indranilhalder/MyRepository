@@ -9,7 +9,7 @@ export default class SearchAndUpdate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pinCode: null,
+      pinCode: this.props.value,
       errorMessage: null
     };
   }
