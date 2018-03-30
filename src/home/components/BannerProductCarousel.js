@@ -27,6 +27,8 @@ export default class BannerProductCarousal extends React.Component {
     if (feedComponentData.items) {
       data = feedComponentData.items.map(transformData);
     }
+
+    console.log(this.props.feedComponentData);
     return (
       <FeedComponent
         banner={
@@ -36,9 +38,8 @@ export default class BannerProductCarousal extends React.Component {
             label={feedComponentData.description}
           />
         }
-        backgroundColor="#e4e4e4"
         carouselOptions={{
-          buttonText: "See All",
+          buttonText: feedComponentData.btnText,
           seeAll: () => {
             this.handleClick();
           }
@@ -49,8 +50,5 @@ export default class BannerProductCarousal extends React.Component {
   }
 }
 BannerProductCarousal.propTypes = {
-  seeAll: PropTypes.func,
-  bannerImage: PropTypes.string,
-  bannerHeading: PropTypes.string,
-  bannerDescription: PropTypes.string
+  seeAll: PropTypes.func
 };

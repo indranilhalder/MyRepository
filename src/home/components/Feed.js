@@ -56,9 +56,9 @@ const typeComponentMapping = {
   // "Auto Product Recommendation Component": props => (
   //   <RecommendationWidget {...props} />
   // ) // no hard coded data
-  // "Banner Product Carousel Component": props => (
-  //   <BannerProductCarousel {...props} />
-  // )
+  "Banner Product Carousel Component": props => (
+    <BannerProductCarousel {...props} />
+  )
   // "Video Product Carousel Component": props => (
   //   <VideoProductCarousel {...props} />
   // ),
@@ -66,7 +66,7 @@ const typeComponentMapping = {
   //   <AutomatedBrandProductCarousel {...props} />
   // )
   // "Auto Following Brands Component": props => <FollowingBrands {...props} />
-  "Flash Sales Component": props => <FlashSale {...props} /> // wired up
+  // "Flash Sales Component": props => <FlashSale {...props} /> // wired up
   // "Offers Component": props => <OfferWidget {...props} /> // wired up
   // "Multipurpose Banner Component": props => <ConnectWidget {...props} /> // modal not working - need to figure out what to show here.
   // "Multi Click Component": props => <ThemeProductWidget {...props} />,
