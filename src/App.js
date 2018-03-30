@@ -92,7 +92,8 @@ import {
   CATEGORY_PAGE_WITH_QUERY_PARAMS,
   CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
   BRAND_PAGE_WITH_QUERY_PARAMS,
-  BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS
+  BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
+  CATEGORY_PRODUCT_LISTINGS_WITH_PAGE
 } from "../src/lib/constants";
 
 const auth = {
@@ -226,6 +227,12 @@ class App extends Component {
               component={OrderDetailsContainer}
             />
             <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
+
+            <Route
+              exact
+              path={CATEGORY_PRODUCT_LISTINGS_WITH_PAGE}
+              component={ProductListingsContainer}
+            />
             <Route
               exact
               path={CATEGORY_PAGE}

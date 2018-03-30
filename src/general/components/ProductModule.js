@@ -90,11 +90,7 @@ export default class ProductModule extends React.Component {
             this.props.view === "grid" ? styles.content : styles.Listcontent
           }
         >
-          <ProductDescription
-            {...this.props}
-            icon={downloadImage}
-            onDownload={this.onDownload}
-          />
+          <ProductDescription {...this.props} />
           {this.props.view === "list" && (
             <ProductInfo
               averageRating={this.props.averageRating}

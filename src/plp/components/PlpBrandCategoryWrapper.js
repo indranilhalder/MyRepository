@@ -6,8 +6,8 @@ import { BLP_OR_CLP_FEED_TYPE } from "../../lib/constants";
 
 export const CATEGORY_REGEX = /c-msh*/;
 export const BRAND_REGEX = /c-mbh*/;
-export const CATEGORY_CAPTURE_REGEX = /c-msh(.*)/;
-export const BRAND_CAPTURE_REGEX = /c-mbh(.*)/;
+export const CATEGORY_CAPTURE_REGEX = /c-msh([a-zA-Z0-9]+)/;
+export const BRAND_CAPTURE_REGEX = /c-mbh([a-zA-Z0-9])/;
 export const BRAND_CATEGORY_PREFIX = "c-";
 
 export default class PlpBrandCategoryWrapper extends React.Component {
@@ -66,6 +66,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   };
 
   render() {
+    console.log("PLP BRAND CATEGORY WRAPPER BEING RENDERED");
     if (
       this.props.homeFeedData.loading ||
       this.props.homeFeedData.feedType === null
