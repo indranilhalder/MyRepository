@@ -159,7 +159,7 @@ export default class PdpJewellery extends React.Component {
     this.setState({ showPriceBreakUp: true });
   }
   showEmiModal = () => {
-    const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
+    const cartValue = this.props.productDetails.winningSellerPrice.value;
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const globalAccessToken = JSON.parse(globalCookie).access_token;
     this.props.getPdpEmi(globalAccessToken, cartValue);
