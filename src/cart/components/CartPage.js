@@ -10,7 +10,7 @@ import SavedProduct from "./SavedProduct";
 import filter from "lodash/filter";
 import { Redirect } from "react-router-dom";
 import { MAIN_ROUTER } from "../../lib/constants";
-import UnderLinedButton from "../../general/components/UnderLinedButton";
+import TextWithUnderLine from "./TextWithUnderLine.js";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -228,20 +228,26 @@ class CartPage extends React.Component {
       return (
         <div className={styles.base}>
           <div className={styles.content}>
-            <div className={styles.search}>
-              {(!defaultPinCode || this.state.changePinCode) && (
+            {(!defaultPinCode || this.state.changePinCode) && (
+              <div className={styles.search}>
                 <SearchAndUpdate
                   value={defaultPinCode}
                   getPinCode={val => this.setState({ pinCode: val })}
                   checkPinCodeAvailability={val =>
                     this.checkPinCodeAvailability(val)
                   }
+                  labelText="check"
+                />
+              </div>
+            )}
+            {!this.state.changePinCode &&
+              defaultPinCode && (
+                <TextWithUnderLine
+                  heading={defaultPinCode}
+                  onClick={() => this.changePinCode()}
+                  buttonLabel="Change"
                 />
               )}
-              {!this.state.changePinCode && (
-                <div onClick={() => this.changePinCode()}>{defaultPinCode}</div>
-              )}
-            </div>
           </div>
           <div
             className={defaultPinCode === "" ? styles.disabled : styles.content}
