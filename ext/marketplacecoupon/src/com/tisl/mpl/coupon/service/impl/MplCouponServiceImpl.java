@@ -23,6 +23,7 @@ import com.tisl.mpl.coupon.dao.MplCouponDao;
 import com.tisl.mpl.coupon.service.MplCouponService;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.util.VoucherDiscountComparator;
 
 
@@ -213,6 +214,46 @@ public class MplCouponServiceImpl implements MplCouponService
 	public List<VoucherModel> getOpenVoucherList()
 	{
 		return mplCouponDao.getOpenVoucherList();
+	}
+
+
+	/**
+	 *
+	 * Returns Voucher Code for No Cost EMI Coupon code
+	 *
+	 * @param couponCode
+	 */
+	@Override
+	public String getNoCostEMIVoucherCode(final String couponCode)
+	{
+		return getMplCouponDao().getNoCostEMIVoucherCode(couponCode);
+	}
+
+
+	/**
+	 * The Method checks for eligibility of No Cost EMI Coupons
+	 *
+	 * @param discountList
+	 */
+	@Override
+	public boolean validateCartEligilityForNoCostEMI(final List<DiscountModel> discountList)
+	{
+		boolean flag = true;
+
+		if (CollectionUtils.isNotEmpty(discountList))
+		{
+			for (final DiscountModel discount : discountList)
+			{
+				if ((discount instanceof PromotionVoucherModel) && (discount instanceof MplCartOfferVoucherModel)
+						&& (discount instanceof MplNoCostEMIVoucherModel))
+				{
+					flag = false;
+					break;
+				}
+			}
+		}
+
+		return flag;
 	}
 
 

@@ -976,8 +976,92 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 	 */
 	@Override
 	public void applyNoCostEMI(final String couponCode, final CartModel cartModel, final OrderModel orderModel)
+			throws VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
+			JaloSecurityException
 	{
-		// YTODO Auto-generated method stub
+		final String voucherCode = mplCouponFacade.getNoCOSTEMIVoucherCode(couponCode);
+		boolean couponRedStatus = false;
+
+		try
+		{
+
+			if (null == orderModel && null != cartModel)
+			{
+				if (StringUtils.isNotEmpty(voucherCode))
+				{
+					couponRedStatus = mplCouponFacade.applyNoCostEMICartVoucher(voucherCode, cartModel, null);
+				}
+
+			}
+
+		}
+		catch (final VoucherOperationException e)
+		{
+
+			if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCPRICEEXCEEDED))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9501);
+			}
+			else if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCINVALID))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9503);
+			}
+			else if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCEXPIRED))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9505);
+			}
+			else if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCISSUE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9507);
+			}
+			else if (e.getMessage().contains(MarketplacewebservicesConstants.EXCNOTAPPLICABLE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9509);
+			}
+			else if (e.getMessage().contains(MarketplacewebservicesConstants.EXCNOTRESERVABLE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9510);
+			}
+			else if (e.getMessage().contains(MarketplacewebservicesConstants.EXCFREEBIE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9511);
+			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCUSERINVALID))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9512);
+			}
+			/* Added for TPR-1290 */
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCFIRSTPURUSERINVALID))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9332);
+			}
+			//TPR-4460 Changes
+			else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_MOBILE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9303);
+			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_WEB))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9302);
+			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_CALLCENTRE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9304);
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9507);
+		}
 
 	}
 

@@ -2464,4 +2464,171 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		return recalculateRequired;
 	}
 
+
+
+	/**
+	 * The Method Returns Voucher Code for Coupon Code
+	 *
+	 * @param couponCode
+	 */
+	@Override
+	public String getNoCOSTEMIVoucherCode(final String couponCode)
+	{
+		return getMplCouponService().getNoCostEMIVoucherCode(couponCode);
+	}
+
+
+
+	/**
+	 * The Method No Cost EMI Voucher
+	 *
+	 * @param voucherCode
+	 * @param cartModel
+	 * @param orderModel
+	 */
+	@Override
+	public boolean applyNoCostEMICartVoucher(final String voucherCode, CartModel cartModel, final OrderModel orderModel)
+			throws VoucherOperationException, EtailNonBusinessExceptions
+	{
+		boolean checkFlag = false;
+		boolean applicabilityFlag = false;
+
+		try
+		{
+			//Apply voucher for cartModel
+			if (null != cartModel)
+			{
+				if (cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+				{
+					return checkFlag;
+				}
+
+				applicabilityFlag = mplCouponService.validateCartEligilityForNoCostEMI(cartModel.getDiscounts());
+
+				if (applicabilityFlag)
+				{
+					LOG.debug("Apply for No Cost EMI Coupon");
+
+					boolean isVoucherRedeemable = false;
+					VoucherModel voucher = null;
+
+					synchronized (cartModel)
+					{
+						validateVoucherCodeParameter(voucherCode);
+
+						voucher = getVoucherService().getVoucher(voucherCode);
+
+						if (null == voucher)
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
+						}
+						LOG.debug("No Cost EMI Voucher Code is Valid");
+
+						if ((null != voucher.getValue() && voucher.getValue().doubleValue() <= 0))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
+						}
+
+						LOG.debug("No Cost EMI Voucher has positive Value");
+
+						if (!checkVoucherIsApplicable(voucher, voucherCode, cartModel)) //Checks whether voucher is applicable
+						{
+							LOG.debug("No Cost EMI is applicable");
+
+							final String error = checkViolatedRestrictions(voucher, cartModel);
+							if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
+							{
+								throw new VoucherOperationException(
+										MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE + voucherCode);
+							}
+							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
+							{
+								throw new VoucherOperationException(
+										MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
+							}
+							/* TPR-1075 Changes Start */
+							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.NEWCUSTOMER))
+							{
+								throw new VoucherOperationException(
+										MarketplacecommerceservicesConstants.VOUCHERINVALIDNEWCUST + voucherCode);
+							}
+							/* TPR-1075 Changes End */
+							//TPR-4460 Changes
+							else if (null != error
+									&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE))
+							{
+								throw new VoucherOperationException(
+										MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE + voucherCode);
+							}
+							else if (null != error
+									&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB))
+							{
+								throw new VoucherOperationException(
+										MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB + voucherCode);
+							}
+							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
+							{
+								throw new VoucherOperationException(
+										MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE + voucherCode);
+							}
+							else
+							{
+								throw new VoucherOperationException(
+										MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
+							}
+						}
+
+						else if (!checkVoucherIsReservable(voucher, voucherCode, cartModel)) //Checks whether voucher is reservable
+						{
+							LOG.debug("No Cost EMI Voucher is Reservable");
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTRESERVABLE + voucherCode);
+						}
+
+						else
+						{
+							LOG.debug("No Cost EMI Voucher Can be redeemed");
+							isVoucherRedeemable = getVoucherService().redeemVoucher(voucherCode, cartModel);
+							if (!isVoucherRedeemable)
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.ERRORAPPLYVOUCHER + voucherCode);
+							}
+						}
+					}
+
+					if (isVoucherRedeemable)
+					{
+						recalculateCartForCoupon(cartModel, null); //Recalculates cart after applying No Cost EMI voucher
+						cartModel = (CartModel) getMplVoucherService().getUpdatedCartDiscountValues(cartModel, voucher);
+
+						final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher,
+								cartModel); //Finds applicable order entries
+
+						//Important! Checking cart, if total amount <0, release this voucher
+						checkVoucherApplicability(voucherCode, voucher, cartModel, null, applicableOrderEntryList);
+						//apportioning
+						setApportionedValueForVoucher(voucher, cartModel, voucherCode, applicableOrderEntryList);
+
+						checkFlag = true;
+					}
+				}
+			}
+			//Apply voucher for orderModel
+			else if (null != orderModel)
+			{
+				//
+			}
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final JaloPriceFactoryException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0018);
+		}
+		return checkFlag;
+
+
+	}
+
 }

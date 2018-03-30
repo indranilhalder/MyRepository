@@ -256,4 +256,25 @@ public interface MplCouponFacade
 	boolean releaseCartVoucherInCheckout(CartModel cart) throws VoucherOperationException, EtailNonBusinessExceptions;
 
 
+	/**
+	 * Returns No Cost EMI Voucher Code
+	 *
+	 * @param couponCode
+	 * @return String
+	 */
+	String getNoCOSTEMIVoucherCode(String couponCode);
+
+
+	/**
+	 * The Method applies No Cost EMI Vouchers
+	 *
+	 * @param voucherCode
+	 * @param cartModel
+	 * @param orderModel
+	 * @return boolean
+	 */
+	boolean applyNoCostEMICartVoucher(String voucherCode, CartModel cartModel, OrderModel orderModel)
+			throws VoucherOperationException, EtailNonBusinessExceptions;
+
+
 }
