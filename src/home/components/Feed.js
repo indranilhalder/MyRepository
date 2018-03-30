@@ -49,7 +49,7 @@ const typeKeyMapping = {
 };
 
 const typeComponentMapping = {
-  "Product Capsules Component": props => <ProductCapsulesContainer {...props} />
+  // "Product Capsules Component": props => <ProductCapsulesContainer {...props} />
   // "Landing Page Header Component": props => <BrandCardHeader {...props} />
   // "Hero Banner Component": props => <HeroBanner {...props} /> // no hard coded data
   // "Theme Offers Component": props => <ThemeOffer {...props} /> // no hard coded data
@@ -76,7 +76,7 @@ const typeComponentMapping = {
   // "Auto Product Recommendation Component": props => (
   //   <RecommendationWidget {...props} />
   // ),
-  // "Top Categories Component": props => <TopCategories {...props} />
+  "Top Categories Component": props => <TopCategories {...props} />
   // "Recently viewed product": props => <RecommendationWidget {...props} />,
   // "Single Banner Component": props => <MonoBanner {...props} />,
   // "Curated Listing Strip Component": props => <LatestCollections {...props} />,

@@ -2,48 +2,72 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Image } from "xelpmoc-core";
 import styles from "./TopCategories.css";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+const TOP_PRODUCT_INDEX = 0;
+const TOP_RIGHT_PRODUCT_INDEX = 1;
+const BOTTOM_RIGHT_PRODUCT_INDEX = 2;
+
 export default class TopCategories extends React.Component {
+  handleClick = index => {
+    const itemToClick = this.props.feedComponentData.items[index];
+    const urlSuffix = itemToClick.webURL.replace(TATA_CLIQ_ROOT, "$1");
+    this.props.history.push(urlSuffix);
+  };
   render() {
     console.log("TOP CATEGORIES");
     console.log(this.props.feedComponentData);
+    const topProduct = this.props.feedComponentData.items[TOP_PRODUCT_INDEX];
+    const topRightProduct = this.props.feedComponentData.items[
+      TOP_RIGHT_PRODUCT_INDEX
+    ];
+    const bottomRightProduct = this.props.feedComponentData.items[
+      BOTTOM_RIGHT_PRODUCT_INDEX
+    ];
     return (
       <div className={styles.base}>
         <div className={styles.headerText}>Top Categories</div>
         <div className={styles.categorieHolder}>
           <div className={styles.leftSection}>
-            <div className={styles.oneImageHolder}>
+            <div
+              className={styles.oneImageHolder}
+              onClick={() => this.handleClick(TOP_RIGHT_PRODUCT_INDEX)}
+            >
               <div className={styles.bigImageHolder}>
                 <div className={styles.overlay}>
-                  <div className={styles.labelText}>
-                    {this.props.topProductText}
-                  </div>
+                  <div className={styles.labelText}>{topProduct.title}</div>
                 </div>
-                <Image image={this.props.topImageUrl} fit="cover" />
+                <Image image={topProduct.imageURL} fit="cover" />
               </div>
             </div>
           </div>
           <div className={styles.rightSection}>
-            <div className={styles.twoByTwo}>
+            <div
+              className={styles.twoByTwo}
+              onClick={() => this.onClick(TOP_RIGHT_PRODUCT_INDEX)}
+            >
               <div className={styles.twoByTwoImageHolder}>
                 <div className={styles.tShirtHolder}>
                   <div className={styles.overlay}>
                     <div className={styles.labelText}>
-                      {this.props.tShirtProductText}
+                      {topRightProduct.title}
                     </div>
                   </div>
-                  <Image image={this.props.tShirtImageUrl} fit="cover" />
+                  <Image image={topRightProduct.imageURL} fit="cover" />
                 </div>
               </div>
             </div>
-            <div className={styles.footWareHolder}>
+            <div
+              className={styles.footWareHolder}
+              onClick={() => this.onClick(BOTTOM_RIGHT_PRODUCT_INDEX)}
+            >
               <div className={styles.twoByTwoImageHolder}>
                 <div className={styles.tShirtHolder}>
                   <div className={styles.overlay}>
                     <div className={styles.labelText}>
-                      {this.props.footwearsProductText}
+                      {bottomRightProduct.title}
                     </div>
                   </div>
-                  <Image image={this.props.footwearsImageUrl} fit="cover" />
+                  <Image image={bottomRightProduct.imageURL} fit="cover" />
                 </div>
               </div>
             </div>
