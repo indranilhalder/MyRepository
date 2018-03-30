@@ -27,7 +27,9 @@ import {
   PRODUCT_CART_ROUTER,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   OLD_CART_GU_ID,
-  PAYMENT_MODE_TYPE
+  PAYMENT_MODE_TYPE,
+  PAYTM,
+  WALLET
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
@@ -474,6 +476,9 @@ class CheckOutPage extends React.Component {
     if (this.state.binValidationCOD) {
       this.softReservationForCODPayment();
     }
+    if (this.state.paymentModeSelected === PAYTM) {
+      this.softReservationPaymentForWallet(PAYTM);
+    }
   };
 
   addAddress = address => {
@@ -499,7 +504,13 @@ class CheckOutPage extends React.Component {
   addNewAddress = () => {
     this.setState({ addNewAddress: true });
   };
-
+  binValidationForPaytm = val => {
+    if (val) {
+      localStorage.setItem(PAYMENT_MODE_TYPE, PAYTM);
+      this.setState({ paymentModeSelected: PAYTM });
+      this.props.binValidation(PAYTM, "");
+    }
+  };
   applyBankCoupons = val => {
     if (val.length > 0) {
       this.props.applyBankOffer(val);
@@ -524,7 +535,14 @@ class CheckOutPage extends React.Component {
     this.setState({ paymentModeSelected: paymentMode });
     this.props.binValidation(paymentMode, binNo);
   };
-
+  softReservationPaymentForWallet = bankName => {
+    this.props.softReservationPaymentForNetBanking(
+      WALLET,
+      PAYTM,
+      bankName,
+      localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+    );
+  };
   binValidationForCOD = paymentMode => {
     localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
     this.setState({ paymentModeSelected: paymentMode });
@@ -715,6 +733,7 @@ class CheckOutPage extends React.Component {
                 this.createJusPayOrderForGiftCardNetBanking(bankName)
               }
               addGiftCard={() => this.addGiftCard()}
+              binValidationForPaytm={val => this.binValidationForPaytm(val)}
             />
           )}
 

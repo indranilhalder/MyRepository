@@ -8,6 +8,8 @@ import CheckoutDebitCard from "./CheckoutDebitCard.js";
 import CheckoutNetbanking from "./CheckoutNetbanking.js";
 import CheckoutSavedCard from "./CheckoutSavedCard.js";
 import CheckoutCOD from "./CheckoutCOD.js";
+import { PAYTM } from "../../lib/constants";
+import PaytmOption from "./PaytmOption.js";
 let cliqCashToggleState = false;
 
 // prettier-ignore
@@ -17,9 +19,15 @@ const typeComponentMapping = {
     "Netbanking": props => <CheckoutNetbanking {...props} />,
      "COD": props => <CheckoutCOD {...props}/>,
     "EMI": props => <CheckoutEmi {...props} />,
+    "PAYTM": props => <PaytmOption {...props} />,
 };
 
 export default class PaymentCardWrapper extends React.Component {
+  binValidationForPaytm(val) {
+    if (this.props.binValidationForPaytm) {
+      this.props.binValidationForPaytm(PAYTM, "", val);
+    }
+  }
   renderPaymentCard = datumType => {
     return (
       <React.Fragment>
