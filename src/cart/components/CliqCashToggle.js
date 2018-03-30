@@ -2,10 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 import Toggle from "../../general/components/Toggle";
 import styles from "./CliqCashToggle.css";
+import UnderLinedButton from "../../general/components/UnderLinedButton";
+
 export default class CliqCashToggle extends React.Component {
   onToggle(val) {
     if (this.props.onToggle) {
       this.props.onToggle(val);
+    }
+  }
+  onClick() {
+    if (this.props.addGiftCard) {
+      this.props.addGiftCard();
     }
   }
   render() {
@@ -28,6 +35,18 @@ export default class CliqCashToggle extends React.Component {
             />
           </div>
         </div>
+        {!this.props.isFromGiftCard && (
+          <div className={styles.actionButtonHolder}>
+            <div className={styles.actionButton}>
+              <UnderLinedButton
+                color="#000"
+                size="14px"
+                label="Add a Gift Card"
+                onClick={() => this.onClick()}
+              />
+            </div>
+          </div>
+        )}
       </div>
     );
   }
