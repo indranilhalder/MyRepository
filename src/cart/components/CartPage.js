@@ -279,7 +279,10 @@ class CartPage extends React.Component {
                         product.elligibleDeliveryMode &&
                         product.elligibleDeliveryMode[0].desc
                       }
-                      deliveryType={product.elligibleDeliveryMode[0].name}
+                      deliveryType={
+                        product.elligibleDeliveryMode &&
+                        product.elligibleDeliveryMode[0].name
+                      }
                       option={[
                         {
                           value: product.qtySelectedByUser,
@@ -295,9 +298,9 @@ class CartPage extends React.Component {
                   </div>
                 );
               })}
-            {cartDetails.products && (
-              <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
-            )}
+
+            <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
+
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
