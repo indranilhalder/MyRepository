@@ -105,7 +105,11 @@ export default class CreditCardForm extends React.Component {
     cardValues.selected = this.state.selected;
     cardValues.merchant_id = MERCHANT_ID;
     cardValues.pincode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-    this.props.softReservationForPayment(cardValues);
+    if (this.props.isFromGiftCard) {
+      this.props.jusPayTokenizeForGiftCard(cardValues);
+    } else {
+      this.props.softReservationForPayment(cardValues);
+    }
   };
 
   render() {

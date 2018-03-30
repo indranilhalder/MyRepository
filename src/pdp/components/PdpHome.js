@@ -156,20 +156,29 @@ export default class PdpApparel extends React.Component {
 
     return (
       productData.eligibleDeliveryModes &&
-      productData.eligibleDeliveryModes.map((val, idx) => {
-        return (
-          <DeliveryInformation
-            key={idx}
-            header={val.name}
-            placedTime={val.timeline}
-            type={val.code}
-            onClick={() => this.renderAddressModal()}
-            deliveryOptions={DELIVERY_TEXT}
-            label={defaultPinCode}
-            showCliqAndPiqButton={false}
-          />
-        );
-      })
+      productData.deliveryModesATP &&
+      productData.deliveryModesATP
+        .filter(val => {
+          return productData.eligibleDeliveryModes
+            .map(val => {
+              return val.code;
+            })
+            .includes(val.key);
+        })
+        .map((val, idx) => {
+          return (
+            <DeliveryInformation
+              key={idx}
+              header={val.name}
+              placedTime={val.value}
+              type={val.key}
+              onClick={() => this.renderAddressModal()}
+              deliveryOptions={DELIVERY_TEXT}
+              label={defaultPinCode}
+              showCliqAndPiqButton={false}
+            />
+          );
+        })
     );
   }
   render() {
@@ -201,8 +210,10 @@ export default class PdpApparel extends React.Component {
               <ProductDetailsMainCard
                 productName={productData.brandName}
                 productDescription={productData.productName}
-                price={productData.mrp}
-                discountPrice={productData.winningSellerMOP}
+                price={productData.mrpPrice.formattedValueNoDecimal}
+                discountPrice={
+                  productData.winningSellerPrice.formattedValueNoDecimal
+                }
                 averageRating={productData.averageRating}
                 onClick={this.goToReviewPage}
               />
@@ -304,11 +315,13 @@ export default class PdpApparel extends React.Component {
             </div>
           )}
           <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
+            {productData.averageRating && (
+              <RatingAndTextLink
+                onClick={this.goToReviewPage}
+                averageRating={productData.averageRating}
+                numberOfReview={productData.numberOfReviews}
+              />
+            )}
           </div>
           {productData.classifications && (
             <div className={styles.details}>

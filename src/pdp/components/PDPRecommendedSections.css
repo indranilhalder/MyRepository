@@ -19,6 +19,7 @@
   min-height: 40px;
   position: relative;
   padding-right: 100px;
+  padding-left: 15px;
 }
 .brandLogoHolder {
   width: auto;

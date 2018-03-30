@@ -10,6 +10,9 @@ import HomeImage from "./img/homeDelivery.svg";
 import arrowIcon from "./img/arrowBackblack.svg";
 import CollectImage from "./img/collect.svg";
 import { EXPRESS, COLLECT } from "../../lib/constants";
+const EXPRESS_TEXT = "Express delivery";
+const HOME_TEXT = "Home delivery";
+const COLLECT_TEXT = "CliQ & PiQ";
 export default class DeliveryInformations extends React.Component {
   handleClick() {
     if (this.props.onClick) {
@@ -33,10 +36,13 @@ export default class DeliveryInformations extends React.Component {
   }
   render() {
     let iconImage = HomeImage;
+    let typeName = HOME_TEXT;
     if (this.props.type === EXPRESS) {
       iconImage = ExpressImage;
+      typeName = EXPRESS_TEXT;
     } else if (this.props.type === COLLECT) {
       iconImage = CollectImage;
+      typeName = COLLECT_TEXT;
     }
     return (
       <div className={styles.base}>
@@ -60,7 +66,7 @@ export default class DeliveryInformations extends React.Component {
               <Icon image={arrowIcon} size={20} />
             </div>
           )}
-        <IconWithHeader image={iconImage} header={this.props.header}>
+        <IconWithHeader image={iconImage} header={typeName}>
           {this.props.placedTime && (
             <div className={styles.placeTime}>{this.props.placedTime}</div>
           )}

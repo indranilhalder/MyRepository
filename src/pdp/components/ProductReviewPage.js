@@ -131,12 +131,16 @@ class ProductReviewPage extends Component {
                 productImage={mobileGalleryImages[0]}
                 productName={this.props.productDetails.brandName}
                 productMaterial={this.props.productDetails.productName}
-                price={this.props.productDetails.winningSellerMOP}
-                discountPrice={this.props.productDetails.mrp}
+                price={
+                  this.props.productDetails.winningSellerPrice
+                    .formattedValueNoDecimal
+                }
+                discountPrice={
+                  this.props.productDetails.mrpPrice.formattedValueNoDecimal
+                }
                 averageRating={this.props.productDetails.averageRating}
                 totalNoOfReviews={this.props.productDetails.productReviewsCount}
               />
-
               <RatingHolder ratingData={this.props.ratingData} />
             </div>
             <div className={styles.reviewText} onClick={this.reviewSection}>
