@@ -13,7 +13,7 @@ export default class TopCategories extends React.Component {
   }
   render() {
     const { feedComponentData } = this.props;
-    console.log(feedComponentData);
+
     return (
       feedComponentData.items && (
         <div className={styles.base}>
