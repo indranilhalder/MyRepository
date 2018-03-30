@@ -93,7 +93,9 @@ import {
   CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
   BRAND_PAGE_WITH_QUERY_PARAMS,
   BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
-  CATEGORY_PRODUCT_LISTINGS_WITH_PAGE
+  CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
+  STATIC_CATEGORY_PAGES,
+  BRAND_AND_CATEGORY_PAGE
 } from "../src/lib/constants";
 
 const auth = {
@@ -230,9 +232,22 @@ class App extends Component {
 
             <Route
               exact
+              path={BRAND_AND_CATEGORY_PAGE}
+              component={ProductListingsContainer}
+            />
+
+            <Route
+              exact
               path={CATEGORY_PRODUCT_LISTINGS_WITH_PAGE}
               component={ProductListingsContainer}
             />
+
+            <Route
+              exact
+              path={BRAND_AND_CATEGORY_PAGE}
+              component={ProductListingsContainer}
+            />
+
             <Route
               exact
               path={CATEGORY_PAGE}
@@ -347,6 +362,12 @@ class App extends Component {
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_ADD_PAGE}`}
               component={AddAddressContainer}
+            />
+            {/* This *has* to be at the bottom */}
+            <Route
+              exact
+              path={STATIC_CATEGORY_PAGES}
+              component={PlpBrandCategoryWrapperContainer}
             />
           </Switch>
           <MobileFooter />

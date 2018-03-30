@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import PlpContainer from "../containers/PlpContainer";
 import queryString from "query-string";
-import { CATEGORY_PRODUCT_LISTINGS_WITH_PAGE } from "../../lib/constants.js";
+import {
+  CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
+  BRAND_AND_CATEGORY_PAGE
+} from "../../lib/constants.js";
 
 const SEARCH_CATEGORY_TO_IGNORE = "all";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
@@ -42,6 +45,16 @@ class ProductListingsPage extends Component {
       this.props.getProductListings(searchText, SUFFIX, page);
       return;
     }
+
+    console.log(this.props);
+    if (this.props.match.path === BRAND_AND_CATEGORY_PAGE) {
+      console.log(this.props);
+      const categoryId = this.props.match.params[0];
+      const brandId = this.props.match.params[1];
+      const searchText = `:relevance:category:${categoryId}:brand:${brandId}`;
+      this.props.getProductListings(searchText, SUFFIX, 0, false);
+      return;
+    }
     if (this.props.location.state && this.props.location.state.isFilter) {
       const suffix = "&isFilter=true";
       const searchText = this.getSearchTextFromUrl();
@@ -66,7 +79,6 @@ class ProductListingsPage extends Component {
 
   componentDidUpdate() {
     let page = null;
-
     if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
       page = this.props.match.params[1];
       const searchText = this.getSearchTextFromUrl();

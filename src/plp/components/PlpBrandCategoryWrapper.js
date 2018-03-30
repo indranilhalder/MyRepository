@@ -2,7 +2,10 @@ import React from "react";
 import BrandLandingPageContainer from "../../blp/containers/BrandLandingPageContainer";
 import { Redirect } from "react-router";
 import MDSpinner from "react-md-spinner";
-import { BLP_OR_CLP_FEED_TYPE } from "../../lib/constants";
+import {
+  BLP_OR_CLP_FEED_TYPE,
+  STATIC_CATEGORY_PAGES
+} from "../../lib/constants";
 
 export const CATEGORY_REGEX = /c-msh*/;
 export const BRAND_REGEX = /c-mbh*/;
@@ -21,7 +24,12 @@ export default class PlpBrandCategoryWrapper extends React.Component {
 
   componentWillMount() {
     const url = this.props.location.pathname;
+    console.log(this.props.match);
     let categoryOrBrandId = null;
+
+    if (this.props.match.path === STATIC_CATEGORY_PAGES) {
+      categoryOrBrandId = this.props.match.params[0];
+    }
 
     if (CATEGORY_REGEX.test(url)) {
       categoryOrBrandId = url.match(CATEGORY_CAPTURE_REGEX)[0];
@@ -66,7 +74,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   };
 
   render() {
-    console.log("PLP BRAND CATEGORY WRAPPER BEING RENDERED");
     if (
       this.props.homeFeedData.loading ||
       this.props.homeFeedData.feedType === null
