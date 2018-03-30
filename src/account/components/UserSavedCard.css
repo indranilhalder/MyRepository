@@ -1,0 +1,13 @@
+.base {
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  background: #ececec;
+  padding: 20px 15px 65px 15px;
+}
+.cardHolder {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}

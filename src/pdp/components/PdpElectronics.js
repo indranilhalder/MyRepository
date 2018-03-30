@@ -149,7 +149,7 @@ export default class PdpElectronics extends React.Component {
   };
 
   showEmiModal = () => {
-    const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
+    const cartValue = this.props.productDetails.winningSellerPrice.value;
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
 
     const globalAccessToken = JSON.parse(globalCookie).access_token;
@@ -162,20 +162,29 @@ export default class PdpElectronics extends React.Component {
 
     return (
       productData.eligibleDeliveryModes &&
-      productData.eligibleDeliveryModes.map((val, idx) => {
-        return (
-          <DeliveryInformation
-            key={idx}
-            header={val.name}
-            placedTime={val.timeline}
-            type={val.code}
-            onClick={() => this.renderAddressModal()}
-            deliveryOptions={DELIVERY_TEXT}
-            label={defaultPinCode}
-            showCliqAndPiqButton={false}
-          />
-        );
-      })
+      productData.deliveryModesATP &&
+      productData.deliveryModesATP
+        .filter(val => {
+          return productData.eligibleDeliveryModes
+            .map(val => {
+              return val.code;
+            })
+            .includes(val.key);
+        })
+        .map((val, idx) => {
+          return (
+            <DeliveryInformation
+              key={idx}
+              header={val.name}
+              placedTime={val.value}
+              type={val.key}
+              onClick={() => this.renderAddressModal()}
+              deliveryOptions={DELIVERY_TEXT}
+              label={defaultPinCode}
+              showCliqAndPiqButton={false}
+            />
+          );
+        })
     );
   }
   render() {
@@ -198,7 +207,7 @@ export default class PdpElectronics extends React.Component {
       }).length > 0
     ) {
       const validSellersCount = productData.otherSellers.filter(val => {
-        return val.availableStock !== "0";
+        return val.availableStock !== "0" && val.availableStock !== "-1";
       }).length;
       otherSellersText = (
         <span>
@@ -207,7 +216,7 @@ export default class PdpElectronics extends React.Component {
             {" "}
             {productData.winningSellerName}
           </span>{" "}
-          and {validSellersCount - 1} other seller(s)
+          and {validSellersCount} other seller(s)
         </span>
       );
     }
@@ -246,17 +255,20 @@ export default class PdpElectronics extends React.Component {
               <ProductDetailsMainCard
                 productName={productData.brandName}
                 productDescription={productData.productName}
-                price={productData.mrp}
-                discountPrice={productData.winningSellerMOP}
+                price={productData.mrpPrice.formattedValueNoDecimal}
+                discountPrice={
+                  productData.winningSellerPrice.formattedValueNoDecimal
+                }
                 averageRating={productData.averageRating}
+                onClick={this.goToReviewPage}
               />
             )}
             {productData.rootCategory === "Watches" && (
               <JewelleryDetailsAndLink
                 productName={productData.brandName}
                 productDescription={productData.productName}
-                price={productData.winningSellerMOP}
-                discountPrice={productData.mrp}
+                price={productData.winningSellerPrice.formattedValueNoDecimal}
+                discountPrice={productData.mrpPrice.formattedValueNoDecimal}
                 averageRating={productData.averageRating}
                 discount={productData.discount}
               />
@@ -334,11 +346,13 @@ please try another pincode">
             </div>
           )}
           <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
+            {productData.averageRating && (
+              <RatingAndTextLink
+                onClick={this.goToReviewPage}
+                averageRating={productData.averageRating}
+                numberOfReview={productData.numberOfReviews}
+              />
+            )}
           </div>
           {productData.classifications && (
             <div className={styles.details}>

@@ -61,7 +61,6 @@ const account = (
     followedBrands: null,
     followedBrandsStatus: null,
     followedBrandsError: null,
-
     loadingForFollowedBrands: false,
 
     cliqCashUserDetailsStatus: null,
@@ -71,8 +70,6 @@ const account = (
     cliqCashVoucherDetailsStatus: null,
     cliqCashVoucherDetailsError: null,
     cliqCashVoucherDetails: null,
-
-    loadingForFollowedBrands: false,
 
     returnPinCodeStatus: null,
     returnPinCodeValues: null,
@@ -108,7 +105,17 @@ const account = (
     updateReturnDetails: null,
     updateReturnDetailsStatus: null,
     updateReturnDetailsError: null,
-    loadingForUpdateReturnDetails: null
+    loadingForUpdateReturnDetails: null,
+
+    cancelProductDetails: null,
+    cancelProductDetailsStatus: null,
+    cancelProductDetailsError: null,
+    loadingForCancelProductDetails: false,
+
+    cancelProduct: null,
+    cancelProductStatus: null,
+    cancelProductError: null,
+    loadingForCancelProduct: false
   },
   action
 ) => {
@@ -544,7 +551,7 @@ const account = (
       return Object.assign({}, state, {
         cliqCashVoucherDetailsStatus: action.status,
         cliqCashVoucherDetailsError: action.error,
-           loading: false
+        loading: false
       });
 
     case accountActions.NEW_RETURN_INITIATE_REQUEST:
@@ -640,6 +647,45 @@ const account = (
         getPinCodeStatus: action.status,
         getPinCodeError: action.error
       });
+    case accountActions.GET_CANCEL_PRODUCT_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        cancelProductDetailsStatus: action.status,
+        loadingForCancelProductDetails: true
+      });
+
+    case accountActions.GET_CANCEL_PRODUCT_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        cancelProductDetailsStatus: action.status,
+        cancelProductDetails: action.getDetailsOfCancelledProduct,
+        loadingForCancelProductDetails: false
+      });
+
+    case accountActions.GET_CANCEL_PRODUCT_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        cancelProductDetailsStatus: action.status,
+        cancelProductDetailsError: action.error,
+        loadingForCancelProductDetails: false
+      });
+
+    case accountActions.CANCEL_PRODUCT_REQUEST:
+      return Object.assign({}, state, {
+        cancelProductStatus: action.status,
+        loadingForCancelProduct: true
+      });
+
+    case accountActions.CANCEL_PRODUCT_SUCCESS:
+      return Object.assign({}, state, {
+        cancelProductStatus: action.status,
+        cancelProduct: action.cancelProduct,
+        loadingForCancelProduct: false
+      });
+    case accountActions.CANCEL_PRODUCT_FAILURE:
+      return Object.assign({}, state, {
+        cancelProductStatus: action.status,
+        cancelProductError: action.error,
+        loadingForCancelProduct: false
+      });
+
     default:
       return state;
   }

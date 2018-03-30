@@ -31,12 +31,12 @@
   font-size: 16px;
   line-height: 22px;
   font-family: regular;
-  margin-bottom: 10px;
   display: inline-block;
 }
 .ratingHolder {
   width: 100%;
   height: auto;
+  margin-top: 10px;
 }
 .ratingText {
   width: auto;

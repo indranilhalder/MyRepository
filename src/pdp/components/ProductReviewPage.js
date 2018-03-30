@@ -49,9 +49,17 @@ class ProductReviewPage extends Component {
       productReview
     );
   };
+  onCancel() {
+    this.setState({ visible: false });
+  }
   renderReviewSection = () => {
     if (this.state.visible) {
-      return <WriteReview onSubmit={this.onSubmit} />;
+      return (
+        <WriteReview
+          onSubmit={this.onSubmit}
+          onCancel={() => this.onCancel()}
+        />
+      );
     }
   };
 
@@ -115,7 +123,7 @@ class ProductReviewPage extends Component {
         <PdpFrame
           addProductToBag={() => this.addProductToBag()}
           addProductToWishList={() => this.addProductToWishList()}
-          gotoPreviousPage={this.goBack}
+          gotoPreviousPage={() => this.goBack()}
         >
           <div className={styles.base}>
             <div className={styles.productBackground}>
@@ -123,12 +131,16 @@ class ProductReviewPage extends Component {
                 productImage={mobileGalleryImages[0]}
                 productName={this.props.productDetails.brandName}
                 productMaterial={this.props.productDetails.productName}
-                price={this.props.productDetails.winningSellerMOP}
-                discountPrice={this.props.productDetails.mrp}
+                price={
+                  this.props.productDetails.winningSellerPrice
+                    .formattedValueNoDecimal
+                }
+                discountPrice={
+                  this.props.productDetails.mrpPrice.formattedValueNoDecimal
+                }
                 averageRating={this.props.productDetails.averageRating}
                 totalNoOfReviews={this.props.productDetails.productReviewsCount}
               />
-
               <RatingHolder ratingData={this.props.ratingData} />
             </div>
             <div className={styles.reviewText} onClick={this.reviewSection}>

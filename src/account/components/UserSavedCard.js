@@ -5,6 +5,7 @@ import {
   LOGGED_IN_USER_DETAILS
 } from "../../lib/constants";
 import SavedPaymentCard from "./SavedPaymentCard.js";
+import styles from "./UserSavedCard.css";
 const CARD_FORMAT = /\B(?=(\d{4})+(?!\d))/g;
 export default class UserSavedCard extends React.Component {
   componentDidMount() {
@@ -29,7 +30,7 @@ export default class UserSavedCard extends React.Component {
   render() {
     if (this.props.profile.savedCards) {
       return (
-        <div>
+        <div className={styles.base}>
           {this.props.profile.savedCards.savedCardDetailsMap &&
             this.props.profile.savedCards.savedCardDetailsMap.map((data, i) => {
               let cardNumber = `${data.value.cardISIN}xx xxxx ${
@@ -39,21 +40,23 @@ export default class UserSavedCard extends React.Component {
                 data.value.firstName
               }`;
               return (
-                <SavedPaymentCard
-                  key={i}
-                  bankLogo={""}
-                  bankName={data.value.cardIssuer}
-                  cardLogo={""}
-                  cardName={data.value.cardType}
-                  cardHolderName={cardHolderName}
-                  validityDate={`${data.value.expiryMonth}/${
-                    data.value.expiryYear
-                  }`}
-                  cardNumber={cardNumber}
-                  cardImage={data.cardImage}
-                  onChangeCvv={(cvv, cardNo) => this.onChangeCvv(cvv, cardNo)}
-                  removeSavedCardDetails={() => this.removeSavedCardDetails()}
-                />
+                <div className={styles.cardHolder}>
+                  <SavedPaymentCard
+                    key={i}
+                    bankLogo={""}
+                    bankName={data.value.cardIssuer}
+                    cardLogo={""}
+                    cardName={data.value.cardType}
+                    cardHolderName={cardHolderName}
+                    validityDate={`${data.value.expiryMonth}/${
+                      data.value.expiryYear
+                    }`}
+                    cardNumber={cardNumber}
+                    cardImage={data.cardImage}
+                    onChangeCvv={(cvv, cardNo) => this.onChangeCvv(cvv, cardNo)}
+                    removeSavedCardDetails={() => this.removeSavedCardDetails()}
+                  />
+                </div>
               );
             })}
         </div>

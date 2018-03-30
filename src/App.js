@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ModalContainer from "./general/containers/ModalContainer";
+import ToastContainer from "./general/containers/ToastContainer";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
@@ -44,6 +45,7 @@ import CliqCashContainer from "./account/containers/CliqCashContainer.js";
 import GiftCardContainer from "./account/containers/GiftCardContainer";
 
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
+import CancelOrderContainer from "./account/containers/CancelOrderContainer";
 
 import {
   HOME_ROUTER,
@@ -95,7 +97,8 @@ import {
   BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
   CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
   STATIC_CATEGORY_PAGES,
-  BRAND_AND_CATEGORY_PAGE
+  BRAND_AND_CATEGORY_PAGE,
+  CANCEL_PREFIX
 } from "../src/lib/constants";
 
 const auth = {
@@ -161,6 +164,7 @@ class App extends Component {
                 <LoginContainer {...routeProps} {...this.props} />
               )}
             />
+            <Route path={CANCEL_PREFIX} component={CancelOrderContainer} />
             <Route
               exact
               path={SIGN_UP_PATH}
@@ -373,6 +377,7 @@ class App extends Component {
           <MobileFooter />
 
           <ModalContainer />
+          <ToastContainer />
         </div>
       </React.Fragment>
     );

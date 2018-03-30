@@ -3,7 +3,7 @@ import * as homeActions from "../actions/home.actions";
 import cloneDeep from "lodash/cloneDeep";
 import map from "lodash/map";
 import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
-
+import { transformFetchingItemsOrder } from "./utils";
 const home = (
   state = {
     homeFeed: [], //array of objects
@@ -145,7 +145,12 @@ const home = (
 
     case homeActions.GET_ITEMS_SUCCESS:
       homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].items = action.items;
+      const orderedItems = transformFetchingItemsOrder(
+        homeFeedData[action.positionInFeed].itemIds,
+        action.items
+      );
+
+      homeFeedData[action.positionInFeed].items = orderedItems;
       return Object.assign({}, state, {
         homeFeed: homeFeedData,
         status: action.status

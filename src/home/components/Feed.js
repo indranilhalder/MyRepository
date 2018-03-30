@@ -29,9 +29,9 @@ import CuratedProductsComponent from "./CuratedProductsComponent";
 import CuratedFeature from "../../blp/components/CuratedFeature";
 import LatestCollections from "../../blp/components/LatestCollections";
 import MonoBanner from "./MonoBanner";
-import TopCategories from "../../blp/components/TopCategories";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
+import TopCategories from "../../blp/components/TopCategories";
 import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
 import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
 import queryString from "query-string";
@@ -78,6 +78,7 @@ const typeComponentMapping = {
     <CuratedProductsComponent {...props} />
   ),
   "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
+  "Top Categories Component": props => <TopCategories {...props} />,
   "Landing Page Hierarchy": props => <AllBrandTypes {...props} />
 };
 

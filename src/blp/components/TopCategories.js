@@ -75,11 +75,3 @@ export default class TopCategories extends React.Component {
     );
   }
 }
-TopCategories.propTypes = {
-  topProductText: PropTypes.string,
-  topImageUrl: PropTypes.string,
-  tShirtProductText: PropTypes.string,
-  tShirtImageUrl: PropTypes.string,
-  footwearsProductText: PropTypes.string,
-  footwearsImageUrl: PropTypes.string
-};

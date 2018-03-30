@@ -5,6 +5,8 @@ export const REQUESTING = "requesting";
 export const ERROR = "error";
 export const FAILURE = "Failure";
 export const FAILURE_UPPERCASE = "FAILURE";
+export const JUS_PAY_PENDING = "PENDING_VBV";
+export const JUS_PAY_CHARGED = "CHARGED";
 export const SINGLE_SELECT_HEADING_COPY = "Thanks!!!";
 export const SINGLE_SELECT_DESCRIPTION_COPY =
   "We will curate the experience based on your choices. Loading products...";
@@ -151,3 +153,8 @@ export const ON_EXCLUSIVE = "onExclusive";
 export const IS_OFFER_EXISTING = "isOfferExisting";
 export const IS_NEW = "isNew";
 export const DISCOUNT_PERCENT = "discountPercent";
+export const PAYTM = "PAYTM";
+export const CANCEL = "/cancel";
+export const CANCEL_PREFIX = "/cancel/(.*)";
+
+export const WALLET = "WALLET";

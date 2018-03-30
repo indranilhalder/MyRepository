@@ -13,6 +13,7 @@
     "babel-runtime": "6.26.0",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "1.1.3",
+    "cross-env": "5.1.4",
     "css-loader": "0.28.7",
     "dotenv": "4.0.0",
     "eslint": "4.10.0",
@@ -60,16 +61,17 @@
     "xelpmoc-core": "^0.3.1"
   },
   "scripts": {
-    "start": "REACT_APP_STAGE=local node -r dotenv/config scripts/start.js",
-    "stage": "REACT_APP_STAGE=stage node scripts/build.js",
-    "tmpprod": "REACT_APP_STAGE=tmpprod node scripts/build.js",
-    "local": "REACT_APP_STAGE=local node scripts/build.js",
-    "dev": "REACT_APP_STAGE=devxelp node scripts/build.js",
-    "uat2": "REACT_APP_STAGE=uat2 node scripts/build.js",
+    "start":
+      "cross-env REACT_APP_STAGE=p2 node -r dotenv/config scripts/start.js",
+    "stage": " REACT_APP_STAGE=stage node scripts/build.js",
+    "tmpprod": " REACT_APP_STAGE=tmpprod node scripts/build.js",
+    "local": " REACT_APP_STAGE=local node scripts/build.js",
+    "dev": " REACT_APP_STAGE=devxelp node scripts/build.js",
+    "uat2": " REACT_APP_STAGE=uat2 node scripts/build.js",
     "build": "REACT_APP_STAGE=devxelp node scripts/build.js",
     "p2": "REACT_APP_STAGE=p2 node scripts/build.js",
     "production": "REACT_APP_STAGE=production node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom",
+    "test": "cross-env node scripts/test.js --env=jsdom",
     "lint": "eslint 'src/**/*.js'",
     "pre-build":
       "yarn run build  && sudo pm2 startOrRestart ecosystem.config.js",
