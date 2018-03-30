@@ -13,80 +13,87 @@ export default class TopCategories extends React.Component {
   }
   render() {
     const { feedComponentData } = this.props;
+
     return (
       feedComponentData.items && (
         <div className={styles.base}>
           <div className={styles.headerText}>{feedComponentData.title}</div>
           <div className={styles.categorieHolder}>
             <div className={styles.leftSection}>
-              <div
-                className={styles.oneImageHolder}
-                onClick={() =>
-                  this.handleClick(feedComponentData.items[0].webURL)
-                }
-              >
-                <div className={styles.bigImageHolder}>
-                  <div className={styles.overlay}>
-                    <div className={styles.labelText}>
-                      {feedComponentData.items[0].title}
-                    </div>
-                  </div>
-                  <Image
-                    image={
-                      feedComponentData.items[0] &&
-                      feedComponentData.items[0].imageURL
-                    }
-                    fit="cover"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className={styles.rightSection}>
-              <div
-                className={styles.twoByTwo}
-                onClick={() =>
-                  this.handleClick(feedComponentData.items[1].webURL)
-                }
-              >
-                <div className={styles.twoByTwoImageHolder}>
-                  <div className={styles.tShirtHolder}>
-                    <div className={styles.overlay}>
-                      <div className={styles.labelText}>
-                        {feedComponentData.items[1].title}
-                      </div>
-                    </div>
-                    <Image
-                      image={
-                        feedComponentData.items[1] &&
-                        feedComponentData.items[1].imageURL
-                      }
-                      fit="cover"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className={styles.footWareHolder}>
+              {feedComponentData.items[0] && (
                 <div
-                  className={styles.twoByTwoImageHolder}
+                  className={styles.oneImageHolder}
                   onClick={() =>
-                    this.handleClick(feedComponentData.items[2].webURL)
+                    this.handleClick(feedComponentData.items[0].webURL)
                   }
                 >
-                  <div className={styles.tShirtHolder}>
+                  <div className={styles.bigImageHolder}>
                     <div className={styles.overlay}>
                       <div className={styles.labelText}>
-                        {feedComponentData.items[2].title}
+                        {feedComponentData.items[0].title}
                       </div>
                     </div>
                     <Image
                       image={
-                        feedComponentData.items[2] &&
-                        feedComponentData.items[2].imageURL
+                        feedComponentData.items[0] &&
+                        feedComponentData.items[0].imageURL
                       }
                       fit="cover"
                     />
                   </div>
                 </div>
+              )}
+            </div>
+            <div className={styles.rightSection}>
+              {feedComponentData.items[1] && (
+                <div
+                  className={styles.twoByTwo}
+                  onClick={() =>
+                    this.handleClick(feedComponentData.items[1].webURL)
+                  }
+                >
+                  <div className={styles.twoByTwoImageHolder}>
+                    <div className={styles.tShirtHolder}>
+                      <div className={styles.overlay}>
+                        <div className={styles.labelText}>
+                          {feedComponentData.items[1].title}
+                        </div>
+                      </div>
+                      <Image
+                        image={
+                          feedComponentData.items[1] &&
+                          feedComponentData.items[1].imageURL
+                        }
+                        fit="cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className={styles.footWareHolder}>
+                {feedComponentData.items[2] && (
+                  <div
+                    className={styles.twoByTwoImageHolder}
+                    onClick={() =>
+                      this.handleClick(feedComponentData.items[2].webURL)
+                    }
+                  >
+                    <div className={styles.tShirtHolder}>
+                      <div className={styles.overlay}>
+                        <div className={styles.labelText}>
+                          {feedComponentData.items[2].title}
+                        </div>
+                      </div>
+                      <Image
+                        image={
+                          feedComponentData.items[2] &&
+                          feedComponentData.items[2].imageURL
+                        }
+                        fit="cover"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
