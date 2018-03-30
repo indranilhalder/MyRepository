@@ -66,8 +66,8 @@ const typeComponentMapping = {
   //   <AutomatedBrandProductCarousel {...props} />
   // )
   // "Auto Following Brands Component": props => <FollowingBrands {...props} />
-  // // // // "Flash Sales Component": props => <FlashSale {...props} />, // wired up
-  "Offers Component": props => <OfferWidget {...props} /> // wired up
+  "Flash Sales Component": props => <FlashSale {...props} /> // wired up
+  // "Offers Component": props => <OfferWidget {...props} /> // wired up
   // "Multipurpose Banner Component": props => <ConnectWidget {...props} /> // modal not working - need to figure out what to show here.
   // "Multi Click Component": props => <ThemeProductWidget {...props} />,
   // "Auto Fresh From Brands Component": props => <FollowBase {...props} /> // wired up with clickable url
