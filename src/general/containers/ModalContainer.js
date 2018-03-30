@@ -12,6 +12,7 @@ import {
   loginUserRequest,
   customerAccessToken
 } from "../../auth/actions/user.actions";
+import { redeemCliqVoucher } from "../../account/actions/account.actions";
 import { SUCCESS } from "../../lib/constants";
 
 import {
@@ -121,6 +122,9 @@ const mapDispatchToProps = dispatch => {
 
     submitSelfCourierReturnInfo: returnDetails => {
       dispatch(submitSelfCourierReturnInfo(returnDetails));
+    },
+    redeemCliqVoucher: (cliqCashDetails, fromCheckOut) => {
+      dispatch(redeemCliqVoucher(cliqCashDetails, fromCheckOut));
     }
   };
 };

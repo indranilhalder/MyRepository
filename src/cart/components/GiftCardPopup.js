@@ -9,8 +9,8 @@ export default class GiftCardPopup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      voucherNumber: this.props.voucherNumber ? this.props.voucherNumber : "",
-      voucherPin: this.props.voucherPin ? this.props.voucherPin : ""
+      cardNumber: this.props.voucherNumber ? this.props.voucherNumber : "",
+      pinNumber: this.props.voucherPin ? this.props.voucherPin : ""
     };
   }
   addGiftCard() {
@@ -36,7 +36,7 @@ export default class GiftCardPopup extends React.Component {
                 ? this.props.voucherNumber
                 : this.state.voucherNumber
             }
-            onChange={voucherNumber => this.setState({ voucherNumber })}
+            onChange={cardNumber => this.setState({ cardNumber })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -50,7 +50,7 @@ export default class GiftCardPopup extends React.Component {
                 ? this.props.voucherPin
                 : this.state.voucherPin
             }
-            onChange={voucherPin => this.setState({ voucherPin })}
+            onChange={pinNumber => this.setState({ pinNumber })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
