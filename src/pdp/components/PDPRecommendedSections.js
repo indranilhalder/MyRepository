@@ -26,9 +26,9 @@ class PDPRecommendedSections extends React.Component {
     let brandId;
 
     if (this.props.aboutTheBrand) {
-      brandId = this.props.aboutTheBrand.brandId;
+      brandId = this.props.aboutTheBrand.id;
     }
-
+    console.log(this.props);
     return (
       this.props.aboutTheBrand && (
         <React.Fragment>

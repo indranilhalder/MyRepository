@@ -5,7 +5,8 @@ import {
   GLOBAL_ACCESS_TOKEN,
   SUCCESS_UPPERCASE,
   SUCCESS_CAMEL_CASE,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  FAILURE_UPPERCASE
 } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
@@ -928,7 +929,11 @@ export function getPdpItems(itemIds, widgetKey) {
       const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
       const result = await api.get(url);
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      console.log(resultJson);
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE_UPPERCASE
+      ) {
         throw new Error(`${resultJson.message}`);
       }
       dispatch(getPdpItemsPdpSuccess(resultJson.results, widgetKey));
