@@ -102,7 +102,6 @@ export const PDP_ABOUT_BRAND_FAILURE = "PDP_ABOUT_BRAND_FAILURE";
 
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
-export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
 export const PRODUCT_PDP_EMI_PATH =
   "v2/mpl/getBankDetailsforEMI?platformNumber=2";
 export const EMI_TERMS_PATH = "/v2/mpl/cms/products/getEmiTermsAndConditions";
@@ -120,6 +119,7 @@ const ADD_PRODUCT_TO_CART = "addProductToCart";
 const REMOVE_FROM_WISH_LIST = "removeFromWl";
 const PRODUCT_SPECIFICATION_PATH = "/v2/mpl/products/productDetails";
 const PRODUCT_DESCRIPTION_PATH = "v2/mpl/products/productDetails";
+const PRODUCT_SIZE_GUIDE_PATH = "v2/mpl/products/";
 const ORDER_BY = "desc";
 const SORT = "byDate";
 const PAGE_VALUE = "0";
@@ -392,7 +392,7 @@ export function getProductSizeGuide(productCode) {
     dispatch(getProductSizeGuideRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_DESCRIPTION_PATH}/${productCode}/sizeGuide?isPwa=true`
+        `${PRODUCT_SIZE_GUIDE_PATH}/${productCode}/sizeGuide?isPwa=true`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {

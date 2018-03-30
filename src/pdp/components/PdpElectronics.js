@@ -149,7 +149,7 @@ export default class PdpElectronics extends React.Component {
   };
 
   showEmiModal = () => {
-    const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
+    const cartValue = this.props.productDetails.winningSellerPrice.value;
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
 
     const globalAccessToken = JSON.parse(globalCookie).access_token;
