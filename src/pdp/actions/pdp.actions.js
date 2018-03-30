@@ -929,7 +929,7 @@ export function getPdpItems(itemIds, widgetKey) {
       const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
       const result = await api.get(url);
       const resultJson = await result.json();
-      console.log(resultJson);
+
       if (
         resultJson.status === FAILURE ||
         resultJson.status === FAILURE_UPPERCASE
