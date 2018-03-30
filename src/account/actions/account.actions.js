@@ -23,8 +23,10 @@ import {
   VERIFY_OTP_FOR_CLIQ_CASH,
   GENERATE_OTP_FOR_EGV,
   hideModal,
-  VERIFY_OTP
+  VERIFY_OTP,
+  GIFT_CARD_MODAL
 } from "../../general/modal.actions.js";
+import { getPaymentModes } from "../../cart/actions/cart.actions.js";
 import { getMcvId } from "../../lib/adobeUtils";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
@@ -179,6 +181,8 @@ const WIDGETS_LIST_FOR_BRANDS = [112];
 const CARD_TYPE = "BOTH";
 const FOLLOW = "follow";
 const UNFOLLOW = "unfollow";
+
+const CART_GU_ID = "cartGuid";
 // cencel product
 
 export function getDetailsOfCancelledProductRequest() {
@@ -1703,10 +1707,11 @@ export function redeemCliqVoucherFailure(error) {
   };
 }
 
-export function redeemCliqVoucher(cliqCashDetails) {
+export function redeemCliqVoucher(cliqCashDetails, fromCheckout) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     dispatch(redeemCliqVoucherRequest());
     try {
       const result = await api.postFormData(
@@ -1730,7 +1735,12 @@ export function redeemCliqVoucher(cliqCashDetails) {
           throw new Error(`${resultJson.error}`);
         }
       }
-
+      if (fromCheckout) {
+        dispatch(hideModal(GIFT_CARD_MODAL));
+        let guIdObject = new FormData();
+        guIdObject.append(CART_GU_ID, JSON.parse(cartDetails).guid);
+        dispatch(getPaymentModes(guIdObject));
+      }
       dispatch(redeemCliqVoucherSuccess(resultJson));
     } catch (e) {
       dispatch(redeemCliqVoucherFailure(e.message));

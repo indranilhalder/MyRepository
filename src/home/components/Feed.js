@@ -30,6 +30,7 @@ import LatestCollections from "../../blp/components/LatestCollections";
 import MonoBanner from "./MonoBanner";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
+import TopCategories from "../../blp/components/TopCategories";
 import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
 import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
 import { CHECKOUT_ROUTER } from "../../lib/constants";
@@ -53,9 +54,11 @@ const typeComponentMapping = {
   "Video Product Carousel Component": props => (
     <VideoProductCarousel {...props} />
   ),
+
   // // automatedBrandProductCarousel: props => (
   // //   <AutomatedBrandProductCarousel {...props} />
   // // ),
+
   "Flash Sales Component": props => <FlashSale {...props} />, // wired up
   "Offers Component": props => <OfferWidget {...props} />, // wired up
   "Multipurpose Banner Component": props => <ConnectWidget {...props} />, // modal not working - need to figure out what to show here.
@@ -72,6 +75,7 @@ const typeComponentMapping = {
     <CuratedProductsComponent {...props} />
   ),
   "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
+  "Top Categories Component": props => <TopCategories {...props} />,
   "Landing Page Hierarchy": props => <AllBrandTypes {...props} />
 };
 

@@ -40,3 +40,16 @@
   display: inline-block;
   vertical-align: middle;
 }
+.actionButtonHolder {
+  width: 100%;
+  height: 25px;
+  display: inline-block;
+  text-align: left;
+  margin-top: 15px;
+}
+.actionButton {
+  width: auto;
+  height: 25px;
+  display: inline-block;
+  vertical-align: top;
+}
