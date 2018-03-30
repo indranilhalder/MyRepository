@@ -86,9 +86,9 @@ const typeComponentMapping = {
 
 class Feed extends Component {
   renderFeedComponent(feedDatum, i) {
-    // if (feedDatum.type === "Product Capsules Component") {
-    //   return <ProductCapsulesContainer positionInFeed={i} />;
-    // }
+    if (feedDatum.type === "Product Capsules Component") {
+      return <ProductCapsulesContainer positionInFeed={i} />;
+    }
     return (
       typeComponentMapping[feedDatum.type] && (
         <WidgetContainer
