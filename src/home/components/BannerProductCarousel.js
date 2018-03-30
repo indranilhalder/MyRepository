@@ -28,7 +28,6 @@ export default class BannerProductCarousal extends React.Component {
       data = feedComponentData.items.map(transformData);
     }
 
-    console.log(this.props.feedComponentData);
     return (
       <FeedComponent
         banner={

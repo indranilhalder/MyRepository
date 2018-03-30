@@ -14,16 +14,12 @@ export default class RecommendationWidget extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("COMPONENT DID UPDATE");
-    console.log(this.props.feedComponentData);
     if (
       this.props.feedComponentData.data &&
       this.props.feedComponentData.items.length === 0
     ) {
       const itemIds = this.props.feedComponentData.data;
 
-      console.log("ITEM IDS");
-      console.log(itemIds);
       this.props.getItems(this.props.positionInFeed, [
         "MP000000000155861",
         "MP000000000114700",
@@ -36,8 +32,6 @@ export default class RecommendationWidget extends React.Component {
   render() {
     let feedComponentData = this.props.feedComponentData;
     let carouselData;
-    console.log("FEED COMPONENT DATA");
-    console.log(feedComponentData);
     if (feedComponentData.items && feedComponentData.items instanceof Array) {
       carouselData = feedComponentData.items.map(transformData);
     }

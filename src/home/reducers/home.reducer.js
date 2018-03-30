@@ -33,10 +33,7 @@ const home = (
       });
     case homeActions.GET_PRODUCT_CAPSULES_SUCCESS:
       homeFeedClonedData = cloneDeep(state.homeFeed);
-      console.log("ACTION PRODUCT CAPSULES");
-      console.log(homeFeedClonedData[action.positionInFeed]);
       homeFeedClonedData[action.positionInFeed].data = action.productCapsules;
-      console.log(homeFeedClonedData[action.positionInFeed]);
       return Object.assign({}, state, {
         status: action.status,
         productCapsulesLoading: false,

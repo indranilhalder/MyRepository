@@ -14,8 +14,6 @@ export default class TopCategories extends React.Component {
     this.props.history.push(urlSuffix);
   };
   render() {
-    console.log("TOP CATEGORIES");
-    console.log(this.props.feedComponentData);
     const topProduct = this.props.feedComponentData.items[TOP_PRODUCT_INDEX];
     const topRightProduct = this.props.feedComponentData.items[
       TOP_RIGHT_PRODUCT_INDEX
@@ -43,7 +41,7 @@ export default class TopCategories extends React.Component {
           <div className={styles.rightSection}>
             <div
               className={styles.twoByTwo}
-              onClick={() => this.onClick(TOP_RIGHT_PRODUCT_INDEX)}
+              onClick={() => this.handleClick(TOP_RIGHT_PRODUCT_INDEX)}
             >
               <div className={styles.twoByTwoImageHolder}>
                 <div className={styles.tShirtHolder}>
@@ -58,7 +56,7 @@ export default class TopCategories extends React.Component {
             </div>
             <div
               className={styles.footWareHolder}
-              onClick={() => this.onClick(BOTTOM_RIGHT_PRODUCT_INDEX)}
+              onClick={() => this.handleClick(BOTTOM_RIGHT_PRODUCT_INDEX)}
             >
               <div className={styles.twoByTwoImageHolder}>
                 <div className={styles.tShirtHolder}>

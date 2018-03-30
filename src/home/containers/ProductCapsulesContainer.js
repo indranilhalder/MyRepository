@@ -11,7 +11,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  console.log("MAP STATE TOPROPS");
   return {
     productCapsulesLoading: state.home.productCapsulesLoading,
     feedComponentData: state.home.homeFeed[ownProps.positionInFeed],

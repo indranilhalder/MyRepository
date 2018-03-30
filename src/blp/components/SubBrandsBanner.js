@@ -10,6 +10,7 @@ export default class SubBrandsBanner extends React.Component {
     this.props.history.push(urlSuffix);
   }
   render() {
+    console.log(this.props.feedComponentData);
     return (
       <div className={styles.base}>
         <Carousel

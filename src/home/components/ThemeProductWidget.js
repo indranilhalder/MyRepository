@@ -35,9 +35,13 @@ export default class ThemeProductWidget extends React.Component {
       }
     }
   }
+
+  handleThemeProductClick = url => {
+    this.props.history.push(url);
+  };
+
   render() {
     let items = [];
-    console.log(this.props.feedComponentData);
     let widgetData =
       this.props.feedComponentData.data && this.props.feedComponentData.data[0];
     if (!widgetData) {
@@ -46,10 +50,6 @@ export default class ThemeProductWidget extends React.Component {
     if (this.props.feedComponentData.items) {
       items = this.props.feedComponentData.items.map(transformData);
     }
-
-    console.log("WIDGET DATA");
-    console.log(widgetData);
-    console.log(items);
 
     return (
       <div
@@ -80,7 +80,9 @@ export default class ThemeProductWidget extends React.Component {
                   price={datum.price}
                   discountPrice={datum.winningSellerMOP}
                   key={i}
+                  onClick={this.handleThemeProductClick}
                   isWhite={true}
+                  {...datum}
                 />
               );
             })}

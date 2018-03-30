@@ -159,8 +159,6 @@ export function getItems(positionInFeed, itemIds) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
-      console.log("GET ITEMS SUCCESS");
-      console.log(resultJson);
       dispatch(getItemsSuccess(positionInFeed, resultJson.results));
     } catch (e) {
       dispatch(getItemsFailure(positionInFeed, e.message));
@@ -480,7 +478,6 @@ export function getComponentData(
         dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
         delay(() => {
-          console.log("DELAY");
           const isFetchUrlDataLoading = getState().home.homeFeed[positionInFeed]
             .loading;
           if (isFetchUrlDataLoading && backUpUrl) {
