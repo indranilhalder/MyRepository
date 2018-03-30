@@ -26,15 +26,15 @@ import {
   PRODUCT_CART_ROUTER,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   OLD_CART_GU_ID,
-  PAYMENT_MODE_TYPE
+  PAYMENT_MODE_TYPE,
+  PAYTM,
+  WALLET
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
-const WALLET = "WALLET";
-const PAYTM = "PAYTM";
 
 class CheckOutPage extends React.Component {
   state = {
@@ -503,7 +503,7 @@ class CheckOutPage extends React.Component {
       WALLET,
       PAYTM,
       bankName,
-      this.props.location.state.pinCode
+      localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
     );
   };
   binValidationForCOD = paymentMode => {
