@@ -44,12 +44,14 @@
   font-family: regular;
   display: inline-block;
   vertical-align: middle;
+  vertical-align: top;
+  line-height: 22px;
 }
 .infoIconHolder {
   width: 22px;
   height: 22px;
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: top;
   margin-left: 10px;
   opacity: 0.5;
 }
