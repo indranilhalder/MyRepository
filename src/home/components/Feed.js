@@ -16,7 +16,7 @@ import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
 import ProductCapsules from "./ProductCapsules.js";
 import FollowingBrands from "./FollowingBrands";
-import ContentWidget from "./ContentWidget";
+import ContentWidgetWrapper from "./ContentWidgetWrapper";
 import FlashSale from "./FlashSale";
 import AllBrandTypes from "../../blp/components/AllBrandTypes";
 import OfferWidget from "./OfferWidget.js";
@@ -48,7 +48,7 @@ const typeComponentMapping = {
   "Auto Product Recommendation Component": props => (
     <RecommendationWidget {...props} />
   ),
-  "Content Component": props => <ContentWidget {...props} />,
+  "Content Component": props => <ContentWidgetWrapper {...props} />,
   "Banner Product Carousel Component": props => (
     <BannerProductCarousel {...props} />
   ),

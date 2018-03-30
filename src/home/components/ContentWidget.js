@@ -1,55 +1,31 @@
 import React from "react";
 import ContentCard from "./ContentCard";
-
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import styles from "./ContentWidget.css";
-const allData = [
-  {
-    image:
-      "https://i.pinimg.com/originals/f2/81/28/f2812844b37d5bb2d5608a6d816e586b.jpg",
-    header: "One",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-  },
-  {
-    image:
-      "https://i.pinimg.com/564x/f1/fc/3e/f1fc3e0d33594f02ccb8d2e06d200f25.jpg",
-    header: "Two",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-  },
-  {
-    image:
-      "https://i.pinimg.com/564x/47/d0/b0/47d0b0338ac894e59b7518aa54af02d1.jpg",
-    header: "Three",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-  },
-  {
-    image:
-      "https://i.pinimg.com/564x/bd/25/6e/bd256e562cdacc9e24d54dcfa6c420ed.jpg",
-    header: "Four",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-  },
-  {
-    image:
-      "https://i.pinimg.com/564x/87/42/44/874244cf20a10178a41c485c5fcfbc65.jpg",
-    header: "Five",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-  }
-];
 
 export default class ContentWidget extends React.Component {
   constructor(props) {
-    console.log("remounted");
     super(props);
     this.state = {
       goLeft: false,
       goRight: false,
-      data: [allData[4], allData[1], allData[0]],
+      data: this.props.allData
+        ? [
+            this.props.allData[this.props.allData.length - 1],
+            this.props.allData[1],
+            this.props.allData[0]
+          ]
+        : [],
+      length: this.props.allData.length,
       position: 0
     };
+  }
+  handleReadMore(webURL) {
+    if (webURL) {
+      const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
+      console.log(urlSuffix);
+      this.props.history.push(urlSuffix);
+    }
   }
   forward = () => {
     this.goLeft();
@@ -74,12 +50,11 @@ export default class ContentWidget extends React.Component {
   }
   goLeft() {
     if (!this.state.goLeft || !this.state.goRight) {
-      console.log("go left");
       const position = this.state.position + 1;
       const currentData = this.state.data;
       this.setState({ goLeft: true, position }, () => {
         let data = [];
-        data[0] = allData[(1 + this.state.position) % 5];
+        data[0] = this.props.allData[(1 + this.state.position) % 5];
         data[1] = currentData[1];
         data[2] = currentData[0];
         this.setState({ data });
@@ -88,16 +63,14 @@ export default class ContentWidget extends React.Component {
   }
   goRight() {
     if (!this.state.goLeft || !this.state.goRight) {
-      console.log("go right");
       let position = this.state.position - 1;
       if (position < 0) {
-        position = 5 + position;
+        position = this.props.allData.length + position;
       }
-      console.log(position);
       const currentData = this.state.data;
       this.setState({ goRight: true, position }, () => {
         let data = [];
-        data[0] = allData[position % 5];
+        data[0] = this.props.allData[position % this.props.allData.length];
         data[1] = currentData[1];
         data[2] = currentData[0];
         this.setState({ data });
@@ -111,11 +84,6 @@ export default class ContentWidget extends React.Component {
   }
   componentDidMount = () => {
     this.registerAnimationELement();
-    allData.forEach(val => {
-      console.log(val.image);
-      new Image().src = val.image;
-    });
-    // (new Image()).src = "http://www.example.com/myimage.jpg"
   };
   componentWillReceiveProps(props) {
     if (this.state.position < props.position) {
@@ -129,7 +97,6 @@ export default class ContentWidget extends React.Component {
   registerAnimationELement = () => {
     const element = document.getElementById("animation-root");
     element.addEventListener("animationend", () => {
-      console.log("please dont crash");
       this.revert();
     });
   };
@@ -197,13 +164,14 @@ export default class ContentWidget extends React.Component {
                 break;
             }
           }
-
           return (
             <div className={className} id={i === 0 ? "animation-root" : ""}>
               <ContentCard
-                image={val.image}
-                header={val.header}
+                image={val.imageURL}
+                header={val.title}
                 description={val.description}
+                buttonText={val.btnText}
+                onClick={() => this.handleReadMore(val.webURL)}
               />
             </div>
           );

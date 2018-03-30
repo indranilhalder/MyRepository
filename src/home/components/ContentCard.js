@@ -18,16 +18,18 @@ export default class ContentCard extends React.Component {
         <div className={styles.content}>
           <div className={styles.overlay}>
             <div className={styles.header}>{this.props.header}</div>
-            <div className={styles.label}>
+            <div
+              className={styles.label}
+              onClick={() => {
+                this.handleClick();
+              }}
+            >
               {this.props.description}
               <div className={styles.buttonBox}>
                 <div className={styles.button}>
                   <UnderLinedButton
-                    label="Read More"
+                    label={this.props.buttonText}
                     color="#fff"
-                    onClick={() => {
-                      this.handleClick();
-                    }}
                   />
                 </div>
               </div>
@@ -42,5 +44,6 @@ ContentCard.propTypes = {
   image: PropTypes.string,
   header: PropTypes.string,
   description: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  buttonText: PropTypes.string
 };
