@@ -105,6 +105,7 @@ class Feed extends Component {
   }
 
   renderFeedComponents() {
+    console.log(this.props.homeFeedData);
     return (
       this.props.homeFeedData &&
       this.props.homeFeedData.map((feedDatum, i) => {

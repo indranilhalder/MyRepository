@@ -24,6 +24,8 @@ export default class BrandCardHeader extends React.Component {
   }
   render() {
     let { feedComponentData } = this.props;
+    console.log("FEED COMPONENT DATA");
+    console.log(feedComponentData.items[0]);
     return (
       <div className={styles.base}>
         <div className={styles.container}>

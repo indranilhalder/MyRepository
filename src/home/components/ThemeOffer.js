@@ -49,6 +49,8 @@ export default class ThemeOffer extends React.Component {
       });
     }
     themeData = concat(offers, items);
+    console.log("THEME DATA");
+    console.log(themeData);
     return (
       <FeedComponent
         backgroundImage={feedComponentData.backgroundImageURL}

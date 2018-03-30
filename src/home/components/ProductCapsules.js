@@ -40,6 +40,10 @@ export default class ProductCapsules extends React.Component {
 
     const productCapsulesData = this.props.feedComponentData;
     const data = this.props.feedComponentData.data;
+
+    if (!data) {
+      return null;
+    }
     let subHeader;
     if (data && data.wishlistData) {
       subHeader = `You have ${

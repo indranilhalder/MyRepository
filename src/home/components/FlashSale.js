@@ -80,6 +80,8 @@ export default class FlashSale extends React.Component {
         <Grid offset={20}>
           {offersAndItemsArray &&
             offersAndItemsArray.map((datum, i) => {
+              console.log("OFFERS AND ITEMS");
+              console.log(datum);
               return (
                 <ProductModule
                   key={i}
@@ -87,6 +89,7 @@ export default class FlashSale extends React.Component {
                   productImage={datum.image}
                   title={datum.title}
                   price={datum.price}
+                  discountPrice={datum.discountPrice}
                   description={datum.description}
                   webURL={datum.webURL}
                   onClick={this.handleClick}

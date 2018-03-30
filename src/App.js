@@ -159,6 +159,11 @@ class App extends Component {
           <Switch>
             <Route
               exact
+              path={CATEGORY_PRODUCT_LISTINGS_WITH_PAGE}
+              component={ProductListingsContainer}
+            />
+            <Route
+              exact
               path={LOGIN_PATH}
               render={routeProps => (
                 <LoginContainer {...routeProps} {...this.props} />
@@ -237,12 +242,6 @@ class App extends Component {
             <Route
               exact
               path={BRAND_AND_CATEGORY_PAGE}
-              component={ProductListingsContainer}
-            />
-
-            <Route
-              exact
-              path={CATEGORY_PRODUCT_LISTINGS_WITH_PAGE}
               component={ProductListingsContainer}
             />
 

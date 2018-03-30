@@ -159,6 +159,7 @@ export function getItems(positionInFeed, itemIds) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
+
       dispatch(getItemsSuccess(positionInFeed, resultJson.results));
     } catch (e) {
       dispatch(getItemsFailure(positionInFeed, e.message));
@@ -289,6 +290,8 @@ export function homeFeed(brandIdOrCategoryId: null) {
         if (resultJson.errors) {
           dispatch(homeFeedSuccess([], feedTypeRequest));
         } else {
+          console.log("PARSED RESULT JSON");
+          console.log(resultJson);
           dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
         }
       } else {
@@ -316,6 +319,8 @@ export function homeFeed(brandIdOrCategoryId: null) {
         throw new Error(`${resultJson}`);
       }
       let parsedResultJson = JSON.parse(resultJson.content);
+      console.log("PARSED RESULT JSON");
+      console.log(parsedResultJson);
       parsedResultJson = parsedResultJson.items;
       dispatch(homeFeedSuccess(parsedResultJson, feedTypeRequest));
     } catch (e) {

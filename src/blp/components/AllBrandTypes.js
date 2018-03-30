@@ -19,6 +19,7 @@ export default class AllBrandTypes extends React.Component {
   }
   render() {
     let feedComponentData = this.props.feedComponentData;
+    console.log("ALL BRAND TYPES");
     return (
       <div className={styles.base}>
         <div className={styles.headerShopAddress}>

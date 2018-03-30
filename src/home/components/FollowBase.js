@@ -12,7 +12,9 @@ export default class FollowBase extends React.Component {
   };
   render() {
     let { feedComponentData, ...rest } = this.props;
+    console.log(feedComponentData);
     feedComponentData = feedComponentData.data;
+
     return (
       <div className={styles.base}>
         <Carousel elementWidthMobile={85} elementWidthDesktop={33.333}>

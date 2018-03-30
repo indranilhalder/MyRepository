@@ -37,16 +37,17 @@ export default class AutomatedBrandProductCarousel extends React.Component {
   render() {
     const componentData =
       this.props.feedComponentData.data && this.props.feedComponentData.data[0];
+    console.log(componentData);
     let carouselData;
     if (!componentData) {
       return null;
     }
+
     if (this.props.feedComponentData.items instanceof Array) {
       carouselData = this.props.feedComponentData.items.map(transformData);
     }
 
     const buttonText = this.props.feedComponentData.btnText;
-
     return componentData ? (
       <FeedComponent
         banner={

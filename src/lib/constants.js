@@ -37,7 +37,7 @@ export const CATEGORY_PAGE_WITH_QUERY_PARAMS = `${CATEGORY_PAGE}?&.*`;
 export const CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS = `${CATEGORY_PAGE_WITH_SLUG}?&.*`;
 export const PRODUCT_LISTINGS = "/search/(.*)";
 export const CATEGORY_PRODUCT_LISTINGS_WITH_PAGE =
-  "/:slug/c-(msh[0-9a-zA-Z]+)/page-([0-9])";
+  "/.*/c-(msh[0-9a-zA-Z]+)/page-([0-9])";
 
 export const PLP_CATEGORY_SEARCH = "/search/?searchCategory=all&text=shirt";
 

@@ -38,6 +38,11 @@ class ProductListingsPage extends Component {
     ) {
       return;
     }
+
+    if (this.props.searchText) {
+      this.props.getProductListings(this.props.searchText, SUFFIX, 0);
+      return;
+    }
     let page = null;
     if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
       page = this.props.match.params[1];
