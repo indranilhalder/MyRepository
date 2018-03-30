@@ -41,7 +41,22 @@
   margin-top: 15px;
   padding: 0 15px;
 }
-
+.salutation {
+  width: 20%;
+  height: auto;
+  font-size: 14px;
+  font-family: regular;
+  display: inline-block;
+  vertical-align: top;
+}
+.name {
+  width: 80%;
+  height: auto;
+  font-size: 14px;
+  font-family: regular;
+  display: inline-block;
+  vertical-align: top;
+}
 .textHolder {
   height: auto;
   display: inline-block;
