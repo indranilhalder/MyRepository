@@ -68,8 +68,8 @@ export default class JewelleryDetailsAndLink extends React.Component {
             )}
           </div>
         </div>
-        <div className={styles.textHolder}>
-          {this.props.informationText && (
+        {this.props.informationText && (
+          <div className={styles.textHolder}>
             <div className={styles.informationText}>
               <span>{this.props.informationText}</span>
               <span
@@ -79,8 +79,8 @@ export default class JewelleryDetailsAndLink extends React.Component {
                 Read More
               </span>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
   }

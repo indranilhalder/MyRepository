@@ -9,12 +9,15 @@ import { Redirect } from "react-router-dom";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  LOGIN_PATH
+  LOGIN_PATH,
+  CHECKOUT_ROUTER
 } from "../../lib/constants";
+import { SUCCESS } from "../../lib/constants.js";
 import * as Cookie from "../../lib/Cookie";
 const PRODUCT_ID = "MP000000000127263";
 const QUANTITY = "1";
 const MOBILE_NUMBER = "999999999";
+
 export default class GiftCard extends React.Component {
   constructor(props) {
     super(props);
@@ -30,6 +33,18 @@ export default class GiftCard extends React.Component {
       this.props.getGiftCardDetails();
     }
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.giftCardDetailsStatus === SUCCESS) {
+      this.props.history.push({
+        pathname: CHECKOUT_ROUTER,
+        state: {
+          isFromGiftCard: true,
+          egvCartGuid: nextProps.giftCardDetails.egvCartGuid,
+          amount: this.state.amountText
+        }
+      });
+    }
+  }
 
   selectAmount(val, amount) {
     this.setState({ amountText: val, amount: amount });
@@ -38,12 +53,12 @@ export default class GiftCard extends React.Component {
   onSubmitDetails() {
     if (this.props.createGiftCardDetails) {
       const giftCardDetails = {};
-      giftCardDetails.from = this.state.email;
+      giftCardDetails.from = this.state.senderName;
       giftCardDetails.quantity = QUANTITY;
       giftCardDetails.messageOnCard = this.state.message;
       giftCardDetails.productID = PRODUCT_ID;
       giftCardDetails.priceSelectedByUserPerQuantity = this.state.amount;
-      giftCardDetails.receiverEmailID = this.state.senderName;
+      giftCardDetails.receiverEmailID = this.state.email;
       giftCardDetails.mobileNumber = MOBILE_NUMBER;
       this.props.createGiftCardDetails(giftCardDetails);
     }
