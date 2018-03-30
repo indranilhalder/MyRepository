@@ -53,6 +53,9 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       //need to show error page
     }
   }
+  componentWillUnmount() {
+    console.log("Will unmount");
+  }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
@@ -99,7 +102,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   render() {
-    if (!this.props.loading && this.props.productDetails) {
+    if (this.props.productDetails) {
       return (
         <div>
           {this.renderRootCategory(this.props.productDetails.rootCategory)}
