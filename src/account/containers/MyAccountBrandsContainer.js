@@ -3,10 +3,9 @@ import { withRouter } from "react-router-dom";
 import MyAccountBrands from "../components/MyAccountBrands";
 import {
   getFollowedBrands,
-  followAndUnFollowBrandInCommerce,
-  followAndUnFollowBrandInFeedBackInCommerceApi
+  followAndUnFollowBrand
 } from "../actions/account.actions";
-import { SUCCESS, REQUESTING, ERROR, FAILURE } from "../../lib/constants";
+import { SUCCESS } from "../../lib/constants";
 const mapDispatchToProps = dispatch => {
   return {
     getFollowedBrands: () => {
@@ -14,26 +13,15 @@ const mapDispatchToProps = dispatch => {
     },
     followAndUnFollowBrand: (brandId, followStatus) => {
       try {
-        dispatch(followAndUnFollowBrandInCommerce(brandId, followStatus))
-          .then(response => {
-            if (response.status === SUCCESS) {
-              return dispatch(
-                followAndUnFollowBrandInFeedBackInCommerceApi(
-                  brandId,
-                  followStatus
-                )
-              );
-            } else {
-              return response;
-            }
-          })
-          .then(response => {
+        dispatch(followAndUnFollowBrand(brandId, followStatus)).then(
+          response => {
             if (response.status === SUCCESS) {
               return dispatch(getFollowedBrands());
             } else {
               return response;
             }
-          });
+          }
+        );
       } catch (e) {
         console.log(e.message);
       }

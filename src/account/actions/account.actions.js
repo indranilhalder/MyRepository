@@ -4,7 +4,10 @@ import {
   SUCCESS_CAMEL_CASE,
   REQUESTING,
   ERROR,
-  FAILURE
+  FAILURE,
+  HOME_FEED_FOLLOW_AND_UN_FOLLOW,
+  PDP_FOLLOW_AND_UN_FOLLOW,
+  MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import {
@@ -105,19 +108,19 @@ export const GET_GIFTCARD_REQUEST = "GET_GIFTCARD_REQUEST";
 export const GET_GIFTCARD_SUCCESS = "GET_GIFTCARD_SUCCESS";
 export const GET_GIFTCARD_FAILURE = "GET_GIFTCARD_FAILURE";
 
-export const FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_REQUEST =
-  "FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_REQUEST";
-export const FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_SUCCESS =
-  "FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_SUCCESS";
-export const FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_FAILURE =
-  "FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_FAILURE";
-
 export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_REQUEST =
   "FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_REQUEST";
 export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_SUCCESS =
   "FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_SUCCESS";
 export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_FAILURE =
   "FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_FAILURE";
+
+export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_HOME_FEED_SUCCESS =
+  "FOLLOW_AND_UN_FOLLOW_BRANDS_IN_HOME_FEED_SUCCESS";
+export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_PDP_SUCCESS =
+  "FOLLOW_AND_UN_FOLLOW_BRANDS_IN_PDP_SUCCESS";
+export const FOLLOW_AND_UN_FOLLOW_BRANDS_IN_MY_ACCOUNT_SUCCESS =
+  "FOLLOW_AND_UN_FOLLOW_BRANDS_IN_MY_ACCOUNT_SUCCESS";
 
 export const GET_USER_CLIQ_CASH_DETAILS_REQUEST =
   "GET_USER_CLIQ_CASH_DETAILS_REQUEST";
@@ -1317,72 +1320,51 @@ export function getFollowedBrands() {
   };
 }
 
-// this follow and unfollow function is for just follow and unfollow brand we don't need to
-// update any reducer data for brand following status. because after follow and un follow we need to hit
-// all brands for user that will return again followed brands
-export function followAndUnFollowBrandInCommerceRequest() {
-  return {
-    type: FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_REQUEST,
-    status: REQUESTING
-  };
-}
-
-export function followAndUnFollowBrandInCommerceSuccess() {
-  return {
-    type: FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_SUCCESS,
-    status: SUCCESS
-  };
-}
-export function followAndUnFollowBrandInCommerceFailure(error) {
-  return {
-    type: FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-export function followAndUnFollowBrandInCommerce(brandId, followStatus) {
-  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  return async (dispatch, getState, { api }) => {
-    dispatch(followAndUnFollowBrandInCommerceRequest());
-    try {
-      const updatedFollowStatus = !followStatus;
-      const result = await api.post(
-        `${PRODUCT_PATH}/${
-          JSON.parse(customerCookie).access_token
-        }/updateFollowedBrands?brands=${brandId}&follow=${updatedFollowStatus}&isPwa=true`
-      );
-      const resultJson = await result.json();
-
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        return dispatch(followAndUnFollowBrandInCommerceSuccess());
-      } else {
-        throw new Error(`${resultJson.message}`);
-      }
-    } catch (e) {
-      return dispatch(followAndUnFollowBrandInCommerceFailure(e.message));
-    }
-  };
-}
-
-export function followAndUnFollowBrandInFeedBackRequest() {
+export function followAndUnFollowBrandRequest() {
   return {
     type: FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_REQUEST,
     status: REQUESTING
   };
 }
 
-export function followAndUnFollowBrandInFeedBackSuccess() {
+// this reducer we need to handle in home reducer
+export function followAndUnFollowBrandSuccessForHomeFeed(
+  brandId,
+  followStatus,
+  positionInFeed
+) {
   return {
-    type: FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_SUCCESS,
-    status: SUCCESS
+    type: FOLLOW_AND_UN_FOLLOW_BRANDS_IN_HOME_FEED_SUCCESS,
+    status: SUCCESS,
+    brandId,
+    followStatus,
+    positionInFeed
   };
 }
-export function followAndUnFollowBrandInFeedBackFailure(error) {
+
+// this reducer we need to catch in pdp reducer
+export function followAndUnFollowBrandSuccessForPdp(brandId, followStatus) {
+  return {
+    type: FOLLOW_AND_UN_FOLLOW_BRANDS_IN_PDP_SUCCESS,
+    status: SUCCESS,
+    brandId,
+    followStatus
+  };
+}
+
+// this reducer we need to catch in account reducer
+export function followAndUnFollowBrandSuccessForMyAccount(
+  brandId,
+  followStatus
+) {
+  return {
+    type: FOLLOW_AND_UN_FOLLOW_BRANDS_IN_MY_ACCOUNT_SUCCESS,
+    status: SUCCESS,
+    brandId,
+    followStatus
+  };
+}
+export function followAndUnFollowBrandFailure(error) {
   return {
     type: FOLLOW_AND_UN_FOLLOW_BRANDS_IN_FEEDBACK_FAILURE,
     status: ERROR,
@@ -1390,42 +1372,83 @@ export function followAndUnFollowBrandInFeedBackFailure(error) {
   };
 }
 
-export function followAndUnFollowBrandInFeedBackInCommerceApi(
+export function followAndUnFollowBrand(
   brandId,
-  followStatus
+  followStatus,
+  pageType: null,
+  positionInFeed: null
 ) {
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const followedText = followStatus ? UNFOLLOW : FOLLOW;
-  const updatedBrandObj = {
-    api_key: API_KEY_FOR_MSD,
-    mad_uuid: getMcvId(),
-    data: [
-      {
-        fields: "brand",
-        values: [brandId],
-        action: followedText
-      }
-    ]
-  };
+  const updatedFollowedStatus = !followStatus;
+
   return async (dispatch, getState, { api }) => {
-    dispatch(followAndUnFollowBrandInFeedBackRequest());
+    dispatch(followAndUnFollowBrandRequest());
+    const mcvId = await getMcvId();
+    const updatedBrandObj = {
+      api_key: API_KEY_FOR_MSD,
+      mad_uuid: mcvId,
+      data: [
+        {
+          fields: "brand",
+          values: [brandId],
+          action: followedText
+        }
+      ]
+    };
     try {
-      const result = await api.postMsdRowData(
-        `${MSD_ROOT_PATH}/feedback`,
+      const followInFeedBackApiResult = await api.postMsdRowData(
+        `feedback`,
         updatedBrandObj
       );
-      const resultJson = await result.json();
-
+      const followInFeedBackApiResultJson = await followInFeedBackApiResult.json();
       if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
+        followInFeedBackApiResultJson.status === SUCCESS ||
+        followInFeedBackApiResultJson.status === SUCCESS_UPPERCASE ||
+        followInFeedBackApiResultJson.status === SUCCESS_CAMEL_CASE
       ) {
-        return dispatch(followAndUnFollowBrandInFeedBackSuccess());
+        const followInCommerceApiResult = await api.post(
+          `${PRODUCT_PATH}/${
+            JSON.parse(customerCookie).access_token
+          }/updateFollowedBrands?brands=${"A0002"}&follow=${updatedFollowedStatus}&isPwa=true`
+        );
+        const followInCommerceApiResultJson = await followInCommerceApiResult.json();
+
+        if (
+          followInCommerceApiResultJson.status === SUCCESS ||
+          followInCommerceApiResultJson.status === SUCCESS_UPPERCASE ||
+          followInCommerceApiResultJson.status === SUCCESS_CAMEL_CASE
+        ) {
+          // dispatch success for following brand on the basis of page type
+          if (pageType === HOME_FEED_FOLLOW_AND_UN_FOLLOW) {
+            dispatch(
+              followAndUnFollowBrandSuccessForHomeFeed(
+                brandId,
+                updatedFollowedStatus,
+                positionInFeed
+              )
+            );
+          } else if (pageType === PDP_FOLLOW_AND_UN_FOLLOW) {
+            dispatch(
+              followAndUnFollowBrandSuccessForPdp(
+                brandId,
+                updatedFollowedStatus
+              )
+            );
+          } else if (pageType === MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW) {
+            dispatch(
+              followAndUnFollowBrandSuccessForMyAccount(
+                brandId,
+                updatedFollowedStatus
+              )
+            );
+          }
+        }
       } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+        throw new Error(`Error in following Brand for feedback Api`);
       }
     } catch (e) {
-      return dispatch(followAndUnFollowBrandInFeedBackFailure(e.message));
+      dispatch(followAndUnFollowBrandFailure(e.message));
     }
   };
 }

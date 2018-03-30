@@ -2,42 +2,36 @@ import React from "react";
 import styles from "./NewBrand.css";
 import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
-import Follow from "./Follow";
+import { FollowUnFollowButtonContainer } from "../../pdp/containers/FollowUnFollowButtonContainer";
 import Logo from "./Logo";
-
+import { HOME_FEED_FOLLOW_AND_UN_FOLLOW } from "../../lib/constants";
 export default class NewBrand extends React.Component {
-  handleClick() {
-    if (this.props.follow) {
-      this.onFollowClick();
-    } else {
-      this.onUnFollowClick();
-    }
-  }
-
   handleBrandClick = () => {
     this.props.onClick(this.props.webUrl);
   };
   render() {
     return (
-      <div className={styles.base} onClick={this.handleBrandClick}>
-        <div className={styles.imageHolder}>
+      <div className={styles.base}>
+        <div className={styles.imageHolder} onClick={this.handleBrandClick}>
           <Image image={this.props.image} color="transparent" />
           <div className={styles.brandOverlay}>
             <div className={styles.brandTextHolder}>
               <div className={styles.brandWrapper}>
                 <div className={styles.brandText}>{this.props.label}</div>
               </div>
-              <div className={styles.brandButton}>
-                <Follow
-                  onClick={follow => this.handleClick(follow)}
-                  follow={this.props.follow}
-                />
-              </div>
             </div>
             <div className={styles.brandLogo}>
               <Logo image={this.props.logo} />
             </div>
           </div>
+        </div>
+        <div className={styles.brandButton}>
+          <FollowUnFollowButtonContainer
+            brandId={this.props.brandId}
+            isFollowing={this.props.isFollowing}
+            pageType={HOME_FEED_FOLLOW_AND_UN_FOLLOW}
+            positionInFeed={this.props.positionInFeed}
+          />
         </div>
       </div>
     );

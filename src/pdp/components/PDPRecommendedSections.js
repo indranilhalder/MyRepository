@@ -10,7 +10,7 @@ import {
   RECOMMENDED_PRODUCTS_WIDGET_KEY,
   SIMILAR_PRODUCTS_WIDGET_KEY
 } from "../actions/pdp.actions.js";
-import FollowUnFollowButtonContainer from "../containers/FollowUnFollowButtonContainer";
+import { FollowUnFollowButtonContainer } from "../containers/FollowUnFollowButtonContainer";
 import styles from "./PDPRecommendedSections.css";
 
 class PDPRecommendedSections extends React.Component {
@@ -28,7 +28,7 @@ class PDPRecommendedSections extends React.Component {
     if (this.props.aboutTheBrand) {
       brandId = this.props.aboutTheBrand.id;
     }
-    console.log(this.props);
+
     return (
       this.props.aboutTheBrand && (
         <React.Fragment>
