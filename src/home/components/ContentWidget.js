@@ -23,7 +23,6 @@ export default class ContentWidget extends React.Component {
   handleReadMore(webURL) {
     if (webURL) {
       const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
-      console.log(urlSuffix);
       this.props.history.push(urlSuffix);
     }
   }
