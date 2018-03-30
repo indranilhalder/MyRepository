@@ -21,6 +21,11 @@ export default class CheckoutDebitCard extends React.Component {
       this.props.softReservationForPayment(cardDetails);
     }
   };
+  jusPayTokenizeForGiftCard = cardDetails => {
+    if (this.props.jusPayTokenizeForGiftCard) {
+      this.props.jusPayTokenizeForGiftCard(cardDetails);
+    }
+  };
 
   render() {
     return (
@@ -30,6 +35,10 @@ export default class CheckoutDebitCard extends React.Component {
           binValidation={binNo => this.binValidation(binNo)}
           softReservationForPayment={cardDetails =>
             this.softReservationForPayment(cardDetails)
+          }
+          isFromGiftCard={this.props.isFromGiftCard}
+          jusPayTokenizeForGiftCard={cardDetails =>
+            this.jusPayTokenizeForGiftCard(cardDetails)
           }
         />
       </ManueDetails>

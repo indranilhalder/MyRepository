@@ -10,7 +10,6 @@ import PriceBreakUp from "./PriceBreakUp";
 import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
 
-import ProductDetails from "./ProductDetails";
 import JewelleryClassification from "./JewelleryClassification";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
@@ -160,7 +159,7 @@ export default class PdpJewellery extends React.Component {
     this.setState({ showPriceBreakUp: true });
   }
   showEmiModal = () => {
-    const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
+    const cartValue = this.props.productDetails.winningSellerPrice.value;
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const globalAccessToken = JSON.parse(globalCookie).access_token;
     this.props.getPdpEmi(globalAccessToken, cartValue);
@@ -191,20 +190,29 @@ export default class PdpJewellery extends React.Component {
 
     return (
       productData.eligibleDeliveryModes &&
-      productData.eligibleDeliveryModes.map((val, idx) => {
-        return (
-          <DeliveryInformation
-            key={idx}
-            header={val.name}
-            placedTime={val.timeline}
-            type={val.code}
-            onClick={() => this.renderAddressModal()}
-            deliveryOptions={DELIVERY_TEXT}
-            label={defaultPinCode}
-            showCliqAndPiqButton={false}
-          />
-        );
-      })
+      productData.deliveryModesATP &&
+      productData.deliveryModesATP
+        .filter(val => {
+          return productData.eligibleDeliveryModes
+            .map(val => {
+              return val.code;
+            })
+            .includes(val.key);
+        })
+        .map((val, idx) => {
+          return (
+            <DeliveryInformation
+              key={idx}
+              header={val.name}
+              placedTime={val.value}
+              type={val.key}
+              onClick={() => this.renderAddressModal()}
+              deliveryOptions={DELIVERY_TEXT}
+              label={defaultPinCode}
+              showCliqAndPiqButton={false}
+            />
+          );
+        })
     );
   }
   render() {
@@ -253,8 +261,9 @@ export default class PdpJewellery extends React.Component {
             <JewelleryDetailsAndLink
               productName={productData.brandName}
               productDescription={productData.productName}
-              price={productData.winningSellerMOP}
-              discountPrice={productData.mrp}
+              price={productData.winningSellerPrice.formattedValueNoDecimal}
+              discountPrice={productData.mrpPrice.formattedValueNoDecimal}
+              averageRating={productData.averageRating}
               discount={productData.discount}
               hasPriceBreakUp={productData.priceBreakUpDetailsMap}
               history={this.props.history}
@@ -339,11 +348,13 @@ please try another pincode">
           )}
 
           <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
+            {productData.averageRating && (
+              <RatingAndTextLink
+                onClick={this.goToReviewPage}
+                averageRating={productData.averageRating}
+                numberOfReview={productData.numberOfReviews}
+              />
+            )}
           </div>
 
           <div className={styles.details} id="priceBreakup">

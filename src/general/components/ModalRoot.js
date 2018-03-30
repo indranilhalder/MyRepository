@@ -14,7 +14,7 @@ import SizeSelectModal from "../../pdp/components/SizeSelectModal.js";
 import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
 import KycDetailsPopup from "../../auth/components/KycDetailsPopup.js";
 import KycApplicationForm from "../../account/components/KycApplicationForm.js";
-
+import GiftCardModal from "../../cart/components/GiftCardModal";
 import UpdateRefundDetailsPopup from "../../account/components/UpdateRefundDetailsPopup.js";
 import KycApplicationFormWithBottomSlideModal from "../../account/components/KycApplicationFormWithBottomSlideModal";
 import KycDetailPopUpWithBottomSlideModal from "../../account/components/KycDetailPopUpWithBottomSlideModal";
@@ -142,6 +142,12 @@ export default class ModalRoot extends React.Component {
     customerDetails.lastName = this.state.lastName;
     this.props.getOtpToActivateWallet(customerDetails);
   }
+
+  addGiftCard = val => {
+    if (this.props.redeemCliqVoucher) {
+      this.props.redeemCliqVoucher(val, true);
+    }
+  };
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -253,6 +259,12 @@ export default class ModalRoot extends React.Component {
           {...this.props.ownProps}
           history={this.props.history}
           closeModal={() => this.handleClose()}
+        />
+      ),
+      GiftCardModal: (
+        <GiftCardModal
+          closeModal={() => this.handleClose()}
+          addGiftCard={val => this.addGiftCard(val)}
         />
       )
     };
