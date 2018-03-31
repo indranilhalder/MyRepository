@@ -27,24 +27,30 @@ export default class SizeGuideMain extends React.Component {
               <Image fit="contain" image={this.props.sizeData.imageURL} />
             </div>
           </div>
-          <div className={styles.sizeList}>
-            {this.props.sizeData.sizeGuideList.map((list, i) => {
-              return (
-                <Accordion
-                  text={list.dimensionSize}
-                  key={i}
-                  offset={20}
-                  activeBackground="#f8f8f8"
-                >
-                  <SizeGuideElement data={list.dimensionList} />
-                </Accordion>
-              );
-            })}
-          </div>
+          {this.props.sizeData.sizeGuideList && (
+            <div className={styles.sizeList}>
+              {this.props.sizeData.sizeGuideList.map((list, i) => {
+                return (
+                  <Accordion
+                    text={list.dimensionSize}
+                    key={i}
+                    offset={20}
+                    activeBackground="#f8f8f8"
+                  >
+                    <SizeGuideElement data={list.dimensionList} />
+                  </Accordion>
+                );
+              })}
+            </div>
+          )}
         </div>
       );
     } else {
-      return null;
+      return (
+        <div className={styles.noSizeGuideHolder}>
+          <div className={styles.noSizeGuide}>No Size Guide Available</div>
+        </div>
+      );
     }
   }
 }
