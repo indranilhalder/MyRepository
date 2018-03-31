@@ -116,14 +116,13 @@ class SignUp extends Component {
                     ? this.props.phoneNumberValue
                     : this.state.phoneNumberValue
                 }
-                placeholder={"Phone number"}
-                type={"number"}
+                placeholder={"Name"}
                 onChange={val => this.onPhoneNumberChange(val)}
               />
             </div>
             <div className={styles.input}>
               <Input
-                placeholder={"Email (optional)"}
+                placeholder={"Email or phone Number"}
                 value={
                   this.props.emailValue
                     ? this.props.emailValue
