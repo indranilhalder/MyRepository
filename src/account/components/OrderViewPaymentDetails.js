@@ -16,9 +16,7 @@ export default class OrderViewPaymentDetails extends React.Component {
         <div className={styles.deliverDataHolder}>
           <div className={styles.labelText}>Delivery & Shipping Charges</div>
           {this.props.DeliveryCharges && (
-            <div className={styles.infoText}>{`Rs. ${
-              this.props.DeliveryCharges
-            }`}</div>
+            <div className={styles.infoText}>{this.props.DeliveryCharges}</div>
           )}
         </div>
         <div className={styles.discountDataHolder}>

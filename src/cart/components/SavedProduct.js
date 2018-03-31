@@ -39,6 +39,7 @@ export default class SavedProduct extends React.Component {
     );
   }
 }
+
 SavedProduct.propTypes = {
   saveProduct: PropTypes.func,
   onApplyCoupon: PropTypes.func,
