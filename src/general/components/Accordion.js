@@ -10,9 +10,14 @@ export default class Accordion extends React.Component {
     };
   }
   openMenu() {
-    this.setState(prevState => ({
-      isOpen: !prevState.isOpen
-    }));
+    if (!this.props.controlled) {
+      this.setState(prevState => ({
+        isOpen: !prevState.isOpen
+      }));
+    }
+    if (this.props.onOpen) {
+      this.props.onOpen();
+    }
   }
   componentWillReceiveProps(props) {
     if (this.state.isOpen !== props.isOpen) {
@@ -62,10 +67,14 @@ Accordion.propTypes = {
   headerFontSize: PropTypes.number,
   offset: PropTypes.number,
   searchImageURL: PropTypes.string,
-  activeBackground: PropTypes.string
+  activeBackground: PropTypes.string,
+  controlled: PropTypes.bool,
+  onOpen: PropTypes.func,
+  isOpen: PropTypes.bool
 };
 
 Accordion.defaultProps = {
   headerFontSize: 14,
+  controlled: false,
   offset: 0
 };
