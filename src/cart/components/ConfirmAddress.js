@@ -33,7 +33,6 @@ export default class ConfirmAddress extends React.Component {
     }
   }
 
-  getAddress(address) {}
   render() {
     return (
       <div className={styles.base}>

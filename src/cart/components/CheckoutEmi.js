@@ -20,24 +20,24 @@ export default class CheckoutEmi extends React.Component {
   };
 
   render() {
-    if (this.props.cart.emiBankStatus === SUCCESS) {
-      return (
-        <MenuDetails text="Easy monthly installments" icon={emiIcon}>
-          <EmiAccordion
-            emiList={this.props.cart.emiBankDetails.bankList}
-            onChangeCvv={i => this.onChangeCvv(i)}
-            binValidation={binNo => this.binValidation(binNo)}
-            softReservationForPayment={cardDetails =>
-              this.softReservationForPayment(cardDetails)
-            }
-          />
-        </MenuDetails>
-      );
-    } else {
-      return (
-        <div className={styles.errorText}>{this.props.cart.emiBankError}</div>
-      );
-    }
+    return (
+      <MenuDetails text="Easy monthly installments" icon={emiIcon}>
+        {this.props.cart.emiBankDetails &&
+          this.props.cart.emiBankDetails.bankList && (
+            <EmiAccordion
+              emiList={this.props.cart.emiBankDetails.bankList}
+              onChangeCvv={i => this.onChangeCvv(i)}
+              binValidation={binNo => this.binValidation(binNo)}
+              softReservationForPayment={cardDetails =>
+                this.softReservationForPayment(cardDetails)
+              }
+            />
+          )}
+        {!this.props.cart.emiBankDetails && (
+          <div className={styles.errorText}>{this.props.cart.emiBankError}</div>
+        )}
+      </MenuDetails>
+    );
   }
 }
 

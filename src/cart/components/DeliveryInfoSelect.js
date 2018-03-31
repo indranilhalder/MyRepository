@@ -31,6 +31,7 @@ export default class DeliveryInfoSelect extends React.Component {
               onSelect={val => this.handleSelect(val)}
               onPiq={val => this.onPiq(val)}
               showCliqAndPiqButton={true}
+              available={datum.desc}
             />
           );
         })}

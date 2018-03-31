@@ -22,7 +22,7 @@ export default class RateyourExperienceCard extends React.Component {
           <div className={styles.retingLabel}>{this.props.label}</div>
           <div className={styles.rating}>
             <ExperienceRateGrid
-              onSelect={val => this.captureOrderExperience(val)}
+              onSelect={val => this.captureOrderExperience(val[0])}
             />
           </div>
           <div className={styles.buttonHolder}>

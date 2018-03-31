@@ -741,23 +741,20 @@ const cart = (
 
     case cartActions.ORDER_EXPERIENCE_CAPTURE_REQUEST:
       return Object.assign({}, state, {
-        orderExperienceStatus: action.status,
-        loading: true
+        orderExperienceStatus: action.status
       });
 
     case cartActions.ORDER_EXPERIENCE_CAPTURE_SUCCESS: {
       return Object.assign({}, state, {
         orderExperienceStatus: action.status,
-        orderExperience: action.orderExperience,
-        loading: false
+        orderExperience: action.orderExperience
       });
     }
 
     case cartActions.ORDER_EXPERIENCE_CAPTURE_FAILURE:
       return Object.assign({}, state, {
         orderExperienceStatus: action.status,
-        orderExperienceError: action.error,
-        loading: false
+        orderExperienceError: action.error
       });
 
     case cartActions.GET_COD_ELIGIBILITY_FAILURE:
