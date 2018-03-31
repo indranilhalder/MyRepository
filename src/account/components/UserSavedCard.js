@@ -7,6 +7,7 @@ import {
 import SavedPaymentCard from "./SavedPaymentCard.js";
 import styles from "./UserSavedCard.css";
 const CARD_FORMAT = /\B(?=(\d{4})+(?!\d))/g;
+const NO_SAVED_CARDS = "No Saved Cards";
 export default class UserSavedCard extends React.Component {
   componentDidMount() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -28,7 +29,11 @@ export default class UserSavedCard extends React.Component {
   };
 
   render() {
-    if (this.props.profile.savedCards) {
+    console.log(this.props.profile.savedCards);
+    if (
+      this.props.profile.savedCards &&
+      this.props.profile.savedCards.savedCardDetailsMap
+    ) {
       return (
         <div className={styles.base}>
           {this.props.profile.savedCards.savedCardDetailsMap &&
@@ -62,7 +67,7 @@ export default class UserSavedCard extends React.Component {
         </div>
       );
     } else {
-      return null;
+      return <div className={styles.noSavedCardBlock}>{NO_SAVED_CARDS}</div>;
     }
   }
 }

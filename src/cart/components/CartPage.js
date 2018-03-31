@@ -11,6 +11,7 @@ import filter from "lodash/filter";
 import { Redirect } from "react-router-dom";
 import { MAIN_ROUTER } from "../../lib/constants";
 import TextWithUnderLine from "./TextWithUnderLine.js";
+import EmptyBag from "./EmptyBag.js";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -299,8 +300,10 @@ class CartPage extends React.Component {
                 );
               })}
 
-            <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
-
+            {cartDetails.products && (
+              <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
+            )}
+            {!cartDetails.products && <EmptyBag />}
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
