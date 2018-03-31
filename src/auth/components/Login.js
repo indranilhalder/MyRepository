@@ -42,7 +42,18 @@ class Login extends Component {
       let userDetails = {};
       userDetails.username = this.state.emailValue;
       userDetails.password = this.state.passwordValue;
-      this.props.onSubmit(userDetails);
+      if (!userDetails.username) {
+        this.props.displayToast("Please fill emailId");
+      }
+      if (!userDetails.password) {
+        this.props.displayToast("Please fill password");
+      }
+      if (!userDetails.username && !userDetails.password) {
+        this.props.displayToast("Please fill login details");
+      }
+      if (userDetails.username && userDetails.password) {
+        this.props.onSubmit(userDetails);
+      }
     }
   };
 
