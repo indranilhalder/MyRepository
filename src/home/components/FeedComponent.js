@@ -19,7 +19,6 @@ class FeedComponent extends React.Component {
       backgroundImage,
       ...rest
     } = this.props;
-
     if (!(data instanceof Array)) {
       return null;
     }
@@ -60,9 +59,12 @@ class FeedComponent extends React.Component {
                   description={datum.description}
                   onDownload={datum.onDownload}
                   webURL={datum.webURL}
+                  productCode={datum.productListingId}
+                  ussId={datum.winningUssID}
                   onClick={this.onClick}
                   {...rest}
                   {...datum}
+                  hasWishlistButton={true}
                 />
               );
             })}

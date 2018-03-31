@@ -4,6 +4,8 @@ import { SUCCESS } from "../../lib/constants";
 const wishlistItems = (
   state = {
     wishlistItems: [],
+    name: null,
+    count: null,
     loading: false,
     status: null,
     error: null
@@ -30,7 +32,9 @@ const wishlistItems = (
     case wishlistActions.GET_WISH_LIST_ITEMS_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
-        wishlistItems: action.wishlistItems,
+        wishlistItems: action.wishlist.products,
+        name: action.wishlist.name,
+        count: action.wishlist.count,
         loading: false
       });
     case wishlistActions.ADD_PRODUCT_TO_WISH_LIST_SUCCESS:
@@ -44,7 +48,7 @@ const wishlistItems = (
     case wishlistActions.REMOVE_PRODUCT_FROM_WISH_LIST_SUCCESS:
       currentWishlistItems = cloneDeep(state.wishlistItems);
       indexToBeRemove = currentWishlistItems.findIndex(item => {
-        return item.ussId === action.product.ussid;
+        return item.winningUssID === action.product.winningUssID;
       });
       currentWishlistItems.splice(indexToBeRemove, 1);
       return Object.assign({}, state, {

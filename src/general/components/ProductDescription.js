@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Icon, CircleButton } from "xelpmoc-core";
 import PropTypes from "prop-types";
+import WishlistContainer from "../../wishlist/containers/wishlistContainer";
 import styles from "./ProductDescription.css";
 
 export default class ProductDescription extends Component {
@@ -34,14 +35,10 @@ export default class ProductDescription extends Component {
       <div className={styles.base}>
         <div className={headerClass}>
           <div className={headerText}>{this.props.title}</div>
-          {this.props.onDownload && (
+
+          {this.props.hasWishlistButton && (
             <div className={styles.button}>
-              <CircleButton
-                size={20}
-                color={"transparent"}
-                icon={<Icon image={this.props.icon} size={15} />}
-                onClick={() => this.handleClick()}
-              />
+              <WishlistContainer {...this.props} />
             </div>
           )}
         </div>
@@ -73,7 +70,8 @@ ProductDescription.propTypes = {
   discountPrice: PropTypes.string,
   icon: PropTypes.string,
   onDownload: PropTypes.func,
-  isWhite: PropTypes.bool
+  isWhite: PropTypes.bool,
+  hasWishlistButton: PropTypes.bool
 };
 
 ProductDescription.defaultProps = {
@@ -82,5 +80,6 @@ ProductDescription.defaultProps = {
   description: "",
   price: "",
   isWhite: false,
-  textColor: "#212121"
+  textColor: "#212121",
+  hasWishlistButton: false
 };

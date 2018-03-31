@@ -38,11 +38,11 @@ export function getWishListItemsRequest() {
     status: REQUESTING
   };
 }
-export function getWishListItemsSuccess(wishlistItems) {
+export function getWishListItemsSuccess(wishlist) {
   return {
     type: GET_WISH_LIST_ITEMS_SUCCESS,
     status: SUCCESS,
-    wishlistItems
+    wishlist
   };
 }
 
@@ -68,11 +68,10 @@ export function getWishListItems(productDetails) {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      return dispatch(getWishListItemsSuccess());
+      return dispatch(getWishListItemsSuccess(resultJson.wishList[0]));
     } catch (e) {
       return dispatch(getWishListItemsFailure(e.message));
     }
@@ -107,20 +106,19 @@ export function addProductToWishList(productDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(addProductToWishListRequest());
     const productToBeAdd = new FormData();
-    productToBeAdd.append("ussid", productDetails.USSID);
-    productToBeAdd.append("productCode", productDetails.productId);
+    productToBeAdd.append("ussid", productDetails.winningUssID);
+    productToBeAdd.append("productCode", productDetails.productListingId);
     productToBeAdd.append("wishlistName", MY_WISH_LIST);
     try {
       const result = await api.postFormData(
         `${PRODUCT_DETAILS_PATH}/${
           JSON.parse(userDetails).userName
-        }/addProductInWishList?platformNumber=2&access_token=${
+        }/addProductInWishlist?platformNumber=2&access_token=${
           JSON.parse(customerCookie).access_token
         }&isPwa=true`,
         productToBeAdd
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (resultJson.status === SUCCESS_FOR_ADDING_TO_WSHLIST) {
         return dispatch(addProductToWishListSuccess(productDetails));
       }

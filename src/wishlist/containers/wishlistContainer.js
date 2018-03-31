@@ -26,8 +26,9 @@ const mapDispatchToProps = dispatch => {
 // here mandatory props is product ojb.
 const mapStateToProps = (state, ownProps) => {
   return {
-    ...ownProps,
-    wishlistItems: state.wishlistItems
+    productListingId: ownProps.productListingId,
+    winningUssID: ownProps.winningUssID,
+    wishlistItems: state.wishlistItems.wishlistItems
   };
 };
 const WishlistContainer = connect(mapStateToProps, mapDispatchToProps)(
