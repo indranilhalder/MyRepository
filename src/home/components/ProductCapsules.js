@@ -40,7 +40,6 @@ export default class ProductCapsules extends React.Component {
 
     const productCapsulesData = this.props.feedComponentData;
     const data = this.props.feedComponentData.data;
-    console.log(data);
     if (!data) {
       return null;
     }
