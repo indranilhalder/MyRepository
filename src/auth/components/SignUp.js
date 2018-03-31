@@ -122,7 +122,7 @@ class SignUp extends Component {
             </div>
             <div className={styles.input}>
               <Input
-                placeholder={"Email or phone Number"}
+                placeholder={"Email or phone number"}
                 value={
                   this.props.emailValue
                     ? this.props.emailValue
