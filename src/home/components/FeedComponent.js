@@ -20,6 +20,10 @@ class FeedComponent extends React.Component {
       ...rest
     } = this.props;
 
+    if (!(data instanceof Array)) {
+      return null;
+    }
+
     return (
       <div
         className={styles.base}

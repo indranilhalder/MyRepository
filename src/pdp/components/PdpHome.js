@@ -11,6 +11,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
+import PdpDeliveryModes from "./PdpDeliveryModes";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
@@ -151,36 +152,7 @@ export default class PdpApparel extends React.Component {
       this.props.onQuantitySelect();
     }
   }
-  renderDeliveryOptions(productData) {
-    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 
-    return (
-      productData.eligibleDeliveryModes &&
-      productData.deliveryModesATP &&
-      productData.deliveryModesATP
-        .filter(val => {
-          return productData.eligibleDeliveryModes
-            .map(val => {
-              return val.code;
-            })
-            .includes(val.key);
-        })
-        .map((val, idx) => {
-          return (
-            <DeliveryInformation
-              key={idx}
-              header={val.name}
-              placedTime={val.value}
-              type={val.key}
-              onClick={() => this.renderAddressModal()}
-              deliveryOptions={DELIVERY_TEXT}
-              label={defaultPinCode}
-              showCliqAndPiqButton={false}
-            />
-          );
-        })
-    );
-  }
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -291,10 +263,16 @@ export default class PdpApparel extends React.Component {
           this.props.productDetails.isServiceableToPincode.status === NO ? (
             <Overlay labelText="Not serviceable in you pincode,
   please try another pincode">
-              {this.renderDeliveryOptions(productData)}
+              <PdpDeliveryModes
+                eligibleDeliveryModes={productData.eligibleDeliveryModes}
+                deliveryModesATP={productData.deliveryModesATP}
+              />
             </Overlay>
           ) : (
-            this.renderDeliveryOptions(productData)
+            <PdpDeliveryModes
+              eligibleDeliveryModes={productData.eligibleDeliveryModes}
+              deliveryModesATP={productData.deliveryModesATP}
+            />
           )}
 
           {productData.otherSellersText && (

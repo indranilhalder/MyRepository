@@ -19,7 +19,6 @@ export default class Button extends React.Component {
             }}
           />
         );
-        break;
       case "secondary":
         return (
           <CoreButton
@@ -34,7 +33,6 @@ export default class Button extends React.Component {
             }}
           />
         );
-        break;
       case "tertiary":
         return (
           <CoreButton

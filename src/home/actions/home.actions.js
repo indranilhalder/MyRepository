@@ -4,17 +4,22 @@ import {
   ERROR,
   FAILURE,
   BLP_OR_CLP_FEED_TYPE,
-  HOME_FEED_TYPE
+  HOME_FEED_TYPE,
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS
 } from "../../lib/constants";
 import each from "lodash/each";
 import delay from "lodash/delay";
 import {
-  MSD_NUM_RESULTS,
   MSD_WIDGET_LIST,
   MSD_WIDGET_PLATFORM,
   MSD_API_KEY
 } from "../../lib/config.js";
+import * as Cookie from "../../lib/Cookie";
+
 import { getMcvId } from "../../lib/adobeUtils.js";
+import { getMsdFormData } from "../../lib/msdUtils.js";
+import { getMsdRequest } from "../../pdp/actions/pdp.actions";
 
 export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
@@ -39,11 +44,84 @@ export const GET_ITEMS_REQUEST = "GET_SALE_ITEMS_REQUEST";
 export const GET_ITEMS_SUCCESS = "GET_SALE_ITEMS_SUCCESS";
 export const GET_ITEMS_FAILURE = "GET_SALE_ITEMS_FAILURE";
 
+export const GET_PRODUCT_CAPSULES_REQUEST = "GET_PRODUCT_CAPSULES_REQUEST";
+export const GET_PRODUCT_CAPSULES_SUCCESS = "GET_PRODUCT_CAPSULES_SUCCESS";
+export const GET_PRODUCT_CAPSULES_FAILURE = "GET_PRODUCT_CAPSULES_FAILURE";
+
 const ADOBE_TARGET_DELAY = 1500;
+const MSD_NUM_PRODUCTS = 10;
+const MSD_NUM_RESULTS = 10;
+const MSD_NUM_BRANDS = 1;
+const DISCOVER_MORE_NUM_RESULTS = 3;
+const FOLLOWED_WIDGET_WIDGET_LIST = [112]; // weirdly it's not done.
+const FRESH_FROM_BRANDS_WIDGET_LIST = [111];
+const DISCOVER_MORE_WIDGET_LIST = [110];
+const AUTOMATED_BRAND_CAROUSEL_WIDGET_LIST = [113];
+const MULTI_CLICK_COMPONENT_WIDGET_LIST = [115];
+const AUTO_PRODUCT_RECOMMENDATION_COMPONENT_WIDGET_LIST = [11];
+
+const AUTO_FRESH_FROM_BRANDS = "Auto Fresh From Brands Component";
+const DISCOVER_MORE = "Auto Discover More Component";
+const AUTOMATED_BRAND_CAROUSEL = "Automated Banner Product Carousel Component";
+const FOLLOW_WIDGET = "Auto Following Brands Component";
+const MULTI_CLICK_COMPONENT = "Multi Click Component";
+const AUTO_PRODUCT_RECOMMENDATION_COMPONENT =
+  "Auto Product Recommendation Component";
+// TODO Followed Widget
 
 const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1"; // for local/devxelp/uat2tmpprod
 const ADOBE_TARGET_PRODUCTION_HOME_FEED_MBOX_NAME = "PROD_Mobile_Homepage_Mbox";
 const ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME = "UAT_Mobile_Homepage_Mbox";
+
+export function getProductCapsulesRequest() {
+  return {
+    type: GET_PRODUCT_CAPSULES_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function getProductCapsulesSuccess(productCapsules, positionInFeed) {
+  return {
+    type: GET_PRODUCT_CAPSULES_SUCCESS,
+    status: SUCCESS,
+    productCapsules,
+    positionInFeed
+  };
+}
+
+export function getProductCapsulesFailure(error) {
+  return {
+    type: GET_PRODUCT_CAPSULES_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+// {{root_url}}/marketplacewebservices/v2/mpl/users/{{username}}/getProductCapsules?access_token={{customer_access_token}}
+
+export function getProductCapsules(positionInFeed) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(getProductCapsulesRequest());
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    try {
+      const result = await api.post(
+        `v2/mpl/users/${
+          JSON.parse(userDetails).userName
+        }/getProductCapsules?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`
+      );
+      const resultJson = await result.json();
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      dispatch(getProductCapsulesSuccess(resultJson, positionInFeed));
+    } catch (e) {
+      dispatch(getProductCapsulesFailure(e.message));
+    }
+  };
+}
 
 export function getItemsRequest(positionInFeed) {
   return {
@@ -67,7 +145,7 @@ export function getItemsFailure(positionInFeed, errorMsg) {
     status: FAILURE
   };
 }
-export function getItems(positionInFeed, itemIds, isPdp: false) {
+export function getItems(positionInFeed, itemIds) {
   return async (dispatch, getState, { api }) => {
     dispatch(getItemsRequest(positionInFeed));
     try {
@@ -81,6 +159,7 @@ export function getItems(positionInFeed, itemIds, isPdp: false) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
+
       dispatch(getItemsSuccess(positionInFeed, resultJson.results));
     } catch (e) {
       dispatch(getItemsFailure(positionInFeed, e.message));
@@ -316,11 +395,40 @@ export function componentDataFailure(positionInFeed, error) {
     error
   };
 }
+
+function getMsdPostData(type) {
+  if (type === AUTO_FRESH_FROM_BRANDS) {
+    return {
+      widget_list: FRESH_FROM_BRANDS_WIDGET_LIST
+    };
+  } else if (type === DISCOVER_MORE) {
+    return {
+      widget_list: DISCOVER_MORE_WIDGET_LIST
+    };
+  } else if (type === FOLLOW_WIDGET) {
+    return {
+      widget_list: FOLLOWED_WIDGET_WIDGET_LIST
+    };
+  } else if (type === MULTI_CLICK_COMPONENT) {
+    return {
+      widget_list: MULTI_CLICK_COMPONENT_WIDGET_LIST
+    };
+  } else if (type === AUTO_PRODUCT_RECOMMENDATION_COMPONENT) {
+    return {
+      widget_list: AUTO_PRODUCT_RECOMMENDATION_COMPONENT_WIDGET_LIST
+    };
+  } else {
+    return {
+      widget_list: AUTOMATED_BRAND_CAROUSEL_WIDGET_LIST
+    };
+  }
+}
 export function getComponentData(
   positionInFeed,
   fetchURL,
   postParams: null,
-  backUpUrl
+  backUpUrl,
+  type
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(componentDataRequest(positionInFeed));
@@ -328,22 +436,46 @@ export function getComponentData(
       let postData;
       let result;
       let resultJson;
-      const mcvId = await getMcvId();
-      if (postParams && postParams.widgetPlatform === MSD_WIDGET_PLATFORM) {
-        postData = {
-          ...postParams,
-          api_key: MSD_API_KEY,
-          num_results: MSD_NUM_RESULTS,
-          mad_uuid: mcvId,
-          widget_list: MSD_WIDGET_LIST //TODO this is going to change.
-        };
 
-        result = await api.postMsd(fetchURL, postData, true);
+      if (postParams && postParams.widgetPlatform === MSD_WIDGET_PLATFORM) {
+        const widgetSpecificPostData = getMsdPostData(type);
+
+        postData = await getMsdFormData(widgetSpecificPostData.widget_list, [
+          MSD_NUM_RESULTS
+        ]);
+
+        if (type === AUTOMATED_BRAND_CAROUSEL) {
+          postData.append("num_brands", JSON.stringify(MSD_NUM_BRANDS));
+          postData.append("num_products", JSON.stringify(MSD_NUM_PRODUCTS));
+        }
+
+        if (type === FOLLOW_WIDGET) {
+          postData.append("num_brands", JSON.stringify(MSD_NUM_BRANDS));
+        }
+
+        if (type === MULTI_CLICK_COMPONENT) {
+          postData.append("num_brands", JSON.stringify(MSD_NUM_BRANDS));
+        }
+
+        if (
+          type === DISCOVER_MORE ||
+          type === AUTO_PRODUCT_RECOMMENDATION_COMPONENT
+        ) {
+          postData.append(
+            "num_results",
+            JSON.stringify([DISCOVER_MORE_NUM_RESULTS])
+          );
+        }
+
+        result = await api.postMsd(fetchURL, postData);
         resultJson = await result.json();
 
         if (resultJson.errors) {
           throw new Error(`${resultJson.errors[0].message}`);
         }
+
+        resultJson.data = resultJson.data[0];
+
         dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
         delay(() => {

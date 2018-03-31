@@ -1,15 +1,16 @@
 import React from "react";
 import BannerImage from "../../general/components/BannerImage";
 import Banner from "../../general/components/Banner";
-import PropTypes from "prop-types";
+import PropTypes, { instanceOf } from "prop-types";
 import styles from "./HeroBanner.css";
 export default class HeroBanner extends React.Component {
   renderBanner = () => {
     const { feedComponentData, ...rest } = this.props;
-    if (!this.props.loading && feedComponentData.items) {
+    if (!this.props.loading) {
       return (
         <Banner>
           {feedComponentData.items &&
+            feedComponentData.items.map &&
             feedComponentData.items.map((datum, i) => {
               return (
                 <BannerImage

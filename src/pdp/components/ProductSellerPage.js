@@ -97,7 +97,6 @@ class ProductSellerPage extends Component {
   }
 
   render() {
-    console.log(this.props);
     const mobileGalleryImages =
       this.props.productDetails &&
       this.props.productDetails.galleryImagesList
@@ -143,7 +142,6 @@ class ProductSellerPage extends Component {
                       );
                     })
                     .map((value, index) => {
-                      console.log(value);
                       return (
                         <SellerCard
                           heading={value.sellerName}

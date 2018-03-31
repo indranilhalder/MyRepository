@@ -13,13 +13,13 @@ export default class FollowBase extends React.Component {
   render() {
     let { feedComponentData, ...rest } = this.props;
     feedComponentData = feedComponentData.data;
+
     return (
       <div className={styles.base}>
         <Carousel elementWidthMobile={85} elementWidthDesktop={33.333}>
           {feedComponentData &&
-            feedComponentData.data &&
-            (feedComponentData.data.length > 0 &&
-              feedComponentData.data.map(datum => {
+            (feedComponentData.length > 0 &&
+              feedComponentData.map(datum => {
                 return (
                   <NewBrand
                     image={datum.imageURL}

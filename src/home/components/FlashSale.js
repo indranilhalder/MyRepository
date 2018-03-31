@@ -40,13 +40,7 @@ export default class FlashSale extends React.Component {
   };
 
   render() {
-    const {
-      feedComponentData,
-      backgroundImage,
-      headingText,
-      subHeader,
-      ...rest
-    } = this.props;
+    const { feedComponentData, ...rest } = this.props;
     let items = [];
 
     if (feedComponentData.items) {
@@ -59,17 +53,18 @@ export default class FlashSale extends React.Component {
     } else {
       offersAndItemsArray = items;
     }
+
     return (
       <div
         className={styles.base}
         style={{
-          backgroundImage: backgroundImage
-            ? `url(${backgroundImage})`
-            : "linear-gradient(204deg, #fd2c7a, #ff7255)"
+          backgroundImage: feedComponentData.backgroundImageURL
+            ? `url(${feedComponentData.backgroundImageURL})`
+            : `${feedComponentData.backgroundHexCode}`
         }}
       >
         <div className={styles.header}>
-          <div className={styles.headingText}>{headingText}</div>
+          <div className={styles.headingText}>{feedComponentData.title}</div>
           <div className={styles.offerTime}>
             <div className={styles.clock}>
               <div className={styles.timerHolder}>
@@ -81,7 +76,7 @@ export default class FlashSale extends React.Component {
             </div>
           </div>
         </div>
-        <div className={styles.subheader}>{subHeader}</div>
+        <div className={styles.subheader}>{feedComponentData.description}</div>
         <Grid offset={20}>
           {offersAndItemsArray &&
             offersAndItemsArray.map((datum, i) => {
@@ -92,6 +87,7 @@ export default class FlashSale extends React.Component {
                   productImage={datum.image}
                   title={datum.title}
                   price={datum.price}
+                  discountPrice={datum.discountPrice}
                   description={datum.description}
                   webURL={datum.webURL}
                   onClick={this.handleClick}
@@ -114,9 +110,6 @@ export default class FlashSale extends React.Component {
   }
 }
 FlashSale.propTypes = {
-  offerTime: PropTypes.string,
-  headingText: PropTypes.string,
-  subHeader: PropTypes.string,
   backgroundImage: PropTypes.string,
   data: PropTypes.arrayOf(
     PropTypes.shape({
