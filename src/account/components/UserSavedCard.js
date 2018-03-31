@@ -29,7 +29,6 @@ export default class UserSavedCard extends React.Component {
   };
 
   render() {
-    console.log(this.props.profile.savedCards);
     if (
       this.props.profile.savedCards &&
       this.props.profile.savedCards.savedCardDetailsMap

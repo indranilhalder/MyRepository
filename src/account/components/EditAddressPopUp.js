@@ -43,8 +43,6 @@ export default class EditAddressPopUp extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(prevProps.editAddressStatus);
-    console.log(this.props.editAddressStatus);
     if (this.props.editAddressStatus !== prevProps.editAddressStatus) {
       if (this.props.editAddressStatus === SUCCESS) {
         this.props.history.goBack();
