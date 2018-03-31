@@ -13,7 +13,7 @@ import queryString from "query-string";
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-import { HOME_ROUTER } from "../../lib/constants";
+import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
 import {
   CASH_ON_DELIVERY,
   ORDER_PREFIX,
@@ -100,6 +100,11 @@ export default class OrderDetails extends React.Component {
   }
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.sendInvoiceSatus === SUCCESS) {
+      this.props.displayToast("Invoice has been sent");
+    }
   }
   render() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);

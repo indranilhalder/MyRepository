@@ -6,16 +6,6 @@ import Follow from "./Follow";
 import Logo from "./Logo";
 
 export default class NewBrand extends React.Component {
-  onFollowClick() {
-    if (this.props.onFollowClick) {
-      this.props.onFollowClick();
-    }
-  }
-  onUnFollowClick() {
-    if (this.props.onUnFollowClick) {
-      this.props.onUnFollowClick();
-    }
-  }
   handleClick() {
     if (this.props.follow) {
       this.onFollowClick();
@@ -39,14 +29,8 @@ export default class NewBrand extends React.Component {
               </div>
               <div className={styles.brandButton}>
                 <Follow
-                  onClick={() => this.handleClick()}
+                  onClick={follow => this.handleClick(follow)}
                   follow={this.props.follow}
-                  onFollowClick={() => {
-                    this.props.onFollowClick();
-                  }}
-                  onUnFollowClick={() => {
-                    this.props.onFollowClick();
-                  }}
                 />
               </div>
             </div>
