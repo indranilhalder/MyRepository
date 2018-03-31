@@ -1,6 +1,7 @@
 import React from "react";
 import DeliveryInformation from "../../general/components/DeliveryInformations";
 import { EXPRESS, COLLECT, HOME_DELIVERY } from "../../lib/constants";
+import PropTypes from "prop-types";
 import styles from "./PdpDeliveryModes.css";
 export default class PdpDeliveryModes extends React.Component {
   render() {
@@ -55,3 +56,17 @@ export default class PdpDeliveryModes extends React.Component {
     );
   }
 }
+PdpDeliveryModes.propTypes = {
+  eligibleDeliveryModes: PropTypes.arrayOf(
+    PropTypes.shape({
+      code: PropTypes.oneOf([EXPRESS, COLLECT, HOME_DELIVERY]),
+      name: PropTypes.string
+    })
+  ),
+  deliveryModesATP: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.oneOf([EXPRESS, COLLECT, HOME_DELIVERY]),
+      value: PropTypes.string
+    })
+  )
+};
