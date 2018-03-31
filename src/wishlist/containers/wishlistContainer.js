@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { displayToast } from "../../general/toast.actions";
-import WishlistIcon from "../components/WishlistIcon";
+import Wishlist from "../components/Wishlist";
 import { addProductToWishList } from "../actions/wishlist.actions";
 import { SUCCESS } from "../../lib/constants";
 
@@ -32,6 +32,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 const WishlistContainer = connect(mapStateToProps, mapDispatchToProps)(
-  WishlistIcon
+  Wishlist
 );
 export default WishlistContainer;

@@ -36,11 +36,12 @@ export default class ProductDescription extends Component {
         <div className={headerClass}>
           <div className={headerText}>{this.props.title}</div>
 
-          {this.props.hasWishlistButton && (
-            <div className={styles.button}>
-              <WishlistContainer {...this.props} />
-            </div>
-          )}
+          {this.props.productListingId &&
+            this.props.winningUssID && (
+              <div className={styles.button}>
+                <WishlistContainer {...this.props} />
+              </div>
+            )}
         </div>
         <div className={contentClass}>
           {this.props.description && (

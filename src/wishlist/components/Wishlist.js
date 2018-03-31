@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Icon } from "xelpmoc-core";
 import downloadIcon from "./img/download.svg";
-export default class WishlistIcon extends React.Component {
+export default class Wishlist extends React.Component {
   onClick(e) {
     e.stopPropagation();
     const { productListingId, winningUssID, wishlistItems } = this.props;
@@ -28,7 +28,7 @@ export default class WishlistIcon extends React.Component {
     );
   }
 }
-WishlistIcon.propTypes = {
+Wishlist.propTypes = {
   productListingId: PropTypes.string.isRequired,
   winningUssID: PropTypes.string.isRequired,
   wishlistItems: PropTypes.arrayOf(
@@ -40,7 +40,7 @@ WishlistIcon.propTypes = {
   addProductToWishList: PropTypes.func,
   size: PropTypes.number
 };
-WishlistIcon.defaultProps = {
+Wishlist.defaultProps = {
   size: 20,
   addProductToWishList: () => {}
 };
