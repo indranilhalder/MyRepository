@@ -61,7 +61,7 @@ export default class AddDeliveryAddress extends React.Component {
     addressDetails.postalCode = this.state.postalCode;
     addressDetails.line1 = this.state.line1;
     addressDetails.state = this.state.state;
-    addressDetails.emailId = this.state.phone;
+    addressDetails.emailId = this.state.emailId;
     addressDetails.line2 = this.state.line2;
     addressDetails.line3 = this.state.line3;
     addressDetails.town = this.state.town;
@@ -187,9 +187,9 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <Input2
             boxy={true}
-            placeholder="Locality/town*"
-            value={this.props.town ? this.props.town : this.state.town}
-            onChange={town => this.onChange({ town })}
+            placeholder="Email"
+            value={this.props.emailId ? this.props.emailId : this.state.emailId}
+            onChange={emailId => this.onChange({ emailId })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
