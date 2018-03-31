@@ -27,6 +27,7 @@ export default class ProductCapsules extends React.Component {
   render() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
     if (!userDetails || !customerCookie) {
       return null;
     }
@@ -44,7 +45,13 @@ export default class ProductCapsules extends React.Component {
       return null;
     }
     let subHeader;
-    if (data && data.wishlistData) {
+
+    if (
+      data &&
+      data.wishlistData &&
+      data.wishlistData[0] &&
+      data.wishlistData[0].items
+    ) {
       subHeader = `You have ${
         data.wishlistData[0].items.length
       } products in your list`;
