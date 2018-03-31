@@ -27,12 +27,7 @@ const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 
 export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidMount() {
-    console.log("PRODUCT DESCRIPTION PAGE WRAPPER");
-    console.log(this.props.match.path);
-    console.log(PRODUCT_DESCRIPTION_PRODUCT_CODE);
-    console.log(PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE);
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-      console.log(this.props.match);
       this.props.getProductDescription(this.props.match.params[0]);
       this.props.getMsdRequest(this.props.match.params[0]);
       this.props.pdpAboutBrand(this.props.match.params[0]);
@@ -58,11 +53,6 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       //need to show error page
     }
   }
-  componentWillUnmount() {
-    console.log("Will unmount");
-  }
-
-  fetchData() {}
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
@@ -109,7 +99,6 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   render() {
-    console.log("RENDER CALLED");
     if (this.props.productDetails) {
       return (
         <div>

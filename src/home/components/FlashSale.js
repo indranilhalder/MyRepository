@@ -80,8 +80,6 @@ export default class FlashSale extends React.Component {
         <Grid offset={20}>
           {offersAndItemsArray &&
             offersAndItemsArray.map((datum, i) => {
-              console.log("OFFERS AND ITEMS");
-              console.log(datum);
               return (
                 <ProductModule
                   key={i}

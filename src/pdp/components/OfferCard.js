@@ -13,8 +13,6 @@ export default class OfferCard extends React.Component {
     }
   }
   render() {
-    console.log("END TIME");
-    console.log(this.props.endTime);
     return (
       <div className={styles.base}>
         <div className={styles.headingText}>

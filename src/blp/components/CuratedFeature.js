@@ -12,8 +12,6 @@ export default class CuratedFeature extends React.Component {
   }
   render() {
     let feedComponentData = this.props.feedComponentData;
-    console.log("FEED COMPONENT DTA");
-    console.log(feedComponentData);
     return (
       <div className={styles.base}>
         <div className={styles.headerText}>{feedComponentData.title}</div>

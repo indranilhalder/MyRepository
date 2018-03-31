@@ -15,7 +15,6 @@ class DiscoverMore500 extends React.Component {
 
   render() {
     const { feedComponentData } = this.props;
-    console.log(feedComponentData);
     if (!(feedComponentData.data instanceof Array)) {
       return null;
     }

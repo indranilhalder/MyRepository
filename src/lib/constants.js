@@ -1,3 +1,5 @@
+import { PRODUCT_DESCRIPTION_REQUEST } from "../pdp/actions/pdp.actions";
+
 export const SUCCESS = "success";
 export const SUCCESS_UPPERCASE = "SUCCESS";
 export const SUCCESS_CAMEL_CASE = "Success";
@@ -50,6 +52,7 @@ export const BRAND_LANDING_PAGE = "/brand";
 
 export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "/p-([a-z0-9A-Z]+)";
 export const PRODUCT_DESCRIPTION_REVIEWS = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/product-reviews`;
+export const PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG = `/:slug${PRODUCT_DESCRIPTION_REVIEWS}`;
 export const PRODUCT_OTHER_SELLER_ROUTER = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/viewSellers`;
 export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE =
   "/:slug/(p-)([a-zA-Z0-9]+)";

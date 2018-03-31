@@ -17,11 +17,9 @@ class ProductListingsPage extends Component {
     };
   }
   getSearchTextFromUrl() {
-    console.log("SEARCH TEXT FROM URL");
     const parsedQueryString = queryString.parse(this.props.location.search);
     const searchCategory = parsedQueryString.searchCategory;
     let searchText = parsedQueryString.q;
-    console.log(searchText);
 
     if (searchCategory && searchCategory !== SEARCH_CATEGORY_TO_IGNORE) {
       searchText = `:category:${searchCategory}`;
@@ -41,9 +39,6 @@ class ProductListingsPage extends Component {
       return;
     }
 
-    console.log("SEARCH TEXT");
-    console.log(this.props.searchText);
-
     if (this.props.searchText) {
       this.props.getProductListings(this.props.searchText, SUFFIX, 0);
       return;
@@ -57,7 +52,6 @@ class ProductListingsPage extends Component {
     }
 
     if (this.props.match.path === BRAND_AND_CATEGORY_PAGE) {
-      console.log(this.props);
       const categoryId = this.props.match.params[0];
       const brandId = this.props.match.params[1];
       const searchText = `:relevance:category:${categoryId}:brand:${brandId}`;
@@ -118,7 +112,6 @@ class ProductListingsPage extends Component {
   }
 
   render() {
-    console.log("PRODUCT LISTINGS PAGE");
     let isFilter = false;
     let showFilter = false;
     if (this.props.location.state && this.props.location.state.isFilter) {

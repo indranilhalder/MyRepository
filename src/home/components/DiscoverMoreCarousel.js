@@ -13,7 +13,6 @@ class DiscoverMoreCarousel extends React.Component {
   };
   render() {
     const discoverMoreCarouselData = this.props.feedComponentData;
-    console.log(discoverMoreCarouselData);
     if (!(discoverMoreCarouselData instanceof Array)) {
       return null;
     }

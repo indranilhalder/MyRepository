@@ -104,7 +104,6 @@ class Feed extends Component {
   }
 
   renderFeedComponents() {
-    console.log(this.props.homeFeedData);
     return (
       this.props.homeFeedData &&
       this.props.homeFeedData.map((feedDatum, i) => {
@@ -122,8 +121,6 @@ class Feed extends Component {
   }
 
   componentWillMount() {
-    console.log("COMPONENT WILL MOUNT");
-    console.log(this.props.isHomeFeedPage);
     if (this.props.isHomeFeedPage) {
       this.props.homeFeed();
     }

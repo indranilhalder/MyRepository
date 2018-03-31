@@ -100,7 +100,8 @@ import {
   STATIC_CATEGORY_PAGES,
   BRAND_AND_CATEGORY_PAGE,
   CANCEL_PREFIX,
-  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG
 } from "../src/lib/constants";
 
 const auth = {
@@ -292,6 +293,11 @@ class App extends Component {
 
             <Route
               path={PRODUCT_DESCRIPTION_REVIEWS}
+              component={ProductReviewContainer}
+            />
+
+            <Route
+              path={PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG}
               component={ProductReviewContainer}
             />
             <Route

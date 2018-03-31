@@ -12,7 +12,6 @@ export default class FollowBase extends React.Component {
   };
   render() {
     let { feedComponentData, ...rest } = this.props;
-    console.log(feedComponentData);
     feedComponentData = feedComponentData.data;
 
     return (
