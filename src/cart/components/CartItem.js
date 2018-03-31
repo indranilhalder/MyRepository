@@ -107,7 +107,8 @@ export default class CartItem extends React.Component {
                 />
               </div>
               <span>
-                Express : <span>{this.props.deliverTime}</span>
+                {this.props.deliveryType} :{" "}
+                <span>{this.props.deliverTime}</span>
               </span>
             </div>
           )}
