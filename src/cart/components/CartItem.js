@@ -16,7 +16,7 @@ export default class CartItem extends React.Component {
       selectedValue: "",
       label: "See all",
       maxQuantityAllowed: 1,
-      qtySelectedByUser: 1,
+      qtySelectedByUser: this.props.qtySelectedByUser,
       quantityList: []
     };
   }
@@ -77,6 +77,7 @@ export default class CartItem extends React.Component {
     }
   };
   render() {
+    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.productInformation}>
