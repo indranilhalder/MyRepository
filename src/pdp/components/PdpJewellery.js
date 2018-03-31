@@ -186,7 +186,6 @@ export default class PdpJewellery extends React.Component {
     }
   };
   render() {
-    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -198,8 +197,9 @@ export default class PdpJewellery extends React.Component {
         return image[0].value;
       });
     let otherSellersText;
-
+    let hasOtherSellers = false;
     if (productData.otherSellers && productData.otherSellers.length > 0) {
+      hasOtherSellers = true;
       otherSellersText = (
         <span>
           Sold by{" "}
@@ -211,6 +211,7 @@ export default class PdpJewellery extends React.Component {
         </span>
       );
     } else {
+      hasOtherSellers = false;
       otherSellersText = `Sold by ${productData.winningSellerName}`;
     }
 
@@ -320,15 +321,7 @@ please try another pincode">
 
           {productData.winningSellerName && (
             <div className={styles.separator}>
-              <PdpLink
-                onClick={this.goToSellerPage}
-                noLink={
-                  productData.otherSellers &&
-                  !productData.otherSellers.filter(val => {
-                    return val.availableStock !== "0";
-                  }).length > 0
-                }
-              >
+              <PdpLink onClick={this.goToSellerPage} noLink={!hasOtherSellers}>
                 <div className={styles.sellers}>{otherSellersText}</div>
               </PdpLink>
             </div>
