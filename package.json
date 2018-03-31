@@ -61,12 +61,12 @@
     "xelpmoc-core": "^0.3.1"
   },
   "scripts": {
-    "start": "REACT_APP_STAGE==local node -r dotenv/config scripts/start.js",
-    "stage": " REACT_APP_STAGE=stage node scripts/build.js",
-    "tmpprod": " REACT_APP_STAGE=tmpprod node scripts/build.js",
-    "local": " REACT_APP_STAGE=local node scripts/build.js",
-    "dev": " REACT_APP_STAGE=devxelp node scripts/build.js",
-    "uat2": " REACT_APP_STAGE=uat2 node scripts/build.js",
+    "start": "REACT_APP_STAGE=local node -r dotenv/config scripts/start.js",
+    "stage": "REACT_APP_STAGE=stage node scripts/build.js",
+    "tmpprod": "REACT_APP_STAGE=tmpprod node scripts/build.js",
+    "local": "REACT_APP_STAGE=local node scripts/build.js",
+    "dev": "REACT_APP_STAGE=devxelp node scripts/build.js",
+    "uat2": "REACT_APP_STAGE=uat2 node scripts/build.js",
     "build": "REACT_APP_STAGE=devxelp node scripts/build.js",
     "p2": "REACT_APP_STAGE=p2 node scripts/build.js",
     "production": "REACT_APP_STAGE=production node scripts/build.js",

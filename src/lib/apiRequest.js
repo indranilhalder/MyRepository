@@ -14,8 +14,10 @@ if (
   API_URL_ROOT = "https://tmppprd.tataunistore.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "production") {
   API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
-} else if (process.env.REACT_APP_STAGE == "p2") {
+} else if (process.env.REACT_APP_STAGE === "p2") {
   API_URL_ROOT = "https://p2.tatacliq.com/marketplacewebservices";
+} else if (process.env.REACT_APP_STAGE === "stage") {
+  API_URL_ROOT = "https://stg.tatacliq.com";
 }
 
 export const API_URL_ROOT_DUMMY =
