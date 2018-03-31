@@ -15,6 +15,7 @@ import CartItem from "./CartItem";
 import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
 import filter from "lodash/filter";
+import find from "lodash/find";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString from "query-string";
 import PiqPage from "./PiqPage";
@@ -91,18 +92,20 @@ class CheckOutPage extends React.Component {
       Object.assign(currentSelectedDeliveryModes, newDeliveryObj);
       this.setState({ ussIdAndDeliveryModesObj: currentSelectedDeliveryModes });
     }
-    let details = filter(this.props.cart.cartDetailsCNC.products, product => {
-      return product.USSID === ussId;
-    });
-
-    if (details) {
-      let SelectedDeliveryDetails = filter(
-        details[0].elligibleDeliveryMode,
+    let deliveryModeDetails = find(
+      this.props.cart.cartDetailsCNC.products,
+      product => {
+        return product.USSID === ussId;
+      }
+    );
+    if (deliveryModeDetails) {
+      let SelectedDeliveryDetails = find(
+        deliveryModeDetails.elligibleDeliveryMode,
         elgibleDeliverMode => {
           return elgibleDeliverMode.code === deliveryMode;
         }
       );
-      this.setState({ selectedDeliveryDetails: SelectedDeliveryDetails[0] });
+      this.setState({ selectedDeliveryDetails: SelectedDeliveryDetails });
     }
   }
 

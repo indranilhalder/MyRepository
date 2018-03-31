@@ -21,7 +21,8 @@ import {
   ANONYMOUS_USER,
   CHECKOUT_ROUTER,
   LOGIN_PATH,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  YES
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
@@ -266,7 +267,7 @@ class CartPage extends React.Component {
               cartDetails.products.map((product, i) => {
                 let serviceable = false;
                 if (product.pinCodeResponse) {
-                  if (product.pinCodeResponse.isServicable === "Y") {
+                  if (product.pinCodeResponse.isServicable === YES) {
                     serviceable = true;
                   }
                 }
