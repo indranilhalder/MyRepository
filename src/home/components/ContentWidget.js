@@ -53,7 +53,9 @@ export default class ContentWidget extends React.Component {
       const currentData = this.state.data;
       this.setState({ goLeft: true, position }, () => {
         let data = [];
-        data[0] = this.props.allData[(1 + this.state.position) % 5];
+        data[0] = this.props.allData[
+          (1 + this.state.position) % this.state.length
+        ];
         data[1] = currentData[1];
         data[2] = currentData[0];
         this.setState({ data });
@@ -69,7 +71,7 @@ export default class ContentWidget extends React.Component {
       const currentData = this.state.data;
       this.setState({ goRight: true, position }, () => {
         let data = [];
-        data[0] = this.props.allData[position % this.props.allData.length];
+        data[0] = this.props.allData[position % this.state.length];
         data[1] = currentData[1];
         data[2] = currentData[0];
         this.setState({ data });
