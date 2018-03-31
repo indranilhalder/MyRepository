@@ -14,6 +14,9 @@ export default class TopCategories extends React.Component {
     this.props.history.push(urlSuffix);
   };
   render() {
+    if (this.props.feedComponentData.items.length < 3) {
+      return null;
+    }
     const topProduct = this.props.feedComponentData.items[TOP_PRODUCT_INDEX];
     const topRightProduct = this.props.feedComponentData.items[
       TOP_RIGHT_PRODUCT_INDEX
@@ -21,6 +24,7 @@ export default class TopCategories extends React.Component {
     const bottomRightProduct = this.props.feedComponentData.items[
       BOTTOM_RIGHT_PRODUCT_INDEX
     ];
+
     return (
       <div className={styles.base}>
         <div className={styles.headerText}>Top Categories</div>

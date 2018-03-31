@@ -80,7 +80,6 @@ const typeComponentMapping = {
     <CuratedProductsComponent {...props} />
   ),
   "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
-  "Top Categories Component": props => <TopCategories {...props} />,
   "Landing Page Hierarchy": props => <AllBrandTypes {...props} />
 };
 
@@ -123,6 +122,8 @@ class Feed extends Component {
   }
 
   componentWillMount() {
+    console.log("COMPONENT WILL MOUNT");
+    console.log(this.props.isHomeFeedPage);
     if (this.props.isHomeFeedPage) {
       this.props.homeFeed();
     }

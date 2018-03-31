@@ -22,6 +22,12 @@ export default class VideoProductCarousel extends React.Component {
 
   render() {
     const feedComponentData = this.props.feedComponentData;
+    if (!feedComponentData) {
+      return null;
+    }
+    if (!(feedComponentData.items instanceof Array)) {
+      return null;
+    }
     let data = [];
     if (feedComponentData.items) {
       data = feedComponentData.items.map(transformData);

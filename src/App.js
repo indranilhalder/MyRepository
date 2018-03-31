@@ -96,9 +96,11 @@ import {
   BRAND_PAGE_WITH_QUERY_PARAMS,
   BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
   CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
+  BRAND_PRODUCT_LISTINGS_WITH_PAGE,
   STATIC_CATEGORY_PAGES,
   BRAND_AND_CATEGORY_PAGE,
-  CANCEL_PREFIX
+  CANCEL_PREFIX,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
 } from "../src/lib/constants";
 
 const auth = {
@@ -164,6 +166,11 @@ class App extends Component {
             />
             <Route
               exact
+              path={BRAND_PRODUCT_LISTINGS_WITH_PAGE}
+              component={ProductListingsContainer}
+            />
+            <Route
+              exact
               path={LOGIN_PATH}
               render={routeProps => (
                 <LoginContainer {...routeProps} {...this.props} />
@@ -222,17 +229,7 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_BRANDS_PAGE}`}
               component={MyAccountBrandsContainer}
             />
-            <Route
-              exact
-              path={BRAND_PAGE}
-              component={PlpBrandCategoryWrapperContainer}
-            />
 
-            <Route
-              exact
-              path={BRAND_PAGE_WITH_QUERY_PARAMS}
-              component={PlpBrandCategoryWrapperContainer}
-            />
             <Route
               path={`${SHORT_URL_ORDER_DETAIL}`}
               component={OrderDetailsContainer}
@@ -247,13 +244,19 @@ class App extends Component {
 
             <Route
               exact
-              path={BRAND_AND_CATEGORY_PAGE}
-              component={ProductListingsContainer}
+              path={CATEGORY_PAGE}
+              component={PlpBrandCategoryWrapperContainer}
             />
 
             <Route
               exact
-              path={CATEGORY_PAGE}
+              path={BRAND_PAGE}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
+              exact
+              path={BRAND_PAGE_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
 
@@ -294,6 +297,11 @@ class App extends Component {
             <Route
               path={PRODUCT_OTHER_SELLER_ROUTER}
               component={ProductSellerContainer}
+            />
+            <Route
+              exact
+              path={PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE}
+              component={ProductDescriptionPageWrapperContainer}
             />
             <Route
               exact

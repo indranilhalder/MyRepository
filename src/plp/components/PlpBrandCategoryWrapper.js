@@ -11,7 +11,7 @@ import {
 export const CATEGORY_REGEX = /c-msh*/;
 export const BRAND_REGEX = /c-mbh*/;
 export const CATEGORY_CAPTURE_REGEX = /c-msh([a-zA-Z0-9]+)/;
-export const BRAND_CAPTURE_REGEX = /c-mbh([a-zA-Z0-9])/;
+export const BRAND_CAPTURE_REGEX = /c-mbh([a-zA-Z0-9]+)/;
 export const BRAND_CATEGORY_PREFIX = "c-";
 
 export default class PlpBrandCategoryWrapper extends React.Component {
@@ -26,6 +26,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
 
   componentWillMount() {
     const url = this.props.location.pathname;
+    console.log(this.props);
 
     let categoryOrBrandId = null;
 
@@ -39,7 +40,11 @@ export default class PlpBrandCategoryWrapper extends React.Component {
 
     if (BRAND_REGEX.test(url)) {
       categoryOrBrandId = url.match(BRAND_CAPTURE_REGEX)[0];
+      console.log(url.match(BRAND_CAPTURE_REGEX)[0]);
     }
+
+    console.log("CATEGORY OR BRAND ID");
+    console.log(categoryOrBrandId);
 
     categoryOrBrandId = categoryOrBrandId.replace(BRAND_CATEGORY_PREFIX, "");
 
@@ -78,7 +83,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     return <MDSpinner />;
   }
 
-  getPlpUrl = () => {
+  getPlpSearchText = () => {
     const url = this.props.location.pathname;
     let match;
     let searchText;
@@ -100,10 +105,11 @@ export default class PlpBrandCategoryWrapper extends React.Component {
       searchText = `:relevance:brand:${match}`;
     }
 
-    return `/search/?q=${searchText}`;
+    return searchText;
   };
 
   render() {
+    console.log("PLP BRAND CATEGORY WRAPPER");
     if (
       this.props.homeFeedData.loading ||
       this.props.homeFeedData.feedType === null
@@ -115,7 +121,9 @@ export default class PlpBrandCategoryWrapper extends React.Component {
       if (this.props.homeFeedData.homeFeed.length > 0) {
         return <BrandLandingPageContainer />;
       } else {
-        return <ProductListingsContainer searchText={this.getPlpUrl()} />;
+        return (
+          <ProductListingsContainer searchText={this.getPlpSearchText()} />
+        );
       }
     }
     return null;

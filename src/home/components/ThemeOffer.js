@@ -38,7 +38,10 @@ export default class ThemeOffer extends React.Component {
     let themeData = [],
       items = [];
     const { feedComponentData, ...rest } = this.props;
-    if (feedComponentData.items) {
+    if (!feedComponentData) {
+      return null;
+    }
+    if (feedComponentData.items && feedComponentData.items instanceof Array) {
       items = feedComponentData.items.map(transformData);
     }
 
@@ -49,8 +52,6 @@ export default class ThemeOffer extends React.Component {
       });
     }
     themeData = concat(offers, items);
-    console.log("THEME DATA");
-    console.log(themeData);
     return (
       <FeedComponent
         backgroundImage={feedComponentData.backgroundImageURL}

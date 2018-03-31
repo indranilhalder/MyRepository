@@ -22,10 +22,15 @@ export default class BannerProductCarousal extends React.Component {
   }
   render() {
     const feedComponentData = this.props.feedComponentData;
+    if (!feedComponentData) {
+      return null;
+    }
 
     let data = [];
-    if (feedComponentData.items) {
+    if (feedComponentData.items && feedComponentData.items instanceof Array) {
       data = feedComponentData.items.map(transformData);
+    } else {
+      return null;
     }
 
     return (

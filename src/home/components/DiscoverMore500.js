@@ -6,6 +6,7 @@ import { withRouter } from "react-router";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 import styles from "./DiscoverMore500.css";
+import FeedComponent from "./FeedComponent";
 class DiscoverMore500 extends React.Component {
   handleClick = webUrl => {
     const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "$1");
@@ -14,6 +15,10 @@ class DiscoverMore500 extends React.Component {
 
   render() {
     const { feedComponentData } = this.props;
+    console.log(feedComponentData);
+    if (!(feedComponentData.data instanceof Array)) {
+      return null;
+    }
     return (
       <div className={styles.base}>
         <div className={styles.header}>{feedComponentData.title}</div>

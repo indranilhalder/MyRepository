@@ -1,7 +1,7 @@
 import React from "react";
 import Carousel from "../../general/components/Carousel";
 import CircleProductImage from "../../general/components/CircleProductImage";
-import PropTypes from "prop-types";
+import PropTypes, { instanceOf } from "prop-types";
 import styles from "./DiscoverMoreCarousel.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import { withRouter } from "react-router";
@@ -13,6 +13,10 @@ class DiscoverMoreCarousel extends React.Component {
   };
   render() {
     const discoverMoreCarouselData = this.props.feedComponentData;
+    console.log(discoverMoreCarouselData);
+    if (!(discoverMoreCarouselData instanceof Array)) {
+      return null;
+    }
     return (
       <div className={styles.base}>
         <Carousel header={discoverMoreCarouselData.title}>

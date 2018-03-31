@@ -29,16 +29,18 @@ export const BRAND_PAGE_WITH_QUERY_PARAMS = `/c-(mbh[0-9a-zA-z]+)?&`;
 export const BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS = `/c-(mbh[0-9a-zA-z]+)?&`;
 
 export const BRAND_AND_CATEGORY_PAGE =
-  "/:slug/c-(msh[a-zA-Z0-9]+)/b-(mbh[a-zA-Z0-9]+)";
+  "/:slug/c-(msh[a-zA-Z0-9]+)/c-(mbh[a-zA-Z0-9]+)";
 
-export const CATEGORY_PAGE = "/c-(msh.*)";
-export const CATEGORY_PAGE_WITH_SLUG = `/:slug/c-(msh.*)`;
+export const CATEGORY_PAGE = "/c-(msh[0-9A-Za-z]+)";
+export const CATEGORY_PAGE_WITH_SLUG = `/:slug/c-(msh[0-9a-zA-Z]+)`;
 export const CATEGORY_PAGE_WITH_QUERY_PARAMS = `${CATEGORY_PAGE}?&.*`;
 export const CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS = `${CATEGORY_PAGE_WITH_SLUG}?&.*`;
 export const PRODUCT_LISTINGS = "/search/(.*)";
 export const CATEGORY_PRODUCT_LISTINGS_WITH_PAGE =
-  "/.*/c-(msh[0-9a-zA-Z]+)/page-([0-9])";
+  "/:slug/c-(msh[0-9a-zA-Z]+)/page-([0-9]+)?";
 
+export const BRAND_PRODUCT_LISTINGS_WITH_PAGE =
+  "/:slug/c-(mbh[0-9a-zA-Z]+)/page-([0-9]+)?";
 export const PLP_CATEGORY_SEARCH = "/search/?searchCategory=all&text=shirt";
 
 export const SEARCH_RESULTS_PAGE = "/search/";
@@ -46,11 +48,11 @@ export const HOME_ROUTER = "/";
 
 export const BRAND_LANDING_PAGE = "/brand";
 
-// USE THESE
-export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "(.*)/p-(.*)";
+export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "/p-([a-z0-9A-Z]+)";
 export const PRODUCT_DESCRIPTION_REVIEWS = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/product-reviews`;
 export const PRODUCT_OTHER_SELLER_ROUTER = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/viewSellers`;
-export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE = "/(.*)/(p-)(.*)";
+export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE =
+  "/:slug/(p-)([a-zA-Z0-9]+)";
 export const PRODUCT_REVIEWS_PATH_SUFFIX = "/product-reviews";
 export const PRODUCT_DESCRIPTION_ROUTER = PRODUCT_DESCRIPTION_PRODUCT_CODE; //TODO remove this
 export const PRODUCT_REVIEW_ROUTER = "/productReview";
