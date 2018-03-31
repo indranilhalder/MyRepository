@@ -1380,8 +1380,11 @@ export function followAndUnFollowBrand(
 ) {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const followedText = followStatus ? UNFOLLOW : FOLLOW;
-  const updatedFollowedStatus = !followStatus;
-
+  //here sometimes  we are getting isFollowingStatus type of string "true" or "false"
+  // so here we are converting it in to bool
+  const updatedFollowedStatus = !Boolean(
+    followStatus === "true" || followStatus === true
+  );
   return async (dispatch, getState, { api }) => {
     dispatch(followAndUnFollowBrandRequest());
     const mcvId = await getMcvId();
@@ -1410,7 +1413,7 @@ export function followAndUnFollowBrand(
         const followInCommerceApiResult = await api.post(
           `${PRODUCT_PATH}/${
             JSON.parse(customerCookie).access_token
-          }/updateFollowedBrands?brands=${"A0002"}&follow=${updatedFollowedStatus}&isPwa=true`
+          }/updateFollowedBrands?brands=${brandId}&follow=${updatedFollowedStatus}&isPwa=true`
         );
         const followInCommerceApiResultJson = await followInCommerceApiResult.json();
 

@@ -403,10 +403,10 @@ const productDescription = (
 
     case FOLLOW_AND_UN_FOLLOW_BRANDS_IN_PDP_SUCCESS:
       currentBrandDetails = cloneDeep(state.aboutTheBrand);
-      currentBrandDetails.isFollowing = action.isFollowing;
+      currentBrandDetails.isFollowing = action.followStatus;
       return Object.assign({}, state, {
         status: action.status,
-        msdItems: currentBrandDetails
+        aboutTheBrand: currentBrandDetails
       });
     case pdpActions.FOLLOW_UN_FOLLOW_BRAND_FAILURE:
       return Object.assign({}, state, {

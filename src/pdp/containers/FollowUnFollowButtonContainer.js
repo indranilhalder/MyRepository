@@ -20,7 +20,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    label: ownProps.isFollowing ? FOLLOWING : FOLLOW,
+    label: Boolean(
+      ownProps.isFollowing === "true" || ownProps.isFollowing === true
+    )
+      ? FOLLOWING
+      : FOLLOW,
     type: "tertiary"
   };
 };
