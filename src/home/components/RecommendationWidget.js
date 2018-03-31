@@ -18,14 +18,10 @@ export default class RecommendationWidget extends React.Component {
       this.props.feedComponentData.data &&
       this.props.feedComponentData.items.length === 0
     ) {
-      const itemIds = this.props.feedComponentData.data;
-
-      this.props.getItems(this.props.positionInFeed, [
-        "MP000000000155861",
-        "MP000000000114700",
-        "MP000000000169248",
-        "MP000000000113243"
-      ]);
+      this.props.getItems(
+        this.props.positionInFeed,
+        this.props.feedComponentData.data
+      );
     }
   }
 
@@ -35,24 +31,22 @@ export default class RecommendationWidget extends React.Component {
       return null;
     }
     let carouselData;
-    if (feedComponentData.items && feedComponentData.items instanceof Array) {
+    console.log(feedComponentData);
+    if (feedComponentData.items && feedComponentData.items.map) {
       carouselData = feedComponentData.items.map(transformData);
     }
 
     return (
-      feedComponentData.items instanceof Array &&
-      feedComponentData.items.length > 0 && (
-        <FeedComponent
-          carouselOptions={{
-            header: this.props.feedComponentData.title,
-            buttonText: this.props.feedComponentData.btnText,
-            seeAll: () => {
-              this.handleClick();
-            }
-          }}
-          data={carouselData}
-        />
-      )
+      <FeedComponent
+        carouselOptions={{
+          header: this.props.feedComponentData.title,
+          buttonText: this.props.feedComponentData.btnText,
+          seeAll: () => {
+            this.handleClick();
+          }
+        }}
+        data={carouselData}
+      />
     );
   }
 }

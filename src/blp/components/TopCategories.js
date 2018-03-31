@@ -27,7 +27,6 @@ export default class TopCategories extends React.Component {
 
     return (
       <div className={styles.base}>
-        <div className={styles.headerText}>Top Categories</div>
         <div className={styles.categorieHolder}>
           <div className={styles.leftSection}>
             <div

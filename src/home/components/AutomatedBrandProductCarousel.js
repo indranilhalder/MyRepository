@@ -24,12 +24,7 @@ export default class AutomatedBrandProductCarousel extends React.Component {
         data.itemIds &&
         data.itemIds.length > 0
       ) {
-        this.props.getItems(this.props.positionInFeed, [
-          "MP000000000155861",
-          "MP000000000114700",
-          "MP000000000169248",
-          "MP000000000113243"
-        ]);
+        this.props.getItems(this.props.positionInFeed, data.itemIds);
       }
     }
   }
