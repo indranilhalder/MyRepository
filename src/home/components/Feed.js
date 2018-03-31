@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+
 import WidgetContainer from "../containers/WidgetContainer";
 import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
@@ -16,6 +17,7 @@ import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
 import ProductCapsules from "./ProductCapsules.js";
 import FollowingBrands from "./FollowingBrands";
+import ContentWidgetWrapper from "./ContentWidgetWrapper";
 import FlashSale from "./FlashSale";
 import AllBrandTypes from "../../blp/components/AllBrandTypes";
 import OfferWidget from "./OfferWidget.js";
@@ -33,8 +35,8 @@ import MDSpinner from "react-md-spinner";
 import TopCategories from "../../blp/components/TopCategories";
 import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
 import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
-import { CHECKOUT_ROUTER } from "../../lib/constants";
 import queryString from "query-string";
+import ProductCapsulesContainer from "../containers/ProductCapsulesContainer";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeKeyMapping = {
@@ -42,31 +44,34 @@ const typeKeyMapping = {
 };
 
 const typeComponentMapping = {
+  "Product Capsules Component": props => (
+    <ProductCapsulesContainer {...props} />
+  ),
   "Landing Page Header Component": props => <BrandCardHeader {...props} />,
-  "Hero Banner Component": props => <HeroBanner {...props} />,
-  "Theme Offers Component": props => <ThemeOffer {...props} />,
+  "Hero Banner Component": props => <HeroBanner {...props} />, // no hard coded data
+  "Theme Offers Component": props => <ThemeOffer {...props} />, // no hard coded data
   "Auto Product Recommendation Component": props => (
     <RecommendationWidget {...props} />
   ),
+  "Content Component": props => <ContentWidgetWrapper {...props} />,
   "Banner Product Carousel Component": props => (
     <BannerProductCarousel {...props} />
   ),
   "Video Product Carousel Component": props => (
     <VideoProductCarousel {...props} />
   ),
-
-  // // automatedBrandProductCarousel: props => (
-  // //   <AutomatedBrandProductCarousel {...props} />
-  // // ),
-
+  "Automated Banner Product Carousel Component": props => (
+    <AutomatedBrandProductCarousel {...props} />
+  ),
+  "Auto Following Brands Component": props => <FollowingBrands {...props} />,
   "Flash Sales Component": props => <FlashSale {...props} />, // wired up
   "Offers Component": props => <OfferWidget {...props} />, // wired up
   "Multipurpose Banner Component": props => <ConnectWidget {...props} />, // modal not working - need to figure out what to show here.
-  // "Multi Click Component": props => <ThemeProductWidget {...props} /> // not wired up for some reason
+  "Multi Click Component": props => <ThemeProductWidget {...props} />,
   "Auto Fresh From Brands Component": props => <FollowBase {...props} />, // wired up with clickable url
   "Banner Separator Component": props => <BannerSeparator {...props} />,
-  "Auto Discover More Component": props => <DiscoverMore {...props} />, // wired up with clickable urls
-  "Auto Product Recommendation": props => <RecommendationWidget {...props} />,
+  "Auto Discover More Component": props => <DiscoverMore {...props} />,
+  "Top Categories Component": props => <TopCategories {...props} />,
   "Recently viewed product": props => <RecommendationWidget {...props} />,
   "Single Banner Component": props => <MonoBanner {...props} />,
   "Curated Listing Strip Component": props => <LatestCollections {...props} />,
@@ -75,17 +80,14 @@ const typeComponentMapping = {
     <CuratedProductsComponent {...props} />
   ),
   "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
-  "Top Categories Component": props => <TopCategories {...props} />,
   "Landing Page Hierarchy": props => <AllBrandTypes {...props} />
 };
 
 class Feed extends Component {
-  constructor(props) {
-    super(props);
-    this.hasSeenThemeProductOrAutomatedBrandCarousel = true;
-  }
-
   renderFeedComponent(feedDatum, i) {
+    if (feedDatum.type === "Product Capsules Component") {
+      return <ProductCapsulesContainer positionInFeed={i} />;
+    }
     return (
       typeComponentMapping[feedDatum.type] && (
         <WidgetContainer

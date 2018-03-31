@@ -1,3 +1,5 @@
+import { PRODUCT_DESCRIPTION_REQUEST } from "../pdp/actions/pdp.actions";
+
 export const SUCCESS = "success";
 export const SUCCESS_UPPERCASE = "SUCCESS";
 export const SUCCESS_CAMEL_CASE = "Success";
@@ -5,8 +7,8 @@ export const REQUESTING = "requesting";
 export const ERROR = "error";
 export const FAILURE = "Failure";
 export const FAILURE_UPPERCASE = "FAILURE";
-export const JUS_PAY_PENDING="PENDING_VBV"
-export const JUS_PAY_CHARGED="CHARGED"
+export const JUS_PAY_PENDING = "PENDING_VBV";
+export const JUS_PAY_CHARGED = "CHARGED";
 export const SINGLE_SELECT_HEADING_COPY = "Thanks!!!";
 export const SINGLE_SELECT_DESCRIPTION_COPY =
   "We will curate the experience based on your choices. Loading products...";
@@ -20,14 +22,27 @@ export const CUSTOMER_ACCESS_TOKEN = "customerAccessToken";
 export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
 export const DEFAULT_PIN_CODE_LOCAL_STORAGE = "defaultPinCode";
 
+export const STATIC_CATEGORY_PAGES = "/(.*)";
+
 export const REFRESH_TOKEN = "refresh_token";
-export const BRAND_PAGE = "/c-(mbh.*)";
-export const BRAND_PAGE_WITH_SLUG = `/.*/${BRAND_PAGE}`;
+export const BRAND_PAGE = "/c-(mbh[a-zA-Z0-9]+)";
+export const BRAND_PAGE_WITH_SLUG = `/:slug/c-(mbh[0-9a-zA-z]+)`;
+export const BRAND_PAGE_WITH_QUERY_PARAMS = `/c-(mbh[0-9a-zA-z]+)?&`;
+export const BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS = `/c-(mbh[0-9a-zA-z]+)?&`;
 
-export const CATEGORY_PAGE = "/c-(msh.*)";
-export const CATEGORY_PAGE_WITH_SLUG = `/:slug/c-(msh.*)`;
+export const BRAND_AND_CATEGORY_PAGE =
+  "/:slug/c-(msh[a-zA-Z0-9]+)/b-(mbh[a-zA-Z0-9]+)";
+
+export const CATEGORY_PAGE = "/c-(msh[0-9A-Za-z]+)";
+export const CATEGORY_PAGE_WITH_SLUG = `/:slug/c-(msh[0-9a-zA-Z]+)`;
+export const CATEGORY_PAGE_WITH_QUERY_PARAMS = `${CATEGORY_PAGE}?&.*`;
+export const CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS = `${CATEGORY_PAGE_WITH_SLUG}?&.*`;
 export const PRODUCT_LISTINGS = "/search/(.*)";
+export const CATEGORY_PRODUCT_LISTINGS_WITH_PAGE =
+  "/:slug/c-(msh[0-9a-zA-Z]+)/page-([0-9]+)?";
 
+export const BRAND_PRODUCT_LISTINGS_WITH_PAGE =
+  "/:slug/c-(mbh[0-9a-zA-Z]+)/page-([0-9]+)?";
 export const PLP_CATEGORY_SEARCH = "/search/?searchCategory=all&text=shirt";
 
 export const SEARCH_RESULTS_PAGE = "/search/";
@@ -35,11 +50,12 @@ export const HOME_ROUTER = "/";
 
 export const BRAND_LANDING_PAGE = "/brand";
 
-// USE THESE
-export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "(.*)/p-(.*)";
+export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "/p-([a-z0-9A-Z]+)";
 export const PRODUCT_DESCRIPTION_REVIEWS = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/product-reviews`;
+export const PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG = `/:slug${PRODUCT_DESCRIPTION_REVIEWS}`;
 export const PRODUCT_OTHER_SELLER_ROUTER = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/viewSellers`;
-export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE = "/(.*)/(p-)(.*)";
+export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE =
+  "/:slug/(p-)([a-zA-Z0-9]+)";
 export const PRODUCT_REVIEWS_PATH_SUFFIX = "/product-reviews";
 export const PRODUCT_DESCRIPTION_ROUTER = PRODUCT_DESCRIPTION_PRODUCT_CODE; //TODO remove this
 export const PRODUCT_REVIEW_ROUTER = "/productReview";
@@ -147,4 +163,3 @@ export const CANCEL = "/cancel";
 export const CANCEL_PREFIX = "/cancel/(.*)";
 
 export const WALLET = "WALLET";
-

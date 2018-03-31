@@ -1,10 +1,11 @@
 import React from "react";
 import styles from "./ConnectKnowMore.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+import { withRouter } from "react-router-dom";
 
-export default class ConnectKnowMore extends React.Component {
+class ConnectKnowMore extends React.Component {
   handleClick() {
-    const urlSuffix = this.props.data.webURL.replace(TATA_CLIQ_ROOT, "$1");
+    const urlSuffix = this.props.url.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   }
   render() {
@@ -20,3 +21,5 @@ export default class ConnectKnowMore extends React.Component {
     );
   }
 }
+
+export default withRouter(ConnectKnowMore);

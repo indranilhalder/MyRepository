@@ -15,12 +15,9 @@ export default class Follow extends Component {
     }
   }
 
-  handleClick() {
-    if (this.props.follow) {
-      this.onFollowClick();
-    } else {
-      this.onUnFollowClick();
-    }
+  handleClick(e) {
+    e.stopPropagation();
+    this.props.onClick(this.props.follow);
   }
 
   render() {
@@ -47,7 +44,7 @@ export default class Follow extends Component {
           fontSize: 14,
           fontFamily: "semibold"
         }}
-        onClick={() => this.handleClick()}
+        onClick={e => this.handleClick(e)}
       />
     );
   }

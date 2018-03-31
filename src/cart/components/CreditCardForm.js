@@ -128,6 +128,7 @@ export default class CreditCardForm extends React.Component {
               onChange={val => this.onChangeCardNumber(val)}
               textStyle={{ fontSize: 14 }}
               height={33}
+              maxLength="16"
             />
           </div>
 

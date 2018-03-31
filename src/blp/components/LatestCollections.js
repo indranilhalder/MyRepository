@@ -15,8 +15,12 @@ export default class LatestCollections extends React.Component {
   }
   render() {
     let feedComponentData = this.props.feedComponentData;
+
     return (
-      <div className={styles.base}>
+      <div
+        className={styles.base}
+        style={{ backgroundColor: feedComponentData.startHexCode }}
+      >
         <div
           className={styles.LatestCollectionsHolder}
           onClick={() => this.arrowNextClick()}
@@ -34,8 +38,3 @@ export default class LatestCollections extends React.Component {
     );
   }
 }
-LatestCollections.propTypes = {
-  heading: PropTypes.string,
-  arrowNextClick: PropTypes.func,
-  iconImageURL: PropTypes.string
-};

@@ -106,6 +106,7 @@ class ProductReviewPage extends Component {
   }
 
   render() {
+    console.log(this.props);
     if (this.props.productDetails) {
       const mobileGalleryImages =
         this.props.productDetails &&
@@ -143,10 +144,12 @@ class ProductReviewPage extends Component {
               />
               <RatingHolder ratingData={this.props.ratingData} />
             </div>
-            <div className={styles.reviewText} onClick={this.reviewSection}>
-              {WRITE_REVIEW_TEXT}
+            <div className={styles.reviewHolder}>
+              <div className={styles.reviewText} onClick={this.reviewSection}>
+                {WRITE_REVIEW_TEXT}
+              </div>
+              {this.renderReviewSection()}
             </div>
-            {this.renderReviewSection()}
             {this.props.reviews && (
               <ReviewList reviewList={this.props.reviews.reviews} />
             )}

@@ -22,6 +22,12 @@ export default class VideoProductCarousel extends React.Component {
 
   render() {
     const feedComponentData = this.props.feedComponentData;
+    if (!feedComponentData) {
+      return null;
+    }
+    if (!(feedComponentData.items instanceof Array)) {
+      return null;
+    }
     let data = [];
     if (feedComponentData.items) {
       data = feedComponentData.items.map(transformData);
@@ -36,9 +42,8 @@ export default class VideoProductCarousel extends React.Component {
             description={feedComponentData.description}
           />
         }
-        backgroundColor="#e4e4e4"
         carouselOptions={{
-          buttonText: "See All",
+          buttonText: feedComponentData.btnText,
           seeAll: () => {
             this.handleClick();
           }

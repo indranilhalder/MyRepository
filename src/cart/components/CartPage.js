@@ -10,6 +10,7 @@ import SavedProduct from "./SavedProduct";
 import filter from "lodash/filter";
 import { Redirect } from "react-router-dom";
 import { MAIN_ROUTER } from "../../lib/constants";
+import TextWithUnderLine from "./TextWithUnderLine.js";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -28,7 +29,8 @@ class CartPage extends React.Component {
     super(props);
     this.state = {
       pinCode: "",
-      isServiceable: false
+      isServiceable: false,
+      changePinCode: false
     };
   }
 
@@ -177,7 +179,7 @@ class CartPage extends React.Component {
   }
 
   checkPinCodeAvailability = val => {
-    this.setState({ pinCode: val });
+    this.setState({ pinCode: val, changePinCode: false });
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, val);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -203,39 +205,61 @@ class CartPage extends React.Component {
     }
   };
 
+  changePinCode = () => {
+    this.setState({ changePinCode: true });
+  };
   render() {
     const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const cartDetailsForAnonymous = Cookie.getCookie(
       CART_DETAILS_FOR_ANONYMOUS
     );
 
-    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-
     if (!globalAccessToken && !cartDetailsForAnonymous) {
       return <Redirect exact to={HOME_ROUTER} />;
     }
     if (this.props.cart.cartDetailsStatus === SUCCESS) {
       const cartDetails = this.props.cart.cartDetails;
+      let defaultPinCode;
+
+      if (cartDetails.products) {
+        defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+      }
+
       return (
         <div className={styles.base}>
           <div className={styles.content}>
-            <div className={styles.search}>
-              <SearchAndUpdate
-                value={defaultPinCode}
-                getPinCode={val => this.setState({ pinCode: val })}
-                checkPinCodeAvailability={val =>
-                  this.checkPinCodeAvailability(val)
-                }
-              />
-            </div>
+            {(!defaultPinCode || this.state.changePinCode) && (
+              <div className={styles.search}>
+                <SearchAndUpdate
+                  value={defaultPinCode}
+                  getPinCode={val => this.setState({ pinCode: val })}
+                  checkPinCodeAvailability={val =>
+                    this.checkPinCodeAvailability(val)
+                  }
+                  labelText="check"
+                />
+              </div>
+            )}
+            {!this.state.changePinCode &&
+              defaultPinCode && (
+                <TextWithUnderLine
+                  heading={defaultPinCode}
+                  onClick={() => this.changePinCode()}
+                  buttonLabel="Change"
+                />
+              )}
           </div>
           <div
             className={defaultPinCode === "" ? styles.disabled : styles.content}
           >
-            <div className={styles.offer}>
-              <div className={styles.offerText}>{this.props.cartOfferText}</div>
-              <div className={styles.offerName}>{this.props.cartOffer}</div>
-            </div>
+            {cartDetails.products && (
+              <div className={styles.offer}>
+                <div className={styles.offerText}>
+                  {this.props.cartOfferText}
+                </div>
+                <div className={styles.offerName}>{this.props.cartOffer}</div>
+              </div>
+            )}
 
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
@@ -255,6 +279,10 @@ class CartPage extends React.Component {
                         product.elligibleDeliveryMode &&
                         product.elligibleDeliveryMode[0].desc
                       }
+                      deliveryType={
+                        product.elligibleDeliveryMode &&
+                        product.elligibleDeliveryMode[0].name
+                      }
                       option={[
                         {
                           value: product.qtySelectedByUser,
@@ -270,18 +298,21 @@ class CartPage extends React.Component {
                   </div>
                 );
               })}
+
             <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
-            {cartDetails.cartAmount && (
-              <Checkout
-                amount={cartDetails.cartAmount.bagTotal.formattedValue}
-                bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
-                tax={this.props.cartTax}
-                offers={this.props.offers}
-                delivery={this.props.delivery}
-                payable={cartDetails.cartAmount.paybleAmount.formattedValue}
-                onCheckout={() => this.renderToCheckOutPage()}
-              />
-            )}
+
+            {cartDetails.products &&
+              cartDetails.cartAmount && (
+                <Checkout
+                  amount={cartDetails.cartAmount.bagTotal.formattedValue}
+                  bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
+                  tax={this.props.cartTax}
+                  offers={this.props.offers}
+                  delivery={this.props.delivery}
+                  payable={cartDetails.cartAmount.paybleAmount.formattedValue}
+                  onCheckout={() => this.renderToCheckOutPage()}
+                />
+              )}
           </div>
         </div>
       );
