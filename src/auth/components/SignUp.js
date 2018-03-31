@@ -33,7 +33,10 @@ class SignUp extends Component {
     }
   }
   onSubmit() {
-    if (this.props.onSubmit) {
+    if (this.state.passwordValue.length < "8") {
+      this.props.displayToast("Password length should be minimum 8 character");
+    }
+    if (this.state.passwordValue.length >= "8") {
       this.props.onSubmit({
         emailId: this.state.emailValue,
         username: this.state.phoneNumberValue,
