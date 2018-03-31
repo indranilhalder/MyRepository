@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./SavedProduct.css";
 import Button from "../../general/components/Button.js";
-import GiftCard from "../../general/components/GiftCard.js";
 import Coupon from "../../general/components/Coupon.js";
 export default class SavedProduct extends React.Component {
   handleClick() {
@@ -34,12 +33,6 @@ export default class SavedProduct extends React.Component {
           <Coupon
             heading={this.props.cuponHeading}
             onClick={() => this.onApplyCoupon()}
-          />
-        </div>
-        <div className={styles.giftCard}>
-          <GiftCard
-            heading={this.props.giftCardHeading}
-            lable={this.props.giftCardLabel}
           />
         </div>
       </div>
