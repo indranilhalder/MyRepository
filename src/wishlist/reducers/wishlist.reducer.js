@@ -56,3 +56,4 @@ const wishlistItems = (
       return state;
   }
 };
+export default wishlistItems;
