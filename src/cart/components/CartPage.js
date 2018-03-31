@@ -271,7 +271,7 @@ class CartPage extends React.Component {
                     serviceable = true;
                   }
                 }
-                console.log(product);
+
                 return (
                   <div className={styles.cartItem} key={i}>
                     <CartItem
