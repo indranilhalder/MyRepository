@@ -1,0 +1,50 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.bagIconAndTextHolder {
+  width: 100%;
+  height: auto;
+  padding: 20px 15px 30px 15px;
+  background: #fff;
+  border-radius: 4px;
+  margin-bottom: 25px;
+}
+.bagImageHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.bagImage {
+  width: auto;
+  height: auto;
+  display: inline-block;
+}
+.headingText {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 14px;
+  font-family: semibold;
+  margin-bottom: 5px;
+  text-align: center;
+}
+.infoText {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-family: regular;
+  text-align: center;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+  margin-bottom: 25px;
+}
+.button {
+  composes: bagImage;
+}
