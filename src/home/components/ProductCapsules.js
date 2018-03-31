@@ -40,7 +40,7 @@ export default class ProductCapsules extends React.Component {
 
     const productCapsulesData = this.props.feedComponentData;
     const data = this.props.feedComponentData.data;
-
+    console.log(data);
     if (!data) {
       return null;
     }
@@ -62,6 +62,7 @@ export default class ProductCapsules extends React.Component {
           withFooter={false}
         >
           {this.props.feedComponentData.data &&
+            this.props.feedComponentData.data.wishlistData &&
             this.props.feedComponentData.data.wishlistData[0] &&
             this.props.feedComponentData.data.wishlistData[0].items &&
             this.props.feedComponentData.data.wishlistData[0].items.map(
