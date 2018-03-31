@@ -325,7 +325,8 @@ class CheckOutPage extends React.Component {
         }
         this.setState({
           payableAmount:
-            nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.formattedValue,
+            nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount
+              .formattedValue,
           cliqCashAmount: cliqCashAmount,
           bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
         });
