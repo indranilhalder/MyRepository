@@ -12,6 +12,7 @@ import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
+import PdpDeliveryModes from "./PdpDeliveryModes";
 import Overlay from "./Overlay";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
@@ -168,36 +169,6 @@ export default class PdpApparel extends React.Component {
       return false;
     }
   };
-  renderDeliveryOptions(productData) {
-    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-
-    return (
-      productData.eligibleDeliveryModes &&
-      productData.deliveryModesATP &&
-      productData.deliveryModesATP
-        .filter(val => {
-          return productData.eligibleDeliveryModes
-            .map(val => {
-              return val.code;
-            })
-            .includes(val.key);
-        })
-        .map((val, idx) => {
-          return (
-            <DeliveryInformation
-              key={idx}
-              header={val.name}
-              placedTime={val.value}
-              type={val.key}
-              onClick={() => this.renderAddressModal()}
-              deliveryOptions={DELIVERY_TEXT}
-              label={defaultPinCode}
-              showCliqAndPiqButton={false}
-            />
-          );
-        })
-    );
-  }
 
   render() {
     const productData = this.props.productDetails;
@@ -302,15 +273,24 @@ export default class PdpApparel extends React.Component {
           this.props.productDetails.isServiceableToPincode.status === NO ? (
             <Overlay labelText="Not serviceable in you pincode,
   please try another pincode">
-              {this.renderDeliveryOptions(productData)}
+              <PdpDeliveryModes
+                eligibleDeliveryModes={productData.eligibleDeliveryModes}
+                deliveryModesATP={productData.deliveryModesATP}
+              />
             </Overlay>
           ) : (
-            this.renderDeliveryOptions(productData)
+            <PdpDeliveryModes
+              eligibleDeliveryModes={productData.eligibleDeliveryModes}
+              deliveryModesATP={productData.deliveryModesATP}
+            />
           )}
 
           {productData.winningSellerName && (
             <div className={styles.separator}>
-              <PdpLink onClick={() => this.goToSellerPage(validSellersCount)}>
+              <PdpLink
+                onClick={() => this.goToSellerPage(validSellersCount)}
+                noLink={validSellersCount === 0}
+              >
                 <div className={styles.sellers}>
                   Sold by{" "}
                   <span className={styles.winningSellerText}>

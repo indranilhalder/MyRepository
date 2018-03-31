@@ -9,7 +9,7 @@ import SizeSelector from "./SizeSelector";
 import PriceBreakUp from "./PriceBreakUp";
 import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
-
+import PdpDeliveryModes from "./PdpDeliveryModes";
 import JewelleryClassification from "./JewelleryClassification";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
@@ -185,36 +185,6 @@ export default class PdpJewellery extends React.Component {
       return false;
     }
   };
-  renderDeliveryOptions(productData) {
-    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-
-    return (
-      productData.eligibleDeliveryModes &&
-      productData.deliveryModesATP &&
-      productData.deliveryModesATP
-        .filter(val => {
-          return productData.eligibleDeliveryModes
-            .map(val => {
-              return val.code;
-            })
-            .includes(val.key);
-        })
-        .map((val, idx) => {
-          return (
-            <DeliveryInformation
-              key={idx}
-              header={val.name}
-              placedTime={val.value}
-              type={val.key}
-              onClick={() => this.renderAddressModal()}
-              deliveryOptions={DELIVERY_TEXT}
-              label={defaultPinCode}
-              showCliqAndPiqButton={false}
-            />
-          );
-        })
-    );
-  }
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -227,8 +197,9 @@ export default class PdpJewellery extends React.Component {
         return image[0].value;
       });
     let otherSellersText;
-
+    let hasOtherSellers = false;
     if (productData.otherSellers && productData.otherSellers.length > 0) {
+      hasOtherSellers = true;
       otherSellersText = (
         <span>
           Sold by{" "}
@@ -239,6 +210,9 @@ export default class PdpJewellery extends React.Component {
           and {productData.otherSellers.length} other sellers;
         </span>
       );
+    } else {
+      hasOtherSellers = false;
+      otherSellersText = `Sold by ${productData.winningSellerName}`;
     }
 
     if (productData) {
@@ -333,15 +307,21 @@ export default class PdpJewellery extends React.Component {
           this.props.productDetails.isServiceableToPincode.status === NO ? (
             <Overlay labelText="Not serviceable in you pincode,
 please try another pincode">
-              {this.renderDeliveryOptions(productData)}
+              <PdpDeliveryModes
+                eligibleDeliveryModes={productData.eligibleDeliveryModes}
+                deliveryModesATP={productData.deliveryModesATP}
+              />
             </Overlay>
           ) : (
-            this.renderDeliveryOptions(productData)
+            <PdpDeliveryModes
+              eligibleDeliveryModes={productData.eligibleDeliveryModes}
+              deliveryModesATP={productData.deliveryModesATP}
+            />
           )}
 
-          {productData.otherSellers && (
+          {productData.winningSellerName && (
             <div className={styles.separator}>
-              <PdpLink onClick={this.goToSellerPage}>
+              <PdpLink onClick={this.goToSellerPage} noLink={!hasOtherSellers}>
                 <div className={styles.sellers}>{otherSellersText}</div>
               </PdpLink>
             </div>
