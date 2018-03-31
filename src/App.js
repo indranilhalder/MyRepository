@@ -91,7 +91,17 @@ import {
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
   MY_ACCOUNT_ADDRESS_ADD_PAGE,
-  CANCEL_PREFIX
+  CATEGORY_PAGE_WITH_QUERY_PARAMS,
+  CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
+  BRAND_PAGE_WITH_QUERY_PARAMS,
+  BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
+  CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
+  BRAND_PRODUCT_LISTINGS_WITH_PAGE,
+  STATIC_CATEGORY_PAGES,
+  BRAND_AND_CATEGORY_PAGE,
+  CANCEL_PREFIX,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG
 } from "../src/lib/constants";
 
 const auth = {
@@ -152,6 +162,16 @@ class App extends Component {
           <Switch>
             <Route
               exact
+              path={CATEGORY_PRODUCT_LISTINGS_WITH_PAGE}
+              component={ProductListingsContainer}
+            />
+            <Route
+              exact
+              path={BRAND_PRODUCT_LISTINGS_WITH_PAGE}
+              component={ProductListingsContainer}
+            />
+            <Route
+              exact
               path={LOGIN_PATH}
               render={routeProps => (
                 <LoginContainer {...routeProps} {...this.props} />
@@ -210,19 +230,40 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_BRANDS_PAGE}`}
               component={MyAccountBrandsContainer}
             />
-            <Route
-              exact
-              path={BRAND_PAGE}
-              component={PlpBrandCategoryWrapperContainer}
-            />
+
             <Route
               path={`${SHORT_URL_ORDER_DETAIL}`}
               component={OrderDetailsContainer}
             />
             <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
+
+            <Route
+              exact
+              path={BRAND_AND_CATEGORY_PAGE}
+              component={ProductListingsContainer}
+            />
+
             <Route
               exact
               path={CATEGORY_PAGE}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
+              exact
+              path={BRAND_PAGE}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
+              exact
+              path={BRAND_PAGE_WITH_QUERY_PARAMS}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
+              exact
+              path={CATEGORY_PAGE_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
 
@@ -233,8 +274,20 @@ class App extends Component {
             />
 
             <Route
+              exact
+              path={BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
               strict
               path={CATEGORY_PAGE_WITH_SLUG}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
+              exact
+              path={CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
 
@@ -242,9 +295,19 @@ class App extends Component {
               path={PRODUCT_DESCRIPTION_REVIEWS}
               component={ProductReviewContainer}
             />
+
+            <Route
+              path={PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG}
+              component={ProductReviewContainer}
+            />
             <Route
               path={PRODUCT_OTHER_SELLER_ROUTER}
               component={ProductSellerContainer}
+            />
+            <Route
+              exact
+              path={PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE}
+              component={ProductDescriptionPageWrapperContainer}
             />
             <Route
               exact
@@ -316,6 +379,12 @@ class App extends Component {
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_ADD_PAGE}`}
               component={AddAddressContainer}
+            />
+            {/* This *has* to be at the bottom */}
+            <Route
+              exact
+              path={STATIC_CATEGORY_PAGES}
+              component={PlpBrandCategoryWrapperContainer}
             />
           </Switch>
           <MobileFooter />

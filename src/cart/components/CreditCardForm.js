@@ -128,6 +128,7 @@ export default class CreditCardForm extends React.Component {
               onChange={val => this.onChangeCardNumber(val)}
               textStyle={{ fontSize: 14 }}
               height={33}
+              maxLength="16"
             />
           </div>
 
@@ -171,7 +172,7 @@ export default class CreditCardForm extends React.Component {
                   <Input2
                     boxy={true}
                     placeholder="Cvv"
-                    type="number"
+                    type="password"
                     onChange={val => this.getCardCvvValue(val)}
                     textStyle={{ fontSize: 14 }}
                     height={33}

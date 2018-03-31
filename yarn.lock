@@ -7926,9 +7926,9 @@ xdg-basedir@^2.0.0:
   dependencies:
     os-homedir "^1.0.0"
 
-xelpmoc-core@^0.2.4:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/xelpmoc-core/-/xelpmoc-core-0.2.7.tgz#e6c40afddc71bbe2f2421f38a591695fc462ddcd"
+xelpmoc-core@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/xelpmoc-core/-/xelpmoc-core-0.3.1.tgz#c4cffc4d680fd50b18ed84b2978f7fcb87e6b83b"
   dependencies:
     classnames "^2.2.5"
 

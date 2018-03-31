@@ -22,8 +22,14 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    searchText: ownProps.searchText ? ownProps.searchText : null
+  };
+};
+
 const ProductListingsContainer = withRouter(
-  connect(null, mapDispatchToProps)(ProductListingsPage)
+  connect(mapStateToProps, mapDispatchToProps)(ProductListingsPage)
 );
 
 export default ProductListingsContainer;

@@ -6,7 +6,7 @@ import Button from "../../general/components/Button";
 import { Image } from "xelpmoc-core";
 
 export default class Offer extends React.Component {
-  handleClick = () => {
+  handleClick = e => {
     if (this.props.onClick) {
       this.props.onClick(this.props.datum.webURL);
     }
