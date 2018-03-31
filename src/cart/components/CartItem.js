@@ -97,15 +97,17 @@ export default class CartItem extends React.Component {
         {this.props.deliveryInformation &&
           this.props.deliveryInfoToggle && (
             <div className={styles.deliverTimeAndButton}>
-              <div className={styles.hideButton}>
-                <UnderLinedButton
-                  size="14px"
-                  fontFamily="regular"
-                  color="#000"
-                  label={this.state.label}
-                  onClick={() => this.onHide()}
-                />
-              </div>
+              {this.props.deliveryInformation.length > 1 && (
+                <div className={styles.hideButton}>
+                  <UnderLinedButton
+                    size="14px"
+                    fontFamily="regular"
+                    color="#000"
+                    label={this.state.label}
+                    onClick={() => this.onHide()}
+                  />
+                </div>
+              )}
               <span>
                 {this.props.deliveryType} :{" "}
                 <span>{this.props.deliverTime}</span>

@@ -19,7 +19,7 @@ export default class EditAddressPopUp extends React.Component {
       lastName: addressDetails.lastName,
       postalCode: addressDetails.postalCode,
       line1: addressDetails.line1,
-      emailId: "",
+      emailId: addressDetails.emailId,
       line2: addressDetails.line2,
       line3: "",
       town: addressDetails.town,
@@ -32,6 +32,7 @@ export default class EditAddressPopUp extends React.Component {
   componentDidMount() {
     this.props.getPinCode(this.state.postalCode);
   }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.getPinCodeDetails) {
       this.setState({
@@ -39,9 +40,15 @@ export default class EditAddressPopUp extends React.Component {
         cityName: nextProps.getPinCodeDetails.cityName
       });
     }
+  }
 
-    if (nextProps.editAddressStatus === SUCCESS) {
-      this.props.history.goBack();
+  componentDidUpdate(prevProps, prevState) {
+    console.log(prevProps.editAddressStatus);
+    console.log(this.props.editAddressStatus);
+    if (this.props.editAddressStatus !== prevProps.editAddressStatus) {
+      if (this.props.editAddressStatus === SUCCESS) {
+        this.props.history.goBack();
+      }
     }
   }
   onChange(val) {
