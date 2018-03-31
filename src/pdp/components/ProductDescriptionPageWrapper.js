@@ -28,6 +28,18 @@ const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidMount() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+      this.props.getProductDescription(this.props.match.params[0]);
+      this.props.getMsdRequest(this.props.match.params[0]);
+      this.props.pdpAboutBrand(this.props.match.params[0]);
+      if (defaultPinCode) {
+        this.props.getProductPinCode(
+          defaultPinCode,
+          this.props.match.params[0]
+        );
+      }
+    } else if (
+      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+    ) {
       this.props.getProductDescription(this.props.match.params[1]);
       this.props.getMsdRequest(this.props.match.params[1]);
       this.props.pdpAboutBrand(this.props.match.params[1]);
@@ -37,46 +49,31 @@ export default class ProductDescriptionPageWrapper extends React.Component {
           this.props.match.params[1]
         );
       }
-    } else if (
-      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
-    ) {
-      this.props.getProductDescription(this.props.match.params[2]);
-      this.props.getMsdRequest(this.props.match.params[2]);
-      this.props.pdpAboutBrand(this.props.match.params[2]);
-      if (defaultPinCode) {
-        this.props.getProductPinCode(
-          defaultPinCode,
-          this.props.match.params[2]
-        );
-      }
     } else {
       //need to show error page
     }
-  }
-  componentWillUnmount() {
-    console.log("Will unmount");
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
       if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+        this.props.getProductDescription(this.props.match.params[0]);
+        this.props.getMsdRequest(this.props.match.params[0]);
+        if (defaultPinCode) {
+          this.props.getProductPinCode(
+            defaultPinCode,
+            this.props.match.params[0]
+          );
+        }
+      } else if (
+        this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+      ) {
         this.props.getProductDescription(this.props.match.params[1]);
         this.props.getMsdRequest(this.props.match.params[1]);
         if (defaultPinCode) {
           this.props.getProductPinCode(
             defaultPinCode,
             this.props.match.params[1]
-          );
-        }
-      } else if (
-        this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
-      ) {
-        this.props.getProductDescription(this.props.match.params[2]);
-        this.props.getMsdRequest(this.props.match.params[2]);
-        if (defaultPinCode) {
-          this.props.getProductPinCode(
-            defaultPinCode,
-            this.props.match.params[2]
           );
         }
       } else {

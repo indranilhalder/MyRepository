@@ -29,9 +29,9 @@ export default class ProductModule extends React.Component {
     if (this.props.webURL) {
       urlSuffix = this.props.webURL.replace(TATA_CLIQ_ROOT, "$1");
     } else if (this.props.productId) {
-      urlSuffix = `p-${this.props.productId.toLowerCase()}`;
+      urlSuffix = `/p-${this.props.productId.toLowerCase()}`;
     } else if (this.props.productListingId) {
-      urlSuffix = `p-${this.props.productListingId.toLowerCase()}`;
+      urlSuffix = `/p-${this.props.productListingId.toLowerCase()}`;
     }
 
     if (this.props.onClick) {
@@ -90,11 +90,7 @@ export default class ProductModule extends React.Component {
             this.props.view === "grid" ? styles.content : styles.Listcontent
           }
         >
-          <ProductDescription
-            {...this.props}
-            icon={downloadImage}
-            onDownload={this.onDownload}
-          />
+          <ProductDescription {...this.props} />
           {this.props.view === "list" && (
             <ProductInfo
               averageRating={this.props.averageRating}

@@ -4,19 +4,45 @@ import PropTypes from "prop-types";
 import ProductImageHeader from "../../general/components/ProductImageHeader";
 import Logo from "../../general/components/Logo";
 import { transformData } from "./utils.js";
-import { PRODUCT_LISTINGS } from "../../lib/constants";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
 export default class AutomatedBrandProductCarousel extends React.Component {
   handleClick() {
-    this.props.history.push(PRODUCT_LISTINGS);
+    const urlSuffix = this.props.feedComponentData.data[0].webURL.replace(
+      TATA_CLIQ_ROOT,
+      "$1"
+    );
+    this.props.history.push(urlSuffix);
   }
+
+  componentDidUpdate() {
+    const data =
+      this.props.feedComponentData.data && this.props.feedComponentData.data[0];
+    if (data) {
+      if (
+        this.props.feedComponentData.items.length === 0 &&
+        data.itemIds &&
+        data.itemIds.length > 0
+      ) {
+        this.props.getItems(this.props.positionInFeed, data.itemIds);
+      }
+    }
+  }
+
   render() {
-    const componentData = this.props.feedComponentData.data;
+    const componentData =
+      this.props.feedComponentData.data && this.props.feedComponentData.data[0];
     let carouselData;
-    if (componentData.items instanceof Array) {
-      carouselData = componentData.items.map(transformData);
+    if (!componentData) {
+      return null;
     }
 
-    return (
+    if (this.props.feedComponentData.items.map) {
+      carouselData = this.props.feedComponentData.items.map(transformData);
+    }
+
+    const buttonText = this.props.feedComponentData.btnText;
+    return componentData ? (
       <FeedComponent
         banner={
           <ProductImageHeader
@@ -27,14 +53,14 @@ export default class AutomatedBrandProductCarousel extends React.Component {
         }
         backgroundColor="#e4e4e4"
         carouselOptions={{
-          buttonText: "See All",
+          buttonText,
           seeAll: () => {
             this.handleClick();
           }
         }}
         data={carouselData}
       />
-    );
+    ) : null;
   }
 }
 AutomatedBrandProductCarousel.propTypes = {

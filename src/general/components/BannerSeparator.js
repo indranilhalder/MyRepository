@@ -32,13 +32,3 @@ export default class BannerSeparator extends React.Component {
     );
   }
 }
-BannerSeparator.propTypes = {
-  bannerImage: PropTypes.string,
-  bannerHeaderText: PropTypes.string,
-  bannerText: PropTypes.string
-};
-BannerSeparator.defaultProps = {
-  bannerImage: image,
-  bannerHeaderText: "Seen something you like",
-  bannerText: "Save it for later with our Save Feature."
-};
