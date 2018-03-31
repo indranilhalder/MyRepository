@@ -33,7 +33,9 @@ class SignUp extends Component {
     }
   }
   onSubmit() {
-    if (this.props.onSubmit) {
+    if (this.state.passwordValue.length < "8") {
+      this.props.displayToast("Password length should be minimum 8 character");
+    } else {
       this.props.onSubmit({
         emailId: this.state.emailValue,
         username: this.state.phoneNumberValue,
@@ -112,13 +114,14 @@ class SignUp extends Component {
                     ? this.props.phoneNumberValue
                     : this.state.phoneNumberValue
                 }
-                placeholder={"Name"}
+                placeholder={"Phone number"}
+                type={"number"}
                 onChange={val => this.onPhoneNumberChange(val)}
               />
             </div>
             <div className={styles.input}>
               <Input
-                placeholder={"Email or phone number"}
+                placeholder={"Email (optional)"}
                 value={
                   this.props.emailValue
                     ? this.props.emailValue
