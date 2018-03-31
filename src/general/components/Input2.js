@@ -61,6 +61,7 @@ export default class Input2 extends React.Component {
               onChange={event => this.handleChange(event)}
               style={{ ...this.props.textStyle }}
               value={this.props.value}
+              maxLength={this.props.maxLength}
             />
           </div>
           {this.props.leftChild && (
