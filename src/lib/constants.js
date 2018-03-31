@@ -31,7 +31,7 @@ export const BRAND_PAGE_WITH_QUERY_PARAMS = `/c-(mbh[0-9a-zA-z]+)?&`;
 export const BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS = `/c-(mbh[0-9a-zA-z]+)?&`;
 
 export const BRAND_AND_CATEGORY_PAGE =
-  "/:slug/c-(msh[a-zA-Z0-9]+)/c-(mbh[a-zA-Z0-9]+)";
+  "/:slug/c-(msh[a-zA-Z0-9]+)/b-(mbh[a-zA-Z0-9]+)";
 
 export const CATEGORY_PAGE = "/c-(msh[0-9A-Za-z]+)";
 export const CATEGORY_PAGE_WITH_SLUG = `/:slug/c-(msh[0-9a-zA-Z]+)`;
