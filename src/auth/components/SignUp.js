@@ -33,13 +33,14 @@ class SignUp extends Component {
     }
   }
   onSubmit() {
-    this.props.onSubmit({
-      emailId: this.state.emailValue,
-      username: this.state.phoneNumberValue,
-      password: this.state.passwordValue
-    });
+    if (this.props.onSubmit) {
+      this.props.onSubmit({
+        emailId: this.state.emailValue,
+        username: this.state.phoneNumberValue,
+        password: this.state.passwordValue
+      });
+    }
   }
-
   navigateToLogin() {
     this.props.history.push(LOGIN_PATH);
   }
