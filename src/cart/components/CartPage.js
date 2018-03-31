@@ -135,7 +135,7 @@ class CartPage extends React.Component {
         this.props.updateQuantityInCartLoggedIn(
           selectedItem,
           quantity,
-          this.state.pinCode
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
         );
       }
     } else {
@@ -264,12 +264,19 @@ class CartPage extends React.Component {
 
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
+                let serviceable = false;
+                if (product.pinCodeResponse) {
+                  if (product.pinCodeResponse.isServicable === "Y") {
+                    serviceable = true;
+                  }
+                }
+
                 return (
                   <div className={styles.cartItem} key={i}>
                     <CartItem
                       pinCode={defaultPinCode}
                       product={product}
-                      productIsServiceable={product.pinCodeResponse}
+                      productIsServiceable={serviceable}
                       productImage={product.imageURL}
                       productDetails={product.description}
                       productName={product.productName}
@@ -307,7 +314,7 @@ class CartPage extends React.Component {
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
-                  amount={cartDetails.cartAmount.bagTotal.formattedValue}
+                  amount={cartDetails.cartAmount.paybleAmount.formattedValue}
                   bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
                   tax={this.props.cartTax}
                   offers={this.props.offers}

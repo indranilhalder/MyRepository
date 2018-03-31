@@ -62,7 +62,9 @@ class CheckOutPage extends React.Component {
     isRemainingAmount: true,
     payableAmount: "",
     cliqCashAmount: "",
-    bagAmount: ""
+    bagAmount: "",
+    selectedDeliveryDetails: "",
+    ratingExperience: false
   };
 
   renderLoader() {
@@ -88,6 +90,19 @@ class CheckOutPage extends React.Component {
     if (!currentSelectedDeliveryModes[ussId]) {
       Object.assign(currentSelectedDeliveryModes, newDeliveryObj);
       this.setState({ ussIdAndDeliveryModesObj: currentSelectedDeliveryModes });
+    }
+    let details = filter(this.props.cart.cartDetailsCNC.products, product => {
+      return product.USSID === ussId;
+    });
+
+    if (details) {
+      let SelectedDeliveryDetails = filter(
+        details[0].elligibleDeliveryMode,
+        elgibleDeliverMode => {
+          return elgibleDeliverMode.code === deliveryMode;
+        }
+      );
+      this.setState({ selectedDeliveryDetails: SelectedDeliveryDetails[0] });
     }
   }
 
@@ -689,6 +704,7 @@ class CheckOutPage extends React.Component {
                 <DeliveryModeSet
                   productDelivery={this.props.cart.cartDetailsCNC.products}
                   changeDeliveryModes={() => this.changeDeliveryModes()}
+                  selectedDeliveryDetails={this.state.selectedDeliveryDetails}
                 />
               </div>
             )}

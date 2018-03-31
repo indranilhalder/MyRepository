@@ -20,6 +20,7 @@ export default class CartItem extends React.Component {
       quantityList: []
     };
   }
+
   handleSave(product) {
     if (this.props.onSave) {
       this.props.onSave(product);
@@ -76,13 +77,6 @@ export default class CartItem extends React.Component {
     }
   };
   render() {
-    let isServiceAble = false;
-    if (this.props.productIsServiceable) {
-      if (this.props.productIsServiceable.isServicable === "Y") {
-        isServiceAble = true;
-      }
-    }
-
     return (
       <div className={styles.base}>
         <div className={styles.productInformation}>
@@ -91,7 +85,7 @@ export default class CartItem extends React.Component {
             productName={this.props.productName}
             productDetails={this.props.productDetails}
             price={this.props.price}
-            isServiceAvailable={isServiceAble}
+            isServiceAvailable={this.props.productIsServiceable}
           />
         </div>
         {this.props.deliveryInformation &&
