@@ -13,7 +13,6 @@ export default class OfferWidget extends React.Component {
   render() {
     let { feedComponentData, rest } = this.props;
     const data = feedComponentData.items ? feedComponentData.items : false;
-
     return (
       <div className={styles.holder}>
         <Carousel

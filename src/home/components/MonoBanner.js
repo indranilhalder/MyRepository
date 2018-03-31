@@ -11,19 +11,6 @@ export default class MonoBanner extends React.Component {
     );
     this.props.history.push(urlSuffix);
   }
-  // componentDidUpdate() {
-  //   console.log("COMPONENT DID UPDATE");
-  //   console.log(this.props.feedComponentData);
-  //   if (
-  //     this.props.feedComponentData.data &&
-  //     this.props.feedComponentData.data.data &&
-  //     this.props.feedComponentData.items.length === 0
-  //   ) {
-  //     const itemIds = this.props.feedComponentData.data.data;
-
-  //     this.props.getItems(this.props.positionInFeed, itemIds);
-  //   }
-  // }
 
   render() {
     let feedComponentData = this.props.feedComponentData;

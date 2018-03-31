@@ -1,0 +1,125 @@
+.base {
+  width: 100%;
+  height: 100vw;
+  position: relative;
+  margin-top: 20px;
+}
+.card {
+  width: 65%;
+  height: auto;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+.card:nth-child(1) {
+  transform: scale(0.9) translateX(-30%);
+  opacity: 0.33;
+}
+.card:nth-child(2) {
+  transform: scale(0.9) translateX(30%);
+  opacity: 0.33;
+}
+
+.leftRight {
+  composes: card;
+  animation: leftRight 1s ease-out forwards;
+}
+.rightCenter {
+  composes: card;
+  animation: rightCenter 1s ease-out forwards;
+}
+.centerLeft {
+  composes: card;
+  animation: centerLeft 1s ease-out forwards;
+}
+.rightLeft {
+  composes: card;
+  animation: rightLeft 1s ease-out forwards;
+}
+.leftCenter {
+  composes: centerLeft;
+  animation-direction: reverse;
+  animation-timing-function: ease-in;
+}
+.centerRight {
+  composes: rightCenter;
+  animation-direction: reverse;
+  animation-timing-function: ease-in;
+}
+.goingLeft {
+  composes: base;
+}
+@keyframes rightCenter {
+  from {
+    transform: scale(0.9) translateX(30%);
+    opacity: 0.33;
+  }
+  to {
+    transform: scale(1) translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes centerLeft {
+  from {
+    transform: scale(1) translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.9) translateX(-30%);
+    opacity: 0.33;
+  }
+}
+@keyframes leftRight {
+  from {
+    transform: scale(0.9) translateX(-30);
+    opacity: 0.33;
+  }
+  to {
+    transform: scale(0.9) translateX(30%);
+    opacity: 0.33;
+  }
+}
+@keyframes rightLeft {
+  from {
+    transform: scale(0.9) translateX(30);
+    opacity: 0.33;
+  }
+  to {
+    transform: scale(0.9) translateX(-30%);
+    opacity: 0.33;
+  }
+}
+
+.goingLeft .card:nth-child(1) {
+  z-index: 0;
+}
+.goingLeft .card:nth-child(2) {
+  z-index: 2;
+}
+.goingLeft .card {
+  z-index: 1;
+}
+
+.card:nth-child(1) {
+  transform: scale(0.9) translateX(-30%);
+  opacity: 0.33;
+}
+.card:nth-child(2) {
+  transform: scale(0.9) translateX(30%);
+  opacity: 0.33;
+}
+.goingRight {
+  composes: base;
+}
+.goingRight .card:nth-child(1) {
+  z-index: 2;
+}
+.goingRight .card:nth-child(2) {
+  z-index: 0;
+}
+.goingRight .card {
+  z-index: 1;
+}

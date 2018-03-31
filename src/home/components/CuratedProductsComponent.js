@@ -19,13 +19,7 @@ class CuratedProductsComponent extends React.Component {
     this.props.history.push(urlSuffix);
   };
   render() {
-    const {
-      feedComponentData,
-      backgroundImage,
-      headingText,
-      subHeader,
-      ...rest
-    } = this.props;
+    const { feedComponentData, ...rest } = this.props;
     let items = [];
     if (feedComponentData.items) {
       items = feedComponentData.items.map(transformData);
@@ -44,6 +38,7 @@ class CuratedProductsComponent extends React.Component {
                   productImage={datum.image}
                   title={datum.title}
                   price={datum.price}
+                  discountPrice={datum.discountPrice}
                   description={datum.description}
                   webURL={datum.webURL}
                   onClick={this.onClick}

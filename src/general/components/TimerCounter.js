@@ -1,6 +1,7 @@
 import React from "react";
 import Countdown from "react-countdown-now";
 import PropTypes from "prop-types";
+import moment from "moment";
 const renderTimer = ({ days, hours, minutes, seconds }) => {
   const finalHour = days * 24 + parseInt(hours, 10);
   return (
@@ -11,20 +12,9 @@ const renderTimer = ({ days, hours, minutes, seconds }) => {
 };
 export default class Counter extends React.Component {
   render() {
-    let endTime = this.props.endTime;
+    let endTime = moment(new Date(this.props.endTime)).format("DD/MM/YYYY");
 
-    const regex = /(.*)\/(.*)\/(.*) (\d+):(\d+):(\d+)/;
-
-    const match = regex.exec(endTime);
-    let newDateStr;
-    if (match) {
-      newDateStr = `${match[2]}/${match[1]}/${match[3]} ${match[4]}:${
-        match[5]
-      }:${match[6]}`;
-    }
-    return newDateStr ? (
-      <Countdown date={new Date(newDateStr)} renderer={renderTimer} />
-    ) : null;
+    return endTime ? <Countdown date={endTime} renderer={renderTimer} /> : null;
   }
 }
 Counter.propTypes = {

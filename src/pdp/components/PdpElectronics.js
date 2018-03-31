@@ -13,6 +13,7 @@ import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
+import PdpDeliveryModes from "./PdpDeliveryModes";
 import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import Logo from "../../general/components/Logo.js";
@@ -157,36 +158,7 @@ export default class PdpElectronics extends React.Component {
     this.props.getEmiTerms(globalAccessToken, cartValue);
     this.props.showEmiModal();
   };
-  renderDeliveryOptions(productData) {
-    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 
-    return (
-      productData.eligibleDeliveryModes &&
-      productData.deliveryModesATP &&
-      productData.deliveryModesATP
-        .filter(val => {
-          return productData.eligibleDeliveryModes
-            .map(val => {
-              return val.code;
-            })
-            .includes(val.key);
-        })
-        .map((val, idx) => {
-          return (
-            <DeliveryInformation
-              key={idx}
-              header={val.name}
-              placedTime={val.value}
-              type={val.key}
-              onClick={() => this.renderAddressModal()}
-              deliveryOptions={DELIVERY_TEXT}
-              label={defaultPinCode}
-              showCliqAndPiqButton={false}
-            />
-          );
-        })
-    );
-  }
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -219,6 +191,8 @@ export default class PdpElectronics extends React.Component {
           and {validSellersCount} other seller(s)
         </span>
       );
+    } else {
+      otherSellersText = `Sold by ${productData.winningSellerName}`;
     }
 
     if (productData) {
@@ -327,15 +301,29 @@ export default class PdpElectronics extends React.Component {
           this.props.productDetails.isServiceableToPincode.status === NO ? (
             <Overlay labelText="Not serviceable in you pincode,
 please try another pincode">
-              {this.renderDeliveryOptions(productData)}
+              <PdpDeliveryModes
+                eligibleDeliveryModes={productData.eligibleDeliveryModes}
+                deliveryModesATP={productData.deliveryModesATP}
+              />
             </Overlay>
           ) : (
-            this.renderDeliveryOptions(productData)
+            <PdpDeliveryModes
+              eligibleDeliveryModes={productData.eligibleDeliveryModes}
+              deliveryModesATP={productData.deliveryModesATP}
+            />
           )}
 
           {productData.otherSellers && (
             <div className={styles.separator}>
-              <PdpLink onClick={this.goToSellerPage}>
+              <PdpLink
+                onClick={this.goToSellerPage}
+                noLink={
+                  productData.otherSellers &&
+                  !productData.otherSellers.filter(val => {
+                    return val.availableStock !== "0";
+                  }).length > 0
+                }
+              >
                 <div className={styles.sellers}>{otherSellersText}</div>
               </PdpLink>
             </div>

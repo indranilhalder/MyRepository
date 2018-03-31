@@ -7,6 +7,8 @@
 }
 .inCard {
   composes: base;
+  background-repeat: no-repeat;
+
   padding: 0 20px;
 }
 .inCard .buffer {
@@ -16,7 +18,6 @@
   width: 100%;
   height: auto;
   overflow: hidden;
-  background-image: linear-gradient(292deg, #48dfe6, #4facfe);
   padding: 30px;
   margin: 20px 0;
 }
