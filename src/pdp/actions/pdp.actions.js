@@ -17,6 +17,7 @@ import {
   ANONYMOUS_USER
 } from "../../lib/constants";
 import { API_MSD_URL_ROOT } from "../../lib/apiRequest.js";
+import { displayToast } from "../../general/toast.actions.js";
 
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
 export const PRODUCT_DESCRIPTION_SUCCESS = "PRODUCT_DESCRIPTION_SUCCESS";
@@ -365,7 +366,7 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-
+      dispatch(displayToast("Added Product to Bag"));
       dispatch(addProductToCartSuccess());
     } catch (e) {
       dispatch(addProductToCartFailure(e.message));

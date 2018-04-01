@@ -1,6 +1,7 @@
 import * as cartActions from "../actions/cart.actions";
 import cloneDeep from "lodash/cloneDeep";
 import * as Cookies from "../../lib/Cookie";
+import { CLEAR_ERROR } from "../../general/error.actions.js";
 import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
@@ -131,6 +132,24 @@ const cart = (
 ) => {
   let updatedCartDetailsCNC;
   switch (action.type) {
+    case CLEAR_ERROR:
+      return Object.assign({}, state, {
+        userCartError: null,
+        cartDetailsError: null,
+        cartDetailsCNCError: null,
+        couponError: null,
+        emiBankError: null,
+        softReserveError: null,
+        paymentsModeError: null,
+        bankOfferError: null,
+        cliqCashPaymentStatusError: null,
+        jusPayError: null,
+        transactionDetailsError: null,
+        orderConfirmationDetailsError: null,
+        jusPayPaymentDetailsError: null,
+        codEligibilityError: null,
+        binValidationCODError: null
+      });
     case cartActions.CART_DETAILS_REQUEST:
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
