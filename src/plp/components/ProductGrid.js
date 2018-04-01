@@ -71,7 +71,7 @@ export default class ProductGrid extends React.Component {
       <div className={styles.base}>
         <div className={styles.header}>
           <div className={styles.product}>
-            {this.props.data && this.props.data.length} Products
+            {this.props.totalResults ? this.props.totalResults : 0} Products
           </div>
 
           {/* <div className={styles.area}>{this.props.area}</div> */}
