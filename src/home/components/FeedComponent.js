@@ -64,7 +64,6 @@ class FeedComponent extends React.Component {
                   onClick={this.onClick}
                   {...rest}
                   {...datum}
-                  hasWishlistButton={true}
                 />
               );
             })}

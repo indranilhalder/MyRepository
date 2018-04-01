@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Icon } from "xelpmoc-core";
 import downloadIcon from "./img/download.svg";
-export default class Wishlist extends React.Component {
+export default class AddToWishListButton extends React.Component {
   onClick(e) {
     e.stopPropagation();
     const { productListingId, winningUssID, wishlistItems } = this.props;
@@ -13,8 +13,8 @@ export default class Wishlist extends React.Component {
     });
     if (indexOfProduct < 0) {
       this.props.addProductToWishList({
-        productcode: productListingId,
-        USSID: winningUssID
+        productListingId,
+        winningUssID
       }); // adding product to wishlist
     } else {
       this.props.displayToast(); // product is a already in wish list show toast
@@ -28,7 +28,7 @@ export default class Wishlist extends React.Component {
     );
   }
 }
-Wishlist.propTypes = {
+AddToWishListButton.propTypes = {
   productListingId: PropTypes.string.isRequired,
   winningUssID: PropTypes.string.isRequired,
   wishlistItems: PropTypes.arrayOf(
@@ -40,7 +40,7 @@ Wishlist.propTypes = {
   addProductToWishList: PropTypes.func,
   size: PropTypes.number
 };
-Wishlist.defaultProps = {
+AddToWishListButton.defaultProps = {
   size: 20,
   addProductToWishList: () => {}
 };

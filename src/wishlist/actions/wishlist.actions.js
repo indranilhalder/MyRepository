@@ -63,13 +63,13 @@ export function getWishListItems(productDetails) {
       const result = await api.postFormData(
         `${PRODUCT_DETAILS_PATH}/${
           JSON.parse(userDetails).userName
-        }//getAllWishlist?platformNumber=2&access_token=${
+        }/getAllWishlist?platformNumber=2&access_token=${
           JSON.parse(customerCookie).access_token
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
       return dispatch(getWishListItemsSuccess(resultJson.wishList[0]));
     } catch (e) {

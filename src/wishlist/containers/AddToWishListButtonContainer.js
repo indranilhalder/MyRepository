@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { displayToast } from "../../general/toast.actions";
-import Wishlist from "../components/Wishlist";
+import AddToWishListButton from "../components/AddToWishListButton";
 import { addProductToWishList } from "../actions/wishlist.actions";
 import { SUCCESS } from "../../lib/constants";
 
@@ -11,6 +11,8 @@ const toastMessageOnAlreadyInWishlist = "Already in wishlist";
 const mapDispatchToProps = dispatch => {
   return {
     addProductToWishList: async productObj => {
+      console.log("ADD PRODUCT TO WISHLIST");
+      console.log(productObj);
       const wishlistResponse = await dispatch(addProductToWishList(productObj));
       if (wishlistResponse.status === SUCCESS) {
         dispatch(displayToast(toastMessageOnSuccessAddToWishlist));
@@ -31,7 +33,8 @@ const mapStateToProps = (state, ownProps) => {
     wishlistItems: state.wishlistItems.wishlistItems
   };
 };
-const WishlistContainer = connect(mapStateToProps, mapDispatchToProps)(
-  Wishlist
-);
-export default WishlistContainer;
+const AddToWishListButtonContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddToWishListButton);
+export default AddToWishListButtonContainer;
