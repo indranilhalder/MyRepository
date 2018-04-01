@@ -366,6 +366,7 @@ public class DefaultCMSComponentControler
 								}
 								if (null != flashSalesComponentModel.getItems() && flashSalesComponentModel.getItems().size() > 0)
 								{
+									String productCode=StringUtils.EMPTY;
 									try
 									{
 										for (final FlashSalesItemElementModel flashSalesElementModel : flashSalesComponentModel.getItems())
@@ -375,6 +376,7 @@ public class DefaultCMSComponentControler
 											if (null != flashSalesElementModel && null != flashSalesElementModel.getProductCode()
 													&& null != flashSalesElementModel.getProductCode().getCode())
 											{
+												productCode = flashSalesElementModel.getProductCode().getCode();
 												final BuyBoxData buyboxdata = buyBoxFacade
 														.buyboxPrice(flashSalesElementModel.getProductCode().getCode());
 												//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
@@ -446,12 +448,12 @@ public class DefaultCMSComponentControler
 									}
 									catch (final EtailNonBusinessExceptions e)
 									{
-										LOG.error("Product is not properly enriched or either out of stock", e);
+										LOG.error("Product is not properly enriched or either out of stock: code-"+ productCode, e);
 										continue;
 									}
 									catch (Exception e)
 									{
-										LOG.error("Product is not properly enriched or either out of stock", e);
+										LOG.error("Product is not properly enriched or either out of stock: code-" + productCode, e);
 										continue;
 									}
 								}
