@@ -29,8 +29,6 @@ class ProductReviewPage extends Component {
   };
 
   componentDidMount() {
-    console.log("COMPONENT DID MOUNT");
-    console.log(this.props.match);
     if (!this.props.productDetails) {
       this.props.getProductDescription(this.props.match.params[0]);
     }
