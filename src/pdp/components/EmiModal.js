@@ -6,6 +6,19 @@ import PropTypes from "prop-types";
 import styles from "./EmiModal.css";
 const EMI_INFO = "EMI for the product is provided by the following banks";
 export default class EmiModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openIndex: null
+    };
+  }
+  handleOpen(index) {
+    if (index === this.state.openIndex) {
+      this.setState({ openIndex: null });
+    } else {
+      this.setState({ openIndex: index });
+    }
+  }
   render() {
     return (
       <SlideModal closeModal={this.props.closeModal}>
@@ -18,10 +31,13 @@ export default class EmiModal extends React.Component {
               this.props.emiData.bankList.map((val, i) => {
                 return (
                   <Accordion
+                    controlled={true}
                     text={val.emiBank}
                     key={i}
                     offset={20}
                     activeBackground="#f8f8f8"
+                    isOpen={this.state.openIndex === i}
+                    onOpen={() => this.handleOpen(i)}
                   >
                     <EmiCard options={val.emitermsrate} />
                   </Accordion>

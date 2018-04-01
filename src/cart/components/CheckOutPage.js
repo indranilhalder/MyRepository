@@ -15,6 +15,7 @@ import CartItem from "./CartItem";
 import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
 import filter from "lodash/filter";
+import find from "lodash/find";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString from "query-string";
 import PiqPage from "./PiqPage";
@@ -62,7 +63,9 @@ class CheckOutPage extends React.Component {
     isRemainingAmount: true,
     payableAmount: "",
     cliqCashAmount: "",
-    bagAmount: ""
+    bagAmount: "",
+    selectedDeliveryDetails: "",
+    ratingExperience: false
   };
 
   renderLoader() {
@@ -88,6 +91,21 @@ class CheckOutPage extends React.Component {
     if (!currentSelectedDeliveryModes[ussId]) {
       Object.assign(currentSelectedDeliveryModes, newDeliveryObj);
       this.setState({ ussIdAndDeliveryModesObj: currentSelectedDeliveryModes });
+    }
+    let deliveryModeDetails = find(
+      this.props.cart.cartDetailsCNC.products,
+      product => {
+        return product.USSID === ussId;
+      }
+    );
+    if (deliveryModeDetails) {
+      let SelectedDeliveryDetails = find(
+        deliveryModeDetails.elligibleDeliveryMode,
+        elgibleDeliverMode => {
+          return elgibleDeliverMode.code === deliveryMode;
+        }
+      );
+      this.setState({ selectedDeliveryDetails: SelectedDeliveryDetails });
     }
   }
 
@@ -310,7 +328,8 @@ class CheckOutPage extends React.Component {
         }
         this.setState({
           payableAmount:
-            nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.formattedValue,
+            nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount
+              .formattedValue,
           cliqCashAmount: cliqCashAmount,
           bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
         });
@@ -689,6 +708,7 @@ class CheckOutPage extends React.Component {
                 <DeliveryModeSet
                   productDelivery={this.props.cart.cartDetailsCNC.products}
                   changeDeliveryModes={() => this.changeDeliveryModes()}
+                  selectedDeliveryDetails={this.state.selectedDeliveryDetails}
                 />
               </div>
             )}

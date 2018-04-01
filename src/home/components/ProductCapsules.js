@@ -27,6 +27,7 @@ export default class ProductCapsules extends React.Component {
   render() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
     if (!userDetails || !customerCookie) {
       return null;
     }
@@ -40,7 +41,6 @@ export default class ProductCapsules extends React.Component {
 
     const productCapsulesData = this.props.feedComponentData;
     const data = this.props.feedComponentData.data;
-
     if (!data) {
       return null;
     }

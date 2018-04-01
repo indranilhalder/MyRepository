@@ -11,6 +11,7 @@ import filter from "lodash/filter";
 import { Redirect } from "react-router-dom";
 import { MAIN_ROUTER } from "../../lib/constants";
 import TextWithUnderLine from "./TextWithUnderLine.js";
+import EmptyBag from "./EmptyBag.js";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -20,7 +21,8 @@ import {
   ANONYMOUS_USER,
   CHECKOUT_ROUTER,
   LOGIN_PATH,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  YES
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
@@ -134,7 +136,7 @@ class CartPage extends React.Component {
         this.props.updateQuantityInCartLoggedIn(
           selectedItem,
           quantity,
-          this.state.pinCode
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
         );
       }
     } else {
@@ -263,16 +265,23 @@ class CartPage extends React.Component {
 
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
+                let serviceable = false;
+                if (product.pinCodeResponse) {
+                  if (product.pinCodeResponse.isServicable === YES) {
+                    serviceable = true;
+                  }
+                }
+
                 return (
                   <div className={styles.cartItem} key={i}>
                     <CartItem
                       pinCode={defaultPinCode}
                       product={product}
-                      productIsServiceable={product.pinCodeResponse}
+                      productIsServiceable={serviceable}
                       productImage={product.imageURL}
                       productDetails={product.description}
                       productName={product.productName}
-                      price={product.price}
+                      price={product.offerPrice}
                       index={i}
                       deliveryInformation={product.elligibleDeliveryMode}
                       deliverTime={
@@ -299,12 +308,14 @@ class CartPage extends React.Component {
                 );
               })}
 
-            <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
-
+            {cartDetails.products && (
+              <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
+            )}
+            {!cartDetails.products && <EmptyBag />}
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
-                  amount={cartDetails.cartAmount.bagTotal.formattedValue}
+                  amount={cartDetails.cartAmount.paybleAmount.formattedValue}
                   bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
                   tax={this.props.cartTax}
                   offers={this.props.offers}
