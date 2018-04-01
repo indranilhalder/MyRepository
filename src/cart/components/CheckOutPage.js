@@ -17,7 +17,7 @@ import GridSelect from "../../general/components/GridSelect";
 import filter from "lodash/filter";
 import find from "lodash/find";
 import OrderConfirmation from "./OrderConfirmation";
-import queryString from "query-string";
+import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
 
 import {
@@ -67,7 +67,10 @@ class CheckOutPage extends React.Component {
     selectedDeliveryDetails: "",
     ratingExperience: false
   };
-
+  updateLocalStoragePinCode(pincode) {
+    const postalCode = parseInt(pincode);
+    localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
+  }
   renderLoader() {
     return (
       <div className={styles.loadingIndicator}>
@@ -110,8 +113,13 @@ class CheckOutPage extends React.Component {
   }
 
   getAllStores = selectedProductsUssIdForCliqAndPiq => {
+    const defalutPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.setState({ showCliqAndPiq: true, selectedProductsUssIdForCliqAndPiq });
-    this.props.getAllStoresCNC(this.state.selectedAddress.postalCode);
+    this.props.getAllStoresCNC(defalutPinCode);
+  };
+  changePincodeOnCliqAndPiq = pincode => {
+    this.updateLocalStoragePinCode(pincode);
+    this.props.getAllStoresCNC(pincode);
   };
   togglePickupPersonForm() {
     this.setState(prevState => ({
@@ -245,6 +253,7 @@ class CheckOutPage extends React.Component {
         addPickupPersonCNC={(mobile, name) =>
           this.addPickupPersonCNC(mobile, name)
         }
+        changePincode={pincode => this.changePincodeOnCliqAndPiq(pincode)}
         goBack={() => this.removeCliqAndPiq()}
       />
     );
@@ -423,21 +432,23 @@ class CheckOutPage extends React.Component {
   }
 
   onSelectAddress(selectedAddress) {
-    let addressSelected = filter(
+    let addressSelected = find(
       this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
       address => {
         return address.id === selectedAddress[0];
       }
     );
+
+    this.updateLocalStoragePinCode(addressSelected.postalCode);
     // here we are checking the if user selected any address then setting our state
     // and in else condition if user deselect then this function will again call and
     //  then we are resetting the previous selected address
     if (selectedAddress[0]) {
       this.setState({
         confirmAddress: false,
-        selectedAddress: addressSelected[0]
+        selectedAddress: addressSelected
       });
-      this.setState({ addressId: addressSelected });
+      this.setState({ addressId: addressSelected.id });
     } else {
       this.setState({ addressId: null, selectedAddress: null });
     }
@@ -452,7 +463,7 @@ class CheckOutPage extends React.Component {
   handleSubmit = () => {
     if (!this.state.confirmAddress && !this.state.isGiftCard) {
       this.props.addAddressToCart(
-        this.state.addressId[0].id,
+        this.state.addressId,
         this.state.selectedAddress.postalCode
       );
       this.setState({ confirmAddress: true });
