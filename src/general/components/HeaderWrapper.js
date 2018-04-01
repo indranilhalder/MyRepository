@@ -15,9 +15,10 @@ import {
   LOGIN_PATH,
   SIGN_UP_PATH,
   PRODUCT_LISTINGS,
-  MY_ACCOUNT_WISHLIST_PAGE,
+  SAVE_LIST_PAGE,
   LOGGED_IN_USER_DETAILS,
-  CUSTOMER_ACCESS_TOKEN
+  CUSTOMER_ACCESS_TOKEN,
+  MY_ACCOUNT_PAGE
 } from "../../../src/lib/constants";
 import { SIGN_UP } from "../../auth/actions/user.actions";
 
@@ -39,7 +40,7 @@ class HeaderWrapper extends React.Component {
       if (!userDetails || !customerCookie) {
         this.props.history.push(LOGIN_PATH);
       } else {
-        this.props.history.push(MY_ACCOUNT_WISHLIST_PAGE);
+        this.props.history.push(`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`);
       }
     }
   };

@@ -170,7 +170,8 @@ export default class PdpApparel extends React.Component {
           goToCart={() => this.goToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
-          addProductToWishList={() => this.addToWishList()}
+          productListingId={productData.productListingId}
+          ussId={productData.winningUssID}
         >
           <ProductGalleryMobile>
             {mobileGalleryImages.map((val, idx) => {
