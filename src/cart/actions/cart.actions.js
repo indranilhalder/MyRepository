@@ -274,8 +274,8 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
         `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetails?access_token=${accessToken}&isPwa=true&platformNumber=2&pincode=${pinCode}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].type}`);
       }
       dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
