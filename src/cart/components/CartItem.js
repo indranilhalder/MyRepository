@@ -53,6 +53,7 @@ export default class CartItem extends React.Component {
   componentWillMount() {
     this.setQuantity();
   }
+
   handleQuantityChange(changedValue) {
     this.setState({ selectedValue: changedValue }, () => {
       if (this.props.onQuantityChange) {
@@ -135,7 +136,7 @@ export default class CartItem extends React.Component {
                 options={this.state.quantityList}
                 selected={this.state.selectedValue}
                 onChange={val => this.handleQuantityChange(val)}
-                value={this.state.qtySelectedByUser}
+                value={this.state.selectedValue}
               />
             </div>
           </div>
