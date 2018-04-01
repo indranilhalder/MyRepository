@@ -160,7 +160,15 @@ export function getProductDescription(productCode) {
         `${PRODUCT_DESCRIPTION_PATH}/${productCode}?isPwa=true`
       );
       const resultJson = await result.json();
-      dispatch(getProductDescriptionSuccess(resultJson));
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        dispatch(getProductDescriptionSuccess(resultJson));
+      } else {
+        throw new Error(`${resultJson.error}`);
+      }
     } catch (e) {
       dispatch(getProductDescriptionFailure(e.message));
     }
