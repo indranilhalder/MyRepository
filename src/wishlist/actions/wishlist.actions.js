@@ -109,6 +109,7 @@ export function addProductToWishList(productDetails) {
     productToBeAdd.append("ussid", productDetails.winningUssID);
     productToBeAdd.append("productCode", productDetails.productListingId);
     productToBeAdd.append("wishlistName", MY_WISH_LIST);
+    console.log("ADD PRODUCT TO WISH LIST REQUEST");
     try {
       const result = await api.postFormData(
         `${PRODUCT_DETAILS_PATH}/${
@@ -118,6 +119,8 @@ export function addProductToWishList(productDetails) {
         }&isPwa=true`,
         productToBeAdd
       );
+      console.log("RESULT JSON");
+      console.log(resultJson);
       const resultJson = await result.json();
       if (resultJson.status === SUCCESS_FOR_ADDING_TO_WSHLIST) {
         return dispatch(addProductToWishListSuccess(productDetails));
