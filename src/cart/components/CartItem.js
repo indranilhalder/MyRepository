@@ -55,7 +55,6 @@ export default class CartItem extends React.Component {
   }
 
   handleQuantityChange(changedValue) {
-    console.log(changedValue);
     this.setState({ selectedValue: changedValue }, () => {
       if (this.props.onQuantityChange) {
         this.props.onQuantityChange(this.props.index, this.state.selectedValue);

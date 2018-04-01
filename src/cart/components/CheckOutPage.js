@@ -661,7 +661,6 @@ class CheckOutPage extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     if (this.props.cart.loading) {
       return <div className={styles.base}>{this.renderLoader()}</div>;
     }
