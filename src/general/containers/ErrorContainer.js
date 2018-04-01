@@ -27,7 +27,8 @@ const mapStateToProps = state => {
     jusPayPaymentDetailsError: state.cart.jusPayPaymentDetailsError,
     codEligibilityError: state.cart.codEligibilityError,
     binValidationCODError: state.cart.binValidationCODError,
-    plpError: state.productListings.error
+    plpError: state.productListings.error,
+    wishlistError: state.wishlistItems.error
   };
 };
 

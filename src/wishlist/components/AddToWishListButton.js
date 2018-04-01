@@ -20,20 +20,21 @@ export default class AddToWishListButton extends React.Component {
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
       this.props.history.push(LOGIN_PATH);
-    }
-    const { productListingId, winningUssID, wishlistItems } = this.props;
-    const indexOfProduct = wishlistItems.findIndex(item => {
-      return (
-        item.productcode === productListingId || item.USSID === winningUssID
-      );
-    });
-    if (indexOfProduct < 0) {
-      this.props.addProductToWishList({
-        productListingId,
-        winningUssID
-      }); // adding product to wishlist
     } else {
-      this.props.displayToast(); // product is a already in wish list show toast
+      const { productListingId, winningUssID, wishlistItems } = this.props;
+      const indexOfProduct = wishlistItems.findIndex(item => {
+        return (
+          item.productcode === productListingId || item.USSID === winningUssID
+        );
+      });
+      if (indexOfProduct < 0) {
+        this.props.addProductToWishList({
+          productListingId,
+          winningUssID
+        }); // adding product to wishlist
+      } else {
+        this.props.displayToast(); // product is a already in wish list show toast
+      }
     }
   }
   render() {
