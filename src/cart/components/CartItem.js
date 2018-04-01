@@ -15,8 +15,8 @@ export default class CartItem extends React.Component {
       showDelivery: this.props.showDelivery ? this.props.showDelivery : false,
       selectedValue: "",
       label: "See all",
-      maxQuantityAllowed: 1,
-      qtySelectedByUser: 1,
+      maxQuantityAllowed: props.product && props.product.maxQuantityAllowed,
+      qtySelectedByUser: props.product && props.product.qtySelectedByUser,
       quantityList: []
     };
   }
@@ -26,9 +26,9 @@ export default class CartItem extends React.Component {
       this.props.onSave(product);
     }
   }
-  handleRemove(index, pinCode) {
+  handleRemove(index) {
     if (this.props.onRemove) {
-      this.props.onRemove(index, pinCode);
+      this.props.onRemove(index);
     }
   }
   selectDeliveryMode(val) {
@@ -68,7 +68,7 @@ export default class CartItem extends React.Component {
     });
 
     if (this.state.quantityList.length === 0) {
-      let fetchedQuantityList = [];
+      let fetchedQuantityList = [{ value: "Qut" }];
       for (let i = 1; i <= parseInt(this.props.maxQuantityAllowed, 10); i++) {
         fetchedQuantityList.push({ value: i.toString() });
       }
@@ -122,9 +122,7 @@ export default class CartItem extends React.Component {
           <div className={styles.footer}>
             <BagPageFooter
               onSave={() => this.handleSave(this.props.product)}
-              onRemove={() =>
-                this.handleRemove(this.props.index, this.state.pinCode)
-              }
+              onRemove={() => this.handleRemove(this.props.index)}
             />
             <div className={styles.dropdown}>
               <div className={styles.dropdownLabel}>
@@ -134,9 +132,9 @@ export default class CartItem extends React.Component {
                 borderNone={true}
                 placeholder="1"
                 options={this.state.quantityList}
-                selected={this.state.selectedValue}
+                selected={this.state.qtySelectedByUser}
                 onChange={val => this.handleQuantityChange(val)}
-                value={this.state.selectedValue}
+                value={this.state.qtySelectedByUser}
               />
             </div>
           </div>
