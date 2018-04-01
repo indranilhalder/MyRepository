@@ -448,12 +448,12 @@ public class DefaultCMSComponentControler
 									}
 									catch (final EtailNonBusinessExceptions e)
 									{
-										LOG.error("Product is not properly enriched or either out of stock: code-"+ productCode, e);
+										LOG.error("Flash Sales Component Product is not properly enriched or either out of stock: code-"+ productCode, e);
 										continue;
 									}
 									catch (Exception e)
 									{
-										LOG.error("Product is not properly enriched or either out of stock: code-" + productCode, e);
+										LOG.error("Flash Sales Component Product is not properly enriched or either out of stock: code-" + productCode, e);
 										continue;
 									}
 								}
