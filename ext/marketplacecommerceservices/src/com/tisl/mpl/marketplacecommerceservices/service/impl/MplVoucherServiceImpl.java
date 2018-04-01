@@ -3521,4 +3521,174 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 	}
 
+	/**
+	 * The Method Returns Updated Discount Values
+	 * 
+	 * NO COST EMI
+	 * 
+	 * @param oModel
+	 * @param voucher
+	 */
+	@Override
+	public AbstractOrderModel getUpdatedDiscountValuesNoCotEMI(AbstractOrderModel oModel, VoucherModel voucher)
+	{
+		getModelService().refresh(oModel);
+		final List<DiscountValue> globalDiscountList = new ArrayList<>(oModel.getGlobalDiscountValues());
+
+		List<DiscountModel> discountList = new ArrayList<>(oModel.getDiscounts());
+
+		final Tuple2<Boolean, String> cartCouponObj = isUserVoucherPresent(discountList);
+
+		//For User Coupon
+		if (cartCouponObj.getFirst().booleanValue())
+		{
+			final String code = cartCouponObj.getSecond();
+			final double couponDiscount = getCouponDiscount(oModel.getEntries());
+			DiscountValue cartdiscountValue = null;
+
+			if (CollectionUtils.isNotEmpty(globalDiscountList))
+			{
+				final Iterator iter = globalDiscountList.iterator();
+				while (iter.hasNext())
+				{
+					final DiscountValue discount = (DiscountValue) iter.next();
+					if (discount.getCode().equalsIgnoreCase(code))
+					{
+						cartdiscountValue = new DiscountValue(discount.getCode(), couponDiscount, true, couponDiscount,
+								discount.getCurrencyIsoCode());
+
+						iter.remove();
+						break;
+					}
+				}
+
+				globalDiscountList.add(cartdiscountValue);
+			}
+
+		}
+
+		//For Cart Coupon
+
+		final Tuple2<Boolean, String> bankCouponObj = isCartVoucherApplicable(discountList);
+		if (bankCouponObj.getFirst().booleanValue())
+		{
+			final String code = bankCouponObj.getSecond();
+			final double couponDiscount = getCartCouponDiscount(oModel.getEntries());
+			DiscountValue cartdiscountValue = null;
+
+			if (CollectionUtils.isNotEmpty(globalDiscountList))
+			{
+				final Iterator iter = globalDiscountList.iterator();
+				while (iter.hasNext())
+				{
+					final DiscountValue discount = (DiscountValue) iter.next();
+					if (discount.getCode().equalsIgnoreCase(code))
+					{
+						cartdiscountValue = new DiscountValue(discount.getCode(), couponDiscount, true, couponDiscount,
+								discount.getCurrencyIsoCode());
+						iter.remove();
+						break;
+					}
+				}
+				globalDiscountList.add(cartdiscountValue);
+			}
+		}
+
+		// For No Cost EMI Block
+		final double discountAmt = getNoCostEMIDiscountAmount(oModel, voucher);
+
+		if (CollectionUtils.isNotEmpty(globalDiscountList))
+		{
+			DiscountValue discountValue = null;
+			final Iterator iter = globalDiscountList.iterator();
+
+			while (iter.hasNext())
+			{
+				final DiscountValue discount = (DiscountValue) iter.next();
+				if (discount.getCode().equalsIgnoreCase(voucher.getCode()))
+				{
+					discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discountAmt,
+							discount.getCurrencyIsoCode());
+
+					iter.remove();
+					break;
+				}
+			}
+
+			globalDiscountList.add(discountValue);
+		}
+
+		oModel.setGlobalDiscountValues(globalDiscountList);
+		getModelService().save(oModel);
+		getModelService().refresh(oModel);
+
+		return oModel;
+
+	}
+	
+	/***
+	 * The Method Return No Cost EMI Discount Amount 
+	 * 
+	 * @param oModel
+	 * @param voucher
+	 * @return
+	 */
+	private double getNoCostEMIDiscountAmount(final AbstractOrderModel oModel, final VoucherModel voucher)
+	{
+		final List<AbstractOrderEntryModel> entries = getOrderEntryModelFromVouEntries(voucher, oModel);
+		double subtotal = getSubtotalForCoupon(entries);
+
+		if(null != oModel.getSplitModeInfo() && oModel.getSplitModeInfo().equalsIgnoreCase("Split"))
+		{
+				double walletAmount= null != oModel.getTotalWalletAmount() ? oModel.getTotalWalletAmount().doubleValue() :0.0d; 
+				subtotal -= walletAmount; 
+		}
+		return getDiscountValue(voucher, subtotal);
+	}
+	
+	/***
+	 * The Method Returns Applicability and code for Bank Coupons 
+	 * 
+	 * @param discounts
+	 * @return Tuple2
+	 */
+	private Tuple2<Boolean, String> isCartVoucherApplicable(final List<DiscountModel> discounts)
+	{
+		boolean flag = false;
+		String couponCode = MarketplacecommerceservicesConstants.EMPTY;
+		if (CollectionUtils.isNotEmpty(discounts))
+		{
+			for (final DiscountModel discount : discounts)
+			{
+				if (discount instanceof MplCartOfferVoucherModel)
+				{
+					final MplCartOfferVoucherModel object = (MplCartOfferVoucherModel) discount;
+					flag = true;
+					couponCode = object.getCode();
+					break;
+				}
+			}
+		}
+
+		final Tuple2<Boolean, String> cartCouponObj = new Tuple2(Boolean.valueOf(flag), couponCode);
+
+		return cartCouponObj;
+	}
+
+	/***
+	 * The Method Checks cart after No Cost EMI apply
+	 * 
+	 * @param lastVoucher
+	 * @param cartModel
+	 * @param orderModel
+	 * @param applicableOrderEntryList
+	 */
+	@Override
+	public VoucherDiscountData checkCartNoCostEMIApply(VoucherModel lastVoucher, CartModel cartModel, OrderModel orderModel,
+			List<AbstractOrderEntryModel> applicableOrderEntryList)
+	{
+		return null;
+		
+	}
+
 }

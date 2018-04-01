@@ -279,7 +279,26 @@ public interface MplVoucherService
 
 	public List<CouponUserRestrictionModel> fetchExistingVoucherData(final VoucherModel voucher);
 
-	/* CAR-330 ends here */
+	/****
+	 * The Method Updates the Discount Values 
+	 * 
+	 * @param oModel
+	 * @param voucher
+	 * @return AbstractOrderModel
+	 */
+	AbstractOrderModel getUpdatedDiscountValuesNoCotEMI(AbstractOrderModel oModel, VoucherModel voucher);
+
+	/***
+	 * The Method Checks Cart after No Cost EMI Apply
+	 * 
+	 * @param lastVoucher
+	 * @param cartModel
+	 * @param orderModel
+	 * @param applicableOrderEntryList
+	 */
+	VoucherDiscountData checkCartNoCostEMIApply(VoucherModel lastVoucher, CartModel cartModel, OrderModel orderModel,
+			List<AbstractOrderEntryModel> applicableOrderEntryList);
+
 
 
 }

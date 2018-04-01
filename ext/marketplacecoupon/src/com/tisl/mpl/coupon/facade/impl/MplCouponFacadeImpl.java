@@ -73,6 +73,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.ChannelRestrictionModel;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.model.MplOrderRestrictionModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -645,6 +646,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			data = getMplVoucherService().checkCartAfterCartVoucherApply(lastVoucher, cartModel, orderModel,
 					applicableOrderEntryList);
 		}
+		else if (lastVoucher instanceof MplNoCostEMIVoucherModel)
+		{
+			getMplVoucherService().checkCartNoCostEMIApply(lastVoucher, cartModel, orderModel, applicableOrderEntryList);
+		}
+
 
 		if (null != data && StringUtils.isNotEmpty(data.getRedeemErrorMsg()))
 		{
@@ -2598,8 +2604,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					if (isVoucherRedeemable)
 					{
 						recalculateCartForCoupon(cartModel, null); //Recalculates cart after applying No Cost EMI voucher
-						cartModel = (CartModel) getMplVoucherService().getUpdatedCartDiscountValues(cartModel, voucher);
-
+						cartModel = (CartModel) getMplVoucherService().getUpdatedDiscountValuesNoCotEMI(cartModel, voucher);
 						final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher,
 								cartModel); //Finds applicable order entries
 
