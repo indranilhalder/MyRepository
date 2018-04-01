@@ -25,6 +25,9 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,6 +93,8 @@ import com.tisl.mpl.wsdto.*;
 @RequestMapping(value = "/{baseSiteId}/cms")
 public class DefaultCMSComponentControler
 {
+	private static final Logger LOG = LoggerFactory.getLogger(DefaultCMSComponentControler.class);
+	
 	@Autowired
 	private MplCMSPageServiceImpl mplCMSPageService;
 
@@ -117,7 +122,7 @@ public class DefaultCMSComponentControler
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/defaultpage", method = RequestMethod.GET)
 	@ResponseBody
-	public UICompPageWiseWsDTO getComponentsForPage(@RequestParam final String pageId) throws CMSItemNotFoundException
+	public UICompPageWiseWsDTO getComponentsForPage(@RequestParam final String pageId) throws CMSItemNotFoundException,EtailNonBusinessExceptions
 	{
 		final ContentPageModel contentPage = mplCMSPageService.getPageByLabelOrId(pageId);
 
@@ -160,7 +165,7 @@ public class DefaultCMSComponentControler
 										}
 										else
 										{
-											heroBannerCompListObj.setImageURL("");
+											heroBannerCompListObj.setImageURL(StringUtils.EMPTY);
 										}
 										if (null != heroBannerElementModel.getBrandLogo()
 												&& null != heroBannerElementModel.getBrandLogo().getURL())
@@ -169,27 +174,33 @@ public class DefaultCMSComponentControler
 										}
 										else
 										{
-											heroBannerCompListObj.setBrandLogo("");
+											heroBannerCompListObj.setBrandLogo(StringUtils.EMPTY);
 										}
 										heroBannerCompListObj
-												.setTitle(null != heroBannerElementModel.getTitle() ? heroBannerElementModel.getTitle() : "");
+												.setTitle(null != heroBannerElementModel.getTitle() ? heroBannerElementModel.getTitle() : StringUtils.EMPTY);
 										heroBannerCompListObj.setWebURL(
-												null != heroBannerElementModel.getWebURL() ? heroBannerElementModel.getWebURL() : "");
+												null != heroBannerElementModel.getWebURL() ? heroBannerElementModel.getWebURL() : StringUtils.EMPTY);
 										heroBannerCompListWsDTO.add(heroBannerCompListObj);
 									}
 								}
 								catch (final EtailNonBusinessExceptions e)
 								{
 									heroBannerCompWsDTO
-											.setComponentId(null != heroBannerCompObj.getUid() ? heroBannerCompObj.getUid() : "");
-									e.setErrorCode("Error in getting HeroBannerComponent with id: " + heroBannerCompObj.getUid());
-									System.out.println(e.getErrorMessage());
+											.setComponentId(null != heroBannerCompObj.getUid() ? heroBannerCompObj.getUid() : StringUtils.EMPTY);
+									LOG.error("Error in getting HeroBannerComponent with id: " + heroBannerCompObj.getUid(), e);
+									continue;
+								}	catch (Exception e)
+								{
+									heroBannerCompWsDTO
+											.setComponentId(null != heroBannerCompObj.getUid() ? heroBannerCompObj.getUid() : StringUtils.EMPTY);
+									LOG.error("Error in getting HeroBannerComponent with id: " + heroBannerCompObj.getUid(), e);
+									continue;
 								}
 							}
 							heroBannerCompWsDTO.setItems(heroBannerCompListWsDTO);
 							heroBannerCompWsDTO.setType(heroBannerComp);
 							uiCompPageElementObj.setComponentName("heroBannerComponent");
-							heroBannerCompWsDTO.setComponentId(null != heroBannerCompObj.getUid() ? heroBannerCompObj.getUid() : "");
+							heroBannerCompWsDTO.setComponentId(null != heroBannerCompObj.getUid() ? heroBannerCompObj.getUid() : StringUtils.EMPTY);
 							uiCompPageElementObj.setHeroBannerComponent(heroBannerCompWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementObj);
 						}
@@ -208,7 +219,7 @@ public class DefaultCMSComponentControler
 								}
 								else
 								{
-									connectBannerWsDTO.setBackgroundImageURL("");
+									connectBannerWsDTO.setBackgroundImageURL(StringUtils.EMPTY);
 								}
 								if (null != connectBannerComponentModel.getIconImageURL()
 										&& null != connectBannerComponentModel.getIconImageURL().getURL())
@@ -217,34 +228,40 @@ public class DefaultCMSComponentControler
 								}
 								else
 								{
-									connectBannerWsDTO.setIconImageURL("");
+									connectBannerWsDTO.setIconImageURL(StringUtils.EMPTY);
 								}
 								connectBannerWsDTO.setBtnText(
-										null != connectBannerComponentModel.getBtnText() ? connectBannerComponentModel.getBtnText() : "");
+										null != connectBannerComponentModel.getBtnText() ? connectBannerComponentModel.getBtnText() : StringUtils.EMPTY);
 								connectBannerWsDTO.setDescription(null != connectBannerComponentModel.getDescription()
-										? connectBannerComponentModel.getDescription() : "");
+										? connectBannerComponentModel.getDescription() : StringUtils.EMPTY);
 								connectBannerWsDTO.setSubType(
-										null != connectBannerComponentModel.getSubType() ? connectBannerComponentModel.getSubType() : "");
+										null != connectBannerComponentModel.getSubType() ? connectBannerComponentModel.getSubType() : StringUtils.EMPTY);
 								connectBannerWsDTO.setTitle(
-										null != connectBannerComponentModel.getTitle() ? connectBannerComponentModel.getTitle() : "");
+										null != connectBannerComponentModel.getTitle() ? connectBannerComponentModel.getTitle() : StringUtils.EMPTY);
 								connectBannerWsDTO.setWebURL(
-										null != connectBannerComponentModel.getWebURL() ? connectBannerComponentModel.getWebURL() : "");
+										null != connectBannerComponentModel.getWebURL() ? connectBannerComponentModel.getWebURL() :StringUtils.EMPTY);
 								connectBannerWsDTO.setStartHexCode(null != connectBannerComponentModel.getStartHexCode()
-										? connectBannerComponentModel.getStartHexCode() : "");
+										? connectBannerComponentModel.getStartHexCode() : StringUtils.EMPTY);
 								connectBannerWsDTO.setEndHexCode(null != connectBannerComponentModel.getEndHexCode()
-										? connectBannerComponentModel.getEndHexCode() : "");
+										? connectBannerComponentModel.getEndHexCode() : StringUtils.EMPTY);
 								connectBannerWsDTO.setType("Multipurpose Banner Component");
 								uiCompPageElementObj.setComponentName("multiPurposeBanner");
 								connectBannerWsDTO.setComponentId(
-										null != connectBannerComponentModel.getUid() ? connectBannerComponentModel.getUid() : "");
+										null != connectBannerComponentModel.getUid() ? connectBannerComponentModel.getUid() : StringUtils.EMPTY);
 							}
 							catch (final EtailNonBusinessExceptions e)
 							{
 								connectBannerWsDTO.setComponentId(
-										null != connectBannerComponentModel.getUid() ? connectBannerComponentModel.getUid() : "");
-								e.setErrorCode(
-										"Error in getting ConnectBannerComponent with id: " + connectBannerComponentModel.getUid());
-								System.out.println(e.getErrorMessage());
+										null != connectBannerComponentModel.getUid() ? connectBannerComponentModel.getUid() : StringUtils.EMPTY);
+								LOG.error("Error in getting connectBannerComponentModel with id: " + connectBannerComponentModel.getUid(), e);
+								continue;
+							}
+							catch (Exception e)
+							{
+								connectBannerWsDTO.setComponentId(
+										null != connectBannerComponentModel.getUid() ? connectBannerComponentModel.getUid() : StringUtils.EMPTY);
+								LOG.error("Error in getting connectBannerComponentModel with id: " + connectBannerComponentModel.getUid(), e);
+								continue;
 							}
 							uiCompPageElementObj.setMultiPurposeBanner(connectBannerWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementObj);
@@ -274,33 +291,39 @@ public class DefaultCMSComponentControler
 										}
 										else
 										{
-											offersWidgetElementWsDTO.setImageURL("");
+											offersWidgetElementWsDTO.setImageURL(StringUtils.EMPTY);
 										}
 										offersWidgetElementWsDTO.setTitle(
-												null != offersWidgetElementModel.getTitle() ? offersWidgetElementModel.getTitle() : "");
+												null != offersWidgetElementModel.getTitle() ? offersWidgetElementModel.getTitle() : StringUtils.EMPTY);
 										offersWidgetElementWsDTO.setBtnText(
-												null != offersWidgetElementModel.getBtnText() ? offersWidgetElementModel.getBtnText() : "");
+												null != offersWidgetElementModel.getBtnText() ? offersWidgetElementModel.getBtnText() : StringUtils.EMPTY);
 										offersWidgetElementWsDTO.setDiscountText(null != offersWidgetElementModel.getDiscountText()
-												? offersWidgetElementModel.getDiscountText() : "");
+												? offersWidgetElementModel.getDiscountText() : StringUtils.EMPTY);
 										offersWidgetElementWsDTO.setWebURL(
-												null != offersWidgetElementModel.getWebURL() ? offersWidgetElementModel.getWebURL() : "");
+												null != offersWidgetElementModel.getWebURL() ? offersWidgetElementModel.getWebURL() : StringUtils.EMPTY);
 										offersWidgetElementList.add(offersWidgetElementWsDTO);
 									}
 								}
 								offersWidgetWsDTO.setItems(offersWidgetElementList);
 								offersWidgetWsDTO.setTitle(
-										null != offersWidgetComponentModel.getTitle() ? offersWidgetComponentModel.getTitle() : "");
+										null != offersWidgetComponentModel.getTitle() ? offersWidgetComponentModel.getTitle() : StringUtils.EMPTY);
 								offersWidgetWsDTO.setType("Offers Component");
 								uiCompPageElementWsDTO.setComponentName("offersComponent");
 								offersWidgetWsDTO.setComponentId(
-										null != offersWidgetComponentModel.getUid() ? offersWidgetComponentModel.getUid() : "");
+										null != offersWidgetComponentModel.getUid() ? offersWidgetComponentModel.getUid() : StringUtils.EMPTY);
 							}
 							catch (final EtailNonBusinessExceptions e)
 							{
 								offersWidgetWsDTO.setComponentId(
-										null != offersWidgetComponentModel.getUid() ? offersWidgetComponentModel.getUid() : "");
-								e.setErrorCode("Error in getting OffersWidgetComponent with id: " + offersWidgetComponentModel.getUid());
-								System.out.println(e.getErrorMessage());
+										null != offersWidgetComponentModel.getUid() ? offersWidgetComponentModel.getUid() : StringUtils.EMPTY);
+								LOG.error("Error in getting OffersWidgetComponent with id: " + offersWidgetComponentModel.getUid(), e);
+								continue;
+							}
+							catch (Exception e) {
+								offersWidgetWsDTO.setComponentId(
+										null != offersWidgetComponentModel.getUid() ? offersWidgetComponentModel.getUid() : StringUtils.EMPTY);
+								LOG.error("Error in getting OffersWidgetComponent with id: " + offersWidgetComponentModel.getUid(), e);
+								continue;
 							}
 							uiCompPageElementWsDTO.setOffersComponent(offersWidgetWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
@@ -323,9 +346,9 @@ public class DefaultCMSComponentControler
 									{
 										final FlashSalesOffersWsDTO flashSalesOffersWsDTO = new FlashSalesOffersWsDTO();
 										flashSalesOffersWsDTO
-												.setTitle(null != flashSalesOffersModel.getTitle() ? flashSalesOffersModel.getTitle() : "");
+												.setTitle(null != flashSalesOffersModel.getTitle() ? flashSalesOffersModel.getTitle() : StringUtils.EMPTY);
 										flashSalesOffersWsDTO.setDescription(
-												null != flashSalesOffersModel.getDescription() ? flashSalesOffersModel.getDescription() : "");
+												null != flashSalesOffersModel.getDescription() ? flashSalesOffersModel.getDescription() : StringUtils.EMPTY);
 										if (null != flashSalesOffersModel.getImageURL()
 												&& null != flashSalesOffersModel.getImageURL().getURL())
 										{
@@ -333,10 +356,10 @@ public class DefaultCMSComponentControler
 										}
 										else
 										{
-											flashSalesOffersWsDTO.setImageURL("");
+											flashSalesOffersWsDTO.setImageURL(StringUtils.EMPTY);
 										}
 										flashSalesOffersWsDTO.setWebURL(
-												null != flashSalesOffersModel.getWebURL() ? flashSalesOffersModel.getWebURL() : "");
+												null != flashSalesOffersModel.getWebURL() ? flashSalesOffersModel.getWebURL() : StringUtils.EMPTY);
 
 										flashSalesOffersWsDTOList.add(flashSalesOffersWsDTO);
 									}
@@ -355,8 +378,8 @@ public class DefaultCMSComponentControler
 												final BuyBoxData buyboxdata = buyBoxFacade
 														.buyboxPrice(flashSalesElementModel.getProductCode().getCode());
 												//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
-												String productUnitPrice = "";
-												String productPrice = "";
+												String productUnitPrice = StringUtils.EMPTY;
+												String productPrice = StringUtils.EMPTY;
 
 												if (buyboxdata != null)
 												{
@@ -415,7 +438,7 @@ public class DefaultCMSComponentControler
 												}
 												else
 												{
-													flashSalesElementWsDTO.setImageURL("");
+													flashSalesElementWsDTO.setImageURL(StringUtils.EMPTY);
 												}
 												flashSalesElementWsDTOList.add(flashSalesElementWsDTO);
 											}
@@ -423,12 +446,17 @@ public class DefaultCMSComponentControler
 									}
 									catch (final EtailNonBusinessExceptions e)
 									{
-										e.setErrorCode("Product is not properly enriched or either out of stock");
-										System.out.println(e.getErrorMessage());
+										LOG.error("Product is not properly enriched or either out of stock", e);
+										continue;
+									}
+									catch (Exception e)
+									{
+										LOG.error("Product is not properly enriched or either out of stock", e);
+										continue;
 									}
 								}
 								flashSalesWsDTO.setBackgroundHexCode(null != flashSalesComponentModel.getBackgroundHexCode()
-										? flashSalesComponentModel.getBackgroundHexCode() : "");
+										? flashSalesComponentModel.getBackgroundHexCode() : StringUtils.EMPTY);
 								if (null != flashSalesComponentModel.getBackgroundImageURL()
 										&& null != flashSalesComponentModel.getBackgroundImageURL().getURL())
 								{
@@ -436,35 +464,41 @@ public class DefaultCMSComponentControler
 								}
 								else
 								{
-									flashSalesWsDTO.setBackgroundImageURL("");
+									flashSalesWsDTO.setBackgroundImageURL(StringUtils.EMPTY);
 								}
 								flashSalesWsDTO.setBtnText(
-										null != flashSalesComponentModel.getBtnText() ? flashSalesComponentModel.getBtnText() : "");
+										null != flashSalesComponentModel.getBtnText() ? flashSalesComponentModel.getBtnText() : StringUtils.EMPTY);
 								flashSalesWsDTO.setDescription(
-										null != flashSalesComponentModel.getDescription() ? flashSalesComponentModel.getDescription() : "");
+										null != flashSalesComponentModel.getDescription() ? flashSalesComponentModel.getDescription() : StringUtils.EMPTY);
 
 								flashSalesWsDTO.setEndDate(null != flashSalesComponentModel.getEndDate()
-										? formatter.format(flashSalesComponentModel.getEndDate()) : "");
+										? formatter.format(flashSalesComponentModel.getEndDate()) : StringUtils.EMPTY);
 								flashSalesWsDTO.setStartDate(null != flashSalesComponentModel.getStartDate()
-										? formatter.format(flashSalesComponentModel.getStartDate()) : "");
+										? formatter.format(flashSalesComponentModel.getStartDate()) : StringUtils.EMPTY);
 
 								flashSalesWsDTO
-										.setTitle(null != flashSalesComponentModel.getTitle() ? flashSalesComponentModel.getTitle() : "");
+										.setTitle(null != flashSalesComponentModel.getTitle() ? flashSalesComponentModel.getTitle() : StringUtils.EMPTY);
 								flashSalesWsDTO.setWebURL(
-										null != flashSalesComponentModel.getWebURL() ? flashSalesComponentModel.getWebURL() : "");
+										null != flashSalesComponentModel.getWebURL() ? flashSalesComponentModel.getWebURL() : StringUtils.EMPTY);
 								flashSalesWsDTO.setOffers(flashSalesOffersWsDTOList);
 								flashSalesWsDTO.setItems(flashSalesElementWsDTOList);
 								flashSalesWsDTO.setType("Flash Sales Component");
 								uiCompPageElementWsDTO.setComponentName("flashSalesComponent");
 								flashSalesWsDTO
-										.setComponentId(null != flashSalesComponentModel.getUid() ? flashSalesComponentModel.getUid() : "");
+										.setComponentId(null != flashSalesComponentModel.getUid() ? flashSalesComponentModel.getUid() : StringUtils.EMPTY);
 							}
 							catch (final EtailNonBusinessExceptions e)
 							{
 								flashSalesWsDTO
-										.setComponentId(null != flashSalesComponentModel.getUid() ? flashSalesComponentModel.getUid() : "");
-								e.setErrorCode("Error in getting FlashSalesComponent with id: " + flashSalesComponentModel.getUid());
-								System.out.println(e.getErrorMessage());
+										.setComponentId(null != flashSalesComponentModel.getUid() ? flashSalesComponentModel.getUid() : StringUtils.EMPTY);
+								LOG.error("Error in getting FlashSalesComponent with id: " + flashSalesComponentModel.getUid(), e);
+								continue;
+							}	catch (Exception e)
+							{
+								flashSalesWsDTO
+										.setComponentId(null != flashSalesComponentModel.getUid() ? flashSalesComponentModel.getUid() : StringUtils.EMPTY);
+								LOG.error("Error in getting FlashSalesComponent with id: " + flashSalesComponentModel.getUid(), e);
+								continue;
 							}
 							uiCompPageElementWsDTO.setFlashSalesComponent(flashSalesWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
