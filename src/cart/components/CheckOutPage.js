@@ -304,7 +304,7 @@ class CheckOutPage extends React.Component {
     );
   }
   changeDeliveryAddress = () => {
-    this.setState({ confirmAddress: false });
+    this.setState({ confirmAddress: false, deliverMode: false });
   };
 
   componentWillReceiveProps(nextProps) {
@@ -492,7 +492,7 @@ class CheckOutPage extends React.Component {
       } else {
         this.props.softReservationPaymentForSavedCard(
           this.state.savedCardDetails,
-          this.state.addressId[0],
+          this.state.addressId,
           this.state.paymentModeSelected
         );
       }
@@ -601,7 +601,7 @@ class CheckOutPage extends React.Component {
     cardDetails.pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.props.softReservationForPayment(
       cardDetails,
-      this.state.addressId[0],
+      this.state.addressId,
       this.state.paymentModeSelected
     );
   };
@@ -698,8 +698,8 @@ class CheckOutPage extends React.Component {
             !this.state.showCliqAndPiq && (
               <div className={styles.deliveryAddress}>
                 <DeliveryAddressSet
-                  addressType={this.state.addressId[0].addressType}
-                  address={this.state.addressId[0].line1}
+                  addressType={this.state.selectedAddress.addressType}
+                  address={this.state.selectedAddress.line1}
                   changeDeliveryAddress={() => this.changeDeliveryAddress()}
                 />
               </div>

@@ -20,15 +20,11 @@ export default class SearchLocationByPincode extends React.Component {
       this.setState({ pinCode });
     }
   }
-  handleClick() {
-    if (this.props.changePincode) {
-      this.props.changePincode(this.state.pinCode);
-    }
-  }
+
   onUpdate() {
     if (this.state.pinCode && this.state.pinCode.match(/^\d{6}$/)) {
       if (this.props.checkPinCodeAvailability) {
-        this.props.checkPinCodeAvailability(this.state.pinCode);
+        this.props.changePincode(this.state.pinCode);
       }
       this.setState({ errorMessage: null });
     } else {
@@ -57,7 +53,7 @@ export default class SearchLocationByPincode extends React.Component {
                 size={35}
                 color={"transparent"}
                 icon={<Icon image={gpsIcon} size={20} />}
-                onClick={() => this.handleClick()}
+                onClick={() => this.onUpdate()}
               />
             }
           />
