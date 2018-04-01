@@ -15,8 +15,8 @@ export default class CartItem extends React.Component {
       showDelivery: this.props.showDelivery ? this.props.showDelivery : false,
       selectedValue: "",
       label: "See all",
-      maxQuantityAllowed: props.product.maxQuantityAllowed,
-      qtySelectedByUser: props.product.qtySelectedByUser,
+      maxQuantityAllowed: props.product && props.product.maxQuantityAllowed,
+      qtySelectedByUser: props.product && props.product.qtySelectedByUser,
       quantityList: []
     };
   }
