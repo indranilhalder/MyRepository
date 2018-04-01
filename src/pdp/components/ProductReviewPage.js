@@ -30,9 +30,9 @@ class ProductReviewPage extends Component {
 
   componentDidMount() {
     if (!this.props.productDetails) {
-      this.props.getProductDescription(this.props.match.params[1]);
+      this.props.getProductDescription(this.props.match.params[0]);
     }
-    this.props.getProductReviews(this.props.match.params[1]);
+    this.props.getProductReviews(this.props.match.params[0]);
   }
 
   reviewSection = () => {
