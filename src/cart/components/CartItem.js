@@ -55,6 +55,7 @@ export default class CartItem extends React.Component {
   }
 
   handleQuantityChange(changedValue) {
+    console.log(changedValue);
     this.setState({ selectedValue: changedValue }, () => {
       if (this.props.onQuantityChange) {
         this.props.onQuantityChange(this.props.index, this.state.selectedValue);
@@ -68,7 +69,7 @@ export default class CartItem extends React.Component {
     });
 
     if (this.state.quantityList.length === 0) {
-      let fetchedQuantityList = [];
+      let fetchedQuantityList = [{ value: "Qut" }];
       for (let i = 1; i <= parseInt(this.props.maxQuantityAllowed, 10); i++) {
         fetchedQuantityList.push({ value: i.toString() });
       }
