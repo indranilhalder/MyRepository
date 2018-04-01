@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import styles from "./FooterButton.css";
 import { Icon } from "xelpmoc-core";
 export default class FooterButton extends React.Component {
-  handleClick() {
+  handleClick(e) {
     if (this.props.onClick) {
-      this.props.onClick();
+      this.props.onClick(e);
     }
   }
   render() {
@@ -16,7 +16,7 @@ export default class FooterButton extends React.Component {
           backgroundColor: this.props.backgroundColor,
           borderRight: `1px solid ${this.props.borderColor}`
         }}
-        onClick={() => this.handleClick()}
+        onClick={e => this.handleClick(e)}
       >
         {this.props.icon && (
           <div className={styles.iconHolder}>

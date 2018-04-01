@@ -14,7 +14,11 @@ import {
   PRODUCT_CART_DELIVERY_MODES,
   LOGIN_PATH,
   SIGN_UP_PATH,
-  PRODUCT_LISTINGS
+  PRODUCT_LISTINGS,
+  SAVE_LIST_PAGE,
+  LOGGED_IN_USER_DETAILS,
+  CUSTOMER_ACCESS_TOKEN,
+  MY_ACCOUNT_PAGE
 } from "../../../src/lib/constants";
 import { SIGN_UP } from "../../auth/actions/user.actions";
 
@@ -26,6 +30,18 @@ class HeaderWrapper extends React.Component {
   goToCart = () => {
     if (this.props.history) {
       this.props.history.push(PRODUCT_CART_ROUTER);
+    }
+  };
+
+  goToWishList = () => {
+    if (this.props.history) {
+      const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+      const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+      if (!userDetails || !customerCookie) {
+        this.props.history.push(LOGIN_PATH);
+      } else {
+        this.props.history.push(`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`);
+      }
     }
   };
 
@@ -95,7 +111,11 @@ class HeaderWrapper extends React.Component {
     );
     if (productCode) {
       headerToRender = (
-        <HollowHeader goBack={this.onBackClick} goToCart={this.goToCart} />
+        <HollowHeader
+          goBack={this.onBackClick}
+          goToCart={this.goToCart}
+          goToWishList={this.goToWishList}
+        />
       );
     } else if (shouldRenderSearch) {
       headerToRender = <SearchContainer canGoBack={canGoBack} />;
