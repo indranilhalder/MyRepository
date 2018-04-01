@@ -24,7 +24,6 @@ const wishlistItems = (
     case wishlistActions.GET_WISH_LIST_ITEMS_FAILURE:
     case wishlistActions.ADD_PRODUCT_TO_WISH_LIST_FAILURE:
     case wishlistActions.REMOVE_PRODUCT_FROM_WISH_LIST_FAILURE:
-      console.log("GET WISH LIST ITEMS FAILURE");
       return Object.assign({}, state, {
         status: action.status,
         loading: false,

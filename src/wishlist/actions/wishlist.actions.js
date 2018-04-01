@@ -125,7 +125,6 @@ export function addProductToWishList(productDetails) {
         throw new Error(`${resultJson.message}`);
       }
     } catch (e) {
-      console.log(e);
       return dispatch(addProductToWishListFailure(e.message));
     }
   };
