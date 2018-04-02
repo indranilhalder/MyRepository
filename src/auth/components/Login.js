@@ -41,8 +41,8 @@ class Login extends Component {
     this.props.history.push(SIGN_UP_PATH);
   }
   onSubmit = () => {
-    const EMAIL_REGULAR_EXPRESSION = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-    const mobilePattern = /^[7,8,9]{1}[0-9]{9}$/;
+    const EMAIL_REGULAR_EXPRESSION = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    const MOBILE_PATTERN = /^[7,8,9]{1}[0-9]{9}$/;
     if (this.props.onSubmit) {
       let userDetails = {};
       userDetails.username = this.state.emailValue;
@@ -52,12 +52,12 @@ class Login extends Component {
         return false;
       }
       if (userDetails.username.indexOf("@") !== -1) {
-        if (EMAIL_REGULAR_EXPRESSION.match(userDetails.username) === false) {
+        if (!EMAIL_REGULAR_EXPRESSION.test(userDetails.username)) {
           this.props.displayToast("Please fill valid emailId");
           return false;
         }
       } else {
-        if (!mobilePattern.test(userDetails.username)) {
+        if (!MOBILE_PATTERN.test(userDetails.username)) {
           this.props.displayToast("Please fill valid mobile number");
           return false;
         }
