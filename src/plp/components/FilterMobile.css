@@ -1,11 +1,27 @@
 .base {
   width: 100%;
   height: auto;
+  min-height: 100vh;
   position: fixed;
   left: 0;
-  top: 50px;
+  z-index: 70;
+  background: #fff;
+  top: -10px;
   right: 0;
   bottom: 0;
+  padding-top: 60px;
+  transition: 300ms;
+  transform: translateX(-100%);
+}
+.pageHeader {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.filterOpen {
+  composes: base;
+  transform: translateX(0);
 }
 .tabHolder {
   width: 40%;
@@ -36,10 +52,16 @@
   width: 100%;
   height: 61px;
   position: fixed;
-  top: 100%;
+  z-index: 70;
   left: 0;
-  transform: translateY(-100%);
+  bottom: 0;
+  transform: translateX(-100%);
+  transition: 300ms;
   border-top: 1px solid #dddddd;
+}
+.footerOpen {
+  composes: footer;
+  transform: translateX(0);
 }
 .footer:after {
   content: "";
