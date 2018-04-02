@@ -10772,6 +10772,21 @@
 							optional="true" initial="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="emiCouponCode" autocreate="true"
+						type="java.lang.String">
+						<description>EMI Coupon Code</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true"  />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="emiCouponValue" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description> EMI Coupon Value</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true"  />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
