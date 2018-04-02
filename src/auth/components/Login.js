@@ -16,11 +16,7 @@ import {
   MAIN_ROUTER,
   SOCIAL_LOG_IN
 } from "../../lib/constants";
-
-//const EMAIL_REGULAR_EXPRESSION = /^([A-Za-z0-9_-.])+@([A-Za-z0-9_-.])+.([A-Za-z]{2,4})$/;
 const MINIMUM_PASSWORD_LENGTH = "8";
-// Forgot password --> shows a modal
-// Don't have an account --> sign up --> a route change.
 
 class Login extends Component {
   constructor(props) {
