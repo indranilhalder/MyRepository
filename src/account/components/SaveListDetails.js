@@ -77,6 +77,7 @@ export default class SaveListDetails extends React.Component {
     return (
       <div className={styles.base}>
         {wishList &&
+          wishList.products &&
           wishList.products.map((product, i) => {
             return (
               <div className={styles.listCardHolder} key={i}>
