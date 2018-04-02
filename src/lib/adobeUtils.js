@@ -1,4 +1,4 @@
-import { getCookieValue } from "./Cookie.js";
+import { getCookieValue, getCookie } from "./Cookie.js";
 import { setInterval, clearInterval } from "timers";
 import * as constants from "../lib/constants.js";
 
@@ -11,20 +11,34 @@ const ADOBE_SATELLITE_CODE = "page view";
 
 export function setDataLayer(routerProps) {
   const path = routerProps.path;
-  if (path === constants.HOME_ROUTER) {
-    window.digitalData = getDigitalDataForHome();
+  if (window.digitalData) {
+    if (path === constants.HOME_ROUTER) {
+      window.digitalData = getDigitalDataForHome();
+    }
+    window._satellite.track(ADOBE_SATELLITE_CODE);
   }
-  window._satellite.track(ADOBE_SATELLITE_CODE);
 }
 
 function getDigitalDataForHome() {
-  return {
+  const userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
+  const data = {
     page: {
       category: {
         primaryCategory: "homepage"
       }
+    },
+    pageInfo: {
+      pageName: "homepage"
     }
   };
+  if (userDetails) {
+    data.account = {
+      login: {
+        customerID: userDetails.customerId
+      }
+    };
+  }
+  return data;
 }
 
 export async function getMcvId() {
