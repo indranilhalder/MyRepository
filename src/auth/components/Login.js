@@ -17,7 +17,6 @@ import {
   SOCIAL_LOG_IN
 } from "../../lib/constants";
 const MINIMUM_PASSWORD_LENGTH = "8";
-
 class Login extends Component {
   constructor(props) {
     super(props);
