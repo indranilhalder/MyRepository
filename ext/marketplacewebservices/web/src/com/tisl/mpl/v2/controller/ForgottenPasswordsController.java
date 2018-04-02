@@ -20,6 +20,7 @@ import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.util.localization.Localization;
@@ -49,8 +50,8 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.ForgetPasswordFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
-import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.helper.MplUserHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.ForgetPasswordService;
@@ -125,8 +126,7 @@ public class ForgottenPasswordsController extends BaseController
 	{ ROLE_CLIENT, TRUSTED_CLIENT })
 	@RequestMapping(value = "/forgotPasswordforEmail", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public UserResultWsDto forgotPassword(@RequestParam final String emailid, final String fields,
-			final HttpServletRequest request)
+	public UserResultWsDto forgotPassword(@RequestParam final String emailid, final String fields, final HttpServletRequest request)
 	{
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
 		final String site = currentBaseSite.getUid();
@@ -236,6 +236,12 @@ public class ForgottenPasswordsController extends BaseController
 			{
 				resultWsDto = mobileUserService.forgotPasswordOtp(username, platformNumber, true);
 			}
+		}
+		catch (final AmbiguousIdentifierException ambiguousIdentifierException)
+		{
+			resultWsDto.setMessage("Found two profiles with same mobile number. Please proceed using your email ID");
+			resultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			resultWsDto.setErrorCode("NU010");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{

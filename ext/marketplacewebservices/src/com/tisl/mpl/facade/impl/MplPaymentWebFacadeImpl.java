@@ -10,7 +10,6 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.customer.CustomerAccountService;
-import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
@@ -395,7 +394,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 						}
 					}
 					//TISPRO-540 - Setting Payment mode in Cart
-					cart.setChannel(SalesApplication.MOBILE);
+					//	cart.setChannel(SalesApplication.MOBILE);
 					if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT))
 					{
 						cart.setModeOfPayment(MarketplacewebservicesConstants.CREDIT);

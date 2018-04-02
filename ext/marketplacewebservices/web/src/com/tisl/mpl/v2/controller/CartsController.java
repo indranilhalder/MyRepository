@@ -1702,8 +1702,8 @@ public class CartsController extends BaseCommerceController
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	public WebSerResponseWsDTO createCart(@PathVariable final String baseSiteId, @PathVariable final String userId,
-			@RequestParam(required = false) final String oldCartId, @RequestParam(required = false) String toMergeCartGuid)
-			throws RequestParameterException
+			@RequestParam(required = false) final String oldCartId, @RequestParam(required = false) String toMergeCartGuid,
+			@RequestParam(required = false) final String channel) throws RequestParameterException
 	{
 
 		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
@@ -1854,7 +1854,9 @@ public class CartsController extends BaseCommerceController
 					cartModel = mplPaymentWebFacade.findCartValues(cart.getCode());
 				}
 				//Setting channel as mobile
-				cartModel.setChannel(SalesApplication.MOBILE);
+				final SalesApplication channelToSet = StringUtils.isNotEmpty(channel) ? SalesApplication.valueOf(channel)
+						: SalesApplication.MOBILE;
+				cartModel.setChannel(channelToSet);
 				getModelService().save(cartModel);
 
 				try
@@ -2109,8 +2111,9 @@ public class CartsController extends BaseCommerceController
 	 */
 	@RequestMapping(value = "/{cartId}/deleteEntries/{entryNumber}", method = RequestMethod.GET)
 	@ResponseBody
-	public CartDataDetailsWsDTO removeCartEntryMobile(@PathVariable final String cartId, @PathVariable final Long entryNumber)
-			throws CommerceCartModificationException, InvalidCartException, ConversionException
+	public CartDataDetailsWsDTO removeCartEntryMobile(@PathVariable final String cartId, @PathVariable final Long entryNumber,
+			@RequestParam(required = false) final String channel) throws CommerceCartModificationException, InvalidCartException,
+			ConversionException
 	{
 		final CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO(); //Object to store result
 		int count = 0;
@@ -2201,7 +2204,10 @@ public class CartsController extends BaseCommerceController
 			modelService.saveAll(entryModelList);
 			cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 
-			cartModel.setChannel(SalesApplication.MOBILE);
+			final SalesApplication channelToSet = StringUtils.isNotEmpty(channel) ? SalesApplication.valueOf(channel)
+					: SalesApplication.MOBILE;
+
+			cartModel.setChannel(channelToSet);
 			getModelService().save(cartModel);
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -2803,7 +2809,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 *
+			 * 
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -3656,9 +3662,9 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public ApplyCartCouponsDTO applyCartCoupons(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode,
-			@RequestParam(required = false) final boolean isPwa) throws RequestParameterException, WebserviceValidationException,
-			MalformedURLException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
-			CalculationException, JaloSecurityException
+			@RequestParam(required = false) final boolean isPwa, @RequestParam(required = false) final String channel)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException
 	{
 		ApplyCartCouponsDTO applycouponDto = new ApplyCartCouponsDTO();
 		CartModel cartModel = null;
@@ -3696,7 +3702,11 @@ public class CartsController extends BaseCommerceController
 						applycouponDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 						return applycouponDto;
 					}
-					cartModel.setChannel(SalesApplication.MOBILE);
+
+					final SalesApplication channelToSet = StringUtils.isNotEmpty(channel) ? SalesApplication.valueOf(channel)
+							: SalesApplication.MOBILE;
+
+					cartModel.setChannel(channelToSet);
 					cartModel.setCheckForBankVoucher("true");
 					//modelService.save(cartModel);
 					getModelService().save(cartModel);
@@ -4430,6 +4440,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public CartDataDetailsWsDTO getCartDetailsWithPOS(@PathVariable final String cartId,
 			@RequestParam(required = false) final String pincode, @RequestParam(required = false) final boolean isPwa,
+			@RequestParam(required = false) final String channel,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final AddressListWsDTO addressListDTO = addressList(fields);
@@ -4439,7 +4450,7 @@ public class CartsController extends BaseCommerceController
 			if (null != cartId)
 			{
 				LOG.debug("************ get cart details with POS mobile web service *********" + cartId);
-				cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, pincode, isPwa);
+				cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, pincode, isPwa, channel);
 
 			}
 		}
@@ -4531,7 +4542,7 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.debug("************ in addStoreToCCEntry :get cart details mobile web service *********" + cartId);
 					final AddressListWsDTO addressListDTO = addressList(fields);
-					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null, false);
+					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null, false, null);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					return cartDataDetails;
 				}
@@ -4630,7 +4641,7 @@ public class CartsController extends BaseCommerceController
 
 					LOG.debug("************ in addPickupPersonDetails :get cart details mobile web service *********" + cartId);
 					final AddressListWsDTO addressListDTO = addressList(fields);
-					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null, false);
+					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null, false, null);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 				}
 			}
