@@ -7,6 +7,7 @@ export default class PdpPincode extends React.Component {
       this.props.onClick();
     }
   }
+
   render() {
     return this.props.hasPincode ? (
       <div className={styles.base}>
@@ -30,7 +31,7 @@ export default class PdpPincode extends React.Component {
           <div className={styles.button}>
             <UnderLinedButton
               fontSize={14}
-              label="Update Pincode"
+              label="Check Pincode"
               onClick={() => this.onClick()}
               color="#ff1744"
             />
