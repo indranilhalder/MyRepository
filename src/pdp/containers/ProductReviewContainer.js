@@ -8,6 +8,7 @@ import {
   getProductDescription,
   addProductReview
 } from "../actions/pdp.actions";
+import { displayToast } from "../../general/toast.actions";
 const mapDispatchToProps = dispatch => {
   return {
     addProductToCart: productDetails => {
@@ -24,6 +25,10 @@ const mapDispatchToProps = dispatch => {
     },
     addProductReview: (productCode, productReview) => {
       dispatch(addProductReview(productCode, productReview));
+    },
+
+    displayToast: message => {
+      dispatch(displayToast(message));
     }
   };
 };

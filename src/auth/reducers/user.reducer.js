@@ -1,4 +1,5 @@
 import * as userActions from "../actions/user.actions";
+import { CLEAR_ERROR } from "../../general/error.actions.js";
 import * as Cookies from "../../lib/Cookie";
 import {
   GLOBAL_ACCESS_TOKEN,
@@ -19,6 +20,12 @@ const user = (
 ) => {
   let userDetails = {};
   switch (action.type) {
+    case CLEAR_ERROR:
+      return Object.assign({}, state, {
+        loading: false,
+        error: null,
+        status: null
+      });
     case userActions.LOGIN_USER_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
