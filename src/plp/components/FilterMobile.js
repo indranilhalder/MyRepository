@@ -23,9 +23,11 @@ export default class FilterMobile extends React.Component {
   }
   selectTab(val) {
     this.setState({ showCategory: false, filterSelectedIndex: val });
+    this.setState({ brandSearchString: "" });
   }
   selectCategories() {
     this.setState({ showCategory: true });
+    this.setState({ brandSearchString: "" });
   }
 
   onClear = () => {
