@@ -950,7 +950,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public CartDataDetailsWsDTO getCartDetailsWithPOS(final String cartId, final AddressListWsDTO addressListDTO,
-			final String pincode, final boolean isPwa)
+			final String pincode, final boolean isPwa, final String channel)
 	{
 
 		CartModel cart = null;
@@ -1001,6 +1001,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				{
 					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
 					cartDataDetails.setDelistedMessage(delistMessage);
+				}
+
+				if (StringUtils.isNotEmpty(channel) && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
+				{
+					cart.setChannel(SalesApplication.WEB);
+					modelService.save(cart);
 				}
 
 				if (null != cart.getPickupPersonName())
@@ -3349,8 +3355,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3619,7 +3625,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3650,7 +3656,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					cartDataDetails.setDelistedMessage(delistMessage);
 				}
 
-				if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
+				if (StringUtils.isNotEmpty(channel) && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
 				{
 					cart.setChannel(SalesApplication.WEB);
 					modelService.save(cart);
@@ -4025,6 +4031,48 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					gwlp.setOfferPrice(abstractOrderEntry.getTotalPrice().toString());
 
 				}
+
+				if (StringUtils.isNotEmpty(productData.getColour()))
+				{
+					gwlp.setColor(productData.getColour());
+				}
+				else
+				{
+					LOG.debug("*************** Mobile webservice color is empty ********************");
+				}
+				if (StringUtils.isNotEmpty(productData.getSize()))
+				{
+					gwlp.setSize(productData.getSize());
+				}
+				else
+				{
+					LOG.debug("*************** Mobile webservice size is empty ********************");
+				}
+				/* capacity */
+				if (abstractOrderEntry.getProduct() instanceof PcmProductVariantModel)
+				{
+					final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) abstractOrderEntry.getProduct();
+					final String selectedCapacity = selectedVariantModel.getCapacity();
+					final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
+					if (null != baseProduct.getVariants() && null != selectedCapacity)
+					{
+						for (final VariantProductModel vm : baseProduct.getVariants())
+						{
+							final PcmProductVariantModel pm = (PcmProductVariantModel) vm;
+							if (!selectedCapacity.isEmpty() && null != pm.getCapacity() && selectedCapacity.equals(pm.getCapacity()))
+							{
+
+								gwlp.setCapacity(pm.getCapacity());
+							}
+							else
+							{
+								LOG.debug("*************** Mobile webservice product capacity empty********************");
+							}
+						}
+					}
+				}
+
+				/* capacity */
 
 				final List<MobdeliveryModeWsDTO> deliveryList = new ArrayList<MobdeliveryModeWsDTO>();
 				final MobdeliveryModeWsDTO delivery = null;
