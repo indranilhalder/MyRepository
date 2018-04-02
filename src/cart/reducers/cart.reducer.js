@@ -168,7 +168,6 @@ const cart = (
       let date = CouponDetails.couponExpiryDate;
       let expiryTime = new Date(date.split(IST_TIME_ZONE).join());
       let expiryCouponDate = expiryTime.getTime();
-      console.log(expiryCouponDate);
       Cookies.createCookie(COUPON_COOKIE, action.couponCode, expiryCouponDate);
       return Object.assign({}, state, {
         couponStatus: action.status,
@@ -938,7 +937,6 @@ const cart = (
       });
 
     case cartActions.DISPLAY_COUPON_SUCCESS:
-      console.log(action.couponDetails);
       return Object.assign({}, state, {
         couponStatus: action.status,
         coupons: action.couponDetails,
