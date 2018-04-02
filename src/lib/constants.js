@@ -167,3 +167,8 @@ export const CANCEL = "/cancel";
 export const CANCEL_PREFIX = "/cancel/(.*)";
 
 export const WALLET = "WALLET";
+
+// COPY
+
+export const REVIEW_SUBMIT_TOAST_TEXT =
+  "Your review has been submitted and will be displayed after moderation";

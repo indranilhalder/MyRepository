@@ -17,7 +17,7 @@ import {
   ANONYMOUS_USER
 } from "../../lib/constants";
 import { API_MSD_URL_ROOT } from "../../lib/apiRequest.js";
-
+import { displayToast } from "../../general/toast.actions.js";
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
 export const PRODUCT_DESCRIPTION_SUCCESS = "PRODUCT_DESCRIPTION_SUCCESS";
 export const PRODUCT_DESCRIPTION_FAILURE = "PRODUCT_DESCRIPTION_FAILURE";
@@ -160,7 +160,15 @@ export function getProductDescription(productCode) {
         `${PRODUCT_DESCRIPTION_PATH}/${productCode}?isPwa=true`
       );
       const resultJson = await result.json();
-      dispatch(getProductDescriptionSuccess(resultJson));
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        dispatch(getProductDescriptionSuccess(resultJson));
+      } else {
+        throw new Error(`${resultJson.error}`);
+      }
     } catch (e) {
       dispatch(getProductDescriptionFailure(e.message));
     }
@@ -354,10 +362,12 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
         }&addedToCartWl=false`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
 
+      // here we dispatch a modal to show something was added to the bag
+      dispatch(displayToast("Added product to Bag"));
       dispatch(addProductToCartSuccess());
     } catch (e) {
       dispatch(addProductToCartFailure(e.message));
@@ -587,7 +597,7 @@ export function addProductReview(productCode, productReview) {
     dispatch(addProductReviewRequest());
     try {
       const result = await api.post(
-        `${PRODUCT_SPECIFICATION_PATH}/${productCode}/reviews?access_token=${
+        `${PRODUCT_SPECIFICATION_PATH}${productCode}/reviews?access_token=${
           JSON.parse(customerCookie).access_token
         }`,
         productReview
@@ -817,7 +827,10 @@ export function getMsdRequest(productCode) {
         msdRequestObject
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE.toLowerCase()
+      ) {
         throw new Error(`${resultJson.message}`);
       }
 
@@ -879,7 +892,10 @@ export function pdpAboutBrand(productCode) {
         msdRequestObject
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE.toLocaleLowerCase()
+      ) {
         throw new Error(`${resultJson.message}`);
       }
 
@@ -909,10 +925,10 @@ export function getPdpItemsPdpSuccess(items, widgetKey) {
     widgetKey
   };
 }
-export function getPdpItemsFailure(positionInFeed, errorMsg) {
+export function getPdpItemsFailure(errorMsg) {
   return {
     type: GET_PDP_ITEMS_FAILURE,
-    errorMsg,
+    error: errorMsg,
     status: FAILURE
   };
 }
@@ -929,11 +945,12 @@ export function getPdpItems(itemIds, widgetKey) {
       const result = await api.get(url);
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson.message}`);
+        throw new Error(`${resultJson.error}`);
       }
+
       dispatch(getPdpItemsPdpSuccess(resultJson.results, widgetKey));
     } catch (e) {
-      dispatch(getPdpItemsFailure(e.message));
+      dispatch(getPdpItemsFailure(`MSD ${e.message}`));
     }
   };
 }
