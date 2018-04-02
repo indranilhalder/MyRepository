@@ -55,9 +55,10 @@ export default class CartItem extends React.Component {
   }
 
   handleQuantityChange(changedValue) {
-    this.setState({ selectedValue: changedValue }, () => {
+    const updatedQuantity = parseInt(changedValue);
+    this.setState({ selectedValue: updatedQuantity }, () => {
       if (this.props.onQuantityChange) {
-        this.props.onQuantityChange(this.props.index, this.state.selectedValue);
+        this.props.onQuantityChange(this.props.entryNumber, updatedQuantity);
       }
     });
   }

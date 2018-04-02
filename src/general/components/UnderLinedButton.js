@@ -34,5 +34,5 @@ UnderLinedButton.propTypes = {
   color: PropTypes.string,
   label: PropTypes.string,
   fontFamily: PropTypes.string,
-  fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };

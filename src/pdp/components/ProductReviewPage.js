@@ -19,7 +19,8 @@ import {
   GLOBAL_ACCESS_TOKEN,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  ANONYMOUS_USER
+  ANONYMOUS_USER,
+  REVIEW_SUBMIT_TOAST_TEXT
 } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
 
@@ -44,10 +45,12 @@ class ProductReviewPage extends Component {
   };
 
   onSubmit = productReview => {
+    this.props.displayToast(REVIEW_SUBMIT_TOAST_TEXT);
     this.props.addProductReview(
       this.props.productDetails.productListingId,
       productReview
     );
+    this.setState({ visible: false });
   };
   onCancel() {
     this.setState({ visible: false });
@@ -106,7 +109,6 @@ class ProductReviewPage extends Component {
   }
 
   render() {
-    console.log(this.props);
     if (this.props.productDetails) {
       const mobileGalleryImages =
         this.props.productDetails &&

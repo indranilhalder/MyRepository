@@ -1,5 +1,6 @@
 import React from "react";
 import EmiCard from "./EmiCard";
+import UnderLinedButton from "../../general/components/UnderLinedButton";
 import SlideModal from "../../general/components/SlideModal";
 import Accordion from "../../general/components/Accordion";
 import PropTypes from "prop-types";
@@ -9,7 +10,8 @@ export default class EmiModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openIndex: null
+      openIndex: null,
+      showEmi: false
     };
   }
   handleOpen(index) {
@@ -18,6 +20,9 @@ export default class EmiModal extends React.Component {
     } else {
       this.setState({ openIndex: index });
     }
+  }
+  toggleTermsView() {
+    this.setState({ showEmi: !this.state.showEmi });
   }
   render() {
     return (
@@ -44,17 +49,34 @@ export default class EmiModal extends React.Component {
                 );
               })}
           </div>
-
-          {this.props.emiTerms &&
-            this.props.emiTerms.data &&
-            this.props.emiTerms.data.termAndConditions && (
-              <div
-                className={styles.termsAndConditions}
-                dangerouslySetInnerHTML={{
-                  __html: this.props.emiTerms.data.termAndConditions[0]
-                }}
-              />
-            )}
+          <div className={styles.info}>
+            <UnderLinedButton
+              label={
+                this.state.showEmi
+                  ? "Hide Terms & Conditions"
+                  : "View Terms & Conditions"
+              }
+              onClick={() => {
+                this.toggleTermsView();
+              }}
+              fontFamily="semibold"
+              size={12}
+            />
+          </div>
+          {this.state.showEmi && (
+            <div className={styles.content}>
+              {this.props.emiTerms &&
+                this.props.emiTerms.data &&
+                this.props.emiTerms.data.termAndConditions && (
+                  <div
+                    className={styles.termsAndConditions}
+                    dangerouslySetInnerHTML={{
+                      __html: this.props.emiTerms.data.termAndConditions[0]
+                    }}
+                  />
+                )}
+            </div>
+          )}
         </div>
       </SlideModal>
     );

@@ -18,7 +18,6 @@ import {
   LOGIN_PATH
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-
 export default class MyAccount extends React.Component {
   constructor(props) {
     super(props);
