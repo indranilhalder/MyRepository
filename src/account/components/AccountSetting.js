@@ -25,7 +25,7 @@ export default class AccountSetting extends React.Component {
                 size="14px"
                 fontFamily="regular"
                 color="#ff1744"
-                label="Account Settings"
+                label={this.props.label}
                 onClick={() => this.handleClick()}
               />
             </div>

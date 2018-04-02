@@ -15,7 +15,10 @@ import {
   MY_ACCOUNT_UPDATE_PROFILE_PAGE,
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
-  LOGIN_PATH
+  LOGIN_PATH,
+  GLOBAL_ACCESS_TOKEN,
+  CART_DETAILS_FOR_ANONYMOUS,
+  CART_DETAILS_FOR_LOGGED_IN_USER
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
@@ -30,9 +33,13 @@ export default class MyAccount extends React.Component {
     this.setState({ isSelected: val });
   }
   renderToAccountSetting() {
-    this.props.history.push(
-      `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`
-    );
+    Cookie.deleteCookie(GLOBAL_ACCESS_TOKEN);
+    Cookie.deleteCookie(CUSTOMER_ACCESS_TOKEN);
+    Cookie.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+    Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    Cookie.deleteCookie(LOGGED_IN_USER_DETAILS);
+    localStorage.clear();
+    this.props.history.push(`${LOGIN_PATH}`);
   }
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -65,6 +72,7 @@ export default class MyAccount extends React.Component {
               userDetails.firstName &&
               `${userDetails.firstName} ${userDetails.lastName}`
             }
+            label={"Logout"}
           />
         </div>
         <div className={styles.tabHolder}>
