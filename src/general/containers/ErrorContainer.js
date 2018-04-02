@@ -28,7 +28,8 @@ const mapStateToProps = state => {
     codEligibilityError: state.cart.codEligibilityError,
     binValidationCODError: state.cart.binValidationCODError,
     plpError: state.productListings.error,
-    wishlistError: state.wishlistItems.error
+    wishlistError: state.wishlistItems.error,
+    reviewsError: state.productDescription.reviewsError
   };
 };
 

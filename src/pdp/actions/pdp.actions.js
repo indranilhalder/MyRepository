@@ -18,7 +18,6 @@ import {
 } from "../../lib/constants";
 import { API_MSD_URL_ROOT } from "../../lib/apiRequest.js";
 import { displayToast } from "../../general/toast.actions.js";
-
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
 export const PRODUCT_DESCRIPTION_SUCCESS = "PRODUCT_DESCRIPTION_SUCCESS";
 export const PRODUCT_DESCRIPTION_FAILURE = "PRODUCT_DESCRIPTION_FAILURE";
@@ -363,10 +362,12 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
         }&addedToCartWl=false`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
-      dispatch(displayToast("Added Product to Bag"));
+
+      // here we dispatch a modal to show something was added to the bag
+      dispatch(displayToast("Added product to Bag"));
       dispatch(addProductToCartSuccess());
     } catch (e) {
       dispatch(addProductToCartFailure(e.message));
@@ -596,7 +597,7 @@ export function addProductReview(productCode, productReview) {
     dispatch(addProductReviewRequest());
     try {
       const result = await api.post(
-        `${PRODUCT_SPECIFICATION_PATH}/${productCode}/reviews?access_token=${
+        `${PRODUCT_SPECIFICATION_PATH}${productCode}/reviews?access_token=${
           JSON.parse(customerCookie).access_token
         }`,
         productReview
@@ -826,7 +827,10 @@ export function getMsdRequest(productCode) {
         msdRequestObject
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE.toLowerCase()
+      ) {
         throw new Error(`${resultJson.message}`);
       }
 
@@ -888,7 +892,10 @@ export function pdpAboutBrand(productCode) {
         msdRequestObject
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE.toLocaleLowerCase()
+      ) {
         throw new Error(`${resultJson.message}`);
       }
 
