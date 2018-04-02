@@ -470,8 +470,8 @@ export function applyUserCouponForAnonymous(couponCode) {
 
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].type}`);
       }
       dispatch(applyUserCouponSuccess(couponCode));
 
@@ -514,8 +514,8 @@ export function applyUserCouponForLoggedInUsers(couponCode) {
 
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].type}`);
       }
       dispatch(applyUserCouponSuccess(couponCode));
     } catch (e) {
@@ -563,8 +563,8 @@ export function releaseCouponForAnonymous(oldCouponCode, newCouponCode) {
       );
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].type}`);
       }
       dispatch(releaseUserCouponSuccess());
       dispatch(applyUserCouponForAnonymous(newCouponCode));
@@ -591,8 +591,8 @@ export function releaseUserCoupon(oldCouponCode, newCouponCode) {
         }&isPwa=true&platformNumber=2&couponCode=${oldCouponCode}&cartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].type}`);
       }
 
       dispatch(releaseUserCouponSuccess());
