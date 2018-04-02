@@ -86,6 +86,7 @@ class ProductCouponDetails extends Component {
                     dateTime={value.couponExpiryDate}
                     amount={value.maxDiscount}
                     key={i}
+                    couponType={value.couponType}
                     value={value.couponCode}
                   />
                 );
