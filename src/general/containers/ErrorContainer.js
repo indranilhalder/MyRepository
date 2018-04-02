@@ -33,7 +33,28 @@ const mapStateToProps = state => {
     codEligibilityError: state.cart.codEligibilityError,
     binValidationCODError: state.cart.binValidationCODError,
     wishlistError: state.wishlistItems.error,
-    reviewsError: state.productDescription.reviewsError
+    reviewsError: state.productDescription.reviewsError,
+    orderDetailsError: state.profile.orderDetailsError,
+    fetchOrderDetailsError: state.profile.fetchOrderDetailsError,
+    userDetailsError: state.profile.userDetailsError,
+    userCouponsError: state.profile.userCouponsError,
+    userAlertsError: state.profile.userAlertsError,
+    sendInvoiceError: state.profile.sendInvoiceError,
+    userAddressError: state.profile.userAddressError,
+    removeAddressError: state.profile.removeAddressError,
+    editAddressError: state.profile.editAddressError,
+    addUserAddressError: state.profile.addUserAddressError,
+    followedBrandsError: state.profile.followedBrandsError,
+    cliqCashUserDetailsError: state.profile.cliqCashUserDetailsError,
+    cliqCashVoucherDetailsError: state.profile.cliqCashUserDetailsError,
+    returnPinCodeError: state.profile.returnPinCodeError,
+    giftCardsError: state.profile.giftCardsError,
+    giftCardDetailsError: state.profile.giftCardDetailsError,
+    getOtpToActivateWalletError: state.profile.getOtpToActivateWalletError,
+    getPinCodeError: state.profile.getPinCodeError,
+    updateReturnDetailsError: state.profile.updateReturnDetailsError,
+    cancelProductDetailsError: state.profile.cancelProductDetailsError,
+    cancelProductError: state.profile.cancelProductError
   };
 };
 
@@ -47,10 +68,6 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-
-// should clear error clear EVERYTHING?
-
-// go through all of the
 
 class ErrorDisplay extends React.Component {
   componentDidUpdate(prevProps) {

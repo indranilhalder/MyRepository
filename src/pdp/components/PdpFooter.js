@@ -12,7 +12,6 @@ export default class PdfFooter extends React.Component {
     }
   }
   render() {
-    console.log("PDP FOOOTER");
     return (
       <div className={styles.base}>
         <div className={styles.footerButtonHolder}>

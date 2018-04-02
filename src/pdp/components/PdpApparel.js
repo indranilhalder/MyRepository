@@ -175,8 +175,6 @@ export default class PdpApparel extends React.Component {
     }
 
     if (productData) {
-      console.log("PRODUCT DATA");
-      console.log(productData);
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}

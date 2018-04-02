@@ -1,6 +1,8 @@
 import * as pdpActions from "../actions/pdp.actions";
 import { YES, NO } from "../../lib/constants";
 import { transferPincodeToPdpPincode } from "./utils";
+import { CLEAR_ERROR } from "../../general/error.actions.js";
+
 import cloneDeep from "lodash/cloneDeep";
 const productDescription = (
   state = {
@@ -27,6 +29,12 @@ const productDescription = (
 ) => {
   let sizeGuide, currentProductDetails, currentBrandDetails;
   switch (action.type) {
+    case CLEAR_ERROR:
+      return Object.assign({}, state, {
+        loading: false,
+        error: null,
+        status: null
+      });
     case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_FAILURE:
       return Object.assign({}, state, {
         emiTerms: {
@@ -63,6 +71,7 @@ const productDescription = (
       });
 
     case pdpActions.PRODUCT_DESCRIPTION_FAILURE:
+      console.log("PRODUCT DESCRIPTION FAILURE");
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
@@ -362,6 +371,7 @@ const productDescription = (
       });
 
     case pdpActions.PRODUCT_MSD_FAILURE:
+      console.log("MSD FAILURE");
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,

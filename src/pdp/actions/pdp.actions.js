@@ -834,6 +834,9 @@ export function getMsdRequest(productCode) {
         throw new Error(`${resultJson.message}`);
       }
 
+      console.log("MSD REQUEST");
+      console.log(resultJson);
+
       if (resultJson.data[0].length > 0) {
         dispatch(
           getPdpItems(resultJson.data[0], RECOMMENDED_PRODUCTS_WIDGET_KEY)
@@ -899,6 +902,9 @@ export function pdpAboutBrand(productCode) {
         throw new Error(`${resultJson.message}`);
       }
 
+      console.log("ABOUT BRAND ");
+      console.log(resultJson);
+
       if (resultJson.data[0].itemIds.length > 0) {
         dispatch(
           getPdpItems(resultJson.data[0].itemIds, ABOUT_THE_BRAND_WIDGET_KEY)
@@ -925,10 +931,10 @@ export function getPdpItemsPdpSuccess(items, widgetKey) {
     widgetKey
   };
 }
-export function getPdpItemsFailure(positionInFeed, errorMsg) {
+export function getPdpItemsFailure(errorMsg) {
   return {
     type: GET_PDP_ITEMS_FAILURE,
-    errorMsg,
+    error: errorMsg,
     status: FAILURE
   };
 }
@@ -945,11 +951,12 @@ export function getPdpItems(itemIds, widgetKey) {
       const result = await api.get(url);
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson.message}`);
+        throw new Error(`${resultJson.error}`);
       }
+
       dispatch(getPdpItemsPdpSuccess(resultJson.results, widgetKey));
     } catch (e) {
-      dispatch(getPdpItemsFailure(e.message));
+      dispatch(getPdpItemsFailure(`MSD ${e.message}`));
     }
   };
 }
