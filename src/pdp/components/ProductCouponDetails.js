@@ -8,11 +8,6 @@ import StaticDarkHeader from "../../general/components/StaticDarkHeader";
 import styles from "./ProductCouponDetails.css";
 import * as Cookie from "../../lib/Cookie.js";
 import { COUPON_COOKIE } from "../../lib/constants.js";
-import find from "lodash/find";
-import moment from "moment";
-const COUPON_HEADER = "Apply Coupon";
-const COUPON_SUB_HEADER =
-  "You can avail the below offer/coupon during checkout";
 
 class ProductCouponDetails extends Component {
   constructor(props) {
@@ -28,16 +23,7 @@ class ProductCouponDetails extends Component {
       if (couponCookie) {
         this.props.releaseUserCoupon(couponCookie, couponCode);
       } else {
-        let CouponDetails = find(this.props.opencouponsList, coupon => {
-          return coupon.couponCode === couponCode;
-        });
-
         if (this.props.applyUserCoupon) {
-          Cookie.createCookie(
-            COUPON_COOKIE,
-            couponCode,
-            CouponDetails.couponExpiryDate
-          );
           this.props.applyUserCoupon(couponCode);
         }
       }

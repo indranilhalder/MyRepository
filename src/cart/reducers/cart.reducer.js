@@ -7,7 +7,8 @@ import {
   OLD_CART_GU_ID,
   COUPON_COOKIE
 } from "../../lib/constants";
-
+import find from "lodash/find";
+const IST_TIME_ZONE = "IST";
 const cart = (
   state = {
     status: null,
@@ -159,6 +160,16 @@ const cart = (
       });
 
     case cartActions.APPLY_USER_COUPON_SUCCESS:
+      let couponList = cloneDeep(state.coupons.opencouponsList);
+
+      let CouponDetails = find(couponList, coupon => {
+        return coupon.couponCode === action.couponCode;
+      });
+      let date = CouponDetails.couponExpiryDate;
+      let expiryTime = new Date(date.split(IST_TIME_ZONE).join());
+      let expiryCouponDate = expiryTime.getTime();
+      console.log(expiryCouponDate);
+      Cookies.createCookie(COUPON_COOKIE, action.couponCode, expiryCouponDate);
       return Object.assign({}, state, {
         couponStatus: action.status,
         loading: false

@@ -517,7 +517,7 @@ export function applyUserCouponForLoggedInUsers(couponCode) {
       if (resultJson.status === FAILURE_UPPERCASE) {
         throw new Error(resultJson.error);
       }
-      dispatch(applyUserCouponSuccess());
+      dispatch(applyUserCouponSuccess(couponCode));
     } catch (e) {
       dispatch(applyUserCouponFailure(e.message));
     }

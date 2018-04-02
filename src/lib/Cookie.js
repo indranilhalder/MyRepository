@@ -6,6 +6,7 @@ export function createCookie(name, value, days) {
   if (days) {
     let date = new Date();
     date.setSeconds(date.getSeconds() + days);
+
     expires = `; expires=${date}`;
   } else {
     expires = "";
