@@ -69,7 +69,6 @@ export default class FilterMobile extends React.Component {
   };
   render() {
     const { facetData, facetdatacategory } = this.props;
-
     return (
       <div className={styles.base}>
         <div className={styles.pageHeader} />
