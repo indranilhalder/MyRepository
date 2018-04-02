@@ -70,75 +70,81 @@ export default class FilterMobile extends React.Component {
   render() {
     const { facetData, facetdatacategory } = this.props;
     return (
-      <div className={styles.base}>
-        <div className={styles.pageHeader} />
-        <div className={styles.tabHolder}>
-          <div className={styles.slider}>
-            <FilterTab
-              name="Categories"
-              onClick={() => {
-                this.selectCategories();
-              }}
-              selected={this.state.showCategory}
-            />
-            {facetData &&
-              facetData.map((val, i) => {
-                return (
-                  <FilterTab
-                    name={val.name}
-                    selectedFilterCount={val.selectedFilterCount}
-                    selected={
-                      i === this.state.filterSelectedIndex &&
-                      !this.state.showCategory
-                    }
-                    onClick={() => {
-                      this.selectTab(i);
-                    }}
-                  />
-                );
-              })}
-          </div>
-        </div>
-        <div className={styles.contenHolder}>
-          <div className={styles.slider}>
-            {this.state.showCategory &&
-              facetdatacategory &&
-              facetdatacategory.filters.map((val, i) => {
-                return (
-                  <FilterCategoryL1
-                    name={val.categoryName}
-                    count={val.quantity}
-                    value={val.categoryCode}
-                    onClick={this.onL1Click}
-                    isOpen={val.selected}
-                  >
-                    <FilterCategory
-                      onClick={this.onL2Click}
-                      onL3Click={this.onL3Click}
-                      categoryTypeList={val.childFilters}
+      <React.Fragment>
+        <div
+          className={this.props.showFilter ? styles.filterOpen : styles.base}
+        >
+          <div className={styles.pageHeader} />
+          <div className={styles.tabHolder}>
+            <div className={styles.slider}>
+              <FilterTab
+                name="Categories"
+                onClick={() => {
+                  this.selectCategories();
+                }}
+                selected={this.state.showCategory}
+              />
+              {facetData &&
+                facetData.map((val, i) => {
+                  return (
+                    <FilterTab
+                      name={val.name}
+                      selectedFilterCount={val.selectedFilterCount}
+                      selected={
+                        i === this.state.filterSelectedIndex &&
+                        !this.state.showCategory
+                      }
+                      onClick={() => {
+                        this.selectTab(i);
+                      }}
                     />
-                  </FilterCategoryL1>
-                );
-              })}
-            {!this.state.showCategory && (
-              <React.Fragment>
-                {facetData[this.state.filterSelectedIndex].values.map(
-                  (val, i) => {
-                    return (
-                      <FilterSelect
-                        onClick={this.onFilterClick}
-                        selected={val.selected}
-                        label={val.name}
-                        url={val.url}
+                  );
+                })}
+            </div>
+          </div>
+          <div className={styles.contenHolder}>
+            <div className={styles.slider}>
+              {this.state.showCategory &&
+                facetdatacategory &&
+                facetdatacategory.filters.map((val, i) => {
+                  return (
+                    <FilterCategoryL1
+                      name={val.categoryName}
+                      count={val.quantity}
+                      value={val.categoryCode}
+                      onClick={this.onL1Click}
+                      isOpen={val.selected}
+                    >
+                      <FilterCategory
+                        onClick={this.onL2Click}
+                        onL3Click={this.onL3Click}
+                        categoryTypeList={val.childFilters}
                       />
-                    );
-                  }
-                )}
-              </React.Fragment>
-            )}
+                    </FilterCategoryL1>
+                  );
+                })}
+              {!this.state.showCategory && (
+                <React.Fragment>
+                  {facetData[this.state.filterSelectedIndex].values.map(
+                    (val, i) => {
+                      return (
+                        <FilterSelect
+                          onClick={this.onFilterClick}
+                          selected={val.selected}
+                          label={val.name}
+                          url={val.url}
+                        />
+                      );
+                    }
+                  )}
+                </React.Fragment>
+              )}
+            </div>
           </div>
         </div>
-        <div className={styles.footer}>
+        <div
+          className={this.props.showFilter ? styles.footerOpen : styles.footer}
+        >
           <div className={styles.buttonHolder}>
             <div className={styles.button} onClick={() => this.onClear()}>
               Clear
@@ -150,7 +156,7 @@ export default class FilterMobile extends React.Component {
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }
