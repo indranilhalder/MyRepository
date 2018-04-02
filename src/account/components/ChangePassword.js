@@ -13,13 +13,13 @@ class ChangePassword extends Component {
     super(props);
     this.state = {
       oldPassword: "",
-      NewPassword: "",
-      ConfirmPassword: ""
+      newPassword: "",
+      confirmPassword: ""
     };
   }
 
   onChange = val => {
-    this.setState({ val });
+    this.setState(val);
   };
 
   updatePassword = () => {
@@ -31,6 +31,7 @@ class ChangePassword extends Component {
   };
 
   render() {
+    console.log(this.state);
     return (
       <AuthFrame {...this.props} showSocialButtons={false}>
         <div>
@@ -39,20 +40,20 @@ class ChangePassword extends Component {
               <PasswordInput
                 placeholder={"Old Password"}
                 password={this.state.oldPassword}
-                onChange={oldPassword => this.onChange(oldPassword)}
+                onChange={oldPassword => this.onChange({ oldPassword })}
               />
             </div>
             <div className={styles.input}>
               <PasswordInput
                 placeholder={"New Password"}
                 password={this.state.NewPassword}
-                onChange={NewPassword => this.onChange(NewPassword)}
+                onChange={newPassword => this.onChange({ newPassword })}
               />
             </div>
             <PasswordInput
               placeholder={"Confirm Password"}
               password={this.state.ConfirmPassword}
-              onChange={ConfirmPassword => this.onChange(ConfirmPassword)}
+              onChange={confirmPassword => this.onChange({ confirmPassword })}
             />
           </div>
           <div className={styles.buttonSignup}>
