@@ -34,7 +34,6 @@
   margin-top: 20px;
   margin-bottom: 20px;
 }
-
 .accountInformationHolder {
   width: 33.33%;
   height: auto;
@@ -42,7 +41,6 @@
   display: inline-block;
   padding: 0px 10px;
 }
-
 .accountInformation {
   width: 100%;
   height: auto;
@@ -71,13 +69,24 @@
   text-align: left;
 }
 .accountImage {
-  width: 60px;
-  height: 60px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
   position: absolute;
   left: 0px;
   top: 0;
   bottom: 0;
   margin: auto;
+  background-color: #ab47bc;
+  color: #fff;
+  text-align: center;
+  font-family: semibold;
+}
+.accountImageText {
+  width: auto;
+  height: auto;
+  top: 20px;
+  line-height: 50px;
 }
 .button {
   width: auto;
