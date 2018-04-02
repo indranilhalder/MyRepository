@@ -4546,8 +4546,16 @@
 			type="com.tisl.mpl.wsdto.LandingPageHeaderComponentWsDTO"/>
 		<property name="autoProductRecommendationComponent" 
 			type="com.tisl.mpl.wsdto.AutoProductRecommendationComponentWsDTO"/>
-		<property name="landingPageHierarchy" 
+		<property name="landingPageHierarchyComponent" 
 			type="com.tisl.mpl.wsdto.LandingPageHierarchyComponentWsDTO"/>
+			
+			<property name="simpleBannerComponentWsDTO" 
+			type="com.tisl.mpl.wsdto.SimpleBannerComponentWsDTO"/>
+			
+			<property name="cmsMediaParagraphComponentWsDTO" 
+			type="com.tisl.mpl.wsdto.CMSMediaParagraphComponentWsDTO"/>
+			
+			
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.UICompPageWiseWsDTO">
@@ -4555,6 +4563,7 @@
 	<property name="message" type="java.lang.String"/>   
 		<property name="items"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.UICompPageElementWsDTO>" />
+	<property name="seo" type="com.tisl.wsdto.SeoContentData"/> 		
 	</bean>
 	
 	<!--NU-50 start  -->
@@ -4879,6 +4888,19 @@
 		<property name="imageURL" type="String" />
 		<property name="breadcrumbs" type="java.util.List&lt;com.tisl.mpl.wsdto.BreadcrumbListWsDTO>" />
 	</bean>
-	
+	<bean class="com.tisl.mpl.wsdto.SimpleBannerComponentWsDTO">
+		<property name="componentId" type="java.lang.String"/>
+		<property name="type" type="java.lang.String" />
+		<property name="title" type="java.lang.String" />
+		<property name="description" type="java.lang.String" />
+		<property name="icid2" type="java.lang.String" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.CMSMediaParagraphComponentWsDTO">
+		<property name="componentId" type="java.lang.String"/>
+		<property name="type" type="java.lang.String" />
+		<property name="media" type="java.lang.String" />
+		<property name="url" type="java.lang.String" />
+		<property name="icid2" type="java.lang.String" />
+	</bean>
 	 
 </beans>

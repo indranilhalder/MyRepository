@@ -1,6 +1,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.servicelayer.internal.dao.AbstractItemDao;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -62,6 +63,30 @@ public class DefaultMplCMSComponentDao extends AbstractItemDao implements MplCMS
 		//final SearchResult result = search(queryBuilder.toString(), queryParameters);
 
 		return abstractCMSComponentModelList;
+
+
+	}
+
+	@Override
+	public Collection<CategoryModel> getCategoryByCode(String categoryId, Collection<CatalogVersionModel> catalogVersions)
+	{
+		final StringBuilder query = new StringBuilder("SELECT {cat." + CategoryModel.PK + "} ");
+		query.append("FROM {" + CategoryModel._TYPECODE + " AS cat} ");
+		query.append("WHERE {cat." + CategoryModel.CODE + "} = ?" + CategoryModel.CODE);
+		
+		final Map queryParameters = new HashMap();
+		
+		
+		query.append(FlexibleSearchUtils.buildOracleCompatibleCollectionStatement(" AND {catalogVersion} in (?catalogVersions)",
+				"catalogVersions", "OR", catalogVersions, queryParameters));
+
+		queryParameters.put(CategoryModel.CODE, categoryId);
+		
+
+		final List<CategoryModel> categoryModelList = flexibleSearchService
+				.<CategoryModel> search(query.toString(), queryParameters).getResult();
+
+		return categoryModelList;
 
 
 	}
