@@ -71,7 +71,6 @@ const productDescription = (
       });
 
     case pdpActions.PRODUCT_DESCRIPTION_FAILURE:
-      console.log("PRODUCT DESCRIPTION FAILURE");
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
@@ -371,7 +370,6 @@ const productDescription = (
       });
 
     case pdpActions.PRODUCT_MSD_FAILURE:
-      console.log("MSD FAILURE");
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,

@@ -834,9 +834,6 @@ export function getMsdRequest(productCode) {
         throw new Error(`${resultJson.message}`);
       }
 
-      console.log("MSD REQUEST");
-      console.log(resultJson);
-
       if (resultJson.data[0].length > 0) {
         dispatch(
           getPdpItems(resultJson.data[0], RECOMMENDED_PRODUCTS_WIDGET_KEY)
@@ -901,9 +898,6 @@ export function pdpAboutBrand(productCode) {
       ) {
         throw new Error(`${resultJson.message}`);
       }
-
-      console.log("ABOUT BRAND ");
-      console.log(resultJson);
 
       if (resultJson.data[0].itemIds.length > 0) {
         dispatch(
