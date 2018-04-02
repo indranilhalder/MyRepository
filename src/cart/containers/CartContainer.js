@@ -11,8 +11,7 @@ import {
   updateQuantityInCartLoggedIn,
   updateQuantityInCartLoggedOut,
   displayCoupons,
-  displayOpenCoupons,
-  applyUserCouponForAnonymous
+  displayOpenCoupons
 } from "../actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
