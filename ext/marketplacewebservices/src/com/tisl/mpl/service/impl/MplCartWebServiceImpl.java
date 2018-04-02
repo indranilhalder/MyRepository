@@ -4645,7 +4645,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				final Double netAmountAfrDiscount = oModel.getNetAmountAfterAllDisc();
 				final Double totalPrice = oModel.getTotalPrice();
 
-				mrp = oModel.getMrp().doubleValue();
+				mrp = (oModel.getMrp().doubleValue() * oModel.getQuantity().intValue());
 				payableAmount += (((netAmountAfrDiscount.doubleValue() > 0) ? netAmountAfrDiscount.doubleValue()
 						: totalPrice.doubleValue()) - walletAmt) + oModel.getCurrDelCharge().doubleValue();
 				couponDiscount += oModel.getCouponValue().doubleValue();
