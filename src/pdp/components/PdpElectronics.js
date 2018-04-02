@@ -118,36 +118,13 @@ export default class PdpElectronics extends React.Component {
   };
   showPincodeModal() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-      this.props.showPincodeModal(this.props.match.params[1]);
+      this.props.showPincodeModal(this.props.match.params[0]);
     } else if (
       this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
     ) {
-      this.props.showPincodeModal(this.props.match.params[2]);
+      this.props.showPincodeModal(this.props.match.params[1]);
     }
   }
-  addToWishList = () => {
-    let productDetails = {};
-    productDetails.code = this.props.productDetails.productListingId;
-    productDetails.ussId = this.props.productDetails.winningUssID;
-
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
-    if (userDetails) {
-      this.props.addProductToWishList(
-        JSON.parse(userDetails).userName,
-        JSON.parse(customerCookie).access_token,
-        productDetails
-      );
-    } else {
-      this.props.addProductToWishList(
-        ANONYMOUS_USER,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
-    }
-  };
 
   showEmiModal = () => {
     const cartValue = this.props.productDetails.winningSellerPrice.value;
@@ -201,7 +178,8 @@ export default class PdpElectronics extends React.Component {
           goToCart={() => this.goToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
-          addProductToWishList={() => this.addToWishList()}
+          productListingId={productData.productListingId}
+          ussId={productData.winningUssID}
           showPincodeModal={() => this.showPincodeModal()}
         >
           <ProductGalleryMobile

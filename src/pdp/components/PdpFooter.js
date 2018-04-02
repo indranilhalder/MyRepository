@@ -2,14 +2,10 @@ import React from "react";
 import styles from "./PdpFooter.css";
 import PropTypes from "prop-types";
 import FooterButton from "../../general/components/FooterButton.js";
-import saveIcon from "./img/Save.svg";
 import addToBagIcon from "./img/order-historyWhite.svg";
+import { WISHLIST_FOOTER_BUTTON_TYPE } from "../../wishlist/components/AddToWishListButton";
+import AddToWishListButtonContainer from "../../wishlist/containers/AddToWishListButtonContainer";
 export default class PdfFooter extends React.Component {
-  onSave() {
-    if (this.props.onSave) {
-      this.props.onSave();
-    }
-  }
   onAddToBag() {
     if (this.props.onAddToBag) {
       this.props.onAddToBag();
@@ -19,11 +15,10 @@ export default class PdfFooter extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.footerButtonHolder}>
-          <FooterButton
-            borderColor="#ececec"
-            icon={saveIcon}
-            label="Save"
-            onClick={() => this.onSave()}
+          <AddToWishListButtonContainer
+            type={WISHLIST_FOOTER_BUTTON_TYPE}
+            productListingId={this.props.productListingId}
+            winningUssID={this.props.winningUssID}
           />
         </div>
         <div className={styles.footerButtonHolder}>

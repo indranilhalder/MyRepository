@@ -139,11 +139,11 @@ export default class PdpApparel extends React.Component {
   };
   showPincodeModal() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-      this.props.showPincodeModal(this.props.match.params[1]);
+      this.props.showPincodeModal(this.props.match.params[0]);
     } else if (
       this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
     ) {
-      this.props.showPincodeModal(this.props.match.params[2]);
+      this.props.showPincodeModal(this.props.match.params[1]);
     }
   }
 
@@ -170,7 +170,8 @@ export default class PdpApparel extends React.Component {
           goToCart={() => this.goToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
-          addProductToWishList={() => this.addToWishList()}
+          productListingId={productData.productListingId}
+          ussId={productData.winningUssID}
         >
           <ProductGalleryMobile>
             {mobileGalleryImages.map((val, idx) => {

@@ -116,7 +116,8 @@ class CartPage extends React.Component {
     }
   };
 
-  removeItemFromCart = (cartListItemPosition, pinCode) => {
+  removeItemFromCart = cartListItemPosition => {
+    const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     if (userDetails) {
       if (this.props.removeItemFromCartLoggedIn) {
@@ -281,7 +282,7 @@ class CartPage extends React.Component {
                       productImage={product.imageURL}
                       productDetails={product.description}
                       productName={product.productName}
-                      price={product.price}
+                      price={product.offerPrice}
                       index={i}
                       deliveryInformation={product.elligibleDeliveryMode}
                       deliverTime={

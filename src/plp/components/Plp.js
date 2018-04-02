@@ -105,6 +105,7 @@ export default class Plp extends React.Component {
             <ProductGrid
               history={this.props.history}
               data={this.props.productListings.searchresult}
+              totalResults={this.props.productListings.pagination.totalResults}
             />
           </div>
           <div className={filterClass}>

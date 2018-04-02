@@ -45,7 +45,6 @@ export default class ProductCapsules extends React.Component {
       return null;
     }
     let subHeader;
-
     if (
       data &&
       data.wishlistData &&
