@@ -1,7 +1,6 @@
 import { connect } from "react-redux";
 import {
   getUserAddress,
-  getCoupons,
   getEmiBankDetails,
   getNetBankDetails,
   getCartDetails,
@@ -10,7 +9,10 @@ import {
   removeItemFromCartLoggedIn,
   removeItemFromCartLoggedOut,
   updateQuantityInCartLoggedIn,
-  updateQuantityInCartLoggedOut
+  updateQuantityInCartLoggedOut,
+  displayCoupons,
+  displayOpenCoupons,
+  applyUserCouponForAnonymous
 } from "../actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
@@ -47,9 +49,7 @@ const mapDispatchToProps = dispatch => {
         )
       );
     },
-    getCoupons: () => {
-      dispatch(getCoupons());
-    },
+
     addProductToWishList: productDetails => {
       dispatch(addProductToWishList(productDetails));
     },
@@ -64,6 +64,17 @@ const mapDispatchToProps = dispatch => {
     },
     updateQuantityInCartLoggedOut: (selectedItem, quantity, pinCode) => {
       dispatch(updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode));
+    },
+    displayCoupons: (userId, accessToken, guId) => {
+      dispatch(displayCoupons(userId, accessToken, guId));
+    },
+    displayOpenCoupons: (userId, accessToken) => {
+      dispatch(displayOpenCoupons(userId, accessToken));
+    },
+    applyUserCouponForAnonymous: (userId, accessToken, cartId, couponCode) => {
+      dispatch(
+        applyUserCouponForAnonymous(userId, accessToken, cartId, couponCode)
+      );
     }
   };
 };

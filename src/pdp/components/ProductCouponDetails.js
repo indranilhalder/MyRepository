@@ -6,6 +6,10 @@ import PropTypes from "prop-types";
 import GridSelect from "../../general/components/GridSelect";
 import StaticDarkHeader from "../../general/components/StaticDarkHeader";
 import styles from "./ProductCouponDetails.css";
+import * as Cookie from "../../lib/Cookie.js";
+import { COUPON_COOKIE } from "../../lib/constants.js";
+import find from "lodash/find";
+import moment from "moment";
 const COUPON_HEADER = "Apply Coupon";
 const COUPON_SUB_HEADER =
   "You can avail the below offer/coupon during checkout";
@@ -17,14 +21,35 @@ class ProductCouponDetails extends Component {
       couponVal: ""
     };
   }
+
   applyUserCoupon = couponCode => {
-    if (this.props.applyUserCoupon) {
-      this.props.applyUserCoupon(couponCode);
+    let couponCookie = Cookie.getCookie(COUPON_COOKIE);
+    if (couponCode) {
+      if (couponCookie) {
+        this.props.releaseUserCoupon(couponCookie, couponCode);
+      } else {
+        let CouponDetails = find(this.props.opencouponsList, coupon => {
+          return coupon.couponCode === couponCode;
+        });
+
+        if (this.props.applyUserCoupon) {
+          Cookie.createCookie(
+            COUPON_COOKIE,
+            couponCode,
+            CouponDetails.couponExpiryDate
+          );
+          this.props.applyUserCoupon(couponCode);
+        }
+      }
     }
   };
 
   setUserCoupons = couponCode => {
-    this.setState({ couponVal: couponCode });
+    if (couponCode.length > 0) {
+      this.setState({ couponVal: couponCode[0] });
+    } else {
+      this.setState({ couponVal: "" });
+    }
   };
   releaseUserCoupon = couponCode => {
     if (this.props.releaseUserCoupon) {
@@ -52,16 +77,16 @@ class ProductCouponDetails extends Component {
             limit={1}
             onSelect={val => this.setUserCoupons(val)}
           >
-            {this.props.productOfferPromotion &&
-              this.props.productOfferPromotion.map((value, i) => {
+            {this.props.opencouponsList &&
+              this.props.opencouponsList.map((value, i) => {
                 return (
                   <CuponDetails
-                    promotionTitle={value.promotionTitle}
-                    promotionDetail={value.promotionDetail}
-                    dateTime={value.validTill.formattedDate}
-                    amount={value.validTill.amount}
+                    promotionTitle={value.couponName}
+                    promotionDetail={value.description}
+                    dateTime={value.couponExpiryDate}
+                    amount={value.maxDiscount}
                     key={i}
-                    value={value.promoID}
+                    value={value.couponCode}
                   />
                 );
               })}

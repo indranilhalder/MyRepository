@@ -57,6 +57,11 @@ class CartPage extends React.Component {
         JSON.parse(cartDetailsLoggedInUser).code,
         defaultPinCode
       );
+      this.props.displayCoupons(
+        JSON.parse(userDetails).userName,
+        JSON.parse(customerCookie).access_token,
+        JSON.parse(cartDetailsLoggedInUser).guid
+      );
     } else {
       if (globalCookie !== undefined && cartDetailsAnonymous !== undefined) {
         this.props.getCartDetails(
@@ -65,11 +70,10 @@ class CartPage extends React.Component {
           JSON.parse(cartDetailsAnonymous).guid,
           defaultPinCode
         );
-      }
-    }
-    if (userDetails) {
-      if (this.props.getCoupons) {
-        this.props.getCoupons();
+        this.props.displayOpenCoupons(
+          ANONYMOUS_USER,
+          JSON.parse(globalCookie).access_token
+        );
       }
     }
   }
@@ -144,12 +148,6 @@ class CartPage extends React.Component {
       if (this.props.updateQuantityInCartLoggedOut) {
         this.props.updateQuantityInCartLoggedOut(selectedItem, quantity, "");
       }
-    }
-  };
-
-  applyCoupon = couponCode => {
-    if (this.props.applyCoupon) {
-      this.props.applyCoupon();
     }
   };
 
@@ -255,15 +253,6 @@ class CartPage extends React.Component {
           <div
             className={defaultPinCode === "" ? styles.disabled : styles.content}
           >
-            {cartDetails.products && (
-              <div className={styles.offer}>
-                <div className={styles.offerText}>
-                  {this.props.cartOfferText}
-                </div>
-                <div className={styles.offerName}>{this.props.cartOffer}</div>
-              </div>
-            )}
-
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
                 let serviceable = false;
@@ -318,9 +307,16 @@ class CartPage extends React.Component {
                 <Checkout
                   amount={cartDetails.cartAmount.paybleAmount.formattedValue}
                   bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
-                  tax={this.props.cartTax}
-                  offers={this.props.offers}
-                  delivery={this.props.delivery}
+                  coupons={
+                    cartDetails.cartAmount.couponDiscountAmount.formattedValue
+                  }
+                  discount={
+                    cartDetails.cartAmount.totalDiscountAmount.formattedValue
+                  }
+                  delivery={
+                    cartDetails.products[0].elligibleDeliveryMode[0].charge
+                      .formattedValue
+                  }
                   payable={cartDetails.cartAmount.paybleAmount.formattedValue}
                   onCheckout={() => this.renderToCheckOutPage()}
                 />

@@ -4,7 +4,8 @@ import * as Cookies from "../../lib/Cookie";
 import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
-  OLD_CART_GU_ID
+  OLD_CART_GU_ID,
+  COUPON_COOKIE
 } from "../../lib/constants";
 
 const cart = (
@@ -28,6 +29,7 @@ const cart = (
 
     couponStatus: null,
     couponError: null,
+    coupons: null,
 
     deliveryModes: null,
     userAddress: null,
@@ -41,7 +43,6 @@ const cart = (
     orderSummary: null,
     orderSummaryStatus: null,
     orderSummaryError: null,
-    coupons: null,
 
     storeDetails: [],
     storeStatus: null,
@@ -170,26 +171,6 @@ const cart = (
         loading: false
       });
 
-    case cartActions.GET_COUPON_REQUEST:
-      return Object.assign({}, state, {
-        couponStatus: action.status,
-        loading: true
-      });
-
-    case cartActions.GET_COUPON_SUCCESS:
-      return Object.assign({}, state, {
-        couponStatus: action.status,
-        loading: false,
-        coupons: action.coupons
-      });
-
-    case cartActions.GET_COUPON_FAILURE:
-      return Object.assign({}, state, {
-        couponStatus: action.status,
-        couponError: action.error,
-        loading: false
-      });
-
     case cartActions.RELEASE_USER_COUPON_REQUEST:
       return Object.assign({}, state, {
         couponStatus: action.status,
@@ -197,6 +178,7 @@ const cart = (
       });
 
     case cartActions.RELEASE_USER_COUPON_SUCCESS:
+      Cookies.deleteCookie(COUPON_COOKIE);
       return Object.assign({}, state, {
         couponStatus: action.status,
         loading: false
@@ -936,6 +918,26 @@ const cart = (
     case cartActions.ADD_USER_ADDRESS_FAILURE:
       return Object.assign({}, state, {
         AddUserAddressStatus: action.status,
+        loading: false
+      });
+    case cartActions.DISPLAY_COUPON_REQUEST:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.DISPLAY_COUPON_SUCCESS:
+      console.log(action.couponDetails);
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        coupons: action.couponDetails,
+        loading: false
+      });
+
+    case cartActions.DISPLAY_COUPON_FAILURE:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        couponError: action.error,
         loading: false
       });
 
