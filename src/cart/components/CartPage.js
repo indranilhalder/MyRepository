@@ -131,6 +131,8 @@ class CartPage extends React.Component {
   };
 
   updateQuantityInCart = (selectedItem, quantity) => {
+    console.log(selectedItem);
+    console.log("COMES IN CART PAGE");
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     if (userDetails) {
       if (this.props.updateQuantityInCartLoggedIn) {
@@ -142,7 +144,11 @@ class CartPage extends React.Component {
       }
     } else {
       if (this.props.updateQuantityInCartLoggedOut) {
-        this.props.updateQuantityInCartLoggedOut(selectedItem, quantity, "");
+        this.props.updateQuantityInCartLoggedOut(
+          selectedItem,
+          quantity,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+        );
       }
     }
   };
@@ -284,6 +290,7 @@ class CartPage extends React.Component {
                       productName={product.productName}
                       price={product.offerPrice}
                       index={i}
+                      entryNumber={product.entryNumber}
                       deliveryInformation={product.elligibleDeliveryMode}
                       deliverTime={
                         product.elligibleDeliveryMode &&
