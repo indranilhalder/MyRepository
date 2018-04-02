@@ -1646,24 +1646,19 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						//TISEE-950
 						String startValue = null;
 						String endValue = null;
-						if (null != abstractOrderEntry.getMplDeliveryMode()
-								&& null != abstractOrderEntry.getMplDeliveryMode().getDeliveryMode())
+						//IQA Code review Fix
+						if (null != val.getDeliveryMode())
 						{
-							startValue = abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getStart() != null
-									? abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getStart().toString()
+							startValue = val.getDeliveryMode().getStart() != null ? val.getDeliveryMode().getStart().toString()
 									: MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
-
-							endValue = abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getEnd() != null
-									? abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getEnd().toString()
+							endValue = val.getDeliveryMode().getEnd() != null ? val.getDeliveryMode().getEnd().toString()
 									: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
-							if (StringUtils.isNotEmpty(abstractOrderEntry.getMplDeliveryMode().getSellerArticleSKU())
-									&& StringUtils.isNotEmpty(startValue) && StringUtils.isNotEmpty(endValue)
-									&& StringUtils.isNotEmpty(abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode()))
+							if (StringUtils.isNotEmpty(val.getSellerArticleSKU()) && StringUtils.isNotEmpty(startValue)
+									&& StringUtils.isNotEmpty(endValue) && StringUtils.isNotEmpty(val.getDeliveryMode().getCode()))
 							{
 								selectedDelivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
-										abstractOrderEntry.getMplDeliveryMode().getSellerArticleSKU(),
-										abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode(), startValue, endValue));
+										val.getSellerArticleSKU(), val.getDeliveryMode().getCode(), startValue, endValue));
 							}
 
 						}
@@ -1908,16 +1903,19 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 				/* Added in R2.3 TISRLUAT-812 start */
 				//SDI-3159 Condition added if CLICK N COLLECT is not there
+				//IQA Code Review Fix
+				final MplZoneDeliveryModeValueModel valNew = abstractOrderEntry.getMplDeliveryMode();
 				if (null != abstractOrderEntry.getEdScheduledDate()
-						&& (null != abstractOrderEntry.getMplDeliveryMode() && !MarketplacecommerceservicesConstants.CLICK_COLLECT
-								.equalsIgnoreCase(abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode())))
+						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
+								.getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryDate(abstractOrderEntry.getEdScheduledDate());
 				}
 				//SDI-3159 Condition added if CLICK N COLLECT is not there
-				if (null != abstractOrderEntry.getTimeSlotTo() && null != abstractOrderEntry.getTimeSlotFrom()
-						&& (null != abstractOrderEntry.getMplDeliveryMode() && !MarketplacecommerceservicesConstants.CLICK_COLLECT
-								.equalsIgnoreCase(abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode())))
+				if (null != abstractOrderEntry.getTimeSlotTo()
+						&& null != abstractOrderEntry.getTimeSlotFrom()
+						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
+								.getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
 							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
@@ -4742,6 +4740,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		// YTODO Auto-generated method stub
 		Double cartTotalMrp = Double.valueOf(0);
 		Double cartEntryMrp = Double.valueOf(0);
+
+
+
 
 		if (CollectionUtils.isNotEmpty(orderdata.getEntries()))
 		{
