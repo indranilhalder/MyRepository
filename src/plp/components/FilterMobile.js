@@ -3,26 +3,31 @@ import FilterTab from "./FilterTab";
 import FilterSelect from "./FilterSelect";
 import FilterCategory from "./FilterCategory";
 import FilterCategoryL1 from "./FilterCategoryL1";
+import SearchInput from "../../general/components/SearchInput";
 import styles from "./FilterMobile.css";
 import queryString from "query-string";
 import { createUrlFromQueryAndCategory } from "./FilterUtils.js";
 
 const FILTER_HEADER = "Refine by";
-
+const BRAND = "brand";
 export default class FilterMobile extends React.Component {
   constructor(props) {
     super(props);
     const url = `${props.location.pathname}${props.location.search}`;
     this.state = {
       showCategory: true,
-      url
+      url,
+      brandSearchString: "",
+      filterSelectedIndex: 0
     };
   }
   selectTab(val) {
     this.setState({ showCategory: false, filterSelectedIndex: val });
+    this.setState({ brandSearchString: "" });
   }
   selectCategories() {
     this.setState({ showCategory: true });
+    this.setState({ brandSearchString: "" });
   }
 
   onClear = () => {
@@ -37,7 +42,9 @@ export default class FilterMobile extends React.Component {
       isFilter: false
     });
   };
-
+  onBrandSearch = val => {
+    this.setState({ brandSearchString: val });
+  };
   onCategorySelect = (val, isFilter) => {
     const parsedQueryString = queryString.parse(this.props.location.search);
     let query = parsedQueryString.q;
@@ -69,6 +76,18 @@ export default class FilterMobile extends React.Component {
   };
   render() {
     const { facetData, facetdatacategory } = this.props;
+    let filteredFacetData = facetData[this.state.filterSelectedIndex].values;
+    if (facetData[this.state.filterSelectedIndex].key === BRAND) {
+      filteredFacetData = facetData[
+        this.state.filterSelectedIndex
+      ].values.filter(val => {
+        return this.state.brandSearchString === ""
+          ? val
+          : val.name
+              .toLowerCase()
+              .includes(this.state.brandSearchString.toLowerCase());
+      });
+    }
     return (
       <React.Fragment>
         <div
@@ -125,18 +144,25 @@ export default class FilterMobile extends React.Component {
                 })}
               {!this.state.showCategory && (
                 <React.Fragment>
-                  {facetData[this.state.filterSelectedIndex].values.map(
-                    (val, i) => {
-                      return (
-                        <FilterSelect
-                          onClick={this.onFilterClick}
-                          selected={val.selected}
-                          label={val.name}
-                          url={val.url}
-                        />
-                      );
-                    }
+                  {facetData[this.state.filterSelectedIndex].key === BRAND && (
+                    <div className={styles.search}>
+                      <SearchInput
+                        placeholder="Search brands"
+                        onChange={val => this.onBrandSearch(val)}
+                      />
+                    </div>
                   )}
+                  {filteredFacetData.map((val, i) => {
+                    return (
+                      <FilterSelect
+                        onClick={this.onFilterClick}
+                        selected={val.selected}
+                        hexColor={val.hexColor}
+                        label={val.name}
+                        url={val.url}
+                      />
+                    );
+                  })}
                 </React.Fragment>
               )}
             </div>
