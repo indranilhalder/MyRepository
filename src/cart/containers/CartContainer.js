@@ -70,11 +70,6 @@ const mapDispatchToProps = dispatch => {
     },
     displayOpenCoupons: (userId, accessToken) => {
       dispatch(displayOpenCoupons(userId, accessToken));
-    },
-    applyUserCouponForAnonymous: (userId, accessToken, cartId, couponCode) => {
-      dispatch(
-        applyUserCouponForAnonymous(userId, accessToken, cartId, couponCode)
-      );
     }
   };
 };
