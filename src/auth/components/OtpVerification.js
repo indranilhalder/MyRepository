@@ -44,19 +44,13 @@ export default class OtpVerification extends React.Component {
   }
 
   render() {
-    let userMobileNumber;
-    if (this.props.username && this.props.password) {
-      userMobileNumber = this.props.userMobileNumber;
-    } else if (this.props.userObj) {
-      userMobileNumber = this.props.userObj;
-    }
-
     return (
       <AuthPopUp>
         <MediaQuery query="(min-device-width: 1025px)">
           <div className={styles.header}>One last step</div>
           <div className={styles.content}>
-            Please enter your OTP sent to {userMobileNumber && userMobileNumber}.<span
+            Please enter your OTP sent to{" "}
+            {this.props.userObj && this.props.userObj.username}.<span
               className={ownStyles.span}
             >
               Change number
@@ -112,7 +106,7 @@ export default class OtpVerification extends React.Component {
             <div>
               <div className={ownStyles.content}>
                 Please enter the OTP sent to{" "}
-                {userMobileNumber && userMobileNumber}.
+                {this.props.userObj && this.props.userObj.username}.
                 <span className={ownStyles.span}>Wrong number?</span>
               </div>
             </div>
