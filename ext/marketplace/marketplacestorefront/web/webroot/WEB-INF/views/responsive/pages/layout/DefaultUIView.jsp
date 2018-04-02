@@ -8,6 +8,8 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 <link href="https://fonts.googleapis.com/css?family=Rubik:400,500"
@@ -45,325 +47,609 @@ th {
 .slick-slide{
 height:auto !important;
 }
-body {
-	font-family: 'Rubik', sans-serif;
-}
+body{
+			font-family: 'Rubik', sans-serif;
+		}
+		.pad0{
+			padding: 0;
+		}
+		.mb40{
+			margin-bottom: 40px;
+		}
+		.hero-slider .slick-slide{
+			margin: 0 5px;
+			position: relative;
+		}
+		.hero-slider .slick-slide img{
+			width: 100%;
+			height: 190px;
+			margin-top: 10px;
+			display: block;
+			border-radius: 4px;
+		}
+		.hero-slider .slick-current img{
+			width: 100%;
+			height: auto;
+			display: block;
+			margin-top: 0px;
+		}
+		.hero-slider .hero-subsection{
+			position: absolute;
+			top: 40%;
+			left: 0;
+		}
+		.hero-slider .brand-logo{
+		    width: auto !important;
+		    height: auto !important;
+		    margin-left: 15px;
+		    border: 1px solid #000;
+		}
+		.hero-slider .banner-title{
+		    width: auto;
+		    height: auto;
+		    margin-left: 15px;
+		    margin-top: 10px;
+		    font-size: 30px;
+  			font-weight: 500;
+  			color: #ffffff;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+		}
 
-.pad0 {
-	padding: 0;
-}
 
-.mb40 {
-	margin-bottom: 40px;
-}
+		.offer-slider .slick-slide{
+			position: relative;
+		}
+		.offer-slider .slick-slide img{
+			max-width: 100%;
+			border-radius: 4px;
+		}
+		.offer-slider .offer-subsection{
+			position: absolute;
+			bottom: 0;
+			left: 0;
+		}
+		.offer-slider .shop-now{
+			width: 141px;
+			height: auto;
+		    margin: 20px 15px;
+		    border: 1px solid #000;
+			border-radius: 100px;
+			border: solid 2px #ffffff;
+			padding: 10px 0;
+		    text-align: center;
+		    color: #ffffff;
+		    display: block;
+		    font-size: 14px;
+		}
+		.offer-slider .banner-title{
+		    width: auto;
+		    height: auto;
+		    margin-left: 15px;
+		    margin-top: 10px;
+		    font-size: 30px;
+  			font-weight: 500;
+  			color: #ffffff;
+		}
+		.offer-slider .offer{
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			width: 78px;
+			height: 78px;
+			background-image: linear-gradient(137deg, #fd2c7a, #ff7255);
+  			text-align: center;
+  			color: #ffffff;
+  			border-radius: 50%;
+		}
+		.offer-slider .offer span{
+			position: absolute;
+			left: 12px;
+			top: 20px;
+			width: 55px;
+		    font-size: 14px;
+  			font-weight: 500;
+		    font-style: normal;
+			font-stretch: normal;
+			line-height: 1.43;
+			letter-spacing: normal;
+		}
+		.offer-widget-title{
+			font-size: 20px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: left;
+			color: #212121;
+			margin: 0px 0px 25px 15px;
+		}
+		
+		.flash-sales-widget{
+			color: #ffffff;
+			padding: 25px 20px;
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+		.flash-sales-widget-title{
+			font-size: 20px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: left;
+			color: #ffffff;
+			text-transform: capitalize;
+		}
+		.flash-sales-widget-timer{
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: right;
+			color: #ffffff;
+		}
+		.flash-sales-widget-text{
+			font-size: 14px;
+			font-weight: normal;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.57;
+			letter-spacing: normal;
+			text-align: left;
+			color: #ffffff;
+			margin: 10px 0 25px 0;
+			width: 195px;
+		}
+		.flash-sales-widget-product:nth-child(even){
+			padding: 0 12px 0 0;
+		}
+		.flash-sales-widget-product:nth-child(odd){
+			padding: 0 0 0 12px;
+		}
+		.flash-sales-widget-product img{
+			border-radius: 4px;
+		}
+		.flash-sales-widget-product-offer{
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.43;
+			letter-spacing: normal;
+			color: #ffffff;
+			padding: 0;
+			margin: 15px 0 10px 0;
+		}
+		.flash-sales-widget-product-name{
+			font-size: 14px;
+			font-weight: 300;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.57;
+			letter-spacing: normal;
+			text-align: left;
+			color: #ffffff;
+			padding: 0;
+			margin-bottom: 25px;
+		}
+		.flash-sales-widget .shop-all-btn{
+			width: 120px;
+			padding: 8px 0;
+			border-radius: 100px;
+			border: solid 2px #ffffff;
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: center;
+			color: #ffffff;
+			float: left;
+			clear: both;
+			margin-bottom: 5px;
+		}
+		.flash-sales-widget .fa-clock-o{
+			font-size: 20px;
+			margin-right: 5px;
+		}
+		.flash-sales-widget-timer .fa-clock-o{
+			font-size: 20px;
+    		margin-right: 10px;
+		}
+		.flash-sales-widget-timer .time-digits{
+			float: right;
+    		margin-top: 2px;
+		}
+		.connect-banner{
+			width: calc(100% - 30px);
+			margin-left: 15px;
+			margin-right: 15px;
+			border-radius: 4.2px;
+			background-image: -webkit-linear-gradient(202deg, #48dfe6, #4facfe);
+			background-image: -o-linear-gradient(202deg, #48dfe6, #4facfe);
+			background-image: linear-gradient(292deg, #48dfe6, #4facfe);
+			padding: 25px;
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+		.connect-banner-text1 {
+			font-size: 14.3px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #ffffff;
+			padding-right: 0;
+		}
 
-.hero-slider .slick-slide {
-	margin: 0 5px;
-	position: relative;
-}
+		.connect-banner-text2 {
+			font-size: 12.5px;
+			font-weight: 300;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #ffffff;
+			margin: 10px 0 15px 0;
+		}
 
-.hero-slider .slick-slide img {
-	width: 100%;
-	height: 190px;
-	margin-top: 10px;
-	display: block;
-	border-radius: 4px;
-}
+		.connect-banner-more {
+			font-size: 12.5px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #ffffff;
+			padding-left: 15px;
+    		display: inline-block;
+    		width: auto;
+		}
+		.connect-banner-more::after {
+		    content: "";
+		    display: block;
+		    width: auto;
+		    border: 0.5px solid #fff;
+		    margin-top: 2px;
+		}
+		.connect-banner-full-width{
+			background-image: -webkit-linear-gradient(202deg, #48dfe6, #4facfe);
+			background-image: -o-linear-gradient(202deg, #48dfe6, #4facfe);
+			background-image: linear-gradient(292deg, #48dfe6, #4facfe);
+			padding: 25px;
+		}
+		.connect-banner-full-width .connect-banner-text1{
+			font-size: 16px;
+		}
+		.connect-banner-full-width .connect-banner-more,
+		.connect-banner-full-width .connect-banner-text2{
+			font-size: 14px;
+		}
+		.banner-product-slider{
+			margin: 30px 0 35px 0;
+		}
+		.banner-product-carousel .overlay-text{
+		    position: absolute;
+		    top: 100px;
+		    text-align: center;
+		}
+		.banner-product-carousel .banner-product-title{
+			font-size: 24px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #ffffff;
+		}
+		.banner-product-carousel .banner-product-desc{
+			font-size: 14px;
+			font-weight: 300;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #ffffff;
+		}
+		.banner-product-slider .slick-slide img{
+			border-radius: 4px;
+		}
+		.banner-product-slider .product-name {
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.57;
+			letter-spacing: normal;
+			text-align: left;
+			color: #212121;
+			margin: 10px 0 15px 0;
+		}
+		.banner-product-slider .product-price {
+			font-size: 14px;
+			font-weight: 300;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.43;
+			letter-spacing: normal;
+			text-align: left;
+			color: #212121;
+		}
+		.banner-product-carousel .shop-all-btn{
+			width: 120px;
+			padding: 8px 0;
+			border-radius: 100px;
+  			border: solid 2px #212121;
+  			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: center;
+			color: #212121;
+			float: left;
+			clear: both;
+    		margin-left: 15px;
+    		margin-bottom: 35px;
+		}
 
-.hero-slider .slick-current img {
-	width: 100%;
-	height: auto;
-	display: block;
-	margin-top: 0px;
-}
+		.video-product-slider{
+			margin: 30px 0 35px 0;
+		}
+		
 
-.hero-slider .hero-subsection {
-	position: absolute;
-	top: 40%;
-	left: 0;
-}
+		.video-product-carousel .video-product-logo{
+			position: absolute;
+		    top: 40px;
+		    text-align: center;
+			font-size: 24px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #ffffff;
+		}
+		.video-product-carousel .video-product-desc{
+			position: absolute;
+		    top: 135px;
+		    text-align: center;
+			font-size: 14px;
+			font-weight: 300;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #ffffff;
+		}
+		.video-product-slider .slick-slide img{
+			border-radius: 4px;
+		}
+		.video-product-slider .product-name {
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.57;
+			letter-spacing: normal;
+			text-align: left;
+			color: #212121;
+			margin: 10px 0 15px 0;
+		}
+		.video-product-slider .product-price {
+			font-size: 14px;
+			font-weight: 300;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.43;
+			letter-spacing: normal;
+			text-align: left;
+			color: #212121;
+		}
+		.video-product-carousel .shop-all-btn{
+			width: 120px;
+			padding: 8px 0;
+			border-radius: 100px;
+  			border: solid 2px #212121;
+  			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: center;
+			color: #212121;
+			float: left;
+			clear: both;
+    		margin-left: 15px;
+		}
+		.theme-offers{
+			background-repeat: no-repeat;
+    		background-size: cover;
+		}
+		.theme-offers .heading{
+			font-size: 20px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #ffffff;
+			margin: 20px 0 25px 15px;
+		}
+		.theme-offers-slider .slick-slide img{
+			border-radius: 4px;
+		}
+		.theme-offers-slider .brand-name{
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.71;
+			letter-spacing: normal;
+			color: #ffffff;
+			margin-top: 15px;
+		}
+		.theme-offers-slider .product-name{
+			font-size: 14px;
+			font-weight: 300;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.43;
+			letter-spacing: normal;
+			color: #ffffff;
+			margin: 5px 0;
+			width: calc(100% - 15px);
+		}
+		.theme-offers-slider .product-price{
+			font-size: 14px;
+			font-weight: 300;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.71;
+			letter-spacing: normal;
+			color: #ffffff;
+			margin-top: 5px;
+		}
+		.theme-offers .shop-all-btn{
+			width: 120px;
+			padding: 8px 0;
+			border-radius: 100px;
+			border: solid 2px #ffffff;
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: center;
+			color: #ffffff;
+			float: left;
+			clear: both;
+			margin: 25px 0 35px 15px;
+		}
+		.line-through{
+			text-decoration: line-through;
+		}
 
-.hero-slider .brand-logo {
-	width: auto !important;
-	height: auto !important;
-	margin-left: 15px;
-	border: 1px solid #000;
-}
+		.theme-product-widget{
+			background-repeat: no-repeat;
+    		background-size: cover;
+		}
+		.theme-product-widget .brand-logo{
+			margin: 25px 0 0 15px;
+		}
+		.theme-product-widget-container{
+			padding: 0;
+    		margin-top: 160px;
+		}
+		.theme-product-widget-slider{
+			margin: 30px 0 25px 0;
+		}
+		.theme-product-widget-slider .slick-slide img{
+			border-radius: 50%;
+		}
+		.theme-product-widget .heading{
+			font-size: 20px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #ffffff;
+		}
+		.theme-product-widget .shop-all-btn{
+			float: right;
+			width: 120px;
+			padding: 8px 0;
+			border-radius: 100px;
+			border: solid 2px #ffffff;
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: center;
+			color: #ffffff;
+			margin-top: -5px;
+		}
+		.theme-product-widget .product-name{
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.71;
+			letter-spacing: normal;
+			text-align: center;
+			color: #ffffff;
+			margin: 10px 0 5px 0;
+			padding-right: 15px;
+		}
+		.theme-product-widget .product-price{
+			font-size: 14px;
+			font-weight: 300;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.43;
+			letter-spacing: normal;
+			text-align: center;
+			color: #ffffff;
+			padding-right: 15px;
+		}
+		.banner-separator{
+			padding: 25px 0 25px 15px;
+			background-repeat: no-repeat;
+    		background-size: cover;
+		}
+		.banner-separator .title{
+			font-size: 16px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.25;
+			letter-spacing: normal;
+			color: #ffffff;
+			margin-bottom: 5px;
+		}
 
-.hero-slider .banner-title {
-	width: auto;
-	height: auto;
-	margin-left: 15px;
-	margin-top: 10px;
-	font-size: 30px;
-	font-weight: 500;
-	color: #ffffff;
-	font-style: normal;
-	font-stretch: normal;
-	line-height: normal;
-	letter-spacing: normal;
-}
-
-.offer-slider .slick-slide {
-	position: relative;
-}
-
-.offer-slider .slick-slide img {
-	max-width: 100%;
-	border-radius: 4px;
-}
-
-.offer-slider .offer-subsection {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-}
-
-.offer-slider .shop-now {
-	width: 141px;
-	height: auto;
-	margin: 20px 15px;
-	border: 1px solid #000;
-	border-radius: 100px;
-	border: solid 2px #ffffff;
-	padding: 10px 0;
-	text-align: center;
-	color: #ffffff;
-	display: block;
-	font-size: 14px;
-}
-
-.offer-slider .banner-title {
-	width: auto;
-	height: auto;
-	margin-left: 15px;
-	margin-top: 10px;
-	font-size: 30px;
-	font-weight: 500;
-	color: #ffffff;
-}
-
-.offer-slider .offer {
-	position: absolute;
-	top: 20px;
-	left: 20px;
-	width: 78px;
-	height: 78px;
-	background-image: linear-gradient(137deg, #fd2c7a, #ff7255);
-	text-align: center;
-	color: #ffffff;
-	border-radius: 50%;
-}
-
-.offer-slider .offer span {
-	position: absolute;
-	left: 12px;
-	top: 20px;
-	width: 55px;
-	font-size: 14px;
-	font-weight: 500;
-	font-style: normal;
-	font-stretch: normal;
-	line-height: 1.43;
-	letter-spacing: normal;
-}
-
-.offer-widget-title {
-	font-size: 20px;
-	font-weight: 500;
-	font-style: normal;
-	font-stretch: normal;
-	line-height: normal;
-	letter-spacing: normal;
-	text-align: left;
-	color: #212121;
-	margin: 0px 0px 25px 15px;
-}
-
-.flash-sales-widget {
-	background-color: #962343;
-	color: #ffffff;
-	padding: 25px 20px;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-
-.flash-sales-widget-title {
-	font-size: 20px;
-	font-weight: 500;
-	font-style: normal;
-	font-stretch: normal;
-	line-height: normal;
-	letter-spacing: normal;
-	text-align: left;
-	color: #ffffff;
-	text-transform: capitalize;
-}
-
-.flash-sales-widget-timer {
-	font-size: 14px;
-	font-weight: 500;
-	font-style: normal;
-	font-stretch: normal;
-	line-height: normal;
-	letter-spacing: normal;
-	text-align: right;
-	color: #ffffff;
-}
-
-.flash-sales-widget-text {
-	font-size: 14px;
-	font-weight: normal;
-	font-style: normal;
-	font-stretch: normal;
-	line-height: 1.57;
-	letter-spacing: normal;
-	text-align: left;
-	color: #ffffff;
-	margin: 10px 0 25px 0;
-	width: 195px;
-}
-
-.flash-sales-widget-product:nth-child(even) {
-	padding: 0 12px 0 0;
-}
-
-.flash-sales-widget-product:nth-child(odd) {
-	padding: 0 0 0 12px;
-}
-
-.flash-sales-widget-product img {
-	border-radius: 4px;
-}
-
-.flash-sales-widget-product-offer {
-	font-size: 14px;
-	font-weight: 500;
-	font-style: normal;
-	font-stretch: normal;
-	line-height: 1.43;
-	letter-spacing: normal;
-	color: #ffffff;
-	padding: 0;
-	margin: 15px 0 10px 0;
-}
-
-.flash-sales-widget-product-name {
-	font-size: 14px;
-	font-weight: 300;
-	font-style: normal;
-	font-stretch: normal;
-	line-height: 1.57;
-	letter-spacing: normal;
-	text-align: left;
-	color: #ffffff;
-	padding: 0;
-	margin-bottom: 25px;
-}
-
-.flash-sales-widget .shop-all-btn {
-	width: 120px;
-	padding: 8px 0;
-	border-radius: 100px;
-	border: solid 2px #ffffff;
-	font-size: 14px;
-	font-weight: 500;
-	font-style: normal;
-	font-stretch: normal;
-	line-height: normal;
-	letter-spacing: normal;
-	text-align: center;
-	color: #ffffff;
-	float: left;
-	margin-bottom: 5px;
-}
-
-.flash-sales-widget .fa-clock-o {
-	font-size: 20px;
-	margin-right: 5px;
-}
-
-.flash-sales-widget-timer .fa-clock-o {
-	font-size: 20px;
-	margin-right: 10px;
-}
-
-.flash-sales-widget-timer .time-digits {
-	float: right;
-	margin-top: 2px;
-}
-
-.connect-banner {
-	width: calc(100% - 30px);
-	margin-left: 15px;
-	margin-right: 15px;
-	border-radius: 4.2px;
-	background-image: -webkit-linear-gradient(202deg, #48dfe6, #4facfe);
-	background-image: -o-linear-gradient(202deg, #48dfe6, #4facfe);
-	background-image: linear-gradient(292deg, #48dfe6, #4facfe);
-	padding: 25px;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-
-.connect-banner-text1 {
-	font-size: 14.3px;
-	font-weight: 500;
-	font-style: normal;
-	font-stretch: normal;
-	line-height: normal;
-	letter-spacing: normal;
-	color: #ffffff;
-	padding-right: 0;
-}
-
-.connect-banner-text2 {
-	font-size: 12.5px;
-	font-weight: 300;
-	font-style: normal;
-	font-stretch: normal;
-	line-height: normal;
-	letter-spacing: normal;
-	color: #ffffff;
-	margin: 10px 0 15px 0;
-}
-
-.connect-banner-more {
-	font-size: 12.5px;
-	font-weight: 500;
-	font-style: normal;
-	font-stretch: normal;
-	line-height: normal;
-	letter-spacing: normal;
-	color: #ffffff;
-	padding-left: 15px;
-	display: inline-block;
-	width: auto;
-}
-
-.connect-banner-more::after {
-	content: "";
-	display: block;
-	width: auto;
-	border: 0.5px solid #fff;
-	margin-top: 2px;
-}
-
-.connect-banner-full-width {
-	background-image: -webkit-linear-gradient(202deg, #48dfe6, #4facfe);
-	background-image: -o-linear-gradient(202deg, #48dfe6, #4facfe);
-	background-image: linear-gradient(292deg, #48dfe6, #4facfe);
-	padding: 25px;
-}
-
-.connect-banner-full-width .connect-banner-text1 {
-	font-size: 16px;
-}
-
-.connect-banner-full-width .connect-banner-more,
-	.connect-banner-full-width .connect-banner-text2 {
-	font-size: 14px;
-}
+		.banner-separator .desc{
+			font-size: 14px;
+			font-weight: normal;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #ffffff;
+		}
+		.mt2{
+			margin-top: 2px;
+		}
+		
+		.curated-listing-strip{
+			padding: 15px;
+		}
+		.curated-listing-strip a{
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: left;
+			color: #ffffff;
+		}
+		
 </style>
 
 <template:page pageTitle="${pageTitle}">
@@ -478,52 +764,6 @@ body {
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'FlashSalesComponent'}">
-					<!--flash sales widget-->
-					<div class="col-xs-12 flash-sales-widget mb40"
-						style="background-image: url('${feature.backgroundImageURL.URL}');">
-						<div class="col-xs-6 pad0 flash-sales-widget-title">${feature.title}</div>
-						<div class="col-xs-6 pad0 flash-sales-widget-timer">
-							<i class="fa fa-clock-o" aria-hidden="true"></i>
-							<div class="time-digits">22 : 48 : 53</div>
-						</div>
-						<div class="col-xs-12 pad0 flash-sales-widget-text">${feature.description}</div>
-						<div class="col-xs-6 flash-sales-widget-product">
-							<a href="#"> <img src="https://via.placeholder.com/148x200"
-								class="img-responsive" />
-								<div class="col-xs-12 flash-sales-widget-product-offer">Under Rs. 999</div>
-								<div class="col-xs-12 flash-sales-widget-product-name">Tommy
-									Hilfiger TH1791163J Watch</div>
-							</a>
-						</div>
-						<div class="col-xs-6 flash-sales-widget-product">
-							<a href="#"> <img src="https://via.placeholder.com/148x200"
-								class="img-responsive" />
-								<div class="col-xs-12 flash-sales-widget-product-offer">Under
-									Rs. 999</div>
-								<div class="col-xs-12 flash-sales-widget-product-name">Tommy
-									Hilfiger TH1791163J Watch</div>
-							</a>
-						</div>
-						<div class="col-xs-6 flash-sales-widget-product">
-							<a href="#"> <img src="https://via.placeholder.com/148x200"
-								class="img-responsive" />
-								<div class="col-xs-12 flash-sales-widget-product-offer">Under
-									Rs. 999</div>
-								<div class="col-xs-12 flash-sales-widget-product-name">Tommy
-									Hilfiger TH1791163J Watch</div>
-							</a>
-						</div>
-						<div class="col-xs-6 flash-sales-widget-product">
-							<a href="#"> <img src="https://via.placeholder.com/148x200"
-								class="img-responsive" />
-								<div class="col-xs-12 flash-sales-widget-product-offer">Under
-									Rs. 999</div>
-								<div class="col-xs-12 flash-sales-widget-product-name">Tommy
-									Hilfiger TH1791163J Watch</div>
-							</a>
-						</div>
-						<a href="#" class="shop-all-btn">Shop all</a>
-					</div>
 					
 					<div>
 						<h1>FlashSalesComponent</h1>
@@ -646,52 +886,43 @@ body {
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'BannerProductCarouselComponent'}">
-					<div>
-						<h1>BannerProductCarouselComponent</h1>
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-									<th>imageURL</th>
-									<th>description</th>
-									<th>btnText</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-								<td><a href="${feature.webURL}">${feature.webURL}</a></td>
-								<td><img alt="" src="${feature.imageURL.URL}"></td>
-								<td>${feature.description}</td>
-								<td>${feature.btnText}</td>
-							</tr>
-						</table>
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>webURL</th>
-									<th>title</th>
-									<th>productCode</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}"
-								var="bannerProdCarouselElement">
-								<div>
-									<c:if
-										test="${bannerProdCarouselElement.typeCode eq 'BannerProdCarouselElementComp'}">
-										<tr>
-											<td>${bannerProdCarouselElement.title}</td>
-											<td><a href="${bannerProdCarouselElement.webURL}">${bannerProdCarouselElement.webURL}</a></td>
-											<c:if
-												test="${not empty bannerProdCarouselElement.productCode}">
-												<td>${bannerProdCarouselElement.productCode.code}</td>
-											</c:if>
-										</tr>
-									</c:if>
-								</div>
-							</c:forEach>
-						</table>
-					</div>
+					<!--banner product carousel-->
+						<div class="col-xs-12 mb40 pad0 banner-product-carousel">
+							<img src="${feature.imageURL.URL}">
+							<div class="col-xs-12 pad0 overlay-text">
+								<div class="col-xs-12 banner-product-title">${feature.title}</div>
+								<div class="col-xs-12 banner-product-desc">${feature.description}</div>
+							</div>
+							<div class="banner-product-slider">
+								<c:forEach items="${feature.items}"
+									var="bannerProdCarouselElement">
+									<div>
+										<c:if
+											test="${bannerProdCarouselElement.typeCode eq 'BannerProdCarouselElementComp'}">
+											<div>
+												<a href="#"> <c:if
+														test="${not empty bannerProdCarouselElement.productCode}">
+														<%-- <product:productPrimaryImage
+															product="${bannerProdCarouselElement.productCode}"
+															format="product" /> --%>
+																    	<img src="${bannerProdCarouselElement.productCode.picture.URL}" />
+													</c:if>
+													<div class="product-name">${bannerProdCarouselElement.title}</div>
+													<c:if
+														test="${not empty bannerProdCarouselElement.productCode}">
+														<fmt:parseNumber var = "productPrice" type = "number" value = "${bannerProdCarouselElement.productCode.mrp}" />
+														
+													<div class="product-price">${productPrice}
+													</div>
+													</c:if>
+												</a>
+											</div>
+										</c:if>
+									</div>
+								</c:forEach>
+							</div>
+							<a href="${feature.webURL}" class="shop-all-btn">${feature.btnText}</a>
+						</div>
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'VideoProductCarouselComponent'}">
@@ -713,7 +944,7 @@ body {
 								<td>${feature.title}</td>
 								<td><a href="${feature.webURL}">${feature.webURL}</a></td>
 								<td><img alt="" src="${feature.imageURL.URL}"></td>
-								<td>${feature.description}</td>
+								<%-- <td>${feature.description}</td> --%>
 								<td>${feature.btnText}</td>
 								<td><img alt="" src="${feature.brandLogo.URL}"></td>
 								<td><a href="${feature.videoURL}">${feature.videoURL}</a></td>
@@ -822,54 +1053,62 @@ body {
 
 
 				<c:if test="${feature.typeCode eq 'ThemeProductWidgetComponent'}">
-					<div>
-						<h1>ThemeProductWidgetComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>imageURL</th>
-									<th>brandLogo</th>
-									<th>btnText</th>
-									<th>title</th>
-								</tr>
-							</thead>
-							<tr>
-								<td><img alt="" src="${feature.imageURL.URL}"></td>
-								<td><img alt="" src="${feature.brandLogo.URL}"></td>
-								<td>${feature.btnText}</td>
-								<td>${feature.title}</td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>webURL</th>
-									<th>title</th>
-									<th>productCode</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}"
-								var="themeProductWidgetElement">
-								<div>
-									<c:if
-										test="${themeProductWidgetElement.typeCode eq 'ThemeProductWidgetElement'}">
-										<tr>
-											<td><a href="${themeProductWidgetElement.webURL}">${themeProductWidgetElement.webURL}</a></td>
-											<td>${themeProductWidgetElement.title}</td>
-											<c:if
-												test="${not empty themeProductWidgetElement.productCode}">
-												<td>${themeProductWidgetElement.productCode.code}</td>
-											</c:if>
-										</tr>
-									</c:if>
-								</div>
-							</c:forEach>
-						</table>
+
+					<div class="col-xs-12 pad0 theme-product-widget mb40"
+						style="background-image:url('${feature.imageURL.URL}'),linear-gradient(to bottom, #5b0627, #5b0627);">
+						<img src="${feature.brandLogo}" class="brand-logo" />
+						<div class="col-xs-12 theme-product-widget-container">
+							<div class="col-xs-6 heading">${feature.title}</div>
+							<div class="col-xs-6">
+								<a href="#" class="shop-all-btn">${feature.btnText}</a>
+							</div>
+							<div class="col-xs-12 pad0 theme-product-widget-slider">
+
+								<c:forEach items="${feature.items}"
+									var="themeProductWidgetElement">
+									<div>
+										<c:if
+											test="${themeProductWidgetElement.typeCode eq 'ThemeProductWidgetElement'}">
+											<div>
+												<a href="#"> <c:if
+														test="${not empty themeProductWidgetElement.productCode}">
+														<img
+															src="${themeProductWidgetElement.productCode.picture.URL}" />
+													</c:if>
+													<div class="product-name">${themeProductWidgetElement.title}</div>
+													<c:if
+														test="${not empty themeProductWidgetElement.productCode}">
+														<fmt:parseNumber var="productPrice" type="number"
+															value="${themeProductWidgetElement.productCode.mrp}" />
+														<div class="product-price">${productPrice}
+														</div>
+													</c:if>
+												</a>
+											</div>
+										</c:if>
+									</div>
+								</c:forEach>
+							</div>
+						</div>
 					</div>
+
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'BannerSeparatorComponent'}">
-					<div>
+					<div class="col-xs-12 pad0 mb40 banner-separator"
+						style="background-image: linear-gradient(285deg, ${feature.startHexCode}, ${feature.endHexCode});">
+						<a href="${feature.webURL}">
+						<div class="col-xs-2">
+							<img src="${feature.iconImageURL.URL}"
+								class="pull-left mt2">
+						</div>
+						<div class="col-xs-10 pad0">
+							<div class="col-xs-12 pad0 title">${feature.title}</div>
+							<div class="col-xs-12 pad0 desc">${feature.description}</div>
+						</div>
+						</a>
+					</div>
+					<%-- <div>
 						<h1>BannerSeparatorComponent</h1>
 						<table class="">
 							<thead>
@@ -884,14 +1123,14 @@ body {
 							</thead>
 							<tr>
 								<td>${feature.title}</td>
-								<td>${feature.description}</td>
+								<td>${feature.description}</td> 
 								<td><img alt="" src="${feature.iconImageURL.URL}"></td>
 								<td>${feature.startHexCode}</td>
 								<td>${feature.endHexCode}</td>
 								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
 							</tr>
 						</table>
-					</div>
+					</div> --%>
 				</c:if>
 
 				<c:if
@@ -945,22 +1184,12 @@ body {
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'CuratedListingStripComponent'}">
-					<div>
-						<h1>CuratedListingStripComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>Title</th>
-									<th>Start Hex Code</th>
-									<th>Web URL</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-								<td>${feature.startHexCode}</td>
-								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
-							</tr>
-						</table>
+					<div class="col-xs-12 pad0 mb40 curated-listing-strip"
+						style="background-color:${feature.startHexCode};">
+						<a href="${feature.webURL}"> ${feature.title} <span
+							class="pull-right"><i class="fa fa-arrow-right"
+								aria-hidden="true"></i></span>
+						</a>
 					</div>
 				</c:if>
 
@@ -1446,41 +1675,155 @@ body {
 	src="_ui/responsive/common/js/mpl/slick.min.js"></script>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('.hero-slider').slick({
-			centerMode : true,
-			centerPadding : '60px',
-			slidesToShow : 3,
-			responsive : [ {
-				breakpoint : 480,
-				settings : {
-					arrows : false,
-					centerMode : true,
-					centerPadding : '20px',
-					slidesToShow : 1,
-					useCSS : true,
-					cssEase : 'ease'
-				}
-			} ]
-		});
-
-		$('.offer-slider').slick({
-			centerMode : true,
-			centerPadding : '60px',
-			slidesToShow : 1,
-			responsive : [ {
-				breakpoint : 480,
-				settings : {
-					arrows : false,
-					centerMode : true,
-					centerPadding : '10px',
-					slidesToShow : 1,
-					useCSS : true,
-					cssEase : 'ease'
-				}
-			} ]
-		});
+$(document).ready(function(){
+	$('.hero-slider').slick({
+	  centerMode: true,
+	  centerPadding: '60px',
+	  slidesToShow: 1,
+	  responsive: [
+	    {
+	      breakpoint: 480,
+	      settings: {
+	        arrows: false,
+	        centerMode: true,
+	        centerPadding: '20px',
+	        slidesToShow: 1,
+	        useCSS : true,
+	        cssEase : 'ease'
+	      }
+	    }
+	  ]
 	});
+
+	$('.offer-slider').slick({
+	  centerMode: true,
+	  centerPadding: '60px',
+	  slidesToShow: 1,
+	  responsive: [
+	    {
+	      breakpoint: 480,
+	      settings: {
+	        arrows: false,
+	        centerMode: true,
+	        centerPadding: '15px',
+	        slidesToShow: 1,
+	        useCSS : true,
+	        cssEase : 'ease'
+	      }
+	    }
+	  ]
+	});
+
+	$('.banner-product-slider').slick({
+	  centerMode: true,
+	  centerPadding: '60px',
+	  slidesToShow: 2,
+	  responsive: [
+	    {
+	      breakpoint: 480,
+	      settings: {
+	        arrows: false,
+	        centerMode: true,
+	        centerPadding: '15px',
+	        slidesToShow: 2,
+	        slidesToScroll: 2,
+	        useCSS : true,
+	        cssEase : 'ease'
+	      }
+	    }
+	  ]
+	});
+
+
+	$('.video-product-slider').slick({
+	  centerMode: true,
+	  centerPadding: '60px',
+	  slidesToShow: 2,
+	  responsive: [
+	    {
+	      breakpoint: 480,
+	      settings: {
+	        arrows: false,
+	        centerMode: true,
+	        centerPadding: '15px',
+	        slidesToShow: 2,
+	        slidesToScroll: 2,
+	        useCSS : true,
+	        cssEase : 'ease'
+	      }
+	    }
+	  ]
+	});
+
+	$('.theme-offers-slider').slick({
+	  centerMode: true,
+	  centerPadding: '60px',
+	  slidesToShow: 2,
+	  responsive: [
+	    {
+	      breakpoint: 480,
+	      settings: {
+	        arrows: false,
+	        centerMode: true,
+	        centerPadding: '15px',
+	        slidesToShow: 2,
+	        slidesToScroll: 2,
+	        useCSS : true,
+	        cssEase : 'ease'
+	      }
+	    }
+	  ]
+	});
+
+	
+	$('.theme-product-widget-slider').slick({
+	  centerMode: true,
+	  centerPadding: '60px',
+	  slidesToShow: 2,
+	  responsive: [
+	    {
+	      breakpoint: 480,
+	      settings: {
+	        arrows: false,
+	        centerMode: true,
+	        centerPadding: '15px',
+	        slidesToShow: 2,
+	        slidesToScroll: 2,
+	        useCSS : true,
+	        cssEase : 'ease'
+	      }
+	    }
+	  ]
+	});
+
+	//countdown js starts
+	// Set the date we're counting down to
+	var end_time = $('#end_time').val();
+	if(end_time){
+		var countDownDate = new Date(end_time).getTime();
+		//var countDownDate = new Date("2018-04-03 13:00:00").getTime();
+		// Update the count down every 1 second
+		var x = setInterval(function() {
+		    // Get todays date and time
+		    var now = new Date().getTime();
+		    // Find the distance between now an the count down date
+		    var distance = countDownDate - now;
+		    // Time calculations for days, hours, minutes and seconds
+		    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+		    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+		    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+		    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+		    // Output the result in an element with id="countdown"
+		    document.getElementById("countdown").innerHTML =  hours + ":" + minutes + ":" + seconds;
+		    // If the count down is over, write some text 
+		    if (distance < 0) {
+		        clearInterval(x);
+		        document.getElementById("countdown").innerHTML = "Sale Started";
+		    }
+		}, 1000);
+	}
+	//countdown js ends
+});
 </script>
 	</html>
 </template:page>
