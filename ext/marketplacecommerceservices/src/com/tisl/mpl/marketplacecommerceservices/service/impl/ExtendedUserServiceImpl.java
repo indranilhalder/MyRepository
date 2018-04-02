@@ -1,16 +1,6 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParameterNotNull;
-import de.hybris.platform.core.model.security.PrincipalGroupModel;
-import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserGroupModel;
-import de.hybris.platform.core.model.user.UserModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
-import de.hybris.platform.servicelayer.user.exceptions.CannotDecodePasswordException;
-import de.hybris.platform.servicelayer.user.exceptions.PasswordEncoderNotFoundException;
-import de.hybris.platform.servicelayer.user.impl.DefaultUserService;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -32,6 +22,17 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.impl.ExtendedUserDaoImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
+
+import de.hybris.platform.core.model.security.PrincipalGroupModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserGroupModel;
+import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.user.exceptions.CannotDecodePasswordException;
+import de.hybris.platform.servicelayer.user.exceptions.PasswordEncoderNotFoundException;
+import de.hybris.platform.servicelayer.user.impl.DefaultUserService;
 
 
 /**
@@ -215,7 +216,7 @@ public class ExtendedUserServiceImpl extends DefaultUserService implements Exten
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-	
+
 	/**
 	 * @description checking uniqueness of MobileNumber for Wallet Creation
 	 * @return boolean
@@ -237,7 +238,7 @@ public class ExtendedUserServiceImpl extends DefaultUserService implements Exten
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-	
+
 	}
 
 	/**
@@ -421,7 +422,7 @@ public class ExtendedUserServiceImpl extends DefaultUserService implements Exten
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService#getAccessTokenForUser(java.lang.String)
 	 */
 	@Override

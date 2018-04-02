@@ -206,9 +206,9 @@ public class CustomProductGalleryImagePopulator<SOURCE extends ProductModel, TAR
 
 	/*
 	 * @JavaDoc Method to List down the MediaFormat and Fire Collective Query to Dao
-	 *
+	 * 
 	 * @param MediaContainerModel container
-	 *
+	 * 
 	 * @return MediaModel
 	 */
 	private Map<String, MediaModel> getMediaList(final MediaContainerModel container)
@@ -241,12 +241,14 @@ public class CustomProductGalleryImagePopulator<SOURCE extends ProductModel, TAR
 
 		final Map<String, MediaModel> mediaMapwithFormat = new HashMap<String, MediaModel>();
 		//Mapping Media with Image Format
+		MediaFormatModel mediaFormatModel = null;
 		for (final Map.Entry<String, String> entry : imageFormatMap.entrySet())
 		{
 			for (final MediaModel media : allmedia)
 			{
-				if (null != media.getMediaFormat() && null != media.getMediaFormat().getName()
-						&& media.getMediaFormat().getName().equals(entry.getValue()))// && null == mediaMapwithFormat.get(entry.getKey())
+				mediaFormatModel = media.getMediaFormat();
+				if (null != mediaFormatModel && StringUtils.isNotEmpty(mediaFormatModel.getName())//PT fix:CAR-375
+						&& mediaFormatModel.getName().equals(entry.getValue()))// && null == mediaMapwithFormat.get(entry.getKey())
 				{
 					mediaMapwithFormat.put(entry.getKey(), media);
 				}
