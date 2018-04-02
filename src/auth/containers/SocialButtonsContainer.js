@@ -20,6 +20,7 @@ import {
   getCartId
 } from "../../cart/actions/cart.actions";
 import { SUCCESS } from "../../lib/constants";
+import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -38,7 +39,10 @@ const mapDispatchToProps = dispatch => {
 
         if (signUpResponse.status !== SUCCESS) {
           //TODO dispatch toast here.
-          return;
+          return false;
+        }
+        if (signUpResponse.status === SUCCESS) {
+          dispatch(createWishlist());
         }
       }
 
