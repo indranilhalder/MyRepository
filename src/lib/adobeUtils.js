@@ -7,12 +7,14 @@ export const ADOBE_TARGET_COOKIE_NAME =
 export const ADOBE_TARGET_SPLIT_VALUE = "%7C";
 export const ADOBE_TARGET_MCMID = "MCMID";
 export const ADOBE_TARGET_WAIT_TIME = 2000;
+const ADOBE_SATELLITE_CODE = "page view";
 
 export function setDataLayer(routerProps) {
   const path = routerProps.path;
   if (path === constants.HOME_ROUTER) {
     window.digitalData = getDigitalDataForHome();
   }
+  window._satellite.track(ADOBE_SATELLITE_CODE);
 }
 
 function getDigitalDataForHome() {
@@ -20,11 +22,6 @@ function getDigitalDataForHome() {
     page: {
       category: {
         primaryCategory: "homepage"
-      },
-      pageInfo: {
-        pageName: "homepage",
-        subDomain: "www",
-        domain: ""
       }
     }
   };
