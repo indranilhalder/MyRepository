@@ -57,7 +57,7 @@ class HeaderWrapper extends React.Component {
 
     let canGoBack = true;
     let shouldRenderHeader = true;
-    let headerText = "";
+    // let headerText = this.props.headerText;
     if (
       url === HOME_ROUTER ||
       url === CATEGORIES_LANDING_PAGE ||
@@ -72,17 +72,17 @@ class HeaderWrapper extends React.Component {
       canGoBack = false;
     }
 
-    if (url === HOME_ROUTER) {
-      headerText = "Home";
-    }
+    // if (url === HOME_ROUTER) {
+    //   headerText;
+    // }
 
-    if (url === CATEGORIES_LANDING_PAGE) {
-      headerText = "Categories";
-    }
+    // if (url === CATEGORIES_LANDING_PAGE) {
+    //   headerText
+    // }
 
-    if (url === DEFAULT_BRANDS_LANDING_PAGE) {
-      headerText = "Brands";
-    }
+    // if (url === DEFAULT_BRANDS_LANDING_PAGE) {
+    //   headerText;
+    // }
 
     if (url === LOGIN_PATH || url === SIGN_UP_PATH) {
       shouldRenderHeader = false;
@@ -105,7 +105,7 @@ class HeaderWrapper extends React.Component {
     let headerToRender = (
       <InformationHeader
         goBack={this.onBackClick}
-        text={headerText}
+        text={this.props.headerText}
         hasBackButton={canGoBack}
       />
     );
@@ -118,7 +118,9 @@ class HeaderWrapper extends React.Component {
         />
       );
     } else if (shouldRenderSearch) {
-      headerToRender = <SearchContainer canGoBack={canGoBack} />;
+      headerToRender = (
+        <SearchContainer text={this.props.headerText} canGoBack={canGoBack} />
+      );
     }
 
     return (

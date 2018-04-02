@@ -32,6 +32,9 @@ export default class UserAlertsAndCoupons extends React.Component {
       this.props.history.push(LOGIN_PATH);
     }
   }
+  componentDidUpdate() {
+    this.props.setHeaderText("Alerts & Coupons");
+  }
   renderToAlerts() {
     this.props.history.push(URL_PATH_ALERTS);
   }

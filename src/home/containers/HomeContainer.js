@@ -3,7 +3,7 @@ import { homeFeed } from "../actions/home.actions";
 import { getCartId } from "../../cart/actions/cart.actions";
 import { getWishListItems } from "../../wishlist/actions/wishlist.actions";
 import Feed from "../components/Feed";
-
+import { setHeaderText } from "../../general/header.actions";
 import { withRouter } from "react-router-dom";
 const mapDispatchToProps = dispatch => {
   return {
@@ -15,6 +15,9 @@ const mapDispatchToProps = dispatch => {
     },
     getWishListItems: () => {
       dispatch(getWishListItems());
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     }
   };
 };

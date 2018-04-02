@@ -34,6 +34,9 @@ export default class MyAccount extends React.Component {
       `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`
     );
   }
+  componentDidUpdate() {
+    this.props.setHeaderText("My Cliq");
+  }
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -42,6 +45,7 @@ export default class MyAccount extends React.Component {
       this.props.getUserAlerts();
     }
   }
+
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
   }

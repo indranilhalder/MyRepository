@@ -16,6 +16,9 @@ export default class CategoriesPage extends React.Component {
   componentDidMount() {
     this.props.getCategories();
   }
+  componentDidUpdate() {
+    this.props.setHeaderText("Categories");
+  }
   handleClick(webURL) {
     if (webURL) {
       const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");

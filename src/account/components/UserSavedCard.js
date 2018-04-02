@@ -21,7 +21,9 @@ export default class UserSavedCard extends React.Component {
       }
     }
   }
-
+  componentDidUpdate() {
+    this.props.setHeaderText("Saved Payments");
+  }
   removeSavedCardDetails = () => {
     if (this.props.removeSavedCardDetails) {
       this.props.removeSavedCardDetails();

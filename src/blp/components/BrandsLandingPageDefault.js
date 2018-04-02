@@ -31,6 +31,9 @@ export default class BrandsLandingPageDefault extends React.Component {
   componentDidMount() {
     this.props.getAllBrands();
   }
+  componentWillUpdate() {
+    this.props.setHeaderText("Brands");
+  }
   renderToAnotherURL(webURL) {
     if (webURL) {
       const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");

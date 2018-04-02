@@ -24,6 +24,9 @@ export default class MyAccountBrands extends React.Component {
       this.props.getFollowedBrands();
     }
   }
+  componentDidUpdate() {
+    this.props.setHeaderText("My Brands");
+  }
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
   }

@@ -66,7 +66,22 @@ export default class Plp extends React.Component {
     this.throttledScroll = this.handleScroll();
     window.addEventListener("scroll", this.throttledScroll);
   }
+  componentDidUpdate(prevProps) {
+    console.log("maa tara");
+    if (this.props.productListings !== null) {
+      this.props.setHeaderText(
+        `${this.props.match.params.slug}(${
+          this.props.productListings.pagination.totalResults
+        })`
+      );
+    }
 
+    // this.props.setHeaderText(
+    //   `${this.props.match.params.slug}(${
+    //     this.props.productListings.pagination.totalResults
+    //   })`
+    // );
+  }
   backPage = () => {
     if (this.state.showFilter) {
       this.setState({ showFilter: !this.state.showFilter });
@@ -89,8 +104,8 @@ export default class Plp extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     let filterClass = styles.filter;
-
     if (this.props.loading && !this.props.isFilter) {
       return this.renderLoader();
     }

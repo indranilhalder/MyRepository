@@ -73,6 +73,10 @@ export default class OrderDetails extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (this.props.orderDetails) {
+      const text = this.props.orderDetails.orderId;
+      this.props.setHeaderText(text);
+    }
 
     if (
       userDetails &&
@@ -98,6 +102,13 @@ export default class OrderDetails extends React.Component {
       this.props.showModal(orderDetails);
     }
   }
+
+  componentDidUpdate(prevProps) {
+    console.log("COMPONENT DID UPDATE CALLED");
+    console.log(this.props);
+    this.props.setHeaderText(`#${this.props.orderDetails.orderId}`);
+  }
+
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
   }
@@ -107,6 +118,7 @@ export default class OrderDetails extends React.Component {
     }
   }
   render() {
+    console.log(this.props);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {

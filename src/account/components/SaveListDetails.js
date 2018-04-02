@@ -25,6 +25,9 @@ export default class SaveListDetails extends React.Component {
       this.props.getWishList();
     }
   }
+  componentDidUpdate() {
+    this.props.setHeaderText("Saved List");
+  }
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
   }

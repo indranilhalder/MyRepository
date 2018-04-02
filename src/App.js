@@ -30,7 +30,7 @@ import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCou
 import MyAccountBrandsContainer from "./account/containers/MyAccountBrandsContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
-import HeaderWrapper from "./general/components/HeaderWrapper.js";
+import HeaderContainer from "./general/containers/HeaderContainer.js";
 import AllOrderContainer from "./account/containers/AllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
@@ -158,7 +158,7 @@ class App extends Component {
     return (
       <React.Fragment>
         <div className={className}>
-          <HeaderWrapper />
+          <HeaderContainer />
           <Switch>
             <Route
               exact

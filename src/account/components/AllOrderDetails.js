@@ -30,6 +30,9 @@ export default class AllOrderDetails extends React.Component {
       this.props.getAllOrdersDetails();
     }
   }
+  componentDidUpdate() {
+    this.props.setHeaderText("Order History");
+  }
   renderToContinueShopping() {
     this.props.history.push(HOME_ROUTER);
   }

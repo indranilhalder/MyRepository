@@ -17,7 +17,9 @@ export default class AddressBook extends React.Component {
   componentDidMount() {
     this.props.getUserAddress();
   }
-
+  componentWillUpdate() {
+    this.props.setHeaderText("Address Book");
+  }
   removeAddress = addressId => {
     if (this.props.removeAddress) {
       this.props.removeAddress(addressId);

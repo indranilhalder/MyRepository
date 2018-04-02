@@ -38,6 +38,7 @@ export default class AddDeliveryAddress extends React.Component {
   onChange(val) {
     this.setState(val);
   }
+  componentDidMount() {}
   onChangeDefaultFlag() {
     this.setState(prevState => ({
       defaultFlag: !prevState.defaultFlag

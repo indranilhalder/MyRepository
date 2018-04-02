@@ -33,6 +33,9 @@ export default class GiftCard extends React.Component {
       this.props.getGiftCardDetails();
     }
   }
+  componentDidUpdate() {
+    this.props.setHeaderText("Gift Card");
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.giftCardDetailsStatus === SUCCESS) {
       this.props.history.push({
