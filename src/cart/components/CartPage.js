@@ -142,7 +142,11 @@ class CartPage extends React.Component {
       }
     } else {
       if (this.props.updateQuantityInCartLoggedOut) {
-        this.props.updateQuantityInCartLoggedOut(selectedItem, quantity, "");
+        this.props.updateQuantityInCartLoggedOut(
+          selectedItem,
+          quantity,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+        );
       }
     }
   };
@@ -284,6 +288,7 @@ class CartPage extends React.Component {
                       productName={product.productName}
                       price={product.offerPrice}
                       index={i}
+                      entryNumber={product.entryNumber}
                       deliveryInformation={product.elligibleDeliveryMode}
                       deliverTime={
                         product.elligibleDeliveryMode &&
