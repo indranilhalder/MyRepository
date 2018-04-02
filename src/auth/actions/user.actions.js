@@ -511,9 +511,7 @@ export function customerAccessToken(userDetails) {
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
-      // TODO: dispatch a modal here
       return dispatch(customerAccessTokenSuccess(resultJson));
-      // dispatch(loginUser(userDetails));
     } catch (e) {
       return dispatch(customerAccessTokenFailure(e.message));
     }

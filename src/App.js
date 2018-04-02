@@ -10,6 +10,7 @@ import ProductDescriptionContainer from "./pdp/containers/ProductDescriptionCont
 import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
+import ErrorContainer from "./general/containers/ErrorContainer.js";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
 import BrandsLandingPageDefaultContainer from "./blp/containers/BrandsLandingPageDefaultContainer";
@@ -390,6 +391,7 @@ class App extends Component {
           <MobileFooter />
 
           <ModalContainer />
+          <ErrorContainer />
           <ToastContainer />
         </div>
       </React.Fragment>

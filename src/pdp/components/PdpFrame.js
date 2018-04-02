@@ -39,7 +39,7 @@ export default class PdpFrame extends React.Component {
           onSave={() => this.onSave()}
           onAddToBag={() => this.onAddToBag()}
           productListingId={this.props.productListingId}
-          winningUssID={this.props.winningUssID}
+          winningUssID={this.props.ussId}
         />
       </div>
     );
