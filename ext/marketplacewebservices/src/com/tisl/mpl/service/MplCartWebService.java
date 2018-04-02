@@ -132,9 +132,11 @@ public interface MplCartWebService
 	 * @param addressListDTO
 	 * @param pincode
 	 * @param isPwa
+	 * @param channel
 	 * @return CartDataDetailsWsDTO
 	 */
-	public CartDataDetailsWsDTO getCartDetailsWithPOS(String cartId, AddressListWsDTO addressListDTO, String pincode, boolean isPwa);
+	public CartDataDetailsWsDTO getCartDetailsWithPOS(String cartId, AddressListWsDTO addressListDTO, String pincode,
+			boolean isPwa, String channel);
 
 	/**
 	 * Service to get cart details with with all summary using cartModel
