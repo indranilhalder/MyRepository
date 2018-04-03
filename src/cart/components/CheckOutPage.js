@@ -67,6 +67,7 @@ class CheckOutPage extends React.Component {
     selectedDeliveryDetails: "",
     ratingExperience: false
   };
+
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
@@ -78,7 +79,9 @@ class CheckOutPage extends React.Component {
       </div>
     );
   }
-
+  componentDidUpdate() {
+    this.props.setHeaderText("Checkout");
+  }
   renderConfirmAddress = () => {
     if (this.state.confirmAddress) {
       return <div> Address Expand</div>;

@@ -15,6 +15,7 @@ import {
   SUCCESS,
   FAILURE
 } from "../../lib/constants.js";
+import { CLIQ_CASH } from "../../lib/headerName";
 const DATE_FORMAT = "DD/MM/YYYY, hh:mm";
 
 export default class CliqAndCash extends React.Component {
@@ -38,7 +39,7 @@ export default class CliqAndCash extends React.Component {
     }
   }
   componentDidUpdate() {
-    this.props.setHeaderText("CliQ Cash");
+    this.props.setHeaderText(CLIQ_CASH);
   }
   componentDidMount() {
     if (this.props.getCliqCashDetails) {

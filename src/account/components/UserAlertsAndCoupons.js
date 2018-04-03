@@ -14,6 +14,7 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGIN_PATH
 } from "../../lib/constants";
+import { ALERTS_COUPON } from "../../lib/headerName";
 import * as styles from "./UserAlertsAndCoupons.css";
 
 const URL_PATH_ALERTS = `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ALERTS_PAGE}`;
@@ -33,7 +34,7 @@ export default class UserAlertsAndCoupons extends React.Component {
     }
   }
   componentDidUpdate() {
-    this.props.setHeaderText("Alerts & Coupons");
+    this.props.setHeaderText(ALERTS_COUPON);
   }
   renderToAlerts() {
     this.props.history.push(URL_PATH_ALERTS);

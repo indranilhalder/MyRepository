@@ -8,6 +8,7 @@ import {
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
   MY_ACCOUNT_ADDRESS_ADD_PAGE
 } from "../../lib/constants.js";
+import { ADDRESS_BOOK } from "../../lib/headerName";
 const ADDRESS_BOOK_HEADER = "Add a new address";
 const DELETE_LABEL = "Delete";
 const EDIT_LABEL = "Edit";
@@ -18,7 +19,7 @@ export default class AddressBook extends React.Component {
     this.props.getUserAddress();
   }
   componentWillUpdate() {
-    this.props.setHeaderText("Address Book");
+    this.props.setHeaderText(ADDRESS_BOOK);
   }
   removeAddress = addressId => {
     if (this.props.removeAddress) {

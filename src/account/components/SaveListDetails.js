@@ -13,6 +13,7 @@ import {
   ANONYMOUS_USER,
   LOGIN_PATH
 } from "../../lib/constants";
+import { SAVED_LIST } from "../../lib/headerName";
 import * as Cookie from "../../lib/Cookie";
 const dateFormat = "MMMM DD YYYY";
 const PRODUCT_QUANTITY = "1";
@@ -26,7 +27,7 @@ export default class SaveListDetails extends React.Component {
     }
   }
   componentDidUpdate() {
-    this.props.setHeaderText("Saved List");
+    this.props.setHeaderText(SAVED_LIST);
   }
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;

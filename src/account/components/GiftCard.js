@@ -12,6 +12,7 @@ import {
   LOGIN_PATH,
   CHECKOUT_ROUTER
 } from "../../lib/constants";
+import { GIFT_CARD } from "../../lib/headerName";
 import { SUCCESS } from "../../lib/constants.js";
 import * as Cookie from "../../lib/Cookie";
 const PRODUCT_ID = "MP000000000127263";
@@ -34,7 +35,7 @@ export default class GiftCard extends React.Component {
     }
   }
   componentDidUpdate() {
-    this.props.setHeaderText("Gift Card");
+    this.props.setHeaderText(GIFT_CARD);
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.giftCardDetailsStatus === SUCCESS) {

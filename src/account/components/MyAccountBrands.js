@@ -13,6 +13,7 @@ import {
   LOGIN_PATH,
   DEFAULT_BRANDS_LANDING_PAGE
 } from "../../lib/constants";
+import { BRANDS } from "../../lib/headerName";
 import * as Cookie from "../../lib/Cookie";
 
 export default class MyAccountBrands extends React.Component {
@@ -25,7 +26,7 @@ export default class MyAccountBrands extends React.Component {
     }
   }
   componentDidUpdate() {
-    this.props.setHeaderText("My Brands");
+    this.props.setHeaderText(BRANDS);
   }
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;

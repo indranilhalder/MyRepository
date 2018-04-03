@@ -18,7 +18,7 @@ import styles from "./BrandsLandingPageDefault.css";
 import arrowIcon from "../../general/components/img/down-arrow.svg";
 import searchIcon from "../../general/components/img/Search.svg";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
-
+import { BRANDS } from "../../lib/headerName";
 export default class BrandsLandingPageDefault extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +32,7 @@ export default class BrandsLandingPageDefault extends React.Component {
     this.props.getAllBrands();
   }
   componentWillUpdate() {
-    this.props.setHeaderText("Brands");
+    this.props.setHeaderText(BRANDS);
   }
   renderToAnotherURL(webURL) {
     if (webURL) {

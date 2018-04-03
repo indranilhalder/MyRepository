@@ -17,6 +17,7 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGIN_PATH
 } from "../../lib/constants";
+import { MY_CLIQ } from "../../lib/headerName";
 import * as Cookie from "../../lib/Cookie";
 
 export default class MyAccount extends React.Component {
@@ -35,7 +36,9 @@ export default class MyAccount extends React.Component {
     );
   }
   componentDidUpdate() {
-    this.props.setHeaderText("My Cliq");
+    if (this.state.isSelected === 0) {
+      this.props.setHeaderText(MY_CLIQ);
+    }
   }
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -97,7 +100,7 @@ export default class MyAccount extends React.Component {
           {this.state.isSelected === 0 && (
             <div className={styles.ordersHolder}>
               <div className={styles.recentOrderHolder}>
-                <AllOrderContainer />
+                <AllOrderContainer shouldCallHeaderContainer={false} />
               </div>
             </div>
           )}

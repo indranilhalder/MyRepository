@@ -1,0 +1,9 @@
+export const MY_CLIQ = "My Cliq";
+export const SAVED_LIST = "Saved list";
+export const ALERTS_COUPON = "Alerts & Coupons";
+export const SAVED_PAYMENTS = "Saved payments";
+export const BRANDS = "Brands";
+export const ADDRESS_BOOK = "Address Book";
+export const ORDER_HISTORY = "Order History";
+export const CLIQ_CASH = "Cliq Cash";
+export const GIFT_CARD = "Gift Card";

@@ -44,7 +44,7 @@ import {
   BANK_OFFERS,
   GIFT_CARD_MODAL
 } from "../../general/modal.actions";
-
+import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getCartDetailsCNC: (
@@ -85,6 +85,9 @@ const mapDispatchToProps = dispatch => {
     },
     getOrderSummary: pinCode => {
       dispatch(getOrderSummary(pinCode));
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     },
     getCoupons: () => {
       dispatch(getCoupons());
@@ -146,6 +149,7 @@ const mapDispatchToProps = dispatch => {
     getCODEligibility: () => {
       dispatch(getCODEligibility());
     },
+
     binValidationForCOD: paymentMode => {
       dispatch(binValidationForCOD(paymentMode));
     },

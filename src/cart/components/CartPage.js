@@ -75,6 +75,7 @@ class CartPage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    this.props.setHeaderText("Your Bag");
     if (prevProps.cart) {
       if (prevProps.cart.cartDetails !== this.props.cart.cartDetails) {
         let productServiceAvailability = filter(
