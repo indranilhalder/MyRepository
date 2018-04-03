@@ -38,7 +38,7 @@ import {
   jusPayTokenizeForGiftCard,
   createJusPayOrderForGiftCardNetBanking,
   createJusPayOrderForGiftCardFromSavedCards,
-  captureOrderExperienceStatusUpdate
+  clearCaptureOrderExperience
 } from "../actions/cart.actions";
 import {
   showModal,
@@ -205,8 +205,8 @@ const mapDispatchToProps = dispatch => {
     displayToast: message => {
       dispatch(displayToast(message));
     },
-    captureOrderExperienceStatusUpdate: () => {
-      dispatch(captureOrderExperienceStatusUpdate());
+    clearCaptureOrderExperience: () => {
+      dispatch(clearCaptureOrderExperience());
     }
   };
 };

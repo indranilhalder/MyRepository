@@ -91,7 +91,6 @@ export default class CreditCardForm extends React.Component {
   }
 
   payBill = cardDetails => {
-    this.props.displayToast("MANe");
     let cardValues = {};
     cardValues.cardNumber = this.state.cardNumberValue;
     cardValues.cardName = this.state.cardNameValue;

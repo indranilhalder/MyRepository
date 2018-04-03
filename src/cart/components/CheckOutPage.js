@@ -52,10 +52,10 @@ class CheckOutPage extends React.Component {
     super(props);
 
     this.state = {
-      confirmAddress: false,
-      isSelectedDeliveryModes: false,
-      deliverMode: false,
-      paymentMethod: false,
+      confirmAddress: false, //render the render delivery Modes if confirmAddress= true
+      isSelectedDeliveryModes: false, // To select the delivery Modes
+      deliverMode: false, // render the payment Modes if deliverMode = true
+      paymentMethod: false, // render the payment mode if it is true
       addressId: null,
       addNewAddress: false,
       deliverModeUssId: "",
@@ -753,8 +753,8 @@ class CheckOutPage extends React.Component {
   };
 
   orderConfirmationUpdate = () => {
-    if (this.props.captureOrderExperienceStatusUpdate) {
-      this.props.captureOrderExperienceStatusUpdate();
+    if (this.props.clearCaptureOrderExperience) {
+      this.props.clearCaptureOrderExperience();
     }
   };
   navigateToOrderDetailPage(orderId) {

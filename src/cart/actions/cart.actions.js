@@ -201,8 +201,7 @@ export const ORDER_EXPERIENCE_CAPTURE_SUCCESS =
 export const ORDER_EXPERIENCE_CAPTURE_FAILURE =
   "ORDER_EXPERIENCE_CAPTURE_FAILURE";
 
-export const ORDER_EXPERIENCE_CAPTURE_UPDATE_STATUS =
-  "ORDER_EXPERIENCE_CAPTURE_UPDATE_STATUS";
+export const CLEAR_ORDER_EXPERIENCE_CAPTURE = "CLEAR_ORDER_EXPERIENCE_CAPTURE";
 
 export const ADD_PRODUCT_TO_WISH_LIST_REQUEST =
   "ADD_PRODUCT_TO_WISH_LIST_REQUEST";
@@ -2731,9 +2730,9 @@ export function captureOrderExperienceFailure(error) {
   };
 }
 
-export function captureOrderExperienceStatusUpdate() {
+export function clearCaptureOrderExperience() {
   return {
-    type: ORDER_EXPERIENCE_CAPTURE_UPDATE_STATUS
+    type: CLEAR_ORDER_EXPERIENCE_CAPTURE
   };
 }
 

@@ -708,7 +708,7 @@ const cart = (
         loading: false
       });
 
-    case cartActions.ORDER_EXPERIENCE_CAPTURE_UPDATE_STATUS:
+    case cartActions.CLEAR_ORDER_EXPERIENCE_CAPTURE:
       return Object.assign({}, state, {
         orderConfirmationDetailsStatus: null
       });
