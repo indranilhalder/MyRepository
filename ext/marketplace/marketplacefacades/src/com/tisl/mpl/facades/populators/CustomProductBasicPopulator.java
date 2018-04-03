@@ -141,6 +141,7 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 				productData.setSize(pcmProductVariantModel.getSize());
 			}
 			productData.setColour(pcmProductVariantModel.getColour());
+			productData.setColourHexCode(pcmProductVariantModel.getColourHexCode());
 		}
 		/* Populating rating review details */
 		if (null != productModel.getRatingReview())

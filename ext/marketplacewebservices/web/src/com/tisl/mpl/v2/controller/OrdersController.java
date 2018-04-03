@@ -92,7 +92,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -155,7 +154,7 @@ import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 
 /**
  * Web Service Controller for the ORDERS resource. Most methods check orders of the user. Methods require authentication
@@ -226,9 +225,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 * 
+	 *
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 * 
+	 *
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -472,9 +471,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 * 
+	 *
 	 * @param orderNumber
-	 * 
+	 *
 	 * @param lineID
 	 */
 
@@ -782,6 +781,7 @@ public class OrdersController extends BaseCommerceController
 		double totalDiscount = 0.0d;
 		try
 		{
+
 			//final Commented for Delivery cost fix final in order final confirmation page
 			//orderDetail = orderFacade.getOrderDetailsForCode(orderCode);
 			//orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
@@ -826,6 +826,7 @@ public class OrdersController extends BaseCommerceController
 					{
 						orderWsDTO.setExchangeId(entry.getExchangeApplied());
 					}
+
 				}
 				/*
 				 * if (orderDetail.getTotalPriceWithTax() != null) {
@@ -960,6 +961,7 @@ public class OrdersController extends BaseCommerceController
 									orderProductDTO.setScheduleDeliveryTime(entry.getTimeSlotFrom().concat(" to ")
 											.concat(entry.getTimeSlotTo()));
 								}
+
 							}
 							//R2.3 Changes End
 
@@ -1038,6 +1040,7 @@ public class OrdersController extends BaseCommerceController
 									{
 										orderProductDTO.setFulfillment(orderEntry.getFulfillmentMode());
 									}
+
 								}
 							}
 
@@ -1179,11 +1182,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1643,7 +1646,7 @@ public class OrdersController extends BaseCommerceController
 					{
 						continue;
 					}
-					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderdetails(orderDetails);
+					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderdetails(orderDetails, isPwa);
 					if (null != order)
 					{
 						orderTrackingListWsDTO.add(order);
