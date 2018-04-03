@@ -109,17 +109,6 @@ class CartPage extends React.Component {
     );
   };
 
-  addProductToWishList = product => {
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    if (userDetails) {
-      if (this.props.addProductToWishList) {
-        this.props.addProductToWishList(product);
-      }
-    } else {
-      this.props.history.push(LOGIN_PATH);
-    }
-  };
-
   removeItemFromCart = cartListItemPosition => {
     const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -321,7 +310,6 @@ class CartPage extends React.Component {
                           label: product.qtySelectedByUser
                         }
                       ]}
-                      onSave={this.addProductToWishList}
                       onRemove={this.removeItemFromCart}
                       onQuantityChange={this.updateQuantityInCart}
                       maxQuantityAllowed={product.maxQuantityAllowed}
@@ -363,7 +351,6 @@ CartPage.propTypes = {
   offers: PropTypes.string,
   removeItemFromCartLoggedOut: PropTypes.func,
   removeItemFromCartLoggedIn: PropTypes.func,
-  addProductToWishList: PropTypes.func,
   getCartDetails: PropTypes.func,
   updateQuantityInCartLoggedIn: PropTypes.func,
   updateQuantityInCartLoggedOut: PropTypes.func
