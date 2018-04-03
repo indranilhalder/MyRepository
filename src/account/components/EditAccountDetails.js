@@ -21,9 +21,9 @@ export default class EditAccountDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: "",
-      lastName: "",
-      dateOfBirth: "",
+      firstName: this.props.firstName ? this.props.firstName : "",
+      lastName: this.props.lastName ? this.props.lastName : "",
+      dateOfBirth: this.props.dateOfBirth ? this.props.dateOfBirth : "",
       gender: "",
       mobileNumber: "",
       emailId: "",
@@ -43,10 +43,16 @@ export default class EditAccountDetails extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.userDetails !== this.props.userDetails) {
       if (nextProps.userDetails) {
+        let dateOfBirth = new Date(
+          nextProps.userDetails.dateOfBirth.split("IST").join()
+        );
+        let formatttedDate = moment(dateOfBirth).format("DD/MM/YYYY");
+
         this.setState({
           firstName: nextProps.userDetails.firstName,
           lastName: nextProps.userDetails.lastName,
           dateOfBirth: nextProps.userDetails.dateOfBirth,
+
           gender: nextProps.userDetails.gender,
           mobileNumber: nextProps.userDetails.mobileNumber,
           emailId: nextProps.userDetails.emailID
@@ -83,6 +89,7 @@ export default class EditAccountDetails extends React.Component {
     this.setState({ changePassword: true });
   };
   render() {
+    console.log(this.state);
     let userDetails = this.props.userDetails;
     if (userDetails && !this.state.changePassword) {
       return (
@@ -95,6 +102,15 @@ export default class EditAccountDetails extends React.Component {
                 textStyle={{ fontSize: 14 }}
                 height={33}
                 onChange={firstName => this.onChange({ firstName })}
+              />
+            </div>
+            <div className={styles.container}>
+              <Input2
+                value={this.state.lastName}
+                boxy={true}
+                textStyle={{ fontSize: 14 }}
+                height={33}
+                onChange={lastName => this.onChange({ lastName })}
               />
             </div>
             <div className={styles.container}>
@@ -120,8 +136,8 @@ export default class EditAccountDetails extends React.Component {
               <SelectBoxMobile
                 value={this.state.gender}
                 options={[
-                  { label: "Female", value: "Female" },
-                  { label: "Male", value: "Male" }
+                  { label: "Female", value: "FEMALE" },
+                  { label: "Male", value: "MALE" }
                 ]}
                 arrowColour="grey"
                 height={33}
@@ -130,6 +146,7 @@ export default class EditAccountDetails extends React.Component {
             </div>
             <div className={styles.container}>
               <MobileDatePicker
+                value={this.state.dateOfBirth}
                 onChange={dateOfBirth =>
                   this.onChangeDateOfBirth({ dateOfBirth })
                 }
