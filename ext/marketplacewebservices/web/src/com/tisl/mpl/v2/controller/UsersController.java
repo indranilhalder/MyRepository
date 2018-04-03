@@ -13729,11 +13729,12 @@ public class UsersController extends BaseCommerceController
 							{
 								wldpDTO = new OffersDTO();
 								ProductData productData1 = null;
-								if (null != entryModel.getProduct())
+								final ProductModel productmodel = entryModel.getProduct();
+								if (null != productmodel)
 								{
-									productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-											ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-											ProductOption.STOCK, ProductOption.SELLER));
+									productData1 = productFacade.getProductForOptions(productmodel, Arrays.asList(ProductOption.BASIC,
+											ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.STOCK,
+											ProductOption.SELLER));
 								}
 								if (null != productData1 && null != productData1.getImages())
 								{
@@ -13741,17 +13742,17 @@ public class UsersController extends BaseCommerceController
 									for (final ImageData img : productData1.getImages())
 									{
 										if (null != img && StringUtils.isNotEmpty(img.getFormat())
-
-										&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
+												&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
 										{
 											wldpDTO.setImageURL(img.getUrl());
 										}
-										final String redirection = productModelUrlResolver.resolve(entryModel.getProduct());
-										wldpDTO.setWebURL(redirection);
+
 									}
-									wldpDTOList.add(wldpDTO);
 
 								}
+								final String redirection = productModelUrlResolver.resolve(productmodel);
+								wldpDTO.setWebURL(redirection);
+								wldpDTOList.add(wldpDTO);
 							}
 
 						}
