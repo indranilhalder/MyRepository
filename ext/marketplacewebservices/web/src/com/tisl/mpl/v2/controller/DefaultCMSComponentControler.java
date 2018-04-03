@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.v2.controller;
 
+import de.hybris.platform.acceleratorcms.model.components.AccountNavigationComponentModel;
+import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
 import de.hybris.platform.category.impl.DefaultCategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 
@@ -13,6 +15,8 @@ import de.hybris.platform.category.model.CategoryModel;
 
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
+import de.hybris.platform.cms2.model.contents.components.CMSLinkComponentModel;
+import de.hybris.platform.cms2.model.contents.components.CMSParagraphComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
@@ -2127,6 +2131,120 @@ public class DefaultCMSComponentControler
 							landingPageTitleComponentWsDTO.setType("Landing Page Title Component");
 							uiCompPageElementWsDTO.setComponentName("landingPageTitleComponent");
 							uiCompPageElementWsDTO.setLandingPageTitleComponent(landingPageTitleComponentWsDTO);
+							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						 }
+						}
+						
+						if (abstractCMSComponentModel instanceof CMSParagraphComponentModel)
+						{
+
+							final CMSParagraphComponentModel cmsParagraphComponentModel = (CMSParagraphComponentModel) abstractCMSComponentModel;
+							if(null != cmsParagraphComponentModel.getVisible() && cmsParagraphComponentModel.getVisible().booleanValue()){
+							final CMSParagraphComponentWsDTO cmsParagraphComponentWsDTO = new CMSParagraphComponentWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+
+							try
+							{
+								cmsParagraphComponentWsDTO
+										.setContent(null != cmsParagraphComponentModel.getContent() ? cmsParagraphComponentModel.getContent() : StringUtils.EMPTY);
+							}
+							catch (final EtailNonBusinessExceptions e)
+							{
+								
+								LOG.error("Error in getting cmsParagraphComponentModel with id: " + cmsParagraphComponentModel.getUid(), e);
+								continue;
+							}
+							catch (Exception e)
+							{
+								LOG.error("Error in getting cmsParagraphComponentModel with id: " + cmsParagraphComponentModel.getUid(), e);
+								continue;
+							}
+							cmsParagraphComponentWsDTO.setType("CMS Paragraph Component");
+							uiCompPageElementWsDTO.setComponentName("cmsParagraphComponent");
+							uiCompPageElementWsDTO.setCmsParagraphComponent(cmsParagraphComponentWsDTO);
+							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						 }
+						}
+						
+						if (abstractCMSComponentModel instanceof SimpleBannerComponentModel)
+						{
+
+							final SimpleBannerComponentModel simpleBannerComponentModel = (SimpleBannerComponentModel) abstractCMSComponentModel;
+							if(null != simpleBannerComponentModel.getVisible() && simpleBannerComponentModel.getVisible().booleanValue()){
+							final SimpleBannerComponentWsDTO simpleBannerComponentWsDTO = new SimpleBannerComponentWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+
+							try
+							{
+								simpleBannerComponentWsDTO
+										.setTitle(null != simpleBannerComponentModel.getTitle() ? simpleBannerComponentModel.getTitle() : StringUtils.EMPTY);
+								simpleBannerComponentWsDTO
+								.setDescription(null != simpleBannerComponentModel.getDescription() ? simpleBannerComponentModel.getDescription() : StringUtils.EMPTY);
+								if(null != simpleBannerComponentModel.getMedia()){
+								simpleBannerComponentWsDTO
+								.setMedia(null != simpleBannerComponentModel.getMedia().getURL() ? simpleBannerComponentModel.getMedia().getURL() : StringUtils.EMPTY);
+							  }else{
+								  simpleBannerComponentWsDTO.setMedia(StringUtils.EMPTY);
+							  }
+								simpleBannerComponentWsDTO
+								.setUrlLink(null != simpleBannerComponentModel.getUrlLink() ? simpleBannerComponentModel.getUrlLink() : StringUtils.EMPTY);
+							}
+							catch (final EtailNonBusinessExceptions e)
+							{
+								
+								LOG.error("Error in getting simpleBannerComponentModel with id: " + simpleBannerComponentModel.getUid(), e);
+								continue;
+							}
+							catch (Exception e)
+							{
+								LOG.error("Error in getting simpleBannerComponentModel with id: " + simpleBannerComponentModel.getUid(), e);
+								continue;
+							}
+							simpleBannerComponentWsDTO.setType("Simple Banner Component");
+							uiCompPageElementWsDTO.setComponentName("simpleBannerComponent");
+							uiCompPageElementWsDTO.setSimpleBannerComponentWsDTO(simpleBannerComponentWsDTO);
+							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						 }
+						}
+						
+						if (abstractCMSComponentModel instanceof AccountNavigationComponentModel)
+						{
+
+							final AccountNavigationComponentModel accountNavigationComponentModel = (AccountNavigationComponentModel) abstractCMSComponentModel;
+							if(null != accountNavigationComponentModel.getVisible() && accountNavigationComponentModel.getVisible().booleanValue()){
+							final AccountNavigationComponentWsDTO accountNavigationComponentWsDTO = new AccountNavigationComponentWsDTO();
+							List<CMSNavigationNodeWsDTO> cmsNavigationNodeWsDTOList = new ArrayList<CMSNavigationNodeWsDTO>();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+
+							try
+							{
+					
+								if(null != accountNavigationComponentModel.getNavigationNode() && accountNavigationComponentModel.getNavigationNode().getLinks().size() >0){
+									
+									for(CMSLinkComponentModel cmsLinkComponentModel : accountNavigationComponentModel.getNavigationNode().getLinks())
+									{
+										CMSNavigationNodeWsDTO cmsNavigationNodeWsDTO =new CMSNavigationNodeWsDTO();
+										cmsNavigationNodeWsDTO.setLinkName(null != cmsLinkComponentModel.getLinkName() ? cmsLinkComponentModel.getLinkName() : StringUtils.EMPTY);
+										cmsNavigationNodeWsDTO.setUrl(null != cmsLinkComponentModel.getUrl() ? cmsLinkComponentModel.getUrl() : StringUtils.EMPTY);
+										cmsNavigationNodeWsDTOList.add(cmsNavigationNodeWsDTO);
+									}
+								}
+								accountNavigationComponentWsDTO.setNodeList(cmsNavigationNodeWsDTOList);
+							}
+							catch (final EtailNonBusinessExceptions e)
+							{
+								
+								LOG.error("Error in getting accountNavigationComponentModel with id: " + accountNavigationComponentModel.getUid(), e);
+								continue;
+							}
+							catch (Exception e)
+							{
+								LOG.error("Error in getting accountNavigationComponentModel with id: " + accountNavigationComponentModel.getUid(), e);
+								continue;
+							}
+							accountNavigationComponentWsDTO.setType("Account Navigation Component");
+							uiCompPageElementWsDTO.setComponentName("accountNavigationComponent");
+							uiCompPageElementWsDTO.setAccountNavigationComponentWsDTO(accountNavigationComponentWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						 }
 						}

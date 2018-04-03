@@ -4496,6 +4496,11 @@
 		<property name="webURL" type="String"/>
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.CMSParagraphComponentWsDTO">
+		<property name="content" type="java.lang.String"/>
+		 <property name="type" type="String"/>
+	</bean>
+	
 	<bean class="com.tisl.mpl.wsdto.UICompPageElementWsDTO">
 		<property name="componentName" type="java.lang.String"/>
 		<property name="heroBannerComponent"
@@ -4547,15 +4552,13 @@
 		<property name="autoProductRecommendationComponent" 
 			type="com.tisl.mpl.wsdto.AutoProductRecommendationComponentWsDTO"/>
 		<property name="landingPageHierarchyComponent" 
-			type="com.tisl.mpl.wsdto.LandingPageHierarchyComponentWsDTO"/>
-			
-			<property name="simpleBannerComponentWsDTO" 
+			type="com.tisl.mpl.wsdto.LandingPageHierarchyComponentWsDTO"/>			
+		<property name="simpleBannerComponentWsDTO" 
 			type="com.tisl.mpl.wsdto.SimpleBannerComponentWsDTO"/>
-			
-			<property name="cmsMediaParagraphComponentWsDTO" 
-			type="com.tisl.mpl.wsdto.CMSMediaParagraphComponentWsDTO"/>
-			
-			
+		<property name="accountNavigationComponentWsDTO" 
+			type="com.tisl.mpl.wsdto.AccountNavigationComponentWsDTO"/>	
+		<property name="cmsParagraphComponent"
+		    type="com.tisl.mpl.wsdto.CMSParagraphComponentWsDTO" />	
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.UICompPageWiseWsDTO">
@@ -4894,11 +4897,16 @@
 		<property name="title" type="java.lang.String" />
 		<property name="description" type="java.lang.String" />
 		<property name="icid2" type="java.lang.String" />
+		<property name="media" type="java.lang.String" />
+		<property name="urlLink" type="java.lang.String" />
 	</bean>
-	<bean class="com.tisl.mpl.wsdto.CMSMediaParagraphComponentWsDTO">
+	<bean class="com.tisl.mpl.wsdto.AccountNavigationComponentWsDTO">
 		<property name="componentId" type="java.lang.String"/>
 		<property name="type" type="java.lang.String" />
-		<property name="media" type="java.lang.String" />
+		<property name="nodeList" type="java.util.List&lt;com.tisl.mpl.wsdto.CMSNavigationNodeWsDTO>" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.CMSNavigationNodeWsDTO">
+		<property name="linkName" type="java.lang.String" />
 		<property name="url" type="java.lang.String" />
 		<property name="icid2" type="java.lang.String" />
 	</bean>
