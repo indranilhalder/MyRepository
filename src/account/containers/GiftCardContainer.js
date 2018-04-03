@@ -5,10 +5,14 @@ import {
   getGiftCardDetails,
   createGiftCardDetails
 } from "../actions/account.actions";
+import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getGiftCardDetails: () => {
       dispatch(getGiftCardDetails());
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     },
     createGiftCardDetails: giftCardDetails => {
       dispatch(createGiftCardDetails(giftCardDetails));

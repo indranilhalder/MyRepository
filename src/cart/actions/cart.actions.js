@@ -238,12 +238,78 @@ export const UPDATE_QUANTITY_IN_CART_LOGGED_OUT_SUCCESS =
 export const UPDATE_QUANTITY_IN_CART_LOGGED_OUT_FAILURE =
   "UPDATE_QUANTITY_IN_CART_LOGGED_OUT_FAILURE";
 
+export const DISPLAY_COUPON_REQUEST = "DISPLAY_COUPON_REQUEST";
+export const DISPLAY_COUPON_SUCCESS = "DISPLAY_COUPON_SUCCESS";
+export const DISPLAY_COUPON_FAILURE = "DISPLAY_COUPON_FAILURE";
+
 export const PAYMENT_MODE = "credit card";
 const pincode = 229001;
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
 const MY_WISH_LIST = "MyWishList";
 export const ANONYMOUS_USER = "anonymous";
+
+export function displayCouponRequest() {
+  return {
+    type: DISPLAY_COUPON_REQUEST,
+    status: REQUESTING
+  };
+}
+export function displayCouponSuccess(couponDetails) {
+  return {
+    type: DISPLAY_COUPON_SUCCESS,
+    status: SUCCESS,
+    couponDetails
+  };
+}
+
+export function displayCouponFailure(error) {
+  return {
+    type: DISPLAY_COUPON_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function displayCouponsForLoggedInUser(userId, accessToken, cartId) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(displayCouponRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${userId}/displayCouponOffers?access_token=${accessToken}&cartGuid=${cartId}`
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].type}`);
+      }
+      dispatch(displayCouponSuccess(resultJson));
+    } catch (e) {
+      dispatch(displayCouponFailure(e.message));
+    }
+  };
+}
+
+export function displayCouponsForAnonymous(userId, accessToken) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(displayCouponRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${userId}/displayOpenCouponOffers?access_token=${accessToken}`
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].type}`);
+      }
+      dispatch(displayCouponSuccess(resultJson));
+    } catch (e) {
+      dispatch(displayCouponFailure(e.message));
+    }
+  };
+}
 
 export function cartDetailsRequest() {
   return {
@@ -276,9 +342,11 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
         `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetails?access_token=${accessToken}&isPwa=true&platformNumber=2&pincode=${pinCode}`
       );
       const resultJson = await result.json();
+
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].type}`);
       }
+
       dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(cartDetailsFailure(e.message));
@@ -365,62 +433,18 @@ export function getCartDetailsCNC(
   };
 }
 
-export function getCouponsRequest() {
-  return {
-    type: GET_COUPON_REQUEST,
-    status: REQUESTING
-  };
-}
-export function getCouponsSuccess(coupons) {
-  return {
-    type: GET_COUPON_SUCCESS,
-    status: SUCCESS,
-    coupons
-  };
-}
-
-export function getCouponsFailure(error) {
-  return {
-    type: GET_CART_ID_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-export function getCoupons(couponCode) {
-  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  return async (dispatch, getState, { api }) => {
-    dispatch(getCouponsRequest());
-    try {
-      const result = await api.get(
-        `${USER_CART_PATH}/${
-          JSON.parse(userDetails).userName
-        }/getCoupons?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&currentPage=0&usedCoupon=N&isPwa=true&platformNumber=2`
-      );
-      const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
-      }
-      dispatch(getCouponsSuccess(resultJson));
-    } catch (e) {
-      dispatch(getCouponsFailure(e.message));
-    }
-  };
-}
-
 export function applyUserCouponRequest() {
   return {
     type: APPLY_USER_COUPON_REQUEST,
     status: REQUESTING
   };
 }
-export function applyUserCouponSuccess() {
+export function applyUserCouponSuccess(couponResult, couponCode) {
   return {
     type: APPLY_USER_COUPON_SUCCESS,
-    status: SUCCESS
+    status: SUCCESS,
+    couponResult,
+    couponCode
   };
 }
 
@@ -432,26 +456,66 @@ export function applyUserCouponFailure(error) {
   };
 }
 
-export function applyUserCoupon(couponCode) {
-  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+export function applyUserCouponForAnonymous(couponCode) {
+  const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+  const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  let cartId = JSON.parse(cartDetailsAnonymous).guid;
   return async (dispatch, getState, { api }) => {
     dispatch(applyUserCouponRequest());
+    let couponObject = new FormData();
+    couponObject.append("access_token", JSON.parse(globalCookie).access_token);
+    couponObject.append("couponCode", couponCode);
+    couponObject.append("channel", "Mobile");
+
     try {
-      const result = await api.get(
-        `${USER_CART_PATH}/${
-          JSON.parse(userDetails).userName
-        }/carts/applyCoupons?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartId}&couponCode=${couponCode}`
+      const result = await api.postFormData(
+        `${USER_CART_PATH}/anonymous/carts/${cartId}/applyCouponsAnonymous?`,
+        couponObject
       );
+
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].type}`);
       }
-      dispatch(applyUserCouponSuccess());
+
+      dispatch(applyUserCouponSuccess(resultJson, couponCode));
+    } catch (e) {
+      dispatch(applyUserCouponFailure(e.message));
+    }
+  };
+}
+
+export function applyUserCouponForLoggedInUsers(couponCode) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    let cartGuId = JSON.parse(cartDetails).guid;
+
+    dispatch(applyUserCouponRequest());
+    let couponObject = new FormData();
+
+    couponObject.append("couponCode", couponCode);
+    couponObject.append("cartGuid", cartGuId);
+
+    try {
+      const result = await api.postFormData(
+        `${USER_CART_PATH}/${JSON.parse(userDetails).userName}/carts/${
+          JSON.parse(cartDetails).code
+        }/applyCoupons?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2`,
+        couponObject
+      );
+
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].type}`);
+      }
+
+      dispatch(applyUserCouponSuccess(resultJson, couponCode));
     } catch (e) {
       dispatch(applyUserCouponFailure(e.message));
     }
@@ -479,7 +543,36 @@ export function releaseUserCouponFailure(error) {
   };
 }
 
-export function releaseUserCoupon(couponCode) {
+export function releaseCouponForAnonymous(oldCouponCode, newCouponCode) {
+  const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+  const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  let cartId = JSON.parse(cartDetailsAnonymous).guid;
+
+  return async (dispatch, getState, { api }) => {
+    dispatch(releaseUserCouponRequest());
+    let couponObject = new FormData();
+    couponObject.append("access_token", JSON.parse(globalCookie).access_token);
+    couponObject.append("couponCode", oldCouponCode);
+
+    try {
+      const result = await api.postFormData(
+        `${USER_CART_PATH}/anonymous/carts/${cartId}/releaseCouponsAnonymous?`,
+        couponObject
+      );
+      const resultJson = await result.json();
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].type}`);
+      }
+      dispatch(releaseUserCouponSuccess());
+      dispatch(applyUserCouponForAnonymous(newCouponCode));
+    } catch (e) {
+      dispatch(releaseUserCouponFailure(e.message));
+    }
+  };
+}
+
+export function releaseUserCoupon(oldCouponCode, newCouponCode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -493,13 +586,15 @@ export function releaseUserCoupon(couponCode) {
           JSON.parse(userDetails).userName
         }/carts/${cartId}/releaseCoupons?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=2&couponCode=${couponCode}&cartGuid=${cartGuId}`
+        }&isPwa=true&platformNumber=2&couponCode=${oldCouponCode}&cartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].type}`);
       }
+
       dispatch(releaseUserCouponSuccess());
+      dispatch(applyUserCouponForLoggedInUsers(newCouponCode));
     } catch (e) {
       dispatch(releaseUserCouponFailure(e.message));
     }

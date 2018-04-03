@@ -15,8 +15,10 @@ import {
   ORDER_CODE,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  LOGIN_PATH
+  LOGIN_PATH,
+  ORDER_HISTORY
 } from "../../lib/constants";
+
 import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 export default class AllOrderDetails extends React.Component {
@@ -28,6 +30,11 @@ export default class AllOrderDetails extends React.Component {
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (userDetails && customerCookie) {
       this.props.getAllOrdersDetails();
+    }
+  }
+  componentDidUpdate() {
+    if (this.props.shouldCallHeaderContainer) {
+      this.props.setHeaderText(ORDER_HISTORY);
     }
   }
   renderToContinueShopping() {
@@ -110,6 +117,7 @@ export default class AllOrderDetails extends React.Component {
   }
 }
 AllOrderDetails.propTypes = {
+  shouldCallHeaderContainer: PropTypes.bool,
   orderDetails: PropTypes.arrayOf(
     PropTypes.shape({
       orderDate: PropTypes.string,
@@ -125,4 +133,7 @@ AllOrderDetails.propTypes = {
       )
     })
   )
+};
+AllOrderDetails.defaultProps = {
+  shouldCallHeaderContainer: true
 };

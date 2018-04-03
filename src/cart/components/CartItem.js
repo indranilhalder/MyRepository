@@ -21,11 +21,6 @@ export default class CartItem extends React.Component {
     };
   }
 
-  handleSave(product) {
-    if (this.props.onSave) {
-      this.props.onSave(product);
-    }
-  }
   handleRemove(index) {
     if (this.props.onRemove) {
       this.props.onRemove(index);
@@ -123,7 +118,8 @@ export default class CartItem extends React.Component {
         {this.props.hasFooter && (
           <div className={styles.footer}>
             <BagPageFooter
-              onSave={() => this.handleSave(this.props.product)}
+              productCode={this.props.product.productcode}
+              winningUssID={this.props.product.USSID}
               onRemove={() => this.handleRemove(this.props.index)}
             />
             <div className={styles.dropdown}>
@@ -146,7 +142,6 @@ export default class CartItem extends React.Component {
   }
 }
 CartItem.propTypes = {
-  onSave: PropTypes.func,
   onRemove: PropTypes.func,
   productImage: PropTypes.string,
   productName: PropTypes.string,

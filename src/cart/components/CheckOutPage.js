@@ -38,7 +38,7 @@ import {
   ORDER,
   ORDER_CODE
 } from "../../lib/constants";
-import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
+import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
@@ -97,7 +97,9 @@ class CheckOutPage extends React.Component {
       </div>
     );
   }
-
+  componentDidUpdate() {
+    this.props.setHeaderText(CHECKOUT);
+  }
   renderConfirmAddress = () => {
     if (this.state.confirmAddress) {
       return <div> Address Expand</div>;
@@ -875,17 +877,27 @@ class CheckOutPage extends React.Component {
             </div>
           )}
 
-          {(this.state.isGiftCard || !this.state.showCliqAndPiq) && (
-            <Checkout
-              amount={this.state.payableAmount}
-              bagTotal={this.state.bagAmount}
-              tax={this.props.tax}
-              offers={this.props.offers}
-              delivery={this.props.delivery}
-              payable={this.state.payableAmount}
-              onCheckout={this.handleSubmit}
-            />
-          )}
+          {(this.state.isGiftCard || !this.state.showCliqAndPiq) &&
+            this.props.cart.cartDetailsCNC && (
+              <Checkout
+                amount={this.state.payableAmount}
+                bagTotal={this.state.bagAmount}
+                payable={this.state.payableAmount}
+                coupons={
+                  this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
+                    .formattedValue
+                }
+                discount={
+                  this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
+                    .formattedValue
+                }
+                delivery={
+                  this.props.cart.cartDetailsCNC.products[0]
+                    .elligibleDeliveryMode[0].deliveryCost
+                }
+                onCheckout={this.handleSubmit}
+              />
+            )}
         </div>
       );
     } else if (this.state.orderConfirmation) {

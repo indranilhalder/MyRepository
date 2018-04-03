@@ -3,7 +3,6 @@ import { signUpUser } from "../actions/user.actions.js";
 import { withRouter } from "react-router-dom";
 import { displayToast } from "../../general/toast.actions.js";
 import SignUp from "../components/SignUp.js";
-
 const mapDispatchToProps = dispatch => {
   return {
     onSubmit: userSignUpDetails => {
@@ -24,5 +23,4 @@ const mapStateToProps = state => {
 const SignUpContainer = withRouter(
   connect(mapStateToProps, mapDispatchToProps)(SignUp)
 );
-
 export default SignUpContainer;

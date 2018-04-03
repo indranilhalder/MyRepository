@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import ModalContainer from "./general/containers/ModalContainer";
 import ToastContainer from "./general/containers/ToastContainer";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Switch, Redirect } from "react-router-dom";
+import Route from "./general/Route";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
 import HomeContainer from "./home/containers/HomeContainer.js";
@@ -31,7 +32,7 @@ import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCou
 import MyAccountBrandsContainer from "./account/containers/MyAccountBrandsContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
-import HeaderWrapper from "./general/components/HeaderWrapper.js";
+import HeaderContainer from "./general/containers/HeaderContainer.js";
 import AllOrderContainer from "./account/containers/AllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
@@ -159,7 +160,7 @@ class App extends Component {
     return (
       <React.Fragment>
         <div className={className}>
-          <HeaderWrapper />
+          <HeaderContainer />
           <Switch>
             <Route
               exact

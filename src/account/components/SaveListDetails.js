@@ -11,7 +11,8 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
   ANONYMOUS_USER,
-  LOGIN_PATH
+  LOGIN_PATH,
+  SAVED_LIST
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 const dateFormat = "MMMM DD YYYY";
@@ -24,6 +25,9 @@ export default class SaveListDetails extends React.Component {
     if (userDetails && customerCookie) {
       this.props.getWishList();
     }
+  }
+  componentDidUpdate() {
+    this.props.setHeaderText(SAVED_LIST);
   }
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;

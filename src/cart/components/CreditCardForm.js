@@ -139,7 +139,7 @@ export default class CreditCardForm extends React.Component {
 
           <div className={styles.content}>
             <Input2
-              placeholder="John Doe"
+              placeholder="Name on card*"
               boxy={true}
               cardNameValue={
                 this.props.cardNameValue
@@ -155,7 +155,7 @@ export default class CreditCardForm extends React.Component {
             <div className={styles.dropDownBox}>
               <SelectBoxMobile
                 theme="hollowBox"
-                value="Expiry Month"
+                label="Expiry Month"
                 onChange={changedValue => this.monthChange(changedValue)}
                 options={this.monthOptions}
                 textStyle={{ fontSize: 14 }}
@@ -165,7 +165,7 @@ export default class CreditCardForm extends React.Component {
               <SelectBoxMobile
                 theme="hollowBox"
                 options={this.expiryYearObject}
-                value="Expiry year"
+                label="Expiry year"
                 onChange={expiryYear => this.onYearChange(expiryYear)}
               />
             </div>
@@ -176,7 +176,7 @@ export default class CreditCardForm extends React.Component {
                 <div className={styles.cardFooterInput}>
                   <Input2
                     boxy={true}
-                    placeholder="Cvv"
+                    placeholder="CVV"
                     type="password"
                     onChange={val => this.getCardCvvValue(val)}
                     textStyle={{ fontSize: 14 }}

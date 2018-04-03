@@ -4,8 +4,11 @@
   padding-right: 30px;
   position: relative;
   font-size: 14px;
-
   font-family: regular;
+}
+.itemHasColour {
+  composes: item;
+  padding-left: 30px;
 }
 .itemContent {
   width: 100%;
@@ -45,6 +48,12 @@
   margin: auto;
   height: 20px;
   width: 20px;
+}
+.colourIndicator {
+  composes: checkCircle;
+  right: initial;
+  left: 0px;
+  border-radius: 50%;
 }
 .count {
   font-size: 14px;

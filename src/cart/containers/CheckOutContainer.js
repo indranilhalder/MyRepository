@@ -8,7 +8,6 @@ import {
   getUserAddress,
   selectDeliveryMode,
   getOrderSummary,
-  getCoupons,
   applyUserCoupon,
   releaseUserCoupon,
   getAllStoresCNC,
@@ -38,7 +37,8 @@ import {
   jusPayTokenizeForGiftCard,
   createJusPayOrderForGiftCardNetBanking,
   createJusPayOrderForGiftCardFromSavedCards,
-  clearCaptureOrderExperience
+  clearCaptureOrderExperience,
+  applyUserCouponForAnonymous
 } from "../actions/cart.actions";
 import {
   showModal,
@@ -47,6 +47,7 @@ import {
 } from "../../general/modal.actions";
 import { displayToast } from "../../general/toast.actions";
 import { SUCCESS } from "../../lib/constants";
+import { setHeaderText } from "../../general/header.actions.js";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -89,14 +90,15 @@ const mapDispatchToProps = dispatch => {
     getOrderSummary: pinCode => {
       dispatch(getOrderSummary(pinCode));
     },
-    getCoupons: () => {
-      dispatch(getCoupons());
-    },
-    applyUserCoupon: () => {
-      dispatch(applyUserCoupon());
+
+    applyUserCouponForAnonymous: couponCode => {
+      dispatch(applyUserCouponForAnonymous(couponCode));
     },
     releaseUserCoupon: () => {
       dispatch(releaseUserCoupon());
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     },
     selectDeliveryMode: (deliveryUssId, pinCode) => {
       dispatch(selectDeliveryMode(deliveryUssId, pinCode));

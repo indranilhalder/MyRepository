@@ -159,28 +159,31 @@ export default class Checkout extends React.Component {
                   </div>
                 </div>
               )}
-              {this.props.tax && (
+              {this.props.discount && (
                 <div className={styles.informationHolder}>
-                  <div className={styles.informationQuestionHolder}>Tax</div>
+                  <div className={styles.informationQuestionHolder}>
+                    Discount
+                  </div>
                   <div className={styles.informationAnswerHolder}>
-                    {this.props.tax}
+                    {this.props.discount}
                   </div>
                 </div>
               )}
               {this.props.delivery && (
                 <div className={styles.informationHolder}>
                   <div className={styles.informationQuestionHolder}>
-                    Delivery
+                    Delivery Charges
                   </div>
                   <div className={styles.informationAnswerHolder}>
                     {this.props.delivery}
                   </div>
                 </div>
               )}
-              {this.props.offers && (
+
+              {this.props.coupons && (
                 <div className={styles.informationHolder}>
-                  <div className={styles.informationQuestionHolder}>Offers</div>
-                  <div className={classOffers}>{this.props.offers}</div>
+                  <div className={styles.informationQuestionHolder}>Coupon</div>
+                  <div className={classOffers}>{this.props.coupons}</div>
                 </div>
               )}
               {this.props.payable && (

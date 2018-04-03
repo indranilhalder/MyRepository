@@ -129,6 +129,7 @@ export const CART_DETAILS_FOR_LOGGED_IN_USER = "cartDetails";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
+export const COUPON_COOKIE = "couponCode";
 
 export const SAVE_LIST_PAGE = "/default/wishList";
 export const PAYMENT_MODE_TYPE = "paymentMode";
@@ -166,6 +167,20 @@ export const CANCEL = "/cancel";
 export const CANCEL_PREFIX = "/cancel/(.*)";
 
 export const WALLET = "WALLET";
+
+//header name
+export const SAVED_PAYMENTS = "Saved Payments";
+export const MY_CLIQ = "My Cliq";
+export const SAVED_LIST = "Saved list";
+export const ALERTS_COUPON = "Alerts & Coupons";
+export const BRANDS = "Brands";
+export const ADDRESS_BOOK = "Address Book";
+export const ORDER_HISTORY = "Order History";
+export const CLIQ_CASH = "Cliq Cash";
+export const GIFT_CARD = "Gift Card";
+export const YOUR_BAG = "Your Bag";
+export const CATEGORIES = "Categories";
+export const CHECKOUT = "Checkout";
 
 // COPY
 
