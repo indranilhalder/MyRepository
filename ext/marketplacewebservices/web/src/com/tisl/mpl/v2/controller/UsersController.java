@@ -36,6 +36,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
+import de.hybris.platform.commerceservices.url.UrlResolver;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.dto.error.ErrorListWsDTO;
@@ -423,7 +424,8 @@ public class UsersController extends BaseCommerceController
 	@Autowired
 	private MplOrderService mplOrderService;
 
-
+	@Resource(name = "productModelUrlResolver")
+	private UrlResolver<ProductModel> productModelUrlResolver;
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
 	@Autowired
@@ -13744,12 +13746,8 @@ public class UsersController extends BaseCommerceController
 										{
 											wldpDTO.setImageURL(img.getUrl());
 										}
-										if (null != img && StringUtils.isNotEmpty(img.getFormat())
-
-										&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
-										{
-											wldpDTO.setAppURL(img.getUrl());
-										}
+										final String redirection = productModelUrlResolver.resolve(entryModel.getProduct());
+										wldpDTO.setWebURL(redirection);
 									}
 									wldpDTOList.add(wldpDTO);
 
