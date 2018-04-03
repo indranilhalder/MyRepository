@@ -3,8 +3,7 @@ import * as homeActions from "../actions/home.actions";
 import cloneDeep from "lodash/cloneDeep";
 import map from "lodash/map";
 import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
-import { homeFeed } from "../actions/home.actions";
-
+import { transformFetchingItemsOrder } from "./utils";
 const home = (
   state = {
     homeFeed: [], //array of objects
@@ -12,12 +11,34 @@ const home = (
     error: null,
     loading: false,
     msdIndex: 0,
-    feedType: null
+    feedType: null,
+    productCapsules: null,
+    productCapsulesStatus: null,
+    productCapsulesLoading: null
   },
   action
 ) => {
-  let homeFeedData, toUpdate, componentData;
+  let homeFeedData, toUpdate, componentData, homeFeedClonedData;
   switch (action.type) {
+    case homeActions.GET_PRODUCT_CAPSULES_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        productCapsulesLoading: true
+      });
+    case homeActions.GET_PRODUCT_CAPSULES_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        productCapsulesLoading: false,
+        error: action.error
+      });
+    case homeActions.GET_PRODUCT_CAPSULES_SUCCESS:
+      homeFeedClonedData = cloneDeep(state.homeFeed);
+      homeFeedClonedData[action.positionInFeed].data = action.productCapsules;
+      return Object.assign({}, state, {
+        status: action.status,
+        productCapsulesLoading: false,
+        homeFeed: homeFeedClonedData
+      });
     case homeActions.HOME_FEED_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
@@ -26,7 +47,7 @@ const home = (
       });
 
     case homeActions.HOME_FEED_SUCCESS:
-      const homeFeedClonedData = cloneDeep(action.data);
+      homeFeedClonedData = cloneDeep(action.data);
       homeFeedData = map(homeFeedClonedData, subData => {
         // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
         return {
@@ -124,7 +145,12 @@ const home = (
 
     case homeActions.GET_ITEMS_SUCCESS:
       homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].items = action.items;
+      const orderedItems = transformFetchingItemsOrder(
+        homeFeedData[action.positionInFeed].itemIds,
+        action.items
+      );
+
+      homeFeedData[action.positionInFeed].items = orderedItems;
       return Object.assign({}, state, {
         homeFeed: homeFeedData,
         status: action.status
@@ -145,9 +171,12 @@ const home = (
             ...componentData
           };
         } else {
+          if (action.data.type) {
+            action.data.category = action.data.type;
+          }
           componentData = {
+            ...action.data,
             ...homeFeedData[action.positionInFeed],
-            data: action.data,
             ...componentData
           };
         }

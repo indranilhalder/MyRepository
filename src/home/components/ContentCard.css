@@ -5,6 +5,8 @@
   border-radius: 4px;
   position: relative;
   padding-bottom: 150%;
+  background-position: center;
+  background-size: cover;
   overflow: hidden;
 }
 .overlay {

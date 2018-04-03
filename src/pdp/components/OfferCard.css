@@ -4,6 +4,7 @@
   position: relative;
   padding: 20px;
   background-image: linear-gradient(131deg, #fd2c7a, #ff7255);
+  margin-top: 15px;
 }
 .headingText {
   width: 100%;
@@ -31,12 +32,12 @@
   color: #ffff;
 }
 .description {
-  width: 70%;
+  width: 100%;
   height: auto;
   font-family: regular;
   font-size: 14px;
-  line-height: 20px;
-  padding-bottom: 15px;
+  line-height: 24px;
+  padding-bottom: 20px;
   color: white;
 }
 .button {

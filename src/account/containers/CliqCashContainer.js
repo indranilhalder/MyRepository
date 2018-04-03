@@ -1,24 +1,28 @@
 import { connect } from "react-redux";
-import { getUserAddress } from "../../cart/actions/cart.actions";
-import { removeAddress } from "../actions/account.actions";
+import {
+  getCliqCashDetails,
+  redeemCliqVoucher,
+} from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import CliqAndCash from "../components/CliqAndCash.js";
 
 const mapDispatchToProps = dispatch => {
   return {
-    getUserAddress: () => {
-      dispatch(getUserAddress());
+    getCliqCashDetails: () => {
+      dispatch(getCliqCashDetails());
     },
-    removeAddress: addressId => {
-      dispatch(removeAddress(addressId));
+    redeemCliqVoucher: cliqCashDetails => {
+      dispatch(redeemCliqVoucher(cliqCashDetails));
     }
   };
 };
 
 const mapStateToProps = state => {
   return {
-    userAddress: state.profile.userAddress,
-    removeAddressStatus: state.profile.removeAddressStatus
+    cliqCashUserDetails: state.profile.cliqCashUserDetails,
+    cliqCashVoucherDetailsStatus: state.profile.cliqCashVoucherDetailsStatus,
+    cliqCashVoucherDetails: state.profile.cliqCashVoucherDetails,
+    cliqCashVoucherDetailsError: state.profile.cliqCashVoucherDetailsError
   };
 };
 

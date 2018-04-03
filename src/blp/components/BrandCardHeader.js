@@ -24,6 +24,10 @@ export default class BrandCardHeader extends React.Component {
   }
   render() {
     let { feedComponentData } = this.props;
+    if (!feedComponentData || feedComponentData.items.length === 0) {
+      return null;
+    }
+
     return (
       <div className={styles.base}>
         <div className={styles.container}>

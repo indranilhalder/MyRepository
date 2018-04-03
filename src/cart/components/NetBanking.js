@@ -19,7 +19,11 @@ export default class NetBanking extends React.Component {
   }
 
   payBill = () => {
-    this.props.softReservationPaymentForNetBanking(this.state.bankName);
+    if (this.props.isFromGiftCard) {
+      this.props.createJusPayOrderForGiftCardNetBanking(this.state.bankName);
+    } else {
+      this.props.softReservationPaymentForNetBanking(this.state.bankName);
+    }
   };
   render() {
     return (

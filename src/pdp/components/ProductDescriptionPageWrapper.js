@@ -1,6 +1,7 @@
 import React from "react";
 import PdpElectronics from "./PdpElectronics";
 import PdpApparel from "./PdpApparel";
+import PdpJewellery from "./PdpJewellery";
 import PdpHome from "./PdpHome";
 import styles from "./ProductDescriptionPageWrapper.css";
 import ProductDescriptionPage from "./ProductDescriptionPage";
@@ -14,9 +15,12 @@ import {
 // prettier-ignore
 const typeComponentMapping = {
   "Electronics": props => <PdpElectronics {...props} />,
-  "FashionJewellery":props => <ProductDescriptionPage {...props} />,
+  "Watches":props =><PdpElectronics {...props} />,
+  "FashionJewellery":props => <PdpJewellery {...props} />,
   "Clothing":props => <PdpApparel {...props} />,
-  "HomeFurnishing":props => <PdpHome {...props} />
+  "Footwear":props => <PdpApparel {...props} />,
+  "HomeFurnishing":props => <PdpHome {...props} />,
+  "FineJewellery": props => <PdpJewellery {...props} />,
 };
 
 const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
@@ -24,6 +28,18 @@ const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidMount() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+      this.props.getProductDescription(this.props.match.params[0]);
+      this.props.getMsdRequest(this.props.match.params[0]);
+      this.props.pdpAboutBrand(this.props.match.params[0]);
+      if (defaultPinCode) {
+        this.props.getProductPinCode(
+          defaultPinCode,
+          this.props.match.params[0]
+        );
+      }
+    } else if (
+      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+    ) {
       this.props.getProductDescription(this.props.match.params[1]);
       this.props.getMsdRequest(this.props.match.params[1]);
       this.props.pdpAboutBrand(this.props.match.params[1]);
@@ -31,18 +47,6 @@ export default class ProductDescriptionPageWrapper extends React.Component {
         this.props.getProductPinCode(
           defaultPinCode,
           this.props.match.params[1]
-        );
-      }
-    } else if (
-      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
-    ) {
-      this.props.getProductDescription(this.props.match.params[2]);
-      this.props.getMsdRequest(this.props.match.params[2]);
-      this.props.pdpAboutBrand(this.props.match.params[2]);
-      if (defaultPinCode) {
-        this.props.getProductPinCode(
-          defaultPinCode,
-          this.props.match.params[2]
         );
       }
     } else {
@@ -53,23 +57,23 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
       if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+        this.props.getProductDescription(this.props.match.params[0]);
+        this.props.getMsdRequest(this.props.match.params[0]);
+        if (defaultPinCode) {
+          this.props.getProductPinCode(
+            defaultPinCode,
+            this.props.match.params[0]
+          );
+        }
+      } else if (
+        this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+      ) {
         this.props.getProductDescription(this.props.match.params[1]);
         this.props.getMsdRequest(this.props.match.params[1]);
         if (defaultPinCode) {
           this.props.getProductPinCode(
             defaultPinCode,
             this.props.match.params[1]
-          );
-        }
-      } else if (
-        this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
-      ) {
-        this.props.getProductDescription(this.props.match.params[2]);
-        this.props.getMsdRequest(this.props.match.params[2]);
-        if (defaultPinCode) {
-          this.props.getProductPinCode(
-            defaultPinCode,
-            this.props.match.params[2]
           );
         }
       } else {
@@ -79,12 +83,12 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   renderRootCategory = datumType => {
-    return (
-      <React.Fragment>
-        {typeComponentMapping[datumType] &&
-          typeComponentMapping[datumType]({ ...this.props })}
-      </React.Fragment>
-    );
+    let pdpToRender = typeComponentMapping[datumType];
+    if (!pdpToRender) {
+      pdpToRender = typeComponentMapping["Clothing"];
+    }
+
+    return <React.Fragment>{pdpToRender({ ...this.props })}</React.Fragment>;
   };
   renderLoader() {
     return (
@@ -95,7 +99,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   render() {
-    if (!this.props.loading && this.props.productDetails) {
+    if (this.props.productDetails) {
       return (
         <div>
           {this.renderRootCategory(this.props.productDetails.rootCategory)}

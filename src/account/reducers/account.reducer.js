@@ -1,3 +1,4 @@
+import cloneDeep from "lodash/cloneDeep";
 import * as accountActions from "../actions/account.actions";
 import * as cartActions from "../../cart/actions/cart.actions";
 import * as Cookie from "../../lib/Cookie.js";
@@ -5,6 +6,9 @@ import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN
 } from "../../lib/constants.js";
+
+import { SUCCESS } from "../../lib/constants";
+import { CLEAR_ERROR } from "../../general/error.actions";
 
 const account = (
   state = {
@@ -21,6 +25,11 @@ const account = (
     fetchOrderDetailsStatus: null,
     fetchOrderDetailsError: null,
     loadingForFetchOrderDetails: false,
+
+    wishlist: null,
+    wishlistStatus: null,
+    wishlistError: null,
+    loadingForWishlist: false,
 
     userDetails: null,
     userDetailsStatus: null,
@@ -54,11 +63,255 @@ const account = (
 
     changePasswordStatus: null,
     changePasswordError: null,
-    changePasswordDetails: null
+    changePasswordDetails: null,
+
+    returnProductDetails: null,
+    returnRequest: null,
+    editAddressStatus: null,
+    editAddressError: null,
+
+    addUserAddressStatus: null,
+    addUserAddressError: null,
+
+    followedBrands: null,
+    followedBrandsStatus: null,
+    followedBrandsError: null,
+    loadingForFollowedBrands: false,
+
+    cliqCashUserDetailsStatus: null,
+    cliqCashUserDetailsError: null,
+    cliqCashUserDetails: null,
+
+    cliqCashVoucherDetailsStatus: null,
+    cliqCashVoucherDetailsError: null,
+    cliqCashVoucherDetails: null,
+
+    returnPinCodeStatus: null,
+    returnPinCodeValues: null,
+    returnPinCodeError: null,
+
+    returnInitiateStatus: null,
+    returnInitiateError: null,
+    returnInitiate: null,
+    giftCards: null,
+    giftCardStatus: null,
+    giftCardsError: null,
+    loadingForGiftCard: false,
+
+    giftCardDetails: null,
+    giftCardDetailsStatus: null,
+    giftCardDetailsError: null,
+    loadingForGiftCardDetails: false,
+
+    getOtpToActivateWallet: null,
+    getOtpToActivateWalletStatus: null,
+    getOtpToActivateWalletError: null,
+    loadingForGetOtpToActivateWallet: false,
+
+    verifyWallet: null,
+    verifyWalletStatus: null,
+    verifyWalletError: null,
+    loadingForverifyWallet: false,
+
+    getPinCodeDetails: null,
+    getPinCodeStatus: null,
+    getPinCodeError: null,
+
+    updateReturnDetails: null,
+    updateReturnDetailsStatus: null,
+    updateReturnDetailsError: null,
+    loadingForUpdateReturnDetails: null,
+
+    cancelProductDetails: null,
+    cancelProductDetailsStatus: null,
+    cancelProductDetailsError: null,
+    loadingForCancelProductDetails: false,
+
+    cancelProduct: null,
+    cancelProductStatus: null,
+    cancelProductError: null,
+    loadingForCancelProduct: false
   },
   action
 ) => {
+  let currentReturnRequest;
   switch (action.type) {
+    case CLEAR_ERROR:
+      return Object.assign({}, state, {
+        orderDetailsError: null,
+        fetchOrderDetailsError: null,
+        userDetailsError: null,
+        userCouponsError: null,
+        userAlertsError: null,
+        sendInvoiceError: null,
+        userAddressError: null,
+        removeAddressError: null,
+        editAddressError: null,
+        addUserAddressError: null,
+        followedBrandsError: null,
+        cliqCashUserDetailsError: null,
+        cliqCashVoucherDetailsError: null,
+        returnPinCodeError: null,
+        giftCardsError: null,
+        giftCardDetailsError: null,
+        getOtpToActivateWalletError: null,
+        getPinCodeError: null,
+        updateReturnDetailsError: null,
+        cancelProductDetailsError: null,
+        cancelProductError: null
+      });
+    case accountActions.GET_RETURN_REQUEST:
+    case accountActions.RETURN_PRODUCT_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+    case accountActions.GET_RETURN_REQUEST_SUCCESS:
+      return Object.assign({}, state, {
+        status: SUCCESS,
+        loading: false,
+        returnRequest: action.returnRequest
+      });
+    case accountActions.GET_RETURN_REQUEST_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        error: action.error
+      });
+    case accountActions.RETURN_PRODUCT_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.state,
+        returnProductDetails: action.returnProductDetails
+      });
+    case accountActions.RETURN_PRODUCT_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.status
+      });
+
+    case accountActions.QUICK_DROP_STORE_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true,
+        error: action.error
+      });
+    case accountActions.QUICK_DROP_STORE_SUCCESS:
+      currentReturnRequest = cloneDeep(state.returnRequest);
+      Object.assign(currentReturnRequest, {
+        returnStoreDetailsList: action.addresses
+      });
+
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.state,
+        returnRequest: currentReturnRequest
+      });
+    case accountActions.QUICK_DROP_STORE_FAILURE:
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.status
+      });
+
+    case accountActions.GET_GIFTCARD_REQUEST:
+      return Object.assign({}, state, {
+        giftCardStatus: action.status,
+        loadingForGiftCard: true
+      });
+
+    case accountActions.GET_GIFTCARD_SUCCESS:
+      return Object.assign({}, state, {
+        giftCardStatus: action.status,
+        giftCards: action.giftCards,
+        loadingForGiftCard: false
+      });
+
+    case accountActions.GET_GIFTCARD_FAILURE:
+      return Object.assign({}, state, {
+        giftCardStatus: action.status,
+        giftCardsError: action.error,
+        loadingForGiftCard: false
+      });
+
+    case accountActions.CREATE_GIFT_CARD_REQUEST:
+      return Object.assign({}, state, {
+        giftCardDetailsStatus: action.status,
+        loadingForGiftCardDetails: true
+      });
+
+    case accountActions.CREATE_GIFT_CARD_SUCCESS:
+      return Object.assign({}, state, {
+        giftCardDetailsStatus: action.status,
+        giftCardDetails: action.giftCardDetails,
+        loadingForGiftCardDetails: false
+      });
+
+    case accountActions.CREATE_GIFT_CARD_FAILURE:
+      return Object.assign({}, state, {
+        giftCardDetailsStatus: action.status,
+        giftCardDetailsError: action.error,
+        loadingForGiftCardDetails: false
+      });
+    case accountActions.GET_OTP_TO_ACTIVATE_WALLET_REQUEST:
+      return Object.assign({}, state, {
+        getOtpToActivateWalletStatus: action.status,
+        loadingForGetOtpToActivateWallet: true
+      });
+
+    case accountActions.GET_OTP_TO_ACTIVATE_WALLET_SUCCESS:
+      return Object.assign({}, state, {
+        getOtpToActivateWalletStatus: action.status,
+        getOtpToActivateWallet: action.getOtpToActivateWallet,
+        loadingForGetOtpToActivateWallet: false
+      });
+
+    case accountActions.GET_OTP_TO_ACTIVATE_WALLET_FAILURE:
+      return Object.assign({}, state, {
+        getOtpToActivateWalletStatus: action.status,
+        getOtpToActivateWalletError: action.error,
+        loadingForGetOtpToActivateWallet: false
+      });
+
+    case accountActions.VERIFY_WALLET_REQUEST:
+      return Object.assign({}, state, {
+        verifyWalletStatus: action.status,
+        loadingForverifyWallet: true
+      });
+
+    case accountActions.VERIFY_WALLET_SUCCESS:
+      return Object.assign({}, state, {
+        verifyWalletStatus: action.status,
+        verifyWallet: action.verifyWallet,
+        loadingForverifyWallet: false
+      });
+
+    case accountActions.VERIFY_WALLET_FAILURE:
+      return Object.assign({}, state, {
+        verifyWalletStatus: action.status,
+        verifyWalletError: action.error,
+        loadingForverifyWallet: false
+      });
+
+    case accountActions.SUBMIT_SELF_COURIER_INFO_REQUEST:
+      return Object.assign({}, state, {
+        updateReturnDetailsStatus: action.status,
+        loadingForUpdateReturnDetails: true
+      });
+
+    case accountActions.SUBMIT_SELF_COURIER_INFO_SUCCESS:
+      return Object.assign({}, state, {
+        updateReturnDetailsStatus: action.status,
+        updateReturnDetails: action.updateReturnDetails,
+        loadingForUpdateReturnDetails: false
+      });
+
+    case accountActions.SUBMIT_SELF_COURIER_INFO_FAILURE:
+      return Object.assign({}, state, {
+        updateReturnDetailsStatus: action.status,
+        updateReturnDetailsError: action.error,
+        loadingForUpdateReturnDetails: false
+      });
+
     case accountActions.GET_SAVED_CARD_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
@@ -117,6 +370,25 @@ const account = (
         orderDetailsError: action.error,
         loading: false
       });
+    case accountActions.GET_WISHLIST_REQUEST:
+      return Object.assign({}, state, {
+        wishlistStatus: action.status,
+        loadingForWishlist: true
+      });
+
+    case accountActions.GET_WISHLIST_SUCCESS:
+      return Object.assign({}, state, {
+        wishlistStatus: action.status,
+        wishlist: action.wishlist,
+        loadingForWishlist: false
+      });
+
+    case accountActions.GET_WISHLIST_FAILURE:
+      return Object.assign({}, state, {
+        wishlistStatus: action.status,
+        wishlistError: action.error,
+        loaloadingForWishlistding: false
+      });
     case accountActions.GET_USER_DETAILS_REQUEST:
       return Object.assign({}, state, {
         userDetailsStatus: action.status,
@@ -174,6 +446,25 @@ const account = (
         userAlertsStatus: action.status,
         userAlertsError: action.error,
         loadingForUserAlerts: false
+      });
+    case accountActions.GET_FOLLOWED_BRANDS_REQUEST:
+      return Object.assign({}, state, {
+        followedBrandsStatus: action.status,
+        loadingForFollowedBrands: true
+      });
+
+    case accountActions.GET_FOLLOWED_BRANDS_SUCCESS:
+      return Object.assign({}, state, {
+        followedBrandsStatus: action.status,
+        followedBrands: action.followedBrands,
+        loadingForFollowedBrands: false
+      });
+
+    case accountActions.GET_FOLLOWED_BRANDS_FAILURE:
+      return Object.assign({}, state, {
+        followedBrandsStatus: action.status,
+        followedBrandsError: action.error,
+        loadingForFollowedBrands: false
       });
 
     case accountActions.FETCH_ORDER_DETAILS_REQUEST:
@@ -242,8 +533,16 @@ const account = (
       });
 
     case accountActions.REMOVE_ADDRESS_SUCCESS:
+      const currentAddresses = cloneDeep(state.userAddress);
+      const indexOfAddressToBeRemove = currentAddresses.addresses.findIndex(
+        address => {
+          return address.id === action.addressId;
+        }
+      );
+      currentAddresses.addresses.splice(indexOfAddressToBeRemove, 1);
       return Object.assign({}, state, {
         removeAddressStatus: action.status,
+        userAddress: currentAddresses,
         loading: false
       });
 
@@ -299,6 +598,178 @@ const account = (
         changePasswordStatus: action.status,
         changePasswordError: action.error,
         loading: false
+      });
+
+    case accountActions.GET_USER_CLIQ_CASH_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        cliqCashUserDetailsStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.GET_USER_CLIQ_CASH_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        cliqCashUserDetailsStatus: action.status,
+        cliqCashUserDetails: action.cliqCashDetails,
+        loading: false
+      });
+
+    case accountActions.GET_USER_CLIQ_CASH_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        cliqCashUserDetailsStatus: action.status,
+        cliqCashUserDetailsError: action.error,
+        loading: false
+      });
+
+    case accountActions.REDEEM_CLIQ_VOUCHER_REQUEST:
+      return Object.assign({}, state, {
+        cliqCashVoucherDetailsStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.REDEEM_CLIQ_VOUCHER_SUCCESS:
+      return Object.assign({}, state, {
+        cliqCashVoucherDetailsStatus: action.status,
+        cliqCashVoucherDetails: action.cliqCashVoucherDetails,
+        loading: false
+      });
+
+    case accountActions.REDEEM_CLIQ_VOUCHER_FAILURE:
+      return Object.assign({}, state, {
+        cliqCashVoucherDetailsStatus: action.status,
+        cliqCashVoucherDetailsError: action.error,
+        loading: false
+      });
+
+    case accountActions.NEW_RETURN_INITIATE_REQUEST:
+      return Object.assign({}, state, {
+        returnInitiateStatus: action.status,
+        loading: true
+      });
+    case accountActions.NEW_RETURN_INITIATE_SUCCESS:
+      return Object.assign({}, state, {
+        returnInitiateStatus: action.status,
+        returnInitiate: action.returnDetails,
+        loading: false
+      });
+
+    case accountActions.NEW_RETURN_INITIATE_FAILURE:
+      return Object.assign({}, state, {
+        returnInitiateStatus: action.status,
+        returnInitiateError: action.error,
+        loading: false
+      });
+
+    case accountActions.RETURN_PIN_CODE_REQUEST:
+      return Object.assign({}, state, {
+        returnPinCodeStatus: action.status,
+        loading: true
+      });
+    case accountActions.RETURN_PIN_CODE_SUCCESS:
+      return Object.assign({}, state, {
+        returnPinCodeStatus: action.status,
+        returnPinCodeValues: action.returnDetails,
+        loading: false
+      });
+
+    case accountActions.RETURN_PIN_CODE_FAILURE:
+      return Object.assign({}, state, {
+        returnPinCodeStatus: action.status,
+        returnPinCodeError: action.error,
+
+        loading: false
+      });
+
+    case accountActions.EDIT_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.EDIT_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        loading: false
+      });
+
+    case accountActions.EDIT_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        editAddressStatus: action.status,
+        editAddressError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_USER_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.ADD_USER_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        addUserAddressStatus: action.status,
+        addUserAddressError: action.error,
+        loading: false
+      });
+
+    case accountActions.GET_PIN_CODE_REQUEST:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status
+      });
+
+    case accountActions.GET_PIN_CODE_SUCCESS:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status,
+        getPinCodeDetails: action.pinCode
+      });
+
+    case accountActions.GET_PIN_CODE_FAILURE:
+      return Object.assign({}, state, {
+        getPinCodeStatus: action.status,
+        getPinCodeError: action.error
+      });
+    case accountActions.GET_CANCEL_PRODUCT_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        cancelProductDetailsStatus: action.status,
+        loadingForCancelProductDetails: true
+      });
+
+    case accountActions.GET_CANCEL_PRODUCT_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        cancelProductDetailsStatus: action.status,
+        cancelProductDetails: action.getDetailsOfCancelledProduct,
+        loadingForCancelProductDetails: false
+      });
+
+    case accountActions.GET_CANCEL_PRODUCT_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        cancelProductDetailsStatus: action.status,
+        cancelProductDetailsError: action.error,
+        loadingForCancelProductDetails: false
+      });
+
+    case accountActions.CANCEL_PRODUCT_REQUEST:
+      return Object.assign({}, state, {
+        cancelProductStatus: action.status,
+        loadingForCancelProduct: true
+      });
+
+    case accountActions.CANCEL_PRODUCT_SUCCESS:
+      return Object.assign({}, state, {
+        cancelProductStatus: action.status,
+        cancelProduct: action.cancelProduct,
+        loadingForCancelProduct: false
+      });
+    case accountActions.CANCEL_PRODUCT_FAILURE:
+      return Object.assign({}, state, {
+        cancelProductStatus: action.status,
+        cancelProductError: action.error,
+        loadingForCancelProduct: false
       });
 
     default:

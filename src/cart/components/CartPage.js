@@ -10,6 +10,8 @@ import SavedProduct from "./SavedProduct";
 import filter from "lodash/filter";
 import { Redirect } from "react-router-dom";
 import { MAIN_ROUTER } from "../../lib/constants";
+import TextWithUnderLine from "./TextWithUnderLine.js";
+import EmptyBag from "./EmptyBag.js";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -19,7 +21,8 @@ import {
   ANONYMOUS_USER,
   CHECKOUT_ROUTER,
   LOGIN_PATH,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  YES
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
@@ -28,7 +31,8 @@ class CartPage extends React.Component {
     super(props);
     this.state = {
       pinCode: "",
-      isServiceable: false
+      isServiceable: false,
+      changePinCode: false
     };
   }
 
@@ -112,7 +116,8 @@ class CartPage extends React.Component {
     }
   };
 
-  removeItemFromCart = (cartListItemPosition, pinCode) => {
+  removeItemFromCart = cartListItemPosition => {
+    const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     if (userDetails) {
       if (this.props.removeItemFromCartLoggedIn) {
@@ -132,12 +137,16 @@ class CartPage extends React.Component {
         this.props.updateQuantityInCartLoggedIn(
           selectedItem,
           quantity,
-          this.state.pinCode
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
         );
       }
     } else {
       if (this.props.updateQuantityInCartLoggedOut) {
-        this.props.updateQuantityInCartLoggedOut(selectedItem, quantity, "");
+        this.props.updateQuantityInCartLoggedOut(
+          selectedItem,
+          quantity,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+        );
       }
     }
   };
@@ -153,9 +162,11 @@ class CartPage extends React.Component {
       this.props.releaseCoupon();
     }
   };
+
   goToCouponPage = () => {
     this.props.showCouponModal(this.props.cart.coupons);
   };
+
   renderToCheckOutPage() {
     let pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -168,6 +179,9 @@ class CartPage extends React.Component {
             isRequestComeThrowMyBag: true
           }
         });
+      }
+      if (!pinCode) {
+        this.props.displayToast("Please enter Pin code / Zip code");
       } else {
         this.setState({ isServiceable: false });
       }
@@ -177,7 +191,7 @@ class CartPage extends React.Component {
   }
 
   checkPinCodeAvailability = val => {
-    this.setState({ pinCode: val });
+    this.setState({ pinCode: val, changePinCode: false });
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, val);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -203,57 +217,91 @@ class CartPage extends React.Component {
     }
   };
 
+  changePinCode = () => {
+    this.setState({ changePinCode: true });
+  };
   render() {
     const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const cartDetailsForAnonymous = Cookie.getCookie(
       CART_DETAILS_FOR_ANONYMOUS
     );
 
-    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-
     if (!globalAccessToken && !cartDetailsForAnonymous) {
       return <Redirect exact to={HOME_ROUTER} />;
     }
     if (this.props.cart.cartDetailsStatus === SUCCESS) {
       const cartDetails = this.props.cart.cartDetails;
+      let defaultPinCode;
+
+      if (cartDetails.products) {
+        defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+      }
+
       return (
         <div className={styles.base}>
           <div className={styles.content}>
-            <div className={styles.search}>
-              <SearchAndUpdate
-                value={defaultPinCode}
-                getPinCode={val => this.setState({ pinCode: val })}
-                checkPinCodeAvailability={val =>
-                  this.checkPinCodeAvailability(val)
-                }
-              />
-            </div>
+            {(!defaultPinCode || this.state.changePinCode) && (
+              <div className={styles.search}>
+                <SearchAndUpdate
+                  value={defaultPinCode}
+                  getPinCode={val => this.setState({ pinCode: val })}
+                  checkPinCodeAvailability={val =>
+                    this.checkPinCodeAvailability(val)
+                  }
+                  labelText="check"
+                />
+              </div>
+            )}
+            {!this.state.changePinCode &&
+              defaultPinCode && (
+                <TextWithUnderLine
+                  heading={defaultPinCode}
+                  onClick={() => this.changePinCode()}
+                  buttonLabel="Change"
+                />
+              )}
           </div>
           <div
             className={defaultPinCode === "" ? styles.disabled : styles.content}
           >
-            <div className={styles.offer}>
-              <div className={styles.offerText}>{this.props.cartOfferText}</div>
-              <div className={styles.offerName}>{this.props.cartOffer}</div>
-            </div>
+            {cartDetails.products && (
+              <div className={styles.offer}>
+                <div className={styles.offerText}>
+                  {this.props.cartOfferText}
+                </div>
+                <div className={styles.offerName}>{this.props.cartOffer}</div>
+              </div>
+            )}
 
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
+                let serviceable = false;
+                if (product.pinCodeResponse) {
+                  if (product.pinCodeResponse.isServicable === YES) {
+                    serviceable = true;
+                  }
+                }
+
                 return (
                   <div className={styles.cartItem} key={i}>
                     <CartItem
                       pinCode={defaultPinCode}
                       product={product}
-                      productIsServiceable={product.pinCodeResponse}
+                      productIsServiceable={serviceable}
                       productImage={product.imageURL}
                       productDetails={product.description}
                       productName={product.productName}
-                      price={product.price}
+                      price={product.offerPrice}
                       index={i}
+                      entryNumber={product.entryNumber}
                       deliveryInformation={product.elligibleDeliveryMode}
                       deliverTime={
                         product.elligibleDeliveryMode &&
                         product.elligibleDeliveryMode[0].desc
+                      }
+                      deliveryType={
+                        product.elligibleDeliveryMode &&
+                        product.elligibleDeliveryMode[0].name
                       }
                       option={[
                         {
@@ -270,18 +318,23 @@ class CartPage extends React.Component {
                   </div>
                 );
               })}
-            <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
-            {cartDetails.cartAmount && (
-              <Checkout
-                amount={cartDetails.cartAmount.bagTotal.formattedValue}
-                bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
-                tax={this.props.cartTax}
-                offers={this.props.offers}
-                delivery={this.props.delivery}
-                payable={cartDetails.cartAmount.paybleAmount.formattedValue}
-                onCheckout={() => this.renderToCheckOutPage()}
-              />
+
+            {cartDetails.products && (
+              <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
             )}
+            {!cartDetails.products && <EmptyBag />}
+            {cartDetails.products &&
+              cartDetails.cartAmount && (
+                <Checkout
+                  amount={cartDetails.cartAmount.paybleAmount.formattedValue}
+                  bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
+                  tax={this.props.cartTax}
+                  offers={this.props.offers}
+                  delivery={this.props.delivery}
+                  payable={cartDetails.cartAmount.paybleAmount.formattedValue}
+                  onCheckout={() => this.renderToCheckOutPage()}
+                />
+              )}
           </div>
         </div>
       );

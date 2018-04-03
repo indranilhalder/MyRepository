@@ -2,12 +2,11 @@
   width: 100%;
   height: auto;
   background: #ececec;
-  padding: 0 15px;
 }
 .row {
   width: 100%;
   height: auto;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 .row:nth-child(2) {
   margin-top: -4px;
@@ -19,8 +18,32 @@
 }
 .products {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 15px;
+  padding: 0px 15px 15px 15px;
 }
 .addInitialAddAddress {
-  padding: 20px 0px;
+  width: 100%;
+  height: auto;
+  padding: 15px;
+}
+.deliveryAddress {
+  width: 100%;
+  height: auto;
+  padding: 0px 15px;
+}
+.paymentCardHolder {
+  width: 100%;
+  height: auto;
+  padding: 0px 15px 15px;
+}
+.addDeliveryAddressHolder {
+  width: 100%;
+  height: auto;
+  background: #ececec;
+  padding: 15px;
+}
+.cartItemHolder {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
 }

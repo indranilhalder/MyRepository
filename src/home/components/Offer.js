@@ -6,7 +6,7 @@ import Button from "../../general/components/Button";
 import { Image } from "xelpmoc-core";
 
 export default class Offer extends React.Component {
-  handleClick = () => {
+  handleClick = e => {
     if (this.props.onClick) {
       this.props.onClick(this.props.datum.webURL);
     }
@@ -24,11 +24,14 @@ export default class Offer extends React.Component {
         <MediaQuery query="(max-device-width: 1024px)">
           <div className={styles.overlay} />
         </MediaQuery>
-        <div className={styles.ovalImage}>
-          <div className={styles.text} key={key}>
-            {datum.discountText}
-          </div>
-        </div>
+        {datum.discountText &&
+          datum.discountText !== " " && (
+            <div className={styles.ovalImage}>
+              <div className={styles.text} key={key}>
+                {datum.discountText}
+              </div>
+            </div>
+          )}
         <div className={styles.textLine}>
           {datum.title}
           <MediaQuery query="(max-device-width: 1024px)">

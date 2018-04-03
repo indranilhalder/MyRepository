@@ -38,7 +38,9 @@ export default class OtpVerification extends React.Component {
     }
   };
   handleOtpInput(val) {
-    this.setState({ otp: val });
+    if (val.length <= 6) {
+      this.setState({ otp: val });
+    }
   }
 
   render() {
@@ -47,16 +49,17 @@ export default class OtpVerification extends React.Component {
         <MediaQuery query="(min-device-width: 1025px)">
           <div className={styles.header}>One last step</div>
           <div className={styles.content}>
-            Please enter your OTP sent to {this.props.mobileNumber}.<span
+            Please enter your OTP sent to{" "}
+            {this.props.userObj && this.props.userObj.username}.<span
               className={ownStyles.span}
             >
               Change number
             </span>
           </div>
           <div>
-            {" "}
             <Input
-              placeholder={"Enter 4-digit code"}
+              value={this.state.otp}
+              placeholder={"Enter 6-digit code"}
               onChange={val => {
                 this.handleOtpInput(val);
               }}
@@ -102,13 +105,15 @@ export default class OtpVerification extends React.Component {
             </div>
             <div>
               <div className={ownStyles.content}>
-                Please enter the OTP sent to {this.props.mobileNumber}.
+                Please enter the OTP sent to{" "}
+                {this.props.userObj && this.props.userObj.username}.
                 <span className={ownStyles.span}>Wrong number?</span>
               </div>
             </div>
             <div className={ownStyles.input}>
               <Input
-                placeholder={"Enter 4-digit code"}
+                value={this.state.otp}
+                placeholder={"Enter 6-digit code"}
                 onChange={val => {
                   this.handleOtpInput(val);
                 }}
@@ -116,7 +121,7 @@ export default class OtpVerification extends React.Component {
               />
             </div>
             <div className={ownStyles.buttonHolder}>
-              <div className={ownStyles.left}>
+              {/* <div className={ownStyles.left}>
                 <Button
                   backgroundColor={"transparent"}
                   height={30}
@@ -124,7 +129,7 @@ export default class OtpVerification extends React.Component {
                   label={"Call to verify"}
                   onClick={() => this.callVerify()}
                 />
-              </div>
+              </div> */}
               <div className={ownStyles.right}>
                 <Button
                   backgroundColor={"transparent"}

@@ -12,6 +12,7 @@ import {
   loginUserRequest,
   customerAccessToken
 } from "../../auth/actions/user.actions";
+import { redeemCliqVoucher } from "../../account/actions/account.actions";
 import { SUCCESS } from "../../lib/constants";
 import { updateProfile } from "../../account/actions/account.actions.js";
 
@@ -25,7 +26,12 @@ import {
   generateCartIdForLoggedInUser,
   getCartId
 } from "../../cart/actions/cart.actions";
-
+import {
+  getOtpToActivateWallet,
+  verifyWallet,
+  submitSelfCourierReturnInfo
+} from "../../account/actions/account.actions";
+import { createWishlist } from "../../wishlist/actions/wishlist.actions";
 const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
@@ -68,11 +74,13 @@ const mapDispatchToProps = dispatch => {
             ) {
               // This is the anonymous case
               // And I have an existing cart that needs to be merged.
+              dispatch(createWishlist());
               dispatch(mergeCartId(cartVal.cartDetails.guid));
             } else {
               const createdCartVal = await dispatch(
                 generateCartIdForLoggedInUser()
               );
+              dispatch(createWishlist());
               dispatch(mergeCartId(createdCartVal.cartDetails.guid));
             }
           }
@@ -106,8 +114,25 @@ const mapDispatchToProps = dispatch => {
     getUserAddress: () => {
       dispatch(getUserAddress());
     },
+
     updateProfile: (accountDetails, otp) => {
       dispatch(updateProfile(accountDetails, otp));
+    },
+
+    getOtpToActivateWallet: (customerDetails, isFromCliqCash) => {
+      dispatch(getOtpToActivateWallet(customerDetails, isFromCliqCash));
+    },
+
+    verifyWallet: (customerDetailsWithOtp, isFromCliqCash) => {
+      dispatch(verifyWallet(customerDetailsWithOtp, isFromCliqCash));
+    },
+
+    submitSelfCourierReturnInfo: returnDetails => {
+      dispatch(submitSelfCourierReturnInfo(returnDetails));
+    },
+    redeemCliqVoucher: (cliqCashDetails, fromCheckOut) => {
+      dispatch(redeemCliqVoucher(cliqCashDetails, fromCheckOut));
+
     }
   };
 };

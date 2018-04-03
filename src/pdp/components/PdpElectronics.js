@@ -13,6 +13,8 @@ import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
+import PdpDeliveryModes from "./PdpDeliveryModes";
+import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import Logo from "../../general/components/Logo.js";
 import Carousel from "../../general/components/Carousel.js";
@@ -20,7 +22,8 @@ import ProductModule from "../../general/components/ProductModule.js";
 import Button from "../../general/components/Button.js";
 import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
-import PDPRecommendedSections from "./PDPRecommendedSections.js";
+import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
+
 import {
   PRODUCT_SELLER_ROUTER_SUFFIX,
   CUSTOMER_ACCESS_TOKEN,
@@ -34,11 +37,11 @@ import {
   YES,
   NO,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
-  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 
 const DELIVERY_TEXT = "Delivery Options For";
-const PIN_CODE = "110011";
 const PRODUCT_QUANTITY = "1";
 export default class PdpElectronics extends React.Component {
   visitBrand() {
@@ -64,11 +67,13 @@ export default class PdpElectronics extends React.Component {
   };
 
   goToCart = () => {
+    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
     this.props.history.push({
       pathname: PRODUCT_CART_ROUTER,
       state: {
         ProductCode: this.props.productDetails.productListingId,
-        pinCode: PIN_CODE
+        pinCode: defaultPinCode
       }
     });
   };
@@ -113,39 +118,16 @@ export default class PdpElectronics extends React.Component {
   };
   showPincodeModal() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-      this.props.showPincodeModal(this.props.match.params[1]);
+      this.props.showPincodeModal(this.props.match.params[0]);
     } else if (
       this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
     ) {
-      this.props.showPincodeModal(this.props.match.params[2]);
+      this.props.showPincodeModal(this.props.match.params[1]);
     }
   }
-  addToWishList = () => {
-    let productDetails = {};
-    productDetails.code = this.props.productDetails.productListingId;
-    productDetails.ussId = this.props.productDetails.winningUssID;
-
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
-    if (userDetails) {
-      this.props.addProductToWishList(
-        JSON.parse(userDetails).userName,
-        JSON.parse(customerCookie).access_token,
-        productDetails
-      );
-    } else {
-      this.props.addProductToWishList(
-        ANONYMOUS_USER,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
-    }
-  };
 
   showEmiModal = () => {
-    const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
+    const cartValue = this.props.productDetails.winningSellerPrice.value;
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
 
     const globalAccessToken = JSON.parse(globalCookie).access_token;
@@ -153,25 +135,7 @@ export default class PdpElectronics extends React.Component {
     this.props.getEmiTerms(globalAccessToken, cartValue);
     this.props.showEmiModal();
   };
-  renderDeliveryOptions(productData) {
-    return (
-      productData.eligibleDeliveryModes &&
-      productData.eligibleDeliveryModes.map((val, idx) => {
-        return (
-          <DeliveryInformation
-            key={idx}
-            header={val.name}
-            placedTime={val.timeline}
-            type={val.code}
-            onClick={() => this.renderAddressModal()}
-            deliveryOptions={DELIVERY_TEXT}
-            label={PIN_CODE}
-            showCliqAndPiqButton={false}
-          />
-        );
-      })
-    );
-  }
+
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -185,7 +149,15 @@ export default class PdpElectronics extends React.Component {
       });
     let otherSellersText;
 
-    if (productData.otherSellers && productData.otherSellers.length > 0) {
+    if (
+      productData.otherSellers &&
+      productData.otherSellers.filter(val => {
+        return val.availableStock !== "0";
+      }).length > 0
+    ) {
+      const validSellersCount = productData.otherSellers.filter(val => {
+        return val.availableStock !== "0" && val.availableStock !== "-1";
+      }).length;
       otherSellersText = (
         <span>
           Sold by{" "}
@@ -193,9 +165,11 @@ export default class PdpElectronics extends React.Component {
             {" "}
             {productData.winningSellerName}
           </span>{" "}
-          and {productData.otherSellers.length} other sellers;
+          and {validSellersCount} other seller(s)
         </span>
       );
+    } else {
+      otherSellersText = `Sold by ${productData.winningSellerName}`;
     }
 
     if (productData) {
@@ -204,24 +178,53 @@ export default class PdpElectronics extends React.Component {
           goToCart={() => this.goToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
-          addProductToWishList={() => this.addToWishList()}
+          productListingId={productData.productListingId}
+          ussId={productData.winningUssID}
           showPincodeModal={() => this.showPincodeModal()}
         >
-          <ProductGalleryMobile isElectronics={true}>
+          <ProductGalleryMobile
+            paddingBottom={
+              productData.rootCategory === "Watches" ? "114" : "89.4"
+            }
+          >
             {mobileGalleryImages.map((val, idx) => {
               return (
-                <Image image={val} key={idx} color="#f5f5f5" fit="contain" />
+                <Image
+                  image={val}
+                  key={idx}
+                  color={
+                    productData.rootCategory === "Watches"
+                      ? "#ffffff"
+                      : "#f5f5f5"
+                  }
+                  fit="contain"
+                />
               );
             })}
           </ProductGalleryMobile>
           <div className={styles.content}>
-            <ProductDetailsMainCard
-              productName={productData.brandName}
-              productDescription={productData.productName}
-              price={productData.mrp}
-              discountPrice={productData.winningSellerMOP}
-              averageRating={productData.averageRating}
-            />
+            {productData.rootCategory !== "Watches" && (
+              <ProductDetailsMainCard
+                productName={productData.brandName}
+                productDescription={productData.productName}
+                price={productData.mrpPrice.formattedValueNoDecimal}
+                discountPrice={
+                  productData.winningSellerPrice.formattedValueNoDecimal
+                }
+                averageRating={productData.averageRating}
+                onClick={this.goToReviewPage}
+              />
+            )}
+            {productData.rootCategory === "Watches" && (
+              <JewelleryDetailsAndLink
+                productName={productData.brandName}
+                productDescription={productData.productName}
+                price={productData.winningSellerPrice.formattedValueNoDecimal}
+                discountPrice={productData.mrpPrice.formattedValueNoDecimal}
+                averageRating={productData.averageRating}
+                discount={productData.discount}
+              />
+            )}
           </div>
           {productData.isEMIEligible === "Y" && (
             <div className={styles.separator}>
@@ -234,17 +237,24 @@ export default class PdpElectronics extends React.Component {
             </div>
           )}
 
-          {productData.productOfferPromotion && (
+          {productData.potentialPromotions && (
             <OfferCard
-              endTime={productData.productOfferPromotion[0].validTill.date}
-              heading={productData.productOfferPromotion[0].promotionTitle}
-              description={productData.productOfferPromotion[0].promotionDetail}
+              endTime={productData.potentialPromotions.endDate}
+              startDate={productData.potentialPromotions.startDate}
+              heading={productData.potentialPromotions.title}
+              description={productData.potentialPromotions.description}
               onClick={this.goToCouponPage}
             />
           )}
 
           {productData.variantOptions && (
             <React.Fragment>
+              <SizeSelector
+                showSizeGuide={this.props.showSizeGuide}
+                data={productData.variantOptions.map(value => {
+                  return value.sizelink;
+                })}
+              />
               <ColourSelector
                 data={productData.variantOptions.map(value => {
                   return value.colorlink;
@@ -252,12 +262,6 @@ export default class PdpElectronics extends React.Component {
                 history={this.props.history}
                 updateColour={val => {}}
                 getProductSpecification={this.props.getProductSpecification}
-              />
-              <SizeSelector
-                showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
               />
             </React.Fragment>
           )}
@@ -275,15 +279,29 @@ export default class PdpElectronics extends React.Component {
           this.props.productDetails.isServiceableToPincode.status === NO ? (
             <Overlay labelText="Not serviceable in you pincode,
 please try another pincode">
-              {this.renderDeliveryOptions(productData)}
+              <PdpDeliveryModes
+                eligibleDeliveryModes={productData.eligibleDeliveryModes}
+                deliveryModesATP={productData.deliveryModesATP}
+              />
             </Overlay>
           ) : (
-            this.renderDeliveryOptions(productData)
+            <PdpDeliveryModes
+              eligibleDeliveryModes={productData.eligibleDeliveryModes}
+              deliveryModesATP={productData.deliveryModesATP}
+            />
           )}
 
           {productData.otherSellers && (
             <div className={styles.separator}>
-              <PdpLink onClick={this.goToSellerPage}>
+              <PdpLink
+                onClick={this.goToSellerPage}
+                noLink={
+                  productData.otherSellers &&
+                  !productData.otherSellers.filter(val => {
+                    return val.availableStock !== "0";
+                  }).length > 0
+                }
+              >
                 <div className={styles.sellers}>{otherSellersText}</div>
               </PdpLink>
             </div>
@@ -294,11 +312,13 @@ please try another pincode">
             </div>
           )}
           <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
+            {productData.averageRating && (
+              <RatingAndTextLink
+                onClick={this.goToReviewPage}
+                averageRating={productData.averageRating}
+                numberOfReview={productData.numberOfReviews}
+              />
+            )}
           </div>
           {productData.classifications && (
             <div className={styles.details}>
@@ -311,10 +331,7 @@ please try another pincode">
             />
           )}
 
-          <PDPRecommendedSections
-            msdItems={this.props.msdItems}
-            productData={productData}
-          />
+          <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );
     } else {

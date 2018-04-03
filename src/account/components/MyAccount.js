@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Redirect } from "react-router-dom";
 import InformationHeader from "../../general/components/InformationHeader.js";
 import AllOrderContainer from "../containers/AllOrderContainer";
 import UserCoupons from "./UserCoupons";
@@ -17,7 +18,6 @@ import {
   LOGIN_PATH
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-
 export default class MyAccount extends React.Component {
   constructor(props) {
     super(props);
@@ -36,29 +36,32 @@ export default class MyAccount extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
     if (userDetails && customerCookie) {
-      this.props.getUserDetails();
       this.props.getUserCoupons();
       this.props.getUserAlerts();
-    } else {
-      this.props.history.push(LOGIN_PATH);
     }
   }
+  navigateToLogin() {
+    return <Redirect to={LOGIN_PATH} />;
+  }
   render() {
+    const userDetailsCookie = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (!userDetailsCookie || !customerCookie) {
+      return this.navigateToLogin();
+    }
+    const userDetails = JSON.parse(userDetailsCookie);
     return (
       <div className={styles.base}>
         <ProfileMenuGrid {...this.props} />
         <div className={styles.accountHolder}>
           <AccountSetting
-            image="http://tong.visitkorea.or.kr/cms/resource/58/1016958_image2_1.jpg"
             onClick={() => this.renderToAccountSetting()}
+            firstName={userDetails && userDetails.firstName.charAt(0)}
             heading={
-              this.props.userDetails &&
-              this.props.userDetails.firstName &&
-              `${this.props.userDetails.firstName} ${
-                this.props.userDetails.lastName
-              }`
+              userDetails &&
+              userDetails.firstName &&
+              `${userDetails.firstName} ${userDetails.lastName}`
             }
           />
         </div>

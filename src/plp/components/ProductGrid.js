@@ -41,6 +41,7 @@ export default class ProductGrid extends React.Component {
 
   renderComponent = data => {
     // if (data.type === PRODUCT) {
+
     return (
       <ProductModule
         productImage={data.imageURL}
@@ -55,6 +56,7 @@ export default class ProductGrid extends React.Component {
         onClick={url => this.goToProductDescription(url)}
         productCategory={data.productCategoryType}
         productId={data.productId}
+        showWishListButton={false}
       />
     );
     // } else if (data.type === PLPAD) {
@@ -69,6 +71,10 @@ export default class ProductGrid extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
+          <div className={styles.product}>
+            {this.props.totalResults ? this.props.totalResults : 0} Products
+          </div>
+
           {/* <div className={styles.area}>{this.props.area}</div> */}
           {/* <div
             className={styles.areaChange}

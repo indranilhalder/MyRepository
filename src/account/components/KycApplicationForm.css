@@ -1,0 +1,55 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.bottomHolder {
+  width: 100%;
+  height: auto;
+}
+.applicationForm {
+  width: 100%;
+  height: auto;
+  padding: 25px 30px;
+  background: #fff;
+}
+.header {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 14px;
+  font-family: semibold;
+  margin-bottom: 10px;
+}
+.labelHedaer {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 12px;
+  font-family: regular;
+  margin-bottom: 15px;
+}
+.formHolder {
+  width: 100%;
+  height: auto;
+}
+.inputHolder {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.button {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+}
+.buttonHolder:last-child {
+  margin-bottom: 0px;
+}

@@ -9,6 +9,7 @@ import { BrowserRouter } from "react-router-dom";
 import user from "../src/auth/reducers/user.reducer";
 import * as api from "../src/lib/apiRequest";
 import modal from "../src/general/modal.reducers";
+import toast from "../src/general/toast.reducers";
 import home from "../src/home/reducers/home.reducer";
 import search from "../src/search/reducers/search.reducer";
 import registerServiceWorker from "./registerServiceWorker";
@@ -17,7 +18,7 @@ import productDescription from "./pdp/reducers/pdp.reducer";
 import categoryDefault from "./clp/reducers/clp.reducer";
 import brandDefault from "./blp/reducers/blp.reducer";
 import profile from "./account/reducers/account.reducer";
-
+import wishlistItems from "./wishlist/reducers/wishlist.reducer";
 import cart from "./cart/reducers/cart.reducer";
 import "babel-polyfill";
 const rootReducer = combineReducers({
@@ -27,10 +28,12 @@ const rootReducer = combineReducers({
   productListings,
   productDescription,
   search,
+  toast,
   cart,
   brandDefault,
   categoryDefault,
-  profile
+  profile,
+  wishlistItems
 });
 
 let store = createStore(

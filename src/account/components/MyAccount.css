@@ -19,7 +19,6 @@
 .dataHolder {
   width: 100%;
   height: auto;
-  padding: 15px;
   background: #ececec;
 }
 .ordersHolder {
@@ -34,5 +33,9 @@
 .alertsHolder {
   width: 100%;
   height: auto;
+  padding: 15px 15px 70px;
   display: inline-block;
+}
+.couponHolder {
+  composes: alertsHolder;
 }

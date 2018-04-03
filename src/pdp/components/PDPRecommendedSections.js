@@ -18,55 +18,57 @@ class PDPRecommendedSections extends React.Component {
     this.props.history.push(url);
   };
   visitBrand() {
-    if (
-      this.props.msdItems.brandDetails &&
-      this.props.msdItems.brandDetails.brandId
-    ) {
-      this.props.history.push(`c-${this.props.msdItems.brandDetails.brandId}`);
+    if (this.props.aboutTheBrand && this.props.aboutTheBrand.brandId) {
+      this.props.history.push(`c-${this.props.aboutTheBrand.brandId}`);
     }
   }
   renderAboutTheBrand() {
     let brandId;
 
-    if (this.props.msdItems.brandDetails) {
-      brandId = this.props.msdItems.brandDetails.brandId;
+    if (this.props.aboutTheBrand) {
+      brandId = this.props.aboutTheBrand.brandId;
     }
-    return (
-      <React.Fragment>
-        <div className={styles.brandSection}>
-          <div className={styles.brandHeader}>About the brand</div>
-          <div className={styles.brandLogoSection}>
-            {this.props.productData.brandLogoImage && (
-              <div className={styles.brandLogoHolder}>
-                <Logo image={this.props.productData.brandLogoImage} />
-              </div>
-            )}
-            {brandId && (
-              <div className={styles.followButton}>
-                <FollowUnFollowButtonContainer brandId={brandId} />
-              </div>
-            )}
-          </div>
-          {this.props.productData.brandInfo && (
-            <div className={styles.brandDescription}>
-              {this.props.productData.brandInfo}
-            </div>
-          )}
 
-          {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY] &&
-            this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY].length > 0 &&
-            this.renderCarousel(
-              this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY]
+    return (
+      this.props.aboutTheBrand && (
+        <React.Fragment>
+          <div className={styles.brandSection}>
+            <div className={styles.brandHeader}>About the brand</div>
+            <div className={styles.brandLogoSection}>
+              {this.props.aboutTheBrand.brandLogo && (
+                <div className={styles.brandLogoHolder}>
+                  <Logo image={this.props.aboutTheBrand.brandLogo} />
+                </div>
+              )}
+              {brandId && (
+                <div className={styles.followButton}>
+                  <FollowUnFollowButtonContainer brandId={brandId} />
+                </div>
+              )}
+            </div>
+            {this.props.aboutTheBrand.description && (
+              <div className={styles.brandDescription}>
+                {this.props.aboutTheBrand.description}
+              </div>
             )}
-          <div className={styles.visitBrandButton}>
-            <Button
-              type="secondary"
-              label="Visit Brand Store"
-              onClick={() => this.visitBrand()}
-            />
+
+            {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY] &&
+              this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY].length > 0 &&
+              this.renderCarousel(
+                this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY]
+              )}
+            {brandId && (
+              <div className={styles.visitBrandButton}>
+                <Button
+                  type="secondary"
+                  label="Visit Brand Store"
+                  onClick={() => this.visitBrand()}
+                />
+              </div>
+            )}
           </div>
-        </div>
-      </React.Fragment>
+        </React.Fragment>
+      )
     );
   }
 

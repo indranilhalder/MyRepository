@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ModalContainer from "./general/containers/ModalContainer";
+import ToastContainer from "./general/containers/ToastContainer";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
@@ -9,6 +10,7 @@ import ProductDescriptionContainer from "./pdp/containers/ProductDescriptionCont
 import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
+import ErrorContainer from "./general/containers/ErrorContainer.js";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
 import BrandsLandingPageDefaultContainer from "./blp/containers/BrandsLandingPageDefaultContainer";
@@ -22,11 +24,11 @@ import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryC
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
 import MobileFooter from "./general/components/MobileFooter.js";
-
 // importing All container for my Accounts
 import MyAccountContainer from "./account/containers/MyAccountContainer";
 import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
 
+import MyAccountBrandsContainer from "./account/containers/MyAccountBrandsContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderWrapper from "./general/components/HeaderWrapper.js";
@@ -35,6 +37,18 @@ import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
 import AddressBookContainer from "./account/containers/AddressBookContainer.js";
 import UpdateProfileContainer from "./account/containers/UpdateProfileContainer.js";
+
+import ReturnFlowContainer from "./account/containers/ReturnFlowContainer.js";
+
+import EditAddressBookContainer from "./account/containers/EditAddressBookContainer.js";
+import AddAddressContainer from "./account/containers/AddAddressContainer.js";
+import SaveListContainer from "./account/containers/SaveListContainer";
+import CliqCashContainer from "./account/containers/CliqCashContainer.js";
+import GiftCardContainer from "./account/containers/GiftCardContainer";
+
+import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
+import CancelOrderContainer from "./account/containers/CancelOrderContainer";
+
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -43,7 +57,6 @@ import {
   SIGN_UP_PATH,
   PRODUCT_DELIVERY_ADDRESSES,
   PRODUCT_FILTER_ROUTER,
-  PRODUCT_REVIEWS_PATH_SUFFIX,
   PRODUCT_CART_ROUTER,
   GLOBAL_ACCESS_TOKEN,
   CUSTOMER_ACCESS_TOKEN,
@@ -52,16 +65,11 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   LOGGED_IN_USER_DETAILS,
   PRODUCT_CART_DELIVERY_MODES,
-  SEARCH_RESULTS_PAGE,
-  BRAND_OR_CATEGORY_LANDING_PAGE,
   ORDER_SUMMARY_ROUTER,
   CHECKOUT_ROUTER,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
-  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  PLP_CATEGORY_SEARCH,
   BRAND_LANDING_PAGE,
   PRODUCT_DESCRIPTION_REVIEWS,
-  PRODUCT_SELLER_ROUTER,
   PRODUCT_OTHER_SELLER_ROUTER,
   DEFAULT_BRANDS_LANDING_PAGE,
   CATEGORIES_LANDING_PAGE,
@@ -69,17 +77,35 @@ import {
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
-  ORDER_PAGE,
+  MY_ACCOUNT_ORDERS_PAGE,
+  SAVE_LIST_PAGE,
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_SAVED_CARDS_PAGE,
   MY_ACCOUNT_ADDRESS_PAGE,
   MY_ACCOUNT_ALERTS_PAGE,
   MY_ACCOUNT_COUPON_PAGE,
+  MY_ACCOUNT_BRANDS_PAGE,
   ACCOUNT_SAVED_CARD_ROUTER,
+  MY_ACCOUNT_CLIQ_CASH_PAGE,
   ORDER_PREFIX,
+  RETURNS,
+  SHORT_URL_ORDER_DETAIL,
+  MY_ACCOUNT_GIFT_CARD_PAGE,
+  MY_ACCOUNT_ADDRESS_EDIT_PAGE,
+  MY_ACCOUNT_ADDRESS_ADD_PAGE,
+  CATEGORY_PAGE_WITH_QUERY_PARAMS,
+  CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
+  BRAND_PAGE_WITH_QUERY_PARAMS,
+  BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
+  CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
+  BRAND_PRODUCT_LISTINGS_WITH_PAGE,
+  STATIC_CATEGORY_PAGES,
+  BRAND_AND_CATEGORY_PAGE,
+  CANCEL_PREFIX,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
   MY_ACCOUNT_UPDATE_PROFILE_PAGE
 } from "../src/lib/constants";
-import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 
 const auth = {
   isAuthenticated: false
@@ -139,11 +165,22 @@ class App extends Component {
           <Switch>
             <Route
               exact
+              path={CATEGORY_PRODUCT_LISTINGS_WITH_PAGE}
+              component={ProductListingsContainer}
+            />
+            <Route
+              exact
+              path={BRAND_PRODUCT_LISTINGS_WITH_PAGE}
+              component={ProductListingsContainer}
+            />
+            <Route
+              exact
               path={LOGIN_PATH}
               render={routeProps => (
                 <LoginContainer {...routeProps} {...this.props} />
               )}
             />
+            <Route path={CANCEL_PREFIX} component={CancelOrderContainer} />
             <Route
               exact
               path={SIGN_UP_PATH}
@@ -151,7 +188,16 @@ class App extends Component {
                 <SignUpContainer {...routeProps} {...this.props} />
               )}
             />
-            <Route path={ORDER_PAGE} component={AllOrderContainer} />
+            <Route path={RETURNS} component={ReturnFlowContainer} />
+
+            <Route
+              path={`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`}
+              component={SaveListContainer}
+            />
+            <Route
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ORDERS_PAGE}`}
+              component={AllOrderContainer}
+            />
             <Route
               exact
               path={MY_ACCOUNT_PAGE}
@@ -171,6 +217,7 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`}
               component={UserAlertsAndCouponsContainer}
             />
+
             <Route
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`}
@@ -180,11 +227,55 @@ class App extends Component {
               exact
               path={BRAND_PAGE}
               component={PlpBrandCategoryWrapperContainer}
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_GIFT_CARD_PAGE}`}
+              component={GiftCardContainer}
             />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_CLIQ_CASH_PAGE}`}
+              component={CliqCashContainer}
+            />
+
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_BRANDS_PAGE}`}
+              component={MyAccountBrandsContainer}
+            />
+
+            <Route
+              path={`${SHORT_URL_ORDER_DETAIL}`}
+              component={OrderDetailsContainer}
+            />
+
             <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
+
+            <Route
+              exact
+              path={BRAND_AND_CATEGORY_PAGE}
+              component={ProductListingsContainer}
+            />
+
             <Route
               exact
               path={CATEGORY_PAGE}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
+              exact
+              path={BRAND_PAGE}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
+              exact
+              path={BRAND_PAGE_WITH_QUERY_PARAMS}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
+              exact
+              path={CATEGORY_PAGE_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
 
@@ -195,8 +286,20 @@ class App extends Component {
             />
 
             <Route
+              exact
+              path={BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
               strict
               path={CATEGORY_PAGE_WITH_SLUG}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+
+            <Route
+              exact
+              path={CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
 
@@ -204,9 +307,19 @@ class App extends Component {
               path={PRODUCT_DESCRIPTION_REVIEWS}
               component={ProductReviewContainer}
             />
+
+            <Route
+              path={PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG}
+              component={ProductReviewContainer}
+            />
             <Route
               path={PRODUCT_OTHER_SELLER_ROUTER}
               component={ProductSellerContainer}
+            />
+            <Route
+              exact
+              path={PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE}
+              component={ProductDescriptionPageWrapperContainer}
             />
             <Route
               exact
@@ -269,10 +382,28 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_PAGE}`}
               component={AddressBookContainer}
             />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_EDIT_PAGE}`}
+              component={EditAddressBookContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_ADD_PAGE}`}
+              component={AddAddressContainer}
+            />
+            {/* This *has* to be at the bottom */}
+            <Route
+              exact
+              path={STATIC_CATEGORY_PAGES}
+              component={PlpBrandCategoryWrapperContainer}
+            />
           </Switch>
           <MobileFooter />
 
           <ModalContainer />
+          <ErrorContainer />
+          <ToastContainer />
         </div>
       </React.Fragment>
     );

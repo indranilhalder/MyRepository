@@ -1,9 +1,8 @@
 import React from "react";
 import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
-import Background from "./img/bg.jpg";
 import concat from "lodash/concat";
-import { transformData, transformItem } from "./utils.js";
+import { transformData } from "./utils.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 const OFFER_AND_ITEM_LIMIT = 4;
@@ -38,21 +37,28 @@ export default class ThemeOffer extends React.Component {
   render() {
     let themeData = [],
       items = [];
-    const { feedComponentData, buttonText, ...rest } = this.props;
-    if (feedComponentData.items) {
+    const { feedComponentData, ...rest } = this.props;
+    if (!feedComponentData) {
+      return null;
+    }
+    if (feedComponentData.items && feedComponentData.items instanceof Array) {
       items = feedComponentData.items.map(transformData);
     }
-    const offers = feedComponentData.offers.map(offer => {
-      return transformData(offer);
-    });
-    themeData = concat(offers, items);
 
+    let offers = [];
+    if (feedComponentData.offers) {
+      offers = feedComponentData.offers.map(offer => {
+        return transformData(offer);
+      });
+    }
+    themeData = concat(offers, items);
     return (
       <FeedComponent
-        backgroundImage={Background}
+        backgroundImage={feedComponentData.backgroundImageURL}
+        backgroundColor={feedComponentData.backgroundHexCode}
         carouselOptions={{
           header: feedComponentData.title,
-          buttonText: buttonText,
+          buttonText: feedComponentData.btnText,
           isWhite: true,
           seeAll: () => {
             this.handleClick();

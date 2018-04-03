@@ -7,7 +7,6 @@
 .content {
   width: 100%;
   height: auto;
-  padding: 0 20px;
 }
 .header {
   width: 100%;
@@ -24,10 +23,15 @@
   height: auto;
   font-size: 14px;
   line-height: 22px;
-  padding: 20px 0;
+  padding: 20px;
 }
-
 .termsAndConditions {
   background: #ececec;
   padding: 10px;
+}
+.termsAndConditions li {
+  font-size: 14px;
+  line-height: 22px;
+  font-family: regular;
+  margin-bottom: 5px;
 }

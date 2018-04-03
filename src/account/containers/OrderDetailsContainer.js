@@ -2,19 +2,31 @@ import { connect } from "react-redux";
 import { fetchOrderDetails, sendInvoice } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import OrderDetails from "../components/OrderDetails";
+import { displayToast } from "../../general/toast.actions";
+import {
+  UPDATE_REFUND_DETAILS_POPUP,
+  showModal
+} from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
     fetchOrderDetails: orderId => {
       dispatch(fetchOrderDetails(orderId));
     },
+    displayToast: toastMessage => {
+      dispatch(displayToast(toastMessage));
+    },
     sendInvoice: (ussid, sellerOrderNo) => {
       dispatch(sendInvoice(ussid, sellerOrderNo));
+    },
+    showModal: orderDetails => {
+      dispatch(showModal(UPDATE_REFUND_DETAILS_POPUP, orderDetails));
     }
   };
 };
 const mapStateToProps = state => {
   return {
-    orderDetails: state.profile.fetchOrderDetails
+    orderDetails: state.profile.fetchOrderDetails,
+    sendInvoiceSatus: state.profile.sendInvoiceStatus
   };
 };
 

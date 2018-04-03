@@ -27,7 +27,32 @@
   border-top: 1px solid #ececec;
 }
 .orderStatusVertical {
-  border-top: 1px solid #ececec;
   padding: 30px 0px;
   border-bottom: 1px solid #ececec;
+}
+.buttonHolderForUpdate {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.replaceHolder {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  text-align: left;
+}
+.replace {
+  font-size: 14px;
+  display: inline-block;
+  opacity: 0.5;
+}
+.reviewHolder {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  text-align: right;
+}
+.review {
+  font-size: 14px;
+  display: inline-block;
 }

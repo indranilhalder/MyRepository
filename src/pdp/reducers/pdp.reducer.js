@@ -1,13 +1,15 @@
 import * as pdpActions from "../actions/pdp.actions";
 import { YES, NO } from "../../lib/constants";
 import { transferPincodeToPdpPincode } from "./utils";
+import { CLEAR_ERROR } from "../../general/error.actions.js";
+
 import cloneDeep from "lodash/cloneDeep";
 const productDescription = (
   state = {
     status: null,
     error: null,
     loading: false,
-    aboutBrand: null,
+    aboutTheBrand: null,
     productDetails: null,
     isServiceableToPincode: null,
     sizeGuide: {
@@ -27,6 +29,12 @@ const productDescription = (
 ) => {
   let sizeGuide, currentProductDetails, currentBrandDetails;
   switch (action.type) {
+    case CLEAR_ERROR:
+      return Object.assign({}, state, {
+        loading: false,
+        error: null,
+        status: null
+      });
     case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_FAILURE:
       return Object.assign({}, state, {
         emiTerms: {
@@ -76,18 +84,18 @@ const productDescription = (
       });
 
     case pdpActions.CHECK_PRODUCT_PIN_CODE_SUCCESS:
-      let currentPdpDetail = cloneDeep(state.productDetails);
+      const currentPdpDetail = cloneDeep(state.productDetails);
+      let currentProductUssId = currentPdpDetail.winningUssID;
+      const deliveryOptionObj = action.productPinCode.deliveryOptions.pincodeListResponse.find(
+        delivery => {
+          return delivery.ussid === currentProductUssId;
+        }
+      );
 
       let eligibleDeliveryModes = [];
-
-      if (
-        action.productPinCode.deliveryOptions.pincodeListResponse &&
-        action.productPinCode.deliveryOptions.pincodeListResponse[0]
-          .isServicable === YES
-      ) {
+      if (deliveryOptionObj.isServicable === YES) {
         eligibleDeliveryModes = transferPincodeToPdpPincode(
-          action.productPinCode.deliveryOptions.pincodeListResponse[0]
-            .validDeliveryModes
+          deliveryOptionObj.validDeliveryModes
         );
         Object.assign(currentPdpDetail, {
           eligibleDeliveryModes,
@@ -389,19 +397,9 @@ const productDescription = (
         loading: false
       });
     case pdpActions.PDP_ABOUT_BRAND_SUCCESS:
-      const newMsdItemsForBrand = cloneDeep(state.msdItems);
-      const brandDetails = Object.assign(
-        {},
-        {
-          isFollowing: action.brandDetails.isFollowing,
-          //we need to change this brand code to brandId once api will fix
-          brandId: action.brandDetails.brandCode
-        }
-      );
-      Object.assign(newMsdItemsForBrand, { brandDetails });
       return Object.assign({}, state, {
         status: action.status,
-        msdItems: newMsdItemsForBrand,
+        aboutTheBrand: action.brandDetails,
         loading: false
       });
 
@@ -411,9 +409,8 @@ const productDescription = (
       });
 
     case pdpActions.FOLLOW_UN_FOLLOW_BRAND_SUCCESS:
-      currentBrandDetails = cloneDeep(state.msdItems);
-      currentBrandDetails.brandDetails.isFollowing =
-        action.brandDetails.isFollowing;
+      currentBrandDetails = cloneDeep(state.aboutTheBrand);
+      currentBrandDetails.isFollowing = action.brandDetails.isFollowing;
       return Object.assign({}, state, {
         status: action.status,
         msdItems: currentBrandDetails

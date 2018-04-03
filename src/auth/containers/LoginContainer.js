@@ -19,11 +19,14 @@ import {
 import { homeFeed } from "../../home/actions/home.actions";
 import Login from "../components/Login.js";
 import { SUCCESS } from "../../lib/constants";
-
+import { displayToast } from "../../general/toast.actions";
 export const OTP_VERIFICATION_REQUIRED_MESSAGE = "OTP VERIFICATION REQUIRED";
 
 const mapDispatchToProps = dispatch => {
   return {
+    displayToast: toastMessage => {
+      dispatch(displayToast(toastMessage));
+    },
     onForgotPassword: () => {
       dispatch(showModal(RESTORE_PASSWORD));
     },
@@ -45,7 +48,12 @@ const mapDispatchToProps = dispatch => {
           ) {
             dispatch(mergeCartId(cartVal.cartDetails.guid));
           } else {
-            dispatch(generateCartIdForLoggedInUser());
+            const newCartIdObj = await dispatch(
+              generateCartIdForLoggedInUser()
+            );
+            if (newCartIdObj.status === SUCCESS) {
+              dispatch(mergeCartId(cartVal.cartDetails.guid));
+            }
           }
         } else if (
           loginUserResponse.error === OTP_VERIFICATION_REQUIRED_MESSAGE

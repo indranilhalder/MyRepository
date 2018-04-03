@@ -16,9 +16,7 @@ import {
   MAIN_ROUTER,
   SOCIAL_LOG_IN
 } from "../../lib/constants";
-// Forgot password --> shows a modal
-// Don't have an account --> sign up --> a route change.
-
+const MINIMUM_PASSWORD_LENGTH = "8";
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -38,11 +36,39 @@ class Login extends Component {
     this.props.history.push(SIGN_UP_PATH);
   }
   onSubmit = () => {
+    const EMAIL_REGULAR_EXPRESSION = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    const MOBILE_PATTERN = /^[7,8,9]{1}[0-9]{9}$/;
     if (this.props.onSubmit) {
       let userDetails = {};
       userDetails.username = this.state.emailValue;
       userDetails.password = this.state.passwordValue;
-      this.props.onSubmit(userDetails);
+      if (!userDetails.username) {
+        this.props.displayToast("Please fill emailId or number");
+        return false;
+      }
+      if (userDetails.username.indexOf("@") !== -1) {
+        if (!EMAIL_REGULAR_EXPRESSION.test(userDetails.username)) {
+          this.props.displayToast("Please fill valid emailId");
+          return false;
+        }
+      } else {
+        if (!MOBILE_PATTERN.test(userDetails.username)) {
+          this.props.displayToast("Please fill valid mobile number");
+          return false;
+        }
+      }
+      if (!userDetails.password) {
+        this.props.displayToast("Please fill password");
+        return false;
+      }
+      if (userDetails.password.length < MINIMUM_PASSWORD_LENGTH) {
+        this.props.displayToast(
+          "Password length should be minimum 8 character"
+        );
+        return false;
+      } else {
+        this.props.onSubmit(userDetails);
+      }
     }
   };
 

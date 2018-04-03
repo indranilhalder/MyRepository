@@ -14,8 +14,10 @@ if (
   API_URL_ROOT = "https://tmppprd.tataunistore.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "production") {
   API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
-} else if (process.env.REACT_APP_STAGE == "p2") {
+} else if (process.env.REACT_APP_STAGE === "p2") {
   API_URL_ROOT = "https://p2.tatacliq.com/marketplacewebservices";
+} else if (process.env.REACT_APP_STAGE === "stage") {
+  API_URL_ROOT = "https://stg.tatacliq.com/marketplacewebservices";
 }
 
 export const API_URL_ROOT_DUMMY =
@@ -24,7 +26,7 @@ export const API_URL_ROOT_DUMMY =
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
-export const JUS_PAY_API_URL_ROOT = "https://sandbox.juspay.in";
+export const JUS_PAY_API_URL_ROOT = process.env.REACT_APP_JUS_PAY_API_URL_ROOT;
 
 const API_URL_ROOT_SUFFIX = "?isPwa=true";
 
@@ -37,35 +39,19 @@ export async function postAdobeTargetUrl(
   tntId: null,
   useApiRoot: true
 ) {
-  let url;
-
-  // I want to use the API URL ROOT and I have a patj
-  // I want to use the API url root and I have no path
-  // I want to just use the path
-
-  if (!useApiRoot) {
-    url = path;
-  }
-
-  if (useApiRoot && path !== null) {
-    url = `${url}/${path}`;
-  }
-
-  if (useApiRoot && path === null) {
-    url = `${HOME_FEED_API_ROOT}`;
-  }
-
-  return await fetch(url, {
-    method: "POST",
-    body: JSON.stringify({
-      mbox,
-      marketingCloudVisitorId,
-      tntId
-    }),
-    headers: {
-      "Content-Type": "application/json"
-    }
+  const result = await new Promise((resolve, reject) => {
+    window.adobe.target.getOffer({
+      mbox: mbox,
+      success: function(offer) {
+        resolve(offer);
+      },
+      error: function(status, error) {
+        reject(error);
+      }
+    });
   });
+
+  return result;
 }
 
 export async function post(path, postData, doNotUserApiSuffix: true) {
@@ -169,7 +155,7 @@ export async function postJusPay(path, postData) {
   let url = `${JUS_PAY_API_URL_ROOT}/${path}`;
   return await fetch(url, {
     method: "POST",
-    body: JSON.stringify(postData)
+    body: postData
   });
 }
 
@@ -177,5 +163,18 @@ export async function postFormData(url, payload) {
   return await fetch(`${API_URL_ROOT}/${url}`, {
     method: "POST",
     body: payload
+  });
+}
+
+// this function is using in follow and un follow brands
+// because there we have to send payload in formData or Row Data format in msd api
+
+export async function postMsdRowData(url, payload) {
+  return await fetch(`${API_MSD_URL_ROOT}/${url}`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json"
+    }
   });
 }

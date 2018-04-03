@@ -19,7 +19,8 @@ import {
   GLOBAL_ACCESS_TOKEN,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  ANONYMOUS_USER
+  ANONYMOUS_USER,
+  REVIEW_SUBMIT_TOAST_TEXT
 } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
 
@@ -30,9 +31,9 @@ class ProductReviewPage extends Component {
 
   componentDidMount() {
     if (!this.props.productDetails) {
-      this.props.getProductDescription(this.props.match.params[1]);
+      this.props.getProductDescription(this.props.match.params[0]);
     }
-    this.props.getProductReviews(this.props.match.params[1]);
+    this.props.getProductReviews(this.props.match.params[0]);
   }
 
   reviewSection = () => {
@@ -44,14 +45,24 @@ class ProductReviewPage extends Component {
   };
 
   onSubmit = productReview => {
+    this.props.displayToast(REVIEW_SUBMIT_TOAST_TEXT);
     this.props.addProductReview(
       this.props.productDetails.productListingId,
       productReview
     );
+    this.setState({ visible: false });
   };
+  onCancel() {
+    this.setState({ visible: false });
+  }
   renderReviewSection = () => {
     if (this.state.visible) {
-      return <WriteReview onSubmit={this.onSubmit} />;
+      return (
+        <WriteReview
+          onSubmit={this.onSubmit}
+          onCancel={() => this.onCancel()}
+        />
+      );
     }
   };
 
@@ -99,42 +110,48 @@ class ProductReviewPage extends Component {
 
   render() {
     if (this.props.productDetails) {
-      let image = find(
-        this.props.productDetails.galleryImagesList[0].galleryImages,
-        galleryImage => {
-          return galleryImage.key === MOBILE_PDP_VIEW;
-        }
-      );
-
-      if (!image) {
-        image = this.props.productDetails.galleryImagesList[0].galleryImages[0]
-          .value;
-      }
+      const mobileGalleryImages =
+        this.props.productDetails &&
+        this.props.productDetails.galleryImagesList
+          .map(galleryImageList => {
+            return galleryImageList.galleryImages.filter(galleryImages => {
+              return galleryImages.key === "product";
+            });
+          })
+          .map(image => {
+            return image[0].value;
+          });
 
       return (
         <PdpFrame
           addProductToBag={() => this.addProductToBag()}
           addProductToWishList={() => this.addProductToWishList()}
-          gotoPreviousPage={this.goBack}
+          gotoPreviousPage={() => this.goBack()}
         >
           <div className={styles.base}>
             <div className={styles.productBackground}>
               <ProductDetailsCard
-                productImage={image}
-                productName={this.props.productDetails.productName}
-                productMaterial={this.props.productDetails.productDescription}
-                price={this.props.productDetails.mrp}
-                discountPrice={this.props.productDetails.winningSellerMOP}
+                productImage={mobileGalleryImages[0]}
+                productName={this.props.productDetails.brandName}
+                productMaterial={this.props.productDetails.productName}
+                price={
+                  this.props.productDetails.winningSellerPrice
+                    .formattedValueNoDecimal
+                }
+                discountPrice={
+                  this.props.productDetails.mrpPrice.formattedValueNoDecimal
+                }
                 averageRating={this.props.productDetails.averageRating}
-                totalNoOfReviews={this.props.productDetails.numberOfReviews}
+                totalNoOfReviews={this.props.productDetails.productReviewsCount}
               />
-
               <RatingHolder ratingData={this.props.ratingData} />
             </div>
-            <div className={styles.reviewText} onClick={this.reviewSection}>
-              {WRITE_REVIEW_TEXT}
+            <div className={styles.reviewHolder}>
+              <div className={styles.reviewText} onClick={this.reviewSection}>
+                {WRITE_REVIEW_TEXT}
+              </div>
+              {this.renderReviewSection()}
             </div>
-            {this.renderReviewSection()}
             {this.props.reviews && (
               <ReviewList reviewList={this.props.reviews.reviews} />
             )}

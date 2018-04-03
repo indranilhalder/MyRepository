@@ -12,8 +12,10 @@ import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
+import PdpDeliveryModes from "./PdpDeliveryModes";
 import Overlay from "./Overlay";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -27,15 +29,14 @@ import {
   PRODUCT_REVIEWS_PATH_SUFFIX,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  NO
+  NO,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
-import PDPRecommendedSections from "./PDPRecommendedSections.js";
 
 const PRODUCT_QUANTITY = "1";
 const DELIVERY_TEXT = "Delivery Options For";
-const PIN_CODE = "110011";
 export default class PdpApparel extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
@@ -45,23 +46,26 @@ export default class PdpApparel extends React.Component {
   gotoPreviousPage = () => {
     this.props.history.goBack();
   };
-  goToSellerPage = () => {
-    let expressionRuleFirst = "/p-(.*)/(.*)";
-    let expressionRuleSecond = "/p-(.*)";
-    let productId;
-    if (this.props.location.pathname.match(expressionRuleFirst)) {
-      productId = this.props.location.pathname.match(expressionRuleFirst)[1];
-    } else {
-      productId = this.props.location.pathname.match(expressionRuleSecond)[1];
+  goToSellerPage(count) {
+    if (count !== 0) {
+      let expressionRuleFirst = "/p-(.*)/(.*)";
+      let expressionRuleSecond = "/p-(.*)";
+      let productId;
+      if (this.props.location.pathname.match(expressionRuleFirst)) {
+        productId = this.props.location.pathname.match(expressionRuleFirst)[1];
+      } else {
+        productId = this.props.location.pathname.match(expressionRuleSecond)[1];
+      }
+      this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
     }
-    this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
-  };
+  }
   goToCart = () => {
+    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.props.history.push({
       pathname: PRODUCT_CART_ROUTER,
       state: {
         ProductCode: this.props.productDetails.productListingId,
-        pinCode: PIN_CODE
+        pinCode: defaultPinCode
       }
     });
   };
@@ -78,25 +82,28 @@ export default class PdpApparel extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-
-    if (userDetails) {
-      if (cartDetailsLoggedInUser && customerCookie) {
-        this.props.addProductToCart(
-          JSON.parse(userDetails).userName,
-          JSON.parse(cartDetailsLoggedInUser).code,
-          JSON.parse(customerCookie).access_token,
-          productDetails
-        );
+    if (this.checkIfSizeSelected()) {
+      if (userDetails) {
+        if (cartDetailsLoggedInUser && customerCookie) {
+          this.props.addProductToCart(
+            JSON.parse(userDetails).userName,
+            JSON.parse(cartDetailsLoggedInUser).code,
+            JSON.parse(customerCookie).access_token,
+            productDetails
+          );
+        }
+      } else {
+        if (cartDetailsAnonymous && globalCookie) {
+          this.props.addProductToCart(
+            ANONYMOUS_USER,
+            JSON.parse(cartDetailsAnonymous).guid,
+            JSON.parse(globalCookie).access_token,
+            productDetails
+          );
+        }
       }
     } else {
-      if (cartDetailsAnonymous && globalCookie) {
-        this.props.addProductToCart(
-          ANONYMOUS_USER,
-          JSON.parse(cartDetailsAnonymous).guid,
-          JSON.parse(globalCookie).access_token,
-          productDetails
-        );
-      }
+      this.showSizeSelector();
     }
   };
 
@@ -105,62 +112,45 @@ export default class PdpApparel extends React.Component {
     this.props.history.push(url);
   };
 
-  addToWishList = () => {
-    let productDetails = {};
-    productDetails.code = this.props.productDetails.productListingId;
-    productDetails.ussId = this.props.productDetails.winningUssID;
-
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
-    if (userDetails) {
-      this.props.addProductToWishList(
-        JSON.parse(userDetails).userName,
-        JSON.parse(customerCookie).access_token,
-        productDetails
-      );
-    } else {
-      this.props.addProductToWishList(
-        ANONYMOUS_USER,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
-    }
-  };
   showPincodeModal() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-      this.props.showPincodeModal(this.props.match.params[1]);
+      this.props.showPincodeModal(this.props.match.params[0]);
     } else if (
       this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
     ) {
-      this.props.showPincodeModal(this.props.match.params[2]);
+      this.props.showPincodeModal(this.props.match.params[1]);
     }
   }
+  showSizeSelector = () => {
+    if (
+      this.props.showSizeSelector &&
+      this.props.productDetails &&
+      this.props.productDetails.variantOptions
+    ) {
+      this.props.showSizeSelector({
+        sizeSelected: this.checkIfSizeSelected(),
+        productId: this.props.productDetails.productListingId,
+        showSizeGuide: this.props.showSizeGuide,
+        data: this.props.productDetails.variantOptions.map(value => {
+          return value.sizelink;
+        })
+      });
+    }
+  };
+
   handleShowSizeguide() {
     if (this.props.getProductSizeGuide) {
       this.props.getProductSizeGuide();
     }
   }
-  renderDeliveryOptions(productData) {
-    return (
-      productData.eligibleDeliveryModes &&
-      productData.eligibleDeliveryModes.map((val, idx) => {
-        return (
-          <DeliveryInformation
-            key={idx}
-            header={val.name}
-            placedTime={val.timeline}
-            type={val.code}
-            onClick={() => this.renderAddressModal()}
-            deliveryOptions={DELIVERY_TEXT}
-            label={PIN_CODE}
-            showCliqAndPiqButton={false}
-          />
-        );
-      })
-    );
-  }
+  checkIfSizeSelected = () => {
+    if (this.props.location.state && this.props.location.state.isSizeSelected) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -172,13 +162,26 @@ export default class PdpApparel extends React.Component {
       .map(image => {
         return image[0].value;
       });
+    let validSellersCount = 0;
+    if (
+      productData.otherSellers &&
+      productData.otherSellers.filter(val => {
+        return val.availableStock !== "0";
+      }).length > 0
+    ) {
+      validSellersCount = productData.otherSellers.filter(val => {
+        return val.availableStock !== "0" && val.availableStock !== "-1";
+      }).length;
+    }
+
     if (productData) {
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
-          addProductToWishList={() => this.addToWishList()}
+          productListingId={productData.productListingId}
+          ussId={productData.winningUssID}
         >
           <ProductGalleryMobile>
             {mobileGalleryImages.map((val, idx) => {
@@ -189,8 +192,10 @@ export default class PdpApparel extends React.Component {
             <ProductDetailsMainCard
               productName={productData.brandName}
               productDescription={productData.productName}
-              price={productData.mrp}
-              discountPrice={productData.winningSellerMOP}
+              price={productData.mrpPrice.formattedValueNoDecimal}
+              discountPrice={
+                productData.winningSellerPrice.formattedValueNoDecimal
+              }
               averageRating={productData.averageRating}
               onClick={this.goToReviewPage}
             />
@@ -206,16 +211,26 @@ export default class PdpApparel extends React.Component {
             </div>
           )}
 
-          {productData.productOfferMsg && (
+          {productData.potentialPromotions && (
             <OfferCard
-              endTime={productData.productOfferMsg[0].validTill.date}
-              heading={productData.productOfferMsg[0].promotionTitle}
-              description={productData.productOfferPromotion[0].promotionDetail}
+              endTime={productData.potentialPromotions.endDate}
+              startDate={productData.potentialPromotions.startDate}
+              heading={productData.potentialPromotions.title}
+              description={productData.potentialPromotions.description}
               onClick={this.goToCouponPage}
             />
           )}
           {productData.variantOptions && (
             <React.Fragment>
+              <SizeSelector
+                history={this.props.history}
+                sizeSelected={this.checkIfSizeSelected()}
+                productId={productData.productListingId}
+                showSizeGuide={this.props.showSizeGuide}
+                data={productData.variantOptions.map(value => {
+                  return value.sizelink;
+                })}
+              />
               <ColourSelector
                 data={productData.variantOptions.map(value => {
                   return value.colorlink;
@@ -223,14 +238,6 @@ export default class PdpApparel extends React.Component {
                 history={this.props.history}
                 updateColour={val => {}}
                 getProductSpecification={this.props.getProductSpecification}
-              />
-              <SizeSelector
-                showSizeGuide={
-                  productData.showSizeGuide ? this.props.showSizeGuide : null
-                }
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
               />
             </React.Fragment>
           )}
@@ -248,21 +255,36 @@ export default class PdpApparel extends React.Component {
           this.props.productDetails.isServiceableToPincode.status === NO ? (
             <Overlay labelText="Not serviceable in you pincode,
   please try another pincode">
-              {this.renderDeliveryOptions(productData)}
+              <PdpDeliveryModes
+                eligibleDeliveryModes={productData.eligibleDeliveryModes}
+                deliveryModesATP={productData.deliveryModesATP}
+              />
             </Overlay>
           ) : (
-            this.renderDeliveryOptions(productData)
+            <PdpDeliveryModes
+              eligibleDeliveryModes={productData.eligibleDeliveryModes}
+              deliveryModesATP={productData.deliveryModesATP}
+            />
           )}
 
-          {productData.otherSellersText && (
+          {productData.winningSellerName && (
             <div className={styles.separator}>
-              <PdpLink onClick={this.goToSellerPage}>
-                <div
-                  className={styles.sellers}
-                  dangerouslySetInnerHTML={{
-                    __html: productData.otherSellersText
-                  }}
-                />
+              <PdpLink
+                onClick={() => this.goToSellerPage(validSellersCount)}
+                noLink={validSellersCount === 0}
+              >
+                <div className={styles.sellers}>
+                  Sold by{" "}
+                  <span className={styles.winningSellerText}>
+                    {productData.winningSellerName}
+                  </span>
+                  {validSellersCount !== 0 && (
+                    <React.Fragment>
+                      {" "}
+                      and {validSellersCount} other seller(s)
+                    </React.Fragment>
+                  )}
+                </div>
               </PdpLink>
             </div>
           )}
@@ -272,11 +294,13 @@ export default class PdpApparel extends React.Component {
             </div>
           )}
           <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
+            {productData.averageRating && (
+              <RatingAndTextLink
+                onClick={this.goToReviewPage}
+                averageRating={productData.averageRating}
+                numberOfReview={productData.numberOfReviews}
+              />
+            )}
           </div>
           {productData.classifications && (
             <div className={styles.details}>
@@ -288,10 +312,7 @@ export default class PdpApparel extends React.Component {
               productContent={productData.APlusContent.productContent}
             />
           )}
-          <PDPRecommendedSections
-            msdItems={this.props.msdItems}
-            productData={productData}
-          />
+          <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );
     } else {

@@ -1,0 +1,88 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.inputHolder {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+}
+.fileUploadHolder {
+  width: 100%;
+  height: 33px;
+  vertical-align: top;
+  position: relative;
+  padding-right: 105px;
+}
+.fileHolder {
+  width: 105px;
+  height: 35px;
+  position: absolute;
+  background: #8d8d8d;
+  color: #fff;
+  font-size: 14px;
+  line-height: 33px;
+  text-align: center;
+  right: 0;
+  top: 0;
+  font-family: regular;
+  overflow: hidden;
+  border: 1px solid #8d8d8d;
+  border-radius: 0px 3px 3px 0px;
+}
+.file {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+.buttonHolder {
+  width: 100%;
+  height: 25px;
+  display: inline-block;
+  position: relative;
+  margin-top: 15px;
+}
+.doItLaterHolder {
+  width: auto;
+  height: 25px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.updateHolder {
+  width: auto;
+  height: 25px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.pathUploadHolder {
+  width: 100%;
+  height: 35px;
+  padding: 0px 10px;
+  border: 1px solid #d2d2d2;
+  color: #212121;
+  font-size: 14px;
+  line-height: 33px;
+  font-family: regular;
+  border-radius: 2px;
+  opacity: 0.7;
+}
+.PopUpbuttonHolder {
+  width: 100%;
+  height: auto;
+  margin-top: 15px;
+  display: inline-block;
+  text-align: left;
+}
+.PopUpbutton {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 18px;
+  box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.24), 0 0 6px 0 rgba(0, 0, 0, 0.12);
+}

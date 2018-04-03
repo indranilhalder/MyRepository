@@ -11,6 +11,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
+import PdpDeliveryModes from "./PdpDeliveryModes";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
@@ -28,15 +29,15 @@ import {
   PRODUCT_REVIEWS_PATH_SUFFIX,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  NO
+  NO,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
-import PDPRecommendedSections from "./PDPRecommendedSections.js";
+import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
 
 const PRODUCT_QUANTITY = "1";
 const DELIVERY_TEXT = "Delivery Options For";
-const PIN_CODE = "110011";
 export default class PdpApparel extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
@@ -63,11 +64,13 @@ export default class PdpApparel extends React.Component {
     this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
   };
   goToCart = () => {
+    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
     this.props.history.push({
       pathname: PRODUCT_CART_ROUTER,
       state: {
         ProductCode: this.props.productDetails.productListingId,
-        pinCode: PIN_CODE
+        pinCode: defaultPinCode
       }
     });
   };
@@ -136,11 +139,11 @@ export default class PdpApparel extends React.Component {
   };
   showPincodeModal() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-      this.props.showPincodeModal(this.props.match.params[1]);
+      this.props.showPincodeModal(this.props.match.params[0]);
     } else if (
       this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
     ) {
-      this.props.showPincodeModal(this.props.match.params[2]);
+      this.props.showPincodeModal(this.props.match.params[1]);
     }
   }
 
@@ -149,25 +152,7 @@ export default class PdpApparel extends React.Component {
       this.props.onQuantitySelect();
     }
   }
-  renderDeliveryOptions(productData) {
-    return (
-      productData.eligibleDeliveryModes &&
-      productData.eligibleDeliveryModes.map((val, idx) => {
-        return (
-          <DeliveryInformation
-            key={idx}
-            header={val.name}
-            placedTime={val.timeline}
-            type={val.code}
-            onClick={() => this.renderAddressModal()}
-            deliveryOptions={DELIVERY_TEXT}
-            label={PIN_CODE}
-            showCliqAndPiqButton={false}
-          />
-        );
-      })
-    );
-  }
+
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -185,7 +170,8 @@ export default class PdpApparel extends React.Component {
           goToCart={() => this.goToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
-          addProductToWishList={() => this.addToWishList()}
+          productListingId={productData.productListingId}
+          ussId={productData.winningUssID}
         >
           <ProductGalleryMobile>
             {mobileGalleryImages.map((val, idx) => {
@@ -197,8 +183,10 @@ export default class PdpApparel extends React.Component {
               <ProductDetailsMainCard
                 productName={productData.brandName}
                 productDescription={productData.productName}
-                price={productData.mrp}
-                discountPrice={productData.winningSellerMOP}
+                price={productData.mrpPrice.formattedValueNoDecimal}
+                discountPrice={
+                  productData.winningSellerPrice.formattedValueNoDecimal
+                }
                 averageRating={productData.averageRating}
                 onClick={this.goToReviewPage}
               />
@@ -214,13 +202,12 @@ export default class PdpApparel extends React.Component {
               </div>
             )}
 
-            {productData.productOfferMsg && (
+            {productData.potentialPromotions && (
               <OfferCard
-                endTime={productData.productOfferMsg[0].validTill.date}
-                heading={productData.productOfferMsg[0].promotionTitle}
-                description={
-                  productData.productOfferPromotion[0].promotionDetail
-                }
+                endTime={productData.potentialPromotions.endDate}
+                startDate={productData.potentialPromotions.startDate}
+                heading={productData.potentialPromotions.title}
+                description={productData.potentialPromotions.description}
                 onClick={this.goToCouponPage}
               />
             )}
@@ -277,10 +264,16 @@ export default class PdpApparel extends React.Component {
           this.props.productDetails.isServiceableToPincode.status === NO ? (
             <Overlay labelText="Not serviceable in you pincode,
   please try another pincode">
-              {this.renderDeliveryOptions(productData)}
+              <PdpDeliveryModes
+                eligibleDeliveryModes={productData.eligibleDeliveryModes}
+                deliveryModesATP={productData.deliveryModesATP}
+              />
             </Overlay>
           ) : (
-            this.renderDeliveryOptions(productData)
+            <PdpDeliveryModes
+              eligibleDeliveryModes={productData.eligibleDeliveryModes}
+              deliveryModesATP={productData.deliveryModesATP}
+            />
           )}
 
           {productData.otherSellersText && (
@@ -301,11 +294,13 @@ export default class PdpApparel extends React.Component {
             </div>
           )}
           <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
+            {productData.averageRating && (
+              <RatingAndTextLink
+                onClick={this.goToReviewPage}
+                averageRating={productData.averageRating}
+                numberOfReview={productData.numberOfReviews}
+              />
+            )}
           </div>
           {productData.classifications && (
             <div className={styles.details}>
@@ -317,10 +312,7 @@ export default class PdpApparel extends React.Component {
               productContent={productData.APlusContent.productContent}
             />
           )}
-          <PDPRecommendedSections
-            msdItems={this.props.msdItems}
-            productData={productData}
-          />
+          <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );
     } else {

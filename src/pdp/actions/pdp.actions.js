@@ -3,17 +3,21 @@ import {
   REQUESTING,
   ERROR,
   GLOBAL_ACCESS_TOKEN,
+  SUCCESS_UPPERCASE,
+  SUCCESS_CAMEL_CASE,
   DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
+import { getMcvId } from "../../lib/adobeUtils.js";
 import each from "lodash/each";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   ANONYMOUS_USER
 } from "../../lib/constants";
-
+import { API_MSD_URL_ROOT } from "../../lib/apiRequest.js";
+import { displayToast } from "../../general/toast.actions.js";
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
 export const PRODUCT_DESCRIPTION_SUCCESS = "PRODUCT_DESCRIPTION_SUCCESS";
 export const PRODUCT_DESCRIPTION_FAILURE = "PRODUCT_DESCRIPTION_FAILURE";
@@ -98,7 +102,6 @@ export const PDP_ABOUT_BRAND_FAILURE = "PDP_ABOUT_BRAND_FAILURE";
 
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
-export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
 export const PRODUCT_PDP_EMI_PATH =
   "v2/mpl/getBankDetailsforEMI?platformNumber=2";
 export const EMI_TERMS_PATH = "/v2/mpl/cms/products/getEmiTermsAndConditions";
@@ -114,19 +117,19 @@ const CLIENT_ID = "gauravj@dewsolutions.in";
 const ADD_PRODUCT_TO_WISH_LIST = "addToWishListInPDP";
 const ADD_PRODUCT_TO_CART = "addProductToCart";
 const REMOVE_FROM_WISH_LIST = "removeFromWl";
-const PRODUCT_SPECIFICATION_PATH = "/v2/mpl/products";
-const PRODUCT_DESCRIPTION_PATH = "v2/mpl/products";
+const PRODUCT_SPECIFICATION_PATH = "/v2/mpl/products/productDetails";
+const PRODUCT_DESCRIPTION_PATH = "v2/mpl/products/productDetails";
+const PRODUCT_SIZE_GUIDE_PATH = "v2/mpl/products/";
 const ORDER_BY = "desc";
 const SORT = "byDate";
 const PAGE_VALUE = "0";
 const PAGE_NUMBER = "1";
 const MSD_REQUEST_PATH = "widgets";
-const MSD_ABOUT_BRAND_REQUEST_PATH = "discover";
+const MSD_ABOUT_BRAND_REQUEST_PATH = "widgets";
 const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
-const WIDGET_LIST = [0, 4];
-const WIDGET_LIST_FOR_ABOUT_BRAND = ["tata_5"];
-const NUMBER_RESULTS = [10];
-const MAD_UUID = "F4B82964-5E08-4531-87AF-7E03E3CD0307";
+const WIDGET_LIST = [0, 8];
+const WIDGET_LIST_FOR_ABOUT_BRAND = [114];
+const NUMBER_RESULTS = [10, 10];
 
 export function getProductDescriptionRequest() {
   return {
@@ -157,11 +160,15 @@ export function getProductDescription(productCode) {
         `${PRODUCT_DESCRIPTION_PATH}/${productCode}?isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        dispatch(getProductDescriptionSuccess(resultJson));
+      } else {
+        throw new Error(`${resultJson.error}`);
       }
-
-      dispatch(getProductDescriptionSuccess(resultJson));
     } catch (e) {
       dispatch(getProductDescriptionFailure(e.message));
     }
@@ -291,16 +298,33 @@ export function removeProductFromWishListFailure(error) {
 
 export function removeProductFromWishList(productDetails) {
   return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const removeProductFromWishListObject = new FormData();
+    removeProductFromWishListObject.append("USSID", productDetails.USSID);
+    removeProductFromWishListObject.append("wishlistName", MY_WISH_LIST);
     dispatch(removeProductFromWishListRequest());
     try {
-      const result = await api.postMock(REMOVE_FROM_WISH_LIST);
+      const result = await api.postFormData(
+        `${PRODUCT_DETAILS_PATH}/${
+          JSON.parse(userDetails).userName
+        }/removeProductFromWishlist?&access_token=${
+          JSON.parse(customerCookie).access_token
+        }`,
+        removeProductFromWishListObject
+      );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        return dispatch(removeProductFromWishListSuccess());
+      } else {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
-      dispatch(removeProductFromWishListSuccess());
     } catch (e) {
-      dispatch(removeProductFromWishListFailure(e.message));
+      return dispatch(removeProductFromWishListFailure(e.message));
     }
   };
 }
@@ -338,10 +362,12 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
         }&addedToCartWl=false`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
 
+      // here we dispatch a modal to show something was added to the bag
+      dispatch(displayToast("Added product to Bag"));
       dispatch(addProductToCartSuccess());
     } catch (e) {
       dispatch(addProductToCartFailure(e.message));
@@ -376,7 +402,7 @@ export function getProductSizeGuide(productCode) {
     dispatch(getProductSizeGuideRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_DESCRIPTION_PATH}/${productCode}/sizeGuide?isPwa=true`
+        `${PRODUCT_SIZE_GUIDE_PATH}/${productCode}/sizeGuide?isPwa=true`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
@@ -571,7 +597,7 @@ export function addProductReview(productCode, productReview) {
     dispatch(addProductReviewRequest());
     try {
       const result = await api.post(
-        `${PRODUCT_SPECIFICATION_PATH}/${productCode}/reviews?access_token=${
+        `${PRODUCT_SPECIFICATION_PATH}${productCode}/reviews?access_token=${
           JSON.parse(customerCookie).access_token
         }`,
         productReview
@@ -742,14 +768,12 @@ export function followUnFollowBrand(brandCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(followUnFollowBrandRequest());
     try {
-      const currentFollowedStatus = getState().productDescription.msdItems
-        .brandDetails.isFollowing;
+      const currentFollowedStatus = getState().productDescription.aboutTheBrand
+        .isFollowing;
       const isFollowing = !currentFollowedStatus;
       // getting market cloud id it is auto generated by use when use visti web MSSiteModeEvent
       // we just need to get it here
-      const mcvId = window._satellite
-        .getVisitorId()
-        .getMarketingCloudVisitorID();
+      const mcvId = await getMcvId();
       const result = await api.post(
         `${FOLLOW_UN_FOLLOW_PATH}/${mcvId}/updateFollowedBrands?brands=${brandCode}&follow=${isFollowing}&isPwa=true`
       );
@@ -791,17 +815,22 @@ export function getMsdRequest(productCode) {
     let msdRequestObject = new FormData();
     msdRequestObject.append("api_key", API_KEY);
     msdRequestObject.append("widget_list", JSON.stringify(WIDGET_LIST));
-    msdRequestObject.append("num_results", NUMBER_RESULTS);
-    msdRequestObject.append("mad_uuid", MAD_UUID);
+    msdRequestObject.append("num_results", JSON.stringify(NUMBER_RESULTS));
+    const mcvId = await getMcvId();
+    msdRequestObject.append("mad_uuid", mcvId);
     msdRequestObject.append("details", false);
-    msdRequestObject.append("product_id", productCode);
-
+    msdRequestObject.append("product_id", productCode.toUpperCase());
     dispatch(productMsdRequest());
-
     try {
-      const result = await api.post(MSD_REQUEST_PATH, msdRequestObject);
+      const result = await api.postMsd(
+        `${API_MSD_URL_ROOT}/${MSD_REQUEST_PATH}`,
+        msdRequestObject
+      );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE.toLowerCase()
+      ) {
         throw new Error(`${resultJson.message}`);
       }
 
@@ -847,24 +876,29 @@ export function pdpAboutBrand(productCode) {
       "widget_list",
       JSON.stringify(WIDGET_LIST_FOR_ABOUT_BRAND)
     );
-    msdRequestObject.append("num_results", NUMBER_RESULTS);
-    msdRequestObject.append("mad_uuid", MAD_UUID);
+    msdRequestObject.append("num_results", JSON.stringify(NUMBER_RESULTS));
+    const mcvId = await getMcvId();
+    msdRequestObject.append("mad_uuid", mcvId);
     msdRequestObject.append("details", false);
-    msdRequestObject.append("product_id", productCode);
+    msdRequestObject.append("product_id", productCode.toUpperCase());
 
     dispatch(pdpAboutBrandRequest());
 
     try {
       // making call for fetch about brand and their items items
       // url may have to change as per api live get live
-      const result = await api.postMock(
-        MSD_ABOUT_BRAND_REQUEST_PATH,
+      const result = await api.postMsd(
+        `${API_MSD_URL_ROOT}/${MSD_REQUEST_PATH}`,
         msdRequestObject
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === FAILURE ||
+        resultJson.status === FAILURE.toLocaleLowerCase()
+      ) {
         throw new Error(`${resultJson.message}`);
       }
+
       if (resultJson.data[0].itemIds.length > 0) {
         dispatch(
           getPdpItems(resultJson.data[0].itemIds, ABOUT_THE_BRAND_WIDGET_KEY)
@@ -891,10 +925,10 @@ export function getPdpItemsPdpSuccess(items, widgetKey) {
     widgetKey
   };
 }
-export function getPdpItemsFailure(positionInFeed, errorMsg) {
+export function getPdpItemsFailure(errorMsg) {
   return {
     type: GET_PDP_ITEMS_FAILURE,
-    errorMsg,
+    error: errorMsg,
     status: FAILURE
   };
 }
@@ -909,14 +943,14 @@ export function getPdpItems(itemIds, widgetKey) {
       });
       const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
       const result = await api.get(url);
-
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson.message}`);
+        throw new Error(`${resultJson.error}`);
       }
+
       dispatch(getPdpItemsPdpSuccess(resultJson.results, widgetKey));
     } catch (e) {
-      dispatch(getPdpItemsFailure(e.message));
+      dispatch(getPdpItemsFailure(`MSD ${e.message}`));
     }
   };
 }

@@ -65,7 +65,7 @@ export default class Carousel extends React.Component {
               !this.props.header &&
               this.props.headerComponent}
             <div className={styles.nav}>
-              {this.props.seeAll && (
+              {this.props.buttonText && (
                 <div
                   className={buttonClass}
                   onClick={() => {
@@ -105,7 +105,7 @@ export default class Carousel extends React.Component {
                 {this.props.subheader && (
                   <div className={styles.subheader}>{this.props.subheader}</div>
                 )}
-                {this.props.seeAll &&
+                {this.props.buttonText &&
                   !this.props.withFooter && (
                     <div className={styles.mobileButton}>
                       <Button
@@ -153,7 +153,12 @@ export default class Carousel extends React.Component {
                       <MediaQuery query="(max-device-width: 1024px)">
                         <div
                           className={styles.element}
-                          style={{ width: `${this.props.elementWidthMobile}%` }}
+                          style={{
+                            width:
+                              this.props.elementWidthMobile === "auto"
+                                ? "auto"
+                                : `${this.props.elementWidthMobile}%`
+                          }}
                         >
                           {child}
                         </div>
@@ -187,7 +192,7 @@ export default class Carousel extends React.Component {
 
 Carousel.propTypes = {
   elementWidthDesktop: PropTypes.number,
-  elementWidthMobile: PropTypes.number,
+  elementWidthMobile: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   buttonText: PropTypes.string,
   header: PropTypes.string,
   isWhite: PropTypes.bool,
@@ -199,7 +204,7 @@ Carousel.propTypes = {
 Carousel.defaultProps = {
   elementWidthDesktop: 25,
   elementWidthMobile: 45,
-  buttonText: "Shop all",
+  buttonText: null,
   color: "#181818",
   withFooter: true
 };

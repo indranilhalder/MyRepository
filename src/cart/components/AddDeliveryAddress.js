@@ -9,7 +9,10 @@ import CheckboxAndText from "./CheckboxAndText";
 import TextArea from "../../general/components/TextArea.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
+import { SUCCESS } from "../../lib/constants.js";
+import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 const SAVE_TEXT = "Save & Continue";
+
 const ISO_CODE = "IN";
 export default class AddDeliveryAddress extends React.Component {
   constructor(props) {
@@ -27,6 +30,7 @@ export default class AddDeliveryAddress extends React.Component {
       line2: "",
       line3: "",
       town: "",
+      salutaion: "",
       defaultFlag: false
     };
   }
@@ -34,8 +38,16 @@ export default class AddDeliveryAddress extends React.Component {
   onChange(val) {
     this.setState(val);
   }
-  onChangeDefaultFlag(val) {
-    this.setState({ defaultFlag: val.defaultFlag });
+  onChangeDefaultFlag() {
+    this.setState(prevState => ({
+      defaultFlag: !prevState.defaultFlag
+    }));
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.addUserAddressStatus === SUCCESS) {
+      this.props.history.goBack();
+    }
   }
 
   addNewAddress = () => {
@@ -45,28 +57,33 @@ export default class AddDeliveryAddress extends React.Component {
     addressDetails.addressType = this.state.addressType;
     addressDetails.phone = this.state.phone;
     addressDetails.firstName = this.state.firstName;
-    addressDetails.lastName = this.state.firstName;
+    addressDetails.lastName = "";
     addressDetails.postalCode = this.state.postalCode;
     addressDetails.line1 = this.state.line1;
     addressDetails.state = this.state.state;
-    addressDetails.emailId = this.state.phone;
+    addressDetails.emailId = this.state.emailId;
     addressDetails.line2 = this.state.line2;
     addressDetails.line3 = this.state.line3;
     addressDetails.town = this.state.town;
+    addressDetails.salutaion = this.state.salutaion;
     addressDetails.defaultFlag = this.state.defaultFlag;
     this.props.addUserAddress(addressDetails);
   };
 
   clearAllValue = () => {
-    this.onChange({
-      pinCodeValue: "",
-      fullNameValue: "",
-      phoneNumberValue: "",
-      stateName: "",
-      cityNameValue: "",
-      localityValue: "",
-      landmark: "",
-      titleValue: ""
+    this.setState({
+      postalCode: "",
+      firstName: "",
+      line2: "",
+      town: "",
+      city: "",
+      state: "",
+      phone: "",
+      line1: " ",
+      titleValue: "",
+      addressType: "",
+      salutaion: "",
+      defaultFlag: false
     });
   };
 
@@ -82,6 +99,17 @@ export default class AddDeliveryAddress extends React.Component {
         label: "Others"
       }
     ];
+    const salutaion = [
+      {
+        label: "Mr."
+      },
+      {
+        label: "Mrs."
+      },
+      {
+        label: "Miss."
+      }
+    ];
     return (
       <div className={styles.base}>
         <div className={styles.addressInnerBox}>
@@ -95,7 +123,6 @@ export default class AddDeliveryAddress extends React.Component {
             placeholder="Enter a pincode/zipcode*"
             onChange={postalCode => this.onChange({ postalCode })}
             textStyle={{ fontSize: 14 }}
-            height={33}
             value={
               this.props.postalCode
                 ? this.props.postalCode
@@ -112,15 +139,34 @@ export default class AddDeliveryAddress extends React.Component {
           />
         </div>
         <div className={styles.content}>
-          <Input2
-            option={this.state.options}
-            placeholder="Name*"
-            onChange={firstName => this.onChange({ firstName })}
-            textStyle={{ fontSize: 14 }}
-            height={33}
-          />
+          <div className={styles.salutation}>
+            <SelectBoxMobile
+              height={33}
+              label={salutaion[0].label}
+              options={salutaion.map((val, i) => {
+                return {
+                  value: val.label,
+                  label: val.label
+                };
+              })}
+              onChange={salutaion => this.onChange({ salutaion })}
+            />
+          </div>
+          <div className={styles.name}>
+            <Input2
+              option={this.state.options}
+              placeholder="Name*"
+              value={
+                this.props.firstName
+                  ? this.props.firstName
+                  : this.state.firstName
+              }
+              onChange={firstName => this.onChange({ firstName })}
+              textStyle={{ fontSize: 14 }}
+              height={33}
+            />
+          </div>
         </div>
-
         <div className={styles.content}>
           <TextArea
             placeholder="Address*"
@@ -141,9 +187,9 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <Input2
             boxy={true}
-            placeholder="Locality/town*"
-            value={this.props.town ? this.props.town : this.state.town}
-            onChange={town => this.onChange({ town })}
+            placeholder="Email"
+            value={this.props.emailId ? this.props.emailId : this.state.emailId}
+            onChange={emailId => this.onChange({ emailId })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -186,6 +232,7 @@ export default class AddDeliveryAddress extends React.Component {
             offset={0}
             elementWidthMobile={50}
             onSelect={val => this.onChange({ addressType: val[0] })}
+            selected={this.state.addressType}
           >
             {dataLabel.map((val, i) => {
               return (
@@ -197,22 +244,22 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.defaultText}>
           <CheckboxAndText
             label="Make this default address"
-            selectItem={() =>
-              this.onChangeDefaultFlag({
-                defaultAddress: !this.props.defaultAddress
-              })
-            }
+            selected={this.state.defaultFlag}
+            selectItem={() => this.onChangeDefaultFlag()}
           />
         </div>
-        <Button
-          backgroundColor={"#FF1744"}
-          label={SAVE_TEXT}
-          width={150}
-          height={45}
-          borderRadius={22.5}
-          onClick={() => this.addNewAddress()}
-          textStyle={{ color: "#FFF", fontSize: 14 }}
-        />
+        <div className={styles.buttonHolder}>
+          <div className={styles.saveAndContinueButton}>
+            <Button
+              type="primary"
+              label={SAVE_TEXT}
+              width={176}
+              height={38}
+              onClick={() => this.addNewAddress()}
+              textStyle={{ color: "#FFF", fontSize: 14 }}
+            />
+          </div>
+        </div>
       </div>
     );
   }

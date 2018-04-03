@@ -14,6 +14,7 @@ import {
   showModal,
   EMI_MODAL,
   ADDRESS,
+  SIZE_SELECTOR,
   SIZE_GUIDE
 } from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
@@ -27,6 +28,10 @@ const mapDispatchToProps = dispatch => {
     addProductToCart: (userId, cartId, accessToken, productDetails) => {
       dispatch(addProductToCart(userId, cartId, accessToken, productDetails));
     },
+    showSizeSelector: data => {
+      dispatch(showModal(SIZE_SELECTOR, data));
+    },
+
     getProductSizeGuide: productCode => {
       dispatch(getProductSizeGuide(productCode));
     },
@@ -63,7 +68,6 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     productDetails: state.productDescription.productDetails,
-    msdItems: state.productDescription.msdItems,
     loading: state.productDescription.loading
   };
 };

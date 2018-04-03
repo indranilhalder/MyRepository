@@ -89,16 +89,14 @@ class ProductSellerPage extends Component {
   };
 
   componentDidMount() {
-    console.log("COMPONENT DID MOUN");
     if (this.props.match.path === PRODUCT_OTHER_SELLER_ROUTER) {
-      this.props.getProductDescription(this.props.match.params[1]);
+      this.props.getProductDescription(this.props.match.params[0]);
     } else {
       //need to show error page
     }
   }
 
   render() {
-    console.log("RIGHT RENDER");
     const mobileGalleryImages =
       this.props.productDetails &&
       this.props.productDetails.galleryImagesList
@@ -121,34 +119,49 @@ class ProductSellerPage extends Component {
           <div className={styles.base}>
             <ProductDetailsCard
               productImage={mobileGalleryImages[0]}
-              productName={this.props.productDetails.productName}
-              price={this.props.productDetails.mrp}
-              discountPrice={this.props.productDetails.discount}
+              productName={this.props.productDetails.brandName}
+              productMaterial={this.props.productDetails.productName}
+              price={
+                this.props.productDetails.winningSellerPrice
+                  .formattedValueNoDecimal
+              }
+              discountPrice={
+                this.props.productDetails.mrpPrice.formattedValueNoDecimal
+              }
               averageRating={this.props.productDetails.averageRating}
               totalNoOfReviews={this.props.productDetails.productReviewsCount}
             />
             <div>
               {this.props.productDetails.otherSellers && (
                 <SellerWithMultiSelect limit={1}>
-                  {this.props.productDetails.otherSellers.map(
-                    (value, index) => {
+                  {this.props.productDetails.otherSellers
+                    .filter(val => {
+                      return (
+                        val.availableStock !== "0" &&
+                        val.availableStock !== "-1"
+                      );
+                    })
+                    .map((value, index) => {
                       return (
                         <SellerCard
                           heading={value.sellerName}
                           priceTitle={PRICE_TEXT}
-                          discountPrice={value.sellerMOP}
-                          price={value.sellerMRP}
+                          discountPrice={
+                            value.specialPriceSeller.formattedValueNoDecimal
+                          }
+                          price={value.mrpSeller.formattedValueNoDecimal}
                           offerText={OFFER_AVAILABLE}
                           deliveryText={DELIVERY_INFORMATION_TEXT}
-                          shippingText={value.deliveryModesATP[0].value}
+                          hasCod={value.isCOD === "Y"}
+                          hasEmi={value.isEMIEligible === "Y"}
+                          eligibleDeliveryModes={value.eligibleDeliveryModes}
                           cashText={CASH_TEXT}
                           policyText={DELIVERY_RATES}
                           key={index}
                           value={value}
                         />
                       );
-                    }
-                  )}
+                    })}
                 </SellerWithMultiSelect>
               )}
             </div>

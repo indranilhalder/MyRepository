@@ -9,12 +9,14 @@ export default class SearchAndUpdate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pinCode: null,
+      pinCode: this.props.value,
       errorMessage: null
     };
   }
   getValue(pinCode) {
-    this.setState({ pinCode });
+    if (pinCode.length <= 6) {
+      this.setState({ pinCode });
+    }
   }
   getLocation() {
     if (this.props.getLocation) {
@@ -45,7 +47,7 @@ export default class SearchAndUpdate extends React.Component {
                 size="14px"
                 fontFamily="regular"
                 color="#000"
-                label="Update"
+                label={this.props.labelText}
                 onClick={() => this.onUpdate()}
               />
             </div>
@@ -53,6 +55,7 @@ export default class SearchAndUpdate extends React.Component {
           <div className={styles.inputHolder}>
             <Input2
               boxy={true}
+              value={this.state.pinCode}
               type="number"
               placeholder="Enter a pincode / zipcode"
               onChange={val => this.getValue(val)}
@@ -79,4 +82,8 @@ SearchAndUpdate.propTypes = {
   getLocation: PropTypes.func,
   onUpdate: PropTypes.func,
   errorMessage: PropTypes.string
+};
+
+SearchAndUpdate.defaultProps = {
+  labelText: "Update"
 };

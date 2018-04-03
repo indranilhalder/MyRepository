@@ -2,6 +2,7 @@
   width: auto;
   position: relative;
   user-select: none;
+  display: inline-block;
   padding-bottom: 5px;
   color: #212121;
   font-size: 14px;

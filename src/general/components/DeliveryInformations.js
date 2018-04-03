@@ -10,6 +10,9 @@ import HomeImage from "./img/homeDelivery.svg";
 import arrowIcon from "./img/arrowBackblack.svg";
 import CollectImage from "./img/collect.svg";
 import { EXPRESS, COLLECT } from "../../lib/constants";
+const EXPRESS_TEXT = "Express delivery";
+const HOME_TEXT = "Home delivery";
+const COLLECT_TEXT = "CLiQ & PiQ";
 export default class DeliveryInformations extends React.Component {
   handleClick() {
     if (this.props.onClick) {
@@ -33,10 +36,16 @@ export default class DeliveryInformations extends React.Component {
   }
   render() {
     let iconImage = HomeImage;
+    let typeName = HOME_TEXT;
     if (this.props.type === EXPRESS) {
       iconImage = ExpressImage;
+      typeName = EXPRESS_TEXT;
     } else if (this.props.type === COLLECT) {
       iconImage = CollectImage;
+      typeName = COLLECT_TEXT;
+    }
+    if (!this.props.available) {
+      typeName = `${typeName} - Unavailable`;
     }
     return (
       <div className={styles.base}>
@@ -60,10 +69,11 @@ export default class DeliveryInformations extends React.Component {
               <Icon image={arrowIcon} size={20} />
             </div>
           )}
-        <IconWithHeader image={iconImage} header={this.props.header}>
-          {this.props.placedTime && (
-            <div className={styles.placeTime}>{this.props.placedTime}</div>
-          )}
+        <IconWithHeader image={iconImage} header={typeName}>
+          {this.props.placedTime &&
+            this.props.available && (
+              <div className={styles.placeTime}>{this.props.placedTime}</div>
+            )}
           {this.props.deliverText && (
             <div className={styles.placeTime}>
               {this.props.deliverText}
@@ -100,7 +110,8 @@ DeliveryInformations.propTypes = {
   onClick: PropTypes.func,
   arrowClick: PropTypes.func,
   onPiq: PropTypes.func,
-  showCliqAndPiqButton: PropTypes.bool
+  showCliqAndPiqButton: PropTypes.bool,
+  available: PropTypes.bool
 };
 
 DeliveryInformations.propTypes = {

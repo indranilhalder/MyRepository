@@ -1,0 +1,101 @@
+import React from "react";
+import { Redirect } from "react-router-dom";
+import ReturnsFrame from "./ReturnsFrame";
+import PropTypes from "prop-types";
+import CourierProduct from "./CourierProduct.js";
+import styles from "./SelfCourier.css";
+import {
+  SELF_COURIER,
+  RETURNS_PREFIX,
+  RETURN_LANDING,
+  RETURNS_REASON
+} from "../../lib/constants";
+export default class SelfCourier extends React.Component {
+  onCancel() {
+    if (this.props.onCancel) {
+      this.props.onCancel();
+    }
+  }
+  onContinue() {
+    if (this.props.newReturnInitial) {
+      const orderDetails = this.props.returnProductDetails.orderProductWsDTO[0];
+      const returnRequest = this.props.returnRequest.codSelfShipData;
+      const initiateReturn = {};
+      initiateReturn.transactionId = orderDetails.transactionId;
+      initiateReturn.ussid = orderDetails.USSID;
+      initiateReturn.orderCode = orderDetails.sellerorderno;
+      initiateReturn.returnReasonCode = orderDetails.transactionId;
+      initiateReturn.returnMethod = SELF_COURIER;
+      initiateReturn.paymentMethod = returnRequest.paymentMode;
+      initiateReturn.isCODorder = "N";
+      if (this.props.bankDetail.accountNumber) {
+        initiateReturn.accountNumber = returnRequest.bankAccount;
+        initiateReturn.reEnterAccountNumber = returnRequest.bankAccount;
+        initiateReturn.bankName = returnRequest.bankName;
+        initiateReturn.IFSCCode = returnRequest.bankKey;
+        initiateReturn.title = returnRequest.title;
+        initiateReturn.accountHolderName = returnRequest.name;
+      }
+
+      this.props.newReturnInitial(initiateReturn);
+    }
+  }
+  downloadForm() {
+    if (this.props.downloadForm) {
+      this.props.downloadForm();
+    }
+  }
+  navigateToReturnLanding() {
+    return (
+      <Redirect
+        to={`${RETURNS_PREFIX}/${
+          this.orderCode
+        }${RETURN_LANDING}${RETURNS_REASON}`}
+      />
+    );
+  }
+  render() {
+    // Preventing user to open this page direct by hitting URL
+    // if (
+    //   !this.props.location.state ||
+    //   !this.props.location.state.authorizedRequest
+    // ) {
+    //   return this.navigateToReturnLanding();
+    // }
+    return (
+      <ReturnsFrame
+        headerText="Steps for self courier"
+        onContinue={() => this.onContinue()}
+        buttonText="Initiate Return"
+        onCancel={() => this.onCancel()}
+      >
+        <div className={styles.card}>
+          <CourierProduct
+            indexNumber="1"
+            header="Courier the product"
+            text="Use any courier services to ship back the products to our address. "
+            subText="Please use the form sent along with the invoice or
+            Re-download the form again from below"
+            underlineButtonLabel="Download form"
+            underlineButtonColour="#ff1744"
+            downloadForm={() => this.downloadForm()}
+          />
+        </div>
+        <div className={styles.card}>
+          <CourierProduct indexNumber="2" header="Update the AWB number">
+            <div className={styles.awbText}>
+              Please update the AWB number provided by the courier service in
+              the <span>Order history</span> section of My Account against the
+              order
+            </div>
+          </CourierProduct>
+        </div>
+      </ReturnsFrame>
+    );
+  }
+}
+SelfCourier.propTypes = {
+  onCancel: PropTypes.func,
+  onContinue: PropTypes.func,
+  downloadForm: PropTypes.func
+};
