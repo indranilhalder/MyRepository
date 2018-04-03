@@ -10,8 +10,8 @@ import {
   removeItemFromCartLoggedOut,
   updateQuantityInCartLoggedIn,
   updateQuantityInCartLoggedOut,
-  displayCoupons,
-  displayOpenCoupons
+  displayCouponsForLoggedInUser,
+  displayCouponsForAnonymous
 } from "../actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
@@ -64,11 +64,11 @@ const mapDispatchToProps = dispatch => {
     updateQuantityInCartLoggedOut: (selectedItem, quantity, pinCode) => {
       dispatch(updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode));
     },
-    displayCoupons: (userId, accessToken, guId) => {
-      dispatch(displayCoupons(userId, accessToken, guId));
+    displayCouponsForLoggedInUser: (userId, accessToken, guId) => {
+      dispatch(displayCouponsForLoggedInUser(userId, accessToken, guId));
     },
-    displayOpenCoupons: (userId, accessToken) => {
-      dispatch(displayOpenCoupons(userId, accessToken));
+    displayCouponsForAnonymous: (userId, accessToken) => {
+      dispatch(displayCouponsForAnonymous(userId, accessToken));
     }
   };
 };

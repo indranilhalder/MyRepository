@@ -188,8 +188,13 @@ const cart = (
       let expiryTime = new Date(date.split(IST_TIME_ZONE).join());
       let expiryCouponDate = expiryTime.getTime();
       Cookies.createCookie(COUPON_COOKIE, action.couponCode, expiryCouponDate);
+
+      let carDetailsCopy = cloneDeep(state.cartDetails);
+      let cartAmount = action.couponResult.cartAmount;
+      carDetailsCopy.cartAmount = cartAmount;
       return Object.assign({}, state, {
         couponStatus: action.status,
+        cartDetails: carDetailsCopy,
         loading: false
       });
 

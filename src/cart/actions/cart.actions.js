@@ -269,7 +269,7 @@ export function displayCouponFailure(error) {
   };
 }
 
-export function displayCoupons(userId, accessToken, cartId) {
+export function displayCouponsForLoggedInUser(userId, accessToken, cartId) {
   return async (dispatch, getState, { api }) => {
     dispatch(displayCouponRequest());
 
@@ -289,7 +289,7 @@ export function displayCoupons(userId, accessToken, cartId) {
   };
 }
 
-export function displayOpenCoupons(userId, accessToken) {
+export function displayCouponsForAnonymous(userId, accessToken) {
   return async (dispatch, getState, { api }) => {
     dispatch(displayCouponRequest());
 
@@ -437,10 +437,11 @@ export function applyUserCouponRequest() {
     status: REQUESTING
   };
 }
-export function applyUserCouponSuccess(couponCode) {
+export function applyUserCouponSuccess(couponResult, couponCode) {
   return {
     type: APPLY_USER_COUPON_SUCCESS,
     status: SUCCESS,
+    couponResult,
     couponCode
   };
 }
@@ -476,15 +477,7 @@ export function applyUserCouponForAnonymous(couponCode) {
         throw new Error(`${resultJson.errors[0].type}`);
       }
 
-      dispatch(
-        getCartDetails(
-          "anonymous",
-          JSON.parse(globalCookie).access_token,
-          cartId,
-          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
-        )
-      );
-      dispatch(applyUserCouponSuccess(couponCode));
+      dispatch(applyUserCouponSuccess(resultJson, couponCode));
     } catch (e) {
       dispatch(applyUserCouponFailure(e.message));
     }
@@ -519,15 +512,8 @@ export function applyUserCouponForLoggedInUsers(couponCode) {
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].type}`);
       }
-      dispatch(
-        getCartDetails(
-          JSON.parse(userDetails).userName,
-          JSON.parse(customerCookie).access_token,
-          JSON.parse(cartDetails).code,
-          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
-        )
-      );
-      dispatch(applyUserCouponSuccess(couponCode));
+
+      dispatch(applyUserCouponSuccess(resultJson, couponCode));
     } catch (e) {
       dispatch(applyUserCouponFailure(e.message));
     }

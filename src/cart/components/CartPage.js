@@ -57,7 +57,7 @@ class CartPage extends React.Component {
         JSON.parse(cartDetailsLoggedInUser).code,
         defaultPinCode
       );
-      this.props.displayCoupons(
+      this.props.displayCouponsForLoggedInUser(
         JSON.parse(userDetails).userName,
         JSON.parse(customerCookie).access_token,
         JSON.parse(cartDetailsLoggedInUser).guid
@@ -70,7 +70,7 @@ class CartPage extends React.Component {
           JSON.parse(cartDetailsAnonymous).guid,
           defaultPinCode
         );
-        this.props.displayOpenCoupons(
+        this.props.displayCouponsForAnonymous(
           ANONYMOUS_USER,
           JSON.parse(globalCookie).access_token
         );
@@ -214,6 +214,7 @@ class CartPage extends React.Component {
     this.setState({ changePinCode: true });
   };
   render() {
+    console.log(this.props.cart.appliedCouponResult);
     const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const cartDetailsForAnonymous = Cookie.getCookie(
       CART_DETAILS_FOR_ANONYMOUS
@@ -228,7 +229,7 @@ class CartPage extends React.Component {
       let deliveryCharge = 0;
       let couponDiscount = 0;
       let totalDiscount = 0;
-      if (!cartDetails.products) {
+      if (cartDetails.products) {
         if (
           cartDetails.products &&
           cartDetails.products[0].elligibleDeliveryMode
