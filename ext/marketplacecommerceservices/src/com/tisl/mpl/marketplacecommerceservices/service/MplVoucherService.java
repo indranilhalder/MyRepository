@@ -297,6 +297,16 @@ public interface MplVoucherService
 	 * @param applicableOrderEntryList
 	 */
 	VoucherDiscountData checkCartNoCostEMIApply(VoucherModel lastVoucher, CartModel cartModel, OrderModel orderModel,
+			List<AbstractOrderEntryModel> applicableOrderEntryList) throws VoucherOperationException, EtailNonBusinessExceptions;
+
+	/**
+	 * The Method Sets apportioned value for No Cost EMI Coupons
+	 * @param voucher
+	 * @param abstractOrderModel
+	 * @param voucherCode
+	 * @param applicableOrderEntryList
+	 */
+	void setApportionedValueForNoCostEMI(VoucherModel voucher, AbstractOrderModel abstractOrderModel, String voucherCode,
 			List<AbstractOrderEntryModel> applicableOrderEntryList);
 
 
