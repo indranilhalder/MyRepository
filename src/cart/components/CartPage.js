@@ -303,7 +303,9 @@ class CartPage extends React.Component {
                       productImage={product.imageURL}
                       productDetails={product.description}
                       productName={product.productName}
-                      price={product.offerPrice}
+                      price={
+                        product.offerPrice ? product.offerPrice : product.price
+                      }
                       index={i}
                       entryNumber={product.entryNumber}
                       deliveryInformation={product.elligibleDeliveryMode}
