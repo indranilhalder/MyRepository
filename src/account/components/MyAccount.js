@@ -10,15 +10,11 @@ import AccountSetting from "./AccountSetting.js";
 import TabHolder from "./TabHolder";
 import TabData from "./TabData";
 import styles from "./MyAccount.css";
+import LogoutButtonContainer from "../containers/LogoutButtonContainer";
 import {
-  MY_ACCOUNT_PAGE,
-  MY_ACCOUNT_UPDATE_PROFILE_PAGE,
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
-  LOGIN_PATH,
-  GLOBAL_ACCESS_TOKEN,
-  CART_DETAILS_FOR_ANONYMOUS,
-  CART_DETAILS_FOR_LOGGED_IN_USER
+  LOGIN_PATH
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 export default class MyAccount extends React.Component {
@@ -30,15 +26,6 @@ export default class MyAccount extends React.Component {
   }
   tabSelect(val) {
     this.setState({ isSelected: val });
-  }
-  renderToAccountSetting() {
-    Cookie.deleteCookie(GLOBAL_ACCESS_TOKEN);
-    Cookie.deleteCookie(CUSTOMER_ACCESS_TOKEN);
-    Cookie.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
-    Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-    Cookie.deleteCookie(LOGGED_IN_USER_DETAILS);
-    localStorage.clear();
-    this.props.history.push(`${LOGIN_PATH}`);
   }
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -63,15 +50,16 @@ export default class MyAccount extends React.Component {
         <ProfileMenuGrid {...this.props} />
         <div className={styles.accountHolder}>
           <AccountSetting
-            onClick={() => this.renderToAccountSetting()}
             firstName={userDetails && userDetails.firstName.charAt(0)}
             heading={
               userDetails &&
               userDetails.firstName &&
               `${userDetails.firstName} ${userDetails.lastName}`
             }
-            label={"Logout"}
           />
+          <div className={styles.logoutButton}>
+            <LogoutButtonContainer />
+          </div>
         </div>
         <div className={styles.tabHolder}>
           <TabHolder>

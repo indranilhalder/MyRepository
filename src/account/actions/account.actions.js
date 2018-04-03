@@ -1747,3 +1747,13 @@ export function redeemCliqVoucher(cliqCashDetails, fromCheckout) {
     }
   };
 }
+export function logout() {
+  return async (dispatch, getState, { api }) => {
+    Cookie.deleteCookie(GLOBAL_ACCESS_TOKEN);
+    Cookie.deleteCookie(CUSTOMER_ACCESS_TOKEN);
+    Cookie.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+    Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    Cookie.deleteCookie(LOGGED_IN_USER_DETAILS);
+    localStorage.clear();
+  };
+}

@@ -1,0 +1,16 @@
+.button {
+  width: auto;
+  right: 0;
+  line-height: 15px;
+  top: 0px;
+  bottom: 0;
+}
+.base {
+  width: auto;
+  height: 25px;
+  display: inline-block;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
