@@ -225,9 +225,30 @@ class CartPage extends React.Component {
     if (this.props.cart.cartDetailsStatus === SUCCESS) {
       const cartDetails = this.props.cart.cartDetails;
       let defaultPinCode;
+      let deliveryCharge = 0;
+      let couponDiscount = 0;
+      let totalDiscount = 0;
+      if (!cartDetails.products) {
+        if (
+          cartDetails.products &&
+          cartDetails.products[0].elligibleDeliveryMode
+        ) {
+          deliveryCharge =
+            cartDetails.products[0].elligibleDeliveryMode[0].charge
+              .formattedValue;
+        }
+        if (cartDetails.cartAmount.totalDiscountAmount) {
+          totalDiscount =
+            cartDetails.cartAmount.totalDiscountAmount.formattedValue;
+        }
 
-      if (cartDetails.products) {
-        defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+        if (cartDetails.cartAmount.couponDiscountAmount) {
+          couponDiscount =
+            cartDetails.cartAmount.couponDiscountAmount.formattedValue;
+        }
+        if (cartDetails.products) {
+          defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+        }
       }
 
       return (
@@ -254,6 +275,8 @@ class CartPage extends React.Component {
                 />
               )}
           </div>
+          {!cartDetails.products && <EmptyBag />}
+
           <div
             className={defaultPinCode === "" ? styles.disabled : styles.content}
           >
@@ -306,22 +329,14 @@ class CartPage extends React.Component {
             {cartDetails.products && (
               <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
             )}
-            {!cartDetails.products && <EmptyBag />}
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
                   amount={cartDetails.cartAmount.paybleAmount.formattedValue}
                   bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
-                  coupons={
-                    cartDetails.cartAmount.couponDiscountAmount.formattedValue
-                  }
-                  discount={
-                    cartDetails.cartAmount.totalDiscountAmount.formattedValue
-                  }
-                  delivery={
-                    cartDetails.products[0].elligibleDeliveryMode[0].charge
-                      .formattedValue
-                  }
+                  coupons={couponDiscount}
+                  discount={totalDiscount}
+                  delivery={deliveryCharge}
                   payable={cartDetails.cartAmount.paybleAmount.formattedValue}
                   onCheckout={() => this.renderToCheckOutPage()}
                 />

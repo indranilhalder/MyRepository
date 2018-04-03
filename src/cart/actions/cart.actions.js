@@ -340,9 +340,11 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
         `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetails?access_token=${accessToken}&isPwa=true&platformNumber=2&pincode=${pinCode}`
       );
       const resultJson = await result.json();
+
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].type}`);
       }
+
       dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(cartDetailsFailure(e.message));
@@ -473,7 +475,6 @@ export function applyUserCouponForAnonymous(couponCode) {
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].type}`);
       }
-      dispatch(applyUserCouponSuccess(couponCode));
 
       dispatch(
         getCartDetails(
@@ -483,6 +484,7 @@ export function applyUserCouponForAnonymous(couponCode) {
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
         )
       );
+      dispatch(applyUserCouponSuccess(couponCode));
     } catch (e) {
       dispatch(applyUserCouponFailure(e.message));
     }
@@ -517,6 +519,14 @@ export function applyUserCouponForLoggedInUsers(couponCode) {
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].type}`);
       }
+      dispatch(
+        getCartDetails(
+          JSON.parse(userDetails).userName,
+          JSON.parse(customerCookie).access_token,
+          JSON.parse(cartDetails).code,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+        )
+      );
       dispatch(applyUserCouponSuccess(couponCode));
     } catch (e) {
       dispatch(applyUserCouponFailure(e.message));
