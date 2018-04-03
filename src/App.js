@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import ModalContainer from "./general/containers/ModalContainer";
 import ToastContainer from "./general/containers/ToastContainer";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Switch, Redirect } from "react-router-dom";
+import Route from "./general/Route";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
 import HomeContainer from "./home/containers/HomeContainer.js";
