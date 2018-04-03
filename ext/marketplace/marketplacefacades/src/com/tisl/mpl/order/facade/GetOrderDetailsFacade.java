@@ -29,13 +29,13 @@ public interface GetOrderDetailsFacade
 	 * @param orderDetails
 	 * @return
 	 */
-	public OrderDataWsDTO getOrderdetails(final OrderData orderDetails);
+	public OrderDataWsDTO getOrderdetails(final OrderData orderDetails, boolean isPwa);
 
 	/**
 	 * @param orderCode
 	 * @return
 	 */
-	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request,String orderCode);
+	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request, String orderCode);
 
 	/**
 	 * @param orderEntryDetail
@@ -58,9 +58,9 @@ public interface GetOrderDetailsFacade
 	public List<ConsignmentStatus> getPickUpButtonDisableOptions();
 
 
-	
+
 	public List<OrderProductWsDTO> getOrderdetailsForApp(final String orderCode);
-	
+
 	public List<OrderProductWsDTO> getOrderdetailsForApp(final String orderCode, final String returnCancelFlag,
 			final String transactionId);
 
