@@ -14,15 +14,13 @@ export default class LogoutButton extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.button}>
-          <UnderLinedButton
-            size={this.props.size}
-            fontFamily={this.props.fontFamily}
-            color={this.props.color}
-            label={this.props.label}
-            onClick={() => this.logoutUser()}
-          />
-        </div>
+        <UnderLinedButton
+          size={this.props.size}
+          fontFamily={this.props.fontFamily}
+          color={this.props.color}
+          label={this.props.label}
+          onClick={() => this.logoutUser()}
+        />
       </div>
     );
   }
