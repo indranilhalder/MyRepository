@@ -10,9 +10,8 @@ import AccountSetting from "./AccountSetting.js";
 import TabHolder from "./TabHolder";
 import TabData from "./TabData";
 import styles from "./MyAccount.css";
+import LogoutButtonContainer from "../containers/LogoutButtonContainer";
 import {
-  MY_ACCOUNT_PAGE,
-  MY_ACCOUNT_UPDATE_PROFILE_PAGE,
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
   LOGIN_PATH,
@@ -30,6 +29,7 @@ export default class MyAccount extends React.Component {
   tabSelect(val) {
     this.setState({ isSelected: val });
   }
+
   renderToAccountSetting() {
     this.props.history.push(
       `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`
@@ -38,6 +38,7 @@ export default class MyAccount extends React.Component {
   componentDidUpdate() {
     this.props.setHeaderText(MY_CLIQ);
   }
+
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -62,6 +63,7 @@ export default class MyAccount extends React.Component {
         <ProfileMenuGrid {...this.props} />
         <div className={styles.accountHolder}>
           <AccountSetting
+            image={userDetails.imageUrl}
             onClick={() => this.renderToAccountSetting()}
             firstName={userDetails && userDetails.firstName.charAt(0)}
             heading={
@@ -70,6 +72,9 @@ export default class MyAccount extends React.Component {
               `${userDetails.firstName} ${userDetails.lastName}`
             }
           />
+          <div className={styles.logoutButton}>
+            <LogoutButtonContainer />
+          </div>
         </div>
         <div className={styles.tabHolder}>
           <TabHolder>

@@ -136,7 +136,7 @@ class Feed extends Component {
     if (this.props.isHomeFeedPage) {
       this.props.homeFeed();
     }
-    if (userDetails && customerCookie) {
+    if (userDetails && customerCookie && this.props.getWishListItems) {
       this.props.getWishListItems();
     }
   }
