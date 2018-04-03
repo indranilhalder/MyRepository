@@ -118,7 +118,7 @@ export default class CreditCardForm extends React.Component {
         <div className={styles.cardDetails}>
           <div className={styles.content}>
             <Input2
-              placeholder="Card Number"
+              placeholder="Card Number*"
               cardNumberValue={
                 this.props.cardNumberValue
                   ? this.props.cardNumberValue
@@ -171,7 +171,7 @@ export default class CreditCardForm extends React.Component {
                 <div className={styles.cardFooterInput}>
                   <Input2
                     boxy={true}
-                    placeholder="Cvv"
+                    placeholder="CVV"
                     type="password"
                     onChange={val => this.getCardCvvValue(val)}
                     textStyle={{ fontSize: 14 }}
