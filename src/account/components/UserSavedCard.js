@@ -2,8 +2,10 @@ import React from "react";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
-  LOGGED_IN_USER_DETAILS
+  LOGGED_IN_USER_DETAILS,
+  SAVED_PAYMENTS
 } from "../../lib/constants";
+
 import SavedPaymentCard from "./SavedPaymentCard.js";
 import styles from "./UserSavedCard.css";
 const CARD_FORMAT = /\B(?=(\d{4})+(?!\d))/g;
@@ -21,7 +23,9 @@ export default class UserSavedCard extends React.Component {
       }
     }
   }
-
+  componentDidUpdate() {
+    this.props.setHeaderText(SAVED_PAYMENTS);
+  }
   removeSavedCardDetails = () => {
     if (this.props.removeSavedCardDetails) {
       this.props.removeSavedCardDetails();

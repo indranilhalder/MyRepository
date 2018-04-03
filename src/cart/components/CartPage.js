@@ -22,7 +22,8 @@ import {
   CHECKOUT_ROUTER,
   LOGIN_PATH,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
-  YES
+  YES,
+  YOUR_BAG
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
@@ -79,6 +80,7 @@ class CartPage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    this.props.setHeaderText(YOUR_BAG);
     if (prevProps.cart) {
       if (prevProps.cart.cartDetails !== this.props.cart.cartDetails) {
         let productServiceAvailability = filter(

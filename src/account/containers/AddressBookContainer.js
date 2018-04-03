@@ -3,7 +3,7 @@ import { getUserAddress } from "../../cart/actions/cart.actions";
 import { removeAddress } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import AddressBook from "../components/AddressBook.js";
-
+import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getUserAddress: () => {
@@ -11,6 +11,9 @@ const mapDispatchToProps = dispatch => {
     },
     removeAddress: addressId => {
       dispatch(removeAddress(addressId));
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     }
   };
 };

@@ -32,7 +32,7 @@ import {
   PAYTM,
   WALLET
 } from "../../lib/constants";
-import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
+import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
@@ -67,6 +67,7 @@ class CheckOutPage extends React.Component {
     selectedDeliveryDetails: "",
     ratingExperience: false
   };
+
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
@@ -78,7 +79,9 @@ class CheckOutPage extends React.Component {
       </div>
     );
   }
-
+  componentDidUpdate() {
+    this.props.setHeaderText(CHECKOUT);
+  }
   renderConfirmAddress = () => {
     if (this.state.confirmAddress) {
       return <div> Address Expand</div>;

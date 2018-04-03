@@ -168,6 +168,20 @@ export const CANCEL_PREFIX = "/cancel/(.*)";
 
 export const WALLET = "WALLET";
 
+//header name
+export const SAVED_PAYMENTS = "Saved Payments";
+export const MY_CLIQ = "My Cliq";
+export const SAVED_LIST = "Saved list";
+export const ALERTS_COUPON = "Alerts & Coupons";
+export const BRANDS = "Brands";
+export const ADDRESS_BOOK = "Address Book";
+export const ORDER_HISTORY = "Order History";
+export const CLIQ_CASH = "Cliq Cash";
+export const GIFT_CARD = "Gift Card";
+export const YOUR_BAG = "Your Bag";
+export const CATEGORIES = "Categories";
+export const CHECKOUT = "Checkout";
+
 // COPY
 
 export const REVIEW_SUBMIT_TOAST_TEXT =

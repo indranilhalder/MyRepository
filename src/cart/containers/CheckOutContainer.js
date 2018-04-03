@@ -44,6 +44,7 @@ import {
   BANK_OFFERS,
   GIFT_CARD_MODAL
 } from "../../general/modal.actions";
+import { setHeaderText } from "../../general/header.actions.js";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -92,6 +93,9 @@ const mapDispatchToProps = dispatch => {
     },
     releaseUserCoupon: () => {
       dispatch(releaseUserCoupon());
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     },
     selectDeliveryMode: (deliveryUssId, pinCode) => {
       dispatch(selectDeliveryMode(deliveryUssId, pinCode));

@@ -14,8 +14,12 @@ import LogoutButtonContainer from "../containers/LogoutButtonContainer";
 import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
-  LOGIN_PATH
+  LOGIN_PATH,
+  MY_CLIQ,
+  MY_ACCOUNT_PAGE,
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE
 } from "../../lib/constants";
+
 import * as Cookie from "../../lib/Cookie";
 export default class MyAccount extends React.Component {
   constructor(props) {
@@ -27,6 +31,16 @@ export default class MyAccount extends React.Component {
   tabSelect(val) {
     this.setState({ isSelected: val });
   }
+
+  renderToAccountSetting() {
+    this.props.history.push(
+      `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`
+    );
+  }
+  componentDidUpdate() {
+    this.props.setHeaderText(MY_CLIQ);
+  }
+
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -35,6 +49,7 @@ export default class MyAccount extends React.Component {
       this.props.getUserAlerts();
     }
   }
+
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
   }
@@ -89,7 +104,7 @@ export default class MyAccount extends React.Component {
           {this.state.isSelected === 0 && (
             <div className={styles.ordersHolder}>
               <div className={styles.recentOrderHolder}>
-                <AllOrderContainer />
+                <AllOrderContainer shouldCallHeaderContainer={false} />
               </div>
             </div>
           )}

@@ -13,8 +13,10 @@ import {
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_PAGE,
   SUCCESS,
-  FAILURE
+  FAILURE,
+  CLIQ_CASH
 } from "../../lib/constants.js";
+
 const DATE_FORMAT = "DD/MM/YYYY, hh:mm";
 
 export default class CliqAndCash extends React.Component {
@@ -36,6 +38,9 @@ export default class CliqAndCash extends React.Component {
         errorMessage: nextProps.cliqCashVoucherDetailsError
       });
     }
+  }
+  componentDidUpdate() {
+    this.props.setHeaderText(CLIQ_CASH);
   }
   componentDidMount() {
     if (this.props.getCliqCashDetails) {
