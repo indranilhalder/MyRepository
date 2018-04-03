@@ -11,7 +11,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
 import { SUCCESS } from "../../lib/constants.js";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
-const SAVE_TEXT = "Save & Continue";
+const SAVE_TEXT = "Save Address";
 
 const ISO_CODE = "IN";
 export default class AddDeliveryAddress extends React.Component {
