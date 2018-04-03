@@ -11850,17 +11850,21 @@ public class UsersController extends BaseCommerceController
 					{
 						for (final Wishlist2Model w : wishlistForCustomer)
 						{
-
-							if (CollectionUtils.isNotEmpty(w.getEntries()))
+							final List<Wishlist2EntryModel> wishListEntryList = w.getEntries();
+							if (CollectionUtils.isNotEmpty(wishListEntryList))
 							{
 
-								for (final Wishlist2EntryModel entry : w.getEntries())
+								for (final Wishlist2EntryModel entry : wishListEntryList)
 
 								{
-									final boolean flag = entry.getIsDeleted().booleanValue();
-									if (!flag)
+									LOG.debug("getCustomerProfile ::IsDeleted FLAG::" + entry.getIsDeleted());
+									if (null != entry.getIsDeleted())
 									{
-										fav_ProductCount++;
+										final boolean flag = entry.getIsDeleted().booleanValue();
+										if (!flag)
+										{
+											fav_ProductCount++;
+										}
 									}
 								}
 							}
@@ -11882,6 +11886,7 @@ public class UsersController extends BaseCommerceController
 			catch (final EtailNonBusinessExceptions e)
 			{
 				ExceptionUtil.etailNonBusinessExceptionHandler(e);
+				LOG.error("getCustomerProfile Error" + e.getMessage());
 				if (null != e.getErrorMessage())
 				{
 					customer.setError(e.getErrorMessage());
@@ -11895,6 +11900,7 @@ public class UsersController extends BaseCommerceController
 			catch (final EtailBusinessExceptions e)
 			{
 				ExceptionUtil.etailBusinessExceptionHandler(e, null);
+				LOG.error("getCustomerProfile Error" + e.getMessage());
 				if (null != e.getErrorMessage())
 				{
 					customer.setError(e.getErrorMessage());
@@ -11903,6 +11909,12 @@ public class UsersController extends BaseCommerceController
 				{
 					customer.setErrorCode(e.getErrorCode());
 				}
+				customer.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			catch (final Exception e)
+			{
+				LOG.error("getCustomerProfile Error::" + e.getMessage());
+				customer.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 				customer.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			}
 		}
