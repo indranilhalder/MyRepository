@@ -7,7 +7,7 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 
-import com.tisl.mpl.core.model.NoCostEMIBankModel;
+import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.data.MplPromoPriceWsDTO;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
@@ -120,8 +120,8 @@ public interface MplPaymentWebService
 
 	/**
 	 * @param pk
-	 * @return NoCostEMIBankModel
+	 * @return EMIBankModel
 	 */
-	public NoCostEMIBankModel getNoCostEMIBankByPk(String pk);
+	public EMIBankModel getNoCostEMIBankByPk(String pk);
 
 }

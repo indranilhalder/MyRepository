@@ -68,7 +68,20 @@
 		<!-- TPR-7448 Ends here -->
     </enumtypes>
             
-
+<relations>
+<relation code="EMIBankVoucherRelation" localized="false"
+			generate="false" autocreate="true">
+			<sourceElement type="EMIBank" qualifier="emiBank"
+				cardinality="one">
+				<modifiers read="true" write="true" optional="true" />
+			</sourceElement>
+			<targetElement type="MplNoCostEMIVoucher" qualifier="mplNoCostEMIVoucher"
+				cardinality="many" collectiontype="list" >
+				<modifiers read="true" write="true" optional="true"
+					partof="false" />
+			</targetElement>
+		</relation>
+</relations>
 	<itemtypes>
 
 <!-- Tata Etail change - Coupon starts -->

@@ -407,13 +407,15 @@
 		<organizer>
 			<search mode="append">
 				<condition attribute="name" />
+				<condition attribute="isStandardEmi" />
+				<condition attribute="isNoCostEmi" />
 			</search>
 			<result defaultview="list">
 				<listview>
 					<itemlayout mode="replace">
 						<attribute name="name" width="150"></attribute>
 						<attribute name="EMITermRates" width="200"></attribute>
-
+						<attribute name="isNoCostEmi" width="150"></attribute>
 					</itemlayout>
 				</listview>
 			</result>
@@ -433,6 +435,13 @@
 							<attribute name="name" />
 						</listlayout>
 					</section>
+					<section name="section.payment.EMIBank.emiTypes" mode="replace"
+						position="1">
+						<listlayout>
+							<attribute name="isStandardEmi" />
+							<attribute name="isNoCostEmi" />
+						</listlayout>
+					</section>
 					<section name="section.payment.EMIrate.description">
 						<columnlayout leftwidth="370">
 							<row>
@@ -449,6 +458,45 @@
 								<text name="text.payment.EMIbanks.EMITermRow.description" />
 							</row>
 
+						</columnlayout>
+					</section>
+				</tab>
+				<tab name="tab.payment.bank.noCostEmi.properties" mode="append">
+					<section name="section.payment.noCostEmi.voucher.description">
+		               <listlayout>
+		               	<text name="text.payment.noCostEmi.voucher.description" width="595"/>
+	                     <attribute name="MplNoCostEMIVoucher">
+	                        <referencecollectioneditor presetattribute="voucher"
+	                        									create="true"
+	                        									add="true"
+	                        									remove="true"
+	                        									autosave="true">
+	                           <itemlayout>
+	                              <attribute name="voucherCode" width="194" position="0"/>
+		                  		  <attribute name="tenure" width="100" position="1"/>
+		                  		  <attribute name="tenure" width="100" position="2"/>
+	                           </itemlayout> 
+	                        </referencecollectioneditor>
+	                     </attribute>
+		               </listlayout>
+		            </section>
+					<section name="section.payment.noCostEmi.tnc.description">
+						<columnlayout leftwidth="500">
+							<row>
+								<text name="text.payment.noCostEmi.tnc.description" />
+								<attribute name="noCostEmiTermsAndCondition" labelwidth="100" width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+							</row>
+						</columnlayout>
+					</section>
+					<section name="section.payment.noCostEmi.logo">
+						<columnlayout leftwidth="500">
+							<row>
+								<attribute name="logoImage" labelwidth="100">
+									<mediaeditor />
+								</attribute>
+							</row>
 						</columnlayout>
 					</section>
 				</tab>
@@ -5582,31 +5630,6 @@
 	         </tab>                  
 	      </editor>
 	   </organizer>
-	</type>
-	<type name="NoCostEMIBank" mode="append">
-		<organizer>
-			<search mode="append">
-				<condition attribute="name" />
-				<condition attribute="code" />
-				<condition attribute="enable" />
-			</search>
-			<result defaultview="list">
-				<listview>
-					<itemlayout mode="replace">
-						<attribute name="name" width="100"></attribute>
-						<attribute name="code" width="200"></attribute>
-						<attribute name="enable" width="100"></attribute>
-					</itemlayout>
-				</listview>
-				<treeview mode="replace">
-					<itemlayout>
-						<attribute name="name" />
-						<attribute name="code" />
-						<attribute name="enable" />
-					</itemlayout>
-				</treeview>
-			</result>
-		</organizer>
 	</type>
 
 </configuration>
