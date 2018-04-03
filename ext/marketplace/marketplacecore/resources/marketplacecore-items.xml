@@ -3109,6 +3109,10 @@
 						<persistence type="property"/>
 						<modifiers read="true" write="true" optional="false" />
 					</attribute>
+					<attribute type="media" qualifier="logoImage">
+						<persistence type="property"></persistence>
+						<modifiers optional="true"/>
+					</attribute>
 					<attribute qualifier="noCostEmiTermsAndCondition" type="localized:java.lang.String">
 		 				<description>The message to show configurable no cost emi terms and conditions</description>
 		 				<modifiers read="true" write="true" />
