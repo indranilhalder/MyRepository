@@ -26,7 +26,6 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   let headerMessage = "Welcome Guest";
-  console.log(state.user);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   if (userDetails) {
     headerMessage = `Welcome ${JSON.parse(userDetails).firstName}`;

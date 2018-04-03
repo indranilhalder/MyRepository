@@ -7,3 +7,5 @@ export const ADDRESS_BOOK = "Address Book";
 export const ORDER_HISTORY = "Order History";
 export const CLIQ_CASH = "Cliq Cash";
 export const GIFT_CARD = "Gift Card";
+export const YOUR_BAG = "Your Bag";
+export const CATEGORIES = "Categories";

@@ -24,6 +24,7 @@ import {
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   YES
 } from "../../lib/constants";
+import { YOUR_BAG } from "../../lib/headerName";
 import * as Cookie from "../../lib/Cookie";
 
 class CartPage extends React.Component {
@@ -75,7 +76,7 @@ class CartPage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.props.setHeaderText("Your Bag");
+    this.props.setHeaderText(YOUR_BAG);
     if (prevProps.cart) {
       if (prevProps.cart.cartDetails !== this.props.cart.cartDetails) {
         let productServiceAvailability = filter(

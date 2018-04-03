@@ -4,7 +4,7 @@ import CategoryL2 from "./CategoryL2";
 import CategoryL3 from "./CategoryL3";
 import styles from "./CategoriesPage.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
-
+import { CATEGORIES } from "../../lib/headerName";
 export default class CategoriesPage extends React.Component {
   constructor(props) {
     super(props);
@@ -17,7 +17,7 @@ export default class CategoriesPage extends React.Component {
     this.props.getCategories();
   }
   componentDidUpdate() {
-    this.props.setHeaderText("Categories");
+    this.props.setHeaderText(CATEGORIES);
   }
   handleClick(webURL) {
     if (webURL) {

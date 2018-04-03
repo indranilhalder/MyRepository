@@ -73,11 +73,6 @@ export default class OrderDetails extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    if (this.props.orderDetails) {
-      const text = this.props.orderDetails.orderId;
-      this.props.setHeaderText(text);
-    }
-
     if (
       userDetails &&
       customerCookie &&
@@ -104,8 +99,6 @@ export default class OrderDetails extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("COMPONENT DID UPDATE CALLED");
-    console.log(this.props);
     this.props.setHeaderText(`#${this.props.orderDetails.orderId}`);
   }
 

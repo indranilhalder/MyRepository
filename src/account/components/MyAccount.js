@@ -36,9 +36,7 @@ export default class MyAccount extends React.Component {
     );
   }
   componentDidUpdate() {
-    if (this.state.isSelected === 0) {
-      this.props.setHeaderText(MY_CLIQ);
-    }
+    this.props.setHeaderText(MY_CLIQ);
   }
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
