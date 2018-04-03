@@ -36,7 +36,6 @@ import AllOrderContainer from "./account/containers/AllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
 import AddressBookContainer from "./account/containers/AddressBookContainer.js";
-import UpdateProfileContainer from "./account/containers/UpdateProfileContainer.js";
 
 import ReturnFlowContainer from "./account/containers/ReturnFlowContainer.js";
 
@@ -48,7 +47,7 @@ import GiftCardContainer from "./account/containers/GiftCardContainer";
 
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 import CancelOrderContainer from "./account/containers/CancelOrderContainer";
-
+import UpdateProfileContainer from "./account/containers/UpdateProfileContainer.js";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -217,16 +216,8 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`}
               component={UserAlertsAndCouponsContainer}
             />
-
             <Route
               exact
-              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`}
-              component={UpdateProfileContainer}
-            />
-            <Route
-              exact
-              path={BRAND_PAGE}
-              component={PlpBrandCategoryWrapperContainer}
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_GIFT_CARD_PAGE}`}
               component={GiftCardContainer}
             />
@@ -241,12 +232,16 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_BRANDS_PAGE}`}
               component={MyAccountBrandsContainer}
             />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`}
+              component={UpdateProfileContainer}
+            />
 
             <Route
               path={`${SHORT_URL_ORDER_DETAIL}`}
               component={OrderDetailsContainer}
             />
-
             <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
 
             <Route

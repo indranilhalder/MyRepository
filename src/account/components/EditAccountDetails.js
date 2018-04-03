@@ -83,7 +83,6 @@ export default class EditAccountDetails extends React.Component {
     this.setState({ changePassword: true });
   };
   render() {
-    console.log("test");
     let userDetails = this.props.userDetails;
     if (userDetails && !this.state.changePassword) {
       return (

@@ -165,6 +165,16 @@ export const GET_CANCEL_PRODUCT_DETAILS_SUCCESS =
 export const GET_CANCEL_PRODUCT_DETAILS_FAILURE =
   "GET_CANCEL_PRODUCT_DETAILS_FAILURE";
 
+export const UPDATE_PROFILE_REQUEST = "UPDATE_PROFILE_REQUEST";
+export const UPDATE_PROFILE_SUCCESS = "UPDATE_PROFILE_SUCCESS";
+export const UPDATE_PROFILE_FAILURE = "UPDATE_PROFILE_FAILURE";
+export const LOG_OUT_ACCOUNT = "LOG_OUT_ACCOUNT";
+export const UPDATE_PROFILE_OTP_VERIFICATION =
+  "UPDATE_PROFILE_OTP_VERIFICATION";
+export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
+export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
+export const CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -172,6 +182,7 @@ export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
 
 export const PIN_PATH = "v2/mpl/";
+export const PATH = "v2/mpl";
 
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
 
