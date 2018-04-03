@@ -36,7 +36,6 @@ class CartPage extends React.Component {
     };
   }
   navigateToHome() {
-    console.log("NAVIGATE");
     this.props.history.push(HOME_ROUTER);
   }
   componentDidMount() {

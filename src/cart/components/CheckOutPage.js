@@ -627,8 +627,6 @@ class CheckOutPage extends React.Component {
     this.setState({ addNewAddress: true });
   };
   binValidationForPaytm = val => {
-    console.log(val);
-    console.log("COMRS IN SLECTIOn ");
     if (val) {
       localStorage.setItem(PAYMENT_MODE_TYPE, PAYTM);
       this.setState({ paymentModeSelected: PAYTM });
