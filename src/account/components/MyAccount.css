@@ -10,6 +10,8 @@
   display: inline-block;
   padding: 15px;
   background: #ececec;
+  position: relative;
+  padding: 15px 60px 15px 15px;
 }
 .tabHolder {
   width: 100%;
@@ -38,4 +40,13 @@
 }
 .couponHolder {
   composes: alertsHolder;
+}
+.logoutButton {
+  width: auto;
+  height: 25px;
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  bottom: 0px;
+  margin: auto;
 }
