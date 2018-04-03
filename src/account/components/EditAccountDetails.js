@@ -46,12 +46,12 @@ export default class EditAccountDetails extends React.Component {
         let dateOfBirth = new Date(
           nextProps.userDetails.dateOfBirth.split("IST").join()
         );
-        let formatttedDate = moment(dateOfBirth).format("DD/MM/YYYY");
+        let formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
 
         this.setState({
           firstName: nextProps.userDetails.firstName,
           lastName: nextProps.userDetails.lastName,
-          dateOfBirth: nextProps.userDetails.dateOfBirth,
+          dateOfBirth: formattedDate,
 
           gender: nextProps.userDetails.gender,
           mobileNumber: nextProps.userDetails.mobileNumber,
@@ -68,8 +68,9 @@ export default class EditAccountDetails extends React.Component {
     this.setState(val);
   }
   onChangeDateOfBirth = val => {
-    let dateOfBirth = moment(val).format("DD/MM/YYYY");
-    this.setState({ dateOfBirth: dateOfBirth });
+    // let dateOfBirth = moment(val).format("YYYY-MM-DD");
+    console.log(val);
+    this.setState({ dateOfBirth: val });
   };
   updateProfile = () => {
     if (this.props.updateProfile) {
@@ -134,6 +135,7 @@ export default class EditAccountDetails extends React.Component {
 
             <div className={styles.container}>
               <SelectBoxMobile
+                label={this.state.gender}
                 value={this.state.gender}
                 options={[
                   { label: "Female", value: "FEMALE" },
