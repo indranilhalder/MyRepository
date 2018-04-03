@@ -82,8 +82,8 @@ export function getProductListings(
       queryString = `${queryString}${PRODUCT_LISTINGS_SUFFIX}`;
       const result = await api.get(queryString);
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.error) {
+        throw new Error(`${resultJson.error}`);
       }
       if (paginated) {
         if (resultJson.searchresult) {
