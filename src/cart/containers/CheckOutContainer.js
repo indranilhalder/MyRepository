@@ -37,13 +37,16 @@ import {
   softReservationForCliqCash,
   jusPayTokenizeForGiftCard,
   createJusPayOrderForGiftCardNetBanking,
-  createJusPayOrderForGiftCardFromSavedCards
+  createJusPayOrderForGiftCardFromSavedCards,
+  captureOrderExperienceStatusUpdate
 } from "../actions/cart.actions";
 import {
   showModal,
   BANK_OFFERS,
   GIFT_CARD_MODAL
 } from "../../general/modal.actions";
+import { displayToast } from "../../general/toast.actions";
+import { SUCCESS } from "../../lib/constants";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -155,8 +158,11 @@ const mapDispatchToProps = dispatch => {
     softReservationForCODPayment: pinCode => {
       dispatch(softReservationForCODPayment(pinCode));
     },
-    captureOrderExperience: (orderId, Rating) => {
-      dispatch(captureOrderExperience(orderId, Rating));
+    captureOrderExperience: async (orderId, Rating) => {
+      const response = await dispatch(captureOrderExperience(orderId, Rating));
+      if (response.status === SUCCESS) {
+        dispatch(displayToast(response.orderExperience.message));
+      }
     },
     binValidationForNetBanking: (paymentMode, binNo) => {
       dispatch(binValidationForNetBanking(paymentMode, binNo));
@@ -195,6 +201,12 @@ const mapDispatchToProps = dispatch => {
     },
     addGiftCard: () => {
       dispatch(showModal(GIFT_CARD_MODAL));
+    },
+    displayToast: message => {
+      dispatch(displayToast(message));
+    },
+    captureOrderExperienceStatusUpdate: () => {
+      dispatch(captureOrderExperienceStatusUpdate());
     }
   };
 };

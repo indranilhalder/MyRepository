@@ -35,7 +35,10 @@ class CartPage extends React.Component {
       changePinCode: false
     };
   }
-
+  navigateToHome() {
+    console.log("NAVIGATE");
+    this.props.history.push(HOME_ROUTER);
+  }
   componentDidMount() {
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -317,7 +320,12 @@ class CartPage extends React.Component {
             {cartDetails.products && (
               <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
             )}
-            {!cartDetails.products && <EmptyBag />}
+            {!cartDetails.products && (
+              <EmptyBag
+                onContinueShopping={() => this.navigateToHome()}
+                viewSavedProduct={() => this.navigateToHome()}
+              />
+            )}
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout

@@ -39,7 +39,7 @@ export default class SavedCard extends React.Component {
             <Input2
               placeholder="Cvv"
               height={33}
-              type="number"
+              type="password"
               textStyle={{
                 color: "#000",
                 fontSize: 13
