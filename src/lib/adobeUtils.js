@@ -11,12 +11,10 @@ const ADOBE_SATELLITE_CODE = "page view";
 
 export function setDataLayer(routerProps) {
   const path = routerProps.path;
-  if (window.digitalData) {
-    if (path === constants.HOME_ROUTER) {
-      window.digitalData = getDigitalDataForHome();
-    }
-    window._satellite.track(ADOBE_SATELLITE_CODE);
+  if (path === constants.HOME_ROUTER) {
+    window.digitalData = getDigitalDataForHome();
   }
+  window._satellite.track(ADOBE_SATELLITE_CODE);
 }
 
 function getDigitalDataForHome() {
