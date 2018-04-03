@@ -15,6 +15,10 @@ export const GET_WISH_LIST_ITEMS_REQUEST = "GET_WISH_LIST_ITEMS_REQUEST";
 export const GET_WISH_LIST_ITEMS_SUCCESS = "GET_WISH_LIST_ITEMS_SUCCESS";
 export const GET_WISH_LIST_ITEMS_FAILURE = "GET_WISH_LIST_ITEMS_FAILURE";
 
+export const CREATE_WISHLIST_REQUEST = "CREATE_WISHLIST_REQUEST";
+export const CREATE_WISHLIST_SUCCESS = "CREATE_WISHLIST_SUCCESS";
+export const CREATE_WISHLIST_FAILURE = "CREATE_WISHLIST_FAILURE";
+
 export const ADD_PRODUCT_TO_WISH_LIST_REQUEST =
   "ADD_PRODUCT_TO_WISH_LIST_REQUEST";
 export const ADD_PRODUCT_TO_WISH_LIST_SUCCESS =
@@ -181,6 +185,50 @@ export function removeProductFromWishList(productDetails) {
       }
     } catch (e) {
       return dispatch(removeProductFromWishListFailure(e.message));
+    }
+  };
+}
+export function createWishlistRequest() {
+  return {
+    type: CREATE_WISHLIST_REQUEST,
+    status: REQUESTING
+  };
+}
+export function createWishlistSuccess() {
+  return {
+    type: CREATE_WISHLIST_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function createWishlistFailure(error) {
+  return {
+    type: CREATE_WISHLIST_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function createWishlist(productDetails) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(createWishlistRequest());
+    try {
+      const result = await api.postFormData(
+        `${PRODUCT_DETAILS_PATH}/${
+          JSON.parse(userDetails).userName
+        }/CreateWishlist?channel=mobile&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true`
+      );
+      const resultJson = await result.json();
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
+      }
+      return dispatch(createWishlistSuccess());
+    } catch (e) {
+      return dispatch(createWishlistFailure(e.message));
     }
   };
 }
