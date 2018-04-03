@@ -2,7 +2,6 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  padding: 15px;
   background: #212121;
   position: fixed;
   bottom: 0;
@@ -22,7 +21,7 @@
   display: inline-block;
   vertical-align: top;
   position: relative;
-  padding-right: 125px;
+  padding: 15px 125px 15px 15px;
 }
 .totalPriceHeading {
   width: 100%;
@@ -57,18 +56,20 @@
 }
 .checkoutButtonHolder {
   width: auto;
-  height: auto;
+  height: 40px;
   position: absolute;
-  right: 0;
-  top: 5px;
+  right: 15px;
+  top: 0px;
+  bottom: 0px;
+  margin: auto;
   display: inline-block;
 }
 .detailsHolder {
   width: 100%;
   height: auto;
-  margin-bottom: 20px;
-  margin-top: 30px;
   display: inline-block;
+  padding: 15px;
+  border-top: 1px solid #ebebec;
 }
 .informationHolder {
   width: 100%;
