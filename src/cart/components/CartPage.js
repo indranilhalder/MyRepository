@@ -214,7 +214,6 @@ class CartPage extends React.Component {
     this.setState({ changePinCode: true });
   };
   render() {
-    console.log(this.props.cart.appliedCouponResult);
     const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const cartDetailsForAnonymous = Cookie.getCookie(
       CART_DETAILS_FOR_ANONYMOUS
