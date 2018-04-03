@@ -17,7 +17,16 @@ export default class FilterSelect extends React.Component {
       countStyle = styles.countSelected;
     }
     return (
-      <div className={styles.item} onClick={() => this.handleClick()}>
+      <div
+        className={this.props.hexColor ? styles.itemHasColour : styles.item}
+        onClick={() => this.handleClick()}
+      >
+        {this.props.hexColor && (
+          <div
+            className={styles.colourIndicator}
+            style={{ backgroundColor: this.props.hexColor }}
+          />
+        )}
         <div className={contentClass}>
           {this.props.icon && (
             <div className={styles.itemLogo}>{this.props.icon}</div>
@@ -39,5 +48,6 @@ FilterSelect.propTypes = {
   selected: PropTypes.bool,
   icon: PropTypes.element,
   label: PropTypes.string,
-  count: PropTypes.number
+  count: PropTypes.number,
+  hexColor: PropTypes.string
 };
