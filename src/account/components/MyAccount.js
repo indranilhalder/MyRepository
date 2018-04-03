@@ -15,7 +15,9 @@ import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
   LOGIN_PATH,
-  MY_CLIQ
+  MY_CLIQ,
+  MY_ACCOUNT_PAGE,
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE
 } from "../../lib/constants";
 
 import * as Cookie from "../../lib/Cookie";
