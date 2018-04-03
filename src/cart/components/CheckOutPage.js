@@ -30,7 +30,13 @@ import {
   OLD_CART_GU_ID,
   PAYMENT_MODE_TYPE,
   PAYTM,
-  WALLET
+  WALLET,
+  HOME_DELIVERY,
+  EXPRESS,
+  ORDER_PREFIX,
+  MY_ACCOUNT,
+  ORDER,
+  ORDER_CODE
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
@@ -39,38 +45,50 @@ const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
 const NET_BANKING = "NB";
 const CART_GU_ID = "cartGuid";
+const DELIVERY_MODE_ADDRESS_ERROR = "No Delivery Modes At Selected Address";
 
 class CheckOutPage extends React.Component {
-  state = {
-    confirmAddress: false,
-    deliverMode: false,
-    paymentMethod: false,
-    addressId: null,
-    addNewAddress: false,
-    deliverModeUssId: "",
-    appliedCoupons: false,
-    paymentModeSelected: null,
-    orderConfirmation: false,
-    showCliqAndPiq: false,
-    showPickupPerson: false,
-    selectedSlaveId: null,
-    ussIdAndDeliveryModesObj: {}, // this object we are using for check when user will continue after  delivery mode then we ll check for all products we selected delivery mode or not
-    selectedProductsUssIdForCliqAndPiq: null,
-    orderId: "",
-    savedCardDetails: "",
-    binValidationCOD: false,
-    isGiftCard: false,
-    isRemainingAmount: true,
-    payableAmount: "",
-    cliqCashAmount: "",
-    bagAmount: "",
-    selectedDeliveryDetails: "",
-    ratingExperience: false
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      confirmAddress: false, //render the render delivery Modes if confirmAddress= true
+      isSelectedDeliveryModes: false, // To select the delivery Modes
+      deliverMode: false, // render the payment Modes if deliverMode = true
+      paymentMethod: false, // render the payment mode if it is true
+      addressId: null,
+      addNewAddress: false,
+      deliverModeUssId: "",
+      appliedCoupons: false,
+      paymentModeSelected: null,
+      orderConfirmation: false,
+      showCliqAndPiq: false,
+      showPickupPerson: false,
+      selectedSlaveId: null,
+      ussIdAndDeliveryModesObj: {}, // this object we are using for check when user will continue after  delivery mode then we ll check for all products we selected delivery mode or not
+      selectedProductsUssIdForCliqAndPiq: null,
+      orderId: "",
+      savedCardDetails: "",
+      binValidationCOD: false,
+      isGiftCard: false,
+      isRemainingAmount: true,
+      payableAmount: "",
+      cliqCashAmount: "",
+      bagAmount: "",
+      selectedDeliveryDetails: null,
+      ratingExperience: false
+    };
+  }
 
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
+  }
+  navigateToMyBag() {
+    if (this.props.displayToast) {
+      this.props.displayToast(DELIVERY_MODE_ADDRESS_ERROR);
+    }
+    this.props.history.goBack();
   }
   renderLoader() {
     return (
@@ -94,25 +112,13 @@ class CheckOutPage extends React.Component {
     let currentSelectedDeliveryModes = cloneDeep(
       this.state.ussIdAndDeliveryModesObj
     );
-    if (!currentSelectedDeliveryModes[ussId]) {
-      Object.assign(currentSelectedDeliveryModes, newDeliveryObj);
-      this.setState({ ussIdAndDeliveryModesObj: currentSelectedDeliveryModes });
-    }
-    let deliveryModeDetails = find(
-      this.props.cart.cartDetailsCNC.products,
-      product => {
-        return product.USSID === ussId;
-      }
-    );
-    if (deliveryModeDetails) {
-      let SelectedDeliveryDetails = find(
-        deliveryModeDetails.elligibleDeliveryMode,
-        elgibleDeliverMode => {
-          return elgibleDeliverMode.code === deliveryMode;
-        }
-      );
-      this.setState({ selectedDeliveryDetails: SelectedDeliveryDetails });
-    }
+
+    Object.assign(currentSelectedDeliveryModes, newDeliveryObj);
+
+    this.setState({
+      ussIdAndDeliveryModesObj: currentSelectedDeliveryModes,
+      isSelectedDeliveryModes: true
+    });
   }
 
   getAllStores = selectedProductsUssIdForCliqAndPiq => {
@@ -150,6 +156,11 @@ class CheckOutPage extends React.Component {
   }
   renderCheckoutAddress = () => {
     const cartData = this.props.cart;
+    let defaultAddressId = null;
+
+    if (this.state.addressId) {
+      defaultAddressId = this.state.addressId;
+    }
     return (
       <div className={styles.addInitialAddAddress}>
         <ConfirmAddress
@@ -158,14 +169,18 @@ class CheckOutPage extends React.Component {
             cartData.userAddress.addresses.map(address => {
               return {
                 addressTitle: address.addressType,
-                addressDescription: `${address.line1} ${address.town} ${
-                  address.city
-                }, ${address.state} ${address.postalCode}`,
+                addressDescription: `${address.line1 &&
+                  address.line1} ${address.town &&
+                  address.town} ${address.city &&
+                  address.city}, ${address.state && address.state} ${
+                  address.postalCode
+                }`,
                 value: address.id,
                 selected: address.defaultAddress
               };
             })
           }
+          selected={[defaultAddressId]}
           onNewAddress={() => this.addNewAddress()}
           onSelectAddress={address => this.onSelectAddress(address)}
         />
@@ -186,6 +201,7 @@ class CheckOutPage extends React.Component {
               <div className={styles.row}>
                 <CartItem
                   key={i}
+                  selected={this.state.ussIdAndDeliveryModesObj[val.USSID]}
                   productImage={val.imageURL}
                   hasFooter={false}
                   productDetails={val.productBrand}
@@ -307,10 +323,83 @@ class CheckOutPage extends React.Component {
     );
   }
   changeDeliveryAddress = () => {
-    this.setState({ confirmAddress: false, deliverMode: false });
+    this.setState({
+      confirmAddress: false,
+      deliverMode: false,
+      isSelectedDeliveryModes: false
+    });
   };
 
   componentWillReceiveProps(nextProps) {
+    // adding default address is selected
+    if (
+      nextProps.cart.status === SUCCESS &&
+      !this.state.addressId &&
+      nextProps.cart &&
+      nextProps.cart.userAddress &&
+      nextProps.cart.userAddress.addresses
+    ) {
+      let defaultAddressId = null;
+
+      let defaultAddress = nextProps.cart.userAddress.addresses.find(
+        address => {
+          return address.defaultAddress;
+        }
+      );
+      if (defaultAddress) {
+        defaultAddressId = defaultAddress.id;
+      }
+      this.updateLocalStoragePinCode(defaultAddress.postalCode);
+      this.setState({
+        addressId: defaultAddressId,
+        selectedAddress: defaultAddress
+      });
+    }
+    // end of adding default address is selected
+
+    // adding selected default delivery modes for every product
+
+    if (
+      !this.state.isSelectedDeliveryModes &&
+      nextProps.cart.cartDetailsCNCStatus === SUCCESS &&
+      nextProps.cart &&
+      nextProps.cart.cartDetailsCNC
+    ) {
+      let defaultSelectedDeliveryModes = {};
+      nextProps.cart.cartDetailsCNC.products.forEach(product => {
+        //check for delivery modes is exit or not for every pincode
+        // if we don;t have any delivery modes for any product
+        // then we ned to navigate user to mybag
+
+        if (!product.elligibleDeliveryMode) {
+          this.navigateToMyBag();
+        }
+        // end of navigate user to myBag
+
+        if (
+          product.elligibleDeliveryMode &&
+          product.elligibleDeliveryMode.findIndex(mode => {
+            return mode.code === HOME_DELIVERY;
+          }) >= 0
+        ) {
+          let newObjectAdd = {};
+          newObjectAdd[product.USSID] = HOME_DELIVERY;
+          Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
+        } else if (
+          product.elligibleDeliveryMode &&
+          product.elligibleDeliveryMode.findIndex(mode => {
+            return mode.code === EXPRESS;
+          }) >= 0
+        ) {
+          let newObjectAdd = {};
+          newObjectAdd[product.USSID] = EXPRESS;
+          Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
+        }
+      });
+      this.setState({ ussIdAndDeliveryModesObj: defaultSelectedDeliveryModes });
+    }
+
+    // end if adding selected default delivery modes for every product
     if (nextProps.cart.cliqCashPaymentDetails) {
       if (
         this.state.isRemainingAmount !==
@@ -483,7 +572,9 @@ class CheckOutPage extends React.Component {
         );
         // this.props.getOrderSummary(this.state.selectedAddress.postalCode);
       }
-      this.setState({ deliverMode: true });
+      this.setState({
+        deliverMode: true
+      });
     }
 
     if (this.state.savedCardDetails !== "") {
@@ -663,6 +754,14 @@ class CheckOutPage extends React.Component {
     this.props.addGiftCard();
   };
 
+  orderConfirmationUpdate = () => {
+    if (this.props.clearCaptureOrderExperience) {
+      this.props.clearCaptureOrderExperience();
+    }
+  };
+  navigateToOrderDetailPage(orderId) {
+    this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
+  }
   render() {
     if (this.props.cart.loading) {
       return <div className={styles.base}>{this.renderLoader()}</div>;
@@ -722,7 +821,7 @@ class CheckOutPage extends React.Component {
                 <DeliveryModeSet
                   productDelivery={this.props.cart.cartDetailsCNC.products}
                   changeDeliveryModes={() => this.changeDeliveryModes()}
-                  selectedDeliveryDetails={this.state.selectedDeliveryDetails}
+                  selectedDeliveryDetails={this.state.ussIdAndDeliveryModesObj}
                 />
               </div>
             )}
@@ -773,6 +872,7 @@ class CheckOutPage extends React.Component {
                 }
                 addGiftCard={() => this.addGiftCard()}
                 binValidationForPaytm={val => this.binValidationForPaytm(val)}
+                displayToast={message => this.props.displayToast(message)}
               />
             </div>
           )}
@@ -814,6 +914,12 @@ class CheckOutPage extends React.Component {
                   this.props.cart.orderConfirmationDetails.orderStatusMessage
                 }
                 continueShopping={() => this.continueShopping()}
+                orderConfirmationUpdate={() => this.orderConfirmationUpdate()}
+                trackOrder={() =>
+                  this.navigateToOrderDetailPage(
+                    this.props.cart.orderConfirmationDetails.orderRefNo
+                  )
+                }
               />
             </div>
           )}
@@ -826,6 +932,12 @@ class CheckOutPage extends React.Component {
                   this.captureOrderExperience(rating)
                 }
                 continueShopping={() => this.continueShopping()}
+                orderConfirmationUpdate={() => this.orderConfirmationUpdate()}
+                trackOrder={() =>
+                  this.navigateToOrderDetailPage(
+                    this.props.cart.cliqCashJusPayDetails.orderId
+                  )
+                }
               />
             </div>
           )}

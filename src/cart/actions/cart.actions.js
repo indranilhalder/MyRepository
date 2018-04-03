@@ -201,6 +201,8 @@ export const ORDER_EXPERIENCE_CAPTURE_SUCCESS =
 export const ORDER_EXPERIENCE_CAPTURE_FAILURE =
   "ORDER_EXPERIENCE_CAPTURE_FAILURE";
 
+export const CLEAR_ORDER_EXPERIENCE_CAPTURE = "CLEAR_ORDER_EXPERIENCE_CAPTURE";
+
 export const ADD_PRODUCT_TO_WISH_LIST_REQUEST =
   "ADD_PRODUCT_TO_WISH_LIST_REQUEST";
 export const ADD_PRODUCT_TO_WISH_LIST_SUCCESS =
@@ -2823,6 +2825,12 @@ export function captureOrderExperienceFailure(error) {
   };
 }
 
+export function clearCaptureOrderExperience() {
+  return {
+    type: CLEAR_ORDER_EXPERIENCE_CAPTURE
+  };
+}
+
 // Action Creator for Order Confirmation
 export function captureOrderExperience(orderId, rating) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -2842,9 +2850,9 @@ export function captureOrderExperience(orderId, rating) {
         throw new Error(resultJson.error);
       }
 
-      dispatch(captureOrderExperienceSuccess(resultJson));
+      return dispatch(captureOrderExperienceSuccess(resultJson));
     } catch (e) {
-      dispatch(captureOrderExperienceFailure(e.message));
+      return dispatch(captureOrderExperienceFailure(e.message));
     }
   };
 }

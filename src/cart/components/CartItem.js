@@ -110,6 +110,7 @@ export default class CartItem extends React.Component {
           this.props.deliveryInformation && (
             <DeliveryInfoSelect
               deliveryInformation={this.props.deliveryInformation}
+              selected={this.props.selected}
               onSelect={val => this.selectDeliveryMode(val)}
               onPiq={val => this.getPickUpDetails()}
             />

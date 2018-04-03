@@ -4,7 +4,7 @@ export default class DeliveryInfoSelect extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCode: ""
+      selectedCode: props.selected
     };
   }
   handleSelect(val) {
