@@ -58,6 +58,11 @@ class CartPage extends React.Component {
         JSON.parse(cartDetailsLoggedInUser).code,
         defaultPinCode
       );
+      this.props.displayCouponsForLoggedInUser(
+        JSON.parse(userDetails).userName,
+        JSON.parse(customerCookie).access_token,
+        JSON.parse(cartDetailsLoggedInUser).guid
+      );
     } else {
       if (globalCookie !== undefined && cartDetailsAnonymous !== undefined) {
         this.props.getCartDetails(
@@ -66,11 +71,10 @@ class CartPage extends React.Component {
           JSON.parse(cartDetailsAnonymous).guid,
           defaultPinCode
         );
-      }
-    }
-    if (userDetails) {
-      if (this.props.getCoupons) {
-        this.props.getCoupons();
+        this.props.displayCouponsForAnonymous(
+          ANONYMOUS_USER,
+          JSON.parse(globalCookie).access_token
+        );
       }
     }
   }
@@ -144,14 +148,12 @@ class CartPage extends React.Component {
       }
     } else {
       if (this.props.updateQuantityInCartLoggedOut) {
-        this.props.updateQuantityInCartLoggedOut(selectedItem, quantity, "");
+        this.props.updateQuantityInCartLoggedOut(
+          selectedItem,
+          quantity,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+        );
       }
-    }
-  };
-
-  applyCoupon = couponCode => {
-    if (this.props.applyCoupon) {
-      this.props.applyCoupon();
     }
   };
 
@@ -160,9 +162,11 @@ class CartPage extends React.Component {
       this.props.releaseCoupon();
     }
   };
+
   goToCouponPage = () => {
     this.props.showCouponModal(this.props.cart.coupons);
   };
+
   renderToCheckOutPage() {
     let pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -175,6 +179,9 @@ class CartPage extends React.Component {
             isRequestComeThrowMyBag: true
           }
         });
+      }
+      if (!pinCode) {
+        this.props.displayToast("Please enter Pin code / Zip code");
       } else {
         this.setState({ isServiceable: false });
       }
@@ -225,9 +232,30 @@ class CartPage extends React.Component {
     if (this.props.cart.cartDetailsStatus === SUCCESS) {
       const cartDetails = this.props.cart.cartDetails;
       let defaultPinCode;
-
+      let deliveryCharge = 0;
+      let couponDiscount = 0;
+      let totalDiscount = 0;
       if (cartDetails.products) {
-        defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+        if (
+          cartDetails.products &&
+          cartDetails.products[0].elligibleDeliveryMode
+        ) {
+          deliveryCharge =
+            cartDetails.products[0].elligibleDeliveryMode[0].charge
+              .formattedValue;
+        }
+        if (cartDetails.cartAmount.totalDiscountAmount) {
+          totalDiscount =
+            cartDetails.cartAmount.totalDiscountAmount.formattedValue;
+        }
+
+        if (cartDetails.cartAmount.couponDiscountAmount) {
+          couponDiscount =
+            cartDetails.cartAmount.couponDiscountAmount.formattedValue;
+        }
+        if (cartDetails.products) {
+          defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+        }
       }
 
       return (
@@ -254,18 +282,11 @@ class CartPage extends React.Component {
                 />
               )}
           </div>
+          {!cartDetails.products && <EmptyBag />}
+
           <div
             className={defaultPinCode === "" ? styles.disabled : styles.content}
           >
-            {cartDetails.products && (
-              <div className={styles.offer}>
-                <div className={styles.offerText}>
-                  {this.props.cartOfferText}
-                </div>
-                <div className={styles.offerName}>{this.props.cartOffer}</div>
-              </div>
-            )}
-
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
                 let serviceable = false;
@@ -286,6 +307,7 @@ class CartPage extends React.Component {
                       productName={product.productName}
                       price={product.offerPrice}
                       index={i}
+                      entryNumber={product.entryNumber}
                       deliveryInformation={product.elligibleDeliveryMode}
                       deliverTime={
                         product.elligibleDeliveryMode &&
@@ -314,15 +336,14 @@ class CartPage extends React.Component {
             {cartDetails.products && (
               <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
             )}
-            {!cartDetails.products && <EmptyBag />}
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
                   amount={cartDetails.cartAmount.paybleAmount.formattedValue}
                   bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
-                  tax={this.props.cartTax}
-                  offers={this.props.offers}
-                  delivery={this.props.delivery}
+                  coupons={couponDiscount}
+                  discount={totalDiscount}
+                  delivery={deliveryCharge}
                   payable={cartDetails.cartAmount.paybleAmount.formattedValue}
                   onCheckout={() => this.renderToCheckOutPage()}
                 />

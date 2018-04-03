@@ -2,6 +2,7 @@ import cloneDeep from "lodash/cloneDeep";
 import * as accountActions from "../actions/account.actions";
 import * as cartActions from "../../cart/actions/cart.actions";
 import { SUCCESS } from "../../lib/constants";
+import { CLEAR_ERROR } from "../../general/error.actions";
 
 const account = (
   state = {
@@ -121,6 +122,30 @@ const account = (
 ) => {
   let currentReturnRequest;
   switch (action.type) {
+    case CLEAR_ERROR:
+      return Object.assign({}, state, {
+        orderDetailsError: null,
+        fetchOrderDetailsError: null,
+        userDetailsError: null,
+        userCouponsError: null,
+        userAlertsError: null,
+        sendInvoiceError: null,
+        userAddressError: null,
+        removeAddressError: null,
+        editAddressError: null,
+        addUserAddressError: null,
+        followedBrandsError: null,
+        cliqCashUserDetailsError: null,
+        cliqCashVoucherDetailsError: null,
+        returnPinCodeError: null,
+        giftCardsError: null,
+        giftCardDetailsError: null,
+        getOtpToActivateWalletError: null,
+        getPinCodeError: null,
+        updateReturnDetailsError: null,
+        cancelProductDetailsError: null,
+        cancelProductError: null
+      });
     case accountActions.GET_RETURN_REQUEST:
     case accountActions.RETURN_PRODUCT_DETAILS_REQUEST:
       return Object.assign({}, state, {

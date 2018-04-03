@@ -4,7 +4,6 @@ import ProductGrid from "./ProductGrid";
 import PlpMobileFooter from "./PlpMobileFooter";
 import styles from "./Plp.css";
 import throttle from "lodash/throttle";
-
 import MDSpinner from "react-md-spinner";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 
@@ -106,11 +105,9 @@ export default class Plp extends React.Component {
   render() {
     console.log(this.props);
     let filterClass = styles.filter;
+
     if (this.props.loading && !this.props.isFilter) {
       return this.renderLoader();
-    }
-    if (this.state.showFilter) {
-      filterClass = styles.filterOpen;
     }
 
     return (
@@ -123,11 +120,10 @@ export default class Plp extends React.Component {
               totalResults={this.props.productListings.pagination.totalResults}
             />
           </div>
-          <div className={filterClass}>
-            {this.state.showFilter && (
-              <FilterContainer backPage={this.backPage} />
-            )}
-          </div>
+          <FilterContainer
+            backPage={this.backPage}
+            showFilter={this.state.showFilter}
+          />
           <div className={styles.footer}>
             <PlpMobileFooter
               onFilter={this.toggleFilter}

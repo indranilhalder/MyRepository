@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import ModalContainer from "./general/containers/ModalContainer";
 import ToastContainer from "./general/containers/ToastContainer";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Switch, Redirect } from "react-router-dom";
+import Route from "./general/Route";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
 import HomeContainer from "./home/containers/HomeContainer.js";
@@ -10,6 +11,7 @@ import ProductDescriptionContainer from "./pdp/containers/ProductDescriptionCont
 import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
+import ErrorContainer from "./general/containers/ErrorContainer.js";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
 import BrandsLandingPageDefaultContainer from "./blp/containers/BrandsLandingPageDefaultContainer";
@@ -390,6 +392,7 @@ class App extends Component {
           <MobileFooter />
 
           <ModalContainer />
+          <ErrorContainer />
           <ToastContainer />
         </div>
       </React.Fragment>

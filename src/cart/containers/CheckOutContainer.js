@@ -8,7 +8,6 @@ import {
   getUserAddress,
   selectDeliveryMode,
   getOrderSummary,
-  getCoupons,
   applyUserCoupon,
   releaseUserCoupon,
   getAllStoresCNC,
@@ -37,7 +36,8 @@ import {
   softReservationForCliqCash,
   jusPayTokenizeForGiftCard,
   createJusPayOrderForGiftCardNetBanking,
-  createJusPayOrderForGiftCardFromSavedCards
+  createJusPayOrderForGiftCardFromSavedCards,
+  applyUserCouponForAnonymous
 } from "../actions/cart.actions";
 import {
   showModal,
@@ -94,6 +94,10 @@ const mapDispatchToProps = dispatch => {
     },
     applyUserCoupon: () => {
       dispatch(applyUserCoupon());
+    },
+    applyUserCouponForAnonymous: couponCode => {
+      dispatch(applyUserCouponForAnonymous(couponCode));
+
     },
     releaseUserCoupon: () => {
       dispatch(releaseUserCoupon());

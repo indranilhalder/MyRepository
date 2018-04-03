@@ -9,6 +9,7 @@
   right: 0;
   bottom: 85px;
   margin: auto;
+  z-index: 1000;
 }
 .textHolder {
   width: 100%;

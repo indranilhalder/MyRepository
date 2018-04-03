@@ -1,7 +1,6 @@
 import { connect } from "react-redux";
 import {
   getUserAddress,
-  getCoupons,
   getEmiBankDetails,
   getNetBankDetails,
   getCartDetails,
@@ -10,14 +9,20 @@ import {
   removeItemFromCartLoggedIn,
   removeItemFromCartLoggedOut,
   updateQuantityInCartLoggedIn,
-  updateQuantityInCartLoggedOut
+  updateQuantityInCartLoggedOut,
+  displayCouponsForLoggedInUser,
+  displayCouponsForAnonymous
 } from "../actions/cart.actions.js";
+import { displayToast } from "../../general/toast.actions";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
 import { setHeaderText } from "../../general/header.actions";
 import { PRODUCT_COUPONS, showModal } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
+    displayToast: toastMessage => {
+      dispatch(displayToast(toastMessage));
+    },
     getUserAddress: () => {
       dispatch(getUserAddress());
     },
@@ -51,9 +56,7 @@ const mapDispatchToProps = dispatch => {
         )
       );
     },
-    getCoupons: () => {
-      dispatch(getCoupons());
-    },
+
     addProductToWishList: productDetails => {
       dispatch(addProductToWishList(productDetails));
     },
@@ -68,6 +71,12 @@ const mapDispatchToProps = dispatch => {
     },
     updateQuantityInCartLoggedOut: (selectedItem, quantity, pinCode) => {
       dispatch(updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode));
+    },
+    displayCouponsForLoggedInUser: (userId, accessToken, guId) => {
+      dispatch(displayCouponsForLoggedInUser(userId, accessToken, guId));
+    },
+    displayCouponsForAnonymous: (userId, accessToken) => {
+      dispatch(displayCouponsForAnonymous(userId, accessToken));
     }
   };
 };
@@ -78,7 +87,6 @@ const mapStateToProps = state => {
     user: state.user
   };
 };
-
 const CartContainer = withRouter(
   connect(mapStateToProps, mapDispatchToProps)(CartPage)
 );

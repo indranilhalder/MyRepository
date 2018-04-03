@@ -19,7 +19,6 @@ import {
 } from "../../lib/constants";
 import { MY_CLIQ } from "../../lib/headerName";
 import * as Cookie from "../../lib/Cookie";
-
 export default class MyAccount extends React.Component {
   constructor(props) {
     super(props);
@@ -52,7 +51,6 @@ export default class MyAccount extends React.Component {
   }
   render() {
     const userDetailsCookie = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetailsCookie || !customerCookie) {
       return this.navigateToLogin();
@@ -63,8 +61,8 @@ export default class MyAccount extends React.Component {
         <ProfileMenuGrid {...this.props} />
         <div className={styles.accountHolder}>
           <AccountSetting
-            image="http://tong.visitkorea.or.kr/cms/resource/58/1016958_image2_1.jpg"
             onClick={() => this.renderToAccountSetting()}
+            firstName={userDetails && userDetails.firstName.charAt(0)}
             heading={
               userDetails &&
               userDetails.firstName &&

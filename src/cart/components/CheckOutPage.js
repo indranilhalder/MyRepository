@@ -777,17 +777,27 @@ class CheckOutPage extends React.Component {
             </div>
           )}
 
-          {(this.state.isGiftCard || !this.state.showCliqAndPiq) && (
-            <Checkout
-              amount={this.state.payableAmount}
-              bagTotal={this.state.bagAmount}
-              tax={this.props.tax}
-              offers={this.props.offers}
-              delivery={this.props.delivery}
-              payable={this.state.payableAmount}
-              onCheckout={this.handleSubmit}
-            />
-          )}
+          {(this.state.isGiftCard || !this.state.showCliqAndPiq) &&
+            this.props.cart.cartDetailsCNC && (
+              <Checkout
+                amount={this.state.payableAmount}
+                bagTotal={this.state.bagAmount}
+                payable={this.state.payableAmount}
+                coupons={
+                  this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
+                    .formattedValue
+                }
+                discount={
+                  this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
+                    .formattedValue
+                }
+                delivery={
+                  this.props.cart.cartDetailsCNC.products[0]
+                    .elligibleDeliveryMode[0].deliveryCost
+                }
+                onCheckout={this.handleSubmit}
+              />
+            )}
         </div>
       );
     } else if (this.state.orderConfirmation) {
