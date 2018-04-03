@@ -14,6 +14,19 @@ const wishlistItems = (
 ) => {
   let currentWishlistItems, indexToBeRemove;
   switch (action.type) {
+    case wishlistActions.CREATE_WISHLIST_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status
+      });
+    case wishlistActions.CREATE_WISHLIST_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error
+      });
+    case wishlistActions.CREATE_WISHLIST_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status
+      });
     case wishlistActions.GET_WISH_LIST_ITEMS_REQUEST:
     case wishlistActions.ADD_PRODUCT_TO_WISH_LIST_REQUEST:
     case wishlistActions.REMOVE_PRODUCT_FROM_WISH_LIST_REQUEST:

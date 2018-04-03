@@ -32,7 +32,7 @@ import {
   verifyWallet,
   submitSelfCourierReturnInfo
 } from "../../account/actions/account.actions";
-
+import { createWishlist } from "../../wishlist/actions/wishlist.actions";
 const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
@@ -75,11 +75,13 @@ const mapDispatchToProps = dispatch => {
             ) {
               // This is the anonymous case
               // And I have an existing cart that needs to be merged.
+              dispatch(createWishlist());
               dispatch(mergeCartId(cartVal.cartDetails.guid));
             } else {
               const createdCartVal = await dispatch(
                 generateCartIdForLoggedInUser()
               );
+              dispatch(createWishlist());
               dispatch(mergeCartId(createdCartVal.cartDetails.guid));
             }
           }

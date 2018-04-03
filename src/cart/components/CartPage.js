@@ -160,9 +160,11 @@ class CartPage extends React.Component {
       this.props.releaseCoupon();
     }
   };
+
   goToCouponPage = () => {
     this.props.showCouponModal(this.props.cart.coupons);
   };
+
   renderToCheckOutPage() {
     let pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -175,6 +177,9 @@ class CartPage extends React.Component {
             isRequestComeThrowMyBag: true
           }
         });
+      }
+      if (!pinCode) {
+        this.props.displayToast("Please enter Pin code / Zip code");
       } else {
         this.setState({ isServiceable: false });
       }

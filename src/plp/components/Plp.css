@@ -5,28 +5,12 @@
   padding: 15px 0;
   background: #ececec;
 }
-.filter {
-  width: 100%;
-  height: auto;
-  min-height: 100vh;
-  position: fixed;
-  left: 0;
-  top: 0;
-  transform: translateX(-100%);
-  background: #fff;
-  z-index: 25;
-  transition: 300ms;
-}
 .pageHeader {
   width: 100%;
   position: fixed;
   left: 0;
   top: 0;
   z-index: 20;
-}
-.filterOpen {
-  composes: filter;
-  transform: translateX(0);
 }
 .main {
   width: 100%;

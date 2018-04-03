@@ -13,11 +13,15 @@ import {
   displayCouponsForLoggedInUser,
   displayCouponsForAnonymous
 } from "../actions/cart.actions.js";
+import { displayToast } from "../../general/toast.actions";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
 import { PRODUCT_COUPONS, showModal } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
+    displayToast: toastMessage => {
+      dispatch(displayToast(toastMessage));
+    },
     getUserAddress: () => {
       dispatch(getUserAddress());
     },
@@ -79,7 +83,6 @@ const mapStateToProps = state => {
     user: state.user
   };
 };
-
 const CartContainer = withRouter(
   connect(mapStateToProps, mapDispatchToProps)(CartPage)
 );
