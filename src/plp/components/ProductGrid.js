@@ -46,8 +46,8 @@ export default class ProductGrid extends React.Component {
       <ProductModule
         productImage={data.imageURL}
         title={data.brandname}
-        price={data.price.mrpPrice.formattedValue}
-        discountPrice={data.price.sellingPrice.formattedValue}
+        price={data.price.mrpPrice.doubleValue}
+        discountPrice={data.price.sellingPrice.doubleValue}
         description={data.productname}
         offerText={data.offerText}
         averageRating={data.averageRating}
