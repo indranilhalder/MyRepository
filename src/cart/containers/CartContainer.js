@@ -5,7 +5,6 @@ import {
   getNetBankDetails,
   getCartDetails,
   checkPinCodeServiceAvailability,
-  addProductToWishList,
   removeItemFromCartLoggedIn,
   removeItemFromCartLoggedOut,
   updateQuantityInCartLoggedIn,
@@ -53,9 +52,6 @@ const mapDispatchToProps = dispatch => {
       );
     },
 
-    addProductToWishList: productDetails => {
-      dispatch(addProductToWishList(productDetails));
-    },
     removeItemFromCartLoggedIn: (cartListItemPosition, pinCode) => {
       dispatch(removeItemFromCartLoggedIn(cartListItemPosition, pinCode));
     },
