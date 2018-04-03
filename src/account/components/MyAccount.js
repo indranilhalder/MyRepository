@@ -50,6 +50,8 @@ export default class MyAccount extends React.Component {
         <ProfileMenuGrid {...this.props} />
         <div className={styles.accountHolder}>
           <AccountSetting
+            image={userDetails.imageUrl}
+            onClick={() => this.renderToAccountSetting()}
             firstName={userDetails && userDetails.firstName.charAt(0)}
             heading={
               userDetails &&

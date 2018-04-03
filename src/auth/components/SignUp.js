@@ -140,6 +140,7 @@ class SignUp extends Component {
                 placeholder={"Phone number"}
                 type={"number"}
                 onChange={val => this.onPhoneNumberChange(val)}
+                maxLength={"10"}
               />
             </div>
             <div className={styles.input}>

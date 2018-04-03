@@ -15,6 +15,7 @@ export default class AccountSetting extends React.Component {
         <div className={styles.accountHolder}>
           <div className={styles.profileImageHolder}>
             <div className={styles.accountImage}>
+              {this.props.image && <ProfileImage image={this.props.image} />}
               <div className={styles.accountImageText}>
                 {this.props.firstName}
               </div>
