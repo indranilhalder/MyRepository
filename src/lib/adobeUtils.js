@@ -1,6 +1,7 @@
 import { getCookieValue, getCookie } from "./Cookie.js";
 import { setInterval, clearInterval } from "timers";
 import * as constants from "../lib/constants.js";
+import { userAddressFailure } from "../cart/actions/cart.actions";
 
 export const ADOBE_TARGET_COOKIE_NAME =
   "AMCV_E9174ABF55BA76BA7F000101%40AdobeOrg";
@@ -18,7 +19,10 @@ export function setDataLayer(routerProps) {
 }
 
 function getDigitalDataForHome() {
-  const userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
+  let userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
+  if (userDetails) {
+    userDetails = JSON.parse(userDetails);
+  }
   const data = {
     page: {
       category: {
