@@ -181,10 +181,10 @@ const cart = (
     case cartActions.APPLY_USER_COUPON_SUCCESS:
       let couponList = cloneDeep(state.coupons.opencouponsList);
 
-      let CouponDetails = find(couponList, coupon => {
+      let couponDetails = find(couponList, coupon => {
         return coupon.couponCode === action.couponCode;
       });
-      let date = CouponDetails.couponExpiryDate;
+      let date = couponDetails.couponExpiryDate;
       let expiryTime = new Date(date.split(IST_TIME_ZONE).join());
       let expiryCouponDate = expiryTime.getTime();
       Cookies.createCookie(COUPON_COOKIE, action.couponCode, expiryCouponDate);

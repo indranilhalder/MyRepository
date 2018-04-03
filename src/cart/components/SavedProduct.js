@@ -18,7 +18,7 @@ export default class SavedProduct extends React.Component {
   }
   render() {
     let couponCookie = Cookie.getCookie(COUPON_COOKIE);
-    let couponText = this.props.cuponHeading;
+    let couponText = this.props.couponHeading;
     let couponButtonText;
 
     if (couponCookie) {
@@ -59,7 +59,7 @@ SavedProduct.propTypes = {
   giftCardLabel: PropTypes.string
 };
 SavedProduct.defaultProps = {
-  cuponHeading: "Have a Coupon ?",
+  couponHeading: "Have a Coupon ?",
   giftCardHeading: "Surprise for a special one ?",
   giftCardLabel: "Gift wrap for free"
 };
