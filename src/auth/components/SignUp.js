@@ -43,14 +43,13 @@ class SignUp extends Component {
       this.props.displayToast("Please fill valid mobile number");
       return false;
     }
-    if (!this.state.emailValue) {
-      this.props.displayToast("Please fill emailId ");
-      return false;
+    if (this.state.emailValue) {
+      if (!EMAIL_REGULAR_EXPRESSION.test(this.state.emailValue)) {
+        this.props.displayToast("Please fill valid emailId");
+        return false;
+      }
     }
-    if (!EMAIL_REGULAR_EXPRESSION.test(this.state.emailValue)) {
-      this.props.displayToast("Please fill valid emailId");
-      return false;
-    }
+
     if (!this.state.passwordValue) {
       this.props.displayToast("Please fill password");
       return false;
