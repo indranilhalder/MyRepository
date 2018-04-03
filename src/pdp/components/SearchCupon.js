@@ -22,6 +22,11 @@ export default class SearchCupon extends React.Component {
       this.props.applyUserCoupon(this.props.couponCode);
     }
   }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.couponCode !== this.props.couponCode) {
+      this.setState({ couponCode: this.props.couponCode });
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
