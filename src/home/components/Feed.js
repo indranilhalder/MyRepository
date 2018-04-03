@@ -37,6 +37,12 @@ import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
 import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
 import queryString from "query-string";
 import ProductCapsulesContainer from "../containers/ProductCapsulesContainer";
+import * as Cookie from "../../lib/Cookie";
+import {
+  LOGGED_IN_USER_DETAILS,
+  CUSTOMER_ACCESS_TOKEN
+} from "../../lib/constants";
+
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeKeyMapping = {
@@ -121,8 +127,13 @@ class Feed extends Component {
   }
 
   componentWillMount() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (this.props.isHomeFeedPage) {
       this.props.homeFeed();
+    }
+    if (userDetails && customerCookie) {
+      this.props.getWishListItems();
     }
   }
 

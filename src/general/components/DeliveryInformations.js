@@ -12,7 +12,7 @@ import CollectImage from "./img/collect.svg";
 import { EXPRESS, COLLECT } from "../../lib/constants";
 const EXPRESS_TEXT = "Express delivery";
 const HOME_TEXT = "Home delivery";
-const COLLECT_TEXT = "CliQ & PiQ";
+const COLLECT_TEXT = "CLiQ & PiQ";
 export default class DeliveryInformations extends React.Component {
   handleClick() {
     if (this.props.onClick) {

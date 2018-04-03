@@ -90,7 +90,7 @@ class ProductSellerPage extends Component {
 
   componentDidMount() {
     if (this.props.match.path === PRODUCT_OTHER_SELLER_ROUTER) {
-      this.props.getProductDescription(this.props.match.params[1]);
+      this.props.getProductDescription(this.props.match.params[0]);
     } else {
       //need to show error page
     }

@@ -11,6 +11,7 @@ import {
 const ADDRESS_BOOK_HEADER = "Add a new address";
 const DELETE_LABEL = "Delete";
 const EDIT_LABEL = "Edit";
+const NO_ADDRESS_TEXT = "No Saved Address";
 
 export default class AddressBook extends React.Component {
   componentDidMount() {
@@ -74,6 +75,10 @@ export default class AddressBook extends React.Component {
               </div>
             );
           })}
+        {this.props.userAddress &&
+          !this.props.userAddress.addresses && (
+            <div className={styles.noAddressBlock}>{NO_ADDRESS_TEXT}</div>
+          )}
         <div className={styles.buttonHolder}>
           <div className={styles.button}>
             <Button

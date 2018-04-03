@@ -33,7 +33,32 @@ class SignUp extends Component {
     }
   }
   onSubmit() {
-    if (this.props.onSubmit) {
+    const EMAIL_REGULAR_EXPRESSION = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    const MOBILE_PATTERN = /^[7,8,9]{1}[0-9]{9}$/;
+    if (!this.state.phoneNumberValue) {
+      this.props.displayToast("Please fill mobile number ");
+      return false;
+    }
+    if (!MOBILE_PATTERN.test(this.state.phoneNumberValue)) {
+      this.props.displayToast("Please fill valid mobile number");
+      return false;
+    }
+    if (!this.state.emailValue) {
+      this.props.displayToast("Please fill emailId ");
+      return false;
+    }
+    if (!EMAIL_REGULAR_EXPRESSION.test(this.state.emailValue)) {
+      this.props.displayToast("Please fill valid emailId");
+      return false;
+    }
+    if (!this.state.passwordValue) {
+      this.props.displayToast("Please fill password");
+      return false;
+    }
+    if (this.state.passwordValue.length < "8") {
+      this.props.displayToast("Password length should be minimum 8 character");
+      return false;
+    } else {
       this.props.onSubmit({
         emailId: this.state.emailValue,
         username: this.state.phoneNumberValue,
@@ -41,7 +66,6 @@ class SignUp extends Component {
       });
     }
   }
-
   navigateToLogin() {
     this.props.history.push(LOGIN_PATH);
   }

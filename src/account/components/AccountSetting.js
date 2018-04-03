@@ -16,6 +16,9 @@ export default class AccountSetting extends React.Component {
           <div className={styles.profileImageHolder}>
             <div className={styles.accountImage}>
               {this.props.image && <ProfileImage image={this.props.image} />}
+              <div className={styles.accountImageText}>
+                {this.props.firstName}
+              </div>
             </div>
             <div className={styles.headingText}>{this.props.heading}</div>
           </div>
@@ -63,6 +66,7 @@ export default class AccountSetting extends React.Component {
     );
   }
 }
+
 AccountSetting.propTypes = {
   orderPlaced: PropTypes.string,
   orderPlacedCount: PropTypes.string,

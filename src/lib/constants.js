@@ -3,6 +3,9 @@ import { PRODUCT_DESCRIPTION_REQUEST } from "../pdp/actions/pdp.actions";
 export const SUCCESS = "success";
 export const SUCCESS_UPPERCASE = "SUCCESS";
 export const SUCCESS_CAMEL_CASE = "Success";
+export const SUCCESS_FOR_ADDING_TO_WSHLIST =
+  "Product added successfully to the wishlist";
+
 export const REQUESTING = "requesting";
 export const ERROR = "error";
 export const FAILURE = "Failure";
@@ -126,6 +129,7 @@ export const CART_DETAILS_FOR_LOGGED_IN_USER = "cartDetails";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
+export const COUPON_COOKIE = "couponCode";
 
 export const SAVE_LIST_PAGE = "/default/wishList";
 export const PAYMENT_MODE_TYPE = "paymentMode";
@@ -163,3 +167,8 @@ export const CANCEL = "/cancel";
 export const CANCEL_PREFIX = "/cancel/(.*)";
 
 export const WALLET = "WALLET";
+
+// COPY
+
+export const REVIEW_SUBMIT_TOAST_TEXT =
+  "Your review has been submitted and will be displayed after moderation";

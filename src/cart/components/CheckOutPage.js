@@ -15,8 +15,9 @@ import CartItem from "./CartItem";
 import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
 import filter from "lodash/filter";
+import find from "lodash/find";
 import OrderConfirmation from "./OrderConfirmation";
-import queryString from "query-string";
+import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
 
 import {
@@ -62,9 +63,14 @@ class CheckOutPage extends React.Component {
     isRemainingAmount: true,
     payableAmount: "",
     cliqCashAmount: "",
-    bagAmount: ""
+    bagAmount: "",
+    selectedDeliveryDetails: "",
+    ratingExperience: false
   };
-
+  updateLocalStoragePinCode(pincode) {
+    const postalCode = parseInt(pincode);
+    localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
+  }
   renderLoader() {
     return (
       <div className={styles.loadingIndicator}>
@@ -89,11 +95,31 @@ class CheckOutPage extends React.Component {
       Object.assign(currentSelectedDeliveryModes, newDeliveryObj);
       this.setState({ ussIdAndDeliveryModesObj: currentSelectedDeliveryModes });
     }
+    let deliveryModeDetails = find(
+      this.props.cart.cartDetailsCNC.products,
+      product => {
+        return product.USSID === ussId;
+      }
+    );
+    if (deliveryModeDetails) {
+      let SelectedDeliveryDetails = find(
+        deliveryModeDetails.elligibleDeliveryMode,
+        elgibleDeliverMode => {
+          return elgibleDeliverMode.code === deliveryMode;
+        }
+      );
+      this.setState({ selectedDeliveryDetails: SelectedDeliveryDetails });
+    }
   }
 
   getAllStores = selectedProductsUssIdForCliqAndPiq => {
+    const defalutPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.setState({ showCliqAndPiq: true, selectedProductsUssIdForCliqAndPiq });
-    this.props.getAllStoresCNC(this.state.selectedAddress.postalCode);
+    this.props.getAllStoresCNC(defalutPinCode);
+  };
+  changePincodeOnCliqAndPiq = pincode => {
+    this.updateLocalStoragePinCode(pincode);
+    this.props.getAllStoresCNC(pincode);
   };
   togglePickupPersonForm() {
     this.setState(prevState => ({
@@ -227,6 +253,7 @@ class CheckOutPage extends React.Component {
         addPickupPersonCNC={(mobile, name) =>
           this.addPickupPersonCNC(mobile, name)
         }
+        changePincode={pincode => this.changePincodeOnCliqAndPiq(pincode)}
         goBack={() => this.removeCliqAndPiq()}
       />
     );
@@ -277,7 +304,7 @@ class CheckOutPage extends React.Component {
     );
   }
   changeDeliveryAddress = () => {
-    this.setState({ confirmAddress: false });
+    this.setState({ confirmAddress: false, deliverMode: false });
   };
 
   componentWillReceiveProps(nextProps) {
@@ -310,7 +337,8 @@ class CheckOutPage extends React.Component {
         }
         this.setState({
           payableAmount:
-            nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.formattedValue,
+            nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount
+              .formattedValue,
           cliqCashAmount: cliqCashAmount,
           bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
         });
@@ -404,21 +432,23 @@ class CheckOutPage extends React.Component {
   }
 
   onSelectAddress(selectedAddress) {
-    let addressSelected = filter(
+    let addressSelected = find(
       this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
       address => {
         return address.id === selectedAddress[0];
       }
     );
+
+    this.updateLocalStoragePinCode(addressSelected.postalCode);
     // here we are checking the if user selected any address then setting our state
     // and in else condition if user deselect then this function will again call and
     //  then we are resetting the previous selected address
     if (selectedAddress[0]) {
       this.setState({
         confirmAddress: false,
-        selectedAddress: addressSelected[0]
+        selectedAddress: addressSelected
       });
-      this.setState({ addressId: addressSelected });
+      this.setState({ addressId: addressSelected.id });
     } else {
       this.setState({ addressId: null, selectedAddress: null });
     }
@@ -433,7 +463,7 @@ class CheckOutPage extends React.Component {
   handleSubmit = () => {
     if (!this.state.confirmAddress && !this.state.isGiftCard) {
       this.props.addAddressToCart(
-        this.state.addressId[0].id,
+        this.state.addressId,
         this.state.selectedAddress.postalCode
       );
       this.setState({ confirmAddress: true });
@@ -462,7 +492,7 @@ class CheckOutPage extends React.Component {
       } else {
         this.props.softReservationPaymentForSavedCard(
           this.state.savedCardDetails,
-          this.state.addressId[0],
+          this.state.addressId,
           this.state.paymentModeSelected
         );
       }
@@ -571,7 +601,7 @@ class CheckOutPage extends React.Component {
     cardDetails.pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.props.softReservationForPayment(
       cardDetails,
-      this.state.addressId[0],
+      this.state.selectedAddress,
       this.state.paymentModeSelected
     );
   };
@@ -668,8 +698,8 @@ class CheckOutPage extends React.Component {
             !this.state.showCliqAndPiq && (
               <div className={styles.deliveryAddress}>
                 <DeliveryAddressSet
-                  addressType={this.state.addressId[0].addressType}
-                  address={this.state.addressId[0].line1}
+                  addressType={this.state.selectedAddress.addressType}
+                  address={this.state.selectedAddress.line1}
                   changeDeliveryAddress={() => this.changeDeliveryAddress()}
                 />
               </div>
@@ -689,6 +719,7 @@ class CheckOutPage extends React.Component {
                 <DeliveryModeSet
                   productDelivery={this.props.cart.cartDetailsCNC.products}
                   changeDeliveryModes={() => this.changeDeliveryModes()}
+                  selectedDeliveryDetails={this.state.selectedDeliveryDetails}
                 />
               </div>
             )}
@@ -743,17 +774,27 @@ class CheckOutPage extends React.Component {
             </div>
           )}
 
-          {(this.state.isGiftCard || !this.state.showCliqAndPiq) && (
-            <Checkout
-              amount={this.state.payableAmount}
-              bagTotal={this.state.bagAmount}
-              tax={this.props.tax}
-              offers={this.props.offers}
-              delivery={this.props.delivery}
-              payable={this.state.payableAmount}
-              onCheckout={this.handleSubmit}
-            />
-          )}
+          {(this.state.isGiftCard || !this.state.showCliqAndPiq) &&
+            this.props.cart.cartDetailsCNC && (
+              <Checkout
+                amount={this.state.payableAmount}
+                bagTotal={this.state.bagAmount}
+                payable={this.state.payableAmount}
+                coupons={
+                  this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
+                    .formattedValue
+                }
+                discount={
+                  this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
+                    .formattedValue
+                }
+                delivery={
+                  this.props.cart.cartDetailsCNC.products[0]
+                    .elligibleDeliveryMode[0].deliveryCost
+                }
+                onCheckout={this.handleSubmit}
+              />
+            )}
         </div>
       );
     } else if (this.state.orderConfirmation) {

@@ -1,12 +1,15 @@
 import * as cartActions from "../actions/cart.actions";
 import cloneDeep from "lodash/cloneDeep";
 import * as Cookies from "../../lib/Cookie";
+import { CLEAR_ERROR } from "../../general/error.actions.js";
 import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
-  OLD_CART_GU_ID
+  OLD_CART_GU_ID,
+  COUPON_COOKIE
 } from "../../lib/constants";
-
+import find from "lodash/find";
+const IST_TIME_ZONE = "IST";
 const cart = (
   state = {
     status: null,
@@ -28,6 +31,7 @@ const cart = (
 
     couponStatus: null,
     couponError: null,
+    coupons: null,
 
     deliveryModes: null,
     userAddress: null,
@@ -41,7 +45,6 @@ const cart = (
     orderSummary: null,
     orderSummaryStatus: null,
     orderSummaryError: null,
-    coupons: null,
 
     storeDetails: [],
     storeStatus: null,
@@ -131,6 +134,24 @@ const cart = (
 ) => {
   let updatedCartDetailsCNC;
   switch (action.type) {
+    case CLEAR_ERROR:
+      return Object.assign({}, state, {
+        userCartError: null,
+        cartDetailsError: null,
+        cartDetailsCNCError: null,
+        couponError: null,
+        emiBankError: null,
+        softReserveError: null,
+        paymentsModeError: null,
+        bankOfferError: null,
+        cliqCashPaymentStatusError: null,
+        jusPayError: null,
+        transactionDetailsError: null,
+        orderConfirmationDetailsError: null,
+        jusPayPaymentDetailsError: null,
+        codEligibilityError: null,
+        binValidationCODError: null
+      });
     case cartActions.CART_DETAILS_REQUEST:
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
@@ -158,32 +179,26 @@ const cart = (
       });
 
     case cartActions.APPLY_USER_COUPON_SUCCESS:
+      let couponList = cloneDeep(state.coupons.opencouponsList);
+
+      let couponDetails = find(couponList, coupon => {
+        return coupon.couponCode === action.couponCode;
+      });
+      let date = couponDetails.couponExpiryDate;
+      let expiryTime = new Date(date.split(IST_TIME_ZONE).join());
+      let expiryCouponDate = expiryTime.getTime();
+      Cookies.createCookie(COUPON_COOKIE, action.couponCode, expiryCouponDate);
+
+      let carDetailsCopy = cloneDeep(state.cartDetails);
+      let cartAmount = action.couponResult.cartAmount;
+      carDetailsCopy.cartAmount = cartAmount;
       return Object.assign({}, state, {
         couponStatus: action.status,
+        cartDetails: carDetailsCopy,
         loading: false
       });
 
     case cartActions.APPLY_USER_COUPON_FAILURE:
-      return Object.assign({}, state, {
-        couponStatus: action.status,
-        couponError: action.error,
-        loading: false
-      });
-
-    case cartActions.GET_COUPON_REQUEST:
-      return Object.assign({}, state, {
-        couponStatus: action.status,
-        loading: true
-      });
-
-    case cartActions.GET_COUPON_SUCCESS:
-      return Object.assign({}, state, {
-        couponStatus: action.status,
-        loading: false,
-        coupons: action.coupons
-      });
-
-    case cartActions.GET_COUPON_FAILURE:
       return Object.assign({}, state, {
         couponStatus: action.status,
         couponError: action.error,
@@ -197,6 +212,7 @@ const cart = (
       });
 
     case cartActions.RELEASE_USER_COUPON_SUCCESS:
+      Cookies.deleteCookie(COUPON_COOKIE);
       return Object.assign({}, state, {
         couponStatus: action.status,
         loading: false
@@ -741,23 +757,20 @@ const cart = (
 
     case cartActions.ORDER_EXPERIENCE_CAPTURE_REQUEST:
       return Object.assign({}, state, {
-        orderExperienceStatus: action.status,
-        loading: true
+        orderExperienceStatus: action.status
       });
 
     case cartActions.ORDER_EXPERIENCE_CAPTURE_SUCCESS: {
       return Object.assign({}, state, {
         orderExperienceStatus: action.status,
-        orderExperience: action.orderExperience,
-        loading: false
+        orderExperience: action.orderExperience
       });
     }
 
     case cartActions.ORDER_EXPERIENCE_CAPTURE_FAILURE:
       return Object.assign({}, state, {
         orderExperienceStatus: action.status,
-        orderExperienceError: action.error,
-        loading: false
+        orderExperienceError: action.error
       });
 
     case cartActions.GET_COD_ELIGIBILITY_FAILURE:
@@ -939,6 +952,25 @@ const cart = (
     case cartActions.ADD_USER_ADDRESS_FAILURE:
       return Object.assign({}, state, {
         AddUserAddressStatus: action.status,
+        loading: false
+      });
+    case cartActions.DISPLAY_COUPON_REQUEST:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.DISPLAY_COUPON_SUCCESS:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        coupons: action.couponDetails,
+        loading: false
+      });
+
+    case cartActions.DISPLAY_COUPON_FAILURE:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        couponError: action.error,
         loading: false
       });
 

@@ -18,19 +18,21 @@ import { SUCCESS } from "../../lib/constants";
 import {
   applyBankOffer,
   releaseBankOffer,
-  applyUserCoupon,
-  releaseUserCoupon,
+  applyUserCouponForAnonymous,
   getUserAddress,
   mergeCartId,
   generateCartIdForLoggedInUser,
-  getCartId
+  getCartId,
+  applyUserCouponForLoggedInUsers,
+  releaseCouponForAnonymous,
+  releaseUserCoupon
 } from "../../cart/actions/cart.actions";
 import {
   getOtpToActivateWallet,
   verifyWallet,
   submitSelfCourierReturnInfo
 } from "../../account/actions/account.actions";
-
+import { createWishlist } from "../../wishlist/actions/wishlist.actions";
 const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
@@ -73,11 +75,13 @@ const mapDispatchToProps = dispatch => {
             ) {
               // This is the anonymous case
               // And I have an existing cart that needs to be merged.
+              dispatch(createWishlist());
               dispatch(mergeCartId(cartVal.cartDetails.guid));
             } else {
               const createdCartVal = await dispatch(
                 generateCartIdForLoggedInUser()
               );
+              dispatch(createWishlist());
               dispatch(mergeCartId(createdCartVal.cartDetails.guid));
             }
           }
@@ -102,11 +106,17 @@ const mapDispatchToProps = dispatch => {
     releaseBankOffer: couponCode => {
       dispatch(releaseBankOffer(couponCode));
     },
-    applyUserCoupon: couponCode => {
-      dispatch(applyUserCoupon(couponCode));
+    applyUserCouponForAnonymous: couponCode => {
+      dispatch(applyUserCouponForAnonymous(couponCode));
     },
-    releaseUserCoupon: couponCode => {
-      dispatch(releaseUserCoupon(couponCode));
+    releaseCouponForAnonymous: (oldCouponCode, newCouponCode) => {
+      dispatch(releaseCouponForAnonymous(oldCouponCode, newCouponCode));
+    },
+    applyUserCouponForLoggedInUsers: couponCode => {
+      dispatch(applyUserCouponForLoggedInUsers(couponCode));
+    },
+    releaseUserCoupon: (oldCouponCode, newCouponCode) => {
+      dispatch(releaseUserCoupon(oldCouponCode, newCouponCode));
     },
     getUserAddress: () => {
       dispatch(getUserAddress());

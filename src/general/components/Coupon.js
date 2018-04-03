@@ -21,7 +21,7 @@ export default class Coupon extends React.Component {
           <div className={styles.headingText}>{this.props.heading}</div>
           <div className={styles.button}>
             <UnderLinedButton
-              label="Apply"
+              label={this.props.couponButtonText}
               onClick={() => {
                 this.handleClick();
               }}
@@ -37,4 +37,7 @@ Coupon.propTypes = {
   heading: PropTypes.string,
   label: PropTypes.string,
   onClick: PropTypes.func
+};
+Coupon.defaultProps = {
+  couponButtonText: "Apply"
 };

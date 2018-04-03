@@ -19,7 +19,8 @@ import {
   GLOBAL_ACCESS_TOKEN,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  ANONYMOUS_USER
+  ANONYMOUS_USER,
+  REVIEW_SUBMIT_TOAST_TEXT
 } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
 
@@ -30,9 +31,9 @@ class ProductReviewPage extends Component {
 
   componentDidMount() {
     if (!this.props.productDetails) {
-      this.props.getProductDescription(this.props.match.params[1]);
+      this.props.getProductDescription(this.props.match.params[0]);
     }
-    this.props.getProductReviews(this.props.match.params[1]);
+    this.props.getProductReviews(this.props.match.params[0]);
   }
 
   reviewSection = () => {
@@ -44,10 +45,12 @@ class ProductReviewPage extends Component {
   };
 
   onSubmit = productReview => {
+    this.props.displayToast(REVIEW_SUBMIT_TOAST_TEXT);
     this.props.addProductReview(
       this.props.productDetails.productListingId,
       productReview
     );
+    this.setState({ visible: false });
   };
   onCancel() {
     this.setState({ visible: false });
@@ -143,10 +146,12 @@ class ProductReviewPage extends Component {
               />
               <RatingHolder ratingData={this.props.ratingData} />
             </div>
-            <div className={styles.reviewText} onClick={this.reviewSection}>
-              {WRITE_REVIEW_TEXT}
+            <div className={styles.reviewHolder}>
+              <div className={styles.reviewText} onClick={this.reviewSection}>
+                {WRITE_REVIEW_TEXT}
+              </div>
+              {this.renderReviewSection()}
             </div>
-            {this.renderReviewSection()}
             {this.props.reviews && (
               <ReviewList reviewList={this.props.reviews.reviews} />
             )}

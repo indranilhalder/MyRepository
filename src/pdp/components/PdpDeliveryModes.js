@@ -10,23 +10,6 @@ export default class PdpDeliveryModes extends React.Component {
     return (
       <div className={styles.base}>
         <DeliveryInformation
-          type={HOME_DELIVERY}
-          available={eligibleDeliveryModes
-            .map(val => {
-              return val.code;
-            })
-            .includes(HOME_DELIVERY)}
-          placedTime={
-            deliveryModesATP
-              .filter(val => {
-                return val.key === HOME_DELIVERY;
-              })
-              .map(val => {
-                return val.value;
-              })[0]
-          }
-        />
-        <DeliveryInformation
           type={EXPRESS}
           available={eligibleDeliveryModes
             .map(val => {
@@ -43,6 +26,24 @@ export default class PdpDeliveryModes extends React.Component {
               })[0]
           }
         />
+        <DeliveryInformation
+          type={HOME_DELIVERY}
+          available={eligibleDeliveryModes
+            .map(val => {
+              return val.code;
+            })
+            .includes(HOME_DELIVERY)}
+          placedTime={
+            deliveryModesATP
+              .filter(val => {
+                return val.key === HOME_DELIVERY;
+              })
+              .map(val => {
+                return val.value;
+              })[0]
+          }
+        />
+
         <DeliveryInformation
           type={COLLECT}
           available={eligibleDeliveryModes

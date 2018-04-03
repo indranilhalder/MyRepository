@@ -19,7 +19,9 @@ export default class DeliveryModeSet extends React.Component {
           return (
             <div className={styles.base} key={i}>
               <div className={styles.productName}>{data.productName}</div>
-              <div className={styles.deliveryWay}>{data.deliveryWay}</div>
+              <div className={styles.deliveryWay}>{`${
+                this.props.selectedDeliveryDetails.name
+              }:${this.props.selectedDeliveryDetails.desc}`}</div>
             </div>
           );
         })}

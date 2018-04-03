@@ -18,7 +18,6 @@ import {
   LOGIN_PATH
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-
 export default class MyAccount extends React.Component {
   constructor(props) {
     super(props);
@@ -47,7 +46,6 @@ export default class MyAccount extends React.Component {
   }
   render() {
     const userDetailsCookie = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetailsCookie || !customerCookie) {
       return this.navigateToLogin();
@@ -60,6 +58,7 @@ export default class MyAccount extends React.Component {
           <AccountSetting
             image={userDetails.imageUrl}
             onClick={() => this.renderToAccountSetting()}
+            firstName={userDetails && userDetails.firstName.charAt(0)}
             heading={
               userDetails &&
               userDetails.firstName &&

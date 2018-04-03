@@ -15,19 +15,20 @@ export default class CartItem extends React.Component {
       showDelivery: this.props.showDelivery ? this.props.showDelivery : false,
       selectedValue: "",
       label: "See all",
-      maxQuantityAllowed: 1,
-      qtySelectedByUser: 1,
+      maxQuantityAllowed: props.product && props.product.maxQuantityAllowed,
+      qtySelectedByUser: props.product && props.product.qtySelectedByUser,
       quantityList: []
     };
   }
+
   handleSave(product) {
     if (this.props.onSave) {
       this.props.onSave(product);
     }
   }
-  handleRemove(index, pinCode) {
+  handleRemove(index) {
     if (this.props.onRemove) {
-      this.props.onRemove(index, pinCode);
+      this.props.onRemove(index);
     }
   }
   selectDeliveryMode(val) {
@@ -52,10 +53,12 @@ export default class CartItem extends React.Component {
   componentWillMount() {
     this.setQuantity();
   }
+
   handleQuantityChange(changedValue) {
-    this.setState({ selectedValue: changedValue }, () => {
+    const updatedQuantity = parseInt(changedValue);
+    this.setState({ selectedValue: updatedQuantity }, () => {
       if (this.props.onQuantityChange) {
-        this.props.onQuantityChange(this.props.index, this.state.selectedValue);
+        this.props.onQuantityChange(this.props.entryNumber, updatedQuantity);
       }
     });
   }
@@ -66,7 +69,7 @@ export default class CartItem extends React.Component {
     });
 
     if (this.state.quantityList.length === 0) {
-      let fetchedQuantityList = [];
+      let fetchedQuantityList = [{ value: "Qut" }];
       for (let i = 1; i <= parseInt(this.props.maxQuantityAllowed, 10); i++) {
         fetchedQuantityList.push({ value: i.toString() });
       }
@@ -76,13 +79,6 @@ export default class CartItem extends React.Component {
     }
   };
   render() {
-    let isServiceAble = false;
-    if (this.props.productIsServiceable) {
-      if (this.props.productIsServiceable.isServicable === "Y") {
-        isServiceAble = true;
-      }
-    }
-
     return (
       <div className={styles.base}>
         <div className={styles.productInformation}>
@@ -91,21 +87,23 @@ export default class CartItem extends React.Component {
             productName={this.props.productName}
             productDetails={this.props.productDetails}
             price={this.props.price}
-            isServiceAvailable={isServiceAble}
+            isServiceAvailable={this.props.productIsServiceable}
           />
         </div>
         {this.props.deliveryInformation &&
           this.props.deliveryInfoToggle && (
             <div className={styles.deliverTimeAndButton}>
-              <div className={styles.hideButton}>
-                <UnderLinedButton
-                  size="14px"
-                  fontFamily="regular"
-                  color="#000"
-                  label={this.state.label}
-                  onClick={() => this.onHide()}
-                />
-              </div>
+              {this.props.deliveryInformation.length > 1 && (
+                <div className={styles.hideButton}>
+                  <UnderLinedButton
+                    size="14px"
+                    fontFamily="regular"
+                    color="#000"
+                    label={this.state.label}
+                    onClick={() => this.onHide()}
+                  />
+                </div>
+              )}
               <span>
                 {this.props.deliveryType} :{" "}
                 <span>{this.props.deliverTime}</span>
@@ -125,9 +123,7 @@ export default class CartItem extends React.Component {
           <div className={styles.footer}>
             <BagPageFooter
               onSave={() => this.handleSave(this.props.product)}
-              onRemove={() =>
-                this.handleRemove(this.props.index, this.state.pinCode)
-              }
+              onRemove={() => this.handleRemove(this.props.index)}
             />
             <div className={styles.dropdown}>
               <div className={styles.dropdownLabel}>
@@ -137,7 +133,7 @@ export default class CartItem extends React.Component {
                 borderNone={true}
                 placeholder="1"
                 options={this.state.quantityList}
-                selected={this.state.selectedValue}
+                selected={this.state.qtySelectedByUser}
                 onChange={val => this.handleQuantityChange(val)}
                 value={this.state.qtySelectedByUser}
               />

@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./CuponDetails.css";
 import CheckBox from "../../general/components/CheckBox.js";
 import PropTypes from "prop-types";
+const COUPON_TYPE = "COUPON";
 export default class CuponDetails extends React.Component {
   handleClick(val) {
     if (this.props.selectItem) {
@@ -12,14 +13,16 @@ export default class CuponDetails extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.cuponCard} onClick={() => this.handleClick()}>
-          <div className={styles.headerText}>
-            <span>{this.props.promotionTitle}</span>
-            {this.props.selectItem && (
-              <div className={styles.checkBoxHolder}>
-                <CheckBox selected={this.props.selected} />
-              </div>
-            )}
-          </div>
+          {this.props.couponType === COUPON_TYPE && (
+            <div className={styles.headerText}>
+              <span>{this.props.promotionTitle}</span>
+              {this.props.selectItem && (
+                <div className={styles.checkBoxHolder}>
+                  <CheckBox selected={this.props.selected} />
+                </div>
+              )}
+            </div>
+          )}
           <div
             className={styles.promotionDetailsText}
             dangerouslySetInnerHTML={{
