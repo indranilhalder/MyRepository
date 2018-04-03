@@ -67,10 +67,15 @@ export default class Plp extends React.Component {
   }
   componentDidUpdate(prevProps) {
     if (this.props.productListings !== null) {
+      const slug = this.props.match.params.slug;
+      let splitSlug = "Tata Cliq";
+      if (slug) {
+        splitSlug = this.props.match.params.slug.replace(/-/g, " ");
+        splitSlug = splitSlug.replace(/\b\w/g, l => l.toUpperCase());
+      }
+
       this.props.setHeaderText(
-        `${this.props.match.params.slug}(${
-          this.props.productListings.pagination.totalResults
-        })`
+        `${splitSlug} (${this.props.productListings.pagination.totalResults})`
       );
     }
   }
