@@ -174,6 +174,7 @@ export const PRODUCT_PATH = "v2/mpl/products";
 export const PIN_PATH = "v2/mpl/";
 
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
+export const LOGOUT = "LOGOUT";
 
 const API_KEY_FOR_MSD = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
 const NUMBER_OF_RESULTS_FOR_BRANDS = [25];
@@ -1748,10 +1749,7 @@ export function redeemCliqVoucher(cliqCashDetails, fromCheckout) {
   };
 }
 export function logout() {
-  return async (dispatch, getState, { api }) => {
-    Cookie.deleteCookie(CUSTOMER_ACCESS_TOKEN);
-    Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-    Cookie.deleteCookie(LOGGED_IN_USER_DETAILS);
-    localStorage.clear();
+  return {
+    type: LOGOUT
   };
 }
