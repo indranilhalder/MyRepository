@@ -106,6 +106,7 @@ public class MplNoCostEMIVoucher extends GeneratedMplNoCostEMIVoucher
 				{ voucherCode, voucher.getName() }), 0);
 			}
 		}
+		super.setVoucherCode(ctx, voucherCode);
 	}
 
 }
