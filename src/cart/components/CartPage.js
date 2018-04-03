@@ -22,9 +22,9 @@ import {
   CHECKOUT_ROUTER,
   LOGIN_PATH,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
-  YES
+  YES,
+  YOUR_BAG
 } from "../../lib/constants";
-import { YOUR_BAG } from "../../lib/headerName";
 import * as Cookie from "../../lib/Cookie";
 
 class CartPage extends React.Component {

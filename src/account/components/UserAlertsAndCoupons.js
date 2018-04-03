@@ -12,9 +12,10 @@ import {
   MY_ACCOUNT_COUPON_PAGE,
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
-  LOGIN_PATH
+  LOGIN_PATH,
+  ALERTS_COUPON
 } from "../../lib/constants";
-import { ALERTS_COUPON } from "../../lib/headerName";
+
 import * as styles from "./UserAlertsAndCoupons.css";
 
 const URL_PATH_ALERTS = `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ALERTS_PAGE}`;

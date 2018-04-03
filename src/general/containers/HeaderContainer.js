@@ -6,9 +6,6 @@ const mapDispatchToProps = dispatch => {
   return {
     setHeaderText: text => {
       dispatch(setHeaderText(text));
-    },
-    clearHeaderText: () => {
-      dispatch(clearHeaderText());
     }
   };
 };

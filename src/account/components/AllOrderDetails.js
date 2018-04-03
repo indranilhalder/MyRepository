@@ -15,9 +15,10 @@ import {
   ORDER_CODE,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  LOGIN_PATH
+  LOGIN_PATH,
+  ORDER_HISTORY
 } from "../../lib/constants";
-import { ORDER_HISTORY } from "../../lib/headerName";
+
 import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 export default class AllOrderDetails extends React.Component {

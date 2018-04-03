@@ -8,7 +8,7 @@ import {
   getUserAddress,
   selectDeliveryMode,
   getOrderSummary,
-  applyUserCoupon,
+  // applyUserCoupon,
   releaseUserCoupon,
   getAllStoresCNC,
   addStoreCNC,
@@ -89,16 +89,15 @@ const mapDispatchToProps = dispatch => {
     setHeaderText: text => {
       dispatch(setHeaderText(text));
     },
-    getCoupons: () => {
-      dispatch(getCoupons());
-    },
-    applyUserCoupon: () => {
-      dispatch(applyUserCoupon());
-    },
-    applyUserCouponForAnonymous: couponCode => {
-      dispatch(applyUserCouponForAnonymous(couponCode));
-
-    },
+    // getCoupons: () => {
+    //   dispatch(getCoupons());
+    // },
+    // applyUserCoupon: () => {
+    //   dispatch(applyUserCoupon());
+    // },
+    // applyUserCouponForAnonymous: couponCode => {
+    //   dispatch(applyUserCouponForAnonymous(couponCode));
+    // },
     releaseUserCoupon: () => {
       dispatch(releaseUserCoupon());
     },

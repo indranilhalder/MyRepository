@@ -4,7 +4,7 @@ import CategoryL2 from "./CategoryL2";
 import CategoryL3 from "./CategoryL3";
 import styles from "./CategoriesPage.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
-import { CATEGORIES } from "../../lib/headerName";
+import { CATEGORIES } from "../../lib/constants";
 export default class CategoriesPage extends React.Component {
   constructor(props) {
     super(props);

@@ -66,7 +66,6 @@ export default class Plp extends React.Component {
     window.addEventListener("scroll", this.throttledScroll);
   }
   componentDidUpdate(prevProps) {
-    console.log("maa tara");
     if (this.props.productListings !== null) {
       this.props.setHeaderText(
         `${this.props.match.params.slug}(${
@@ -74,12 +73,6 @@ export default class Plp extends React.Component {
         })`
       );
     }
-
-    // this.props.setHeaderText(
-    //   `${this.props.match.params.slug}(${
-    //     this.props.productListings.pagination.totalResults
-    //   })`
-    // );
   }
   backPage = () => {
     if (this.state.showFilter) {

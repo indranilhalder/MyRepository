@@ -11,9 +11,9 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
   ANONYMOUS_USER,
-  LOGIN_PATH
+  LOGIN_PATH,
+  SAVED_LIST
 } from "../../lib/constants";
-import { SAVED_LIST } from "../../lib/headerName";
 import * as Cookie from "../../lib/Cookie";
 const dateFormat = "MMMM DD YYYY";
 const PRODUCT_QUANTITY = "1";

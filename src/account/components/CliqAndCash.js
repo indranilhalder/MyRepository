@@ -13,9 +13,10 @@ import {
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_PAGE,
   SUCCESS,
-  FAILURE
+  FAILURE,
+  CLIQ_CASH
 } from "../../lib/constants.js";
-import { CLIQ_CASH } from "../../lib/headerName";
+
 const DATE_FORMAT = "DD/MM/YYYY, hh:mm";
 
 export default class CliqAndCash extends React.Component {

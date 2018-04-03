@@ -32,7 +32,7 @@ import {
   PAYTM,
   WALLET
 } from "../../lib/constants";
-import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
+import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
@@ -80,7 +80,7 @@ class CheckOutPage extends React.Component {
     );
   }
   componentDidUpdate() {
-    this.props.setHeaderText("Checkout");
+    this.props.setHeaderText(CHECKOUT);
   }
   renderConfirmAddress = () => {
     if (this.state.confirmAddress) {

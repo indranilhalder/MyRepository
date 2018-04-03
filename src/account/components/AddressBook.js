@@ -6,9 +6,10 @@ import MDSpinner from "react-md-spinner";
 import {
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
-  MY_ACCOUNT_ADDRESS_ADD_PAGE
+  MY_ACCOUNT_ADDRESS_ADD_PAGE,
+  ADDRESS_BOOK
 } from "../../lib/constants.js";
-import { ADDRESS_BOOK } from "../../lib/headerName";
+
 const ADDRESS_BOOK_HEADER = "Add a new address";
 const DELETE_LABEL = "Delete";
 const EDIT_LABEL = "Edit";

@@ -10,9 +10,9 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   LOGIN_PATH,
-  CHECKOUT_ROUTER
+  CHECKOUT_ROUTER,
+  GIFT_CARD
 } from "../../lib/constants";
-import { GIFT_CARD } from "../../lib/headerName";
 import { SUCCESS } from "../../lib/constants.js";
 import * as Cookie from "../../lib/Cookie";
 const PRODUCT_ID = "MP000000000127263";

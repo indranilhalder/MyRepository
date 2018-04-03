@@ -15,9 +15,10 @@ import {
   MY_ACCOUNT_UPDATE_PROFILE_PAGE,
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
-  LOGIN_PATH
+  LOGIN_PATH,
+  MY_CLIQ
 } from "../../lib/constants";
-import { MY_CLIQ } from "../../lib/headerName";
+
 import * as Cookie from "../../lib/Cookie";
 export default class MyAccount extends React.Component {
   constructor(props) {

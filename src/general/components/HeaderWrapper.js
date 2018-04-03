@@ -72,18 +72,6 @@ class HeaderWrapper extends React.Component {
       canGoBack = false;
     }
 
-    // if (url === HOME_ROUTER) {
-    //   headerText;
-    // }
-
-    // if (url === CATEGORIES_LANDING_PAGE) {
-    //   headerText
-    // }
-
-    // if (url === DEFAULT_BRANDS_LANDING_PAGE) {
-    //   headerText;
-    // }
-
     if (url === LOGIN_PATH || url === SIGN_UP_PATH) {
       shouldRenderHeader = false;
     }
