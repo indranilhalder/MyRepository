@@ -27,7 +27,7 @@ class SignUp extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.user) {
-      if (nextProps.user.isLoggedIn === true) {
+      if (nextProps.loading === false) {
         this.props.history.push(HOME_ROUTER);
       }
     }
@@ -112,7 +112,7 @@ class SignUp extends Component {
       footerClick = () => this.navigateToLogin();
       showSocialButtons = true;
     }
-    if (this.props.user.loading) {
+    if (this.props.loading) {
       return (
         <div className={styles.loadingIndicator}>
           <MDSpinner />

@@ -18,7 +18,7 @@ import {
 } from "../../general/modal.actions.js";
 import { homeFeed } from "../../home/actions/home.actions";
 import Login from "../components/Login.js";
-import { SUCCESS } from "../../lib/constants";
+import { SUCCESS, REQUESTING } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
 export const OTP_VERIFICATION_REQUIRED_MESSAGE = "OTP VERIFICATION REQUIRED";
 
@@ -52,7 +52,7 @@ const mapDispatchToProps = dispatch => {
               generateCartIdForLoggedInUser()
             );
             if (newCartIdObj.status === SUCCESS) {
-              dispatch(mergeCartId(cartVal.cartDetails.guid));
+              await dispatch(mergeCartId(cartVal.cartDetails.guid));
             }
           }
         } else if (
@@ -70,8 +70,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    user: state.user,
-    cart: state.cart
+    loading: state.user.testLoggedIn
   };
 };
 

@@ -16,7 +16,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    loading: state.user.testLoggedIn
   };
 };
 

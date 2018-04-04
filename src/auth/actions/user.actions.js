@@ -53,11 +53,6 @@ export const FACE_BOOK_LOGIN_FAILURE = "FACE_BOOK_LOGIN_FAILURE";
 export const GOOGLE_PLUS_LOGIN_REQUEST = "GOOGLE_PLUS_LOGIN_REQUEST";
 export const GOOGLE_PLUS_LOGIN_FAILURE = "GOOGLE_PLUS_LOGIN_FAILURE";
 
-export const GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_REQUEST =
-  "GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_REQUEST";
-export const GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_FAILURE =
-  "GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_FAILURE";
-
 export const SOCIAL_MEDIA_REGISTRATION_REQUEST =
   "SOCIAL_MEDIA_REGISTRATION_REQUEST";
 export const SOCIAL_MEDIA_REGISTRATION_SUCCESS =
@@ -620,21 +615,6 @@ export function googlePlusLogin(type) {
     } catch (e) {
       return dispatch(googlePlusLoginFailure(e));
     }
-  };
-}
-
-export function generateCustomerLevelAccessTokenRequest() {
-  return {
-    type: GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_REQUEST,
-    status: REQUESTING
-  };
-}
-
-export function generateCustomerLevelAccessTokenFailure(error) {
-  return {
-    type: GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_FAILURE,
-    status: ERROR,
-    error
   };
 }
 

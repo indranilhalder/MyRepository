@@ -16,6 +16,9 @@ const cart = (
     error: null,
     loading: false,
     type: null,
+    cartIdForLoggedInUserStatus: null,
+    cartIdForAnonymousUserStatus: null,
+    mergeCartIdStatus: null,
 
     userCart: null,
     userCartStatus: null,
@@ -325,12 +328,7 @@ const cart = (
         loading: false
       });
 
-    case cartActions.GENERATE_CART_ID_REQUEST:
-      return Object.assign({}, state, {
-        status: action.status
-      });
-
-    case cartActions.GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS:
+    case cartActions.GENERATE_CART_ID_FOR_LOGGED_IN_USER_SUCCESS:
       let cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       if (!cartDetails) {
         Cookies.createCookie(
@@ -339,21 +337,33 @@ const cart = (
         );
       }
       return Object.assign({}, state, {
-        status: action.status
+        cartIdForLoggedInUserStatus: action.status
+      });
+    case cartActions.GENERATE_CART_ID_FOR_LOGGED_IN_USER_REQUEST:
+      return Object.assign({}, state, {
+        cartIdForLoggedInUserStatus: action.status
+      });
+    case cartActions.GENERATE_CART_ID_FOR_LOGGED_IN_USER_FAILURE:
+      return Object.assign({}, state, {
+        cartIdForLoggedInUserStatus: action.status,
+        error: action.error
       });
 
-    case cartActions.GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS:
+    case cartActions.GENERATE_CART_ID_FOR_ANONYMOUS_USER_SUCCESS:
       Cookies.createCookie(
         CART_DETAILS_FOR_ANONYMOUS,
         JSON.stringify(action.cartDetails)
       );
       return Object.assign({}, state, {
-        status: action.status
+        cartIdForAnonymousUserStatus: action.status
       });
-
-    case cartActions.GENERATE_CART_ID_FAILURE:
+    case cartActions.GENERATE_CART_ID_FOR_ANONYMOUS_USER_REQUEST:
       return Object.assign({}, state, {
-        status: action.status,
+        cartIdForAnonymousUserStatus: action.status
+      });
+    case cartActions.GENERATE_CART_ID_FOR_ANONYMOUS_USER_FAILURE:
+      return Object.assign({}, state, {
+        cartIdForAnonymousUserStatus: action.status,
         error: action.error
       });
 
@@ -391,7 +401,7 @@ const cart = (
 
     case cartActions.MERGE_CART_ID_REQUEST:
       return Object.assign({}, state, {
-        status: action.status
+        mergeCartIdStatus: action.status
       });
 
     case cartActions.MERGE_CART_ID_SUCCESS:
@@ -400,14 +410,16 @@ const cart = (
         JSON.stringify(action.cartDetails)
       );
       Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+      console.log("MERGE CART ID SUCCESS");
+      console.log(action);
       return Object.assign({}, state, {
-        status: action.status,
+        mergeCartIdStatus: action.status,
         type: action.type
       });
 
     case cartActions.MERGE_CART_ID_FAILURE:
       return Object.assign({}, state, {
-        status: action.status,
+        mergeCartIdStatus: action.status,
         error: action.error
       });
 

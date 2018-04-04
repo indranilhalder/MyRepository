@@ -1,4 +1,5 @@
 import * as userActions from "../actions/user.actions";
+import * as cartActions from "../../cart/actions/cart.actions";
 import { CLEAR_ERROR } from "../../general/error.actions.js";
 import { LOGOUT } from "../../account/actions/account.actions";
 import * as Cookies from "../../lib/Cookie";
@@ -16,7 +17,14 @@ const user = (
     error: null,
     loading: false,
     message: null,
-    isLoggedIn: false
+    isLoggedIn: false,
+
+    testLoggedIn: false,
+
+    globalAccessTokenStatus: null,
+    customerAccessTokenStatus: null,
+    loginUserStatus: null,
+    refreshCustomerAccessTokenStatus: null
   },
   action
 ) => {
@@ -180,7 +188,7 @@ const user = (
 
     case userActions.GLOBAL_ACCESS_TOKEN_REQUEST:
       return Object.assign({}, state, {
-        status: action.status,
+        globalAccessTokenStatus: action.status,
         loading: true
       });
 
@@ -192,21 +200,28 @@ const user = (
       );
 
       return Object.assign({}, state, {
-        status: action.status,
+        globalAccessTokenStatus: action.status,
         loading: false
       });
 
     case userActions.GLOBAL_ACCESS_TOKEN_FAILURE:
       return Object.assign({}, state, {
-        status: action.status,
+        globalAccessTokenStatus: action.status,
         loading: false,
         error: action.error
       });
 
     case userActions.CUSTOMER_ACCESS_TOKEN_REQUEST:
+      console.log("CUSTOMER ACCESS TOKEN _REQUEST");
+      console.log(action.status);
       return Object.assign({}, state, {
-        status: action.status,
-        loading: true
+        customerAccessTokenStatus: action.status,
+        loading: true,
+        testLoggedIn: true
+      });
+    case cartActions.MERGE_CART_ID_SUCCESS:
+      return Object.assign({}, state, {
+        testLoggedIn: false
       });
 
     case userActions.CUSTOMER_ACCESS_TOKEN_SUCCESS:
@@ -219,15 +234,16 @@ const user = (
         REFRESH_TOKEN,
         action.customerAccessTokenDetails.refresh_token
       );
+      console.log("CUSTOMER ACCESS TOKEN SUCCESS");
 
       return Object.assign({}, state, {
-        status: action.status,
+        customerAccessTokenStatus: action.status,
         loading: false
       });
 
     case userActions.CUSTOMER_ACCESS_TOKEN_FAILURE:
       return Object.assign({}, state, {
-        status: action.status,
+        customerAccessTokenStatus: action.status,
         loading: false,
         error: action.error
       });
@@ -251,19 +267,6 @@ const user = (
       });
 
     case userActions.GOOGLE_PLUS_LOGIN_FAILURE:
-      return Object.assign({}, state, {
-        status: action.status,
-        loading: false,
-        error: action.error
-      });
-
-    case userActions.GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_REQUEST:
-      return Object.assign({}, state, {
-        status: action.status,
-        loading: true
-      });
-
-    case userActions.GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         loading: false,
@@ -319,7 +322,7 @@ const user = (
 
     case userActions.REFRESH_TOKEN_REQUEST:
       return Object.assign({}, state, {
-        status: action.status
+        refreshCustomerAccessTokenStatus: action.status
       });
 
     case userActions.REFRESH_TOKEN_SUCCESS:
@@ -334,14 +337,14 @@ const user = (
       );
 
       return Object.assign({}, state, {
-        status: action.status,
+        refreshCustomerAccessTokenStatus: action.status,
         loading: false
       });
 
     case userActions.REFRESH_TOKEN_FAILURE:
       localStorage.removeItem(REFRESH_TOKEN);
       return Object.assign({}, state, {
-        status: action.status,
+        refreshCustomerAccessTokenStatus: action.status,
         loading: false,
         error: action.error
       });
