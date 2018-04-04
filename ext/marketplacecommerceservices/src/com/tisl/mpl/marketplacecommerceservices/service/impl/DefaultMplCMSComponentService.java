@@ -4,8 +4,10 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.catalog.CatalogService;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -91,6 +93,14 @@ public class DefaultMplCMSComponentService implements MplCMSComponentService
 		final List<AbstractCMSComponentModel> abstractCMSComponentModel = getMplCmsComponentDao().getPagewiseComponent(pageId,
 				componentId, this.catalogService.getSessionCatalogVersions());
 		return abstractCMSComponentModel;
+	}
+
+
+	@Override
+	public Collection<CategoryModel> getCategoryByCode(String categoryId)
+	{
+		
+		return getMplCmsComponentDao().getCategoryByCode(categoryId, this.catalogService.getSessionCatalogVersions());
 	}
 
 

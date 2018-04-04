@@ -94,6 +94,11 @@ function loadImageAjaxCall() {
 	    
 	    $("#uploaded-files tr").html("");
 	    
+	    var staticHost = $('#staticHost').val();
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+
+	    
 	    var formdata = $('#uploadImages')[0];
 		var form = new FormData(formdata);
 	 
@@ -106,7 +111,7 @@ function loadImageAjaxCall() {
 		        contentType: false,
 		        cache: false,
 			success : function(response) {				
-				//alert(response[0].imageUrl);
+				$("#no-click,.loaderDiv").remove();
 				$("#upload_file").empty();
 				$("#image_preview").empty();
 				$('#downloadBtn').removeClass('hidden');
@@ -119,6 +124,8 @@ function loadImageAjaxCall() {
 				})
 			},
 			error : function(resp) {
+		    $("#no-click,.loaderDiv").remove();	
+		    alert("some error accured");
 			console.log(resp);
 			}
 		});
