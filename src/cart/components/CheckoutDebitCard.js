@@ -40,6 +40,7 @@ export default class CheckoutDebitCard extends React.Component {
           jusPayTokenizeForGiftCard={cardDetails =>
             this.jusPayTokenizeForGiftCard(cardDetails)
           }
+          displayToast={this.props.displayToast}
         />
       </ManueDetails>
     );

@@ -12,7 +12,6 @@ import SearchContainer from "../../search/SearchContainer";
 import ConnectWidget from "./ConnectWidget";
 import BrandCardHeader from "../../blp/components/BrandCardHeader";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
-
 import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
 import ProductCapsules from "./ProductCapsules.js";
@@ -90,6 +89,11 @@ const typeComponentMapping = {
 };
 
 class Feed extends Component {
+  componentWillUpdate() {
+    // check if hte user is logged in
+    // then send the name
+    this.props.setHeaderText(this.props.headerMessage);
+  }
   renderFeedComponent(feedDatum, i) {
     if (feedDatum.type === "Product Capsules Component") {
       return <ProductCapsulesContainer positionInFeed={i} />;
@@ -132,7 +136,7 @@ class Feed extends Component {
     if (this.props.isHomeFeedPage) {
       this.props.homeFeed();
     }
-    if (userDetails && customerCookie) {
+    if (userDetails && customerCookie && this.props.getWishListItems) {
       this.props.getWishListItems();
     }
   }

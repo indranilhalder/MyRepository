@@ -22,7 +22,8 @@ import {
   CHECKOUT_ROUTER,
   LOGIN_PATH,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
-  YES
+  YES,
+  YOUR_BAG
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
@@ -35,7 +36,9 @@ class CartPage extends React.Component {
       changePinCode: false
     };
   }
-
+  navigateToHome() {
+    this.props.history.push(HOME_ROUTER);
+  }
   componentDidMount() {
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -79,6 +82,7 @@ class CartPage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    this.props.setHeaderText(YOUR_BAG);
     if (prevProps.cart) {
       if (prevProps.cart.cartDetails !== this.props.cart.cartDetails) {
         let productServiceAvailability = filter(
@@ -107,17 +111,6 @@ class CartPage extends React.Component {
         <MDSpinner />
       </div>
     );
-  };
-
-  addProductToWishList = product => {
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    if (userDetails) {
-      if (this.props.addProductToWishList) {
-        this.props.addProductToWishList(product);
-      }
-    } else {
-      this.props.history.push(LOGIN_PATH);
-    }
   };
 
   removeItemFromCart = cartListItemPosition => {
@@ -303,7 +296,9 @@ class CartPage extends React.Component {
                       productImage={product.imageURL}
                       productDetails={product.description}
                       productName={product.productName}
-                      price={product.offerPrice}
+                      price={
+                        product.offerPrice ? product.offerPrice : product.price
+                      }
                       index={i}
                       entryNumber={product.entryNumber}
                       deliveryInformation={product.elligibleDeliveryMode}
@@ -321,7 +316,6 @@ class CartPage extends React.Component {
                           label: product.qtySelectedByUser
                         }
                       ]}
-                      onSave={this.addProductToWishList}
                       onRemove={this.removeItemFromCart}
                       onQuantityChange={this.updateQuantityInCart}
                       maxQuantityAllowed={product.maxQuantityAllowed}
@@ -333,6 +327,12 @@ class CartPage extends React.Component {
 
             {cartDetails.products && (
               <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
+            )}
+            {!cartDetails.products && (
+              <EmptyBag
+                onContinueShopping={() => this.navigateToHome()}
+                viewSavedProduct={() => this.navigateToHome()}
+              />
             )}
             {cartDetails.products &&
               cartDetails.cartAmount && (
@@ -363,7 +363,6 @@ CartPage.propTypes = {
   offers: PropTypes.string,
   removeItemFromCartLoggedOut: PropTypes.func,
   removeItemFromCartLoggedIn: PropTypes.func,
-  addProductToWishList: PropTypes.func,
   getCartDetails: PropTypes.func,
   updateQuantityInCartLoggedIn: PropTypes.func,
   updateQuantityInCartLoggedOut: PropTypes.func

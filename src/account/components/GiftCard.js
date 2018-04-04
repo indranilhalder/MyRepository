@@ -10,7 +10,8 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   LOGIN_PATH,
-  CHECKOUT_ROUTER
+  CHECKOUT_ROUTER,
+  GIFT_CARD
 } from "../../lib/constants";
 import { SUCCESS } from "../../lib/constants.js";
 import * as Cookie from "../../lib/Cookie";
@@ -32,6 +33,9 @@ export default class GiftCard extends React.Component {
     if (this.props.getGiftCardDetails) {
       this.props.getGiftCardDetails();
     }
+  }
+  componentDidUpdate() {
+    this.props.setHeaderText(GIFT_CARD);
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.giftCardDetailsStatus === SUCCESS) {
