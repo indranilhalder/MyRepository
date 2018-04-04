@@ -461,7 +461,7 @@
 						</columnlayout>
 					</section>
 				</tab>
-				<tab name="tab.payment.bank.noCostEmi.properties" mode="append">
+				<tab name="tab.payment.bank.noCostEmi.properties" mode="append"  position="1">
 					<section name="section.payment.noCostEmi.voucher.description">
 		               <listlayout>
 		               	<text name="text.payment.noCostEmi.voucher.description" width="595"/>
@@ -500,7 +500,7 @@
 						</columnlayout>
 					</section>
 				</tab>
-				<tab name="administration" position="1">
+				<tab name="administration" position="2">
 					<section name="section.metadata">
 						<listlayout>
 							<attribute name="name" mode="delete" />
