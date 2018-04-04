@@ -11,6 +11,7 @@ import moment from "moment";
 import { LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER } from "../actions/account.actions.js";
 import ChangePassword from "./ChangePassword.js";
 import * as Cookie from "../../lib/Cookie";
+import ProfilePicture from "../../blp/components/ProfilePicture.js";
 import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
@@ -95,9 +96,16 @@ export default class EditAccountDetails extends React.Component {
     if (userDetails && !this.state.changePassword) {
       return (
         <div className={styles.base}>
+          <div className={styles.profileImage}>
+            <ProfilePicture
+              firstName={this.state.firstName}
+              lastName={this.state.lastName}
+            />
+          </div>
           <div className={styles.holder}>
             <div className={styles.container}>
               <Input2
+                placeholder="First Name"
                 value={this.state.firstName}
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
@@ -107,6 +115,7 @@ export default class EditAccountDetails extends React.Component {
             </div>
             <div className={styles.container}>
               <Input2
+                placeholder="Last Name"
                 value={this.state.lastName}
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
@@ -116,6 +125,7 @@ export default class EditAccountDetails extends React.Component {
             </div>
             <div className={styles.container}>
               <Input2
+                placeholder="Email"
                 value={this.state.emailId}
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
@@ -125,6 +135,7 @@ export default class EditAccountDetails extends React.Component {
             </div>
             <div className={styles.container}>
               <Input2
+                placeholder="Mobile NUmber"
                 value={this.state.mobileNumber}
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
