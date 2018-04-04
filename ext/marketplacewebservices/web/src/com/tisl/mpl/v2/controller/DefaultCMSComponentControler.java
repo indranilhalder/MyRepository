@@ -2202,7 +2202,7 @@ public class DefaultCMSComponentControler
 							}
 							simpleBannerComponentWsDTO.setType("Simple Banner Component");
 							uiCompPageElementWsDTO.setComponentName("simpleBannerComponent");
-							uiCompPageElementWsDTO.setSimpleBannerComponentWsDTO(simpleBannerComponentWsDTO);
+							uiCompPageElementWsDTO.setSimpleBannerComponent(simpleBannerComponentWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						 }
 						}
@@ -2244,7 +2244,7 @@ public class DefaultCMSComponentControler
 							}
 							accountNavigationComponentWsDTO.setType("Account Navigation Component");
 							uiCompPageElementWsDTO.setComponentName("accountNavigationComponent");
-							uiCompPageElementWsDTO.setAccountNavigationComponentWsDTO(accountNavigationComponentWsDTO);
+							uiCompPageElementWsDTO.setAccountNavigationComponent(accountNavigationComponentWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						 }
 						}

@@ -4555,9 +4555,9 @@
 			type="com.tisl.mpl.wsdto.AutoProductRecommendationComponentWsDTO"/>
 		<property name="landingPageHierarchyComponent" 
 			type="com.tisl.mpl.wsdto.LandingPageHierarchyComponentWsDTO"/>			
-		<property name="simpleBannerComponentWsDTO" 
+		<property name="simpleBannerComponent" 
 			type="com.tisl.mpl.wsdto.SimpleBannerComponentWsDTO"/>
-		<property name="accountNavigationComponentWsDTO" 
+		<property name="accountNavigationComponent" 
 			type="com.tisl.mpl.wsdto.AccountNavigationComponentWsDTO"/>	
 		<property name="cmsParagraphComponent"
 		    type="com.tisl.mpl.wsdto.CMSParagraphComponentWsDTO" />	
