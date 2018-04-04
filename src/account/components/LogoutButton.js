@@ -10,6 +10,7 @@ export default class LogoutButton extends React.Component {
       this.props.history.push(`${HOME_ROUTER}`);
     }
   }
+
   render() {
     return (
       <div className={styles.base}>
