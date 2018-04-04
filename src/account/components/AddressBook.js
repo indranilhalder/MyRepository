@@ -17,9 +17,10 @@ const NO_ADDRESS_TEXT = "No Saved Address";
 
 export default class AddressBook extends React.Component {
   componentDidMount() {
+    this.props.setHeaderText(ADDRESS_BOOK);
     this.props.getUserAddress();
   }
-  componentWillUpdate() {
+  componentDidUpdate() {
     this.props.setHeaderText(ADDRESS_BOOK);
   }
   removeAddress = addressId => {
