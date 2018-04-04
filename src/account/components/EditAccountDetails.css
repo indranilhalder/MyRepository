@@ -1,7 +1,7 @@
 .base {
   width: 100%;
   height: auto;
-  padding: 0 15px;
+  padding: 0;
   padding-bottom: 75px;
 }
 .header {
@@ -37,4 +37,12 @@
 .sendNotification {
   padding-left: 15px;
   padding-right: 15px;
+}
+.profileImage {
+  margin-bottom: 15px;
+}
+.changePassword {
+  padding: 15px;
+  border-top: solid 1px #ececec;
+  border-bottom: solid 1px #ececec;
 }
