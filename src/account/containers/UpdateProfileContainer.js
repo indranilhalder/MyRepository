@@ -21,16 +21,12 @@ const mapDispatchToProps = dispatch => {
       const response = await dispatch(updateProfile(accountDetails));
       if (response.status === SUCCESS) {
         dispatch(displayToast(UPDATE_PROFILE_SUCCESS));
-      } else {
-        dispatch(displayToast(response.error));
       }
     },
     changePassword: async passwordDetails => {
       const response = await dispatch(changePassword(passwordDetails));
       if (response.status === SUCCESS) {
         dispatch(displayToast(UPDATE_PASSWORD));
-      } else {
-        dispatch(displayToast(response.error));
       }
     },
     setHeaderText: text => {
