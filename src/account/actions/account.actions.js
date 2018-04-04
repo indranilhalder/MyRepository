@@ -1558,7 +1558,7 @@ export function updateProfile(accountDetails, otp) {
         resultJson.status === FAILURE_UPPERCASE ||
         resultJson.status === FAILURE
       ) {
-        throw new Error(`${resultJson.message}`);
+        throw new Error(`${resultJson.error}`);
       }
 
       if (resultJson.status === "OTP SENT TO MOBILE NUMBER: PLEASE VALIDATE") {
@@ -1567,11 +1567,11 @@ export function updateProfile(accountDetails, otp) {
         if (otp) {
           dispatch(logoutUserByMobileNumber());
         } else {
-          dispatch(updateProfileSuccess(resultJson));
+          return dispatch(updateProfileSuccess(resultJson));
         }
       }
     } catch (e) {
-      dispatch(updateProfileFailure(e.message));
+      return dispatch(updateProfileFailure(e.message));
     }
   };
 }
@@ -1784,9 +1784,9 @@ export function changePassword(passwordDetails) {
         throw new Error(`${resultJson.error}`);
       }
 
-      dispatch(changePasswordSuccess(resultJson));
+      return dispatch(changePasswordSuccess(resultJson));
     } catch (e) {
-      dispatch(changePasswordFailure(e.message));
+      return dispatch(changePasswordFailure(e.message));
     }
   };
 }

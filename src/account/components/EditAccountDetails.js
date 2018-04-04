@@ -17,7 +17,7 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGIN_PATH
 } from "../../lib/constants";
-
+const ACCOUNT_SETTING_HEADER = "Account Settings";
 export default class EditAccountDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -39,6 +39,7 @@ export default class EditAccountDetails extends React.Component {
     } else {
       this.props.history.push(LOGIN_PATH);
     }
+    this.props.setHeaderText(ACCOUNT_SETTING_HEADER);
   }
 
   componentWillReceiveProps(nextProps) {
