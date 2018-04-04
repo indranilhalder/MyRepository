@@ -5,15 +5,24 @@ import TextArea from "../../general/components/TextArea";
 import ReturnsFrame from "./ReturnsFrame";
 import styles from "./CancelReasonForm.css";
 import PropTypes from "prop-types";
+import { Redirect } from "react-router-dom";
 export default class CancelReasonForm extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       displaySecondary: false,
       secondaryReasons: null,
-      comment: null
+      comment: null,
+      redirect: false
     };
+  }
+  redirectToPdpPage() {
+    if (this.state.redirect) {
+      return <Redirect to={`/p-${this.state.productCode.toLowerCase()}`} />;
+    }
+  }
+  onClickImage(productCode) {
+    this.setState({ redirect: true, productCode: productCode });
   }
   handleContinue() {
     if (this.props.onContinue) {
@@ -46,6 +55,9 @@ export default class CancelReasonForm extends React.Component {
             productName={`${data.orderProductWsDTO[0].productBrand} ${
               data.orderProductWsDTO[0].productName
             }`}
+            onClick={() =>
+              this.onClickImage(data.orderProductWsDTO[0].productcode)
+            }
             price={data.orderProductWsDTO[0].price}
           >
             {data.orderProductWsDTO[0].quantity && (
@@ -71,6 +83,7 @@ export default class CancelReasonForm extends React.Component {
             <TextArea onChange={val => this.handleChange(val)} />
           </div>
         </div>
+        {this.redirectToPdpPage()}
       </ReturnsFrame>
     );
   }
