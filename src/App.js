@@ -137,6 +137,18 @@ class App extends Component {
       if (!cartDetailsForLoggedInUser && !this.props.cart.loading) {
         this.props.generateCartIdForLoggedInUser();
       }
+    }
+    if (
+      customerAccessToken &&
+      cartDetailsForLoggedInUser &&
+      loggedInUserDetails
+    ) {
+      if (
+        this.props.location.pathname.indexOf(LOGIN_PATH) !== -1 ||
+        this.props.location.pathname.indexOf(SIGN_UP_PATH) !== -1
+      ) {
+        this.props.history.push(`${HOME_ROUTER}`);
+      }
     } else {
       if (!cartDetailsForAnonymous && globalAccessToken) {
         this.props.generateCartIdForAnonymous();
