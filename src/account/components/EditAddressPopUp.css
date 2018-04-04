@@ -1,6 +1,9 @@
 .base {
   width: 100%;
   height: auto;
+  min-height: 100vh;
+  background: #ececec;
+  padding: 15px;
 }
 .container {
   width: 100%;
@@ -11,11 +14,17 @@
   width: 100%;
   height: auto;
   padding: 15px;
-  border-top: 1px solid #ececec;
+}
+.formHolder {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ececec;
 }
 .holder {
   width: 100%;
   height: auto;
-  padding: 20px;
-  margin-bottom: 15px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 4px;
 }
