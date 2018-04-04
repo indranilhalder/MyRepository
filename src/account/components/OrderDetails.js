@@ -73,7 +73,6 @@ export default class OrderDetails extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
     if (
       userDetails &&
       customerCookie &&
@@ -98,6 +97,11 @@ export default class OrderDetails extends React.Component {
       this.props.showModal(orderDetails);
     }
   }
+
+  componentDidUpdate(prevProps) {
+    this.props.setHeaderText(`#${this.props.orderDetails.orderId}`);
+  }
+
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
   }

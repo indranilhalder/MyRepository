@@ -8,7 +8,11 @@ import { Icon } from "xelpmoc-core";
 import styles from "./ProductGrid.css";
 import gridImage from "./img/grid.svg";
 import listImage from "./img/list.svg";
-import { PRODUCT_DESCRIPTION_ROUTER } from "../../lib/constants";
+import {
+  PRODUCT_DESCRIPTION_ROUTER,
+  IS_OFFER_EXISTING
+} from "../../lib/constants";
+
 const LIST = "list";
 const GRID = "grid";
 const PRODUCT = "product";
@@ -46,10 +50,11 @@ export default class ProductGrid extends React.Component {
       <ProductModule
         productImage={data.imageURL}
         title={data.brandname}
-        price={data.price.mrpPrice.formattedValue}
-        discountPrice={data.price.sellingPrice.formattedValue}
+        price={data.price.mrpPrice.doubleValue}
+        discountPrice={data.price.sellingPrice.doubleValue}
         description={data.productname}
         offerText={data.offerText}
+        onOffer={data.isOfferExisting}
         averageRating={data.averageRating}
         totalNoOfReviews={data.totalNoOfReviews}
         view={this.state.view}

@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MyAccount from "../components/MyAccount";
 import { getUserCoupons, getUserAlerts } from "../actions/account.actions";
+import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getUserCoupons: () => {
@@ -9,6 +10,9 @@ const mapDispatchToProps = dispatch => {
     },
     getUserAlerts: () => {
       dispatch(getUserAlerts());
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     }
   };
 };

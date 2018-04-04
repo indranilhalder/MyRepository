@@ -5,7 +5,7 @@ import {
 } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import CliqAndCash from "../components/CliqAndCash.js";
-
+import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getCliqCashDetails: () => {
@@ -13,6 +13,9 @@ const mapDispatchToProps = dispatch => {
     },
     redeemCliqVoucher: cliqCashDetails => {
       dispatch(redeemCliqVoucher(cliqCashDetails));
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     }
   };
 };

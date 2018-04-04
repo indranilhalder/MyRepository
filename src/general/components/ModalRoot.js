@@ -18,6 +18,8 @@ import GiftCardModal from "../../cart/components/GiftCardModal";
 import UpdateRefundDetailsPopup from "../../account/components/UpdateRefundDetailsPopup.js";
 import KycApplicationFormWithBottomSlideModal from "../../account/components/KycApplicationFormWithBottomSlideModal";
 import KycDetailPopUpWithBottomSlideModal from "../../account/components/KycDetailPopUpWithBottomSlideModal";
+import * as Cookie from "../../lib/Cookie.js";
+import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
@@ -81,10 +83,24 @@ export default class ModalRoot extends React.Component {
     this.props.releaseBankOffer(couponCode);
   };
   applyUserCoupon = couponCode => {
-    this.props.applyUserCoupon(couponCode);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      this.props.applyUserCouponForLoggedInUsers(couponCode);
+    } else {
+      this.props.applyUserCouponForAnonymous(couponCode);
+    }
+
+    this.props.hideModal();
   };
-  releaseUserCoupon = couponCode => {
-    this.props.releaseUserCoupon(couponCode);
+  releaseUserCoupon = (oldCouponCode, newCouponCode) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      this.props.releaseUserCoupon(oldCouponCode, newCouponCode);
+    } else {
+      this.props.releaseCouponForAnonymous(oldCouponCode, newCouponCode);
+    }
+
+    this.props.hideModal();
   };
   getUserAddress = () => {
     this.props.getUserAddress();
@@ -217,7 +233,9 @@ export default class ModalRoot extends React.Component {
         <ProductCouponDetails
           closeModal={() => this.handleClose()}
           applyUserCoupon={couponCode => this.applyUserCoupon(couponCode)}
-          releaseUserCoupon={couponCode => this.releaseUserCoupon(couponCode)}
+          releaseUserCoupon={(oldCouponCode, newCouponCode) =>
+            this.releaseUserCoupon(oldCouponCode, newCouponCode)
+          }
           {...this.props.ownProps}
         />
       ),

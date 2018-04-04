@@ -70,8 +70,8 @@ export default class ProductDescription extends Component {
 ProductDescription.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
-  price: PropTypes.string,
-  discountPrice: PropTypes.string,
+  price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  discountPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   icon: PropTypes.string,
   onDownload: PropTypes.func,
   isWhite: PropTypes.bool

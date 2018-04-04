@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./BagPageFooter.css";
-import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
-import image from "./img/Save.svg";
+import AddToWishListButtonContainer from "../../wishlist/containers/AddToWishListButtonContainer";
+import { WISHLIST_BUTTON_TEXT_TYPE } from "../../wishlist/components/AddToWishListButton";
 export default class BagPageFooter extends React.Component {
   onSave() {
     if (this.props.onSave) {
@@ -18,12 +18,11 @@ export default class BagPageFooter extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.wrapper}>
-          <div className={styles.saveButton} onClick={() => this.onSave()}>
-            <div className={styles.iconHolder}>
-              <Icon image={image} size={24} />
-            </div>
-            <div className={styles.saveLabel}>{this.props.saveText}</div>
-          </div>
+          <AddToWishListButtonContainer
+            type={WISHLIST_BUTTON_TEXT_TYPE}
+            productListingId={this.props.productCode}
+            winningUssID={this.props.winningUssID}
+          />
           <div className={styles.removeLabel} onClick={() => this.onRemove()}>
             {this.props.removeText}
           </div>
@@ -34,10 +33,8 @@ export default class BagPageFooter extends React.Component {
 }
 BagPageFooter.propTypes = {
   image: PropTypes.string,
-  onSave: PropTypes.func,
   onRemove: PropTypes.func
 };
 BagPageFooter.defaultProps = {
-  saveText: "Save",
   removeText: "Remove"
 };

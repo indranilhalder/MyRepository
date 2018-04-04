@@ -8,7 +8,6 @@ import {
   getUserAddress,
   selectDeliveryMode,
   getOrderSummary,
-  getCoupons,
   applyUserCoupon,
   releaseUserCoupon,
   getAllStoresCNC,
@@ -37,13 +36,18 @@ import {
   softReservationForCliqCash,
   jusPayTokenizeForGiftCard,
   createJusPayOrderForGiftCardNetBanking,
-  createJusPayOrderForGiftCardFromSavedCards
+  createJusPayOrderForGiftCardFromSavedCards,
+  clearCaptureOrderExperience,
+  applyUserCouponForAnonymous
 } from "../actions/cart.actions";
 import {
   showModal,
   BANK_OFFERS,
   GIFT_CARD_MODAL
 } from "../../general/modal.actions";
+import { displayToast } from "../../general/toast.actions";
+import { SUCCESS } from "../../lib/constants";
+import { setHeaderText } from "../../general/header.actions.js";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -86,14 +90,15 @@ const mapDispatchToProps = dispatch => {
     getOrderSummary: pinCode => {
       dispatch(getOrderSummary(pinCode));
     },
-    getCoupons: () => {
-      dispatch(getCoupons());
-    },
-    applyUserCoupon: () => {
-      dispatch(applyUserCoupon());
+
+    applyUserCouponForAnonymous: couponCode => {
+      dispatch(applyUserCouponForAnonymous(couponCode));
     },
     releaseUserCoupon: () => {
       dispatch(releaseUserCoupon());
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     },
     selectDeliveryMode: (deliveryUssId, pinCode) => {
       dispatch(selectDeliveryMode(deliveryUssId, pinCode));
@@ -155,8 +160,11 @@ const mapDispatchToProps = dispatch => {
     softReservationForCODPayment: pinCode => {
       dispatch(softReservationForCODPayment(pinCode));
     },
-    captureOrderExperience: (orderId, Rating) => {
-      dispatch(captureOrderExperience(orderId, Rating));
+    captureOrderExperience: async (orderId, Rating) => {
+      const response = await dispatch(captureOrderExperience(orderId, Rating));
+      if (response.status === SUCCESS) {
+        dispatch(displayToast(response.orderExperience.message));
+      }
     },
     binValidationForNetBanking: (paymentMode, binNo) => {
       dispatch(binValidationForNetBanking(paymentMode, binNo));
@@ -195,6 +203,12 @@ const mapDispatchToProps = dispatch => {
     },
     addGiftCard: () => {
       dispatch(showModal(GIFT_CARD_MODAL));
+    },
+    displayToast: message => {
+      dispatch(displayToast(message));
+    },
+    clearCaptureOrderExperience: () => {
+      dispatch(clearCaptureOrderExperience());
     }
   };
 };

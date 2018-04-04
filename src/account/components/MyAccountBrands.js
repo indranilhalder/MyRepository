@@ -11,8 +11,10 @@ import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
   LOGIN_PATH,
-  DEFAULT_BRANDS_LANDING_PAGE
+  DEFAULT_BRANDS_LANDING_PAGE,
+  BRANDS
 } from "../../lib/constants";
+
 import * as Cookie from "../../lib/Cookie";
 
 export default class MyAccountBrands extends React.Component {
@@ -23,6 +25,9 @@ export default class MyAccountBrands extends React.Component {
     if (userDetails && customerCookie) {
       this.props.getFollowedBrands();
     }
+  }
+  componentDidUpdate() {
+    this.props.setHeaderText(BRANDS);
   }
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
