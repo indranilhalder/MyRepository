@@ -40,7 +40,7 @@ export default class AccountFooter extends React.Component {
     );
   }
 }
-AccountFooter.propTyes = {
+AccountFooter.propTypes = {
   cancel: PropTypes.func,
   update: PropTypes.func
 };
