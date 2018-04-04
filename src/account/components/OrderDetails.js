@@ -34,6 +34,9 @@ const PRODUCT_CANCEL = "Cancel Product";
 const AWB_POPUP_TRUE = "Y";
 const AWB_POPUP_FALSE = "N";
 export default class OrderDetails extends React.Component {
+  onClickImage(productCode) {
+    this.props.history.push(`/p-${productCode.toLowerCase()}`);
+  }
   requestInvoice(ussid, sellerOrderNo) {
     if (this.props.sendInvoice) {
       this.props.sendInvoice(ussid, sellerOrderNo);
@@ -155,6 +158,7 @@ export default class OrderDetails extends React.Component {
                   price={products.price}
                   discountPrice={""}
                   productName={products.productName}
+                  onClick={() => this.onClickImage(products.productcode)}
                 />
 
                 <div className={styles.payment}>

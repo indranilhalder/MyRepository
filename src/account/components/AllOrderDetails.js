@@ -16,12 +16,16 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   LOGIN_PATH,
-  ORDER_HISTORY
+  ORDER_HISTORY,
+  PRODUCT_SELLER_ROUTER_SUFFIX
 } from "../../lib/constants";
 
 import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 export default class AllOrderDetails extends React.Component {
+  onClickImage(productCode) {
+    this.props.history.push(`/p-${productCode.toLowerCase()}`);
+  }
   onViewDetails(orderId) {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
@@ -94,6 +98,12 @@ export default class AllOrderDetails extends React.Component {
                     productName={
                       orderDetails.products &&
                       orderDetails.products[0].productName
+                    }
+                    onClick={() =>
+                      this.onClickImage(
+                        orderDetails.products &&
+                          orderDetails.products[0].productcode
+                      )
                     }
                   />
                   <PriceAndLink
