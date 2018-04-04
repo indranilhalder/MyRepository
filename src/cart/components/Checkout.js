@@ -116,7 +116,7 @@ export default class Checkout extends React.Component {
                 type="primary"
                 backgroundColor="#ff1744"
                 height={40}
-                label="Checkout"
+                label={this.props.label}
                 width={120}
                 textStyle={{ color: "#FFF", fontSize: 14 }}
                 onClick={() => this.handleClick()}
@@ -211,5 +211,9 @@ Checkout.propTypes = {
   delivery: PropTypes.string,
   onCheckout: PropTypes.func,
   offers: PropTypes.string,
-  payable: PropTypes.string
+  payable: PropTypes.string,
+  label: PropTypes.string
+};
+Checkout.defaultProps = {
+  label: "Continue"
 };
