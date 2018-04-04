@@ -18,12 +18,8 @@ export default class Offer extends React.Component {
         <div className={styles.imageHolder}>
           <Image image={datum.imageURL} key={key} />
         </div>
-        <MediaQuery query="(min-device-width: 1025px)">
-          <div className={styles.overlay} onClick={this.handleClick} />
-        </MediaQuery>
-        <MediaQuery query="(max-device-width: 1024px)">
-          <div className={styles.overlay} />
-        </MediaQuery>
+        <div onClick={this.handleClick} />
+
         {datum.discountText &&
           datum.discountText !== " " && (
             <div className={styles.ovalImage}>
