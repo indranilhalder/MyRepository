@@ -573,7 +573,7 @@ const account = (
         loading: false
       });
 
-    case accountActions.LOG_OUT_ACCOUNT:
+    case accountActions.LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER:
       Cookie.deleteCookie(LOGGED_IN_USER_DETAILS);
       Cookie.deleteCookie(CUSTOMER_ACCESS_TOKEN);
       return Object.assign({}, state, {

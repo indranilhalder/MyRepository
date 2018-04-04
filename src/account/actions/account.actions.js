@@ -168,7 +168,8 @@ export const GET_CANCEL_PRODUCT_DETAILS_FAILURE =
 export const UPDATE_PROFILE_REQUEST = "UPDATE_PROFILE_REQUEST";
 export const UPDATE_PROFILE_SUCCESS = "UPDATE_PROFILE_SUCCESS";
 export const UPDATE_PROFILE_FAILURE = "UPDATE_PROFILE_FAILURE";
-export const LOG_OUT_ACCOUNT = "LOG_OUT_ACCOUNT";
+export const LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER =
+  "LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER";
 export const UPDATE_PROFILE_OTP_VERIFICATION =
   "UPDATE_PROFILE_OTP_VERIFICATION";
 export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
@@ -1431,9 +1432,9 @@ export function updateProfileRequest() {
   };
 }
 
-export function logoutUser() {
+export function logoutUserByMobileNumber() {
   return {
-    type: LOG_OUT_ACCOUNT
+    type: LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER
   };
 }
 
@@ -1529,7 +1530,6 @@ export function followAndUnFollowBrandInCommerceFailure(error) {
 }
 
 export function updateProfile(accountDetails, otp) {
-
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -1565,7 +1565,7 @@ export function updateProfile(accountDetails, otp) {
         dispatch(showModal(UPDATE_PROFILE_OTP_VERIFICATION, accountDetails));
       } else {
         if (otp) {
-          dispatch(logoutUser());
+          dispatch(logoutUserByMobileNumber());
         } else {
           dispatch(updateProfileSuccess(resultJson));
         }
