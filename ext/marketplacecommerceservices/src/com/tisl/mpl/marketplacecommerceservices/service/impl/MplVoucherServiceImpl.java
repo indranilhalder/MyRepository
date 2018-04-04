@@ -3025,9 +3025,35 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 						globalDiscountList.add(cartdiscountValue);
 					}
-
-
 				}
+				else if(discount instanceof MplNoCostEMIVoucherModel)
+				{
+					MplNoCostEMIVoucherModel emiCoupon = (MplNoCostEMIVoucherModel) discount;
+					final String code = emiCoupon.getCode();
+					
+					final double couponDiscount = getEMIDiscount(oModel.getEntries());
+					DiscountValue cartdiscountValue = null;
+
+					if (CollectionUtils.isNotEmpty(globalDiscountList))
+					{
+						final Iterator iter = globalDiscountList.iterator();
+						while (iter.hasNext())
+						{
+							final DiscountValue discountVal = (DiscountValue) iter.next();
+							if (discountVal.getCode().equalsIgnoreCase(code))
+							{
+								cartdiscountValue = new DiscountValue(discountVal.getCode(), couponDiscount, true, couponDiscount,
+										discountVal.getCurrencyIsoCode());
+
+								iter.remove();
+								break;
+							}
+						}
+
+						globalDiscountList.add(cartdiscountValue);
+					}
+				}
+				
 			}
 
 		}
@@ -3037,6 +3063,28 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		getModelService().refresh(oModel);
 
 		return oModel;
+	}
+
+	/****
+	 * Get Go Cost EMI Discount
+	 * @param entries
+	 * @return emiDiscount
+	 */
+	private double getEMIDiscount(List<AbstractOrderEntryModel> entries)
+	{
+		refreshOrderEntries(entries);
+		double emiDiscount = 0;
+		if (CollectionUtils.isNotEmpty(entries))
+		{
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				final double val = (null != entry.getEmiCouponValue() && entry.getEmiCouponValue().doubleValue() > 0) ? entry
+						.getEmiCouponValue().doubleValue() : 0;
+						emiDiscount += val;
+			}
+		}
+		return emiDiscount;
+	
 	}
 
 	/**
@@ -3945,13 +3993,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			if (null != cartModel)
 			{
 				//For cart
-				//releaseCartVoucher(voucherCode, cartModel, null); //Releases voucher
+				releaseNoCostEMIVoucher(voucherCode, cartModel, null);
 				recalculateCartForCoupon(cartModel, null); //Recalculates cart after releasing voucher
-
-//				modifyDiscountValues(cartModel);
-//				final Double total = setTotalPrice(cartModel);
-//				cartModel.setTotalPrice(total);
-//				getModelService().save(cartModel);
+				modifyDiscountValues(cartModel);
+				final Double total = setTotalPrice(cartModel);
+				cartModel.setTotalPrice(total);
+				getModelService().save(cartModel);
 
 				discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(0)));
 				if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
@@ -3970,14 +4017,13 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			}
 			else if (null != orderModel)
 			{
-				//releaseCartVoucher(voucherCode, null, orderModel); //Releases voucher
+				releaseNoCostEMIVoucher(voucherCode, null, orderModel);
 				recalculateCartForCoupon(null, orderModel); //Recalculates cart after releasing voucher
+				modifyDiscountValues(orderModel);
+				final Double total = setTotalPrice(orderModel);
+				orderModel.setTotalPrice(total);
 
-//				modifyDiscountValues(orderModel);
-//				final Double total = setTotalPrice(orderModel);
-//				orderModel.setTotalPrice(total);
-//
-//				getModelService().save(orderModel); //TPR-1079
+				getModelService().save(orderModel); //TPR-1079
 
 				discountData.setCouponDiscount(getDiscountUtility().createPrice(orderModel, Double.valueOf(0))); //TPR-1079/
 				if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
@@ -4003,6 +4049,84 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 		return discountData;
 	
+	}
+
+	/***
+	 * Releases NO Cost EMI Coupons 
+	 * 
+	 * @param voucherCode
+	 * @param cartModel
+	 * @param orderModel
+	 */
+	@Override
+	public void releaseNoCostEMIVoucher(String voucherCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException
+	{
+		try
+		{
+			LOG.debug("No Cost EMI>>> Inside Release No Cost EMI Coupon");
+			validateVoucherCodeParameter(voucherCode);
+			final VoucherModel voucher = getVoucherService().getVoucher(voucherCode); //Finds voucher for the selected code
+			if (voucher == null)
+			{
+				throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
+			}
+			else if (cartModel != null)
+			{
+				final List<AbstractOrderEntryModel> entryList = new ArrayList<>();
+				getVoucherService().releaseVoucher(voucherCode, cartModel); //Releases the voucher from the cart
+				LOG.debug("No Cost EMI Coupon Released");
+
+				for (final AbstractOrderEntryModel entry : cartModel.getEntries())//Resets the coupon details against the entries
+				{
+					entry.setEmiCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+					entry.setEmiCouponValue(Double.valueOf(0.00D));
+					entryList.add(entry);
+				}
+				if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
+				{
+					getModelService().saveAll(entryList);
+				}
+
+				LOG.debug("No Cost EMI>>> Coupon Code and Value Resetted");
+			}
+			else if (null != orderModel)
+			{
+				if (!OrderStatus.PAYMENT_SUCCESSFUL.equals(orderModel.getStatus())
+						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
+				{
+					getVoucherService().releaseVoucher(voucherCode, orderModel); //Releases the voucher from the order
+					LOG.debug("No Cost EMI Coupon Released");
+					
+					final List<AbstractOrderEntryModel> entryList = new ArrayList<>();
+
+					for (final AbstractOrderEntryModel entry : orderModel.getEntries())//Resets the coupon details against the entries
+					{
+						entry.setEmiCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+						entry.setEmiCouponValue(Double.valueOf(0.00D));
+						entryList.add(entry);
+					}
+					if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
+					{
+						getModelService().saveAll(entryList);
+					}
+
+					LOG.debug("No Cost EMI>>> Coupon Code and Value Resetted");
+				}
+			}
+
+		}
+		catch (final JaloPriceFactoryException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0018);
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final ConsistencyCheckException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0018);
+		}	
 	}
 
 	/***

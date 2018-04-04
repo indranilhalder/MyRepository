@@ -309,6 +309,15 @@ public interface MplVoucherService
 	void setApportionedValueForNoCostEMI(VoucherModel voucher, AbstractOrderModel abstractOrderModel, String voucherCode,
 			List<AbstractOrderEntryModel> applicableOrderEntryList);
 
+	/**
+	 * Releases No Cost EMI Coupons 
+	 * 
+	 * @param voucherCode
+	 * @param cartModel
+	 * @param orderModel
+	 * @throws VoucherOperationException
+	 */
+	void releaseNoCostEMIVoucher(String voucherCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException;
 
 
 }
