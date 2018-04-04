@@ -54,13 +54,13 @@ export default class JewelleryDetailsAndLink extends React.Component {
           </div>
           <div className={styles.priceContainer}>
             {this.props.price && (
-              <div className={styles.price}>{`Rs. ${this.props.price}`}</div>
+              <div className={styles.price}>{`${this.props.price}`}</div>
             )}
             {this.props.discountPrice &&
               this.props.discountPrice !== this.props.price && (
                 <div className={styles.deletePriceAndDiscount}>
                   <div className={styles.discountPrice}>
-                    {`Rs. ${this.props.discountPrice}`}
+                    {`${this.props.discountPrice}`}
                   </div>
                   <div className={styles.discount}>
                     {this.props.discount && `(${this.props.discount}%)`}

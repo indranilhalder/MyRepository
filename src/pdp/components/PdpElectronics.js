@@ -207,6 +207,8 @@ export default class PdpElectronics extends React.Component {
               <ProductDetailsMainCard
                 productName={productData.brandName}
                 productDescription={productData.productName}
+                brandUrl={productData.brandURL}
+                history={this.props.history}
                 price={productData.mrpPrice.formattedValueNoDecimal}
                 discountPrice={
                   productData.winningSellerPrice.formattedValueNoDecimal
@@ -219,6 +221,8 @@ export default class PdpElectronics extends React.Component {
               <JewelleryDetailsAndLink
                 productName={productData.brandName}
                 productDescription={productData.productName}
+                brandUrl={productData.brandURL}
+                history={this.props.history}
                 price={productData.winningSellerPrice.formattedValueNoDecimal}
                 discountPrice={productData.mrpPrice.formattedValueNoDecimal}
                 averageRating={productData.averageRating}
