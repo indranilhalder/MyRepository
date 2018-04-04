@@ -406,11 +406,13 @@ body{
 		.video-product-slider{
 			margin: 30px 0 35px 0;
 		}
-		
-
-		.video-product-carousel .video-product-logo{
+		.video-product-carousel-container{
 			position: absolute;
-		    top: 40px;
+			top: 50px;
+			z-index: 1;
+			width: 100%;
+		}
+		.video-product-carousel .video-product-title{
 		    text-align: center;
 			font-size: 24px;
 			font-weight: 500;
@@ -421,8 +423,6 @@ body{
 			color: #ffffff;
 		}
 		.video-product-carousel .video-product-desc{
-			position: absolute;
-		    top: 135px;
 		    text-align: center;
 			font-size: 14px;
 			font-weight: 300;
@@ -472,7 +472,9 @@ body{
 			float: left;
 			clear: both;
     		margin-left: 15px;
+    		margin-bottom: 35px;
 		}
+		
 		.theme-offers{
 			background-repeat: no-repeat;
     		background-size: cover;
@@ -648,6 +650,162 @@ body{
 			letter-spacing: normal;
 			text-align: left;
 			color: #ffffff;
+		}
+		
+		.mono-blp-banner {
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+
+		.mono-blp-banner .follow-brand {
+			float: right;
+			margin: 15px 15px 0 0;
+			width: 100px;
+			padding: 8px 20px;
+			border-radius: 100px;
+			border: solid 2px #ffffff;
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: center;
+			color: #ffffff;
+		}
+
+		.mono-blp-banner .banner-logo {
+			margin: 121px 0 0 15px;
+		}
+
+		.mono-blp-banner .banner-desc {
+			font-size: 30px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: left;
+			color: #ffffff;
+			margin: 15px 0 15px 15px;
+		}
+		
+		.sub-brand-banner-blp{
+			background-color: #ececec;
+			padding: 40px 0;
+		}
+		.sub-brand-banner-blp .sub-brand-heading {
+			font-size: 20px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: left;
+			color: #212121;
+			margin-bottom: 25px;
+		}
+		.subbrand-banner-blp-slider .sub-brand-img{
+			border-radius: 50%;
+		}
+		.subbrand-banner-blp-slider .sub-brand-logo{
+			margin: 15px auto 0 auto;
+    		padding-right: 15px;
+		}
+		.pr0{
+			padding-right: 0;
+		}
+		.pl0{
+			padding-left: 0;
+		}
+		.mb16{
+			margin-bottom: 16px;
+		}
+		.top-categories-widget .sub-brand-heading{
+			font-size: 20px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #212121;
+			margin: 25px 0;
+		}
+		.top-categories-widget .category-title{
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.29;
+			letter-spacing: normal;
+			text-align: center;
+			color: #ffffff;
+			position: absolute;
+			top: 45%;
+    		left: 0;
+		}
+		.br4{
+			border-radius: 4px;
+		}
+		.curated-products-widget .heading{
+			font-size: 20px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #212121;
+			margin: 25px 0;
+		}
+		.curated-products-widget .brand-name {
+			font-size: 16px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.5;
+			letter-spacing: normal;
+			color: #181818;
+			margin-top: 10px;
+		}
+
+		.curated-products-widget .product-name {
+			font-size: 14px;
+			font-weight: 300;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.43;
+			letter-spacing: normal;
+			color: #212121;
+			margin: 5px 0;
+		}
+
+		.curated-products-widget .product-price {
+			font-size: 14px;
+			font-weight: 300;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: 1.71;
+			letter-spacing: normal;
+			color: #212121;
+			margin-bottom: 25px;
+		}
+		.curated-products-widget .shop-all-btn{
+			width: 120px;
+			padding: 8px 0;
+			border-radius: 100px;
+			border: solid 2px #212121;
+			font-size: 14px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			text-align: center;
+			color: #212121;
+			float: left;
+			clear: both;
+			margin-left: 15px;
+			margin-bottom: 35px;
 		}
 		
 </style>
@@ -902,9 +1060,6 @@ body{
 											<div>
 												<a href="#"> <c:if
 														test="${not empty bannerProdCarouselElement.productCode}">
-														<%-- <product:productPrimaryImage
-															product="${bannerProdCarouselElement.productCode}"
-															format="product" /> --%>
 																    	<img src="${bannerProdCarouselElement.productCode.picture.URL}" />
 													</c:if>
 													<div class="product-name">${bannerProdCarouselElement.title}</div>
@@ -944,7 +1099,7 @@ body{
 								<td>${feature.title}</td>
 								<td><a href="${feature.webURL}">${feature.webURL}</a></td>
 								<td><img alt="" src="${feature.imageURL.URL}"></td>
-								<%-- <td>${feature.description}</td> --%>
+								<td>${feature.description}</td>
 								<td>${feature.btnText}</td>
 								<td><img alt="" src="${feature.brandLogo.URL}"></td>
 								<td><a href="${feature.videoURL}">${feature.videoURL}</a></td>
@@ -1108,29 +1263,6 @@ body{
 						</div>
 						</a>
 					</div>
-					<%-- <div>
-						<h1>BannerSeparatorComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>Title</th>
-									<th>Description</th>
-									<th>iconImageURL</th>
-									<th>Start Hex Code</th>
-									<th>End Hex Code</th>
-									<th>Web URL</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-								<td>${feature.description}</td> 
-								<td><img alt="" src="${feature.iconImageURL.URL}"></td>
-								<td>${feature.startHexCode}</td>
-								<td>${feature.endHexCode}</td>
-								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
-							</tr>
-						</table>
-					</div> --%>
 				</c:if>
 
 				<c:if
@@ -1194,6 +1326,7 @@ body{
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'MonoBLPBannerComponent'}">
+				
 					<div>
 						<h1>MonoBLPBannerComponent</h1>
 						<table class="">
@@ -1237,44 +1370,31 @@ body{
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'SubBrandBannerBLPComponent'}">
-					<div>
-						<h1>SubBrandBannerBLPComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>webURL</th>
-									<th>imageURL</th>
-									<th>brandLogo</th>
-								</tr>
-							</thead>
+
+					<div class="col-xs-12 pad0 sub-brand-banner-blp mb40">
+						<div class="col-xs-12 sub-brand-heading">${feature.title}</div>
+						<div class="col-xs-12 pad0 subbrand-banner-blp-slider">
+
 							<c:forEach items="${feature.items}"
 								var="subBrandBannerBLPElement">
-								<div>
 									<c:if
 										test="${subBrandBannerBLPElement.typeCode eq 'SubBrandBannerBLPElement'}">
-										<tr>
-											<td><a href="${subBrandBannerBLPElement.webURL}">
-													${subBrandBannerBLPElement.webURL}</a></td>
-											<td><img alt=""
-												src="${subBrandBannerBLPElement.imageURL.URL}"></td>
-											<td><img alt=""
-												src="${subBrandBannerBLPElement.brandLogo.URL}"></td>
-										</tr>
+										<div>
+											<a href="${subBrandBannerBLPElement.webURL}"> <img
+												src="${subBrandBannerBLPElement.imageURL.URL}"
+												class="sub-brand-img" /> <img
+												src="${subBrandBannerBLPElement.brandLogo.URL}"
+												class="sub-brand-logo" />
+											</a>
+										</div>
+
 									</c:if>
-								</div>
+
 							</c:forEach>
-						</table>
+
+						</div>
 					</div>
+
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'TopCategoriesWidgetComponent'}">
@@ -1736,24 +1856,24 @@ $(document).ready(function(){
 
 
 	$('.video-product-slider').slick({
-	  centerMode: true,
-	  centerPadding: '60px',
-	  slidesToShow: 2,
-	  responsive: [
-	    {
-	      breakpoint: 480,
-	      settings: {
-	        arrows: false,
-	        centerMode: true,
-	        centerPadding: '15px',
-	        slidesToShow: 2,
-	        slidesToScroll: 2,
-	        useCSS : true,
-	        cssEase : 'ease'
-	      }
-	    }
-	  ]
-	});
+		  centerMode: true,
+		  centerPadding: '60px',
+		  slidesToShow: 2,
+		  responsive: [
+		    {
+		      breakpoint: 480,
+		      settings: {
+		        arrows: false,
+		        centerMode: true,
+		        centerPadding: '15px',
+		        slidesToShow: 2,
+		        slidesToScroll: 2,
+		        useCSS : true,
+		        cssEase : 'ease'
+		      }
+		    }
+		  ]
+		});
 
 	$('.theme-offers-slider').slick({
 	  centerMode: true,
@@ -1795,6 +1915,47 @@ $(document).ready(function(){
 	    }
 	  ]
 	});
+	
+	$('.auto-brand-product-slider').slick({
+		  centerMode: true,
+		  centerPadding: '60px',
+		  slidesToShow: 2,
+		  responsive: [
+		    {
+		      breakpoint: 480,
+		      settings: {
+		        arrows: false,
+		        centerMode: true,
+		        centerPadding: '15px',
+		        slidesToShow: 2,
+		        slidesToScroll: 2,
+		        useCSS : true,
+		        cssEase : 'ease'
+		      }
+		    }
+		  ]
+		});
+
+		
+		$('.subbrand-banner-blp-slider').slick({
+		  centerMode: true,
+		  centerPadding: '60px',
+		  slidesToShow: 2,
+		  responsive: [
+		    {
+		      breakpoint: 480,
+		      settings: {
+		        arrows: false,
+		        centerMode: true,
+		        centerPadding: '15px',
+		        slidesToShow: 2,
+		        slidesToScroll: 2,
+		        useCSS : true,
+		        cssEase : 'ease'
+		      }
+		    }
+		  ]
+		});
 
 	//countdown js starts
 	// Set the date we're counting down to
