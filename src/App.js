@@ -48,7 +48,7 @@ import GiftCardContainer from "./account/containers/GiftCardContainer";
 
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 import CancelOrderContainer from "./account/containers/CancelOrderContainer";
-
+import UpdateProfileContainer from "./account/containers/UpdateProfileContainer.js";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -103,7 +103,8 @@ import {
   BRAND_AND_CATEGORY_PAGE,
   CANCEL_PREFIX,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG
+  PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE
 } from "../src/lib/constants";
 
 const auth = {
@@ -231,6 +232,11 @@ class App extends Component {
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_BRANDS_PAGE}`}
               component={MyAccountBrandsContainer}
+            />
+            <Route
+              exact
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`}
+              component={UpdateProfileContainer}
             />
 
             <Route

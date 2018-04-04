@@ -106,6 +106,12 @@ export default class ModalRoot extends React.Component {
     this.props.getUserAddress();
   };
 
+  submitOtpForUpdateProfile(otpDetails) {
+    this.props.updateProfile(this.props.ownProps, otpDetails);
+    this.props.hideModal();
+  }
+
+
   generateOtpForCliqCash = kycDetails => {
     if (this.props.getOtpToActivateWallet) {
       this.props.getOtpToActivateWallet(kycDetails, true);
@@ -164,6 +170,7 @@ export default class ModalRoot extends React.Component {
       this.props.redeemCliqVoucher(val, true);
     }
   };
+
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -185,6 +192,13 @@ export default class ModalRoot extends React.Component {
           closeModal={() => this.handleClose()}
           resendOtp={userObj => this.resendOTP(userObj)}
           submitOtp={otpDetails => this.submitOtp(otpDetails)}
+        />
+      ),
+      UpdateProfileOtpVerification: (
+        <OtpVerification
+          userObj={this.props.ownProps}
+          closeModal={() => this.handleClose()}
+          submitOtp={otpDetails => this.submitOtpForUpdateProfile(otpDetails)}
         />
       ),
       ForgotPasswordOtpVerification: (

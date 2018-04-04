@@ -44,3 +44,10 @@
   height: 2px;
   background: #000000;
 }
+.product {
+  width: 100%;
+  height: auto;
+  font-family: regular;
+  font-size: 14px;
+  display: inline-block;
+}
