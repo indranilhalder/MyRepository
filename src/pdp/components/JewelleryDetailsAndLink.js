@@ -3,6 +3,7 @@ import styles from "./JewelleryDetailsAndLink.css";
 import { HashLink as Link } from "react-router-hash-link";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 export default class JewelleryDetailsAndLink extends React.Component {
   handleClick() {
     if (this.props.onClick) {
@@ -19,13 +20,26 @@ export default class JewelleryDetailsAndLink extends React.Component {
       this.props.showPriceBreakUp();
     }
   }
+  handleBrandClick() {
+    if (this.props.brandUrl) {
+      const urlSuffix = this.props.brandUrl.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
         <div className={styles.linkHolder}>
           <div className={styles.detailsContainer}>
             {this.props.productName && (
-              <div className={styles.productName}>{this.props.productName}</div>
+              <div
+                className={styles.productName}
+                onClick={() => {
+                  this.handleBrandClick();
+                }}
+              >
+                {this.props.productName}
+              </div>
             )}
             {this.props.productDescription && (
               <div className={styles.productDescription}>
