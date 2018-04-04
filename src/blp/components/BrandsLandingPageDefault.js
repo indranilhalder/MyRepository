@@ -86,7 +86,7 @@ export default class BrandsLandingPageDefault extends React.Component {
       return list.brandName[0];
     });
     const parentBrandsLabel = Object.keys(currentActiveBrandList);
-    console.log(parentBrandsLabel);
+
     return (
       <div className={styles.base}>
         <div className={styles.header}>
