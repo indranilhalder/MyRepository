@@ -891,6 +891,8 @@
 		<property name="priceDisclaimerTextJwlry" type="String" />
 		<!-- added for get user cart details api:NU-46 -->
 		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
+		<!-- Added for NU-351 -->
+		<property name="appliedCoupon" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />

@@ -405,7 +405,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -2178,12 +2178,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 *
+	 * 
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 *
-	 *
+	 * 
+	 * 
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
@@ -3245,7 +3245,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getEgvProduct()
 	 */
 	@Override
@@ -3594,7 +3594,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetails(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3928,20 +3928,24 @@ public class MplProductWebServiceImpl implements MplProductWebService
 								final List<ClassificationDTO> classificationList = new ArrayList<ClassificationDTO>();
 								final ClassificationDTOLister lister = new ClassificationDTOLister();
 								final Classifications classifications = new Classifications();
-								for (final String setInfo : setInfoList)
+
+								if (null != setInfoList && CollectionUtils.isNotEmpty(setInfoList))
 								{
-									final ClassificationDTO classDTO = new ClassificationDTO();
-									String setAttrVal = null;
-									final String[] setAttr = setInfo.split(":", 2);
-									final String setAttrName = setAttr[0];
-									if (setAttr.length >= 2)
+									for (final String setInfo : setInfoList)
 									{
-										setAttrVal = setAttr[1];
+										final ClassificationDTO classDTO = new ClassificationDTO();
+										String setAttrVal = null;
+										final String[] setAttr = setInfo.split(":", 2);
+										final String setAttrName = setAttr[0];
+										if (setAttr.length >= 2)
+										{
+											setAttrVal = setAttr[1];
+										}
+										classDTO.setKey(setAttrName);
+										classDTO.setValue(setAttrVal);
+										classificationList.add(classDTO);
+										classifications.setClassificationList(classificationList);
 									}
-									classDTO.setKey(setAttrName);
-									classDTO.setValue(setAttrVal);
-									classificationList.add(classDTO);
-									classifications.setClassificationList(classificationList);
 								}
 								lister.setKey(overviewtabSectEntry[2]);
 								lister.setValue(classifications);
@@ -4110,28 +4114,32 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						{
 							final Map<String, String> offerMessage = entry.getValue();
 							final ProductOfferMsgDTO ProductOfferMsgDTO = new ProductOfferMsgDTO();
-							for (final Entry<String, String> entry1 : offerMessage.entrySet())
+							//IQA Code Review Fix
+							if ((null != offerMessage.entrySet()) && (CollectionUtils.isNotEmpty(offerMessage.entrySet())))
 							{
-								if (null != entry1 && null != entry1.getValue()
-										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGEDET))
+								for (final Entry<String, String> entry1 : offerMessage.entrySet())
 								{
-									ProductOfferMsgDTO.setMessageDetails(entry1.getValue());
-								}
-								if (null != entry1 && null != entry1.getValue()
-										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGE))
-								{
-									ProductOfferMsgDTO.setMessageID(entry1.getValue());
-								}
-								if (null != entry1 && null != entry1.getValue()
-										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGESTARTDATE))
-								{
+									if (null != entry1 && null != entry1.getValue()
+											&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGEDET))
+									{
+										ProductOfferMsgDTO.setMessageDetails(entry1.getValue());
+									}
+									if (null != entry1 && null != entry1.getValue()
+											&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGE))
+									{
+										ProductOfferMsgDTO.setMessageID(entry1.getValue());
+									}
+									if (null != entry1 && null != entry1.getValue()
+											&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGESTARTDATE))
+									{
 
-									ProductOfferMsgDTO.setStartDate(entry1.getValue());
-								}
-								if (null != entry1 && null != entry1.getValue()
-										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGEENDDATE))
-								{
-									ProductOfferMsgDTO.setEndDate(entry1.getValue());
+										ProductOfferMsgDTO.setStartDate(entry1.getValue());
+									}
+									if (null != entry1 && null != entry1.getValue()
+											&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGEENDDATE))
+									{
+										ProductOfferMsgDTO.setEndDate(entry1.getValue());
+									}
 								}
 							}
 							productDetailMobileNew.setProductOfferMsg(ProductOfferMsgDTO);
@@ -4257,99 +4265,102 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		List<DeliveryModeData> mplDeliverymodeInfoData = new ArrayList<DeliveryModeData>();
 		try
 		{
-			for (final SellerInformationData seller : otherSellerList)
+			if (null != otherSellerList && CollectionUtils.isNotEmpty(otherSellerList))
 			{
-				String isEMIeligible = null;
-				final SellerInformationMobileData sellerMobileData = new SellerInformationMobileData();
-				if (null != seller.getAvailableStock())
+				for (final SellerInformationData seller : otherSellerList)
 				{
-					sellerMobileData.setAvailableStock(seller.getAvailableStock().toString());
-				}
+					String isEMIeligible = null;
+					final SellerInformationMobileData sellerMobileData = new SellerInformationMobileData();
+					if (null != seller.getAvailableStock())
+					{
+						sellerMobileData.setAvailableStock(seller.getAvailableStock().toString());
+					}
 
-				if (null != seller.getSellerID())
-				{
-					sellerMobileData.setSellerId(seller.getSellerID());
-				}
-				if (null != seller.getSellername())
-				{
-					sellerMobileData.setSellerName(seller.getSellername());
-				}
-				if (null != seller.getIsCod())
-				{
-					sellerMobileData.setIsCOD(seller.getIsCod());
-				}
-				if (null != seller.getFullfillment())
-				{
-					sellerMobileData.setFullfillmentType(seller.getFullfillment());
-				}
-				if (null != seller.getReturnPolicy())
-				{
-					sellerMobileData.setReturnPolicy(seller.getReturnPolicy());
-				}
-				if (null != seller.getReplacement())
-				{
-					sellerMobileData.setReplacement(seller.getReplacement());
-				}
-				if (null != seller.getSellerAssociationstatus())
-				{
-					sellerMobileData.setSellerAssociationstatus(MarketplacecommerceservicesConstants.Y);
-				}
-				else
-				{
-					sellerMobileData.setSellerAssociationstatus(MarketplacecommerceservicesConstants.N);
-				}
-				if (null != seller.getSpPriceMobile() && null != seller.getSpPriceMobile().getValue()
-						&& seller.getSpPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
-				{
-					isEMIeligible = getEMIforProduct(seller.getSpPriceMobile().getValue());
-				}
-				else if (null != seller.getSpPrice() && null != seller.getSpPrice().getValue()
-						&& seller.getSpPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
-				{
-					isEMIeligible = getEMIforProduct(seller.getSpPrice().getValue());
-				}
-				else if (null != seller.getMopPrice() && null != seller.getMopPrice().getValue()
-						&& seller.getMopPrice().getValue().compareTo(BigDecimal.ZERO) > 0) //backward compatible
-				{
-					isEMIeligible = getEMIforProduct(seller.getMopPrice().getValue());
-				}
-				if (null != isEMIeligible)
-				{
-					sellerMobileData.setIsEMIEligible(isEMIeligible);
-				}
-				if (null != seller.getUssid())
-				{
-					sellerMobileData.setUSSID(seller.getUssid());
-				}
-				if (null != seller.getSpPriceMobile() && null != seller.getSpPriceMobile().getFormattedValue()
-						&& null != seller.getSpPriceMobile().getValue()
-						&& seller.getSpPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
-				{
-					sellerMobileData.setSpecialPriceSeller(seller.getSpPriceMobile());
-				}
-				else if (null == seller.getSpPriceMobile() && null != seller.getSpPrice()
-						&& null != seller.getSpPrice().getFormattedValue() && null != seller.getSpPrice().getValue()
-						&& seller.getSpPrice().getValue().compareTo(BigDecimal.ZERO) > 0) //backward compatible
-				{
-					sellerMobileData.setSpecialPriceSeller(seller.getSpPrice());
-				}
+					if (null != seller.getSellerID())
+					{
+						sellerMobileData.setSellerId(seller.getSellerID());
+					}
+					if (null != seller.getSellername())
+					{
+						sellerMobileData.setSellerName(seller.getSellername());
+					}
+					if (null != seller.getIsCod())
+					{
+						sellerMobileData.setIsCOD(seller.getIsCod());
+					}
+					if (null != seller.getFullfillment())
+					{
+						sellerMobileData.setFullfillmentType(seller.getFullfillment());
+					}
+					if (null != seller.getReturnPolicy())
+					{
+						sellerMobileData.setReturnPolicy(seller.getReturnPolicy());
+					}
+					if (null != seller.getReplacement())
+					{
+						sellerMobileData.setReplacement(seller.getReplacement());
+					}
+					if (null != seller.getSellerAssociationstatus())
+					{
+						sellerMobileData.setSellerAssociationstatus(MarketplacecommerceservicesConstants.Y);
+					}
+					else
+					{
+						sellerMobileData.setSellerAssociationstatus(MarketplacecommerceservicesConstants.N);
+					}
+					if (null != seller.getSpPriceMobile() && null != seller.getSpPriceMobile().getValue()
+							&& seller.getSpPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
+					{
+						isEMIeligible = getEMIforProduct(seller.getSpPriceMobile().getValue());
+					}
+					else if (null != seller.getSpPrice() && null != seller.getSpPrice().getValue()
+							&& seller.getSpPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+					{
+						isEMIeligible = getEMIforProduct(seller.getSpPrice().getValue());
+					}
+					else if (null != seller.getMopPrice() && null != seller.getMopPrice().getValue()
+							&& seller.getMopPrice().getValue().compareTo(BigDecimal.ZERO) > 0) //backward compatible
+					{
+						isEMIeligible = getEMIforProduct(seller.getMopPrice().getValue());
+					}
+					if (null != isEMIeligible)
+					{
+						sellerMobileData.setIsEMIEligible(isEMIeligible);
+					}
+					if (null != seller.getUssid())
+					{
+						sellerMobileData.setUSSID(seller.getUssid());
+					}
+					if (null != seller.getSpPriceMobile() && null != seller.getSpPriceMobile().getFormattedValue()
+							&& null != seller.getSpPriceMobile().getValue()
+							&& seller.getSpPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
+					{
+						sellerMobileData.setSpecialPriceSeller(seller.getSpPriceMobile());
+					}
+					else if (null == seller.getSpPriceMobile() && null != seller.getSpPrice()
+							&& null != seller.getSpPrice().getFormattedValue() && null != seller.getSpPrice().getValue()
+							&& seller.getSpPrice().getValue().compareTo(BigDecimal.ZERO) > 0) //backward compatible
+					{
+						sellerMobileData.setSpecialPriceSeller(seller.getSpPrice());
+					}
 
-				else if (null != seller.getMopPrice() && null != seller.getMopPrice().getFormattedValue()
-						&& null != seller.getMopPrice().getValue() && seller.getMopPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
-				{
-					sellerMobileData.setSpecialPriceSeller(seller.getMopPrice());
+					else if (null != seller.getMopPrice() && null != seller.getMopPrice().getFormattedValue()
+							&& null != seller.getMopPrice().getValue() && seller.getMopPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+					{
+						sellerMobileData.setSpecialPriceSeller(seller.getMopPrice());
+					}
+					if (null != seller.getMrpPrice() && null != seller.getMrpPrice().getFormattedValue()
+							&& null != seller.getMrpPrice().getValue() && seller.getMrpPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+					{
+						sellerMobileData.setMrpSeller(seller.getMrpPrice());
+					}
+					mplDeliverymodeInfoData = createDeliverymodeInfoDataPwa(seller, productModel);
+					if (CollectionUtils.isNotEmpty(mplDeliverymodeInfoData))
+					{
+						sellerMobileData.setEligibleDeliveryModes(mplDeliverymodeInfoData);
+					}
+					othersellerDataList.add(sellerMobileData);
 				}
-				if (null != seller.getMrpPrice() && null != seller.getMrpPrice().getFormattedValue()
-						&& null != seller.getMrpPrice().getValue() && seller.getMrpPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
-				{
-					sellerMobileData.setMrpSeller(seller.getMrpPrice());
-				}
-				mplDeliverymodeInfoData = createDeliverymodeInfoDataPwa(seller, productModel);
-				if (CollectionUtils.isNotEmpty(mplDeliverymodeInfoData))
-				{
-					sellerMobileData.setEligibleDeliveryModes(mplDeliverymodeInfoData);
-				}
-				othersellerDataList.add(sellerMobileData);
 			}
 		}
 		catch (final Exception e)
