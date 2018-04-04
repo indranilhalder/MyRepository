@@ -80,6 +80,7 @@ export default class OrderDetails extends React.Component {
     ) {
       const orderCode = queryString.parse(this.props.location.search).orderCode;
       this.props.fetchOrderDetails(orderCode);
+      this.props.setHeaderText(`#${orderCode}`);
     } else if (
       userDetails &&
       customerCookie &&
@@ -87,6 +88,7 @@ export default class OrderDetails extends React.Component {
     ) {
       const orderCode = this.props.match.params.orderCode;
       this.props.fetchOrderDetails(orderCode);
+      this.props.setHeaderText(`#${orderCode}`);
     }
   }
   updateRefundDetailsPopUp(orderId, transactionId) {
@@ -98,9 +100,7 @@ export default class OrderDetails extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    this.props.setHeaderText(`#${this.props.orderDetails.orderId}`);
-  }
+  componentDidUpdate(prevProps) {}
 
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
