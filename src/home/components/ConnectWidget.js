@@ -18,6 +18,8 @@ export default class ConnectWidget extends React.Component {
     if (this.props.feedComponentData["sub-type"] === "bannerInCard") {
       className = styles.inCard;
     }
+    console.log("IMAGE URL");
+    console.log(this.props.feedComponentData.iconImageURL);
     return (
       <div
         className={styles.holder}
@@ -42,12 +44,15 @@ export default class ConnectWidget extends React.Component {
               }}
             >
               <div className={styles.content}>
-                <div className={styles.icon}>
-                  <Icon
-                    image={this.props.feedComponentData.iconImageURL}
-                    size={40}
-                  />
-                </div>
+                {this.props.feedComponentData.iconImageURL && (
+                  <div className={styles.icon}>
+                    <Icon
+                      image={this.props.feedComponentData.iconImageURL}
+                      size={40}
+                    />
+                  </div>
+                )}
+
                 <div className={styles.connectBox}>
                   {this.props.feedComponentData.title}
                 </div>

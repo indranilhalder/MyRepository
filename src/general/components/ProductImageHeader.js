@@ -4,13 +4,18 @@ import PropTypes from "prop-types";
 import MediaQuery from "react-responsive";
 import styles from "./ProductImageHeader.css";
 export default class ProductImageHeader extends React.Component {
+  onClick = () => {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  };
   render() {
     let className = styles.base;
     if (this.props.description) {
       className = styles.hasDescription;
     }
     return (
-      <div className={className}>
+      <div className={className} onClick={this.onClick}>
         <div className={styles.content}>
           <Image image={this.props.image} />
           <MediaQuery query="(max-device-width:1024px)">
