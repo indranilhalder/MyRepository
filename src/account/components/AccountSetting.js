@@ -15,23 +15,26 @@ export default class AccountSetting extends React.Component {
         <div className={styles.accountHolder}>
           <div className={styles.profileImageHolder}>
             <div className={styles.accountImage}>
+              {this.props.image && <ProfileImage image={this.props.image} />}
               <div className={styles.accountImageText}>
                 {this.props.firstName}
               </div>
             </div>
             <div className={styles.headingText}>{this.props.heading}</div>
           </div>
-          <div className={styles.buttonHolder}>
-            <div className={styles.button}>
-              <UnderLinedButton
-                size="14px"
-                fontFamily="regular"
-                color="#ff1744"
-                label="Account Settings"
-                onClick={() => this.handleClick()}
-              />
+          {this.props.label && (
+            <div className={styles.buttonHolder}>
+              <div className={styles.button}>
+                <UnderLinedButton
+                  size="14px"
+                  fontFamily="regular"
+                  color="#ff1744"
+                  label={this.props.label}
+                  onClick={() => this.handleClick()}
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
         {this.props.isDetails && (
           <div className={styles.accountSettingFooter}>
@@ -77,6 +80,5 @@ AccountSetting.propTypes = {
   isDetails: PropTypes.bool
 };
 AccountSetting.defaultProps = {
-  isDetails: false,
-  label: "Account Settings"
+  isDetails: false
 };

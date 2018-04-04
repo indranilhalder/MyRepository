@@ -19,12 +19,14 @@ import { updateProfile } from "../../account/actions/account.actions.js";
 import {
   applyBankOffer,
   releaseBankOffer,
-  applyUserCoupon,
-  releaseUserCoupon,
+  applyUserCouponForAnonymous,
   getUserAddress,
   mergeCartId,
   generateCartIdForLoggedInUser,
-  getCartId
+  getCartId,
+  applyUserCouponForLoggedInUsers,
+  releaseCouponForAnonymous,
+  releaseUserCoupon
 } from "../../cart/actions/cart.actions";
 import {
   getOtpToActivateWallet,
@@ -105,11 +107,17 @@ const mapDispatchToProps = dispatch => {
     releaseBankOffer: couponCode => {
       dispatch(releaseBankOffer(couponCode));
     },
-    applyUserCoupon: couponCode => {
-      dispatch(applyUserCoupon(couponCode));
+    applyUserCouponForAnonymous: couponCode => {
+      dispatch(applyUserCouponForAnonymous(couponCode));
     },
-    releaseUserCoupon: couponCode => {
-      dispatch(releaseUserCoupon(couponCode));
+    releaseCouponForAnonymous: (oldCouponCode, newCouponCode) => {
+      dispatch(releaseCouponForAnonymous(oldCouponCode, newCouponCode));
+    },
+    applyUserCouponForLoggedInUsers: couponCode => {
+      dispatch(applyUserCouponForLoggedInUsers(couponCode));
+    },
+    releaseUserCoupon: (oldCouponCode, newCouponCode) => {
+      dispatch(releaseUserCoupon(oldCouponCode, newCouponCode));
     },
     getUserAddress: () => {
       dispatch(getUserAddress());

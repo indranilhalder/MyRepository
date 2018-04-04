@@ -48,21 +48,7 @@ export default class ProductModule extends React.Component {
     if (this.props.isWhite) {
       downloadImage = downloadIconWhite;
     }
-    let image;
-    switch (this.props.offer) {
-      case IS_OFFER_EXISTING:
-        image = offerFlag;
-        break;
-      case ON_EXCLUSIVE:
-        image = exclusiveFlag;
-        break;
-      case IS_NEW:
-        image = newFlag;
-        break;
 
-      default:
-        image = null;
-    }
     return (
       <div className={styles.base} onClick={this.onClick}>
         <div
@@ -76,11 +62,11 @@ export default class ProductModule extends React.Component {
           {this.props.onConnect && (
             <ConnectButton onClick={this.handleConnect} />
           )}
-          {this.props.offer && (
+          {this.props.onOffer && (
             <div className={styles.flagHolder}>
               <div className={styles.flag}>
-                <Logo image={image} />
-                <div className={styles.flagText}>{this.props.flagText}</div>
+                <Logo image={offerFlag} />
+                <div className={styles.flagText}>On offer</div>
               </div>
             </div>
           )}
@@ -113,7 +99,8 @@ ProductModule.propTypes = {
   averageRating: PropTypes.number,
   totalNoOfReviews: PropTypes.number,
   offerText: PropTypes.string,
-  bestDeliveryInfo: PropTypes.string
+  bestDeliveryInfo: PropTypes.string,
+  onOffer: PropTypes.bool
 };
 ProductModule.defaultProps = {
   view: "grid"

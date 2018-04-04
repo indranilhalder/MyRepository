@@ -6,8 +6,10 @@ import MDSpinner from "react-md-spinner";
 import {
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
-  MY_ACCOUNT_ADDRESS_ADD_PAGE
+  MY_ACCOUNT_ADDRESS_ADD_PAGE,
+  ADDRESS_BOOK
 } from "../../lib/constants.js";
+
 const ADDRESS_BOOK_HEADER = "Add a new address";
 const DELETE_LABEL = "Delete";
 const EDIT_LABEL = "Edit";
@@ -17,7 +19,9 @@ export default class AddressBook extends React.Component {
   componentDidMount() {
     this.props.getUserAddress();
   }
-
+  componentWillUpdate() {
+    this.props.setHeaderText(ADDRESS_BOOK);
+  }
   removeAddress = addressId => {
     if (this.props.removeAddress) {
       this.props.removeAddress(addressId);

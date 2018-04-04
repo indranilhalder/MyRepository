@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Plp from "../components/Plp";
 import { showModal, SORT } from "../../general/modal.actions.js";
-
+import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     showSort: () => {
@@ -10,6 +10,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     paginate: (pageNumber, suffix) => {
       ownProps.paginate(pageNumber, suffix);
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     }
   };
 };
