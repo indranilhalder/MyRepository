@@ -26,16 +26,15 @@ export default class SizeSelector extends React.Component {
       <div className={styles.base}>
         <div className={styles.header}>
           {this.props.headerText}
-          {this.props.showSizeGuide && (
-            <div className={styles.button}>
-              <UnderLinedButton
-                label={SIZE_GUIDE}
-                onClick={() => {
-                  this.handleShowSize();
-                }}
-              />
-            </div>
-          )}
+          <div className={styles.button}>
+            <UnderLinedButton
+              disabled={!this.props.hasSizeGuide}
+              label={SIZE_GUIDE}
+              onClick={() => {
+                this.handleShowSize();
+              }}
+            />
+          </div>
         </div>
         <Carousel elementWidthMobile="auto" limit={1}>
           {data

@@ -226,6 +226,7 @@ export default class PdpApparel extends React.Component {
                 history={this.props.history}
                 sizeSelected={this.checkIfSizeSelected()}
                 productId={productData.productListingId}
+                hasSizeGuide={productData.showSizeGuide}
                 showSizeGuide={this.props.showSizeGuide}
                 data={productData.variantOptions.map(value => {
                   return value.sizelink;
