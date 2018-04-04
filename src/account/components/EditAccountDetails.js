@@ -8,7 +8,7 @@ import ShopByBrandLists from "../../blp/components/ShopByBrandLists.js";
 import CheckboxAndText from "../../cart/components/CheckboxAndText.js";
 import AccountFooter from "./AccountFooter.js";
 import moment from "moment";
-import { LOG_OUT_ACCOUNT } from "../actions/account.actions.js";
+import { LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER } from "../actions/account.actions.js";
 import ChangePassword from "./ChangePassword.js";
 import * as Cookie from "../../lib/Cookie";
 import {
@@ -41,13 +41,14 @@ export default class EditAccountDetails extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.userDetails !== this.props.userDetails) {
+    if (nextProps.userDetails) {
       let formattedDate = "";
       if (nextProps.userDetails) {
         if (nextProps.userDetails.dateOfBirth) {
           let dateOfBirth = new Date(
             nextProps.userDetails.dateOfBirth.split("IST").join()
           );
+
           formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
         }
 
@@ -55,14 +56,13 @@ export default class EditAccountDetails extends React.Component {
           firstName: nextProps.userDetails.firstName,
           lastName: nextProps.userDetails.lastName,
           dateOfBirth: formattedDate,
-
           gender: nextProps.userDetails.gender,
           mobileNumber: nextProps.userDetails.mobileNumber,
           emailId: nextProps.userDetails.emailID
         });
       }
     }
-    if (nextProps.type === LOG_OUT_ACCOUNT) {
+    if (nextProps.type === LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER) {
       this.props.history.push(LOGIN_PATH);
     }
   }
@@ -139,8 +139,9 @@ export default class EditAccountDetails extends React.Component {
                 label={this.state.gender}
                 value={this.state.gender}
                 options={[
-                  { label: "Female", value: "FEMALE" },
-                  { label: "Male", value: "MALE" }
+                  { label: "Gender", value: "gender" },
+                  { label: "Female", value: "Female" },
+                  { label: "Male", value: "Male" }
                 ]}
                 arrowColour="grey"
                 height={33}
