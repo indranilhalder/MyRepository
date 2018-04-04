@@ -20,6 +20,7 @@ const PRODUCT_QUANTITY = "1";
 
 export default class SaveListDetails extends React.Component {
   componentDidMount() {
+    this.props.setHeaderText(SAVED_LIST);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (userDetails && customerCookie) {

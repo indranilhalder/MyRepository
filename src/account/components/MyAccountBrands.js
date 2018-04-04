@@ -19,6 +19,7 @@ import * as Cookie from "../../lib/Cookie";
 
 export default class MyAccountBrands extends React.Component {
   componentDidMount() {
+    this.props.setHeaderText(BRANDS);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
