@@ -45,13 +45,13 @@ class ChangePassword extends Component {
             <div className={styles.input}>
               <PasswordInput
                 placeholder={"New Password"}
-                password={this.state.NewPassword}
+                password={this.state.newPassword}
                 onChange={newPassword => this.onChange({ newPassword })}
               />
             </div>
             <PasswordInput
               placeholder={"Confirm Password"}
-              password={this.state.ConfirmPassword}
+              password={this.state.confirmPassword}
               onChange={confirmPassword => this.onChange({ confirmPassword })}
             />
           </div>
