@@ -7,10 +7,14 @@ import {
   followAndUnFollowBrandInFeedBackInCommerceApi
 } from "../actions/account.actions";
 import { SUCCESS, REQUESTING, ERROR, FAILURE } from "../../lib/constants";
+import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getFollowedBrands: () => {
       dispatch(getFollowedBrands());
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     },
     followAndUnFollowBrand: (brandId, followStatus) => {
       try {

@@ -5,6 +5,7 @@ import downloadIcon from "./img/download.svg";
 import * as Cookie from "../../lib/Cookie";
 import FooterButton from "../../general/components/FooterButton.js";
 import saveIcon from "../../general/components/img/download.svg";
+import styles from "./AddToWishListButton.css";
 
 import {
   LOGIN_PATH,
@@ -13,6 +14,7 @@ import {
 } from "../../lib/constants.js";
 export const WISHLIST_FOOTER_BUTTON_TYPE = "wishlistFooter";
 export const WISHLIST_FOOTER_ICON_TYPE = "wishlistIcon";
+export const WISHLIST_BUTTON_TEXT_TYPE = "wishlistText";
 export default class AddToWishListButton extends React.Component {
   onClick(e) {
     e.stopPropagation();
@@ -46,6 +48,17 @@ export default class AddToWishListButton extends React.Component {
           label="Save"
           onClick={e => this.onClick(e)}
         />
+      );
+    }
+
+    if (this.props.type === WISHLIST_BUTTON_TEXT_TYPE) {
+      return (
+        <div className={styles.saveButton} onClick={e => this.onClick(e)}>
+          <div className={styles.iconHolder}>
+            <Icon image={saveIcon} size={24} />
+          </div>
+          <div className={styles.saveLabel}>Save</div>
+        </div>
       );
     }
     return (

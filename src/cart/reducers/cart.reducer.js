@@ -705,6 +705,11 @@ const cart = (
         loading: false
       });
 
+    case cartActions.CLEAR_ORDER_EXPERIENCE_CAPTURE:
+      return Object.assign({}, state, {
+        orderConfirmationDetailsStatus: null
+      });
+
     case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_REQUEST:
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,

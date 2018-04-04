@@ -8,6 +8,9 @@ import informationIcon from "../../general/components/img/Info-grey.svg";
 import Button from "../../general/components/Button";
 import CheckBox from "../../general/components/CheckBox.js";
 import { DEFAULT_PIN_CODE_LOCAL_STORAGE } from "../../lib/constants.js";
+
+const INSUFFICIENT_DATA_ERROR_MESSAGE = "PLease enter valid card details";
+
 const MERCHANT_ID = "tul_uat2";
 
 const MINIMUM_YEARS_TO_SHOW = 0;
@@ -17,7 +20,7 @@ export default class CreditCardForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.expiryYearObject = [];
+    this.expiryYearObject = [{ label: "YY", value: "YY" }];
     const currentYear = new Date().getFullYear();
     for (let i = MINIMUM_YEARS_TO_SHOW; i <= MAXIMUM_YEARS_TO_SHOW; i++) {
       this.expiryYearObject.push({
@@ -27,6 +30,7 @@ export default class CreditCardForm extends React.Component {
     }
 
     this.monthOptions = [
+      { label: "MM", value: "MM" },
       { label: "1", value: 1 },
       { label: "2", value: 2 },
       { label: "3", value: 3 },
@@ -45,8 +49,8 @@ export default class CreditCardForm extends React.Component {
       cardNumberValue: props.cardNumberValue ? props.cardNumberValue : "",
       cardNameValue: props.cardNameValue ? props.cardNameValue : "",
       cardCvvValue: props.cardCvvValue ? props.cardCvvValue : "",
-      ExpiryMonth: props.ExpiryMonth ? props.ExpiryMonth : "1",
-      ExpiryYear: props.ExpiryYear ? props.ExpiryYear : "2018",
+      ExpiryMonth: props.ExpiryMonth ? props.ExpiryMonth : null,
+      ExpiryYear: props.ExpiryYear ? props.ExpiryYear : null,
       value: props.value ? props.value : "",
       monthValue: this.monthOptions[0].label,
       yearValue: "" + this.expiryYearObject[0].label
@@ -61,16 +65,20 @@ export default class CreditCardForm extends React.Component {
     this.setState({ cardNumberValue: val });
   }
   onChangeCardNumber(val) {
-    this.setState({ cardNumberValue: val });
-    if (val.length === 6) {
-      this.props.binValidation(val);
+    if (val && val.length <= 16) {
+      this.setState({ cardNumberValue: val });
+      if (val.length === 6) {
+        this.props.binValidation(val);
+      }
     }
   }
   getCardDetails(val) {
     this.setState({ cardNumberValue: val });
   }
   getCardCvvValue(val) {
-    this.setState({ cardCvvValue: val });
+    if (val && val.length <= 3) {
+      this.setState({ cardCvvValue: val });
+    }
   }
   onChangeCardName(val) {
     this.setState({ cardNameValue: val });
@@ -80,19 +88,6 @@ export default class CreditCardForm extends React.Component {
   }
   onYearChange(val) {
     this.setState({ yearValue: val });
-  }
-  onSaveCardDetails(val) {
-    if (this.props.onSaveCardDetails) {
-      let cardDetails = {};
-      cardDetails.cardNumber = this.state.cardNumberValue;
-      cardDetails.cardName = this.state.cardNameValue;
-      cardDetails.cvvNumber = this.state.cardCvvValue;
-      cardDetails.monthValue = this.state.monthValue;
-      cardDetails.yearValue = this.state.yearValue;
-      cardDetails.selected = this.state.selected;
-      cardDetails.merchant_id = MERCHANT_ID;
-      this.props.onSaveCardDetails(cardDetails);
-    }
   }
 
   payBill = cardDetails => {
@@ -105,10 +100,20 @@ export default class CreditCardForm extends React.Component {
     cardValues.selected = this.state.selected;
     cardValues.merchant_id = MERCHANT_ID;
     cardValues.pincode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-    if (this.props.isFromGiftCard) {
-      this.props.jusPayTokenizeForGiftCard(cardValues);
+    if (
+      cardValues.cardNumber &&
+      cardValues.cardName &&
+      cardValues.cvvNumber &&
+      cardValues.monthValue &&
+      cardValues.yearValue
+    ) {
+      if (this.props.isFromGiftCard) {
+        this.props.jusPayTokenizeForGiftCard(cardValues);
+      } else {
+        this.props.softReservationForPayment(cardValues);
+      }
     } else {
-      this.props.softReservationForPayment(cardValues);
+      this.props.displayToast(INSUFFICIENT_DATA_ERROR_MESSAGE);
     }
   };
 
@@ -118,8 +123,8 @@ export default class CreditCardForm extends React.Component {
         <div className={styles.cardDetails}>
           <div className={styles.content}>
             <Input2
-              placeholder="Card Number*"
-              cardNumberValue={
+              placeholder="Card Number"
+              value={
                 this.props.cardNumberValue
                   ? this.props.cardNumberValue
                   : this.state.cardNumberValue
@@ -176,7 +181,7 @@ export default class CreditCardForm extends React.Component {
                     onChange={val => this.getCardCvvValue(val)}
                     textStyle={{ fontSize: 14 }}
                     height={33}
-                    cardCvvValue={
+                    value={
                       this.props.cardCvvValue
                         ? this.props.cardCvvValue
                         : this.state.cardCvvValue
