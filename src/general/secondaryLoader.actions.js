@@ -1,15 +1,15 @@
 export const SHOW_LOADER = "SHOW_LOADER";
 export const HIDE_LOADER = "HIDE_LOADER";
-export function showSecondaryLoader(type, ownProps) {
+export function showSecondaryLoader() {
+  console.log("show called");
   return {
-    type: SHOW_LOADER,
-    secondaryLoaderDisplay: true
+    type: SHOW_LOADER
   };
 }
 
-export function hideModal() {
+export function hideSecondaryLoader() {
+  console.log("hide called");
   return {
-    type: HIDE_LOADER,
-    secondaryLoaderDisplay: false
+    type: HIDE_LOADER
   };
 }

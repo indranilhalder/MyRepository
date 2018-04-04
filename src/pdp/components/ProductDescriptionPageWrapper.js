@@ -3,6 +3,7 @@ import PdpElectronics from "./PdpElectronics";
 import PdpApparel from "./PdpApparel";
 import PdpJewellery from "./PdpJewellery";
 import PdpHome from "./PdpHome";
+
 import styles from "./ProductDescriptionPageWrapper.css";
 import ProductDescriptionPage from "./ProductDescriptionPage";
 import MDSpinner from "react-md-spinner";
@@ -27,9 +28,10 @@ const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 
 export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidMount() {
-    console.log("mounted");
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-      window.scrollTo(0, 0);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 0);
       this.props.getProductDescription(this.props.match.params[0]);
       this.props.getMsdRequest(this.props.match.params[0]);
       this.props.pdpAboutBrand(this.props.match.params[0]);
@@ -42,7 +44,9 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     } else if (
       this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
     ) {
-      window.scrollTo(0, 0);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 0);
       this.props.getProductDescription(this.props.match.params[1]);
       this.props.getMsdRequest(this.props.match.params[1]);
       this.props.pdpAboutBrand(this.props.match.params[1]);
@@ -56,12 +60,13 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       //need to show error page
     }
   }
-  componentWillUnmount() {
-    console.log("will unmount");
-  }
+
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
-      window.scrollTo(0, 0);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 0);
+
       if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
         this.props.getProductDescription(this.props.match.params[0]);
         this.props.getMsdRequest(this.props.match.params[0]);
@@ -74,7 +79,9 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       } else if (
         this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
       ) {
-        window.scrollTo(0, 0);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+        }, 0);
         this.props.getProductDescription(this.props.match.params[1]);
         this.props.getMsdRequest(this.props.match.params[1]);
         if (defaultPinCode) {
@@ -88,7 +95,12 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       }
     }
   }
-
+  showLoader = () => {
+    this.props.showSecondaryLoader();
+  };
+  hideLoader = () => {
+    this.props.hideSecondaryLoader();
+  };
   renderRootCategory = datumType => {
     let pdpToRender = typeComponentMapping[datumType];
     if (!pdpToRender) {
@@ -106,7 +118,11 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   render() {
-    console.log(this.props);
+    if (this.props.loading) {
+      this.showLoader();
+    } else {
+      this.hideLoader();
+    }
     if (this.props.productDetails) {
       return (
         <div>

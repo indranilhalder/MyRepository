@@ -10,7 +10,7 @@ import SecondaryLoader from "../components/SecondaryLoader";
 //   };
 // };
 const mapStateToProps = state => {
-  console.log(state);
+  //console.log(state);
   return {
     display: state.secondaryLoader.display
   };
