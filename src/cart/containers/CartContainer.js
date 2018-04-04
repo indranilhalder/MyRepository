@@ -15,6 +15,7 @@ import {
 import { displayToast } from "../../general/toast.actions";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
+import { setHeaderText } from "../../general/header.actions";
 import { PRODUCT_COUPONS, showModal } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
@@ -32,6 +33,9 @@ const mapDispatchToProps = dispatch => {
     },
     getCartDetails: (cartId, userId, accessToken, pinCode) => {
       dispatch(getCartDetails(cartId, userId, accessToken, pinCode));
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     },
     showCouponModal: data => {
       dispatch(showModal(PRODUCT_COUPONS, data));

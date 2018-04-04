@@ -22,7 +22,8 @@ import {
   CHECKOUT_ROUTER,
   LOGIN_PATH,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
-  YES
+  YES,
+  YOUR_BAG
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
@@ -35,7 +36,9 @@ class CartPage extends React.Component {
       changePinCode: false
     };
   }
-
+  navigateToHome() {
+    this.props.history.push(HOME_ROUTER);
+  }
   componentDidMount() {
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -79,6 +82,7 @@ class CartPage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    this.props.setHeaderText(YOUR_BAG);
     if (prevProps.cart) {
       if (prevProps.cart.cartDetails !== this.props.cart.cartDetails) {
         let productServiceAvailability = filter(
@@ -323,6 +327,12 @@ class CartPage extends React.Component {
 
             {cartDetails.products && (
               <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
+            )}
+            {!cartDetails.products && (
+              <EmptyBag
+                onContinueShopping={() => this.navigateToHome()}
+                viewSavedProduct={() => this.navigateToHome()}
+              />
             )}
             {cartDetails.products &&
               cartDetails.cartAmount && (

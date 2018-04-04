@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 import { getWishList } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import SaveListDetails from "../components/SaveListDetails";
+import { setHeaderText } from "../../general/header.actions";
 import {
   removeProductFromWishList,
   addProductToCart
@@ -11,6 +12,9 @@ const mapDispatchToProps = dispatch => {
   return {
     getWishList: () => {
       dispatch(getWishList());
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     },
     addProductToCart: (userId, cartId, accessToken, productDetails) => {
       dispatch(addProductToCart(userId, cartId, accessToken, productDetails));
