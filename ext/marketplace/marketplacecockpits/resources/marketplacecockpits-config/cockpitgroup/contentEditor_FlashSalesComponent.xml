@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="content-editor.xsd" hideEmpty="true"
+	hideReadOnly="true" groupCollections="true">
+	<template>
+	<![CDATA[
+		<table width="100%" style="margin:0px;padding:0px" class="structViewCnt">
+			<tbody>
+				
+				<tr>
+					<td><cockpit code="property" value="FlashSalesComponent.title"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="FlashSalesComponent.description"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="FlashSalesComponent.backgroundHexCode"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>	
+				<tr>
+					<td><cockpit code="property" value="FlashSalesComponent.backgroundImageURL"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="FlashSalesComponent.startDate"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>	
+				<tr>
+					<td><cockpit code="property" value="FlashSalesComponent.endDate"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>			
+				<tr>
+					<td><cockpit code="property" value="FlashSalesComponent.btnText"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>	
+				<tr>
+					<td><cockpit code="property" value="FlashSalesComponent.webURL"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="FlashSalesComponent.offers"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>	
+				<tr>
+					<td><cockpit code="property" value="FlashSalesComponent.items"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+			</tbody>
+		</table>
+	]]>
+	</template>
+</content-editor>
