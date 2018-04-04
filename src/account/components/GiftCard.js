@@ -30,6 +30,7 @@ export default class GiftCard extends React.Component {
     };
   }
   componentDidMount() {
+    this.props.setHeaderText(GIFT_CARD);
     if (this.props.getGiftCardDetails) {
       this.props.getGiftCardDetails();
     }

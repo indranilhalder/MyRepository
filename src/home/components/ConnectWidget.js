@@ -42,12 +42,15 @@ export default class ConnectWidget extends React.Component {
               }}
             >
               <div className={styles.content}>
-                <div className={styles.icon}>
-                  <Icon
-                    image={this.props.feedComponentData.iconImageURL}
-                    size={40}
-                  />
-                </div>
+                {this.props.feedComponentData.iconImageURL && (
+                  <div className={styles.icon}>
+                    <Icon
+                      image={this.props.feedComponentData.iconImageURL}
+                      size={40}
+                    />
+                  </div>
+                )}
+
                 <div className={styles.connectBox}>
                   {this.props.feedComponentData.title}
                 </div>
