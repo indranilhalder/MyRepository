@@ -43,14 +43,9 @@ export default class ThemeProductWidget extends React.Component {
       return null;
     }
 
-    console.log("FEED DATA");
-    console.log(this.props.feedComponentData);
     if (this.props.feedComponentData.items) {
       items = this.props.feedComponentData.items.map(transformData);
     }
-
-    console.log("WIDGET DATA");
-    console.log(widgetData);
 
     return (
       <div
