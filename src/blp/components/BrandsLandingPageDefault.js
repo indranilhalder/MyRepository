@@ -154,7 +154,7 @@ export default class BrandsLandingPageDefault extends React.Component {
         </div>
         <div className={styles.following} />
         <div className={styles.category}>
-          {parentBrandsLabel &&
+          {parentBrandsLabel && parentBrandsLabel.length !== 0 ? (
             parentBrandsLabel.map((val, i) => {
               return (
                 <BrandsCategory index={val} catagory={val} key={i}>
@@ -171,7 +171,10 @@ export default class BrandsLandingPageDefault extends React.Component {
                     })}
                 </BrandsCategory>
               );
-            })}
+            })
+          ) : (
+            <div className={styles.noResultHolder}>No Result Found </div>
+          )}
         </div>
       </div>
     );
