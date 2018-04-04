@@ -155,7 +155,25 @@ class App extends Component {
       }
     }
   }
-
+  componentDidUpdate() {
+    let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let loggedInUserDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsForLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    if (
+      customerAccessToken &&
+      cartDetailsForLoggedInUser &&
+      loggedInUserDetails
+    ) {
+      if (
+        this.props.location.pathname.indexOf(LOGIN_PATH) !== -1 ||
+        this.props.location.pathname.indexOf(SIGN_UP_PATH) !== -1
+      ) {
+        this.props.history.push(`${HOME_ROUTER}`);
+      }
+    }
+  }
   renderLoader() {
     return (
       <div className={AppStyles.loadingIndicator}>
