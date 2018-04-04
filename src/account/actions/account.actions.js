@@ -1528,7 +1528,7 @@ export function followAndUnFollowBrandInCommerceFailure(error) {
 }
 
 export function updateProfile(accountDetails, otp) {
-  console.log(accountDetails);
+
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {

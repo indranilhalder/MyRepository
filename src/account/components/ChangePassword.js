@@ -23,7 +23,7 @@ class ChangePassword extends Component {
   };
 
   updatePassword = () => {
-    if (this.state.NewPassword === this.state.ConfirmPassword) {
+    if (this.state.newPassword === this.state.confirmPassword) {
       if (this.props.updatePassword) {
         this.props.updatePassword(this.state);
       }
@@ -31,7 +31,6 @@ class ChangePassword extends Component {
   };
 
   render() {
-    console.log(this.state);
     return (
       <AuthFrame {...this.props} showSocialButtons={false}>
         <div>

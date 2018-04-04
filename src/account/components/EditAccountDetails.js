@@ -68,8 +68,6 @@ export default class EditAccountDetails extends React.Component {
     this.setState(val);
   }
   onChangeDateOfBirth = val => {
-    // let dateOfBirth = moment(val).format("YYYY-MM-DD");
-    console.log(val);
     this.setState({ dateOfBirth: val });
   };
   updateProfile = () => {
@@ -90,7 +88,6 @@ export default class EditAccountDetails extends React.Component {
     this.setState({ changePassword: true });
   };
   render() {
-    console.log(this.state);
     let userDetails = this.props.userDetails;
     if (userDetails && !this.state.changePassword) {
       return (
