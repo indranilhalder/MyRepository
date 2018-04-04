@@ -23,6 +23,7 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -96,6 +97,7 @@ import com.tisl.mpl.wsdto.PaymentServiceWsDTO;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
 import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
+import com.tisl.mpl.wsdto.mplNoCostEMIBankTenureDTO;
 import com.tisl.mpl.wsdto.mplNoCostEMIEligibilityDTO;
 import com.tisl.wsdto.MplNoCostEMITermsDTO;
 
@@ -2155,7 +2157,7 @@ public class PaymentServicesController extends BaseController
 	}
 
 	/**
-	 * This method Provided no cost emi available or not
+	 * This method Provided noCost EMI available or not
 	 *
 	 * @param cartGuid
 	 * @return MplSavedCardDTO
@@ -2171,47 +2173,10 @@ public class PaymentServicesController extends BaseController
 		final mplNoCostEMIEligibilityDTO noCostEmiWsDTO = new mplNoCostEMIEligibilityDTO();
 		try
 		{
-
-
-			if (StringUtils.isNotEmpty(cartGuid))
-			{
-				final CartModel cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
-				{
-					for (final AbstractOrderEntryModel itemEntry : cartModel.getEntries())
-					{
-						if (null != itemEntry)
-						{
-							final String productCode = itemEntry.getProduct().getCode();
-							final String ussid = itemEntry.getSelectedUSSID();
-							String sellerId = null;
-							if (StringUtils.isNotEmpty(ussid))
-							{
-								sellerId = ussid.substring(0, 6);
-							}
-
-							if (StringUtils.isNotEmpty(productCode) && StringUtils.isNotEmpty(sellerId))
-							{
-								LOG.debug("product seller id ----" + sellerId);
-								LOG.debug("product listing id ----" + productCode);
-
-								emiFlag = getMplPaymentFacade().isNoCostEmiAvailable(productCode, sellerId);
-
-								if (emiFlag)
-								{
-									break;
-								}
-
-							}
-
-
-
-						}
-					}
-				}
-
-			}
-			noCostEmiWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			final Tuple2<?, ?> bankResult = getNoOfEligibleproducts(cartGuid);
+			emiFlag = ((Boolean) bankResult.getFirst()).booleanValue();
+			noCostEmiWsDTO.setIsNoCostEMIEligible(emiFlag);
+			noCostEmiWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
@@ -2246,12 +2211,161 @@ public class PaymentServicesController extends BaseController
 			}
 			noCostEmiWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-
-		noCostEmiWsDTO.setIsNoCostEMIEligible(emiFlag);
 		return noCostEmiWsDTO;
 
 	}
 
+	private Tuple2<?, ?> getNoOfEligibleproducts(final String cartGuid) throws EtailBusinessExceptions,
+			EtailNonBusinessExceptions, Exception
+	{
+		int count = 0;
+		boolean emiFlag = false;
+		if (StringUtils.isNotEmpty(cartGuid))
+		{
+			final OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+
+			if (null == orderModel)
+			{ // for  cart model
+				final CartModel cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				if (null != cartModel && null != cartModel.getIsEGVCart() && !cartModel.getIsEGVCart().booleanValue())
+				{
+					if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+					{
+						for (final AbstractOrderEntryModel itemEntry : cartModel.getEntries())
+						{
+							if (null != itemEntry)
+							{
+								final String productCode = itemEntry.getProduct().getCode();
+								final String ussid = itemEntry.getSelectedUSSID();
+								String sellerId = StringUtils.isNotEmpty(ussid) ? sellerId = ussid.substring(0, 6) : null;
+
+								if (StringUtils.isNotEmpty(productCode) && StringUtils.isNotEmpty(sellerId))
+								{
+									LOG.debug("product seller id ----" + sellerId);
+									LOG.debug("product listing id ----" + productCode);
+
+									emiFlag = getMplPaymentFacade().isNoCostEmiAvailable(productCode, sellerId);
+
+									if (emiFlag)
+									{
+										count++;
+									}
+
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+			{ // for order model
+
+				if (null != orderModel.getIsEGVCart() && !orderModel.getIsEGVCart().booleanValue())
+				{
+
+					if (CollectionUtils.isNotEmpty(orderModel.getEntries()))
+					{
+						for (final AbstractOrderEntryModel itemEntry : orderModel.getEntries())
+						{
+							if (null != itemEntry)
+							{
+								final String productCode = itemEntry.getProduct().getCode();
+								final String ussid = itemEntry.getSelectedUSSID();
+								String sellerId = StringUtils.isNotEmpty(ussid) ? sellerId = ussid.substring(0, 6) : null;
+
+								if (StringUtils.isNotEmpty(productCode) && StringUtils.isNotEmpty(sellerId))
+								{
+									LOG.debug("product seller id ----" + sellerId);
+									LOG.debug("product listing id ----" + productCode);
+
+									emiFlag = getMplPaymentFacade().isNoCostEmiAvailable(productCode, sellerId);
+
+									if (emiFlag)
+									{
+										count++;
+									}
+
+								}
+
+							}
+						}
+					}
+				}
+			}
+
+		}
+
+		if (count > 0)
+		{
+			emiFlag = true;
+		}
+		return new Tuple2(Boolean.valueOf(emiFlag), String.valueOf(count));
+	}
+
+	/**
+	 * This method Provided nocost EMI bank names with coupon list
+	 *
+	 * @param cartGuid
+	 * @return mplNoCostEMIBankTenureDTO
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.NOCOSTEMITENURELIST, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
+	@ResponseBody
+	public mplNoCostEMIBankTenureDTO noCostEmiTenureList(@RequestParam(required = false) final String cartGuid)
+	{
+		mplNoCostEMIBankTenureDTO noCostEmiTenureList = new mplNoCostEMIBankTenureDTO();
+
+		try
+		{
+			noCostEmiTenureList = getMplPaymentFacade().noCostEmiBankTenureList();
+			if (noCostEmiTenureList != null)
+			{
+
+				final Tuple2<?, ?> emiResult = getNoOfEligibleproducts(cartGuid);
+				noCostEmiTenureList.setNumEligibleProducts((String) emiResult.getSecond());
+				noCostEmiTenureList.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				noCostEmiTenureList.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				noCostEmiTenureList.setErrorCode(e.getErrorCode());
+			}
+			noCostEmiTenureList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				noCostEmiTenureList.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				noCostEmiTenureList.setErrorCode(e.getErrorCode());
+			}
+			noCostEmiTenureList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			noCostEmiTenureList.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			noCostEmiTenureList.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			noCostEmiTenureList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return noCostEmiTenureList;
+
+	}
 
 	/**
 	 * Method to share terms and conditions for a NoCostEMIBank

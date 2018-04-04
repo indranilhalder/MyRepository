@@ -34,6 +34,7 @@ import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
 import com.tisl.mpl.juspay.response.AddCardResponse;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.model.BankModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 
 
@@ -500,4 +501,7 @@ public interface MplPaymentService
 	List<EMIBankModel> getBankDetailsforEMI(Double productValue) throws EtailNonBusinessExceptions;
 	
 	public boolean isNoCostEmiAvailable(String productCode, String sellerId);
+	
+	Map<EMIBankModel, List<MplNoCostEMIVoucherModel>> getNoCostEmiCouponDetails() throws EtailNonBusinessExceptions;
+
 }
