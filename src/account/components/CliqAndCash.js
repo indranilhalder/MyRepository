@@ -43,6 +43,7 @@ export default class CliqAndCash extends React.Component {
     this.props.setHeaderText(CLIQ_CASH);
   }
   componentDidMount() {
+    this.props.setHeaderText(CLIQ_CASH);
     if (this.props.getCliqCashDetails) {
       this.props.getCliqCashDetails();
     }

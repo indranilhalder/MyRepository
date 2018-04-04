@@ -40,6 +40,7 @@ export default class BannerProductCarousal extends React.Component {
             image={feedComponentData.imageURL}
             name={feedComponentData.title}
             label={feedComponentData.description}
+            onClick={() => this.handleClick()}
           />
         }
         carouselOptions={{

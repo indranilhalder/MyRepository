@@ -273,7 +273,6 @@ class CartPage extends React.Component {
                 />
               )}
           </div>
-          {!cartDetails.products && <EmptyBag />}
 
           <div
             className={defaultPinCode === "" ? styles.disabled : styles.content}

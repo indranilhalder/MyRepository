@@ -2,12 +2,20 @@ import React from "react";
 import styles from "./ProductDetailsMainCard.css";
 import StarRating from "../../general/components/StarRating.js";
 import { Icon } from "xelpmoc-core";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import arrowIcon from "../../general/components/img/arrow.svg";
 import PropTypes from "prop-types";
 export default class ProductDetailsMainCard extends React.Component {
   handleClick() {
     if (this.props.onClick) {
       this.props.onClick();
+    }
+  }
+
+  handleBrandClick() {
+    if (this.props.brandUrl) {
+      const urlSuffix = this.props.brandUrl.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
     }
   }
   render() {
@@ -19,7 +27,12 @@ export default class ProductDetailsMainCard extends React.Component {
       <div className={styles.base}>
         <div className={styles.productInfo}>
           <div className={styles.productDescriptionSection}>
-            <div className={styles.productName}>{this.props.productName}</div>
+            <div
+              className={styles.productName}
+              onClick={() => this.handleBrandClick()}
+            >
+              {this.props.productName}
+            </div>
             <div className={styles.productDescription}>
               {this.props.productDescription}
             </div>

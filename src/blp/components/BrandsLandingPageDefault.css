@@ -54,3 +54,12 @@
 .searchIcon {
   padding: 10px;
 }
+.noResultHolder {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 16px;
+  font-family: semibold;
+  text-align: center;
+  opacity: 0.5;
+}

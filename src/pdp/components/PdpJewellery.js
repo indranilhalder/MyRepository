@@ -217,6 +217,7 @@ export default class PdpJewellery extends React.Component {
               discountPrice={productData.mrpPrice.formattedValueNoDecimal}
               averageRating={productData.averageRating}
               discount={productData.discount}
+              brandUrl={productData.brandURL}
               hasPriceBreakUp={productData.priceBreakUpDetailsMap}
               history={this.props.history}
               showPriceBreakUp={() => {

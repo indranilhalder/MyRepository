@@ -7,5 +7,7 @@ export function transformFetchingItemsOrder(itemsIds, itemsObj) {
     });
     orderedItems.push(findObj);
   });
+
+  orderedItems = orderedItems.filter(Boolean);
   return orderedItems;
 }
