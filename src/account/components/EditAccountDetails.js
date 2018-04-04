@@ -42,11 +42,14 @@ export default class EditAccountDetails extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.userDetails !== this.props.userDetails) {
+      let formattedDate = "";
       if (nextProps.userDetails) {
-        let dateOfBirth = new Date(
-          nextProps.userDetails.dateOfBirth.split("IST").join()
-        );
-        let formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
+        if (nextProps.userDetails.dateOfBirth) {
+          let dateOfBirth = new Date(
+            nextProps.userDetails.dateOfBirth.split("IST").join()
+          );
+          formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
+        }
 
         this.setState({
           firstName: nextProps.userDetails.firstName,
@@ -68,7 +71,8 @@ export default class EditAccountDetails extends React.Component {
     this.setState(val);
   }
   onChangeDateOfBirth = val => {
-    this.setState({ dateOfBirth: val });
+    let formattedDate = moment(val).format("DD/MM/YYYY");
+    this.setState({ dateOfBirth: formattedDate });
   };
   updateProfile = () => {
     if (this.props.updateProfile) {
@@ -146,9 +150,7 @@ export default class EditAccountDetails extends React.Component {
             <div className={styles.container}>
               <MobileDatePicker
                 value={this.state.dateOfBirth}
-                onChange={dateOfBirth =>
-                  this.onChangeDateOfBirth({ dateOfBirth })
-                }
+                onChange={dateOfBirth => this.onChangeDateOfBirth(dateOfBirth)}
               />
             </div>
           </div>
