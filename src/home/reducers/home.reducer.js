@@ -18,7 +18,11 @@ const home = (
   },
   action
 ) => {
-  let homeFeedData, toUpdate, componentData, homeFeedClonedData;
+  let homeFeedData,
+    toUpdate,
+    componentData,
+    homeFeedClonedData,
+    clonedComponent;
   switch (action.type) {
     case homeActions.GET_PRODUCT_CAPSULES_REQUEST:
       return Object.assign({}, state, {
@@ -136,21 +140,24 @@ const home = (
       });
 
     case homeActions.COMPONENT_DATA_REQUEST:
-      homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].loading = true;
+      homeFeedData = state.homeFeed;
+      clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
+      clonedComponent.loading = true;
+      homeFeedData[action.positionInFeed] = clonedComponent;
       return Object.assign({}, state, {
         status: action.status,
         homeFeed: homeFeedData
       });
 
     case homeActions.GET_ITEMS_SUCCESS:
-      homeFeedData = cloneDeep(state.homeFeed);
-      const orderedItems = transformFetchingItemsOrder(
+      homeFeedData = state.homeFeed;
+      clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
+      clonedComponent.items = transformFetchingItemsOrder(
         homeFeedData[action.positionInFeed].itemIds,
         action.items
       );
 
-      homeFeedData[action.positionInFeed].items = orderedItems;
+      homeFeedData[action.positionInFeed] = clonedComponent;
       return Object.assign({}, state, {
         homeFeed: homeFeedData,
         status: action.status
@@ -158,7 +165,7 @@ const home = (
 
     case homeActions.COMPONENT_DATA_SUCCESS:
       if (!state.homeFeed[action.positionInFeed].useBackUpData) {
-        homeFeedData = cloneDeep(state.homeFeed);
+        homeFeedData = state.homeFeed;
         componentData = {
           loading: false,
           status: action.status
@@ -189,9 +196,11 @@ const home = (
       break;
 
     case homeActions.COMPONENT_DATA_FAILURE:
-      homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].loading = false;
-      homeFeedData[action.positionInFeed].status = action.error;
+      homeFeedData = state.homeFeed;
+      clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
+      clonedComponent.loading = true;
+      clonedComponent.status = action.error;
+      homeFeedData[action.positionInFeed] = clonedComponent;
 
       return Object.assign({}, state, {
         status: action.status,
