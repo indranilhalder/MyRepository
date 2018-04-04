@@ -82,7 +82,7 @@ export default class SocialButtons extends Component {
         ? this.props.titleTextSignIp
         : this.props.titleTextLogin;
     return (
-      <div>
+      <div className={styles.base}>
         <div className={styles.textHolder}>
           <p className={styles.title}>{titleText}</p>
         </div>
