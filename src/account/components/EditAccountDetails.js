@@ -43,24 +43,23 @@ export default class EditAccountDetails extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.userDetails) {
       let formattedDate = "";
-      if (nextProps.userDetails) {
-        if (nextProps.userDetails.dateOfBirth) {
-          let dateOfBirth = new Date(
-            nextProps.userDetails.dateOfBirth.split("IST").join()
-          );
 
-          formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
-        }
+      if (nextProps.userDetails.dateOfBirth) {
+        let dateOfBirth = new Date(
+          nextProps.userDetails.dateOfBirth.split("IST").join()
+        );
 
-        this.setState({
-          firstName: nextProps.userDetails.firstName,
-          lastName: nextProps.userDetails.lastName,
-          dateOfBirth: formattedDate,
-          gender: nextProps.userDetails.gender,
-          mobileNumber: nextProps.userDetails.mobileNumber,
-          emailId: nextProps.userDetails.emailID
-        });
+        formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
       }
+
+      this.setState({
+        firstName: nextProps.userDetails.firstName,
+        lastName: nextProps.userDetails.lastName,
+        dateOfBirth: formattedDate,
+        gender: nextProps.userDetails.gender,
+        mobileNumber: nextProps.userDetails.mobileNumber,
+        emailId: nextProps.userDetails.emailID
+      });
     }
     if (nextProps.type === LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER) {
       this.props.history.push(LOGIN_PATH);
