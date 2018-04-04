@@ -183,7 +183,7 @@ export default class EditAccountDetails extends React.Component {
       );
     } else if (this.state.changePassword) {
       return (
-        <div className={styles.changePassword}>
+        <div className={styles.changePasswordPageHolder}>
           <ChangePassword
             updatePassword={passwordDetails =>
               this.changePassword(passwordDetails)
