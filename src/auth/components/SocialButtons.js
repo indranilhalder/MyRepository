@@ -83,10 +83,10 @@ export default class SocialButtons extends Component {
         : this.props.titleTextLogin;
     return (
       <div>
+        <div className={styles.textHolder}>
+          <p className={styles.title}>{titleText}</p>
+        </div>
         <MediaQuery query="(min-device-width: 1025px)">
-          <div className={styles.textHolder}>
-            <p className={styles.title}>{titleText}</p>
-          </div>
           <div className={styles.base}>
             <div className={styles.holder}>
               <CircleButton
