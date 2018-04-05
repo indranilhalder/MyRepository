@@ -128,6 +128,7 @@ export default class AddDeliveryAddress extends React.Component {
                 ? this.props.postalCode
                 : this.state.postalCode
             }
+            type={"number"}
             rightChildSize={33}
             rightChild={
               <CircleButton
