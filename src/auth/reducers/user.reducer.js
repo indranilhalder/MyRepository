@@ -8,7 +8,8 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   REFRESH_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  CART_DETAILS_FOR_LOGGED_IN_USER
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  CART_DETAILS_FOR_ANONYMOUS
 } from "../../lib/constants";
 const user = (
   state = {
@@ -33,6 +34,7 @@ const user = (
     case LOGOUT: {
       Cookies.deleteCookie(CUSTOMER_ACCESS_TOKEN);
       Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
       Cookies.deleteCookie(LOGGED_IN_USER_DETAILS);
       localStorage.clear();
       return Object.assign({}, state, {

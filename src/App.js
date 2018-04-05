@@ -118,6 +118,7 @@ const auth = {
 };
 class App extends Component {
   async componentDidMount() {
+    console.log("Call me ");
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
@@ -150,7 +151,16 @@ class App extends Component {
       }
     }
   }
-
+  componentDidUpdate() {
+    const cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    if (
+      !cartIdForAnonymous &&
+      this.props.cartIdForAnonymousUSerStatus !== REQUESTING
+    ) {
+      console.log("CALL ME IN COMPONENT DID UPDATE");
+      this.props.generateCartIdForAnonymous();
+    }
+  }
   renderLoader() {
     return (
       <div className={AppStyles.loadingIndicator}>
