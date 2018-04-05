@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import styles from "./HeaderWrapper.css";
 import SearchContainer from "../../search/SearchContainer.js";
-
+import queryString, { parse } from "query-string";
 import {
   HOME_ROUTER,
   PRODUCT_CART_ROUTER,
@@ -25,7 +25,14 @@ import { SIGN_UP } from "../../auth/actions/user.actions";
 const PRODUCT_CODE_REGEX = /p-(.*)/;
 class HeaderWrapper extends React.Component {
   onBackClick = () => {
-    this.props.history.goBack();
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    const value = parsedQueryString.status;
+
+    if (value === "CHARGED") {
+      window.history.go(-3);
+    } else {
+      this.props.history.goBack();
+    }
   };
   goToCart = () => {
     if (this.props.history) {

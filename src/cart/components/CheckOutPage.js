@@ -36,7 +36,8 @@ import {
   ORDER_PREFIX,
   MY_ACCOUNT,
   ORDER,
-  ORDER_CODE
+  ORDER_CODE,
+  REQUESTING
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
@@ -367,36 +368,41 @@ class CheckOutPage extends React.Component {
       nextProps.cart.cartDetailsCNC
     ) {
       let defaultSelectedDeliveryModes = {};
-      nextProps.cart.cartDetailsCNC.products.forEach(product => {
-        //check for delivery modes is exit or not for every pincode
-        // if we don;t have any delivery modes for any product
-        // then we ned to navigate user to mybag
+      if (
+        nextProps.cart.cartDetailsCNC &&
+        nextProps.cart.cartDetailsCNC.products
+      ) {
+        nextProps.cart.cartDetailsCNC.products.forEach(product => {
+          //check for delivery modes is exit or not for every pincode
+          // if we don;t have any delivery modes for any product
+          // then we ned to navigate user to mybag
 
-        if (!product.elligibleDeliveryMode) {
-          this.navigateToMyBag();
-        }
-        // end of navigate user to myBag
+          if (!product.elligibleDeliveryMode) {
+            this.navigateToMyBag();
+          }
+          // end of navigate user to myBag
 
-        if (
-          product.elligibleDeliveryMode &&
-          product.elligibleDeliveryMode.findIndex(mode => {
-            return mode.code === HOME_DELIVERY;
-          }) >= 0
-        ) {
-          let newObjectAdd = {};
-          newObjectAdd[product.USSID] = HOME_DELIVERY;
-          Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
-        } else if (
-          product.elligibleDeliveryMode &&
-          product.elligibleDeliveryMode.findIndex(mode => {
-            return mode.code === EXPRESS;
-          }) >= 0
-        ) {
-          let newObjectAdd = {};
-          newObjectAdd[product.USSID] = EXPRESS;
-          Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
-        }
-      });
+          if (
+            product.elligibleDeliveryMode &&
+            product.elligibleDeliveryMode.findIndex(mode => {
+              return mode.code === HOME_DELIVERY;
+            }) >= 0
+          ) {
+            let newObjectAdd = {};
+            newObjectAdd[product.USSID] = HOME_DELIVERY;
+            Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
+          } else if (
+            product.elligibleDeliveryMode &&
+            product.elligibleDeliveryMode.findIndex(mode => {
+              return mode.code === EXPRESS;
+            }) >= 0
+          ) {
+            let newObjectAdd = {};
+            newObjectAdd[product.USSID] = EXPRESS;
+            Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
+          }
+        });
+      }
       this.setState({ ussIdAndDeliveryModesObj: defaultSelectedDeliveryModes });
     }
 
@@ -487,7 +493,11 @@ class CheckOutPage extends React.Component {
           );
         }
       }
-    } else if (this.props.location.state.isFromGiftCard) {
+    } else if (
+      this.props.location &&
+      this.props.location.state &&
+      this.props.location.state.isFromGiftCard
+    ) {
       this.setState({ isGiftCard: true });
       let guIdObject = new FormData();
       guIdObject.append(CART_GU_ID, this.props.location.state.egvCartGuid);
@@ -515,11 +525,13 @@ class CheckOutPage extends React.Component {
         );
         let guIdObject = new FormData();
         guIdObject.append(CART_GU_ID, JSON.parse(cartDetailsLoggedInUser).guid);
-        this.props.getPaymentModes(guIdObject);
+
         this.props.getPaymentModes(guIdObject);
         this.props.getCODEligibility();
         this.props.getNetBankDetails();
-        this.props.getEmiBankDetails(this.props.location.state.productValue);
+        if (this.props.location && this.props.location.state) {
+          this.props.getEmiBankDetails(this.props.location.state.productValue);
+        }
       }
     }
   }
@@ -769,16 +781,14 @@ class CheckOutPage extends React.Component {
       this.props.cart.cartDetailsCNC &&
       this.props.cart.cartDetailsCNC.products
     ) {
-      console.log(this.props.cart.addingAddress);
-      if (this.props.cart.loading) {
-        // return <div className={styles.base}>{this.renderLoader()}</div>;
+      if (this.props.cart.loading && this.props.cart.cartDetailsCNC) {
         this.props.showSecondaryLoader();
       } else {
         this.props.hideSecondaryLoader();
       }
     }
-    const cartData = this.props.cart;
 
+    const cartData = this.props.cart;
     let deliveryCharge = 0;
     let couponDiscount = 0;
     let totalDiscount = 0;
@@ -982,7 +992,7 @@ class CheckOutPage extends React.Component {
         </div>
       );
     } else {
-      return <div className={styles.base}>{this.renderLoader()}</div>;
+      return null;
     }
   }
 }

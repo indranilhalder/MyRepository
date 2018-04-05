@@ -10,6 +10,7 @@ export const REQUESTING = "requesting";
 export const ERROR = "error";
 export const FAILURE = "Failure";
 export const FAILURE_UPPERCASE = "FAILURE";
+export const FAILURE_LOWERCASE = "failure";
 export const JUS_PAY_PENDING = "PENDING_VBV";
 export const JUS_PAY_CHARGED = "CHARGED";
 export const SINGLE_SELECT_HEADING_COPY = "Thanks!!!";

@@ -213,11 +213,50 @@ class CartPage extends React.Component {
   changePinCode = () => {
     this.setState({ changePinCode: true });
   };
+
+  renderEmptyBag = () => {
+    let defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+    return (
+      <div className={styles.base}>
+        <div className={styles.content}>
+          {(!defaultPinCode || this.state.changePinCode) && (
+            <div className={styles.search}>
+              <SearchAndUpdate
+                value={defaultPinCode}
+                getPinCode={val => this.setState({ pinCode: val })}
+                checkPinCodeAvailability={val =>
+                  this.checkPinCodeAvailability(val)
+                }
+                labelText="check"
+              />
+            </div>
+          )}
+          {!this.state.changePinCode &&
+            defaultPinCode && (
+              <TextWithUnderLine
+                heading={defaultPinCode}
+                onClick={() => this.changePinCode()}
+                buttonLabel="Change"
+              />
+            )}
+        </div>
+        <div className={styles.content}>
+          <EmptyBag
+            onContinueShopping={() => this.navigateToHome()}
+            viewSavedProduct={() => this.navigateToHome()}
+          />
+        </div>
+      </div>
+    );
+  };
   render() {
     const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const cartDetailsForAnonymous = Cookie.getCookie(
       CART_DETAILS_FOR_ANONYMOUS
     );
+    if (this.props.cart.loading && !this.props.cart.cartDetails) {
+      return this.renderLoader();
+    }
     if (this.props.cart.loading && this.props.cart.cartDetails) {
       this.props.showSecondaryLoader();
     } else {
@@ -227,7 +266,8 @@ class CartPage extends React.Component {
     if (!globalAccessToken && !cartDetailsForAnonymous) {
       return <Redirect exact to={HOME_ROUTER} />;
     }
-    if (this.props.cart.cartDetails) {
+
+    if (this.props.cart.cartDetails && this.props.cart.cartDetails.products) {
       const cartDetails = this.props.cart.cartDetails;
       let defaultPinCode;
       let deliveryCharge = 0;
@@ -250,9 +290,6 @@ class CartPage extends React.Component {
         if (cartDetails.cartAmount.couponDiscountAmount) {
           couponDiscount =
             cartDetails.cartAmount.couponDiscountAmount.formattedValue;
-        }
-        if (cartDetails.products) {
-          defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
         }
       }
 
@@ -334,12 +371,7 @@ class CartPage extends React.Component {
             {cartDetails.products && (
               <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
             )}
-            {!cartDetails.products && (
-              <EmptyBag
-                onContinueShopping={() => this.navigateToHome()}
-                viewSavedProduct={() => this.navigateToHome()}
-              />
-            )}
+
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
@@ -356,7 +388,7 @@ class CartPage extends React.Component {
         </div>
       );
     } else {
-      return this.renderLoader();
+      return this.renderEmptyBag();
     }
   }
 }

@@ -54,7 +54,25 @@ const mapStateToProps = state => {
     getPinCodeError: state.profile.getPinCodeError,
     updateReturnDetailsError: state.profile.updateReturnDetailsError,
     cancelProductDetailsError: state.profile.cancelProductDetailsError,
-    cancelProductError: state.profile.cancelProductError
+    cancelProductError: state.profile.cancelProductError,
+    updateQuantityLoggedInError: state.cart.updateQuantityLoggedInError,
+    updateQuantityLoggedOutError: state.cart.updateQuantityLoggedOutError,
+    justPayPaymentDetailsError: state.cart.justPayPaymentDetailsError,
+    orderSummaryError: state.cart.orderSummaryError,
+    storeError: state.cart.storeError,
+    paymentModesError: state.cart.paymentModesError,
+    transactionCODError: state.cart.transactionCODError,
+    softReserveCODPaymentError: state.cart.softReserveCODPaymentError,
+    orderExperienceError: state.cart.orderExperienceError,
+    binValidationError: state.cart.binValidationError,
+    addToWishlistError: state.cart.addToWishlistError,
+    removeCartItemError: state.cart.removeCartItemError,
+    removeCartItemLoggedOutError: state.cart.removeCartItemLoggedOutError,
+    softReservationForPaymentError: state.cart.softReservationForPaymentError,
+    jusPayTokenizeError: state.cart.jusPayTokenizeError,
+    createJusPayOrderError: state.cart.createJusPayOrderError,
+    getUserAddressError: state.cart.getUserAddressError,
+    netBankDetailsError: state.cart.netBankDetailsError
   };
 };
 
@@ -98,6 +116,7 @@ class ErrorDisplay extends React.Component {
     each(errorKeys, key => {
       const previousError = prevProps[key];
       const currentError = this.props[key];
+
       if (previousError !== currentError) {
         if (currentError !== "" && currentError !== null && !seenError) {
           this.displayError(currentError);
@@ -113,6 +132,7 @@ class ErrorDisplay extends React.Component {
   }
 
   render() {
+    console.log("test");
     return null;
   }
 }
