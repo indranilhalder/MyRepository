@@ -16,8 +16,7 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   LOGIN_PATH,
-  ORDER_HISTORY,
-  PRODUCT_SELLER_ROUTER_SUFFIX
+  ORDER_HISTORY
 } from "../../lib/constants";
 
 import { HOME_ROUTER } from "../../lib/constants";
