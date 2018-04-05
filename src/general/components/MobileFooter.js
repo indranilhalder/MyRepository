@@ -38,7 +38,6 @@ class MobileFooter extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     const pathName = this.props.location.pathname;
     let selected = null;
     if (pathName === HOME_ROUTER) {
