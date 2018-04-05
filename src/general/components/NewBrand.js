@@ -18,6 +18,8 @@ export default class NewBrand extends React.Component {
     this.props.onClick(this.props.webUrl);
   };
   render() {
+    let productCount = this.props.label.split(" ")[0];
+    let totalNumberOfProduct = parseInt(productCount);
     return (
       <div className={styles.base} onClick={this.handleBrandClick}>
         <div className={styles.imageHolder}>
@@ -25,7 +27,9 @@ export default class NewBrand extends React.Component {
           <div className={styles.brandOverlay}>
             <div className={styles.brandTextHolder}>
               <div className={styles.brandWrapper}>
-                <div className={styles.brandText}>{this.props.label}</div>
+                {totalNumberOfProduct > 0 && (
+                  <div className={styles.brandText}>{this.props.label}</div>
+                )}
               </div>
               <div className={styles.brandButton}>
                 <Follow
