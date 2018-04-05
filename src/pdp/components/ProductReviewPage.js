@@ -6,10 +6,12 @@ import WriteReview from "./WriteReview";
 import PropTypes from "prop-types";
 import RatingHolder from "./RatingHolder";
 import PdpFrame from "./PdpFrame";
+import { Redirect } from "react-router-dom";
 import {
   MOBILE_PDP_VIEW,
   PRODUCT_REVIEWS_PATH_SUFFIX,
-  SUCCESS
+  SUCCESS,
+  LOGIN_PATH
 } from "../../lib/constants";
 import find from "lodash/find";
 import * as Cookie from "../../lib/Cookie";
@@ -119,8 +121,15 @@ class ProductReviewPage extends Component {
       this.setState({ visible: false });
     }
   }
-
+  navigateToLogin() {
+    return <Redirect to={LOGIN_PATH} />;
+  }
   render() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (!userDetails || !customerCookie) {
+      return this.navigateToLogin();
+    }
     if (this.props.productDetails) {
       const mobileGalleryImages =
         this.props.productDetails &&
