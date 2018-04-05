@@ -125,10 +125,22 @@ const cart = (
 
     AddUserAddressStatus: null,
     AddUserAddressError: null,
-
+    addingAddress: false,
     returnCliqPiqStatus: null,
     returnCliqPiqDetails: null,
-    returnCliqPiqError: null
+    returnCliqPiqError: null,
+
+    softReservationForPaymetStatus: null,
+    softReservationForPaymetError: null,
+    softReservationForPaymetDetails: null,
+
+    jusPayTokenizeStatus: null,
+    jusPayTokenizeError: null,
+    jusPayTokenizeDetails: null,
+
+    createJusPayOrderStatus: null,
+    createJusPayOrderError: null,
+    createJusPayOrderDetails: null
   },
   action
 ) => {
@@ -645,20 +657,23 @@ const cart = (
 
     case cartActions.BIN_VALIDATION_REQUEST:
       return Object.assign({}, state, {
-        binValidationStatus: action.status
+        binValidationStatus: action.status,
+        loading: true
       });
 
     case cartActions.BIN_VALIDATION_SUCCESS: {
       return Object.assign({}, state, {
         binValidationStatus: action.status,
-        binValidationDetails: action.jusPayDetails
+        binValidationDetails: action.jusPayDetails,
+        loading: false
       });
     }
 
     case cartActions.BIN_VALIDATION_FAILURE:
       return Object.assign({}, state, {
         binValidationStatus: action.status,
-        binValidationError: action.error
+        binValidationError: action.error,
+        loading: false
       });
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_REQUEST:
@@ -976,6 +991,46 @@ const cart = (
       return Object.assign({}, state, {
         couponStatus: action.status,
         couponError: action.error,
+        loading: false
+      });
+
+    case cartActions.SOFT_RESERVATION_FOR_PAYMENT_REQUEST:
+      return Object.assign({}, state, {
+        softReservationForPaymetStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.SOFT_RESERVATION_FOR_PAYMENT_SUCCESS:
+      return Object.assign({}, state, {
+        softReservationForPaymetStatus: action.status,
+        softReservationForPaymetDetails: action.orderDetails,
+        loading: false
+      });
+
+    case cartActions.SOFT_RESERVATION_FOR_PAYMENT_FAILURE:
+      return Object.assign({}, state, {
+        softReservationForPaymetStatus: action.status,
+        softReservationForPaymetError: action.error,
+        loading: false
+      });
+
+    case cartActions.JUS_PAY_TOKENIZE_REQUEST:
+      return Object.assign({}, state, {
+        jusPayTokenizeStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.JUS_PAY_TOKENIZE_SUCCESS:
+      return Object.assign({}, state, {
+        jusPayTokenizeStatus: action.status,
+        jusPayTokenizeDetails: action.jusPayToken,
+        loading: false
+      });
+
+    case cartActions.JUS_PAY_TOKENIZE_FAILURE:
+      return Object.assign({}, state, {
+        jusPayTokenizeStatus: action.status,
+        jusPayTokenizeError: action.error,
         loading: false
       });
 
