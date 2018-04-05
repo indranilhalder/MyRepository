@@ -48,3 +48,10 @@
   height: auto;
   border-radius: 4px;
 }
+.orderConfirmationHolder {
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  background: #ececec;
+  padding: 15px;
+}

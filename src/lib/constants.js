@@ -181,7 +181,9 @@ export const GIFT_CARD = "Gift Card";
 export const YOUR_BAG = "Your Bag";
 export const CATEGORIES = "Categories";
 export const CHECKOUT = "Checkout";
+export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
+
 
 // COPY
 
