@@ -175,6 +175,7 @@ export default class PdpApparel extends React.Component {
     }
 
     if (productData) {
+      console.log(productData.variantOptions);
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
@@ -230,14 +231,10 @@ export default class PdpApparel extends React.Component {
                 productId={productData.productListingId}
                 hasSizeGuide={productData.showSizeGuide}
                 showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
+                data={productData.variantOptions}
               />
               <ColourSelector
-                data={productData.variantOptions.map(value => {
-                  return value.colorlink;
-                })}
+                data={productData.variantOptions}
                 history={this.props.history}
                 updateColour={val => {}}
                 getProductSpecification={this.props.getProductSpecification}

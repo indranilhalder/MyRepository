@@ -21,6 +21,22 @@ export default class SizeSelector extends React.Component {
     }
   }
   render() {
+    const selectedColour = this.props.data.filter(val => {
+      return val.colorlink.selected;
+    })[0].colorlink.color;
+
+    const sizes = this.props.data
+      .filter(val => {
+        return val.sizelink.isAvailable;
+      })
+      .filter(val => {
+        return val.colorlink.color === selectedColour;
+      })
+      .map(val => {
+        return val.sizelink;
+      });
+    //return val.isAvailable
+    console.log(sizes);
     let data = this.props.data;
     return (
       <div className={styles.base}>
@@ -37,26 +53,22 @@ export default class SizeSelector extends React.Component {
           </div>
         </div>
         <Carousel elementWidthMobile="auto" limit={1}>
-          {data
-            .filter(val => {
-              return val.isAvailable;
-            })
-            .map((datum, i) => {
-              return (
-                <SizeSelect
-                  key={i}
-                  selected={
-                    this.props.sizeSelected
-                      ? datum.productCode === this.props.productId
-                      : false
-                  }
-                  size={datum.size}
-                  value={datum.size}
-                  fontSize={this.props.textSize}
-                  onSelect={() => this.updateSize(datum.url)}
-                />
-              );
-            })}
+          {sizes.map((datum, i) => {
+            return (
+              <SizeSelect
+                key={i}
+                selected={
+                  this.props.sizeSelected
+                    ? datum.productCode === this.props.productId
+                    : false
+                }
+                size={datum.size}
+                value={datum.size}
+                fontSize={this.props.textSize}
+                onSelect={() => this.updateSize(datum.url)}
+              />
+            );
+          })}
         </Carousel>
       </div>
     );
