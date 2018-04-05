@@ -214,6 +214,7 @@ class CartPage extends React.Component {
     this.setState({ changePinCode: true });
   };
   render() {
+    console.log(this.props.cart.cartDetails);
     const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const cartDetailsForAnonymous = Cookie.getCookie(
       CART_DETAILS_FOR_ANONYMOUS
@@ -316,15 +317,14 @@ class CartPage extends React.Component {
                         product.elligibleDeliveryMode &&
                         product.elligibleDeliveryMode[0].name
                       }
-                      option={[
-                        {
-                          value: product.qtySelectedByUser,
-                          label: product.qtySelectedByUser
-                        }
-                      ]}
                       onRemove={this.removeItemFromCart}
                       onQuantityChange={this.updateQuantityInCart}
-                      maxQuantityAllowed={product.maxQuantityAllowed}
+                      maxQuantityAllowed={
+                        parseInt(product.maxQuantityAllowed, 10) <
+                        product.availableStockCount
+                          ? parseInt(product.maxQuantityAllowed, 10)
+                          : product.availableStockCount
+                      }
                       qtySelectedByUser={product.qtySelectedByUser}
                     />
                   </div>
