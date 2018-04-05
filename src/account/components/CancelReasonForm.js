@@ -52,7 +52,11 @@ export default class CancelReasonForm extends React.Component {
               data.orderProductWsDTO[0].productName
             }`}
             onClick={() =>
-              this.onClickImage(data.orderProductWsDTO[0].productcode)
+              this.onClickImage(
+                data.orderProductWsDTO &&
+                  data.orderProductWsDTO[0] &&
+                  data.orderProductWsDTO[0].productcode
+              )
             }
             price={data.orderProductWsDTO[0].price}
           >

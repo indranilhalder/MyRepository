@@ -57,7 +57,6 @@ class ProductReviewPage extends Component {
       this.props.displayToast("Please enter comment");
       return false;
     } else {
-      this.props.displayToast(REVIEW_SUBMIT_TOAST_TEXT);
       this.props.addProductReview(
         this.props.productDetails.productListingId,
         productReview
