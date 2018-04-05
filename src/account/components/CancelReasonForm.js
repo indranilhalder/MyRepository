@@ -12,8 +12,7 @@ export default class CancelReasonForm extends React.Component {
     this.state = {
       displaySecondary: false,
       secondaryReasons: null,
-      comment: null,
-      redirect: false
+      comment: null
     };
   }
   onClickImage(productCode) {
