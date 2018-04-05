@@ -20,8 +20,6 @@ const user = (
     message: null,
     isLoggedIn: false,
 
-    testLoggedIn: false,
-
     globalAccessTokenStatus: null,
     customerAccessTokenStatus: null,
     loginUserStatus: null,
@@ -214,18 +212,10 @@ const user = (
       });
 
     case userActions.CUSTOMER_ACCESS_TOKEN_REQUEST:
-      console.log("CUSTOMER ACCESS TOKEN _REQUEST");
-      console.log(action.status);
       return Object.assign({}, state, {
         customerAccessTokenStatus: action.status,
-        loading: true,
-        testLoggedIn: true
+        loading: true
       });
-    case cartActions.MERGE_CART_ID_SUCCESS:
-      return Object.assign({}, state, {
-        testLoggedIn: false
-      });
-
     case userActions.CUSTOMER_ACCESS_TOKEN_SUCCESS:
       Cookies.createCookie(
         CUSTOMER_ACCESS_TOKEN,
@@ -236,8 +226,6 @@ const user = (
         REFRESH_TOKEN,
         action.customerAccessTokenDetails.refresh_token
       );
-      console.log("CUSTOMER ACCESS TOKEN SUCCESS");
-
       return Object.assign({}, state, {
         customerAccessTokenStatus: action.status,
         loading: false

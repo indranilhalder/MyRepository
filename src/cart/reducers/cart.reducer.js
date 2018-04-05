@@ -410,8 +410,6 @@ const cart = (
         JSON.stringify(action.cartDetails)
       );
       Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
-      console.log("MERGE CART ID SUCCESS");
-      console.log(action);
       return Object.assign({}, state, {
         mergeCartIdStatus: action.status,
         type: action.type

@@ -19,9 +19,9 @@ import {
   JUS_PAY_PENDING,
   JUS_PAY_CHARGED
 } from "../../lib/constants";
-import { isResponseFailed } from "../../auth/actions/user.actions";
+import { getFailureResponse } from "../../auth/actions/user.actions";
 import {
-  setIfAuthCallHasFailed,
+  singleAuthCallHasFailed,
   setIfAllAuthCallsHaveSucceeded
 } from "../../auth/actions/auth.actions";
 export const USER_CART_PATH = "v2/mpl/users";
@@ -957,9 +957,9 @@ export function generateCartIdForLoggedInUser() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = isResponseFailed(resultJson);
+      const resultJsonStatus = getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        dispatch(setIfAuthCallHasFailed(resultJsonStatus.message));
+        dispatch(singleAuthCallHasFailed(resultJsonStatus.message));
         throw new Error(resultJsonStatus.message);
       }
 
@@ -1102,9 +1102,9 @@ export function getCartId() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = isResponseFailed(resultJson);
+      const resultJsonStatus = getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        dispatch(setIfAuthCallHasFailed(resultJsonStatus.message));
+        dispatch(singleAuthCallHasFailed(resultJsonStatus.message));
         throw new Error(resultJsonStatus.message);
       }
       return dispatch(getCartIdSuccess(resultJson));
@@ -1156,7 +1156,7 @@ export function mergeCartId(cartGuId) {
         }&toMergeCartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = isResponseFailed(resultJson);
+      const resultJsonStatus = getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         dispatch(resultJsonStatus.message);
         throw new Error(resultJsonStatus.message);

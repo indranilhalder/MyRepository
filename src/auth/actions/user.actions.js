@@ -20,8 +20,8 @@ import * as Cookie from "../../lib/Cookie";
 import config from "../../lib/config";
 import { SOCIAL_SIGN_UP } from "../../lib/constants";
 import {
-  setIfAuthCallHasRequest,
-  setIfAuthCallHasFailed
+  authCallsAreInProgress,
+  singleAuthCallHasFailed
 } from "./auth.actions";
 export const LOGIN_USER_REQUEST = "LOGIN_USER_REQUEST";
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
@@ -110,7 +110,7 @@ const FAILURE = "Failure";
 export const SOCIAL_CHANNEL_GOOGLE_PLUS = "G";
 export const SOCIAL_CHANNEL_FACEBOOK = "F";
 
-export function isResponseFailed(response) {
+export function getFailureResponse(response) {
   if (response.errors) {
     return { status: true, message: response.errors[0].message };
   }
@@ -168,7 +168,7 @@ export function loginUser(userLoginDetails) {
       }
       const result = await api.post(url);
       const resultJson = await result.json();
-      const resultJsonStatus = isResponseFailed(resultJson);
+      const resultJsonStatus = getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -523,7 +523,10 @@ export function customerAccessToken(userDetails) {
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(customerAccessTokenRequest());
-    dispatch(setIfAuthCallHasRequest());
+    // this is our first call so we are setting true that from this
+    // we started loading and  this loading will end with merge cart
+    // id request success
+    dispatch(authCallsAreInProgress());
     try {
       const result = await api.post(
         `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${
@@ -533,9 +536,9 @@ export function customerAccessToken(userDetails) {
         }`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = isResponseFailed(resultJson);
+      const resultJsonStatus = getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        dispatch(setIfAuthCallHasFailed(resultJsonStatus.message));
+        dispatch(singleAuthCallHasFailed(resultJsonStatus.message));
         throw new Error(resultJsonStatus.message);
       }
 

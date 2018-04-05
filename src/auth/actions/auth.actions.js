@@ -4,14 +4,14 @@ export const ALL_AUTH_CALLS_REQUEST = "ALL_AUTH_CALLS_REQUEST";
 export const ALL_AUTH_CALLS_SUCCESS = "ALL_AUTH_CALLS_SUCCESS";
 export const ANY_AUTH_CALLS_FAILED = "ANY_AUTH_CALLS_FAILED";
 
-export function setIfAuthCallHasRequest() {
+export function authCallsAreInProgress() {
   return {
     type: ALL_AUTH_CALLS_REQUEST,
     status: REQUESTING
   };
 }
 
-export function setIfAuthCallHasFailed(error) {
+export function singleAuthCallHasFailed(error) {
   return {
     type: ANY_AUTH_CALLS_FAILED,
     status: FAILURE,
