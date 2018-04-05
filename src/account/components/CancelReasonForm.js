@@ -5,15 +5,20 @@ import TextArea from "../../general/components/TextArea";
 import ReturnsFrame from "./ReturnsFrame";
 import styles from "./CancelReasonForm.css";
 import PropTypes from "prop-types";
+import { Redirect } from "react-router-dom";
 export default class CancelReasonForm extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       displaySecondary: false,
       secondaryReasons: null,
       comment: null
     };
+  }
+  onClickImage(productCode) {
+    if (this.props.onClickImage) {
+      this.props.onClickImage(productCode);
+    }
   }
   handleContinue() {
     if (this.props.onContinue) {
@@ -46,6 +51,9 @@ export default class CancelReasonForm extends React.Component {
             productName={`${data.orderProductWsDTO[0].productBrand} ${
               data.orderProductWsDTO[0].productName
             }`}
+            onClick={() =>
+              this.onClickImage(data.orderProductWsDTO[0].productcode)
+            }
             price={data.orderProductWsDTO[0].price}
           >
             {data.orderProductWsDTO[0].quantity && (
