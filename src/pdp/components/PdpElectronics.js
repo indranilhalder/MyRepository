@@ -173,7 +173,6 @@ export default class PdpElectronics extends React.Component {
     }
 
     if (productData) {
-      console.log(productData);
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
