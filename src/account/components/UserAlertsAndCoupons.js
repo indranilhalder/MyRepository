@@ -24,6 +24,7 @@ const COUPONS = "coupons";
 const ALERTS = "alerts";
 export default class UserAlertsAndCoupons extends React.Component {
   componentDidMount() {
+    this.props.setHeaderText(ALERTS_COUPON);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 

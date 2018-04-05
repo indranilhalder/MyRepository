@@ -21,13 +21,17 @@ export default class ProfilePicture extends React.Component {
             >
               <Icon image={editIcon} size={18} />
             </div>
-            <ProfileImage
-              image={this.props.profileImageLink}
-              size={3}
-              initials={
-                this.props.firstName.charAt(0) + this.props.lastName.charAt(0)
-              }
-            />
+            {this.props.firstName &&
+              this.props.lastName && (
+                <ProfileImage
+                  image={this.props.profileImageLink}
+                  size={3}
+                  initials={
+                    this.props.firstName.charAt(0) +
+                    this.props.lastName.charAt(0)
+                  }
+                />
+              )}
           </div>
           {!this.props.edit && (
             <div className={styles.nameOfProfileHolder}>

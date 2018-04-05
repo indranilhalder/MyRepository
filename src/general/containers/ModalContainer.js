@@ -14,6 +14,7 @@ import {
 } from "../../auth/actions/user.actions";
 import { redeemCliqVoucher } from "../../account/actions/account.actions";
 import { SUCCESS } from "../../lib/constants";
+import { updateProfile } from "../../account/actions/account.actions.js";
 
 import {
   applyBankOffer,
@@ -122,6 +123,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(getUserAddress());
     },
 
+    updateProfile: (accountDetails, otp) => {
+      dispatch(updateProfile(accountDetails, otp));
+    },
+
     getOtpToActivateWallet: (customerDetails, isFromCliqCash) => {
       dispatch(getOtpToActivateWallet(customerDetails, isFromCliqCash));
     },
@@ -135,6 +140,7 @@ const mapDispatchToProps = dispatch => {
     },
     redeemCliqVoucher: (cliqCashDetails, fromCheckOut) => {
       dispatch(redeemCliqVoucher(cliqCashDetails, fromCheckOut));
+
     }
   };
 };

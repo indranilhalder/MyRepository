@@ -42,6 +42,7 @@ export default class MyAccount extends React.Component {
   }
 
   componentDidMount() {
+    this.props.setHeaderText(MY_CLIQ);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (userDetails && customerCookie) {

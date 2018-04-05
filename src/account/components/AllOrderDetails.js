@@ -26,6 +26,9 @@ export default class AllOrderDetails extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   componentDidMount() {
+    if (this.props.shouldCallHeaderContainer) {
+      this.props.setHeaderText(ORDER_HISTORY);
+    }
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (userDetails && customerCookie) {

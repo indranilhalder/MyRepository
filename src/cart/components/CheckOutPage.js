@@ -46,7 +46,8 @@ const PAYMENT_MODE = "EMI";
 const NET_BANKING = "NB";
 const CART_GU_ID = "cartGuid";
 const DELIVERY_MODE_ADDRESS_ERROR = "No Delivery Modes At Selected Address";
-
+const CONTINUE = "Continue";
+const PROCEED = "Proceed";
 class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
@@ -767,6 +768,35 @@ class CheckOutPage extends React.Component {
       return <div className={styles.base}>{this.renderLoader()}</div>;
     }
     const cartData = this.props.cart;
+
+    let deliveryCharge = 0;
+    let couponDiscount = 0;
+    let totalDiscount = 0;
+    if (
+      this.props.cart &&
+      this.props.cart.cartDetailsCNC &&
+      this.props.cart.cartDetailsCNC.products
+    ) {
+      if (
+        this.props.cart.cartDetailsCNC.products &&
+        this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode &&
+        this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode[0] &&
+        this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode[0]
+          .charge
+      ) {
+        deliveryCharge = this.props.cart.cartDetailsCNC.products[0]
+          .elligibleDeliveryMode[0].charge.formattedValue;
+      }
+      if (this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount) {
+        totalDiscount = this.props.cart.cartDetailsCNC.cartAmount
+          .totalDiscountAmount.formattedValue;
+      }
+
+      if (this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount) {
+        couponDiscount = this.props.cart.cartDetailsCNC.cartAmount
+          .couponDiscountAmount.formattedValue;
+      }
+    }
     if (
       this.state.addNewAddress &&
       !this.state.orderConfirmation &&
@@ -880,21 +910,19 @@ class CheckOutPage extends React.Component {
           {(this.state.isGiftCard || !this.state.showCliqAndPiq) &&
             this.props.cart.cartDetailsCNC && (
               <Checkout
+                label={
+                  this.state.confirmAddress &&
+                  !this.state.deliverMode &&
+                  !this.state.isGiftCard
+                    ? PROCEED
+                    : CONTINUE
+                }
                 amount={this.state.payableAmount}
                 bagTotal={this.state.bagAmount}
                 payable={this.state.payableAmount}
-                coupons={
-                  this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
-                    .formattedValue
-                }
-                discount={
-                  this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
-                    .formattedValue
-                }
-                delivery={
-                  this.props.cart.cartDetailsCNC.products[0]
-                    .elligibleDeliveryMode[0].deliveryCost
-                }
+                coupons={couponDiscount}
+                discount={totalDiscount}
+                delivery={deliveryCharge}
                 onCheckout={this.handleSubmit}
               />
             )}

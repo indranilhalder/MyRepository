@@ -10,6 +10,7 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import TimerCounter from "../../general/components/TimerCounter.js";
 import { Icon } from "xelpmoc-core";
 import ClockImage from "../../pdp/components/img/clockWhite.svg";
+import moment from "moment";
 
 const OFFER_AND_ITEM_LIMIT = 4;
 
@@ -31,6 +32,11 @@ export default class FlashSale extends React.Component {
     }
   }
 
+  handleItemClick = url => {
+    const urlSuffix = url.replace(TATA_CLIQ_ROOT, "$1");
+    this.props.history.push(urlSuffix);
+  };
+
   handleClick = () => {
     const urlSuffix = this.props.feedComponentData.webURL.replace(
       TATA_CLIQ_ROOT,
@@ -49,9 +55,24 @@ export default class FlashSale extends React.Component {
 
     let offersAndItemsArray;
     if (feedComponentData.offers) {
-      offersAndItemsArray = concat(feedComponentData.offers, items);
+      const offers = feedComponentData.offers.map(transformData);
+      offersAndItemsArray = concat(offers, items);
     } else {
       offersAndItemsArray = items;
+    }
+
+    // WE do this because new Date(Datestr) gives back date time in the american format, but the string is in non-american format.
+    // So we need to do a diff of the correct date.
+    // TODO - optimize.
+    const today = new Date(moment(new Date()).format("DD/MM/YYYY"));
+    const themeOfferDate = new Date(
+      moment(new Date(this.props.feedComponentData.endDate)).format(
+        "DD/MM/YYYY"
+      )
+    );
+
+    if (themeOfferDate < today) {
+      return null;
     }
 
     return (
@@ -90,7 +111,7 @@ export default class FlashSale extends React.Component {
                   discountPrice={datum.discountPrice}
                   description={datum.description}
                   webURL={datum.webURL}
-                  onClick={this.handleClick}
+                  onClick={this.handleItemClick}
                   {...rest}
                   {...datum}
                 />

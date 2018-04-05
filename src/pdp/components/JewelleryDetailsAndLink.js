@@ -3,6 +3,7 @@ import styles from "./JewelleryDetailsAndLink.css";
 import { HashLink as Link } from "react-router-hash-link";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 export default class JewelleryDetailsAndLink extends React.Component {
   handleClick() {
     if (this.props.onClick) {
@@ -19,13 +20,26 @@ export default class JewelleryDetailsAndLink extends React.Component {
       this.props.showPriceBreakUp();
     }
   }
+  handleBrandClick() {
+    if (this.props.brandUrl) {
+      const urlSuffix = this.props.brandUrl.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
         <div className={styles.linkHolder}>
           <div className={styles.detailsContainer}>
             {this.props.productName && (
-              <div className={styles.productName}>{this.props.productName}</div>
+              <div
+                className={styles.productName}
+                onClick={() => {
+                  this.handleBrandClick();
+                }}
+              >
+                {this.props.productName}
+              </div>
             )}
             {this.props.productDescription && (
               <div className={styles.productDescription}>
@@ -40,13 +54,13 @@ export default class JewelleryDetailsAndLink extends React.Component {
           </div>
           <div className={styles.priceContainer}>
             {this.props.price && (
-              <div className={styles.price}>{`Rs. ${this.props.price}`}</div>
+              <div className={styles.price}>{`${this.props.price}`}</div>
             )}
             {this.props.discountPrice &&
               this.props.discountPrice !== this.props.price && (
                 <div className={styles.deletePriceAndDiscount}>
                   <div className={styles.discountPrice}>
-                    {`Rs. ${this.props.discountPrice}`}
+                    {`${this.props.discountPrice}`}
                   </div>
                   <div className={styles.discount}>
                     {this.props.discount && `(${this.props.discount}%)`}
