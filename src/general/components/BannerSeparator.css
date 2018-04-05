@@ -5,6 +5,8 @@
   object-fit: contain;
   background-image: linear-gradient(#fce38a, #f38181);
   background-image: url(./img/download.svg)no-repeat;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 .downloadInnerBox {
   width: 100%;
@@ -19,7 +21,7 @@
   font-size: 16px;
   line-height: 20px;
   font-weight: bold;
-  margin-left: 5px;
+  margin-left: 10px;
 }
 .downloadLabel {
   width: 100%;
@@ -27,7 +29,7 @@
   color: #fff;
   font-size: 14px;
   line-height: 20px;
-  margin-left: 5px;
+  margin-left: 10px;
 }
 .downloadIcon {
   width: 40px;
