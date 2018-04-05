@@ -36,6 +36,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
+import de.hybris.platform.commerceservices.url.UrlResolver;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.dto.error.ErrorListWsDTO;
@@ -423,7 +424,8 @@ public class UsersController extends BaseCommerceController
 	@Autowired
 	private MplOrderService mplOrderService;
 
-
+	@Resource(name = "productModelUrlResolver")
+	private UrlResolver<ProductModel> productModelUrlResolver;
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
 	@Autowired
@@ -11848,17 +11850,21 @@ public class UsersController extends BaseCommerceController
 					{
 						for (final Wishlist2Model w : wishlistForCustomer)
 						{
-
-							if (CollectionUtils.isNotEmpty(w.getEntries()))
+							final List<Wishlist2EntryModel> wishListEntryList = w.getEntries();
+							if (CollectionUtils.isNotEmpty(wishListEntryList))
 							{
 
-								for (final Wishlist2EntryModel entry : w.getEntries())
+								for (final Wishlist2EntryModel entry : wishListEntryList)
 
 								{
-									final boolean flag = entry.getIsDeleted().booleanValue();
-									if (!flag)
+									LOG.debug("getCustomerProfile ::IsDeleted FLAG::" + entry.getIsDeleted());
+									if (null != entry.getIsDeleted())
 									{
-										fav_ProductCount++;
+										final boolean flag = entry.getIsDeleted().booleanValue();
+										if (!flag)
+										{
+											fav_ProductCount++;
+										}
 									}
 								}
 							}
@@ -11880,6 +11886,7 @@ public class UsersController extends BaseCommerceController
 			catch (final EtailNonBusinessExceptions e)
 			{
 				ExceptionUtil.etailNonBusinessExceptionHandler(e);
+				LOG.error("getCustomerProfile Error" + e.getMessage());
 				if (null != e.getErrorMessage())
 				{
 					customer.setError(e.getErrorMessage());
@@ -11893,6 +11900,7 @@ public class UsersController extends BaseCommerceController
 			catch (final EtailBusinessExceptions e)
 			{
 				ExceptionUtil.etailBusinessExceptionHandler(e, null);
+				LOG.error("getCustomerProfile Error" + e.getMessage());
 				if (null != e.getErrorMessage())
 				{
 					customer.setError(e.getErrorMessage());
@@ -11901,6 +11909,12 @@ public class UsersController extends BaseCommerceController
 				{
 					customer.setErrorCode(e.getErrorCode());
 				}
+				customer.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			catch (final Exception e)
+			{
+				LOG.error("getCustomerProfile Error::" + e.getMessage());
+				customer.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 				customer.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			}
 		}
@@ -13727,11 +13741,12 @@ public class UsersController extends BaseCommerceController
 							{
 								wldpDTO = new OffersDTO();
 								ProductData productData1 = null;
-								if (null != entryModel.getProduct())
+								final ProductModel productmodel = entryModel.getProduct();
+								if (null != productmodel)
 								{
-									productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-											ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-											ProductOption.STOCK, ProductOption.SELLER));
+									productData1 = productFacade.getProductForOptions(productmodel, Arrays.asList(ProductOption.BASIC,
+											ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.STOCK,
+											ProductOption.SELLER));
 								}
 								if (null != productData1 && null != productData1.getImages())
 								{
@@ -13739,21 +13754,17 @@ public class UsersController extends BaseCommerceController
 									for (final ImageData img : productData1.getImages())
 									{
 										if (null != img && StringUtils.isNotEmpty(img.getFormat())
-
-										&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
+												&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
 										{
 											wldpDTO.setImageURL(img.getUrl());
 										}
-										if (null != img && StringUtils.isNotEmpty(img.getFormat())
 
-										&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
-										{
-											wldpDTO.setAppURL(img.getUrl());
-										}
 									}
-									wldpDTOList.add(wldpDTO);
 
 								}
+								final String redirection = productModelUrlResolver.resolve(productmodel);
+								wldpDTO.setWebURL(redirection);
+								wldpDTOList.add(wldpDTO);
 							}
 
 						}

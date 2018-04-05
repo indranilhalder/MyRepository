@@ -2104,16 +2104,17 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B009900);
 		}
 	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getProductForCode(java.lang.String, java.lang.String)
 	 */
 	//changes for SDI 6152
 	@Override
-	public ProductModel getProductForCode(final String productCode,final String catalogCode)
+	public ProductModel getProductForCode(final String productCode, final String catalogCode)
 	{
-		final ProductModel products = mplOrderService.findProductsByCodewithCatalog(productCode,catalogCode);
+		final ProductModel products = mplOrderService.findProductsByCodewithCatalog(productCode, catalogCode);
 		return products;
 	}
 
