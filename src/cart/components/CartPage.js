@@ -107,8 +107,10 @@ class CartPage extends React.Component {
   }
   renderLoader = () => {
     return (
-      <div>
-        <MDSpinner />
+      <div className={styles.cartLoader}>
+        <div className={styles.spinner}>
+          <MDSpinner />
+        </div>
       </div>
     );
   };
@@ -216,11 +218,16 @@ class CartPage extends React.Component {
     const cartDetailsForAnonymous = Cookie.getCookie(
       CART_DETAILS_FOR_ANONYMOUS
     );
+    if (this.props.cart.loading && this.props.cart.cartDetails) {
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
+    }
 
     if (!globalAccessToken && !cartDetailsForAnonymous) {
       return <Redirect exact to={HOME_ROUTER} />;
     }
-    if (this.props.cart.cartDetailsStatus === SUCCESS) {
+    if (this.props.cart.cartDetails) {
       const cartDetails = this.props.cart.cartDetails;
       let defaultPinCode;
       let deliveryCharge = 0;

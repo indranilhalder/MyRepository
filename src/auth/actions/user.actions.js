@@ -236,7 +236,7 @@ export function otpVerification(otpDetails, userDetails) {
           JSON.parse(globalCookie).access_token
         }&otp=${otpDetails}&isPwa=true&platformNumber=${PLATFORM_NUMBER}&username=${
           userDetails.username
-        }&password=${userDetails.password}`
+        }&password=${userDetails.password}&emailId=${userDetails.emailId}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
