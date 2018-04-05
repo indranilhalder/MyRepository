@@ -105,6 +105,7 @@ export default class AllOrderDetails extends React.Component {
                       this.onClickImage(
                         orderDetails.products &&
                           orderDetails.products[0] &&
+                          orderDetails.products.length &&
                           orderDetails.products[0].productcode
                       )
                     }
