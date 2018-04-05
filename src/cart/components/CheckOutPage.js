@@ -781,7 +781,7 @@ class CheckOutPage extends React.Component {
       this.props.cart.cartDetailsCNC &&
       this.props.cart.cartDetailsCNC.products
     ) {
-      if (this.props.cart.loading && this.props.cart.cartDetailsCNC) {
+      if (this.props.cart.loading) {
         this.props.showSecondaryLoader();
       } else {
         this.props.hideSecondaryLoader();

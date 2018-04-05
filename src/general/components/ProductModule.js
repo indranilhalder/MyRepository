@@ -7,10 +7,7 @@ import styles from "./ProductModule.css";
 import downloadIcon from "./img/download.svg";
 import downloadIconWhite from "./img/downloadWhite.svg";
 import ProductInfo from "./ProductInfo.js";
-import Logo from "./Logo.js";
-import newFlag from "./img/new.svg";
-import offerFlag from "./img/offer.svg";
-import exclusiveFlag from "./img/exclusive.svg";
+import ProductFlags from "./ProductFlags.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import {
   ON_EXCLUSIVE,
@@ -62,14 +59,15 @@ export default class ProductModule extends React.Component {
           {this.props.onConnect && (
             <ConnectButton onClick={this.handleConnect} />
           )}
-          {this.props.onOffer && (
-            <div className={styles.flagHolder}>
-              <div className={styles.flag}>
-                <Logo image={offerFlag} />
-                <div className={styles.flagText}>On offer</div>
-              </div>
-            </div>
-          )}
+
+          <div className={styles.flagHolder}>
+            <ProductFlags
+              discountPercent={this.props.discountPercent}
+              isOfferExisting={this.props.isOfferExisting}
+              onlineExclusive={this.props.onlineExclusive}
+              outOfStock={this.props.outOfStock}
+            />
+          </div>
         </div>
         <div
           className={
