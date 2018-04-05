@@ -16,7 +16,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    loading: state.user.testLoggedIn
+    authCallsInProcess: state.auth.authCallsInProcess,
+    authCallsIsSucceed: state.auth.authCallsIsSucceed
   };
 };
 
