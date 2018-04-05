@@ -597,7 +597,7 @@ export function addProductReview(productCode, productReview) {
     dispatch(addProductReviewRequest());
     try {
       const result = await api.post(
-        `${PRODUCT_SPECIFICATION_PATH}${productCode}/reviews?access_token=${
+        `${PRODUCT_SIZE_GUIDE_PATH}${productCode}/reviews?access_token=${
           JSON.parse(customerCookie).access_token
         }`,
         productReview
