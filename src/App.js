@@ -179,9 +179,6 @@ class App extends Component {
       return this.renderLoader();
     }
 
-    // console.log("CORRECT RENDER");
-    // console.log("==========");
-
     if (this.props.modalStatus) {
       className = AppStyles.blur;
     }

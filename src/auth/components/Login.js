@@ -27,7 +27,7 @@ class Login extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.loading) {
+    if (nextProps.authCallsIsSucceed) {
       this.props.history.push(HOME_ROUTER);
     }
   }
@@ -108,7 +108,7 @@ class Login extends Component {
       footerClick = () => this.navigateToLogin();
       showSocialButtons = false;
     }
-    if (this.props.loading) {
+    if (this.props.authCallsInProcess) {
       return (
         <div className={styles.loadingIndicator}>
           <MDSpinner />

@@ -19,6 +19,11 @@ import {
   JUS_PAY_PENDING,
   JUS_PAY_CHARGED
 } from "../../lib/constants";
+import { isResponseFailed } from "../../auth/actions/user.actions";
+import {
+  setIfAuthCallHasFailed,
+  setIfAllAuthCallsHaveSucceeded
+} from "../../auth/actions/auth.actions";
 export const USER_CART_PATH = "v2/mpl/users";
 export const CART_PATH = "v2/mpl";
 export const ALL_STORES_PATH = "v2/mpl/allStores";
@@ -952,8 +957,10 @@ export function generateCartIdForLoggedInUser() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = isResponseFailed(resultJson);
+      if (resultJsonStatus.status) {
+        dispatch(setIfAuthCallHasFailed(resultJsonStatus.message));
+        throw new Error(resultJsonStatus.message);
       }
 
       return dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
@@ -1095,8 +1102,10 @@ export function getCartId() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = isResponseFailed(resultJson);
+      if (resultJsonStatus.status) {
+        dispatch(setIfAuthCallHasFailed(resultJsonStatus.message));
+        throw new Error(resultJsonStatus.message);
       }
       return dispatch(getCartIdSuccess(resultJson));
     } catch (e) {
@@ -1147,12 +1156,12 @@ export function mergeCartId(cartGuId) {
         }&toMergeCartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = isResponseFailed(resultJson);
+      if (resultJsonStatus.status) {
+        dispatch(resultJsonStatus.message);
+        throw new Error(resultJsonStatus.message);
       }
-
-      console.log("MERGE CART ID SUCCESS");
-
+      dispatch(setIfAllAuthCallsHaveSucceeded());
       return dispatch(mergeCartIdSuccess(resultJson));
     } catch (e) {
       return dispatch(mergeCartIdFailure(e.message));
