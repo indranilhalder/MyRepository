@@ -135,6 +135,7 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
+    console.log(orderDetails);
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -169,8 +170,8 @@ export default class OrderDetails extends React.Component {
 
                 <OrderPaymentMethod
                   phoneNumber={
-                    orderDetails.billingAddress &&
-                    orderDetails.billingAddress.phone
+                    orderDetails.deliveryAddress &&
+                    orderDetails.deliveryAddress.phone
                   }
                   paymentMethod={orderDetails.paymentMethod}
                   isInvoiceAvailable={products.isInvoiceAvailable}
