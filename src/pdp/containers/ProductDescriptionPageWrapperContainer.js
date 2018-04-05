@@ -11,6 +11,10 @@ import {
   getProductPinCode
 } from "../actions/pdp.actions";
 import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
+import {
   showModal,
   EMI_MODAL,
   ADDRESS,
@@ -61,6 +65,12 @@ const mapDispatchToProps = dispatch => {
     },
     getProductPinCode: (pinCode, productCode) => {
       dispatch(getProductPinCode(pinCode, productCode));
+    },
+    hideSecondaryLoader: () => {
+      dispatch(hideSecondaryLoader());
+    },
+    showSecondaryLoader: () => {
+      dispatch(showSecondaryLoader());
     }
   };
 };
