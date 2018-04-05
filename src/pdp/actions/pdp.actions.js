@@ -123,7 +123,7 @@ const PRODUCT_SIZE_GUIDE_PATH = "v2/mpl/products/";
 const ORDER_BY = "desc";
 const SORT = "byDate";
 const PAGE_VALUE = "0";
-const PAGE_NUMBER = "1";
+const PAGE_NUMBER = "10";
 const MSD_REQUEST_PATH = "widgets";
 const MSD_ABOUT_BRAND_REQUEST_PATH = "widgets";
 const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
@@ -722,12 +722,15 @@ export function getProductReviewsFailure(error) {
 }
 
 export function getProductReviews(productCode) {
-  let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
     dispatch(getProductReviewsRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_SPECIFICATION_PATH}/${productCode.toUpperCase()}/users/anonymous/reviews?access_token=${
+        `${PRODUCT_SIZE_GUIDE_PATH}/${productCode.toUpperCase()}/users/${
+          JSON.parse(userDetails).userName
+        }/reviews?access_token=${
           JSON.parse(globalAccessToken).access_token
         }&page=${PAGE_VALUE}&pageSize=${PAGE_NUMBER}&orderBy=${ORDER_BY}&sort=${SORT}`
       );
