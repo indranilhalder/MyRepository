@@ -132,7 +132,6 @@ class ErrorDisplay extends React.Component {
   }
 
   render() {
-    console.log("test");
     return null;
   }
 }
