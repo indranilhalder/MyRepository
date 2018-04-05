@@ -14,7 +14,23 @@ export default class ColourSelector extends React.Component {
     this.props.history.push(productUrl);
   }
   render() {
-    let data = this.props.data;
+    const selectedSize = this.props.data.filter(val => {
+      return val.sizelink.prductCode === this.props.productId;
+    })[0].sizelink.size;
+    const selectedColour = this.props.data.filter(val => {
+      return val.colorlink.selected;
+    })[0].colorlink.color;
+
+    const colors = this.props.data
+      .filter(val => {
+        return val.sizelink.isAvailable;
+      })
+      .filter(val => {
+        return val.sizelink.size === selectedSize;
+      })
+      .map(val => {
+        return val.colorlink;
+      });
 
     return (
       <div
@@ -31,13 +47,13 @@ export default class ColourSelector extends React.Component {
             </div>
           }
         >
-          {data.map((datum, i) => {
+          {colors.map((datum, i) => {
             return (
               <ColourSelect
                 key={i}
                 colour={datum.colorHexCode}
                 value={datum.color}
-                selected={datum.selected}
+                selected={datum.color === selectedColour}
                 onSelect={() => this.updateColour(datum.colorurl)}
               />
             );
@@ -50,6 +66,7 @@ export default class ColourSelector extends React.Component {
 ColourSelector.propTypes = {
   noBackground: PropTypes.bool,
   onSelect: PropTypes.func,
+  productId: PropTypes.string,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       color: PropTypes.string,

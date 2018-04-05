@@ -131,9 +131,7 @@ export default class PdpApparel extends React.Component {
         sizeSelected: this.checkIfSizeSelected(),
         productId: this.props.productDetails.productListingId,
         showSizeGuide: this.props.showSizeGuide,
-        data: this.props.productDetails.variantOptions.map(value => {
-          return value.sizelink;
-        })
+        data: this.props.productDetails.variantOptions
       });
     }
   };
@@ -175,7 +173,6 @@ export default class PdpApparel extends React.Component {
     }
 
     if (productData) {
-      console.log(productData.variantOptions);
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}

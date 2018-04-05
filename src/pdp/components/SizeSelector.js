@@ -35,9 +35,7 @@ export default class SizeSelector extends React.Component {
       .map(val => {
         return val.sizelink;
       });
-    //return val.isAvailable
-    console.log(sizes);
-    let data = this.props.data;
+
     return (
       <div className={styles.base}>
         <div className={styles.header}>
@@ -83,6 +81,7 @@ SizeSelector.propTypes = {
     })
   ),
   headerText: PropTypes.string,
+  productId: PropTypes.string,
   textSize: PropTypes.oneOfType([PropTypes.string, PropTypes.string])
 };
 SizeSelector.defaultProps = {

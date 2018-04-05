@@ -173,6 +173,7 @@ export default class PdpElectronics extends React.Component {
     }
 
     if (productData) {
+      console.log(productData);
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
@@ -254,15 +255,15 @@ export default class PdpElectronics extends React.Component {
           {productData.variantOptions && (
             <React.Fragment>
               <SizeSelector
+                history={this.props.history}
+                sizeSelected={this.checkIfSizeSelected()}
+                productId={productData.productListingId}
+                hasSizeGuide={productData.showSizeGuide}
                 showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
+                data={productData.variantOptions}
               />
               <ColourSelector
-                data={productData.variantOptions.map(value => {
-                  return value.colorlink;
-                })}
+                data={productData.variantOptions}
                 history={this.props.history}
                 updateColour={val => {}}
                 getProductSpecification={this.props.getProductSpecification}
