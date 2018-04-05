@@ -4887,7 +4887,27 @@
 	<bean class="com.tisl.mpl.wsdto.mplNoCostEMIEligibilityDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="isNoCostEMIEligible" type="boolean" />
 	</bean>
-	
+		<bean class="com.tisl.mpl.wsdto.mplNoCostEMIBankTenureDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="numEligibleProducts" type="String" />
+		<property name="bankList" type="java.util.List&lt;com.tisl.mpl.wsdto.EmiBankListWsData>" />
+	</bean>	
+	<bean class="com.tisl.mpl.wsdto.EmiBankListWsData">
+		<property name="bankName" type="String" />
+		<property name="bankCode" type="String" />
+		<property name="code" type="String" />
+		<property name="noCostEMICouponList" type="java.util.List&lt;com.tisl.mpl.wsdto.EmiCouponListWsData>" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.EmiCouponListWsData">
+		<property name="emicouponCode" type="String" />
+		<property name="emicouponCreationDate" type="String" />
+		<property name="emicouponExpiryDate" type="String" />
+		<property name="emicouponName" type="String" />
+		<property name="description" type="String" />	
+		<property name="eligibleCartThreshold" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="isPercentage" type="String" />
+		<property name="value" type="String" />
+		<property name="tenure" type="String" />
+	</bean>
 	<!-- No Cost EMI -->
 	<bean class="com.tisl.wsdto.MplNoCostEMITermsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="termsAndCondition" type="String" />

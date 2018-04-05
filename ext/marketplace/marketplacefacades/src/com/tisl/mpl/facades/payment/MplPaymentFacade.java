@@ -35,6 +35,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.wsdto.mplNoCostEMIBankTenureDTO;
 
 
 /**
@@ -315,11 +316,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -327,9 +328,9 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return Map<String, List<MplNetbankingData>>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
@@ -535,5 +536,7 @@ public interface MplPaymentFacade
 	public String generateQCCode();
 
 	public boolean isNoCostEmiAvailable(String productCode, String sellerId);
+
+	public mplNoCostEMIBankTenureDTO noCostEmiBankTenureList();
 
 }
