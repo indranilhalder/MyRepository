@@ -764,8 +764,18 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
-    if (this.props.cart.loading) {
-      return <div className={styles.base}>{this.renderLoader()}</div>;
+    if (
+      this.props.cart &&
+      this.props.cart.cartDetailsCNC &&
+      this.props.cart.cartDetailsCNC.products
+    ) {
+      console.log(this.props.cart.addingAddress);
+      if (this.props.cart.loading) {
+        // return <div className={styles.base}>{this.renderLoader()}</div>;
+        this.props.showSecondaryLoader();
+      } else {
+        this.props.hideSecondaryLoader();
+      }
     }
     const cartData = this.props.cart;
 
@@ -972,7 +982,7 @@ class CheckOutPage extends React.Component {
         </div>
       );
     } else {
-      return null;
+      return <div className={styles.base}>{this.renderLoader()}</div>;
     }
   }
 }

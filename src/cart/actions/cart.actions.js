@@ -654,7 +654,6 @@ export function addUserAddressRequest(error) {
     status: REQUESTING
   };
 }
-
 export function addUserAddressSuccess() {
   return {
     type: ADD_USER_ADDRESS_SUCCESS,
@@ -2033,6 +2032,7 @@ export function jusPayTokenize(
       ) {
         throw new Error(resultJson.error);
       }
+      dispatch(jusPayTokenizeSuccess(resultJson.token));
       dispatch(
         createJusPayOrder(
           resultJson.token,
