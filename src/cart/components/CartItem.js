@@ -44,7 +44,6 @@ export default class CartItem extends React.Component {
       }
     });
   }
-
   componentWillMount() {
     this.setQuantity();
   }
@@ -64,7 +63,7 @@ export default class CartItem extends React.Component {
     });
 
     if (this.state.quantityList.length === 0) {
-      let fetchedQuantityList = [{ value: "Qut" }];
+      let fetchedQuantityList = [];
       for (let i = 1; i <= parseInt(this.props.maxQuantityAllowed, 10); i++) {
         fetchedQuantityList.push({ value: i.toString() });
       }

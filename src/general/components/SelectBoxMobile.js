@@ -71,6 +71,7 @@ export default class SelectBoxMobile extends React.Component {
           name={this.props.name}
           className={styles.hideSelect}
           onChange={event => this.handleChange(event)}
+          value={this.state.value}
         >
           {this.props.options &&
             this.props.options.map((item, i) => {
