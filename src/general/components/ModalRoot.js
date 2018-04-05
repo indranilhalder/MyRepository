@@ -21,6 +21,7 @@ import KycDetailPopUpWithBottomSlideModal from "../../account/components/KycDeta
 import * as Cookie from "../../lib/Cookie.js";
 import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
 const modalRoot = document.getElementById("modal-root");
+const GenerateOtp = "GenerateOtpForEgv";
 export default class ModalRoot extends React.Component {
   constructor(props) {
     super(props);
@@ -150,7 +151,7 @@ export default class ModalRoot extends React.Component {
   }
   wrongNumber() {
     this.props.hideModal();
-    this.props.showModal("GenerateOtpForEgv");
+    this.props.showModal(GenerateOtp);
   }
   generateOtp(val) {
     let customerDetails = {};

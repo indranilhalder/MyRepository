@@ -18,7 +18,7 @@ export default class NewBrand extends React.Component {
     this.props.onClick(this.props.webUrl);
   };
   render() {
-    let productCount = this.props.label.split(" ")[0];
+    let productCount = `${this.props.label && this.props.label.split(" ")[0]}`;
     let totalNumberOfProduct = parseInt(productCount);
     return (
       <div className={styles.base} onClick={this.handleBrandClick}>
