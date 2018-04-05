@@ -256,12 +256,6 @@ export default class PdpJewellery extends React.Component {
                 showSizeGuide={this.props.showSizeGuide}
                 data={productData.variantOptions}
               />
-              <ColourSelector
-                data={productData.variantOptions}
-                history={this.props.history}
-                updateColour={val => {}}
-                getProductSpecification={this.props.getProductSpecification}
-              />
             </React.Fragment>
           )}
           {productData.certificationMapFrJwlry && (
