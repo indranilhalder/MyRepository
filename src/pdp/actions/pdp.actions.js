@@ -728,7 +728,7 @@ export function getProductReviews(productCode) {
     dispatch(getProductReviewsRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_SIZE_GUIDE_PATH}/${productCode.toUpperCase()}/users/${
+        `${PRODUCT_SIZE_GUIDE_PATH}${productCode.toUpperCase()}/users/${
           JSON.parse(userDetails).userName
         }/reviews?access_token=${
           JSON.parse(globalAccessToken).access_token
