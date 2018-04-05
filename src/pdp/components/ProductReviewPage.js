@@ -47,12 +47,24 @@ class ProductReviewPage extends Component {
   };
 
   onSubmit = productReview => {
-    this.props.displayToast(REVIEW_SUBMIT_TOAST_TEXT);
-    this.props.addProductReview(
-      this.props.productDetails.productListingId,
-      productReview
-    );
-    this.setState({ visible: false });
+    if (!productReview.rating) {
+      this.props.displayToast("Please give rating");
+      return false;
+    }
+    if (!productReview.headline) {
+      this.props.displayToast("Please enter title");
+      return false;
+    }
+    if (!productReview.comment) {
+      this.props.displayToast("Please enter comment");
+      return false;
+    } else {
+      this.props.addProductReview(
+        this.props.productDetails.productListingId,
+        productReview
+      );
+      this.setState({ visible: false });
+    }
   };
   onCancel() {
     this.setState({ visible: false });
@@ -61,7 +73,7 @@ class ProductReviewPage extends Component {
     if (this.state.visible) {
       return (
         <WriteReview
-          onSubmit={this.onSubmit}
+          onSubmit={val => this.onSubmit(val)}
           onCancel={() => this.onCancel()}
         />
       );

@@ -88,7 +88,7 @@ export const MY_ACCOUNT_ALERTS_PAGE = "/alerts";
 export const MY_ACCOUNT_COUPON_PAGE = "/coupons";
 export const MY_ACCOUNT_CART_PAGE = "/cart";
 export const MY_ACCOUNT_CLIQ_CASH_PAGE = "/cliq-cash";
-
+export const EDIT_ADDRESS_BOOK = "/my-account/address-book/edit";
 //returns
 export const RETURNS_PREFIX = "/returns";
 export const RETURNS = "/returns/(.*)";
@@ -181,6 +181,9 @@ export const GIFT_CARD = "Gift Card";
 export const YOUR_BAG = "Your Bag";
 export const CATEGORIES = "Categories";
 export const CHECKOUT = "Checkout";
+export const THANK_YOU = "Thank You";
+export const EDIT_YOUR_ADDRESS = "Edit Your Address";
+
 
 // COPY
 
