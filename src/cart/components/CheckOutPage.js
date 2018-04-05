@@ -430,7 +430,11 @@ class CheckOutPage extends React.Component {
     } else {
       if (nextProps.cart.cartDetailsCNC && this.state.isRemainingAmount) {
         let cliqCashAmount = 0;
-        if (nextProps.cart.paymentModes) {
+        if (
+          nextProps.cart.paymentModes &&
+          nextProps.cart.paymentModes.cliqCash &&
+          nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance
+        ) {
           cliqCashAmount =
             nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance.value;
         }
@@ -566,7 +570,12 @@ class CheckOutPage extends React.Component {
     this.setState(val);
   }
   handleSubmit = () => {
-    if (!this.state.confirmAddress && !this.state.isGiftCard) {
+    if (
+      !this.state.confirmAddress &&
+      !this.state.isGiftCard &&
+      this.state.addressId &&
+      this.state.selectedAddress.postalCode
+    ) {
       this.props.addAddressToCart(
         this.state.addressId,
         this.state.selectedAddress.postalCode
@@ -777,15 +786,13 @@ class CheckOutPage extends React.Component {
   }
   render() {
     if (
-      this.props.cart &&
-      this.props.cart.cartDetailsCNC &&
-      this.props.cart.cartDetailsCNC.products
+      this.props.cart.loading ||
+      this.props.cart.jusPaymentLoader ||
+      this.props.cart.selectDeliveryModeLoader
     ) {
-      if (this.props.cart.loading) {
-        this.props.showSecondaryLoader();
-      } else {
-        this.props.hideSecondaryLoader();
-      }
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
     }
 
     const cartData = this.props.cart;

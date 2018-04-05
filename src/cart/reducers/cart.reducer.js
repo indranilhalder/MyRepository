@@ -146,7 +146,9 @@ const cart = (
 
     createJusPayOrderStatus: null,
     createJusPayOrderError: null,
-    createJusPayOrderDetails: null
+    createJusPayOrderDetails: null,
+    jusPaymentLoader: false,
+    selectDeliveryModeLoader: false
   },
   action
 ) => {
@@ -266,21 +268,20 @@ const cart = (
     case cartActions.SELECT_DELIVERY_MODES_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        loading: true
+        selectDeliveryModeLoader: true
       });
 
     case cartActions.SELECT_DELIVERY_MODES_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
-        deliveryModes: action.deliveryModes,
-        loading: false
+        deliveryModes: action.deliveryModes
       });
 
     case cartActions.SELECT_DELIVERY_MODES_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
-        loading: false
+        selectDeliveryModeLoader: false
       });
 
     case cartActions.GET_USER_ADDRESS_REQUEST:
@@ -398,21 +399,21 @@ const cart = (
     case cartActions.ORDER_SUMMARY_REQUEST:
       return Object.assign({}, state, {
         orderSummaryStatus: action.status,
-        loading: true
+        selectDeliveryModeLoader: true
       });
 
     case cartActions.ORDER_SUMMARY_SUCCESS:
       return Object.assign({}, state, {
         orderSummaryStatus: action.status,
         orderSummary: action.orderSummary,
-        loading: false
+        selectDeliveryModeLoader: false
       });
 
     case cartActions.ORDER_SUMMARY_FAILURE:
       return Object.assign({}, state, {
         orderSummaryStatus: action.status,
         orderSummaryError: action.error,
-        loading: false
+        selectDeliveryModeLoader: false
       });
 
     case cartActions.GET_CART_ID_REQUEST:
@@ -537,21 +538,20 @@ const cart = (
     case cartActions.SOFT_RESERVATION_REQUEST:
       return Object.assign({}, state, {
         softReserveStatus: action.status,
-        loading: true
+        selectDeliveryModeLoader: true
       });
 
     case cartActions.SOFT_RESERVATION_SUCCESS:
       return Object.assign({}, state, {
         softReserveStatus: action.status,
-        softReserve: action.softReserve,
-        loading: false
+        softReserve: action.softReserve
       });
 
     case cartActions.SOFT_RESERVATION_FAILURE:
       return Object.assign({}, state, {
         softReserveStatus: action.status,
         softReserveError: action.error,
-        loading: false
+        selectDeliveryModeLoader: false
       });
 
     case cartActions.GET_PAYMENT_MODES_REQUEST:
@@ -653,14 +653,13 @@ const cart = (
     case cartActions.CREATE_JUS_PAY_ORDER_REQUEST:
       return Object.assign({}, state, {
         jusPayStatus: action.status,
-        loading: true
+        jusPaymentLoader: true
       });
 
     case cartActions.CREATE_JUS_PAY_ORDER_SUCCESS: {
       return Object.assign({}, state, {
         jusPayStatus: action.status,
-        jusPayDetails: action.jusPayDetails,
-        loading: false
+        jusPayDetails: action.jusPayDetails
       });
     }
     case cartActions.CREATE_JUS_PAY_ORDER_FOR_CLIQ_CASH_SUCCESS: {
@@ -673,7 +672,7 @@ const cart = (
       return Object.assign({}, state, {
         jusPayStatus: action.status,
         cliqCashJusPayDetails: action.cliqCashJusPayDetails,
-        loading: false
+        jusPaymentLoader: false
       });
     }
 
@@ -681,7 +680,7 @@ const cart = (
       return Object.assign({}, state, {
         jusPayStatus: action.status,
         jusPayError: action.error,
-        loading: false
+        jusPaymentLoader: false
       });
 
     case cartActions.BIN_VALIDATION_REQUEST:
@@ -708,15 +707,14 @@ const cart = (
     case cartActions.UPDATE_TRANSACTION_DETAILS_REQUEST:
       return Object.assign({}, state, {
         jusPayStatus: action.status,
-        loading: true
+        jusPaymentLoader: true
       });
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_SUCCESS: {
       localStorage.removeItem(OLD_CART_GU_ID);
       return Object.assign({}, state, {
         jusPayStatus: action.status,
-        jusPayDetails: action.jusPayDetails,
-        loading: false
+        jusPayDetails: action.jusPayDetails
       });
     }
 
@@ -725,20 +723,20 @@ const cart = (
       return Object.assign({}, state, {
         jusPayStatus: action.status,
         jusPayError: action.error,
-        loading: false
+        jusPaymentLoader: false
       });
 
     case cartActions.ORDER_CONFIRMATION_REQUEST:
       return Object.assign({}, state, {
         orderConfirmationDetailsStatus: action.status,
-        loading: true
+        jusPaymentLoader: true
       });
 
     case cartActions.ORDER_CONFIRMATION_SUCCESS: {
       return Object.assign({}, state, {
         orderConfirmationDetailsStatus: action.status,
         orderConfirmationDetails: action.confirmedOrderDetails,
-        loading: false
+        jusPaymentLoader: false
       });
     }
 
@@ -746,7 +744,7 @@ const cart = (
       return Object.assign({}, state, {
         orderConfirmationDetailsStatus: action.status,
         orderConfirmationDetailsError: action.error,
-        loading: false
+        jusPaymentLoader: false
       });
 
     case cartActions.CLEAR_ORDER_EXPERIENCE_CAPTURE:
@@ -757,7 +755,7 @@ const cart = (
     case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_REQUEST:
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
-        loading: true
+        jusPaymentLoader: true
       });
 
     case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_SUCCESS: {
@@ -770,7 +768,7 @@ const cart = (
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetails: action.justPayPaymentDetails,
-        loading: false
+        jusPaymentLoader: true
       });
     }
 
@@ -779,7 +777,7 @@ const cart = (
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetails: action.justPayPaymentDetails,
-        loading: false
+        jusPaymentLoader: true
       });
     }
 
@@ -787,7 +785,7 @@ const cart = (
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetailsError: action.error,
-        loading: false
+        jusPaymentLoader: true
       });
 
     case cartActions.GET_COD_ELIGIBILITY_REQUEST:
@@ -1026,41 +1024,39 @@ const cart = (
     case cartActions.SOFT_RESERVATION_FOR_PAYMENT_REQUEST:
       return Object.assign({}, state, {
         softReservationForPaymentStatus: action.status,
-        loading: true
+        jusPaymentLoader: true
       });
 
     case cartActions.SOFT_RESERVATION_FOR_PAYMENT_SUCCESS:
       return Object.assign({}, state, {
         softReservationForPaymentStatus: action.status,
-        softReservationForPaymentDetails: action.orderDetails,
-        loading: false
+        softReservationForPaymentDetails: action.orderDetails
       });
 
     case cartActions.SOFT_RESERVATION_FOR_PAYMENT_FAILURE:
       return Object.assign({}, state, {
         softReservationForPaymentStatus: action.status,
         softReservationForPaymentError: action.error,
-        loading: false
+        jusPaymentLoader: false
       });
 
     case cartActions.JUS_PAY_TOKENIZE_REQUEST:
       return Object.assign({}, state, {
         jusPayTokenizeStatus: action.status,
-        loading: true
+        jusPaymentLoader: true
       });
 
     case cartActions.JUS_PAY_TOKENIZE_SUCCESS:
       return Object.assign({}, state, {
         jusPayTokenizeStatus: action.status,
-        jusPayTokenizeDetails: action.jusPayToken,
-        loading: false
+        jusPayTokenizeDetails: action.jusPayToken
       });
 
     case cartActions.JUS_PAY_TOKENIZE_FAILURE:
       return Object.assign({}, state, {
         jusPayTokenizeStatus: action.status,
         jusPayTokenizeError: action.error,
-        loading: false
+        jusPaymentLoader: false
       });
 
     default:
