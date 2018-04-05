@@ -41,6 +41,10 @@ import {
   applyUserCouponForAnonymous
 } from "../actions/cart.actions";
 import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
+import {
   showModal,
   BANK_OFFERS,
   GIFT_CARD_MODAL
@@ -209,6 +213,12 @@ const mapDispatchToProps = dispatch => {
     },
     clearCaptureOrderExperience: () => {
       dispatch(clearCaptureOrderExperience());
+    },
+    showSecondaryLoader: () => {
+      dispatch(showSecondaryLoader());
+    },
+    hideSecondaryLoader: () => {
+      dispatch(hideSecondaryLoader());
     }
   };
 };
