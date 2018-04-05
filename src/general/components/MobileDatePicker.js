@@ -23,6 +23,7 @@ export default class MobileDatePicker extends React.Component {
             type="date"
             className={styles.input}
             onChange={value => this.handleChange(value)}
+            value={this.state.value}
           />
         </div>
         <div className={styles.displayValue}>

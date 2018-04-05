@@ -4,7 +4,7 @@ import { Icon } from "xelpmoc-core";
 import downloadIcon from "./img/download.svg";
 import * as Cookie from "../../lib/Cookie";
 import FooterButton from "../../general/components/FooterButton.js";
-import saveIcon from "../../pdp/components/img/Save.svg";
+import saveIcon from "../../general/components/img/download.svg";
 import styles from "./AddToWishListButton.css";
 
 import {

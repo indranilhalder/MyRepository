@@ -165,6 +165,17 @@ export const GET_CANCEL_PRODUCT_DETAILS_SUCCESS =
 export const GET_CANCEL_PRODUCT_DETAILS_FAILURE =
   "GET_CANCEL_PRODUCT_DETAILS_FAILURE";
 
+export const UPDATE_PROFILE_REQUEST = "UPDATE_PROFILE_REQUEST";
+export const UPDATE_PROFILE_SUCCESS = "UPDATE_PROFILE_SUCCESS";
+export const UPDATE_PROFILE_FAILURE = "UPDATE_PROFILE_FAILURE";
+export const LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER =
+  "LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER";
+export const UPDATE_PROFILE_OTP_VERIFICATION =
+  "UPDATE_PROFILE_OTP_VERIFICATION";
+export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
+export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
+export const CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -172,6 +183,7 @@ export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
 
 export const PIN_PATH = "v2/mpl/";
+export const PATH = "v2/mpl";
 
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
 export const LOGOUT = "LOGOUT";
@@ -1413,6 +1425,35 @@ export function sendInvoice(lineID, orderNumber) {
   };
 }
 
+export function updateProfileRequest() {
+  return {
+    type: UPDATE_PROFILE_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function logoutUserByMobileNumber() {
+  return {
+    type: LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER
+  };
+}
+
+export function updateProfileSuccess(userDetails) {
+  return {
+    type: UPDATE_PROFILE_SUCCESS,
+    status: SUCCESS,
+    userDetails
+  };
+}
+
+export function updateProfileFailure(error) {
+  return {
+    type: UPDATE_PROFILE_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
 export function getFollowedBrandsRequest() {
   return {
     type: GET_FOLLOWED_BRANDS_REQUEST,
@@ -1485,6 +1526,53 @@ export function followAndUnFollowBrandInCommerceFailure(error) {
     type: FOLLOW_AND_UN_FOLLOW_BRANDS_COMMERCE_FAILURE,
     status: ERROR,
     error
+  };
+}
+
+export function updateProfile(accountDetails, otp) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(updateProfileRequest());
+    let updateProfileUrl;
+    try {
+      updateProfileUrl = `${USER_PATH}/${
+        JSON.parse(userDetails).userName
+      }/updateprofile?isPwa=true&access_token=${
+        JSON.parse(customerCookie).access_token
+      }&ProfileDataRequired=true&firstName=${
+        accountDetails.firstName
+      }&lastName=${accountDetails.lastName}&dateOfBirth=${
+        accountDetails.dateOfBirth
+      }&gender=${accountDetails.gender}&mobilenumber=${
+        accountDetails.mobileNumber
+      }&emailId=${accountDetails.emailId}`;
+      if (otp) {
+        updateProfileUrl = `${updateProfileUrl}&otp=${otp}`;
+      }
+      const result = await api.post(updateProfileUrl);
+      const resultJson = await result.json();
+
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(`${resultJson.error}`);
+      }
+
+      if (resultJson.status === "OTP SENT TO MOBILE NUMBER: PLEASE VALIDATE") {
+        dispatch(showModal(UPDATE_PROFILE_OTP_VERIFICATION, accountDetails));
+      } else {
+        if (otp) {
+          dispatch(logoutUserByMobileNumber());
+        } else {
+          return dispatch(updateProfileSuccess(resultJson));
+        }
+      }
+    } catch (e) {
+      return dispatch(updateProfileFailure(e.message));
+    }
   };
 }
 
@@ -1627,6 +1715,28 @@ export function getWishList() {
   };
 }
 
+export function changePasswordRequest() {
+  return {
+    type: CHANGE_PASSWORD_REQUEST,
+    status: REQUESTING
+  };
+}
+export function changePasswordSuccess(passwordDetails) {
+  return {
+    type: CHANGE_PASSWORD_SUCCESS,
+    status: SUCCESS,
+    passwordDetails
+  };
+}
+
+export function changePasswordFailure(error) {
+  return {
+    type: CHANGE_PASSWORD_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
 export function getCliqCashRequest() {
   return {
     type: GET_USER_CLIQ_CASH_DETAILS_REQUEST,
@@ -1646,6 +1756,38 @@ export function getCliqCashFailure(error) {
     type: GET_USER_CLIQ_CASH_DETAILS_FAILURE,
     status: ERROR,
     error
+  };
+}
+
+export function changePassword(passwordDetails) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(changePasswordRequest());
+    try {
+      const result = await api.post(
+        `${PATH}/forgottenpasswordtokens/${
+          JSON.parse(userDetails).userName
+        }/resetCustomerPassword?isPwa=true&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&old=${passwordDetails.oldPassword}&newPassword=${
+          passwordDetails.newPassword
+        }`
+      );
+      const resultJson = await result.json();
+
+      if (
+        resultJson.errors ||
+        resultJson.status === FAILURE_UPPERCASE ||
+        resultJson.status === FAILURE
+      ) {
+        throw new Error(`${resultJson.error}`);
+      }
+
+      return dispatch(changePasswordSuccess(resultJson));
+    } catch (e) {
+      return dispatch(changePasswordFailure(e.message));
+    }
   };
 }
 

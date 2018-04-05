@@ -1,6 +1,12 @@
 import cloneDeep from "lodash/cloneDeep";
 import * as accountActions from "../actions/account.actions";
 import * as cartActions from "../../cart/actions/cart.actions";
+import * as Cookie from "../../lib/Cookie.js";
+import {
+  LOGGED_IN_USER_DETAILS,
+  CUSTOMER_ACCESS_TOKEN
+} from "../../lib/constants.js";
+
 import { SUCCESS } from "../../lib/constants";
 import { CLEAR_ERROR } from "../../general/error.actions";
 
@@ -9,6 +15,7 @@ const account = (
     status: null,
     error: null,
     loading: false,
+    type: null,
     savedCards: null,
     orderDetails: null,
     orderDetailsStatus: null,
@@ -50,6 +57,13 @@ const account = (
 
     removeAddressStatus: null,
     removeAddressError: null,
+
+    updateProfileStatus: null,
+    updateProfileError: null,
+
+    changePasswordStatus: null,
+    changePasswordError: null,
+    changePasswordDetails: null,
 
     returnProductDetails: null,
     returnRequest: null,
@@ -536,6 +550,53 @@ const account = (
       return Object.assign({}, state, {
         removeAddressStatus: action.status,
         removeAddressError: action.error,
+        loading: false
+      });
+
+    case accountActions.UPDATE_PROFILE_REQUEST:
+      return Object.assign({}, state, {
+        updateProfileStatus: action.status,
+        loading: true
+      });
+
+    case accountActions.UPDATE_PROFILE_SUCCESS:
+      return Object.assign({}, state, {
+        updateProfileStatus: action.status,
+        userDetails: action.userDetails,
+        loading: false
+      });
+
+    case accountActions.UPDATE_PROFILE_FAILURE:
+      return Object.assign({}, state, {
+        updateProfileStatus: action.status,
+        updateProfileError: action.error,
+        loading: false
+      });
+
+    case accountActions.LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER:
+      Cookie.deleteCookie(LOGGED_IN_USER_DETAILS);
+      Cookie.deleteCookie(CUSTOMER_ACCESS_TOKEN);
+      return Object.assign({}, state, {
+        type: action.type
+      });
+
+    case accountActions.CHANGE_PASSWORD_REQUEST:
+      return Object.assign({}, state, {
+        changePasswordStatus: action.status,
+        loading: false
+      });
+
+    case accountActions.CHANGE_PASSWORD_SUCCESS:
+      return Object.assign({}, state, {
+        changePasswordStatus: action.status,
+        changePasswordDetails: action.passwordDetails,
+        loading: false
+      });
+
+    case accountActions.CHANGE_PASSWORD_FAILURE:
+      return Object.assign({}, state, {
+        changePasswordStatus: action.status,
+        changePasswordError: action.error,
         loading: false
       });
 
