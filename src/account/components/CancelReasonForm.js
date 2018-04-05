@@ -16,13 +16,10 @@ export default class CancelReasonForm extends React.Component {
       redirect: false
     };
   }
-  redirectToPdpPage() {
-    if (this.state.redirect) {
-      return <Redirect to={`/p-${this.state.productCode.toLowerCase()}`} />;
-    }
-  }
   onClickImage(productCode) {
-    this.setState({ redirect: true, productCode: productCode });
+    if (this.props.onClickImage) {
+      this.props.onClickImage(productCode);
+    }
   }
   handleContinue() {
     if (this.props.onContinue) {
@@ -83,7 +80,6 @@ export default class CancelReasonForm extends React.Component {
             <TextArea onChange={val => this.handleChange(val)} />
           </div>
         </div>
-        {this.redirectToPdpPage()}
       </ReturnsFrame>
     );
   }

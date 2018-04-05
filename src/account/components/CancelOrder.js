@@ -38,6 +38,11 @@ export default class CancelOrder extends React.Component {
     this.props.history.goBack();
   }
 
+  onClickImage(productCode) {
+    if (productCode) {
+      this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    }
+  }
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
   }
@@ -62,6 +67,7 @@ export default class CancelOrder extends React.Component {
             cancelProductDetails={cancelProductDetails}
             onContinue={reason => this.finalSubmit(reason)}
             onCancel={() => this.onCancel()}
+            onClickImage={productCode => this.onClickImage(productCode)}
           />
         )}
       </div>

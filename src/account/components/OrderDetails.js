@@ -35,7 +35,9 @@ const AWB_POPUP_TRUE = "Y";
 const AWB_POPUP_FALSE = "N";
 export default class OrderDetails extends React.Component {
   onClickImage(productCode) {
-    this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    if (productCode) {
+      this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    }
   }
   requestInvoice(ussid, sellerOrderNo) {
     if (this.props.sendInvoice) {
