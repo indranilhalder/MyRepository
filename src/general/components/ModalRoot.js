@@ -21,6 +21,7 @@ import KycDetailPopUpWithBottomSlideModal from "../../account/components/KycDeta
 import * as Cookie from "../../lib/Cookie.js";
 import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
 const modalRoot = document.getElementById("modal-root");
+const GenerateOtp = "GenerateOtpForEgv";
 export default class ModalRoot extends React.Component {
   constructor(props) {
     super(props);
@@ -111,7 +112,6 @@ export default class ModalRoot extends React.Component {
     this.props.hideModal();
   }
 
-
   generateOtpForCliqCash = kycDetails => {
     if (this.props.getOtpToActivateWallet) {
       this.props.getOtpToActivateWallet(kycDetails, true);
@@ -148,6 +148,10 @@ export default class ModalRoot extends React.Component {
     customerDetailsWithOtp.lastName = this.state.lastName;
     customerDetailsWithOtp.otp = val.otp;
     this.props.verifyWallet(customerDetailsWithOtp);
+  }
+  wrongNumber() {
+    this.props.hideModal();
+    this.props.showModal(GenerateOtp);
   }
   generateOtp(val) {
     let customerDetails = {};
@@ -276,6 +280,7 @@ export default class ModalRoot extends React.Component {
           mobileNumber={this.state.mobileNumber}
           submitOtp={val => this.verifyOtp(val, this.props.ownProps)}
           resendOtp={val => this.resendOtp(val, this.props.ownProps)}
+          wrongNumber={() => this.wrongNumber()}
           {...this.props.ownProps}
         />
       ),
