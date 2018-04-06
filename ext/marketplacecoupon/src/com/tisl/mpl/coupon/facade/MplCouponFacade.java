@@ -277,4 +277,13 @@ public interface MplCouponFacade
 			throws VoucherOperationException, EtailNonBusinessExceptions;
 
 
+	/**
+	 * Removes Last No Cost EMI Coupon
+	 *
+	 * @param cartModel
+	 * @return AbstractOrderModel
+	 */
+	AbstractOrderModel removeLastEMICoupon(AbstractOrderModel cartModel);
+
+
 }

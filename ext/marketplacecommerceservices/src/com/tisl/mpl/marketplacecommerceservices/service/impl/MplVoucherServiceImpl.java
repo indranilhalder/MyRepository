@@ -3983,7 +3983,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @throws VoucherOperationException
 	 * @throws EtailNonBusinessExceptions
 	 */
-	private VoucherDiscountData releaseNoCostEMIAfterCheck(final CartModel cartModel, final OrderModel orderModel,
+	@Override
+	public VoucherDiscountData releaseNoCostEMIAfterCheck(final CartModel cartModel, final OrderModel orderModel,
 			final String voucherCode, final Double productPrice, final List<AbstractOrderEntryModel> applicableOrderEntryList,
 			final List<DiscountModel> voucherList) throws VoucherOperationException, EtailNonBusinessExceptions
 	{
