@@ -2760,4 +2760,72 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 	}
 
+
+
+	/**
+	 * Removes Last No Cost EMI Coupon
+	 *
+	 * @param oModel
+	 */
+	@Override
+	public AbstractOrderModel removeLastEMICoupon(final AbstractOrderModel oModel)
+	{
+		final List<DiscountModel> discountList = oModel.getDiscounts();
+		boolean isPresent = false;
+		MplNoCostEMIVoucherModel voucher = null;
+
+		double productPrice = 0.0;
+		String voucherCode = MarketplacecommerceservicesConstants.EMPTY;
+
+
+		try
+		{
+			if (CollectionUtils.isNotEmpty(discountList))
+			{
+				for (final DiscountModel discount : discountList)
+				{
+					if ((discount instanceof PromotionVoucherModel) && (discount instanceof MplNoCostEMIVoucherModel))
+					{
+						isPresent = true;
+						voucher = (MplNoCostEMIVoucherModel) discount;
+						voucherCode = voucher.getVoucherCode();
+						break;
+					}
+				}
+			}
+
+
+			if (isPresent)
+			{
+				if (oModel instanceof CartModel)
+				{
+					final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher, oModel);
+
+					productPrice = getTotalProductPrice(applicableOrderEntryList);
+
+					getMplVoucherService().releaseNoCostEMIAfterCheck((CartModel) oModel, null, voucherCode,
+							Double.valueOf(productPrice), applicableOrderEntryList, discountList);
+				}
+				else if (oModel instanceof OrderModel)
+				{
+					final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher, oModel);
+
+					productPrice = getTotalProductPrice(applicableOrderEntryList);
+
+					getMplVoucherService().releaseNoCostEMIAfterCheck(null, (OrderModel) oModel, voucherCode,
+							Double.valueOf(productPrice), applicableOrderEntryList, discountList);
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.debug("Exception" + exception.getMessage());
+		}
+
+		getModelService().refresh(oModel);
+
+		return oModel;
+
+	}
+
 }

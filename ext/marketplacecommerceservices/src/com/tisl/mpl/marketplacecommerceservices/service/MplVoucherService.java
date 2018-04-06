@@ -318,6 +318,24 @@ public interface MplVoucherService
 	 * @throws VoucherOperationException
 	 */
 	void releaseNoCostEMIVoucher(String voucherCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException;
+	
+	
+	/***
+	 * Releases No COST EMI 
+	 * 
+	 * @param cartModel
+	 * @param orderModel
+	 * @param voucherCode
+	 * @param productPrice
+	 * @param applicableOrderEntryList
+	 * @param voucherList
+	 * @return VoucherDiscountData
+	 * @throws VoucherOperationException
+	 * @throws EtailNonBusinessExceptions
+	 */
+	VoucherDiscountData releaseNoCostEMIAfterCheck(final CartModel cartModel, final OrderModel orderModel,
+			final String voucherCode, final Double productPrice, final List<AbstractOrderEntryModel> applicableOrderEntryList,
+			final List<DiscountModel> voucherList) throws VoucherOperationException, EtailNonBusinessExceptions;
 
 
 }

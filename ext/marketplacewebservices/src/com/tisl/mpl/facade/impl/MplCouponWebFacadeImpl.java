@@ -981,7 +981,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 	 * @param orderModel
 	 */
 	@Override
-	public ApplyCouponsDTO applyNoCostEMI(final String couponCode, final CartModel cartModel, final OrderModel orderModel)
+	public ApplyCouponsDTO applyNoCostEMI(final String couponCode, CartModel cartModel, OrderModel orderModel)
 			throws VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
 			JaloSecurityException
 	{
@@ -997,6 +997,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 			{
 				if (null != cartModel)
 				{
+					cartModel = (CartModel) mplCouponFacade.removeLastEMICoupon(cartModel);
 					if (StringUtils.isNotEmpty(voucherCode))
 					{
 						couponRedStatus = mplCouponFacade.applyNoCostEMICartVoucher(voucherCode, cartModel, null);
@@ -1017,6 +1018,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 			}
 			else
 			{
+				orderModel = (OrderModel) mplCouponFacade.removeLastEMICoupon(orderModel);
 				if (StringUtils.isNotEmpty(voucherCode))
 				{
 					couponRedStatus = mplCouponFacade.applyNoCostEMICartVoucher(voucherCode, null, orderModel);
