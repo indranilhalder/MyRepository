@@ -40,12 +40,6 @@ export default class AddToWishListButton extends React.Component {
     }
   }
   render() {
-    let saveListIcon = "";
-    if (this.props.isWhite) {
-      saveListIcon = downloadIconWhite;
-    } else {
-      saveListIcon = downloadIcon;
-    }
     if (this.props.type === WISHLIST_FOOTER_BUTTON_TYPE) {
       return (
         <FooterButton
@@ -69,7 +63,10 @@ export default class AddToWishListButton extends React.Component {
     }
     return (
       <div onClick={e => this.onClick(e)}>
-        <Icon image={saveListIcon} size={this.props.size} />
+        <Icon
+          image={this.props.isWhite ? downloadIconWhite : downloadIcon}
+          size={this.props.size}
+        />
       </div>
     );
   }
