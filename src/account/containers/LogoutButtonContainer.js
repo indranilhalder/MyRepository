@@ -2,10 +2,14 @@ import { connect } from "react-redux";
 import { logout } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import LogoutButton from "../components/LogoutButton";
+import { generateCartIdForAnonymous } from "../../cart/actions/cart.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    logout: () => {
-      dispatch(logout());
+    logout: async () => {
+      return await dispatch(logout());
+    },
+    generateCartIdForAnonymous: async () => {
+      return await dispatch(generateCartIdForAnonymous());
     }
   };
 };
