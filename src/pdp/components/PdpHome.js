@@ -154,6 +154,7 @@ export default class PdpApparel extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -242,9 +243,8 @@ export default class PdpApparel extends React.Component {
                 )}
                 <ColourSelector
                   noBackground={true}
-                  data={productData.variantOptions.map(value => {
-                    return value.colorlink;
-                  })}
+                  productId={productData.productListingId}
+                  data={productData.variantOptions}
                   history={this.props.history}
                   updateColour={val => {}}
                   getProductSpecification={this.props.getProductSpecification}
