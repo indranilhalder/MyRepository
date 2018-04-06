@@ -181,11 +181,7 @@ export default class CreditCardForm extends React.Component {
                     onChange={val => this.getCardCvvValue(val)}
                     textStyle={{ fontSize: 14 }}
                     height={33}
-                    value={
-                      this.props.cardCvvValue
-                        ? this.props.cardCvvValue
-                        : this.state.cardCvvValue
-                    }
+                    maxLength={"3"}
                     rightChildSize={33}
                     rightChild={
                       <CircleButton
