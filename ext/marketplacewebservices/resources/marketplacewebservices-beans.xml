@@ -4592,6 +4592,16 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="couponDiscountAmount"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="noCostEMIOrderValue"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="noCostEMIInterestValue"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="noCostEMIDiscountValue"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="noCostEMITotalPayable"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="noCostEMIPerMonthPayable"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.ColorLinkData">

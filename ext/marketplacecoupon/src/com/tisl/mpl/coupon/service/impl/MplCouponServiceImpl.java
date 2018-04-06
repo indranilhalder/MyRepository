@@ -148,7 +148,8 @@ public class MplCouponServiceImpl implements MplCouponService
 		{
 			for (final DiscountModel discount : discountList)
 			{
-				if (discount instanceof PromotionVoucherModel && !(discount instanceof MplCartOfferVoucherModel))
+				if (discount instanceof PromotionVoucherModel && !(discount instanceof MplCartOfferVoucherModel)
+						&& !(discount instanceof MplNoCostEMIVoucherModel))
 				{
 					flag = false;
 					break;
@@ -244,8 +245,7 @@ public class MplCouponServiceImpl implements MplCouponService
 		{
 			for (final DiscountModel discount : discountList)
 			{
-				if ((discount instanceof PromotionVoucherModel) && (discount instanceof MplCartOfferVoucherModel)
-						&& (discount instanceof MplNoCostEMIVoucherModel))
+				if ((discount instanceof PromotionVoucherModel) && (discount instanceof MplNoCostEMIVoucherModel))
 				{
 					flag = false;
 					break;

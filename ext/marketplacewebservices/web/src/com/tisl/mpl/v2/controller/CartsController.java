@@ -3698,7 +3698,7 @@ public class CartsController extends BaseCommerceController
 						applycouponDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 						return applycouponDto;
 					}
-					cartModel.setChannel(SalesApplication.MOBILE);
+					//cartModel.setChannel(SalesApplication.MOBILE);
 					cartModel.setCheckForBankVoucher("true");
 					//modelService.save(cartModel);
 					getModelService().save(cartModel);
@@ -5195,11 +5195,15 @@ public class CartsController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{cartId}/applyNoCostEMI", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public void applyNoCostEMI(@RequestParam final String couponCode, @RequestParam(required = false) final String cartGuid,
-			@RequestParam(required = false) final String channel)
+	public ApplyCouponsDTO applyNoCostEMI(@RequestParam final String couponCode,
+			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String channel)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException
 	{
 		CartModel cartModel = null;
 		OrderModel orderModel = null;
+		ApplyCouponsDTO applycouponDto = new ApplyCouponsDTO();
+
 		try
 		{
 			LOG.debug("No Cost EMI>>> Evaluation Controller Call");
@@ -5222,26 +5226,74 @@ public class CartsController extends BaseCommerceController
 				}
 				else
 				{
-					final SalesApplication channelToSet = StringUtils.isNotEmpty(channel) ? SalesApplication.valueOf(channel)
-							: SalesApplication.MOBILE;
-					cartModel.setChannel(channelToSet);
-					getModelService().save(cartModel);
-
-					mplCouponWebFacade.applyNoCostEMI(couponCode, cartModel, null);
+					applycouponDto = mplCouponWebFacade.applyNoCostEMI(couponCode, cartModel, null);
+					applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, cartModel);
 				}
 
 
 			}
 			else
 			{
-				// Code for Order Model
+				applycouponDto = mplCouponWebFacade.applyNoCostEMI(couponCode, null, orderModel);
+				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
 			}
 
 		}
-		catch (final Exception exception)
+		catch (final EtailNonBusinessExceptions e)
 		{
-			//
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				applycouponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				applycouponDto.setErrorCode(e.getErrorCode());
+			}
+			applycouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+			if (null != cartModel)
+			{
+				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
+				applycouponDto.setCartAmount(pricePwa);
+				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, cartModel);
+			}
+			else if (null != orderModel)
+			{
+				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
+				applycouponDto.setCartAmount(pricePwa);
+				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
+			}
+
 		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				applycouponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				applycouponDto.setErrorCode(e.getErrorCode());
+			}
+			applycouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+			if (null != cartModel)
+			{
+				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
+				applycouponDto.setCartAmount(pricePwa);
+				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, cartModel);
+			}
+			else if (null != orderModel)
+			{
+				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
+				applycouponDto.setCartAmount(pricePwa);
+				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
+			}
+		}
+
+		return applycouponDto;
 	}
 
 }

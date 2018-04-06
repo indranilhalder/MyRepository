@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.WebserviceValidationException;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
@@ -42,12 +43,14 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplCouponWebService;
 import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.ApplyCartCouponsDTO;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
+import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
 
 
@@ -75,6 +78,9 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 	@Autowired
 	private ModelService modelService;
+
+	@Resource
+	private MplCartWebService mplCartWebService;
 
 	/**
 	 * @Description : For getting the details of all the Coupons available for the User
@@ -975,29 +981,58 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 	 * @param orderModel
 	 */
 	@Override
-	public void applyNoCostEMI(final String couponCode, final CartModel cartModel, final OrderModel orderModel)
+	public ApplyCouponsDTO applyNoCostEMI(final String couponCode, final CartModel cartModel, final OrderModel orderModel)
 			throws VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
 			JaloSecurityException
 	{
 		final String voucherCode = mplCouponFacade.getNoCOSTEMIVoucherCode(couponCode);
 		boolean couponRedStatus = false;
 
+		ApplyCouponsDTO applycouponDto = new ApplyCouponsDTO();
+
 		try
 		{
 
-			if (null == orderModel && null != cartModel)
+			if (null == orderModel)
+			{
+				if (null != cartModel)
+				{
+					if (StringUtils.isNotEmpty(voucherCode))
+					{
+						couponRedStatus = mplCouponFacade.applyNoCostEMICartVoucher(voucherCode, cartModel, null);
+						LOG.debug("No Cost EMI Coupon Redemption Status is >>>>" + couponRedStatus);
+
+						if (couponRedStatus)
+						{
+							applycouponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+						}
+
+						applycouponDto = populateNoCostEMIData(applycouponDto, cartModel);
+					}
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9500);
+				}
+			}
+			else
 			{
 				if (StringUtils.isNotEmpty(voucherCode))
 				{
-					couponRedStatus = mplCouponFacade.applyNoCostEMICartVoucher(voucherCode, cartModel, null);
-				}
+					couponRedStatus = mplCouponFacade.applyNoCostEMICartVoucher(voucherCode, null, orderModel);
+					LOG.debug("No Cost EMI Coupon Redemption Status is >>>>" + couponRedStatus);
+					if (couponRedStatus)
+					{
+						applycouponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 
+					}
+					applycouponDto = populateNoCostEMIData(applycouponDto, orderModel);
+				}
 			}
 
 		}
 		catch (final VoucherOperationException e)
 		{
-
 			if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCPRICEEXCEEDED))
 			{
 				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9501);
@@ -1063,6 +1098,29 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9507);
 		}
 
+		return applycouponDto;
+
+	}
+
+
+	/**
+	 * Populate Data for No Cost EMI
+	 *
+	 * @param applycouponDto
+	 * @param oModel
+	 * @return ApplyCouponsDTO
+	 */
+	private ApplyCouponsDTO populateNoCostEMIData(final ApplyCouponsDTO applycouponDto, final AbstractOrderModel oModel)
+	{
+		final ApplyCouponsDTO dto = applycouponDto;
+
+		if (null != oModel)
+		{
+			final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(oModel);
+			dto.setCartAmount(pricePwa);
+		}
+
+		return dto;
 	}
 
 }

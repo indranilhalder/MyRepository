@@ -95,6 +95,6 @@ public interface MplCouponWebFacade
 	 * @param orderModel
 	 * @throws VoucherOperationException
 	 */
-	void applyNoCostEMI(String couponCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException,
+	ApplyCouponsDTO applyNoCostEMI(String couponCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException,
 			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException;
 }

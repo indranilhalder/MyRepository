@@ -2903,7 +2903,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			for (final DiscountModel discount : discounts)
 			{
-				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel))
+				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel)
+						&& !(discount instanceof MplNoCostEMIVoucherModel))
 				{
 					couponCode = discount.getCode();
 					flag = true;
@@ -2970,7 +2971,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			for (final DiscountModel discount : voucherList)
 			{
-				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel))
+				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel)
+						&& !(discount instanceof MplNoCostEMIVoucherModel))
 				{
 
 					final PromotionVoucherModel voucher = (PromotionVoucherModel) discount;
@@ -4204,7 +4206,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					entry.setEmiCouponValue(Double.valueOf(entryLevelApportionedPrice.doubleValue()));
 
 					if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode()))
-							|| StringUtils.isNotEmpty(entry.getCouponCode()))
+							|| StringUtils.isNotEmpty(entry.getCouponCode()) || StringUtils.isNotEmpty(entry.getCartCouponCode()))
 					{
 						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() == null ? 0.00D : entry
 								.getNetAmountAfterAllDisc().doubleValue();

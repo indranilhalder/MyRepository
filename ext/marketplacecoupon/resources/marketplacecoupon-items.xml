@@ -659,30 +659,11 @@
 		
 		<!-- No Cost EMI Coupons Begin Here -->
 		<itemtype code="MplNoCostEMIVoucher" 
-			extends="Voucher" 
+			extends="PromotionVoucher" 
 			jaloclass="com.tisl.mpl.jalo.MplNoCostEMIVoucher"
 			autocreate="true" 
 			generate="true">
 			<attributes>
-				<attribute qualifier="voucherCode" type="java.lang.String">
-					<description>the voucher code.</description>
-					<persistence type="property"/>
-					<custom-properties>
-						<property name="hmcIndexField"><value>"thefield"</value></property>
-					</custom-properties>
-				</attribute>
-				<attribute qualifier="redemptionQuantityLimit" type="java.lang.Integer">
-					<defaultvalue>Integer.valueOf(1000)</defaultvalue>
-					<description>the upper limit of uses possible for this voucher.</description>
-					<persistence type="property"/>
-					<modifiers search="false" optional="false"/>
-				</attribute>
-				<attribute qualifier="redemptionQuantityLimitPerUser" type="java.lang.Integer">
-					<defaultvalue>Integer.valueOf(1000)</defaultvalue>
-					<description>the upper limit of voucher uses possible per user. Default is one.</description>
-					<persistence type="property"/>
-					<modifiers search="false" optional="false"/>
-				</attribute>
 				<attribute qualifier="tenure" type="java.lang.Integer">
 					<defaultvalue>Integer.valueOf(3)</defaultvalue>
 					<description>Minimum Tenure Value</description>

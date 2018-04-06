@@ -637,7 +637,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	{
 		VoucherDiscountData data = null;
 
-		if (lastVoucher instanceof PromotionVoucherModel && !(lastVoucher instanceof MplCartOfferVoucherModel))
+		if (lastVoucher instanceof PromotionVoucherModel && !(lastVoucher instanceof MplCartOfferVoucherModel)
+				&& !(lastVoucher instanceof MplNoCostEMIVoucherModel))
 		{
 			data = getMplVoucherService().checkCartAfterApply(lastVoucher, cartModel, orderModel, applicableOrderEntryList);
 		}
@@ -981,7 +982,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	public void setApportionedValueForVoucher(final VoucherModel voucher, final AbstractOrderModel abstractOrderModel,
 			final String voucherCode, final List<AbstractOrderEntryModel> applicableOrderEntryList)
 	{
-		if ((voucher instanceof PromotionVoucherModel) && !(voucher instanceof MplCartOfferVoucherModel))
+		if ((voucher instanceof PromotionVoucherModel) && !(voucher instanceof MplCartOfferVoucherModel)
+				&& !(voucher instanceof MplNoCostEMIVoucherModel))
 		{
 			getMplVoucherService().setApportionedValueForVoucher(voucher, abstractOrderModel, voucherCode, applicableOrderEntryList);
 		}
@@ -2197,7 +2199,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		{
 			for (final DiscountModel discount : discountList)
 			{
-				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel))
+				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel)
+						&& !(discount instanceof MplNoCostEMIVoucherModel))
 				{
 					isPresent = true;
 					oModel = (PromotionVoucherModel) discount;
@@ -2456,6 +2459,24 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							{
 								entry.setCartCouponCode(MarketplacecommerceservicesConstants.EMPTY);
 								entry.setCartCouponValue(Double.valueOf(0.00D));
+							}
+							if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
+							{
+								getModelService().saveAll(entryList);
+							}
+						}
+					}
+					else if (oModel instanceof MplNoCostEMIVoucherModel)
+					{
+						final MplNoCostEMIVoucherModel coupon = (MplNoCostEMIVoucherModel) oModel;
+						getVoucherService().releaseVoucher(coupon.getVoucherCode(), cart);
+						final List<AbstractOrderEntryModel> entryList = cart.getEntries();
+						if (CollectionUtils.isNotEmpty(entryList))
+						{
+							for (final AbstractOrderEntryModel entry : entryList)
+							{
+								entry.setEmiCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+								entry.setEmiCouponValue(Double.valueOf(0.00D));
 							}
 							if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
 							{
