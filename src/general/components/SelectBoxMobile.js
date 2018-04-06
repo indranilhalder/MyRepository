@@ -39,7 +39,7 @@ export default class SelectBoxMobile extends React.Component {
     });
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.value !== this.props.value) {
+    if (nextProps.value !== this.state.value) {
       this.setState({ value: nextProps.value });
     }
   }

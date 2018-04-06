@@ -53,7 +53,7 @@ export default class CartItem extends React.Component {
 
   render() {
     const fetchedQuantityList = [];
-    for (let i = 1; i <= parseInt(this.props.maxQuantityAllowed, 10); i++) {
+    for (let i = 1; i <= this.props.maxQuantityAllowed; i++) {
       fetchedQuantityList.push({ value: i.toString() });
     }
     return (
@@ -111,7 +111,6 @@ export default class CartItem extends React.Component {
               <SelectBoxMobile
                 borderNone={true}
                 options={fetchedQuantityList}
-                // selected={this.state.qtySelectedByUser}
                 onChange={val => this.handleQuantityChange(val)}
                 value={this.props.qtySelectedByUser}
               />
