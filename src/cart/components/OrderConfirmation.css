@@ -1,0 +1,17 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.orderBannerHolder {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+.rateHolder {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+  background: #fff;
+  border-radius: 4px;
+}

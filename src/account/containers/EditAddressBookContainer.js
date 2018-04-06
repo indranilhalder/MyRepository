@@ -3,7 +3,7 @@ import { getUserAddress } from "../../cart/actions/cart.actions";
 import { editAddress, getPinCode } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import EditAddressPopUp from "../components/EditAddressPopUp.js";
-
+import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = dispatch => {
   return {
     editAddress: addressDetails => {
@@ -11,6 +11,9 @@ const mapDispatchToProps = dispatch => {
     },
     getPinCode: pinCode => {
       dispatch(getPinCode(pinCode));
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     }
   };
 };
