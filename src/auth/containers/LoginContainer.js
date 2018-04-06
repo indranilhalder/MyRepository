@@ -41,7 +41,6 @@ const mapDispatchToProps = dispatch => {
       const userDetailsResponse = await dispatch(
         customerAccessToken(userDetails)
       );
-      console.log(userDetailsResponse);
       // checking condition for the failure customer access token api
       if (userDetailsResponse.status === ERROR) {
         dispatch(singleAuthCallHasFailed(userDetailsResponse.error));
