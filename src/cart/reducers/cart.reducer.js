@@ -148,7 +148,8 @@ const cart = (
     createJusPayOrderError: null,
     createJusPayOrderDetails: null,
     jusPaymentLoader: false,
-    selectDeliveryModeLoader: false
+    selectDeliveryModeLoader: false,
+    transactionStatus: null
   },
   action
 ) => {
@@ -706,14 +707,13 @@ const cart = (
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_REQUEST:
       return Object.assign({}, state, {
-        jusPayStatus: action.status,
+        transactionStatus: action.status,
         jusPaymentLoader: true
       });
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_SUCCESS: {
       localStorage.removeItem(OLD_CART_GU_ID);
       return Object.assign({}, state, {
-        jusPayStatus: action.status,
         jusPayDetails: action.jusPayDetails
       });
     }
@@ -721,7 +721,7 @@ const cart = (
     case cartActions.UPDATE_TRANSACTION_DETAILS_FAILURE:
       localStorage.removeItem(OLD_CART_GU_ID);
       return Object.assign({}, state, {
-        jusPayStatus: action.status,
+        transactionStatus: action.status,
         jusPayError: action.error,
         jusPaymentLoader: false
       });
@@ -736,6 +736,7 @@ const cart = (
       return Object.assign({}, state, {
         orderConfirmationDetailsStatus: action.status,
         orderConfirmationDetails: action.confirmedOrderDetails,
+        transactionStatus: action.status,
         jusPaymentLoader: false
       });
     }
@@ -743,6 +744,7 @@ const cart = (
     case cartActions.ORDER_CONFIRMATION_FAILURE:
       return Object.assign({}, state, {
         orderConfirmationDetailsStatus: action.status,
+        transactionStatus: action.status,
         orderConfirmationDetailsError: action.error,
         jusPaymentLoader: false
       });

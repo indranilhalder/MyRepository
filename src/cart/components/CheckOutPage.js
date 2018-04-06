@@ -39,7 +39,6 @@ import {
   ORDER_CODE,
   REQUESTING,
   THANK_YOU
-
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
@@ -96,8 +95,10 @@ class CheckOutPage extends React.Component {
   }
   renderLoader() {
     return (
-      <div className={styles.loadingIndicator}>
-        <MDSpinner />
+      <div className={styles.cartLoader}>
+        <div className={styles.spinner}>
+          <MDSpinner />
+        </div>
       </div>
     );
   }
@@ -352,7 +353,6 @@ class CheckOutPage extends React.Component {
       nextProps.cart.userAddress.addresses
     ) {
       let defaultAddressId = null;
-
       let defaultAddress = nextProps.cart.userAddress.addresses.find(
         address => {
           return address.defaultAddress;
@@ -496,6 +496,7 @@ class CheckOutPage extends React.Component {
 
     if (value === PAYMENT_CHARGED) {
       this.setState({ orderId: orderId });
+
       if (this.props.updateTransactionDetails) {
         let cartId;
         cartId = localStorage.getItem(OLD_CART_GU_ID);
@@ -803,6 +804,19 @@ class CheckOutPage extends React.Component {
       this.props.showSecondaryLoader();
     } else {
       this.props.hideSecondaryLoader();
+    }
+
+    if (this.props.cart.transactionStatus === REQUESTING) {
+      return false;
+    }
+
+    if (
+      this.props.cart.paymentModesStatus === REQUESTING ||
+      this.props.cart.codEligibilityStatus === REQUESTING ||
+      this.props.netBankDetailsStatus === REQUESTING ||
+      this.props.cart.getUserAddressStatus === REQUESTING
+    ) {
+      return this.renderLoader();
     }
 
     const cartData = this.props.cart;

@@ -223,7 +223,6 @@ class CartPage extends React.Component {
             <div className={styles.search}>
               <SearchAndUpdate
                 value={defaultPinCode}
-                getPinCode={val => this.setState({ pinCode: val })}
                 checkPinCodeAvailability={val =>
                   this.checkPinCodeAvailability(val)
                 }

@@ -775,7 +775,7 @@ export function selectDeliveryMode(deliveryUssId, pinCode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
 
   return async (dispatch, getState, { api }) => {
-    dispatch(userAddressRequest());
+    dispatch(selectDeliveryModeRequest());
     try {
       const result = await api.post(
         `${USER_CART_PATH}/${JSON.parse(userDetails).userName}/carts/${
@@ -834,7 +834,7 @@ export function addAddressToCart(addressId, pinCode) {
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
-    dispatch(userAddressRequest());
+    dispatch(addAddressToCartRequest());
     try {
       let userId = JSON.parse(userDetails).userName;
       let access_token = JSON.parse(customerCookie).access_token;
