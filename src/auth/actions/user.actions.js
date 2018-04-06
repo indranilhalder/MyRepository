@@ -265,7 +265,7 @@ export function otpVerification(otpDetails, userDetails) {
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+        throw new Error(`${resultJson.error}`);
       }
       dispatch(hideModal());
       return dispatch(otpVerificationSuccess(resultJson, userDetails.username));
@@ -538,10 +538,8 @@ export function customerAccessToken(userDetails) {
       const resultJson = await result.json();
       const resultJsonStatus = getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        dispatch(singleAuthCallHasFailed(resultJsonStatus.message));
         throw new Error(resultJsonStatus.message);
       }
-
       return dispatch(customerAccessTokenSuccess(resultJson));
     } catch (e) {
       return dispatch(customerAccessTokenFailure(e.message));

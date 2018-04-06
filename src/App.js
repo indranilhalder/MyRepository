@@ -150,15 +150,7 @@ class App extends Component {
       }
     }
   }
-  componentDidUpdate() {
-    const cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (
-      !cartIdForAnonymous &&
-      this.props.cartIdForAnonymousUSerStatus !== REQUESTING
-    ) {
-      this.props.generateCartIdForAnonymous();
-    }
-  }
+
   renderLoader() {
     return (
       <div className={AppStyles.loadingIndicator}>

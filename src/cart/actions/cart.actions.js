@@ -959,7 +959,6 @@ export function generateCartIdForLoggedInUser() {
       const resultJson = await result.json();
       const resultJsonStatus = getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        dispatch(singleAuthCallHasFailed(resultJsonStatus.message));
         throw new Error(resultJsonStatus.message);
       }
 
@@ -1104,7 +1103,6 @@ export function getCartId() {
       const resultJson = await result.json();
       const resultJsonStatus = getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        dispatch(singleAuthCallHasFailed(resultJsonStatus.message));
         throw new Error(resultJsonStatus.message);
       }
       return dispatch(getCartIdSuccess(resultJson));
@@ -1140,7 +1138,7 @@ export function mergeCartId(cartGuId) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-
+  console.log(userDetails, customerCookie, cartDetailsAnonymous);
   return async (dispatch, getState, { api }) => {
     dispatch(mergeCardIdRequest());
     try {
@@ -1158,10 +1156,9 @@ export function mergeCartId(cartGuId) {
       const resultJson = await result.json();
       const resultJsonStatus = getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        dispatch(resultJsonStatus.message);
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(setIfAllAuthCallsHaveSucceeded());
+
       return dispatch(mergeCartIdSuccess(resultJson));
     } catch (e) {
       return dispatch(mergeCartIdFailure(e.message));
