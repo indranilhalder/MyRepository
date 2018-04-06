@@ -13,7 +13,7 @@ import {
   customerAccessToken
 } from "../../auth/actions/user.actions";
 import { redeemCliqVoucher } from "../../account/actions/account.actions";
-import { SUCCESS } from "../../lib/constants";
+import { SUCCESS, FAILURE } from "../../lib/constants";
 import { updateProfile } from "../../account/actions/account.actions.js";
 
 import {
@@ -34,6 +34,10 @@ import {
   submitSelfCourierReturnInfo
 } from "../../account/actions/account.actions";
 import { createWishlist } from "../../wishlist/actions/wishlist.actions";
+import {
+  singleAuthCallHasFailed,
+  setIfAllAuthCallsHaveSucceeded
+} from "../../auth/actions/auth.actions.js";
 const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
@@ -61,32 +65,32 @@ const mapDispatchToProps = dispatch => {
       const otpResponse = await dispatch(
         otpVerification(otpDetails, userDetails)
       );
-      const customerAccessResponse = await dispatch(
-        customerAccessToken(userDetails)
-      );
-      if (customerAccessResponse.status === SUCCESS) {
-        if (otpResponse.status === SUCCESS) {
-          const loginUserResponse = await dispatch(loginUser(userDetails));
-          if (loginUserResponse.status === SUCCESS) {
-            const cartVal = await dispatch(getCartId());
-            if (
-              cartVal.status === SUCCESS &&
-              cartVal.cartDetails.guid &&
-              cartVal.cartDetails.code
-            ) {
-              // This is the anonymous case
-              // And I have an existing cart that needs to be merged.
-              dispatch(createWishlist());
-              dispatch(mergeCartId(cartVal.cartDetails.guid));
+      if (otpResponse.status === SUCCESS) {
+        const customerAccessResponse = await dispatch(
+          customerAccessToken(userDetails)
+        );
+        if (customerAccessResponse.status === SUCCESS) {
+          const createdCartVal = await dispatch(
+            generateCartIdForLoggedInUser()
+          );
+          if (createdCartVal.status === SUCCESS) {
+            await dispatch(createWishlist());
+            const mergeCartIdResponse = await dispatch(
+              mergeCartId(createdCartVal.cartDetails.guid)
+            );
+            if (mergeCartIdResponse.status === SUCCESS) {
+              dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
-              const createdCartVal = await dispatch(
-                generateCartIdForLoggedInUser()
-              );
-              dispatch(createWishlist());
-              dispatch(mergeCartId(createdCartVal.cartDetails.guid));
+              dispatch(singleAuthCallHasFailed(mergeCartIdResponse.error));
             }
+          } else if (createdCartVal.status === FAILURE) {
+            dispatch(singleAuthCallHasFailed(otpResponse.error));
           }
+        } else if (customerAccessResponse.status === FAILURE) {
+          dispatch(singleAuthCallHasFailed(otpResponse.error));
         }
+      } else if (otpResponse.status === FAILURE) {
+        dispatch(singleAuthCallHasFailed(otpResponse.error));
       }
     },
     resetPassword: userDetails => {
@@ -140,7 +144,6 @@ const mapDispatchToProps = dispatch => {
     },
     redeemCliqVoucher: (cliqCashDetails, fromCheckOut) => {
       dispatch(redeemCliqVoucher(cliqCashDetails, fromCheckOut));
-
     }
   };
 };

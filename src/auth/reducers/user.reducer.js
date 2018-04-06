@@ -1,4 +1,5 @@
 import * as userActions from "../actions/user.actions";
+import * as cartActions from "../../cart/actions/cart.actions";
 import { CLEAR_ERROR } from "../../general/error.actions.js";
 import { LOGOUT } from "../../account/actions/account.actions";
 import * as Cookies from "../../lib/Cookie";
@@ -7,7 +8,8 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   REFRESH_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  CART_DETAILS_FOR_LOGGED_IN_USER
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  CART_DETAILS_FOR_ANONYMOUS
 } from "../../lib/constants";
 const user = (
   state = {
@@ -16,7 +18,12 @@ const user = (
     error: null,
     loading: false,
     message: null,
-    isLoggedIn: false
+    isLoggedIn: false,
+
+    globalAccessTokenStatus: null,
+    customerAccessTokenStatus: null,
+    loginUserStatus: null,
+    refreshCustomerAccessTokenStatus: null
   },
   action
 ) => {
@@ -25,6 +32,7 @@ const user = (
     case LOGOUT: {
       Cookies.deleteCookie(CUSTOMER_ACCESS_TOKEN);
       Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
       Cookies.deleteCookie(LOGGED_IN_USER_DETAILS);
       localStorage.clear();
       return Object.assign({}, state, {
@@ -180,7 +188,7 @@ const user = (
 
     case userActions.GLOBAL_ACCESS_TOKEN_REQUEST:
       return Object.assign({}, state, {
-        status: action.status,
+        globalAccessTokenStatus: action.status,
         loading: true
       });
 
@@ -192,23 +200,22 @@ const user = (
       );
 
       return Object.assign({}, state, {
-        status: action.status,
+        globalAccessTokenStatus: action.status,
         loading: false
       });
 
     case userActions.GLOBAL_ACCESS_TOKEN_FAILURE:
       return Object.assign({}, state, {
-        status: action.status,
+        globalAccessTokenStatus: action.status,
         loading: false,
         error: action.error
       });
 
     case userActions.CUSTOMER_ACCESS_TOKEN_REQUEST:
       return Object.assign({}, state, {
-        status: action.status,
+        customerAccessTokenStatus: action.status,
         loading: true
       });
-
     case userActions.CUSTOMER_ACCESS_TOKEN_SUCCESS:
       Cookies.createCookie(
         CUSTOMER_ACCESS_TOKEN,
@@ -219,15 +226,14 @@ const user = (
         REFRESH_TOKEN,
         action.customerAccessTokenDetails.refresh_token
       );
-
       return Object.assign({}, state, {
-        status: action.status,
+        customerAccessTokenStatus: action.status,
         loading: false
       });
 
     case userActions.CUSTOMER_ACCESS_TOKEN_FAILURE:
       return Object.assign({}, state, {
-        status: action.status,
+        customerAccessTokenStatus: action.status,
         loading: false,
         error: action.error
       });
@@ -251,19 +257,6 @@ const user = (
       });
 
     case userActions.GOOGLE_PLUS_LOGIN_FAILURE:
-      return Object.assign({}, state, {
-        status: action.status,
-        loading: false,
-        error: action.error
-      });
-
-    case userActions.GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_REQUEST:
-      return Object.assign({}, state, {
-        status: action.status,
-        loading: true
-      });
-
-    case userActions.GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         loading: false,
@@ -319,7 +312,7 @@ const user = (
 
     case userActions.REFRESH_TOKEN_REQUEST:
       return Object.assign({}, state, {
-        status: action.status
+        refreshCustomerAccessTokenStatus: action.status
       });
 
     case userActions.REFRESH_TOKEN_SUCCESS:
@@ -334,14 +327,14 @@ const user = (
       );
 
       return Object.assign({}, state, {
-        status: action.status,
+        refreshCustomerAccessTokenStatus: action.status,
         loading: false
       });
 
     case userActions.REFRESH_TOKEN_FAILURE:
       localStorage.removeItem(REFRESH_TOKEN);
       return Object.assign({}, state, {
-        status: action.status,
+        refreshCustomerAccessTokenStatus: action.status,
         loading: false,
         error: action.error
       });
