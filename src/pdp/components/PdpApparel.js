@@ -232,6 +232,7 @@ export default class PdpApparel extends React.Component {
               />
               <ColourSelector
                 data={productData.variantOptions}
+                productId={productData.productListingId}
                 history={this.props.history}
                 updateColour={val => {}}
                 getProductSpecification={this.props.getProductSpecification}
