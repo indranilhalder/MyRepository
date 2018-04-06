@@ -10,8 +10,10 @@ export const REQUESTING = "requesting";
 export const ERROR = "error";
 export const FAILURE = "Failure";
 export const FAILURE_UPPERCASE = "FAILURE";
+export const FAILURE_LOWERCASE = "failure";
 export const JUS_PAY_PENDING = "PENDING_VBV";
 export const JUS_PAY_CHARGED = "CHARGED";
+export const JUS_PAY_AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
 export const SINGLE_SELECT_HEADING_COPY = "Thanks!!!";
 export const SINGLE_SELECT_DESCRIPTION_COPY =
   "We will curate the experience based on your choices. Loading products...";
@@ -183,7 +185,6 @@ export const CATEGORIES = "Categories";
 export const CHECKOUT = "Checkout";
 export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
-
 
 // COPY
 

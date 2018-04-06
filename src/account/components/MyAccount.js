@@ -68,7 +68,11 @@ export default class MyAccount extends React.Component {
           <AccountSetting
             image={userDetails.imageUrl}
             onClick={() => this.renderToAccountSetting()}
-            firstName={userDetails && userDetails.firstName.charAt(0)}
+            firstName={
+              userDetails &&
+              userDetails.firstName &&
+              userDetails.firstName.charAt(0)
+            }
             heading={
               userDetails &&
               userDetails.firstName &&

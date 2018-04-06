@@ -47,7 +47,13 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     modalStatus: state.modal.modalDisplayed,
-    cart: state.cart
+    cart: state.cart,
+    globalAccessTokenStatus: state.user.globalAccessTokenStatus,
+    customerAccessTokenStatus: state.user.customerAccessTokenStatus,
+    refreshCustomerAccessTokenStatus:
+      state.user.refreshCustomerAccessTokenStatus,
+    cartIdForLoggedInUserStatus: state.cart.cartIdForLoggedInUserStatus,
+    cartIdForAnonymousUserStatus: state.cart.cartIdForAnonymousUserStatus
   };
 };
 
