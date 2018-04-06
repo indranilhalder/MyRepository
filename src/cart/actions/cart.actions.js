@@ -7,6 +7,7 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash/each";
+import * as ErrorHandling from "../../general/ErrorHandling.js";
 import {
   CUSTOMER_ACCESS_TOKEN,
   GLOBAL_ACCESS_TOKEN,
@@ -244,33 +245,13 @@ export const DISPLAY_COUPON_REQUEST = "DISPLAY_COUPON_REQUEST";
 export const DISPLAY_COUPON_SUCCESS = "DISPLAY_COUPON_SUCCESS";
 export const DISPLAY_COUPON_FAILURE = "DISPLAY_COUPON_FAILURE";
 
+export const LOGIN_FROM_MY_BAG = "LOGIN_FROM_MY_BAG";
+
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
 const MY_WISH_LIST = "MyWishList";
 export const ANONYMOUS_USER = "anonymous";
-
-export function getFailureResponse(response) {
-  if (response.errors) {
-    return { status: true, message: response.errors[0].message };
-  }
-  if (response.error) {
-    return { status: true, message: response.error };
-  }
-  if (response.error_message) {
-    return { status: true, message: response.error_message };
-  }
-  if (
-    response.status === FAILURE ||
-    response.status === FAILURE_UPPERCASE ||
-    response.status === ERROR ||
-    response.status === FAILURE_LOWERCASE
-  ) {
-    return { status: true, message: response.message };
-  } else {
-    return { status: false };
-  }
-}
 
 export function displayCouponRequest() {
   return {
@@ -303,7 +284,7 @@ export function displayCouponsForLoggedInUser(userId, accessToken, cartId) {
         `${USER_CART_PATH}/${userId}/displayCouponOffers?access_token=${accessToken}&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -325,7 +306,7 @@ export function displayCouponsForAnonymous(userId, accessToken) {
         `${USER_CART_PATH}/${userId}/displayOpenCouponOffers?access_token=${accessToken}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -368,8 +349,7 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
         `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetails?access_token=${accessToken}&isPwa=true&platformNumber=2&pincode=${pinCode}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
-
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -450,7 +430,7 @@ export function getCartDetailsCNC(
 
         dispatch(softReservation(pinCode, productItems));
       }
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -503,7 +483,7 @@ export function applyUserCouponForAnonymous(couponCode) {
       );
 
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -540,7 +520,7 @@ export function applyUserCouponForLoggedInUsers(couponCode) {
       );
 
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -590,7 +570,7 @@ export function releaseCouponForAnonymous(oldCouponCode, newCouponCode) {
         couponObject
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -620,7 +600,7 @@ export function releaseUserCoupon(oldCouponCode, newCouponCode) {
         }&isPwa=true&platformNumber=2&couponCode=${oldCouponCode}&cartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -670,7 +650,7 @@ export function getUserAddress() {
         }&access_token=${JSON.parse(customerCookie).access_token}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -736,7 +716,7 @@ export function addUserAddress(userAddress, fromAccount) {
         }&town=${userAddress.town}&defaultFlag=${userAddress.defaultFlag}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -785,7 +765,7 @@ export function selectDeliveryMode(deliveryUssId, pinCode) {
         }&deliverymodeussId=${JSON.stringify(deliveryUssId)}&removeExchange=0`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -843,7 +823,7 @@ export function addAddressToCart(addressId, pinCode) {
         `${USER_CART_PATH}/${userId}/addAddressToOrder?channel=mobile&access_token=${access_token}&addressId=${addressId}&cartId=${cartId}&removeExchangeFromCart=0`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -892,7 +872,7 @@ export function getNetBankDetails() {
         }`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -938,7 +918,7 @@ export function getEmiBankDetails(price) {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -987,7 +967,7 @@ export function generateCartIdForLoggedInUser() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1020,7 +1000,7 @@ export function generateCartIdForAnonymous() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1094,7 +1074,7 @@ export function getOrderSummary(pincode) {
         }&pincode=${pincode}&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1121,7 +1101,7 @@ export function getCartId() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1175,7 +1155,7 @@ export function mergeCartId(cartGuId) {
         }&toMergeCartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1224,7 +1204,7 @@ export function checkPinCodeServiceAvailability(
         `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=${productCode}&pin=${pinCode}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1271,7 +1251,7 @@ export function getAllStoresCNC(pinCode) {
         }`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1324,7 +1304,7 @@ export function addStoreCNC(ussId, slaveId) {
         }&slaveId=${slaveId}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1377,7 +1357,7 @@ export function addPickupPersonCNC(personMobile, personName) {
         }&isPwa=true&platformNumber=2&personMobile=${personMobile}&personName=${personName}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1432,7 +1412,7 @@ export function softReservation(pinCode, payload) {
       );
       const resultJson = await result.json();
 
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1488,7 +1468,7 @@ export function getPaymentModes(guIdDetails) {
         guIdDetails
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1538,7 +1518,7 @@ export function applyBankOffer(couponCode) {
         }&isPwa=true&platformNumber=2&paymentMode=${PAYMENT_MODE}&couponCode=${couponCode}&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1586,7 +1566,7 @@ export function releaseBankOffer(couponCode) {
         }&paymentMode=${PAYMENT_MODE}&couponCode=${couponCode}&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1639,7 +1619,7 @@ export function applyCliqCash() {
         }&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1692,7 +1672,7 @@ export function removeCliqCash() {
         }&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1748,7 +1728,7 @@ export function binValidation(paymentMode, binNo) {
         paymentTypeObject
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1781,7 +1761,7 @@ export function binValidationForNetBanking(paymentMode, bankName) {
         paymentTypeObject
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1859,7 +1839,7 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
         productItems
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1919,7 +1899,7 @@ export function softReservationPaymentForNetBanking(
         productItems
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -1984,7 +1964,7 @@ export function softReservationPaymentForSavedCard(
         productItems
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2039,7 +2019,7 @@ export function softReservationForCliqCash(pinCode) {
         productItems
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2095,7 +2075,7 @@ export function jusPayTokenize(
     try {
       const result = await api.postJusPay(`card/tokenize?`, cardObject);
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2129,7 +2109,7 @@ export function jusPayTokenizeForGiftCard(cardDetails, paymentMode, guId) {
     try {
       const result = await api.postJusPay(`card/tokenize?`, cardObject);
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2215,8 +2195,7 @@ export function createJusPayOrder(
         cartItem
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
-
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -2256,7 +2235,7 @@ export function createJusPayOrderForGiftCard(
         }&firstName=&lastName=&addressLine1=&addressLine2=&addressLine3=&country=&city=&state=&pincode=&cardSaved=true&sameAsShipping=true&cartGuid=${guId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2299,7 +2278,7 @@ export function createJusPayOrderForNetBanking(
         cartItem
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2334,7 +2313,7 @@ export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
         }&juspayUrl=${jusPayUrl}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2377,7 +2356,7 @@ export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
         cartItem
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2417,7 +2396,7 @@ export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
         }&juspayUrl=${jusPayUrl}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2454,7 +2433,7 @@ export function createJusPayOrderForCliqCash(pinCode, cartItem) {
         cartItem
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2602,7 +2581,6 @@ export function jusPayPaymentMethodType(
 
       const result = await api.postJusPay(`txns?`, cardObject);
       const resultJson = await result.json();
-
       if (
         resultJson.status === JUS_PAY_PENDING ||
         resultJson.status === SUCCESS ||
@@ -2790,7 +2768,7 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
         paymentObject
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2841,7 +2819,7 @@ export function orderConfirmation(orderId) {
         }&platformNumber=2`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2897,7 +2875,7 @@ export function captureOrderExperience(orderId, rating) {
         }&ratings=${rating}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -2951,7 +2929,7 @@ export function getCODEligibility() {
         }&isPwa=true&platformNumber=2&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -3008,7 +2986,7 @@ export function binValidationForCOD(paymentMode) {
         paymentTypeObject
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -3060,7 +3038,7 @@ export function updateTransactionDetailsForCOD(paymentMode, juspayOrderID) {
         }&platformNumber=2&isPwa=true&paymentMode=${paymentMode}&juspayOrderID=${juspayOrderID}&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -3130,7 +3108,7 @@ export function softReservationForCODPayment(pinCode) {
         productItems
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -3184,7 +3162,7 @@ export function addProductToWishList(productDetails) {
         }&wishlistName=${MY_WISH_LIST}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -3235,7 +3213,7 @@ export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
         }&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -3293,7 +3271,7 @@ export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
         }&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -3356,7 +3334,7 @@ export function updateQuantityInCartLoggedIn(selectedItem, quantity, pinCode) {
         }&isPwa=true&platformNumber=2&quantity=${quantity}`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -3418,7 +3396,7 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
       );
 
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -3437,5 +3415,13 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
     } catch (e) {
       dispatch(updateQuantityInCartLoggedOutFailure(e.message));
     }
+  };
+}
+
+//call action when we login from MyBag
+export function isLoginFromMyBag(isFromMyBag) {
+  return {
+    type: LOGIN_FROM_MY_BAG,
+    isFromMyBag
   };
 }

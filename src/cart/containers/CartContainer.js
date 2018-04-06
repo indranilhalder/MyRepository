@@ -10,7 +10,8 @@ import {
   updateQuantityInCartLoggedIn,
   updateQuantityInCartLoggedOut,
   displayCouponsForLoggedInUser,
-  displayCouponsForAnonymous
+  displayCouponsForAnonymous,
+  isLoginFromMyBag
 } from "../actions/cart.actions.js";
 import { displayToast } from "../../general/toast.actions";
 import { withRouter } from "react-router-dom";
@@ -83,6 +84,9 @@ const mapDispatchToProps = dispatch => {
     },
     hideSecondaryLoader: () => {
       dispatch(hideSecondaryLoader());
+    },
+    isLoginFromMyBag: (isFromMyBag) => {
+      dispatch(isLoginFromMyBag(isFromMyBag));
     }
   };
 };
@@ -90,7 +94,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     cart: state.cart,
-    user: state.user
+    user: state.user,
+    loginFromMyBag: state.cart.loginFromMyBag
   };
 };
 const CartContainer = withRouter(

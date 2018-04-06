@@ -28,6 +28,7 @@ import {
 } from "../../general/modal.actions.js";
 import { getPaymentModes } from "../../cart/actions/cart.actions.js";
 import { getMcvId } from "../../lib/adobeUtils";
+import * as ErrorHandling from "../../general/ErrorHandling.js";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
@@ -246,15 +247,12 @@ export function getDetailsOfCancelledProduct(cancelProductDetails) {
         cancelProductObject
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.errors
-      ) {
-        throw new Error(`${resultJson.errors[0].message}`);
-      } else {
-        return dispatch(getDetailsOfCancelledProductSuccess(resultJson));
+
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      return dispatch(getDetailsOfCancelledProductSuccess(resultJson));
     } catch (e) {
       dispatch(getDetailsOfCancelledProductFailure(e.message));
     }
@@ -311,16 +309,12 @@ export function cancelProduct(cancelProductDetails) {
         cancelProductObject
       );
       const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.errors
-      ) {
-        throw new Error(`${resultJson.errors[0].message}`);
-      } else {
-        return dispatch(cancelProductSuccess(resultJson));
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      return dispatch(cancelProductSuccess(resultJson));
     } catch (e) {
       return dispatch(cancelProductFailure(e.message));
     }

@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { homeFeed } from "../actions/home.actions";
-import { getCartId } from "../../cart/actions/cart.actions";
+import { getCartId, isLoginFromMyBag } from "../../cart/actions/cart.actions";
 import { getWishListItems } from "../../wishlist/actions/wishlist.actions";
 import Feed from "../components/Feed";
 import { setHeaderText } from "../../general/header.actions";
@@ -20,6 +20,9 @@ const mapDispatchToProps = dispatch => {
     },
     setHeaderText: text => {
       dispatch(setHeaderText(text));
+    },
+    isLoginFromMyBag: isFromMyBag => {
+      dispatch(isLoginFromMyBag(isFromMyBag));
     }
   };
 };
@@ -35,7 +38,8 @@ const mapStateToProps = state => {
     isHomeFeedPage: true,
     loading: state.home.loading,
     type: state.cart.type,
-    headerMessage
+    headerMessage,
+    loginFromMyBag: state.cart.loginFromMyBag
   };
 };
 
