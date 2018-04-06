@@ -54,12 +54,11 @@ const mapDispatchToProps = dispatch => {
             cartVal.cartDetails.guid &&
             cartVal.cartDetails.code
           ) {
-            console.log(cartVal);
             // if get old cart id then just merge it with anonymous cart id
             const mergeCartIdWithOldOneResponse = await dispatch(
               mergeCartId(cartVal.cartDetails.guid)
             );
-            console.log(mergeCartIdWithOldOneResponse);
+
             if (mergeCartIdWithOldOneResponse.status === SUCCESS) {
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else if (mergeCartIdWithOldOneResponse.status === ERROR) {
@@ -78,7 +77,7 @@ const mapDispatchToProps = dispatch => {
                 mergeCartId(cartVal.cartDetails.guid)
               );
               // merging cart id with new cart id
-              console.log(mergeCartIdResponse);
+
               if (mergeCartIdResponse.status === SUCCESS) {
                 dispatch(setIfAllAuthCallsHaveSucceeded());
               } else if (mergeCartIdResponse.status === ERROR) {
