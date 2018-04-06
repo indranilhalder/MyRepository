@@ -13,7 +13,6 @@ export default class CartItem extends React.Component {
     super(props);
     this.state = {
       showDelivery: this.props.showDelivery ? this.props.showDelivery : false,
-      selectedValue: "",
       label: "See all"
     };
   }
@@ -43,14 +42,11 @@ export default class CartItem extends React.Component {
   }
 
   handleQuantityChange(changedValue) {
-    const updatedQuantity = parseInt(changedValue);
-    this.setState({ selectedValue: updatedQuantity }, () => {
-      if (this.props.onQuantityChange) {
-        this.props.onQuantityChange(this.props.entryNumber, updatedQuantity);
-      }
-    });
+    const updatedQuantity = parseInt(changedValue, 10);
+    if (this.props.onQuantityChange) {
+      this.props.onQuantityChange(this.props.entryNumber, updatedQuantity);
+    }
   }
-
   render() {
     const fetchedQuantityList = [];
     for (let i = 1; i <= this.props.maxQuantityAllowed; i++) {
