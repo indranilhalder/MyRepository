@@ -1,18 +1,15 @@
-/**
- *
- */
+
 package com.tisl.mpl.v2.controller;
 
-import de.hybris.platform.acceleratorcms.model.components.AccountNavigationComponentModel;
-import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
-import de.hybris.platform.category.impl.DefaultCategoryService;
-import de.hybris.platform.category.model.CategoryModel;
 
 /**
  * @author TUL
  *
  */
-
+import de.hybris.platform.acceleratorcms.model.components.AccountNavigationComponentModel;
+import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
+import de.hybris.platform.category.impl.DefaultCategoryService;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.components.CMSLinkComponentModel;
@@ -134,9 +131,44 @@ public class DefaultCMSComponentControler
 
 	private final String Success = "SUCCESS";
 	private final String pageComponent = "pageComponent";
-	private final String heroBannerComp = "Hero Banner Component";
+	private static final String heroBannerComp = "Hero Banner Component";
 
-	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	public SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+	public static final String heroBannerError = "Error in getting HeroBannerComponent with id:";
+	public static final String connectBannerComponentError = "Error in getting connectBannerComponentModel with id:";
+	public static final String offerWidgetComponentError = "Error in getting OffersWidgetComponent with id: ";
+	public static final String fscProductError = "Flash Sales Component Product is not properly enriched or either out of stock: code-";
+	public static final String fscError = "Error in getting FlashSalesComponent with id: ";
+	public static final String contentWidgetError = "Error in getting ContentWidgetComponent with id: ";
+	public static final String bannerProductCarouseError = "BannerProductCarouselComponent Product is not properly enriched or either out of stock, code:-";
+	public static final String bpcError = "Error in getting BannerProductCarouselComponent with id: ";
+	public static final String VideoProductCarouselError = "VideoProductCarouselComponentModel Product is not properly enriched or either out of stock, code:-";
+	public static final String vpcError = "Error in getting VideoProductCarouselComponent with id: ";
+	public static final String themeOffersError = "ThemeOffersComponentModel Product is not properly enriched or either out of stock code:-";
+	public static final String toError = "Error in getting ThemeOffersComponent with id: ";
+	public static final String themeProductWidgetError = "ThemeProductWidgetComponentModel Product is not properly enriched or either out of stock code:-";
+	public static final String tpwError = "Error in getting ThemeProductWidgetComponent with id: ";
+	public static final String BannerSeparatorError = "Error in getting BannerSeparatorComponent with id: ";
+	public static final String AutomatedBrandProCarError = "AutomatedBrandProCarCompModel Product is not properly enriched or either out of stock code:- ";
+	public static final String abpcError = "Error in getting AutomatedBrandProductCarouselComponent with id: ";
+	public static final String CuratedListingStripError = "Error in getting CuratedListingStripComponent with id: ";
+	public static final String MonoBLPBannerError = "Error in getting MonoBLPBannerComponent with id: ";
+	public static final String SubBrandBLPBannerError = "Error in getting SubBrandBLPBannerComponent with id: ";
+	public static final String TopCategoriesWidgetEror = "Error in getting TopCategoriesWidgetComponent with id: ";
+	public static final String CuratedProductWidgetEror = "CuratedProductWidgetComponent Product is not properly enriched or either out of stock code:-";
+	public static final String cpwError = "Error in getting CuratedProductWidgetComponent with id: ";
+	public static final String SmartFilterWidgetError = "Error in getting SmartFilterWidgetComponent with id: ";
+	public static final String MsdError = "Error in getting MsdComponent with id: ";
+	public static final String AdobeTargetError = "Error in getting AdobeTargetComponent with id: ";
+	public static final String BrandsTabAZListError = "Error in getting BrandsTabAZListComponent with id: ";
+	public static final String LandingPageTitleError = "Error in getting LandingPageTitleComponent with id: ";
+	public static final String LandingPageHeaderError = "Error in getting LandingPageHeaderComponent with id: ";
+	public static final String LandingPageHierError = "Error in getting LandingPageHierarchyComponent with id: ";
+	public static final String cmsParagraphError = "Error in getting cmsParagraphComponentModel with id: ";
+	public static final String simpleBannerError = "Error in getting simpleBannerComponentModel with id: ";
+	public static final String accountNavigationError = "Error in getting accountNavigationComponentModel with id: ";
+
 
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/defaultpage", method = RequestMethod.GET)
@@ -217,14 +249,14 @@ public class DefaultCMSComponentControler
 									{
 										heroBannerCompWsDTO.setComponentId(
 												null != heroBannerCompObj.getUid() ? heroBannerCompObj.getUid() : StringUtils.EMPTY);
-										LOG.error("Error in getting HeroBannerComponent with id: " + heroBannerCompObj.getUid(), e);
+										LOG.error(heroBannerError + heroBannerCompObj.getUid(), e);
 										continue;
 									}
 									catch (final Exception e)
 									{
 										heroBannerCompWsDTO.setComponentId(
 												null != heroBannerCompObj.getUid() ? heroBannerCompObj.getUid() : StringUtils.EMPTY);
-										LOG.error("Error in getting HeroBannerComponent with id: " + heroBannerCompObj.getUid(), e);
+										LOG.error(heroBannerError + heroBannerCompObj.getUid(), e);
 										continue;
 									}
 								}
@@ -290,18 +322,14 @@ public class DefaultCMSComponentControler
 								{
 									connectBannerWsDTO.setComponentId(null != connectBannerComponentModel.getUid()
 											? connectBannerComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting connectBannerComponentModel with id: " + connectBannerComponentModel.getUid(),
-											e);
+									LOG.error(connectBannerComponentError + connectBannerComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									connectBannerWsDTO.setComponentId(null != connectBannerComponentModel.getUid()
 											? connectBannerComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting connectBannerComponentModel with id: " + connectBannerComponentModel.getUid(),
-											e);
+									LOG.error(connectBannerComponentError + connectBannerComponentModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementObj.setMultiPurposeBanner(connectBannerWsDTO);
@@ -360,14 +388,14 @@ public class DefaultCMSComponentControler
 								{
 									offersWidgetWsDTO.setComponentId(null != offersWidgetComponentModel.getUid()
 											? offersWidgetComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting OffersWidgetComponent with id: " + offersWidgetComponentModel.getUid(), e);
+									LOG.error(offerWidgetComponentError + offersWidgetComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									offersWidgetWsDTO.setComponentId(null != offersWidgetComponentModel.getUid()
 											? offersWidgetComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting OffersWidgetComponent with id: " + offersWidgetComponentModel.getUid(), e);
+									LOG.error(offerWidgetComponentError + offersWidgetComponentModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setOffersComponent(offersWidgetWsDTO);
@@ -427,7 +455,6 @@ public class DefaultCMSComponentControler
 													productCode = flashSalesElementModel.getProductCode().getCode();
 													final BuyBoxData buyboxdata = buyBoxFacade
 															.buyboxPrice(flashSalesElementModel.getProductCode().getCode());
-													//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
 													String productUnitPrice = StringUtils.EMPTY;
 													String productPrice = StringUtils.EMPTY;
 
@@ -496,14 +523,12 @@ public class DefaultCMSComponentControler
 										}
 										catch (final EtailNonBusinessExceptions e)
 										{
-											LOG.error("Flash Sales Component Product is not properly enriched or either out of stock: code-"
-													+ productCode, e);
+											LOG.error(fscProductError + productCode, e);
 											continue;
 										}
 										catch (final Exception e)
 										{
-											LOG.error("Flash Sales Component Product is not properly enriched or either out of stock: code-"
-													+ productCode, e);
+											LOG.error(fscProductError + productCode, e);
 											continue;
 										}
 									}
@@ -543,14 +568,14 @@ public class DefaultCMSComponentControler
 								{
 									flashSalesWsDTO.setComponentId(null != flashSalesComponentModel.getUid()
 											? flashSalesComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting FlashSalesComponent with id: " + flashSalesComponentModel.getUid(), e);
+									LOG.error(fscError + flashSalesComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									flashSalesWsDTO.setComponentId(null != flashSalesComponentModel.getUid()
 											? flashSalesComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting FlashSalesComponent with id: " + flashSalesComponentModel.getUid(), e);
+									LOG.error(fscError + flashSalesComponentModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setFlashSalesComponent(flashSalesWsDTO);
@@ -612,16 +637,14 @@ public class DefaultCMSComponentControler
 								{
 									contentWidgetCompWsDTO.setComponentId(null != contentWidgetComponentModel.getUid()
 											? contentWidgetComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting ContentWidgetComponent with id: " + contentWidgetComponentModel.getUid(),
-											e);
+									LOG.error(contentWidgetError + contentWidgetComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									contentWidgetCompWsDTO.setComponentId(null != contentWidgetComponentModel.getUid()
 											? contentWidgetComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting ContentWidgetComponent with id: " + contentWidgetComponentModel.getUid(),
-											e);
+									LOG.error(contentWidgetError + contentWidgetComponentModel.getUid(), e);
 									continue;
 
 								}
@@ -654,7 +677,6 @@ public class DefaultCMSComponentControler
 													productCode = productObj.getProductCode().getCode();
 													final BuyBoxData buyboxdata = buyBoxFacade
 															.buyboxPrice(productObj.getProductCode().getCode());
-													//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
 													String productUnitPrice = StringUtils.EMPTY;
 													String productPrice = StringUtils.EMPTY;
 
@@ -724,18 +746,12 @@ public class DefaultCMSComponentControler
 										}
 										catch (final EtailNonBusinessExceptions e)
 										{
-											LOG.error(
-													"BannerProductCarouselComponent Product is not properly enriched or either out of stock, code:-"
-															+ productCode,
-													e);
+											LOG.error(bannerProductCarouseError + productCode, e);
 											continue;
 										}
 										catch (final Exception e)
 										{
-											LOG.error(
-													"BannerProductCarouselComponent Product is not properly enriched or either out of stock, code:-"
-															+ productCode,
-													e);
+											LOG.error(bannerProductCarouseError + productCode, e);
 											continue;
 										}
 									}
@@ -766,18 +782,14 @@ public class DefaultCMSComponentControler
 								{
 									bannerProductCarouselWsDTO.setComponentId(
 											null != bannerProComponentModel.getUid() ? bannerProComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting BannerProductCarouselComponent with id: " + bannerProComponentModel.getUid(),
-											e);
+									LOG.error(bpcError + bannerProComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									bannerProductCarouselWsDTO.setComponentId(
 											null != bannerProComponentModel.getUid() ? bannerProComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting BannerProductCarouselComponent with id: " + bannerProComponentModel.getUid(),
-											e);
+									LOG.error(bpcError + bannerProComponentModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setBannerProductCarouselComponent(bannerProductCarouselWsDTO);
@@ -885,18 +897,12 @@ public class DefaultCMSComponentControler
 										}
 										catch (final EtailNonBusinessExceptions e)
 										{
-											LOG.error(
-													"VideoProductCarouselComponentModel Product is not properly enriched or either out of stock code:-"
-															+ productCode,
-													e);
+											LOG.error(VideoProductCarouselError + productCode, e);
 											continue;
 										}
 										catch (final Exception e)
 										{
-											LOG.error(
-													"VideoProductCarouselComponentModel Product is not properly enriched or either out of stock code:-"
-															+ productCode,
-													e);
+											LOG.error(VideoProductCarouselError + productCode, e);
 											continue;
 										}
 									}
@@ -938,16 +944,14 @@ public class DefaultCMSComponentControler
 								{
 									videoProductCarouselWsDTO.setComponentId(
 											null != videoProComponentModel.getUid() ? videoProComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting VideoProductCarouselComponent with id: " + videoProComponentModel.getUid(),
-											e);
+									LOG.error(vpcError + videoProComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									videoProductCarouselWsDTO.setComponentId(
 											null != videoProComponentModel.getUid() ? videoProComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting VideoProductCarouselComponent with id: " + videoProComponentModel.getUid(),
-											e);
+									LOG.error(vpcError + videoProComponentModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setVideoProductCarouselComponent(videoProductCarouselWsDTO);
@@ -1008,7 +1012,6 @@ public class DefaultCMSComponentControler
 													productCode = productObj.getProductCode().getCode();
 													final BuyBoxData buyboxdata = buyBoxFacade
 															.buyboxPrice(productObj.getProductCode().getCode());
-													//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
 													String productUnitPrice = StringUtils.EMPTY;
 													String productPrice = StringUtils.EMPTY;
 
@@ -1077,18 +1080,12 @@ public class DefaultCMSComponentControler
 										}
 										catch (final EtailNonBusinessExceptions e)
 										{
-											LOG.error(
-													"ThemeOffersComponentModel Product is not properly enriched or either out of stock code:-"
-															+ productCode,
-													e);
+											LOG.error(themeOffersError + productCode, e);
 											continue;
 										}
 										catch (final Exception e)
 										{
-											LOG.error(
-													"ThemeOffersComponentModel Product is not properly enriched or either out of stock code:-"
-															+ productCode,
-													e);
+											LOG.error(themeOffersError + productCode, e);
 											continue;
 										}
 									}
@@ -1120,14 +1117,14 @@ public class DefaultCMSComponentControler
 								{
 									themeOffersWsDTO.setComponentId(null != themeOffersComponentModel.getUid()
 											? themeOffersComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting ThemeOffersComponent with id: " + themeOffersComponentModel.getUid(), e);
+									LOG.error(toError + themeOffersComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									themeOffersWsDTO.setComponentId(null != themeOffersComponentModel.getUid()
 											? themeOffersComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting ThemeOffersComponent with id: " + themeOffersComponentModel.getUid(), e);
+									LOG.error(toError + themeOffersComponentModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setThemeOffersComponent(themeOffersWsDTO);
@@ -1231,18 +1228,12 @@ public class DefaultCMSComponentControler
 										}
 										catch (final EtailNonBusinessExceptions e)
 										{
-											LOG.error(
-													"ThemeProductWidgetComponentModel Product is not properly enriched or either out of stock code:-"
-															+ productCode,
-													e);
+											LOG.error(themeProductWidgetError + productCode, e);
 											continue;
 										}
 										catch (final Exception e)
 										{
-											LOG.error(
-													"ThemeProductWidgetComponentModel Product is not properly enriched or either out of stock code:-"
-															+ productCode,
-													e);
+											LOG.error(themeProductWidgetError + productCode, e);
 											continue;
 										}
 									}
@@ -1278,8 +1269,14 @@ public class DefaultCMSComponentControler
 								{
 									themeProductWidgetWsDTO.setComponentId(null != themeProductWidgetComponentModel.getUid()
 											? themeProductWidgetComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting ThemeProductWidgetComponent with id: "
-											+ themeProductWidgetComponentModel.getUid(), e);
+									LOG.error(tpwError + themeProductWidgetComponentModel.getUid(), e);
+									continue;
+								}
+								catch (final Exception e)
+								{
+									themeProductWidgetWsDTO.setComponentId(null != themeProductWidgetComponentModel.getUid()
+											? themeProductWidgetComponentModel.getUid() : StringUtils.EMPTY);
+									LOG.error(tpwError + themeProductWidgetComponentModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setMultiClickComponent(themeProductWidgetWsDTO);
@@ -1358,18 +1355,14 @@ public class DefaultCMSComponentControler
 								{
 									bannerSeperatorWsDTO.setComponentId(null != bannerSeparatorComponentModel.getUid()
 											? bannerSeparatorComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting BannerSeparatorComponent with id: " + bannerSeparatorComponentModel.getUid(),
-											e);
+									LOG.error(BannerSeparatorError + bannerSeparatorComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									bannerSeperatorWsDTO.setComponentId(null != bannerSeparatorComponentModel.getUid()
 											? bannerSeparatorComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting BannerSeparatorComponent with id: " + bannerSeparatorComponentModel.getUid(),
-											e);
+									LOG.error(BannerSeparatorError + bannerSeparatorComponentModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setBannerSeparatorComponent(bannerSeperatorWsDTO);
@@ -1471,18 +1464,12 @@ public class DefaultCMSComponentControler
 											}
 											catch (final EtailNonBusinessExceptions e)
 											{
-												LOG.error(
-														"AutomatedBrandProCarCompModel Product is not properly enriched or either out of stock code:- "
-																+ productCode,
-														e);
+												LOG.error(AutomatedBrandProCarError + productCode, e);
 												continue;
 											}
 											catch (final Exception e)
 											{
-												LOG.error(
-														"AutomatedBrandProCarCompModel Product is not properly enriched or either out of stock code:- "
-																+ productCode,
-														e);
+												LOG.error(AutomatedBrandProCarError + productCode, e);
 												continue;
 											}
 											automatedBrandProCarEleList.add(automatedBrandProCarEleWsDTO);
@@ -1522,16 +1509,14 @@ public class DefaultCMSComponentControler
 								{
 									automatedBrandProCarWsDTO.setComponentId(null != automatedBrandProCarCompModel.getUid()
 											? automatedBrandProCarCompModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting AutomatedBrandProductCarouselComponent with id: "
-											+ automatedBrandProCarCompModel.getUid(), e);
+									LOG.error(abpcError + automatedBrandProCarCompModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									automatedBrandProCarWsDTO.setComponentId(null != automatedBrandProCarCompModel.getUid()
 											? automatedBrandProCarCompModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting AutomatedBrandProductCarouselComponent with id: "
-											+ automatedBrandProCarCompModel.getUid(), e);
+									LOG.error(abpcError + automatedBrandProCarCompModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setAutomatedBannerProductCarouselComponent(automatedBrandProCarWsDTO);
@@ -1563,18 +1548,14 @@ public class DefaultCMSComponentControler
 								{
 									curatedListingStripWsDTO.setComponentId(null != curatedListStripCompModel.getUid()
 											? curatedListStripCompModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting CuratedListingStripComponent with id: " + curatedListStripCompModel.getUid(),
-											e);
+									LOG.error(CuratedListingStripError + curatedListStripCompModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									curatedListingStripWsDTO.setComponentId(null != curatedListStripCompModel.getUid()
 											? curatedListStripCompModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting CuratedListingStripComponent with id: " + curatedListStripCompModel.getUid(),
-											e);
+									LOG.error(CuratedListingStripError + curatedListStripCompModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setCuratedListingStripComponent(curatedListingStripWsDTO);
@@ -1633,16 +1614,14 @@ public class DefaultCMSComponentControler
 								{
 									moBannerWsDTO.setComponentId(null != monoBLPBannerComponentModel.getUid()
 											? monoBLPBannerComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting MonoBLPBannerComponent with id: " + monoBLPBannerComponentModel.getUid(),
-											e);
+									LOG.error(MonoBLPBannerError + monoBLPBannerComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									moBannerWsDTO.setComponentId(null != monoBLPBannerComponentModel.getUid()
 											? monoBLPBannerComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting MonoBLPBannerComponent with id: " + monoBLPBannerComponentModel.getUid(),
-											e);
+									LOG.error(MonoBLPBannerError + monoBLPBannerComponentModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setSingleBannerComponent(moBannerWsDTO);
@@ -1702,18 +1681,14 @@ public class DefaultCMSComponentControler
 								{
 									subBrandBannerBLPWsDTO.setComponentId(null != subBrandBLPBannerCompModel.getUid()
 											? subBrandBLPBannerCompModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting SubBrandBLPBannerComponent with id: " + subBrandBLPBannerCompModel.getUid(),
-											e);
+									LOG.error(SubBrandBLPBannerError + subBrandBLPBannerCompModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									subBrandBannerBLPWsDTO.setComponentId(null != subBrandBLPBannerCompModel.getUid()
 											? subBrandBLPBannerCompModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting SubBrandBLPBannerComponent with id: " + subBrandBLPBannerCompModel.getUid(),
-											e);
+									LOG.error(SubBrandBLPBannerError + subBrandBLPBannerCompModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setSubBrandsBannerComponent(subBrandBannerBLPWsDTO);
@@ -1770,16 +1745,14 @@ public class DefaultCMSComponentControler
 								{
 									topCategoriesWidgetWsDTO.setComponentId(null != topCategoriesWidgetComponentModel.getUid()
 											? topCategoriesWidgetComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting TopCategoriesWidgetComponent with id: "
-											+ topCategoriesWidgetComponentModel.getUid(), e);
+									LOG.error(TopCategoriesWidgetEror + topCategoriesWidgetComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									topCategoriesWidgetWsDTO.setComponentId(null != topCategoriesWidgetComponentModel.getUid()
 											? topCategoriesWidgetComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting TopCategoriesWidgetComponent with id: "
-											+ topCategoriesWidgetComponentModel.getUid(), e);
+									LOG.error(TopCategoriesWidgetEror + topCategoriesWidgetComponentModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setTopCategoriesComponent(topCategoriesWidgetWsDTO);
@@ -1885,18 +1858,12 @@ public class DefaultCMSComponentControler
 										}
 										catch (final EtailNonBusinessExceptions e)
 										{
-											LOG.error(
-													"CuratedProductWidgetComponent Product is not properly enriched or either out of stock code:-"
-															+ productCode,
-													e);
+											LOG.error(CuratedProductWidgetEror + productCode, e);
 											continue;
 										}
 										catch (final Exception e)
 										{
-											LOG.error(
-													"CuratedProductWidgetComponent Product is not properly enriched or either out of stock code:-"
-															+ productCode,
-													e);
+											LOG.error(CuratedProductWidgetEror + productCode, e);
 											continue;
 										}
 									}
@@ -1917,18 +1884,14 @@ public class DefaultCMSComponentControler
 								{
 									curatedProductsWidgetWsDTO.setComponentId(null != curatedProWidgetCompModel.getUid()
 											? curatedProWidgetCompModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting CuratedProductWidgetComponent with id: " + curatedProWidgetCompModel.getUid(),
-											e);
+									LOG.error(cpwError + curatedProWidgetCompModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									curatedProductsWidgetWsDTO.setComponentId(null != curatedProWidgetCompModel.getUid()
 											? curatedProWidgetCompModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting CuratedProductWidgetComponent with id: " + curatedProWidgetCompModel.getUid(),
-											e);
+									LOG.error(cpwError + curatedProWidgetCompModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setCuratedProductsComponent(curatedProductsWidgetWsDTO);
@@ -1982,16 +1945,14 @@ public class DefaultCMSComponentControler
 								{
 									smartFilterWsDTO.setComponentId(null != smartFilterWidgetComponentModel.getUid()
 											? smartFilterWidgetComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting SmartFilterWidgetComponent with id: "
-											+ smartFilterWidgetComponentModel.getUid(), e);
+									LOG.error(SmartFilterWidgetError + smartFilterWidgetComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									smartFilterWsDTO.setComponentId(null != smartFilterWidgetComponentModel.getUid()
 											? smartFilterWidgetComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting SmartFilterWidgetComponent with id: "
-											+ smartFilterWidgetComponentModel.getUid(), e);
+									LOG.error(SmartFilterWidgetError + smartFilterWidgetComponentModel.getUid(), e);
 									continue;
 								}
 								smartFilterWsDTO.setType("Two by Two Banner Component");
@@ -2023,14 +1984,14 @@ public class DefaultCMSComponentControler
 								{
 									msdComponentWsDTO.setComponentId(
 											null != msdComponentModel.getUid() ? msdComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting MsdComponent with id: " + msdComponentModel.getUid(), e);
+									LOG.error(MsdError + msdComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									msdComponentWsDTO.setComponentId(
 											null != msdComponentModel.getUid() ? msdComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting MsdComponent with id: " + msdComponentModel.getUid(), e);
+									LOG.error(MsdError + msdComponentModel.getUid(), e);
 									continue;
 								}
 								msdComponentWsDTO.setType("MSD Component");
@@ -2062,14 +2023,14 @@ public class DefaultCMSComponentControler
 								{
 									adobeTargetComponentWsDTO.setComponentId(null != adobeTargetComponentModel.getUid()
 											? adobeTargetComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting AdobeTargetComponent with id: " + adobeTargetComponentModel.getUid(), e);
+									LOG.error(AdobeTargetError + adobeTargetComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									adobeTargetComponentWsDTO.setComponentId(null != adobeTargetComponentModel.getUid()
 											? adobeTargetComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting AdobeTargetComponent with id: " + adobeTargetComponentModel.getUid(), e);
+									LOG.error(AdobeTargetError + adobeTargetComponentModel.getUid(), e);
 									continue;
 								}
 								uiCompPageElementWsDTO.setAdobeTargetComponent(adobeTargetComponentWsDTO);
@@ -2157,18 +2118,14 @@ public class DefaultCMSComponentControler
 								{
 									brandsTabAZListComponentWsDTO.setComponentId(null != brandsTabAZListComponentModel.getUid()
 											? brandsTabAZListComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting BrandsTabAZListComponent with id: " + brandsTabAZListComponentModel.getUid(),
-											e);
+									LOG.error(BrandsTabAZListError + brandsTabAZListComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									brandsTabAZListComponentWsDTO.setComponentId(null != brandsTabAZListComponentModel.getUid()
 											? brandsTabAZListComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting BrandsTabAZListComponent with id: " + brandsTabAZListComponentModel.getUid(),
-											e);
+									LOG.error(BrandsTabAZListError + brandsTabAZListComponentModel.getUid(), e);
 									continue;
 								}
 								brandsTabAZListComponentWsDTO.setItems(brandsTabAZList);
@@ -2200,16 +2157,14 @@ public class DefaultCMSComponentControler
 								{
 									landingPageTitleComponentWsDTO.setComponentId(null != landingPageTitleCompModel.getUid()
 											? landingPageTitleCompModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting LandingPageTitleComponent with id: " + landingPageTitleCompModel.getUid(),
-											e);
+									LOG.error(LandingPageTitleError + landingPageTitleCompModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									landingPageTitleComponentWsDTO.setComponentId(null != landingPageTitleCompModel.getUid()
 											? landingPageTitleCompModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting LandingPageTitleComponent with id: " + landingPageTitleCompModel.getUid(),
-											e);
+									LOG.error(LandingPageTitleError + landingPageTitleCompModel.getUid(), e);
 									continue;
 								}
 								landingPageTitleComponentWsDTO.setType("Landing Page Title Component");
@@ -2237,16 +2192,12 @@ public class DefaultCMSComponentControler
 								catch (final EtailNonBusinessExceptions e)
 								{
 
-									LOG.error(
-											"Error in getting cmsParagraphComponentModel with id: " + cmsParagraphComponentModel.getUid(),
-											e);
+									LOG.error(cmsParagraphError + cmsParagraphComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
-									LOG.error(
-											"Error in getting cmsParagraphComponentModel with id: " + cmsParagraphComponentModel.getUid(),
-											e);
+									LOG.error(cmsParagraphError + cmsParagraphComponentModel.getUid(), e);
 									continue;
 								}
 								cmsParagraphComponentWsDTO.setType("CMS Paragraph Component");
@@ -2287,16 +2238,12 @@ public class DefaultCMSComponentControler
 								catch (final EtailNonBusinessExceptions e)
 								{
 
-									LOG.error(
-											"Error in getting simpleBannerComponentModel with id: " + simpleBannerComponentModel.getUid(),
-											e);
+									LOG.error(simpleBannerError + simpleBannerComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
-									LOG.error(
-											"Error in getting simpleBannerComponentModel with id: " + simpleBannerComponentModel.getUid(),
-											e);
+									LOG.error(simpleBannerError + simpleBannerComponentModel.getUid(), e);
 									continue;
 								}
 								simpleBannerComponentWsDTO.setType("Simple Banner Component");
@@ -2340,14 +2287,12 @@ public class DefaultCMSComponentControler
 								catch (final EtailNonBusinessExceptions e)
 								{
 
-									LOG.error("Error in getting accountNavigationComponentModel with id: "
-											+ accountNavigationComponentModel.getUid(), e);
+									LOG.error(accountNavigationError + accountNavigationComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
-									LOG.error("Error in getting accountNavigationComponentModel with id: "
-											+ accountNavigationComponentModel.getUid(), e);
+									LOG.error(accountNavigationError + accountNavigationComponentModel.getUid(), e);
 									continue;
 								}
 								accountNavigationComponentWsDTO.setType("Account Navigation Component");
@@ -2406,16 +2351,14 @@ public class DefaultCMSComponentControler
 								{
 									landingPageHeaderComponentWsDTO.setComponentId(null != landingPageHeaderComponentModel.getUid()
 											? landingPageHeaderComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting LandingPageHeaderComponent with id: "
-											+ landingPageHeaderComponentModel.getUid(), e);
+									LOG.error(LandingPageHeaderError + landingPageHeaderComponentModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									landingPageHeaderComponentWsDTO.setComponentId(null != landingPageHeaderComponentModel.getUid()
 											? landingPageHeaderComponentModel.getUid() : StringUtils.EMPTY);
-									LOG.error("Error in getting LandingPageHeaderComponent with id: "
-											+ landingPageHeaderComponentModel.getUid(), e);
+									LOG.error(LandingPageHeaderError + landingPageHeaderComponentModel.getUid(), e);
 									continue;
 								}
 								landingPageHeaderComponentWsDTO.setComponentId(null != landingPageHeaderComponentModel.getUid()
@@ -2634,18 +2577,14 @@ public class DefaultCMSComponentControler
 								{
 									landingPageHierarchyComponentWsDTO.setComponentId(null != landingPageHierarchyModel.getUid()
 											? landingPageHierarchyModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting LandingPageHierarchyComponent with id: " + landingPageHierarchyModel.getUid(),
-											e);
+									LOG.error(LandingPageHierError + landingPageHierarchyModel.getUid(), e);
 									continue;
 								}
 								catch (final Exception e)
 								{
 									landingPageHierarchyComponentWsDTO.setComponentId(null != landingPageHierarchyModel.getUid()
 											? landingPageHierarchyModel.getUid() : StringUtils.EMPTY);
-									LOG.error(
-											"Error in getting LandingPageHierarchyComponent with id: " + landingPageHierarchyModel.getUid(),
-											e);
+									LOG.error(LandingPageHierError + landingPageHierarchyModel.getUid(), e);
 									continue;
 								}
 								landingPageHierarchyComponentWsDTO.setComponentId(null != landingPageHierarchyModel.getUid()
@@ -2778,14 +2717,14 @@ public class DefaultCMSComponentControler
 							{
 								heroBannerCompWsDTO.setComponentId(
 										null != heroBannerCompObj.getUid() ? heroBannerCompObj.getUid() : StringUtils.EMPTY);
-								LOG.error("Error in getting HeroBannerComponent with id: " + heroBannerCompObj.getUid(), e);
+								LOG.error(heroBannerError + heroBannerCompObj.getUid(), e);
 								continue;
 							}
 							catch (final Exception e)
 							{
 								heroBannerCompWsDTO.setComponentId(
 										null != heroBannerCompObj.getUid() ? heroBannerCompObj.getUid() : StringUtils.EMPTY);
-								LOG.error("Error in getting HeroBannerComponent with id: " + heroBannerCompObj.getUid(), e);
+								LOG.error(heroBannerError + heroBannerCompObj.getUid(), e);
 								continue;
 							}
 						}
@@ -2851,16 +2790,14 @@ public class DefaultCMSComponentControler
 						{
 							connectBannerWsDTO.setComponentId(null != connectBannerComponentModel.getUid()
 									? connectBannerComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting connectBannerComponentModel with id: " + connectBannerComponentModel.getUid(),
-									e);
+							LOG.error(connectBannerComponentError + connectBannerComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							connectBannerWsDTO.setComponentId(null != connectBannerComponentModel.getUid()
 									? connectBannerComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting connectBannerComponentModel with id: " + connectBannerComponentModel.getUid(),
-									e);
+							LOG.error(connectBannerComponentError + connectBannerComponentModel.getUid(), e);
 							continue;
 						}
 						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
@@ -2916,14 +2853,14 @@ public class DefaultCMSComponentControler
 						{
 							offersWidgetWsDTO.setComponentId(
 									null != offersWidgetComponentModel.getUid() ? offersWidgetComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting OffersWidgetComponent with id: " + offersWidgetComponentModel.getUid(), e);
+							LOG.error(offerWidgetComponentError + offersWidgetComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							offersWidgetWsDTO.setComponentId(
 									null != offersWidgetComponentModel.getUid() ? offersWidgetComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting OffersWidgetComponent with id: " + offersWidgetComponentModel.getUid(), e);
+							LOG.error(offerWidgetComponentError + offersWidgetComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setOffersComponent(offersWidgetWsDTO);
@@ -3055,14 +2992,12 @@ public class DefaultCMSComponentControler
 								}
 								catch (final EtailNonBusinessExceptions e)
 								{
-									LOG.error("Flash Sales Component Product is not properly enriched or either out of stock: code-"
-											+ productCode, e);
+									LOG.error(fscProductError + productCode, e);
 									continue;
 								}
 								catch (final Exception e)
 								{
-									LOG.error("Flash Sales Component Product is not properly enriched or either out of stock: code-"
-											+ productCode, e);
+									LOG.error(fscProductError + productCode, e);
 									continue;
 								}
 							}
@@ -3101,14 +3036,14 @@ public class DefaultCMSComponentControler
 						{
 							flashSalesWsDTO.setComponentId(
 									null != flashSalesComponentModel.getUid() ? flashSalesComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting FlashSalesComponent with id: " + flashSalesComponentModel.getUid(), e);
+							LOG.error(fscError + flashSalesComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							flashSalesWsDTO.setComponentId(
 									null != flashSalesComponentModel.getUid() ? flashSalesComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting FlashSalesComponent with id: " + flashSalesComponentModel.getUid(), e);
+							LOG.error(fscError + flashSalesComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setFlashSalesComponent(flashSalesWsDTO);
@@ -3167,14 +3102,14 @@ public class DefaultCMSComponentControler
 						{
 							contentWidgetCompWsDTO.setComponentId(null != contentWidgetComponentModel.getUid()
 									? contentWidgetComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting ContentWidgetComponent with id: " + contentWidgetComponentModel.getUid(), e);
+							LOG.error(contentWidgetError + contentWidgetComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							contentWidgetCompWsDTO.setComponentId(null != contentWidgetComponentModel.getUid()
 									? contentWidgetComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting ContentWidgetComponent with id: " + contentWidgetComponentModel.getUid(), e);
+							LOG.error(contentWidgetError + contentWidgetComponentModel.getUid(), e);
 							continue;
 
 						}
@@ -3278,18 +3213,12 @@ public class DefaultCMSComponentControler
 								}
 								catch (final EtailNonBusinessExceptions e)
 								{
-									LOG.error(
-											"BannerProductCarouselComponent Product is not properly enriched or either out of stock, code:-"
-													+ productCode,
-											e);
+									LOG.error(bannerProductCarouseError + productCode, e);
 									continue;
 								}
 								catch (final Exception e)
 								{
-									LOG.error(
-											"BannerProductCarouselComponent Product is not properly enriched or either out of stock, code:-"
-													+ productCode,
-											e);
+									LOG.error(bannerProductCarouseError + productCode, e);
 									continue;
 								}
 							}
@@ -3318,14 +3247,14 @@ public class DefaultCMSComponentControler
 						{
 							bannerProductCarouselWsDTO.setComponentId(
 									null != bannerProComponentModel.getUid() ? bannerProComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting BannerProductCarouselComponent with id: " + bannerProComponentModel.getUid(), e);
+							LOG.error(bpcError + bannerProComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							bannerProductCarouselWsDTO.setComponentId(
 									null != bannerProComponentModel.getUid() ? bannerProComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting BannerProductCarouselComponent with id: " + bannerProComponentModel.getUid(), e);
+							LOG.error(bpcError + bannerProComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setBannerProductCarouselComponent(bannerProductCarouselWsDTO);
@@ -3358,7 +3287,6 @@ public class DefaultCMSComponentControler
 										{
 											productCode = productObj.getProductCode().getCode();
 											final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
-											//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
 											String productUnitPrice = StringUtils.EMPTY;
 											String productPrice = StringUtils.EMPTY;
 
@@ -3432,18 +3360,12 @@ public class DefaultCMSComponentControler
 								}
 								catch (final EtailNonBusinessExceptions e)
 								{
-									LOG.error(
-											"BannerProductCarouselComponent Product is not properly enriched or either out of stock, code:-"
-													+ productCode,
-											e);
+									LOG.error(VideoProductCarouselError + productCode, e);
 									continue;
 								}
 								catch (final Exception e)
 								{
-									LOG.error(
-											"BannerProductCarouselComponent Product is not properly enriched or either out of stock, code:-"
-													+ productCode,
-											e);
+									LOG.error(VideoProductCarouselError + productCode, e);
 									continue;
 								}
 							}
@@ -3483,14 +3405,14 @@ public class DefaultCMSComponentControler
 						{
 							videoProductCarouselWsDTO.setComponentId(
 									null != videoProComponentModel.getUid() ? videoProComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting VideoProductCarouselComponent with id: " + videoProComponentModel.getUid(), e);
+							LOG.error(vpcError + videoProComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							videoProductCarouselWsDTO.setComponentId(
 									null != videoProComponentModel.getUid() ? videoProComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting VideoProductCarouselComponent with id: " + videoProComponentModel.getUid(), e);
+							LOG.error(vpcError + videoProComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setVideoProductCarouselComponent(videoProductCarouselWsDTO);
@@ -3551,7 +3473,6 @@ public class DefaultCMSComponentControler
 										{
 											productCode = productObj.getProductCode().getCode();
 											final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
-											//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
 											String productUnitPrice = StringUtils.EMPTY;
 											String productPrice = StringUtils.EMPTY;
 
@@ -3620,14 +3541,12 @@ public class DefaultCMSComponentControler
 								}
 								catch (final EtailNonBusinessExceptions e)
 								{
-									LOG.error("ThemeOffersComponentModel Product is not properly enriched or either out of stock code:-"
-											+ productCode, e);
+									LOG.error(themeOffersError + productCode, e);
 									continue;
 								}
 								catch (final Exception e)
 								{
-									LOG.error("ThemeOffersComponentModel Product is not properly enriched or either out of stock code:-"
-											+ productCode, e);
+									LOG.error(themeOffersError + productCode, e);
 									continue;
 								}
 							}
@@ -3658,14 +3577,14 @@ public class DefaultCMSComponentControler
 						{
 							themeOffersWsDTO.setComponentId(
 									null != themeOffersComponentModel.getUid() ? themeOffersComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting ThemeOffersComponent with id: " + themeOffersComponentModel.getUid(), e);
+							LOG.error(toError + themeOffersComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							themeOffersWsDTO.setComponentId(
 									null != themeOffersComponentModel.getUid() ? themeOffersComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting ThemeOffersComponent with id: " + themeOffersComponentModel.getUid(), e);
+							LOG.error(toError + themeOffersComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setThemeOffersComponent(themeOffersWsDTO);
@@ -3767,14 +3686,12 @@ public class DefaultCMSComponentControler
 								}
 								catch (final EtailNonBusinessExceptions e)
 								{
-									LOG.error("ThemeOffersComponentModel Product is not properly enriched or either out of stock code:-"
-											+ productCode, e);
+									LOG.error(themeProductWidgetError + productCode, e);
 									continue;
 								}
 								catch (final Exception e)
 								{
-									LOG.error("ThemeOffersComponentModel Product is not properly enriched or either out of stock code:-"
-											+ productCode, e);
+									LOG.error(themeProductWidgetError + productCode, e);
 									continue;
 								}
 							}
@@ -3810,14 +3727,14 @@ public class DefaultCMSComponentControler
 						{
 							themeProductWidgetWsDTO.setComponentId(null != themeProductWidgetComponentModel.getUid()
 									? themeProductWidgetComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting ThemeOffersComponent with id: " + themeProductWidgetComponentModel.getUid(), e);
+							LOG.error(tpwError + themeProductWidgetComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							themeProductWidgetWsDTO.setComponentId(null != themeProductWidgetComponentModel.getUid()
 									? themeProductWidgetComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting ThemeOffersComponent with id: " + themeProductWidgetComponentModel.getUid(), e);
+							LOG.error(tpwError + themeProductWidgetComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setMultiClickComponent(themeProductWidgetWsDTO);
@@ -3894,14 +3811,14 @@ public class DefaultCMSComponentControler
 						{
 							bannerSeperatorWsDTO.setComponentId(null != bannerSeparatorComponentModel.getUid()
 									? bannerSeparatorComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting BannerSeparatorComponent with id: " + bannerSeparatorComponentModel.getUid(), e);
+							LOG.error(BannerSeparatorError + bannerSeparatorComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							bannerSeperatorWsDTO.setComponentId(null != bannerSeparatorComponentModel.getUid()
 									? bannerSeparatorComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting BannerSeparatorComponent with id: " + bannerSeparatorComponentModel.getUid(), e);
+							LOG.error(BannerSeparatorError + bannerSeparatorComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setBannerSeparatorComponent(bannerSeperatorWsDTO);
@@ -3934,7 +3851,6 @@ public class DefaultCMSComponentControler
 										{
 											productCode = productObj.getProductCode().getCode();
 											final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
-											//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
 											String productUnitPrice = StringUtils.EMPTY;
 											String productPrice = StringUtils.EMPTY;
 
@@ -4000,18 +3916,12 @@ public class DefaultCMSComponentControler
 									}
 									catch (final EtailNonBusinessExceptions e)
 									{
-										LOG.error(
-												"AutomatedBrandProCarCompModel Product is not properly enriched or either out of stock code:- "
-														+ productCode,
-												e);
+										LOG.error(AutomatedBrandProCarError + productCode, e);
 										continue;
 									}
 									catch (final Exception e)
 									{
-										LOG.error(
-												"AutomatedBrandProCarCompModel Product is not properly enriched or either out of stock code:- "
-														+ productCode,
-												e);
+										LOG.error(AutomatedBrandProCarError + productCode, e);
 										continue;
 									}
 								}
@@ -4050,16 +3960,14 @@ public class DefaultCMSComponentControler
 						{
 							automatedBrandProCarWsDTO.setComponentId(null != automatedBrandProCarCompModel.getUid()
 									? automatedBrandProCarCompModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting AutomatedBrandProductCarouselComponent with id: "
-									+ automatedBrandProCarCompModel.getUid(), e);
+							LOG.error(abpcError + automatedBrandProCarCompModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							automatedBrandProCarWsDTO.setComponentId(null != automatedBrandProCarCompModel.getUid()
 									? automatedBrandProCarCompModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting AutomatedBrandProductCarouselComponent with id: "
-									+ automatedBrandProCarCompModel.getUid(), e);
+							LOG.error(abpcError + automatedBrandProCarCompModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setAutomatedBannerProductCarouselComponent(automatedBrandProCarWsDTO);
@@ -4091,14 +3999,14 @@ public class DefaultCMSComponentControler
 						{
 							curatedListingStripWsDTO.setComponentId(
 									null != curatedListStripCompModel.getUid() ? curatedListStripCompModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting CuratedListingStripComponent with id: " + curatedListStripCompModel.getUid(), e);
+							LOG.error(CuratedListingStripError + curatedListStripCompModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							curatedListingStripWsDTO.setComponentId(
 									null != curatedListStripCompModel.getUid() ? curatedListStripCompModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting CuratedListingStripComponent with id: " + curatedListStripCompModel.getUid(), e);
+							LOG.error(CuratedListingStripError + curatedListStripCompModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setCuratedListingStripComponent(curatedListingStripWsDTO);
@@ -4154,14 +4062,14 @@ public class DefaultCMSComponentControler
 						{
 							moBannerWsDTO.setComponentId(null != monoBLPBannerComponentModel.getUid()
 									? monoBLPBannerComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting MonoBLPBannerComponent with id: " + monoBLPBannerComponentModel.getUid(), e);
+							LOG.error(MonoBLPBannerError + monoBLPBannerComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							moBannerWsDTO.setComponentId(null != monoBLPBannerComponentModel.getUid()
 									? monoBLPBannerComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting MonoBLPBannerComponent with id: " + monoBLPBannerComponentModel.getUid(), e);
+							LOG.error(MonoBLPBannerError + monoBLPBannerComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setSingleBannerComponent(moBannerWsDTO);
@@ -4220,14 +4128,14 @@ public class DefaultCMSComponentControler
 						{
 							subBrandBannerBLPWsDTO.setComponentId(
 									null != subBrandBLPBannerCompModel.getUid() ? subBrandBLPBannerCompModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting SubBrandBLPBannerComponent with id: " + subBrandBLPBannerCompModel.getUid(), e);
+							LOG.error(SubBrandBLPBannerError + subBrandBLPBannerCompModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							subBrandBannerBLPWsDTO.setComponentId(
 									null != subBrandBLPBannerCompModel.getUid() ? subBrandBLPBannerCompModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting SubBrandBLPBannerComponent with id: " + subBrandBLPBannerCompModel.getUid(), e);
+							LOG.error(SubBrandBLPBannerError + subBrandBLPBannerCompModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setSubBrandsBannerComponent(subBrandBannerBLPWsDTO);
@@ -4280,18 +4188,14 @@ public class DefaultCMSComponentControler
 						{
 							topCategoriesWidgetWsDTO.setComponentId(null != topCategoriesWidgetComponentModel.getUid()
 									? topCategoriesWidgetComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error(
-									"Error in getting TopCategoriesWidgetComponent with id: " + topCategoriesWidgetComponentModel.getUid(),
-									e);
+							LOG.error(TopCategoriesWidgetEror + topCategoriesWidgetComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							topCategoriesWidgetWsDTO.setComponentId(null != topCategoriesWidgetComponentModel.getUid()
 									? topCategoriesWidgetComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error(
-									"Error in getting TopCategoriesWidgetComponent with id: " + topCategoriesWidgetComponentModel.getUid(),
-									e);
+							LOG.error(TopCategoriesWidgetEror + topCategoriesWidgetComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setTopCategoriesComponent(topCategoriesWidgetWsDTO);
@@ -4324,7 +4228,6 @@ public class DefaultCMSComponentControler
 										{
 											productCode = productObj.getProductCode().getCode();
 											final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
-											//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
 											String productUnitPrice = StringUtils.EMPTY;
 											String productPrice = StringUtils.EMPTY;
 
@@ -4392,18 +4295,12 @@ public class DefaultCMSComponentControler
 								}
 								catch (final EtailNonBusinessExceptions e)
 								{
-									LOG.error(
-											"CuratedProductWidgetComponent Product is not properly enriched or either out of stock code:-"
-													+ productCode,
-											e);
+									LOG.error(CuratedProductWidgetEror + productCode, e);
 									continue;
 								}
 								catch (final Exception e)
 								{
-									LOG.error(
-											"CuratedProductWidgetComponent Product is not properly enriched or either out of stock code:-"
-													+ productCode,
-											e);
+									LOG.error(CuratedProductWidgetEror + productCode, e);
 									continue;
 								}
 							}
@@ -4422,16 +4319,14 @@ public class DefaultCMSComponentControler
 						{
 							curatedProductsWidgetWsDTO.setComponentId(
 									null != curatedProWidgetCompModel.getUid() ? curatedProWidgetCompModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting CuratedProductWidgetComponent with id: " + curatedProWidgetCompModel.getUid(),
-									e);
+							LOG.error(cpwError + curatedProWidgetCompModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							curatedProductsWidgetWsDTO.setComponentId(
 									null != curatedProWidgetCompModel.getUid() ? curatedProWidgetCompModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting CuratedProductWidgetComponent with id: " + curatedProWidgetCompModel.getUid(),
-									e);
+							LOG.error(cpwError + curatedProWidgetCompModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setCuratedProductsComponent(curatedProductsWidgetWsDTO);
@@ -4487,16 +4382,14 @@ public class DefaultCMSComponentControler
 						{
 							smartFilterWsDTO.setComponentId(null != smartFilterWidgetComponentModel.getUid()
 									? smartFilterWidgetComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting SmartFilterWidgetComponent with id: " + smartFilterWidgetComponentModel.getUid(),
-									e);
+							LOG.error(SmartFilterWidgetError + smartFilterWidgetComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							smartFilterWsDTO.setComponentId(null != smartFilterWidgetComponentModel.getUid()
 									? smartFilterWidgetComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting SmartFilterWidgetComponent with id: " + smartFilterWidgetComponentModel.getUid(),
-									e);
+							LOG.error(SmartFilterWidgetError + smartFilterWidgetComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setTwoByTwoBannerComponent(smartFilterWsDTO);
@@ -4527,14 +4420,14 @@ public class DefaultCMSComponentControler
 						{
 							msdComponentWsDTO
 									.setComponentId(null != msdComponentModel.getUid() ? msdComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting MsdComponent with id: " + msdComponentModel.getUid(), e);
+							LOG.error(MsdError + msdComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							msdComponentWsDTO
 									.setComponentId(null != msdComponentModel.getUid() ? msdComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting MsdComponent with id: " + msdComponentModel.getUid(), e);
+							LOG.error(MsdError + msdComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setMsdComponent(msdComponentWsDTO);
@@ -4562,14 +4455,14 @@ public class DefaultCMSComponentControler
 						{
 							adobeTargetComponentWsDTO.setComponentId(
 									null != adobeTargetComponentModel.getUid() ? adobeTargetComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting AdobeTargetComponent with id: " + adobeTargetComponentModel.getUid(), e);
+							LOG.error(AdobeTargetError + adobeTargetComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							adobeTargetComponentWsDTO.setComponentId(
 									null != adobeTargetComponentModel.getUid() ? adobeTargetComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting AdobeTargetComponent with id: " + adobeTargetComponentModel.getUid(), e);
+							LOG.error(AdobeTargetError + adobeTargetComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setAdobeTargetComponent(adobeTargetComponentWsDTO);
@@ -4658,14 +4551,14 @@ public class DefaultCMSComponentControler
 						{
 							brandsTabAZListComponentWsDTO.setComponentId(null != brandsTabAZListComponentModel.getUid()
 									? brandsTabAZListComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting BrandsTabAZListComponent with id: " + brandsTabAZListComponentModel.getUid(), e);
+							LOG.error(BrandsTabAZListError + brandsTabAZListComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							brandsTabAZListComponentWsDTO.setComponentId(null != brandsTabAZListComponentModel.getUid()
 									? brandsTabAZListComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting BrandsTabAZListComponent with id: " + brandsTabAZListComponentModel.getUid(), e);
+							LOG.error(BrandsTabAZListError + brandsTabAZListComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setComponentName("brandsTabAZListComponent");
@@ -4691,14 +4584,14 @@ public class DefaultCMSComponentControler
 						{
 							landingPageTitleComponentWsDTO.setComponentId(
 									null != landingPageTitleCompModel.getUid() ? landingPageTitleCompModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting LandingPageTitleComponent with id: " + landingPageTitleCompModel.getUid(), e);
+							LOG.error(LandingPageTitleError + landingPageTitleCompModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							landingPageTitleComponentWsDTO.setComponentId(
 									null != landingPageTitleCompModel.getUid() ? landingPageTitleCompModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting LandingPageTitleComponent with id: " + landingPageTitleCompModel.getUid(), e);
+							LOG.error(LandingPageTitleError + landingPageTitleCompModel.getUid(), e);
 							continue;
 						}
 						landingPageTitleComponentWsDTO.setType("Landing Page Title Component");
@@ -4758,16 +4651,14 @@ public class DefaultCMSComponentControler
 						{
 							landingPageHeaderComponentWsDTO.setComponentId(null != landingPageHeaderComponentModel.getUid()
 									? landingPageHeaderComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting LandingPageHeaderComponent with id: " + landingPageHeaderComponentModel.getUid(),
-									e);
+							LOG.error(LandingPageHeaderError + landingPageHeaderComponentModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							landingPageHeaderComponentWsDTO.setComponentId(null != landingPageHeaderComponentModel.getUid()
 									? landingPageHeaderComponentModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting LandingPageHeaderComponent with id: " + landingPageHeaderComponentModel.getUid(),
-									e);
+							LOG.error(LandingPageHeaderError + landingPageHeaderComponentModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setComponentName("landingPageHeaderComponent");
@@ -4986,16 +4877,14 @@ public class DefaultCMSComponentControler
 						{
 							landingPageHierarchyComponentWsDTO.setComponentId(
 									null != landingPageHierarchyModel.getUid() ? landingPageHierarchyModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting LandingPageHierarchyComponent with id: " + landingPageHierarchyModel.getUid(),
-									e);
+							LOG.error(LandingPageHierError + landingPageHierarchyModel.getUid(), e);
 							continue;
 						}
 						catch (final Exception e)
 						{
 							landingPageHierarchyComponentWsDTO.setComponentId(
 									null != landingPageHierarchyModel.getUid() ? landingPageHierarchyModel.getUid() : StringUtils.EMPTY);
-							LOG.error("Error in getting LandingPageHierarchyComponent with id: " + landingPageHierarchyModel.getUid(),
-									e);
+							LOG.error(LandingPageHierError + landingPageHierarchyModel.getUid(), e);
 							continue;
 						}
 						uiCompPageElementWsDTO.setComponentName("landingPageHierarchyComponent");
@@ -5022,14 +4911,12 @@ public class DefaultCMSComponentControler
 							catch (final EtailNonBusinessExceptions e)
 							{
 
-								LOG.error("Error in getting cmsParagraphComponentModel with id: " + cmsParagraphComponentModel.getUid(),
-										e);
+								LOG.error(cmsParagraphError + cmsParagraphComponentModel.getUid(), e);
 								continue;
 							}
 							catch (final Exception e)
 							{
-								LOG.error("Error in getting cmsParagraphComponentModel with id: " + cmsParagraphComponentModel.getUid(),
-										e);
+								LOG.error(cmsParagraphError + cmsParagraphComponentModel.getUid(), e);
 								continue;
 							}
 							cmsParagraphComponentWsDTO.setType("CMS Paragraph Component");
@@ -5071,14 +4958,12 @@ public class DefaultCMSComponentControler
 							catch (final EtailNonBusinessExceptions e)
 							{
 
-								LOG.error("Error in getting simpleBannerComponentModel with id: " + simpleBannerComponentModel.getUid(),
-										e);
+								LOG.error(simpleBannerError + simpleBannerComponentModel.getUid(), e);
 								continue;
 							}
 							catch (final Exception e)
 							{
-								LOG.error("Error in getting simpleBannerComponentModel with id: " + simpleBannerComponentModel.getUid(),
-										e);
+								LOG.error(simpleBannerError + simpleBannerComponentModel.getUid(), e);
 								continue;
 							}
 							simpleBannerComponentWsDTO.setType("Simple Banner Component");
@@ -5124,14 +5009,12 @@ public class DefaultCMSComponentControler
 							catch (final EtailNonBusinessExceptions e)
 							{
 
-								LOG.error("Error in getting accountNavigationComponentModel with id: "
-										+ accountNavigationComponentModel.getUid(), e);
+								LOG.error(accountNavigationError + accountNavigationComponentModel.getUid(), e);
 								continue;
 							}
 							catch (final Exception e)
 							{
-								LOG.error("Error in getting accountNavigationComponentModel with id: "
-										+ accountNavigationComponentModel.getUid(), e);
+								LOG.error(accountNavigationError + accountNavigationComponentModel.getUid(), e);
 								continue;
 							}
 							accountNavigationComponentWsDTO.setType("Account Navigation Component");
@@ -5151,7 +5034,7 @@ public class DefaultCMSComponentControler
 
 	public String stringUtil(final String number)
 	{
-		String intStr = new String();
+		String intStr = StringUtils.EMPTY;
 		if (number.contains("."))
 		{
 			final String[] arrOfStr = number.split("\\.");
