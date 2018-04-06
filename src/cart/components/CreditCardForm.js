@@ -157,6 +157,7 @@ export default class CreditCardForm extends React.Component {
                 onChange={changedValue => this.monthChange(changedValue)}
                 options={this.monthOptions}
                 textStyle={{ fontSize: 14 }}
+                value={this.state.monthValue}
               />
             </div>
             <div className={styles.dropDownBox}>
@@ -165,6 +166,7 @@ export default class CreditCardForm extends React.Component {
                 options={this.expiryYearObject}
                 label="Expiry year"
                 onChange={expiryYear => this.onYearChange(expiryYear)}
+                value={this.state.yearValue}
               />
             </div>
           </div>
