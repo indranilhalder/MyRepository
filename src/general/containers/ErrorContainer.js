@@ -14,6 +14,7 @@ const CLEAR_ERROR_DELAY = TOAST_DELAY + 500;
 
 const mapStateToProps = state => {
   return {
+    loginError: state.auth.error,
     userError: state.user.error,
     pdpError: state.productDescription.error,
     plpError: state.productListings.error,

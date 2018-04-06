@@ -1,13 +1,19 @@
 import React from "react";
-import { LOGIN_PATH } from "../../lib/constants";
+import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
 import PropTypes from "prop-types";
 import styles from "./LogoutButton.css";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 export default class LogoutButton extends React.Component {
-  logoutUser() {
+  async logoutUser() {
     if (this.props.logout) {
-      this.props.logout();
-      this.props.history.push(`${LOGIN_PATH}`);
+      const logoutResponse = await this.props.logout();
+      this.props.history.push(`${HOME_ROUTER}`);
+      if (logoutResponse.status === SUCCESS) {
+        const generateCartIdForAnonymous = await this.props.generateCartIdForAnonymous();
+        if (generateCartIdForAnonymous.status === SUCCESS) {
+          this.props.setFalseForAllAuthCallHasSucceedFlag();
+        }
+      }
     }
   }
 
