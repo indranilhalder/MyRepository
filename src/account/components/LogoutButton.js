@@ -10,6 +10,7 @@ export default class LogoutButton extends React.Component {
       if (logoutResponse.status === SUCCESS) {
         const generateCartIdForAnonymous = await this.props.generateCartIdForAnonymous();
         if (generateCartIdForAnonymous.status === SUCCESS) {
+          this.props.setFalseForAllAuthCallHasSucceedFlag();
           this.props.history.push(`${HOME_ROUTER}`);
         }
       }

@@ -25,6 +25,10 @@ const auth = (
         authCallsInProcess: false,
         authCallsIsSucceed: true
       });
+    case authActions.SET_FALSE_ALL_AUTH_CALLS_SUCCESS_FLAG:
+      return Object.assign({}, state, {
+        authCallsIsSucceed: false
+      });
     default:
       return state;
   }

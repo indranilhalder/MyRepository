@@ -79,18 +79,18 @@ const mapDispatchToProps = dispatch => {
               mergeCartId(createdCartVal.cartDetails.guid)
             );
             if (mergeCartIdResponse.status === SUCCESS) {
-              setIfAllAuthCallsHaveSucceeded();
+              dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
-              singleAuthCallHasFailed(mergeCartIdResponse.error);
+              dispatch(singleAuthCallHasFailed(mergeCartIdResponse.error));
             }
           } else if (createdCartVal.status === FAILURE) {
-            singleAuthCallHasFailed(otpResponse.error);
+            dispatch(singleAuthCallHasFailed(otpResponse.error));
           }
         } else if (customerAccessResponse.status === FAILURE) {
-          singleAuthCallHasFailed(otpResponse.error);
+          dispatch(singleAuthCallHasFailed(otpResponse.error));
         }
       } else if (otpResponse.status === FAILURE) {
-        singleAuthCallHasFailed(otpResponse.error);
+        dispatch(singleAuthCallHasFailed(otpResponse.error));
       }
     },
     resetPassword: userDetails => {
