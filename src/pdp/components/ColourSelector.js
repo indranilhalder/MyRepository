@@ -15,7 +15,7 @@ export default class ColourSelector extends React.Component {
   }
   render() {
     const selectedSize = this.props.data.filter(val => {
-      return val.sizelink.prductCode === this.props.productId;
+      return val.sizelink.productCode === this.props.productId;
     })[0].sizelink.size;
     const selectedColour = this.props.data.filter(val => {
       return val.colorlink.selected;
