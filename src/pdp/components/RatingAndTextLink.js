@@ -16,10 +16,15 @@ export default class RatingAndTextLink extends React.Component {
           <div className={styles.ratingsHolder}>
             <StarRating averageRating={this.props.averageRating} />
           </div>
-          <div className={styles.textHolder}>
-            <span>{this.props.numberOfReview}</span>
-            reviews for this product
-          </div>
+          {this.props.numberOfReview !== 0 && (
+            <div className={styles.textHolder}>
+              <span>{this.props.numberOfReview}</span>
+              reviews for this product
+            </div>
+          )}
+          {this.props.numberOfReview === 0 && (
+            <div className={styles.text}>There are no review yet</div>
+          )}
         </div>
       </PdpLink>
     );
