@@ -279,7 +279,45 @@ public interface MplVoucherService
 
 	public List<CouponUserRestrictionModel> fetchExistingVoucherData(final VoucherModel voucher);
 
-	/* CAR-330 ends here */
+	/****
+	 * The Method Updates the Discount Values 
+	 * 
+	 * @param oModel
+	 * @param voucher
+	 * @return AbstractOrderModel
+	 */
+	AbstractOrderModel getUpdatedDiscountValuesNoCotEMI(AbstractOrderModel oModel, VoucherModel voucher);
+
+	/***
+	 * The Method Checks Cart after No Cost EMI Apply
+	 * 
+	 * @param lastVoucher
+	 * @param cartModel
+	 * @param orderModel
+	 * @param applicableOrderEntryList
+	 */
+	VoucherDiscountData checkCartNoCostEMIApply(VoucherModel lastVoucher, CartModel cartModel, OrderModel orderModel,
+			List<AbstractOrderEntryModel> applicableOrderEntryList) throws VoucherOperationException, EtailNonBusinessExceptions;
+
+	/**
+	 * The Method Sets apportioned value for No Cost EMI Coupons
+	 * @param voucher
+	 * @param abstractOrderModel
+	 * @param voucherCode
+	 * @param applicableOrderEntryList
+	 */
+	void setApportionedValueForNoCostEMI(VoucherModel voucher, AbstractOrderModel abstractOrderModel, String voucherCode,
+			List<AbstractOrderEntryModel> applicableOrderEntryList);
+
+	/**
+	 * Releases No Cost EMI Coupons 
+	 * 
+	 * @param voucherCode
+	 * @param cartModel
+	 * @param orderModel
+	 * @throws VoucherOperationException
+	 */
+	void releaseNoCostEMIVoucher(String voucherCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException;
 
 
 }

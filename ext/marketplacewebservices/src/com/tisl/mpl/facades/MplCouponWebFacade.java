@@ -86,4 +86,15 @@ public interface MplCouponWebFacade
 			final String paymentMode) throws RequestParameterException, WebserviceValidationException, MalformedURLException,
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
 			JaloSecurityException, JaloPriceFactoryException, CalculationException;
+
+	/**
+	 * The Method applies No Cost EMI
+	 *
+	 * @param couponCode
+	 * @param cartModel
+	 * @param orderModel
+	 * @throws VoucherOperationException
+	 */
+	ApplyCouponsDTO applyNoCostEMI(String couponCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException,
+			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException;
 }

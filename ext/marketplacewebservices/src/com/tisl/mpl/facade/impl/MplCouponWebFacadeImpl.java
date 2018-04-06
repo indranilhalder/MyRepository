@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.WebserviceValidationException;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
@@ -42,12 +43,14 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplCouponWebService;
 import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.ApplyCartCouponsDTO;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
+import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
 
 
@@ -75,6 +78,9 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 	@Autowired
 	private ModelService modelService;
+
+	@Resource
+	private MplCartWebService mplCartWebService;
 
 	/**
 	 * @Description : For getting the details of all the Coupons available for the User
@@ -160,8 +166,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					mplCouponFacade.updatePaymentInfoSession(paymentInfo, cartModel);
 
 					// EGV Changes Start
-					if (cartModel.getTotalPrice().doubleValue() > (null != walletPayableAmount ? walletPayableAmount.doubleValue()
-							: 0.00D))
+					if (cartModel.getTotalPrice()
+							.doubleValue() > (null != walletPayableAmount ? walletPayableAmount.doubleValue() : 0.00D))
 					{
 						if (StringUtils.isNotEmpty(cartCouponCode))
 						{
@@ -174,8 +180,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
 					{
 						//Price data new calculation for 2 decimal values
-						applycouponDto.setCouponDiscount(String.valueOf(data.getCouponDiscount().getValue()
-								.setScale(2, BigDecimal.ROUND_HALF_UP)));
+						applycouponDto.setCouponDiscount(
+								String.valueOf(data.getCouponDiscount().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 						if (null != data.getCouponDiscount())
 						{
 							final BigDecimal couponDiscount = new BigDecimal(data.getCouponDiscount().getValue().doubleValue());
@@ -393,8 +399,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					if (data != null && data.getMbDiscountAftrCVoucher() != null
 							&& data.getMbDiscountAftrCVoucher().getValue() != null)
 					{
-						applycouponDto.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
-								.setScale(2, BigDecimal.ROUND_HALF_UP)));
+						applycouponDto.setDiscount(
+								String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 					}
 
 					applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
@@ -443,8 +449,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 				if (data != null && data.getMbDiscountAftrCVoucher() != null && data.getMbDiscountAftrCVoucher().getValue() != null)
 				{
-					applycouponDto.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
-							.setScale(2, BigDecimal.ROUND_HALF_UP)));
+					applycouponDto.setDiscount(
+							String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 
 				applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(orderModel, orderModel.getTotalPriceWithConv())
@@ -652,8 +658,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 						final boolean applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, null, orderModel);
 						orderModel.setCheckForBankVoucher("false");
 						modelService.save(orderModel);
-						final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(orderModel, null, applyStatus,
-								true, couponCode);
+						final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(orderModel, null, applyStatus, true,
+								couponCode);
 
 						data = newData;
 						//data.setTotalDiscount(newData.getTotalDiscount());
@@ -884,8 +890,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 				if (data.getMbDiscountAftrCVoucher() != null && data.getMbDiscountAftrCVoucher().getValue() != null)
 				{
-					releaseCouponsDTO.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
-							.setScale(2, BigDecimal.ROUND_HALF_UP)));
+					releaseCouponsDTO.setDiscount(
+							String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 
 				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
@@ -922,8 +928,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 				if (data.getMbDiscountAftrCVoucher() != null && data.getMbDiscountAftrCVoucher().getValue() != null)
 				{
-					releaseCouponsDTO.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
-							.setScale(2, BigDecimal.ROUND_HALF_UP)));
+					releaseCouponsDTO.setDiscount(
+							String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 
 				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
@@ -964,6 +970,157 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		releaseCouponsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9508);
 		releaseCouponsDTO.setError(MarketplacewebservicesConstants.COUPONRELISSUE);
 		return releaseCouponsDTO;
+	}
+
+
+	/**
+	 * The Method applies No Cost EMI
+	 *
+	 * @param couponCode
+	 * @param cartModel
+	 * @param orderModel
+	 */
+	@Override
+	public ApplyCouponsDTO applyNoCostEMI(final String couponCode, final CartModel cartModel, final OrderModel orderModel)
+			throws VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
+			JaloSecurityException
+	{
+		final String voucherCode = mplCouponFacade.getNoCOSTEMIVoucherCode(couponCode);
+		boolean couponRedStatus = false;
+
+		ApplyCouponsDTO applycouponDto = new ApplyCouponsDTO();
+
+		try
+		{
+
+			if (null == orderModel)
+			{
+				if (null != cartModel)
+				{
+					if (StringUtils.isNotEmpty(voucherCode))
+					{
+						couponRedStatus = mplCouponFacade.applyNoCostEMICartVoucher(voucherCode, cartModel, null);
+						LOG.debug("No Cost EMI Coupon Redemption Status is >>>>" + couponRedStatus);
+
+						if (couponRedStatus)
+						{
+							applycouponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+						}
+
+						applycouponDto = populateNoCostEMIData(applycouponDto, cartModel);
+					}
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9500);
+				}
+			}
+			else
+			{
+				if (StringUtils.isNotEmpty(voucherCode))
+				{
+					couponRedStatus = mplCouponFacade.applyNoCostEMICartVoucher(voucherCode, null, orderModel);
+					LOG.debug("No Cost EMI Coupon Redemption Status is >>>>" + couponRedStatus);
+					if (couponRedStatus)
+					{
+						applycouponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+
+					}
+					applycouponDto = populateNoCostEMIData(applycouponDto, orderModel);
+				}
+			}
+
+		}
+		catch (final VoucherOperationException e)
+		{
+			if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCPRICEEXCEEDED))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9501);
+			}
+			else if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCINVALID))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9503);
+			}
+			else if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCEXPIRED))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9505);
+			}
+			else if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCISSUE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9507);
+			}
+			else if (e.getMessage().contains(MarketplacewebservicesConstants.EXCNOTAPPLICABLE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9509);
+			}
+			else if (e.getMessage().contains(MarketplacewebservicesConstants.EXCNOTRESERVABLE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9510);
+			}
+			else if (e.getMessage().contains(MarketplacewebservicesConstants.EXCFREEBIE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9511);
+			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCUSERINVALID))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9512);
+			}
+			/* Added for TPR-1290 */
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCFIRSTPURUSERINVALID))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9332);
+			}
+			//TPR-4460 Changes
+			else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_MOBILE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9303);
+			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_WEB))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9302);
+			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_CALLCENTRE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9304);
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9507);
+		}
+
+		return applycouponDto;
+
+	}
+
+
+	/**
+	 * Populate Data for No Cost EMI
+	 *
+	 * @param applycouponDto
+	 * @param oModel
+	 * @return ApplyCouponsDTO
+	 */
+	private ApplyCouponsDTO populateNoCostEMIData(final ApplyCouponsDTO applycouponDto, final AbstractOrderModel oModel)
+	{
+		final ApplyCouponsDTO dto = applycouponDto;
+
+		if (null != oModel)
+		{
+			final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(oModel);
+			dto.setCartAmount(pricePwa);
+		}
+
+		return dto;
 	}
 
 }

@@ -230,26 +230,26 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 	 */
 
 	private void resetNetAmtAftrAllDisc(final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
-	{
-		// Code Added for TISPT-148
+	{// Code Added for TISPT-148
 		final List<AbstractOrderEntryModel> cartEntryList = new ArrayList<AbstractOrderEntryModel>();
 		for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 		{
-			if (StringUtils.isNotEmpty(entry.getCouponCode()))
+			if (StringUtils.isNotEmpty(entry.getCouponCode()) || StringUtils.isNotEmpty(entry.getCartCouponCode()))
 			{
 				double currNetAmtAftrAllDisc = 0.00D;
-				final double entryTotalPrice = entry.getTotalPrice().doubleValue();
-				final double couponValue = entry.getCouponValue().doubleValue();
+				double entryTotalPrice = entry.getTotalPrice().doubleValue();
+				double couponValue = entry.getCouponValue().doubleValue();
+				double cartCouponValue = entry.getCartCouponValue().doubleValue();
 
 				if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode())))
 				{
 					final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc()
 							.doubleValue() : 0.00D;
-					currNetAmtAftrAllDisc = netAmtAftrAllDisc - couponValue;
+					currNetAmtAftrAllDisc = netAmtAftrAllDisc - couponValue - cartCouponValue;
 				}
 				else
 				{
-					currNetAmtAftrAllDisc = entryTotalPrice - couponValue;
+					currNetAmtAftrAllDisc = entryTotalPrice - couponValue - cartCouponValue;
 				}
 				entry.setNetAmountAfterAllDisc(Double.valueOf(currNetAmtAftrAllDisc));
 				cartEntryList.add(entry);
@@ -261,9 +261,7 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 		if (CollectionUtils.isNotEmpty(cartEntryList))
 		{
 			getModelService().saveAll(cartEntryList);
-		}
-
-	}
+		}}
 
 
 	/**
