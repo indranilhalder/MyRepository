@@ -43,6 +43,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplCouponWebService;
 import com.tisl.mpl.service.MplEgvWalletService;
@@ -1124,5 +1125,123 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 		return dto;
 	}
+
+
+	/***
+	 * The Method Releases No Cost EMI Coupon
+	 *
+	 * @param couponCode
+	 * @param cartModel
+	 * @param orderModel
+	 * @param paymentMode
+	 * @return ReleaseCouponsDTO
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 * @throws NumberFormatException
+	 * @throws JaloInvalidParameterException
+	 * @throws VoucherOperationException
+	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloPriceFactoryException
+	 * @throws CalculationException
+	 */
+	@Override
+	public ReleaseCouponsDTO releaseNoCostEMI(final String couponCode, CartModel cartModel, OrderModel orderModel,
+			final String paymentMode) throws RequestParameterException, WebserviceValidationException, MalformedURLException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException, CalculationException
+	{
+		ReleaseCouponsDTO releaseCouponsDTO = new ReleaseCouponsDTO();
+		boolean isCouponReleased = false;
+		try
+		{
+			if (null != cartModel)
+			{
+				LOG.debug("Releasing No Cost EMI Coupon >> Coupon Code" + couponCode);
+				cartModel = (CartModel) mplCouponFacade.removeLastEMICoupon(cartModel);
+
+				isCouponReleased = isNoCostEMICouponRemoved(cartModel.getDiscounts());
+
+				if (isCouponReleased)
+				{
+					releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+				}
+				releaseCouponsDTO = populateNoCostEMIReleaseData(releaseCouponsDTO, cartModel);
+
+			}
+			else if (null != orderModel)
+			{
+				LOG.debug("Releasing No Cost EMI Coupon >> Coupon Code" + couponCode);
+				orderModel = (OrderModel) mplCouponFacade.removeLastEMICoupon(orderModel);
+
+				isCouponReleased = isNoCostEMICouponRemoved(orderModel.getDiscounts());
+
+				if (isCouponReleased)
+				{
+					releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+				}
+				releaseCouponsDTO = populateNoCostEMIReleaseData(releaseCouponsDTO, orderModel);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO);
+		}
+		return releaseCouponsDTO;
+	}
+
+
+	/**
+	 * Checks if No Cost EMI Coupon is Released
+	 *
+	 * @param discounts
+	 * @return flag
+	 */
+	private boolean isNoCostEMICouponRemoved(final List<DiscountModel> discounts)
+	{
+		boolean flag = true;
+
+		if (CollectionUtils.isNotEmpty(discounts))
+		{
+			for (final DiscountModel discount : discounts)
+			{
+				if (discount instanceof MplNoCostEMIVoucherModel)
+				{
+					flag = false;
+					break;
+				}
+			}
+		}
+		return flag;
+	}
+
+	/**
+	 * Populate Data for No Cost EMI
+	 *
+	 * @param releaseCouponsDTO
+	 * @param oModel
+	 * @return ReleaseCouponsDTO
+	 */
+	private ReleaseCouponsDTO populateNoCostEMIReleaseData(final ReleaseCouponsDTO releaseCouponsDTO,
+			final AbstractOrderModel oModel)
+	{
+		final ReleaseCouponsDTO dto = releaseCouponsDTO;
+
+		if (null != oModel)
+		{
+			final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(oModel);
+			dto.setCartAmount(pricePwa);
+		}
+
+		return dto;
+	}
+
 
 }

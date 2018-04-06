@@ -155,6 +155,7 @@ import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartServi
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.order.data.CartDataList;
@@ -4263,7 +4264,8 @@ public class CartsController extends BaseCommerceController
 					{
 
 						final double value = discount.getAppliedValue();
-						if ((voucher instanceof PromotionVoucherModel) && !(voucher instanceof MplCartOfferVoucherModel))
+						if ((voucher instanceof PromotionVoucherModel) && !(voucher instanceof MplCartOfferVoucherModel)
+								&& !(voucher instanceof MplNoCostEMIVoucherModel))
 						{
 							if (value > 0.0d)
 							{
@@ -5294,6 +5296,98 @@ public class CartsController extends BaseCommerceController
 		}
 
 		return applycouponDto;
+	}
+
+	/****
+	 * This Method is Hit For the release of No Cost EMI Coupons
+	 *
+	 * @param couponCode
+	 * @param cartGuid
+	 * @param paymentMode
+	 * @return releaseCouponDto
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 * @throws NumberFormatException
+	 * @throws JaloInvalidParameterException
+	 * @throws VoucherOperationException
+	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloPriceFactoryException
+	 * @throws CalculationException
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{cartId}/releaseNoCostEMI", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ReleaseCouponsDTO releaseNoCostEMI(@RequestParam final String couponCode,
+			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
+			JaloPriceFactoryException, CalculationException
+	{
+		ReleaseCouponsDTO releaseCouponDto = new ReleaseCouponsDTO();
+
+		CartModel cartModel = null;
+		OrderModel orderModel = null;
+
+		try
+		{
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+			}
+
+			if (null == orderModel)
+			{
+				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+
+				if (cartModel == null)
+				{
+					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartGuid);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
+				}
+				else
+				{
+					releaseCouponDto = mplCouponWebFacade.releaseNoCostEMI(couponCode, cartModel, null, paymentMode);
+					getTotalPrice(releaseCouponDto, cartModel, false);
+				}
+			}
+			else
+			{
+				releaseCouponDto = mplCouponWebFacade.releaseNoCostEMI(couponCode, null, orderModel, paymentMode);
+				getTotalPrice(releaseCouponDto, orderModel, false);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorCode())
+			{
+				releaseCouponDto.setErrorCode(e.getErrorCode());
+			}
+			if (null != e.getErrorMessage())
+			{
+				releaseCouponDto.setError(e.getErrorMessage());
+			}
+			releaseCouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorCode())
+			{
+				releaseCouponDto.setErrorCode(e.getErrorCode());
+			}
+			if (null != e.getErrorMessage())
+			{
+				releaseCouponDto.setError(e.getErrorMessage());
+			}
+			releaseCouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return releaseCouponDto;
 	}
 
 }
