@@ -2,7 +2,8 @@ import * as authActions from "../actions/auth.actions";
 const auth = (
   state = {
     authCallsInProcess: false,
-    authCallsIsSucceed: false
+    authCallsIsSucceed: false,
+    error: null
   },
   action
 ) => {
@@ -16,7 +17,8 @@ const auth = (
     case authActions.ANY_AUTH_CALLS_FAILED:
       return Object.assign({}, state, {
         status: action.status,
-        authCallsInProcess: false
+        authCallsInProcess: false,
+        error: action.error
       });
 
     case authActions.ALL_AUTH_CALLS_SUCCESS:

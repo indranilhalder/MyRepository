@@ -41,9 +41,9 @@ const mapDispatchToProps = dispatch => {
       const userDetailsResponse = await dispatch(
         customerAccessToken(userDetails)
       );
-
+      console.log(userDetailsResponse);
       // checking condition for the failure customer access token api
-      if (userDetailsResponse.status === FAILURE) {
+      if (userDetailsResponse.status === ERROR) {
         dispatch(singleAuthCallHasFailed(userDetailsResponse.error));
       } else if (userDetailsResponse.status === SUCCESS) {
         const loginUserResponse = await dispatch(loginUser(userDetails));
@@ -84,7 +84,7 @@ const mapDispatchToProps = dispatch => {
                 dispatch(singleAuthCallHasFailed(mergeCartIdResponse.error));
               }
               // end of merging cart id with new cart id
-            } else if (newCartIdObj.status === FAILURE) {
+            } else if (newCartIdObj.status === ERROR) {
               dispatch(singleAuthCallHasFailed(newCartIdObj.error));
             }
             // end of generating new cart if if wont get any existing cartId
