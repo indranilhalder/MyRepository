@@ -13,6 +13,7 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.customerreview.dao.impl.DefaultCustomerReviewDao;
 import de.hybris.platform.customerreview.model.CustomerReviewModel;
 import de.hybris.platform.jalo.Item;
+import de.hybris.platform.search.restriction.SearchRestrictionService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.SearchResult;
@@ -43,6 +44,11 @@ public class MplCustomerReviewDaoImpl extends DefaultCustomerReviewDao implement
 
 	@Resource
 	private ConfigurationService configurationService;
+
+	@Autowired
+	private SearchRestrictionService searchRestrictionService;
+
+	private static final String PRODUCT = "product";
 
 	@Override
 	public SearchPageData<CustomerReviewModel> getReviewsForProductAndLanguage(final ProductModel product,
@@ -120,23 +126,31 @@ public class MplCustomerReviewDaoImpl extends DefaultCustomerReviewDao implement
 	public boolean reviewApplicableForGivenCustomer(final UserModel user, final ProductModel product)
 	{
 		boolean reviewApplicable = true;
-		final StringBuilder query = new StringBuilder(300);
-		query.append(
-				"select count(*) from {CustomerReview as c join CustomerReviewApprovalType as cap on {cap.pk}={c.approvalstatus} } where {c.product}=?product and {c.user}=?user and {c.blocked}='0' and {cap.code} in (")
-				.append(
-						configurationService.getConfiguration().getString("review.restriction.approvalStatus", "'pending','approved'"))
-				.append(")");
-		final FlexibleSearchQuery fsQuery = new FlexibleSearchQuery(query);
-		fsQuery.addQueryParameter("product", product);
-		fsQuery.addQueryParameter("user", user);
-		fsQuery.setResultClassList(Arrays.asList(Integer.class));
-		final List<Integer> instockResultList = getFlexibleSearchService().<Integer> search(fsQuery).getResult();
-		if (CollectionUtils.isNotEmpty(instockResultList))
+		try
 		{
-			if (instockResultList.get(0).intValue() > 0)
+			final StringBuilder query = new StringBuilder(300);
+			query.append(
+					"select count(*) from {CustomerReview as c join CustomerReviewApprovalType as cap on {cap.pk}={c.approvalstatus} } where {c.product}=?product and {c.user}=?user and {c.blocked}='0' and {cap.code} in (")
+					.append(
+							configurationService.getConfiguration().getString("review.restriction.approvalStatus",
+									"'pending','approved'")).append(")");
+			final FlexibleSearchQuery fsQuery = new FlexibleSearchQuery(query);
+			fsQuery.addQueryParameter(PRODUCT, product.getPk());
+			fsQuery.addQueryParameter("user", user.getPk());
+			fsQuery.setResultClassList(Arrays.asList(Integer.class));
+			searchRestrictionService.disableSearchRestrictions();
+			final List<Integer> ratingCount = getFlexibleSearchService().<Integer> search(fsQuery).getResult();
+			if (CollectionUtils.isNotEmpty(ratingCount))
 			{
-				reviewApplicable = false;
+				if (ratingCount.get(0).intValue() > 0)
+				{
+					reviewApplicable = false;
+				}
 			}
+		}
+		finally
+		{
+			searchRestrictionService.enableSearchRestrictions();
 		}
 		return reviewApplicable;
 	}
