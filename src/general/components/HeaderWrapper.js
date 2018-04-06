@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import styles from "./HeaderWrapper.css";
 import SearchContainer from "../../search/SearchContainer.js";
-
+import queryString, { parse } from "query-string";
 import {
   HOME_ROUTER,
   PRODUCT_CART_ROUTER,
@@ -18,14 +18,28 @@ import {
   SAVE_LIST_PAGE,
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
-  MY_ACCOUNT_PAGE
+  MY_ACCOUNT_PAGE,
+  JUS_PAY_CHARGED,
+  JUS_PAY_PENDING,
+  JUS_PAY_AUTHENTICATION_FAILED
 } from "../../../src/lib/constants";
 import { SIGN_UP } from "../../auth/actions/user.actions";
 
 const PRODUCT_CODE_REGEX = /p-(.*)/;
 class HeaderWrapper extends React.Component {
   onBackClick = () => {
-    this.props.history.goBack();
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    const value = parsedQueryString.status;
+
+    if (
+      value === JUS_PAY_CHARGED ||
+      value === JUS_PAY_PENDING ||
+      value === JUS_PAY_AUTHENTICATION_FAILED
+    ) {
+      window.history.go(-2);
+    } else {
+      this.props.history.goBack();
+    }
   };
   goToCart = () => {
     if (this.props.history) {

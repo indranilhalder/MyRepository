@@ -45,6 +45,7 @@ import AddAddressContainer from "./account/containers/AddAddressContainer.js";
 import SaveListContainer from "./account/containers/SaveListContainer";
 import CliqCashContainer from "./account/containers/CliqCashContainer.js";
 import GiftCardContainer from "./account/containers/GiftCardContainer";
+import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
 
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 import CancelOrderContainer from "./account/containers/CancelOrderContainer";
@@ -420,6 +421,7 @@ class App extends Component {
               component={PlpBrandCategoryWrapperContainer}
             />
           </Switch>
+          <SecondaryLoaderContainer />
           <MobileFooter />
 
           <ModalContainer />

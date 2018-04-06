@@ -115,7 +115,10 @@ export function getFailureResponse(response) {
     return { status: true, message: response.errors[0].message };
   }
   if (response.error) {
-    return { status: true, message: response.error[0].message };
+    return { status: true, message: response.error };
+  }
+  if (response.error_message) {
+    return { status: true, message: response.error_message };
   }
   if (
     response.status === FAILURE ||
@@ -123,7 +126,7 @@ export function getFailureResponse(response) {
     response.status === ERROR ||
     response.status === FAILURE_LOWERCASE
   ) {
-    return { status: true, message: response.error[0].message };
+    return { status: true, message: response.message };
   } else {
     return { status: false };
   }
@@ -261,7 +264,7 @@ export function otpVerification(otpDetails, userDetails) {
           JSON.parse(globalCookie).access_token
         }&otp=${otpDetails}&isPwa=true&platformNumber=${PLATFORM_NUMBER}&username=${
           userDetails.username
-        }&password=${userDetails.password}`
+        }&password=${userDetails.password}&emailId=${userDetails.emailId}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {

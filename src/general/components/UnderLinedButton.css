@@ -8,6 +8,10 @@
   font-size: 14px;
   font-family: regular;
 }
+.disabled {
+  composes: base;
+  opacity: 0.5;
+}
 .underline {
   width: 100%;
   height: 2px;
