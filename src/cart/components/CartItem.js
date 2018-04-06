@@ -13,11 +13,7 @@ export default class CartItem extends React.Component {
     super(props);
     this.state = {
       showDelivery: this.props.showDelivery ? this.props.showDelivery : false,
-      selectedValue: "",
-      label: "See all",
-      maxQuantityAllowed: props.product && props.product.maxQuantityAllowed,
-      qtySelectedByUser: props.product && props.product.qtySelectedByUser,
-      quantityList: []
+      label: "See all"
     };
   }
 
@@ -45,35 +41,17 @@ export default class CartItem extends React.Component {
     });
   }
 
-  componentWillMount() {
-    this.setQuantity();
-  }
-
   handleQuantityChange(changedValue) {
-    const updatedQuantity = parseInt(changedValue);
-    this.setState({ selectedValue: updatedQuantity }, () => {
-      if (this.props.onQuantityChange) {
-        this.props.onQuantityChange(this.props.entryNumber, updatedQuantity);
-      }
-    });
-  }
-  setQuantity = () => {
-    this.setState({
-      maxQuantityAllowed: parseInt(this.props.maxQuantityAllowed, 10),
-      qtySelectedByUser: parseInt(this.props.qtySelectedByUser, 10)
-    });
-
-    if (this.state.quantityList.length === 0) {
-      let fetchedQuantityList = [{ value: "Qut" }];
-      for (let i = 1; i <= parseInt(this.props.maxQuantityAllowed, 10); i++) {
-        fetchedQuantityList.push({ value: i.toString() });
-      }
-      this.setState({
-        quantityList: fetchedQuantityList
-      });
+    const updatedQuantity = parseInt(changedValue, 10);
+    if (this.props.onQuantityChange) {
+      this.props.onQuantityChange(this.props.entryNumber, updatedQuantity);
     }
-  };
+  }
   render() {
+    const fetchedQuantityList = [];
+    for (let i = 1; i <= this.props.maxQuantityAllowed; i++) {
+      fetchedQuantityList.push({ value: i.toString() });
+    }
     return (
       <div className={styles.base}>
         <div className={styles.productInformation}>
@@ -128,11 +106,9 @@ export default class CartItem extends React.Component {
               </div>
               <SelectBoxMobile
                 borderNone={true}
-                placeholder="1"
-                options={this.state.quantityList}
-                selected={this.state.qtySelectedByUser}
+                options={fetchedQuantityList}
                 onChange={val => this.handleQuantityChange(val)}
-                value={this.state.qtySelectedByUser}
+                value={this.props.qtySelectedByUser}
               />
             </div>
           </div>

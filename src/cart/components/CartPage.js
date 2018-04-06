@@ -316,15 +316,14 @@ class CartPage extends React.Component {
                         product.elligibleDeliveryMode &&
                         product.elligibleDeliveryMode[0].name
                       }
-                      option={[
-                        {
-                          value: product.qtySelectedByUser,
-                          label: product.qtySelectedByUser
-                        }
-                      ]}
                       onRemove={this.removeItemFromCart}
                       onQuantityChange={this.updateQuantityInCart}
-                      maxQuantityAllowed={product.maxQuantityAllowed}
+                      maxQuantityAllowed={
+                        parseInt(product.maxQuantityAllowed, 10) <
+                        product.availableStockCount
+                          ? parseInt(product.maxQuantityAllowed, 10)
+                          : product.availableStockCount
+                      }
                       qtySelectedByUser={product.qtySelectedByUser}
                     />
                   </div>
