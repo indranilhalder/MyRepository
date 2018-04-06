@@ -29,6 +29,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     productListingId: ownProps.productListingId,
     winningUssID: ownProps.winningUssID,
+    isWhite: ownProps.isWhite,
     wishlistItems: state.wishlistItems.wishlistItems,
     type: ownProps.type
   };

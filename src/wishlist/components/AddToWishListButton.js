@@ -6,7 +6,7 @@ import * as Cookie from "../../lib/Cookie";
 import FooterButton from "../../general/components/FooterButton.js";
 import saveIcon from "../../general/components/img/download.svg";
 import styles from "./AddToWishListButton.css";
-
+import downloadIconWhite from "../../general/components/img/downloadWhite.svg";
 import {
   LOGIN_PATH,
   LOGGED_IN_USER_DETAILS,
@@ -40,6 +40,12 @@ export default class AddToWishListButton extends React.Component {
     }
   }
   render() {
+    let saveListIcon = "";
+    if (this.props.isWhite) {
+      saveListIcon = downloadIconWhite;
+    } else {
+      saveListIcon = downloadIcon;
+    }
     if (this.props.type === WISHLIST_FOOTER_BUTTON_TYPE) {
       return (
         <FooterButton
@@ -63,7 +69,7 @@ export default class AddToWishListButton extends React.Component {
     }
     return (
       <div onClick={e => this.onClick(e)}>
-        <Icon image={downloadIcon} size={this.props.size} />
+        <Icon image={saveListIcon} size={this.props.size} />
       </div>
     );
   }
