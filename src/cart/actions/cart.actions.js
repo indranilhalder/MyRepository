@@ -1138,7 +1138,6 @@ export function mergeCartId(cartGuId) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-  console.log(userDetails, customerCookie, cartDetailsAnonymous);
   return async (dispatch, getState, { api }) => {
     dispatch(mergeCardIdRequest());
     try {
