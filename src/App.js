@@ -105,8 +105,14 @@ import {
   CANCEL_PREFIX,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
-  MY_ACCOUNT_UPDATE_PROFILE_PAGE
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE,
+  REQUESTING
 } from "../src/lib/constants";
+import {
+  globalAccessTokenSuccess,
+  customerAccessToken
+} from "./auth/actions/user.actions";
+import { cartDetailsCNCFailure } from "./cart/actions/cart.actions";
 
 const auth = {
   isAuthenticated: false
@@ -156,9 +162,28 @@ class App extends Component {
 
   render() {
     let className = AppStyles.base;
+    const {
+      globalAccessTokenStatus,
+      customerAccessTokenStatus,
+      refreshCustomerAccessTokenStatus,
+      cartIdForLoggedInUserStatus,
+      cartIdForAnonymousUSerStatus
+    } = this.props;
+
+    if (
+      globalAccessTokenStatus === REQUESTING ||
+      customerAccessTokenStatus === REQUESTING ||
+      refreshCustomerAccessTokenStatus === REQUESTING ||
+      cartIdForLoggedInUserStatus === REQUESTING ||
+      cartIdForAnonymousUSerStatus === REQUESTING
+    ) {
+      return this.renderLoader();
+    }
+
     if (this.props.modalStatus) {
       className = AppStyles.blur;
     }
+
     return (
       <React.Fragment>
         <div className={className}>
