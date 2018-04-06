@@ -37,7 +37,9 @@ import {
   MY_ACCOUNT,
   ORDER,
   ORDER_CODE,
-  REQUESTING
+  REQUESTING,
+  THANK_YOU
+
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
@@ -100,8 +102,16 @@ class CheckOutPage extends React.Component {
     );
   }
   componentDidUpdate() {
-    this.props.setHeaderText(CHECKOUT);
+    if (
+      this.props.cart.orderConfirmationDetails ||
+      this.props.cart.cliqCashPaymentDetails
+    ) {
+      this.props.setHeaderText(THANK_YOU);
+    } else {
+      this.props.setHeaderText(CHECKOUT);
+    }
   }
+
   renderConfirmAddress = () => {
     if (this.state.confirmAddress) {
       return <div> Address Expand</div>;
@@ -959,7 +969,7 @@ class CheckOutPage extends React.Component {
       return (
         <div>
           {this.props.cart.orderConfirmationDetails && (
-            <div>
+            <div className={styles.orderConfirmationHolder}>
               <OrderConfirmation
                 orderId={this.props.cart.orderConfirmationDetails.orderRefNo}
                 captureOrderExperience={rating =>
@@ -979,7 +989,7 @@ class CheckOutPage extends React.Component {
             </div>
           )}
           {this.props.cart.cliqCashJusPayDetails && (
-            <div>
+            <div className={styles.orderConfirmationHolder}>
               <OrderConfirmation
                 orderId={this.props.cart.cliqCashJusPayDetails.orderId}
                 orderStatusMessage={this.props.orderConfirmationText}
