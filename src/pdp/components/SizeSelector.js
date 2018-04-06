@@ -24,7 +24,6 @@ export default class SizeSelector extends React.Component {
     const selectedColour = this.props.data.filter(val => {
       return val.colorlink.selected;
     })[0].colorlink.color;
-    console.log(selectedColour);
     const sizes = this.props.data
       .filter(val => {
         return val.sizelink.isAvailable;
