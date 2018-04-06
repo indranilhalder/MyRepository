@@ -74,9 +74,7 @@ export default class CreditCardForm extends React.Component {
     this.setState({ cardNumberValue: val });
   }
   getCardCvvValue(val) {
-    if (val && val.length <= 3) {
-      this.setState({ cardCvvValue: val });
-    }
+    this.setState({ cardCvvValue: val });
   }
   onChangeCardName(val) {
     this.setState({ cardNameValue: val });
@@ -182,6 +180,11 @@ export default class CreditCardForm extends React.Component {
                     textStyle={{ fontSize: 14 }}
                     height={33}
                     maxLength={"3"}
+                    value={
+                      this.props.cardCvvValue
+                        ? this.props.cardCvvValue
+                        : this.state.cardCvvValue
+                    }
                     rightChildSize={33}
                     rightChild={
                       <CircleButton
