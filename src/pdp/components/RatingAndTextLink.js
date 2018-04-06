@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import StarRating from "../../general/components/StarRating.js";
 import PdpLink from "./PdpLink";
 import styles from "./RatingAndTextLink.css";
+const NO_REVIEW_TEXT = "There are no review yet";
 export default class RatingAndTextLink extends React.Component {
   onClick() {
     if (this.props.onClick) {
@@ -23,7 +24,7 @@ export default class RatingAndTextLink extends React.Component {
             </div>
           )}
           {this.props.numberOfReview === 0 && (
-            <div className={styles.text}>There are no review yet</div>
+            <div className={styles.text}>{NO_REVIEW_TEXT}</div>
           )}
         </div>
       </PdpLink>
