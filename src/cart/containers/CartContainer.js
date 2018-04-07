@@ -83,14 +83,16 @@ const mapDispatchToProps = dispatch => {
     },
     hideSecondaryLoader: () => {
       dispatch(hideSecondaryLoader());
-    }
+    },
+
   };
 };
 
 const mapStateToProps = state => {
   return {
     cart: state.cart,
-    user: state.user
+    user: state.user,
+    loginFromMyBag: state.cart.loginFromMyBag
   };
 };
 const CartContainer = withRouter(

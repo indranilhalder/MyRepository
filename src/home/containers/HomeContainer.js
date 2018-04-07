@@ -35,7 +35,8 @@ const mapStateToProps = state => {
     isHomeFeedPage: true,
     loading: state.home.loading,
     type: state.cart.type,
-    headerMessage
+    headerMessage,
+    loginFromMyBag: state.cart.loginFromMyBag
   };
 };
 

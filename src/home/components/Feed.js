@@ -39,7 +39,8 @@ import ProductCapsulesContainer from "../containers/ProductCapsulesContainer";
 import * as Cookie from "../../lib/Cookie";
 import {
   LOGGED_IN_USER_DETAILS,
-  CUSTOMER_ACCESS_TOKEN
+  CUSTOMER_ACCESS_TOKEN,
+  PRODUCT_CART_ROUTER
 } from "../../lib/constants";
 
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
@@ -94,6 +95,8 @@ class Feed extends Component {
     // then send the name
     this.props.setHeaderText(this.props.headerMessage);
   }
+
+
   renderFeedComponent(feedDatum, i) {
     if (feedDatum.type === "Product Capsules Component") {
       return <ProductCapsulesContainer positionInFeed={i} />;

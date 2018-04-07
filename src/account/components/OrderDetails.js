@@ -280,7 +280,7 @@ export default class OrderDetails extends React.Component {
                           <div
                             className={styles.review}
                             replaceItem={() =>
-                              this.canelItem(
+                              this.cancelItem(
                                 products.transactionId,
                                 products.USSID,
                                 products.sellerorderno

@@ -538,10 +538,16 @@ class CheckOutPage extends React.Component {
         this.props.getUserAddress(
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
         );
-        let guIdObject = new FormData();
-        guIdObject.append(CART_GU_ID, JSON.parse(cartDetailsLoggedInUser).guid);
+        if (cartDetailsLoggedInUser) {
+          let guIdObject = new FormData();
+          guIdObject.append(
+            CART_GU_ID,
+            JSON.parse(cartDetailsLoggedInUser).guid
+          );
 
-        this.props.getPaymentModes(guIdObject);
+          this.props.getPaymentModes(guIdObject);
+        }
+
         this.props.getCODEligibility();
         this.props.getNetBankDetails();
         if (this.props.location && this.props.location.state) {
@@ -797,26 +803,25 @@ class CheckOutPage extends React.Component {
   }
   render() {
     if (
-      this.props.cart.loading ||
-      this.props.cart.jusPaymentLoader ||
-      this.props.cart.selectDeliveryModeLoader
-    ) {
-      this.props.showSecondaryLoader();
-    } else {
-      this.props.hideSecondaryLoader();
-    }
-
-    if (this.props.cart.transactionStatus === REQUESTING) {
-      return false;
-    }
-
-    if (
       this.props.cart.paymentModesStatus === REQUESTING ||
       this.props.cart.codEligibilityStatus === REQUESTING ||
       this.props.netBankDetailsStatus === REQUESTING ||
       this.props.cart.getUserAddressStatus === REQUESTING
     ) {
       return this.renderLoader();
+    } else {
+      if (
+        this.props.cart.loading ||
+        this.props.cart.jusPaymentLoader ||
+        this.props.cart.selectDeliveryModeLoader
+      ) {
+        this.props.showSecondaryLoader();
+      } else {
+        this.props.hideSecondaryLoader();
+      }
+    }
+    if (this.props.cart.transactionStatus === REQUESTING) {
+      return false;
     }
 
     const cartData = this.props.cart;
