@@ -1,9 +1,15 @@
 import React from "react";
 import styles from "./BannerSeparator.css";
 import { Image } from "xelpmoc-core";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import PropTypes from "prop-types";
-import image from "./img/download.svg";
 export default class BannerSeparator extends React.Component {
+  handleClick(webURL) {
+    if (webURL) {
+      const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
+    }
+  }
   render() {
     return (
       <div
@@ -12,6 +18,9 @@ export default class BannerSeparator extends React.Component {
           backgroundImage: `linear-gradient(165deg, ${
             this.props.feedComponentData.startHexCode
           } ,${this.props.feedComponentData.endHexCode})`
+        }}
+        onClick={() => {
+          this.handleClick(this.props.feedComponentData.webURL);
         }}
       >
         <div className={styles.downloadInnerBox}>
