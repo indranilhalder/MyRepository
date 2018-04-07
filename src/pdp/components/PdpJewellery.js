@@ -298,13 +298,11 @@ please try another pincode">
           )}
 
           <div className={styles.separator}>
-            {productData.averageRating && (
-              <RatingAndTextLink
-                onClick={this.goToReviewPage}
-                averageRating={productData.averageRating}
-                numberOfReview={productData.numberOfReviews}
-              />
-            )}
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
           </div>
 
           <div className={styles.details} id="priceBreakup">

@@ -18,8 +18,12 @@ import {
 } from "../../general/modal.actions.js";
 import { homeFeed } from "../../home/actions/home.actions";
 import Login from "../components/Login.js";
-import { SUCCESS } from "../../lib/constants";
+import { SUCCESS, REQUESTING, FAILURE, ERROR } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
+import {
+  singleAuthCallHasFailed,
+  setIfAllAuthCallsHaveSucceeded
+} from "../../auth/actions/auth.actions";
 export const OTP_VERIFICATION_REQUIRED_MESSAGE = "OTP VERIFICATION REQUIRED";
 
 const mapDispatchToProps = dispatch => {
@@ -37,7 +41,10 @@ const mapDispatchToProps = dispatch => {
       const userDetailsResponse = await dispatch(
         customerAccessToken(userDetails)
       );
-      if (userDetailsResponse.status === SUCCESS) {
+      // checking condition for the failure customer access token api
+      if (userDetailsResponse.status === ERROR) {
+        dispatch(singleAuthCallHasFailed(userDetailsResponse.error));
+      } else if (userDetailsResponse.status === SUCCESS) {
         const loginUserResponse = await dispatch(loginUser(userDetails));
         if (loginUserResponse.status === SUCCESS) {
           const cartVal = await dispatch(getCartId());
@@ -46,14 +53,40 @@ const mapDispatchToProps = dispatch => {
             cartVal.cartDetails.guid &&
             cartVal.cartDetails.code
           ) {
-            dispatch(mergeCartId(cartVal.cartDetails.guid));
+            // if get old cart id then just merge it with anonymous cart id
+            const mergeCartIdWithOldOneResponse = await dispatch(
+              mergeCartId(cartVal.cartDetails.guid)
+            );
+
+            if (mergeCartIdWithOldOneResponse.status === SUCCESS) {
+              dispatch(setIfAllAuthCallsHaveSucceeded());
+            } else if (mergeCartIdWithOldOneResponse.status === ERROR) {
+              dispatch(
+                singleAuthCallHasFailed(mergeCartIdWithOldOneResponse.error)
+              );
+            }
+            //end of  merge old cart id with anonymous cart id
           } else {
+            // generating new cart if if wont get any existing cartId
             const newCartIdObj = await dispatch(
               generateCartIdForLoggedInUser()
             );
             if (newCartIdObj.status === SUCCESS) {
-              dispatch(mergeCartId(cartVal.cartDetails.guid));
+              const mergeCartIdResponse = await dispatch(
+                mergeCartId(cartVal.cartDetails.guid)
+              );
+              // merging cart id with new cart id
+
+              if (mergeCartIdResponse.status === SUCCESS) {
+                dispatch(setIfAllAuthCallsHaveSucceeded());
+              } else if (mergeCartIdResponse.status === ERROR) {
+                dispatch(singleAuthCallHasFailed(mergeCartIdResponse.error));
+              }
+              // end of merging cart id with new cart id
+            } else if (newCartIdObj.status === ERROR) {
+              dispatch(singleAuthCallHasFailed(newCartIdObj.error));
             }
+            // end of generating new cart if if wont get any existing cartId
           }
         } else if (
           loginUserResponse.error === OTP_VERIFICATION_REQUIRED_MESSAGE
@@ -70,8 +103,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    user: state.user,
-    cart: state.cart
+    authCallsInProcess: state.auth.authCallsInProcess,
+    authCallsIsSucceed: state.auth.authCallsIsSucceed
   };
 };
 

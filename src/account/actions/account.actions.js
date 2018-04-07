@@ -1886,6 +1886,7 @@ export function redeemCliqVoucher(cliqCashDetails, fromCheckout) {
 }
 export function logout() {
   return {
-    type: LOGOUT
+    type: LOGOUT,
+    status: SUCCESS
   };
 }

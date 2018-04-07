@@ -68,12 +68,19 @@ export const EMI_BANKING_DETAILS_REQUEST = "EMI_BANKING_DETAILS_REQUEST";
 export const EMI_BANKING_DETAILS_SUCCESS = "EMI_BANKING_DETAILS_SUCCESS";
 export const EMI_BANKING_DETAILS_FAILURE = "EMI_BANKING_DETAILS_FAILURE";
 
-export const GENERATE_CART_ID_REQUEST = "GENERATE_CART_ID_REQUEST";
-export const GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS =
-  "GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS";
-export const GENERATE_CART_ID_FAILURE = "GENERATE_CART_ID_FAILURE";
-export const GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS =
-  "GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS";
+export const GENERATE_CART_ID_FOR_ANONYMOUS_USER_REQUEST =
+  "GENERATE_CART_ID_FOR_ANONYMOUS_USER_REQUEST";
+export const GENERATE_CART_ID_FOR_ANONYMOUS_USER_SUCCESS =
+  "GENERATE_CART_ID_FOR_ANONYMOUS_USER_SUCCESS";
+export const GENERATE_CART_ID_FOR_ANONYMOUS_USER_FAILURE =
+  "GENERATE_CART_ID_FOR_ANONYMOUS_USER_FAILURE";
+
+export const GENERATE_CART_ID_FOR_LOGGED_IN_USER_REQUEST =
+  "GENERATE_CART_ID_FOR_LOGGED_IN_USER_REQUEST";
+export const GENERATE_CART_ID_FOR_LOGGED_IN_USER_SUCCESS =
+  "GENERATE_CART_ID_FOR_LOGGED_IN_USER_SUCCESS";
+export const GENERATE_CART_ID_FOR_LOGGED_IN_USER_FAILURE =
+  "GENERATE_CART_ID_FOR_LOGGED_IN_USER_FAILURE";
 
 export const CART_DETAILS_REQUEST = "CART_DETAILS_REQUEST";
 export const CART_DETAILS_SUCCESS = "CART_DETAILS_SUCCESS";
@@ -929,32 +936,33 @@ export function getEmiBankDetails(price) {
   };
 }
 
-export function generateCartIdRequest() {
+export function generateCartidForLoggedInUserRequest() {
   return {
-    type: GENERATE_CART_ID_REQUEST,
+    type: GENERATE_CART_ID_FOR_LOGGED_IN_USER_REQUEST,
     status: REQUESTING
+  };
+}
+
+export function generaetCartIdForLoggedInUserFailure(error) {
+  return {
+    type: GENERATE_CART_ID_FOR_LOGGED_IN_USER_FAILURE,
+    status: FAILURE,
+    error
   };
 }
 export function generateCartIdForLoggedInUserSuccess(cartDetails) {
   return {
-    type: GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS,
+    type: GENERATE_CART_ID_FOR_LOGGED_IN_USER_SUCCESS,
     status: SUCCESS,
     cartDetails
   };
 }
 
-export function generateCartIdFailure(error) {
-  return {
-    type: GENERATE_CART_ID_FAILURE,
-    status: ERROR,
-    error
-  };
-}
 export function generateCartIdForLoggedInUser() {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
-    dispatch(generateCartIdRequest());
+    dispatch(generateCartidForLoggedInUserRequest());
 
     try {
       const result = await api.post(
@@ -966,30 +974,44 @@ export function generateCartIdForLoggedInUser() {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
 
       return dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
     } catch (e) {
-      return dispatch(generateCartIdFailure(e.message));
+      return dispatch(generaetCartIdForLoggedInUserFailure(e.message));
     }
   };
 }
 
-export function generateCartIdAnonymousSuccess(cartDetails) {
+export function generateCartIdForAnonymousUserSuccess(cartDetails) {
   return {
-    type: GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS,
+    type: GENERATE_CART_ID_FOR_ANONYMOUS_USER_SUCCESS,
     status: SUCCESS,
     cartDetails
+  };
+}
+
+export function generateCartdIdForAnonymousUserRequest() {
+  return {
+    type: GENERATE_CART_ID_FOR_ANONYMOUS_USER_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function generateCartIdForAnonymousUserFailure(error) {
+  return {
+    type: GENERATE_CART_ID_FOR_ANONYMOUS_USER_FAILURE,
+    error,
+    status: FAILURE
   };
 }
 
 export function generateCartIdForAnonymous() {
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
-    dispatch(generateCartIdRequest());
+    dispatch(generateCartdIdForAnonymousUserRequest());
 
     try {
       const result = await api.post(
@@ -1003,9 +1025,9 @@ export function generateCartIdForAnonymous() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      return dispatch(generateCartIdAnonymousSuccess(resultJson));
+      return dispatch(generateCartIdForAnonymousUserSuccess(resultJson));
     } catch (e) {
-      return dispatch(generateCartIdFailure(e.message));
+      return dispatch(generateCartIdForAnonymousUserFailure(e.message));
     }
   };
 }
@@ -1100,7 +1122,6 @@ export function getCartId() {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -1137,7 +1158,6 @@ export function mergeCartId(cartGuId) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-
   return async (dispatch, getState, { api }) => {
     dispatch(mergeCardIdRequest());
     try {
@@ -1154,7 +1174,6 @@ export function mergeCartId(cartGuId) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }

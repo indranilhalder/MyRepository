@@ -7,7 +7,7 @@ import ReturnModes from "./ReturnModes.js";
 import ReturnToStoreContainer from "../containers/ReturnToStoreContainer";
 import ReturnBankForm from "./ReturnBankForm";
 import ReturnReasonAndModes from "./ReturnReasonAndModes";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 import SelfCourierContainer from "../containers/SelfCourierContainer";
 import {
   RETURNS,
@@ -74,7 +74,7 @@ export default class ReturnFlow extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}`);
   }
   renderLoader() {
-    return <MDSpinner />;
+    return <Loader />;
   }
   render() {
     // if user hit return page by url then i am navigating him on orderDetial page

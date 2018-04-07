@@ -1,7 +1,13 @@
-import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
+import {
+  SUCCESS,
+  REQUESTING,
+  ERROR,
+  FAILURE_LOWERCASE
+} from "../../lib/constants";
 import {
   GLOBAL_ACCESS_TOKEN,
-  CUSTOMER_ACCESS_TOKEN
+  CUSTOMER_ACCESS_TOKEN,
+  FAILURE_UPPERCASE
 } from "../../lib/constants";
 import {
   showModal,
@@ -13,6 +19,10 @@ import {
 import * as Cookie from "../../lib/Cookie";
 import config from "../../lib/config";
 import { SOCIAL_SIGN_UP } from "../../lib/constants";
+import {
+  authCallsAreInProgress,
+  singleAuthCallHasFailed
+} from "./auth.actions";
 export const LOGIN_USER_REQUEST = "LOGIN_USER_REQUEST";
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
 export const LOGIN_USER_FAILURE = "LOGIN_USER_FAILURE";
@@ -52,11 +62,6 @@ export const FACE_BOOK_LOGIN_REQUEST = "FACE_BOOK_LOGIN_REQUEST";
 export const FACE_BOOK_LOGIN_FAILURE = "FACE_BOOK_LOGIN_FAILURE";
 export const GOOGLE_PLUS_LOGIN_REQUEST = "GOOGLE_PLUS_LOGIN_REQUEST";
 export const GOOGLE_PLUS_LOGIN_FAILURE = "GOOGLE_PLUS_LOGIN_FAILURE";
-
-export const GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_REQUEST =
-  "GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_REQUEST";
-export const GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_FAILURE =
-  "GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_FAILURE";
 
 export const SOCIAL_MEDIA_REGISTRATION_REQUEST =
   "SOCIAL_MEDIA_REGISTRATION_REQUEST";
@@ -104,6 +109,28 @@ const FAILURE = "Failure";
 export const SOCIAL_CHANNEL_GOOGLE_PLUS = "G";
 export const SOCIAL_CHANNEL_FACEBOOK = "F";
 
+export function getFailureResponse(response) {
+  if (response.errors) {
+    return { status: true, message: response.errors[0].message };
+  }
+  if (response.error) {
+    return { status: true, message: response.error };
+  }
+  if (response.error_message) {
+    return { status: true, message: response.error_message };
+  }
+  if (
+    response.status === FAILURE ||
+    response.status === FAILURE_UPPERCASE ||
+    response.status === ERROR ||
+    response.status === FAILURE_LOWERCASE
+  ) {
+    return { status: true, message: response.message };
+  } else {
+    return { status: false };
+  }
+}
+
 export function loginUserRequest() {
   return {
     type: LOGIN_USER_REQUEST,
@@ -143,8 +170,9 @@ export function loginUser(userLoginDetails) {
       }
       const result = await api.post(url);
       const resultJson = await result.json();
-      if (resultJson.errorCode) {
-        throw new Error(`${resultJson.status}`);
+      const resultJsonStatus = getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       return dispatch(loginUserSuccess(resultJson, userLoginDetails.username));
@@ -240,7 +268,7 @@ export function otpVerification(otpDetails, userDetails) {
       const resultJson = await result.json();
 
       if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+        throw new Error(`${resultJson.error}`);
       }
       dispatch(hideModal());
       return dispatch(otpVerificationSuccess(resultJson, userDetails.username));
@@ -498,6 +526,10 @@ export function customerAccessToken(userDetails) {
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(customerAccessTokenRequest());
+    // this is our first call so we are setting true that from this
+    // we started loading and  this loading will end with merge cart
+    // id request success
+    dispatch(authCallsAreInProgress());
     try {
       const result = await api.post(
         `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${
@@ -507,9 +539,9 @@ export function customerAccessToken(userDetails) {
         }`
       );
       const resultJson = await result.json();
-
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       return dispatch(customerAccessTokenSuccess(resultJson));
     } catch (e) {
@@ -620,21 +652,6 @@ export function googlePlusLogin(type) {
     } catch (e) {
       return dispatch(googlePlusLoginFailure(e));
     }
-  };
-}
-
-export function generateCustomerLevelAccessTokenRequest() {
-  return {
-    type: GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_REQUEST,
-    status: REQUESTING
-  };
-}
-
-export function generateCustomerLevelAccessTokenFailure(error) {
-  return {
-    type: GENERATE_CUSTOMER_LEVEL_ACCESS_TOKEN_FAILURE,
-    status: ERROR,
-    error
   };
 }
 

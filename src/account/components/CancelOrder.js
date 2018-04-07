@@ -10,7 +10,7 @@ import {
 } from "../../lib/constants";
 import CancelReasonForm from "./CancelReasonForm";
 import PropTypes from "prop-types";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 export default class CancelOrder extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -47,7 +47,7 @@ export default class CancelOrder extends React.Component {
     return <Redirect to={LOGIN_PATH} />;
   }
   renderLoader() {
-    return <MDSpinner />;
+    return <Loader />;
   }
   render() {
     let cancelProductDetails = this.props.cancelProductDetails;
