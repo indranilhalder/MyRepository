@@ -3,7 +3,7 @@ import SizeGuideElement from "./SizeGuideElement";
 import styles from "./SizeGuideMain.css";
 import { Image } from "xelpmoc-core";
 import Accordion from "../../general/components/Accordion.js";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 
 export default class SizeGuideMain extends React.Component {
   componentDidMount() {
@@ -11,13 +11,7 @@ export default class SizeGuideMain extends React.Component {
   }
   render() {
     if (this.props.loading) {
-      return (
-        <div className={styles.base}>
-          <div className={styles.loadingIndicator}>
-            <MDSpinner />
-          </div>
-        </div>
-      );
+      return <Loader />;
     }
     if (this.props.sizeData && this.props.sizeData.sizeGuideList) {
       return (
