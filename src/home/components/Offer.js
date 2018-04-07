@@ -14,7 +14,7 @@ export default class Offer extends React.Component {
   render() {
     const { datum, key } = this.props;
     return (
-      <div className={styles.base} key={key}>
+      <div className={styles.base} key={key} onClick={this.handleClick}>
         <div className={styles.imageHolder}>
           <Image image={datum.imageURL} key={key} />
         </div>
@@ -36,7 +36,6 @@ export default class Offer extends React.Component {
                 type="hollow"
                 color="#fff"
                 label={datum.btnText}
-                onClick={this.handleClick}
                 width={130}
               />
             </div>
