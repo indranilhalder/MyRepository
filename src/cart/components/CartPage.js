@@ -81,12 +81,6 @@ class CartPage extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.loginFromMyBag) {
-      this.props.history.push(LOGIN_PATH);
-    }
-  }
-
   componentDidUpdate(prevProps, prevState) {
     this.props.setHeaderText(YOUR_BAG);
     if (prevProps.cart) {
@@ -185,7 +179,7 @@ class CartPage extends React.Component {
         this.setState({ isServiceable: false });
       }
     } else {
-      this.props.isLoginFromMyBag(true);
+      this.props.history.push(LOGIN_PATH);
     }
   }
 

@@ -1061,11 +1061,6 @@ const cart = (
         jusPaymentLoader: false
       });
 
-    case cartActions.LOGIN_FROM_MY_BAG:
-      return Object.assign({}, state, {
-        loginFromMyBag: action.isFromMyBag
-      });
-
     default:
       return state;
   }

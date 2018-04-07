@@ -96,12 +96,7 @@ class Feed extends Component {
     this.props.setHeaderText(this.props.headerMessage);
   }
 
-  componentDidMount = () => {
-    if (this.props.loginFromMyBag === true) {
-      this.props.isLoginFromMyBag(false);
-      this.props.history.push(PRODUCT_CART_ROUTER);
-    }
-  };
+
   renderFeedComponent(feedDatum, i) {
     if (feedDatum.type === "Product Capsules Component") {
       return <ProductCapsulesContainer positionInFeed={i} />;
