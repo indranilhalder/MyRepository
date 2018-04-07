@@ -222,6 +222,7 @@ class CartPage extends React.Component {
 
   renderEmptyBag = () => {
     let defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
     return (
       <div className={styles.base}>
         <div className={styles.content}>
@@ -259,13 +260,15 @@ class CartPage extends React.Component {
     const cartDetailsForAnonymous = Cookie.getCookie(
       CART_DETAILS_FOR_ANONYMOUS
     );
+
     if (this.props.cart.loading && !this.props.cart.cartDetails) {
       return this.renderLoader();
-    }
-    if (this.props.cart.loading && this.props.cart.cartDetails) {
-      this.props.showSecondaryLoader();
     } else {
-      this.props.hideSecondaryLoader();
+      if (this.props.cart.loading) {
+        this.props.showSecondaryLoader();
+      } else {
+        this.props.hideSecondaryLoader();
+      }
     }
 
     if (!globalAccessToken && !cartDetailsForAnonymous) {
@@ -274,7 +277,7 @@ class CartPage extends React.Component {
 
     if (this.props.cart.cartDetails && this.props.cart.cartDetails.products) {
       const cartDetails = this.props.cart.cartDetails;
-      let defaultPinCode;
+      let defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
       let deliveryCharge = 0;
       let couponDiscount = 0;
       let totalDiscount = 0;
@@ -305,7 +308,6 @@ class CartPage extends React.Component {
               <div className={styles.search}>
                 <SearchAndUpdate
                   value={defaultPinCode}
-                  getPinCode={val => this.setState({ pinCode: val })}
                   checkPinCodeAvailability={val =>
                     this.checkPinCodeAvailability(val)
                   }
