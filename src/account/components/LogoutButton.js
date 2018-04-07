@@ -16,7 +16,6 @@ export default class LogoutButton extends React.Component {
       }
     }
   }
-
   render() {
     return (
       <div className={styles.base}>

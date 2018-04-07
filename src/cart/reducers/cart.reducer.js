@@ -152,7 +152,8 @@ const cart = (
     createJusPayOrderDetails: null,
     jusPaymentLoader: false,
     selectDeliveryModeLoader: false,
-    transactionStatus: null
+    transactionStatus: null,
+    loginFromMyBag: false
   },
   action
 ) => {
@@ -738,8 +739,7 @@ const cart = (
 
     case cartActions.ORDER_CONFIRMATION_REQUEST:
       return Object.assign({}, state, {
-        orderConfirmationDetailsStatus: action.status,
-        jusPaymentLoader: true
+        orderConfirmationDetailsStatus: action.status
       });
 
     case cartActions.ORDER_CONFIRMATION_SUCCESS: {
@@ -780,7 +780,7 @@ const cart = (
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetails: action.justPayPaymentDetails,
-        jusPaymentLoader: true
+        jusPaymentLoader: false
       });
     }
 
@@ -789,7 +789,7 @@ const cart = (
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetails: action.justPayPaymentDetails,
-        jusPaymentLoader: true
+        jusPaymentLoader: false
       });
     }
 
@@ -797,7 +797,7 @@ const cart = (
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetailsError: action.error,
-        jusPaymentLoader: true
+        jusPaymentLoader: false
       });
 
     case cartActions.GET_COD_ELIGIBILITY_REQUEST:
