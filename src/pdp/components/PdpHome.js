@@ -165,6 +165,15 @@ export default class PdpApparel extends React.Component {
         return image[0].value;
       });
     if (productData) {
+      let price = "";
+      let discountPrice = "";
+      if (productData.mrpPrice) {
+        price = productData.mrpPrice.formattedValueNoDecimal;
+      }
+
+      if (productData.winningSellerPrice) {
+        discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
+      }
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
@@ -185,10 +194,8 @@ export default class PdpApparel extends React.Component {
                 productDescription={productData.productName}
                 brandUrl={productData.brandURL}
                 history={this.props.history}
-                price={productData.mrpPrice.formattedValueNoDecimal}
-                discountPrice={
-                  productData.winningSellerPrice.formattedValueNoDecimal
-                }
+                price={price}
+                discountPrice={discountPrice}
                 averageRating={productData.averageRating}
                 onClick={this.goToReviewPage}
               />

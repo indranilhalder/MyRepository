@@ -7,7 +7,7 @@ export default class PdpDeliveryModes extends React.Component {
   render() {
     const eligibleDeliveryModes = this.props.eligibleDeliveryModes;
     const deliveryModesATP = this.props.deliveryModesATP;
-    return (
+    return eligibleDeliveryModes ? (
       <div className={styles.base}>
         <DeliveryInformation
           type={EXPRESS}
@@ -54,7 +54,7 @@ export default class PdpDeliveryModes extends React.Component {
           showCliqAndPiqButton={false}
         />
       </div>
-    );
+    ) : null;
   }
 }
 PdpDeliveryModes.propTypes = {
