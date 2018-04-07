@@ -4,7 +4,7 @@ import TabHolder from "./TabHolder";
 import TabData from "./TabData";
 import UserAlerts from "./UserAlerts";
 import UserCoupons from "./UserCoupons";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 import * as Cookie from "../../lib/Cookie";
 import {
   MY_ACCOUNT_PAGE,
@@ -46,7 +46,7 @@ export default class UserAlertsAndCoupons extends React.Component {
     this.props.history.push(URL_PATH_COUPONS);
   }
   renderLoader() {
-    return <MDSpinner />;
+    return <Loader />;
   }
 
   render() {

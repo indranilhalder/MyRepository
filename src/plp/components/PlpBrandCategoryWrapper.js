@@ -1,7 +1,7 @@
 import React from "react";
 import BrandLandingPageContainer from "../../blp/containers/BrandLandingPageContainer";
 import { Redirect } from "react-router";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 import ProductListingsContainer from "../containers/ProductListingsContainer";
 import {
   BLP_OR_CLP_FEED_TYPE,
@@ -75,7 +75,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   }
 
   renderLoader() {
-    return <MDSpinner />;
+    return <Loader />;
   }
 
   getPlpSearchText = () => {
