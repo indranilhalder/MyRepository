@@ -317,11 +317,7 @@ export function homeFeed(brandIdOrCategoryId: null) {
         throw new Error(`${resultJson}`);
       }
       let parsedResultJson = JSON.parse(resultJson.content);
-      console.log("PARSED RESULT JSON");
-      console.log(parsedResultJson);
       parsedResultJson = parsedResultJson.items;
-      console.log("PARSED RESULT JSON");
-      console.log(parsedResultJson);
       dispatch(homeFeedSuccess(parsedResultJson, feedTypeRequest));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
