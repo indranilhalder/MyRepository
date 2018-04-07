@@ -24,6 +24,11 @@ export default class SearchHeader extends React.Component {
       this.props.onSearch(val);
     }
   }
+  searchRaw() {
+    if (this.props.searchRaw) {
+      this.props.searchRaw();
+    }
+  }
   onClickIcon() {
     if (this.state.searchBar) {
       this.setState({ searchBar: false }, () => {
@@ -69,7 +74,12 @@ export default class SearchHeader extends React.Component {
           )}
           {this.state.searchBar && (
             <div className={styles.searchWithInputRedHolder}>
-              <div className={styles.searchRedHolder}>
+              <div
+                className={styles.searchRedHolder}
+                onClick={() => {
+                  this.searchRaw();
+                }}
+              >
                 <Icon image={searchRedIcon} size={16} />
               </div>
               <div className={styles.input}>
