@@ -1,10 +1,10 @@
 import React from "react";
 import ContentWidget from "./ContentWidget";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 import styles from "./ContentWidgetWrapper.css";
 export default class ContentWidgetWrapper extends React.Component {
   renderLoader() {
-    return <MDSpinner />;
+    return <Loader />;
   }
   render() {
     if (
