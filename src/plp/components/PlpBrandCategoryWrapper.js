@@ -77,7 +77,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   renderLoader() {
     return <Loader />;
   }
-
   getPlpSearchText = () => {
     const url = this.props.location.pathname;
     let match;

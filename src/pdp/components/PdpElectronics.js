@@ -317,11 +317,13 @@ please try another pincode">
             </div>
           )}
           <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
+            {productData.averageRating && (
+              <RatingAndTextLink
+                onClick={this.goToReviewPage}
+                averageRating={productData.averageRating}
+                numberOfReview={productData.numberOfReviews}
+              />
+            )}
           </div>
           {productData.classifications && (
             <div className={styles.details}>
