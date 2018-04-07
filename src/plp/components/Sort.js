@@ -19,9 +19,7 @@ export const ARRAY_OF_SORTS = [
 
 export default class Sort extends React.Component {
   onClick(val) {
-    console.log("SORT");
-    console.log(val);
-    let searchText;
+    let searchText = "";
 
     if (this.props.onClick) {
       if (this.props.location.search) {
@@ -31,8 +29,6 @@ export default class Sort extends React.Component {
         } else if (parsedQueryString.text) {
           searchText = parsedQueryString.text;
         }
-      } else {
-        searchText = `:${val}`;
       }
 
       const url = applySortToUrl(searchText, this.props.location.pathname, val);
