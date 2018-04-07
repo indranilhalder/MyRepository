@@ -100,13 +100,6 @@ class ProductReviewPage extends Component {
     }
     this.props.addProductToCart(productDetails);
   };
-  addProductToWishList = () => {
-    if (this.props.addProductToWishList) {
-      let productDetails = {};
-      productDetails.listingId = this.props.productDetails.productListingId;
-      this.props.addProductToWishList(productDetails);
-    }
-  };
 
   goBack = () => {
     const url = this.props.location.pathname.replace(
@@ -146,8 +139,9 @@ class ProductReviewPage extends Component {
       return (
         <PdpFrame
           addProductToBag={() => this.addProductToBag()}
-          addProductToWishList={() => this.addProductToWishList()}
           gotoPreviousPage={() => this.goBack()}
+          productListingId={this.props.productDetails.productListingId}
+          ussId={this.props.productDetails.winningUssID}
         >
           <div className={styles.base}>
             <div className={styles.productBackground}>

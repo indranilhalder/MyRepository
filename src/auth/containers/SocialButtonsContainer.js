@@ -9,9 +9,6 @@ import {
   SOCIAL_CHANNEL_FACEBOOK,
   GOOGLE_PLUS_PLATFORM,
   SOCIAL_CHANNEL_GOOGLE_PLUS,
-  loginUser,
-  loginUserRequest,
-  customerAccessToken,
   socialMediaRegistration
 } from "../../auth/actions/user.actions";
 import {
@@ -21,9 +18,13 @@ import {
 } from "../../cart/actions/cart.actions";
 import { SUCCESS } from "../../lib/constants";
 import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
+import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 
 const mapDispatchToProps = dispatch => {
   return {
+    clearUrlToRedirectToAfterAuth: () => {
+      dispatch(clearUrlToRedirectToAfterAuth());
+    },
     facebookLogin: async isSignUp => {
       const facebookResponse = await dispatch(facebookLogin(isSignUp));
       if (isSignUp) {
@@ -152,7 +153,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    signUp: ownProps.isSignUp
+    signUp: ownProps.isSignUp,
+    redirectToAfterAuthUrl: state.auth.redirectToAfterAuthUrl
   };
 };
 

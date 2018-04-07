@@ -179,6 +179,8 @@ class CartPage extends React.Component {
         this.setState({ isServiceable: false });
       }
     } else {
+      const url = this.props.location.pathname;
+      this.props.setUrlToRedirectToAfterAuth(url);
       this.props.history.push(LOGIN_PATH);
     }
   }
