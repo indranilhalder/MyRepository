@@ -64,7 +64,7 @@ export default class FlashSale extends React.Component {
     // WE do this because new Date(Datestr) gives back date time in the american format, but the string is in non-american format.
     // So we need to do a diff of the correct date.
     // TODO - optimize.
-    const today = new Date(moment(new Date()).format("DD/MM/YYYY"));
+    const today = new Date();
     const themeOfferDate = new Date(
       moment(new Date(this.props.feedComponentData.endDate)).format(
         "DD/MM/YYYY"
