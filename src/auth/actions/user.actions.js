@@ -84,9 +84,8 @@ export const FORGOT_PASSWORD_PATH =
 export const FORGOT_PASSWORD_OTP_VERIFICATION_PATH =
   "v2/mpl/forgottenpasswordtokens/forgotPasswordOTPVerification";
 export const RESET_PASSWORD =
-  "/v2/mpl/forgottenpasswordtokens/forgotPassword?access_token=";
-export const OTP_VERIFICATION_PATH =
-  "/v2/mpl/users/registrationOTPVerification";
+  "v2/mpl/forgottenpasswordtokens/forgotPassword?access_token=";
+export const OTP_VERIFICATION_PATH = "v2/mpl/users/registrationOTPVerification";
 export const TOKEN_PATH = "oauth/token";
 export const SIGN_UP = "v2/mpl/users/customerRegistration";
 export const SOCIAL_MEDIA_REGISTRATION_PATH =
@@ -267,6 +266,7 @@ export function otpVerification(otpDetails, userDetails) {
         }&password=${userDetails.password}&emailId=${userDetails.emailId}`
       );
       const resultJson = await result.json();
+
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.error}`);
       }
