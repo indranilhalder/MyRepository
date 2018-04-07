@@ -96,7 +96,6 @@ class Feed extends Component {
     this.props.setHeaderText(this.props.headerMessage);
   }
 
-
   renderFeedComponent(feedDatum, i) {
     if (feedDatum.type === "Product Capsules Component") {
       return <ProductCapsulesContainer positionInFeed={i} />;
