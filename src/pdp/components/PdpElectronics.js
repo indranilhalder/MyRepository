@@ -207,6 +207,8 @@ export default class PdpElectronics extends React.Component {
               <ProductDetailsMainCard
                 productName={productData.brandName}
                 productDescription={productData.productName}
+                brandUrl={productData.brandURL}
+                history={this.props.history}
                 price={productData.mrpPrice.formattedValueNoDecimal}
                 discountPrice={
                   productData.winningSellerPrice.formattedValueNoDecimal
@@ -219,6 +221,8 @@ export default class PdpElectronics extends React.Component {
               <JewelleryDetailsAndLink
                 productName={productData.brandName}
                 productDescription={productData.productName}
+                brandUrl={productData.brandURL}
+                history={this.props.history}
                 price={productData.winningSellerPrice.formattedValueNoDecimal}
                 discountPrice={productData.mrpPrice.formattedValueNoDecimal}
                 averageRating={productData.averageRating}
@@ -250,15 +254,16 @@ export default class PdpElectronics extends React.Component {
           {productData.variantOptions && (
             <React.Fragment>
               <SizeSelector
+                history={this.props.history}
+                sizeSelected={this.checkIfSizeSelected()}
+                productId={productData.productListingId}
+                hasSizeGuide={productData.showSizeGuide}
                 showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
+                data={productData.variantOptions}
               />
               <ColourSelector
-                data={productData.variantOptions.map(value => {
-                  return value.colorlink;
-                })}
+                data={productData.variantOptions}
+                productId={productData.productListingId}
                 history={this.props.history}
                 updateColour={val => {}}
                 getProductSpecification={this.props.getProductSpecification}
@@ -312,13 +317,11 @@ please try another pincode">
             </div>
           )}
           <div className={styles.separator}>
-            {productData.averageRating && (
-              <RatingAndTextLink
-                onClick={this.goToReviewPage}
-                averageRating={productData.averageRating}
-                numberOfReview={productData.numberOfReviews}
-              />
-            )}
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
           </div>
           {productData.classifications && (
             <div className={styles.details}>

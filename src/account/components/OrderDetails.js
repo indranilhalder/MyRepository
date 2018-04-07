@@ -34,6 +34,11 @@ const PRODUCT_CANCEL = "Cancel Product";
 const AWB_POPUP_TRUE = "Y";
 const AWB_POPUP_FALSE = "N";
 export default class OrderDetails extends React.Component {
+  onClickImage(productCode) {
+    if (productCode) {
+      this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    }
+  }
   requestInvoice(ussid, sellerOrderNo) {
     if (this.props.sendInvoice) {
       this.props.sendInvoice(ussid, sellerOrderNo);
@@ -80,6 +85,7 @@ export default class OrderDetails extends React.Component {
     ) {
       const orderCode = queryString.parse(this.props.location.search).orderCode;
       this.props.fetchOrderDetails(orderCode);
+      this.props.setHeaderText(`#${orderCode}`);
     } else if (
       userDetails &&
       customerCookie &&
@@ -87,6 +93,7 @@ export default class OrderDetails extends React.Component {
     ) {
       const orderCode = this.props.match.params.orderCode;
       this.props.fetchOrderDetails(orderCode);
+      this.props.setHeaderText(`#${orderCode}`);
     }
   }
   updateRefundDetailsPopUp(orderId, transactionId) {
@@ -99,7 +106,23 @@ export default class OrderDetails extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    this.props.setHeaderText(`#${this.props.orderDetails.orderId}`);
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (
+      userDetails &&
+      customerCookie &&
+      this.props.match.path === `${ORDER_PREFIX}`
+    ) {
+      const orderCode = queryString.parse(this.props.location.search).orderCode;
+      this.props.setHeaderText(`#${orderCode}`);
+    } else if (
+      userDetails &&
+      customerCookie &&
+      this.props.match.path === `${SHORT_URL_ORDER_DETAIL}`
+    ) {
+      const orderCode = this.props.match.params.orderCode;
+      this.props.setHeaderText(`#${orderCode}`);
+    }
   }
 
   navigateToLogin() {
@@ -137,6 +160,7 @@ export default class OrderDetails extends React.Component {
                   price={products.price}
                   discountPrice={""}
                   productName={products.productName}
+                  onClick={() => this.onClickImage(products.productcode)}
                 />
 
                 <div className={styles.payment}>
@@ -151,8 +175,8 @@ export default class OrderDetails extends React.Component {
 
                 <OrderPaymentMethod
                   phoneNumber={
-                    orderDetails.billingAddress &&
-                    orderDetails.billingAddress.phone
+                    orderDetails.deliveryAddress &&
+                    orderDetails.deliveryAddress.phone
                   }
                   paymentMethod={orderDetails.paymentMethod}
                   isInvoiceAvailable={products.isInvoiceAvailable}

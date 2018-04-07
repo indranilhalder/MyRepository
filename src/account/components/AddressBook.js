@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./AddressBook.css";
 import Button from "../../general/components/Button.js";
 import AddressItemFooter from "./AddressItemFooter.js";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 import {
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
@@ -17,9 +17,10 @@ const NO_ADDRESS_TEXT = "No Saved Address";
 
 export default class AddressBook extends React.Component {
   componentDidMount() {
+    this.props.setHeaderText(ADDRESS_BOOK);
     this.props.getUserAddress();
   }
-  componentWillUpdate() {
+  componentDidUpdate() {
     this.props.setHeaderText(ADDRESS_BOOK);
   }
   removeAddress = addressId => {
@@ -29,11 +30,7 @@ export default class AddressBook extends React.Component {
   };
 
   renderLoader = () => {
-    return (
-      <div className={styles.loadingIndicator}>
-        <MDSpinner />
-      </div>
-    );
+    return <Loader />;
   };
 
   editAddress = address => {

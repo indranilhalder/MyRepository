@@ -36,7 +36,9 @@ import {
   ORDER_PREFIX,
   MY_ACCOUNT,
   ORDER,
-  ORDER_CODE
+  ORDER_CODE,
+  REQUESTING,
+  THANK_YOU
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
@@ -46,7 +48,8 @@ const PAYMENT_MODE = "EMI";
 const NET_BANKING = "NB";
 const CART_GU_ID = "cartGuid";
 const DELIVERY_MODE_ADDRESS_ERROR = "No Delivery Modes At Selected Address";
-
+const CONTINUE = "Continue";
+const PROCEED = "Proceed";
 class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
@@ -92,14 +95,24 @@ class CheckOutPage extends React.Component {
   }
   renderLoader() {
     return (
-      <div className={styles.loadingIndicator}>
-        <MDSpinner />
+      <div className={styles.cartLoader}>
+        <div className={styles.spinner}>
+          <MDSpinner />
+        </div>
       </div>
     );
   }
   componentDidUpdate() {
-    this.props.setHeaderText(CHECKOUT);
+    if (
+      this.props.cart.orderConfirmationDetails ||
+      this.props.cart.cliqCashPaymentDetails
+    ) {
+      this.props.setHeaderText(THANK_YOU);
+    } else {
+      this.props.setHeaderText(CHECKOUT);
+    }
   }
+
   renderConfirmAddress = () => {
     if (this.state.confirmAddress) {
       return <div> Address Expand</div>;
@@ -340,7 +353,6 @@ class CheckOutPage extends React.Component {
       nextProps.cart.userAddress.addresses
     ) {
       let defaultAddressId = null;
-
       let defaultAddress = nextProps.cart.userAddress.addresses.find(
         address => {
           return address.defaultAddress;
@@ -366,36 +378,41 @@ class CheckOutPage extends React.Component {
       nextProps.cart.cartDetailsCNC
     ) {
       let defaultSelectedDeliveryModes = {};
-      nextProps.cart.cartDetailsCNC.products.forEach(product => {
-        //check for delivery modes is exit or not for every pincode
-        // if we don;t have any delivery modes for any product
-        // then we ned to navigate user to mybag
+      if (
+        nextProps.cart.cartDetailsCNC &&
+        nextProps.cart.cartDetailsCNC.products
+      ) {
+        nextProps.cart.cartDetailsCNC.products.forEach(product => {
+          //check for delivery modes is exit or not for every pincode
+          // if we don;t have any delivery modes for any product
+          // then we ned to navigate user to mybag
 
-        if (!product.elligibleDeliveryMode) {
-          this.navigateToMyBag();
-        }
-        // end of navigate user to myBag
+          if (!product.elligibleDeliveryMode) {
+            this.navigateToMyBag();
+          }
+          // end of navigate user to myBag
 
-        if (
-          product.elligibleDeliveryMode &&
-          product.elligibleDeliveryMode.findIndex(mode => {
-            return mode.code === HOME_DELIVERY;
-          }) >= 0
-        ) {
-          let newObjectAdd = {};
-          newObjectAdd[product.USSID] = HOME_DELIVERY;
-          Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
-        } else if (
-          product.elligibleDeliveryMode &&
-          product.elligibleDeliveryMode.findIndex(mode => {
-            return mode.code === EXPRESS;
-          }) >= 0
-        ) {
-          let newObjectAdd = {};
-          newObjectAdd[product.USSID] = EXPRESS;
-          Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
-        }
-      });
+          if (
+            product.elligibleDeliveryMode &&
+            product.elligibleDeliveryMode.findIndex(mode => {
+              return mode.code === HOME_DELIVERY;
+            }) >= 0
+          ) {
+            let newObjectAdd = {};
+            newObjectAdd[product.USSID] = HOME_DELIVERY;
+            Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
+          } else if (
+            product.elligibleDeliveryMode &&
+            product.elligibleDeliveryMode.findIndex(mode => {
+              return mode.code === EXPRESS;
+            }) >= 0
+          ) {
+            let newObjectAdd = {};
+            newObjectAdd[product.USSID] = EXPRESS;
+            Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
+          }
+        });
+      }
       this.setState({ ussIdAndDeliveryModesObj: defaultSelectedDeliveryModes });
     }
 
@@ -423,7 +440,11 @@ class CheckOutPage extends React.Component {
     } else {
       if (nextProps.cart.cartDetailsCNC && this.state.isRemainingAmount) {
         let cliqCashAmount = 0;
-        if (nextProps.cart.paymentModes) {
+        if (
+          nextProps.cart.paymentModes &&
+          nextProps.cart.paymentModes.cliqCash &&
+          nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance
+        ) {
           cliqCashAmount =
             nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance.value;
         }
@@ -475,6 +496,7 @@ class CheckOutPage extends React.Component {
 
     if (value === PAYMENT_CHARGED) {
       this.setState({ orderId: orderId });
+
       if (this.props.updateTransactionDetails) {
         let cartId;
         cartId = localStorage.getItem(OLD_CART_GU_ID);
@@ -486,7 +508,11 @@ class CheckOutPage extends React.Component {
           );
         }
       }
-    } else if (this.props.location.state.isFromGiftCard) {
+    } else if (
+      this.props.location &&
+      this.props.location.state &&
+      this.props.location.state.isFromGiftCard
+    ) {
       this.setState({ isGiftCard: true });
       let guIdObject = new FormData();
       guIdObject.append(CART_GU_ID, this.props.location.state.egvCartGuid);
@@ -514,11 +540,13 @@ class CheckOutPage extends React.Component {
         );
         let guIdObject = new FormData();
         guIdObject.append(CART_GU_ID, JSON.parse(cartDetailsLoggedInUser).guid);
-        this.props.getPaymentModes(guIdObject);
+
         this.props.getPaymentModes(guIdObject);
         this.props.getCODEligibility();
         this.props.getNetBankDetails();
-        this.props.getEmiBankDetails(this.props.location.state.productValue);
+        if (this.props.location && this.props.location.state) {
+          this.props.getEmiBankDetails(this.props.location.state.productValue);
+        }
       }
     }
   }
@@ -553,7 +581,12 @@ class CheckOutPage extends React.Component {
     this.setState(val);
   }
   handleSubmit = () => {
-    if (!this.state.confirmAddress && !this.state.isGiftCard) {
+    if (
+      !this.state.confirmAddress &&
+      !this.state.isGiftCard &&
+      this.state.addressId &&
+      this.state.selectedAddress.postalCode
+    ) {
       this.props.addAddressToCart(
         this.state.addressId,
         this.state.selectedAddress.postalCode
@@ -763,10 +796,58 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
-    if (this.props.cart.loading) {
-      return <div className={styles.base}>{this.renderLoader()}</div>;
+    if (
+      this.props.cart.loading ||
+      this.props.cart.jusPaymentLoader ||
+      this.props.cart.selectDeliveryModeLoader
+    ) {
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
     }
+
+    if (this.props.cart.transactionStatus === REQUESTING) {
+      return false;
+    }
+
+    if (
+      this.props.cart.paymentModesStatus === REQUESTING ||
+      this.props.cart.codEligibilityStatus === REQUESTING ||
+      this.props.netBankDetailsStatus === REQUESTING ||
+      this.props.cart.getUserAddressStatus === REQUESTING
+    ) {
+      return this.renderLoader();
+    }
+
     const cartData = this.props.cart;
+    let deliveryCharge = 0;
+    let couponDiscount = 0;
+    let totalDiscount = 0;
+    if (
+      this.props.cart &&
+      this.props.cart.cartDetailsCNC &&
+      this.props.cart.cartDetailsCNC.products
+    ) {
+      if (
+        this.props.cart.cartDetailsCNC.products &&
+        this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode &&
+        this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode[0] &&
+        this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode[0]
+          .charge
+      ) {
+        deliveryCharge = this.props.cart.cartDetailsCNC.products[0]
+          .elligibleDeliveryMode[0].charge.formattedValue;
+      }
+      if (this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount) {
+        totalDiscount = this.props.cart.cartDetailsCNC.cartAmount
+          .totalDiscountAmount.formattedValue;
+      }
+
+      if (this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount) {
+        couponDiscount = this.props.cart.cartDetailsCNC.cartAmount
+          .couponDiscountAmount.formattedValue;
+      }
+    }
     if (
       this.state.addNewAddress &&
       !this.state.orderConfirmation &&
@@ -880,21 +961,19 @@ class CheckOutPage extends React.Component {
           {(this.state.isGiftCard || !this.state.showCliqAndPiq) &&
             this.props.cart.cartDetailsCNC && (
               <Checkout
+                label={
+                  this.state.confirmAddress &&
+                  !this.state.deliverMode &&
+                  !this.state.isGiftCard
+                    ? PROCEED
+                    : CONTINUE
+                }
                 amount={this.state.payableAmount}
                 bagTotal={this.state.bagAmount}
                 payable={this.state.payableAmount}
-                coupons={
-                  this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
-                    .formattedValue
-                }
-                discount={
-                  this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
-                    .formattedValue
-                }
-                delivery={
-                  this.props.cart.cartDetailsCNC.products[0]
-                    .elligibleDeliveryMode[0].deliveryCost
-                }
+                coupons={couponDiscount}
+                discount={totalDiscount}
+                delivery={deliveryCharge}
                 onCheckout={this.handleSubmit}
               />
             )}
@@ -904,7 +983,7 @@ class CheckOutPage extends React.Component {
       return (
         <div>
           {this.props.cart.orderConfirmationDetails && (
-            <div>
+            <div className={styles.orderConfirmationHolder}>
               <OrderConfirmation
                 orderId={this.props.cart.orderConfirmationDetails.orderRefNo}
                 captureOrderExperience={rating =>
@@ -924,7 +1003,7 @@ class CheckOutPage extends React.Component {
             </div>
           )}
           {this.props.cart.cliqCashJusPayDetails && (
-            <div>
+            <div className={styles.orderConfirmationHolder}>
               <OrderConfirmation
                 orderId={this.props.cart.cliqCashJusPayDetails.orderId}
                 orderStatusMessage={this.props.orderConfirmationText}

@@ -10,7 +10,7 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 export default class ProductCapsules extends React.Component {
   handleClick() {
     const urlSuffix = this.props.feedComponentData.webURL.replace(
@@ -32,7 +32,7 @@ export default class ProductCapsules extends React.Component {
       return null;
     }
     if (this.props.productCapsulesLoading) {
-      return <MDSpinner />;
+      return <Loader />;
     }
 
     if (!this.props.feedComponentData) {

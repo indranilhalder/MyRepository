@@ -217,6 +217,7 @@ export default class PdpJewellery extends React.Component {
               discountPrice={productData.mrpPrice.formattedValueNoDecimal}
               averageRating={productData.averageRating}
               discount={productData.discount}
+              brandUrl={productData.brandURL}
               hasPriceBreakUp={productData.priceBreakUpDetailsMap}
               history={this.props.history}
               showPriceBreakUp={() => {
@@ -251,18 +252,9 @@ export default class PdpJewellery extends React.Component {
                 history={this.props.history}
                 sizeSelected={this.checkIfSizeSelected()}
                 productId={productData.productListingId}
+                hasSizeGuide={productData.showSizeGuide}
                 showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
-              />
-              <ColourSelector
-                data={productData.variantOptions.map(value => {
-                  return value.colorlink;
-                })}
-                history={this.props.history}
-                updateColour={val => {}}
-                getProductSpecification={this.props.getProductSpecification}
+                data={productData.variantOptions}
               />
             </React.Fragment>
           )}
@@ -306,13 +298,11 @@ please try another pincode">
           )}
 
           <div className={styles.separator}>
-            {productData.averageRating && (
-              <RatingAndTextLink
-                onClick={this.goToReviewPage}
-                averageRating={productData.averageRating}
-                numberOfReview={productData.numberOfReviews}
-              />
-            )}
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
           </div>
 
           <div className={styles.details} id="priceBreakup">

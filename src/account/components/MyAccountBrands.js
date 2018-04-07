@@ -5,7 +5,7 @@ import MoreBrands from "../../blp/components/MoreBrands";
 import BrandEdit from "../../blp/components/BrandEdit";
 import ProfilePicture from "../../blp/components/ProfilePicture";
 import * as styles from "./MyAccountBrands.css";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 import {
   TRUE,
   LOGGED_IN_USER_DETAILS,
@@ -19,6 +19,7 @@ import * as Cookie from "../../lib/Cookie";
 
 export default class MyAccountBrands extends React.Component {
   componentDidMount() {
+    this.props.setHeaderText(BRANDS);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
@@ -41,7 +42,7 @@ export default class MyAccountBrands extends React.Component {
     }
   }
   renderLoader() {
-    return <MDSpinner />;
+    return <Loader />;
   }
 
   render() {

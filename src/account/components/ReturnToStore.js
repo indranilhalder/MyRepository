@@ -1,7 +1,7 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import PiqPage from "../../cart/components/PiqPage";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 import ReturnStoreConfirmation from "./ReturnStoreConfirmation.js";
 import * as styles from "./ReturnToStore.css";
 import {
@@ -82,7 +82,7 @@ export default class ReturnToStore extends React.Component {
     this.props.newReturnInitial(productObj);
   }
   renderLoader() {
-    return <MDSpinner />;
+    return <Loader />;
   }
   navigateToReturnLanding() {
     return (

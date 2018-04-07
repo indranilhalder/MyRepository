@@ -42,6 +42,7 @@ export default class ThemeProductWidget extends React.Component {
     if (!widgetData) {
       return null;
     }
+
     if (this.props.feedComponentData.items) {
       items = this.props.feedComponentData.items.map(transformData);
     }
@@ -50,7 +51,7 @@ export default class ThemeProductWidget extends React.Component {
       <div
         className={styles.base}
         style={{
-          backgroundImage: `url(${widgetData.backgroundImageURL})`
+          backgroundImage: `url(${widgetData.imageURL})`
         }}
       >
         <div className={styles.overlay} />

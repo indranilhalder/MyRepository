@@ -21,43 +21,51 @@ export default class SizeSelector extends React.Component {
     }
   }
   render() {
-    let data = this.props.data;
+    const selectedColour = this.props.data.filter(val => {
+      return val.colorlink.selected;
+    })[0].colorlink.color;
+    const sizes = this.props.data
+      .filter(val => {
+        return val.sizelink.isAvailable;
+      })
+      .filter(val => {
+        return selectedColour ? val.colorlink.color === selectedColour : true;
+      })
+      .map(val => {
+        return val.sizelink;
+      });
+
     return (
       <div className={styles.base}>
         <div className={styles.header}>
           {this.props.headerText}
-          {this.props.showSizeGuide && (
-            <div className={styles.button}>
-              <UnderLinedButton
-                label={SIZE_GUIDE}
-                onClick={() => {
-                  this.handleShowSize();
-                }}
-              />
-            </div>
-          )}
+          <div className={styles.button}>
+            <UnderLinedButton
+              disabled={!this.props.hasSizeGuide}
+              label={SIZE_GUIDE}
+              onClick={() => {
+                this.handleShowSize();
+              }}
+            />
+          </div>
         </div>
         <Carousel elementWidthMobile="auto" limit={1}>
-          {data
-            .filter(val => {
-              return val.isAvailable;
-            })
-            .map((datum, i) => {
-              return (
-                <SizeSelect
-                  key={i}
-                  selected={
-                    this.props.sizeSelected
-                      ? datum.productCode === this.props.productId
-                      : false
-                  }
-                  size={datum.size}
-                  value={datum.size}
-                  fontSize={this.props.textSize}
-                  onSelect={() => this.updateSize(datum.url)}
-                />
-              );
-            })}
+          {sizes.map((datum, i) => {
+            return (
+              <SizeSelect
+                key={i}
+                selected={
+                  this.props.sizeSelected
+                    ? datum.productCode === this.props.productId
+                    : false
+                }
+                size={datum.size}
+                value={datum.size}
+                fontSize={this.props.textSize}
+                onSelect={() => this.updateSize(datum.url)}
+              />
+            );
+          })}
         </Carousel>
       </div>
     );
@@ -72,6 +80,7 @@ SizeSelector.propTypes = {
     })
   ),
   headerText: PropTypes.string,
+  productId: PropTypes.string,
   textSize: PropTypes.oneOfType([PropTypes.string, PropTypes.string])
 };
 SizeSelector.defaultProps = {

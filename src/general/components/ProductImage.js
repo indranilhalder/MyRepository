@@ -4,10 +4,15 @@ import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
 
 export default class ProductImage extends React.Component {
+  onClickImage() {
+    if (this.props.onClickImage) {
+      this.props.onClickImage();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.imageHolder}>
+        <div className={styles.imageHolder} onClick={() => this.onClickImage()}>
           <Image image={this.props.image} />
         </div>
       </div>

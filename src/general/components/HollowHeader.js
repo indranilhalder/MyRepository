@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styles from "./HollowHeader.css";
 import orderIcon from "./img/order-history.svg";
 import backArrow from "./img/arrowBackblack.svg";
-import downloadIcon from "../../pdp/components/img/Save.svg";
+import downloadIcon from "./img/download.svg";
 import { Icon } from "xelpmoc-core";
 export default class HollowHeader extends React.Component {
   backPage() {
