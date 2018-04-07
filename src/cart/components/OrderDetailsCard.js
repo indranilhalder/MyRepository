@@ -5,6 +5,16 @@ import OrderCard from "../../account/components/OrderCard";
 import PriceAndLink from "../../account/components/PriceAndLink";
 import styles from "./OrderDetailsCard.css";
 export default class OrderDetailsCard extends React.Component {
+  onViewDetails() {
+    if (this.props.onViewDetails) {
+      this.props.onViewDetails();
+    }
+  }
+  onClick(val) {
+    if (this.props.onClick) {
+      this.props.onClick(val);
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -16,6 +26,7 @@ export default class OrderDetailsCard extends React.Component {
           productName={this.props.productName}
           price={this.props.price}
           discountPrice={this.props.discountPrice}
+          onClick={() => this.onClick(this.props.orderId)}
         >
           <div className={styles.quantityHolder}>
             <div className={styles.quantityLabel}>Qty :</div>
