@@ -44,8 +44,7 @@ const mapDispatchToProps = dispatch => {
         dispatch(logout());
         return;
       }
-      console.log("FACEBOOK RESPONSE");
-      console.log(facebookResponse);
+
       if (isSignUp) {
         const signUpResponse = await dispatch(
           socialMediaRegistration(
@@ -82,9 +81,6 @@ const mapDispatchToProps = dispatch => {
         )
       );
 
-      console.log("CUSTOMER ACCESS TOKEN RESPONSE");
-      console.log(customerAccessTokenActionResponse);
-
       // now I need to actually login
       if (customerAccessTokenActionResponse.status === SUCCESS) {
         const loginUserResponse = await dispatch(
@@ -96,14 +92,9 @@ const mapDispatchToProps = dispatch => {
           )
         );
 
-        console.log("LOGIN USER RESPONSE");
-        console.log(loginUserResponse);
-
         if (loginUserResponse.status === SUCCESS) {
           const cartVal = await dispatch(getCartId());
 
-          console.log("CART VAL");
-          console.log(cartVal);
           if (
             cartVal.status === SUCCESS &&
             cartVal.cartDetails.guid &&
@@ -113,11 +104,7 @@ const mapDispatchToProps = dispatch => {
               mergeCartId(cartVal.cartDetails.guid)
             );
 
-            console.log("MERGE CART RESPONSE");
-            console.log(mergeCartResponse);
-
             if (mergeCartResponse.status === SUCCESS) {
-              console.log("AUTH CALLS SUCCEEDED");
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
               dispatch(singleAuthCallHasFailed(mergeCartResponse.error));
@@ -128,8 +115,6 @@ const mapDispatchToProps = dispatch => {
               generateCartIdForLoggedInUser()
             );
 
-            console.log("CREATED CART VAl");
-            console.log(createdCartVal);
             if (
               createdCartVal.status === ERROR ||
               createdCartVal.status === FAILURE
@@ -141,8 +126,6 @@ const mapDispatchToProps = dispatch => {
                 mergeCartId(createdCartVal.cartDetails.guid)
               );
               if (mergeCartResponse.status === SUCCESS) {
-                console.log("AUTH CALLS SUCCEEDED");
-
                 dispatch(setIfAllAuthCallsHaveSucceeded());
               }
             }

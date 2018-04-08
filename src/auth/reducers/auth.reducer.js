@@ -10,8 +10,6 @@ const auth = (
 ) => {
   switch (action.type) {
     case authActions.SET_URL_TO_REDIRECT_TO_AFTER_AUTH:
-      console.log("SET _URL SUCCESS");
-      console.log(action.url);
       return Object.assign({}, state, {
         redirectToAfterAuthUrl: action.url
       });

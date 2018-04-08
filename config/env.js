@@ -70,7 +70,7 @@ if (
   process.env.REACT_APP_STAGE === "uat2" ||
   process.env.REACT_APP_STAGE === "tmpprod"
 ) {
-  process.env.REACT_APP_FACEBOOK_CLIENT_ID = "1444012285724567";
+  process.env.REACT_APP_FACEBOOK_CLIENT_ID = "552270434933633";
 } else if (
   process.env.REACT_APP_STAGE === "p2" ||
   process.env.REACT_APP_STAGE === "production"
