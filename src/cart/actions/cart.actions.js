@@ -1124,8 +1124,6 @@ export function getCartId() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      resultJson.errors = [{ message: "TEST CART ID ERROR" }];
-
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
