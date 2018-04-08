@@ -1628,11 +1628,11 @@ body {
 									</a>
 								</div>
 							</c:if>
-							<c:set var="status" value="${loop}" />
+							<c:set var="status" value="${loop.index}" />
 						</c:forEach>
 
 						<c:forEach items="${feature.items}" var="flashsalesitemElements"
-							begin="0" end="${3 - loop}">
+							begin="0" end="${3 - loop.index}">
 							<c:if
 								test="${flashsalesitemElements.typeCode eq 'FlashSalesItemElement'}">
 								<c:if test="${not empty flashsalesitemElements.productCode}">
@@ -1992,42 +1992,45 @@ body {
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'TopCategoriesWidgetComponent'}">
-					<div>
-						<h1>TopCategoriesWidgetComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-									<th>imageURL</th>
-								</tr>
-							</thead>
+					<div class="col-xs-12 pad0 mb40 top-categories-widget">
+						<div class="col-xs-12 sub-brand-heading">${feature.title}</div>
 							<c:forEach items="${feature.items}"
-								var="topCategoriesWidgetElement">
-								<div>
-									<c:if
-										test="${topCategoriesWidgetElement.typeCode eq 'TopCategoriesWidgetElement'}">
-										<tr>
-											<td>${topCategoriesWidgetElement.title}</td>
-											<td><a href="${topCategoriesWidgetElement.webURL}">
-													${topCategoriesWidgetElement.webURL}</a></td>
-											<td><img alt=""
-												src="${topCategoriesWidgetElement.imageURL.URL}"></td>
-										</tr>
+								var="topCategoriesWidgetElement" varStatus="loop">
+								<c:if
+									test="${topCategoriesWidgetElement.typeCode eq 'TopCategoriesWidgetElement'}">
+									<c:if test="${loop.index eq 0}">
+									<div class="col-xs-6 pr0">
+									<a href="${topCategoriesWidgetElement.webURL}"> 
+										<img src="${topCategoriesWidgetElement.imageURL}"
+											class="img-responsive br4" />
+											<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}s</div>
+											</a>
+									</div>
 									</c:if>
-								</div>
+									<c:if test="${loop.index gt 0}">
+									<div class="col-xs-6 pl0">
+									<c:if test="${loop.index eq 1}">
+									<div class="col-xs-12 pad0 mb16">
+										<a href="${topCategoriesWidgetElement.webURL}"> 
+										<img src="${topCategoriesWidgetElement.imageURL}"
+											class="img-responsive pull-right br4" />
+											<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}</div>
+										</a>
+									</div>
+									</c:if>
+									<c:if test="${loop.index gt 1}">
+									<div class="col-xs-12 pad0">
+										<a href="${topCategoriesWidgetElement.webURL}"> 
+										<img src="${topCategoriesWidgetElement.imageURL}"
+											class="img-responsive pull-right br4" />
+											<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}</div>
+										</a>
+									</div>
+									</c:if>
+									</div>
+									</c:if>
+								</c:if>
 							</c:forEach>
-						</table>
 					</div>
 				</c:if>
 
