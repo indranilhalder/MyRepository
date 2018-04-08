@@ -23,8 +23,7 @@ const user = (
     globalAccessTokenStatus: null,
     customerAccessTokenStatus: null,
     loginUserStatus: null,
-    refreshCustomerAccessTokenStatus: null,
-    socialMediaLoginStatus: null
+    refreshCustomerAccessTokenStatus: null
   },
   action
 ) => {
@@ -286,7 +285,7 @@ const user = (
 
     case userActions.SOCIAL_MEDIA_LOGIN_REQUEST:
       return Object.assign({}, state, {
-        socialMediaLoginStatus: action.status,
+        status: action.status,
         loading: true,
         isLoggedIn: false
       });
@@ -297,7 +296,7 @@ const user = (
 
       Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(userDetails));
       return Object.assign({}, state, {
-        socialMediaLoginStatus: action.status,
+        status: action.status,
         loading: false,
         user: action.user,
         isLoggedIn: true
@@ -305,7 +304,7 @@ const user = (
 
     case userActions.SOCIAL_MEDIA_LOGIN_FAILURE:
       return Object.assign({}, state, {
-        socialMediaLoginStatus: action.status,
+        status: action.status,
         loading: false,
         error: action.error,
         isLoggedIn: false

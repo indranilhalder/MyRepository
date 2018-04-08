@@ -60,10 +60,15 @@ const mapDispatchToProps = dispatch => {
         if (signUpResponse.status !== SUCCESS) {
           dispatch(singleAuthCallHasFailed(signUpResponse.error));
           dispatch(logout());
-          return false;
+          return;
         }
         if (signUpResponse.status === SUCCESS) {
-          dispatch(createWishlist());
+          const wishListResponse = await dispatch(createWishlist());
+          if (wishListResponse.status === ERROR) {
+            dispatch(singleAuthCallHasFailed(signUpResponse.error));
+            dispatch(logout());
+            return;
+          }
         }
       }
 
@@ -165,7 +170,6 @@ const mapDispatchToProps = dispatch => {
         return;
       }
 
-      // console.log("LOAD GOOGLE SDK");
       const googlePlusResponse = await dispatch(googlePlusLogin(isSignUp));
       if (googlePlusResponse.status && googlePlusResponse.status !== SUCCESS) {
         dispatch(singleAuthCallHasFailed());
@@ -187,8 +191,16 @@ const mapDispatchToProps = dispatch => {
         if (signUpResponse.status !== SUCCESS) {
           dispatch(singleAuthCallHasFailed(signUpResponse.error));
           dispatch(logout());
-
           return;
+        }
+
+        if (signUpResponse.status === SUCCESS) {
+          const wishListResponse = await dispatch(createWishlist());
+          if (wishListResponse.status === ERROR) {
+            dispatch(singleAuthCallHasFailed(signUpResponse.error));
+            dispatch(logout());
+            return;
+          }
         }
       }
 
@@ -203,7 +215,6 @@ const mapDispatchToProps = dispatch => {
       );
 
       if (customerAccessTokenActionResponse.status === SUCCESS) {
-        // console.log("CUSTOMER ACCESS TOKEN SUCCESS");
         const loginUserResponse = await dispatch(
           socialMediaLogin(
             googlePlusResponse.email,
