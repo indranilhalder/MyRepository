@@ -33,7 +33,13 @@ import { displayToast } from "../../general/toast.actions.js";
 const mapDispatchToProps = dispatch => {
   return {
     facebookLogin: async isSignUp => {
+      dispatch(authCallsAreInProgress());
       const facebookResponse = await dispatch(facebookLogin(isSignUp));
+      if (facebookResponse.status === ERROR) {
+        dispatch(singleAuthCallHasFailed(facebookResponse.error));
+        dispatch(logout());
+        return;
+      }
       if (isSignUp) {
         const signUpResponse = await dispatch(
           socialMediaRegistration(
@@ -46,7 +52,8 @@ const mapDispatchToProps = dispatch => {
         );
 
         if (signUpResponse.status !== SUCCESS) {
-          //TODO dispatch toast here.
+          dispatch(singleAuthCallHasFailed(signUpResponse.error));
+          dispatch(logout());
           return false;
         }
         if (signUpResponse.status === SUCCESS) {
@@ -82,16 +89,44 @@ const mapDispatchToProps = dispatch => {
             cartVal.cartDetails.guid &&
             cartVal.cartDetails.code
           ) {
-            dispatch(mergeCartId(cartVal.cartDetails.guid));
+            const mergeCartResponse = dispatch(
+              mergeCartId(cartVal.cartDetails.guid)
+            );
+
+            if (mergeCartResponse.status === SUCCESS) {
+              dispatch(setIfAllAuthCallsHaveSucceeded());
+            } else {
+              dispatch(singleAuthCallHasFailed(mergeCartResponse.error));
+              dispatch(logout());
+            }
           } else {
             const createdCartVal = await dispatch(
               generateCartIdForLoggedInUser()
             );
-            if (isSignUp) {
-              dispatch(mergeCartId(createdCartVal.cartDetails.guid));
+            if (
+              createdCartVal.status === ERROR ||
+              createdCartVal.status === FAILURE
+            ) {
+              dispatch(singleAuthCallHasFailed(createdCartVal.error));
+              dispatch(logout());
+            } else {
+              const mergeCartResponse = await dispatch(
+                mergeCartId(createdCartVal.cartDetails.guid)
+              );
+              if (mergeCartResponse.status === SUCCESS) {
+                dispatch(setIfAllAuthCallsHaveSucceeded());
+              }
             }
           }
+        } else {
+          dispatch(singleAuthCallHasFailed(loginUserRequest.error));
+          dispatch(logout());
         }
+      } else {
+        dispatch(
+          singleAuthCallHasFailed(customerAccessTokenActionResponse.error)
+        );
+        dispatch(logout());
       }
     },
     googlePlusLogin: async isSignUp => {

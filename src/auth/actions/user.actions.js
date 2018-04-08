@@ -577,7 +577,7 @@ export function facebookLogin(isSignUp) {
             if (resp.authResponse) {
               resolve(resp);
             } else {
-              console.log("User cancelled login or did not fully authorize.");
+              reject("User cancelled login or did not fully authorize");
             }
           },
           {
@@ -598,7 +598,7 @@ export function facebookLogin(isSignUp) {
 
       return { ...authResponse.authResponse, ...graphResponse };
     } catch (e) {
-      dispatch(faceBookLoginFailure(e));
+      return dispatch(faceBookLoginFailure(e));
     }
   };
 }
@@ -687,7 +687,6 @@ export function googlePlusLogin(type) {
 
       return { email, id, accessToken };
     } catch (e) {
-      console.log("GOOGLE PLUS LOGIN FAILURE TRIGGERED");
       return dispatch(googlePlusLoginFailure(e.message));
     }
   };
@@ -713,7 +712,6 @@ export function generateCustomerLevelAccessTokenForSocialMedia(
 
       return dispatch(customerAccessTokenSuccess(resultJson));
     } catch (e) {
-      console.log(e);
       return dispatch(customerAccessTokenFailure(e.message));
     }
   };
