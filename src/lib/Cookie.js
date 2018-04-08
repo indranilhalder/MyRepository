@@ -1,6 +1,8 @@
 //TODO why are some cookies session and why are some timestamped?
 // What is the difference?
 
+// Taken from Quirks mode
+
 export function createCookie(name, value, days) {
   if (days) {
     var date = new Date();
