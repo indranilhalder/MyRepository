@@ -233,7 +233,6 @@ const user = (
       });
 
     case userActions.CUSTOMER_ACCESS_TOKEN_FAILURE:
-      console.log("CUSTOMER ACCESS TOKEN FAILURE");
       return Object.assign({}, state, {
         customerAccessTokenStatus: action.status,
         loading: false,

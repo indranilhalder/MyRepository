@@ -23,6 +23,8 @@ import {
   authCallsAreInProgress,
   singleAuthCallHasFailed
 } from "./auth.actions";
+import * as ErrorHandling from "../../general/ErrorHandling.js";
+
 export const LOGIN_USER_REQUEST = "LOGIN_USER_REQUEST";
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
 export const LOGIN_USER_FAILURE = "LOGIN_USER_FAILURE";
@@ -685,6 +687,7 @@ export function googlePlusLogin(type) {
 
       return { email, id, accessToken };
     } catch (e) {
+      console.log("GOOGLE PLUS LOGIN FAILURE TRIGGERED");
       return dispatch(googlePlusLoginFailure(e.message));
     }
   };
@@ -707,9 +710,6 @@ export function generateCustomerLevelAccessTokenForSocialMedia(
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
-
-      console.log("CUSTOMER LEVEL ACCESS TOKEN PROBLEM");
-      console.log(resultJson);
 
       return dispatch(customerAccessTokenSuccess(resultJson));
     } catch (e) {
@@ -759,8 +759,10 @@ export function socialMediaRegistration(
         }&emailId=${userName}&socialMedia=${platForm}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus) {
+        throw new Error(`${resultJsonStatus.message}`);
       }
       return dispatch(socialMediaRegistrationSuccess(resultJson));
     } catch (e) {
@@ -800,8 +802,7 @@ export function socialMediaLogin(userName, platform, customerAccessToken) {
         `${SOCIAL_MEDIA_LOGIN_PATH}/${userName}/loginSocialUser?access_token=${customerAccessToken}&emailId=${userName}&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
       );
       const resultJson = await result.json();
-      console.log("SOCIAL MEDIA LOGIN");
-      console.log(resultJson);
+
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].message}`);
       }

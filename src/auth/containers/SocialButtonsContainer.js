@@ -25,7 +25,7 @@ import {
   generateCartIdForLoggedInUser,
   getCartId
 } from "../../cart/actions/cart.actions";
-import { SUCCESS, ERROR } from "../../lib/constants";
+import { SUCCESS, ERROR, FAILURE } from "../../lib/constants";
 import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
 
 const mapDispatchToProps = dispatch => {
@@ -98,6 +98,7 @@ const mapDispatchToProps = dispatch => {
       const loadGoogleSdkResponse = await loadGoogleSignInApi();
       if (loadGoogleSdkResponse.status === ERROR) {
         dispatch(singleAuthCallHasFailed(loadGoogleSdkResponse.description));
+        return;
       }
 
       // console.log("LOAD GOOGLE SDK");
@@ -107,7 +108,6 @@ const mapDispatchToProps = dispatch => {
         return;
       }
 
-      // console.log("GOOGLE PLUS LOGIN");
       if (isSignUp) {
         const signUpResponse = await dispatch(
           socialMediaRegistration(
@@ -119,9 +119,11 @@ const mapDispatchToProps = dispatch => {
           )
         );
 
+        console.log("SIGN UP RESPONSE");
+        console.log(signUpResponse);
+
         if (signUpResponse.status !== SUCCESS) {
           dispatch(singleAuthCallHasFailed(signUpResponse.error));
-          // TODO toast.
           return;
         }
       }
@@ -147,47 +149,39 @@ const mapDispatchToProps = dispatch => {
           )
         );
 
-        // console.log("LOGIN USER SUCCESS");
-        // console.log(loginUserResponse);
-
         if (loginUserResponse.status === SUCCESS) {
           const cartVal = await dispatch(getCartId());
-          // console.log("CART VAL");
-          // console.log(cartVal);
+
           if (
             cartVal.status === SUCCESS &&
+            cartVal.cartDetails &&
             cartVal.cartDetails.guid &&
             cartVal.cartDetails.code
           ) {
-            // console.log("GET CART SUCCESSS");
-
             const mergeCartResponse = await dispatch(
               mergeCartId(cartVal.cartDetails.guid)
             );
 
-            // console.log("MERGE CART RESPONES");
-            // console.log(mergeCartResponse);
-
             if (mergeCartResponse.status === SUCCESS) {
-              // console.log("MERGE CART SUCCESS");
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
               dispatch(singleAuthCallHasFailed(mergeCartResponse.error));
             }
           } else {
-            // console.log("GET CART FAILURE");
             const createdCartVal = await dispatch(
               generateCartIdForLoggedInUser()
             );
-            // console.log("CREATE CART SUCCESS");
-            if (createdCartVal.status === ERROR) {
+
+            if (
+              createdCartVal.status === ERROR ||
+              createdCartVal.status === FAILURE
+            ) {
               dispatch(singleAuthCallHasFailed(createdCartVal.error));
             } else {
               const mergeCartResponse = await dispatch(
                 mergeCartId(createdCartVal.cartDetails.guid)
               );
               if (mergeCartResponse.status === SUCCESS) {
-                // console.log("MERGE CART SUCCESS");
                 dispatch(setIfAllAuthCallsHaveSucceeded());
               }
             }

@@ -109,8 +109,6 @@ class Login extends Component {
       showSocialButtons = false;
     }
 
-    console.log("AUTH CALLS IN PROCESS");
-    console.log(this.props.authCallsInProcess);
     if (this.props.authCallsInProcess) {
       return (
         <div className={styles.loadingIndicator}>
