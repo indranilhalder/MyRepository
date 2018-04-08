@@ -146,7 +146,6 @@ const mapDispatchToProps = dispatch => {
         return;
       }
 
-      // console.log("LOAD GOOGLE SDK");
       const googlePlusResponse = await dispatch(googlePlusLogin(isSignUp));
       if (googlePlusResponse.status && googlePlusResponse.status !== SUCCESS) {
         dispatch(singleAuthCallHasFailed());
@@ -192,7 +191,6 @@ const mapDispatchToProps = dispatch => {
       );
 
       if (customerAccessTokenActionResponse.status === SUCCESS) {
-        // console.log("CUSTOMER ACCESS TOKEN SUCCESS");
         const loginUserResponse = await dispatch(
           socialMediaLogin(
             googlePlusResponse.email,
