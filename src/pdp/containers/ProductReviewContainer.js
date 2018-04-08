@@ -8,6 +8,7 @@ import {
   getProductDescription,
   addProductReview
 } from "../actions/pdp.actions";
+import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 import { displayToast } from "../../general/toast.actions";
 const mapDispatchToProps = dispatch => {
   return {
@@ -26,7 +27,9 @@ const mapDispatchToProps = dispatch => {
     addProductReview: (productCode, productReview) => {
       dispatch(addProductReview(productCode, productReview));
     },
-
+    setUrlToRedirectToAfterAuth: url => {
+      dispatch(setUrlToRedirectToAfterAuth(url));
+    },
     displayToast: message => {
       dispatch(displayToast(message));
     }

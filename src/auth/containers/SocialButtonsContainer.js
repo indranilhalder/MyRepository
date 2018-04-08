@@ -29,9 +29,13 @@ import { logout } from "../../account/actions/account.actions.js";
 import { SUCCESS, ERROR, FAILURE } from "../../lib/constants";
 import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
 import { displayToast } from "../../general/toast.actions.js";
+import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 
 const mapDispatchToProps = dispatch => {
   return {
+    clearUrlToRedirectToAfterAuth: () => {
+      dispatch(clearUrlToRedirectToAfterAuth());
+    },
     facebookLogin: async isSignUp => {
       dispatch(authCallsAreInProgress());
       const facebookResponse = await dispatch(facebookLogin(isSignUp));
@@ -40,6 +44,8 @@ const mapDispatchToProps = dispatch => {
         dispatch(logout());
         return;
       }
+      console.log("FACEBOOK RESPONSE");
+      console.log(facebookResponse);
       if (isSignUp) {
         const signUpResponse = await dispatch(
           socialMediaRegistration(
@@ -71,6 +77,9 @@ const mapDispatchToProps = dispatch => {
         )
       );
 
+      console.log("CUSTOMER ACCESS TOKEN RESPONSE");
+      console.log(customerAccessTokenActionResponse);
+
       // now I need to actually login
       if (customerAccessTokenActionResponse.status === SUCCESS) {
         const loginUserResponse = await dispatch(
@@ -82,18 +91,28 @@ const mapDispatchToProps = dispatch => {
           )
         );
 
+        console.log("LOGIN USER RESPONSE");
+        console.log(loginUserResponse);
+
         if (loginUserResponse.status === SUCCESS) {
           const cartVal = await dispatch(getCartId());
+
+          console.log("CART VAL");
+          console.log(cartVal);
           if (
             cartVal.status === SUCCESS &&
             cartVal.cartDetails.guid &&
             cartVal.cartDetails.code
           ) {
-            const mergeCartResponse = dispatch(
+            const mergeCartResponse = await dispatch(
               mergeCartId(cartVal.cartDetails.guid)
             );
 
+            console.log("MERGE CART RESPONSE");
+            console.log(mergeCartResponse);
+
             if (mergeCartResponse.status === SUCCESS) {
+              console.log("AUTH CALLS SUCCEEDED");
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
               dispatch(singleAuthCallHasFailed(mergeCartResponse.error));
@@ -103,6 +122,9 @@ const mapDispatchToProps = dispatch => {
             const createdCartVal = await dispatch(
               generateCartIdForLoggedInUser()
             );
+
+            console.log("CREATED CART VAl");
+            console.log(createdCartVal);
             if (
               createdCartVal.status === ERROR ||
               createdCartVal.status === FAILURE
@@ -114,6 +136,8 @@ const mapDispatchToProps = dispatch => {
                 mergeCartId(createdCartVal.cartDetails.guid)
               );
               if (mergeCartResponse.status === SUCCESS) {
+                console.log("AUTH CALLS SUCCEEDED");
+
                 dispatch(setIfAllAuthCallsHaveSucceeded());
               }
             }
@@ -244,7 +268,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    signUp: ownProps.isSignUp
+    signUp: ownProps.isSignUp,
+    redirectToAfterAuthUrl: state.auth.redirectToAfterAuthUrl
   };
 };
 

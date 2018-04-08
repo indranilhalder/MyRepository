@@ -13,7 +13,7 @@ import queryString from "query-string";
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
+import { SUCCESS } from "../../lib/constants";
 import {
   CASH_ON_DELIVERY,
   ORDER_PREFIX,
