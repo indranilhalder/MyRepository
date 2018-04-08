@@ -25,6 +25,7 @@ import {
   generateCartIdForLoggedInUser,
   getCartId
 } from "../../cart/actions/cart.actions";
+import { logout } from "../../account/actions/account.actions.js";
 import { SUCCESS, ERROR, FAILURE } from "../../lib/constants";
 import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
 
@@ -105,6 +106,7 @@ const mapDispatchToProps = dispatch => {
       const googlePlusResponse = await dispatch(googlePlusLogin(isSignUp));
       if (googlePlusResponse.status && googlePlusResponse.status !== SUCCESS) {
         dispatch(singleAuthCallHasFailed());
+        dispatch(logout());
         return;
       }
 
@@ -119,11 +121,10 @@ const mapDispatchToProps = dispatch => {
           )
         );
 
-        console.log("SIGN UP RESPONSE");
-        console.log(signUpResponse);
-
         if (signUpResponse.status !== SUCCESS) {
           dispatch(singleAuthCallHasFailed(signUpResponse.error));
+          dispatch(logout());
+
           return;
         }
       }
@@ -166,6 +167,7 @@ const mapDispatchToProps = dispatch => {
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
               dispatch(singleAuthCallHasFailed(mergeCartResponse.error));
+              dispatch(logout());
             }
           } else {
             const createdCartVal = await dispatch(
@@ -177,6 +179,7 @@ const mapDispatchToProps = dispatch => {
               createdCartVal.status === FAILURE
             ) {
               dispatch(singleAuthCallHasFailed(createdCartVal.error));
+              dispatch(logout());
             } else {
               const mergeCartResponse = await dispatch(
                 mergeCartId(createdCartVal.cartDetails.guid)
@@ -188,11 +191,13 @@ const mapDispatchToProps = dispatch => {
           }
         } else {
           dispatch(singleAuthCallHasFailed(loginUserRequest.error));
+          dispatch(logout());
         }
       } else {
         dispatch(
           singleAuthCallHasFailed(customerAccessTokenActionResponse.error)
         );
+        dispatch(logout());
       }
     }
   };
