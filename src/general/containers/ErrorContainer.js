@@ -90,7 +90,6 @@ const mapDispatchToProps = dispatch => {
 
 class ErrorDisplay extends React.Component {
   componentDidUpdate(prevProps) {
-    // console.log("ERROR CONTAINER COMPONENT DID UPDATE IS CALLED");
     const errorKeys = keys(this.props);
     let seenError = false;
 
