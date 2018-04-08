@@ -105,9 +105,8 @@ const FACEBOOK_SCOPE = "email,user_likes";
 const LOCALE = "en_US";
 const FACEBOOK_FIELDS = "name, email";
 const MY_PROFILE = "me";
-const GOOGLE_PLUS = "plus";
-const GOOGLE_PLUS_VERSION = "v1";
 const FAILURE = "Failure";
+const GOOGLE_PLATFORM_URL = "//apis.google.com/js/platform.js";
 export const SOCIAL_CHANNEL_GOOGLE_PLUS = "G";
 export const SOCIAL_CHANNEL_FACEBOOK = "F";
 
@@ -625,7 +624,7 @@ export function loadGoogleSignInApi() {
     const firstJS = document.getElementsByTagName("script")[0];
     const js = document.createElement("script");
 
-    js.src = "//apis.google.com/js/platform.js";
+    js.src = GOOGLE_PLATFORM_URL;
     js.id = "gapi-client";
 
     js.onload = () => {
