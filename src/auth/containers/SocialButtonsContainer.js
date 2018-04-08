@@ -54,10 +54,15 @@ const mapDispatchToProps = dispatch => {
         if (signUpResponse.status !== SUCCESS) {
           dispatch(singleAuthCallHasFailed(signUpResponse.error));
           dispatch(logout());
-          return false;
+          return;
         }
         if (signUpResponse.status === SUCCESS) {
-          dispatch(createWishlist());
+          const wishListResponse = await dispatch(createWishlist());
+          if (wishListResponse.status === ERROR) {
+            dispatch(singleAuthCallHasFailed(signUpResponse.error));
+            dispatch(logout());
+            return;
+          }
         }
       }
 
@@ -89,7 +94,7 @@ const mapDispatchToProps = dispatch => {
             cartVal.cartDetails.guid &&
             cartVal.cartDetails.code
           ) {
-            const mergeCartResponse = dispatch(
+            const mergeCartResponse = await dispatch(
               mergeCartId(cartVal.cartDetails.guid)
             );
 
@@ -163,8 +168,16 @@ const mapDispatchToProps = dispatch => {
         if (signUpResponse.status !== SUCCESS) {
           dispatch(singleAuthCallHasFailed(signUpResponse.error));
           dispatch(logout());
-
           return;
+        }
+
+        if (signUpResponse.status === SUCCESS) {
+          const wishListResponse = await dispatch(createWishlist());
+          if (wishListResponse.status === ERROR) {
+            dispatch(singleAuthCallHasFailed(signUpResponse.error));
+            dispatch(logout());
+            return;
+          }
         }
       }
 
