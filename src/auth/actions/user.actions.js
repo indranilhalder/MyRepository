@@ -646,7 +646,7 @@ export function loadGoogleSignInApi() {
                   status: SUCCESS
                 }),
               err => {
-                reject({
+                resolve({
                   provider: "google",
                   type: "load",
                   error: "Failed to load SDK",

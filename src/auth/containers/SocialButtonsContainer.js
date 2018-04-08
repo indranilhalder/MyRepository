@@ -28,6 +28,7 @@ import {
 import { logout } from "../../account/actions/account.actions.js";
 import { SUCCESS, ERROR, FAILURE } from "../../lib/constants";
 import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
+import { displayToast } from "../../general/toast.actions.js";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -99,6 +100,9 @@ const mapDispatchToProps = dispatch => {
       const loadGoogleSdkResponse = await loadGoogleSignInApi();
       if (loadGoogleSdkResponse.status === ERROR) {
         dispatch(singleAuthCallHasFailed(loadGoogleSdkResponse.description));
+        // as loading the google sign in api has nothing with redux state
+        // we manually trigger the toast error here
+        dispatch(displayToast("SDK Failed to load, check Google Client ID"));
         return;
       }
 

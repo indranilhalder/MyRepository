@@ -84,10 +84,10 @@ if (
 
 if (process.env.REACT_APP_STAGE === "devxelp") {
   process.env.REACT_APP_GOOGLE_CLIENT_ID =
-    "965074323679-ksg7prjke4p8rns1nm483jkh2dhf8at7.apps.googleusercontent.com";
+    "970557259016-70rgadfp6vrjm445jbadbel2rg2p90gn.apps.googleusercontent.com";
 } else if (process.env.REACT_APP_STAGE === "uat2") {
   process.env.REACT_APP_GOOGLE_CLIENT_ID =
-    "965074323679-ksg7prjke4p8rns1nm483jkh2dhf8at7.apps.googleusercontent.com";
+    "970557259016-cogplqj21kjv34vld1obo0336cov2a38.apps.googleusercontent.com";
 } else if (process.env.REACT_APP_STAGE === "p2") {
   process.env.REACT_APP_GOOGLE_CLIENT_ID =
     "742445068598-kmlgng78u9jacghfitar82vjjmsg78q5.apps.googleusercontent.com";
