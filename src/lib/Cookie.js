@@ -2,16 +2,12 @@
 // What is the difference?
 
 export function createCookie(name, value, days) {
-  let expires;
   if (days) {
-    let date = new Date();
-    date.setSeconds(date.getSeconds() + days);
-
-    expires = `; expires=${date}`;
-  } else {
-    expires = "";
-  }
-  document.cookie = `${name}=${value + expires}`;
+    var date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000); // ) removed
+    var expires = "; expires=" + date.toGMTString(); // + added
+  } else var expires = "";
+  document.cookie = name + "=" + value + expires + ";path=/"; // + and " added
 }
 
 export function getCookie(cookieName) {

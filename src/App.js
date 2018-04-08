@@ -130,7 +130,6 @@ class App extends Component {
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
     // Case 1. THe user is not logged in.
-
     if (!globalAccessToken && !this.props.cart.loading) {
       await this.props.getGlobalAccessToken();
       globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -155,7 +154,7 @@ class App extends Component {
         this.props.location.pathname.indexOf(LOGIN_PATH) !== -1 ||
         this.props.location.pathname.indexOf(SIGN_UP_PATH) !== -1
       ) {
-        this.props.history.push(`${HOME_ROUTER}`);
+        // this.props.history.push(`${HOME_ROUTER}`);
       }
     } else {
       if (!cartDetailsForAnonymous && globalAccessToken) {
@@ -178,7 +177,7 @@ class App extends Component {
         this.props.location.pathname.indexOf(LOGIN_PATH) !== -1 ||
         this.props.location.pathname.indexOf(SIGN_UP_PATH) !== -1
       ) {
-        this.props.history.push(`${HOME_ROUTER}`);
+        // this.props.history.push(`${HOME_ROUTER}`);
       }
     }
   }

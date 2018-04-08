@@ -43,14 +43,14 @@ export default class SocialButtons extends Component {
     })(document, SCRIPT, FACEBOOK_JSDK);
 
     //Load Google Sdk
-    (() => {
-      var e = document.createElement(SCRIPT);
-      e.type = TYPE;
-      e.async = true;
-      e.src = GOOGLE_PLUS_SDK;
-      var t = document.getElementsByTagName(SCRIPT)[0];
-      t.parentNode.insertBefore(e, t);
-    })();
+    // (() => {
+    //   var e = document.createElement(SCRIPT);
+    //   e.type = TYPE;
+    //   e.async = true;
+    //   e.src = GOOGLE_PLUS_SDK;
+    //   var t = document.getElementsByTagName(SCRIPT)[0];
+    //   t.parentNode.insertBefore(e, t);
+    // })();
   }
 
   componentWillReceiveProps(nextProps) {

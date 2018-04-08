@@ -616,41 +616,76 @@ export function googlePlusLoginFailure(error) {
   };
 }
 
+export function loadGoogleSignInApi() {
+  const scope = SCOPE;
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  return new Promise((resolve, reject) => {
+    const firstJS = document.getElementsByTagName("script")[0];
+    const js = document.createElement("script");
+
+    js.src = "//apis.google.com/js/platform.js";
+    js.id = "gapi-client";
+
+    js.onload = () => {
+      window.gapi.load("auth2", () => {
+        if (!window.gapi.auth2.getAuthInstance()) {
+          window.gapi.auth2
+            .init({
+              client_id: clientId,
+              fetch_basic_profile: true,
+              ux_mode: "popup",
+              scope: scope
+                ? (Array.isArray(scope) && scope.join(" ")) || scope
+                : null
+            })
+            .then(
+              () =>
+                resolve({
+                  status: SUCCESS
+                }),
+              err => {
+                reject({
+                  provider: "google",
+                  type: "load",
+                  error: "Failed to load SDK",
+                  status: ERROR
+                });
+              }
+            );
+        } else {
+          resolve({
+            status: SUCCESS
+          });
+        }
+      });
+    };
+
+    if (!firstJS) {
+      document.appendChild(js);
+    } else {
+      firstJS.parentNode.appendChild(js);
+    }
+  });
+}
+
 export function googlePlusLogin(type) {
   return async dispatch => {
     try {
       dispatch(googlePlusLoginRequest());
-      let accessToken;
-      const googleResponse = await new Promise((resolve, reject) => {
-        window.gapi.auth.signIn({
-          callback: function(authResponse) {
-            window.gapi.client.load(
-              GOOGLE_PLUS,
-              GOOGLE_PLUS_VERSION,
-              function() {
-                var request = window.gapi.client.plus.people.get({
-                  userId: MY_PROFILE
-                });
-                request.execute(function(resp) {
-                  accessToken = authResponse.id_token;
-                  resolve(resp);
-                });
-              }
-            );
-          },
-          clientid: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-          cookiepolicy: COOKIE_POLICY,
-          requestvisibleactions: REQUEST_VISIBLE_ACTIONS,
-          scope: SCOPE
-        });
-      });
+
+      const googleResponse = await window.gapi.auth2.getAuthInstance().signIn();
       if (googleResponse.code > 400) {
         throw new Error(`${googleResponse.message}`);
       }
 
-      return { ...googleResponse, accessToken };
+      const basicProfile = googleResponse.getBasicProfile();
+      const email = basicProfile.getEmail();
+      const id = basicProfile.getId();
+      const accessToken = googleResponse.getAuthResponse().access_token;
+
+      return { email, id, accessToken };
     } catch (e) {
-      return dispatch(googlePlusLoginFailure(e));
+      return dispatch(googlePlusLoginFailure(e.message));
     }
   };
 }
@@ -673,8 +708,12 @@ export function generateCustomerLevelAccessTokenForSocialMedia(
         throw new Error(`${resultJson.errors[0].message}`);
       }
 
+      console.log("CUSTOMER LEVEL ACCESS TOKEN PROBLEM");
+      console.log(resultJson);
+
       return dispatch(customerAccessTokenSuccess(resultJson));
     } catch (e) {
+      console.log(e);
       return dispatch(customerAccessTokenFailure(e.message));
     }
   };
@@ -761,6 +800,8 @@ export function socialMediaLogin(userName, platform, customerAccessToken) {
         `${SOCIAL_MEDIA_LOGIN_PATH}/${userName}/loginSocialUser?access_token=${customerAccessToken}&emailId=${userName}&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
       );
       const resultJson = await result.json();
+      console.log("SOCIAL MEDIA LOGIN");
+      console.log(resultJson);
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].message}`);
       }

@@ -23,7 +23,8 @@ const user = (
     globalAccessTokenStatus: null,
     customerAccessTokenStatus: null,
     loginUserStatus: null,
-    refreshCustomerAccessTokenStatus: null
+    refreshCustomerAccessTokenStatus: null,
+    socialMediaLoginStatus: null
   },
   action
 ) => {
@@ -232,6 +233,7 @@ const user = (
       });
 
     case userActions.CUSTOMER_ACCESS_TOKEN_FAILURE:
+      console.log("CUSTOMER ACCESS TOKEN FAILURE");
       return Object.assign({}, state, {
         customerAccessTokenStatus: action.status,
         loading: false,
@@ -285,7 +287,7 @@ const user = (
 
     case userActions.SOCIAL_MEDIA_LOGIN_REQUEST:
       return Object.assign({}, state, {
-        status: action.status,
+        socialMediaLoginStatus: action.status,
         loading: true,
         isLoggedIn: false
       });
@@ -296,7 +298,7 @@ const user = (
 
       Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(userDetails));
       return Object.assign({}, state, {
-        status: action.status,
+        socialMediaLoginStatus: action.status,
         loading: false,
         user: action.user,
         isLoggedIn: true
@@ -304,7 +306,7 @@ const user = (
 
     case userActions.SOCIAL_MEDIA_LOGIN_FAILURE:
       return Object.assign({}, state, {
-        status: action.status,
+        socialMediaLoginStatus: action.status,
         loading: false,
         error: action.error,
         isLoggedIn: false

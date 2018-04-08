@@ -12,14 +12,20 @@ import {
   loginUser,
   loginUserRequest,
   customerAccessToken,
-  socialMediaRegistration
+  socialMediaRegistration,
+  loadGoogleSignInApi
 } from "../../auth/actions/user.actions";
+import {
+  singleAuthCallHasFailed,
+  setIfAllAuthCallsHaveSucceeded,
+  authCallsAreInProgress
+} from "../../auth/actions/auth.actions";
 import {
   mergeCartId,
   generateCartIdForLoggedInUser,
   getCartId
 } from "../../cart/actions/cart.actions";
-import { SUCCESS } from "../../lib/constants";
+import { SUCCESS, ERROR } from "../../lib/constants";
 import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
 
 const mapDispatchToProps = dispatch => {
@@ -87,15 +93,26 @@ const mapDispatchToProps = dispatch => {
       }
     },
     googlePlusLogin: async isSignUp => {
+      dispatch(authCallsAreInProgress());
+
+      const loadGoogleSdkResponse = await loadGoogleSignInApi();
+      if (loadGoogleSdkResponse.status === ERROR) {
+        dispatch(singleAuthCallHasFailed(loadGoogleSdkResponse.description));
+      }
+
+      // console.log("LOAD GOOGLE SDK");
       const googlePlusResponse = await dispatch(googlePlusLogin(isSignUp));
       if (googlePlusResponse.status && googlePlusResponse.status !== SUCCESS) {
+        dispatch(singleAuthCallHasFailed());
         return;
       }
+
+      // console.log("GOOGLE PLUS LOGIN");
       if (isSignUp) {
         const signUpResponse = await dispatch(
           socialMediaRegistration(
-            googlePlusResponse.emails[0].value,
-            googlePlusResponse.emails[0].value,
+            googlePlusResponse.email,
+            googlePlusResponse.email,
             googlePlusResponse.id,
             GOOGLE_PLUS_PLATFORM,
             SOCIAL_CHANNEL_GOOGLE_PLUS
@@ -103,14 +120,15 @@ const mapDispatchToProps = dispatch => {
         );
 
         if (signUpResponse.status !== SUCCESS) {
-          // TODO toast
+          dispatch(singleAuthCallHasFailed(signUpResponse.error));
+          // TODO toast.
           return;
         }
       }
 
       const customerAccessTokenActionResponse = await dispatch(
         generateCustomerLevelAccessTokenForSocialMedia(
-          googlePlusResponse.emails[0].value,
+          googlePlusResponse.email,
           googlePlusResponse.id,
           googlePlusResponse.accessToken,
           GOOGLE_PLUS_PLATFORM,
@@ -119,32 +137,68 @@ const mapDispatchToProps = dispatch => {
       );
 
       if (customerAccessTokenActionResponse.status === SUCCESS) {
+        // console.log("CUSTOMER ACCESS TOKEN SUCCESS");
         const loginUserResponse = await dispatch(
           socialMediaLogin(
-            googlePlusResponse.emails[0].value,
+            googlePlusResponse.email,
             GOOGLE_PLUS_PLATFORM,
             customerAccessTokenActionResponse.customerAccessTokenDetails
               .access_token
           )
         );
 
+        // console.log("LOGIN USER SUCCESS");
+        // console.log(loginUserResponse);
+
         if (loginUserResponse.status === SUCCESS) {
           const cartVal = await dispatch(getCartId());
+          // console.log("CART VAL");
+          // console.log(cartVal);
           if (
             cartVal.status === SUCCESS &&
             cartVal.cartDetails.guid &&
             cartVal.cartDetails.code
           ) {
-            dispatch(mergeCartId(cartVal.cartDetails.guid));
+            // console.log("GET CART SUCCESSS");
+
+            const mergeCartResponse = await dispatch(
+              mergeCartId(cartVal.cartDetails.guid)
+            );
+
+            // console.log("MERGE CART RESPONES");
+            // console.log(mergeCartResponse);
+
+            if (mergeCartResponse.status === SUCCESS) {
+              // console.log("MERGE CART SUCCESS");
+              dispatch(setIfAllAuthCallsHaveSucceeded());
+            } else {
+              dispatch(singleAuthCallHasFailed(mergeCartResponse.error));
+            }
           } else {
+            // console.log("GET CART FAILURE");
             const createdCartVal = await dispatch(
               generateCartIdForLoggedInUser()
             );
-            if (isSignUp) {
-              dispatch(mergeCartId(createdCartVal.cartDetails.guid));
+            // console.log("CREATE CART SUCCESS");
+            if (createdCartVal.status === ERROR) {
+              dispatch(singleAuthCallHasFailed(createdCartVal.error));
+            } else {
+              const mergeCartResponse = await dispatch(
+                mergeCartId(createdCartVal.cartDetails.guid)
+              );
+              if (mergeCartResponse.status === SUCCESS) {
+                // console.log("MERGE CART SUCCESS");
+                dispatch(setIfAllAuthCallsHaveSucceeded());
+              }
             }
           }
+        } else {
+          dispatch(singleAuthCallHasFailed(loginUserRequest.error));
         }
+      } else {
+        dispatch(
+          singleAuthCallHasFailed(customerAccessTokenActionResponse.error)
+        );
       }
     }
   };
