@@ -15,8 +15,9 @@ export const ADOBE_CART_TYPE = "cart";
 export const ADOBE_PDP_CPJ = "cpj_pdp";
 export const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
 
-export function setDataLayer(type, response) {
+export function setDataLayer(type, response, icid) {
   let userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
+
   if (userDetails) {
     userDetails = JSON.parse(userDetails);
   }
@@ -26,6 +27,14 @@ export function setDataLayer(type, response) {
 
   if (type === ADOBE_PDP_TYPE) {
     window.digitalData = getDigitalDataForPdp(type, response);
+  }
+
+  if (icid) {
+    window.digitalData.internal = {
+      campaign: {
+        id: icid
+      }
+    };
   }
 
   if (userDetails) {
@@ -40,11 +49,11 @@ export function setDataLayer(type, response) {
   );
 
   if (defaultPinCode) {
-    {
-      {
-        defaultPinCode;
+    window.digitalData.geolocation = {
+      pin: {
+        code: defaultPinCode
       }
-    }
+    };
   }
 
   window._satellite.track(ADOBE_SATELLITE_CODE);
@@ -72,12 +81,13 @@ function getDigitalDataForPdp(type, pdpResponse) {
         discount: pdpResponse.winningSellerPrice.doubleValue
       },
       pdp: {
-        findingMethod: "Page name"
+        findingMethod: window.digitalData.pageName
       },
       brand: {
         name: pdpResponse.brandName
       }
     },
+    flag: "internal_campaign",
     page: {
       category: {
         primaryCategory: "product",
@@ -87,6 +97,9 @@ function getDigitalDataForPdp(type, pdpResponse) {
       },
       display: {
         hierarchy: ["home", ...seoBreadCrumbs]
+      },
+      pageInfo: {
+        pageName: "product details"
       }
     }
   };

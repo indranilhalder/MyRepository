@@ -26,6 +26,10 @@ export default class PlpBrandCategoryWrapper extends React.Component {
 
   componentWillMount() {
     const url = this.props.location.pathname;
+    console.log("PLP BRAND CAETGORY WRAPPER CALLED");
+    console.log(url);
+    console.log(this.props.match.path);
+    console.log(this.props.match.params);
 
     let categoryOrBrandId = null;
 
@@ -81,6 +85,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     const url = this.props.location.pathname;
     let match;
     let searchText;
+
     if (CATEGORY_REGEX.test(url)) {
       match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
       match = match.replace(BRAND_CATEGORY_PREFIX, "");
@@ -97,6 +102,10 @@ export default class PlpBrandCategoryWrapper extends React.Component {
       match = match.toUpperCase();
 
       searchText = `:relevance:brand:${match}`;
+    }
+
+    if (this.props.match.path === STATIC_CATEGORY_PAGES) {
+      searchText = this.props.match.params[0];
     }
 
     return searchText;
