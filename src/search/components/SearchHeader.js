@@ -31,6 +31,11 @@ export default class SearchHeader extends React.Component {
       this.props.onSearchString(this.state.searchString);
     }
   }
+  handleKeyUp(val) {
+    if (val === "Enter") {
+      this.searchString();
+    }
+  }
   onClickIcon() {
     if (this.state.searchBar) {
       this.setState({ searchBar: false }, () => {
@@ -92,6 +97,7 @@ export default class SearchHeader extends React.Component {
                   isWhite={true}
                   borderColor={"#212121"}
                   borderBottom={"0px solid #212121"}
+                  onKeyUp={event => this.handleKeyUp(event.key)}
                 />
               </div>
             </div>

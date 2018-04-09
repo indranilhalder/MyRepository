@@ -19,7 +19,7 @@ export default class SearchPage extends React.Component {
     const urlSuffix = `c-${webURL.toLowerCase()}`.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   }
-  handleSearch(val) {
+  handleSearch(val, e) {
     if (this.props.getSearchResults) {
       this.props.getSearchResults(val);
     }
