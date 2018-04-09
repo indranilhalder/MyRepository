@@ -1765,76 +1765,52 @@ body {
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'ThemeOffersComponent'}">
-					<div>
-						<h1>ThemeOffersComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>Title</th>
-									<th>backgroundHexCode</th>
-									<th>backgroundImageURL</th>
-									<th>btnText</th>
-									<th>webURL</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-								<td>${feature.backgroundHexCode}</td>
-								<td><img alt="" src="${feature.backgroundImageURL.URL}"></td>
-								<td>${feature.btnText}</td>
-								<td><a href="${feature.webURL}">${feature.webURL}</a></td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>description</th>
-									<th>imageURL</th>
-									<th>webURL</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.offers}"
-								var="themeOffersCompOfferElement">
-								<div>
-									<c:if
+				
+				
+				<!--  ============================================= -->
+				<div class="col-xs-12 pad0 theme-offers mb40" style="background-image:url(${feature.backgroundImageURL.URL}),linear-gradient(to bottom, ${feature.backgroundHexCode}, ${feature.backgroundHexCode});">
+					<div class="heading">${feature.title}</div>
+					<div class="theme-offers-slider">
+						<c:forEach items="${feature.offers}"
+									var="themeOffersCompOfferElement">
+							<c:if
 										test="${themeOffersCompOfferElement.typeCode eq 'ThemeOffersCompOfferElement'}">
-										<tr>
-											<td>${themeOffersCompOfferElement.title}</td>
-											<td>${themeOffersCompOfferElement.description}</td>
-											<td><img alt=""
-												src="${themeOffersCompOfferElement.imageURL.URL}"></td>
-											<td><a href="${themeOffersCompOfferElement.webURL}">${themeOffersCompOfferElement.webURL}</a></td>
-										</tr>
-									</c:if>
-								</div>
-							</c:forEach>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-									<th>productCode</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}" var="themeOffersItemsElement">
 								<div>
-									<c:if
+						    	<a href="${themeOffersCompOfferElement.webURL}">
+							    	<img src="${themeOffersCompOfferElement.imageURL.URL}">
+							    	<div class="brand-name">${themeOffersCompOfferElement.title}</div>
+							    	<div class="product-name">${themeOffersCompOfferElement.description}</div>
+						    	</a>
+						    </div>
+							</c:if>
+						
+						</c:forEach>
+						<c:forEach items="${feature.items}" var="themeOffersItemsElement">
+							<c:if
 										test="${themeOffersItemsElement.typeCode eq 'ThemeOffersItemsElement'}">
-										<tr>
-											<td>${themeOffersItemsElement.title}</td>
-											<td><a href="${themeOffersItemsElement.webURL}">${themeOffersItemsElement.webURL}</a></td>
-											<c:if test="${not empty themeOffersItemsElement.productCode}">
-												<td>${themeOffersItemsElement.productCode.code}</td>
-											</c:if>
-										</tr>
-									</c:if>
-								</div>
-							</c:forEach>
-						</table>
-
+								<div>
+						    	<a href="#">
+						    		<c:if test="${not empty themeOffersItemsElement.productCode}">
+							    		<img src="${themeOffersItemsElement.productCode.picture.URL}">
+							    	</c:if>
+							    	<div class="brand-name">${themeOffersItemsElement.title}</div>
+							    	<div class="product-name">${themeOffersCompOfferElement.description}</div>
+							    	<c:if test="${not empty themeOffersItemsElement.productCode}">
+							    	<fmt:parseNumber var="productPrice" type="number"
+												value="${themeOffersItemsElement.productCode.mrp}" />
+							    	<div class="product-price">Rs. ${productPrice}  <span class="line-through">Rs. ${productPrice}</span></div>
+							    	</c:if>
+						    	</a>s
+						    </div>
+							</c:if>
+						
+						</c:forEach>
 					</div>
+					<a href="${feature.webURL}" class="shop-all-btn">${feature.btnText}</a>
+				</div>
+				
+				<!-- ================================================= -->
+				
 				</c:if>
 
 
