@@ -2119,6 +2119,7 @@ body {
 
 				<c:if test="${feature.typeCode eq 'BrandsTabAZListComponent'}">
 				
+								
 				<!-- =========================== -->
 
 					<div class="col-xs-12 pad0 brand-tab-azlist mb40">
@@ -2127,33 +2128,47 @@ body {
 								test="${brandsTabAZElement.typeCode eq 'BrandsTabAZElement'}">
 								<ul class="nav nav-tabs" role="tablist">
 									<li role="presentation" class="${loop.index eq 0 ? 'active' : ''}">
-										${brandsTabAZElement.subType}
+										<a href="#mytab${loop.index + 1}" aria-controls="mytab${loop.index + 1}" role="tab" data-toggle="tab">
+											${brandsTabAZElement.subType}
+										</a>
 									</li>
 								</ul>
 							</c:if>
 						</c:forEach>
 					</div>
-
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane ${loop.index eq 0 ? 'active' : ''}" id="mytab${loop.index + 1}">
+						<!--brands slider starts-->
+						<div class="brands-slider mb40">
+						<c:forEach items="${brandsTabAZElement.items}" var="brandTabAZHeroBannerElement" begin="0" end="0">
+							<c:if test="${brandTabAZHeroBannerElement.typeCode eq 'HeroBannerComponent'}">
+								<c:forEach items="${brandTabAZHeroBannerElement.items}"
+												var="heroElements">
+									<c:if test="${not empty heroElements && heroElements.typeCode eq 'HeroBannerElement'}">
+								<div>
+							    	<a href="${heroElements.webURL}">
+								    	<img src="${heroElements.imageURL.URL}">
+								    	<div class="brands-slider-subsection">
+								    		<img class="brand-logo" src="${heroElements.brandLogo.URL}">
+								    	</div>
+<%-- 								    	<div class="banner-title">${heroElements.title}</div> --%>
+							    	</a>
+							    </div>
+							    </c:if>
+							    </c:forEach>
+							</c:if>	
+						</c:forEach>
+						</div>
+						</div>
+					</div>
 
 	
 
 					<!--========================================================  -->
 					<div>
-						<h1>BrandsTabAZListComponent</h1>
 						<table class="">
 							
 							<c:forEach items="${feature.items}" var="brandsTabAZElement">
-								<div>
-									<c:if
-										test="${brandsTabAZElement.typeCode eq 'BrandsTabAZElement'}">
-										<tr>
-											<td style="font-weight: bold;">${brandsTabAZElement.subType}</td>
-
-										</tr>
-										<br>
-									</c:if>
-								</div>
-
 								<table class="">
 									<thead>
 										<tr>
@@ -2174,61 +2189,8 @@ body {
 										</div>
 									</c:forEach>
 								</table>
-
-								<c:forEach items="${brandsTabAZElement.items}"
-									var="brandTabAZHeroBannerElement">
-
-
-									<c:if
-										test="${brandTabAZHeroBannerElement.typeCode eq 'HeroBannerComponent'}">
-										<div>
-											<c:forEach items="${brandTabAZHeroBannerElement.items}"
-												var="heroElements">
-												<c:if
-													test="${not empty heroElements && heroElements.typeCode eq 'HeroBannerElement'}">
-													<h1>HeroBannerComponent oF BrandsTabAZListComponent--
-														${brandsTabAZElement.subType}</h1>
-													<table class="">
-														<thead>
-															<tr>
-																<th>title</th>
-																<th>webURL</th>
-																<th>imageURL</th>
-																<th>brandLogo</th>
-															</tr>
-														</thead>
-
-														<tr>
-															<td>${heroElements.title}</td>
-															<td><a href="${heroElements.webURL}">${heroElements.webURL}</a></td>
-															<td><img alt="" src="${heroElements.imageURL.URL}"></td>
-															<td><img alt="" src="${heroElements.brandLogo.URL}"></td>
-														</tr>
-
-													</table>
-												</c:if>
-
-											</c:forEach>
-
-										</div>
-									</c:if>
-
-
-									<div>
-										<c:if
-											test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement'}">
-											<tr>
-												<td><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.webURL}</a></td>
-												<td>${brandTabAZBrandElement.brandName}</td>
-											</tr>
-										</c:if>
-									</div>
-								</c:forEach>
-
 							</c:forEach>
 						</table>
-
-
 					</div>
 				</c:if>
 
