@@ -26,8 +26,6 @@ import auth from "./auth/reducers/auth.reducer";
 import cart from "./cart/reducers/cart.reducer";
 import "babel-polyfill";
 
-console.log("ICID REDUCER");
-console.log(icid);
 const rootReducer = combineReducers({
   auth,
   user,
