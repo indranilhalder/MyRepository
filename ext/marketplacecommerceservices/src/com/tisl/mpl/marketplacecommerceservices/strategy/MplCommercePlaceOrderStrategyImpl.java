@@ -138,6 +138,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			}
 			cModel.setSubtotal(Double.valueOf(subtotal));
 			modelService.save(cModel);
+			modelService.refresh(cModel);
 		}
 	}
 	@Override
@@ -330,7 +331,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 					final Double subTotal = orderModel.getSubtotal();
 					LOG.info("order subTotal is -- " + subTotal);
- boolean deliveryCostPromotionApplied = false;
+					boolean deliveryCostPromotionApplied = false;
 					if(null !=orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
 						LOG.info("Igonre Promotions for EGV Order");
 					}else {
@@ -684,7 +685,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		double promoDiscount = 0.0D;
 		double couponDiscount = 0.0D;
 		double cartcouponDiscount = 0.0D;
-
+		double noCostEMIDiscount = 0.0D;
+		
 		if (CollectionUtils.isNotEmpty(entries))
 		{
 			for (final AbstractOrderEntryModel oModel : entries)
@@ -698,6 +700,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 								.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue());
 					}
 
+					noCostEMIDiscount +=(null == oModel.getEmiCouponValue() ? 0.0d : oModel.getEmiCouponValue().doubleValue());
 					cartcouponDiscount += (null == oModel.getCartCouponValue() ? 0.0d : oModel.getCartCouponValue().doubleValue());
 					couponDiscount += (null == oModel.getCouponValue() ? 0.0d : oModel.getCouponValue().doubleValue());
 					promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d : oModel.getTotalProductLevelDisc()
@@ -707,8 +710,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			LOG.info("deliveryCost for order entry in getTotalDiscount is = " + deliveryCost);
 			LOG.info("promoDiscount for order entry in getTotalDiscount is = " + promoDiscount);
 			LOG.info("couponDiscount for order entry in getTotalDiscount is = " + couponDiscount);
+			LOG.info("No Cost EMI Discount for order entry in getTotalDiscount is = " + noCostEMIDiscount);
 
-			discount = Double.valueOf(deliveryCost + couponDiscount + promoDiscount + cartcouponDiscount);
+			discount = Double.valueOf(deliveryCost + couponDiscount + promoDiscount + cartcouponDiscount+ noCostEMIDiscount);
 			LOG.info("discount for order entry in getTotalDiscount is = " + discount);
 		}
 		return discount;
