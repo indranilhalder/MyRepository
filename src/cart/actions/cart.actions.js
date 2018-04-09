@@ -945,7 +945,7 @@ export function generateCartidForLoggedInUserRequest() {
   };
 }
 
-export function generaetCartIdForLoggedInUserFailure(error) {
+export function generateCartIdForLoggedInUserFailure(error) {
   return {
     type: GENERATE_CART_ID_FOR_LOGGED_IN_USER_FAILURE,
     status: FAILURE,
@@ -975,14 +975,16 @@ export function generateCartIdForLoggedInUser() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
+
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
 
       return dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
     } catch (e) {
-      return dispatch(generaetCartIdForLoggedInUserFailure(e.message));
+      return dispatch(generateCartIdForLoggedInUserFailure(e.message));
     }
   };
 }
@@ -1096,6 +1098,7 @@ export function getOrderSummary(pincode) {
         }&pincode=${pincode}&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
+
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {

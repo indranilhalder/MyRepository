@@ -23,6 +23,8 @@ import {
   authCallsAreInProgress,
   singleAuthCallHasFailed
 } from "./auth.actions";
+import * as ErrorHandling from "../../general/ErrorHandling.js";
+
 export const LOGIN_USER_REQUEST = "LOGIN_USER_REQUEST";
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
 export const LOGIN_USER_FAILURE = "LOGIN_USER_FAILURE";
@@ -103,9 +105,8 @@ const FACEBOOK_SCOPE = "email,user_likes";
 const LOCALE = "en_US";
 const FACEBOOK_FIELDS = "name, email";
 const MY_PROFILE = "me";
-const GOOGLE_PLUS = "plus";
-const GOOGLE_PLUS_VERSION = "v1";
 const FAILURE = "Failure";
+const GOOGLE_PLATFORM_URL = "//apis.google.com/js/platform.js";
 export const SOCIAL_CHANNEL_GOOGLE_PLUS = "G";
 export const SOCIAL_CHANNEL_FACEBOOK = "F";
 
@@ -575,7 +576,7 @@ export function facebookLogin(isSignUp) {
             if (resp.authResponse) {
               resolve(resp);
             } else {
-              console.log("User cancelled login or did not fully authorize.");
+              reject("User cancelled login or did not fully authorize");
             }
           },
           {
@@ -596,7 +597,7 @@ export function facebookLogin(isSignUp) {
 
       return { ...authResponse.authResponse, ...graphResponse };
     } catch (e) {
-      dispatch(faceBookLoginFailure(e));
+      return dispatch(faceBookLoginFailure(e));
     }
   };
 }
@@ -616,41 +617,76 @@ export function googlePlusLoginFailure(error) {
   };
 }
 
+export function loadGoogleSignInApi() {
+  const scope = SCOPE;
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  return new Promise((resolve, reject) => {
+    const firstJS = document.getElementsByTagName("script")[0];
+    const js = document.createElement("script");
+
+    js.src = GOOGLE_PLATFORM_URL;
+    js.id = "gapi-client";
+
+    js.onload = () => {
+      window.gapi.load("auth2", () => {
+        if (!window.gapi.auth2.getAuthInstance()) {
+          window.gapi.auth2
+            .init({
+              client_id: clientId,
+              fetch_basic_profile: true,
+              ux_mode: "popup",
+              scope: scope
+                ? (Array.isArray(scope) && scope.join(" ")) || scope
+                : null
+            })
+            .then(
+              () =>
+                resolve({
+                  status: SUCCESS
+                }),
+              err => {
+                resolve({
+                  provider: "google",
+                  type: "load",
+                  error: "Failed to load SDK",
+                  status: ERROR
+                });
+              }
+            );
+        } else {
+          resolve({
+            status: SUCCESS
+          });
+        }
+      });
+    };
+
+    if (!firstJS) {
+      document.appendChild(js);
+    } else {
+      firstJS.parentNode.appendChild(js);
+    }
+  });
+}
+
 export function googlePlusLogin(type) {
   return async dispatch => {
     try {
       dispatch(googlePlusLoginRequest());
-      let accessToken;
-      const googleResponse = await new Promise((resolve, reject) => {
-        window.gapi.auth.signIn({
-          callback: function(authResponse) {
-            window.gapi.client.load(
-              GOOGLE_PLUS,
-              GOOGLE_PLUS_VERSION,
-              function() {
-                var request = window.gapi.client.plus.people.get({
-                  userId: MY_PROFILE
-                });
-                request.execute(function(resp) {
-                  accessToken = authResponse.id_token;
-                  resolve(resp);
-                });
-              }
-            );
-          },
-          clientid: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-          cookiepolicy: COOKIE_POLICY,
-          requestvisibleactions: REQUEST_VISIBLE_ACTIONS,
-          scope: SCOPE
-        });
-      });
+
+      const googleResponse = await window.gapi.auth2.getAuthInstance().signIn();
       if (googleResponse.code > 400) {
         throw new Error(`${googleResponse.message}`);
       }
 
-      return { ...googleResponse, accessToken };
+      const basicProfile = googleResponse.getBasicProfile();
+      const email = basicProfile.getEmail();
+      const id = basicProfile.getId();
+      const accessToken = googleResponse.getAuthResponse().access_token;
+
+      return { email, id, accessToken };
     } catch (e) {
-      return dispatch(googlePlusLoginFailure(e));
+      return dispatch(googlePlusLoginFailure(e.message));
     }
   };
 }
@@ -720,8 +756,10 @@ export function socialMediaRegistration(
         }&emailId=${userName}&socialMedia=${platForm}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus) {
+        throw new Error(`${resultJsonStatus.message}`);
       }
       return dispatch(socialMediaRegistrationSuccess(resultJson));
     } catch (e) {
@@ -761,6 +799,7 @@ export function socialMediaLogin(userName, platform, customerAccessToken) {
         `${SOCIAL_MEDIA_LOGIN_PATH}/${userName}/loginSocialUser?access_token=${customerAccessToken}&emailId=${userName}&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
       );
       const resultJson = await result.json();
+
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
