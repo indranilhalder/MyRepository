@@ -22,7 +22,10 @@ export default class ProductDetailsMainCard extends React.Component {
     const displayPrice = this.props.discountPrice
       ? this.props.discountPrice
       : this.props.price;
-
+    let averageRating = "";
+    if (this.props.averageRating) {
+      averageRating = Math.floor(this.props.averageRating);
+    }
     return (
       <div className={styles.base}>
         <div className={styles.productInfo}>
@@ -53,7 +56,7 @@ export default class ProductDetailsMainCard extends React.Component {
                   className={styles.ratingText}
                   onClick={() => this.handleClick()}
                 >
-                  Rating {this.props.averageRating}/5
+                  Rating {`${averageRating}`} /5
                 </div>
               )}
               <div className={styles.arrowHolder}>

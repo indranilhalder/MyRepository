@@ -110,7 +110,7 @@ export default class OtpVerification extends React.Component {
             </div>
             <div>
               <div className={ownStyles.content}>
-                Please enter the OTP sent to {mobileNumber}.
+                Waiting to automatically detect an SMS sent to {mobileNumber}.
                 <span className={ownStyles.span}>Wrong number?</span>
               </div>
             </div>
@@ -121,7 +121,7 @@ export default class OtpVerification extends React.Component {
                 onChange={val => {
                   this.handleOtpInput(val);
                 }}
-                type="tel"
+                type="password"
               />
             </div>
             <div className={ownStyles.buttonHolder}>

@@ -82,7 +82,11 @@ class CheckOutPage extends React.Component {
       ratingExperience: false
     };
   }
-
+  onClickImage(productCode) {
+    if (productCode) {
+      this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    }
+  }
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
@@ -232,6 +236,7 @@ class CheckOutPage extends React.Component {
                     )
                   }
                   onPiq={() => this.getAllStores(val.USSID)}
+                  onClickImage={() => this.onClickImage(val.productcode)}
                 />
               </div>
             );
