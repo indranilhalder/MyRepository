@@ -8,21 +8,105 @@ export const ADOBE_TARGET_COOKIE_NAME =
 export const ADOBE_TARGET_SPLIT_VALUE = "%7C";
 export const ADOBE_TARGET_MCMID = "MCMID";
 export const ADOBE_TARGET_WAIT_TIME = 2000;
-const ADOBE_SATELLITE_CODE = "page view";
+const ADOBE_SATELLITE_CODE = "virtual_page_load";
+export const ADOBE_HOME_TYPE = "home";
+export const ADOBE_PDP_TYPE = "pdp";
+export const ADOBE_CART_TYPE = "cart";
+export const ADOBE_PDP_CPJ = "cpj_pdp";
+export const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
 
-export function setDataLayer(routerProps) {
-  const path = routerProps.path;
-  if (path === constants.HOME_ROUTER) {
-    window.digitalData = getDigitalDataForHome();
-  }
-  window._satellite.track(ADOBE_SATELLITE_CODE);
-}
-
-function getDigitalDataForHome() {
+export function setDataLayer(type, response, icid) {
   let userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
+
   if (userDetails) {
     userDetails = JSON.parse(userDetails);
   }
+  if (type === ADOBE_HOME_TYPE) {
+    window.digitalData = getDigitalDataForHome();
+  }
+
+  if (type === ADOBE_PDP_TYPE) {
+    window.digitalData = getDigitalDataForPdp(type, response);
+  }
+
+  if (icid) {
+    window.digitalData.internal = {
+      campaign: {
+        id: icid
+      }
+    };
+  }
+
+  if (userDetails) {
+    window.digitalData.account = {
+      login: {
+        customerID: userDetails.customerId
+      }
+    };
+  }
+  const defaultPinCode = localStorage.getItem(
+    constants.DEFAULT_PIN_CODE_LOCAL_STORAGE
+  );
+
+  if (defaultPinCode) {
+    window.digitalData.geolocation = {
+      pin: {
+        code: defaultPinCode
+      }
+    };
+  }
+
+  window._satellite.track(ADOBE_SATELLITE_CODE);
+}
+
+function getDigitalDataForPdp(type, pdpResponse) {
+  const seoBreadCrumbs = pdpResponse.seo
+    ? pdpResponse.seo
+      ? pdpResponse.seo.breadcrumbs
+          .map(val => {
+            return val.name.toLowerCase().replace(/\s+/g, "_");
+          })
+          .reverse()
+      : ["", "", "", ""]
+    : ["", "", "", ""];
+  const categoryHierarchy = pdpResponse.categoryHierarchy.map(val => {
+    return val.category_name.toLowerCase().replace(/\s+/g, "_");
+  });
+
+  const data = {
+    cpj: {
+      product: {
+        id: pdpResponse.productListingId,
+        price: pdpResponse.mrpPrice.doubleValue,
+        discount: pdpResponse.winningSellerPrice.doubleValue
+      },
+      pdp: {
+        findingMethod: window.digitalData.pageName
+      },
+      brand: {
+        name: pdpResponse.brandName
+      }
+    },
+    flag: "internal_campaign",
+    page: {
+      category: {
+        primaryCategory: "product",
+        subCategory1: categoryHierarchy[0],
+        subCategory2: categoryHierarchy[1],
+        subCategory3: categoryHierarchy[2]
+      },
+      display: {
+        hierarchy: ["home", ...seoBreadCrumbs]
+      },
+      pageInfo: {
+        pageName: "product details"
+      }
+    }
+  };
+  return data;
+}
+
+function getDigitalDataForHome() {
   const data = {
     page: {
       category: {
@@ -33,13 +117,7 @@ function getDigitalDataForHome() {
       pageName: "homepage"
     }
   };
-  if (userDetails) {
-    data.account = {
-      login: {
-        customerID: userDetails.customerId
-      }
-    };
-  }
+
   return data;
 }
 

@@ -15,6 +15,7 @@ import {
   MSD_WIDGET_PLATFORM,
   MSD_API_KEY
 } from "../../lib/config.js";
+import { setDataLayer, ADOBE_HOME_TYPE } from "../../lib/adobeUtils.js";
 import * as Cookie from "../../lib/Cookie";
 
 import { getMcvId } from "../../lib/adobeUtils.js";
@@ -319,6 +320,7 @@ export function homeFeed(brandIdOrCategoryId: null) {
       }
       let parsedResultJson = JSON.parse(resultJson.content);
       parsedResultJson = parsedResultJson.items;
+      setDataLayer(ADOBE_HOME_TYPE);
       dispatch(homeFeedSuccess(parsedResultJson, feedTypeRequest));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
