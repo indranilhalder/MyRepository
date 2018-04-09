@@ -25,6 +25,17 @@ export default class FilterMobile extends React.Component {
       filterSelectedIndex: 0
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    const facetdatacategory = nextProps.facetdatacategory;
+    if (facetdatacategory && this.state.showCategory === false) {
+      this.setState({ showCategory: true });
+    }
+
+    if (!facetdatacategory && this.state.showCategory === true) {
+      this.setState({ showCategory: false });
+    }
+  }
   selectTab(val) {
     this.setState({ showCategory: false, filterSelectedIndex: val });
     this.setState({ brandSearchString: "" });
