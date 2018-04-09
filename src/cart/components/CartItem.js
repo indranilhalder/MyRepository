@@ -16,7 +16,11 @@ export default class CartItem extends React.Component {
       label: "See all"
     };
   }
-
+  onClick() {
+    if (this.props.onClickImage) {
+      this.props.onClickImage();
+    }
+  }
   handleRemove(index) {
     if (this.props.onRemove) {
       this.props.onRemove(index);
@@ -61,6 +65,7 @@ export default class CartItem extends React.Component {
             productDetails={this.props.productDetails}
             price={this.props.price}
             isServiceAvailable={this.props.productIsServiceable}
+            onClickImage={() => this.onClick()}
           />
         </div>
         {this.props.deliveryInformation &&

@@ -57,15 +57,39 @@ export default class GiftCard extends React.Component {
 
   onSubmitDetails() {
     if (this.props.createGiftCardDetails) {
-      const giftCardDetails = {};
-      giftCardDetails.from = this.state.senderName;
-      giftCardDetails.quantity = QUANTITY;
-      giftCardDetails.messageOnCard = this.state.message;
-      giftCardDetails.productID = PRODUCT_ID;
-      giftCardDetails.priceSelectedByUserPerQuantity = this.state.amount;
-      giftCardDetails.receiverEmailID = this.state.email;
-      giftCardDetails.mobileNumber = MOBILE_NUMBER;
-      this.props.createGiftCardDetails(giftCardDetails);
+      const EMAIL_REGULAR_EXPRESSION = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      if (this.props.createGiftCardDetails) {
+        const giftCardDetails = {};
+        giftCardDetails.from = this.state.senderName;
+        giftCardDetails.quantity = QUANTITY;
+        giftCardDetails.messageOnCard = this.state.message;
+        giftCardDetails.productID = PRODUCT_ID;
+        giftCardDetails.priceSelectedByUserPerQuantity = this.state.amount;
+        giftCardDetails.receiverEmailID = this.state.email;
+        giftCardDetails.mobileNumber = MOBILE_NUMBER;
+        if (!this.state.amount) {
+          this.props.displayToast("Please select the amount");
+          return false;
+        }
+        if (!this.state.email) {
+          this.props.displayToast("Please fill recipient e-mail address");
+          return false;
+        }
+        if (!EMAIL_REGULAR_EXPRESSION.test(this.state.email)) {
+          this.props.displayToast("Please fill valid  e-mail address");
+          return false;
+        }
+        if (!this.state.senderName) {
+          this.props.displayToast("Please enter sender name");
+          return false;
+        }
+        if (!this.state.message) {
+          this.props.displayToast("Please enter message");
+          return false;
+        } else {
+          this.props.createGiftCardDetails(giftCardDetails);
+        }
+      }
     }
   }
   navigateToLogin() {
