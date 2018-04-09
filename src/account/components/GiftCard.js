@@ -50,6 +50,11 @@ export default class GiftCard extends React.Component {
       });
     }
   }
+  componentWillMount() {
+    if (this.props.clearGiftCardStatus) {
+      this.props.clearGiftCardStatus();
+    }
+  }
 
   selectAmount(val, amount) {
     this.setState({ amountText: val, amount: amount });
@@ -247,6 +252,7 @@ export default class GiftCard extends React.Component {
     );
   }
 }
+
 GiftCard.propTypes = {
   giftCardImage: PropTypes.obj,
   email: PropTypes.string,

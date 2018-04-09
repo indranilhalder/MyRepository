@@ -25,7 +25,7 @@ import {
   REVIEW_SUBMIT_TOAST_TEXT
 } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
-
+const PRODUCT_QUANTITY = "1";
 class ProductReviewPage extends Component {
   state = {
     visible: false
@@ -82,29 +82,36 @@ class ProductReviewPage extends Component {
 
   addProductToBag = () => {
     let productDetails = {};
+    productDetails.code = this.props.productDetails.productListingId;
+    productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.ussId = this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (userDetails) {
-      productDetails.userId = JSON.parse(userDetails).customerInfo.mobileNumber;
-      productDetails.accessToken = JSON.parse(customerCookie).access_token;
-      productDetails.cartId = JSON.parse(cartDetailsLoggedInUser).code;
-    } else {
-      productDetails.userId = ANONYMOUS_USER;
-      productDetails.accessToken = JSON.parse(globalCookie).access_token;
-      productDetails.cartId = JSON.parse(cartDetailsForAnonymous).guid;
-    }
-    this.props.addProductToCart(productDetails);
-  };
-  addProductToWishList = () => {
-    if (this.props.addProductToWishList) {
-      let productDetails = {};
-      productDetails.listingId = this.props.productDetails.productListingId;
-      this.props.addProductToWishList(productDetails);
+      if (
+        cartDetailsLoggedInUser !== undefined &&
+        customerCookie !== undefined
+      ) {
+        this.props.addProductToCart(
+          JSON.parse(userDetails).userName,
+          JSON.parse(cartDetailsLoggedInUser).code,
+          JSON.parse(customerCookie).access_token,
+          productDetails
+        );
+      }
+    } else if (cartDetailsForAnonymous) {
+      this.props.addProductToCart(
+        ANONYMOUS_USER,
+        JSON.parse(cartDetailsForAnonymous).guid,
+        JSON.parse(globalCookie).access_token,
+        productDetails
+      );
     }
   };
 

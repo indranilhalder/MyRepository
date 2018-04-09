@@ -868,6 +868,9 @@ class CheckOutPage extends React.Component {
           <AddDeliveryAddress
             addUserAddress={address => this.addAddress(address)}
             {...this.state}
+            showSecondaryLoader={this.props.showSecondaryLoader}
+            hideSecondaryLoader={this.props.hideSecondaryLoader}
+            loading={this.props.cart.loading}
             onChange={val => this.onChange(val)}
           />
         </div>

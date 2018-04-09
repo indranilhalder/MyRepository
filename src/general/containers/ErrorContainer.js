@@ -6,7 +6,7 @@ import delay from "lodash/delay";
 import keys from "lodash/keys";
 import each from "lodash/each";
 
-const CLEAR_ERROR_DELAY = TOAST_DELAY + 500;
+const CLEAR_ERROR_DELAY = TOAST_DELAY + 1000;
 
 // The errors for user, pdp and plp are universal errors
 // This means that they need to be dealt with separately here (meaning that the entire reducer has an error key)
@@ -93,36 +93,32 @@ class ErrorDisplay extends React.Component {
     const errorKeys = keys(this.props);
     let seenError = false;
 
-    if (prevProps.userError !== this.props.userError) {
-      if (this.props.userError !== "" && this.props.userError !== null) {
-        this.displayError(this.props.userError);
-        return;
-      }
+    if (this.props.userError !== "" && this.props.userError !== null) {
+      this.displayError(this.props.userError);
+      return;
     }
 
-    if (prevProps.plpError !== this.props.plpError) {
-      if (this.props.plpError !== "" && this.props.plpError !== null) {
-        this.displayError(this.props.plpError);
-        return;
-      }
+    if (this.props.plpError !== "" && this.props.plpError !== null) {
+      this.displayError(this.props.plpError);
+      return;
     }
 
-    if (prevProps.pdpError !== this.props.pdpError) {
-      if (this.props.pdpError !== "" && this.props.pdpError !== null) {
-        this.displayError(this.props.pdpError);
-        return;
-      }
+    if (this.props.pdpError !== "" && this.props.pdpError !== null) {
+      this.displayError(this.props.pdpError);
+      return;
     }
 
     each(errorKeys, key => {
-      const previousError = prevProps[key];
       const currentError = this.props[key];
 
-      if (previousError !== currentError) {
-        if (currentError !== "" && currentError !== null && !seenError) {
-          this.displayError(currentError);
-          seenError = true;
-        }
+      if (
+        currentError !== "" &&
+        currentError !== null &&
+        !seenError &&
+        typeof currentError === "string"
+      ) {
+        this.displayError(currentError);
+        seenError = true;
       }
     });
   }
