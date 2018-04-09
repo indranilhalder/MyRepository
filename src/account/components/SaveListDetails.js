@@ -107,6 +107,9 @@ export default class SaveListDetails extends React.Component {
           !wishList.products && (
             <div className={styles.noSaveListBlock}>{NO_SAVELIST_TEXT}</div>
           )}
+        {!wishList && (
+          <div className={styles.noSaveListBlock}>{NO_SAVELIST_TEXT}</div>
+        )}
       </div>
     );
   }
