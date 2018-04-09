@@ -2001,7 +2001,7 @@ body {
 									<c:if test="${loop.index eq 0}">
 									<div class="col-xs-6 pr0">
 									<a href="${topCategoriesWidgetElement.webURL}"> 
-										<img src="${topCategoriesWidgetElement.imageURL}"
+										<img src="${topCategoriesWidgetElement.imageURL.URL}"
 											class="img-responsive br4" />
 											<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}s</div>
 											</a>
@@ -2012,7 +2012,7 @@ body {
 									<c:if test="${loop.index eq 1}">
 									<div class="col-xs-12 pad0 mb16">
 										<a href="${topCategoriesWidgetElement.webURL}"> 
-										<img src="${topCategoriesWidgetElement.imageURL}"
+										<img src="${topCategoriesWidgetElement.imageURL.URL}"
 											class="img-responsive pull-right br4" />
 											<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}</div>
 										</a>
@@ -2021,7 +2021,7 @@ body {
 									<c:if test="${loop.index gt 1}">
 									<div class="col-xs-12 pad0">
 										<a href="${topCategoriesWidgetElement.webURL}"> 
-										<img src="${topCategoriesWidgetElement.imageURL}"
+										<img src="${topCategoriesWidgetElement.imageURL.URL}"
 											class="img-responsive pull-right br4" />
 											<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}</div>
 										</a>
@@ -2276,52 +2276,39 @@ body {
 
 				<c:if
 					test="${feature.typeCode eq 'AutoProductRecommendationComponent'}">
-					<div>
+					<div class="col-xs-12 pad0 mb40 product-recommendation-widget">
 						<h1>AutoProductRecommendationComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>btnText</th>
-									<th>fetchURL</th>
-									<th>backupURL</th>
-									<th>widgetPlatform</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-								<td>${feature.btnText}</td>
-								<td><a href="${feature.fetchURL}"> ${feature.fetchURL}</a></td>
-								<td><a href="${feature.backupURL}">
-										${feature.backupURL}</a></td>
-								<td>${feature.widgetPlatform}</td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-									<th>productCode</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}"
-								var="autoProductRecommendationElement">
-								<div>
-									<c:if
-										test="${autoProductRecommendationElement.typeCode eq 'AutoProductRecommendationElement'}">
-										<tr>
-											<td>${autoProductRecommendationElement.title}</td>
-											<td><a href="${autoProductRecommendationElement.webURL}">${autoProductRecommendationElement.webURL}</a></td>
-											<c:if
-												test="${not empty autoProductRecommendationElement.productCode}">
-												<td>${autoProductRecommendationElement.productCode.code}</td>
-											</c:if>
-										</tr>
-									</c:if>
-								</div>
-							</c:forEach>
-						</table>
+						<div class="col-xs-12 heading">${feature.title}</div>
+							<div class="col-xs-12 pad0 product-recommendation-slider">
+								<c:forEach items="${feature.items}"
+									var="autoProductRecommendationElement">
+									<div>
+										<c:if
+											test="${autoProductRecommendationElement.typeCode eq 'AutoProductRecommendationElement'}">
+											
+											<a href="${autoProductRecommendationElement.webURL}">
+										    	<img src="${autoProductRecommendationElement.productCode.picture.URL}" class="br4" />
+										    </a>
+									    	<div class="brand-name">${autoProductRecommendationElement.title}
+									    		<a href="#" class="pull-right">
+									    			<i class="fa fa-bookmark-o" aria-hidden="true"></i>
+									    		</a>
+									    	</div>
+										    <a href="${autoProductRecommendationElement.webURL}">
+										    	<div class="product-name">${autoProductRecommendationElement.productCode.name}</div>
+										    </a>
+										    <!-- <div class="product-price">Rs. 4,950</div> -->
+										<c:if
+											test="${not empty autoProductRecommendationElement.productCode}">
+											<fmt:parseNumber var="productPrice" type="number"
+												value="${autoProductRecommendationElement.productCode.mrp}" />
+											<div class="product-price">${productPrice}</div>
+										</c:if>
+										</c:if>
+									</div>
+								</c:forEach>
+							</div>
+						<a href="${feature.fetchURL}" class="shop-all-btn">${feature.btnText}</a>
 					</div>
 				</c:if>
 
