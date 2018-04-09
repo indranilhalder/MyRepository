@@ -32,7 +32,7 @@ export default class BrandCardHeader extends React.Component {
       feedComponentData.items &&
       feedComponentData.items[0]
     ) {
-      const urlSuffix = this.props.feedComponentData.items[0].webURL.replace(
+      const urlSuffix = feedComponentData.items[0].webURL.replace(
         TATA_CLIQ_ROOT,
         "$1"
       );
