@@ -34,1318 +34,1458 @@
 	height: auto !important;
 }
 
-	body{
-			font-family: 'Rubik', sans-serif;
-		}
-		.pad0{
-			padding: 0;
-		}
-		.mb40{
-			margin-bottom: 40px;
-		}
-		.hero-slider .slick-slide{
-			margin: 0 5px;
-			position: relative;
-		}
-		.hero-slider .slick-slide img{
-			width: 100%;
-			height: 190px;
-			margin-top: 10px;
-			display: block;
-			border-radius: 4px;
-		}
-		.hero-slider .slick-current img{
-			width: 100%;
-			height: auto;
-			display: block;
-			margin-top: 0px;
-		}
-		.hero-slider .hero-subsection{
-			position: absolute;
-			top: 40%;
-			left: 0;
-		}
-		.hero-slider .brand-logo{
-		    width: auto !important;
-		    height: auto !important;
-		    margin-left: 15px;
-		    border: 1px solid #000;
-		}
-		.hero-slider .banner-title{
-		    width: auto;
-		    height: auto;
-		    margin-left: 15px;
-		    margin-top: 10px;
-		    font-size: 30px;
-  			font-weight: 500;
-  			color: #ffffff;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-		}
+body {
+	font-family: 'Rubik', sans-serif;
+}
 
+.pad0 {
+	padding: 0;
+}
 
-		.offer-slider .slick-slide{
-			position: relative;
-		}
-		.offer-slider .slick-slide img{
-			max-width: 100%;
-			border-radius: 4px;
-		}
-		.offer-slider .offer-subsection{
-			position: absolute;
-			bottom: 0;
-			left: 0;
-		}
-		.offer-slider .shop-now{
-			width: 141px;
-			height: auto;
-		    margin: 20px 15px;
-		    border: 1px solid #000;
-			border-radius: 100px;
-			border: solid 2px #ffffff;
-			padding: 10px 0;
-		    text-align: center;
-		    color: #ffffff;
-		    display: block;
-		    font-size: 14px;
-		}
-		.offer-slider .banner-title{
-		    width: auto;
-		    height: auto;
-		    margin-left: 15px;
-		    margin-top: 10px;
-		    font-size: 30px;
-  			font-weight: 500;
-  			color: #ffffff;
-		}
-		.offer-slider .offer{
-			position: absolute;
-			top: 20px;
-			left: 20px;
-			width: 78px;
-			height: 78px;
-			background-image: linear-gradient(137deg, #fd2c7a, #ff7255);
-  			text-align: center;
-  			color: #ffffff;
-  			border-radius: 50%;
-		}
-		.offer-slider .offer span{
-			position: absolute;
-			left: 12px;
-			top: 20px;
-			width: 55px;
-		    font-size: 14px;
-  			font-weight: 500;
-		    font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-		}
-		.offer-widget-title{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-			margin: 0px 0px 25px 15px;
-		}
-		
-		.flash-sales-widget{
-			color: #ffffff;
-			padding: 25px 20px;
-			background-repeat: no-repeat;
-			background-size: cover;
-		}
-		.flash-sales-widget-title{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: left;
-			color: #ffffff;
-			text-transform: capitalize;
-		}
-		.flash-sales-widget-timer{
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: right;
-			color: #ffffff;
-		}
-		.flash-sales-widget-text{
-			font-size: 14px;
-			font-weight: normal;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.57;
-			letter-spacing: normal;
-			text-align: left;
-			color: #ffffff;
-			margin: 10px 0 25px 0;
-			width: 195px;
-		}
-		.flash-sales-widget-product:nth-child(even){
-			padding: 0 12px 0 0;
-		}
-		.flash-sales-widget-product:nth-child(odd){
-			padding: 0 0 0 12px;
-		}
-		.flash-sales-widget-product img{
-			border-radius: 4px;
-		}
-		.flash-sales-widget-product-offer{
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			color: #ffffff;
-			padding: 0;
-			margin: 15px 0 10px 0;
-		}
-		.flash-sales-widget-product-name{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.57;
-			letter-spacing: normal;
-			text-align: left;
-			color: #ffffff;
-			padding: 0;
-			margin-bottom: 25px;
-		}
-		.flash-sales-widget .shop-all-btn{
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-			border: solid 2px #ffffff;
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			float: left;
-			clear: both;
-			margin-bottom: 5px;
-		}
-		.flash-sales-widget .fa-clock-o{
-			font-size: 20px;
-			margin-right: 5px;
-		}
-		.flash-sales-widget-timer .fa-clock-o{
-			font-size: 20px;
-    		margin-right: 10px;
-		}
-		.flash-sales-widget-timer .time-digits{
-			float: right;
-    		margin-top: 2px;
-		}
-		.connect-banner{
-			width: calc(100% - 30px);
-			margin-left: 15px;
-			margin-right: 15px;
-			border-radius: 4.2px;
-			padding: 25px;
-			background-repeat: no-repeat;
-			background-size: cover;
-		}
-		.connect-banner-text1 {
-			font-size: 14.3px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-			padding-right: 0;
-		}
+.mb40 {
+	margin-bottom: 40px;
+}
 
-		.connect-banner-text2 {
-			font-size: 12.5px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-			margin: 10px 0 15px 0;
-		}
+.hero-slider .slick-slide {
+	margin: 0 5px;
+	position: relative;
+}
 
-		.connect-banner-more {
-			font-size: 12.5px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-			padding-left: 15px;
-    		display: inline-block;
-    		width: auto;
-		}
-		.connect-banner-more::after {
-		    content: "";
-		    display: block;
-		    width: auto;
-		    border: 0.5px solid #fff;
-		    margin-top: 2px;
-		}
-		.connect-banner-full-width{
-			background-repeat: no-repeat;
-			background-size: cover;
-			padding: 25px;
-		}
-		.connect-banner-full-width .connect-banner-text1{
-			font-size: 16px;
-		}
-		.connect-banner-full-width .connect-banner-more,
-		.connect-banner-full-width .connect-banner-text2{
-			font-size: 14px;
-		}
-		.banner-product-slider{
-			margin: 30px 0 35px 0;
-		}
-		.banner-product-carousel,
-		.video-product-carousel,
-		.auto-brand-product-carousel{
-			background-color: #e4e4e4;
-		}
-		.banner-product-carousel .overlay-text{
-		    position: absolute;
-		    top: 100px;
-		    text-align: center;
-		}
-		.banner-product-carousel .banner-product-title{
-			font-size: 24px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.banner-product-carousel .banner-product-desc{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.banner-product-slider .slick-slide img{
-			border-radius: 4px;
-		}
-		.banner-product-slider .product-name {
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.57;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-			margin: 10px 0 15px 0;
-		}
-		.banner-product-slider .product-price {
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-		}
-		.banner-product-carousel .shop-all-btn{
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-  			border: solid 2px #212121;
-  			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #212121;
-			float: left;
-			clear: both;
-    		margin-left: 15px;
-    		margin-bottom: 35px;
-		}
+.hero-slider .slick-slide img {
+	width: 100%;
+	height: 190px;
+	margin-top: 10px;
+	display: block;
+	border-radius: 4px;
+}
 
-		.video-product-slider{
-			margin: 30px 0 35px 0;
-		}
-		.video-product-carousel-container{
-			position: absolute;
-			top: 50px;
-			z-index: 1;
-			width: 100%;
-		}
-		.video-product-carousel .video-product-title{
-		    text-align: center;
-			font-size: 24px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.video-product-carousel .video-product-desc{
-		    text-align: center;
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.video-product-slider .slick-slide img{
-			border-radius: 4px;
-		}
-		.video-product-slider .product-name {
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.57;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-			margin: 10px 0 15px 0;
-		}
-		.video-product-slider .product-price {
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-		}
-		.video-product-carousel .shop-all-btn{
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-  			border: solid 2px #212121;
-  			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #212121;
-			float: left;
-			clear: both;
-    		margin-left: 15px;
-    		margin-bottom: 35px;
-		}
-		.theme-offers{
-			background-repeat: no-repeat;
-    		background-size: cover;
-		}
-		.theme-offers .heading{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-			margin: 20px 0 25px 15px;
-		}
-		.theme-offers-slider .slick-slide img{
-			border-radius: 4px;
-		}
-		.theme-offers-slider .brand-name{
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.71;
-			letter-spacing: normal;
-			color: #ffffff;
-			margin-top: 15px;
-		}
-		.theme-offers-slider .product-name{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			color: #ffffff;
-			margin: 5px 0;
-			width: calc(100% - 15px);
-		}
-		.theme-offers-slider .product-price{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.71;
-			letter-spacing: normal;
-			color: #ffffff;
-			margin-top: 5px;
-		}
-		.theme-offers .shop-all-btn{
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-			border: solid 2px #ffffff;
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			float: left;
-			clear: both;
-			margin: 25px 0 35px 15px;
-		}
-		.line-through{
-			text-decoration: line-through;
-		}
+.hero-slider .slick-current img {
+	width: 100%;
+	height: auto;
+	display: block;
+	margin-top: 0px;
+}
 
-		.theme-product-widget{
-			background-repeat: no-repeat;
-    		background-size: cover;
-		}
-		.theme-product-widget .brand-logo{
-			margin: 25px 0 0 15px;
-		}
-		.theme-product-widget-container{
-			padding: 0;
-    		margin-top: 160px;
-		}
-		.theme-product-widget-slider{
-			margin: 30px 0 25px 0;
-		}
-		.theme-product-widget-slider .slick-slide img{
-			border-radius: 50%;
-		}
-		.theme-product-widget .heading{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.theme-product-widget .shop-all-btn{
-			float: right;
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-			border: solid 2px #ffffff;
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			margin-top: -5px;
-		}
-		.theme-product-widget .product-name{
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.71;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			margin: 10px 0 5px 0;
-			padding-right: 15px;
-		}
-		.theme-product-widget .product-price{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			padding-right: 15px;
-		}
-		.banner-separator{
-			padding: 25px 0 25px 15px;
-			background-repeat: no-repeat;
-    		background-size: cover;
-		}
-		.banner-separator .title{
-			font-size: 16px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.25;
-			letter-spacing: normal;
-			color: #ffffff;
-			margin-bottom: 5px;
-		}
+.hero-slider .hero-subsection {
+	position: absolute;
+	top: 40%;
+	left: 0;
+}
 
-		.banner-separator .desc{
-			font-size: 14px;
-			font-weight: normal;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.mt2{
-			margin-top: 2px;
-		}
-		
-		.auto-brand-product-slider{
-			margin: 40px 0 25px 0;
-		}
-		/*.auto-brand-product-carousel .overlay-text{
+.hero-slider .brand-logo {
+	width: auto !important;
+	height: auto !important;
+	margin-left: 15px;
+	border: 1px solid #000;
+}
+
+.hero-slider .banner-title {
+	width: auto;
+	height: auto;
+	margin-left: 15px;
+	margin-top: 10px;
+	font-size: 30px;
+	font-weight: 500;
+	color: #ffffff;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+}
+
+.offer-slider .slick-slide {
+	position: relative;
+}
+
+.offer-slider .slick-slide img {
+	max-width: 100%;
+	border-radius: 4px;
+}
+
+.offer-slider .offer-subsection {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+.offer-slider .shop-now {
+	width: 141px;
+	height: auto;
+	margin: 20px 15px;
+	border: 1px solid #000;
+	border-radius: 100px;
+	border: solid 2px #ffffff;
+	padding: 10px 0;
+	text-align: center;
+	color: #ffffff;
+	display: block;
+	font-size: 14px;
+}
+
+.offer-slider .banner-title {
+	width: auto;
+	height: auto;
+	margin-left: 15px;
+	margin-top: 10px;
+	font-size: 30px;
+	font-weight: 500;
+	color: #ffffff;
+}
+
+.offer-slider .offer {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	width: 78px;
+	height: 78px;
+	background-image: linear-gradient(137deg, #fd2c7a, #ff7255);
+	text-align: center;
+	color: #ffffff;
+	border-radius: 50%;
+}
+
+.offer-slider .offer span {
+	position: absolute;
+	left: 12px;
+	top: 20px;
+	width: 55px;
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.43;
+	letter-spacing: normal;
+}
+
+.offer-widget-title {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: left;
+	color: #212121;
+	margin: 0px 0px 25px 15px;
+}
+
+.flash-sales-widget {
+	color: #ffffff;
+	padding: 25px 20px;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.flash-sales-widget-title {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: left;
+	color: #ffffff;
+	text-transform: capitalize;
+}
+
+.flash-sales-widget-timer {
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: right;
+	color: #ffffff;
+}
+
+.flash-sales-widget-text {
+	font-size: 14px;
+	font-weight: normal;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.57;
+	letter-spacing: normal;
+	text-align: left;
+	color: #ffffff;
+	margin: 10px 0 25px 0;
+	width: 195px;
+}
+
+.flash-sales-widget-product:nth-child(even) {
+	padding: 0 12px 0 0;
+}
+
+.flash-sales-widget-product:nth-child(odd) {
+	padding: 0 0 0 12px;
+}
+
+.flash-sales-widget-product img {
+	border-radius: 4px;
+}
+
+.flash-sales-widget-product-offer {
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.43;
+	letter-spacing: normal;
+	color: #ffffff;
+	padding: 0;
+	margin: 15px 0 10px 0;
+}
+
+.flash-sales-widget-product-name {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.57;
+	letter-spacing: normal;
+	text-align: left;
+	color: #ffffff;
+	padding: 0;
+	margin-bottom: 25px;
+}
+
+.flash-sales-widget .shop-all-btn {
+	width: 120px;
+	padding: 8px 0;
+	border-radius: 100px;
+	border: solid 2px #ffffff;
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #ffffff;
+	float: left;
+	clear: both;
+	margin-bottom: 5px;
+}
+
+.flash-sales-widget .fa-clock-o {
+	font-size: 20px;
+	margin-right: 5px;
+}
+
+.flash-sales-widget-timer .fa-clock-o {
+	font-size: 20px;
+	margin-right: 10px;
+}
+
+.flash-sales-widget-timer .time-digits {
+	float: right;
+	margin-top: 2px;
+}
+
+.connect-banner {
+	width: calc(100% - 30px);
+	margin-left: 15px;
+	margin-right: 15px;
+	border-radius: 4.2px;
+	padding: 25px;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.connect-banner-text1 {
+	font-size: 14.3px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+	padding-right: 0;
+}
+
+.connect-banner-text2 {
+	font-size: 12.5px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+	margin: 10px 0 15px 0;
+}
+
+.connect-banner-more {
+	font-size: 12.5px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+	padding-left: 15px;
+	display: inline-block;
+	width: auto;
+}
+
+.connect-banner-more::after {
+	content: "";
+	display: block;
+	width: auto;
+	border: 0.5px solid #fff;
+	margin-top: 2px;
+}
+
+.connect-banner-full-width {
+	background-repeat: no-repeat;
+	background-size: cover;
+	padding: 25px;
+}
+
+.connect-banner-full-width .connect-banner-text1 {
+	font-size: 16px;
+}
+
+.connect-banner-full-width .connect-banner-more,
+	.connect-banner-full-width .connect-banner-text2 {
+	font-size: 14px;
+}
+
+.banner-product-slider {
+	margin: 30px 0 35px 0;
+}
+
+.banner-product-carousel, .video-product-carousel,
+	.auto-brand-product-carousel {
+	background-color: #e4e4e4;
+}
+
+.banner-product-carousel .overlay-text {
+	position: absolute;
+	top: 100px;
+	text-align: center;
+}
+
+.banner-product-carousel .banner-product-title {
+	font-size: 24px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+}
+
+.banner-product-carousel .banner-product-desc {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+}
+
+.banner-product-slider .slick-slide img {
+	border-radius: 4px;
+}
+
+.banner-product-slider .product-name {
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.57;
+	letter-spacing: normal;
+	text-align: left;
+	color: #212121;
+	margin: 10px 0 15px 0;
+}
+
+.banner-product-slider .product-price {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.43;
+	letter-spacing: normal;
+	text-align: left;
+	color: #212121;
+}
+
+.banner-product-carousel .shop-all-btn {
+	width: 120px;
+	padding: 8px 0;
+	border-radius: 100px;
+	border: solid 2px #212121;
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #212121;
+	float: left;
+	clear: both;
+	margin-left: 15px;
+	margin-bottom: 35px;
+}
+
+.video-product-slider {
+	margin: 30px 0 35px 0;
+}
+
+.video-product-carousel-container {
+	position: absolute;
+	top: 50px;
+	z-index: 1;
+	width: 100%;
+}
+
+.video-product-carousel .video-product-title {
+	text-align: center;
+	font-size: 24px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+}
+
+.video-product-carousel .video-product-desc {
+	text-align: center;
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+}
+
+.video-product-slider .slick-slide img {
+	border-radius: 4px;
+}
+
+.video-product-slider .product-name {
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.57;
+	letter-spacing: normal;
+	text-align: left;
+	color: #212121;
+	margin: 10px 0 15px 0;
+}
+
+.video-product-slider .product-price {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.43;
+	letter-spacing: normal;
+	text-align: left;
+	color: #212121;
+}
+
+.video-product-carousel .shop-all-btn {
+	width: 120px;
+	padding: 8px 0;
+	border-radius: 100px;
+	border: solid 2px #212121;
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #212121;
+	float: left;
+	clear: both;
+	margin-left: 15px;
+	margin-bottom: 35px;
+}
+
+.theme-offers {
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.theme-offers .heading {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+	margin: 20px 0 25px 15px;
+}
+
+.theme-offers-slider .slick-slide img {
+	border-radius: 4px;
+}
+
+.theme-offers-slider .brand-name {
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.71;
+	letter-spacing: normal;
+	color: #ffffff;
+	margin-top: 15px;
+}
+
+.theme-offers-slider .product-name {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.43;
+	letter-spacing: normal;
+	color: #ffffff;
+	margin: 5px 0;
+	width: calc(100% - 15px);
+}
+
+.theme-offers-slider .product-price {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.71;
+	letter-spacing: normal;
+	color: #ffffff;
+	margin-top: 5px;
+}
+
+.theme-offers .shop-all-btn {
+	width: 120px;
+	padding: 8px 0;
+	border-radius: 100px;
+	border: solid 2px #ffffff;
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #ffffff;
+	float: left;
+	clear: both;
+	margin: 25px 0 35px 15px;
+}
+
+.line-through {
+	text-decoration: line-through;
+}
+
+.theme-product-widget {
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.theme-product-widget .brand-logo {
+	margin: 25px 0 0 15px;
+}
+
+.theme-product-widget-container {
+	padding: 0;
+	margin-top: 160px;
+}
+
+.theme-product-widget-slider {
+	margin: 30px 0 25px 0;
+}
+
+.theme-product-widget-slider .slick-slide img {
+	border-radius: 50%;
+}
+
+.theme-product-widget .heading {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+}
+
+.theme-product-widget .shop-all-btn {
+	float: right;
+	width: 120px;
+	padding: 8px 0;
+	border-radius: 100px;
+	border: solid 2px #ffffff;
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #ffffff;
+	margin-top: -5px;
+}
+
+.theme-product-widget .product-name {
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.71;
+	letter-spacing: normal;
+	text-align: center;
+	color: #ffffff;
+	margin: 10px 0 5px 0;
+	padding-right: 15px;
+}
+
+.theme-product-widget .product-price {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.43;
+	letter-spacing: normal;
+	text-align: center;
+	color: #ffffff;
+	padding-right: 15px;
+}
+
+.banner-separator {
+	padding: 25px 0 25px 15px;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.banner-separator .title {
+	font-size: 16px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.25;
+	letter-spacing: normal;
+	color: #ffffff;
+	margin-bottom: 5px;
+}
+
+.banner-separator .desc {
+	font-size: 14px;
+	font-weight: normal;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+}
+
+.mt2 {
+	margin-top: 2px;
+}
+
+.auto-brand-product-slider {
+	margin: 40px 0 25px 0;
+}
+/*.auto-brand-product-carousel .overlay-text{
 		    position: absolute;
 		    top: 100px;
 		    text-align: center;
 		}*/
-		.auto-brand-product-carousel .auto-brand-product-logo{
-			font-size: 24px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-			position: absolute;
-			top: 20px;
-		}
-		.auto-brand-product-carousel .auto-brand-product-desc{
-			width: 328px;
-			border-radius: 4px;
-  			background-color: #212121;
-  			padding: 15px 30px;
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			color: #ffffff;
-			position: absolute;
-			top: 115px;
-			/*left: calc((100% - 328px)/2);*/
-			margin: 0 15px;
-		}
-		.auto-brand-product-slider .slick-slide img{
-			border-radius: 4px;
-		}
-		.auto-brand-product-slider .product-name {
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.57;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-			margin: 10px 0 5px 0;
-		}
-		.auto-brand-product-slider .product-price {
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-		}
-		.auto-brand-product-carousel .shop-all-btn{
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-  			border: solid 2px #212121;
-  			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #212121;
-			float: left;
-			clear: both;
-    		margin-left: 15px;
-    		margin-bottom: 35px;
-		}
-		.mtb15{
-			margin: 15px 0;
-		}
-		#play-video{
-			color: #ffffff;
-		}
-		.curated-listing-strip{
-			padding: 15px;
-		}
-		.curated-listing-strip a{
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: left;
-			color: #ffffff;
-		}
+.auto-brand-product-carousel .auto-brand-product-logo {
+	font-size: 24px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+	position: absolute;
+	top: 20px;
+}
 
-		.landing-page-header-component {
-			background-repeat: no-repeat;
-			background-size: cover;
-		}
+.auto-brand-product-carousel .auto-brand-product-desc {
+	width: 328px;
+	border-radius: 4px;
+	background-color: #212121;
+	padding: 15px 30px;
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.43;
+	letter-spacing: normal;
+	color: #ffffff;
+	position: absolute;
+	top: 115px;
+	/*left: calc((100% - 328px)/2);*/
+	margin: 0 15px;
+}
 
-		.landing-page-header-component .follow-brand {
-			float: right;
-			margin: 15px 15px 0 0;
-			width: 100px;
-			padding: 8px 20px;
-			border-radius: 100px;
-			border: solid 2px #ffffff;
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-		}
+.auto-brand-product-slider .slick-slide img {
+	border-radius: 4px;
+}
 
-		.landing-page-header-component .banner-logo {
-			margin: 121px 0 0 15px;
-		}
+.auto-brand-product-slider .product-name {
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.57;
+	letter-spacing: normal;
+	text-align: left;
+	color: #212121;
+	margin: 10px 0 5px 0;
+}
 
-		.landing-page-header-component .banner-desc {
-			font-size: 30px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: left;
-			color: #ffffff;
-			margin: 15px 0 15px 15px;
-		}
-		.sub-brand-banner-blp{
-			background-color: #ececec;
-			padding: 40px 0;
-		}
-		.sub-brand-banner-blp .sub-brand-heading {
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-			margin-bottom: 25px;
-		}
-		.subbrand-banner-blp-slider .sub-brand-img{
-			border-radius: 50%;
-		}
-		.subbrand-banner-blp-slider .sub-brand-logo{
-			margin: 15px auto 0 auto;
-    		padding-right: 15px;
-		}
-		.pr0{
-			padding-right: 0;
-		}
-		.pl0{
-			padding-left: 0;
-		}
-		.mb16{
-			margin-bottom: 16px;
-		}
-		.top-categories-widget .sub-brand-heading{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #212121;
-			margin: 25px 0;
-		}
-		.top-categories-widget .category-title{
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.29;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			position: absolute;
-			top: 45%;
-    		left: 0;
-		}
-		.br4{
-			border-radius: 4px;
-		}
-		.curated-products-widget .heading{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #212121;
-			margin: 25px 0;
-		}
-		.curated-products-widget .brand-name {
-			font-size: 16px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.5;
-			letter-spacing: normal;
-			color: #181818;
-			margin-top: 10px;
-		}
+.auto-brand-product-slider .product-price {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.43;
+	letter-spacing: normal;
+	text-align: left;
+	color: #212121;
+}
 
-		.curated-products-widget .product-name {
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			color: #212121;
-			margin: 5px 0;
-		}
+.auto-brand-product-carousel .shop-all-btn {
+	width: 120px;
+	padding: 8px 0;
+	border-radius: 100px;
+	border: solid 2px #212121;
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #212121;
+	float: left;
+	clear: both;
+	margin-left: 15px;
+	margin-bottom: 35px;
+}
 
-		.curated-products-widget .product-price {
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.71;
-			letter-spacing: normal;
-			color: #212121;
-			margin-bottom: 25px;
-		}
-		.curated-products-widget .shop-all-btn{
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-			border: solid 2px #212121;
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #212121;
-			float: left;
-			clear: both;
-			margin-left: 15px;
-			margin-bottom: 35px;
-		}
+.mtb15 {
+	margin: 15px 0;
+}
 
-		/**/
-		.product-recommendation-widget .heading{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #212121;
-			margin: 25px 0;
-		}
-		.product-recommendation-widget .brand-name {
-			font-size: 16px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.5;
-			letter-spacing: normal;
-			color: #181818;
-			margin: 20px 18px 0 0;
-		}
+#play-video {
+	color: #ffffff;
+}
 
-		.product-recommendation-widget .product-name {
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			color: #212121;
-			margin: 5px 15px 5px 0;
-		}
+.curated-listing-strip {
+	padding: 15px;
+}
 
-		.product-recommendation-widget .product-price {
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.71;
-			letter-spacing: normal;
-			color: #212121;
-			margin: 0 15px 25px 0;
-		}
-		.product-recommendation-widget .shop-all-btn{
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-			border: solid 2px #212121;
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #212121;
-			float: left;
-			clear: both;
-			margin-left: 15px;
-			margin-bottom: 35px;
-		}
+.curated-listing-strip a {
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: left;
+	color: #ffffff;
+}
 
-		.smart-filter-widget{
-			padding: 25px 15px;
-		}
+.landing-page-header-component {
+	background-repeat: no-repeat;
+	background-size: cover;
+}
 
-		.smart-filter-widget .overlay-div{
-			position: absolute;
-			top: 55px;
-			width: calc(100% - 10px);
-		}
+.landing-page-header-component .follow-brand {
+	float: right;
+	margin: 15px 15px 0 0;
+	width: 100px;
+	padding: 8px 20px;
+	border-radius: 100px;
+	border: solid 2px #ffffff;
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #ffffff;
+}
 
-		.smart-filter-widget .heading {
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #212121;
-			margin-bottom: 25px;
-		}
+.landing-page-header-component .banner-logo {
+	margin: 121px 0 0 15px;
+}
 
-		.smart-filter-widget .category-title {
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.57;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-		}
+.landing-page-header-component .banner-desc {
+	font-size: 30px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: left;
+	color: #ffffff;
+	margin: 15px 0 15px 15px;
+}
 
-		.smart-filter-widget .category-desc {
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.29;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-		}
-			
-		/**/
-		.content-widget .heading{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-			margin: 25px 0;
-		}
-		.content-widget-slider{
-			clear: both;
-			padding-bottom: 25px;
-		}
-		.content-widget-slider .slick-slide{
-			margin: 0 -5px;
-			position: relative;
-		}
-		.content-widget-slider .content-subsection{
-			width: 100%;
-			position: absolute;
-			top: 80px;
-		}
-		.content-widget-slider .content-title{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-		}
+.sub-brand-banner-blp {
+	background-color: #ececec;
+	padding: 40px 0;
+}
 
-		.content-widget-slider .content-desc{
-			font-size: 12px;
-			font-weight: normal;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: justify;
-			color: #ffffff;
-			margin: 80px 0 20px 0;
-			padding: 0 23px;
-		}
+.sub-brand-banner-blp .sub-brand-heading {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: left;
+	color: #212121;
+	margin-bottom: 25px;
+}
 
-		.content-widget-slider .content-link{
-			font-size: 14px;
-			font-weight: normal;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			text-decoration: underline;
-		}
-		.content-widget-slider .slick-slide img{
-			width: 100%;
-    		display: block;
-			opacity: 0.11;
-			height: 348px;
-			margin-top: 15px;
-		}
-		.content-widget-slider .slick-current img{
-			opacity: 1;
-			width: 100%;
-			height: auto;
-			display: block;
-			margin-top: 0px;
-			box-shadow: 0 5px 25px 0 rgba(0, 0, 0, 0.32);
-		}
+.subbrand-banner-blp-slider .sub-brand-img {
+	border-radius: 50%;
+}
 
-		.right0{
-			right: 0;
-		}
-		.mono-blp-banner{
-			padding-bottom: 40px;
-		}
-		.mono-blp-banner .heading{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #212121;
-			margin: 25px 0;
-		}
-		.mono-blp-banner-container{
-			border-radius: 4px;
-			background-repeat: no-repeat;
-    		background-size: cover;
-		}
-		.mono-blp-banner-container .banner-title {
-			margin-top: 190px;
-			font-size: 30px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.mono-blp-banner-container .banner-btn {
-			margin: 15px 0 20px 15px;
-			width: 141px;
-			padding: 8px 0;
-			border-radius: 100px;
-			background-color: #ff1744;
-			float: left;
-			clear: both;
-			color: #ffffff;
-			text-align: center;
-		}
-		.landing-page-hierarchy-title{
-			font-size: 16px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-			margin-bottom: 15px;
-		}
-		.category-l1{
-			float: left;
-			width: 100%;
-			padding: 0 16px;
-	    	margin: 0;
-		}
-		.category-l1,.category-l2,.category-l3{
-			list-style-type: none;
-		}
-		.category-l2,.category-l3{
-			display: none;
-		}
-		.category-l1 a{
-			display: block;
-			float: left;
-			width: 100%;
-			margin: 10px 0;
-			font-size: 16px;
-			font-weight: 400;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #212121;
-			position: relative;
-			text-decoration: none;
-		}
-		.category-l2 a{
-			font-size: 15px;
-			font-weight: 300;
-		}
-		.category-l3 a{
-			font-size: 14px;
-		}
-		.category-l1 a.has-carrot::after{
-			font-family: FontAwesome;
-			content: "\f107";
-			font-size: 18px;
-			position: absolute;
-			display: block;
-			width: auto;
-			height: auto;
-			top: 0;
-			color: #000000;    
-			right: 5px;
-		}
-		.category-l1 a.active-ul::after,
-		#following-brands1.show-brands::after,
-		#following-brands2.show-brands::after,
-		#following-brands3.show-brands::after,
-		#following-brands4.show-brands::after{
-			transform: rotate(180deg);
-		}
-		.active-ul{
-			font-weight: 500 !important;
-		}
-		.view-more-categories,.view-less-categories{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ff1744;
-			width: auto;
-			float: left;
-			display: inline-block;
-	        margin: 15px 0 15px 15px;
-		}
-		.view-more-categories::after,.view-less-categories::after {
-		    content: " ";
-		    width: auto;
-		    border-bottom: 1px solid;
-		    display: block;
-		    padding-bottom: 2px;
-		}
-		.landing-page-hierarchy{
-			padding: 25px 0 5px 0;
-		}
-		.brand-tab-azlist .nav-tabs > li{
-			width: 25%;
-    		text-align: center;
-		}
-		.brand-tab-azlist .nav-tabs>li>a{
-			font-size: 14px;
-  			font-weight: 500;
-  			color: #21212159;
-		}
-		.brand-tab-azlist .nav-tabs>li.active>a{
-			border: none;
-			border-bottom: 2px solid #ff1744;
-			color: #ff1744;
-		}
-		.brands-slider{
-			margin: 20px 0;
-		}
-		.brands-slider .slick-slide{
-			margin: 0 5px;
-			position: relative;
-		}
-		.brands-slider .slick-slide img{
-			width: 100%;
-			height: 130px;
-			margin-top: 5px;
-			display: block;
-			border-radius: 4px;
-		}
-		.brands-slider .slick-current img{
-			width: 100%;
-			height: auto;
-			display: block;
-			margin-top: 0px;
-		}
-		.brands-slider .brands-slider-subsection{
-			position: absolute;
-			top: 50px;
-    		left: 60px;
-		}
-		.brands-slider .brand-logo{
-		    width: auto !important;
-		    height: auto !important;
-		    margin-left: 15px;
-		}
-		#following-brands1,#following-brands2,#following-brands3,#following-brands4{
-			font-size: 16px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #212121;
-			margin-bottom: 15px;
-			text-decoration: none;
-		}
-		#following-brands1::after,#following-brands2::after,#following-brands3::after,#following-brands4::after{
-			font-family: FontAwesome;
-			content: "\f107";
-			font-size: 18px;
-			position: absolute;
-			display: block;
-			width: auto;
-			height: auto;
-			top: 0;
-			color: #000000;    
-			right: 15px;
-		}
-		.following-brands .brand-logo-container{
-			width: 90px;
-			height: 90px;
-			background-color: #000000;
-  			border-radius: 50%;
-  			position: relative;
-		}
-		.following-brands .brand-logo{
-			position: absolute;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			top: 0;
-			margin: auto;
-		}
-		.following-brands-slider{
-			float: left;
-		    width: 100%;
-		    display: block;
-		    margin-bottom: 20px;
-		}
-		.search-for-brand{
-			margin-bottom: 20px;
-			width: 100%;
-    		padding: 8px 10px;
-    		border-radius: 2px;
-			border: solid 1px #d2d2d2;
-		}
-		.search-for-brand::placeholder{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #8d8d8d;
-		}
-		.searchicon-for-brand{
-			position: absolute;
-		    top: 10px;
-		    right: 30px;
-		    color: #8d8d8d;
-		}
-		.all-brands-list ul,.all-brands-list ul li{
-			list-style-type: none;
-		}
-		.all-brands-list ul{
-			padding: 0;
-		}
-		.mb20{
-			margin-bottom: 20px;
-		}
-		.brandname-list li{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			letter-spacing: normal;
-			color: #212121;
-			margin-bottom: 10px;
-		}
-		.brandname-list{
-			margin-bottom: 20px;
-		}
-		.brandslist-leftsection{
-			height: 540px;
-			overflow-y: auto;
-		}
-		.brandinitials-section li a{
-		    font-weight: 300;
-		    font-style: normal;
-		    font-stretch: normal;
-		    letter-spacing: normal;
-		    color: #000000;
-		    border-radius: 50%;
-			width: 20px;
-			height: 20px;
-			display: inline-block;
-			text-align: center;
-			text-decoration: none;
-		}
-		.text-bold{
-			font-weight: 500;
-		}
-		.active-brandinitial{
-			border: 1px solid #ff1744;
-		}
-	</style>
+.subbrand-banner-blp-slider .sub-brand-logo {
+	margin: 15px auto 0 auto;
+	padding-right: 15px;
+}
+
+.pr0 {
+	padding-right: 0;
+}
+
+.pl0 {
+	padding-left: 0;
+}
+
+.mb16 {
+	margin-bottom: 16px;
+}
+
+.top-categories-widget .sub-brand-heading {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #212121;
+	margin: 25px 0;
+}
+
+.top-categories-widget .category-title {
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.29;
+	letter-spacing: normal;
+	text-align: center;
+	color: #ffffff;
+	position: absolute;
+	top: 45%;
+	left: 0;
+}
+
+.br4 {
+	border-radius: 4px;
+}
+
+.curated-products-widget .heading {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #212121;
+	margin: 25px 0;
+}
+
+.curated-products-widget .brand-name {
+	font-size: 16px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.5;
+	letter-spacing: normal;
+	color: #181818;
+	margin-top: 10px;
+}
+
+.curated-products-widget .product-name {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.43;
+	letter-spacing: normal;
+	color: #212121;
+	margin: 5px 0;
+}
+
+.curated-products-widget .product-price {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.71;
+	letter-spacing: normal;
+	color: #212121;
+	margin-bottom: 25px;
+}
+
+.curated-products-widget .shop-all-btn {
+	width: 120px;
+	padding: 8px 0;
+	border-radius: 100px;
+	border: solid 2px #212121;
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #212121;
+	float: left;
+	clear: both;
+	margin-left: 15px;
+	margin-bottom: 35px;
+}
+
+/**/
+.product-recommendation-widget .heading {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #212121;
+	margin: 25px 0;
+}
+
+.product-recommendation-widget .brand-name {
+	font-size: 16px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.5;
+	letter-spacing: normal;
+	color: #181818;
+	margin: 20px 18px 0 0;
+}
+
+.product-recommendation-widget .product-name {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.43;
+	letter-spacing: normal;
+	color: #212121;
+	margin: 5px 15px 5px 0;
+}
+
+.product-recommendation-widget .product-price {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.71;
+	letter-spacing: normal;
+	color: #212121;
+	margin: 0 15px 25px 0;
+}
+
+.product-recommendation-widget .shop-all-btn {
+	width: 120px;
+	padding: 8px 0;
+	border-radius: 100px;
+	border: solid 2px #212121;
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #212121;
+	float: left;
+	clear: both;
+	margin-left: 15px;
+	margin-bottom: 35px;
+}
+
+.smart-filter-widget {
+	padding: 25px 15px;
+}
+
+.smart-filter-widget .overlay-div {
+	position: absolute;
+	top: 55px;
+	width: calc(100% - 10px);
+}
+
+.smart-filter-widget .heading {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #212121;
+	margin-bottom: 25px;
+}
+
+.smart-filter-widget .category-title {
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.57;
+	letter-spacing: normal;
+	text-align: center;
+	color: #ffffff;
+}
+
+.smart-filter-widget .category-desc {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.29;
+	letter-spacing: normal;
+	text-align: center;
+	color: #ffffff;
+}
+
+/**/
+.content-widget .heading {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: left;
+	color: #212121;
+	margin: 25px 0;
+}
+
+.content-widget-slider {
+	clear: both;
+	padding-bottom: 25px;
+}
+
+.content-widget-slider .slick-slide {
+	margin: 0 -5px;
+	position: relative;
+}
+
+.content-widget-slider .content-subsection {
+	width: 100%;
+	position: absolute;
+	top: 80px;
+}
+
+.content-widget-slider .content-title {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #ffffff;
+}
+
+.content-widget-slider .content-desc {
+	font-size: 12px;
+	font-weight: normal;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: justify;
+	color: #ffffff;
+	margin: 80px 0 20px 0;
+	padding: 0 23px;
+}
+
+.content-widget-slider .content-link {
+	font-size: 14px;
+	font-weight: normal;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #ffffff;
+	text-decoration: underline;
+}
+
+.content-widget-slider .slick-slide img {
+	width: 100%;
+	display: block;
+	opacity: 0.11;
+	height: 348px;
+	margin-top: 15px;
+}
+
+.content-widget-slider .slick-current img {
+	opacity: 1;
+	width: 100%;
+	height: auto;
+	display: block;
+	margin-top: 0px;
+	box-shadow: 0 5px 25px 0 rgba(0, 0, 0, 0.32);
+}
+
+.right0 {
+	right: 0;
+}
+
+.mono-blp-banner {
+	padding-bottom: 40px;
+}
+
+.mono-blp-banner .heading {
+	font-size: 20px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #212121;
+	margin: 25px 0;
+}
+
+.mono-blp-banner-container {
+	border-radius: 4px;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.mono-blp-banner-container .banner-title {
+	margin-top: 190px;
+	font-size: 30px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+}
+
+.mono-blp-banner-container .banner-btn {
+	margin: 15px 0 20px 15px;
+	width: 141px;
+	padding: 8px 0;
+	border-radius: 100px;
+	background-color: #ff1744;
+	float: left;
+	clear: both;
+	color: #ffffff;
+	text-align: center;
+}
+
+.landing-page-hierarchy-title {
+	font-size: 16px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: left;
+	color: #212121;
+	margin-bottom: 15px;
+}
+
+.category-l1 {
+	float: left;
+	width: 100%;
+	padding: 0 16px;
+	margin: 0;
+}
+
+.category-l1, .category-l2, .category-l3 {
+	list-style-type: none;
+}
+
+.category-l2, .category-l3 {
+	display: none;
+}
+
+.category-l1 a {
+	display: block;
+	float: left;
+	width: 100%;
+	margin: 10px 0;
+	font-size: 16px;
+	font-weight: 400;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #212121;
+	position: relative;
+	text-decoration: none;
+}
+
+.category-l2 a {
+	font-size: 15px;
+	font-weight: 300;
+}
+
+.category-l3 a {
+	font-size: 14px;
+}
+
+.category-l1 a.has-carrot::after {
+	font-family: FontAwesome;
+	content: "\f107";
+	font-size: 18px;
+	position: absolute;
+	display: block;
+	width: auto;
+	height: auto;
+	top: 0;
+	color: #000000;
+	right: 5px;
+}
+
+.category-l1 a.active-ul::after, #following-brands1.show-brands::after,
+	#following-brands2.show-brands::after, #following-brands3.show-brands::after,
+	#following-brands4.show-brands::after {
+	transform: rotate(180deg);
+}
+
+.active-ul {
+	font-weight: 500 !important;
+}
+
+.view-more-categories, .view-less-categories {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #ff1744;
+	width: auto;
+	float: left;
+	display: inline-block;
+	margin: 15px 0 15px 15px;
+}
+
+.view-more-categories::after, .view-less-categories::after {
+	content: " ";
+	width: auto;
+	border-bottom: 1px solid;
+	display: block;
+	padding-bottom: 2px;
+}
+
+.landing-page-hierarchy {
+	padding: 25px 0 5px 0;
+}
+
+.brand-tab-azlist .nav-tabs>li {
+	width: 25%;
+	text-align: center;
+}
+
+.brand-tab-azlist .nav-tabs>li>a {
+	font-size: 14px;
+	font-weight: 500;
+	color: #21212159;
+}
+
+.brand-tab-azlist .nav-tabs>li.active>a {
+	border: none;
+	border-bottom: 2px solid #ff1744;
+	color: #ff1744;
+}
+
+.brands-slider {
+	margin: 20px 0;
+}
+
+.brands-slider .slick-slide {
+	margin: 0 5px;
+	position: relative;
+}
+
+.brands-slider .slick-slide img {
+	width: 100%;
+	height: 130px;
+	margin-top: 5px;
+	display: block;
+	border-radius: 4px;
+}
+
+.brands-slider .slick-current img {
+	width: 100%;
+	height: auto;
+	display: block;
+	margin-top: 0px;
+}
+
+.brands-slider .brands-slider-subsection {
+	position: absolute;
+	top: 50px;
+	left: 60px;
+}
+
+.brands-slider .brand-logo {
+	width: auto !important;
+	height: auto !important;
+	margin-left: 15px;
+}
+
+#following-brands1, #following-brands2, #following-brands3,
+	#following-brands4 {
+	font-size: 16px;
+	font-weight: 500;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #212121;
+	margin-bottom: 15px;
+	text-decoration: none;
+}
+
+#following-brands1::after, #following-brands2::after, #following-brands3::after,
+	#following-brands4::after {
+	font-family: FontAwesome;
+	content: "\f107";
+	font-size: 18px;
+	position: absolute;
+	display: block;
+	width: auto;
+	height: auto;
+	top: 0;
+	color: #000000;
+	right: 15px;
+}
+
+.following-brands .brand-logo-container {
+	width: 90px;
+	height: 90px;
+	background-color: #000000;
+	border-radius: 50%;
+	position: relative;
+}
+
+.following-brands .brand-logo {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	margin: auto;
+}
+
+.following-brands-slider {
+	float: left;
+	width: 100%;
+	display: block;
+	margin-bottom: 20px;
+}
+
+.search-for-brand {
+	margin-bottom: 20px;
+	width: 100%;
+	padding: 8px 10px;
+	border-radius: 2px;
+	border: solid 1px #d2d2d2;
+}
+
+.search-for-brand::placeholder {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #8d8d8d;
+}
+
+.searchicon-for-brand {
+	position: absolute;
+	top: 10px;
+	right: 30px;
+	color: #8d8d8d;
+}
+
+.all-brands-list ul, .all-brands-list ul li {
+	list-style-type: none;
+}
+
+.all-brands-list ul {
+	padding: 0;
+}
+
+.mb20 {
+	margin-bottom: 20px;
+}
+
+.brandname-list li {
+	font-size: 14px;
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	letter-spacing: normal;
+	color: #212121;
+	margin-bottom: 10px;
+}
+
+.brandname-list {
+	margin-bottom: 20px;
+}
+
+.brandslist-leftsection {
+	height: 540px;
+	overflow-y: auto;
+}
+
+.brandinitials-section li a {
+	font-weight: 300;
+	font-style: normal;
+	font-stretch: normal;
+	letter-spacing: normal;
+	color: #000000;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	text-align: center;
+	text-decoration: none;
+}
+
+.text-bold {
+	font-weight: 500;
+}
+
+.active-brandinitial {
+	border: 1px solid #ff1744;
+}
+</style>
 
 <template:page pageTitle="${pageTitle}">
 	<html>
@@ -1607,52 +1747,57 @@
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'ThemeOffersComponent'}">
-				
-				
-				<!--  ============================================= -->
-				<div class="col-xs-12 pad0 theme-offers mb40" style="background-image:url(${feature.backgroundImageURL.URL}),linear-gradient(to bottom, ${feature.backgroundHexCode}, ${feature.backgroundHexCode});">
-					<div class="heading">${feature.title}</div>
-					<div class="theme-offers-slider">
-						<c:forEach items="${feature.offers}"
-									var="themeOffersCompOfferElement">
-							<c:if
-										test="${themeOffersCompOfferElement.typeCode eq 'ThemeOffersCompOfferElement'}">
-								<div>
-						    	<a href="${themeOffersCompOfferElement.webURL}">
-							    	<img src="${themeOffersCompOfferElement.imageURL.URL}">
-							    	<div class="brand-name">${themeOffersCompOfferElement.title}</div>
-							    	<div class="product-name">${themeOffersCompOfferElement.description}</div>
-						    	</a>
-						    </div>
-							</c:if>
-						
-						</c:forEach>
-						<c:forEach items="${feature.items}" var="themeOffersItemsElement">
-							<c:if
-										test="${themeOffersItemsElement.typeCode eq 'ThemeOffersItemsElement'}">
-								<div>
-						    	<a href="#">
-						    		<c:if test="${not empty themeOffersItemsElement.productCode}">
-							    		<img src="${themeOffersItemsElement.productCode.picture.URL}">
-							    	</c:if>
-							    	<div class="brand-name">${themeOffersItemsElement.title}</div>
-							    	<div class="product-name">${themeOffersCompOfferElement.description}</div>
-							    	<c:if test="${not empty themeOffersItemsElement.productCode}">
-							    	<fmt:parseNumber var="productPrice" type="number"
-												value="${themeOffersItemsElement.productCode.mrp}" />
-							    	<div class="product-price">Rs. ${productPrice}  <span class="line-through">Rs. ${productPrice}</span></div>
-							    	</c:if>
-						    	</a>s
-						    </div>
-							</c:if>
-						
-						</c:forEach>
+
+
+					<!--  ============================================= -->
+					<div class="col-xs-12 pad0 theme-offers mb40"
+						style="background-image:url(${feature.backgroundImageURL.URL}),linear-gradient(to bottom, ${feature.backgroundHexCode}, ${feature.backgroundHexCode});">
+						<div class="heading">${feature.title}</div>
+						<div class="theme-offers-slider">
+							<c:forEach items="${feature.offers}"
+								var="themeOffersCompOfferElement">
+								<c:if
+									test="${themeOffersCompOfferElement.typeCode eq 'ThemeOffersCompOfferElement'}">
+									<div>
+										<a href="${themeOffersCompOfferElement.webURL}"> <img
+											src="${themeOffersCompOfferElement.imageURL.URL}">
+											<div class="brand-name">${themeOffersCompOfferElement.title}</div>
+											<div class="product-name">${themeOffersCompOfferElement.description}</div>
+										</a>
+									</div>
+								</c:if>
+
+							</c:forEach>
+							<c:forEach items="${feature.items}" var="themeOffersItemsElement">
+								<c:if
+									test="${themeOffersItemsElement.typeCode eq 'ThemeOffersItemsElement'}">
+									<div>
+										<a href="#"> <c:if
+												test="${not empty themeOffersItemsElement.productCode}">
+												<img
+													src="${themeOffersItemsElement.productCode.picture.URL}">
+											</c:if>
+											<div class="brand-name">${themeOffersItemsElement.title}</div>
+											<div class="product-name">${themeOffersCompOfferElement.description}</div>
+											<c:if test="${not empty themeOffersItemsElement.productCode}">
+												<fmt:parseNumber var="productPrice" type="number"
+													value="${themeOffersItemsElement.productCode.mrp}" />
+												<div class="product-price">
+													Rs. ${productPrice} <span class="line-through">Rs.
+														${productPrice}</span>
+												</div>
+											</c:if>
+										</a>s
+									</div>
+								</c:if>
+
+							</c:forEach>
+						</div>
+						<a href="${feature.webURL}" class="shop-all-btn">${feature.btnText}</a>
 					</div>
-					<a href="${feature.webURL}" class="shop-all-btn">${feature.btnText}</a>
-				</div>
-				
-				<!-- ================================================= -->
-				
+
+					<!-- ================================================= -->
+
 				</c:if>
 
 
@@ -1766,20 +1911,20 @@
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'MonoBLPBannerComponent'}">
-				<div class="col-xs-12 mono-blp-banner">
-					<div class="col-xs-12 pad0 heading">${feature.title}</div>
-					<!--mono blp banner-->
+					<div class="col-xs-12 mono-blp-banner">
+						<div class="col-xs-12 pad0 heading">${feature.title}</div>
+						<!--mono blp banner-->
 
-					<c:forEach items="${feature.items}" var="monoBLPBannerElement">
-						<div class="col-xs-12 mono-blp-banner">
-							<div class="col-xs-12 pad0 mono-blp-banner-container"
-								style="background-image:url(${monoBLPBannerElement.imageURL.URL});linear-gradient(to bottom, ${monoBLPBannerElement.hexCode});">
-								<div class="col-xs-12 banner-title">${monoBLPBannerElement.title}.</div>
-								<a href="${monoBLPBannerElement.webURL}" class="banner-btn">${monoBLPBannerElement.btnText}</a>
+						<c:forEach items="${feature.items}" var="monoBLPBannerElement">
+							<div class="col-xs-12 mono-blp-banner">
+								<div class="col-xs-12 pad0 mono-blp-banner-container"
+									style="background-image:url(${monoBLPBannerElement.imageURL.URL});linear-gradient(to bottom, ${monoBLPBannerElement.hexCode});">
+									<div class="col-xs-12 banner-title">${monoBLPBannerElement.title}.</div>
+									<a href="${monoBLPBannerElement.webURL}" class="banner-btn">${monoBLPBannerElement.btnText}</a>
+								</div>
 							</div>
-						</div>
-					</c:forEach>
-				</div>
+						</c:forEach>
+					</div>
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'SubBrandBannerBLPComponent'}">
@@ -1813,43 +1958,43 @@
 				<c:if test="${feature.typeCode eq 'TopCategoriesWidgetComponent'}">
 					<div class="col-xs-12 pad0 mb40 top-categories-widget">
 						<div class="col-xs-12 sub-brand-heading">${feature.title}</div>
-							<c:forEach items="${feature.items}"
-								var="topCategoriesWidgetElement" varStatus="loop">
-								<c:if
-									test="${topCategoriesWidgetElement.typeCode eq 'TopCategoriesWidgetElement'}">
-									<c:if test="${loop.index eq 0}">
+						<c:forEach items="${feature.items}"
+							var="topCategoriesWidgetElement" varStatus="loop">
+							<c:if
+								test="${topCategoriesWidgetElement.typeCode eq 'TopCategoriesWidgetElement'}">
+								<c:if test="${loop.index eq 0}">
 									<div class="col-xs-6 pr0">
-									<a href="${topCategoriesWidgetElement.webURL}"> 
-										<img src="${topCategoriesWidgetElement.imageURL.URL}"
+										<a href="${topCategoriesWidgetElement.webURL}"> <img
+											src="${topCategoriesWidgetElement.imageURL.URL}"
 											class="img-responsive br4" />
 											<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}s</div>
-											</a>
-									</div>
-									</c:if>
-									<c:if test="${loop.index gt 0}">
-									<div class="col-xs-6 pl0">
-									<c:if test="${loop.index eq 1}">
-									<div class="col-xs-12 pad0 mb16">
-										<a href="${topCategoriesWidgetElement.webURL}"> 
-										<img src="${topCategoriesWidgetElement.imageURL.URL}"
-											class="img-responsive pull-right br4" />
-											<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}</div>
 										</a>
 									</div>
-									</c:if>
-									<c:if test="${loop.index gt 1}">
-									<div class="col-xs-12 pad0">
-										<a href="${topCategoriesWidgetElement.webURL}"> 
-										<img src="${topCategoriesWidgetElement.imageURL.URL}"
-											class="img-responsive pull-right br4" />
-											<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}</div>
-										</a>
-									</div>
-									</c:if>
-									</div>
-									</c:if>
 								</c:if>
-							</c:forEach>
+								<c:if test="${loop.index gt 0}">
+									<div class="col-xs-6 pl0">
+										<c:if test="${loop.index eq 1}">
+											<div class="col-xs-12 pad0 mb16">
+												<a href="${topCategoriesWidgetElement.webURL}"> <img
+													src="${topCategoriesWidgetElement.imageURL.URL}"
+													class="img-responsive pull-right br4" />
+													<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}</div>
+												</a>
+											</div>
+										</c:if>
+										<c:if test="${loop.index gt 1}">
+											<div class="col-xs-12 pad0">
+												<a href="${topCategoriesWidgetElement.webURL}"> <img
+													src="${topCategoriesWidgetElement.imageURL.URL}"
+													class="img-responsive pull-right br4" />
+													<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}</div>
+												</a>
+											</div>
+										</c:if>
+									</div>
+								</c:if>
+							</c:if>
+						</c:forEach>
 					</div>
 				</c:if>
 
@@ -1937,92 +2082,137 @@
 
 
 				<c:if test="${feature.typeCode eq 'BrandsTabAZListComponent'}">
-				
-								
-				<!-- =========================== -->
+
+
+					<!-- =========================== -->
 
 					<div class="col-xs-12 pad0 brand-tab-azlist mb40">
-						<c:forEach items="${feature.items}" var="brandsTabAZElement" varStatus="loop">
-							<c:if
-								test="${brandsTabAZElement.typeCode eq 'BrandsTabAZElement'}">
-								<ul class="nav nav-tabs" role="tablist">
-									<li role="presentation" class="${loop.index eq 0 ? 'active' : ''}">
-										<a href="#mytab${loop.index + 1}" aria-controls="mytab${loop.index + 1}" role="tab" data-toggle="tab">
-											${brandsTabAZElement.subType}
-										</a>
-									</li>
-								</ul>
-							</c:if>
-						
-					<div class="tab-content">
-						<div role="tabpanel" class="tab-pane ${loop.index eq 0 ? 'active' : ''}" id="mytab${loop.index + 1}">
-						<!--brands slider starts-->
-						<div class="brands-slider mb40">
-						<c:forEach items="${brandsTabAZElement.items}" var="brandTabAZHeroBannerElement" begin="0" end="0">
-							<c:if test="${brandTabAZHeroBannerElement.typeCode eq 'HeroBannerComponent'}">
-								<c:forEach items="${brandTabAZHeroBannerElement.items}"
-												var="heroElements">
-									<c:if test="${not empty heroElements && heroElements.typeCode eq 'HeroBannerElement'}">
-								<div>
-							    	<a href="${heroElements.webURL}">
-								    	<img src="${heroElements.imageURL.URL}">
-								    	<div class="brands-slider-subsection">
-								    		<img class="brand-logo" src="${heroElements.brandLogo.URL}">
-								    	</div>
-<%-- 								    	<div class="banner-title">${heroElements.title}</div> --%>
-							    	</a>
-							    </div>
-							    </c:if>
-							    </c:forEach>
-							</c:if>	
-						</c:forEach>
-						</div>
-						</div>
-					</div>
-						<div class="col-xs-12">
-							<input type="text" id="search-for-brand" placeholder="Search your brand">
-							<i class="fa fa-search searchicon-for-brand" aria-hidden="true"></i>
-						</div>
-						<div class="col-xs-12 all-brands-list">
-							<div class="col-xs-11 pad0 brandslist-leftsection" id="brandslist-leftsection">
-								<c:set var="number" value="9"/>
-								<c:forEach items="${number}" var="num">
-								<div class="col-xs-2 pad0 text-bold" id="search_num1">${num}</div>
-								<ul class="col-xs-10 brandname-list">
-									<c:forEach items="${brandsTabAZElement.brands}"
-											var="brandTabAZBrandElement">
-											<c:if
-												test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement' and fn:startsWith(brandTabAZBrandElement.brandName, num)}">
-												<li><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.brandName}</a></li>
-											</c:if>
-									</c:forEach>
-								</ul>
-								</c:forEach>
-								
-								<c:set var="alphabet" value="${fn:split('A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z', ',')}" scope="application" />
-								<c:forEach items="${alphabet}" var="alpha">
-								<div class="col-xs-2 pad0 text-bold" id="search_num1">${alpha}</div>
-								<ul class="col-xs-10 brandname-list">
-									<c:forEach items="${brandsTabAZElement.brands}"
-											var="brandTabAZBrandElement">
-											<c:if
-												test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement' and fn:startsWith(brandTabAZBrandElement.brandName, alpha)}">
-												<li><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.brandName}</a></li>
-											</c:if>
-									</c:forEach>
-								</ul>
-								</c:forEach>
-								
-								
-							</div>
-						</div>
-					</c:forEach>
-					</div>
+						<ul class="nav nav-tabs" role="tablist">
+							<c:forEach items="${feature.items}" var="brandsTabAZElement"
+								varStatus="loop">
+								<c:if
+									test="${brandsTabAZElement.typeCode eq 'BrandsTabAZElement'}">
 
-	
+									<li role="presentation"
+										class="${loop.index eq 0 ? 'active' : ''}"><a
+										class="mytablist" href="#mytab${loop.index + 1}"
+										aria-controls="mytab${loop.index + 1}" role="tab"
+										data-toggle="tab"> ${brandsTabAZElement.subType} </a></li>
+								</c:if>
+							</c:forEach>
+						</ul>
+
+						<c:forEach items="${feature.items}" var="brandsTabAZElement"
+							varStatus="loop">
+							<div class="tab-content">
+								<div role="tabpanel"
+									class="tab-pane ${loop.index eq 0 ? ' active' : ''}"
+									id="mytab${loop.index + 1}">
+									<!--brands slider starts-->
+
+									<c:forEach items="${brandsTabAZElement.items}"
+										var="brandTabAZHeroBannerElement" begin="0" end="1">
+										<c:if
+											test="${brandTabAZHeroBannerElement.typeCode eq 'HeroBannerComponent'}">
+											<div class="brands-slider mb40">
+												<c:forEach items="${brandTabAZHeroBannerElement.items}"
+													var="heroElements">
+													<c:if
+														test="${not empty heroElements && heroElements.typeCode eq 'HeroBannerElement'}">
+														<div>
+															<a href="${heroElements.webURL}"> <img
+																src="${heroElements.imageURL.URL}">
+																<div class="brands-slider-subsection">
+																	<img class="brand-logo"
+																		src="${heroElements.brandLogo.URL}">
+																</div> <%-- 								    	<div class="banner-title">${heroElements.title}</div> --%>
+															</a>
+														</div>
+
+													</c:if>
+												</c:forEach>
+											</div>
+										</c:if>
+									</c:forEach>
+								</div>
+								<div class="col-xs-12">
+									<input type="text" id="search-for-brand${loop.index + 1}"
+										class="search-for-brand" data-id="${loop.index + 1}"
+										placeholder="Search your brand"> <i
+										class="fa fa-search searchicon-for-brand" aria-hidden="true"></i>
+								</div>
+								<div class="col-xs-12 all-brands-list">
+									<div class="col-xs-11 pad0 brandslist-leftsection"
+										id="brandslist-leftsection${loop.index + 1}">
+										<c:set var="number" value="${fn:split('1,2,3,4,5,6,7,8,9', ',')}" />
+										<c:forEach items="${number}" var="num">
+											<div class="col-xs-2 pad0 text-bold" id="search_num${num}">${num}</div>
+											<ul class="col-xs-10 brandname-list">
+												<c:forEach items="${brandsTabAZElement.brands}"
+													var="brandTabAZBrandElement">
+													<c:if
+														test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement' and fn:startsWith(brandTabAZBrandElement.brandName, num)}">
+														<li><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.brandName}</a></li>
+													</c:if>
+												</c:forEach>
+											</ul>
+										</c:forEach>
+
+										<c:set var="alphabet"
+											value="${fn:split('A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z', ',')}"
+											scope="application" />
+										<c:forEach items="${alphabet}" var="alpha">
+											<div class="col-xs-2 pad0 text-bold" id="search_num${alpha}">${alpha}</div>
+											<ul class="col-xs-10 brandname-list">
+												<c:forEach items="${brandsTabAZElement.brands}"
+													var="brandTabAZBrandElement">
+													<c:if
+														test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement' and fn:startsWith(brandTabAZBrandElement.brandName, alpha)}">
+														<li><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.brandName}</a></li>
+													</c:if>
+												</c:forEach>
+											</ul>
+										</c:forEach>
+									</div>
+									<div class="col-xs-1 pad0">
+										<ul class="brandinitials-section"
+											id="brandinitials-section${loop.index + 1}">
+											<li><a href="#search_num1"> # </a></li>
+											<li><a href="#search_A"> A </a></li>
+											<li><a href="#search_B"> B </a></li>
+											<li><a href="#search_C"> C </a></li>
+											<li><a href="#search_D"> D </a></li>
+											<li><a href="#search_E"> E </a></li>
+											<li><a href="#search_F"> F </a></li>
+											<li><a href="#search_G"> G </a></li>
+											<li><a href="#search_H"> H </a></li>
+											<li><a href="#search_I"> I </a></li>
+											<li><a href="#search_J"> J </a></li>
+											<li><a href="#search_K"> K </a></li>
+											<li><a href="#search_L"> L </a></li>
+											<li><a href="#search_M"> M </a></li>
+											<li><a href="#search_N"> N </a></li>
+											<li><a href="#search_O"> O </a></li>
+											<li><a href="#search_P"> P </a></li>
+											<li><a href="#search_Q"> Q </a></li>
+											<li><a href="#search_R"> R </a></li>
+											<li><a href="#search_S"> S </a></li>
+											<li><a href="#search_T"> T </a></li>
+											<li><a href="#search_U"> U </a></li>
+											<li><a href="#search_V"> V </a></li>
+											<li><a href="#search_W"> W </a></li>
+											<li><a href="#search_X"> X </a></li>
+											<li><a href="#search_Y"> Y </a></li>
+											<li><a href="#search_Z"> Z </a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</c:forEach>
+					</div>
 
 					<!--========================================================  -->
-					
+
 				</c:if>
 
 
@@ -2072,35 +2262,36 @@
 					<div class="col-xs-12 pad0 mb40 product-recommendation-widget">
 						<h1>AutoProductRecommendationComponent</h1>
 						<div class="col-xs-12 heading">${feature.title}</div>
-							<div class="col-xs-12 pad0 product-recommendation-slider">
-								<c:forEach items="${feature.items}"
-									var="autoProductRecommendationElement">
-									<div>
-										<c:if
-											test="${autoProductRecommendationElement.typeCode eq 'AutoProductRecommendationElement'}">
-											
-											<a href="${autoProductRecommendationElement.webURL}">
-										    	<img src="${autoProductRecommendationElement.productCode.picture.URL}" class="br4" />
-										    </a>
-									    	<div class="brand-name">${autoProductRecommendationElement.title}
-									    		<a href="#" class="pull-right">
-									    			<i class="fa fa-bookmark-o" aria-hidden="true"></i>
-									    		</a>
-									    	</div>
-										    <a href="${autoProductRecommendationElement.webURL}">
-										    	<div class="product-name">${autoProductRecommendationElement.productCode.name}</div>
-										    </a>
-										    <!-- <div class="product-price">Rs. 4,950</div> -->
+						<div class="col-xs-12 pad0 product-recommendation-slider">
+							<c:forEach items="${feature.items}"
+								var="autoProductRecommendationElement">
+								<div>
+									<c:if
+										test="${autoProductRecommendationElement.typeCode eq 'AutoProductRecommendationElement'}">
+
+										<a href="${autoProductRecommendationElement.webURL}"> <img
+											src="${autoProductRecommendationElement.productCode.picture.URL}"
+											class="br4" />
+										</a>
+										<div class="brand-name">${autoProductRecommendationElement.title}
+											<a href="#" class="pull-right"> <i
+												class="fa fa-bookmark-o" aria-hidden="true"></i>
+											</a>
+										</div>
+										<a href="${autoProductRecommendationElement.webURL}">
+											<div class="product-name">${autoProductRecommendationElement.productCode.name}</div>
+										</a>
+										<!-- <div class="product-price">Rs. 4,950</div> -->
 										<c:if
 											test="${not empty autoProductRecommendationElement.productCode}">
 											<fmt:parseNumber var="productPrice" type="number"
 												value="${autoProductRecommendationElement.productCode.mrp}" />
 											<div class="product-price">${productPrice}</div>
 										</c:if>
-										</c:if>
-									</div>
-								</c:forEach>
-							</div>
+									</c:if>
+								</div>
+							</c:forEach>
+						</div>
 						<a href="${feature.fetchURL}" class="shop-all-btn">${feature.btnText}</a>
 					</div>
 				</c:if>
