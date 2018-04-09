@@ -17,6 +17,7 @@ import {
   ANONYMOUS_USER
 } from "../../lib/constants";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
+
 import { API_MSD_URL_ROOT } from "../../lib/apiRequest.js";
 import { displayToast } from "../../general/toast.actions.js";
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
@@ -321,15 +322,13 @@ export function removeProductFromWishList(productDetails) {
         removeProductFromWishListObject
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        return dispatch(removeProductFromWishListSuccess());
-      } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
+      return dispatch(removeProductFromWishListSuccess());
     } catch (e) {
       return dispatch(removeProductFromWishListFailure(e.message));
     }
@@ -369,8 +368,10 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
         }&addedToCartWl=false`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       // here we dispatch a modal to show something was added to the bag
@@ -412,9 +413,12 @@ export function getProductSizeGuide(productCode) {
         `${PRODUCT_SIZE_GUIDE_PATH}/${productCode}/sizeGuide?isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(getProductSizeGuideSuccess(resultJson));
     } catch (e) {
       dispatch(getProductSizeGuideFailure(e.message));
@@ -452,9 +456,12 @@ export function getEmiTerms(accessToken, productValue) {
       const url = `${EMI_TERMS_PATH}?access_token=${accessToken}&productValue=${productValue}`;
       const result = await api.get(url);
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(getEmiTermsSuccess(resultJson));
     } catch (e) {
       dispatch(getEmiTermsFailure(e.message));
@@ -490,9 +497,12 @@ export function getPdpEmi(token, cartValue) {
       const url = `${PRODUCT_PDP_EMI_PATH}&productValue=${cartValue}&access_token=${token}`;
       const result = await api.get(url);
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(getPdpEmiSuccess(resultJson));
     } catch (e) {
       dispatch(getPdpEmiFailure(e.message));
@@ -527,9 +537,12 @@ export function getProductWishList() {
     try {
       const result = await api.postMock(PRODUCT_WISH_LIST_PATH);
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(getProductWishListSuccess(resultJson));
     } catch (e) {
       dispatch(getProductWishListFailure(e.message));
@@ -566,9 +579,12 @@ export function getProductSpecification(productId) {
         `${PRODUCT_SPECIFICATION_PATH}/${productId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(ProductSpecificationSuccess(resultJson));
     } catch (e) {
       dispatch(ProductSpecificationFailure(e.message));
@@ -615,9 +631,12 @@ export function addProductReview(productCode, productReview) {
         reviewData
       );
       const resultJson = await result.json();
-      if (resultJson.errors.length > 0) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(addProductReviewSuccess(productReview));
     } catch (e) {
       dispatch(addProductReviewFailure(e.message));
@@ -659,9 +678,12 @@ export function editProductReview(productCode, productReviews) {
         }&headline=${productReviews.headLine}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(editProductReviewSuccess());
     } catch (e) {
       dispatch(editProductReviewFailure(e.message));
@@ -701,9 +723,12 @@ export function deleteProductReview(productCode, reviewId) {
         }`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(deleteProductReviewSuccess());
     } catch (e) {
       dispatch(deleteProductReviewFailure(e.message));
@@ -747,9 +772,12 @@ export function getProductReviews(productCode) {
         }&page=${PAGE_VALUE}&pageSize=${PAGE_NUMBER}&orderBy=${ORDER_BY}&sort=${SORT}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(getProductReviewsSuccess(resultJson));
     } catch (e) {
       dispatch(getProductReviewsFailure(e.message));
@@ -793,9 +821,12 @@ export function followUnFollowBrand(brandCode) {
         `${FOLLOW_UN_FOLLOW_PATH}/${mcvId}/updateFollowedBrands?brands=${brandCode}&follow=${isFollowing}&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(followUnFollowBrandSuccess({ isFollowing }));
     } catch (e) {
       dispatch(followUnFollowBrandFailure(e.message));
@@ -842,11 +873,10 @@ export function getMsdRequest(productCode) {
         msdRequestObject
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE.toLowerCase()
-      ) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       if (resultJson.data[0].length > 0) {
@@ -907,11 +937,10 @@ export function pdpAboutBrand(productCode) {
         msdRequestObject
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE.toLocaleLowerCase()
-      ) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       if (resultJson.data[0].itemIds.length > 0) {
@@ -959,8 +988,10 @@ export function getPdpItems(itemIds, widgetKey) {
       const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
       const result = await api.get(url);
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson.error}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(getPdpItemsPdpSuccess(resultJson.results, widgetKey));

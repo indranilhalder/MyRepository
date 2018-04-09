@@ -23,7 +23,9 @@ import {
   LOGIN_PATH,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   YES,
-  YOUR_BAG
+  YOUR_BAG,
+  MY_ACCOUNT_PAGE,
+  SAVE_LIST_PAGE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
@@ -210,6 +212,20 @@ class CartPage extends React.Component {
     }
   };
 
+  goToWishList = () => {
+    if (this.props.history) {
+      const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+      const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+      console.log(userDetails, customerCookie);
+      if (!userDetails || !customerCookie) {
+        this.props.history.push(LOGIN_PATH);
+      } else {
+        this.props.history.push(`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`);
+      }
+    }
+  };
+
   changePinCode = () => {
     this.setState({ changePinCode: true });
   };
@@ -243,7 +259,7 @@ class CartPage extends React.Component {
         <div className={styles.content}>
           <EmptyBag
             onContinueShopping={() => this.navigateToHome()}
-            viewSavedProduct={() => this.navigateToHome()}
+            viewSavedProduct={() => this.goToWishList()}
           />
         </div>
       </div>
@@ -369,7 +385,10 @@ class CartPage extends React.Component {
               })}
 
             {cartDetails.products && (
-              <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
+              <SavedProduct
+                saveProduct={() => this.goToWishList()}
+                onApplyCoupon={() => this.goToCouponPage()}
+              />
             )}
 
             {cartDetails.products &&
