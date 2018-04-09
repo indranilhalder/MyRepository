@@ -3,14 +3,14 @@ import styles from "./ProductCapsuleCircle.css";
 import PropTypes from "prop-types";
 
 export default class ProductCapsuleCircle extends React.Component {
-  handleClick() {
+  handleClick = () => {
     if (this.props.onClick) {
-      this.props.onClick();
+      this.props.onClick(this.props.url);
     }
-  }
+  };
   render() {
     return (
-      <div className={styles.base} onClick={() => this.handleClick}>
+      <div className={styles.base} onClick={this.handleClick}>
         <div
           className={styles.imageHolder}
           style={{
