@@ -31,7 +31,6 @@ export default class Input2 extends React.Component {
     });
   }
   handleKeyUp(event) {
-    console.log("here");
     if (this.props.onKeyUp) {
       this.props.onKeyUp(event);
     }
