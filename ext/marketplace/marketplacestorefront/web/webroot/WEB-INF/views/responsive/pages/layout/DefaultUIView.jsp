@@ -2160,39 +2160,50 @@ body {
 						</div>
 						</div>
 					</div>
+						<div class="col-xs-12">
+							<input type="text" id="search-for-brand" placeholder="Search your brand">
+							<i class="fa fa-search searchicon-for-brand" aria-hidden="true"></i>
+						</div>
+						<div class="col-xs-12 all-brands-list">
+							<div class="col-xs-11 pad0 brandslist-leftsection" id="brandslist-leftsection">
+								<c:set var="number" value="9"/>
+								<c:forEach items="${number}" var="num">
+								<div class="col-xs-2 pad0 text-bold" id="search_num1">${num}</div>
+								<ul class="col-xs-10 brandname-list">
+									<c:forEach items="${brandsTabAZElement.brands}"
+											var="brandTabAZBrandElement">
+											<c:if
+												test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement' and fn:startsWith(brandTabAZBrandElement.brandName, num)}">
+												<li><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.brandName}</a></li>
+											</c:if>
+									</c:forEach>
+								</ul>
+								</c:forEach>
+								
+								<c:set var="alphabet" value="${fn:split('A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z', ',')}" scope="application" />
+								<c:forEach items="${alphabet}" var="alpha">
+								<div class="col-xs-2 pad0 text-bold" id="search_num1">${alpha}</div>
+								<ul class="col-xs-10 brandname-list">
+									<c:forEach items="${brandsTabAZElement.brands}"
+											var="brandTabAZBrandElement">
+											<c:if
+												test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement' and fn:startsWith(brandTabAZBrandElement.brandName, alpha)}">
+												<li><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.brandName}</a></li>
+											</c:if>
+									</c:forEach>
+								</ul>
+								</c:forEach>
+								
+								
+							</div>
+						</div>
 					</c:forEach>
 					</div>
 
 	
 
 					<!--========================================================  -->
-					<div>
-						<table class="">
-							
-							<c:forEach items="${feature.items}" var="brandsTabAZElement">
-								<table class="">
-									<thead>
-										<tr>
-											<th>webURL</th>
-											<th>brandName</th>
-										</tr>
-									</thead>
-									<c:forEach items="${brandsTabAZElement.brands}"
-										var="brandTabAZBrandElement">
-										<div>
-											<c:if
-												test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement'}">
-												<tr>
-													<td><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.webURL}</a></td>
-													<td>${brandTabAZBrandElement.brandName}</td>
-												</tr>
-											</c:if>
-										</div>
-									</c:forEach>
-								</table>
-							</c:forEach>
-						</table>
-					</div>
+					
 				</c:if>
 
 
