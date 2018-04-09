@@ -16,6 +16,7 @@ import {
   LOGGED_IN_USER_DETAILS,
   ANONYMOUS_USER
 } from "../../lib/constants";
+import { setDataLayer, ADOBE_PDP_TYPE } from "../../lib/adobeUtils.js";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 import { API_MSD_URL_ROOT } from "../../lib/apiRequest.js";
 import { displayToast } from "../../general/toast.actions.js";
@@ -166,6 +167,7 @@ export function getProductDescription(productCode) {
         resultJson.status === SUCCESS_UPPERCASE ||
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
+        setDataLayer(ADOBE_PDP_TYPE, resultJson);
         dispatch(getProductDescriptionSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.error}`);
@@ -376,6 +378,7 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
       // here we dispatch a modal to show something was added to the bag
       dispatch(displayToast("Added product to Bag"));
       dispatch(addProductToCartSuccess());
+      // ADOBE_ADD_TO_CART
     } catch (e) {
       dispatch(addProductToCartFailure(e.message));
     }
