@@ -369,6 +369,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				{
 					//Apply the voucher
 
+					cartModel = (CartModel) mplCouponFacade.removeLastEMICoupon(cartModel);
 					cartModel = (CartModel) mplCouponFacade.removeLastCartCoupon(cartModel);
 					if (StringUtils.isNotEmpty(couponCode))
 					{
@@ -861,7 +862,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 				LOG.debug("Step 1:::The cart coupon code to be released by the customer is ::: " + couponCode);
 
-
+				cartModel = (CartModel) mplCouponFacade.removeLastEMICoupon(cartModel);
 				cartModel = (CartModel) mplCouponFacade.removeCartCoupon(cartModel);
 
 				isCartVoucherRemoved = checkforCartVoucherRemoved(cartModel.getDiscounts());
