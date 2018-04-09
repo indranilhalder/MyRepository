@@ -3052,6 +3052,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				orderEntryModel.setCartCouponCode(abstractOrderEntryModel.getCartCouponCode());
 			}
+			
+			if (StringUtils.isNotEmpty(abstractOrderEntryModel.getEmiCouponCode()))
+			{
+				orderEntryModel.setEmiCouponCode(abstractOrderEntryModel.getEmiCouponCode());
+			}
 
 
 			final DecimalFormat df = new DecimalFormat("#.##");
