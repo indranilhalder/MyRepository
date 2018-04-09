@@ -45,9 +45,6 @@ export default class BrandCardHeader extends React.Component {
       return null;
     }
 
-    console.log("FEED COMPONENT DATA");
-    console.log(feedComponentData);
-
     return (
       <div className={styles.base} onClick={this.itemClick}>
         <div className={styles.container}>
