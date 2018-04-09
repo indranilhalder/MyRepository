@@ -86,14 +86,21 @@ const productDescription = (
     case pdpActions.CHECK_PRODUCT_PIN_CODE_SUCCESS:
       const currentPdpDetail = cloneDeep(state.productDetails);
       let currentProductUssId = currentPdpDetail.winningUssID;
-      const deliveryOptionObj = action.productPinCode.deliveryOptions.pincodeListResponse.find(
-        delivery => {
-          return delivery.ussid === currentProductUssId;
-        }
-      );
+      let deliveryOptionObj;
+      if (
+        action.productPinCode &&
+        action.productPinCode.deliveryOptions &&
+        action.productPinCode.deliveryOptions.pincodeListResponse
+      ) {
+        deliveryOptionObj = action.productPinCode.deliveryOptions.pincodeListResponse.find(
+          delivery => {
+            return delivery.ussid === currentProductUssId;
+          }
+        );
+      }
 
       let eligibleDeliveryModes = [];
-      if (deliveryOptionObj.isServicable === YES) {
+      if (deliveryOptionObj && deliveryOptionObj.isServicable === YES) {
         eligibleDeliveryModes = transferPincodeToPdpPincode(
           deliveryOptionObj.validDeliveryModes
         );

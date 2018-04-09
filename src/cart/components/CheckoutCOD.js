@@ -18,7 +18,9 @@ export default class CheckoutCOD extends React.Component {
   render() {
     return (
       <div>
-        {this.props.cart.codEligibilityDetails.status ? (
+        {this.props.cart &&
+        this.props.cart.codEligibilityDetails &&
+        this.props.cart.codEligibilityDetails.status ? (
           <MenuDetails text="Cash On Delivery" icon={creditCardIcon}>
             <CodForm
               cart={this.props.cart}

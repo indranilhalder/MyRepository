@@ -17,7 +17,7 @@ import {
 import * as Cookie from "../../lib/Cookie";
 const dateFormat = "MMMM DD YYYY";
 const PRODUCT_QUANTITY = "1";
-
+const NO_SAVELIST_TEXT = "No Saved List";
 export default class SaveListDetails extends React.Component {
   componentDidMount() {
     this.props.setHeaderText(SAVED_LIST);
@@ -103,6 +103,9 @@ export default class SaveListDetails extends React.Component {
               </div>
             );
           })}
+        {(!wishList || !wishList.products) && (
+          <div className={styles.noSaveListBlock}>{NO_SAVELIST_TEXT}</div>
+        )}
       </div>
     );
   }
