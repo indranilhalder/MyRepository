@@ -4,6 +4,8 @@ import styles from "./BrandCardHeader.css";
 import Logo from "../../general/components/Logo";
 import CoreButton from "../../general/components/Button";
 import PropTypes from "prop-types";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
 export default class BrandCardHeader extends React.Component {
   constructor(props) {
     super(props);
@@ -22,14 +24,32 @@ export default class BrandCardHeader extends React.Component {
       );
     }
   }
+
+  itemClick = () => {
+    const feedComponentData = this.props.feedComponentData;
+    if (
+      feedComponentData &&
+      feedComponentData.items &&
+      feedComponentData.items[0]
+    ) {
+      const urlSuffix = this.props.feedComponentData.items[0].webURL.replace(
+        TATA_CLIQ_ROOT,
+        "$1"
+      );
+      this.props.history.push(urlSuffix);
+    }
+  };
   render() {
     let { feedComponentData } = this.props;
     if (!feedComponentData || feedComponentData.items.length === 0) {
       return null;
     }
 
+    console.log("FEED COMPONENT DATA");
+    console.log(feedComponentData);
+
     return (
-      <div className={styles.base}>
+      <div className={styles.base} onClick={this.itemClick}>
         <div className={styles.container}>
           <div className={styles.imageHolder}>
             <Image
