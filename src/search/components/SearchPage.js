@@ -29,6 +29,9 @@ export default class SearchPage extends React.Component {
       this.props.onBack();
     }
   }
+  handleOnSearchString(webURL) {
+    this.props.history.push(`search/?searchCategory=all&text=${webURL}`);
+  }
   render() {
     const data = this.props.searchResult;
     return (
@@ -44,6 +47,7 @@ export default class SearchPage extends React.Component {
             }}
             canGoBack={this.props.canGoBack}
             text={this.props.header}
+            onSearchString={val => this.handleOnSearchString(val)}
           />
         </div>
         {this.state.showResults && (

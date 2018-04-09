@@ -11,7 +11,8 @@ export default class SearchHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchBar: false
+      searchBar: false,
+      searchString: null
     };
   }
   onClickBack() {
@@ -22,11 +23,12 @@ export default class SearchHeader extends React.Component {
   onSearch(val) {
     if (this.props.onSearch) {
       this.props.onSearch(val);
+      this.setState({ searchString: val });
     }
   }
-  searchRaw() {
-    if (this.props.searchRaw) {
-      this.props.searchRaw();
+  searchString() {
+    if (this.props.onSearchString) {
+      this.props.onSearchString(this.state.searchString);
     }
   }
   onClickIcon() {
@@ -77,7 +79,7 @@ export default class SearchHeader extends React.Component {
               <div
                 className={styles.searchRedHolder}
                 onClick={() => {
-                  this.searchRaw();
+                  this.searchString();
                 }}
               >
                 <Icon image={searchRedIcon} size={16} />
