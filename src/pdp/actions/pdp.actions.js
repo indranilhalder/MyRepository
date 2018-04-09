@@ -225,7 +225,6 @@ export function getProductPinCode(pinCode, productCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      console.log(resultJson);
 
       dispatch(
         getProductPinCodeSuccess({
@@ -605,7 +604,6 @@ export function addProductReview(productCode, productReview) {
   reviewData.append("rating", productReview.rating);
   reviewData.append("headline", productReview.headline);
 
-  console.log(JSON.stringify(reviewData));
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(addProductReviewRequest());
