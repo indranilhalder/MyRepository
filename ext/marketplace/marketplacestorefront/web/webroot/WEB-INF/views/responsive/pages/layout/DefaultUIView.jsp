@@ -2134,8 +2134,7 @@ body {
 									</li>
 								</ul>
 							</c:if>
-						</c:forEach>
-					</div>
+						
 					<div class="tab-content">
 						<div role="tabpanel" class="tab-pane ${loop.index eq 0 ? 'active' : ''}" id="mytab${loop.index + 1}">
 						<!--brands slider starts-->
@@ -2160,6 +2159,8 @@ body {
 						</c:forEach>
 						</div>
 						</div>
+					</div>
+					</c:forEach>
 					</div>
 
 	
