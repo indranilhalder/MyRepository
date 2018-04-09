@@ -32,8 +32,6 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       setTimeout(() => {
         window.scrollTo(0, 0);
       }, 0);
-      console.log("COMPONENT DID MOUNT");
-      console.log(this.props);
       this.props.getProductDescription(this.props.match.params[0]);
       this.props.getMsdRequest(this.props.match.params[0]);
       this.props.pdpAboutBrand(this.props.match.params[0]);

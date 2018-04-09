@@ -167,8 +167,6 @@ export function getProductDescription(productCode) {
         resultJson.status === SUCCESS_UPPERCASE ||
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
-        console.log("ICID");
-        console.log(getState().icid);
         setDataLayer(ADOBE_PDP_TYPE, resultJson, getState().icid.value);
         dispatch(getProductDescriptionSuccess(resultJson));
       } else {

@@ -7,8 +7,6 @@ const icid = (
 ) => {
   switch (action.type) {
     case icidActions.SET_ICID:
-      console.log("SET ICID");
-      console.log(action.icid);
       return Object.assign({}, state, {
         value: action.icid
       });

@@ -8,9 +8,6 @@ import { parse } from "query-string";
 const Route = props => {
   const search = parse(props.location.search);
   const icid = search.icid2;
-  console.log("ICID");
-  console.log(search);
-  console.log(icid);
   if (icid) {
     props.setIcid(icid);
   } else {
