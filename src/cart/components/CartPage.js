@@ -216,8 +216,6 @@ class CartPage extends React.Component {
     if (this.props.history) {
       const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
       const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
-      console.log(userDetails, customerCookie);
       if (!userDetails || !customerCookie) {
         this.props.history.push(LOGIN_PATH);
       } else {
