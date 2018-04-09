@@ -50,7 +50,6 @@ export default class BrandsLandingPageDefault extends React.Component {
   renderLoader() {
     return <Loader />;
   }
-  renderBanner() {}
 
   render() {
     if (this.props.loading || !this.props.brandsStores) {
