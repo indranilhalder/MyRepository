@@ -2118,16 +2118,30 @@ body {
 
 
 				<c:if test="${feature.typeCode eq 'BrandsTabAZListComponent'}">
+				
+				<!-- =========================== -->
+
+					<div class="col-xs-12 pad0 brand-tab-azlist mb40">
+						<c:forEach items="${feature.items}" var="brandsTabAZElement" varStatus="loop">
+							<c:if
+								test="${brandsTabAZElement.typeCode eq 'BrandsTabAZElement'}">
+								<ul class="nav nav-tabs" role="tablist">
+									<li role="presentation" class="${loop.index eq 0 ? 'active' : ''}">
+										${brandsTabAZElement.subType}
+									</li>
+								</ul>
+							</c:if>
+						</c:forEach>
+					</div>
+
+
+	
+
+					<!--========================================================  -->
 					<div>
 						<h1>BrandsTabAZListComponent</h1>
 						<table class="">
-							<thead>
-								<tr>
-									<th>subType</th>
-
-								</tr>
-
-							</thead>
+							
 							<c:forEach items="${feature.items}" var="brandsTabAZElement">
 								<div>
 									<c:if
