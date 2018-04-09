@@ -40,6 +40,16 @@ const mapDispatchToProps = dispatch => {
         dispatch(logout());
         return;
       }
+      // if user doesn't have any email id linked to their fb account then
+      // we have to show toast that
+      if (!facebookResponse.email) {
+        dispatch(
+          singleAuthCallHasFailed(
+            "Something went wrong. Please try with different account"
+          )
+        );
+        return;
+      }
       if (isSignUp) {
         const signUpResponse = await dispatch(
           socialMediaRegistration(
@@ -199,7 +209,6 @@ const mapDispatchToProps = dispatch => {
               .access_token
           )
         );
-
         if (loginUserResponse.status === SUCCESS) {
           const cartVal = await dispatch(getCartId());
 
