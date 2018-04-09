@@ -173,6 +173,15 @@ export default class PdpElectronics extends React.Component {
     }
 
     if (productData) {
+      let price = "";
+      let discountPrice = "";
+      if (productData.mrpPrice) {
+        price = productData.mrpPrice.formattedValueNoDecimal;
+      }
+
+      if (productData.winningSellerPrice) {
+        discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
+      }
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
@@ -209,10 +218,8 @@ export default class PdpElectronics extends React.Component {
                 productDescription={productData.productName}
                 brandUrl={productData.brandURL}
                 history={this.props.history}
-                price={productData.mrpPrice.formattedValueNoDecimal}
-                discountPrice={
-                  productData.winningSellerPrice.formattedValueNoDecimal
-                }
+                price={price}
+                discountPrice={discountPrice}
                 averageRating={productData.averageRating}
                 onClick={this.goToReviewPage}
               />
@@ -223,8 +230,8 @@ export default class PdpElectronics extends React.Component {
                 productDescription={productData.productName}
                 brandUrl={productData.brandURL}
                 history={this.props.history}
-                price={productData.winningSellerPrice.formattedValueNoDecimal}
-                discountPrice={productData.mrpPrice.formattedValueNoDecimal}
+                price={price}
+                discountPrice={discountPrice}
                 averageRating={productData.averageRating}
                 discount={productData.discount}
               />
@@ -254,15 +261,16 @@ export default class PdpElectronics extends React.Component {
           {productData.variantOptions && (
             <React.Fragment>
               <SizeSelector
+                history={this.props.history}
+                sizeSelected={this.checkIfSizeSelected()}
+                productId={productData.productListingId}
+                hasSizeGuide={productData.showSizeGuide}
                 showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
+                data={productData.variantOptions}
               />
               <ColourSelector
-                data={productData.variantOptions.map(value => {
-                  return value.colorlink;
-                })}
+                data={productData.variantOptions}
+                productId={productData.productListingId}
                 history={this.props.history}
                 updateColour={val => {}}
                 getProductSpecification={this.props.getProductSpecification}
@@ -316,13 +324,11 @@ please try another pincode">
             </div>
           )}
           <div className={styles.separator}>
-            {productData.averageRating && (
-              <RatingAndTextLink
-                onClick={this.goToReviewPage}
-                averageRating={productData.averageRating}
-                numberOfReview={productData.numberOfReviews}
-              />
-            )}
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
           </div>
           {productData.classifications && (
             <div className={styles.details}>

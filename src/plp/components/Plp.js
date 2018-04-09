@@ -4,7 +4,7 @@ import ProductGrid from "./ProductGrid";
 import PlpMobileFooter from "./PlpMobileFooter";
 import styles from "./Plp.css";
 import throttle from "lodash/throttle";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 
 export default class Plp extends React.Component {
@@ -93,15 +93,10 @@ export default class Plp extends React.Component {
   };
 
   renderLoader() {
-    return (
-      <div>
-        <MDSpinner />
-      </div>
-    );
+    return <Loader />;
   }
 
   render() {
-    console.log(this.props);
     let filterClass = styles.filter;
 
     if (this.props.loading && !this.props.isFilter) {

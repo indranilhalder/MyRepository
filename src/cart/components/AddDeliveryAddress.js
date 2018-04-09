@@ -88,6 +88,16 @@ export default class AddDeliveryAddress extends React.Component {
   };
 
   render() {
+    if (this.props.loading) {
+      if (this.props.showSecondaryLoader) {
+        this.props.showSecondaryLoader();
+      }
+    } else {
+      if (this.props.hideSecondaryLoader) {
+        this.props.hideSecondaryLoader();
+      }
+    }
+
     const dataLabel = [
       {
         label: "Home"
@@ -128,6 +138,7 @@ export default class AddDeliveryAddress extends React.Component {
                 ? this.props.postalCode
                 : this.state.postalCode
             }
+            type={"number"}
             rightChildSize={33}
             rightChild={
               <CircleButton

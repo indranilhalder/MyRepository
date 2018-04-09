@@ -65,20 +65,16 @@ export default class CreditCardForm extends React.Component {
     this.setState({ cardNumberValue: val });
   }
   onChangeCardNumber(val) {
-    if (val && val.length <= 16) {
-      this.setState({ cardNumberValue: val });
-      if (val.length === 6) {
-        this.props.binValidation(val);
-      }
+    this.setState({ cardNumberValue: val });
+    if (val.length === 6) {
+      this.props.binValidation(val);
     }
   }
   getCardDetails(val) {
     this.setState({ cardNumberValue: val });
   }
   getCardCvvValue(val) {
-    if (val && val.length <= 3) {
-      this.setState({ cardCvvValue: val });
-    }
+    this.setState({ cardCvvValue: val });
   }
   onChangeCardName(val) {
     this.setState({ cardNameValue: val });
@@ -159,6 +155,7 @@ export default class CreditCardForm extends React.Component {
                 onChange={changedValue => this.monthChange(changedValue)}
                 options={this.monthOptions}
                 textStyle={{ fontSize: 14 }}
+                value={this.state.monthValue}
               />
             </div>
             <div className={styles.dropDownBox}>
@@ -167,6 +164,7 @@ export default class CreditCardForm extends React.Component {
                 options={this.expiryYearObject}
                 label="Expiry year"
                 onChange={expiryYear => this.onYearChange(expiryYear)}
+                value={this.state.yearValue}
               />
             </div>
           </div>
@@ -181,6 +179,7 @@ export default class CreditCardForm extends React.Component {
                     onChange={val => this.getCardCvvValue(val)}
                     textStyle={{ fontSize: 14 }}
                     height={33}
+                    maxLength={"3"}
                     value={
                       this.props.cardCvvValue
                         ? this.props.cardCvvValue

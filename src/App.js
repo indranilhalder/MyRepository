@@ -45,6 +45,7 @@ import AddAddressContainer from "./account/containers/AddAddressContainer.js";
 import SaveListContainer from "./account/containers/SaveListContainer";
 import CliqCashContainer from "./account/containers/CliqCashContainer.js";
 import GiftCardContainer from "./account/containers/GiftCardContainer";
+import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
 
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 import CancelOrderContainer from "./account/containers/CancelOrderContainer";
@@ -104,8 +105,14 @@ import {
   CANCEL_PREFIX,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
-  MY_ACCOUNT_UPDATE_PROFILE_PAGE
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE,
+  REQUESTING
 } from "../src/lib/constants";
+import {
+  globalAccessTokenSuccess,
+  customerAccessToken
+} from "./auth/actions/user.actions";
+import { cartDetailsCNCFailure } from "./cart/actions/cart.actions";
 
 const auth = {
   isAuthenticated: false
@@ -114,16 +121,16 @@ class App extends Component {
   async componentDidMount() {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     let loggedInUserDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsForLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
 
+    console.log(loggedInUserDetails);
+
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
     // Case 1. THe user is not logged in.
-
     if (!globalAccessToken && !this.props.cart.loading) {
       await this.props.getGlobalAccessToken();
       globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -138,13 +145,24 @@ class App extends Component {
       if (!cartDetailsForLoggedInUser && !this.props.cart.loading) {
         this.props.generateCartIdForLoggedInUser();
       }
+    }
+    if (
+      customerAccessToken &&
+      cartDetailsForLoggedInUser &&
+      loggedInUserDetails
+    ) {
+      if (
+        this.props.location.pathname.indexOf(LOGIN_PATH) !== -1 ||
+        this.props.location.pathname.indexOf(SIGN_UP_PATH) !== -1
+      ) {
+        this.props.history.push(`${HOME_ROUTER}`);
+      }
     } else {
       if (!cartDetailsForAnonymous && globalAccessToken) {
         this.props.generateCartIdForAnonymous();
       }
     }
   }
-
   renderLoader() {
     return (
       <div className={AppStyles.loadingIndicator}>
@@ -155,9 +173,28 @@ class App extends Component {
 
   render() {
     let className = AppStyles.base;
+    const {
+      globalAccessTokenStatus,
+      customerAccessTokenStatus,
+      refreshCustomerAccessTokenStatus,
+      cartIdForLoggedInUserStatus,
+      cartIdForAnonymousUserStatus
+    } = this.props;
+
+    if (
+      globalAccessTokenStatus === REQUESTING ||
+      customerAccessTokenStatus === REQUESTING ||
+      refreshCustomerAccessTokenStatus === REQUESTING ||
+      cartIdForLoggedInUserStatus === REQUESTING ||
+      cartIdForAnonymousUserStatus === REQUESTING
+    ) {
+      return this.renderLoader();
+    }
+
     if (this.props.modalStatus) {
       className = AppStyles.blur;
     }
+
     return (
       <React.Fragment>
         <div className={className}>
@@ -395,6 +432,7 @@ class App extends Component {
               component={PlpBrandCategoryWrapperContainer}
             />
           </Switch>
+          <SecondaryLoaderContainer />
           <MobileFooter />
 
           <ModalContainer />

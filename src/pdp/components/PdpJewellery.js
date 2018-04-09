@@ -149,9 +149,7 @@ export default class PdpJewellery extends React.Component {
         sizeSelected: this.checkIfSizeSelected(),
         productId: this.props.productDetails.productListingId,
         showSizeGuide: this.props.showSizeGuide,
-        data: this.props.productDetails.variantOptions.map(value => {
-          return value.sizelink;
-        })
+        data: this.props.productDetails.variantOptions
       });
     }
   };
@@ -193,6 +191,15 @@ export default class PdpJewellery extends React.Component {
     }
 
     if (productData) {
+      let price = "";
+      let discountPrice = "";
+      if (productData.mrpPrice) {
+        price = productData.mrpPrice.formattedValueNoDecimal;
+      }
+
+      if (productData.winningSellerPrice) {
+        discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
+      }
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
@@ -213,8 +220,8 @@ export default class PdpJewellery extends React.Component {
             <JewelleryDetailsAndLink
               productName={productData.brandName}
               productDescription={productData.productName}
-              price={productData.winningSellerPrice.formattedValueNoDecimal}
-              discountPrice={productData.mrpPrice.formattedValueNoDecimal}
+              price={price}
+              discountPrice={discountPrice}
               averageRating={productData.averageRating}
               discount={productData.discount}
               brandUrl={productData.brandURL}
@@ -252,18 +259,9 @@ export default class PdpJewellery extends React.Component {
                 history={this.props.history}
                 sizeSelected={this.checkIfSizeSelected()}
                 productId={productData.productListingId}
+                hasSizeGuide={productData.showSizeGuide}
                 showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
-              />
-              <ColourSelector
-                data={productData.variantOptions.map(value => {
-                  return value.colorlink;
-                })}
-                history={this.props.history}
-                updateColour={val => {}}
-                getProductSpecification={this.props.getProductSpecification}
+                data={productData.variantOptions}
               />
             </React.Fragment>
           )}
@@ -307,13 +305,11 @@ please try another pincode">
           )}
 
           <div className={styles.separator}>
-            {productData.averageRating && (
-              <RatingAndTextLink
-                onClick={this.goToReviewPage}
-                averageRating={productData.averageRating}
-                numberOfReview={productData.numberOfReviews}
-              />
-            )}
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
           </div>
 
           <div className={styles.details} id="priceBreakup">

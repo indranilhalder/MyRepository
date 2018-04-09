@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./AddressBook.css";
 import Button from "../../general/components/Button.js";
 import AddressItemFooter from "./AddressItemFooter.js";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 import {
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
@@ -30,11 +30,7 @@ export default class AddressBook extends React.Component {
   };
 
   renderLoader = () => {
-    return (
-      <div className={styles.loadingIndicator}>
-        <MDSpinner />
-      </div>
-    );
+    return <Loader />;
   };
 
   editAddress = address => {
@@ -100,9 +96,16 @@ export default class AddressBook extends React.Component {
     );
   };
   render() {
-    if (this.props.renderLoader) {
+    if (this.props.loading && !this.props.userAddress) {
       return this.renderLoader();
+    } else {
+      if (this.props.loading) {
+        this.props.showSecondaryLoader();
+      } else {
+        this.props.hideSecondaryLoader();
+      }
     }
+
     return this.renderAddressBook();
   }
 }

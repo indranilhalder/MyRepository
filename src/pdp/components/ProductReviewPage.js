@@ -6,10 +6,12 @@ import WriteReview from "./WriteReview";
 import PropTypes from "prop-types";
 import RatingHolder from "./RatingHolder";
 import PdpFrame from "./PdpFrame";
+import { Redirect } from "react-router-dom";
 import {
   MOBILE_PDP_VIEW,
   PRODUCT_REVIEWS_PATH_SUFFIX,
-  SUCCESS
+  SUCCESS,
+  LOGIN_PATH
 } from "../../lib/constants";
 import find from "lodash/find";
 import * as Cookie from "../../lib/Cookie";
@@ -23,7 +25,7 @@ import {
   REVIEW_SUBMIT_TOAST_TEXT
 } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
-
+const PRODUCT_QUANTITY = "1";
 class ProductReviewPage extends Component {
   state = {
     visible: false
@@ -45,12 +47,24 @@ class ProductReviewPage extends Component {
   };
 
   onSubmit = productReview => {
-    this.props.displayToast(REVIEW_SUBMIT_TOAST_TEXT);
-    this.props.addProductReview(
-      this.props.productDetails.productListingId,
-      productReview
-    );
-    this.setState({ visible: false });
+    if (!productReview.rating) {
+      this.props.displayToast("Please give rating");
+      return false;
+    }
+    if (!productReview.headline) {
+      this.props.displayToast("Please enter title");
+      return false;
+    }
+    if (!productReview.comment) {
+      this.props.displayToast("Please enter comment");
+      return false;
+    } else {
+      this.props.addProductReview(
+        this.props.productDetails.productListingId,
+        productReview
+      );
+      this.setState({ visible: false });
+    }
   };
   onCancel() {
     this.setState({ visible: false });
@@ -59,7 +73,7 @@ class ProductReviewPage extends Component {
     if (this.state.visible) {
       return (
         <WriteReview
-          onSubmit={this.onSubmit}
+          onSubmit={val => this.onSubmit(val)}
           onCancel={() => this.onCancel()}
         />
       );
@@ -68,29 +82,36 @@ class ProductReviewPage extends Component {
 
   addProductToBag = () => {
     let productDetails = {};
+    productDetails.code = this.props.productDetails.productListingId;
+    productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.ussId = this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (userDetails) {
-      productDetails.userId = JSON.parse(userDetails).customerInfo.mobileNumber;
-      productDetails.accessToken = JSON.parse(customerCookie).access_token;
-      productDetails.cartId = JSON.parse(cartDetailsLoggedInUser).code;
-    } else {
-      productDetails.userId = ANONYMOUS_USER;
-      productDetails.accessToken = JSON.parse(globalCookie).access_token;
-      productDetails.cartId = JSON.parse(cartDetailsForAnonymous).guid;
-    }
-    this.props.addProductToCart(productDetails);
-  };
-  addProductToWishList = () => {
-    if (this.props.addProductToWishList) {
-      let productDetails = {};
-      productDetails.listingId = this.props.productDetails.productListingId;
-      this.props.addProductToWishList(productDetails);
+      if (
+        cartDetailsLoggedInUser !== undefined &&
+        customerCookie !== undefined
+      ) {
+        this.props.addProductToCart(
+          JSON.parse(userDetails).userName,
+          JSON.parse(cartDetailsLoggedInUser).code,
+          JSON.parse(customerCookie).access_token,
+          productDetails
+        );
+      }
+    } else if (cartDetailsForAnonymous) {
+      this.props.addProductToCart(
+        ANONYMOUS_USER,
+        JSON.parse(cartDetailsForAnonymous).guid,
+        JSON.parse(globalCookie).access_token,
+        productDetails
+      );
     }
   };
 
@@ -107,8 +128,15 @@ class ProductReviewPage extends Component {
       this.setState({ visible: false });
     }
   }
-
+  navigateToLogin() {
+    return <Redirect to={LOGIN_PATH} />;
+  }
   render() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (!userDetails || !customerCookie) {
+      return this.navigateToLogin();
+    }
     if (this.props.productDetails) {
       const mobileGalleryImages =
         this.props.productDetails &&

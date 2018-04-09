@@ -16,6 +16,10 @@ import { displayToast } from "../../general/toast.actions";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
 import { setHeaderText } from "../../general/header.actions";
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
 import { PRODUCT_COUPONS, showModal } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
@@ -73,6 +77,12 @@ const mapDispatchToProps = dispatch => {
     },
     displayCouponsForAnonymous: (userId, accessToken) => {
       dispatch(displayCouponsForAnonymous(userId, accessToken));
+    },
+    showSecondaryLoader: () => {
+      dispatch(showSecondaryLoader());
+    },
+    hideSecondaryLoader: () => {
+      dispatch(hideSecondaryLoader());
     }
   };
 };
@@ -80,7 +90,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     cart: state.cart,
-    user: state.user
+    user: state.user,
+    loginFromMyBag: state.cart.loginFromMyBag
   };
 };
 const CartContainer = withRouter(

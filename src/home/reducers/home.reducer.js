@@ -159,13 +159,9 @@ const home = (
 
     case homeActions.GET_ITEMS_SUCCESS:
       homeFeedData = state.homeFeed;
-      console.log("GET ITEMS SUCCESS");
-      console.log(action.items);
-      console.log(homeFeedData[action.positionInFeed]);
       clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
-      console.log("BEFORE TRANSFORM FETCHING ITEMS ORDER");
       clonedComponent.items = transformFetchingItemsOrder(
-        homeFeedData[action.positionInFeed].itemIds,
+        action.itemIds,
         action.items
       );
 

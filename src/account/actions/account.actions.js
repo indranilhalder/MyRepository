@@ -28,6 +28,7 @@ import {
 } from "../../general/modal.actions.js";
 import { getPaymentModes } from "../../cart/actions/cart.actions.js";
 import { getMcvId } from "../../lib/adobeUtils";
+import * as ErrorHandling from "../../general/ErrorHandling.js";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
@@ -187,7 +188,7 @@ export const PATH = "v2/mpl";
 
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
 export const LOGOUT = "LOGOUT";
-
+export const CLEAR_GIFT_CARD_STATUS = "CLEAR_GIFT_CARD_STATUS";
 const API_KEY_FOR_MSD = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
 const NUMBER_OF_RESULTS_FOR_BRANDS = [25];
 const WIDGETS_LIST_FOR_BRANDS = [112];
@@ -246,15 +247,12 @@ export function getDetailsOfCancelledProduct(cancelProductDetails) {
         cancelProductObject
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.errors
-      ) {
-        throw new Error(`${resultJson.errors[0].message}`);
-      } else {
-        return dispatch(getDetailsOfCancelledProductSuccess(resultJson));
+
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      return dispatch(getDetailsOfCancelledProductSuccess(resultJson));
     } catch (e) {
       dispatch(getDetailsOfCancelledProductFailure(e.message));
     }
@@ -311,16 +309,12 @@ export function cancelProduct(cancelProductDetails) {
         cancelProductObject
       );
       const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.errors
-      ) {
-        throw new Error(`${resultJson.errors[0].message}`);
-      } else {
-        return dispatch(cancelProductSuccess(resultJson));
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      return dispatch(cancelProductSuccess(resultJson));
     } catch (e) {
       return dispatch(cancelProductFailure(e.message));
     }
@@ -1892,6 +1886,13 @@ export function redeemCliqVoucher(cliqCashDetails, fromCheckout) {
 }
 export function logout() {
   return {
-    type: LOGOUT
+    type: LOGOUT,
+    status: SUCCESS
+  };
+}
+
+export function clearGiftCardStatus() {
+  return {
+    type: CLEAR_GIFT_CARD_STATUS
   };
 }

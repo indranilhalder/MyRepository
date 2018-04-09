@@ -25,17 +25,19 @@ export default class RateyourExperienceCard extends React.Component {
               onSelect={val => this.captureOrderExperience(val[0])}
             />
           </div>
-          <div className={styles.buttonHolder}>
-            <Button
-              type="primary"
-              backgroundColor="#ff1744"
-              height={40}
-              label={this.props.buttonText}
-              width={211}
-              textStyle={{ color: "#FFF", fontSize: 50 }}
-              onClick={() => this.continueShopping()}
-            />
-          </div>
+          {this.props.isContinue && (
+            <div className={styles.buttonHolder}>
+              <Button
+                type="primary"
+                backgroundColor="#ff1744"
+                height={40}
+                label={this.props.buttonText}
+                width={211}
+                textStyle={{ color: "#FFF", fontSize: 50 }}
+                onClick={() => this.continueShopping()}
+              />
+            </div>
+          )}
         </div>
       </div>
     );
@@ -45,11 +47,13 @@ RateyourExperienceCard.propTypes = {
   heading: PropTypes.string,
   label: PropTypes.string,
   buttonText: PropTypes.string,
-  onCheckout: PropTypes.func
+  onCheckout: PropTypes.func,
+  isContinue: PropTypes.bool
 };
 
 RateyourExperienceCard.defaultProps = {
   heading: "Rate your experience",
   label: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit. ",
-  buttonText: "Continue shopping"
+  buttonText: "Continue shopping",
+  isContinue: false
 };

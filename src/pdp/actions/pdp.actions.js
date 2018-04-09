@@ -16,6 +16,8 @@ import {
   LOGGED_IN_USER_DETAILS,
   ANONYMOUS_USER
 } from "../../lib/constants";
+import { setDataLayer, ADOBE_PDP_TYPE } from "../../lib/adobeUtils.js";
+import * as ErrorHandling from "../../general/ErrorHandling.js";
 import { API_MSD_URL_ROOT } from "../../lib/apiRequest.js";
 import { displayToast } from "../../general/toast.actions.js";
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
@@ -123,7 +125,7 @@ const PRODUCT_SIZE_GUIDE_PATH = "v2/mpl/products/";
 const ORDER_BY = "desc";
 const SORT = "byDate";
 const PAGE_VALUE = "0";
-const PAGE_NUMBER = "1";
+const PAGE_NUMBER = "10";
 const MSD_REQUEST_PATH = "widgets";
 const MSD_ABOUT_BRAND_REQUEST_PATH = "widgets";
 const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
@@ -165,6 +167,7 @@ export function getProductDescription(productCode) {
         resultJson.status === SUCCESS_UPPERCASE ||
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
+        setDataLayer(ADOBE_PDP_TYPE, resultJson, getState().icid.value);
         dispatch(getProductDescriptionSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.error}`);
@@ -217,10 +220,14 @@ export function getProductPinCode(pinCode, productCode) {
         url = `${PRODUCT_DETAILS_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=${validProductCode}&pin=${pinCode}`;
       }
       const result = await api.post(url);
+
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(
         getProductPinCodeSuccess({
           pinCode,
@@ -264,8 +271,10 @@ export function addProductToWishList(userId, accessToken, productDetails) {
         }&productCode=${productDetails.code}&wishlistName=${MY_WISH_LIST}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(addProductToWishListSuccess());
@@ -369,6 +378,7 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
       // here we dispatch a modal to show something was added to the bag
       dispatch(displayToast("Added product to Bag"));
       dispatch(addProductToCartSuccess());
+      // ADOBE_ADD_TO_CART
     } catch (e) {
       dispatch(addProductToCartFailure(e.message));
     }
@@ -592,15 +602,20 @@ export function addProductReviewFailure(error) {
 }
 
 export function addProductReview(productCode, productReview) {
+  let reviewData = new FormData();
+  reviewData.append("comment", productReview.comment);
+  reviewData.append("rating", productReview.rating);
+  reviewData.append("headline", productReview.headline);
+
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(addProductReviewRequest());
     try {
-      const result = await api.post(
-        `${PRODUCT_SPECIFICATION_PATH}${productCode}/reviews?access_token=${
+      const result = await api.postFormData(
+        `${PRODUCT_SIZE_GUIDE_PATH}${productCode}/reviews?access_token=${
           JSON.parse(customerCookie).access_token
         }`,
-        productReview
+        reviewData
       );
       const resultJson = await result.json();
       if (resultJson.errors.length > 0) {
@@ -722,13 +737,16 @@ export function getProductReviewsFailure(error) {
 }
 
 export function getProductReviews(productCode) {
-  let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getProductReviewsRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_SPECIFICATION_PATH}/${productCode.toUpperCase()}/users/anonymous/reviews?access_token=${
-          JSON.parse(globalAccessToken).access_token
+        `${PRODUCT_SIZE_GUIDE_PATH}${productCode.toUpperCase()}/users/${
+          JSON.parse(userDetails).userName
+        }/reviews?access_token=${
+          JSON.parse(customerCookie).access_token
         }&page=${PAGE_VALUE}&pageSize=${PAGE_NUMBER}&orderBy=${ORDER_BY}&sort=${SORT}`
       );
       const resultJson = await result.json();

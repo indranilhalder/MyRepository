@@ -6,7 +6,7 @@ import { SUCCESS } from "../../lib/constants";
 import { withRouter } from "react-router-dom";
 
 const toastMessageOnSuccessAddToWishlist = "Added";
-const toastMessageOnFailureAddToWishlist = "Failed";
+
 const toastMessageOnAlreadyInWishlist = "Already in wishlist";
 
 const mapDispatchToProps = dispatch => {
@@ -15,8 +15,6 @@ const mapDispatchToProps = dispatch => {
       const wishlistResponse = await dispatch(addProductToWishList(productObj));
       if (wishlistResponse.status === SUCCESS) {
         dispatch(displayToast(toastMessageOnSuccessAddToWishlist));
-      } else {
-        dispatch(displayToast(toastMessageOnFailureAddToWishlist));
       }
     },
     displayToast: () => {
@@ -29,6 +27,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     productListingId: ownProps.productListingId,
     winningUssID: ownProps.winningUssID,
+    isWhite: ownProps.isWhite,
     wishlistItems: state.wishlistItems.wishlistItems,
     type: ownProps.type
   };
