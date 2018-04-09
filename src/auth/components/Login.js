@@ -108,6 +108,7 @@ class Login extends Component {
       footerClick = () => this.navigateToLogin();
       showSocialButtons = false;
     }
+
     if (this.props.authCallsInProcess) {
       return (
         <div className={styles.loadingIndicator}>
