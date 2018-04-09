@@ -16,7 +16,7 @@ export default class ContentWidgetWrapper extends React.Component {
       return this.renderLoader();
     } else if (this.props.feedComponentData.items.length > 1) {
       return (
-        <React.Fragment>
+        <div className={styles.base}>
           <div className={styles.header}>
             {this.props.feedComponentData.title}
           </div>
@@ -24,7 +24,7 @@ export default class ContentWidgetWrapper extends React.Component {
             allData={this.props.feedComponentData.items}
             history={this.props.history}
           />
-        </React.Fragment>
+        </div>
       );
     } else {
       return this.renderLoader();

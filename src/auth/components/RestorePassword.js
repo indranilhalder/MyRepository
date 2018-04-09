@@ -1,7 +1,8 @@
 import React from "react";
 import AuthPopUp from "./AuthPopUp";
 import PropTypes from "prop-types";
-import { Button } from "xelpmoc-core";
+import { Button, Icon } from "xelpmoc-core";
+import lockIcon from "./img/lock.svg";
 import Input from "../../general/components/Input";
 import { default as styles } from "./AuthPopUp.css";
 import { default as ownStyles } from "./RestorePassword.css";
@@ -27,6 +28,11 @@ export default class RestorePassword extends React.Component {
   render() {
     return (
       <AuthPopUp>
+        <div className={ownStyles.iconHolder}>
+          <div className={ownStyles.icon}>
+            <Icon image={lockIcon} size={30} />
+          </div>
+        </div>
         <div className={styles.header}>Restore password</div>
         <div className={styles.content}>
           Please enter your Email or phone number to restore the password
