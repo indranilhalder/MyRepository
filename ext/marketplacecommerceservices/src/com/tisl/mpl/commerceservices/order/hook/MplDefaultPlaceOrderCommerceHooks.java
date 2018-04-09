@@ -59,6 +59,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificat
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
 import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pojo.request.Customer;
@@ -1258,6 +1259,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				double totalConvChargeForCOD = 0D;
 				double totalCouponDiscount = 0D;
 				double totalCartCouponDiscount = 0D;
+				double totalEmiCouponDiscount = 0D;
 
 				for (final AbstractOrderEntryModel entryModelList : sellerOrderList.getEntries())
 				{
@@ -1275,6 +1277,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					if (null != entryModelList.getCartCouponValue() && entryModelList.getCartCouponValue().doubleValue() > 0D)
 					{
 						totalCartCouponDiscount += entryModelList.getCartCouponValue().doubleValue();
+					}
+					
+					if (null != entryModelList.getEmiCouponValue() && entryModelList.getEmiCouponValue().doubleValue() > 0D)
+					{
+						totalEmiCouponDiscount += entryModelList.getEmiCouponValue().doubleValue();
 					}
 
 
@@ -1440,7 +1447,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				totalPrice = BigDecimal.valueOf(totalPriceForSubTotal)/* .add(BigDecimal.valueOf(totalConvChargeForCOD)) */
 				.add(BigDecimal.valueOf(totalDeliveryPrice))/* .subtract(BigDecimal.valueOf(totalDeliveryDiscount)) */
 				.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
-						.subtract(BigDecimal.valueOf(totalCouponDiscount)).subtract(BigDecimal.valueOf(totalCartCouponDiscount));
+						.subtract(BigDecimal.valueOf(totalCouponDiscount)).subtract(BigDecimal.valueOf(totalCartCouponDiscount))
+						.subtract(BigDecimal.valueOf(totalEmiCouponDiscount));
 
 				totalPriceWithConv = totalPrice.add(BigDecimal.valueOf(totalConvChargeForCOD));
 
@@ -2593,7 +2601,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					{
 						cartcouponApportionValue = (abstractOrderEntryModel.getCartCouponValue().doubleValue()) / quantity;
 					}
-
+					
+					//*************************
+					//Block for No Cost EMI Apportion // NU-351
+					//**************************
+					double noCostEmiApportionValue = 0; 
+					
+					if (null != abstractOrderEntryModel.getEmiCouponValue()
+							&& abstractOrderEntryModel.getEmiCouponValue().doubleValue() > 0)
+					{
+						noCostEmiApportionValue = (abstractOrderEntryModel.getEmiCouponValue().doubleValue()) / quantity;
+					}
 
 					// Looping through the order Model for single line single quantity at entry level
 
@@ -2614,6 +2632,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						double bogoCartApportion = cartApportionValue;
 						double bogoCouponApportion = couponApportionValue;
 						double bogoCartCouponApportion = cartcouponApportionValue;
+						double bogoNoCostEmiApportion = noCostEmiApportionValue;
 
 
 						if (StringUtil.isNotEmpty(abstractOrderEntryModel.getProductPromoCode())
@@ -2658,6 +2677,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 										/ (qualifyingCount - abstractOrderEntryModel.getFreeCount().intValue());
 								bogoCartCouponApportion = (cartcouponApportionValue * qualifyingCount)
 										/ (qualifyingCount - abstractOrderEntryModel.getFreeCount().intValue());
+								bogoNoCostEmiApportion = (noCostEmiApportionValue * qualifyingCount)
+										/ (qualifyingCount - abstractOrderEntryModel.getFreeCount().intValue());
+								
 
 								bogoCODPrice = abstractOrderEntryModel.getConvenienceChargeApportion().doubleValue()
 										* abstractOrderEntryModel.getQualifyingCount().intValue();
@@ -2667,7 +2689,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 								createOrderLine(abstractOrderEntryModel, bogoCount, clonedSubOrder, cartApportionValue,
 										productApportionvalue, price, true, qualifyingCount, deliveryCharge, hdDeliveryCharge,
 										scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0,
-										cartcouponApportionValue, 0);
+										cartcouponApportionValue, 0,noCostEmiApportionValue,0);
 								productApportionvalue = 0;
 
 
@@ -2675,7 +2697,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 							createOrderLine(abstractOrderEntryModel, qualifyingCount, clonedSubOrder, cartApportionValue,
 									productApportionvalue, price, false, 0, deliveryCharge, hdDeliveryCharge, scheduleDeliveryCharge,
 									cachedSellerInfoMap, bogoCODPrice, bogoCartApportion, prevDelCharge, couponApportionValue,
-									bogoCouponApportion, cartcouponApportionValue, bogoCartCouponApportion);
+									bogoCouponApportion, cartcouponApportionValue, bogoCartCouponApportion,noCostEmiApportionValue,bogoNoCostEmiApportion);
 
 
 						}
@@ -2720,7 +2742,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, cartApportionValue, 0, price, false, 0,
 
 						deliveryCharge, hdDeliveryCharge, scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge,
-								couponApportionValue, 0, cartcouponApportionValue, 0);
+								couponApportionValue, 0, cartcouponApportionValue, 0,noCostEmiApportionValue,0);
 
 					}
 					else
@@ -2729,7 +2751,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, 0, 0, abstractOrderEntryModel
 								.getTotalPrice().doubleValue() / quantity, false, 0, deliveryCharge, hdDeliveryCharge,
 								scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0,
-								cartcouponApportionValue, 0);
+								cartcouponApportionValue, 0,noCostEmiApportionValue,0);
 
 					}
 				}
@@ -2761,7 +2783,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 			for (final DiscountModel discount : voucherList)
 			{
-				if (discount instanceof PromotionVoucherModel)
+				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel)
+						&& !(discount instanceof MplNoCostEMIVoucherModel))
 				{
 					final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 
@@ -2770,14 +2793,21 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					//getModelService().save(clonedSubOrder);
 					//getModelService().refresh(clonedSubOrder);
 
-					LOG.info("Voucher " + promotionVoucherModel.getVoucherCode() + "released from suborder "
+					LOG.info("Marketable Voucher " + promotionVoucherModel.getVoucherCode() + "released from suborder "
 							+ clonedSubOrder.getCode());
 				}
 				else if (discount instanceof MplCartOfferVoucherModel)
 				{
 					final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
 					getVoucherService().releaseVoucher(promotionVoucherModel.getVoucherCode(), clonedSubOrder);
-					LOG.info("Voucher " + promotionVoucherModel.getVoucherCode() + "released from suborder "
+					LOG.info("Bank Voucher " + promotionVoucherModel.getVoucherCode() + "released from suborder "
+							+ clonedSubOrder.getCode());
+				}
+				else if (discount instanceof MplNoCostEMIVoucherModel)
+				{
+					final MplNoCostEMIVoucherModel promotionVoucherModel = (MplNoCostEMIVoucherModel) discount;
+					getVoucherService().releaseVoucher(promotionVoucherModel.getVoucherCode(), clonedSubOrder);
+					LOG.info("NO Cost EMI Voucher " + promotionVoucherModel.getVoucherCode() + "released from suborder "
 							+ clonedSubOrder.getCode());
 				}
 			}
@@ -2817,7 +2847,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final Double hdDeliveryCharge, final Double scheduleDeliveryCharge,
 			final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice,
 			final double bogoCartApportion, final Double prevDelCharge, final double couponApportionValue,
-			final double bogoCouponApportion, final double cartcouponApportionValue, final double bogoCartCouponApportion)
+			final double bogoCouponApportion, final double cartcouponApportionValue, final double bogoCartCouponApportion,
+			final double noCostEmiApportionValue,final double bogoNoCostEmiApportion)
 
 	{
 
@@ -3026,11 +3057,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final DecimalFormat df = new DecimalFormat("#.##");
 			final double netSellingPrice = Double.parseDouble(df.format(price - productApportionvalue));
 			final double netAmountAfterAllDisc = Double.parseDouble(df.format(price - cartApportionValue - productApportionvalue
-					- couponApportionValue - cartcouponApportionValue));
+					- couponApportionValue - cartcouponApportionValue-noCostEmiApportionValue));
 			LOG.debug("setCurrDelCharge" + deliveryCharge);
 			LOG.debug("Step :-10 "+deliveryCharge);
+			
 			orderEntryModel.setCouponValue(Double.valueOf(couponApportionValue));
 			orderEntryModel.setCartCouponValue(Double.valueOf(cartcouponApportionValue));
+			orderEntryModel.setEmiCouponValue(Double.valueOf(noCostEmiApportionValue));
+			
 			orderEntryModel.setNetSellingPrice(Double.valueOf(netSellingPrice));
 			orderEntryModel.setTotalPrice(Double.valueOf(netSellingPrice));
 			orderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(netAmountAfterAllDisc));
@@ -3059,7 +3093,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderEntryModel.setIsBOGOapplied(Boolean.TRUE);
 				orderEntryModel.setConvenienceChargeApportion(Double.valueOf(0));
 				orderEntryModel.setCartLevelDisc(Double.valueOf(0));
-				orderEntryModel.setCouponCode("");
+				orderEntryModel.setCouponCode(MarketplacecommerceservicesConstants.EMPTY);
 				orderEntryModel.setCouponValue(Double.valueOf(0));
 
 				//TPR-7408 starts here
@@ -3076,6 +3110,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				/* Added in R2.3 STARt */
 				orderEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
 				/* Added in R2.3 end */
+				
+				// Code Changes for NU-351: No Cost EMI Coupon
+				orderEntryModel.setEmiCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+				orderEntryModel.setEmiCouponValue(Double.valueOf(0));
 			}
 			if (!isbogo && CollectionUtils.isNotEmpty(orderEntryModel.getAssociatedItems())
 					&& !orderEntryModel.getGiveAway().booleanValue())
@@ -3085,8 +3123,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderEntryModel.setCartLevelDisc(Double.valueOf(bogoCartApportion));
 				orderEntryModel.setCouponValue(Double.valueOf(bogoCouponApportion));
 				orderEntryModel.setCartCouponValue(Double.valueOf(bogoCartCouponApportion));
+				orderEntryModel.setEmiCouponValue(Double.valueOf(bogoNoCostEmiApportion));
+				
 				orderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(Double.parseDouble(df.format(price - bogoCartApportion
-						- productApportionvalue - bogoCouponApportion - bogoCartCouponApportion))));
+						- productApportionvalue - bogoCouponApportion - bogoCartCouponApportion - bogoNoCostEmiApportion))));
 				orderEntryModel.setCurrDelCharge(deliveryCharge);
 				orderEntryModel.setHdDeliveryCharge(hdDeliveryCharge);
 				orderEntryModel.setScheduledDeliveryCharge(scheduleDeliveryCharge);
