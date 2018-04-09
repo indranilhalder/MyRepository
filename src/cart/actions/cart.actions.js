@@ -252,6 +252,8 @@ export const DISPLAY_COUPON_REQUEST = "DISPLAY_COUPON_REQUEST";
 export const DISPLAY_COUPON_SUCCESS = "DISPLAY_COUPON_SUCCESS";
 export const DISPLAY_COUPON_FAILURE = "DISPLAY_COUPON_FAILURE";
 
+
+
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
@@ -3437,3 +3439,6 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
     }
   };
 }
+
+
+

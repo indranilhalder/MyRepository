@@ -771,6 +771,12 @@ const account = (
         cancelProductError: action.error,
         loadingForCancelProduct: false
       });
+    case accountActions.CLEAR_GIFT_CARD_STATUS: {
+      return Object.assign({}, state, {
+        giftCardDetails: null,
+        giftCardDetailsStatus: null
+      });
+    }
 
     default:
       return state;
