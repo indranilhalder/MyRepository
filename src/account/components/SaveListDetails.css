@@ -4,6 +4,7 @@
   display: inline-block;
   padding: 15px;
   background: #ececec;
+  min-height: 100vh;
 }
 .headerHolder {
   width: 100%;
@@ -20,5 +21,11 @@
   margin-bottom: 15px;
   background: #fff;
   padding: 15px 0px 25px;
+  border-radius: 4px;
+}
+.noSaveListBlock {
+  background: #fff;
+  margin: 10px;
+  padding: 20px;
   border-radius: 4px;
 }
