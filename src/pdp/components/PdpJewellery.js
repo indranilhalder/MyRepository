@@ -191,6 +191,15 @@ export default class PdpJewellery extends React.Component {
     }
 
     if (productData) {
+      let price = "";
+      let discountPrice = "";
+      if (productData.mrpPrice) {
+        price = productData.mrpPrice.formattedValueNoDecimal;
+      }
+
+      if (productData.winningSellerPrice) {
+        discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
+      }
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
@@ -211,8 +220,8 @@ export default class PdpJewellery extends React.Component {
             <JewelleryDetailsAndLink
               productName={productData.brandName}
               productDescription={productData.productName}
-              price={productData.winningSellerPrice.formattedValueNoDecimal}
-              discountPrice={productData.mrpPrice.formattedValueNoDecimal}
+              price={price}
+              discountPrice={discountPrice}
               averageRating={productData.averageRating}
               discount={productData.discount}
               brandUrl={productData.brandURL}

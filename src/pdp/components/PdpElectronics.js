@@ -173,6 +173,15 @@ export default class PdpElectronics extends React.Component {
     }
 
     if (productData) {
+      let price = "";
+      let discountPrice = "";
+      if (productData.mrpPrice) {
+        price = productData.mrpPrice.formattedValueNoDecimal;
+      }
+
+      if (productData.winningSellerPrice) {
+        discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
+      }
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
@@ -209,10 +218,8 @@ export default class PdpElectronics extends React.Component {
                 productDescription={productData.productName}
                 brandUrl={productData.brandURL}
                 history={this.props.history}
-                price={productData.mrpPrice.formattedValueNoDecimal}
-                discountPrice={
-                  productData.winningSellerPrice.formattedValueNoDecimal
-                }
+                price={price}
+                discountPrice={discountPrice}
                 averageRating={productData.averageRating}
                 onClick={this.goToReviewPage}
               />
@@ -223,8 +230,8 @@ export default class PdpElectronics extends React.Component {
                 productDescription={productData.productName}
                 brandUrl={productData.brandURL}
                 history={this.props.history}
-                price={productData.winningSellerPrice.formattedValueNoDecimal}
-                discountPrice={productData.mrpPrice.formattedValueNoDecimal}
+                price={price}
+                discountPrice={discountPrice}
                 averageRating={productData.averageRating}
                 discount={productData.discount}
               />

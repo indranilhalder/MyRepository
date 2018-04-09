@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import map from "lodash/map";
 import groupBy from "lodash/groupBy";
 import filter from "lodash/filter";
-import MDSpinner from "react-md-spinner";
 import BrandsCategory from "./BrandsCategory";
 import BrandsSubCategory from "./BrandsSubCategory";
 import BrandBanner from "./BrandBanner";
@@ -18,6 +17,7 @@ import styles from "./BrandsLandingPageDefault.css";
 import arrowIcon from "../../general/components/img/down-arrow.svg";
 import searchIcon from "../../general/components/img/Search.svg";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+import Loader from "../../general/components/Loader";
 import { BRANDS } from "../../lib/constants";
 export default class BrandsLandingPageDefault extends React.Component {
   constructor(props) {
@@ -48,11 +48,7 @@ export default class BrandsLandingPageDefault extends React.Component {
     this.setState({ showFollowing });
   }
   renderLoader() {
-    return (
-      <div className={styles.loadingIndicator}>
-        <MDSpinner />
-      </div>
-    );
+    return <Loader />;
   }
 
   render() {
