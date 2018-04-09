@@ -1882,7 +1882,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	}
 
 	@Override
-	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request, final String orderCode)
+	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request, final String orderCode,
+			final boolean ispwa)
 	{
 		final OrderTrackingWsDTO orderTrackingWsDTO = new OrderTrackingWsDTO();
 		final List<OrderProductWsDTO> orderproductdtos = new ArrayList<OrderProductWsDTO>();
@@ -2171,12 +2172,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								}
 								if (StringUtils.isNotEmpty(product.getVariantType()))
 								{
-
 									orderproductdto.setVariantOptions(product.getVariantType());
 								}
-								if (StringUtils.isNotEmpty(product.getColour()))
+								if (ispwa && StringUtils.isNotEmpty(product.getColourHexCode()))
 								{
-
+									orderproductdto.setProductColour(product.getColourHexCode());
+								}
+								if (StringUtils.isNotEmpty(product.getColour()) && (!ispwa))
+								{
 									orderproductdto.setProductColour(product.getColour());
 								}
 								/* Fulfillment type */
@@ -2798,7 +2801,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							{
 								orderproductdto.setVariantOptions(product.getVariantType());
 							}
-							if (StringUtils.isNotEmpty(product.getColour()))
+							if (ispwa && StringUtils.isNotEmpty(product.getColourHexCode()))
+							{
+								orderproductdto.setProductColour(product.getColourHexCode());
+							}
+							if (StringUtils.isNotEmpty(product.getColour()) && (!ispwa))
 							{
 								orderproductdto.setProductColour(product.getColour());
 							}

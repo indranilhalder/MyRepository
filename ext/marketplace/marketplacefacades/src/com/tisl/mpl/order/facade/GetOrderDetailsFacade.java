@@ -35,7 +35,7 @@ public interface GetOrderDetailsFacade
 	 * @param orderCode
 	 * @return
 	 */
-	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request, String orderCode);
+	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request, String orderCode, boolean isPwa);
 
 	/**
 	 * @param orderEntryDetail
