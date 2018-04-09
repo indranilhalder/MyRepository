@@ -14,8 +14,12 @@ export default class FilterMobile extends React.Component {
   constructor(props) {
     super(props);
     const url = `${props.location.pathname}${props.location.search}`;
+    let showCategory = true;
+    if (!props.facetdatacategory) {
+      showCategory = false;
+    }
     this.state = {
-      showCategory: true,
+      showCategory,
       url,
       brandSearchString: "",
       filterSelectedIndex: 0
@@ -96,13 +100,16 @@ export default class FilterMobile extends React.Component {
           <div className={styles.pageHeader} />
           <div className={styles.tabHolder}>
             <div className={styles.slider}>
-              <FilterTab
-                name="Categories"
-                onClick={() => {
-                  this.selectCategories();
-                }}
-                selected={this.state.showCategory}
-              />
+              {this.props.facetdatacategory && (
+                <FilterTab
+                  name="Categories"
+                  onClick={() => {
+                    this.selectCategories();
+                  }}
+                  selected={this.state.showCategory}
+                />
+              )}
+
               {facetData &&
                 facetData.map((val, i) => {
                   return (
