@@ -64,7 +64,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String COUPONFAILUREMESSAGE = "Sorry! This coupon can't be used with this card/bank. Please use either the applicable card/bank or coupon.";
 	public static final String CARTCOUPONFAILUREMESSAGE = "Sorry! The bank offer selected can't be applied with this card/bank. Please use the applicable card/bank.";
 	public static final String CARTANDCOUPONBOTHFAILUREMESSAGE = "Sorry! The bank offer and coupon can't be applied with this card/bank. Please use the applicable card/bank.";
-
+	public static final String NOCOSTEMTCOUPONFAILUREMESSAGE = "Sorry! No-Cost EMI not applicable with this card/bank.";
 
 	public static final String EXTENSIONNAME = "marketplacecommerceservices";
 
