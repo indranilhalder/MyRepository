@@ -12,11 +12,11 @@ import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js"
 import { displayToast } from "../../general/toast.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    addProductToCart: productDetails => {
-      dispatch(addProductToCart(productDetails));
+    addProductToCart: (userId, cartId, accessToken, productDetails) => {
+      dispatch(addProductToCart(userId, cartId, accessToken, productDetails));
     },
-    addProductToWishList: productDetails => {
-      dispatch(addProductToWishList(productDetails));
+    addProductToWishList: (userId, accessToken, productDetails) => {
+      dispatch(addProductToWishList(userId, accessToken, productDetails));
     },
     getProductReviews: productCode => {
       dispatch(getProductReviews(productCode));

@@ -131,10 +131,10 @@ export default class ModalRoot extends React.Component {
   resendOtp = () => {
     if (this.props.getOtpToActivateWallet) {
       let kycDetails = {};
-      kycDetails.firstName = this.props.ownProps.firstName;
-      kycDetails.lastName = this.props.ownProps.lastName;
-      kycDetails.mobileNumber = this.props.ownProps.mobileNumber;
-      this.props.getOtpToActivateWallet(kycDetails, true);
+      kycDetails.firstName = this.state.firstName;
+      kycDetails.lastName = this.state.lastName;
+      kycDetails.mobileNumber = this.state.mobileNumber;
+      this.props.getOtpToActivateWallet(kycDetails);
     }
   };
 
