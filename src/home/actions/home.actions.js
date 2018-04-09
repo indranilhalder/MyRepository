@@ -130,12 +130,13 @@ export function getItemsRequest(positionInFeed) {
     status: REQUESTING
   };
 }
-export function getItemsSuccess(positionInFeed, items) {
+export function getItemsSuccess(positionInFeed, items, itemIds) {
   return {
     type: GET_ITEMS_SUCCESS,
     status: SUCCESS,
     items,
-    positionInFeed
+    positionInFeed,
+    itemIds
   };
 }
 export function getItemsFailure(positionInFeed, errorMsg) {
@@ -160,7 +161,7 @@ export function getItems(positionInFeed, itemIds) {
         throw new Error(`${resultJson.message}`);
       }
 
-      dispatch(getItemsSuccess(positionInFeed, resultJson.results));
+      dispatch(getItemsSuccess(positionInFeed, resultJson.results, itemIds));
     } catch (e) {
       dispatch(getItemsFailure(positionInFeed, e.message));
     }
