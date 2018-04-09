@@ -122,19 +122,38 @@ export default class BrandsLandingPageDefault extends React.Component {
           )}
         </div> */}
         <div className={styles.bannerHolder}>
-          <BannerMobile bannerHeight="45vw">
-            {currentActiveHeroBanner &&
-              currentActiveHeroBanner.map(heroBanner => {
-                return (
+          {currentActiveHeroBanner &&
+            currentActiveHeroBanner.length > 1 && (
+              <BannerMobile bannerHeight="45vw">
+                {currentActiveHeroBanner &&
+                  currentActiveHeroBanner.map(heroBanner => {
+                    return (
+                      <BrandBanner
+                        image={heroBanner.imageURL}
+                        logo={heroBanner.brandLogo}
+                        title={heroBanner.title}
+                        onClick={() =>
+                          this.renderToAnotherURL(heroBanner.webURL)
+                        }
+                      />
+                    );
+                  })}
+              </BannerMobile>
+            )}
+          {currentActiveHeroBanner &&
+            currentActiveHeroBanner.length < 2 &&
+            currentActiveHeroBanner.map(heroBanner => {
+              return (
+                <div className={styles.monoBannerHolder}>
                   <BrandBanner
                     image={heroBanner.imageURL}
                     logo={heroBanner.brandLogo}
                     title={heroBanner.title}
                     onClick={() => this.renderToAnotherURL(heroBanner.webURL)}
                   />
-                );
-              })}
-          </BannerMobile>
+                </div>
+              );
+            })}
         </div>
         <div className={styles.searchInput}>
           <Input2
