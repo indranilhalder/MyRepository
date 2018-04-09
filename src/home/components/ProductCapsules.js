@@ -20,6 +20,13 @@ export default class ProductCapsules extends React.Component {
     this.props.history.push(urlSuffix);
   }
 
+  handleProductClick = val => {
+    if (val) {
+      const urlSuffix = val.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
+    }
+  };
+
   componentDidMount() {
     this.props.getProductCapsules(this.props.positionInFeed);
   }
@@ -77,6 +84,8 @@ export default class ProductCapsules extends React.Component {
                     image={datum.imageURL}
                     label={datum.label}
                     key={i}
+                    url={datum.webURL}
+                    onClick={this.handleProductClick}
                   />
                 );
               }
