@@ -15,6 +15,7 @@ import com.tisl.mpl.wsdto.CategoryListHierarchyData;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyData;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyDataAmp;
 import com.tisl.mpl.wsdto.HelpAndServicestWsData;
+import com.tisl.mpl.wsdto.HeroBannerCompWsDTO;
 import com.tisl.mpl.wsdto.ProductForCategoryData;
 
 
@@ -46,5 +47,11 @@ public interface MplCustomCategoryService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	CategoryListHierarchyData getAllCategorieshierarchy() throws EtailNonBusinessExceptions;
+
+	/**
+	 * @param categoryId
+	 * @return
+	 */
+	public HeroBannerCompWsDTO getBannerDataForCategory(String categoryId);
 
 }

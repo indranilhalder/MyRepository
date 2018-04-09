@@ -3976,7 +3976,7 @@
 		<property name="imageURL" type="java.lang.String"/>
 		<property name="brandLogo" type="java.lang.String"/>
 	</bean>
-	<bean class="com.tisl.mpl.wsdto.HeroBannerCompWsDTO">
+	<bean class="com.tisl.mpl.wsdto.HeroBannerCompWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 	<property name="type" type="String" />
 	<property name="componentId" type="java.lang.String"/>
 		<property name="items"
