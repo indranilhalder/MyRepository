@@ -111,7 +111,12 @@ class ErrorDisplay extends React.Component {
     each(errorKeys, key => {
       const currentError = this.props[key];
 
-      if (currentError !== "" && currentError !== null && !seenError) {
+      if (
+        currentError !== "" &&
+        currentError !== null &&
+        !seenError &&
+        typeof currentError === "string"
+      ) {
         this.displayError(currentError);
         seenError = true;
       }
