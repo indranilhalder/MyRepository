@@ -103,11 +103,7 @@ export default class SaveListDetails extends React.Component {
               </div>
             );
           })}
-        {wishList &&
-          !wishList.products && (
-            <div className={styles.noSaveListBlock}>{NO_SAVELIST_TEXT}</div>
-          )}
-        {!wishList && (
+        {(!wishList || !wishList.products) && (
           <div className={styles.noSaveListBlock}>{NO_SAVELIST_TEXT}</div>
         )}
       </div>
