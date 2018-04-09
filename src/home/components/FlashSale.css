@@ -3,6 +3,8 @@
   height: auto;
   padding: 30px 0;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
 }
 .header {
   width: 100%;
