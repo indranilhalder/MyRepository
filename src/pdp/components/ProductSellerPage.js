@@ -185,7 +185,7 @@ class ProductSellerPage extends Component {
               </div>
               <div className={styles.price}>
                 <SelectBoxMobile
-                  label={"Price Low - High"}
+                  label={PRICE_LOW_TO_HIGH}
                   height={30}
                   onChange={priceValue => this.onSortByPrice(priceValue)}
                   theme={"hollowBox"}
