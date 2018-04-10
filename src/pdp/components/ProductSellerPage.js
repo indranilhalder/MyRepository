@@ -133,10 +133,10 @@ class ProductSellerPage extends Component {
         }
       });
       if (availableSeller) {
-        price = availableSeller[0].specialPriceSeller.value;
+        price = availableSeller[0].specialPriceSeller.doubleValue;
         availableSeller.forEach(seller => {
-          if (price > seller.specialPriceSeller.value) {
-            price = seller.specialPriceSeller.value;
+          if (price > seller.specialPriceSeller.doubleValue) {
+            price = seller.specialPriceSeller.doubleValue;
           }
           return price;
         });
