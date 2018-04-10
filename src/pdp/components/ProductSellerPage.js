@@ -136,7 +136,7 @@ class ProductSellerPage extends Component {
         price = availableSeller[0].specialPriceSeller.value;
         availableSeller.forEach(seller => {
           if (price > seller.specialPriceSeller.value) {
-            price = seller.specialPriceSeller.formattedValueNoDecimal;
+            price = seller.specialPriceSeller.value;
           }
           return price;
         });
