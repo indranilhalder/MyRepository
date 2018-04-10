@@ -460,6 +460,15 @@
 
 						</columnlayout>
 					</section>
+					<section name="section.payment.standardtEmi.tnc.description">
+						<columnlayout leftwidth="500">
+							<row>
+								<attribute name="standardEmiTermsAndCondition" labelwidth="100" width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+							</row>
+						</columnlayout>
+					</section>
 				</tab>
 				<tab name="tab.payment.bank.noCostEmi.properties" mode="append"  position="1">
 					<section name="section.payment.noCostEmi.voucher.description">
@@ -483,7 +492,6 @@
 					<section name="section.payment.noCostEmi.tnc.description">
 						<columnlayout leftwidth="500">
 							<row>
-								<text name="text.payment.noCostEmi.tnc.description" />
 								<attribute name="noCostEmiTermsAndCondition" labelwidth="100" width="400">
 									<textareaeditor expanded="true" rows="5" />
 								</attribute>

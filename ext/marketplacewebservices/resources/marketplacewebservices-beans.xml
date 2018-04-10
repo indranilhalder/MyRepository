@@ -4923,5 +4923,23 @@
 		<property name="termsAndCondition" type="String" />
 		<property name="code" type="String" />
 	</bean>
+	<bean class="com.tisl.mpl.wsdto.NoCostEMIItemBreakUp" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="itemBreakUpDetailList" type="java.util.List&lt;com.tisl.mpl.wsdto.ItemBreakUpDetailListDTO>" />
+		<property name="noCostEMIDiscountValue" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="noCostEMIPerMonthPayable" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cardBlockingAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="tenure" type="String" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.ItemBreakUpDetailListDTO">
+		<property name="productTitle" type="String" />
+		<property name="quantity" type="String" />
+		<property name="USSID" type="String" />
+		<property name="isNoCostEMIEligible" type="boolean" />
+		<property name="lineValue" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="lineBankInterst" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="noCostEMILineDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="lineTotalValue" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="perMonthEMILineValue" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
 	 
 </beans>

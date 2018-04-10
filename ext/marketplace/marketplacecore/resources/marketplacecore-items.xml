@@ -3135,6 +3135,27 @@
 		 					</persistence>
 		 			</attribute>
 		 			<!-- No cost emi-Ends -->
+		 			<attribute qualifier="standardEmiTermsAndCondition" type="localized:java.lang.String">
+		 				<description>The message to show configurable standard emi terms and conditions</description>
+		 				<modifiers read="true" write="true" />
+		 					<persistence type="property">
+		 						<columntype database="oracle">
+		 							<value>varchar2(2500)</value>	<!-- Changed for PRDI-177 -->
+		 						</columntype>
+		 						<columntype database="mysql">
+		 							<value>text</value>
+		 						</columntype>
+		 						<columntype database="sqlserver">
+									<value>nvarchar(max)</value>
+		 						</columntype>
+		 						<columntype database="hsqldb">
+		 							<value>LONGVARCHAR</value>
+		 						</columntype>
+		 						<columntype>
+		 							<value>varchar</value>
+		 						</columntype>
+		 					</persistence>
+		 			</attribute>
 				</attributes>
 			</itemtype>
 

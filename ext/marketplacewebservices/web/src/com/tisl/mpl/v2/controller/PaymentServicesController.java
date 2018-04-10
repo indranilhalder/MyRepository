@@ -93,6 +93,7 @@ import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.CliqCashWsDto;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
+import com.tisl.mpl.wsdto.NoCostEMIItemBreakUp;
 import com.tisl.mpl.wsdto.PaymentServiceWsDTO;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
 import com.tisl.mpl.wsdto.PriceWsPwaDTO;
@@ -2441,7 +2442,75 @@ public class PaymentServicesController extends BaseController
 	}
 
 
+	/**
+	 * This method Provided nocost EMI bank names with coupon list
+	 *
+	 * @param cartGuid
+	 * @return mplNoCostEMIBankTenureDTO
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.NOCOSTEMIITEMBREAKUP, method = RequestMethod.GET, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
+	@ResponseBody
+	public NoCostEMIItemBreakUp noCostEmiItemBreakUp(@RequestParam(required = false) final String cartGuid)
+	{
+		NoCostEMIItemBreakUp noCostEMIItemBreakUp = new NoCostEMIItemBreakUp();
+		AbstractOrderModel abstractOrderModel = null;
+		try
+		{
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				abstractOrderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+			}
+			if (abstractOrderModel == null)
+			{
+				abstractOrderModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+			}
+			noCostEMIItemBreakUp = getMplPaymentFacade().lineBreakupForNoCostEMI(abstractOrderModel);
 
+			//final Tuple2<?, ?> emiResult = getNoOfEligibleproducts(cartGuid);
+			//noCostEMIItemBreakUp.setNumEligibleProducts((String) emiResult.getSecond());
+			noCostEMIItemBreakUp.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				noCostEMIItemBreakUp.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				noCostEMIItemBreakUp.setErrorCode(e.getErrorCode());
+			}
+			noCostEMIItemBreakUp.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				noCostEMIItemBreakUp.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				noCostEMIItemBreakUp.setErrorCode(e.getErrorCode());
+			}
+			noCostEMIItemBreakUp.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			noCostEMIItemBreakUp.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			noCostEMIItemBreakUp.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			noCostEMIItemBreakUp.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return noCostEMIItemBreakUp;
+
+	}
 
 	//Commenting due to SONAR Fix
 	//	/**

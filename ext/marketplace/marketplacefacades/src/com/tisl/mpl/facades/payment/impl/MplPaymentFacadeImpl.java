@@ -8,13 +8,18 @@ import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParamete
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -26,11 +31,13 @@ import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -100,6 +107,8 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wallet.service.DefaultMplMrupeePaymentService;
 import com.tisl.mpl.wsdto.EmiBankListWsData;
 import com.tisl.mpl.wsdto.EmiCouponListWsData;
+import com.tisl.mpl.wsdto.ItemBreakUpDetailListDTO;
+import com.tisl.mpl.wsdto.NoCostEMIItemBreakUp;
 import com.tisl.mpl.wsdto.mplNoCostEMIBankTenureDTO;
 
 
@@ -162,6 +171,12 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	@Resource(name = "mplWalletFacade")
 	private MplWalletFacade mplWalletFacade;
+
+	@Autowired
+	private PriceDataFactory priceDataFactory;
+	@Autowired
+	private CommonI18NService commonI18NService;
+	private static final String INR = "INR";
 
 	/**
 	 * This method returns the map of all active Payment modes(eg. Credit Card, Debit Card, COD, etc.) and their
@@ -477,19 +492,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		getModelService().save(orderModel);
 
 		//sending sms to verify COD Payment before order confirmation
-		final String contactNumber = getConfigurationService().getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
+		final String contactNumber = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
 		try
 		{
 			//TODO mplCustomerName null pointer code fix 16-AUG-15
 
-			getSendSMSFacade().sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+			getSendSMSFacade().sendSms(
+					MarketplacecommerceservicesConstants.SMS_SENDER_ID,
 					MarketplacecommerceservicesConstants.SMS_MESSAGE_COD_OTP
 							.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO,
 									mplCustomerName != null ? mplCustomerName : "There")
 							.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, otp)
-							.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, contactNumber),
-					mobileNumber);
+							.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, contactNumber), mobileNumber);
 		}
 		catch (final ModelSavingException e)
 		{
@@ -526,9 +541,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//					Long.parseLong(getConfigurationService().getConfiguration().getString(
 			//							MarketplacecommerceservicesConstants.TIMEFOROTP)));
 
-			final OTPResponseData otpResponse = getOtpGenericService().validateLatestOTP(customerID, null, enteredOTPNumber,
-					OTPTypeEnum.COD, Long.parseLong(
-							getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
+			final OTPResponseData otpResponse = getOtpGenericService().validateLatestOTP(
+					customerID,
+					null,
+					enteredOTPNumber,
+					OTPTypeEnum.COD,
+					Long.parseLong(getConfigurationService().getConfiguration().getString(
+							MarketplacecommerceservicesConstants.TIMEFOROTP)));
 
 			if (null != otpResponse && null != otpResponse.getInvalidErrorMessage())
 			{
@@ -573,9 +592,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//					Long.parseLong(getConfigurationService().getConfiguration().getString(
 			//							MarketplacecommerceservicesConstants.TIMEFOROTP)));
 
-			final OTPResponseData otpResponse = getOtpGenericService().validateLatestOTPWV(customerID, null, enteredOTPNumber,
-					OTPTypeEnum.COD, Long.parseLong(
-							getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
+			final OTPResponseData otpResponse = getOtpGenericService().validateLatestOTPWV(
+					customerID,
+					null,
+					enteredOTPNumber,
+					OTPTypeEnum.COD,
+					Long.parseLong(getConfigurationService().getConfiguration().getString(
+							MarketplacecommerceservicesConstants.TIMEFOROTP)));
 
 			if (null != otpResponse && null != otpResponse.getInvalidErrorMessage())
 			{
@@ -629,8 +652,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		try
 		{
 			//checking user blacklisted or not
-			mplCustomerIsBlackListed = getBlacklistService()
-					.getBlacklistedCustomerforCOD(customerPk, customerEmail, customerPhoneNo, ipAddress).booleanValue();
+			mplCustomerIsBlackListed = getBlacklistService().getBlacklistedCustomerforCOD(customerPk, customerEmail,
+					customerPhoneNo, ipAddress).booleanValue();
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -1050,11 +1073,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		final PaymentService juspayService = new PaymentService();
 
-		juspayService.setBaseUrl(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService
-				.withKey(getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService.withKey(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 				.withMerchantId(
 						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
@@ -1097,10 +1119,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						for (final SavedCardModel savedCard : savedCardList)
 						{
 							//TISEE-396
-							if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null != binModel
-									&& (StringUtils.equalsIgnoreCase("CREDIT", binModel.getCardType())
-											|| StringUtils.equalsIgnoreCase("CC", binModel.getCardType()))
-									&& null != savedCard.getBillingAddress())
+							if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
+									&& null != binModel
+									&& (StringUtils.equalsIgnoreCase("CREDIT", binModel.getCardType()) || StringUtils.equalsIgnoreCase(
+											"CC", binModel.getCardType())) && null != savedCard.getBillingAddress())
 							{
 								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
@@ -1187,9 +1209,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				savedCardData.setCardIssuer(binModel.getBankName());
 			}
 
-			savedCardData.setIsDomestic(
-					(StringUtils.isNotEmpty(binModel.getIssuingCountry()) && binModel.getIssuingCountry().equalsIgnoreCase("India"))
-							? Boolean.TRUE : Boolean.FALSE);
+			savedCardData.setIsDomestic((StringUtils.isNotEmpty(binModel.getIssuingCountry()) && binModel.getIssuingCountry()
+					.equalsIgnoreCase("India")) ? Boolean.TRUE : Boolean.FALSE);
 		}
 		else
 		{
@@ -1230,11 +1251,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public Map<Date, SavedCardData> listStoredDebitCards(final CustomerModel customer)
 	{
 		final PaymentService juspayService = new PaymentService();
-		juspayService.setBaseUrl(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService
-				.withKey(getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService.withKey(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 				.withMerchantId(
 						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
@@ -1277,9 +1297,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						for (final SavedCardModel savedCard : savedCardList)
 						{
 							//TISEE-396
-							if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null != binModel
-									&& (StringUtils.equalsIgnoreCase("DEBIT", binModel.getCardType())
-											|| StringUtils.equalsIgnoreCase("DC", binModel.getCardType())))
+							if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
+									&& null != binModel
+									&& (StringUtils.equalsIgnoreCase("DEBIT", binModel.getCardType()) || StringUtils.equalsIgnoreCase(
+											"DC", binModel.getCardType())))
 							{
 								SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 
@@ -1364,9 +1385,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			{
 				savedCardData.setCardIssuer(binModel.getBankName());
 			}
-			savedCardData.setIsDomestic(
-					(StringUtils.isNotEmpty(binModel.getIssuingCountry()) && binModel.getIssuingCountry().equalsIgnoreCase("India"))
-							? Boolean.TRUE : Boolean.FALSE);
+			savedCardData.setIsDomestic((StringUtils.isNotEmpty(binModel.getIssuingCountry()) && binModel.getIssuingCountry()
+					.equalsIgnoreCase("India")) ? Boolean.TRUE : Boolean.FALSE);
 		}
 		else
 		{
@@ -1398,8 +1418,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	//TISPRD-361 method signature changes
 	@Override
-	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge,
-			final AbstractOrderModel abstractOrderModel) //Parameter abstractOrderModel added extra for TPR-629
+	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final AbstractOrderModel abstractOrderModel) //Parameter abstractOrderModel added extra for TPR-629
 			throws EtailNonBusinessExceptions, Exception
 	{
 		if (abstractOrderModel != null)
@@ -1530,19 +1549,18 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		LOG.debug("Starting executing getPaytmOrderStatus....");
 		final PaymentService juspayService = new PaymentService();
-		juspayService.setBaseUrl(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService
-				.withKey(getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService.withKey(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 				.withMerchantId(
 						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
 		//creating OrderStatusRequest
 		final NetbankingRequest paytmRequest = new NetbankingRequest();
 		paytmRequest.setOrderId(juspayOrderId);
-		paytmRequest.setMerchantId(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID));
+		paytmRequest.setMerchantId(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.MARCHANTID));
 		paytmRequest.setPaymentMethodType(paymentMethodType);
 		paytmRequest.setPaymentMethod(paymentMethod);
 		paytmRequest.setRedirectAfterPayment(redirectAfterPayment);
@@ -1581,19 +1599,18 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		final PaymentService juspayService = new PaymentService();
 
-		juspayService.setBaseUrl(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService
-				.withKey(getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService.withKey(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 				.withMerchantId(
 						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
 		//creating OrderStatusRequest
 		final NetbankingRequest netbankingRequest = new NetbankingRequest();
 		netbankingRequest.setOrderId(juspayOrderId);
-		netbankingRequest.setMerchantId(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID));
+		netbankingRequest.setMerchantId(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.MARCHANTID));
 		netbankingRequest.setPaymentMethodType(paymentMethodType);
 		netbankingRequest.setPaymentMethod(paymentMethod);
 		netbankingRequest.setRedirectAfterPayment(redirectAfterPayment);
@@ -1636,11 +1653,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public Map<Date, SavedCardData> listStoredEMICards(final CustomerModel customer, final String bankName)
 	{
 		final PaymentService juspayService = new PaymentService();
-		juspayService.setBaseUrl(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService
-				.withKey(getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService.withKey(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 				.withMerchantId(
 						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
@@ -1679,10 +1695,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 						{
 							//TISEE-396
-							if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null != binModel
-									&& (StringUtils.equalsIgnoreCase("CREDIT", binModel.getCardType())
-											|| StringUtils.equalsIgnoreCase("CC", binModel.getCardType()))
-									&& null != savedCard.getBillingAddress())
+							if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
+									&& null != binModel
+									&& (StringUtils.equalsIgnoreCase("CREDIT", binModel.getCardType()) || StringUtils.equalsIgnoreCase(
+											"CC", binModel.getCardType())) && null != savedCard.getBillingAddress())
 							{
 								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
@@ -1735,9 +1751,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	@Override
 	public MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
-			final OrderModel orderModel, final MplPromoPriceData mplPromoPriceData)
-			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
-			CalculationException, JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions
+			final OrderModel orderModel, final MplPromoPriceData mplPromoPriceData) throws ModelSavingException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions
 
 	{
 		return getMplPaymentService().applyPromotions(cartData, orderData, cartModel, orderModel, mplPromoPriceData);
@@ -1746,11 +1762,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1777,8 +1793,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			if (null == (getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION)))
 			{
-				final Map<String, Double> paymentInfo = getSessionService()
-						.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
+				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
+						MarketplacecommerceservicesConstants.PAYMENTMODE);
 				for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
 				{
 					if (!(MarketplacecommerceservicesConstants.WALLET.equalsIgnoreCase(entry.getKey())))
@@ -1801,9 +1817,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -1903,11 +1919,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 		final PaymentService juspayService = new PaymentService();
 
-		juspayService.setBaseUrl(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService
-				.withKey(getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService.withKey(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 				.withMerchantId(
 						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
@@ -1988,21 +2003,22 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					for (final SavedCardModel savedCard : savedCardList)
 					{
 						//TISEE-396
-						if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null != binModel
+						if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
+								&& null != binModel
 								&& (StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.CARD_TYPE_CREDIT,
-										binModel.getCardType())
-										|| StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.CC, binModel.getCardType()))
-								&& null != savedCard.getBillingAddress())
+										binModel.getCardType()) || StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.CC,
+										binModel.getCardType())) && null != savedCard.getBillingAddress())
 						{
 
 							SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 							savedCreditCardDataMap.put(savedCard.getCreationtime(), savedCardData);
 							savedCardData = null;
 						}
-						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null != binModel
+						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
+								&& null != binModel
 								&& (StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.CARD_TYPE_DEBIT,
-										binModel.getCardType())
-										|| StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.DC, binModel.getCardType())))
+										binModel.getCardType()) || StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.DC,
+										binModel.getCardType())))
 						{
 							SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 							savedDebitCardDataMap.put(savedCard.getCreationtime(), savedCardData);
@@ -2087,9 +2103,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				if (mplZoneDeliveryModeValueModel.getDeliveryMode() != null
 						&& mplZoneDeliveryModeValueModel.getDeliveryMode().getCode() != null
 						&& (mplZoneDeliveryModeValueModel.getDeliveryMode().getCode()
-								.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
-								|| mplZoneDeliveryModeValueModel.getDeliveryMode().getCode()
-										.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)))
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) || mplZoneDeliveryModeValueModel
+								.getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)))
 				{
 					isOnlyClickNCollect = false;
 				}
@@ -2284,13 +2299,14 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		boolean updAuditErrStatus = false;
 		try
 		{
-			juspayService.setBaseUrl(
-					getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+			juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
 			juspayService
-					.withKey(getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
-					.withMerchantId(getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+					.withKey(
+							getConfigurationService().getConfiguration().getString(
+									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
+							getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
 			//For Mobile
 			if (MapUtils.isEmpty(paymentMode))
@@ -2328,8 +2344,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			}
 			catch (final Exception e)
 			{
-				LOG.error("Exception in picking up juspay order id from session...reverting to fallback mechanism with exception ",
-						e);
+				LOG.error("Exception in picking up juspay order id from session...reverting to fallback mechanism with exception ", e);
 			}
 
 			if (StringUtils.isNotEmpty(juspayOrderId)) //TISPT-200
@@ -2350,8 +2365,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 					// Commented Code Opened
-					if (/* orderModel.getTotalPriceWithConv().equals */(null != orderStatusResponse.getAmount()
-							&& orderStatusResponse.getAmount().doubleValue() > 0))
+					if (/* orderModel.getTotalPriceWithConv().equals */(null != orderStatusResponse.getAmount() && orderStatusResponse
+							.getAmount().doubleValue() > 0))
 					{
 						getMplPaymentService().setPaymentTransaction(orderStatusResponse, paymentMode, orderModel);
 					}
@@ -2461,13 +2476,14 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//creating PaymentService of Juspay
 			final PaymentService juspayService = new PaymentService();
 
-			juspayService.setBaseUrl(
-					getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+			juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
 			juspayService
-					.withKey(getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
-					.withMerchantId(getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+					.withKey(
+							getConfigurationService().getConfiguration().getString(
+									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
+							getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
 			//LOG to check address details submitted by customer TISPRD-3025
 			final StringBuilder sb = new StringBuilder(180);
@@ -2625,19 +2641,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 					if (null != cart)
 					{
-						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
-								.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
-								.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
-								.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl)
-								.withsessionId(sessionId);
+						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice())
+								.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
+								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3)
+								.withUdf6(country).withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues)
+								.withReturnUrl(returnUrl).withsessionId(sessionId);
 					}
 					else if (null != order)
 					{
 						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(order.getTotalPrice())
 								.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
-								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country)
-								.withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl)
-								.withsessionId(sessionId);
+								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3)
+								.withUdf6(country).withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues)
+								.withReturnUrl(returnUrl).withsessionId(sessionId);
 					}
 
 
@@ -2649,15 +2665,17 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					{
 						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(Double.valueOf(amount))
 								.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
-								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country)
-								.withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
+								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3)
+								.withUdf6(country).withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues)
+								.withReturnUrl(returnUrl);
 					}
 					else if (null != order)
 					{
 						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(Double.valueOf(amount))
 								.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
-								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country)
-								.withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
+								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3)
+								.withUdf6(country).withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues)
+								.withReturnUrl(returnUrl);
 					}
 
 				}
@@ -2712,8 +2730,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	@Override
 	public String makeGetPaymentStatusCall(final String url)
 	{
-		final String key = getConfigurationService().getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY);
+		final String key = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY);
 		return new PaymentService().getCockpitOrderPaymentstatus(url, key);
 	}
 
@@ -3604,7 +3622,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#createQCOrderRequest()
 	 */
 	@Override
@@ -3703,8 +3721,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//System.out.println("Free Count ------- if bogo " + abstractOrderEntryModel.getFreeCount());
 			//			if(null != abstractOrderEntryModel.getIsBOGOapplied() && abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
 			//			{
-			final WalletApportionPaymentInfoModel walletApportionPayment = getModelService()
-					.create(WalletApportionPaymentInfoModel.class);
+			final WalletApportionPaymentInfoModel walletApportionPayment = getModelService().create(
+					WalletApportionPaymentInfoModel.class);
 
 			final List<WalletCardApportionDetailModel> WalletCardApportionList = new ArrayList<WalletCardApportionDetailModel>();
 
@@ -3801,8 +3819,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			for (final QCCard cardList : qcRedeeptionResponse.getCards())
 			{
-				final WalletCardApportionDetailModel walletCardApportionObj = getModelService()
-						.create(WalletCardApportionDetailModel.class);
+				final WalletCardApportionDetailModel walletCardApportionObj = getModelService().create(
+						WalletCardApportionDetailModel.class);
 
 				if (cardList.getBucketType().equalsIgnoreCase("CASHBACK") || cardList.getBucketType().equalsIgnoreCase("GOODWILL")
 						|| cardList.getBucketType().equalsIgnoreCase("PROMOTION"))
@@ -3907,7 +3925,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#isNoCostEmiAvailable(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -3920,7 +3938,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#noCostEmiBankTenureList()
 	 */
 	@Override
@@ -4099,5 +4117,100 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 
 		return noCostEMIBankList;
+	}
+
+	/**
+	 * The Method to fetch no cost emi price break up details
+	 *
+	 * @param absOrder
+	 * @return NoCostEMIItemBreakUp
+	 */
+	@Override
+	public NoCostEMIItemBreakUp lineBreakupForNoCostEMI(final AbstractOrderModel absOrder)
+	{
+		final NoCostEMIItemBreakUp noCostEMIItemBreakUp = new NoCostEMIItemBreakUp();
+		final CurrencyModel currency = commonI18NService.getCurrency(INR);
+
+		double noCostEMITotalDiscountValue = 0;
+		double totalEMIPerMonth = 0;
+		double totalPriceAfterIntrstDiscount = 0;
+		double totalPrice = 0;
+		double cardBlockingAmount = 0;
+		int tenure = 0;
+
+		final List<ItemBreakUpDetailListDTO> dtoList = new ArrayList<ItemBreakUpDetailListDTO>();
+
+		if (null != absOrder && CollectionUtils.isNotEmpty(absOrder.getDiscounts()))
+		{
+			for (final DiscountModel oModel : absOrder.getDiscounts())
+			{
+				if (oModel instanceof MplNoCostEMIVoucherModel)
+				{
+					final MplNoCostEMIVoucherModel coupon = (MplNoCostEMIVoucherModel) oModel;
+					final Double percentage = coupon.getValue();
+					tenure = coupon.getTenure().intValue();
+
+					for (final AbstractOrderEntryModel entry : absOrder.getEntries())
+					{
+						if (null != entry)
+						{
+							final ItemBreakUpDetailListDTO dto = new ItemBreakUpDetailListDTO();
+							final ProductModel productModel = entry.getProduct();
+							final String productCode = productModel.getCode();
+							final String ussid = entry.getSelectedUSSID();
+							boolean isNoCostEMIEligible = false;
+							String sellerId = StringUtils.isNotEmpty(ussid) ? sellerId = ussid.substring(0, 6) : null;
+
+							if (StringUtils.isNotEmpty(productCode) && StringUtils.isNotEmpty(sellerId))
+							{
+								LOG.debug("product seller id ----" + sellerId);
+								LOG.debug("product listing id ----" + productCode);
+								isNoCostEMIEligible = getMplPaymentService().isNoCostEmiAvailable(productCode, sellerId);
+							}
+							//final double netAmountAfterAllDiscount = (null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0) ? entry.getNetAmountAfterAllDisc().doubleValue() : 0;
+							//final double lineAmountAfterAllDiscount = (netAmountAfterAllDiscount > 0) ? netAmountAfterAllDiscount: entry.getTotalPrice().doubleValue();
+							final double linePrice = entry.getTotalPrice().doubleValue();
+							totalPrice += linePrice;
+							final double lineInterest = ((percentage.doubleValue() * linePrice) / 100);
+							final double lineEmiDiscount = (null != entry.getEmiCouponValue() && entry.getEmiCouponValue().doubleValue() > 0) ? entry
+									.getEmiCouponValue().doubleValue() : 0;
+							noCostEMITotalDiscountValue += lineEmiDiscount;
+							final double lineTotalValue = linePrice + lineInterest - lineEmiDiscount;
+							totalPriceAfterIntrstDiscount += lineTotalValue;
+							final double perMonthEMILineValue = (tenure > 0) ? (lineTotalValue / tenure) : lineTotalValue;
+
+							dto.setProductTitle(productModel.getTitle());
+							dto.setUSSID(entry.getSelectedUSSID());
+							dto.setQuantity(entry.getQuantity().toString());
+							dto.setIsNoCostEMIEligible(isNoCostEMIEligible);
+							dto.setLineValue(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(linePrice), currency));
+							dto.setLineBankInterst(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(lineInterest), currency));
+							dto.setNoCostEMILineDiscount(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(lineEmiDiscount),
+									currency));
+							dto.setLineTotalValue(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(lineTotalValue),
+									currency));
+							dto.setPerMonthEMILineValue(priceDataFactory.create(PriceDataType.BUY,
+									BigDecimal.valueOf(perMonthEMILineValue), currency));
+							dtoList.add(dto);
+						}
+
+						totalEMIPerMonth = totalPriceAfterIntrstDiscount / tenure;
+						cardBlockingAmount = totalPrice - noCostEMITotalDiscountValue;
+						noCostEMIItemBreakUp.setItemBreakUpDetailList(dtoList);
+						noCostEMIItemBreakUp.setNoCostEMIDiscountValue(priceDataFactory.create(PriceDataType.BUY,
+								BigDecimal.valueOf(noCostEMITotalDiscountValue), currency));
+						noCostEMIItemBreakUp.setNoCostEMIPerMonthPayable(priceDataFactory.create(PriceDataType.BUY,
+								BigDecimal.valueOf(totalEMIPerMonth), currency));
+						noCostEMIItemBreakUp.setCardBlockingAmount(priceDataFactory.create(PriceDataType.BUY,
+								BigDecimal.valueOf(cardBlockingAmount), currency));
+						noCostEMIItemBreakUp.setTenure(String.valueOf(tenure));
+
+					}
+					break;
+				}
+
+			}
+		}
+		return noCostEMIItemBreakUp;
 	}
 }
