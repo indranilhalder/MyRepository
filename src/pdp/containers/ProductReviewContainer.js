@@ -13,7 +13,6 @@ import {
   showSecondaryLoader,
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
-
 const mapDispatchToProps = dispatch => {
   return {
     addProductToCart: (userId, cartId, accessToken, productDetails) => {
@@ -49,7 +48,8 @@ const mapStateToProps = state => {
     productDetails: state.productDescription.productDetails,
     reviews: state.productDescription.reviews,
     addReviewStatus: state.productDescription.addReviewStatus,
-    loadingForAddProduct: state.productDescription.loadingForAddProduct
+    loadingForAddProduct: state.productDescription.loadingForAddProduct,
+    loading: state.productDescription.loading
   };
 };
 

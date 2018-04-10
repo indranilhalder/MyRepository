@@ -172,11 +172,12 @@ class ProductReviewPage extends Component {
   }
 
   render() {
-    if (this.props.loadingForAddProduct) {
+    if (this.props.loadingForAddProduct || this.props.loading) {
       this.props.showSecondaryLoader();
     } else {
       this.props.hideSecondaryLoader();
     }
+
     if (this.props.productDetails) {
       const mobileGalleryImages =
         this.props.productDetails &&

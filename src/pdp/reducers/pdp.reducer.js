@@ -35,7 +35,9 @@ const productDescription = (
       return Object.assign({}, state, {
         loading: false,
         error: null,
-        status: null
+        status: null,
+        reviewsError: null,
+        addReviewStatus: null
       });
     case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_FAILURE:
       return Object.assign({}, state, {
