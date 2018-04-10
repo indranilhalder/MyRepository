@@ -314,7 +314,7 @@
 														${productPrice}</span>
 												</div>
 											</c:if>
-										</a>s
+										</a>
 									</div>
 								</c:if>
 
