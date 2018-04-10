@@ -4864,8 +4864,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 								: entry.getTotalPrice().doubleValue();
 
 
-						orderValue += (null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0)
-								? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue();
+						orderValue += ((null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+								? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue())
+								+ (entry.getCurrDelCharge().doubleValue() + entry.getScheduledDeliveryCharge().doubleValue());
 
 						if (StringUtils.isEmpty(entry.getEmiCouponCode()))
 						{
