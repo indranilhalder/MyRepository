@@ -48,13 +48,14 @@ export default class Plp extends React.Component {
           html.scrollHeight,
           html.offsetHeight
         );
+
         const windowBottom = windowHeight + window.pageYOffset;
-        if (windowBottom >= docHeight) {
-          window.scrollBy(0, -200);
+
+        if (windowBottom >= docHeight - 800) {
           this.props.paginate(this.props.pageNumber + 1, SUFFIX);
         }
       }
-    }, 2000);
+    }, 500);
   };
 
   componentWillUnmount() {
@@ -97,8 +98,6 @@ export default class Plp extends React.Component {
   }
 
   render() {
-    let filterClass = styles.filter;
-
     if (this.props.loading && !this.props.isFilter) {
       return this.renderLoader();
     }
