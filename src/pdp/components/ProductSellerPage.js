@@ -133,9 +133,9 @@ class ProductSellerPage extends Component {
         }
       });
       if (availableSeller) {
-        price = availableSeller[0].specialPriceSeller.formattedValueNoDecimal;
+        price = availableSeller[0].specialPriceSeller.value;
         availableSeller.forEach(seller => {
-          if (price > seller.specialPriceSeller.formattedValueNoDecimal) {
+          if (price > seller.specialPriceSeller.value) {
             price = seller.specialPriceSeller.formattedValueNoDecimal;
           }
           return price;
@@ -179,7 +179,7 @@ class ProductSellerPage extends Component {
             <div className={styles.OtherSeller}>Other sellers</div>
             <div className={styles.priceWithSeller}>
               <div className={styles.seller}>
-                {availableSeller.length} Other Sellers available starting at{" "}
+                {availableSeller.length} Other Sellers available starting at ₹
                 {price}
               </div>
               <div className={styles.price}>
