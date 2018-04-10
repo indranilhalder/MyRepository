@@ -294,7 +294,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * To get all categories shop by department
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getallCategories()
 	 */
 
@@ -675,7 +675,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getAboutusBanner()
 	 */
 	@Override
@@ -747,7 +747,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getHelpnServices()
 	 */
 	@Override
@@ -1372,30 +1372,46 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 	@Override
 	public HeroBannerCompWsDTO getBannerDataForCategory(final String categoryId)
 	{
-		final HeroBannerCompListWsDTO list = new HeroBannerCompListWsDTO();
-		final HeroBannerCompWsDTO result = new HeroBannerCompWsDTO();
+		final HeroBannerCompListWsDTO heroBannerlist = new HeroBannerCompListWsDTO();
+		final HeroBannerCompWsDTO heroBannerData = new HeroBannerCompWsDTO();
+
 		final CategoryModel catmod = categoryService.getCategoryForCode(categoryId);
 
-		LOG.debug("to get Dynamic Banner");
-		catmod.getDynamicBanners();
-		List<SimpleBannerComponentModel> al = new ArrayList<SimpleBannerComponentModel>();
-		al = catmod.getDynamicBanners();
-		for (final SimpleBannerComponentModel code : al)
-		{
-			if (code.getTitle() != null || code.getUrlLink() != null || code.getUid() != null)
-			{
-				list.setTitle(code.getTitle());
-				list.setWebURL(code.getUrlLink());
-				result.setComponentId(code.getUid());
-			}
+		List<SimpleBannerComponentModel> bannerList = new ArrayList<SimpleBannerComponentModel>();
 
-			list.setBrandLogo("");
+		if (CollectionUtils.isNotEmpty(catmod.getDynamicBanners()))
+		{
+			bannerList = catmod.getDynamicBanners();
+
+			for (final SimpleBannerComponentModel code : bannerList)
+			{
+				if (code.getTitle() != null)
+				{
+					heroBannerlist.setTitle(code.getTitle());
+				}
+				if (code.getUrlLink() != null)
+				{
+					heroBannerlist.setWebURL(code.getUrlLink());
+				}
+				if (code.getUid() != null)
+				{
+					heroBannerlist.setComponentId(code.getUid());
+				}
+
+				if (code.getMedia() != null && code.getMedia().getURL2() != null)
+				{
+					heroBannerlist.setImageURL(code.getMedia().getURL2());
+				}
+
+				heroBannerlist.setBrandLogo("");
+			}
 		}
 		final List<HeroBannerCompListWsDTO> items = new ArrayList<HeroBannerCompListWsDTO>();
 
-		items.add(list);
-		result.setItems(items);
-		return result;
+		items.add(heroBannerlist);
+		heroBannerData.setItems(items);
+		return heroBannerData;
+
 
 	}
 
