@@ -269,7 +269,7 @@ class CartPage extends React.Component {
       CART_DETAILS_FOR_ANONYMOUS
     );
 
-    if (this.props.cart.loading && !this.props.cart.cartDetails) {
+    if (this.props.cart.loading && this.props.cart.cartDetails === null) {
       return this.renderLoader();
     } else {
       if (this.props.cart.loading) {
@@ -406,6 +406,12 @@ class CartPage extends React.Component {
       );
     } else {
       return this.renderEmptyBag();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.clearCartDetails) {
+      this.props.clearCartDetails();
     }
   }
 }
