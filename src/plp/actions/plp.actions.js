@@ -42,8 +42,6 @@ export function getProductListingsPaginatedSuccess(productListings) {
   };
 }
 export function getProductListingsRequest(paginated: false) {
-  if (paginated) {
-  }
   return {
     type: PRODUCT_LISTINGS_REQUEST,
     status: REQUESTING,

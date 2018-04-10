@@ -6,7 +6,8 @@ import styles from "./Plp.css";
 import throttle from "lodash/throttle";
 import Loader from "../../general/components/Loader";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
-
+const SCROLL_CHECK_INTERVAL = 500;
+const OFFSET_BOTTOM = 800;
 export default class Plp extends React.Component {
   constructor(props) {
     super(props);
@@ -53,11 +54,11 @@ export default class Plp extends React.Component {
           html.offsetHeight
         );
         const windowBottom = windowHeight + window.pageYOffset;
-        if (windowBottom >= docHeight - 800) {
+        if (windowBottom >= docHeight - OFFSET_BOTTOM) {
           this.props.paginate(this.props.pageNumber + 1, SUFFIX);
         }
       }
-    }, 500);
+    }, SCROLL_CHECK_INTERVAL);
   };
 
   componentWillUnmount() {
