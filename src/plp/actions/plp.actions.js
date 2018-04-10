@@ -42,6 +42,8 @@ export function getProductListingsPaginatedSuccess(productListings) {
   };
 }
 export function getProductListingsRequest(paginated: false) {
+  if (paginated) {
+  }
   return {
     type: PRODUCT_LISTINGS_REQUEST,
     status: REQUESTING,
@@ -73,7 +75,6 @@ export function getProductListings(
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductListingsRequest(paginated));
-
     dispatch(showSecondaryLoader());
     try {
       const searchState = getState().search;

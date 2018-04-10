@@ -33,8 +33,18 @@ export default class Plp extends React.Component {
   };
 
   handleScroll = () => {
+    console.log(
+      this.props.productListings
+        ? this.props.productListings.pagination.totalPages - 1
+        : 0
+    );
+
     return throttle(() => {
-      if (!this.state.showFilter) {
+      if (
+        !this.state.showFilter &&
+        this.props.pageNumber <
+          this.props.productListings.pagination.totalPages - 1
+      ) {
         const windowHeight =
           "innerHeight" in window
             ? window.innerHeight
@@ -48,9 +58,7 @@ export default class Plp extends React.Component {
           html.scrollHeight,
           html.offsetHeight
         );
-
         const windowBottom = windowHeight + window.pageYOffset;
-
         if (windowBottom >= docHeight - 800) {
           this.props.paginate(this.props.pageNumber + 1, SUFFIX);
         }
@@ -98,10 +106,6 @@ export default class Plp extends React.Component {
   }
 
   render() {
-    if (this.props.loading && !this.props.isFilter) {
-      return this.renderLoader();
-    }
-
     return (
       this.props.productListings && (
         <div className={styles.base}>
