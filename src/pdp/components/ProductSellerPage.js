@@ -7,7 +7,6 @@ import PdpFrame from "./PdpFrame";
 import * as Cookie from "../../lib/Cookie";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 import { reverse, sortBy } from "lodash";
-import cloneDeep from "lodash/cloneDeep";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
