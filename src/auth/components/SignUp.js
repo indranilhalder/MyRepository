@@ -77,7 +77,9 @@ class SignUp extends Component {
     if (this.props.onPhoneNumberChange) {
       this.props.onPhoneNumberChange(val);
     }
-    this.setState({ phoneNumberValue: val });
+    if (val.length <= 10) {
+      this.setState({ phoneNumberValue: val });
+    }
   }
 
   onChangeEmail(val) {

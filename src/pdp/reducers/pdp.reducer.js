@@ -3,6 +3,7 @@ import { YES, NO } from "../../lib/constants";
 import { transferPincodeToPdpPincode } from "./utils";
 import { CLEAR_ERROR } from "../../general/error.actions.js";
 
+import concat from "lodash/concat";
 import cloneDeep from "lodash/cloneDeep";
 const productDescription = (
   state = {
@@ -20,6 +21,7 @@ const productDescription = (
     wishList: null,
     reviews: {},
     reviewsStatus: null,
+    loadingForAddProduct: false,
     addReviewStatus: false,
     reviewsError: null,
     msdItems: {},
@@ -33,7 +35,9 @@ const productDescription = (
       return Object.assign({}, state, {
         loading: false,
         error: null,
-        status: null
+        status: null,
+        reviewsError: null,
+        addReviewStatus: null
       });
     case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_FAILURE:
       return Object.assign({}, state, {
@@ -283,27 +287,20 @@ const productDescription = (
     case pdpActions.ADD_PRODUCT_REVIEW_REQUEST:
       return Object.assign({}, state, {
         addReviewStatus: action.status,
-        loading: true
+        loadingForAddProduct: true
       });
 
     case pdpActions.ADD_PRODUCT_REVIEW_SUCCESS:
-      let reviews = cloneDeep(state.reviews);
-      if (!reviews.reviews) {
-        reviews.reviews = [action.productReview];
-      } else {
-        reviews.reviews = reviews.push(action.productReview);
-      }
       return Object.assign({}, state, {
         addReviewStatus: action.status,
-        loading: false,
-        reviews
+        loadingForAddProduct: false
       });
 
     case pdpActions.ADD_PRODUCT_REVIEW_FAILURE:
       return Object.assign({}, state, {
         addReviewStatus: action.status,
         reviewsError: action.error,
-        loading: false
+        loadingForAddProduct: false
       });
 
     case pdpActions.EDIT_PRODUCT_REVIEW_REQUEST:
@@ -350,9 +347,24 @@ const productDescription = (
       });
 
     case pdpActions.GET_PRODUCT_REVIEW_SUCCESS:
+      const currentReviews = cloneDeep(state.reviews);
+      let updatedReviewsObj;
+      if (action.reviews.pageNumber === 0) {
+        updatedReviewsObj = Object.assign({}, currentReviews, action.reviews);
+      } else {
+        let updatedReviews = concat(
+          currentReviews.reviews,
+          action.reviews.reviews
+        );
+        updatedReviewsObj = Object.assign({}, currentReviews, {
+          reviews: updatedReviews,
+          pageNumber: action.reviews.pageNumber
+        });
+      }
+
       return Object.assign({}, state, {
         reviewsStatus: action.status,
-        reviews: action.reviews,
+        reviews: updatedReviewsObj,
         loading: false
       });
 
