@@ -38,6 +38,9 @@ export default class CliqAndCash extends React.Component {
         errorMessage: nextProps.cliqCashVoucherDetailsError
       });
     }
+    if (nextProps.cliqCashVoucherDetailsStatus === FAILURE) {
+      this.setState({ cardNumber: "", pinNumber: "" });
+    }
   }
   componentDidUpdate() {
     this.props.setHeaderText(CLIQ_CASH);
@@ -65,6 +68,11 @@ export default class CliqAndCash extends React.Component {
     this.props.history.push(`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_GIFT_CARD_PAGE}`);
   };
   render() {
+    if (this.props.loading) {
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
+    }
     if (this.props.cliqCashUserDetails) {
       return (
         <div className={styles.base}>

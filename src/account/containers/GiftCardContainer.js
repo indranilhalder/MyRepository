@@ -8,6 +8,10 @@ import {
 } from "../actions/account.actions";
 import { setHeaderText } from "../../general/header.actions";
 import { displayToast } from "../../general/toast.actions";
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
 const mapDispatchToProps = dispatch => {
   return {
     displayToast: toastMessage => {
@@ -24,6 +28,12 @@ const mapDispatchToProps = dispatch => {
     },
     clearGiftCardStatus: () => {
       dispatch(clearGiftCardStatus());
+    },
+    showSecondaryLoader: () => {
+      dispatch(showSecondaryLoader());
+    },
+    hideSecondaryLoader: () => {
+      dispatch(hideSecondaryLoader());
     }
   };
 };
@@ -32,7 +42,8 @@ const mapStateToProps = state => {
   return {
     giftCardsDetails: state.profile.giftCards,
     giftCardDetailsStatus: state.profile.giftCardDetailsStatus,
-    giftCardDetails: state.profile.giftCardDetails
+    giftCardDetails: state.profile.giftCardDetails,
+    loadingForGiftCardDetails: state.profile.loadingForGiftCardDetails
   };
 };
 
