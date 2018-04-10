@@ -153,7 +153,6 @@ class ProductSellerPage extends Component {
         .map(image => {
           return image[0].value;
         });
-
     return (
       mobileGalleryImages && (
         <PdpFrame
