@@ -125,7 +125,7 @@ const PRODUCT_SIZE_GUIDE_PATH = "v2/mpl/products/";
 const ORDER_BY = "desc";
 const SORT = "byDate";
 const PAGE_VALUE = "0";
-const PAGE_NUMBER = "10";
+const PAGE_NUMBER = "3";
 const MSD_REQUEST_PATH = "widgets";
 const MSD_ABOUT_BRAND_REQUEST_PATH = "widgets";
 const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
@@ -606,7 +606,6 @@ export function addProductReview(productCode, productReview) {
   reviewData.append("comment", productReview.comment);
   reviewData.append("rating", productReview.rating);
   reviewData.append("headline", productReview.headline);
-
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(addProductReviewRequest());
@@ -618,8 +617,9 @@ export function addProductReview(productCode, productReview) {
         reviewData
       );
       const resultJson = await result.json();
-      if (resultJson.errors.length > 0) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(addProductReviewSuccess(productReview));
     } catch (e) {
@@ -736,22 +736,28 @@ export function getProductReviewsFailure(error) {
   };
 }
 
-export function getProductReviews(productCode) {
+export function getProductReviews(productCode, pageIndex) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  let accessToken, userName;
+  if (customerCookie) {
+    userName = JSON.parse(userDetails).userName;
+    accessToken = JSON.parse(customerCookie).access_token;
+  } else {
+    userName = ANONYMOUS_USER;
+    accessToken = JSON.parse(globalCookie).access_token;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(getProductReviewsRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_SIZE_GUIDE_PATH}${productCode.toUpperCase()}/users/${
-          JSON.parse(userDetails).userName
-        }/reviews?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&page=${PAGE_VALUE}&pageSize=${PAGE_NUMBER}&orderBy=${ORDER_BY}&sort=${SORT}`
+        `${PRODUCT_SIZE_GUIDE_PATH}${productCode.toUpperCase()}/users/${userName}/reviews?access_token=${accessToken}&page=${pageIndex}&pageSize=${PAGE_NUMBER}&orderBy=${ORDER_BY}&sort=${SORT}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(getProductReviewsSuccess(resultJson));
     } catch (e) {

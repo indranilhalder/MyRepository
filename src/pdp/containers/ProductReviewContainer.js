@@ -9,6 +9,11 @@ import {
   addProductReview
 } from "../actions/pdp.actions";
 import { displayToast } from "../../general/toast.actions";
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
+
 const mapDispatchToProps = dispatch => {
   return {
     addProductToCart: (userId, cartId, accessToken, productDetails) => {
@@ -17,8 +22,8 @@ const mapDispatchToProps = dispatch => {
     addProductToWishList: (userId, accessToken, productDetails) => {
       dispatch(addProductToWishList(userId, accessToken, productDetails));
     },
-    getProductReviews: productCode => {
-      dispatch(getProductReviews(productCode));
+    getProductReviews: (productCode, pageIndex) => {
+      dispatch(getProductReviews(productCode, pageIndex));
     },
     getProductDescription: productCode => {
       dispatch(getProductDescription(productCode));
@@ -29,6 +34,12 @@ const mapDispatchToProps = dispatch => {
 
     displayToast: message => {
       dispatch(displayToast(message));
+    },
+    showSecondaryLoader: () => {
+      dispatch(showSecondaryLoader());
+    },
+    hideSecondaryLoader: () => {
+      dispatch(hideSecondaryLoader());
     }
   };
 };
@@ -37,7 +48,8 @@ const mapStateToProps = state => {
   return {
     productDetails: state.productDescription.productDetails,
     reviews: state.productDescription.reviews,
-    addReviewStatus: state.productDescription.addReviewStatus
+    addReviewStatus: state.productDescription.addReviewStatus,
+    loadingForAddProduct: state.productDescription.loadingForAddProduct
   };
 };
 
