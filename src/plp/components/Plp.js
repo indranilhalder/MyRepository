@@ -33,12 +33,6 @@ export default class Plp extends React.Component {
   };
 
   handleScroll = () => {
-    console.log(
-      this.props.productListings
-        ? this.props.productListings.pagination.totalPages - 1
-        : 0
-    );
-
     return throttle(() => {
       if (
         !this.state.showFilter &&
