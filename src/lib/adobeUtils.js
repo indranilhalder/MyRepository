@@ -81,7 +81,7 @@ function getDigitalDataForPdp(type, pdpResponse) {
         discount: pdpResponse.winningSellerPrice.doubleValue
       },
       pdp: {
-        findingMethod: window.digitalData.pageName
+        findingMethod: window.digitalData && window.digitalData.pageName
       },
       brand: {
         name: pdpResponse.brandName
