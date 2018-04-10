@@ -498,15 +498,6 @@
 							</row>
 						</columnlayout>
 					</section>
-					<section name="section.payment.noCostEmi.logo">
-						<columnlayout leftwidth="500">
-							<row>
-								<attribute name="logoImage" labelwidth="100">
-									<mediaeditor />
-								</attribute>
-							</row>
-						</columnlayout>
-					</section>
 				</tab>
 				<tab name="administration" position="2">
 					<section name="section.metadata">

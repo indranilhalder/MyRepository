@@ -1762,11 +1762,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1817,9 +1817,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -3622,7 +3622,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#createQCOrderRequest()
 	 */
 	@Override
@@ -3925,7 +3925,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#isNoCostEmiAvailable(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -3938,7 +3938,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#noCostEmiBankTenureList()
 	 */
 	@Override
@@ -4204,6 +4204,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						noCostEMIItemBreakUp.setCardBlockingAmount(priceDataFactory.create(PriceDataType.BUY,
 								BigDecimal.valueOf(cardBlockingAmount), currency));
 						noCostEMIItemBreakUp.setTenure(String.valueOf(tenure));
+						noCostEMIItemBreakUp.setBankName(((MplNoCostEMIVoucherModel) oModel).getEmiBank().getName().getBankName());
 
 					}
 					break;
