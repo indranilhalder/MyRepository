@@ -25,8 +25,8 @@ export default class SearchPage extends React.Component {
     }
   }
   handleBackClick() {
-    if (this.props.onBack) {
-      this.props.onBack();
+    if (this.props.canGoBack) {
+      this.props.canGoBack();
     }
   }
   render() {
@@ -42,7 +42,7 @@ export default class SearchPage extends React.Component {
             onClickBack={() => {
               this.handleBackClick();
             }}
-            canGoBack={this.props.canGoBack}
+            isGoBack={this.props.hasBackButton}
             text={this.props.header}
           />
         </div>
