@@ -26,16 +26,16 @@ export default class SearchHeader extends React.Component {
       this.setState({ searchString: val });
     }
   }
-  searchString() {
+  searchString = () => {
     if (this.props.onSearchString) {
       this.props.onSearchString(this.state.searchString);
     }
-  }
-  handleKeyUp(val) {
+  };
+  handleKeyUp = val => {
     if (val === "Enter") {
       this.searchString();
     }
-  }
+  };
   onClickIcon() {
     if (this.state.searchBar) {
       this.setState({ searchBar: false }, () => {
