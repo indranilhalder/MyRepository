@@ -21,8 +21,8 @@ const mapDispatchToProps = dispatch => {
     addProductToWishList: (userId, accessToken, productDetails) => {
       dispatch(addProductToWishList(userId, accessToken, productDetails));
     },
-    getProductReviews: productCode => {
-      dispatch(getProductReviews(productCode));
+    getProductReviews: (productCode, pageIndex) => {
+      dispatch(getProductReviews(productCode, pageIndex));
     },
     getProductDescription: productCode => {
       dispatch(getProductDescription(productCode));
@@ -48,6 +48,7 @@ const mapStateToProps = state => {
     productDetails: state.productDescription.productDetails,
     reviews: state.productDescription.reviews,
     addReviewStatus: state.productDescription.addReviewStatus,
+    loadingForAddProduct: state.productDescription.loadingForAddProduct,
     loading: state.productDescription.loading
   };
 };
