@@ -30,11 +30,11 @@ export default class Input2 extends React.Component {
       }
     });
   }
-  handleKeyUp(event) {
+  handleKeyUp = event => {
     if (this.props.onKeyUp) {
       this.props.onKeyUp(event);
     }
-  }
+  };
   render() {
     let className = styles.base;
     if (this.props.isWhite) {
