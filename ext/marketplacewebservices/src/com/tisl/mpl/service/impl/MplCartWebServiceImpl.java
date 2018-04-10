@@ -4608,7 +4608,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 				mrp = oModel.getMrp().doubleValue() * oModel.getQuantity().intValue();
 				payableAmount += (((netAmountAfrDiscount.doubleValue() > 0) ? netAmountAfrDiscount.doubleValue()
-						: totalPrice.doubleValue()) - walletAmt) + oModel.getCurrDelCharge().doubleValue();
+						: totalPrice.doubleValue()) - walletAmt) + oModel.getCurrDelCharge().doubleValue()
+						+ oModel.getScheduledDeliveryCharge().doubleValue();
 				couponDiscount += oModel.getCouponValue().doubleValue();
 				mopPlusPromoDiscounty += (mrp - (oModel.getBasePrice().doubleValue() * oModel.getQuantity().intValue()))
 						+ oModel.getTotalProductLevelDisc().doubleValue() + oModel.getCartLevelDisc().doubleValue()
