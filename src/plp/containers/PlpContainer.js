@@ -25,7 +25,6 @@ const mapStateToProps = (state, ownProps) => {
     productListings: state.productListings.productListings,
     pageNumber: state.productListings.pageNumber,
     loading: state.productListings.loading,
-    totalPages: state.productListings.totalPages,
     searchresult: state.productListings.searchresult
   };
 };
