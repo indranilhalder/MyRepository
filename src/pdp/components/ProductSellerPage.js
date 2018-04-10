@@ -5,7 +5,8 @@ import SellerWithMultiSelect from "./SellerWithMultiSelect";
 import SellerCard from "./SellerCard";
 import PdpFrame from "./PdpFrame";
 import * as Cookie from "../../lib/Cookie";
-
+import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import { reverse, sortBy } from "lodash";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -26,7 +27,16 @@ import {
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
 } from "../../lib/constants";
 const PRODUCT_QUANTITY = "1";
+const PRICE_LOW_TO_HIGH = "Price Low - High";
+const PRICE_HIGH_TO_LOW = "Price High - Low";
 class ProductSellerPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      priceValue: null
+    };
+  }
+  priceValue;
   gotoPreviousPage = () => {
     const url = this.props.location.pathname.replace(
       PRODUCT_SELLER_ROUTER_SUFFIX,
@@ -95,8 +105,43 @@ class ProductSellerPage extends Component {
       //need to show error page
     }
   }
-
+  onSortByPrice(val) {
+    this.setState({ priceValue: val });
+  }
+  sortedJobs(product) {
+    switch (this.state.priceValue) {
+      case PRICE_LOW_TO_HIGH:
+        return reverse(product);
+      case PRICE_HIGH_TO_LOW:
+        return reverse(product);
+      default:
+        return product;
+    }
+  }
   render() {
+    let product = this.sortedJobs(
+      this.props.productDetails &&
+        this.props.productDetails.otherSellers &&
+        this.props.productDetails.otherSellers
+    );
+    let availableSeller = {};
+    let price;
+    if (product) {
+      availableSeller = product.filter(seller => {
+        if (seller.availableStock !== "0" && seller.availableStock !== "-1") {
+          return seller;
+        }
+      });
+      if (availableSeller) {
+        price = availableSeller[0].specialPriceSeller.value;
+        availableSeller.forEach(seller => {
+          if (price > seller.specialPriceSeller.value) {
+            price = seller.specialPriceSeller.formattedValueNoDecimal;
+          }
+          return price;
+        });
+      }
+    }
     const mobileGalleryImages =
       this.props.productDetails &&
       this.props.productDetails.galleryImagesList
@@ -108,7 +153,6 @@ class ProductSellerPage extends Component {
         .map(image => {
           return image[0].value;
         });
-
     return (
       mobileGalleryImages && (
         <PdpFrame
@@ -131,10 +175,31 @@ class ProductSellerPage extends Component {
               averageRating={this.props.productDetails.averageRating}
               totalNoOfReviews={this.props.productDetails.productReviewsCount}
             />
+            <div className={styles.OtherSeller}>Other sellers</div>
+            <div className={styles.priceWithSeller}>
+              <div className={styles.seller}>
+                {availableSeller.length} Other Sellers available starting at ₹
+                {price}
+              </div>
+              <div className={styles.price}>
+                <SelectBoxMobile
+                  label={PRICE_LOW_TO_HIGH}
+                  height={30}
+                  onChange={priceValue => this.onSortByPrice(priceValue)}
+                  theme={"hollowBox"}
+                  arrowColour={"black"}
+                  value={this.state.priceValue}
+                  options={[
+                    { label: PRICE_LOW_TO_HIGH, value: PRICE_LOW_TO_HIGH },
+                    { label: PRICE_HIGH_TO_LOW, value: PRICE_HIGH_TO_LOW }
+                  ]}
+                />
+              </div>
+            </div>
             <div>
-              {this.props.productDetails.otherSellers && (
+              {product && (
                 <SellerWithMultiSelect limit={1}>
-                  {this.props.productDetails.otherSellers
+                  {product
                     .filter(val => {
                       return (
                         val.availableStock !== "0" &&
