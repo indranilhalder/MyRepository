@@ -63,3 +63,8 @@
   text-align: center;
   opacity: 0.5;
 }
+.monoBannerHolder {
+  width: 100%;
+  height: auto;
+  padding: 20px;
+}
