@@ -9,6 +9,10 @@ import {
   addProductReview
 } from "../actions/pdp.actions";
 import { displayToast } from "../../general/toast.actions";
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
 const mapDispatchToProps = dispatch => {
   return {
     addProductToCart: (userId, cartId, accessToken, productDetails) => {
@@ -29,6 +33,12 @@ const mapDispatchToProps = dispatch => {
 
     displayToast: message => {
       dispatch(displayToast(message));
+    },
+    showSecondaryLoader: () => {
+      dispatch(showSecondaryLoader());
+    },
+    hideSecondaryLoader: () => {
+      dispatch(hideSecondaryLoader());
     }
   };
 };
@@ -37,7 +47,8 @@ const mapStateToProps = state => {
   return {
     productDetails: state.productDescription.productDetails,
     reviews: state.productDescription.reviews,
-    addReviewStatus: state.productDescription.addReviewStatus
+    addReviewStatus: state.productDescription.addReviewStatus,
+    loading: state.productDescription.loading
   };
 };
 
