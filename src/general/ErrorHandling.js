@@ -28,11 +28,10 @@ export function getFailureResponse(response) {
   ) {
     if (response.error) {
       return { status: true, message: response.error };
-    }
-    if (response.type) {
-      return { status: true, message: response.type };
-    } else {
+    } else if (response.message) {
       return { status: true, message: response.message };
+    } else {
+      return { status: true, message: response.status };
     }
   } else {
     return { status: false };

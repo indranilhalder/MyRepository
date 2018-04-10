@@ -7,7 +7,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button.js";
 import cliqCashIcon from "./img/cliqcash.png";
 import styles from "./CliqAndCash.css";
-import Error from "../../general/components/Error.js";
+
 import moment from "moment";
 import {
   MY_ACCOUNT_GIFT_CARD_PAGE,
@@ -25,23 +25,10 @@ export default class CliqAndCash extends React.Component {
     this.state = {
       cardNumber: this.props.cardNumber ? this.props.cardNumber : "",
       pinNumber: this.props.pinNumber ? this.props.cardNumber : "",
-      cliqCashUpdate: false,
-      error: false,
-      errorMessage: ""
+      cliqCashUpdate: false
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.cliqCashVoucherDetailsStatus === FAILURE) {
-      this.setState({
-        error: true,
-        errorMessage: nextProps.cliqCashVoucherDetailsError
-      });
-    }
-    if (nextProps.cliqCashVoucherDetailsStatus === FAILURE) {
-      this.setState({ cardNumber: "", pinNumber: "" });
-    }
-  }
   componentDidUpdate() {
     this.props.setHeaderText(CLIQ_CASH);
   }
@@ -76,7 +63,6 @@ export default class CliqAndCash extends React.Component {
     if (this.props.cliqCashUserDetails) {
       return (
         <div className={styles.base}>
-          <Error message={this.state.errorMessage} show={this.state.error} />
           <div className={styles.logoHolder}>
             <Logo image={cliqCashIcon} />
           </div>
