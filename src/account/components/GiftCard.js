@@ -101,6 +101,12 @@ export default class GiftCard extends React.Component {
     return <Redirect to={LOGIN_PATH} />;
   }
   render() {
+    if (this.props.loadingForGiftCardDetails) {
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
+    }
+
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
