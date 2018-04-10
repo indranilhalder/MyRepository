@@ -61,12 +61,7 @@
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'OffersWidgetComponent'}">
-
-
 					<div>
-						<h1>OffersWidgetComponent</h1>
-
-
 						<div class="offer-widget-title">${feature.title}</div>
 						<div class="offer-slider mb40">
 							<c:forEach items="${feature.items}" var="offersWidgetElement">
@@ -337,7 +332,7 @@
 
 					<div class="col-xs-12 pad0 theme-product-widget mb40"
 						style="background-image:url('${feature.imageURL.URL}'),linear-gradient(to bottom, #5b0627, #5b0627);">
-						<img src="${feature.brandLogo}" class="brand-logo" />
+						<img src="${feature.brandLogo.URL}" class="brand-logo" />
 						<div class="col-xs-12 theme-product-widget-container">
 							<div class="col-xs-6 heading">${feature.title}</div>
 							<div class="col-xs-6">
@@ -794,7 +789,6 @@
 				<c:if
 					test="${feature.typeCode eq 'AutoProductRecommendationComponent'}">
 					<div class="col-xs-12 pad0 mb40 product-recommendation-widget">
-						<h1>AutoProductRecommendationComponent</h1>
 						<div class="col-xs-12 heading">${feature.title}</div>
 						<div class="col-xs-12 pad0 product-recommendation-slider">
 							<c:forEach items="${feature.items}"
