@@ -111,9 +111,9 @@ class ProductSellerPage extends Component {
   sortedJobs(product) {
     switch (this.state.priceValue) {
       case PRICE_LOW_TO_HIGH:
-        return sortBy(product);
+        return reverse(product);
       case PRICE_HIGH_TO_LOW:
-        return reverse(sortBy(product));
+        return reverse(product);
       default:
         return product;
     }
@@ -125,7 +125,6 @@ class ProductSellerPage extends Component {
         this.props.productDetails.otherSellers
     );
     let availableSeller = {};
-    let minimumPrice = {};
     let price;
     if (product) {
       availableSeller = product.filter(seller => {
@@ -135,7 +134,7 @@ class ProductSellerPage extends Component {
       });
       if (availableSeller) {
         price = availableSeller[0].specialPriceSeller.formattedValueNoDecimal;
-        minimumPrice = availableSeller.find(seller => {
+        availableSeller.forEach(seller => {
           if (price > seller.specialPriceSeller.formattedValueNoDecimal) {
             price = seller.specialPriceSeller.formattedValueNoDecimal;
           }
@@ -181,7 +180,7 @@ class ProductSellerPage extends Component {
             <div className={styles.priceWithSeller}>
               <div className={styles.seller}>
                 {availableSeller.length} Other Sellers available starting at{" "}
-                {minimumPrice.specialPriceSeller.formattedValueNoDecimal}
+                {price}
               </div>
               <div className={styles.price}>
                 <SelectBoxMobile
