@@ -245,7 +245,6 @@ export default class PdpElectronics extends React.Component {
                   View Plans
                 </span>
               </div>
-              <div className={styles.cashInfo}>Cash on Delivery available.</div>
             </div>
           )}
 
