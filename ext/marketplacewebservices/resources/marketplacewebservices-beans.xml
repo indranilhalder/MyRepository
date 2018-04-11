@@ -1687,6 +1687,7 @@
 		<property name="awbPopupLink" type="String" />
 		<!-- TPR-1083 Start -->
 		<property name="exchangeId" type="String" />
+		<property name="categoryHierarchy" type="java.util.List&lt;com.tisl.mpl.wsdto.MplCategoryHierarchydata>"></property>
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.StatusResponseListDTO">
 		<property name="statusList"
