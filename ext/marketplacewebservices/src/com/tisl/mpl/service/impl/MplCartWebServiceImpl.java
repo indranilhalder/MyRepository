@@ -122,8 +122,8 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
-import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
@@ -1660,8 +1660,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							if (StringUtils.isNotEmpty(val.getSellerArticleSKU()) && StringUtils.isNotEmpty(startValue)
 									&& StringUtils.isNotEmpty(endValue) && StringUtils.isNotEmpty(val.getDeliveryMode().getCode()))
 							{
-								selectedDelivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
-										val.getSellerArticleSKU(), val.getDeliveryMode().getCode(), startValue, endValue));
+								selectedDelivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(val.getSellerArticleSKU(),
+										val.getDeliveryMode().getCode(), startValue, endValue));
 							}
 
 						}
@@ -1908,17 +1908,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				//SDI-3159 Condition added if CLICK N COLLECT is not there
 				//IQA Code Review Fix
 				final MplZoneDeliveryModeValueModel valNew = abstractOrderEntry.getMplDeliveryMode();
-				if (null != abstractOrderEntry.getEdScheduledDate()
-						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
-								.getDeliveryMode().getCode())))
+				if (null != abstractOrderEntry.getEdScheduledDate() && (null != valNew
+						&& !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew.getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryDate(abstractOrderEntry.getEdScheduledDate());
 				}
 				//SDI-3159 Condition added if CLICK N COLLECT is not there
-				if (null != abstractOrderEntry.getTimeSlotTo()
-						&& null != abstractOrderEntry.getTimeSlotFrom()
-						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
-								.getDeliveryMode().getCode())))
+				if (null != abstractOrderEntry.getTimeSlotTo() && null != abstractOrderEntry.getTimeSlotFrom() && (null != valNew
+						&& !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew.getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
 							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
@@ -3362,8 +3359,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3631,7 +3628,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3717,6 +3714,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<>();
 		List<PinCodeResponseData> pinCodeRes = null;
+		List<PromotionResultModel> promotionResult = null;
 
 		int count = 0;
 
@@ -3803,6 +3801,23 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				cartDataDetails.setCartAmount(priceWsPwaDTO);
 			}
+
+
+			//Added for NEWUIUX-1768
+			if (CollectionUtils.isNotEmpty(cartModel.getAllPromotionResults()))
+			{
+				promotionResult = new ArrayList(cartModel.getAllPromotionResults());
+			}
+			List<CartOfferDetailsWsDTO> cartOfferList = null;
+			if (null != promotionResult && !promotionResult.isEmpty())
+			{
+				cartOfferList = offerDetails(promotionResult, cartModel);
+			}
+			if (null != cartOfferList && !cartOfferList.isEmpty())
+			{
+				cartDataDetails.setOfferDetails(cartOfferList);
+			}
+			//Changes for NEWUIUX-1768 end
 
 			//TPR-6980:Change in the logic of display of price disclaimer in the cart for Fine Jewellery
 			final String displayMsgFinal = mplCommerceCartService.populatePriceDisclaimerCart(cartModel);
