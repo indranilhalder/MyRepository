@@ -8,7 +8,6 @@ import {
   getProductDescription,
   addProductReview
 } from "../actions/pdp.actions";
-import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 import { displayToast } from "../../general/toast.actions";
 import {
   showSecondaryLoader,
@@ -22,8 +21,8 @@ const mapDispatchToProps = dispatch => {
     addProductToWishList: (userId, accessToken, productDetails) => {
       dispatch(addProductToWishList(userId, accessToken, productDetails));
     },
-    getProductReviews: (productCode, pageIndex) => {
-      dispatch(getProductReviews(productCode, pageIndex));
+    getProductReviews: (productCode, pageIndex, orderBy, sortBy) => {
+      dispatch(getProductReviews(productCode, pageIndex, orderBy, sortBy));
     },
     getProductDescription: productCode => {
       dispatch(getProductDescription(productCode));
@@ -31,9 +30,7 @@ const mapDispatchToProps = dispatch => {
     addProductReview: (productCode, productReview) => {
       dispatch(addProductReview(productCode, productReview));
     },
-    setUrlToRedirectToAfterAuth: url => {
-      dispatch(setUrlToRedirectToAfterAuth(url));
-    },
+
     displayToast: message => {
       dispatch(displayToast(message));
     },
@@ -59,4 +56,5 @@ const mapStateToProps = state => {
 const ProductReviewContainer = withRouter(
   connect(mapStateToProps, mapDispatchToProps)(ProductReviewPage)
 );
+
 export default ProductReviewContainer;
