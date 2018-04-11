@@ -49,6 +49,10 @@ export default class FlashSale extends React.Component {
     const { feedComponentData, ...rest } = this.props;
     let items = [];
 
+    if (!feedComponentData.endDate || !feedComponentData.startDate) {
+      return null;
+    }
+
     if (feedComponentData.items) {
       items = feedComponentData.items.map(transformData);
     }
@@ -63,15 +67,24 @@ export default class FlashSale extends React.Component {
 
     // WE do this because new Date(Datestr) gives back date time in the american format, but the string is in non-american format.
     // So we need to do a diff of the correct date.
-    // TODO - optimize.
-    const today = new Date();
-    const themeOfferDate = new Date(
-      moment(new Date(this.props.feedComponentData.endDate)).format(
-        "DD/MM/YYYY"
+
+    const startDateTime = new Date(
+      moment(new Date(feedComponentData.startDate)).format(
+        "MM/DD/YYYY HH:mm:ss"
       )
     );
+    const endDateTime = new Date(
+      moment(new Date(feedComponentData.endDate)).format("MM/DD/YYYY HH:mm:ss")
+    );
 
-    if (themeOfferDate < today) {
+    // if date time
+
+    const now = Date.now();
+
+    // if now is > start and < end, show
+    // if now is < start do not show
+    // if now is > end do not show
+    if (now > endDateTime || now < startDateTime) {
       return null;
     }
 
