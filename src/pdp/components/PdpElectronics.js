@@ -138,6 +138,7 @@ export default class PdpElectronics extends React.Component {
 
   render() {
     const productData = this.props.productDetails;
+    console.log(productData);
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -250,14 +251,16 @@ export default class PdpElectronics extends React.Component {
 
           {productData.potentialPromotions && (
             <OfferCard
-              endTime={productData.potentialPromotions.endDate}
-              startDate={productData.potentialPromotions.startDate}
               heading={productData.potentialPromotions.title}
-              description={productData.potentialPromotions.description}
               onClick={this.goToCouponPage}
             />
           )}
-
+          {productData.productOfferMsg && (
+            <OfferCard
+              messageId={productData.productOfferMsg.messageID}
+              onClick={this.goToCouponPage}
+            />
+          )}
           {productData.variantOptions && (
             <React.Fragment>
               <SizeSelector

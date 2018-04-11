@@ -10,10 +10,10 @@
   width: 100%;
   height: auto;
   font-size: 14px;
-  padding-bottom: 20px;
   font-family: semibold;
   color: #ffff;
   text-align: left;
+  margin-bottom: 5px;
 }
 .headingDescription {
   width: 100%;
@@ -63,4 +63,13 @@
   position: absolute;
   left: 0;
   top: 0;
+}
+.descriptionText {
+  width: 100%;
+  height: auto;
+  line-height: normal;
+  color: #fff;
+  font-size: 12px;
+  font-family: regular;
+  padding: 5px 0px;
 }

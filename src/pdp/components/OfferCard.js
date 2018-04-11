@@ -15,37 +15,25 @@ export default class OfferCard extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.headingText}>
-          {this.props.heading}
-          {this.props.endTime && (
-            <div className={styles.iconHolder}>
-              <div className={styles.timer}>
-                {" "}
-                <TimerCounter endTime={this.props.endTime} />
-              </div>
-              <div className={styles.timerHolder}>
-                <Icon image={ClockImage} size={this.props.size} />
-              </div>
-            </div>
-          )}
-        </div>
-        <div
-          className={styles.description}
-          dangerouslySetInnerHTML={{
-            __html: this.props.description
-              .replace("<p>", "")
-              .replace("</p>", "")
-          }}
-        />
+        {this.props.heading && (
+          <div className={styles.headingText}>{this.props.heading}</div>
+        )}
 
-        <div className={styles.button}>
-          {this.props.buttonText}
-          <UnderLinedButton
-            color="#fff"
-            label="More Offers"
-            onClick={() => this.handleClick()}
-          />
-        </div>
+        {this.props.isDescription && (
+          <div>
+            <div
+              className={styles.description}
+              dangerouslySetInnerHTML={{
+                __html: this.props.description
+                  .replace("<p>", "")
+                  .replace("</p>", "")
+              }}
+            />
+          </div>
+        )}
+        {this.props.messageId && (
+          <div className={styles.descriptionText}>{this.props.messageId}</div>
+        )}
       </div>
     );
   }
