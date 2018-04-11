@@ -2115,8 +2115,8 @@ public class CartsController extends BaseCommerceController
 	@RequestMapping(value = "/{cartId}/deleteEntries/{entryNumber}", method = RequestMethod.GET)
 	@ResponseBody
 	public CartDataDetailsWsDTO removeCartEntryMobile(@PathVariable final String cartId, @PathVariable final Long entryNumber,
-			@RequestParam(required = false) final String channel) throws CommerceCartModificationException, InvalidCartException,
-			ConversionException
+			@RequestParam(required = false) final String channel)
+			throws CommerceCartModificationException, InvalidCartException, ConversionException
 	{
 		final CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO(); //Object to store result
 		int count = 0;
@@ -2812,7 +2812,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -3665,7 +3665,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public ApplyCartCouponsDTO applyCartCoupons(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode,
-			@RequestParam(required = false) final boolean isPwa, @RequestParam(required = false) final String channel
+			@RequestParam(required = false) final boolean isPwa, @RequestParam(required = false) final String channel)
 			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
 			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException
 	{
@@ -3708,7 +3708,7 @@ public class CartsController extends BaseCommerceController
 					//cartModel.setChannel(SalesApplication.MOBILE);
 
 					//final SalesApplication channelToSet = StringUtils.isNotEmpty(channel) ? SalesApplication.valueOf(channel)
-							//: SalesApplication.MOBILE;
+					//: SalesApplication.MOBILE;
 
 					//cartModel.setChannel(channelToSet);
 
