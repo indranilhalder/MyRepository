@@ -15,9 +15,21 @@ export default class SearchPage extends React.Component {
     this.setState({ showResults: val });
   }
 
+  handleBrandClick(webURL) {
+    const brandCode = `c-${webURL.toLowerCase()}`.replace(TATA_CLIQ_ROOT, "$1");
+    this.props.history.push(
+      `search/?searchCategory=all&text=:relevance:brand:${brandCode}`
+    );
+  }
+
   handleCategoryClick(webURL) {
-    const urlSuffix = `c-${webURL.toLowerCase()}`.replace(TATA_CLIQ_ROOT, "$1");
-    this.props.history.push(urlSuffix);
+    const categoryCode = `c-${webURL.toLowerCase()}`.replace(
+      TATA_CLIQ_ROOT,
+      "$1"
+    );
+    this.props.history.push(
+      `search/?searchCategory=all&text=:relevance:category:${categoryCode}`
+    );
   }
   handleSearch(val, e) {
     if (this.props.getSearchResults) {
@@ -61,7 +73,7 @@ export default class SearchPage extends React.Component {
                     text={val.categoryName}
                     value={val.categoryCode}
                     onClick={() => {
-                      this.handleCategoryClick(val.categoryCode);
+                      this.handleBrandClick(val.categoryCode);
                     }}
                   />
                 );
