@@ -23,7 +23,7 @@ export default class Follow extends Component {
   render() {
     let text = this.props.text;
     let width = this.props.width;
-    if (this.props.follow) {
+    if (this.props.follow === true) {
       text = "Following";
       width = 100;
     } else {
