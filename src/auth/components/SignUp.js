@@ -27,7 +27,12 @@ class SignUp extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.authCallsIsSucceed) {
-      this.props.history.push(HOME_ROUTER);
+      if (this.props.redirectToAfterAuthUrl) {
+        this.props.history.push(this.props.redirectToAfterAuthUrl);
+        this.props.clearUrlToRedirectToAfterAuth();
+      } else {
+        this.props.history.push(HOME_ROUTER);
+      }
     }
   }
   onSubmit() {

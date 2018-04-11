@@ -17,6 +17,8 @@ import { displayToast } from "../../general/toast.actions";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
 import { setHeaderText } from "../../general/header.actions";
+import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
+
 import {
   showSecondaryLoader,
   hideSecondaryLoader
@@ -42,9 +44,14 @@ const mapDispatchToProps = dispatch => {
     setHeaderText: text => {
       dispatch(setHeaderText(text));
     },
+
+    setUrlToRedirectToAfterAuth: url => {
+      dispatch(setUrlToRedirectToAfterAuth(url));
+    },
     showCouponModal: data => {
       dispatch(showModal(PRODUCT_COUPONS, data));
     },
+
     checkPinCodeServiceAvailability: (
       userName,
       accessToken,

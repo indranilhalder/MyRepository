@@ -4,6 +4,7 @@ import AddToWishListButton from "../components/AddToWishListButton";
 import { addProductToWishList } from "../actions/wishlist.actions";
 import { SUCCESS } from "../../lib/constants";
 import { withRouter } from "react-router-dom";
+import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 
 const toastMessageOnSuccessAddToWishlist = "Added";
 
@@ -19,6 +20,10 @@ const mapDispatchToProps = dispatch => {
     },
     displayToast: () => {
       dispatch(displayToast(toastMessageOnAlreadyInWishlist));
+    },
+
+    setUrlToRedirectToAfterAuth: url => {
+      dispatch(setUrlToRedirectToAfterAuth(url));
     }
   };
 };
