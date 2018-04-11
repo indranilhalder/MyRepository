@@ -324,7 +324,7 @@ public class WalletController
 				removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, cart);
 				if (isPwa)
 				{
-					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cart);
 					removeCliqCashWsDto.setCartAmount(pricePwa);
 
 					//					final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);

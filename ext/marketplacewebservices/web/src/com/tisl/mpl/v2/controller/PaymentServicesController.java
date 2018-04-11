@@ -11,6 +11,7 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -379,7 +380,8 @@ public class PaymentServicesController extends BaseController
 	@ResponseBody
 	public MplPromoPriceWsDTO binValidation(@PathVariable final String userId, @RequestParam final String paymentMode,
 			@RequestParam final String cartGuid, @RequestParam(required = false) final String binNo,
-			@RequestParam(required = false) final String bankName, @RequestParam(required = false) final boolean isPwa)
+			@RequestParam(required = false) final String bankName, @RequestParam(required = false) final boolean isPwa,
+			@RequestParam(required = false) final String channel)
 	{
 		LOG.debug(String.format("binValidation : binNo :  %s | paymentMode : %s | cartGuid : %s | userId : %s | bankName : %s ",
 				binNo, paymentMode, cartGuid, userId, bankName));
@@ -403,6 +405,11 @@ public class PaymentServicesController extends BaseController
 				//TISPT-29
 				if (null != cart)
 				{
+					final SalesApplication channelToSet = StringUtils.isNotEmpty(channel) ? SalesApplication.valueOf(channel)
+							: SalesApplication.MOBILE;
+					cart.setChannel(channelToSet);
+					modelService.save(cart);
+
 					if (StringUtils.isNotEmpty(paymentMode)
 							&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
@@ -542,6 +549,11 @@ public class PaymentServicesController extends BaseController
 					{
 						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
 						promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, orderModel, userId, bankName);
+						if (isPwa)
+						{
+							final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
+							promoPriceData.setCartAmount(pricePwa);
+						}
 					}
 					else
 					{

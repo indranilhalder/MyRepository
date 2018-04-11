@@ -92,7 +92,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -155,7 +154,7 @@ import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto; 
 
 /**
  * Web Service Controller for the ORDERS resource. Most methods check orders of the user. Methods require authentication
@@ -782,6 +781,7 @@ public class OrdersController extends BaseCommerceController
 		double totalDiscount = 0.0d;
 		try
 		{
+
 			//final Commented for Delivery cost fix final in order final confirmation page
 			//orderDetail = orderFacade.getOrderDetailsForCode(orderCode);
 			//orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
@@ -826,6 +826,7 @@ public class OrdersController extends BaseCommerceController
 					{
 						orderWsDTO.setExchangeId(entry.getExchangeApplied());
 					}
+
 				}
 				/*
 				 * if (orderDetail.getTotalPriceWithTax() != null) {
@@ -960,6 +961,7 @@ public class OrdersController extends BaseCommerceController
 									orderProductDTO.setScheduleDeliveryTime(entry.getTimeSlotFrom().concat(" to ")
 											.concat(entry.getTimeSlotTo()));
 								}
+
 							}
 							//R2.3 Changes End
 
@@ -1038,6 +1040,7 @@ public class OrdersController extends BaseCommerceController
 									{
 										orderProductDTO.setFulfillment(orderEntry.getFulfillmentMode());
 									}
+
 								}
 							}
 
@@ -1374,7 +1377,7 @@ public class OrdersController extends BaseCommerceController
 		OrderTrackingWsDTO orderTrackingWsDTO = new OrderTrackingWsDTO();
 		try
 		{
-			orderTrackingWsDTO = getOrderDetailsFacade.getOrderDetailsWithTracking(request, orderCode);
+			orderTrackingWsDTO = getOrderDetailsFacade.getOrderDetailsWithTracking(request, orderCode, isPwa);
 			if (isPwa)
 			{
 				final DecimalFormat df = new DecimalFormat("#.##");
@@ -1643,7 +1646,7 @@ public class OrdersController extends BaseCommerceController
 					{
 						continue;
 					}
-					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderdetails(orderDetails);
+					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderdetails(orderDetails, isPwa);
 					if (null != order)
 					{
 						orderTrackingListWsDTO.add(order);

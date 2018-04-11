@@ -1286,7 +1286,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			LOG.debug(LOG1 + mobileNumber);
 			final ExtRegisterData registration = new ExtRegisterData();
 			registration.setLogin(mobileNumber);
-			if (!registerCustomerFacade.checkUniquenessOfEmail(registration))
+			if (!registerCustomerFacade.checkMobileNumberUnique(registration))
 			{
 				final String otp = otpGenericService.generateOTPForRegister(mobileNumber, OTPTypeEnum.FORGOT_PASSWORD.getCode(),
 						mobileNumber);
@@ -1325,7 +1325,10 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		{
 			throw businessException;
 		}
-
+		catch (final AmbiguousIdentifierException ambiguousIdentifierException)
+		{
+			throw new AmbiguousIdentifierException(ambiguousIdentifierException.getMessage());
+		}
 		catch (final ModelSavingException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9013);

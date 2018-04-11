@@ -2593,6 +2593,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String OFFERSELLERID = "sellerId".intern();
 
-
-
+	public static final String NU009 = "NU009";
+	public static final String NU010 = "NU010";
 }

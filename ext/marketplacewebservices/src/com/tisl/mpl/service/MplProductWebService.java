@@ -7,6 +7,8 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.promotions.util.Tuple3;
 
 import java.util.List;
@@ -30,6 +32,7 @@ public interface MplProductWebService
 	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, String baseUrl, String channel);
 
 	public EgvProductInfoWSDTO getEgvProductDetails();
+
 	public String getCategoryCodeOfProduct(final ProductData productData);
 
 	public List<GalleryImageData> getGalleryImages(final ProductData productData);
@@ -57,4 +60,12 @@ public interface MplProductWebService
 	 * @return List<ReviewData>
 	 */
 	public Tuple3<List<ReviewData>, Long, Integer> getReviews(String productCode, PageableData pageableData, String orderBy);
+
+	/**
+	 *
+	 * @param userId
+	 * @param product
+	 * @return
+	 */
+	boolean isCustomerApplicableforReview(UserModel userId, ProductModel product);
 }

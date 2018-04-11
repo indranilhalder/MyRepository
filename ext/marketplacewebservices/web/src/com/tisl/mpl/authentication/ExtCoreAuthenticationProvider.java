@@ -53,6 +53,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.SocialLoginValidationService;
 
@@ -94,7 +95,7 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 
 	/*
 	 * To authenticate users
-	 *
+	 * 
 	 * @see de.hybris.platform.spring.security.CoreAuthenticationProvider#authenticate(org.springframework.security.core.
 	 * Authentication)
 	 */
@@ -199,10 +200,7 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 				}
 			}
 			//New UI/UX changes for social token validation || End
-
-
 			UserDetails userDetails = null;
-
 			try
 			{
 				userDetails = retrieveUser(userName.toLowerCase());
@@ -218,6 +216,12 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-" + userName);
 				throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
 						"Email ID or phone number does not exist"), dataIntegrity);
+			}
+			catch (final EtailNonBusinessExceptions ex)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "More than 1 user found for " + userName);
+				throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
+						"More than 1 user found for " + userName), ex);
 			}
 			getPreAuthenticationChecks().check(userDetails);
 			final UserModel userModel = extUserService.getUserForUIDAccessToken(StringUtils.lowerCase(userName));
@@ -306,7 +310,7 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 	 * user) { final UsernamePasswordAuthenticationToken result = new
 	 * UsernamePasswordAuthenticationToken(user.getUsername(), authentication.getCredentials(), user.getAuthorities());
 	 * if (null != authentication.getDetails()) { result.setDetails(authentication.getDetails()); }
-	 *
+	 * 
 	 * return result; }
 	 */
 

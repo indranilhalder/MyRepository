@@ -73,6 +73,7 @@ import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.variants.model.VariantProductModel;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 
 import java.math.BigDecimal;
@@ -122,6 +123,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
@@ -951,7 +953,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public CartDataDetailsWsDTO getCartDetailsWithPOS(final String cartId, final AddressListWsDTO addressListDTO,
-			final String pincode, final boolean isPwa)
+			final String pincode, final boolean isPwa, final String channel)
 	{
 
 		CartModel cart = null;
@@ -1004,6 +1006,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					cartDataDetails.setDelistedMessage(delistMessage);
 				}
 
+				if (StringUtils.isNotEmpty(channel) && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
+				{
+					cart.setChannel(SalesApplication.WEB);
+					modelService.save(cart);
+				}
+
 				if (null != cart.getPickupPersonName())
 				{
 					cartDataDetails.setPickupPersonName(cart.getPickupPersonName());
@@ -1013,6 +1021,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					cartDataDetails.setPickupPersonMobile(cart.getPickupPersonMobile());
 				}
 
+				final String appliedCouponCode = getAppliedCouponCode(cart.getDiscounts());
+				if (StringUtils.isNotEmpty(appliedCouponCode))
+				{
+					cartDataDetails.setAppliedCoupon(appliedCouponCode);
+				}
 
 			}
 			else
@@ -1634,24 +1647,21 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						//TISEE-950
 						String startValue = null;
 						String endValue = null;
-						if (null != abstractOrderEntry.getMplDeliveryMode()
-								&& null != abstractOrderEntry.getMplDeliveryMode().getDeliveryMode())
+						//IQA Code review Fix
+						if (null != val.getDeliveryMode())
 						{
-							startValue = abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getStart() != null
-									? abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getStart().toString()
+
+							startValue = val.getDeliveryMode().getStart() != null ? val.getDeliveryMode().getStart().toString()
 									: MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
-							endValue = abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getEnd() != null
-									? abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getEnd().toString()
+							endValue = val.getDeliveryMode().getEnd() != null ? val.getDeliveryMode().getEnd().toString()
 									: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
-							if (StringUtils.isNotEmpty(abstractOrderEntry.getMplDeliveryMode().getSellerArticleSKU())
-									&& StringUtils.isNotEmpty(startValue) && StringUtils.isNotEmpty(endValue)
-									&& StringUtils.isNotEmpty(abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode()))
+							if (StringUtils.isNotEmpty(val.getSellerArticleSKU()) && StringUtils.isNotEmpty(startValue)
+									&& StringUtils.isNotEmpty(endValue) && StringUtils.isNotEmpty(val.getDeliveryMode().getCode()))
 							{
 								selectedDelivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
-										abstractOrderEntry.getMplDeliveryMode().getSellerArticleSKU(),
-										abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode(), startValue, endValue));
+										val.getSellerArticleSKU(), val.getDeliveryMode().getCode(), startValue, endValue));
 							}
 
 						}
@@ -1896,16 +1906,19 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 				/* Added in R2.3 TISRLUAT-812 start */
 				//SDI-3159 Condition added if CLICK N COLLECT is not there
+				//IQA Code Review Fix
+				final MplZoneDeliveryModeValueModel valNew = abstractOrderEntry.getMplDeliveryMode();
 				if (null != abstractOrderEntry.getEdScheduledDate()
-						&& (null != abstractOrderEntry.getMplDeliveryMode() && !MarketplacecommerceservicesConstants.CLICK_COLLECT
-								.equalsIgnoreCase(abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode())))
+						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
+								.getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryDate(abstractOrderEntry.getEdScheduledDate());
 				}
 				//SDI-3159 Condition added if CLICK N COLLECT is not there
-				if (null != abstractOrderEntry.getTimeSlotTo() && null != abstractOrderEntry.getTimeSlotFrom()
-						&& (null != abstractOrderEntry.getMplDeliveryMode() && !MarketplacecommerceservicesConstants.CLICK_COLLECT
-								.equalsIgnoreCase(abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode())))
+				if (null != abstractOrderEntry.getTimeSlotTo()
+						&& null != abstractOrderEntry.getTimeSlotFrom()
+						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
+								.getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
 							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
@@ -3349,8 +3362,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3618,7 +3631,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3649,7 +3662,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					cartDataDetails.setDelistedMessage(delistMessage);
 				}
 
-				if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
+				if (StringUtils.isNotEmpty(channel) && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
 				{
 					cart.setChannel(SalesApplication.WEB);
 					modelService.save(cart);
@@ -3799,6 +3812,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				cartDataDetails.setPriceDisclaimerTextJwlry(displayMsgFinal);
 			}
 
+			final String appliedCouponCode = getAppliedCouponCode(cartModel.getDiscounts());
+
+			if (StringUtils.isNotEmpty(appliedCouponCode))
+			{
+				cartDataDetails.setAppliedCoupon(appliedCouponCode);
+			}
+
 		}
 		catch (final Exception e)
 		{
@@ -3808,6 +3828,32 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 
 		return cartDataDetails;
+	}
+
+
+	/**
+	 * The Method Returns applied Coupon Code on Cart
+	 *
+	 * @param discounts
+	 * @return String
+	 */
+	private String getAppliedCouponCode(final List<DiscountModel> discounts)
+	{
+		String appliedCouponCode = MarketplacecommerceservicesConstants.EMPTY;
+		if (CollectionUtils.isNotEmpty(discounts))
+		{
+			for (final DiscountModel discount : discounts)
+			{
+				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel))
+				{
+					final PromotionVoucherModel voucher = (PromotionVoucherModel) discount;
+					appliedCouponCode = voucher.getVoucherCode();
+					break;
+				}
+			}
+		}
+
+		return appliedCouponCode;
 	}
 
 
@@ -4022,6 +4068,48 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					gwlp.setOfferPrice(abstractOrderEntry.getTotalPrice().toString());
 
 				}
+
+				if (StringUtils.isNotEmpty(productData.getColour()))
+				{
+					gwlp.setColor(productData.getColour());
+				}
+				else
+				{
+					LOG.debug("*************** Mobile webservice color is empty ********************");
+				}
+				if (StringUtils.isNotEmpty(productData.getSize()))
+				{
+					gwlp.setSize(productData.getSize());
+				}
+				else
+				{
+					LOG.debug("*************** Mobile webservice size is empty ********************");
+				}
+				/* capacity */
+				if (abstractOrderEntry.getProduct() instanceof PcmProductVariantModel)
+				{
+					final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) abstractOrderEntry.getProduct();
+					final String selectedCapacity = selectedVariantModel.getCapacity();
+					final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
+					if (null != baseProduct.getVariants() && null != selectedCapacity)
+					{
+						for (final VariantProductModel vm : baseProduct.getVariants())
+						{
+							final PcmProductVariantModel pm = (PcmProductVariantModel) vm;
+							if (!selectedCapacity.isEmpty() && null != pm.getCapacity() && selectedCapacity.equals(pm.getCapacity()))
+							{
+
+								gwlp.setCapacity(pm.getCapacity());
+							}
+							else
+							{
+								LOG.debug("*************** Mobile webservice product capacity empty********************");
+							}
+						}
+					}
+				}
+
+				/* capacity */
 
 				final List<MobdeliveryModeWsDTO> deliveryList = new ArrayList<MobdeliveryModeWsDTO>();
 				final MobdeliveryModeWsDTO delivery = null;
@@ -4656,6 +4744,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		// YTODO Auto-generated method stub
 		Double cartTotalMrp = Double.valueOf(0);
 		Double cartEntryMrp = Double.valueOf(0);
+
+
+
 
 		if (CollectionUtils.isNotEmpty(orderdata.getEntries()))
 		{

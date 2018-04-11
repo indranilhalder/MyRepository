@@ -34,7 +34,7 @@ public class HomePageComponentsController
 	private HomePageAppFacade homePageAppFacade;
 
 
-	@RequestMapping(value = "/getProductInfo", method = RequestMethod.POST, consumes = "application/json")
+	@RequestMapping(value = "/getProductInfo", method = RequestMethod.GET, consumes = "application/json")
 	@ResponseBody
 	public HomepageComponetsDTO getHomepageComponetsData(@RequestParam final String productCodes,
 			@RequestParam(required = false) final String channel, @RequestParam final String isPwa)

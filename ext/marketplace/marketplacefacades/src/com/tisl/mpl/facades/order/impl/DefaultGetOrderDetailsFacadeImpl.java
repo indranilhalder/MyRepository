@@ -317,7 +317,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * @return OrderTrackingWsDTO
 	 */
 	@Override
-	public OrderDataWsDTO getOrderdetails(final OrderData orderDetails)
+	public OrderDataWsDTO getOrderdetails(final OrderData orderDetails, final boolean ispwa)
 	{
 
 		OrderDataWsDTO orderTrackingWsDTO = null;
@@ -340,8 +340,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				orderTrackingWsDTO.setBillingAddress(GenericUtilityMethods.setAddress(orderDetails, 1));
 				orderTrackingWsDTO.setDeliveryAddress(GenericUtilityMethods.setAddress(orderDetails, 2));
 				//add pickup person details
-				
-				/*Added For EGV Functionality Start*/ 
+
+				/* Added For EGV Functionality Start */
 				if (StringUtils.isNotEmpty(orderDetails.getEgvCardNumber()))
 				{
 					orderTrackingWsDTO.setEgvCardNumber(orderDetails.getEgvCardNumber());
@@ -354,27 +354,33 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				{
 					orderTrackingWsDTO.setResendAvailable(true);
 				}
-				
+
 				if (orderDetails.isIsEGVOrder())
 				{
 					orderTrackingWsDTO.setIsEgvOrder(true);
-					if(null != orderDetails.getMplPaymentInfo() && null != orderDetails.getStatus()) {
-						if(OrderStatus.REDEEMED.getCode().equalsIgnoreCase(orderDetails.getStatus().getCode())){
+					if (null != orderDetails.getMplPaymentInfo() && null != orderDetails.getStatus())
+					{
+						if (OrderStatus.REDEEMED.getCode().equalsIgnoreCase(orderDetails.getStatus().getCode()))
+						{
 							orderTrackingWsDTO.setGiftCardStatus(orderDetails.getStatus().getCode());
-						}else {
+						}
+						else
+						{
 							orderTrackingWsDTO.setGiftCardStatus(OrderStatus.CONFIRMED.getCode());
 						}
-						
+
 					}
-					
-					if(null != orderDetails.getEntries() && CollectionUtils.isNotEmpty(orderDetails.getEntries())){
-						if(null == orderDetails.getEntries().get(0).getWalletApportionPaymentData()) {
+
+					if (null != orderDetails.getEntries() && CollectionUtils.isNotEmpty(orderDetails.getEntries()))
+					{
+						if (null == orderDetails.getEntries().get(0).getWalletApportionPaymentData())
+						{
 							orderTrackingWsDTO.setGiftCardStatus("FAILED");
 						}
 					}
 				}
-				
-				/*Added For EGV Functionality End*/ 
+
+				/* Added For EGV Functionality End */
 				if (StringUtils.isNotEmpty(orderDetails.getPickupName()))
 				{
 					orderTrackingWsDTO.setPickupPersonName(orderDetails.getPickupName());
@@ -513,7 +519,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 									orderproductdto.setVariantOptions(product.getVariantType());
 								}
-								if (StringUtils.isNotEmpty(product.getColour()))
+								if (ispwa && StringUtils.isNotEmpty(product.getColourHexCode()))
+								{
+									orderproductdto.setProductColour(product.getColourHexCode());
+								}
+								if (StringUtils.isNotEmpty(product.getColour()) && (!ispwa))
 								{
 
 									orderproductdto.setProductColour(product.getColour());
@@ -1872,7 +1882,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	}
 
 	@Override
-	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request, final String orderCode)
+	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request, final String orderCode,
+			final boolean ispwa)
 	{
 		final OrderTrackingWsDTO orderTrackingWsDTO = new OrderTrackingWsDTO();
 		final List<OrderProductWsDTO> orderproductdtos = new ArrayList<OrderProductWsDTO>();
@@ -1909,60 +1920,80 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			}
 			else
 			{
-				
-				/*Added For EGV Functionality Start */
+
+				/* Added For EGV Functionality Start */
 				if (null != orderDetail.getEgvCardExpDate())
 				{
 					orderTrackingWsDTO.setCartExpiryDate(orderDetail.getEgvCardExpDate());
 				}
-				if(orderDetail.isResendEgvMailAvailable()) {
+				if (orderDetail.isResendEgvMailAvailable())
+				{
 					orderTrackingWsDTO.setResendAvailable(true);
-				}else {
+				}
+				else
+				{
 					orderTrackingWsDTO.setResendAvailable(false);
 				}
-				if(null != orderDetail.getEgvCardNumber()){
+				if (null != orderDetail.getEgvCardNumber())
+				{
 					orderTrackingWsDTO.setEgvCardNumber(orderDetail.getEgvCardNumber());
 				}
-				if(orderDetail.isIsEGVOrder() ){
+				if (orderDetail.isIsEGVOrder())
+				{
 					orderTrackingWsDTO.setIsEgvOrder(true);
-					if(null != orderDetail.getMplPaymentInfo() && null != orderDetail.getStatus()) {
-						if(OrderStatus.REDEEMED.getCode().equalsIgnoreCase(orderDetail.getStatus().getCode())){
+					if (null != orderDetail.getMplPaymentInfo() && null != orderDetail.getStatus())
+					{
+						if (OrderStatus.REDEEMED.getCode().equalsIgnoreCase(orderDetail.getStatus().getCode()))
+						{
 							orderTrackingWsDTO.setGiftCardStatus(orderDetail.getStatus().getCode());
-						}else {
+						}
+						else
+						{
 							orderTrackingWsDTO.setGiftCardStatus(OrderStatus.CONFIRMED.getCode());
 						}
-						
+
 					}
-					
+
 				}
-				if(null !=orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().trim().equalsIgnoreCase(MarketplaceFacadesConstants.CLIQ_CASH.trim()) && null != orderModel.getModeOfOrderPayment()){
+				if (null != orderModel.getSplitModeInfo()
+						&& orderModel.getSplitModeInfo().trim().equalsIgnoreCase(MarketplaceFacadesConstants.CLIQ_CASH.trim())
+						&& null != orderModel.getModeOfOrderPayment())
+				{
 					orderTrackingWsDTO.setPaymentMethod(orderModel.getModeOfOrderPayment());
 				}
-				String splitModeInfo = orderModel.getSplitModeInfo();
+				final String splitModeInfo = orderModel.getSplitModeInfo();
 				Double totalAmount = Double.valueOf(0.0D);
 				Double juspayAmount = Double.valueOf(0.0D);
 				Double qcAmount = Double.valueOf(0.0D);
 
-				if(null != splitModeInfo ) {
-					if(splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.JUSPAY)) {
+				if (null != splitModeInfo)
+				{
+					if (splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.JUSPAY))
+					{
 						juspayAmount = orderModel.getTotalPrice();
-					}else if(splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.SPLIT)){
-						totalAmount =  orderModel.getTotalPrice();
+					}
+					else if (splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.SPLIT))
+					{
+						totalAmount = orderModel.getTotalPrice();
 						qcAmount = orderModel.getPayableWalletAmount();
 						juspayAmount = Double.valueOf(totalAmount.doubleValue() - qcAmount.doubleValue());
-					}else if (splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQCASH)
-						||  splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQ_CASH)){
+					}
+					else if (splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQCASH)
+							|| splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQ_CASH))
+					{
 						qcAmount = orderModel.getTotalPrice();
-					}else {
+					}
+					else
+					{
 						juspayAmount = orderModel.getTotalPrice();
 					}
 				}
 				orderTrackingWsDTO.setCliqCashAmountDeducted(qcAmount);
 				orderTrackingWsDTO.setJuspayAmountDeducted(juspayAmount);
 
-			//	setUpStatementData(orderTrackingWsDTO,orderDetail);
-				
-				/*Added For EGV Functionality End */
+				//	setUpStatementData(orderTrackingWsDTO,orderDetail);
+
+				/* Added For EGV Functionality End */
 				//orderTrackingWsDTO.setRecipientname(recipientname);
 				if (null != orderDetail.getDeliveryAddress())
 				{
@@ -2100,10 +2131,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							else
 							{
 								orderproductdto = new OrderProductWsDTO();
-								if(null !=entry.getWalletApportionPaymentData() ){
+								if (null != entry.getWalletApportionPaymentData())
+								{
 									orderproductdto.setWalletApportionPaymentData(entry.getWalletApportionPaymentData());
 								}
-								if(null !=entry.getWalletApportionforReverseData() ){
+								if (null != entry.getWalletApportionforReverseData())
+								{
 									orderproductdto.setWalletApportionforReverseData(entry.getWalletApportionforReverseData());
 								}
 								ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
@@ -2139,12 +2172,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								}
 								if (StringUtils.isNotEmpty(product.getVariantType()))
 								{
-
 									orderproductdto.setVariantOptions(product.getVariantType());
 								}
-								if (StringUtils.isNotEmpty(product.getColour()))
+								if (ispwa && StringUtils.isNotEmpty(product.getColourHexCode()))
 								{
-
+									orderproductdto.setProductColour(product.getColourHexCode());
+								}
+								if (StringUtils.isNotEmpty(product.getColour()) && (!ispwa))
+								{
 									orderproductdto.setProductColour(product.getColour());
 								}
 								/* Fulfillment type */
@@ -2710,14 +2745,16 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						{
 							//getting the product code
 							final ProductModel productModel = mplOrderFacade.getProductForCode(product.getCode());
-							if(null !=orderEntry.getWalletApportionPaymentData() ){
+							if (null != orderEntry.getWalletApportionPaymentData())
+							{
 								orderproductdto.setWalletApportionPaymentData(orderEntry.getWalletApportionPaymentData());
 							}
-							if(null !=orderEntry.getWalletApportionforReverseData() ){
+							if (null != orderEntry.getWalletApportionforReverseData())
+							{
 								orderproductdto.setWalletApportionforReverseData(orderEntry.getWalletApportionforReverseData());
 							}
 							orderproductdto = new OrderProductWsDTO();
-							
+
 							ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
 							//set image
 							orderproductdto.setImageURL(setImageURL(product));
@@ -2764,7 +2801,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							{
 								orderproductdto.setVariantOptions(product.getVariantType());
 							}
-							if (StringUtils.isNotEmpty(product.getColour()))
+							if (ispwa && StringUtils.isNotEmpty(product.getColourHexCode()))
+							{
+								orderproductdto.setProductColour(product.getColourHexCode());
+							}
+							if (StringUtils.isNotEmpty(product.getColour()) && (!ispwa))
 							{
 								orderproductdto.setProductColour(product.getColour());
 							}
@@ -3045,8 +3086,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				}
 			}
 		}
-		
-	 
+
+
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);

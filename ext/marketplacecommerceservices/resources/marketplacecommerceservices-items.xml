@@ -75,6 +75,7 @@
 			<value code="CDA" />
 			<value code="REG" /> <!-- NU-30 -->
 			<value code="QC_OTP" />
+			<value code="Login" /> <!-- NU-30 -->
 		</enumtype>
 		<enumtype generate="true" code="oISPaymentTypeEnum" autocreate="true"
 			dynamic="true">
