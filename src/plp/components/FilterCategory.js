@@ -7,7 +7,6 @@ import styles from "./FilterCategory.css";
 export default class FilterCategory extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       selected: []
     };
