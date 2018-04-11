@@ -210,16 +210,10 @@ export default class PdpApparel extends React.Component {
                 </div>
               </div>
             )}
-
-            {productData.potentialPromotions && (
-              <OfferCard
-                endTime={productData.potentialPromotions.endDate}
-                startDate={productData.potentialPromotions.startDate}
-                heading={productData.potentialPromotions.title}
-                description={productData.potentialPromotions.description}
-                onClick={this.goToCouponPage}
-              />
-            )}
+            <OfferCard
+              potentialPromotions={productData.potentialPromotions}
+              secondaryPromotions={productData.productOfferMsg}
+            />
             {productData.variantOptions && (
               <React.Fragment>
                 <SizeQuantitySelect
