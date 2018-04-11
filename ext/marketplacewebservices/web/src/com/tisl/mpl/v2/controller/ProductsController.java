@@ -57,6 +57,8 @@ import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.media.MediaModel;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.i18n.I18NService;
@@ -86,12 +88,12 @@ import org.apache.log4j.Logger;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -618,18 +620,36 @@ public class ProductsController extends BaseController
 		final String reviewId = request.getParameter("id");
 		validate(reviewData, "reviewData", reviewValidator);
 		ReviewData reviewDataRet = null;
-		if (StringUtils.isNotBlank(reviewId))
+		final UserModel user = getUserService().getCurrentUser();
+		final ProductModel product = productService.getProductForCode(productCode);
+		final String restrictionEnabled = configurationService.getConfiguration().getString("review.restriction.enabled", "Y");
+		if (((StringUtils.isNotBlank(reviewId) || mplProductWebService.isCustomerApplicableforReview(user, product)) && restrictionEnabled
+				.equalsIgnoreCase("Y")))
 		{
-			reviewDataRet = productService.editDeleteReviewEntry(getUserService().getCurrentUser(),
-					productService.getProductForCode(productCode), reviewId, true, reviewData);
+			if (StringUtils.isNotBlank(reviewId))
+			{
+				reviewDataRet = productService.editDeleteReviewEntry(user, product, reviewId, true, reviewData);
+			}
+			else
+			{
+				reviewDataRet = productFacade.postReview(productCode, reviewData);
+			}
 		}
 		else
 		{
-			reviewDataRet = productFacade.postReview(productCode, reviewData);
+			final Errors errors = new BeanPropertyBindingResult(reviewData, "reviewData");
+			errors.reject("review.count.exceded");
+			if (errors.hasErrors())
+			{
+				throw new WebserviceValidationException(errors);
+			}
 		}
 		final ReviewWsDTO dto = dataMapper.map(reviewDataRet, ReviewWsDTO.class, fields);
+
 		return dto;
+
 	}
+
 
 	/**
 	 * Delete's a Review for a logged in Customer
@@ -665,19 +685,19 @@ public class ProductsController extends BaseController
 	 * @throws WebserviceValidationException
 	 *            When given parameters are incorrect
 	 */
-	@RequestMapping(value = "/{productCode}/reviews", method = RequestMethod.POST, consumes =
-	{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
-	@ResponseStatus(HttpStatus.CREATED)
-	@ResponseBody
-	public ReviewWsDTO createReview(@PathVariable final String productCode, @RequestBody final ReviewWsDTO review,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields) throws WebserviceValidationException
-	{
-		validate(review, "review", reviewDTOValidator);
-		final ReviewData reviewData = dataMapper.map(review, ReviewData.class, "alias,rating,headline,comment");
-		final ReviewData reviewDataRet = productFacade.postReview(productCode, reviewData);
-		final ReviewWsDTO dto = dataMapper.map(reviewDataRet, ReviewWsDTO.class, fields);
-		return dto;
-	}
+	//	@RequestMapping(value = "/{productCode}/reviews", method = RequestMethod.POST, consumes =
+	//	{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	//	@ResponseStatus(HttpStatus.CREATED)
+	//	@ResponseBody
+	//	public ReviewWsDTO createReview(@PathVariable final String productCode, @RequestBody final ReviewWsDTO review,
+	//			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields) throws WebserviceValidationException
+	//	{
+	//		validate(review, "review", reviewDTOValidator);
+	//		final ReviewData reviewData = dataMapper.map(review, ReviewData.class, "alias,rating,headline,comment");
+	//		final ReviewData reviewDataRet = productFacade.postReview(productCode, reviewData);
+	//		final ReviewWsDTO dto = dataMapper.map(reviewDataRet, ReviewWsDTO.class, fields);
+	//		return dto;
+	//	}
 
 	/**
 	 * Returns references for a product with a given product code. Reference type specifies which references to return.

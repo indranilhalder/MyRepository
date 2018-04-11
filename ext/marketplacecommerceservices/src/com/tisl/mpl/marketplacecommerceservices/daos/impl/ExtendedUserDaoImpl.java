@@ -1,13 +1,5 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
-import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserModel;
-import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
-import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
-import de.hybris.platform.servicelayer.internal.dao.DefaultGenericDao;
-import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
-import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +13,14 @@ import com.tisl.mpl.core.model.CustomerOldEmailDetailsModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.ExtendedUserDao;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
+
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.internal.dao.DefaultGenericDao;
+import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 
 
@@ -71,7 +71,7 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 				{
 					parameters.put(CustomerModel.ORIGINALUID, uid);
 				}
-				else if (uid.length() == 10 && (uid.startsWith("9") || uid.startsWith("8") || uid.startsWith("7")))
+				else
 				{
 					parameters.put(CustomerModel.MOBILENUMBER, uid);
 				}

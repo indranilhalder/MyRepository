@@ -24,10 +24,12 @@ import de.hybris.platform.commercewebservicescommons.dto.catalog.CatalogListWsDT
 import de.hybris.platform.commercewebservicescommons.dto.catalog.CatalogVersionWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.catalog.CatalogWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.catalog.CategoryHierarchyWsDTO;
+import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 
+import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,6 +59,7 @@ import com.tisl.mpl.wsdto.CategoryListHierarchyWSData;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyData;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyDataAmp;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyWsDTO;
+import com.tisl.mpl.wsdto.HeroBannerCompWsDTO;
 import com.tisl.mpl.wsdto.ProductForCategoryData;
 import com.tisl.mpl.wsdto.ProductForCategoryWsDTO;
 
@@ -574,6 +577,51 @@ public class CatalogsController extends BaseController
 		}
 
 		return deptListDto;
+	}
+
+	//NU-367
+	//New API for Page banner
+
+	@RequestMapping(value = "/category/{categoryId}/bannerbycategory", method = RequestMethod.GET)
+	@ResponseBody
+	public HeroBannerCompWsDTO getBannerbyCategory(@PathVariable final String categoryId) throws RequestParameterException,
+			MalformedURLException
+	{
+		HeroBannerCompWsDTO result = new HeroBannerCompWsDTO();
+		try
+		{
+			result = mplCustomCategoryService.getBannerDataForCategory(categoryId);
+			result.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				result.setErrorCode(e.getErrorCode());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				result.setErrorCode(e.getErrorCode());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return result;
 	}
 
 }

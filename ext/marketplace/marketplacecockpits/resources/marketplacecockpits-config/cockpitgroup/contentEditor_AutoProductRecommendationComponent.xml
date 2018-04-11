@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="content-editor.xsd" hideEmpty="true"
+	hideReadOnly="true" groupCollections="true">
+	<template>
+	<![CDATA[
+		<table width="100%" style="margin:0px;padding:0px" class="structViewCnt">
+			<tbody>
+				
+				<tr>
+					<td><cockpit code="property" value="AutoProductRecommendationComponent.items"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="AutoProductRecommendationComponent.btnText"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>	
+				<tr>
+					<td><cockpit code="property" value="AutoProductRecommendationComponent.title"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="AutoProductRecommendationComponent.fetchURL"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="AutoProductRecommendationComponent.backupURL"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="AutoProductRecommendationComponent.widgetPlatform"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>		
+
+			</tbody>
+		</table>
+	]]>
+	</template>
+</content-editor>

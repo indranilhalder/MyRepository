@@ -80,7 +80,30 @@
 						<value>ImageCarouselComponent.collectionItems</value>
 						<value>SignColComponent.showcaseItems</value>
 						<value>OurJourneyComponent.footerImageList</value>
-						<value>MplNavigationNodeComponent.sliders</value>
+						<value>MplNavigationNodeComponent.sliders</value>	
+						<value>HeroBannerComponent.items</value>
+						<value>OffersWidgetComponent.items</value>
+						<value>FlashSalesComponent.items</value>
+						<value>FlashSalesComponent.offers</value>
+						<value>ContentWidgetComponent.items</value>
+						<value>BannerProductCarouselComponent.items</value>
+						<value>VideoProductCarouselComponent.items</value>
+						<value>ThemeOffersComponent.items</value>
+						<value>ThemeProductWidgetComponent.items</value>
+						<value>BannerSeparatorComponent.items</value>
+						<value>AutomatedBrandProductCarouselComponent.items</value>
+						<value>MonoBLPBannerComponent.items</value>
+						<value>SubBrandBannerBLPComponent.items</value>
+						<value>TopCategoriesWidgetComponent.items</value>
+						<value>CuratedProductsWidgetComponent.items</value>
+						<value>BrandsTabAZListComponent.items</value>
+						<value>BrandsTabAZElement.items</value>
+						<value>BrandsTabAZElement.brands</value>
+						<value>LandingPageHeaderComponent.items</value>
+						<value>AutoProductRecommendationComponent.items</value>
+						<value>SmartFilterWidgetComponent.items</value>
+						<value>LandingPageHierarchyComponent.items</value>
+						<value>LandingPageHierarchyElement.items</value>				
 					</list>
 				</entry>
 				<entry key="AbstractCMSComponent">
@@ -139,6 +162,114 @@
 						<value>FooterComponent.footerAppImageList</value>
 					</list>
 				</entry>
+				  
+
+				  <entry key="HeroBannerComponent">
+                    <list>
+                        <value>HeroBannerComponent.items</value>
+                    </list>
+                </entry>
+				   <entry key="OffersWidgetComponent">
+                    <list>
+                        <value>OffersWidgetComponent.items</value>
+                    </list>
+                </entry>
+				   <entry key="FlashSalesComponent">
+                    <list>
+						<value>FlashSalesComponent.items</value>
+						<value>FlashSalesComponent.offers</value>                    
+					</list>
+                </entry>
+				<entry key="ContentWidgetComponent">
+                    <list>
+                        <value>ContentWidgetComponent.items</value>
+                    </list>
+                </entry>
+				<entry key="BannerProductCarouselComponent">
+                    <list>
+                        <value>BannerProductCarouselComponent.items</value>
+                    </list>
+                </entry>
+				<entry key="VideoProductCarouselComponent">
+                    <list>
+                        <value>VideoProductCarouselComponent.items</value>
+                    </list>
+                </entry>
+				<entry key="ThemeOffersComponent">
+                    <list>
+                        <value>ThemeOffersComponent.items</value>
+                    </list>
+                </entry>
+				<entry key="ThemeProductWidgetComponent">
+                    <list>
+                        <value>ThemeProductWidgetComponent.items</value>
+                    </list>
+                </entry>
+				<entry key="AutomatedBrandProductCarouselComponent">
+                    <list>
+                        <value>AutomatedBrandProductCarouselComponent.items</value>
+                    </list>
+                </entry>
+				<entry key="MonoBLPBannerComponent">
+                    <list>
+                        <value>MonoBLPBannerComponent.items</value>
+                    </list>
+                </entry>
+				
+				<entry key="SubBrandBannerBLPComponent">
+                    <list>
+                        <value>SubBrandBannerBLPComponent.items</value>
+                    </list>
+                </entry>
+				
+				<entry key="TopCategoriesWidgetComponent">
+                    <list>
+                        <value>TopCategoriesWidgetComponent.items</value>
+                    </list>
+                </entry>
+				<entry key="CuratedProductsWidgetComponent">
+                    <list>
+                        <value>CuratedProductsWidgetComponent.items</value>
+                    </list>
+                </entry>
+				<entry key="BrandsTabAZListComponent">
+                    <list>
+                        <value>BrandsTabAZListComponent.items</value>
+                    </list>
+                </entry>
+				<entry key="BrandsTabAZElement">
+                    <list>
+                       <value>BrandsTabAZElement.items</value>
+					   <value>BrandsTabAZElement.brands</value>
+                    </list>
+                </entry>
+				<entry key="LandingPageHeaderComponent">
+                    <list>
+                        <value>LandingPageHeaderComponent.items</value>
+                    </list>
+                </entry>
+				<entry key="AutoProductRecommendationComponent">
+                    <list>
+                        <value>AutoProductRecommendationComponent.items</value>
+                    </list>
+                </entry>
+				<entry key="SmartFilterWidgetComponent">
+                    <list>
+                        <value>SmartFilterWidgetComponent.items</value>
+                    </list>
+                </entry>
+
+				<entry key="LandingPageHierarchyComponent">
+                    <list>
+                       <value>LandingPageHierarchyComponent.items</value>
+                    </list>
+                </entry>
+				<entry key="LandingPageHierarchyElement">
+                    <list>
+                       <value>LandingPageHierarchyElement.items</value>
+                    </list>
+                </entry>
+
 				<entry key="BrandCollectionComponent">
 					<list>
 						<value>BrandCollectionComponent.brandCollection</value>

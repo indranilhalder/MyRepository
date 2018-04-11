@@ -7028,6 +7028,12 @@
 						<key attribute="type"></key>
 						<key attribute="itemType"></key>
 					</index>
+					<!-- Added as per PT suggestion in API R0 release -->
+					<index name="IDX_ORD_COMB">
+						<key attribute="type"></key>
+						<key attribute="parentReference"></key>
+						<key attribute="versionID"></key>
+					</index>
 				</indexes>
 			</itemtype>
 
@@ -8771,6 +8777,11 @@
 					<!-- CAR-274 -->
 					<index name="MPL_ORDERHISTORY_MODIFIEDDTS">
 						<key attribute="modifiedtime" />
+					</index>
+					<!-- Added for PT suggestion for API R0 -->
+					<index name="IDX_ORDHIS_TSMPTYPE">
+						<key attribute="timestamp" />
+						<key attribute="itemtype" />
 					</index>
 				</indexes>
 			</itemtype>
@@ -15699,7 +15710,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>char</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="media" qualifier="brandLogo"
 						autocreate="true" generate="true">
@@ -15754,7 +15781,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
@@ -15773,7 +15816,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
@@ -15816,7 +15875,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
@@ -15841,7 +15916,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
@@ -15896,7 +15987,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
@@ -15945,7 +16052,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="ThemeOffersCompOfferCollection" qualifier="offers"
 						autocreate="true" generate="true">
@@ -15983,7 +16106,23 @@
 				     </attribute>
 				     <attribute qualifier="webURL" type="java.lang.String"
 				      generate="true" autocreate="true">
-				      <persistence type="property" />
+				      <persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 				      <modifiers optional="true" />
 				     </attribute>
 			    </attributes>
@@ -15997,7 +16136,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
@@ -16059,7 +16214,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
@@ -16102,7 +16273,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="ProductCapsulesCollection" qualifier="items"
 						autocreate="true" generate="true">
@@ -16127,7 +16314,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 				</attributes>
 			</itemtype>
@@ -16170,7 +16373,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 				</attributes>
 			</itemtype>
@@ -16189,7 +16408,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="media" qualifier="brandLogo" autocreate="true"
 						generate="true">
@@ -16226,7 +16461,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
@@ -16263,7 +16514,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 				</attributes>
 			</itemtype>
@@ -16314,7 +16581,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
@@ -16364,7 +16647,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 				</attributes>
 			</itemtype>
@@ -16402,7 +16701,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
@@ -16433,7 +16748,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="CuratedProductsWidgetCollection" qualifier="items"
 						autocreate="true" generate="true">
@@ -16452,7 +16783,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="java.lang.String" qualifier="description"
 						autocreate="true" generate="true">
@@ -16555,7 +16902,23 @@
 			<attribute type="java.lang.String" qualifier="webURL">
 				<modifiers read="true" write="true" search="true"
 				 optional="true" />
-				<persistence type="property" />
+				<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 			</attribute>
 			<attribute type="java.lang.String" qualifier="brandName">
 				<modifiers read="true" write="true" search="true"
@@ -16601,7 +16964,23 @@
 			<attribute type="java.lang.String" qualifier="webURL">
 				<modifiers read="true" write="true" search="true"
 				 optional="true" />
-				<persistence type="property" />
+				<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>VARCHAR(1000)</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+					</persistence>
 			</attribute>
 			<attribute type="media" qualifier="imageURL">
 				<modifiers read="true" write="true" search="true"
@@ -16661,7 +17040,23 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
-						<persistence type='property' />
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
@@ -16707,7 +17102,23 @@
 			<attribute type="java.lang.String" qualifier="webURL">
 				<modifiers read="true" write="true" search="true"
 				 optional="true" />
-				<persistence type="property" />
+				<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 			</attribute>
 			<attribute type="LandingPageHierarchyCollectionList" qualifier="items">
 				<modifiers read="true" write="true" search="true"
@@ -16729,7 +17140,23 @@
 			<attribute type="java.lang.String" qualifier="webURL">
 				<modifiers read="true" write="true" search="true"
 				 optional="true" />
-				<persistence type="property" />
+				<persistence type='property'>
+							<columntype database="oracle">
+								<value>varchar2(1000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 			</attribute>
 			</attributes>
 			</itemtype>
