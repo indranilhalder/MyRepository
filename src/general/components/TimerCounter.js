@@ -12,7 +12,9 @@ const renderTimer = ({ days, hours, minutes, seconds }) => {
 };
 export default class Counter extends React.Component {
   render() {
-    let endTime = moment(new Date(this.props.endTime)).format("DD/MM/YYYY");
+    let endTime = moment(new Date(this.props.endTime)).format(
+      "MM/DD/YYYY HH:mm:ss"
+    );
     return endTime ? <Countdown date={endTime} renderer={renderTimer} /> : null;
   }
 }
