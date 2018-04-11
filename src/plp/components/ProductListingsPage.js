@@ -60,6 +60,7 @@ class ProductListingsPage extends Component {
       this.props.getProductListings(searchText, SUFFIX, 0, false);
       return;
     }
+
     if (this.props.location.state && this.props.location.state.isFilter) {
       const suffix = "&isFilter=true";
       const searchText = this.getSearchTextFromUrl();

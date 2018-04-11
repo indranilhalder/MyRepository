@@ -37,7 +37,6 @@ export default class Plp extends React.Component {
     return throttle(() => {
       if (
         !this.state.showFilter &&
-        this.props.productListings &&
         this.props.pageNumber <
           this.props.productListings.pagination.totalPages - 1
       ) {
