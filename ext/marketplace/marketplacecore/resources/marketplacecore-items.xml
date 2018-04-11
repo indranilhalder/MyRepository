@@ -5396,6 +5396,13 @@
 						<description>Associated product list to the content page for product content</description>
 					</attribute>
 					<!-- TPR-978 -->
+					
+					<attribute qualifier="reactPageType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read=" true" write="true" optional="true" />
+						<description>Page Type</description>
+					</attribute>
+					
 				</attributes>
 			</itemtype>
 			<!-- Start of Mpl Advanced Category Carousel Component -->

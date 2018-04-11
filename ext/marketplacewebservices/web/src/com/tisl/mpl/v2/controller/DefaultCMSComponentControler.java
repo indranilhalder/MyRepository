@@ -2816,7 +2816,12 @@ public class DefaultCMSComponentControler
 				}
 			}
 			uiCompPageObj.setItems(genericUICompPageWsDTO);
-			uiCompPageObj.setMessage("HOMEPAGE");
+			uiCompPageObj.setMessage(contentPage.getUid());
+			if(null != contentPage.getReactPageType() && !contentPage.getReactPageType().isEmpty()){
+				uiCompPageObj.setPageType(contentPage.getReactPageType());
+			}else{
+				uiCompPageObj.setPageType(StringUtils.EMPTY);
+			}
 			uiCompPageObj.setStatus(Success);
 			return uiCompPageObj;
 		}
