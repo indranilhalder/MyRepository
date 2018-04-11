@@ -18,6 +18,7 @@ class ProductListingsPage extends Component {
   }
   getSearchTextFromUrl() {
     const parsedQueryString = queryString.parse(this.props.location.search);
+
     const searchCategory = parsedQueryString.searchCategory;
     let searchText = parsedQueryString.q;
 
@@ -28,7 +29,8 @@ class ProductListingsPage extends Component {
     if (!searchText) {
       searchText = parsedQueryString.text;
     }
-    return searchText;
+
+    return encodeURIComponent(searchText);
   }
 
   componentDidMount() {
