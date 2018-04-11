@@ -101,37 +101,19 @@ export function setDataLayer(type, response, icid, icidType) {
       }
     };
   }
-
   window._satellite.track(ADOBE_SATELLITE_CODE);
 }
 
 function getDigitalDataForPdp(type, pdpResponse) {
-  const seoBreadCrumbs = pdpResponse.seo
-    ? pdpResponse.seo
-      ? pdpResponse.seo.breadcrumbs
-          .map(val => {
-            return val.name.toLowerCase().replace(/\s+/g, "_");
-          })
-          .reverse()
-      : ["", "", "", ""]
-    : ["", "", "", ""];
   const categoryHierarchy = pdpResponse.categoryHierarchy.map(val => {
     return val.category_name.toLowerCase().replace(/\s+/g, "_");
   });
-
   const data = {
     cpj: {
       product: {
-        id: pdpResponse.productListingId,
-        price: pdpResponse.mrpPrice.doubleValue,
-        discount: pdpResponse.winningSellerPrice.doubleValue
+        id: pdpResponse.productListingId
       },
-      pdp: {
-        findingMethod:
-          window.digitalData &&
-          window.digitalData.page &&
-          window.digitalData.page.pageInfo.pageName
-      },
+
       brand: {
         name: pdpResponse.brandName
       }
@@ -144,14 +126,54 @@ function getDigitalDataForPdp(type, pdpResponse) {
         subCategory2: categoryHierarchy[1],
         subCategory3: categoryHierarchy[2]
       },
-      display: {
-        hierarchy: ["home", ...seoBreadCrumbs]
-      },
+
       pageInfo: {
         pageName: "product details"
       }
     }
   };
+  if (pdpResponse && pdpResponse.seo && pdpResponse.seo.breadcrumbs) {
+    const seoBreadCrumbs = pdpResponse.seo.breadcrumbs
+      .map(val => {
+        return val.name.toLowerCase().replace(/\s+/g, "_");
+      })
+      .reverse();
+    Object.assign(data.page, {
+      display: {
+        hierarchy: ["home", ...seoBreadCrumbs]
+      }
+    });
+  } else {
+    Object.assign(data, {
+      display: {
+        hierarchy: ["home"]
+      }
+    });
+  }
+  if (pdpResponse.mrpPrice && pdpResponse.mrpPrice.doubleValue) {
+    Object.assign(data.cpj.product, {
+      price: pdpResponse.mrpPrice.doubleValue
+    });
+    if (
+      pdpResponse.winningSellerPrice &&
+      pdpResponse.winningSellerPrice.doubleValue
+    ) {
+      Object.assign(data.cpj.product, {
+        discount:
+          pdpResponse.mrpPrice.doubleValue -
+          pdpResponse.winningSellerPrice.doubleValue
+      });
+    }
+  }
+
+  if (pdpResponse && pdpResponse.seo && pdpResponse.seo.breadcrumbs) {
+    let categoryName =
+      pdpResponse.seo.breadcrumbs[pdpResponse.seo.breadcrumbs.length - 1].name;
+    categoryName = categoryName.replace(/ /g, "_");
+    Object.assign(data.cpj.product, {
+      category: categoryName
+    });
+  }
   if (
     window.digitalData &&
     window.digitalData.page &&
