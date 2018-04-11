@@ -101,7 +101,6 @@ export function setDataLayer(type, response, icid, icidType) {
       }
     };
   }
-
   window._satellite.track(ADOBE_SATELLITE_CODE);
 }
 
@@ -118,13 +117,15 @@ function getDigitalDataForPdp(type, pdpResponse) {
   const categoryHierarchy = pdpResponse.categoryHierarchy.map(val => {
     return val.category_name.toLowerCase().replace(/\s+/g, "_");
   });
-
+  console.log(pdpResponse);
   const data = {
     cpj: {
       product: {
         id: pdpResponse.productListingId,
         price: pdpResponse.mrpPrice.doubleValue,
-        discount: pdpResponse.winningSellerPrice.doubleValue
+        discount:
+          pdpResponse.mrpPrice.doubleValue -
+          pdpResponse.winningSellerPrice.doubleValue
       },
 
       brand: {
@@ -147,6 +148,14 @@ function getDigitalDataForPdp(type, pdpResponse) {
       }
     }
   };
+  if (pdpResponse && pdpResponse.seo && pdpResponse.seo.breadcrumbs) {
+    let categoryName =
+      pdpResponse.seo.breadcrumbs[pdpResponse.seo.breadcrumbs.length - 1].name;
+    categoryName = categoryName.replace(/ /g, "_");
+    Object.assign(data.cpj.product, {
+      category: categoryName
+    });
+  }
   if (
     window.digitalData &&
     window.digitalData.page &&
