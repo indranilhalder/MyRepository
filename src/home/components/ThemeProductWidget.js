@@ -4,7 +4,6 @@ import ThemeProduct from "../../general/components/ThemeProduct";
 import Logo from "../../general/components/Logo";
 import PropTypes from "prop-types";
 import styles from "./ThemeProductWidget.css";
-import { PRODUCT_LISTINGS } from "../../lib/constants";
 import { transformData } from "./utils.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import { MSD_WIDGET_PLATFORM } from "../../lib/config.js";
@@ -46,7 +45,6 @@ export default class ThemeProductWidget extends React.Component {
   render() {
     let items = [];
     let widgetData = this.props.feedComponentData;
-    console.log(widgetData);
     if (
       widgetData.postParams &&
       widgetData.widgetPlatform === MSD_WIDGET_PLATFORM
