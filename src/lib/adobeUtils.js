@@ -106,8 +106,8 @@ export function setDataLayer(type, response, icid, icidType) {
 }
 
 function getDigitalDataForPdp(type, pdpResponse) {
-  const seoBreadCrumbs = pdpResponse.seo
-    ? pdpResponse.seo.breadcrumbs
+  const seoBreadCrumbs = pdpResponse
+    ? pdpResponse.seo
       ? pdpResponse.seo.breadcrumbs
           .map(val => {
             return val.name.toLowerCase().replace(/\s+/g, "_");
