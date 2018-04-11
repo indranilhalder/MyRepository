@@ -45,57 +45,63 @@ export default class DeliveryInformations extends React.Component {
       typeName = COLLECT_TEXT;
     }
     if (!this.props.available) {
-      typeName = `${typeName} - Unavailable`;
+      typeName = `${typeName}`;
     }
     return (
       <div className={styles.base}>
-        {this.props.onSelect &&
-          this.props.type !== COLLECT && (
-            <div
-              className={styles.checkboxHolder}
-              onClick={() => {
-                this.handleSelect();
-              }}
-            >
-              <CheckBox selected={this.props.selected} />
-            </div>
-          )}
-        {this.props.arrowClick &&
-          this.props.type === COLLECT && (
-            <div
-              className={styles.arrowHolder}
-              onClick={() => this.arrowClick()}
-            >
-              <Icon image={arrowIcon} size={20} />
-            </div>
-          )}
-        <IconWithHeader image={iconImage} header={typeName}>
-          {this.props.placedTime &&
-            this.props.available && (
-              <div className={styles.placeTime}>{this.props.placedTime}</div>
-            )}
-          {this.props.deliverText && (
-            <div className={styles.placeTime}>
-              {this.props.deliverText}
-              <span className={styles.text}>{this.props.textHeading}</span>
-            </div>
-          )}
-
-          {this.props.type === COLLECT &&
-            this.props.showCliqAndPiqButton && (
-              <div className={styles.underLineButtonHolder}>
-                <span className={styles.buttonHolderPiq}>
-                  <UnderLinedButton
-                    size="14px"
-                    fontFamily="regular"
-                    color="#ff1744"
-                    label="Check for pick up options"
-                    onClick={() => this.onPiq()}
-                  />
-                </span>
+        <div
+          className={
+            !this.props.available ? styles.notAvailable : styles.dataHolder
+          }
+        >
+          {this.props.onSelect &&
+            this.props.type !== COLLECT && (
+              <div
+                className={styles.checkboxHolder}
+                onClick={() => {
+                  this.handleSelect();
+                }}
+              >
+                <CheckBox selected={this.props.selected} />
               </div>
             )}
-        </IconWithHeader>
+          {this.props.arrowClick &&
+            this.props.type === COLLECT && (
+              <div
+                className={styles.arrowHolder}
+                onClick={() => this.arrowClick()}
+              >
+                <Icon image={arrowIcon} size={20} />
+              </div>
+            )}
+          <IconWithHeader image={iconImage} header={typeName}>
+            {this.props.placedTime &&
+              this.props.available && (
+                <div className={styles.placeTime}>{this.props.placedTime}</div>
+              )}
+            {this.props.deliverText && (
+              <div className={styles.placeTime}>
+                {this.props.deliverText}
+                <span className={styles.text}>{this.props.textHeading}</span>
+              </div>
+            )}
+
+            {this.props.type === COLLECT &&
+              this.props.showCliqAndPiqButton && (
+                <div className={styles.underLineButtonHolder}>
+                  <span className={styles.buttonHolderPiq}>
+                    <UnderLinedButton
+                      size="14px"
+                      fontFamily="regular"
+                      color="#ff1744"
+                      label="Check for pick up options"
+                      onClick={() => this.onPiq()}
+                    />
+                  </span>
+                </div>
+              )}
+          </IconWithHeader>
+        </div>
       </div>
     );
   }
