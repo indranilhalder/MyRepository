@@ -1473,12 +1473,12 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ### Category Landing Page V1#########
 
 
-########### New UI Template ans ContentSlot Starts #######
+########### New UI Template and ContentSlot Starts #######
 
 INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
-;;DefaultNewUIPageTemplate;Default New UI Page Template;
+;;DefaultNewUIPageTemplate;Default New UI Page Template;layout/DefaultUIView;
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='DefaultNewUIPageTemplate'];validComponentTypes(code)
 ;DefaultNewUIContentSlot;;HeroBannerComponent,HeroBannerElement,ConnectBannerComponent,OffersWidgetComponent,OffersWidgetElement,FlashSalesComponent,FlashSalesElement,FlashSalesItemElement,ContentWidgetComponent,ContentWidgetElement,BannerProductCarouselComponent,BannerProdCarouselElementComp,VideoProductCarouselComponent,VideoProductCarouselElement,ThemeOffersComponent,ThemeOffersCompOfferElement,ThemeOffersItemsElement,ThemeProductWidgetComponent,ThemeProductWidgetElement,BannerSeparatorComponent,AutomatedBrandProductCarouselComponent,AutomatedBrandProductCarElement,CuratedListingStripComponent,MonoBLPBannerComponent,MonoBLPBannerElement,SubBrandBannerBLPComponent,SubBrandBannerBLPElement,TopCategoriesWidgetComponent,TopCategoriesWidgetElement,CuratedProductsWidgetComponent,CuratedProductsWidgetElement,MSDComponent,AdobeTargetComponent,BrandsTabAZListComponent,BrandsTabAZElement,BrandTabAZBrandElement,LandingPageTitleComponent,LandingPageHeaderComponent,LandingPageHeaderElement,AutoProductRecommendationComponent,AutoProductRecommendationElement,LandingPageHierarchyComponent,LandingPageHierarchyElement,LandingPageHierarchyElementList,SmartFilterWidgetComponent,SmartFilterWidgetElement
 
-########### New UI Template ans ContentSlot Ends #######
+########### New UI Template and ContentSlot Ends #######
