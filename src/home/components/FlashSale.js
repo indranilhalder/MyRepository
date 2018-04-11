@@ -68,15 +68,6 @@ export default class FlashSale extends React.Component {
     // WE do this because new Date(Datestr) gives back date time in the american format, but the string is in non-american format.
     // So we need to do a diff of the correct date.
 
-    // Testing when start date and endDate are before now - done
-
-    // Testing when now is between start date and end date
-
-    // Test when now is between start date and end date and this is at the start and end of today.
-
-    this.props.feedComponentData.endDate = "2018-04-12 14:35:00";
-    this.props.feedComponentData.startDate = "2018-04-12 03:35:00";
-
     const startDateTime = new Date(
       moment(new Date(feedComponentData.startDate)).format(
         "MM/DD/YYYY HH:mm:ss"
