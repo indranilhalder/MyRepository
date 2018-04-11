@@ -165,7 +165,7 @@ export default class FilterMobile extends React.Component {
                   {facetData[this.state.filterSelectedIndex].key === BRAND && (
                     <div className={styles.search}>
                       <SearchInput
-                        placeholder="Search brands"
+                        placeholder="Search by brands"
                         onChange={val => this.onBrandSearch(val)}
                       />
                     </div>
@@ -177,6 +177,7 @@ export default class FilterMobile extends React.Component {
                         selected={val.selected}
                         hexColor={val.hexColor}
                         label={val.name}
+                        count={val.count}
                         url={val.url}
                       />
                     );
@@ -191,7 +192,7 @@ export default class FilterMobile extends React.Component {
         >
           <div className={styles.buttonHolder}>
             <div className={styles.button} onClick={() => this.onClear()}>
-              Clear
+              Reset
             </div>
           </div>
           <div className={styles.buttonHolder}>
