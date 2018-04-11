@@ -47,10 +47,7 @@ export default class SizeQuantitySelect extends React.Component {
             />
           </div>
           <div className={styles.sizeQuantity}>
-            <MobileSelectWithError
-              value="Quantity"
-              options={fetchedQuantityList}
-            />
+            <MobileSelectWithError value="1" options={fetchedQuantityList} />
           </div>
         </div>
       </div>
