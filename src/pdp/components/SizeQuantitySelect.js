@@ -2,7 +2,7 @@ import React from "react";
 import MobileSelectWithError from "../../general/components/MobileSelectWithError";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import styles from "./SizeQuantitySelect.css";
-import _ from "lodash";
+import findIndex from "lodash/findIndex";
 export default class SizeQuantitySelect extends React.Component {
   updateSize(productUrl) {
     this.props.history.push(productUrl);
@@ -13,7 +13,6 @@ export default class SizeQuantitySelect extends React.Component {
     }
   }
   render() {
-    console.log(_.findIndex(this.props.sizes, { size: "No Size" }));
     let fetchedQuantityList = [];
     if (this.props.maxQuantity) {
       for (let i = 1; i <= parseInt(this.props.maxQuantity, 10); i++) {
@@ -38,7 +37,7 @@ export default class SizeQuantitySelect extends React.Component {
           )}
         </div>
         <div className={styles.selectHolder}>
-          {_.findIndex(this.props.sizes, { size: "No Size" }) !== 0 && (
+          {findIndex(this.props.sizes, { size: "No Size" }) !== 0 && (
             <div className={styles.sizeSelect}>
               <MobileSelectWithError
                 value="Size"
