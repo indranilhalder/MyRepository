@@ -248,19 +248,10 @@ export default class PdpElectronics extends React.Component {
               </div>
             </div>
           )}
-
-          {productData.potentialPromotions && (
-            <OfferCard
-              heading={productData.potentialPromotions.title}
-              onClick={this.goToCouponPage}
-            />
-          )}
-          {productData.productOfferMsg && (
-            <OfferCard
-              messageId={productData.productOfferMsg.messageID}
-              onClick={this.goToCouponPage}
-            />
-          )}
+          <OfferCard
+            potentialPromotions={productData.potentialPromotions}
+            secondaryPromotions={productData.productOfferMsg}
+          />
           {productData.variantOptions && (
             <React.Fragment>
               <SizeSelector
