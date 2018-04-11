@@ -146,15 +146,15 @@
 								test="${flashsalesitemElements.typeCode eq 'FlashSalesItemElement'}">
 								<c:if test="${not empty flashsalesitemElements.productCode}">
 									<div class="col-xs-6 flash-sales-widget-product">
-										<a href="${flashsalesitemElements.webURL}"> <c:if
-												test="${not empty flashsalesitemElements.productCode}">
+										<a href="${flashsalesitemElements.webURL}"> 
 												<img src="${flashsalesitemElements.productCode.thumbnail.URL}"
 													class="img-responsive" />
-											</c:if>
-											<div class="col-xs-12 flash-sales-widget-product-offer">${flashsalesitemElements.title}</div>
-											<c:if test="${not empty flashsalesitemElements.productCode}">
-												<div class="col-xs-12 flash-sales-widget-product-name">${flashsalesitemElements.productCode.name}</div>
-											</c:if>
+											
+											<div class="col-xs-12 flash-sales-widget-product-offer">${flashsalesitemElements.productCode.name}</div>
+											<fmt:parseNumber var="productPrice" type="number"
+														value="${bannerProdCarouselElement.productCode.mrp}" />
+												<div class="col-xs-12 flash-sales-widget-product-name">Rs. ${productPrice}</div>
+											
 										</a>
 									</div>
 								</c:if>
@@ -212,8 +212,9 @@
 													test="${not empty bannerProdCarouselElement.productCode}">
 													<img
 														src="${bannerProdCarouselElement.productCode.thumbnail.URL}" />
+												
+												<div class="product-name">${bannerProdCarouselElement.productCode.name}</div>
 												</c:if>
-												<div class="product-name">${bannerProdCarouselElement.title}</div>
 												<c:if
 													test="${not empty bannerProdCarouselElement.productCode}">
 													<fmt:parseNumber var="productPrice" type="number"
@@ -256,10 +257,7 @@
 												test="${not empty videoProdCarouselElement.productCode}">
 												<img
 													src="${videoProdCarouselElement.productCode.thumbnail.URL}" />
-											</c:if>
-											<div class="product-name">${videoProdCarouselElement.title}</div>
-											<c:if
-												test="${not empty videoProdCarouselElement.productCode}">
+											<div class="product-name">${videoProdCarouselElement.productCode.name}</div>
 												<fmt:parseNumber var="productPrice" type="number"
 													value="${videoProdCarouselElement.productCode.mrp}" />
 												<div class="product-price">${productPrice}</div>
@@ -299,14 +297,12 @@
 								<c:if
 									test="${themeOffersItemsElement.typeCode eq 'ThemeOffersItemsElement'}">
 									<div>
-										<a href="#"> <c:if
+										<a href="${themeOffersItemsElement.webURL}"> <c:if
 												test="${not empty themeOffersItemsElement.productCode}">
 												<img
 													src="${themeOffersItemsElement.productCode.thumbnail.URL}">
-											</c:if>
-											<div class="brand-name">${themeOffersItemsElement.title}</div>
-											<div class="product-name">${themeOffersCompOfferElement.description}</div>
-											<c:if test="${not empty themeOffersItemsElement.productCode}">
+											
+											<div class="brand-name">${themeOffersItemsElement.productCode.name}</div>
 												<fmt:parseNumber var="productPrice" type="number"
 													value="${themeOffersItemsElement.productCode.mrp}" />
 												<div class="product-price">
@@ -350,10 +346,7 @@
 														test="${not empty themeProductWidgetElement.productCode}">
 														<img
 															src="${themeProductWidgetElement.productCode.thumbnail.URL}" />
-													</c:if>
-													<div class="product-name">${themeProductWidgetElement.title}</div>
-													<c:if
-														test="${not empty themeProductWidgetElement.productCode}">
+													<div class="product-name">${themeProductWidgetElement.productCode.name}</div>
 														<fmt:parseNumber var="productPrice" type="number"
 															value="${themeProductWidgetElement.productCode.mrp}" />
 														<div class="product-price">${productPrice}</div>
@@ -407,11 +400,7 @@
 												test="${not empty automatedBrandProductCarElement.productCode}">
 												<img
 													src="${automatedBrandProductCarElement.productCode.thumbnail.URL}" />
-											</c:if>
-											<div class="product-name">${automatedBrandProductCarElement.title}</div>
-											<%-- <div class="product-price">${automatedBrandProductCarElement.productCode.code}</div> --%>
-											<c:if
-												test="${not empty automatedBrandProductCarElement.productCode}">
+											<div class="product-name">${automatedBrandProductCarElement.productCode.name}</div>
 												<fmt:parseNumber var="productPrice" type="number"
 													value="${automatedBrandProductCarElement.productCode.mrp}" />
 												<div class="product-price">${productPrice}</div>
@@ -544,7 +533,7 @@
 								</a>
 								<c:if
 									test="${curatedProductsWidgetElement.typeCode eq 'CuratedProductsWidgetElement'}">
-									<div class="brand-name">${curatedProductsWidgetElement.title}
+									<div class="brand-name">${curatedProductsWidgetElement.productCode.name}
 										<a href="#" class="pull-right"> <i
 											class="fa fa-bookmark-o" aria-hidden="true"></i>
 										</a>
@@ -801,7 +790,7 @@
 											src="${autoProductRecommendationElement.productCode.thumbnail.URL}"
 											class="br4" />
 										</a>
-										<div class="brand-name">${autoProductRecommendationElement.title}
+										<div class="brand-name">${autoProductRecommendationElement.productCode.name}
 											<a href="#" class="pull-right"> <i
 												class="fa fa-bookmark-o" aria-hidden="true"></i>
 											</a>
@@ -809,7 +798,6 @@
 										<a href="${autoProductRecommendationElement.webURL}">
 											<div class="product-name">${autoProductRecommendationElement.productCode.name}</div>
 										</a>
-										<!-- <div class="product-price">Rs. 4,950</div> -->
 										<c:if
 											test="${not empty autoProductRecommendationElement.productCode}">
 											<fmt:parseNumber var="productPrice" type="number"
