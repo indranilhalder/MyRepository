@@ -152,6 +152,22 @@ function getDigitalDataForPdp(type, pdpResponse) {
       }
     }
   };
+  if (
+    window.digitalData &&
+    window.digitalData.page &&
+    window.digitalData.page.pageInfo.pageName
+  ) {
+    Object.assign(data, {
+      cpj: {
+        pdp: {
+          findingMethod:
+            window.digitalData &&
+            window.digitalData.page &&
+            window.digitalData.page.pageInfo.pageName
+        }
+      }
+    });
+  }
   return data;
 }
 
