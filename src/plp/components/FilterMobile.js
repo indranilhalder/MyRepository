@@ -91,7 +91,6 @@ export default class FilterMobile extends React.Component {
   };
   render() {
     const { facetData, facetdatacategory } = this.props;
-    console.log(this.props);
     let filteredFacetData = facetData[this.state.filterSelectedIndex].values;
     if (facetData[this.state.filterSelectedIndex].key === BRAND) {
       filteredFacetData = facetData[
