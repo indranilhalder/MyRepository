@@ -32,7 +32,6 @@ export default class BannerProductCarousal extends React.Component {
     } else {
       return null;
     }
-
     return (
       <FeedComponent
         banner={

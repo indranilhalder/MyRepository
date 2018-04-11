@@ -22,6 +22,7 @@ import {
   FAILURE_LOWERCASE
 } from "../../lib/constants";
 
+export const CLEAR_CART_DETAILS="CLEAR_CART_DETAILS"
 export const USER_CART_PATH = "v2/mpl/users";
 export const CART_PATH = "v2/mpl";
 export const ALL_STORES_PATH = "v2/mpl/allStores";
@@ -2219,6 +2220,7 @@ export function createJusPayOrder(
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
+
         throw new Error(resultJsonStatus.message);
       }
       dispatch(
@@ -3437,6 +3439,13 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
     } catch (e) {
       dispatch(updateQuantityInCartLoggedOutFailure(e.message));
     }
+  };
+}
+
+export function clearCartDetails()
+{
+  return {
+    type: CLEAR_CART_DETAILS,
   };
 }
 

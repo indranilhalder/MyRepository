@@ -7,24 +7,45 @@ export default class HeroBanner extends React.Component {
   renderBanner = () => {
     const { feedComponentData, ...rest } = this.props;
     if (!this.props.loading) {
-      return (
-        <Banner>
-          {feedComponentData.items &&
-            feedComponentData.items.map &&
-            feedComponentData.items.map((datum, i) => {
-              return (
-                <BannerImage
-                  logo={datum.brandLogo}
-                  title={datum.title}
-                  image={datum.imageURL}
-                  key={i}
-                  url={datum.webURL}
-                  {...rest}
-                />
-              );
-            })}
-        </Banner>
-      );
+      if (feedComponentData.items.length > 1) {
+        return (
+          <Banner>
+            {feedComponentData.items &&
+              feedComponentData.items.map &&
+              feedComponentData.items.map((datum, i) => {
+                return (
+                  <BannerImage
+                    logo={datum.brandLogo}
+                    title={datum.title}
+                    image={datum.imageURL}
+                    key={i}
+                    url={datum.webURL}
+                    {...rest}
+                  />
+                );
+              })}
+          </Banner>
+        );
+      } else {
+        return (
+          <React.Fragment>
+            {feedComponentData.items &&
+              feedComponentData.items.map &&
+              feedComponentData.items.map((datum, i) => {
+                return (
+                  <BannerImage
+                    logo={datum.brandLogo}
+                    title={datum.title}
+                    image={datum.imageURL}
+                    key={i}
+                    url={datum.webURL}
+                    {...rest}
+                  />
+                );
+              })}
+          </React.Fragment>
+        );
+      }
     } else {
       return null;
     }
