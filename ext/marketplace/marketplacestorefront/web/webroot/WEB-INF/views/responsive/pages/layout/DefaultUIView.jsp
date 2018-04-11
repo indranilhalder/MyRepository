@@ -7,808 +7,17 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
-<link href="https://fonts.googleapis.com/css?family=Rubik:400,500"
-	rel="stylesheet">
-<link rel="stylesheet" type="text/css"
-	href="/_ui/responsive/theme-blue/css/slick.css" />
-
-<style>
-table {
-	border-collapse: collapse;
-	width: 100%;
-	padding-bottom: 5%;
-}
-
-th, td {
-	text-align: left;
-	padding: 8px;
-}
-
-tr:nth-child(even) {
-	background-color: #f2f2f2
-}
-
-th {
-	background-color: #514848;
-	color: white;
-	height: 30px !important;
-	text-align: center;
-}
-
-/*new css*/
-.wrapper{
-	padding:0;
-}
-.slick-slide{
-height:auto !important;
-}
-body{
-			font-family: 'Rubik', sans-serif;
-		}
-		.pad0{
-			padding: 0;
-		}
-		.mb40{
-			margin-bottom: 40px;
-		}
-		.hero-slider .slick-slide{
-			margin: 0 5px;
-			position: relative;
-		}
-		.hero-slider .slick-slide img{
-			width: 100%;
-			height: 190px;
-			margin-top: 10px;
-			display: block;
-			border-radius: 4px;
-		}
-		.hero-slider .slick-current img{
-			width: 100%;
-			height: auto;
-			display: block;
-			margin-top: 0px;
-		}
-		.hero-slider .hero-subsection{
-			position: absolute;
-			top: 40%;
-			left: 0;
-		}
-		.hero-slider .brand-logo{
-		    width: auto !important;
-		    height: auto !important;
-		    margin-left: 15px;
-		    border: 1px solid #000;
-		}
-		.hero-slider .banner-title{
-		    width: auto;
-		    height: auto;
-		    margin-left: 15px;
-		    margin-top: 10px;
-		    font-size: 30px;
-  			font-weight: 500;
-  			color: #ffffff;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-		}
-
-
-		.offer-slider .slick-slide{
-			position: relative;
-		}
-		.offer-slider .slick-slide img{
-			max-width: 100%;
-			border-radius: 4px;
-		}
-		.offer-slider .offer-subsection{
-			position: absolute;
-			bottom: 0;
-			left: 0;
-		}
-		.offer-slider .shop-now{
-			width: 141px;
-			height: auto;
-		    margin: 20px 15px;
-		    border: 1px solid #000;
-			border-radius: 100px;
-			border: solid 2px #ffffff;
-			padding: 10px 0;
-		    text-align: center;
-		    color: #ffffff;
-		    display: block;
-		    font-size: 14px;
-		}
-		.offer-slider .banner-title{
-		    width: auto;
-		    height: auto;
-		    margin-left: 15px;
-		    margin-top: 10px;
-		    font-size: 30px;
-  			font-weight: 500;
-  			color: #ffffff;
-		}
-		.offer-slider .offer{
-			position: absolute;
-			top: 20px;
-			left: 20px;
-			width: 78px;
-			height: 78px;
-			background-image: linear-gradient(137deg, #fd2c7a, #ff7255);
-  			text-align: center;
-  			color: #ffffff;
-  			border-radius: 50%;
-		}
-		.offer-slider .offer span{
-			position: absolute;
-			left: 12px;
-			top: 20px;
-			width: 55px;
-		    font-size: 14px;
-  			font-weight: 500;
-		    font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-		}
-		.offer-widget-title{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-			margin: 0px 0px 25px 15px;
-		}
-		
-		.flash-sales-widget{
-			color: #ffffff;
-			padding: 25px 20px;
-			background-repeat: no-repeat;
-			background-size: cover;
-		}
-		.flash-sales-widget-title{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: left;
-			color: #ffffff;
-			text-transform: capitalize;
-		}
-		.flash-sales-widget-timer{
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: right;
-			color: #ffffff;
-		}
-		.flash-sales-widget-text{
-			font-size: 14px;
-			font-weight: normal;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.57;
-			letter-spacing: normal;
-			text-align: left;
-			color: #ffffff;
-			margin: 10px 0 25px 0;
-			width: 195px;
-		}
-		.flash-sales-widget-product:nth-child(even){
-			padding: 0 12px 0 0;
-		}
-		.flash-sales-widget-product:nth-child(odd){
-			padding: 0 0 0 12px;
-		}
-		.flash-sales-widget-product img{
-			border-radius: 4px;
-		}
-		.flash-sales-widget-product-offer{
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			color: #ffffff;
-			padding: 0;
-			margin: 15px 0 10px 0;
-		}
-		.flash-sales-widget-product-name{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.57;
-			letter-spacing: normal;
-			text-align: left;
-			color: #ffffff;
-			padding: 0;
-			margin-bottom: 25px;
-		}
-		.flash-sales-widget .shop-all-btn{
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-			border: solid 2px #ffffff;
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			float: left;
-			clear: both;
-			margin-bottom: 5px;
-		}
-		.flash-sales-widget .fa-clock-o{
-			font-size: 20px;
-			margin-right: 5px;
-		}
-		.flash-sales-widget-timer .fa-clock-o{
-			font-size: 20px;
-    		margin-right: 10px;
-		}
-		.flash-sales-widget-timer .time-digits{
-			float: right;
-    		margin-top: 2px;
-		}
-		.connect-banner{
-			width: calc(100% - 30px);
-			margin-left: 15px;
-			margin-right: 15px;
-			border-radius: 4.2px;
-			background-image: -webkit-linear-gradient(202deg, #48dfe6, #4facfe);
-			background-image: -o-linear-gradient(202deg, #48dfe6, #4facfe);
-			background-image: linear-gradient(292deg, #48dfe6, #4facfe);
-			padding: 25px;
-			background-repeat: no-repeat;
-			background-size: cover;
-		}
-		.connect-banner-text1 {
-			font-size: 14.3px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-			padding-right: 0;
-		}
-
-		.connect-banner-text2 {
-			font-size: 12.5px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-			margin: 10px 0 15px 0;
-		}
-
-		.connect-banner-more {
-			font-size: 12.5px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-			padding-left: 15px;
-    		display: inline-block;
-    		width: auto;
-		}
-		.connect-banner-more::after {
-		    content: "";
-		    display: block;
-		    width: auto;
-		    border: 0.5px solid #fff;
-		    margin-top: 2px;
-		}
-		.connect-banner-full-width{
-			background-image: -webkit-linear-gradient(202deg, #48dfe6, #4facfe);
-			background-image: -o-linear-gradient(202deg, #48dfe6, #4facfe);
-			background-image: linear-gradient(292deg, #48dfe6, #4facfe);
-			padding: 25px;
-		}
-		.connect-banner-full-width .connect-banner-text1{
-			font-size: 16px;
-		}
-		.connect-banner-full-width .connect-banner-more,
-		.connect-banner-full-width .connect-banner-text2{
-			font-size: 14px;
-		}
-		.banner-product-slider{
-			margin: 30px 0 35px 0;
-		}
-		.banner-product-carousel .overlay-text{
-		    position: absolute;
-		    top: 100px;
-		    text-align: center;
-		}
-		.banner-product-carousel .banner-product-title{
-			font-size: 24px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.banner-product-carousel .banner-product-desc{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.banner-product-slider .slick-slide img{
-			border-radius: 4px;
-		}
-		.banner-product-slider .product-name {
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.57;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-			margin: 10px 0 15px 0;
-		}
-		.banner-product-slider .product-price {
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-		}
-		.banner-product-carousel .shop-all-btn{
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-  			border: solid 2px #212121;
-  			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #212121;
-			float: left;
-			clear: both;
-    		margin-left: 15px;
-    		margin-bottom: 35px;
-		}
-
-		.video-product-slider{
-			margin: 30px 0 35px 0;
-		}
-		.video-product-carousel-container{
-			position: absolute;
-			top: 50px;
-			z-index: 1;
-			width: 100%;
-		}
-		.video-product-carousel .video-product-title{
-		    text-align: center;
-			font-size: 24px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.video-product-carousel .video-product-desc{
-		    text-align: center;
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.video-product-slider .slick-slide img{
-			border-radius: 4px;
-		}
-		.video-product-slider .product-name {
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.57;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-			margin: 10px 0 15px 0;
-		}
-		.video-product-slider .product-price {
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-		}
-		.video-product-carousel .shop-all-btn{
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-  			border: solid 2px #212121;
-  			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #212121;
-			float: left;
-			clear: both;
-    		margin-left: 15px;
-    		margin-bottom: 35px;
-		}
-		
-		.theme-offers{
-			background-repeat: no-repeat;
-    		background-size: cover;
-		}
-		.theme-offers .heading{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-			margin: 20px 0 25px 15px;
-		}
-		.theme-offers-slider .slick-slide img{
-			border-radius: 4px;
-		}
-		.theme-offers-slider .brand-name{
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.71;
-			letter-spacing: normal;
-			color: #ffffff;
-			margin-top: 15px;
-		}
-		.theme-offers-slider .product-name{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			color: #ffffff;
-			margin: 5px 0;
-			width: calc(100% - 15px);
-		}
-		.theme-offers-slider .product-price{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.71;
-			letter-spacing: normal;
-			color: #ffffff;
-			margin-top: 5px;
-		}
-		.theme-offers .shop-all-btn{
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-			border: solid 2px #ffffff;
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			float: left;
-			clear: both;
-			margin: 25px 0 35px 15px;
-		}
-		.line-through{
-			text-decoration: line-through;
-		}
-
-		.theme-product-widget{
-			background-repeat: no-repeat;
-    		background-size: cover;
-		}
-		.theme-product-widget .brand-logo{
-			margin: 25px 0 0 15px;
-		}
-		.theme-product-widget-container{
-			padding: 0;
-    		margin-top: 160px;
-		}
-		.theme-product-widget-slider{
-			margin: 30px 0 25px 0;
-		}
-		.theme-product-widget-slider .slick-slide img{
-			border-radius: 50%;
-		}
-		.theme-product-widget .heading{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.theme-product-widget .shop-all-btn{
-			float: right;
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-			border: solid 2px #ffffff;
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			margin-top: -5px;
-		}
-		.theme-product-widget .product-name{
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.71;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			margin: 10px 0 5px 0;
-			padding-right: 15px;
-		}
-		.theme-product-widget .product-price{
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			padding-right: 15px;
-		}
-		.banner-separator{
-			padding: 25px 0 25px 15px;
-			background-repeat: no-repeat;
-    		background-size: cover;
-		}
-		.banner-separator .title{
-			font-size: 16px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.25;
-			letter-spacing: normal;
-			color: #ffffff;
-			margin-bottom: 5px;
-		}
-
-		.banner-separator .desc{
-			font-size: 14px;
-			font-weight: normal;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #ffffff;
-		}
-		.mt2{
-			margin-top: 2px;
-		}
-		
-		.curated-listing-strip{
-			padding: 15px;
-		}
-		.curated-listing-strip a{
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: left;
-			color: #ffffff;
-		}
-		
-		.mono-blp-banner {
-			background-repeat: no-repeat;
-			background-size: cover;
-		}
-
-		.mono-blp-banner .follow-brand {
-			float: right;
-			margin: 15px 15px 0 0;
-			width: 100px;
-			padding: 8px 20px;
-			border-radius: 100px;
-			border: solid 2px #ffffff;
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-		}
-
-		.mono-blp-banner .banner-logo {
-			margin: 121px 0 0 15px;
-		}
-
-		.mono-blp-banner .banner-desc {
-			font-size: 30px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: left;
-			color: #ffffff;
-			margin: 15px 0 15px 15px;
-		}
-		
-		.sub-brand-banner-blp{
-			background-color: #ececec;
-			padding: 40px 0;
-		}
-		.sub-brand-banner-blp .sub-brand-heading {
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: left;
-			color: #212121;
-			margin-bottom: 25px;
-		}
-		.subbrand-banner-blp-slider .sub-brand-img{
-			border-radius: 50%;
-		}
-		.subbrand-banner-blp-slider .sub-brand-logo{
-			margin: 15px auto 0 auto;
-    		padding-right: 15px;
-		}
-		.pr0{
-			padding-right: 0;
-		}
-		.pl0{
-			padding-left: 0;
-		}
-		.mb16{
-			margin-bottom: 16px;
-		}
-		.top-categories-widget .sub-brand-heading{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #212121;
-			margin: 25px 0;
-		}
-		.top-categories-widget .category-title{
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.29;
-			letter-spacing: normal;
-			text-align: center;
-			color: #ffffff;
-			position: absolute;
-			top: 45%;
-    		left: 0;
-		}
-		.br4{
-			border-radius: 4px;
-		}
-		.curated-products-widget .heading{
-			font-size: 20px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			color: #212121;
-			margin: 25px 0;
-		}
-		.curated-products-widget .brand-name {
-			font-size: 16px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.5;
-			letter-spacing: normal;
-			color: #181818;
-			margin-top: 10px;
-		}
-
-		.curated-products-widget .product-name {
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.43;
-			letter-spacing: normal;
-			color: #212121;
-			margin: 5px 0;
-		}
-
-		.curated-products-widget .product-price {
-			font-size: 14px;
-			font-weight: 300;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: 1.71;
-			letter-spacing: normal;
-			color: #212121;
-			margin-bottom: 25px;
-		}
-		.curated-products-widget .shop-all-btn{
-			width: 120px;
-			padding: 8px 0;
-			border-radius: 100px;
-			border: solid 2px #212121;
-			font-size: 14px;
-			font-weight: 500;
-			font-style: normal;
-			font-stretch: normal;
-			line-height: normal;
-			letter-spacing: normal;
-			text-align: center;
-			color: #212121;
-			float: left;
-			clear: both;
-			margin-left: 15px;
-			margin-bottom: 35px;
-		}
-		
-</style>
+<link href="https://fonts.googleapis.com/css?family=Rubik:400,500" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/_ui/responsive/common/css/slick.css" />
+<link rel="stylesheet" type="text/css" href="/_ui/responsive/common/css/preview-style.css" />
 
 <template:page pageTitle="${pageTitle}">
 	<html>
@@ -845,18 +54,14 @@ body{
 						<div class="col-xs-10 pad0">
 							<div class="col-xs-12 connect-banner-text1">${feature.title}</div>
 							<div class="col-xs-12 connect-banner-text2">${feature.description}</div>
-							<a href="${not empty feature.webURL ? feature.webURL : '#'}" class="connect-banner-more">${feature.btnText}</a>
+							<a href="${not empty feature.webURL ? feature.webURL : '#'}"
+								class="connect-banner-more">${feature.btnText}</a>
 						</div>
 					</div>
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'OffersWidgetComponent'}">
-				
-				
 					<div>
-						<h1>OffersWidgetComponent</h1>
-
-
 						<div class="offer-widget-title">${feature.title}</div>
 						<div class="offer-slider mb40">
 							<c:forEach items="${feature.items}" var="offersWidgetElement">
@@ -882,328 +87,240 @@ body{
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'SmartFilterWidgetComponent'}">
-					<div>
-						<h1>SmartFilterWidgetComponent</h1>
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>title</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-							</tr>
-						</table>
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>Title</th>
-									<th>Web URL</th>
-									<th>Image URL</th>
-									<th>Description</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}" var="smartfilterElements">
-								<div>
-									<c:if
-										test="${smartfilterElements.typeCode eq 'SmartFilterWidgetElement'}">
-										<tr>
-											<td>${smartfilterElements.title}</td>
-											<td><a href="${smartfilterElements.webURL}">${smartfilterElements.webURL}</a></td>
-											<td><img alt=""
-												src="${smartfilterElements.imageURL.URL}"></td>
-											<td>${smartfilterElements.description}</td>
-										</tr>
-									</c:if>
-								</div>
-							</c:forEach>
-						</table>
+					<div class="col-xs-12 smart-filter-widget mb40">
+						<div class="col-xs-12 pad0 heading">${feature.title}</div>
+						<c:forEach items="${feature.items}" var="smartfilterElements">
+							<!--smart filter widget-->
+							<div class="col-xs-6 pad0 mb16">
+								<a href=#"> <img src="${smartfilterElements.imageURL.URL}"
+									class="img-responsive" />
+									<div class="col-xs-12 pad0 overlay-div right0">
+										<div class="col-xs-12 category-title">${smartfilterElements.title}</div>
+										<div class="col-xs-12 category-desc">${smartfilterElements.description}</div>
+									</div>
+								</a>
+							</div>
+
+						</c:forEach>
 					</div>
+
+
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'FlashSalesComponent'}">
-					
-					<div>
-						<h1>FlashSalesComponent</h1>
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>description</th>
-									<th>backgroundHexCode</th>
-									<th>backgroundImageURL</th>
-									<th>startDate</th>
-									<th>endDate</th>
-									<th>btnText</th>
-									<th>webURL</th>
-								</tr>
-							</thead>
-							<tr>
-<%-- 								<td>${feature.title}</td> --%>
-<%-- 								<td>${feature.description}</td> --%>
-								<td>${feature.backgroundHexCode}</td>
-								<td><img alt="" src="${feature.backgroundImageURL.URL}"></td>
-								<td>${feature.startDate}</td>
-								<td>${feature.endDate}</td>
-								<td>${feature.btnText}</td>
-								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
-							</tr>
-						</table>
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>description</th>
-									<th>imageURL</th>
-									<th>webURL</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.offers}" var="flashsalesElements">
-								<div>
-									<c:if
-										test="${flashsalesElements.typeCode eq 'FlashSalesElement'}">
-										<tr>
-											<td>${flashsalesElements.title}</td>
-											<td>${flashsalesElements.description}</td>
-											<td><img alt="" src="${flashsalesElements.imageURL.URL}"></td>
-											<td><a href="${flashsalesElements.webURL}">${flashsalesElements.webURL}</a></td>
-										</tr>
-									</c:if>
+					<!--flash sales widget-->
+					<!--pass background url,color values as dynamic-->
+					<div class="col-xs-12 flash-sales-widget mb40"
+						style="background-image:url(${feature.backgroundImageURL.URL}),linear-gradient(to bottom, ${feature.backgroundHexCode},${feature.backgroundHexCode});">
+						<div class="col-xs-6 pad0 flash-sales-widget-title">${feature.title}</div>
+						<div class="col-xs-6 pad0 flash-sales-widget-timer">
+							<!--paas here dynamic values for end time-->
+							<%-- 	 	<jsp:useBean id="now" class="java.util.Date" /> --%>
+							<%-- 		<fmt:formatDate type="date" value="${now}" /> --%>
+							<input type="hidden" name="end_time" id="end_time"
+								value="2018-04-03 13:00:00"> <i class="fa fa-clock-o"
+								aria-hidden="true"></i>
+							<div class="time-digits" id="countdown"></div>
+						</div>
+						<div class="col-xs-12 pad0 flash-sales-widget-text">${feature.description}</div>
+						<c:set var="status" value="0" />
+						<c:forEach items="${feature.offers}" var="flashsalesElements"
+							begin="0" end="3" varStatus="loop">
+							<c:if
+								test="${flashsalesElements.typeCode eq 'FlashSalesElement'}">
+								<div class="col-xs-6 flash-sales-widget-product">
+									<a href="${flashsalesElements.webURL}"> <img
+										src="${flashsalesElements.imageURL.URL}"
+										class="img-responsive" />
+										<div class="col-xs-12 flash-sales-widget-product-offer">${flashsalesElements.title}</div>
+										<div class="col-xs-12 flash-sales-widget-product-name">${flashsalesElements.description}</div>
+									</a>
 								</div>
-							</c:forEach>
-						</table>
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>webURL</th>
-									<th>title</th>
-									<th>productCode</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}" var="flashsalesitemElements">
-								<div>
-									<c:if
-										test="${flashsalesitemElements.typeCode eq 'FlashSalesItemElement'}">
+							</c:if>
+							<c:set var="status" value="${loop.index}" />
+						</c:forEach>
 
-										<tr>
-											<td>${flashsalesitemElements.title}</td>
-											<td><a href="${flashsalesitemElements.webURL}">${flashsalesitemElements.webURL}</a></td>
-
-											<c:if test="${not empty flashsalesitemElements.productCode}">
-												<td>${flashsalesitemElements.productCode.code}</td>
-											</c:if>
-										</tr>
-									</c:if>
-								</div>
-							</c:forEach>
-						</table>
-
+						<c:forEach items="${feature.items}" var="flashsalesitemElements"
+							begin="0" end="${3 - loop.index}">
+							<c:if
+								test="${flashsalesitemElements.typeCode eq 'FlashSalesItemElement'}">
+								<c:if test="${not empty flashsalesitemElements.productCode}">
+									<div class="col-xs-6 flash-sales-widget-product">
+										<a href="${flashsalesitemElements.webURL}"> 
+												<img src="${flashsalesitemElements.productCode.thumbnail.URL}"
+													class="img-responsive" />
+											
+											<div class="col-xs-12 flash-sales-widget-product-offer">${flashsalesitemElements.productCode.name}</div>
+											<fmt:parseNumber var="productPrice" type="number"
+														value="${bannerProdCarouselElement.productCode.mrp}" />
+												<div class="col-xs-12 flash-sales-widget-product-name">Rs. ${productPrice}</div>
+											
+										</a>
+									</div>
+								</c:if>
+							</c:if>
+						</c:forEach>
+						<a href="${feature.webURL}" class="shop-all-btn">${feature.btnText}</a>
 					</div>
 				</c:if>
 
+
 				<c:if test="${feature.typeCode eq 'ContentWidgetComponent'}">
-					<div>
-						<h1>ContentWidgetComponent</h1>
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>title</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-							</tr>
-						</table>
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-									<th>imageURL</th>
-									<th>description</th>
-									<th>btnText</th>
-								</tr>
-							</thead>
+
+					<!--content widget-->
+					<div class="col-xs-12 mb40 content-widget">
+						<div class="col-xs-12 pad0 heading">${feature.title}</div>
+						<div class="content-widget-slider">
+
 							<c:forEach items="${feature.items}" var="contentwidgetElement">
 								<div>
 									<c:if
 										test="${contentwidgetElement.typeCode eq 'ContentWidgetElement'}">
-										<tr>
-											<td>${contentwidgetElement.title}</td>
-											<td><a href="${contentwidgetElement.webURL}">${contentwidgetElement.webURL}</a></td>
-											<td><img alt=""
-												src="${contentwidgetElement.imageURL.URL}"></td>
-											<td>${contentwidgetElement.description}</td>
-											<td>${contentwidgetElement.btnText}</td>
-										</tr>
+										<div>
+											<img src="${contentwidgetElement.imageURL.URL}" class="br4" />
+											<div class="content-subsection">
+												<div class="col-xs-12 pad0 content-title">${contentwidgetElement.title}</div>
+												<div class="col-xs-12 pad0 content-desc">${contentwidgetElement.description}
+												</div>
+												<a href="${contentwidgetElement.webURL}"
+													class="col-xs-12 pad0 content-link">${contentwidgetElement.btnText}</a>
+											</div>
+										</div>
 									</c:if>
 								</div>
 							</c:forEach>
-						</table>
+						</div>
 					</div>
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'BannerProductCarouselComponent'}">
 					<!--banner product carousel-->
-						<div class="col-xs-12 mb40 pad0 banner-product-carousel">
-							<img src="${feature.imageURL.URL}">
-							<div class="col-xs-12 pad0 overlay-text">
-								<div class="col-xs-12 banner-product-title">${feature.title}</div>
-								<div class="col-xs-12 banner-product-desc">${feature.description}</div>
-							</div>
-							<div class="banner-product-slider">
-								<c:forEach items="${feature.items}"
-									var="bannerProdCarouselElement">
-									<div>
-										<c:if
-											test="${bannerProdCarouselElement.typeCode eq 'BannerProdCarouselElementComp'}">
-											<div>
-												<a href="#"> <c:if
-														test="${not empty bannerProdCarouselElement.productCode}">
-																    	<img src="${bannerProdCarouselElement.productCode.picture.URL}" />
-													</c:if>
-													<div class="product-name">${bannerProdCarouselElement.title}</div>
-													<c:if
-														test="${not empty bannerProdCarouselElement.productCode}">
-														<fmt:parseNumber var = "productPrice" type = "number" value = "${bannerProdCarouselElement.productCode.mrp}" />
-														
-													<div class="product-price">${productPrice}
-													</div>
-													</c:if>
-												</a>
-											</div>
-										</c:if>
-									</div>
-								</c:forEach>
-							</div>
-							<a href="${feature.webURL}" class="shop-all-btn">${feature.btnText}</a>
+					<div class="col-xs-12 mb40 pad0 banner-product-carousel">
+						<img src="${feature.imageURL.URL}">
+						<div class="col-xs-12 pad0 overlay-text">
+							<div class="col-xs-12 banner-product-title">${feature.title}</div>
+							<div class="col-xs-12 banner-product-desc">${feature.description}</div>
 						</div>
-				</c:if>
-
-				<c:if test="${feature.typeCode eq 'VideoProductCarouselComponent'}">
-					<div>
-						<h1>VideoProductCarouselComponent</h1>
-						<table class="" border="1">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-									<th>imageURL</th>
-									<th>description</th>
-									<th>btnText</th>
-									<th>brandLogo</th>
-									<th>videoURL</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-								<td><a href="${feature.webURL}">${feature.webURL}</a></td>
-								<td><img alt="" src="${feature.imageURL.URL}"></td>
-								<td>${feature.description}</td>
-								<td>${feature.btnText}</td>
-								<td><img alt="" src="${feature.brandLogo.URL}"></td>
-								<td><a href="${feature.videoURL}">${feature.videoURL}</a></td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>webURL</th>
-									<th>title</th>
-									<th>productCode</th>
-								</tr>
-							</thead>
+						<div class="banner-product-slider">
 							<c:forEach items="${feature.items}"
-								var="videoProductCarouselElement">
+								var="bannerProdCarouselElement">
 								<div>
 									<c:if
-										test="${videoProductCarouselElement.typeCode eq 'VideoProductCarouselElement'}">
-										<tr>
-											<td>${videoProductCarouselElement.title}</td>
-											<td><a href="${videoProductCarouselElement.webURL}">${videoProductCarouselElement.webURL}</a></td>
-											<c:if
-												test="${not empty videoProductCarouselElement.productCode}">
-												<td>${videoProductCarouselElement.productCode.code}</td>
-											</c:if>
-										</tr>
+										test="${bannerProdCarouselElement.typeCode eq 'BannerProdCarouselElementComp'}">
+										<div>
+											<a href="#"> <c:if
+													test="${not empty bannerProdCarouselElement.productCode}">
+													<img
+														src="${bannerProdCarouselElement.productCode.thumbnail.URL}" />
+												
+												<div class="product-name">${bannerProdCarouselElement.productCode.name}</div>
+												</c:if>
+												<c:if
+													test="${not empty bannerProdCarouselElement.productCode}">
+													<fmt:parseNumber var="productPrice" type="number"
+														value="${bannerProdCarouselElement.productCode.mrp}" />
+
+													<div class="product-price">${productPrice}</div>
+												</c:if>
+											</a>
+										</div>
 									</c:if>
 								</div>
 							</c:forEach>
-						</table>
+						</div>
+						<a href="${feature.webURL}" class="shop-all-btn">${feature.btnText}</a>
+					</div>
+				</c:if>
+
+				<c:if test="${feature.typeCode eq 'VideoProductCarouselComponent'}">
+					<!--video product carousel-->
+					<div class="col-xs-12 mb40 pad0 video-product-carousel">
+						<video id="video-el" width="100%" src="${feature.videoURL}"
+							poster="${feature.imageURL.URL}"></video>
+						<!-- 						<img src=""> -->
+						<div class="video-product-carousel-container" id="vpc-container">
+							<div class="col-xs-12 video-product-title">${feature.title}</div>
+							<div class="col-xs-12 text-center mtb15">
+								<i class="fa fa-play-circle-o fa-3x" aria-hidden="true"
+									id="play-video"></i>
+							</div>
+							<div class="col-xs-12 video-product-desc">${feature.description}</div>
+						</div>
+
+						<div class="video-product-slider">
+							<c:forEach items="${feature.items}"
+								var="videoProdCarouselElement">
+								<div>
+									<c:if
+										test="${videoProdCarouselElement.typeCode eq 'VideoProductCarouselElement'}">
+										<a href="#"> <c:if
+												test="${not empty videoProdCarouselElement.productCode}">
+												<img
+													src="${videoProdCarouselElement.productCode.thumbnail.URL}" />
+											<div class="product-name">${videoProdCarouselElement.productCode.name}</div>
+												<fmt:parseNumber var="productPrice" type="number"
+													value="${videoProdCarouselElement.productCode.mrp}" />
+												<div class="product-price">${productPrice}</div>
+											</c:if>
+										</a>
+									</c:if>
+								</div>
+							</c:forEach>
+						</div>
+						<a href="${feature.webURL}" class="shop-all-btn">${feature.btnText}</a>
 					</div>
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'ThemeOffersComponent'}">
-					<div>
-						<h1>ThemeOffersComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>Title</th>
-									<th>backgroundHexCode</th>
-									<th>backgroundImageURL</th>
-									<th>btnText</th>
-									<th>webURL</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-								<td>${feature.backgroundHexCode}</td>
-								<td><img alt="" src="${feature.backgroundImageURL.URL}"></td>
-								<td>${feature.btnText}</td>
-								<td><a href="${feature.webURL}">${feature.webURL}</a></td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>description</th>
-									<th>imageURL</th>
-									<th>webURL</th>
-								</tr>
-							</thead>
+
+
+					<!--  ============================================= -->
+					<div class="col-xs-12 pad0 theme-offers mb40"
+						style="background-image:url(${feature.backgroundImageURL.URL}),linear-gradient(to bottom, ${feature.backgroundHexCode}, ${feature.backgroundHexCode});">
+						<div class="heading">${feature.title}</div>
+						<div class="theme-offers-slider">
 							<c:forEach items="${feature.offers}"
 								var="themeOffersCompOfferElement">
-								<div>
-									<c:if
-										test="${themeOffersCompOfferElement.typeCode eq 'ThemeOffersCompOfferElement'}">
-										<tr>
-											<td>${themeOffersCompOfferElement.title}</td>
-											<td>${themeOffersCompOfferElement.description}</td>
-											<td><img alt=""
-												src="${themeOffersCompOfferElement.imageURL.URL}"></td>
-											<td><a href="${themeOffersCompOfferElement.webURL}">${themeOffersCompOfferElement.webURL}</a></td>
-										</tr>
-									</c:if>
-								</div>
-							</c:forEach>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-									<th>productCode</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}" var="themeOffersItemsElement">
-								<div>
-									<c:if
-										test="${themeOffersItemsElement.typeCode eq 'ThemeOffersItemsElement'}">
-										<tr>
-											<td>${themeOffersItemsElement.title}</td>
-											<td><a href="${themeOffersItemsElement.webURL}">${themeOffersItemsElement.webURL}</a></td>
-											<c:if test="${not empty themeOffersItemsElement.productCode}">
-												<td>${themeOffersItemsElement.productCode.code}</td>
-											</c:if>
-										</tr>
-									</c:if>
-								</div>
-							</c:forEach>
-						</table>
+								<c:if
+									test="${themeOffersCompOfferElement.typeCode eq 'ThemeOffersCompOfferElement'}">
+									<div>
+										<a href="${themeOffersCompOfferElement.webURL}"> <img
+											src="${themeOffersCompOfferElement.imageURL.URL}">
+											<div class="brand-name">${themeOffersCompOfferElement.title}</div>
+											<div class="product-name">${themeOffersCompOfferElement.description}</div>
+										</a>
+									</div>
+								</c:if>
 
+							</c:forEach>
+							<c:forEach items="${feature.items}" var="themeOffersItemsElement">
+								<c:if
+									test="${themeOffersItemsElement.typeCode eq 'ThemeOffersItemsElement'}">
+									<div>
+										<a href="${themeOffersItemsElement.webURL}"> <c:if
+												test="${not empty themeOffersItemsElement.productCode}">
+												<img
+													src="${themeOffersItemsElement.productCode.thumbnail.URL}">
+											
+											<div class="brand-name">${themeOffersItemsElement.productCode.name}</div>
+												<fmt:parseNumber var="productPrice" type="number"
+													value="${themeOffersItemsElement.productCode.mrp}" />
+												<div class="product-price">
+													Rs. ${productPrice} <span class="line-through">Rs.
+														${productPrice}</span>
+												</div>
+											</c:if>
+										</a>
+									</div>
+								</c:if>
+
+							</c:forEach>
+						</div>
+						<a href="${feature.webURL}" class="shop-all-btn">${feature.btnText}</a>
 					</div>
+
+					<!-- ================================================= -->
+
 				</c:if>
 
 
@@ -1211,7 +328,7 @@ body{
 
 					<div class="col-xs-12 pad0 theme-product-widget mb40"
 						style="background-image:url('${feature.imageURL.URL}'),linear-gradient(to bottom, #5b0627, #5b0627);">
-						<img src="${feature.brandLogo}" class="brand-logo" />
+						<img src="${feature.brandLogo.URL}" class="brand-logo" />
 						<div class="col-xs-12 theme-product-widget-container">
 							<div class="col-xs-6 heading">${feature.title}</div>
 							<div class="col-xs-6">
@@ -1228,15 +345,11 @@ body{
 												<a href="#"> <c:if
 														test="${not empty themeProductWidgetElement.productCode}">
 														<img
-															src="${themeProductWidgetElement.productCode.picture.URL}" />
-													</c:if>
-													<div class="product-name">${themeProductWidgetElement.title}</div>
-													<c:if
-														test="${not empty themeProductWidgetElement.productCode}">
+															src="${themeProductWidgetElement.productCode.thumbnail.URL}" />
+													<div class="product-name">${themeProductWidgetElement.productCode.name}</div>
 														<fmt:parseNumber var="productPrice" type="number"
 															value="${themeProductWidgetElement.productCode.mrp}" />
-														<div class="product-price">${productPrice}
-														</div>
+														<div class="product-price">${productPrice}</div>
 													</c:if>
 												</a>
 											</div>
@@ -1253,67 +366,55 @@ body{
 					<div class="col-xs-12 pad0 mb40 banner-separator"
 						style="background-image: linear-gradient(285deg, ${feature.startHexCode}, ${feature.endHexCode});">
 						<a href="${feature.webURL}">
-						<div class="col-xs-2">
-							<img src="${feature.iconImageURL.URL}"
-								class="pull-left mt2">
-						</div>
-						<div class="col-xs-10 pad0">
-							<div class="col-xs-12 pad0 title">${feature.title}</div>
-							<div class="col-xs-12 pad0 desc">${feature.description}</div>
-						</div>
+							<div class="col-xs-2">
+								<img src="${feature.iconImageURL.URL}" class="pull-left mt2">
+							</div>
+							<div class="col-xs-10 pad0">
+								<div class="col-xs-12 pad0 title">${feature.title}</div>
+								<div class="col-xs-12 pad0 desc">${feature.description}</div>
+							</div>
 						</a>
 					</div>
 				</c:if>
 
 				<c:if
 					test="${feature.typeCode eq 'AutomatedBrandProductCarouselComponent'}">
-					<div>
-						<h1>AutomatedBrandProductCarouselComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>imageURL</th>
-									<th>brandLogo</th>
-									<th>btnText</th>
-									<th>webURL</th>
-									<th>Description</th>
-								</tr>
-							</thead>
-							<tr>
-								<td><img alt="" src="${feature.imageURL.URL}"></td>
-								<td><img alt="" src="${feature.brandLogo.URL}"></td>
-								<td>${feature.btnText}</td>
-								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
-								<td>${feature.description}</td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>webURL</th>
-									<th>title</th>
-									<th>productCode</th>
-								</tr>
-							</thead>
+
+					<!--Automated brand product carousel-->
+					<div class="col-xs-12 mb40 pad0 auto-brand-product-carousel">
+						<img src="${feature.imageURL.URL}">
+
+						<div class="col-xs-12 auto-brand-product-logo">
+							<img src="${feature.brandLogo.URL}" />
+						</div>
+						<div class="col-xs-12 auto-brand-product-desc">
+							${feature.description}</div>
+
+						<div class="auto-brand-product-slider">
 							<c:forEach items="${feature.items}"
 								var="automatedBrandProductCarElement">
-								<div>
-									<c:if
-										test="${automatedBrandProductCarElement.typeCode eq 'AutomatedBrandProductCarElement'}">
-										<tr>
-											<td><a href="${automatedBrandProductCarElement.webURL}">${automatedBrandProductCarElement.webURL}</a></td>
-											<td>${automatedBrandProductCarElement.title}</td>
-											<c:if
+								<c:if
+									test="${automatedBrandProductCarElement.typeCode eq 'AutomatedBrandProductCarElement'}">
+									<div>
+										<a href="${automatedBrandProductCarElement.webURL}"> <c:if
 												test="${not empty automatedBrandProductCarElement.productCode}">
-												<td>${automatedBrandProductCarElement.productCode.code}</td>
+												<img
+													src="${automatedBrandProductCarElement.productCode.thumbnail.URL}" />
+											<div class="product-name">${automatedBrandProductCarElement.productCode.name}</div>
+												<fmt:parseNumber var="productPrice" type="number"
+													value="${automatedBrandProductCarElement.productCode.mrp}" />
+												<div class="product-price">${productPrice}</div>
 											</c:if>
-										</tr>
-									</c:if>
-								</div>
+										</a>
+									</div>
+
+								</c:if>
 							</c:forEach>
-						</table>
+						</div>
+						<a href="${feature.webURL}" class="shop-all-btn">${feature.btnText}</a>
 					</div>
 				</c:if>
+
 
 				<c:if test="${feature.typeCode eq 'CuratedListingStripComponent'}">
 					<div class="col-xs-12 pad0 mb40 curated-listing-strip"
@@ -1326,46 +427,19 @@ body{
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'MonoBLPBannerComponent'}">
-				
-					<div>
-						<h1>MonoBLPBannerComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>btnText</th>
-									<th>hexCode</th>
-									<th>title</th>
-									<th>webURL</th>
-									<th>imageURL</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}" var="monoBLPBannerElement">
-								<div>
-									<c:if
-										test="${monoBLPBannerElement.typeCode eq 'MonoBLPBannerElement'}">
-										<tr>
-											<td>${monoBLPBannerElement.btnText}</td>
-											<td>${monoBLPBannerElement.hexCode}</td>
-											<td>${monoBLPBannerElement.title}</td>
-											<td><a href="${monoBLPBannerElement.webURL}">
-													${monoBLPBannerElement.webURL}"></a></td>
-											<td><img alt=""
-												src="${monoBLPBannerElement.imageURL.URL}"></td>
-										</tr>
-									</c:if>
+					<div class="col-xs-12 mono-blp-banner">
+						<div class="col-xs-12 pad0 heading">${feature.title}</div>
+						<!--mono blp banner-->
+
+						<c:forEach items="${feature.items}" var="monoBLPBannerElement">
+							<div class="col-xs-12 mono-blp-banner">
+								<div class="col-xs-12 pad0 mono-blp-banner-container"
+									style="background-image:url(${monoBLPBannerElement.imageURL.URL});linear-gradient(to bottom, ${monoBLPBannerElement.hexCode});">
+									<div class="col-xs-12 banner-title">${monoBLPBannerElement.title}.</div>
+									<a href="${monoBLPBannerElement.webURL}" class="banner-btn">${monoBLPBannerElement.btnText}</a>
 								</div>
-							</c:forEach>
-						</table>
+							</div>
+						</c:forEach>
 					</div>
 				</c:if>
 
@@ -1377,18 +451,18 @@ body{
 
 							<c:forEach items="${feature.items}"
 								var="subBrandBannerBLPElement">
-									<c:if
-										test="${subBrandBannerBLPElement.typeCode eq 'SubBrandBannerBLPElement'}">
-										<div>
-											<a href="${subBrandBannerBLPElement.webURL}"> <img
-												src="${subBrandBannerBLPElement.imageURL.URL}"
-												class="sub-brand-img" /> <img
-												src="${subBrandBannerBLPElement.brandLogo.URL}"
-												class="sub-brand-logo" />
-											</a>
-										</div>
+								<c:if
+									test="${subBrandBannerBLPElement.typeCode eq 'SubBrandBannerBLPElement'}">
+									<div>
+										<a href="${subBrandBannerBLPElement.webURL}"> <img
+											src="${subBrandBannerBLPElement.imageURL.URL}"
+											class="sub-brand-img" /> <img
+											src="${subBrandBannerBLPElement.brandLogo.URL}"
+											class="sub-brand-logo" />
+										</a>
+									</div>
 
-									</c:if>
+								</c:if>
 
 							</c:forEach>
 
@@ -1398,89 +472,87 @@ body{
 				</c:if>
 
 				<c:if test="${feature.typeCode eq 'TopCategoriesWidgetComponent'}">
-					<div>
-						<h1>TopCategoriesWidgetComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-									<th>imageURL</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}"
-								var="topCategoriesWidgetElement">
-								<div>
-									<c:if
-										test="${topCategoriesWidgetElement.typeCode eq 'TopCategoriesWidgetElement'}">
-										<tr>
-											<td>${topCategoriesWidgetElement.title}</td>
-											<td><a href="${topCategoriesWidgetElement.webURL}">
-													${topCategoriesWidgetElement.webURL}</a></td>
-											<td><img alt=""
-												src="${topCategoriesWidgetElement.imageURL.URL}"></td>
-										</tr>
-									</c:if>
-								</div>
-							</c:forEach>
-						</table>
+					<div class="col-xs-12 pad0 mb40 top-categories-widget">
+						<div class="col-xs-12 sub-brand-heading">${feature.title}</div>
+						<c:forEach items="${feature.items}"
+							var="topCategoriesWidgetElement" varStatus="loop">
+							<c:if
+								test="${topCategoriesWidgetElement.typeCode eq 'TopCategoriesWidgetElement'}">
+								<c:if test="${loop.index eq 0}">
+									<div class="col-xs-6 pr0">
+										<a href="${topCategoriesWidgetElement.webURL}"> <img
+											src="${topCategoriesWidgetElement.imageURL.URL}"
+											class="img-responsive br4" />
+											<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}s</div>
+										</a>
+									</div>
+								</c:if>
+								<c:if test="${loop.index gt 0}">
+									<div class="col-xs-6 pl0">
+										<c:if test="${loop.index eq 1}">
+											<div class="col-xs-12 pad0 mb16">
+												<a href="${topCategoriesWidgetElement.webURL}"> <img
+													src="${topCategoriesWidgetElement.imageURL.URL}"
+													class="img-responsive pull-right br4" />
+													<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}</div>
+												</a>
+											</div>
+										</c:if>
+										<c:if test="${loop.index gt 1}">
+											<div class="col-xs-12 pad0">
+												<a href="${topCategoriesWidgetElement.webURL}"> <img
+													src="${topCategoriesWidgetElement.imageURL.URL}"
+													class="img-responsive pull-right br4" />
+													<div class="col-xs-12 category-title">${topCategoriesWidgetElement.title}</div>
+												</a>
+											</div>
+										</c:if>
+									</div>
+								</c:if>
+							</c:if>
+						</c:forEach>
 					</div>
 				</c:if>
 
+
 				<c:if test="${feature.typeCode eq 'CuratedProductsWidgetComponent'}">
-					<div>
-						<h1>CuratedProductsWidgetComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-									<th>btnText</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-								<td><a href="${feature.webURL}"> ${feature.webURL}</a></td>
-								<td>${feature.btnText}</td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>webURL</th>
-									<th>title</th>
-									<th>productCode</th>
-									<th>description</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}"
-								var="curatedProductsWidgetElement">
-								<div>
-									<c:if
-										test="${curatedProductsWidgetElement.typeCode eq 'CuratedProductsWidgetElement'}">
-										<tr>
-											<td><a href="${curatedProductsWidgetElement.webURL}">${curatedProductsWidgetElement.webURL}</a></td>
-											<td>${curatedProductsWidgetElement.title}</td>
-											<c:if
-												test="${not empty curatedProductsWidgetElement.productCode}">
-												<td>${curatedProductsWidgetElement.productCode.code}</td>
-											</c:if>
-											<td>${curatedProductsWidgetElement.description}</td>
-										</tr>
+
+
+					<div class="col-xs-12 pad0 mb40 curated-products-widget">
+						<div class="col-xs-12 heading">${feature.title}</div>
+						<c:forEach items="${feature.items}"
+							var="curatedProductsWidgetElement">
+							<div class="col-xs-6">
+								<a href="${feature.webURL}"> <c:if
+										test="${not empty curatedProductsWidgetElement.productCode}">
+
+										<img
+											src="${curatedProductsWidgetElement.productCode.thumbnail.URL}"
+											class="br4" />
 									</c:if>
-								</div>
-							</c:forEach>
-						</table>
+								</a>
+								<c:if
+									test="${curatedProductsWidgetElement.typeCode eq 'CuratedProductsWidgetElement'}">
+									<div class="brand-name">${curatedProductsWidgetElement.productCode.name}
+										<a href="#" class="pull-right"> <i
+											class="fa fa-bookmark-o" aria-hidden="true"></i>
+										</a>
+									</div>
+									<a href="${curatedProductsWidgetElement.webURL}">
+										<div class="product-name">${curatedProductsWidgetElement.description}</div>
+									</a>
+									<div class="product-price">
+										<c:if
+											test="${not empty curatedProductsWidgetElement.productCode}">
+											<fmt:parseNumber var="productPrice" type="number"
+												value="${curatedProductsWidgetElement.productCode.mrp}" />
+											<div class="product-price">${productPrice}</div>
+										</c:if>
+									</div>
+								</c:if>
+							</div>
+						</c:forEach>
+						<a href="#" class="shop-all-btn">${feature.btnText}</a>
 					</div>
 				</c:if>
 
@@ -1526,108 +598,144 @@ body{
 
 
 				<c:if test="${feature.typeCode eq 'BrandsTabAZListComponent'}">
-					<div>
-						<h1>BrandsTabAZListComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>subType</th>
-
-								</tr>
-
-							</thead>
-							<c:forEach items="${feature.items}" var="brandsTabAZElement">
-								<div>
-									<c:if
-										test="${brandsTabAZElement.typeCode eq 'BrandsTabAZElement'}">
-										<tr>
-											<td style="font-weight: bold;">${brandsTabAZElement.subType}</td>
-
-										</tr>
-										<br>
-									</c:if>
-								</div>
-
-								<table class="">
-									<thead>
-										<tr>
-											<th>webURL</th>
-											<th>brandName</th>
-										</tr>
-									</thead>
-									<c:forEach items="${brandsTabAZElement.brands}"
-										var="brandTabAZBrandElement">
-										<div>
-											<c:if
-												test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement'}">
-												<tr>
-													<td><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.webURL}</a></td>
-													<td>${brandTabAZBrandElement.brandName}</td>
-												</tr>
-											</c:if>
-										</div>
-									</c:forEach>
-								</table>
-
-								<c:forEach items="${brandsTabAZElement.items}"
-									var="brandTabAZHeroBannerElement">
 
 
-									<c:if
-										test="${brandTabAZHeroBannerElement.typeCode eq 'HeroBannerComponent'}">
-										<div>
-											<c:forEach items="${brandTabAZHeroBannerElement.items}"
-												var="heroElements">
-												<c:if
-													test="${not empty heroElements && heroElements.typeCode eq 'HeroBannerElement'}">
-													<h1>HeroBannerComponent oF BrandsTabAZListComponent--
-														${brandsTabAZElement.subType}</h1>
-													<table class="">
-														<thead>
-															<tr>
-																<th>title</th>
-																<th>webURL</th>
-																<th>imageURL</th>
-																<th>brandLogo</th>
-															</tr>
-														</thead>
+					<!-- =========================== -->
 
-														<tr>
-															<td>${heroElements.title}</td>
-															<td><a href="${heroElements.webURL}">${heroElements.webURL}</a></td>
-															<td><img alt="" src="${heroElements.imageURL.URL}"></td>
-															<td><img alt="" src="${heroElements.brandLogo.URL}"></td>
-														</tr>
+					<div class="col-xs-12 pad0 brand-tab-azlist mb40">
+						<ul class="nav nav-tabs" role="tablist">
+							<c:forEach items="${feature.items}" var="brandsTabAZElement"
+								varStatus="loop">
+								<c:if
+									test="${brandsTabAZElement.typeCode eq 'BrandsTabAZElement'}">
 
-													</table>
-												</c:if>
-
-											</c:forEach>
-
-										</div>
-									</c:if>
-
-
-									<div>
-										<c:if
-											test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement'}">
-											<tr>
-												<td><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.webURL}</a></td>
-												<td>${brandTabAZBrandElement.brandName}</td>
-											</tr>
-										</c:if>
-									</div>
-								</c:forEach>
-
+									<li role="presentation"
+										class="${loop.index eq 0 ? 'active' : ''}"><a
+										class="mytablist" href="#mytab${loop.index + 1}"
+										aria-controls="mytab${loop.index + 1}" role="tab"
+										data-toggle="tab"> ${brandsTabAZElement.subType} </a></li>
+								</c:if>
 							</c:forEach>
-						</table>
+						</ul>
+						
+						<div class="tab-content">
+						<c:forEach items="${feature.items}" var="brandsTabAZElement"
+							varStatus="loop">
+							
+								<div role="tabpanel"
+									class="tab-pane ${loop.index eq 0 ? ' active' : ''}"
+									id="mytab${loop.index + 1}">
+									<!--brands slider starts-->
 
+									<c:forEach items="${brandsTabAZElement.items}"
+										var="brandTabAZHeroBannerElement" begin="0" end="1">
+										<c:if
+											test="${brandTabAZHeroBannerElement.typeCode eq 'HeroBannerComponent'}">
+											<div class="brands-slider mb40">
+												<c:forEach items="${brandTabAZHeroBannerElement.items}"
+													var="heroElements">
+													<c:if
+														test="${not empty heroElements && heroElements.typeCode eq 'HeroBannerElement'}">
+														<div>
+															<a href="${heroElements.webURL}"> <img
+																src="${heroElements.imageURL.URL}">
+																<div class="brands-slider-subsection">
+																	<img class="brand-logo"
+																		src="${heroElements.brandLogo.URL}">
+																</div> <%-- 								    	<div class="banner-title">${heroElements.title}</div> --%>
+															</a>
+														</div>
 
+													</c:if>
+												</c:forEach>
+											</div>
+										</c:if>
+									</c:forEach>
+								
+								<div class="col-xs-12">
+									<input type="text" id="search-for-brand${loop.index + 1}"
+										class="search-for-brand" data-id="${loop.index + 1}"
+										placeholder="Search your brand"> <i
+										class="fa fa-search searchicon-for-brand" aria-hidden="true"></i>
+								</div>
+								<div class="col-xs-12 all-brands-list">
+									<div class="col-xs-11 pad0 brandslist-leftsection"
+										id="brandslist-leftsection${loop.index + 1}">
+										<c:set var="number" value="${fn:split('1,2,3,4,5,6,7,8,9', ',')}" />
+										<c:forEach items="${number}" var="num">
+											<div class="col-xs-2 pad0 text-bold" id="search_${num}">${num}</div>
+											<ul class="col-xs-10 brandname-list">
+												<c:forEach items="${brandsTabAZElement.brands}"
+													var="brandTabAZBrandElement">
+													<c:if
+														test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement' and fn:startsWith(brandTabAZBrandElement.brandName, num)}">
+														<li><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.brandName}</a></li>
+													</c:if>
+												</c:forEach>
+											</ul>
+										</c:forEach>
+
+										<c:set var="alphabet"
+											value="${fn:split('A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z', ',')}"
+											scope="application" />
+										<c:forEach items="${alphabet}" var="alpha">
+											<div class="col-xs-2 pad0 text-bold" id="search_${alpha}">${alpha}</div>
+											<ul class="col-xs-10 brandname-list">
+												<c:forEach items="${brandsTabAZElement.brands}"
+													var="brandTabAZBrandElement">
+													<c:if
+														test="${brandTabAZBrandElement.typeCode eq 'BrandTabAZBrandElement' and fn:startsWith(brandTabAZBrandElement.brandName, alpha)}">
+														<li><a href="${brandTabAZBrandElement.webURL}">${brandTabAZBrandElement.brandName}</a></li>
+													</c:if>
+												</c:forEach>
+											</ul>
+										</c:forEach>
+									</div>
+									<div class="col-xs-1 pad0">
+										<ul class="brandinitials-section"
+											id="brandinitials-section${loop.index + 1}">
+											<li><a href="#search_1"> # </a></li>
+											<li><a href="#search_A"> A </a></li>
+											<li><a href="#search_B"> B </a></li>
+											<li><a href="#search_C"> C </a></li>
+											<li><a href="#search_D"> D </a></li>
+											<li><a href="#search_E"> E </a></li>
+											<li><a href="#search_F"> F </a></li>
+											<li><a href="#search_G"> G </a></li>
+											<li><a href="#search_H"> H </a></li>
+											<li><a href="#search_I"> I </a></li>
+											<li><a href="#search_J"> J </a></li>
+											<li><a href="#search_K"> K </a></li>
+											<li><a href="#search_L"> L </a></li>
+											<li><a href="#search_M"> M </a></li>
+											<li><a href="#search_N"> N </a></li>
+											<li><a href="#search_O"> O </a></li>
+											<li><a href="#search_P"> P </a></li>
+											<li><a href="#search_Q"> Q </a></li>
+											<li><a href="#search_R"> R </a></li>
+											<li><a href="#search_S"> S </a></li>
+											<li><a href="#search_T"> T </a></li>
+											<li><a href="#search_U"> U </a></li>
+											<li><a href="#search_V"> V </a></li>
+											<li><a href="#search_W"> W </a></li>
+											<li><a href="#search_X"> X </a></li>
+											<li><a href="#search_Y"> Y </a></li>
+											<li><a href="#search_Z"> Z </a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</c:forEach>
+						</div>
 					</div>
+
+					<!--========================================================  -->
+
 				</c:if>
 
 
 				<c:if test="${feature.typeCode eq 'LandingPageTitleComponent'}">
+
 					<div>
 						<h1>LandingPageTitleComponent</h1>
 						<table class="">
@@ -1645,145 +753,94 @@ body{
 
 
 				<c:if test="${feature.typeCode eq 'LandingPageHeaderComponent'}">
+					<!--Landing Page Title Component,Landing Page Header Component-->
+
 					<div>
-						<h1>LandingPageHeaderComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-									<th>imageURL</th>
-									<th>brandLogo</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}"
-								var="landingPageHeaderElement">
-								<div>
-									<c:if
-										test="${landingPageHeaderElement.typeCode eq 'LandingPageHeaderElement'}">
-										<tr>
-											<td>${landingPageHeaderElement.title}</td>
-											<td><a href="${landingPageHeaderElement.webURL}">
-													${landingPageHeaderElement.webURL}</a></td>
-											<td><img alt=""
-												src="${landingPageHeaderElement.imageURL.URL}"></td>
-											<td><img alt=""
-												src="${landingPageHeaderElement.brandLogo.URL}"></td>
-										</tr>
-									</c:if>
-								</div>
-							</c:forEach>
-						</table>
+						<c:forEach items="${feature.items}" var="landingPageHeaderElement">
+							<div>
+								<c:if
+									test="${landingPageHeaderElement.typeCode eq 'LandingPageHeaderElement'}">
+									<div class="col-xs-12 pad0 mb40 landing-page-header-component"
+										style="background-image:url(${landingPageHeaderElement.imageURL.URL})">
+										<a href="${landingPageHeaderElement.webURL}"
+											class="follow-brand">follow</a> <img class="banner-logo"
+											src="${landingPageHeaderElement.brandLogo.URL}" />
+										<div class="banner-desc">
+											${landingPageHeaderElement.title}</div>
+									</div>
+								</c:if>
+							</div>
+						</c:forEach>
+						<!-- 						</table> -->
 					</div>
 				</c:if>
 
 				<c:if
 					test="${feature.typeCode eq 'AutoProductRecommendationComponent'}">
-					<div>
-						<h1>AutoProductRecommendationComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>btnText</th>
-									<th>fetchURL</th>
-									<th>backupURL</th>
-									<th>widgetPlatform</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-								<td>${feature.btnText}</td>
-								<td><a href="${feature.fetchURL}"> ${feature.fetchURL}</a></td>
-								<td><a href="${feature.backupURL}">
-										${feature.backupURL}</a></td>
-								<td>${feature.widgetPlatform}</td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-									<th>productCode</th>
-								</tr>
-							</thead>
+					<div class="col-xs-12 pad0 mb40 product-recommendation-widget">
+						<div class="col-xs-12 heading">${feature.title}</div>
+						<div class="col-xs-12 pad0 product-recommendation-slider">
 							<c:forEach items="${feature.items}"
 								var="autoProductRecommendationElement">
 								<div>
 									<c:if
 										test="${autoProductRecommendationElement.typeCode eq 'AutoProductRecommendationElement'}">
-										<tr>
-											<td>${autoProductRecommendationElement.title}</td>
-											<td><a href="${autoProductRecommendationElement.webURL}">${autoProductRecommendationElement.webURL}</a></td>
-											<c:if
-												test="${not empty autoProductRecommendationElement.productCode}">
-												<td>${autoProductRecommendationElement.productCode.code}</td>
-											</c:if>
-										</tr>
+
+										<a href="${autoProductRecommendationElement.webURL}"> <img
+											src="${autoProductRecommendationElement.productCode.thumbnail.URL}"
+											class="br4" />
+										</a>
+										<div class="brand-name">${autoProductRecommendationElement.productCode.name}
+											<a href="#" class="pull-right"> <i
+												class="fa fa-bookmark-o" aria-hidden="true"></i>
+											</a>
+										</div>
+										<a href="${autoProductRecommendationElement.webURL}">
+											<div class="product-name">${autoProductRecommendationElement.productCode.name}</div>
+										</a>
+										<c:if
+											test="${not empty autoProductRecommendationElement.productCode}">
+											<fmt:parseNumber var="productPrice" type="number"
+												value="${autoProductRecommendationElement.productCode.mrp}" />
+											<div class="product-price">${productPrice}</div>
+										</c:if>
 									</c:if>
 								</div>
 							</c:forEach>
-						</table>
+						</div>
+						<a href="${feature.fetchURL}" class="shop-all-btn">${feature.btnText}</a>
 					</div>
 				</c:if>
 
 
 				<c:if test="${feature.typeCode eq 'LandingPageHierarchyComponent'}">
-					<div>
-						<h1>LandingPageHierarchyComponent</h1>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>${feature.title}</td>
-							</tr>
-						</table>
-						<table class="">
-							<thead>
-								<tr>
-									<th>title</th>
-									<th>webURL</th>
-								</tr>
-							</thead>
-							<c:forEach items="${feature.items}"
-								var="landingPageHierarchyElement">
-								<div>
-									<c:if
-										test="${landingPageHierarchyElement.typeCode eq 'LandingPageHierarchyElement'}">
-										<tr>
-											<td>${landingPageHierarchyElement.title}</td>
-											<td><a href="${landingPageHierarchyElement.webURL}">${landingPageHierarchyElement.webURL}</a></td>
-										</tr>
-									</c:if>
-								</div>
-								<table class="">
-									<thead>
-										<tr>
-											<th>title</th>
-											<th>webURL</th>
-										</tr>
-									</thead>
-									<c:forEach items="${landingPageHierarchyElement.items}"
-										var="landingPageHierarchyElementList">
-										<div>
+					<div class="col-xs-12 pad0 landing-page-hierarchy">
+						<div class="col-xs-12 landing-page-hierarchy-title">${feature.title}</div>
+						<c:forEach items="${feature.items}"
+							var="landingPageHierarchyElement">
+							<c:if
+								test="${landingPageHierarchyElement.typeCode eq 'LandingPageHierarchyElement'}">
+								<ul class="category-l1">
+									<li><a href="${landingPageHierarchyElement.webURL}"
+										class="has-carrot">${landingPageHierarchyElement.title}</a> <c:forEach
+											items="${landingPageHierarchyElement.items}"
+											var="landingPageHierarchyElementList">
 											<c:if
 												test="${landingPageHierarchyElementList.typeCode eq 'LandingPageHierarchyElementList'}">
-												<tr>
-													<td>${landingPageHierarchyElementList.title}</td>
-													<td><a
-														href="${landingPageHierarchyElementList.webURL}">${landingPageHierarchyElementList.webURL}</a></td>
-												</tr>
+												<ul class="category-l2">
+													<li><a
+														href="${landingPageHierarchyElementList.webURL}">${landingPageHierarchyElementList.title}</a>
+													</li>
+												</ul>
 											</c:if>
-										</div>
-									</c:forEach>
-								</table>
-							</c:forEach>
-						</table>
-
+										</c:forEach></li>
+								</ul>
+							</c:if>
+						</c:forEach>
+						<div class="view-more-categories">
+							View <span id="hidden_categories_count">2</span> <span
+								id="hidden_categories_text">more</span> categories
+						</div>
 					</div>
 				</c:if>
 
@@ -1791,200 +848,9 @@ body{
 		</div>
 	</div>
 </div>
-<script type="text/javascript"
-	src="_ui/responsive/common/js/mpl/slick.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){
-	$('.hero-slider').slick({
-	  centerMode: true,
-	  centerPadding: '60px',
-	  slidesToShow: 1,
-	  responsive: [
-	    {
-	      breakpoint: 480,
-	      settings: {
-	        arrows: false,
-	        centerMode: true,
-	        centerPadding: '20px',
-	        slidesToShow: 1,
-	        useCSS : true,
-	        cssEase : 'ease'
-	      }
-	    }
-	  ]
-	});
-
-	$('.offer-slider').slick({
-	  centerMode: true,
-	  centerPadding: '60px',
-	  slidesToShow: 1,
-	  responsive: [
-	    {
-	      breakpoint: 480,
-	      settings: {
-	        arrows: false,
-	        centerMode: true,
-	        centerPadding: '15px',
-	        slidesToShow: 1,
-	        useCSS : true,
-	        cssEase : 'ease'
-	      }
-	    }
-	  ]
-	});
-
-	$('.banner-product-slider').slick({
-	  centerMode: true,
-	  centerPadding: '60px',
-	  slidesToShow: 2,
-	  responsive: [
-	    {
-	      breakpoint: 480,
-	      settings: {
-	        arrows: false,
-	        centerMode: true,
-	        centerPadding: '15px',
-	        slidesToShow: 2,
-	        slidesToScroll: 2,
-	        useCSS : true,
-	        cssEase : 'ease'
-	      }
-	    }
-	  ]
-	});
-
-
-	$('.video-product-slider').slick({
-		  centerMode: true,
-		  centerPadding: '60px',
-		  slidesToShow: 2,
-		  responsive: [
-		    {
-		      breakpoint: 480,
-		      settings: {
-		        arrows: false,
-		        centerMode: true,
-		        centerPadding: '15px',
-		        slidesToShow: 2,
-		        slidesToScroll: 2,
-		        useCSS : true,
-		        cssEase : 'ease'
-		      }
-		    }
-		  ]
-		});
-
-	$('.theme-offers-slider').slick({
-	  centerMode: true,
-	  centerPadding: '60px',
-	  slidesToShow: 2,
-	  responsive: [
-	    {
-	      breakpoint: 480,
-	      settings: {
-	        arrows: false,
-	        centerMode: true,
-	        centerPadding: '15px',
-	        slidesToShow: 2,
-	        slidesToScroll: 2,
-	        useCSS : true,
-	        cssEase : 'ease'
-	      }
-	    }
-	  ]
-	});
-
-	
-	$('.theme-product-widget-slider').slick({
-	  centerMode: true,
-	  centerPadding: '60px',
-	  slidesToShow: 2,
-	  responsive: [
-	    {
-	      breakpoint: 480,
-	      settings: {
-	        arrows: false,
-	        centerMode: true,
-	        centerPadding: '15px',
-	        slidesToShow: 2,
-	        slidesToScroll: 2,
-	        useCSS : true,
-	        cssEase : 'ease'
-	      }
-	    }
-	  ]
-	});
-	
-	$('.auto-brand-product-slider').slick({
-		  centerMode: true,
-		  centerPadding: '60px',
-		  slidesToShow: 2,
-		  responsive: [
-		    {
-		      breakpoint: 480,
-		      settings: {
-		        arrows: false,
-		        centerMode: true,
-		        centerPadding: '15px',
-		        slidesToShow: 2,
-		        slidesToScroll: 2,
-		        useCSS : true,
-		        cssEase : 'ease'
-		      }
-		    }
-		  ]
-		});
-
-		
-		$('.subbrand-banner-blp-slider').slick({
-		  centerMode: true,
-		  centerPadding: '60px',
-		  slidesToShow: 2,
-		  responsive: [
-		    {
-		      breakpoint: 480,
-		      settings: {
-		        arrows: false,
-		        centerMode: true,
-		        centerPadding: '15px',
-		        slidesToShow: 2,
-		        slidesToScroll: 2,
-		        useCSS : true,
-		        cssEase : 'ease'
-		      }
-		    }
-		  ]
-		});
-
-	//countdown js starts
-	// Set the date we're counting down to
-	var end_time = $('#end_time').val();
-	if(end_time){
-		var countDownDate = new Date(end_time).getTime();
-		//var countDownDate = new Date("2018-04-03 13:00:00").getTime();
-		// Update the count down every 1 second
-		var x = setInterval(function() {
-		    // Get todays date and time
-		    var now = new Date().getTime();
-		    // Find the distance between now an the count down date
-		    var distance = countDownDate - now;
-		    // Time calculations for days, hours, minutes and seconds
-		    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-		    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-		    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-		    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-		    // Output the result in an element with id="countdown"
-		    document.getElementById("countdown").innerHTML =  hours + ":" + minutes + ":" + seconds;
-		    // If the count down is over, write some text 
-		    if (distance < 0) {
-		        clearInterval(x);
-		        document.getElementById("countdown").innerHTML = "Sale Started";
-		    }
-		}, 1000);
-	}
-	//countdown js ends
-});
-</script>
+<!-- <script type="text/javascript" src="https://static.tatacliq.com/_ui/responsive/common/js/jquery-2.1.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<script type="text/javascript" src="/_ui/responsive/common/js/mpl/slick.min.js"></script>
+<script type="text/javascript" src="/_ui/responsive/common/js/mpl/preview.js"></script>
 	</html>
 </template:page>
