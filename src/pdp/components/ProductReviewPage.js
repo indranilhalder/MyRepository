@@ -194,8 +194,9 @@ class ProductReviewPage extends Component {
       return (
         <PdpFrame
           addProductToBag={() => this.addProductToBag()}
-          addProductToWishList={() => this.addProductToWishList()}
           gotoPreviousPage={() => this.goBack()}
+          productListingId={this.props.productDetails.productListingId}
+          ussId={this.props.productDetails.winningUssID}
         >
           <div className={styles.base}>
             <div className={styles.productBackground}>

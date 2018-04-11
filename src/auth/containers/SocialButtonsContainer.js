@@ -29,9 +29,13 @@ import { logout } from "../../account/actions/account.actions.js";
 import { SUCCESS, ERROR, FAILURE } from "../../lib/constants";
 import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
 import { displayToast } from "../../general/toast.actions.js";
+import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 
 const mapDispatchToProps = dispatch => {
   return {
+    clearUrlToRedirectToAfterAuth: () => {
+      dispatch(clearUrlToRedirectToAfterAuth());
+    },
     facebookLogin: async isSignUp => {
       dispatch(authCallsAreInProgress());
       const facebookResponse = await dispatch(facebookLogin(isSignUp));
@@ -99,6 +103,7 @@ const mapDispatchToProps = dispatch => {
 
         if (loginUserResponse.status === SUCCESS) {
           const cartVal = await dispatch(getCartId());
+
           if (
             cartVal.status === SUCCESS &&
             cartVal.cartDetails.guid &&
@@ -118,6 +123,7 @@ const mapDispatchToProps = dispatch => {
             const createdCartVal = await dispatch(
               generateCartIdForLoggedInUser()
             );
+
             if (
               createdCartVal.status === ERROR ||
               createdCartVal.status === FAILURE
@@ -264,7 +270,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    signUp: ownProps.isSignUp
+    signUp: ownProps.isSignUp,
+    redirectToAfterAuthUrl: state.auth.redirectToAfterAuthUrl
   };
 };
 

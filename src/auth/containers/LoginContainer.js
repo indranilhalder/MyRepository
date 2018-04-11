@@ -20,6 +20,8 @@ import { homeFeed } from "../../home/actions/home.actions";
 import Login from "../components/Login.js";
 import { SUCCESS, REQUESTING, FAILURE, ERROR } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
+import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
+
 import {
   singleAuthCallHasFailed,
   setIfAllAuthCallsHaveSucceeded
@@ -36,6 +38,9 @@ const mapDispatchToProps = dispatch => {
     },
     homeFeed: () => {
       dispatch(homeFeed());
+    },
+    clearUrlToRedirectToAfterAuth: () => {
+      dispatch(clearUrlToRedirectToAfterAuth());
     },
     onSubmit: async userDetails => {
       const userDetailsResponse = await dispatch(
@@ -104,7 +109,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     authCallsInProcess: state.auth.authCallsInProcess,
-    authCallsIsSucceed: state.auth.authCallsIsSucceed
+    authCallsIsSucceed: state.auth.authCallsIsSucceed,
+    redirectToAfterAuthUrl: state.auth.redirectToAfterAuthUrl
   };
 };
 
