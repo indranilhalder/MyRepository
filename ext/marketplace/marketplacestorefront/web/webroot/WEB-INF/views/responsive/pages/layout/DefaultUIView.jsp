@@ -148,7 +148,7 @@
 									<div class="col-xs-6 flash-sales-widget-product">
 										<a href="${flashsalesitemElements.webURL}"> <c:if
 												test="${not empty flashsalesitemElements.productCode}">
-												<img src="${flashsalesitemElements.productCode.picture.URL}"
+												<img src="${flashsalesitemElements.productCode.thumbnail.URL}"
 													class="img-responsive" />
 											</c:if>
 											<div class="col-xs-12 flash-sales-widget-product-offer">${flashsalesitemElements.title}</div>
@@ -211,7 +211,7 @@
 											<a href="#"> <c:if
 													test="${not empty bannerProdCarouselElement.productCode}">
 													<img
-														src="${bannerProdCarouselElement.productCode.picture.URL}" />
+														src="${bannerProdCarouselElement.productCode.thumbnail.URL}" />
 												</c:if>
 												<div class="product-name">${bannerProdCarouselElement.title}</div>
 												<c:if
@@ -255,7 +255,7 @@
 										<a href="#"> <c:if
 												test="${not empty videoProdCarouselElement.productCode}">
 												<img
-													src="${videoProdCarouselElement.productCode.picture.URL}" />
+													src="${videoProdCarouselElement.productCode.thumbnail.URL}" />
 											</c:if>
 											<div class="product-name">${videoProdCarouselElement.title}</div>
 											<c:if
@@ -302,7 +302,7 @@
 										<a href="#"> <c:if
 												test="${not empty themeOffersItemsElement.productCode}">
 												<img
-													src="${themeOffersItemsElement.productCode.picture.URL}">
+													src="${themeOffersItemsElement.productCode.thumbnail.URL}">
 											</c:if>
 											<div class="brand-name">${themeOffersItemsElement.title}</div>
 											<div class="product-name">${themeOffersCompOfferElement.description}</div>
@@ -349,7 +349,7 @@
 												<a href="#"> <c:if
 														test="${not empty themeProductWidgetElement.productCode}">
 														<img
-															src="${themeProductWidgetElement.productCode.picture.URL}" />
+															src="${themeProductWidgetElement.productCode.thumbnail.URL}" />
 													</c:if>
 													<div class="product-name">${themeProductWidgetElement.title}</div>
 													<c:if
@@ -406,7 +406,7 @@
 										<a href="${automatedBrandProductCarElement.webURL}"> <c:if
 												test="${not empty automatedBrandProductCarElement.productCode}">
 												<img
-													src="${automatedBrandProductCarElement.productCode.picture.URL}" />
+													src="${automatedBrandProductCarElement.productCode.thumbnail.URL}" />
 											</c:if>
 											<div class="product-name">${automatedBrandProductCarElement.title}</div>
 											<%-- <div class="product-price">${automatedBrandProductCarElement.productCode.code}</div> --%>
@@ -538,7 +538,7 @@
 										test="${not empty curatedProductsWidgetElement.productCode}">
 
 										<img
-											src="${curatedProductsWidgetElement.productCode.picture.URL}"
+											src="${curatedProductsWidgetElement.productCode.thumbnail.URL}"
 											class="br4" />
 									</c:if>
 								</a>
@@ -798,7 +798,7 @@
 										test="${autoProductRecommendationElement.typeCode eq 'AutoProductRecommendationElement'}">
 
 										<a href="${autoProductRecommendationElement.webURL}"> <img
-											src="${autoProductRecommendationElement.productCode.picture.URL}"
+											src="${autoProductRecommendationElement.productCode.thumbnail.URL}"
 											class="br4" />
 										</a>
 										<div class="brand-name">${autoProductRecommendationElement.title}
