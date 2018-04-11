@@ -59,7 +59,7 @@ export default class SearchHeader extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.InformationHeader}>
-          {this.props.canGoBack && (
+          {this.props.isGoBack && (
             <div
               className={styles.backHolder}
               onClick={() => this.onClickBack()}
