@@ -6,8 +6,8 @@ import PriceAndLink from "../../account/components/PriceAndLink";
 import styles from "./OrderDetailsCard.css";
 export default class OrderDetailsCard extends React.Component {
   onViewDetails() {
-    if (this.props.onViewDetails) {
-      this.props.onViewDetails();
+    if (this.props.trackOrder) {
+      this.props.trackOrder();
     }
   }
   onClick(val) {
@@ -22,42 +22,50 @@ export default class OrderDetailsCard extends React.Component {
           <OrderPlacedAndId orderId={this.props.orderId} />
         </div>
         <OrderCard
-          imageUrl={this.props.imageUrl}
-          productName={this.props.productName}
-          price={this.props.price}
-          discountPrice={this.props.discountPrice}
+          imageUrl={this.props.productDetails.imageUrl}
+          productName={this.props.productDetails.productName}
+          price={this.props.productDetails.pricevalue}
+          discountPrice=""
           onClick={() => this.onClick(this.props.orderId)}
         >
           <div className={styles.quantityHolder}>
             <div className={styles.quantityLabel}>Qty :</div>
-            <div className={styles.quantityAmount}>{this.props.quantity}</div>
+            <div className={styles.quantityAmount}>
+              {this.props.productDetails.quantity}
+            </div>
           </div>
         </OrderCard>
         <PriceAndLink
           onViewDetails={() => this.onViewDetails()}
-          price={this.props.totalPrice}
+          price={this.props.orderDetails.subTotal}
         />
         <div className={styles.informationDataHolder}>
-          {this.props.deliveredAddress && (
+          {this.props.orderDetails.shippingAddress && (
             <div className={styles.addressHolder}>
               <div className={styles.deliveredTo}>Delivery Address: </div>
               <div className={styles.address}>
-                {this.props.deliveredAddress}
+                {`${this.props.orderDetails.shippingAddress.addressLine1} ${
+                  this.props.orderDetails.shippingAddress.addressLine2
+                } ${this.props.orderDetails.shippingAddress.state} ${
+                  this.props.orderDetails.shippingAddress.postalcode
+                }`}
               </div>
             </div>
           )}
-          {this.props.standardDelivery && (
+          {this.props.productDetails.selectedDeliveryMode && (
             <div className={styles.addressHolder}>
               <div className={styles.deliveredTo}>Standard Delivery: </div>
               <div className={styles.address}>
-                {this.props.standardDelivery}
+                {this.props.productDetails.selectedDeliveryMode.desc}
               </div>
             </div>
           )}
-          {this.props.standardDelivery && (
+          {this.props.orderDetails.sellerName && (
             <div className={styles.orderSoldBy}>
               <div className={styles.labelText}>Sold by:</div>
-              <div className={styles.infoText}>{this.props.soldBy}</div>
+              <div className={styles.infoText}>
+                {this.props.orderDetails.sellerName}
+              </div>
             </div>
           )}
         </div>

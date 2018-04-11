@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ModalContainer from "./general/containers/ModalContainer";
 import ToastContainer from "./general/containers/ToastContainer";
-import { Switch, Redirect } from "react-router-dom";
+import { Switch } from "react-router-dom";
 import Route from "./general/Route";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
@@ -155,7 +155,12 @@ class App extends Component {
         this.props.location.pathname.indexOf(LOGIN_PATH) !== -1 ||
         this.props.location.pathname.indexOf(SIGN_UP_PATH) !== -1
       ) {
-        this.props.history.push(`${HOME_ROUTER}`);
+        if (this.props.redirectToAfterAuthUrl) {
+          this.props.history.push(this.props.redirectToAfterAuthUrl);
+          this.props.clearUrlToRedirectToAfterAuth();
+        } else {
+          this.props.history.push(`${HOME_ROUTER}`);
+        }
       }
     } else {
       if (!cartDetailsForAnonymous && globalAccessToken) {

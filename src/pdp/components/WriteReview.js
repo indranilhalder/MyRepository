@@ -50,6 +50,8 @@ class WriteReview extends React.Component {
           headline: this.state.title
         });
       } else {
+        const url = this.props.location.pathname;
+        this.props.setUrlToRedirectToAfterAuth(url);
         this.props.history.push(LOGIN_PATH);
       }
     }
