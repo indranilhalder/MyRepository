@@ -105,15 +105,6 @@ export function setDataLayer(type, response, icid, icidType) {
 }
 
 function getDigitalDataForPdp(type, pdpResponse) {
-  const seoBreadCrumbs = pdpResponse
-    ? pdpResponse.seo
-      ? pdpResponse.seo.breadcrumbs
-          .map(val => {
-            return val.name.toLowerCase().replace(/\s+/g, "_");
-          })
-          .reverse()
-      : ["", "", "", ""]
-    : ["", "", "", ""];
   const categoryHierarchy = pdpResponse.categoryHierarchy.map(val => {
     return val.category_name.toLowerCase().replace(/\s+/g, "_");
   });
@@ -139,14 +130,30 @@ function getDigitalDataForPdp(type, pdpResponse) {
         subCategory2: categoryHierarchy[1],
         subCategory3: categoryHierarchy[2]
       },
-      display: {
-        hierarchy: ["home", ...seoBreadCrumbs]
-      },
+
       pageInfo: {
         pageName: "product details"
       }
     }
   };
+  if (pdpResponse && pdpResponse.seo && pdpResponse.seo.breadcrumbs) {
+    const seoBreadCrumbs = pdpResponse.seo.breadcrumbs
+      .map(val => {
+        return val.name.toLowerCase().replace(/\s+/g, "_");
+      })
+      .reverse();
+    Object.assign(data.page, {
+      display: {
+        hierarchy: ["home", ...seoBreadCrumbs]
+      }
+    });
+  } else {
+    Object.assign(data, {
+      display: {
+        hierarchy: ["home"]
+      }
+    });
+  }
   if (pdpResponse && pdpResponse.seo && pdpResponse.seo.breadcrumbs) {
     let categoryName =
       pdpResponse.seo.breadcrumbs[pdpResponse.seo.breadcrumbs.length - 1].name;
