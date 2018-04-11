@@ -111,11 +111,7 @@ function getDigitalDataForPdp(type, pdpResponse) {
   const data = {
     cpj: {
       product: {
-        id: pdpResponse.productListingId,
-        price: pdpResponse.mrpPrice.doubleValue,
-        discount:
-          pdpResponse.mrpPrice.doubleValue -
-          pdpResponse.winningSellerPrice.doubleValue
+        id: pdpResponse.productListingId
       },
 
       brand: {
@@ -154,6 +150,22 @@ function getDigitalDataForPdp(type, pdpResponse) {
       }
     });
   }
+  if (pdpResponse.mrpPrice && pdpResponse.mrpPrice.doubleValue) {
+    Object.assign(data.cpj.product, {
+      price: pdpResponse.mrpPrice.doubleValue
+    });
+    if (
+      pdpResponse.winningSellerPrice &&
+      pdpResponse.winningSellerPrice.doubleValue
+    ) {
+      Object.assign(data.cpj.product, {
+        discount:
+          pdpResponse.mrpPrice.doubleValue -
+          pdpResponse.winningSellerPrice.doubleValue
+      });
+    }
+  }
+
   if (pdpResponse && pdpResponse.seo && pdpResponse.seo.breadcrumbs) {
     let categoryName =
       pdpResponse.seo.breadcrumbs[pdpResponse.seo.breadcrumbs.length - 1].name;
