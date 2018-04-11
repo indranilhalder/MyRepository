@@ -4945,6 +4945,7 @@
 		<property name="noCostEMIPerMonthPayable" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cardBlockingAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="tenure" type="String" />
+		<property name="bankName" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.ItemBreakUpDetailListDTO">
 		<property name="productTitle" type="String" />
