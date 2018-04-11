@@ -3,10 +3,12 @@ import { HOME_ROUTER, SUCCESS } from "../../lib/constants";
 import PropTypes from "prop-types";
 import styles from "./LogoutButton.css";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
+const LOGOUT_TEXT = "You have logged out successfully";
 export default class LogoutButton extends React.Component {
   async logoutUser() {
     if (this.props.logout) {
       const logoutResponse = await this.props.logout();
+      this.props.displayToast(LOGOUT_TEXT);
       this.props.history.push(`${HOME_ROUTER}`);
       if (logoutResponse.status === SUCCESS) {
         const generateCartIdForAnonymous = await this.props.generateCartIdForAnonymous();
@@ -16,7 +18,6 @@ export default class LogoutButton extends React.Component {
       }
     }
   }
-
   render() {
     return (
       <div className={styles.base}>

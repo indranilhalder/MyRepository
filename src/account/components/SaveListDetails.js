@@ -15,9 +15,11 @@ import {
   SAVED_LIST
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
+import MDSpinner from "react-md-spinner";
+
 const dateFormat = "MMMM DD YYYY";
 const PRODUCT_QUANTITY = "1";
-
+const NO_SAVELIST_TEXT = "No Saved List";
 export default class SaveListDetails extends React.Component {
   componentDidMount() {
     this.props.setHeaderText(SAVED_LIST);
@@ -78,7 +80,15 @@ export default class SaveListDetails extends React.Component {
     if (!userDetails || !customerCookie) {
       return this.navigateToLogin();
     }
+    if (this.props.loading) {
+      return (
+        <div className={styles.loadingIndicator}>
+          <MDSpinner />
+        </div>
+      );
+    }
     const wishList = this.props.wishList;
+
     return (
       <div className={styles.base}>
         {wishList &&
@@ -103,6 +113,9 @@ export default class SaveListDetails extends React.Component {
               </div>
             );
           })}
+        {(!wishList || !wishList.products) && (
+          <div className={styles.noSaveListBlock}>{NO_SAVELIST_TEXT}</div>
+        )}
       </div>
     );
   }

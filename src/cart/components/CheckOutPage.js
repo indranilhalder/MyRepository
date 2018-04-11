@@ -82,7 +82,11 @@ class CheckOutPage extends React.Component {
       ratingExperience: false
     };
   }
-
+  onClickImage(productCode) {
+    if (productCode) {
+      this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    }
+  }
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
@@ -232,6 +236,7 @@ class CheckOutPage extends React.Component {
                     )
                   }
                   onPiq={() => this.getAllStores(val.USSID)}
+                  onClickImage={() => this.onClickImage(val.productcode)}
                 />
               </div>
             );
@@ -863,6 +868,9 @@ class CheckOutPage extends React.Component {
           <AddDeliveryAddress
             addUserAddress={address => this.addAddress(address)}
             {...this.state}
+            showSecondaryLoader={this.props.showSecondaryLoader}
+            hideSecondaryLoader={this.props.hideSecondaryLoader}
+            loading={this.props.cart.loading}
             onChange={val => this.onChange(val)}
           />
         </div>
@@ -963,8 +971,6 @@ class CheckOutPage extends React.Component {
             </div>
           )}
 
-          {(this.state.isGiftCard || !this.state.showCliqAndPiq) &&
-            this.props.cart.cartDetailsCNC && (
               <Checkout
                 label={
                   this.state.confirmAddress &&
@@ -981,7 +987,7 @@ class CheckOutPage extends React.Component {
                 delivery={deliveryCharge}
                 onCheckout={this.handleSubmit}
               />
-            )}
+
         </div>
       );
     } else if (this.state.orderConfirmation) {

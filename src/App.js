@@ -121,16 +121,16 @@ class App extends Component {
   async componentDidMount() {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     let loggedInUserDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsForLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
 
+    console.log(loggedInUserDetails);
+
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
     // Case 1. THe user is not logged in.
-
     if (!globalAccessToken && !this.props.cart.loading) {
       await this.props.getGlobalAccessToken();
       globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -145,13 +145,24 @@ class App extends Component {
       if (!cartDetailsForLoggedInUser && !this.props.cart.loading) {
         this.props.generateCartIdForLoggedInUser();
       }
+    }
+    if (
+      customerAccessToken &&
+      cartDetailsForLoggedInUser &&
+      loggedInUserDetails
+    ) {
+      if (
+        this.props.location.pathname.indexOf(LOGIN_PATH) !== -1 ||
+        this.props.location.pathname.indexOf(SIGN_UP_PATH) !== -1
+      ) {
+        this.props.history.push(`${HOME_ROUTER}`);
+      }
     } else {
       if (!cartDetailsForAnonymous && globalAccessToken) {
         this.props.generateCartIdForAnonymous();
       }
     }
   }
-
   renderLoader() {
     return (
       <div className={AppStyles.loadingIndicator}>
@@ -167,7 +178,7 @@ class App extends Component {
       customerAccessTokenStatus,
       refreshCustomerAccessTokenStatus,
       cartIdForLoggedInUserStatus,
-      cartIdForAnonymousUSerStatus
+      cartIdForAnonymousUserStatus
     } = this.props;
 
     if (
@@ -175,7 +186,7 @@ class App extends Component {
       customerAccessTokenStatus === REQUESTING ||
       refreshCustomerAccessTokenStatus === REQUESTING ||
       cartIdForLoggedInUserStatus === REQUESTING ||
-      cartIdForAnonymousUSerStatus === REQUESTING
+      cartIdForAnonymousUserStatus === REQUESTING
     ) {
       return this.renderLoader();
     }

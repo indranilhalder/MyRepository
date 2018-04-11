@@ -10,7 +10,7 @@ import {
   SUCCESS_FOR_ADDING_TO_WSHLIST
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-
+import * as ErrorHandling from "../../general/ErrorHandling.js";
 export const GET_WISH_LIST_ITEMS_REQUEST = "GET_WISH_LIST_ITEMS_REQUEST";
 export const GET_WISH_LIST_ITEMS_SUCCESS = "GET_WISH_LIST_ITEMS_SUCCESS";
 export const GET_WISH_LIST_ITEMS_FAILURE = "GET_WISH_LIST_ITEMS_FAILURE";
@@ -123,11 +123,13 @@ export function addProductToWishList(productDetails) {
         productToBeAdd
       );
       const resultJson = await result.json();
-      if (resultJson.status === SUCCESS_FOR_ADDING_TO_WSHLIST) {
-        return dispatch(addProductToWishListSuccess(productDetails));
-      } else {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
+      return dispatch(addProductToWishListSuccess(productDetails));
     } catch (e) {
       return dispatch(addProductToWishListFailure(e.message));
     }

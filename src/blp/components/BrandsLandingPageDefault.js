@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import map from "lodash/map";
 import groupBy from "lodash/groupBy";
 import filter from "lodash/filter";
-import MDSpinner from "react-md-spinner";
 import BrandsCategory from "./BrandsCategory";
 import BrandsSubCategory from "./BrandsSubCategory";
 import BrandBanner from "./BrandBanner";
@@ -18,6 +17,7 @@ import styles from "./BrandsLandingPageDefault.css";
 import arrowIcon from "../../general/components/img/down-arrow.svg";
 import searchIcon from "../../general/components/img/Search.svg";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+import Loader from "../../general/components/Loader";
 import { BRANDS } from "../../lib/constants";
 export default class BrandsLandingPageDefault extends React.Component {
   constructor(props) {
@@ -48,11 +48,7 @@ export default class BrandsLandingPageDefault extends React.Component {
     this.setState({ showFollowing });
   }
   renderLoader() {
-    return (
-      <div className={styles.loadingIndicator}>
-        <MDSpinner />
-      </div>
-    );
+    return <Loader />;
   }
 
   render() {
@@ -126,19 +122,38 @@ export default class BrandsLandingPageDefault extends React.Component {
           )}
         </div> */}
         <div className={styles.bannerHolder}>
-          <BannerMobile bannerHeight="45vw">
-            {currentActiveHeroBanner &&
-              currentActiveHeroBanner.map(heroBanner => {
-                return (
+          {currentActiveHeroBanner &&
+            currentActiveHeroBanner.length > 1 && (
+              <BannerMobile bannerHeight="45vw">
+                {currentActiveHeroBanner &&
+                  currentActiveHeroBanner.map(heroBanner => {
+                    return (
+                      <BrandBanner
+                        image={heroBanner.imageURL}
+                        logo={heroBanner.brandLogo}
+                        title={heroBanner.title}
+                        onClick={() =>
+                          this.renderToAnotherURL(heroBanner.webURL)
+                        }
+                      />
+                    );
+                  })}
+              </BannerMobile>
+            )}
+          {currentActiveHeroBanner &&
+            currentActiveHeroBanner.length < 2 &&
+            currentActiveHeroBanner.map(heroBanner => {
+              return (
+                <div className={styles.monoBannerHolder}>
                   <BrandBanner
                     image={heroBanner.imageURL}
                     logo={heroBanner.brandLogo}
                     title={heroBanner.title}
                     onClick={() => this.renderToAnotherURL(heroBanner.webURL)}
                   />
-                );
-              })}
-          </BannerMobile>
+                </div>
+              );
+            })}
         </div>
         <div className={styles.searchInput}>
           <Input2

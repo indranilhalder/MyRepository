@@ -32,7 +32,8 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   return {
-    wishList: state.profile.wishlist
+    wishList: state.profile.wishlist,
+    loading: state.profile.loadingForWishlist
   };
 };
 

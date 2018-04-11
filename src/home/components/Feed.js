@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
+import { setDataLayer } from "../../lib/adobeUtils.js";
 import WidgetContainer from "../containers/WidgetContainer";
 import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
@@ -95,7 +95,6 @@ class Feed extends Component {
     // then send the name
     this.props.setHeaderText(this.props.headerMessage);
   }
-
 
   renderFeedComponent(feedDatum, i) {
     if (feedDatum.type === "Product Capsules Component") {

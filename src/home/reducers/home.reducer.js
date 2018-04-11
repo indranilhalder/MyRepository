@@ -146,7 +146,7 @@ const home = (
     case homeActions.GET_ITEMS_SUCCESS:
       homeFeedData = cloneDeep(state.homeFeed);
       const orderedItems = transformFetchingItemsOrder(
-        homeFeedData[action.positionInFeed].itemIds,
+        action.itemIds,
         action.items
       );
 
