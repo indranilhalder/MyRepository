@@ -7028,6 +7028,12 @@
 						<key attribute="type"></key>
 						<key attribute="itemType"></key>
 					</index>
+					<!-- Added as per PT suggestion in API R0 release -->
+					<index name="IDX_ORD_COMB">
+						<key attribute="type"></key>
+						<key attribute="parentReference"></key>
+						<key attribute="versionID"></key>
+					</index>
 				</indexes>
 			</itemtype>
 
@@ -8771,6 +8777,11 @@
 					<!-- CAR-274 -->
 					<index name="MPL_ORDERHISTORY_MODIFIEDDTS">
 						<key attribute="modifiedtime" />
+					</index>
+					<!-- Added for PT suggestion for API R0 -->
+					<index name="IDX_ORDHIS_TSMPTYPE">
+						<key attribute="timestamp" />
+						<key attribute="itemtype" />
 					</index>
 				</indexes>
 			</itemtype>
