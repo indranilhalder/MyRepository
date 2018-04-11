@@ -11,7 +11,8 @@ export default class SearchHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchBar: false
+      searchBar: false,
+      searchString: null
     };
   }
   onClickBack() {
@@ -22,8 +23,19 @@ export default class SearchHeader extends React.Component {
   onSearch(val) {
     if (this.props.onSearch) {
       this.props.onSearch(val);
+      this.setState({ searchString: val });
     }
   }
+  searchString = () => {
+    if (this.props.onSearchString) {
+      this.props.onSearchString(this.state.searchString);
+    }
+  };
+  handleKeyUp = val => {
+    if (val === "Enter") {
+      this.searchString();
+    }
+  };
   onClickIcon() {
     if (this.state.searchBar) {
       this.setState({ searchBar: false }, () => {
@@ -69,7 +81,12 @@ export default class SearchHeader extends React.Component {
           )}
           {this.state.searchBar && (
             <div className={styles.searchWithInputRedHolder}>
-              <div className={styles.searchRedHolder}>
+              <div
+                className={styles.searchRedHolder}
+                onClick={() => {
+                  this.searchString();
+                }}
+              >
                 <Icon image={searchRedIcon} size={16} />
               </div>
               <div className={styles.input}>
@@ -80,6 +97,7 @@ export default class SearchHeader extends React.Component {
                   isWhite={true}
                   borderColor={"#212121"}
                   borderBottom={"0px solid #212121"}
+                  onKeyUp={event => this.handleKeyUp(event.key)}
                 />
               </div>
             </div>

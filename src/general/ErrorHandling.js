@@ -6,7 +6,13 @@ import {
 } from "../lib/constants.js";
 export function getFailureResponse(response) {
   if (response.errors) {
-    return { status: true, message: response.errors[0].message };
+    if (response.errors[0].message) {
+      return { status: true, message: response.errors[0].message };
+    }
+
+    if (response.errors[0].type) {
+      return { status: true, message: response.errors[0].type };
+    }
   }
   if (response.error) {
     return { status: true, message: response.error };
@@ -22,8 +28,10 @@ export function getFailureResponse(response) {
   ) {
     if (response.error) {
       return { status: true, message: response.error };
-    } else {
+    } else if (response.message) {
       return { status: true, message: response.message };
+    } else {
+      return { status: true, message: response.status };
     }
   } else {
     return { status: false };
