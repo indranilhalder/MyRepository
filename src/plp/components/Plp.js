@@ -77,13 +77,17 @@ export default class Plp extends React.Component {
         splitSlug = this.props.match.params.slug.replace(/-/g, " ");
         splitSlug = splitSlug.replace(/\b\w/g, l => l.toUpperCase());
       }
-
-      this.props.setHeaderText(
-        `${splitSlug} (${this.props.productListings.pagination.totalResults})`
-      );
+      if (this.state.showFilter) {
+        this.props.setHeaderText("Refine by");
+      } else {
+        this.props.setHeaderText(
+          `${splitSlug} (${this.props.productListings.pagination.totalResults})`
+        );
+      }
     }
   }
   backPage = () => {
+    console.log("close filter");
     if (this.state.showFilter) {
       this.setState({ showFilter: !this.state.showFilter });
     } else {
