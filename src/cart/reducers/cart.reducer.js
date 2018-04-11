@@ -1071,6 +1071,13 @@ const cart = (
         jusPaymentLoader: false
       });
 
+    case cartActions.CLEAR_CART_DETAILS:
+      return Object.assign({}, state, {
+        cartDetails: null,
+        cartDetailsStatus: null,
+        cartDetailsError: null
+      });
+
     default:
       return state;
   }

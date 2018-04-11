@@ -6,7 +6,16 @@ import exclusiveFlag from "./img/exclusive.svg";
 export default class ProductFlags extends React.Component {
   renderFlag = () => {
     if (this.props.outOfStock) {
-      return <div className={styles.outOfStock}>Not Available</div>;
+      return (
+        <div className={styles.overlay}>
+          <div
+            className={styles.base}
+            style={{ backgroundImage: `url(${newFlag})` }}
+          >
+            Out of Stock
+          </div>
+        </div>
+      );
     } else if (
       this.props.discountPercent &&
       this.props.discountPercent !== "0"

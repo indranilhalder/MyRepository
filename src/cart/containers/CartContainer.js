@@ -10,7 +10,8 @@ import {
   updateQuantityInCartLoggedIn,
   updateQuantityInCartLoggedOut,
   displayCouponsForLoggedInUser,
-  displayCouponsForAnonymous
+  displayCouponsForAnonymous,
+  clearCartDetails
 } from "../actions/cart.actions.js";
 import { displayToast } from "../../general/toast.actions";
 import { withRouter } from "react-router-dom";
@@ -90,6 +91,9 @@ const mapDispatchToProps = dispatch => {
     },
     hideSecondaryLoader: () => {
       dispatch(hideSecondaryLoader());
+    },
+    clearCartDetails: () => {
+      dispatch(clearCartDetails());
     }
   };
 };

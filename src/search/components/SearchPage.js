@@ -19,15 +19,18 @@ export default class SearchPage extends React.Component {
     const urlSuffix = `c-${webURL.toLowerCase()}`.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   }
-  handleSearch(val) {
+  handleSearch(val, e) {
     if (this.props.getSearchResults) {
       this.props.getSearchResults(val);
     }
   }
   handleBackClick() {
-    if (this.props.onBack) {
-      this.props.onBack();
+    if (this.props.canGoBack) {
+      this.props.canGoBack();
     }
+  }
+  handleOnSearchString(webURL) {
+    this.props.history.push(`search/?searchCategory=all&text=${webURL}`);
   }
   render() {
     const data = this.props.searchResult;
@@ -42,8 +45,9 @@ export default class SearchPage extends React.Component {
             onClickBack={() => {
               this.handleBackClick();
             }}
-            canGoBack={this.props.canGoBack}
+            isGoBack={this.props.hasBackButton}
             text={this.props.header}
+            onSearchString={val => this.handleOnSearchString(val)}
           />
         </div>
         {this.state.showResults && (

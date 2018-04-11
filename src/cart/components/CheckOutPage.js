@@ -971,8 +971,6 @@ class CheckOutPage extends React.Component {
             </div>
           )}
 
-          {(this.state.isGiftCard || !this.state.showCliqAndPiq) &&
-            this.props.cart.cartDetailsCNC && (
               <Checkout
                 label={
                   this.state.confirmAddress &&
@@ -989,7 +987,7 @@ class CheckOutPage extends React.Component {
                 delivery={deliveryCharge}
                 onCheckout={this.handleSubmit}
               />
-            )}
+
         </div>
       );
     } else if (this.state.orderConfirmation) {

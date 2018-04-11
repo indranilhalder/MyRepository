@@ -6,6 +6,7 @@ import WriteReview from "./WriteReview";
 import PropTypes from "prop-types";
 import RatingHolder from "./RatingHolder";
 import PdpFrame from "./PdpFrame";
+import throttle from "lodash/throttle";
 import { Redirect } from "react-router-dom";
 import {
   MOBILE_PDP_VIEW,
@@ -27,22 +28,63 @@ import {
 const WRITE_REVIEW_TEXT = "Write Review";
 const PRODUCT_QUANTITY = "1";
 class ProductReviewPage extends Component {
-  state = {
-    visible: false
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: false
+    };
+  }
+
+  handleScroll = () => {
+    return throttle(() => {
+      if (
+        this.props.reviews &&
+        this.props.reviews.pageNumber + 1 < this.props.reviews.totalNoOfPages
+      ) {
+        const windowHeight =
+          "innerHeight" in window
+            ? window.innerHeight
+            : document.documentElement.offsetHeight;
+        const body = document.body;
+        const html = document.documentElement;
+        const docHeight = Math.max(
+          body.scrollHeight,
+          body.offsetHeight,
+          html.clientHeight,
+          html.scrollHeight,
+          html.offsetHeight
+        );
+        const windowBottom = windowHeight + window.pageYOffset;
+        if (windowBottom >= docHeight) {
+          window.scrollBy(0, -200);
+          this.props.getProductReviews(
+            this.props.match.params[0],
+            this.props.reviews.pageNumber + 1
+          );
+        }
+      }
+    }, 2000);
   };
 
   componentDidMount() {
+    this.throttledScroll = this.handleScroll();
+    window.addEventListener("scroll", this.throttledScroll);
     if (!this.props.productDetails) {
       this.props.getProductDescription(this.props.match.params[0]);
     }
-    this.props.getProductReviews(this.props.match.params[0]);
+    this.props.getProductReviews(this.props.match.params[0], 0);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.throttledScroll);
   }
 
   reviewSection = () => {
-    if (this.state.visible === false) {
-      this.setState({ visible: true });
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (!userDetails || !customerCookie) {
+      this.props.history.push(LOGIN_PATH);
     } else {
-      this.setState({ visible: false });
+      this.setState(prevState => ({ visible: !prevState.visible }));
     }
   };
 
@@ -128,15 +170,14 @@ class ProductReviewPage extends Component {
       this.setState({ visible: false });
     }
   }
-  navigateToLogin() {
-    return <Redirect to={LOGIN_PATH} />;
-  }
+
   render() {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    if (!userDetails || !customerCookie) {
-      return this.navigateToLogin();
+    if (this.props.loadingForAddProduct || this.props.loading) {
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
     }
+
     if (this.props.productDetails) {
       const mobileGalleryImages =
         this.props.productDetails &&
