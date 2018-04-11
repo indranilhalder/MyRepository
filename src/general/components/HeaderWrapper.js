@@ -69,8 +69,13 @@ class HeaderWrapper extends React.Component {
       shouldRenderSearch = true;
     }
 
-    let canGoBack = true;
+    let isGoBack = true;
     let shouldRenderHeader = true;
+
+    if (this.props.location.pathname.includes("/")) {
+      isGoBack = true;
+      shouldRenderSearch = true;
+    }
     // let headerText = this.props.headerText;
     if (
       url === HOME_ROUTER ||
@@ -78,12 +83,12 @@ class HeaderWrapper extends React.Component {
       url === DEFAULT_BRANDS_LANDING_PAGE ||
       url === PRODUCT_LISTINGS
     ) {
-      canGoBack = false;
+      isGoBack = false;
       shouldRenderSearch = true;
     }
 
     if (this.props.history.length === 0) {
-      canGoBack = false;
+      isGoBack = false;
     }
 
     if (url === LOGIN_PATH || url === SIGN_UP_PATH) {
@@ -108,7 +113,7 @@ class HeaderWrapper extends React.Component {
       <InformationHeader
         goBack={this.onBackClick}
         text={this.props.headerText}
-        hasBackButton={canGoBack}
+        hasBackButton={isGoBack}
       />
     );
     if (productCode) {
@@ -121,7 +126,11 @@ class HeaderWrapper extends React.Component {
       );
     } else if (shouldRenderSearch) {
       headerToRender = (
-        <SearchContainer text={this.props.headerText} canGoBack={canGoBack} />
+        <SearchContainer
+          text={this.props.headerText}
+          canGoBack={this.onBackClick}
+          hasBackButton={isGoBack}
+        />
       );
     }
 
