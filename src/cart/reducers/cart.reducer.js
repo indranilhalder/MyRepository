@@ -1,5 +1,5 @@
 import * as cartActions from "../actions/cart.actions";
-import cloneDeep from "lodash/cloneDeep";
+import cloneDeep from "lodash.clonedeep";
 import * as Cookies from "../../lib/Cookie";
 import { CLEAR_ERROR } from "../../general/error.actions.js";
 import {
@@ -8,7 +8,7 @@ import {
   OLD_CART_GU_ID,
   COUPON_COOKIE
 } from "../../lib/constants";
-import find from "lodash/find";
+import find from "lodash.find";
 const IST_TIME_ZONE = "IST";
 const cart = (
   state = {

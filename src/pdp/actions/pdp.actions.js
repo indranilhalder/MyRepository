@@ -10,7 +10,7 @@ import {
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import { getMcvId } from "../../lib/adobeUtils.js";
-import each from "lodash/each";
+import each from "lodash.foreach";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,

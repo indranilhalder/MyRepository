@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import MDSpinner from "react-md-spinner";
 import { SUCCESS, HOME_ROUTER } from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
-import filter from "lodash/filter";
+import filter from "lodash.filter";
 import { Redirect } from "react-router-dom";
 import { MAIN_ROUTER } from "../../lib/constants";
 import TextWithUnderLine from "./TextWithUnderLine.js";

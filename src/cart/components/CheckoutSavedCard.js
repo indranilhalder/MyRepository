@@ -3,8 +3,8 @@ import savedCardIcon from "./img/saved-card.svg";
 import PropTypes from "prop-types";
 import SavedCard from "./SavedCard.js";
 import MenuDetails from "../../general/components/MenuDetails.js";
-import filter from "lodash/filter";
-import merge from "lodash/merge";
+import filter from "lodash.filter";
+import merge from "lodash.merge";
 
 export default class CheckoutSavedCard extends React.Component {
   onChangeCvv(cvv, cardNo) {

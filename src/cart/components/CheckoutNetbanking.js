@@ -3,7 +3,7 @@ import netBankingIcon from "./img/netBanking.svg";
 import PropTypes from "prop-types";
 import NetBanking from "./NetBanking.js";
 import ManueDetails from "../../general/components/MenuDetails.js";
-import filter from "lodash/filter";
+import filter from "lodash.filter";
 const PAYMENT_MODE = "Netbanking";
 export default class CheckoutNetBanking extends React.Component {
   binValidationForNetBank = bankName => {
