@@ -87,7 +87,6 @@ export default class Plp extends React.Component {
     }
   }
   backPage = () => {
-    console.log("close filter");
     if (this.state.showFilter) {
       this.setState({ showFilter: !this.state.showFilter });
     } else {
