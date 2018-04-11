@@ -64,7 +64,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String COUPONFAILUREMESSAGE = "Sorry! This coupon can't be used with this card/bank. Please use either the applicable card/bank or coupon.";
 	public static final String CARTCOUPONFAILUREMESSAGE = "Sorry! The bank offer selected can't be applied with this card/bank. Please use the applicable card/bank.";
 	public static final String CARTANDCOUPONBOTHFAILUREMESSAGE = "Sorry! The bank offer and coupon can't be applied with this card/bank. Please use the applicable card/bank.";
-
+	public static final String NOCOSTEMTCOUPONFAILUREMESSAGE = "Sorry! No-Cost EMI not applicable with this card/bank.";
 
 	public static final String EXTENSIONNAME = "marketplacecommerceservices";
 
@@ -1969,6 +1969,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//Added for displaying Non HMC configurable offer messages , TPR-589
 	public static final String PRODUCTOFFERDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} WHERE {prodOffrDet.productId}= ?productId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate"
 			.intern();
+	//no cost emi
+	public static final String PRODUCTOFFERDETMSGQUERYPWA = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate},{prodOffrDet.offerStartDate},{prodOffrDet.offerEndDate},{prodOffrDet.isNoCostEmi} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} WHERE {prodOffrDet.productId}= ?productId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate"
+			.intern();
 
 	public static final String OFFERPRODUCTID = "productId".intern();
 
@@ -1976,6 +1979,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MESSAGEDET = "messageDet".intern();
 	public static final String MESSAGESTARTDATE = "startDate".intern();
 	public static final String MESSAGEENDDATE = "endDate".intern();
+	//no cost emi
+	public static final String OFFERSTARTDATE = "offerStartDate".intern();
+	public static final String OFFERENDDATE = "offerEndDate".intern();
+	public static final String ISNOCOSTEMI = "isNoCostEmi".intern();
 
 	public static final String TERMSANDCONDITIONS = "termsAndConditions".intern();//CAR-327 added
 	public static final String PROMOURL = "promoUrl".intern();
@@ -2581,6 +2588,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SDPFIFTEENLOG = "sdp.fifteen.log";
 	public static final String ISH = "ISH";
 	public static final String LUXURY_CATALOG_ID = "luxProductCatalog";
+	//no cost emi
+	public static final String NOCOSTEMIQUERY = "SELECT count(*) FROM {ProductOfferDetail as prodOffrDet} WHERE {prodOffrDet.isNoCostEmi} = 1 AND {prodOffrDet.productId}= ?productId AND {prodOffrDet.sellerId}= ?sellerId AND {prodOffrDet.offerStartDate} <= ?sysdate AND {prodOffrDet.offerEndDate} >= ?sysdate"
+			.intern();
+	public static final String OFFERSELLERID = "sellerId".intern();
+
 	public static final String NU009 = "NU009";
 	public static final String NU010 = "NU010";
 }

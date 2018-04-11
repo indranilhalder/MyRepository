@@ -8,13 +8,18 @@ import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParamete
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -26,11 +31,13 @@ import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -90,6 +97,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.model.BankModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.QCCard;
@@ -97,6 +105,11 @@ import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wallet.service.DefaultMplMrupeePaymentService;
+import com.tisl.mpl.wsdto.EmiBankListWsData;
+import com.tisl.mpl.wsdto.EmiCouponListWsData;
+import com.tisl.mpl.wsdto.ItemBreakUpDetailListDTO;
+import com.tisl.mpl.wsdto.NoCostEMIItemBreakUp;
+import com.tisl.mpl.wsdto.mplNoCostEMIBankTenureDTO;
 
 
 /**
@@ -158,6 +171,12 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	@Resource(name = "mplWalletFacade")
 	private MplWalletFacade mplWalletFacade;
+
+	@Autowired
+	private PriceDataFactory priceDataFactory;
+	@Autowired
+	private CommonI18NService commonI18NService;
+	private static final String INR = "INR";
 
 	/**
 	 * This method returns the map of all active Payment modes(eg. Credit Card, Debit Card, COD, etc.) and their
@@ -3902,5 +3921,297 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 		getModelService().save(orderToBeUpdated);
 		getModelService().refresh(orderToBeUpdated);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#isNoCostEmiAvailable(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean isNoCostEmiAvailable(final String productCode, final String sellerId) throws EtailNonBusinessExceptions
+	{
+		return getMplPaymentService().isNoCostEmiAvailable(productCode, sellerId);
+	}
+
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#noCostEmiBankTenureList()
+	 */
+	@Override
+	public mplNoCostEMIBankTenureDTO noCostEmiBankTenureList()
+	{
+		// YTODO Auto-generated method stub
+		final mplNoCostEMIBankTenureDTO noCostEMIBankList = new mplNoCostEMIBankTenureDTO();
+		try
+		{
+
+			final List<EmiBankListWsData> banklist = new ArrayList<EmiBankListWsData>();
+
+			final Map<EMIBankModel, List<MplNoCostEMIVoucherModel>> bankCoupondataSet = getMplPaymentService()
+					.getNoCostEmiCouponDetails();
+
+			for (final Map.Entry<EMIBankModel, List<MplNoCostEMIVoucherModel>> resultMap : bankCoupondataSet.entrySet())
+			{
+				final EMIBankModel bank = resultMap.getKey();
+				final List<MplNoCostEMIVoucherModel> coupondatalist = resultMap.getValue();
+				final EmiBankListWsData listofbanks = new EmiBankListWsData();
+				if (null != bank.getName() && null != bank.getName().getBankName())
+				{
+					listofbanks.setBankName(bank.getName().getBankName());
+				}
+				if (null != bank.getCode())
+				{
+					listofbanks.setBankCode(bank.getCode());
+				}
+				if (null != bank.getPk())
+				{
+					listofbanks.setCode(bank.getPk().toString());
+				}
+				final List<EmiCouponListWsData> couponlist = new ArrayList<EmiCouponListWsData>();
+				for (final MplNoCostEMIVoucherModel voucher : coupondatalist)
+				{
+
+					//voucher
+					final EmiCouponListWsData listofcoupons = new EmiCouponListWsData();
+					if (null != voucher.getTenure())
+					{
+						listofcoupons.setTenure(voucher.getTenure().toString());
+					}
+					if (null != voucher.getValue())
+					{
+						listofcoupons.setValue(voucher.getValue().toString());
+
+					}
+					if (null != voucher.getCode())
+					{
+						listofcoupons.setEmicouponCode(voucher.getCode());
+					}
+					if (null != voucher.getName())
+					{
+						listofcoupons.setEmicouponName(voucher.getName());
+					}
+					if (null != voucher.getDescription())
+					{
+						listofcoupons.setDescription(voucher.getDescription());
+					}
+					if (null != voucher.getAbsolute())
+					{
+						final String IsPercentage = (voucher.getAbsolute().booleanValue()) ? "false" : "true";
+						listofcoupons.setIsPercentage(IsPercentage);
+					}
+					couponlist.add(listofcoupons);
+				}
+				listofbanks.setNoCostEMICouponList(couponlist);
+
+				banklist.add(listofbanks);
+
+			}
+			noCostEMIBankList.setBankList(banklist);
+
+			//			final Set<Map<EMIBankModel, MplNoCostEMIVoucherModel>> bankCoupondataSet = getMplPaymentService()
+			//					.getNoCostEmiCouponDetails();
+			//
+			//
+			//			for (final Map<EMIBankModel, MplNoCostEMIVoucherModel> resultMap : bankCoupondataSet)
+			//			{
+			//				for (final Map.Entry<EMIBankModel, MplNoCostEMIVoucherModel> entry : resultMap.entrySet())
+			//				{
+			//					final EMIBankModel bank = entry.getKey();
+			//					final boolean bankcodecheck = bankcodelist.contains(bank.getPk());
+			//					if (bankcodecheck == false)
+			//					{
+			//						//final MplNoCostEMIVoucherModel voucher = entry.getValue();
+			//						final EmiBankListWsData listofbanks = new EmiBankListWsData();
+			//						if (null != bank.getName() && null != bank.getName().getBankName())
+			//						{
+			//							listofbanks.setBankName(bank.getName().getBankName());
+			//						}
+			//						if (null != bank.getCode())
+			//						{
+			//							listofbanks.setBankCode(bank.getCode());
+			//						}
+			//						if (null != bank.getPk())
+			//						{
+			//							listofbanks.setCode(bank.getPk().toString());
+			//							bankcodelist.add(bank.getPk());
+			//						}
+			//						final List<EmiCouponListWsData> couponlist = new ArrayList<EmiCouponListWsData>();
+			//						for (final Map<EMIBankModel, MplNoCostEMIVoucherModel> resultMap1 : bankCoupondataSet)
+			//						{
+			//							for (final Map.Entry<EMIBankModel, MplNoCostEMIVoucherModel> entry1 : resultMap1.entrySet())
+			//							{
+			//								final EMIBankModel bankkey = entry1.getKey();
+			//								final MplNoCostEMIVoucherModel voucher = entry1.getValue();
+			//								if (bankkey.getPk().equals(bank.getPk()))
+			//								{
+			//									//voucher
+			//									final EmiCouponListWsData listofcoupons = new EmiCouponListWsData();
+			//									if (null != voucher.getTenure())
+			//									{
+			//										listofcoupons.setTenure(voucher.getTenure().toString());
+			//									}
+			//									if (null != voucher.getValue())
+			//									{
+			//										listofcoupons.setValue(voucher.getValue().toString());
+			//
+			//									}
+			//									if (null != voucher.getVoucherCode())
+			//									{
+			//										listofcoupons.setEmicouponCode(voucher.getVoucherCode());
+			//									}
+			//									if (null != voucher.getName())
+			//									{
+			//										listofcoupons.setEmicouponName(voucher.getName());
+			//									}
+			//									if (null != voucher.getDescription())
+			//									{
+			//										listofcoupons.setDescription(voucher.getDescription());
+			//									}
+			//									if (null != voucher.getAbsolute())
+			//									{
+			//										listofcoupons.setIsPercentage(voucher.getAbsolute().toString());
+			//									}
+			//
+			//									//final String isPercentage = "true";
+			//									//listofcoupons.setIsPercentage(isPercentage);
+			//									couponlist.add(listofcoupons);
+			//
+			//								}
+			//
+			//							}
+			//						}
+			//						listofbanks.setNoCostEMICouponList(couponlist);
+			//						banklist.add(listofbanks);
+			//					}
+			//
+			//
+			//				}
+			//
+			//
+			//			}
+			//noCostEMIBankList.setBankList(banklist);
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			//ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions while noCostEmiBankTenureList ", e);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			//ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions while noCostEmiBankTenureList ", e);
+
+		}
+		catch (final Exception e)
+		{
+			//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+			//MarketplacecommerceservicesConstants.E0000));
+			LOG.error("Exception while noCostEmiBankTenureList ", e);
+
+		}
+
+		return noCostEMIBankList;
+	}
+
+	/**
+	 * The Method to fetch no cost emi price break up details
+	 *
+	 * @param absOrder
+	 * @return NoCostEMIItemBreakUp
+	 */
+	@Override
+	public NoCostEMIItemBreakUp lineBreakupForNoCostEMI(final AbstractOrderModel absOrder)
+	{
+		final NoCostEMIItemBreakUp noCostEMIItemBreakUp = new NoCostEMIItemBreakUp();
+		final CurrencyModel currency = commonI18NService.getCurrency(INR);
+
+		double noCostEMITotalDiscountValue = 0;
+		double totalEMIPerMonth = 0;
+		double totalPriceAfterIntrstDiscount = 0;
+		double totalPrice = 0;
+		double cardBlockingAmount = 0;
+		int tenure = 0;
+
+		final List<ItemBreakUpDetailListDTO> dtoList = new ArrayList<ItemBreakUpDetailListDTO>();
+
+		if (null != absOrder && CollectionUtils.isNotEmpty(absOrder.getDiscounts()))
+		{
+			for (final DiscountModel oModel : absOrder.getDiscounts())
+			{
+				if (oModel instanceof MplNoCostEMIVoucherModel)
+				{
+					final MplNoCostEMIVoucherModel coupon = (MplNoCostEMIVoucherModel) oModel;
+					final Double percentage = coupon.getValue();
+					tenure = coupon.getTenure().intValue();
+
+					for (final AbstractOrderEntryModel entry : absOrder.getEntries())
+					{
+						if (null != entry)
+						{
+							final ItemBreakUpDetailListDTO dto = new ItemBreakUpDetailListDTO();
+							final ProductModel productModel = entry.getProduct();
+							final String productCode = productModel.getCode();
+							final String ussid = entry.getSelectedUSSID();
+							boolean isNoCostEMIEligible = false;
+							String sellerId = StringUtils.isNotEmpty(ussid) ? sellerId = ussid.substring(0, 6) : null;
+
+							if (StringUtils.isNotEmpty(productCode) && StringUtils.isNotEmpty(sellerId))
+							{
+								LOG.debug("product seller id ----" + sellerId);
+								LOG.debug("product listing id ----" + productCode);
+								isNoCostEMIEligible = getMplPaymentService().isNoCostEmiAvailable(productCode, sellerId);
+							}
+							//final double netAmountAfterAllDiscount = (null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0) ? entry.getNetAmountAfterAllDisc().doubleValue() : 0;
+							//final double lineAmountAfterAllDiscount = (netAmountAfterAllDiscount > 0) ? netAmountAfterAllDiscount: entry.getTotalPrice().doubleValue();
+							final double linePrice = entry.getTotalPrice().doubleValue();
+							totalPrice += linePrice;
+							final double lineInterest = ((percentage.doubleValue() * linePrice) / 100);
+							final double lineEmiDiscount = (null != entry.getEmiCouponValue() && entry.getEmiCouponValue().doubleValue() > 0) ? entry
+									.getEmiCouponValue().doubleValue() : 0;
+							noCostEMITotalDiscountValue += lineEmiDiscount;
+							final double lineTotalValue = linePrice + lineInterest - lineEmiDiscount;
+							totalPriceAfterIntrstDiscount += lineTotalValue;
+							final double perMonthEMILineValue = (tenure > 0) ? (lineTotalValue / tenure) : lineTotalValue;
+
+							dto.setProductTitle(productModel.getTitle());
+							dto.setUSSID(entry.getSelectedUSSID());
+							dto.setQuantity(entry.getQuantity().toString());
+							dto.setIsNoCostEMIEligible(isNoCostEMIEligible);
+							dto.setLineValue(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(linePrice), currency));
+							dto.setLineBankInterst(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(lineInterest), currency));
+							dto.setNoCostEMILineDiscount(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(lineEmiDiscount),
+									currency));
+							dto.setLineTotalValue(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(lineTotalValue),
+									currency));
+							dto.setPerMonthEMILineValue(priceDataFactory.create(PriceDataType.BUY,
+									BigDecimal.valueOf(perMonthEMILineValue), currency));
+							dtoList.add(dto);
+						}
+
+						totalEMIPerMonth = totalPriceAfterIntrstDiscount / tenure;
+						cardBlockingAmount = totalPrice - noCostEMITotalDiscountValue;
+						noCostEMIItemBreakUp.setItemBreakUpDetailList(dtoList);
+						noCostEMIItemBreakUp.setNoCostEMIDiscountValue(priceDataFactory.create(PriceDataType.BUY,
+								BigDecimal.valueOf(noCostEMITotalDiscountValue), currency));
+						noCostEMIItemBreakUp.setNoCostEMIPerMonthPayable(priceDataFactory.create(PriceDataType.BUY,
+								BigDecimal.valueOf(totalEMIPerMonth), currency));
+						noCostEMIItemBreakUp.setCardBlockingAmount(priceDataFactory.create(PriceDataType.BUY,
+								BigDecimal.valueOf(cardBlockingAmount), currency));
+						noCostEMIItemBreakUp.setTenure(String.valueOf(tenure));
+						noCostEMIItemBreakUp.setBankName(((MplNoCostEMIVoucherModel) oModel).getEmiBank().getName().getBankName());
+
+					}
+					break;
+				}
+
+			}
+		}
+		return noCostEMIItemBreakUp;
 	}
 }

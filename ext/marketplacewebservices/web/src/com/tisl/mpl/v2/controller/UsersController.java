@@ -228,6 +228,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.model.OrderStatusCodeMasterModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -7554,6 +7555,8 @@ public class UsersController extends BaseCommerceController
 						VoucherModel appliedVoucher = null;
 						//TPR-7486
 						boolean mplCartVoucher = false;
+						boolean mplNoCostEmiVoucher = false;
+						boolean noEmiapplicable = false;
 						final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
 
 						//final DiscountModel discount = voucherList.get(0);
@@ -7561,7 +7564,7 @@ public class UsersController extends BaseCommerceController
 						{
 
 
-							if (discount instanceof PromotionVoucherModel)
+							if (discount instanceof PromotionVoucherModel && !(discount instanceof MplNoCostEMIVoucherModel))
 							{
 								//final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 								//appliedVoucher = promotionVoucherModel;
@@ -7645,6 +7648,21 @@ public class UsersController extends BaseCommerceController
 									}
 								}
 							}
+							else
+							{
+								if (discount instanceof MplNoCostEMIVoucherModel)
+								{ //noCostEMI
+									mplNoCostEmiVoucher = true;
+									final MplNoCostEMIVoucherModel noCostEmiVoucherModel = (MplNoCostEMIVoucherModel) discount;
+									final List<BankModel> emibankLists = noCostEmiVoucherModel.getBanks();
+									if (CollectionUtils.isNotEmpty(emibankLists) && StringUtils.isEmpty(bankName))
+									{
+										noEmiapplicable = getMplPaymentFacade().validateBank(emibankLists, bankName);
+
+									}
+								}
+
+							}
 						}
 						//ERROR MESSAGE FOR COUPON AND VOUCHER
 						boolean checkcartVoucher1 = true;
@@ -7709,6 +7727,20 @@ public class UsersController extends BaseCommerceController
 							LOG.error("Both token and cardFingerPrint are empty for mobile(cart)");
 						}
 						//TPR-7448 Ends here
+
+
+						//No-Cost EMI validation START here
+						if (mplNoCostEmiVoucher && noEmiapplicable == false) // nocost emi voucher available but bank name not applicable
+						{
+							orderCreateInJusPayWsDto.setErrorMessage(MarketplacecommerceservicesConstants.NOCOSTEMTCOUPONFAILUREMESSAGE);
+							failFlag = true;
+							failErrorCode = MarketplacecommerceservicesConstants.B9078;
+
+						}
+						//No-Cost EMI validation END here
+
+
+
 					}
 
 					//TPR-4461 ENDS HERE WHEN ORDER MODEL IS NULL
@@ -7930,13 +7962,15 @@ public class UsersController extends BaseCommerceController
 					VoucherModel appliedVoucher = null;
 					//TPR-7486
 					boolean mplCartVoucher = false;
+					boolean mplNoCostEmiVoucher = false;
+					boolean noEmiapplicable = false;
 					final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
 
 					//final DiscountModel discount = voucherList.get(0);
 					for (final DiscountModel discount : voucherList)
 					{
 
-						if (discount instanceof PromotionVoucherModel)
+						if (discount instanceof PromotionVoucherModel && !(discount instanceof MplNoCostEMIVoucherModel))
 						{
 							//final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 							//appliedVoucher = promotionVoucherModel;
@@ -8016,6 +8050,21 @@ public class UsersController extends BaseCommerceController
 								}
 							}
 						}
+						else
+						{
+							if (discount instanceof MplNoCostEMIVoucherModel)
+							{ //noCostEMI
+								mplNoCostEmiVoucher = true;
+								final MplNoCostEMIVoucherModel noCostEmiVoucherModel = (MplNoCostEMIVoucherModel) discount;
+								final List<BankModel> emibankLists = noCostEmiVoucherModel.getBanks();
+								if (CollectionUtils.isNotEmpty(emibankLists) && StringUtils.isEmpty(bankName))
+								{
+									noEmiapplicable = getMplPaymentFacade().validateBank(emibankLists, bankName);
+
+								}
+							}
+
+						}
 					}
 					//ERROR MESSAGE FOR COUPON AND VOUCHER
 					boolean checkcartVoucher1 = true;
@@ -8079,6 +8128,16 @@ public class UsersController extends BaseCommerceController
 						LOG.error("Both token and cardFingerPrint are empty for mobile(order)");
 					}
 					//TPR-7448 Ends here
+					//No-Cost EMI validation START here
+					if (mplNoCostEmiVoucher && noEmiapplicable == false) // nocost emi voucher available but bank name not applicable
+					{
+						orderCreateInJusPayWsDto.setErrorMessage(MarketplacecommerceservicesConstants.NOCOSTEMTCOUPONFAILUREMESSAGE);
+						failFlag = true;
+						failErrorCode = MarketplacecommerceservicesConstants.B9078;
+
+					}
+					//No-Cost EMI validation END here
+
 				}
 				//TPR-4461 ENDS HERE WHEN ORDER MODEL IS NOT NULL
 

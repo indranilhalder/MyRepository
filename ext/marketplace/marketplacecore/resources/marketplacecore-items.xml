@@ -1506,6 +1506,8 @@
 		</relation>
 		
 	<!-- NU-50 end -->
+	
+		
 	</relations>
 	<itemtypes>
 	
@@ -3094,6 +3096,66 @@
 						<modifiers read="true" write="true" search="false"
 							initial="false" optional="true" partof="true" />
 					</attribute>
+					<!-- No cost emi-Starts -->
+					<attribute qualifier="isStandardEmi" type="java.lang.Boolean">
+						<description>Flag to indicate if standard emi is enabled.</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" optional="false" />
+					</attribute>
+					<attribute qualifier="isNoCostEmi" type="java.lang.Boolean">
+						<description>Flag to indicate if no cost emi is enabled.</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" optional="false" />
+					</attribute>
+					<attribute type="media" qualifier="logoImage">
+						<persistence type="property"></persistence>
+						<modifiers optional="true"/>
+					</attribute>
+					<attribute qualifier="noCostEmiTermsAndCondition" type="localized:java.lang.String">
+		 				<description>The message to show configurable no cost emi terms and conditions</description>
+		 				<modifiers read="true" write="true" />
+		 					<persistence type="property">
+		 						<columntype database="oracle">
+		 							<value>varchar2(2500)</value>	<!-- Changed for PRDI-177 -->
+		 						</columntype>
+		 						<columntype database="mysql">
+		 							<value>text</value>
+		 						</columntype>
+		 						<columntype database="sqlserver">
+									<value>nvarchar(max)</value>
+		 						</columntype>
+		 						<columntype database="hsqldb">
+		 							<value>LONGVARCHAR</value>
+		 						</columntype>
+		 						<columntype>
+		 							<value>varchar</value>
+		 						</columntype>
+		 					</persistence>
+		 			</attribute>
+		 			<!-- No cost emi-Ends -->
+		 			<attribute qualifier="standardEmiTermsAndCondition" type="localized:java.lang.String">
+		 				<description>The message to show configurable standard emi terms and conditions</description>
+		 				<modifiers read="true" write="true" />
+		 					<persistence type="property">
+		 						<columntype database="oracle">
+		 							<value>varchar2(2500)</value>	<!-- Changed for PRDI-177 -->
+		 						</columntype>
+		 						<columntype database="mysql">
+		 							<value>text</value>
+		 						</columntype>
+		 						<columntype database="sqlserver">
+									<value>nvarchar(max)</value>
+		 						</columntype>
+		 						<columntype database="hsqldb">
+		 							<value>LONGVARCHAR</value>
+		 						</columntype>
+		 						<columntype>
+		 							<value>varchar</value>
+		 						</columntype>
+		 					</persistence>
+		 			</attribute>
 				</attributes>
 			</itemtype>
 
@@ -10783,6 +10845,21 @@
 							optional="true" initial="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="emiCouponCode" autocreate="true"
+						type="java.lang.String">
+						<description>EMI Coupon Code</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true"  />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="emiCouponValue" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description> EMI Coupon Value</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true"  />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -11489,6 +11566,26 @@
 						<persistence type="property" />
 						<modifiers read="true" write="true" unique="false"
 							optional="true" />
+					</attribute>
+					<!-- no cost emi -->
+					<attribute qualifier="isNoCostEmi" autocreate="true"
+						type="java.lang.Boolean" generate="true">
+						<description>No Cost Emi Available</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='offerStartDate' type="java.util.Date"
+						generate="true">
+						<description>Date on which the no cost emi promotion would start</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='offerEndDate' type="java.util.Date"
+						generate="true">
+						<description>Date on which the no cost emi promotion would end</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
 					</attribute>
 				</attributes>
 				<indexes>

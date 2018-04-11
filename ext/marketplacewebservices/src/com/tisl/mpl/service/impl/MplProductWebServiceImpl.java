@@ -406,7 +406,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -617,7 +617,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			//			Added for OfferDetail of  a product TPR-1299
 			if (null != productCode)
 			{
-				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showOfferMessage(productCode);
+				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showOfferMessage(productCode, null);
 				if (MapUtils.isNotEmpty(offerMessageMap) && null != buyBoxData && null != buyBoxData.getSellerId()
 						&& offerMessageMap.containsKey(buyBoxData.getSellerId()))
 				{
@@ -2179,12 +2179,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 *
+	 * 
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 *
-	 *
+	 * 
+	 * 
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
@@ -3246,7 +3246,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getEgvProduct()
 	 */
 	@Override
@@ -3595,7 +3595,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetails(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -4104,7 +4104,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobileNew.setPotentialPromotions(potenitalPromo);
 				}
 
-				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showOfferMessage(productCode);
+				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showOfferMessage(productCode,
+						Boolean.TRUE);
 				if (MapUtils.isNotEmpty(offerMessageMap) && null != buyBoxData && null != buyBoxData.getSellerId()
 						&& offerMessageMap.containsKey(buyBoxData.getSellerId()))
 				{
@@ -4141,6 +4142,22 @@ public class MplProductWebServiceImpl implements MplProductWebService
 									{
 										ProductOfferMsgDTO.setEndDate(entry1.getValue());
 									}
+								}
+								//no cost emi
+								if (null != entry1 && null != entry1.getValue()
+										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.OFFERSTARTDATE))
+								{
+									ProductOfferMsgDTO.setOfferStartDate(entry1.getValue());
+								}
+								if (null != entry1 && null != entry1.getValue()
+										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.OFFERENDDATE))
+								{
+									ProductOfferMsgDTO.setOfferEndDate(entry1.getValue());
+								}
+								if (null != entry1 && null != entry1.getValue()
+										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.ISNOCOSTEMI))
+								{
+									ProductOfferMsgDTO.setIsNoCostEmi(entry1.getValue());
 								}
 							}
 							productDetailMobileNew.setProductOfferMsg(ProductOfferMsgDTO);

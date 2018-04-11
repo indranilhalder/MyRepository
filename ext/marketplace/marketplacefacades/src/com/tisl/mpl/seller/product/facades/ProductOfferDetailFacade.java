@@ -15,9 +15,10 @@ public interface ProductOfferDetailFacade
 {
 
 
-	public Map<String, Map<String, String>> showOfferMessage(final String productCode);
+	public Map<String, Map<String, String>> showOfferMessage(final String productCode, final Boolean isPwa);
 
 	//update the message for Freebie product TPR-1754
 
 	public Map<String, String> showFreebieMessage(String ussId);
+
 }

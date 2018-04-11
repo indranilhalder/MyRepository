@@ -45,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.MplPromoPriceWsDTO;
@@ -1297,6 +1298,18 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			priceWsPwaDTO = mplCartWebService.configureCartAmountPwa(orderModel);
 		}
 		return priceWsPwaDTO;
+	}
+
+	/**
+	 * NU-351 - Code to fetch NoCostEMIBankModel by pk
+	 *
+	 * @param pk
+	 * @return NoCostEMIBankModel
+	 */
+	@Override
+	public EMIBankModel getNoCostEMIBankByPk(final String pk)
+	{
+		return getMplPaymentWebService().getNoCostEMIBankByPk(pk);
 	}
 
 	protected CheckoutCustomerStrategy getCheckoutCustomerStrategy()

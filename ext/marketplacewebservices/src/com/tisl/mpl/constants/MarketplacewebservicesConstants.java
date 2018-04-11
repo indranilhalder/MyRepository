@@ -550,7 +550,7 @@ public class MarketplacewebservicesConstants
 	public static final String RESEND_NOTIFICATION_EGV = "/{userId}/resendEGV";
 	public static final String CREATE_ELECTRONICS_GIFTCARD_GUID_ID = "/{userId}/createElectronicsGiftCardCartGuidId";
 	public static final String CREATE_ELECTRONICS_GIFTCARD_AMOUNT = "/{userId}/calculateElectronicsGiftCardAmount";
-	
+
 	public static final String CRMNODES = "/{userId}/getWebCRMNodes";
 	public static final String MRUPEE = "MRUPEE".intern();
 
@@ -640,13 +640,13 @@ public class MarketplacewebservicesConstants
 	public static final String CHECK_WALLET_MOBILE_NUMBER = "/{userId}/checkWalletMobileNumber";
 	public static final String VERIFY_WALLET_OTP = "/{userId}/verifyWalletOtp";
 	public static final String BUCKET_DETAILS = "getBucketDetails";
-	
+
 	public static final String BUYING_EGV_MIN_PRICE = "mpl.buyingEgv.minPrice".intern();
 
 	public static final String BUYING_EGV_MAX_PRICE = "mpl.buyingEgv.maxPrice".intern();
 
 	public static final String BUYING_EGV_PRICE_OPTIONS = "mpl.buyingEgv.priceOptions".intern();
-	public static final String BUYING_EGV_PRODUCT_DISCLAIMER="SoldbyQwikCilverSolutionsPvt.Ltd.anddeliveredbyTataCliQ.CGiftCardsaresubjecttoTermsandConditions.HaveTataCliQGiftCard(s)?Redeemyourgiftcard.";
+	public static final String BUYING_EGV_PRODUCT_DISCLAIMER = "SoldbyQwikCilverSolutionsPvt.Ltd.anddeliveredbyTataCliQ.CGiftCardsaresubjecttoTermsandConditions.HaveTataCliQGiftCard(s)?Redeemyourgiftcard.";
 
 	public static final String MAP_CONFIGURABLE_ATTRIBUTE = "mapConfigurableAttribute";
 	public static final String MAP_CONFIGURABLE_ATTRIBUTES = "mapConfigurableAttributes";
@@ -698,4 +698,11 @@ public class MarketplacewebservicesConstants
 
 	public static final String H9002 = "H9002";
 	public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled";
+
+	//nocostemi
+	public static final String NOCOSTEMICHECK = "/noCostEmiCheck";
+	public static final String NOCOSTEMITNC = "/noCostEmiTnc";
+	public static final String NOCOSTEMITENURELIST = "/noCostEmiTenureList";
+
+	public static final String NOCOSTEMIITEMBREAKUP = "/noCostEmiItemBreakUp";
 }

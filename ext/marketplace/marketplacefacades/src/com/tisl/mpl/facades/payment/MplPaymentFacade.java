@@ -35,6 +35,8 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.wsdto.NoCostEMIItemBreakUp;
+import com.tisl.mpl.wsdto.mplNoCostEMIBankTenureDTO;
 
 
 /**
@@ -315,11 +317,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -327,9 +329,9 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return Map<String, List<MplNetbankingData>>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions, Exception;
@@ -505,9 +507,10 @@ public interface MplPaymentFacade
 	public String fetchBankFromCustomerSavedCard(final String cardRefNum, final CustomerModel Customer);
 
 	public String fetchBanknameFromBin(final String cardBinNo);//TPR-7486
+
 	/**
 	 * Added for paytm integration
-	 * 
+	 *
 	 * @param juspayOrderId
 	 * @param paymentMethodType
 	 * @param paymentMethod
@@ -518,8 +521,8 @@ public interface MplPaymentFacade
 	 */
 	public String getPaytmOrderStatus(String juspayOrderId, String paymentMethodType, String paymentMethod,
 			String redirectAfterPayment, String format) throws EtailNonBusinessExceptions;
-	
-	
+
+
 	/**
 	 * @param guid
 	 * @param orderToBeUpdated
@@ -532,5 +535,11 @@ public interface MplPaymentFacade
 	 * @return
 	 */
 	public String generateQCCode();
+
+	public boolean isNoCostEmiAvailable(String productCode, String sellerId);
+
+	public mplNoCostEMIBankTenureDTO noCostEmiBankTenureList();
+
+	NoCostEMIItemBreakUp lineBreakupForNoCostEMI(final AbstractOrderModel absOrder);
 
 }

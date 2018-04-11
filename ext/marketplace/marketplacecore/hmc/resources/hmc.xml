@@ -18,6 +18,7 @@
 			<typeref type="MplPaymentAudit" description="payment.PaymentAudit.description" />
 			<typeref type="JuspayWebhook" description="payment.PaymentWebhook.description" />
 			<typeref type="BinError" description="payment.BinError.description" />
+			<typeref type="NoCostEMIBank" description="payment.NoCostEMIBank.description" />
 		</group>
 		<group name="user" expand="false" description="group.user.description">
 			<typeref type="OTP" description="typeref.otp.description" />
@@ -406,13 +407,15 @@
 		<organizer>
 			<search mode="append">
 				<condition attribute="name" />
+				<condition attribute="isStandardEmi" />
+				<condition attribute="isNoCostEmi" />
 			</search>
 			<result defaultview="list">
 				<listview>
 					<itemlayout mode="replace">
 						<attribute name="name" width="150"></attribute>
 						<attribute name="EMITermRates" width="200"></attribute>
-
+						<attribute name="isNoCostEmi" width="150"></attribute>
 					</itemlayout>
 				</listview>
 			</result>
@@ -430,6 +433,13 @@
 						<listlayout>
 							<text name="text.payment.EMIbanks.detaileddescription" />
 							<attribute name="name" />
+						</listlayout>
+					</section>
+					<section name="section.payment.EMIBank.emiTypes" mode="replace"
+						position="1">
+						<listlayout>
+							<attribute name="isStandardEmi" />
+							<attribute name="isNoCostEmi" />
 						</listlayout>
 					</section>
 					<section name="section.payment.EMIrate.description">
@@ -450,8 +460,46 @@
 
 						</columnlayout>
 					</section>
+					<section name="section.payment.standardtEmi.tnc.description">
+						<columnlayout leftwidth="500">
+							<row>
+								<attribute name="standardEmiTermsAndCondition" labelwidth="100" width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+							</row>
+						</columnlayout>
+					</section>
 				</tab>
-				<tab name="administration" position="1">
+				<tab name="tab.payment.bank.noCostEmi.properties" mode="append"  position="1">
+					<section name="section.payment.noCostEmi.voucher.description">
+		               <listlayout>
+		               	<text name="text.payment.noCostEmi.voucher.description" width="595"/>
+	                     <attribute name="MplNoCostEMIVoucher">
+	                        <referencecollectioneditor presetattribute="voucher"
+	                        									create="true"
+	                        									add="true"
+	                        									remove="true"
+	                        									autosave="true">
+	                           <itemlayout>
+	                              <attribute name="voucherCode" width="194" position="0"/>
+		                  		  <attribute name="tenure" width="100" position="1"/>
+		                  		  <attribute name="tenure" width="100" position="2"/>
+	                           </itemlayout> 
+	                        </referencecollectioneditor>
+	                     </attribute>
+		               </listlayout>
+		            </section>
+					<section name="section.payment.noCostEmi.tnc.description">
+						<columnlayout leftwidth="500">
+							<row>
+								<attribute name="noCostEmiTermsAndCondition" labelwidth="100" width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+				<tab name="administration" position="2">
 					<section name="section.metadata">
 						<listlayout>
 							<attribute name="name" mode="delete" />
@@ -5522,5 +5570,4 @@
 		</organizer>
 	</type>
 	<!--NU-50 end  -->
-
 </configuration>

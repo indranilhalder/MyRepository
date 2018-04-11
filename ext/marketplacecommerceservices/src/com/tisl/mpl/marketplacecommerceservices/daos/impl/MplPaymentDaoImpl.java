@@ -11,24 +11,39 @@ import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.store.BaseStoreModel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enumerations.SellerAssociationStatusEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPaymentDao;
 import com.tisl.mpl.model.BankModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.model.PaymentTypeModel;
+import com.tisl.mpl.model.SellerInformationModel;
 
 
 /**
@@ -867,6 +882,119 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 		{
 			throw new EtailNonBusinessExceptions(ex);
 		}
+
+	}
+	@Override
+	public boolean isNoCostEmiAvailable(String productId, String sellerId)
+	{
+		boolean isNoCostEmiAvailable = false;
+		try
+		{
+			
+		  final String queryString = MarketplacecommerceservicesConstants.NOCOSTEMIQUERY;
+			LOG.debug("queryString: " + queryString);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+			query.addQueryParameter(MarketplacecommerceservicesConstants.OFFERPRODUCTID, productId);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.OFFERSELLERID, sellerId);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.SYSDATE, new Date());		
+
+			List resultClassList = new ArrayList();
+			resultClassList.add(Integer.class);
+			query.setResultClassList(resultClassList);
+			//flexExchangeL3Query.setResultClassList(Arrays.asList(String.class));
+
+			//LOG.debug(logQuery + flexExchangeL3Query.getQuery() + logQueryParam + flexExchangeL3Query.getQueryParameters());
+			final List<Integer> emiListcount = flexibleSearchService.<Integer> search(query).getResult();
+
+			if (CollectionUtils.isNotEmpty(emiListcount))
+			{
+				if (emiListcount.get(0).intValue() > 0)
+				{
+					isNoCostEmiAvailable = true;
+				}
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return isNoCostEmiAvailable;
+	}
+
+	protected <T> SearchResult<T> search(FlexibleSearchQuery searchQuery) {
+		return this.flexibleSearchService.search(searchQuery);
+	}
+
+	@Override
+	public Set<Map<EMIBankModel, MplNoCostEMIVoucherModel>> getNoCostEmiCouponDetails() throws EtailNonBusinessExceptions
+	{
+		final Set<Map<EMIBankModel, MplNoCostEMIVoucherModel>> emibankdataset = new LinkedHashSet<Map<EMIBankModel, MplNoCostEMIVoucherModel>>();
+		String queryString = StringUtils.EMPTY;
+
+		try
+		{
+			
+				queryString = "SELECT {e.pk},{v.pk} FROM "
+						+ "{EMIBank as e},{MplNoCostEMIVoucher as v},{daterestriction as d} WHERE {e.ISNOCOSTEMI} = '1' and "
+						+ "{v.EMIBANK} = {e.PK} and {v.pk}={d.voucher} and "
+                  + "{d.startdate} <= sysdate and sysdate<= {d.enddate}";
+				
+				LOG.debug(queryString);
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.setResultClassList(Arrays.asList(EMIBankModel.class, MplNoCostEMIVoucherModel.class));
+
+			final SearchResult<List<Object>> result = search(query);
+			if (result.getResult().isEmpty())
+			{
+				LOG.debug("empty voucher list of emi banks");
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
+			}
+			else
+			{
+				for (final List<Object> row : result.getResult())
+				{
+					final EMIBankModel emibank = (EMIBankModel) row.get(0);
+					final MplNoCostEMIVoucherModel vouchers = (MplNoCostEMIVoucherModel) row.get(1);
+					
+						final Map<EMIBankModel, MplNoCostEMIVoucherModel> resultMap = new HashMap<EMIBankModel, MplNoCostEMIVoucherModel>();
+						resultMap.put(emibank, vouchers);
+						emibankdataset.add(resultMap);
+					
+				}
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		return emibankdataset;
 
 	}
 }

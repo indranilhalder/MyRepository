@@ -3,10 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
-import de.hybris.platform.servicelayer.search.SearchResult;
-import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +21,10 @@ import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.ProductOfferDetailDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ProductOfferDetailService;
+
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.search.SearchResult;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 
 /**
@@ -50,55 +50,139 @@ public class ProductOfferDetailServiceImpl implements ProductOfferDetailService
 	 */
 
 	@Override
-	public Map<String, Map<String, String>> showOfferMessage(final String productCode)
+	public Map<String, Map<String, String>> showOfferMessage(final String productCode, final Boolean isPwa)
 	{
-		final SearchResult<List<Object>> result = prodOfferDetDao.showOfferMessage(productCode);
-
+		SearchResult<List<Object>> result = null;
 		final Map<String, Map<String, String>> resultMap = new HashMap<String, Map<String, String>>();
 
-		if (null != result && CollectionUtils.isNotEmpty(result.getResult()))
+		if (null != isPwa && isPwa.booleanValue())
 		{
-			for (final List<Object> row : result.getResult())
+			result = prodOfferDetDao.showOfferMessage(productCode, isPwa);
+
+			if (null != result && CollectionUtils.isNotEmpty(result.getResult()))
 			{
-				final Map<String, String> offerDetMap = new HashMap<String, String>();
-				String sellerIdQry = null;
-				String offerMessage = null;
-				String offerMessageDet = null;
-				String offerStartDate = null;
-				String offerEndDate = null;
-				if (!row.isEmpty())
+				for (final List<Object> row : result.getResult())
 				{
-					sellerIdQry = (String) row.get(0);
-					offerMessage = (String) row.get(1);
-					offerMessageDet = (String) row.get(2);
-					offerStartDate = (String) row.get(3);
-					offerEndDate = (String) row.get(4);
-				}
-				if (null != sellerIdQry)
-				{
-					if (StringUtils.isNotEmpty(offerMessage) && offerMessage.length() <= MIN_OFFER_LENGTH)
+					final Map<String, String> offerDetMap = new HashMap<String, String>();
+					String sellerIdQry = null;
+					String offerMessage = null;
+					String offerMessageDet = null;
+					String offerStartDate = null;
+					String offerEndDate = null;
+					//no cost emi
+					String offerStartDate1 = null;
+					String offerEndDate1 = null;
+					Boolean isNoCostEmi = null;
+					if (!row.isEmpty())
 					{
-						offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGE, offerMessage);
+						sellerIdQry = (String) row.get(0);
+						offerMessage = (String) row.get(1);
+						offerMessageDet = (String) row.get(2);
+						offerStartDate = (String) row.get(3);
+						offerEndDate = (String) row.get(4);
+						//no cost emi
+						offerStartDate1 = (String) row.get(5);
+						offerEndDate1 = (String) row.get(6);
+						isNoCostEmi = (Boolean) row.get(7);
 					}
+					if (null != sellerIdQry)
+					{
+						if (StringUtils.isNotEmpty(offerMessage) && offerMessage.length() <= MIN_OFFER_LENGTH)
+						{
+							offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGE, offerMessage);
+						}
 
-					// validateOffer method call for messageDet removed for INC_11105
-					if (StringUtils.isNotEmpty(offerMessageDet) && offerMessageDet.length() <= MIN_OFFER_LENGTH)
+						// validateOffer method call for messageDet removed for INC_11105
+						if (StringUtils.isNotEmpty(offerMessageDet) && offerMessageDet.length() <= MIN_OFFER_LENGTH)
 
-					{
-						offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGEDET, offerMessageDet);
+						{
+							offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGEDET, offerMessageDet);
+						}
+						if (StringUtils.isNotEmpty(offerStartDate))
+						{
+							offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGESTARTDATE, offerStartDate);
+						}
+						if (StringUtils.isNotEmpty(offerEndDate))
+						{
+							offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGEENDDATE, offerEndDate);
+						}
+						//no cost emi
+						if (StringUtils.isNotEmpty(offerStartDate1))
+						{
+							offerDetMap.put(MarketplacecommerceservicesConstants.OFFERSTARTDATE, offerStartDate1);
+						}
+						if (StringUtils.isNotEmpty(offerEndDate1))
+						{
+							offerDetMap.put(MarketplacecommerceservicesConstants.OFFERENDDATE, offerEndDate1);
+						}
+						if (null != isNoCostEmi)
+						{
+							if (isNoCostEmi.booleanValue())
+							{
+								offerDetMap.put(MarketplacecommerceservicesConstants.ISNOCOSTEMI,
+										MarketplacecommerceservicesConstants.TRUE.toLowerCase());
+							}
+							else
+							{
+								offerDetMap.put(MarketplacecommerceservicesConstants.ISNOCOSTEMI,
+										MarketplacecommerceservicesConstants.FALSE.toLowerCase());
+							}
+						}
+						resultMap.put(sellerIdQry, offerDetMap);
 					}
-					if (StringUtils.isNotEmpty(offerStartDate))
-					{
-						offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGESTARTDATE, offerStartDate);
-					}
-					if (StringUtils.isNotEmpty(offerEndDate))
-					{
-						offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGEENDDATE, offerEndDate);
-					}
-					resultMap.put(sellerIdQry, offerDetMap);
 				}
 			}
 		}
+		else
+		{
+			result = prodOfferDetDao.showOfferMessage(productCode, null);
+
+			if (null != result && CollectionUtils.isNotEmpty(result.getResult()))
+			{
+				for (final List<Object> row : result.getResult())
+				{
+					final Map<String, String> offerDetMap = new HashMap<String, String>();
+					String sellerIdQry = null;
+					String offerMessage = null;
+					String offerMessageDet = null;
+					String offerStartDate = null;
+					String offerEndDate = null;
+					if (!row.isEmpty())
+					{
+						sellerIdQry = (String) row.get(0);
+						offerMessage = (String) row.get(1);
+						offerMessageDet = (String) row.get(2);
+						offerStartDate = (String) row.get(3);
+						offerEndDate = (String) row.get(4);
+					}
+					if (null != sellerIdQry)
+					{
+						if (StringUtils.isNotEmpty(offerMessage) && offerMessage.length() <= MIN_OFFER_LENGTH)
+						{
+							offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGE, offerMessage);
+						}
+
+						// validateOffer method call for messageDet removed for INC_11105
+						if (StringUtils.isNotEmpty(offerMessageDet) && offerMessageDet.length() <= MIN_OFFER_LENGTH)
+
+						{
+							offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGEDET, offerMessageDet);
+						}
+						if (StringUtils.isNotEmpty(offerStartDate))
+						{
+							offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGESTARTDATE, offerStartDate);
+						}
+						if (StringUtils.isNotEmpty(offerEndDate))
+						{
+							offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGEENDDATE, offerEndDate);
+						}
+						resultMap.put(sellerIdQry, offerDetMap);
+					}
+				}
+			}
+		}
+
+
 		return resultMap;
 	}
 

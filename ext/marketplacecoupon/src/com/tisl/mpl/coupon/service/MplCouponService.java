@@ -87,4 +87,18 @@ public interface MplCouponService
 	 */
 	List<VoucherModel> getOpenVoucherList();
 
+	/**
+	 * Returns No Cost EMI Voucher Code
+	 *
+	 * @param couponCode
+	 * @return String
+	 */
+	String getNoCostEMIVoucherCode(String couponCode);
+
+	/**
+	 * @param discounts
+	 * @return boolean
+	 */
+	boolean validateCartEligilityForNoCostEMI(List<DiscountModel> discounts);
+
 }
