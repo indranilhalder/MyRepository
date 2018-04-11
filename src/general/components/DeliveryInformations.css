@@ -6,6 +6,14 @@
   position: relative;
   background: #fff;
 }
+.dataHolder {
+  width: 100%;
+  height: auto;
+}
+.notAvailable {
+  composes: dataHolder;
+  opacity: 0.4;
+}
 .placeTime {
   width: 100%;
   height: auto;
@@ -34,25 +42,25 @@
   line-height: 20px;
   margin-bottom: 35px;
 }
-.checkboxHolder{
-  width:20px;
-  height:20px;
+.checkboxHolder {
+  width: 20px;
+  height: 20px;
   position: absolute;
-  right:15px;
-  top:0;
-  bottom:0;
-  margin:auto;
+  right: 15px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }
-.arrowHolder{
-  composes:checkboxHolder;
+.arrowHolder {
+  composes: checkboxHolder;
   transform: rotate(180deg);
 }
-.underLineButtonHolder{
-  width:100%;
-  height:auto;
-  margin-top:3px;
+.underLineButtonHolder {
+  width: 100%;
+  height: auto;
+  margin-top: 3px;
 }
-.buttonHolderPiq{
-  composes:buttonHolder;
-  margin-left:0;
+.buttonHolderPiq {
+  composes: buttonHolder;
+  margin-left: 0;
 }
