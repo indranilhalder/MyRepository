@@ -101,6 +101,8 @@ const CLIENT_ID = "gauravj@dewsolutions.in";
 const CUSTOMER_PROFILE_PATH = "v2/mpl/users";
 export const FACEBOOK_PLATFORM = "facebook";
 export const GOOGLE_PLUS_PLATFORM = "googleplus";
+export const LOGIN_WITH_MOBILE = "mobile";
+export const LOGIN_WITH_EMAIL = "email";
 const FACEBOOK_SCOPE = "email,user_likes";
 const LOCALE = "en_US";
 const FACEBOOK_FIELDS = "name, email";
@@ -775,11 +777,12 @@ export function socialMediaLoginRequest() {
   };
 }
 
-export function socialMediaLoginSuccess(user) {
+export function socialMediaLoginSuccess(user, loginType) {
   return {
     type: SOCIAL_MEDIA_LOGIN_SUCCESS,
     status: SUCCESS,
-    user
+    user,
+    loginType
   };
 }
 
@@ -803,7 +806,8 @@ export function socialMediaLogin(userName, platform, customerAccessToken) {
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
-      return dispatch(socialMediaLoginSuccess(resultJson));
+
+      return dispatch(socialMediaLoginSuccess(resultJson, platform));
     } catch (e) {
       return dispatch(socialMediaLoginFailure(e.message));
     }
