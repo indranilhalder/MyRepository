@@ -5,12 +5,15 @@ export default class OrderPlacedAndId extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.orderPlacedHolder}>
-          <div className={styles.labelHeader}>{this.props.label} :</div>
-          <div className={styles.dataInformationText}>
-            {this.props.placedTime}
+        {this.props.placedTime && (
+          <div className={styles.orderPlacedHolder}>
+            <div className={styles.labelHeader}>{this.props.label} :</div>
+            <div className={styles.dataInformationText}>
+              {this.props.placedTime}
+            </div>
           </div>
-        </div>
+        )}
+
         <div className={styles.orderIdHolder}>
           <div className={styles.labelHeader}>Order ID :</div>
           <div className={styles.dataInformationText}>{this.props.orderId}</div>
