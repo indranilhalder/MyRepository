@@ -971,23 +971,22 @@ class CheckOutPage extends React.Component {
             </div>
           )}
 
-              <Checkout
-                label={
-                  this.state.confirmAddress &&
-                  !this.state.deliverMode &&
-                  !this.state.isGiftCard
-                    ? PROCEED
-                    : CONTINUE
-                }
-                amount={this.state.payableAmount}
-                bagTotal={this.state.bagAmount}
-                payable={this.state.payableAmount}
-                coupons={couponDiscount}
-                discount={totalDiscount}
-                delivery={deliveryCharge}
-                onCheckout={this.handleSubmit}
-              />
-
+          <Checkout
+            label={
+              this.state.confirmAddress &&
+              !this.state.deliverMode &&
+              !this.state.isGiftCard
+                ? PROCEED
+                : CONTINUE
+            }
+            amount={this.state.payableAmount}
+            bagTotal={this.state.bagAmount}
+            payable={this.state.payableAmount}
+            coupons={couponDiscount}
+            discount={totalDiscount}
+            delivery={deliveryCharge}
+            onCheckout={this.handleSubmit}
+          />
         </div>
       );
     } else if (this.state.orderConfirmation) {
@@ -1010,6 +1009,7 @@ class CheckOutPage extends React.Component {
                     this.props.cart.orderConfirmationDetails.orderRefNo
                   )
                 }
+                orderDetails={this.props.cart.orderConfirmationDetails}
               />
             </div>
           )}
@@ -1028,6 +1028,7 @@ class CheckOutPage extends React.Component {
                     this.props.cart.cliqCashJusPayDetails.orderId
                   )
                 }
+                orderDetails={this.props.cart.cliqCashJusPayDetails}
               />
             </div>
           )}
