@@ -11,6 +11,7 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS
 } from "../../lib/constants";
+import { LOGIN_WITH_MOBILE, LOGIN_WITH_EMAIL } from "../actions/user.actions";
 const user = (
   state = {
     user: null,
@@ -60,6 +61,12 @@ const user = (
       userDetails.firstName = action.user.customerInfo.firstName;
       userDetails.gender = action.user.customerInfo.gender;
       userDetails.lastName = action.user.customerInfo.lastName;
+      const EMAIL_REG_EX = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      if (EMAIL_REG_EX.test(action.userName)) {
+        userDetails.loginType = LOGIN_WITH_EMAIL;
+      } else {
+        userDetails.loginType = LOGIN_WITH_MOBILE;
+      }
 
       Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(userDetails));
       return Object.assign({}, state, {
@@ -293,7 +300,7 @@ const user = (
     case userActions.SOCIAL_MEDIA_LOGIN_SUCCESS:
       userDetails.userName = action.user.customerInfo.emailId;
       userDetails.customerId = action.user.customerId;
-
+      userDetails.loginType = action.loginType;
       Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(userDetails));
       return Object.assign({}, state, {
         status: action.status,

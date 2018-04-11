@@ -320,7 +320,13 @@ export function homeFeed(brandIdOrCategoryId: null) {
       }
       let parsedResultJson = JSON.parse(resultJson.content);
       parsedResultJson = parsedResultJson.items;
-      setDataLayer(ADOBE_HOME_TYPE);
+
+      setDataLayer(
+        ADOBE_HOME_TYPE,
+        null,
+        getState().icid.value,
+        getState().icid.icidType
+      );
       dispatch(homeFeedSuccess(parsedResultJson, feedTypeRequest));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
