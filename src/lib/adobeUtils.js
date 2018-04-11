@@ -117,7 +117,6 @@ function getDigitalDataForPdp(type, pdpResponse) {
   const categoryHierarchy = pdpResponse.categoryHierarchy.map(val => {
     return val.category_name.toLowerCase().replace(/\s+/g, "_");
   });
-  console.log(pdpResponse);
   const data = {
     cpj: {
       product: {
