@@ -22,7 +22,7 @@ export default class OrderDetailsCard extends React.Component {
           <OrderPlacedAndId orderId={this.props.orderId} />
         </div>
         <OrderCard
-          imageUrl={this.props.productDetails.imageUrl}
+          imageUrl={this.props.productDetails.imageURL}
           productName={this.props.productDetails.productName}
           price={this.props.productDetails.pricevalue}
           discountPrice=""
