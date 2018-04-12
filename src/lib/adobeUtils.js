@@ -14,13 +14,15 @@ export const ADOBE_TARGET_SPLIT_VALUE = "%7C";
 export const ADOBE_TARGET_MCMID = "MCMID";
 export const ADOBE_TARGET_WAIT_TIME = 2000;
 const ADOBE_SATELLITE_CODE = "virtual_page_load";
+const ADOBE_PDP_CPJ = "cpj_pdp";
+const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
+const ADOBE_SAVE_PRODUCT = "cpj_button_save";
+const ADOBE_EMI_BANK_SELECT_ON_PDP = "'cpj_pdp_emi";
+
 export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
 export const ADOBE_CART_TYPE = "cart";
-export const ADOBE_PDP_CPJ = "cpj_pdp";
-export const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
-export const ADOBE_SAVE_PRODUCT = "cpj_button_save";
-export const ADOBE_EMI_BANK_SELECT_ON_PDP = "'cpj_pdp_emi";
+
 export const ICID2 = "ICID2";
 export const CID = "CID";
 export const LOGIN_WITH_MOBIEL_NUMBER = "mobile";
@@ -48,6 +50,7 @@ export function setDataLayer(type, response, icid, icidType) {
 
   if (type === ADOBE_HOME_TYPE) {
     window.digitalData = getDigitalDataForHome();
+    window._satellite.track(ADOBE_PDP_CPJ);
   }
 
   if (type === ADOBE_PDP_TYPE) {
@@ -260,12 +263,15 @@ export function setDataLayerForPdpDirectCalls(type, layerData: null) {
   let data = window.digitalData;
 
   if (type === SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT) {
+    debugger;
     window._satellite.track(ADOBE_ADD_TO_CART);
   }
   if (type === SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT) {
+    debugger;
     window._satellite.track(ADOBE_SAVE_PRODUCT);
   }
   if (type === SET_DATA_LAYER_FOR_EMI_BANK_EVENT) {
+    debugger;
     Object.assign(data.cpj, {
       emi: { bank: layerData.replace(/ /g, "_").toLowerCase() }
     });

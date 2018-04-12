@@ -287,7 +287,7 @@ export function addProductToWishList(userId, accessToken, productDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayerForPdpDirectCalls(SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT);
+
       dispatch(addProductToWishListSuccess());
     } catch (e) {
       dispatch(addProductToWishListFailure(e.message));
