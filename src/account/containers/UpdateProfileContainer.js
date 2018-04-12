@@ -19,13 +19,14 @@ const mapDispatchToProps = dispatch => {
 
     updateProfile: async accountDetails => {
       const response = await dispatch(updateProfile(accountDetails));
-      if (response.status === SUCCESS) {
+
+      if (response && response.status && response.status === SUCCESS) {
         dispatch(displayToast(UPDATE_PROFILE_SUCCESS));
       }
     },
     changePassword: async passwordDetails => {
       const response = await dispatch(changePassword(passwordDetails));
-      if (response.status === SUCCESS) {
+      if (response.status && response.status === SUCCESS) {
         dispatch(displayToast(UPDATE_PASSWORD));
       }
     },

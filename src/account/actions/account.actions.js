@@ -26,6 +26,7 @@ import {
   VERIFY_OTP,
   GIFT_CARD_MODAL
 } from "../../general/modal.actions.js";
+import moment from "moment";
 import { getPaymentModes } from "../../cart/actions/cart.actions.js";
 import { getMcvId } from "../../lib/adobeUtils";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
@@ -171,8 +172,7 @@ export const UPDATE_PROFILE_SUCCESS = "UPDATE_PROFILE_SUCCESS";
 export const UPDATE_PROFILE_FAILURE = "UPDATE_PROFILE_FAILURE";
 export const LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER =
   "LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER";
-export const UPDATE_PROFILE_OTP_VERIFICATION =
-  "UPDATE_PROFILE_OTP_VERIFICATION";
+export const UPDATE_PROFILE_OTP_VERIFICATION = "UpdateProfileOtpVerification";
 export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
 export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
 export const CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAILURE";
@@ -195,6 +195,7 @@ const WIDGETS_LIST_FOR_BRANDS = [112];
 const CARD_TYPE = "BOTH";
 const FOLLOW = "follow";
 const UNFOLLOW = "unfollow";
+const DATE_FORAMT_TO_UPDATE_PROFILE = "([0-9]{2})/([0-9]{2})/([0-9]{4})";
 
 const CART_GU_ID = "cartGuid";
 // cencel product
@@ -1503,6 +1504,9 @@ export function followAndUnFollowBrandInCommerceFailure(error) {
 }
 
 export function updateProfile(accountDetails, otp) {
+  let dateOfBirth = moment(accountDetails.dateOfBirth).format("DD/MM/YYYY");
+  console.log(dateOfBirth);
+
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -1515,11 +1519,11 @@ export function updateProfile(accountDetails, otp) {
         JSON.parse(customerCookie).access_token
       }&ProfileDataRequired=true&firstName=${
         accountDetails.firstName
-      }&lastName=${accountDetails.lastName}&dateOfBirth=${
-        accountDetails.dateOfBirth
-      }&gender=${accountDetails.gender}&mobilenumber=${
-        accountDetails.mobileNumber
-      }&emailId=${accountDetails.emailId}`;
+      }&lastName=${accountDetails.lastName}&dateOfBirth=${dateOfBirth}&gender=${
+        accountDetails.gender
+      }&mobilenumber=${accountDetails.mobileNumber}&emailId=${
+        accountDetails.emailId
+      }`;
       if (otp) {
         updateProfileUrl = `${updateProfileUrl}&otp=${otp}`;
       }
@@ -1536,7 +1540,13 @@ export function updateProfile(accountDetails, otp) {
         dispatch(showModal(UPDATE_PROFILE_OTP_VERIFICATION, accountDetails));
       } else {
         if (otp) {
-          dispatch(logoutUserByMobileNumber());
+          if (
+            resultJson.status === SUCCESS ||
+            resultJson.status === SUCCESS_CAMEL_CASE ||
+            resultJson.status === SUCCESS_UPPERCASE
+          ) {
+            dispatch(logoutUserByMobileNumber());
+          }
         } else {
           return dispatch(updateProfileSuccess(resultJson));
         }
