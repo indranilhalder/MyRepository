@@ -195,7 +195,7 @@ const WIDGETS_LIST_FOR_BRANDS = [112];
 const CARD_TYPE = "BOTH";
 const FOLLOW = "follow";
 const UNFOLLOW = "unfollow";
-const DATE_FORAMT_TO_UPDATE_PROFILE = "([0-9]{2})/([0-9]{2})/([0-9]{4})";
+const DATE_FORMAT_TO_UPDATE_PROFILE = "DD/MM/YYYY";
 
 const CART_GU_ID = "cartGuid";
 // cencel product
@@ -1504,9 +1504,9 @@ export function followAndUnFollowBrandInCommerceFailure(error) {
 }
 
 export function updateProfile(accountDetails, otp) {
-  let dateOfBirth = moment(accountDetails.dateOfBirth).format("DD/MM/YYYY");
-  console.log(dateOfBirth);
-
+  let dateOfBirth = moment(accountDetails.dateOfBirth).format(
+    DATE_FORMAT_TO_UPDATE_PROFILE
+  );
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
