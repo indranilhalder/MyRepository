@@ -3,7 +3,15 @@ export const SET_SEARCH_STRING = "SET_SEARCH_STRING";
 export const SEARCH_RESULT_REQUEST = "SEARCH_RESULT_REQUEST";
 export const SEARCH_RESULT_SUCCESS = "SEARCH_RESULT_SUCCESS";
 export const SEARCH_RESULT_FAILURE = "SEARCH_RESULT_FAILURE";
+export const CLEAR_SEARCH_RESULTS = "CLEAR_SEARCH_RESULTS";
 export const SEARCH_PATH = "/v2/mpl/searchAndSuggest?searchString=";
+
+export function clearSearchResults() {
+  return {
+    type: CLEAR_SEARCH_RESULTS
+  };
+}
+
 export function setSearchString(string) {
   return {
     type: SET_SEARCH_STRING,

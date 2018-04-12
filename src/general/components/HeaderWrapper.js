@@ -21,7 +21,11 @@ import {
   MY_ACCOUNT_PAGE,
   JUS_PAY_CHARGED,
   JUS_PAY_PENDING,
-  JUS_PAY_AUTHENTICATION_FAILED
+  JUS_PAY_AUTHENTICATION_FAILED,
+  CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
+  BRAND_PRODUCT_LISTINGS_WITH_PAGE,
+  BRAND_AND_CATEGORY_PAGE,
+  SEARCH_RESULTS_PAGE
 } from "../../../src/lib/constants";
 import { SIGN_UP } from "../../auth/actions/user.actions";
 
@@ -61,6 +65,7 @@ class HeaderWrapper extends React.Component {
 
   render() {
     const url = this.props.location.pathname;
+
     let shouldRenderSearch = false;
 
     let productCode = null;
@@ -76,7 +81,7 @@ class HeaderWrapper extends React.Component {
       isGoBack = true;
       shouldRenderSearch = true;
     }
-    // let headerText = this.props.headerText;
+
     if (
       url === HOME_ROUTER ||
       url === CATEGORIES_LANDING_PAGE ||
@@ -84,6 +89,16 @@ class HeaderWrapper extends React.Component {
       url === PRODUCT_LISTINGS
     ) {
       isGoBack = false;
+      shouldRenderSearch = true;
+    }
+
+    if (
+      url === BRAND_AND_CATEGORY_PAGE ||
+      url === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE ||
+      url === BRAND_PRODUCT_LISTINGS_WITH_PAGE ||
+      url === SEARCH_RESULTS_PAGE
+    ) {
+      isGoBack = true;
       shouldRenderSearch = true;
     }
 
