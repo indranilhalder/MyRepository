@@ -57,6 +57,7 @@ export default class ProductGrid extends React.Component {
         onlineExclusive={data.onlineExclusive}
         outOfStock={!data.cumulativeStockLevel}
         onOffer={data.isOfferExisting}
+        newProduct={data.newProduct}
         averageRating={data.averageRating}
         totalNoOfReviews={data.totalNoOfReviews}
         view={this.state.view}
