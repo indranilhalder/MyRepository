@@ -14,6 +14,8 @@ import moment from "moment";
 
 const OFFER_AND_ITEM_LIMIT = 4;
 
+const DATE_TIME_REGEX = /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})/;
+
 export default class FlashSale extends React.Component {
   componentDidUpdate() {
     const offers = this.props.feedComponentData.offers;
@@ -45,6 +47,20 @@ export default class FlashSale extends React.Component {
     this.props.history.push(urlSuffix);
   };
 
+  convertDateTimeFromIndianToAmerican = str => {
+    const match = DATE_TIME_REGEX.exec(str);
+
+    const day = match[1];
+    const month = match[2];
+    const year = match[3];
+    const hours = match[4];
+    const minutes = match[5];
+    const seconds = match[6];
+
+    const dateTimeInAmericanFormat = `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`;
+    return dateTimeInAmericanFormat;
+  };
+
   render() {
     const { feedComponentData, ...rest } = this.props;
     let items = [];
@@ -53,9 +69,29 @@ export default class FlashSale extends React.Component {
       return null;
     }
 
+    const startDateTime = new Date(
+      this.convertDateTimeFromIndianToAmerican(feedComponentData.startDate)
+    );
+
+    const endDateTime = new Date(
+      this.convertDateTimeFromIndianToAmerican(feedComponentData.endDate)
+    );
+
+    if (!moment(startDateTime).isValid()) {
+      return null;
+    }
+
+    if (!moment(endDateTime).isValid()) {
+      return null;
+    }
+
     if (feedComponentData.items) {
       items = feedComponentData.items.map(transformData);
     }
+
+    // Check for date validation
+
+    // feedComponentData.startDate = "13/04/2018 25:40:00";
 
     let offersAndItemsArray;
     if (feedComponentData.offers) {
@@ -64,18 +100,6 @@ export default class FlashSale extends React.Component {
     } else {
       offersAndItemsArray = items;
     }
-
-    // WE do this because new Date(Datestr) gives back date time in the american format, but the string is in non-american format.
-    // So we need to do a diff of the correct date.
-
-    const startDateTime = new Date(
-      moment(new Date(feedComponentData.startDate)).format(
-        "MM/DD/YYYY HH:mm:ss"
-      )
-    );
-    const endDateTime = new Date(
-      moment(new Date(feedComponentData.endDate)).format("MM/DD/YYYY HH:mm:ss")
-    );
 
     // if date time
 
@@ -105,7 +129,7 @@ export default class FlashSale extends React.Component {
                 <Icon image={ClockImage} size={20} />
               </div>
               <div className={styles.countDownHolder}>
-                <TimerCounter endTime={feedComponentData.endDate} />
+                <TimerCounter endTime={endDateTime} />
               </div>
             </div>
           </div>
