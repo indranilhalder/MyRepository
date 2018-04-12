@@ -238,7 +238,7 @@ export default class PdpJewellery extends React.Component {
             />
           </div>
           {productData.details &&
-            productData.details.lengtht > 0 && (
+            productData.details.length > 0 && (
               <div className={styles.info}>
                 <span className={styles.textOffset}>
                   {productData.details[0].value}
