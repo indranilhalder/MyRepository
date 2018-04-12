@@ -15,12 +15,12 @@ import ErrorContainer from "./general/containers/ErrorContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
 import BrandsLandingPageDefaultContainer from "./blp/containers/BrandsLandingPageDefaultContainer";
 // import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
-import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
+// import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 // import CartContainer from "./cart/containers/CartContainer";
-import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
-import CategoriesPageContainer from "./clp/containers/CategoriesPageContainer";
-import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
-import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
+// import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
+// import CategoriesPageContainer from "./clp/containers/CategoriesPageContainer";
+// import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
+// import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
 // import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
 import MobileFooter from "./general/components/MobileFooter.js";
@@ -81,6 +81,41 @@ import {
   REQUESTING
 } from "../src/lib/constants";
 import Loadable from "react-loadable";
+
+const DisplayOrderSummaryContainer = Loadable({
+  loader: () => import("./cart/containers/DisplayOrderSummaryContainer"),
+  loading() {
+    return <div> Loading...</div>;
+  }
+});
+
+const CheckoutAddressContainer = Loadable({
+  loader: () => import("./cart/containers/CheckoutAddressContainer"),
+  loading() {
+    return <div> Loading...</div>;
+  }
+});
+
+const PlpBrandCategoryWrapperContainer = Loadable({
+  loader: () => import("./plp/containers/PlpBrandCategoryWrapperContainer"),
+  loading() {
+    return <div> Loading...</div>;
+  }
+});
+
+const DeliveryModesContainer = Loadable({
+  loader: () => import("./cart/containers/DeliveryModesContainer"),
+  loading() {
+    return <div> Loading...</div>;
+  }
+});
+
+const CategoriesPageContainer = Loadable({
+  loader: () => import("./clp/containers/CategoriesPageContainer"),
+  loading() {
+    return <div> Loading...</div>;
+  }
+});
 
 const LoginContainer = Loadable({
   loader: () => import("./auth/containers/LoginContainer"),
