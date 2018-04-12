@@ -2,6 +2,7 @@ package com.tisl.mpl.service;
 
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.PK;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -40,6 +41,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
+import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.SavedCardModel;
 import com.tisl.mpl.dao.MplPaymentWebDAO;
@@ -1691,5 +1693,26 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	public void setCartService(final CartService cartService)
 	{
 		this.cartService = cartService;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.service.MplPaymentWebService#getNoCostEMIBankByPk(java.lang.String)
+	 */
+	@Override
+	public EMIBankModel getNoCostEMIBankByPk(final String pkStr)
+	{
+		EMIBankModel noCostEMIBankModel = null;
+		try
+		{
+			final PK pk = PK.fromLong(Long.parseLong(pkStr));
+			noCostEMIBankModel = modelService.get(pk);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error:getNoCostEMIBankByPk=", e);
+		}
+		return noCostEMIBankModel;
 	}
 }

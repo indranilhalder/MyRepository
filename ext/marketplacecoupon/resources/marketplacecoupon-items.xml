@@ -68,7 +68,20 @@
 		<!-- TPR-7448 Ends here -->
     </enumtypes>
             
-
+<relations>
+<relation code="EMIBankVoucherRelation" localized="false"
+			generate="false" autocreate="true">
+			<sourceElement type="EMIBank" qualifier="emiBank"
+				cardinality="one">
+				<modifiers read="true" write="true" optional="true" />
+			</sourceElement>
+			<targetElement type="MplNoCostEMIVoucher" qualifier="mplNoCostEMIVoucher"
+				cardinality="many" collectiontype="list" >
+				<modifiers read="true" write="true" optional="true"
+					partof="false" />
+			</targetElement>
+		</relation>
+</relations>
 	<itemtypes>
 
 <!-- Tata Etail change - Coupon starts -->
@@ -643,5 +656,29 @@
 		</itemtype>		
 		<!-- COUPON USER RESTRICTION ENDS --> 
 		<!-- CAR-330 ends here -->
+		
+		<!-- No Cost EMI Coupons Begin Here -->
+		<itemtype code="MplNoCostEMIVoucher" 
+			extends="PromotionVoucher" 
+			jaloclass="com.tisl.mpl.jalo.MplNoCostEMIVoucher"
+			autocreate="true" 
+			generate="true">
+			<attributes>
+				<attribute qualifier="tenure" type="java.lang.Integer">
+					<defaultvalue>Integer.valueOf(3)</defaultvalue>
+					<description>Minimum Tenure Value</description>
+					<persistence type="property"/>
+					<modifiers search="false" optional="false"/>
+				</attribute>
+				<attribute autocreate="true"  qualifier="banks"
+					type="BankDataCollection">
+					<description>List of Banks</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		<!-- No Cost EMI Coupons Ends Here -->
 	</itemtypes>
 </items>

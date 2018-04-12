@@ -230,8 +230,7 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 	 */
 
 	private void resetNetAmtAftrAllDisc(final AbstractOrderModel abstractOrderModel) //Changed to abstractOrderModel for TPR-629
-	{
-		// Code Added for TISPT-148
+	{// Code Added for TISPT-148
 		final List<AbstractOrderEntryModel> cartEntryList = new ArrayList<AbstractOrderEntryModel>();
 		for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 		{
@@ -262,9 +261,7 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 		if (CollectionUtils.isNotEmpty(cartEntryList))
 		{
 			getModelService().saveAll(cartEntryList);
-		}
-
-	}
+		}}
 
 
 	/**

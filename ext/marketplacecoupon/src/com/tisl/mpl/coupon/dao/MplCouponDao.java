@@ -71,4 +71,10 @@ public interface MplCouponDao
 
 	List<VoucherModel> getOpenVoucherList();
 
+	/**
+	 * @param couponCode
+	 * @return String
+	 */
+	String getNoCostEMIVoucherCode(String couponCode);
+
 }

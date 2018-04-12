@@ -22,7 +22,7 @@ public interface ProductOfferDetailService
 	 * @param productCode
 	 * @return message
 	 */
-	public Map<String, Map<String, String>> showOfferMessage(String productCode);
+	public Map<String, Map<String, String>> showOfferMessage(String productCode, final Boolean isPwa);
 
 	//update the message for Freebie product TPR-1754
 

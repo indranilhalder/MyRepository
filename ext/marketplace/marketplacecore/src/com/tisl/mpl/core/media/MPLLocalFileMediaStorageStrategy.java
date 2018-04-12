@@ -74,10 +74,6 @@ public class MPLLocalFileMediaStorageStrategy implements MediaStorageStrategy, L
 		this.sessionService = sessionService;
 	}
 
-	public MPLLocalFileMediaStorageStrategy()
-	{
-	}
-
 	@Override
 	public StoredMediaData store(final de.hybris.platform.media.storage.MediaStorageConfigService.MediaFolderConfig config,
 			final String mediaId, final Map metaData, final InputStream dataStream)

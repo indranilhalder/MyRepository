@@ -69,6 +69,8 @@ import com.tisl.mpl.wsdto.DepartmentListHierarchyDataAmp;
 import com.tisl.mpl.wsdto.DepartmentSubHierarchyData;
 import com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyData;
 import com.tisl.mpl.wsdto.HelpAndServicestWsData;
+import com.tisl.mpl.wsdto.HeroBannerCompListWsDTO;
+import com.tisl.mpl.wsdto.HeroBannerCompWsDTO;
 import com.tisl.mpl.wsdto.ProductForCategoryData;
 import com.tisl.mpl.wsdto.ProductMobileWsDTOList;
 
@@ -1367,5 +1369,50 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 		return shopByDeptData;
 	}
 
+	@Override
+	public HeroBannerCompWsDTO getBannerDataForCategory(final String categoryId)
+	{
+		final HeroBannerCompListWsDTO heroBannerlist = new HeroBannerCompListWsDTO();
+		final HeroBannerCompWsDTO heroBannerData = new HeroBannerCompWsDTO();
+
+		final CategoryModel catmod = categoryService.getCategoryForCode(categoryId);
+
+		List<SimpleBannerComponentModel> bannerList = new ArrayList<SimpleBannerComponentModel>();
+
+		if (CollectionUtils.isNotEmpty(catmod.getDynamicBanners()))
+		{
+			bannerList = catmod.getDynamicBanners();
+
+			for (final SimpleBannerComponentModel code : bannerList)
+			{
+				if (code.getTitle() != null)
+				{
+					heroBannerlist.setTitle(code.getTitle());
+				}
+				if (code.getUrlLink() != null)
+				{
+					heroBannerlist.setWebURL(code.getUrlLink());
+				}
+				if (code.getUid() != null)
+				{
+					heroBannerlist.setComponentId(code.getUid());
+				}
+
+				if (code.getMedia() != null && code.getMedia().getURL2() != null)
+				{
+					heroBannerlist.setImageURL(code.getMedia().getURL2());
+				}
+
+				heroBannerlist.setBrandLogo("");
+			}
+		}
+		final List<HeroBannerCompListWsDTO> items = new ArrayList<HeroBannerCompListWsDTO>();
+
+		items.add(heroBannerlist);
+		heroBannerData.setItems(items);
+		return heroBannerData;
+
+
+	}
 
 }

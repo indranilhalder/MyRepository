@@ -11,12 +11,17 @@ import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.tisl.mpl.core.model.BankforNetbankingModel;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.model.BankModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 
 
@@ -188,5 +193,8 @@ public interface MplPaymentDao
 	 * @return
 	 */
 	List<EMIBankModel> getBankDetailsforEMI(Double productValue, String emiBankName);
+	
+	boolean isNoCostEmiAvailable(String productCode, String sellerId);
+	Set<Map<EMIBankModel, MplNoCostEMIVoucherModel>> getNoCostEmiCouponDetails() throws EtailNonBusinessExceptions;
 
 }

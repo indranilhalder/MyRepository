@@ -1,5 +1,19 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.CustomerOldEmailDetailsModel;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.daos.ExtendedUserDao;
+import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
+
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
@@ -7,18 +21,6 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.internal.dao.DefaultGenericDao;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.CustomerOldEmailDetailsModel;
-import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.marketplacecommerceservices.daos.ExtendedUserDao;
-import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 
 
 
@@ -57,21 +59,23 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 		final List<CustomerModel> resList;
 		final Map parameters = new HashMap();
 
-		if (ANNONYMOUS.equals(uid))
+		if (null != uid && StringUtils.isNotEmpty(uid))
 		{
-			parameters.put(CustomerModel.UID, uid);
-		}
-		else
-		{
-			if (uid.contains("@"))
+			if (ANNONYMOUS.equals(uid))
 			{
-				parameters.put(CustomerModel.ORIGINALUID, uid);
+				parameters.put(CustomerModel.UID, uid);
 			}
-			else if (uid.length() == 10 && (uid.startsWith("9") || uid.startsWith("8") || uid.startsWith("7")))
+			else
 			{
-				parameters.put(CustomerModel.MOBILENUMBER, uid);
+				if (uid.contains("@"))
+				{
+					parameters.put(CustomerModel.ORIGINALUID, uid);
+				}
+				else
+				{
+					parameters.put(CustomerModel.MOBILENUMBER, uid);
+				}
 			}
-
 		}
 
 		resList = find(parameters);
@@ -83,7 +87,7 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 		}
 		return resList.isEmpty() ? null : resList.get(0);
 	}
-	
+
 	@Override
 	public CustomerModel findUserByWalletMobileNumber(final String mobileNumber)
 	{
@@ -100,11 +104,17 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 	@Override
 	public UserModel findUserByEmailId(final String uid)
 	{
-		final List resList = find(Collections.singletonMap("uid", uid));
-		if (resList.size() > 1)
+		List resList = null;
+		if (null != uid && StringUtils.isNotEmpty(uid))
 		{
-			throw new AmbiguousIdentifierException(MarketplacecommerceservicesConstants.FOUND + resList.size()
-					+ " users with the unique uid '" + uid + "'");
+			resList = find(Collections.singletonMap("uid", uid));
+
+
+			if (resList.size() > 1)
+			{
+				throw new AmbiguousIdentifierException(MarketplacecommerceservicesConstants.FOUND + resList.size()
+						+ " users with the unique uid '" + uid + "'");
+			}
 		}
 		return ((resList.isEmpty()) ? null : (UserModel) resList.get(0));
 	}

@@ -3,12 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
-import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
-import de.hybris.platform.servicelayer.internal.dao.AbstractItemDao;
-import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
-import de.hybris.platform.servicelayer.search.SearchResult;
-import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
-
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +14,12 @@ import com.tisl.mpl.core.model.FreebieDetailModel;
 import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.ProductOfferDetailDao;
+
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.internal.dao.AbstractItemDao;
+import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
+import de.hybris.platform.servicelayer.search.SearchResult;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 
 /**
@@ -38,24 +38,44 @@ public class ProductOfferDetailDaoImpl extends AbstractItemDao implements Produc
 	 * @return message
 	 */
 	@Override
-	public SearchResult<List<Object>> showOfferMessage(final String productCode)
+	public SearchResult<List<Object>> showOfferMessage(final String productCode, final Boolean isPwa)
 	{
 		try
 		{
-
-			final String queryString = MarketplacecommerceservicesConstants.PRODUCTOFFERDETMSGQUERY;
-			LOG.debug("queryString: " + queryString);
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-
-			query.addQueryParameter(MarketplacecommerceservicesConstants.OFFERPRODUCTID, productCode);
-
-			query.addQueryParameter(MarketplacecommerceservicesConstants.SYSDATE, new Date());
-
-			query.setResultClassList(Arrays.asList(String.class, String.class, String.class, String.class, String.class));
-			final SearchResult<List<Object>> result = search(query);
-			if (null != result)
+			if (null != isPwa && isPwa.booleanValue())
 			{
-				return result;
+				final String queryString = MarketplacecommerceservicesConstants.PRODUCTOFFERDETMSGQUERYPWA;
+				LOG.debug("queryString: " + queryString);
+				final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+				query.addQueryParameter(MarketplacecommerceservicesConstants.OFFERPRODUCTID, productCode);
+
+				query.addQueryParameter(MarketplacecommerceservicesConstants.SYSDATE, new Date());
+
+				query.setResultClassList(Arrays.asList(String.class, String.class, String.class, String.class, String.class,
+						String.class, String.class, Boolean.class));
+				final SearchResult<List<Object>> result = search(query);
+				if (null != result)
+				{
+					return result;
+				}
+			}
+			else
+			{
+				final String queryString = MarketplacecommerceservicesConstants.PRODUCTOFFERDETMSGQUERY;
+				LOG.debug("queryString: " + queryString);
+				final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+				query.addQueryParameter(MarketplacecommerceservicesConstants.OFFERPRODUCTID, productCode);
+
+				query.addQueryParameter(MarketplacecommerceservicesConstants.SYSDATE, new Date());
+
+				query.setResultClassList(Arrays.asList(String.class, String.class, String.class, String.class, String.class));
+				final SearchResult<List<Object>> result = search(query);
+				if (null != result)
+				{
+					return result;
+				}
 			}
 			return null;
 		}

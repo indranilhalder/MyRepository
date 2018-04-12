@@ -73,6 +73,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionSer
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.BankModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.pojo.request.QCCreditRequest;
@@ -222,11 +223,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	private static final String PENDING_KEY = "PENDING";
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService; //Added for TPR-1348
-   @Autowired
+	@Autowired
 	private OrderModelService orderModelService;
-   
-   @Autowired
-   private MplWalletServices mplWalletServices;
+
+	@Autowired
+	private MplWalletServices mplWalletServices;
+
 	/**
 	 * @return the mplJusPayRefundService
 	 */
@@ -2165,7 +2167,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		VoucherDiscountData discData = new VoucherDiscountData();
 		//SDP-15 starts here
 		String sdpLogFlag = null;
-		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SDPFIFTEENLOG)))
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SDPFIFTEENLOG)))
 		{
 			sdpLogFlag = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SDPFIFTEENLOG);
 		}
@@ -2173,9 +2176,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		if (null != cartModel)
 		{
 			calculatePromotion(cartModel, null, cartData, null);
-			if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+			if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 			{
-			 LOG.error("Cart Total Price before Coupon Discount Calculation is : " + cartModel.getTotalPrice() + "Cart guid" + cartModel.getGuid()); //SDP-15
+				LOG.error("Cart Total Price before Coupon Discount Calculation is : " + cartModel.getTotalPrice() + "Cart guid"
+						+ cartModel.getGuid()); //SDP-15
 			}
 			final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 			final String paymentMode = getSessionService()
@@ -2246,9 +2250,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		else if (null != orderModel)
 		{
 			calculatePromotion(null, orderModel, null, orderData);
-			if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+			if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 			{
-			LOG.error("Cart Total Price before Coupon Discount Calculation is : " + orderModel.getTotalPrice() + "OrderCart guid" + orderModel.getGuid()); //SDP-15
+				LOG.error("Cart Total Price before Coupon Discount Calculation is : " + orderModel.getTotalPrice() + "OrderCart guid"
+						+ orderModel.getGuid()); //SDP-15
 			}
 			final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 			final String paymentMode = getSessionService()
@@ -2279,9 +2284,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					getModelService().save(orderModel);
 					getModelService().refresh(orderModel);
 				}
-				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 				{
-				LOG.error("Cart Total Price after Coupon Discount Calculation is : " + orderModel.getTotalPrice() + "OrderCart guid" + orderModel.getGuid()); //SDP-15
+					LOG.error("Cart Total Price after Coupon Discount Calculation is : " + orderModel.getTotalPrice()
+							+ "OrderCart guid" + orderModel.getGuid()); //SDP-15
 				}
 				discData = getMplVoucherService().getVoucherData(orderModel);
 				//				LOG.debug(">> 2 : Checking voucher related promotion >> ");
@@ -2407,15 +2413,16 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final OrderData orderData) //Added  orderModel and orderData to handle TPR-629---order before payment
 	{
 		final long startTime = System.currentTimeMillis();
-		
+
 		//SDP-15 starts here
 		String sdpLogFlag = null;
-		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SDPFIFTEENLOG)))
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SDPFIFTEENLOG)))
 		{
 			sdpLogFlag = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SDPFIFTEENLOG);
 		}
 		//SDP-15 ends here
-				
+
 		//Try/catch handled for IQA TPR-629
 		try
 		{
@@ -2429,26 +2436,26 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				parameter.setCart(cartModel);
 				getCalculationStrategy().recalculateCart(parameter);
 
-				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 				{
-				LOG.error("Cart Guid in calculate Promotion Method : " + cartModel.getGuid()); //SDP-15
+					LOG.error("Cart Guid in calculate Promotion Method : " + cartModel.getGuid()); //SDP-15
 				}
-				
+
 				final Double subTotal = cartModel.getSubtotal();
-				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 				{
-				LOG.error("Cart Subtotal in calculatePromotion method:" + subTotal);//SDP-15
+					LOG.error("Cart Subtotal in calculatePromotion method:" + subTotal);//SDP-15
 				}
 				final Double cartDiscount = populateCartDiscountPrice(cartModel, null);
-				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 				{
-				LOG.error("Cart Discount in calculatePromotion method:" + cartDiscount);//SDP-15
+					LOG.error("Cart Discount in calculatePromotion method:" + cartDiscount);//SDP-15
 				}
 
 				final double deliveryCost = calculateDeliveryChargeForShipping(cartModel);
-				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 				{
-				LOG.error("Cart Delivery Cost in calculatePromotion method: " + deliveryCost); //SDP-15
+					LOG.error("Cart Delivery Cost in calculatePromotion method: " + deliveryCost); //SDP-15
 				}
 
 				cartModel.setDeliveryCost(Double.valueOf(deliveryCost));
@@ -2459,24 +2466,24 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//TISEE-5354
 				final Double totalPrice = Double.valueOf(String.format("%.2f", totalPriceAfterDeliveryCost));
 				cartModel.setTotalPrice(totalPrice);
-				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 				{
-				LOG.error("Cart Total Price in calculatePromotion method: " + cartModel.getTotalPrice()); //SDP-15
+					LOG.error("Cart Total Price in calculatePromotion method: " + cartModel.getTotalPrice()); //SDP-15
 				}
 				getModelService().save(cartModel);
 				getMplCommerceCartService().setTotalWithConvCharge(cartModel, cartData);
 			}
 			else if (null != orderModel)
 			{
-				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 				{
-				LOG.error("OrderModel Cart Guid in calculate Promotion Method : " + orderModel.getGuid()); //SDP-15
+					LOG.error("OrderModel Cart Guid in calculate Promotion Method : " + orderModel.getGuid()); //SDP-15
 				}
 				//When customer has orderModel
 				final Double deliveryCost = orderModel.getDeliveryCost();
-				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 				{
-				LOG.error("OrderCart Delivery Cost in calculatePromotion method: " + deliveryCost); //SDP-15
+					LOG.error("OrderCart Delivery Cost in calculatePromotion method: " + deliveryCost); //SDP-15
 				}
 				final CommerceCartParameter parameter = new CommerceCartParameter();
 				parameter.setEnableHooks(true);
@@ -2484,14 +2491,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				getCalculationStrategy().recalculateCart(parameter);
 
 				final Double subTotal = orderModel.getSubtotal();
-				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 				{
-				LOG.error("OrderCart Subtotal in calculatePromotion method:" + subTotal);//SDP-15
+					LOG.error("OrderCart Subtotal in calculatePromotion method:" + subTotal);//SDP-15
 				}
 				final Double orderDiscount = populateCartDiscountPrice(null, orderModel);
-				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 				{
-				LOG.error("OrderCart Discount in calculatePromotion method:" + orderDiscount);//SDP-15
+					LOG.error("OrderCart Discount in calculatePromotion method:" + orderDiscount);//SDP-15
 				}
 				final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliveryCost.doubleValue()
 						- orderDiscount.doubleValue());
@@ -2501,9 +2508,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//TISEE-5354
 				final Double totalPrice = Double.valueOf(String.format("%.2f", totalPriceAfterDeliveryCost));
 				orderModel.setTotalPrice(totalPrice);
-				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 				{
-				LOG.error("OrderCart Total Price in calculatePromotion method: " + orderModel.getTotalPrice()); //SDP-15
+					LOG.error("OrderCart Total Price in calculatePromotion method: " + orderModel.getTotalPrice()); //SDP-15
 				}
 				getModelService().save(orderModel);
 				getMplCommerceCartService().setTotalWithConvCharge(orderModel, orderData);
@@ -2511,19 +2518,21 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		catch (final ModelSavingException e)
 		{
-			if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+			if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 			{
-			StringBuilder exceptionDetails = new StringBuilder(e.getClass().getName()).append(" in calculatePromotion(), cartGuid:").append(cartModel.getGuid());
-			LOG.error(exceptionDetails);
+				StringBuilder exceptionDetails = new StringBuilder(e.getClass().getName()).append(
+						" in calculatePromotion(), cartGuid:").append(cartModel.getGuid());
+				LOG.error(exceptionDetails);
 			}
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
 		catch (final Exception e)
 		{
-			if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+			if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 			{
-			StringBuilder exceptionDetails = new StringBuilder(e.getClass().getName()).append(" in calculatePromotion(), cartGuid:").append(cartModel.getGuid());
-			LOG.error(exceptionDetails);
+				StringBuilder exceptionDetails = new StringBuilder(e.getClass().getName()).append(
+						" in calculatePromotion(), cartGuid:").append(cartModel.getGuid());
+				LOG.error(exceptionDetails);
 			}
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
@@ -2723,10 +2732,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	public boolean createEntryInAudit(final String juspayOrderId, final String channel, final String cartGuId)
 			throws EtailNonBusinessExceptions
 	{
-		
+
 		//SDP-15 starts here
 		String sdpLogFlag = null;
-		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SDPFIFTEENLOG)))
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SDPFIFTEENLOG)))
 		{
 			sdpLogFlag = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SDPFIFTEENLOG);
 		}
@@ -2780,9 +2790,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				newAuditModel.setAuditEntries(auditEntryList);
 				if (cartModel != null && cartModel.getTotalPrice() != null)
 				{
-					if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+					if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 					{
-					LOG.error("Cart Guid : " + cartModel.getGuid() + " Payment Amount getting set in cart model: " + cartModel.getTotalPrice());//SDP-15
+						LOG.error("Cart Guid : " + cartModel.getGuid() + " Payment Amount getting set in cart model: "
+								+ cartModel.getTotalPrice());//SDP-15
 					}
 					newAuditModel.setPaymentAmount(cartModel.getTotalPrice());
 				}
@@ -2792,9 +2803,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					final OrderModel orderModel = getMplPaymentDao().fetchOrderOnGUID(cartGuId);
 					if (null != orderModel)
 					{
-						if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+						if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 						{
-						LOG.error("Order Cart Guid : " + orderModel.getGuid() + "Payment Amount getting set in order model: " + orderModel.getTotalPrice());//SDP-15
+							LOG.error("Order Cart Guid : " + orderModel.getGuid() + "Payment Amount getting set in order model: "
+									+ orderModel.getTotalPrice());//SDP-15
 						}
 						newAuditModel.setPaymentAmount(orderModel.getTotalPrice());
 					}
@@ -5076,23 +5088,27 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			try
 			{
-				
-				try{
-					
+
+				try
+				{
+
 					for (final OrderEntryModel orderEntry : orderEntryModel)
 					{
 						final OrderModel subOrderModel = orderModelService.getOrder(orderEntry.getOrder().getCode());
 						if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
 						{
-							
-							walletCardApportionDetailModelList = qcCallforReturnRefund(subOrderModel,orderEntry);
-							returnModel =constructQuickCilverOrderEntryForSplit(walletCardApportionDetailModelList,subOrderModel,orderEntry);
-							
-						  
+
+							walletCardApportionDetailModelList = qcCallforReturnRefund(subOrderModel, orderEntry);
+							returnModel = constructQuickCilverOrderEntryForSplit(walletCardApportionDetailModelList, subOrderModel,
+									orderEntry);
+
+
 						}
 					}
-				}catch(Exception e){
-					LOG.error("Quck Cilver giving response code  Order Id :"+order.getCode());
+				}
+				catch (Exception e)
+				{
+					LOG.error("Quck Cilver giving response code  Order Id :" + order.getCode());
 				}
 				paymentTransactionModel = mplJusPayRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
 						PaymentTransactionType.RETURN, uniqueRequestId);
@@ -5101,19 +5117,20 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 					for (final OrderEntryModel orderEntry : orderEntryModel)
 					{
-						
+
 						final OrderModel subOrderModel = orderModelService.getOrder(orderEntry.getOrder().getCode());
 						try
 						{
-							if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")) {
-								saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel,subOrderModel);
+							if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
+							{
+								saveQCandJuspayResponse(orderEntry, paymentTransactionModel, returnModel, subOrderModel);
 							}
-							
+
 						}
-						catch(final Exception e)
+						catch (final Exception e)
 						{
-							LOG.error(e.getMessage(),e);
-						}						// If CosignmentEnteries are present then update OMS with
+							LOG.error(e.getMessage(), e);
+						} // If CosignmentEnteries are present then update OMS with
 						// the state.
 						ConsignmentStatus newStatus = null;
 						if (CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
@@ -5128,8 +5145,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), PENDING_KEY))
 							{
 								newStatus = ConsignmentStatus.REFUND_INITIATED;
-								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
-										.create(RefundTransactionMappingModel.class);
+								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
+										RefundTransactionMappingModel.class);
 								refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
 								refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
 								refundTransactionMappingModel.setCreationtime(new Date());
@@ -5166,11 +5183,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						constructQuickCilverOrderEntry(walletCardApportionDetailModelList, orderEntry, subOrderModel);
 						mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
 								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
-						
+
 					}
-					
+
 					paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-							FAILURE_KEY, Double.valueOf(totalRefundAmount), PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+							FAILURE_KEY, Double.valueOf(totalRefundAmount), PaymentTransactionType.RETURN, "NO Response FROM PG",
+							uniqueRequestId);
 					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 					//TISSIT-1801
 
@@ -5187,8 +5205,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_INITIATED, null);
 
 					// Making RTM entry to be picked up by webhook job
-					final RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
-							.create(RefundTransactionMappingModel.class);
+					final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
+							RefundTransactionMappingModel.class);
 					refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
 					refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
 					refundTransactionMappingModel.setCreationtime(new Date());
@@ -5251,8 +5269,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							}
 						}
 						paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0)
-								.getOrder(), FAILURE_KEY, Double.valueOf(totalRefundAmount), PaymentTransactionType.RETURN, "NO Response FROM PG",
-								uniqueRequestId);
+								.getOrder(), FAILURE_KEY, Double.valueOf(totalRefundAmount), PaymentTransactionType.RETURN,
+								"NO Response FROM PG", uniqueRequestId);
 						mplJusPayRefundService
 								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 					}
@@ -5268,7 +5286,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
 					}
 					paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-							FAILURE_KEY, Double.valueOf(totalRefundAmount), PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+							FAILURE_KEY, Double.valueOf(totalRefundAmount), PaymentTransactionType.RETURN, "NO Response FROM PG",
+							uniqueRequestId);
 					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 				}
 			}
@@ -5292,133 +5311,152 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		return result;
 	}
 
-	private String constructQuickCilverOrderEntry(final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList, final OrderEntryModel abstractOrderEntryModel,final OrderModel subOrderModel)
+	private String constructQuickCilverOrderEntry(final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList,
+			final OrderEntryModel abstractOrderEntryModel, final OrderModel subOrderModel)
 	{
-		
-         String result = "FAILURE";
-		   final List<WalletCardApportionDetailModel> walletCardApportionDetailList =new ArrayList<WalletCardApportionDetailModel>();
-			final WalletApportionReturnInfoModel walletApportionReturnModel = getModelService().create(WalletApportionReturnInfoModel.class);
-		   List<String> qcResponseStatus = new ArrayList<String>();
-		 
-		   if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue())
-			{
-		   	walletApportionReturnModel.setQcApportionPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue())
-			{
-				walletApportionReturnModel.setQcDeliveryPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue())
-			{
-				walletApportionReturnModel.setQcSchedulingPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue())
-			{
-				walletApportionReturnModel.setQcShippingPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue())
-			{
-				walletApportionReturnModel.setJuspayApportionValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue())
-			{
-				walletApportionReturnModel.setJuspayDeliveryValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue())
-			{
-				walletApportionReturnModel.setJuspaySchedulingValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue())
-			{
-				walletApportionReturnModel.setJuspayShippingValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue());
-			}
-			if(null != walletCardApportionDetailModelList &&  walletCardApportionDetailModelList.size()>0){
-				 
-				 for(WalletCardApportionDetailModel walletCardApportionDetailModelObj :walletCardApportionDetailModelList){
-						final WalletCardApportionDetailModel walletCardApportionDetailModel = getModelService().create(WalletCardApportionDetailModel.class);
-						walletCardApportionDetailModel.setCardNumber(walletCardApportionDetailModelObj.getCardNumber());
-						walletCardApportionDetailModel.setCardExpiry(walletCardApportionDetailModelObj.getCardExpiry());
-						walletCardApportionDetailModel.setCardAmount(walletCardApportionDetailModelObj.getCardAmount().toString());
-						walletCardApportionDetailModel.setBucketType(walletCardApportionDetailModelObj.getBucketType());
-						walletCardApportionDetailModel.setQcApportionValue(walletCardApportionDetailModelObj.getQcApportionValue());
-						walletCardApportionDetailModel.setQcDeliveryValue(walletCardApportionDetailModelObj.getQcDeliveryValue());
-						walletCardApportionDetailModel.setQcSchedulingValue(walletCardApportionDetailModelObj.getQcSchedulingValue());
-						walletCardApportionDetailModel.setQcShippingValue(walletCardApportionDetailModelObj.getQcShippingValue());
-						walletCardApportionDetailModel.setTransactionId(walletCardApportionDetailModelObj.getTransactionId());
-						walletCardApportionDetailModel.setTrnsStatus(walletCardApportionDetailModelObj.getTrnsStatus());
-						walletCardApportionDetailList.add(walletCardApportionDetailModel);
-						qcResponseStatus.add(walletCardApportionDetailModelObj.getTrnsStatus());
-						createPaymentEntryForQCTransaction(subOrderModel,walletCardApportionDetailModel);
-				 }
-			 }
-			 walletApportionReturnModel.setWalletCardList(walletCardApportionDetailList);
-			 walletApportionReturnModel.setTransactionId(abstractOrderEntryModel.getTransactionID());
-			 walletApportionReturnModel.setType("RETURN");
-			if(qcResponseStatus.contains(PENDING_KEY)){
-        	 walletApportionReturnModel.setStatus(PENDING_KEY);
-         }else{
-        	 walletApportionReturnModel.setStatus(SUCCESS_KEY);
-        	result=SUCCESS_KEY;
-         }
-			modelService.save(walletApportionReturnModel);
-			abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionReturnModel);
-			modelService.save(abstractOrderEntryModel);
-			
-			return result;
-		}
-	
-private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderModel subOrderModel,final WalletCardApportionDetailModel walletCardApportionDetailModel){
-		
-		final PaymentTransactionModel paymentTransactionModel = modelService.create(PaymentTransactionModel.class);
-			paymentTransactionModel.setCode(walletCardApportionDetailModel.getTransactionId().toString());
-			paymentTransactionModel.setRequestId(walletCardApportionDetailModel.getTransactionId().toString());
-			paymentTransactionModel.setStatus(walletCardApportionDetailModel.getTrnsStatus());
-			paymentTransactionModel.setOrder(subOrderModel);
-			final PaymentTransactionEntryModel paymentTransactionEntryModel = modelService.create(PaymentTransactionEntryModel.class);
-			paymentTransactionEntryModel.setCode(walletCardApportionDetailModel.getTransactionId().toString());
-			final BigDecimal bigAmount = new BigDecimal(walletCardApportionDetailModel.getCardAmount(), MathContext.DECIMAL64);
-			paymentTransactionEntryModel.setAmount(bigAmount);
-			paymentTransactionEntryModel.setRequestId(walletCardApportionDetailModel.getTransactionId().toString());
-			paymentTransactionEntryModel.setTime(new Date());
-			paymentTransactionEntryModel.setCurrency(subOrderModel.getCurrency());
-			paymentTransactionEntryModel.setTransactionStatus(walletCardApportionDetailModel.getTrnsStatus());
-			paymentTransactionEntryModel.setTransactionStatusDetails(walletCardApportionDetailModel.getTrnsStatus());
-			PaymentTypeModel model= new PaymentTypeModel();
-			for (final PaymentTransactionModel paymentTransaction : subOrderModel.getPaymentTransactions())
-			{
-				for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
-				{
-					if ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
-							|| "ACCEPTED".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()))
-					{
-						model = paymentTransactionEntry.getPaymentMode();
-					}
 
+		String result = "FAILURE";
+		final List<WalletCardApportionDetailModel> walletCardApportionDetailList = new ArrayList<WalletCardApportionDetailModel>();
+		final WalletApportionReturnInfoModel walletApportionReturnModel = getModelService().create(
+				WalletApportionReturnInfoModel.class);
+		List<String> qcResponseStatus = new ArrayList<String>();
+
+		if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
+				&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue())
+		{
+			walletApportionReturnModel.setQcApportionPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo()
+					.getQcApportionPartValue());
+		}
+		if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
+				&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue())
+		{
+			walletApportionReturnModel.setQcDeliveryPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo()
+					.getQcDeliveryPartValue());
+		}
+		if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
+				&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue())
+		{
+			walletApportionReturnModel.setQcSchedulingPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo()
+					.getQcSchedulingPartValue());
+		}
+		if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
+				&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue())
+		{
+			walletApportionReturnModel.setQcShippingPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo()
+					.getQcShippingPartValue());
+		}
+		if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
+				&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue())
+		{
+			walletApportionReturnModel.setJuspayApportionValue(abstractOrderEntryModel.getWalletApportionPaymentInfo()
+					.getJuspayApportionValue());
+		}
+		if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
+				&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue())
+		{
+			walletApportionReturnModel.setJuspayDeliveryValue(abstractOrderEntryModel.getWalletApportionPaymentInfo()
+					.getJuspayDeliveryValue());
+		}
+		if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
+				&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue())
+		{
+			walletApportionReturnModel.setJuspaySchedulingValue(abstractOrderEntryModel.getWalletApportionPaymentInfo()
+					.getJuspaySchedulingValue());
+		}
+		if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
+				&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue())
+		{
+			walletApportionReturnModel.setJuspayShippingValue(abstractOrderEntryModel.getWalletApportionPaymentInfo()
+					.getJuspayShippingValue());
+		}
+		if (null != walletCardApportionDetailModelList && walletCardApportionDetailModelList.size() > 0)
+		{
+
+			for (WalletCardApportionDetailModel walletCardApportionDetailModelObj : walletCardApportionDetailModelList)
+			{
+				final WalletCardApportionDetailModel walletCardApportionDetailModel = getModelService().create(
+						WalletCardApportionDetailModel.class);
+				walletCardApportionDetailModel.setCardNumber(walletCardApportionDetailModelObj.getCardNumber());
+				walletCardApportionDetailModel.setCardExpiry(walletCardApportionDetailModelObj.getCardExpiry());
+				walletCardApportionDetailModel.setCardAmount(walletCardApportionDetailModelObj.getCardAmount().toString());
+				walletCardApportionDetailModel.setBucketType(walletCardApportionDetailModelObj.getBucketType());
+				walletCardApportionDetailModel.setQcApportionValue(walletCardApportionDetailModelObj.getQcApportionValue());
+				walletCardApportionDetailModel.setQcDeliveryValue(walletCardApportionDetailModelObj.getQcDeliveryValue());
+				walletCardApportionDetailModel.setQcSchedulingValue(walletCardApportionDetailModelObj.getQcSchedulingValue());
+				walletCardApportionDetailModel.setQcShippingValue(walletCardApportionDetailModelObj.getQcShippingValue());
+				walletCardApportionDetailModel.setTransactionId(walletCardApportionDetailModelObj.getTransactionId());
+				walletCardApportionDetailModel.setTrnsStatus(walletCardApportionDetailModelObj.getTrnsStatus());
+				walletCardApportionDetailList.add(walletCardApportionDetailModel);
+				qcResponseStatus.add(walletCardApportionDetailModelObj.getTrnsStatus());
+				createPaymentEntryForQCTransaction(subOrderModel, walletCardApportionDetailModel);
+			}
+		}
+		walletApportionReturnModel.setWalletCardList(walletCardApportionDetailList);
+		walletApportionReturnModel.setTransactionId(abstractOrderEntryModel.getTransactionID());
+		walletApportionReturnModel.setType("RETURN");
+		if (qcResponseStatus.contains(PENDING_KEY))
+		{
+			walletApportionReturnModel.setStatus(PENDING_KEY);
+		}
+		else
+		{
+			walletApportionReturnModel.setStatus(SUCCESS_KEY);
+			result = SUCCESS_KEY;
+		}
+		modelService.save(walletApportionReturnModel);
+		abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionReturnModel);
+		modelService.save(abstractOrderEntryModel);
+
+		return result;
+	}
+
+	private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderModel subOrderModel,
+			final WalletCardApportionDetailModel walletCardApportionDetailModel)
+	{
+
+		final PaymentTransactionModel paymentTransactionModel = modelService.create(PaymentTransactionModel.class);
+		paymentTransactionModel.setCode(walletCardApportionDetailModel.getTransactionId().toString());
+		paymentTransactionModel.setRequestId(walletCardApportionDetailModel.getTransactionId().toString());
+		paymentTransactionModel.setStatus(walletCardApportionDetailModel.getTrnsStatus());
+		paymentTransactionModel.setOrder(subOrderModel);
+		final PaymentTransactionEntryModel paymentTransactionEntryModel = modelService.create(PaymentTransactionEntryModel.class);
+		paymentTransactionEntryModel.setCode(walletCardApportionDetailModel.getTransactionId().toString());
+		final BigDecimal bigAmount = new BigDecimal(walletCardApportionDetailModel.getCardAmount(), MathContext.DECIMAL64);
+		paymentTransactionEntryModel.setAmount(bigAmount);
+		paymentTransactionEntryModel.setRequestId(walletCardApportionDetailModel.getTransactionId().toString());
+		paymentTransactionEntryModel.setTime(new Date());
+		paymentTransactionEntryModel.setCurrency(subOrderModel.getCurrency());
+		paymentTransactionEntryModel.setTransactionStatus(walletCardApportionDetailModel.getTrnsStatus());
+		paymentTransactionEntryModel.setTransactionStatusDetails(walletCardApportionDetailModel.getTrnsStatus());
+		PaymentTypeModel model = new PaymentTypeModel();
+		for (final PaymentTransactionModel paymentTransaction : subOrderModel.getPaymentTransactions())
+		{
+			for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
+			{
+				if ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
+						|| "ACCEPTED".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()))
+				{
+					model = paymentTransactionEntry.getPaymentMode();
 				}
 
 			}
-			paymentTransactionEntryModel.setPaymentMode(model);
-  			paymentTransactionEntryModel.setType(PaymentTransactionType.RETURN);
-  			modelService.save(paymentTransactionEntryModel);
-  			final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
-  			entries.add(paymentTransactionEntryModel);
-  			paymentTransactionModel.setEntries(entries);
-  			modelService.save(paymentTransactionModel);
-  			LOG.debug("Payment Transaction created SuccessFully......:");
-  			
-  			return paymentTransactionModel;
-  			
+
+		}
+		paymentTransactionEntryModel.setPaymentMode(model);
+		paymentTransactionEntryModel.setType(PaymentTransactionType.RETURN);
+		modelService.save(paymentTransactionEntryModel);
+		final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
+		entries.add(paymentTransactionEntryModel);
+		paymentTransactionModel.setEntries(entries);
+		modelService.save(paymentTransactionModel);
+		LOG.debug("Payment Transaction created SuccessFully......:");
+
+		return paymentTransactionModel;
+
 	}
 
-	private List<WalletCardApportionDetailModel>  qcCallforReturnRefund(final OrderModel orderModel, final OrderEntryModel abstractOrderEntryModel)
+	private List<WalletCardApportionDetailModel> qcCallforReturnRefund(final OrderModel orderModel,
+			final OrderEntryModel abstractOrderEntryModel)
 	{
 		LOG.debug("AutoRefundInitiateAction: Going to call QC  mplWalletServices.qcCredit(walletInfo); for Order #"
 				+ orderModel.getCode());
@@ -5434,36 +5472,45 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 			{
 				walletId = customerModel.getCustomerWalletDetail().getWalletId();
 			}
-			
-			DecimalFormat decimalFormat =new DecimalFormat("#.00");
-			 if(null != abstractOrderEntryModel && null != abstractOrderEntryModel.getWalletApportionPaymentInfo()){
-   			 for(WalletCardApportionDetailModel cardApportionDetail : abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList()){
-   				 double qcCliqCashAmt =0.0D;
-   					if(null != cardApportionDetail && null!= cardApportionDetail.getBucketType()){
-   					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION")){
-   						 qcCliqCashAmt = Double.parseDouble(cardApportionDetail.getQcApportionValue());
-   					     
-   						   QCCreditRequest qcCreditRequest =new QCCreditRequest();
-   		    	      	qcCreditRequest.setAmount(decimalFormat.format(qcCliqCashAmt));
-   		    	      	qcCreditRequest.setInvoiceNumber(createQCPaymentId());
-   		    	      	qcCreditRequest.setNotes("Cancel for "+ decimalFormat.format(qcCliqCashAmt));    	
-   		    	      	qcRedeeptionResponse = mplWalletServices.qcCredit(walletId, qcCreditRequest);
-   		    	      	walletCardApportionDetailModelList.add(getQcWalletCardResponse(qcRedeeptionResponse,cardApportionDetail));
-   					
-   					}
-   				 }
-   			 }
-   		 }
+
+			DecimalFormat decimalFormat = new DecimalFormat("#.00");
+			if (null != abstractOrderEntryModel && null != abstractOrderEntryModel.getWalletApportionPaymentInfo())
+			{
+				for (WalletCardApportionDetailModel cardApportionDetail : abstractOrderEntryModel.getWalletApportionPaymentInfo()
+						.getWalletCardList())
+				{
+					double qcCliqCashAmt = 0.0D;
+					if (null != cardApportionDetail && null != cardApportionDetail.getBucketType())
+					{
+						if (!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION"))
+						{
+							qcCliqCashAmt = Double.parseDouble(cardApportionDetail.getQcApportionValue());
+
+							QCCreditRequest qcCreditRequest = new QCCreditRequest();
+							qcCreditRequest.setAmount(decimalFormat.format(qcCliqCashAmt));
+							qcCreditRequest.setInvoiceNumber(createQCPaymentId());
+							qcCreditRequest.setNotes("Cancel for " + decimalFormat.format(qcCliqCashAmt));
+							qcRedeeptionResponse = mplWalletServices.qcCredit(walletId, qcCreditRequest);
+							walletCardApportionDetailModelList.add(getQcWalletCardResponse(qcRedeeptionResponse, cardApportionDetail));
+
+						}
+					}
+				}
+			}
 		}
 		catch (final Exception e)
 		{
-			LOG.error(
-					"AutoRefundInitiateAction: After call mplWalletServices.qcCredit(walletInfo); for Order #" + orderModel.getCode());
+			LOG.error("AutoRefundInitiateAction: After call mplWalletServices.qcCredit(walletInfo); for Order #"
+					+ orderModel.getCode());
 		}
 		return walletCardApportionDetailModelList;
 	}
-	private WalletCardApportionDetailModel getQcWalletCardResponse(QCRedeeptionResponse response, WalletCardApportionDetailModel walletObject){
-		final WalletCardApportionDetailModel walletCardApportionDetailModel =  modelService.create(WalletCardApportionDetailModel.class);
+
+	private WalletCardApportionDetailModel getQcWalletCardResponse(QCRedeeptionResponse response,
+			WalletCardApportionDetailModel walletObject)
+	{
+		final WalletCardApportionDetailModel walletCardApportionDetailModel = modelService
+				.create(WalletCardApportionDetailModel.class);
 		if (null != response && null != response.getCards())
 		{
 			for (final QCCard qcCard : response.getCards())
@@ -5486,7 +5533,9 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 			walletCardApportionDetailModel.setQcDeliveryValue(walletObject.getQcDeliveryValue());
 			walletCardApportionDetailModel.setQcSchedulingValue(walletObject.getQcSchedulingValue());
 			walletCardApportionDetailModel.setQcShippingValue(walletObject.getQcShippingValue());
-		}else{
+		}
+		else
+		{
 			walletCardApportionDetailModel.setTrnsStatus(SUCCESS_KEY);
 			walletCardApportionDetailModel.setTransactionId("0");
 			walletCardApportionDetailModel.setQcApportionValue("0");
@@ -5498,39 +5547,49 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 		return walletCardApportionDetailModel;
 	}
 
-	
-	private void saveQCandJuspayResponse(final OrderEntryModel orderEntry,final PaymentTransactionModel paymentTransactionModel,final WalletApportionReturnInfoModel returnModel , final OrderModel subOrderModel){
-		 List<String> qcResponseStatus = new ArrayList<String>();
-		 
-		if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue()){
+
+	private void saveQCandJuspayResponse(final OrderEntryModel orderEntry, final PaymentTransactionModel paymentTransactionModel,
+			final WalletApportionReturnInfoModel returnModel, final OrderModel subOrderModel)
+	{
+		List<String> qcResponseStatus = new ArrayList<String>();
+
+		if (null != orderEntry.getWalletApportionPaymentInfo()
+				&& null != orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue())
+		{
 			returnModel.setJuspayApportionValue(orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue());
 		}
 		returnModel.setJuspayDeliveryValue("0");
 		returnModel.setJuspaySchedulingValue("0");
 		returnModel.setJuspayShippingValue("0");
-		
+
 		returnModel.setOrderId(orderEntry.getOrder().getCode());
 		returnModel.setType("RETURN");
-		if(qcResponseStatus.contains(PENDING_KEY) ){
+		if (qcResponseStatus.contains(PENDING_KEY))
+		{
 			returnModel.setStatusForQc(PENDING_KEY);
-		}else{
+		}
+		else
+		{
 			returnModel.setStatusForQc(SUCCESS_KEY);
 		}
-		if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), MarketplacecommerceservicesConstants.SUCCESS)){
+		if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), MarketplacecommerceservicesConstants.SUCCESS))
+		{
 			returnModel.setStatus(SUCCESS_KEY);
-		}else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), PENDING_KEY)){
-			returnModel.setStatus(PENDING_KEY);	  
 		}
-		
-		System.out.println("Before Saving Juspay Response is :"+returnModel.getJuspayApportionValue());
+		else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), PENDING_KEY))
+		{
+			returnModel.setStatus(PENDING_KEY);
+		}
+
+		System.out.println("Before Saving Juspay Response is :" + returnModel.getJuspayApportionValue());
 		modelService.save(returnModel);
-		System.out.println("After Saving Juspay Response is :"+returnModel.getJuspayApportionValue());
-		
+		System.out.println("After Saving Juspay Response is :" + returnModel.getJuspayApportionValue());
+
 		orderEntry.setWalletApportionReturnInfo(returnModel);
-		System.out.println("Before setting  Order Entry Response is :"+returnModel.getJuspayApportionValue());
+		System.out.println("Before setting  Order Entry Response is :" + returnModel.getJuspayApportionValue());
 		modelService.save(orderEntry);
-		System.out.println("After setting  Order Entry Response is :"+returnModel.getJuspayApportionValue());
-     LOG.debug("abstractOrderEntryModel Saved Successfully..............");
+		System.out.println("After setting  Order Entry Response is :" + returnModel.getJuspayApportionValue());
+		LOG.debug("abstractOrderEntryModel Saved Successfully..............");
 	}
 
 	//CheckedInvalid PaymentInfo missing handled call
@@ -5903,8 +5962,8 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 	}
 
 	@Override
-	public boolean createQCEntryInAudit(final String qcOrderID, final String channel, final String cartGuId, final String qcAmount,
-			final String qcResponseCode, final String transactionId) throws EtailNonBusinessExceptions
+	public boolean createQCEntryInAudit(final String qcOrderID, final String channel, final String cartGuId,
+			final String qcAmount, final String qcResponseCode, final String transactionId) throws EtailNonBusinessExceptions
 	{
 		boolean flag = false;
 		try
@@ -5962,64 +6021,112 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 		}
 		return flag;
 	}
-private WalletApportionReturnInfoModel constructQuickCilverOrderEntryForSplit(final  List<WalletCardApportionDetailModel> walletCardApportionDetailModelList ,final OrderModel subOrderModel,final OrderEntryModel orderEntry){
-		
-			final WalletApportionReturnInfoModel walletApportionReturnModel = getModelService().create(WalletApportionReturnInfoModel.class);
-		   List<String> qcResponseStatus = new ArrayList<String>();
-		   double totalQcApportionValue = 0d;
-		   if (null != orderEntry && null != orderEntry.getWalletApportionPaymentInfo())
+
+	private WalletApportionReturnInfoModel constructQuickCilverOrderEntryForSplit(
+			final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList, final OrderModel subOrderModel,
+			final OrderEntryModel orderEntry)
+	{
+
+		final WalletApportionReturnInfoModel walletApportionReturnModel = getModelService().create(
+				WalletApportionReturnInfoModel.class);
+		List<String> qcResponseStatus = new ArrayList<String>();
+		double totalQcApportionValue = 0d;
+		if (null != orderEntry && null != orderEntry.getWalletApportionPaymentInfo())
+		{
+			for (final WalletCardApportionDetailModel cardApportionDetail : orderEntry.getWalletApportionPaymentInfo()
+					.getWalletCardList())
 			{
-				for (final WalletCardApportionDetailModel cardApportionDetail : orderEntry
-						.getWalletApportionPaymentInfo().getWalletCardList())
+				if (null != cardApportionDetail && null != cardApportionDetail.getBucketType())
 				{
-					if (null != cardApportionDetail && null != cardApportionDetail.getBucketType())
+					if (!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION"))
 					{
-						if (!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION"))
-						{
-							totalQcApportionValue += Double.parseDouble(cardApportionDetail.getQcApportionValue());
-						}
+						totalQcApportionValue += Double.parseDouble(cardApportionDetail.getQcApportionValue());
 					}
 				}
 			}
-		   walletApportionReturnModel.setQcApportionPartValue(String.valueOf(totalQcApportionValue));
-		   walletApportionReturnModel.setQcDeliveryPartValue(String.valueOf("0"));
-			walletApportionReturnModel.setQcSchedulingPartValue(String.valueOf("0"));
-			walletApportionReturnModel.setQcShippingPartValue(String.valueOf("0"));
-			
-			final List<PaymentTransactionModel> paymentTransactions = new ArrayList<PaymentTransactionModel>(
-					subOrderModel.getPaymentTransactions());
-			
-			 if(null != walletCardApportionDetailModelList &&  walletCardApportionDetailModelList.size()>0){
-				 for(WalletCardApportionDetailModel walletCardApportionDetailModelObj :walletCardApportionDetailModelList){
-						qcResponseStatus.add(walletCardApportionDetailModelObj.getTrnsStatus());
-						PaymentTransactionModel paymentTransactionModel=	createPaymentEntryForQCTransaction(subOrderModel,walletCardApportionDetailModelObj);
-						paymentTransactions.add(paymentTransactionModel);
-				 }
-			 }
-			 walletApportionReturnModel.setWalletCardList(walletCardApportionDetailModelList);
-			 walletApportionReturnModel.setTransactionId(orderEntry.getTransactionID());
-			 walletApportionReturnModel.setType("RETURN");
-       if(qcResponseStatus.contains(PENDING_KEY)){
-      	 walletApportionReturnModel.setStatus(PENDING_KEY);
-       }else{
-      	 walletApportionReturnModel.setStatus(SUCCESS_KEY);
-       }
-       subOrderModel.setPaymentTransactions(paymentTransactions);
-			modelService.saveAll(paymentTransactions);
-			modelService.saveAll(subOrderModel);
-			System.out.println("Before Saving Juspay Response is :");
-			modelService.save(walletApportionReturnModel);
-			System.out.println("After Saving Juspay Response is :");
-			
-			orderEntry.setWalletApportionReturnInfo(walletApportionReturnModel);
-			System.out.println("Before setting  Order Entry Response is :");
-			modelService.save(orderEntry);
-			modelService.refresh(walletApportionReturnModel);
-			
-			System.out.println("After setting  Order Entry Response is :");
-	     LOG.error("abstractOrderEntryModel QC Model  Saved Successfully..............");
-	
+		}
+		walletApportionReturnModel.setQcApportionPartValue(String.valueOf(totalQcApportionValue));
+		walletApportionReturnModel.setQcDeliveryPartValue(String.valueOf("0"));
+		walletApportionReturnModel.setQcSchedulingPartValue(String.valueOf("0"));
+		walletApportionReturnModel.setQcShippingPartValue(String.valueOf("0"));
+
+		final List<PaymentTransactionModel> paymentTransactions = new ArrayList<PaymentTransactionModel>(
+				subOrderModel.getPaymentTransactions());
+
+		if (null != walletCardApportionDetailModelList && walletCardApportionDetailModelList.size() > 0)
+		{
+			for (WalletCardApportionDetailModel walletCardApportionDetailModelObj : walletCardApportionDetailModelList)
+			{
+				qcResponseStatus.add(walletCardApportionDetailModelObj.getTrnsStatus());
+				PaymentTransactionModel paymentTransactionModel = createPaymentEntryForQCTransaction(subOrderModel,
+						walletCardApportionDetailModelObj);
+				paymentTransactions.add(paymentTransactionModel);
+			}
+		}
+		walletApportionReturnModel.setWalletCardList(walletCardApportionDetailModelList);
+		walletApportionReturnModel.setTransactionId(orderEntry.getTransactionID());
+		walletApportionReturnModel.setType("RETURN");
+		if (qcResponseStatus.contains(PENDING_KEY))
+		{
+			walletApportionReturnModel.setStatus(PENDING_KEY);
+		}
+		else
+		{
+			walletApportionReturnModel.setStatus(SUCCESS_KEY);
+		}
+		subOrderModel.setPaymentTransactions(paymentTransactions);
+		modelService.saveAll(paymentTransactions);
+		modelService.saveAll(subOrderModel);
+		System.out.println("Before Saving Juspay Response is :");
+		modelService.save(walletApportionReturnModel);
+		System.out.println("After Saving Juspay Response is :");
+
+		orderEntry.setWalletApportionReturnInfo(walletApportionReturnModel);
+		System.out.println("Before setting  Order Entry Response is :");
+		modelService.save(orderEntry);
+		modelService.refresh(walletApportionReturnModel);
+
+		System.out.println("After setting  Order Entry Response is :");
+		LOG.error("abstractOrderEntryModel QC Model  Saved Successfully..............");
+
 		return walletApportionReturnModel;
 	}
-	
+
+	@Override
+	public boolean isNoCostEmiAvailable(String productCode, String sellerId)
+	{
+		// YTODO Auto-generated method stub
+		return getMplPaymentDao().isNoCostEmiAvailable(productCode, sellerId);
+	}
+
+
+	@Override
+	public Map<EMIBankModel, List<MplNoCostEMIVoucherModel>> getNoCostEmiCouponDetails() throws EtailNonBusinessExceptions
+	{
+		final Set<Map<EMIBankModel, MplNoCostEMIVoucherModel>> resultMap = getMplPaymentDao().getNoCostEmiCouponDetails();
+		
+		Map<EMIBankModel, List<MplNoCostEMIVoucherModel>> resultSet = new HashMap<EMIBankModel, List<MplNoCostEMIVoucherModel>>();
+		List<MplNoCostEMIVoucherModel> voucherList = null;
+		for (final Map<EMIBankModel, MplNoCostEMIVoucherModel> result : resultMap)
+		{
+			for (final Map.Entry<EMIBankModel, MplNoCostEMIVoucherModel> entry : result.entrySet())
+			{
+				EMIBankModel emibankmodel = entry.getKey();
+				MplNoCostEMIVoucherModel vouchermodel  = entry.getValue();
+				if(resultSet.containsKey(emibankmodel)){
+					 voucherList = resultSet.get(emibankmodel);
+					 voucherList.add(vouchermodel);
+				} else {
+					voucherList = new ArrayList<MplNoCostEMIVoucherModel>();
+					voucherList.add(vouchermodel);
+					
+				}
+				resultSet.put(emibankmodel, voucherList); 
+				
+			}
+		}	
+		
+		return resultSet;
+	}
+
 }

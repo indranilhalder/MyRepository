@@ -11,6 +11,7 @@
 			<property qualifier="AbstractPage.masterTemplate"/>
 			<property qualifier="ContentPage.categoryAssociated"/>
 			<property qualifier="ContentPage.associatedSeller"/>
+			<property qualifier="ContentPage.reactPageType"/>
 			
 		</group>
 		<group qualifier="Other" visible="true" initially-opened="false">

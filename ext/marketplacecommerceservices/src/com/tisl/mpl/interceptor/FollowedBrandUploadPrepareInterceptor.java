@@ -42,7 +42,7 @@ public class FollowedBrandUploadPrepareInterceptor implements PrepareInterceptor
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.servicelayer.interceptor.PrepareInterceptor#onPrepare(java.lang.Object,
 	 * de.hybris.platform.servicelayer.interceptor.InterceptorContext)
 	 */
@@ -57,7 +57,9 @@ public class FollowedBrandUploadPrepareInterceptor implements PrepareInterceptor
 			try
 			{
 
-				if (StringUtils.isEmpty(followedBrandUploadModel.getCsvFile().getURL()))
+
+				if (null != followedBrandUploadModel.getCsvFile()
+						&& StringUtils.isEmpty(followedBrandUploadModel.getCsvFile().getURL()))
 				{
 					throw new InterceptorException("Please upload a CSV file");
 				}
@@ -83,20 +85,19 @@ public class FollowedBrandUploadPrepareInterceptor implements PrepareInterceptor
 				script2.append(header2);
 
 				String valueLine = null;
+				//IQA Code review fix
 				while ((valueLine = reader.readLine()) != null)
 				{
-					if (StringUtils.isNotEmpty(valueLine.split(",")[0]) && StringUtils.isNotEmpty(valueLine.split(",")[1])
-							&& StringUtils.isNotEmpty(valueLine.split(",")[2]))
+					String[] valueLineArr = valueLine.split(",");
+					if (valueLineArr.length >= 4 && StringUtils.isNotEmpty(valueLineArr[0]) && StringUtils.isNotEmpty(valueLineArr[1])
+							&& StringUtils.isNotEmpty(valueLineArr[2]) && StringUtils.isNotEmpty(valueLineArr[3]))
 					{
-						script1.append("\n" + ";" + valueLine.split(",")[0] + ";" + valueLine.split(",")[1] + ";"
-								+ valueLine.split(",")[2]);
-					}
-					if (StringUtils.isNotEmpty(valueLine.split(",")[1]) && StringUtils.isNotEmpty(valueLine.split(",")[3]))
-					{
-						script2.append("\n" + ";" + valueLine.split(",")[1] + ";" + valueLine.split(",")[3]);
+						script1.append("\n" + ";" + valueLineArr[0] + ";" + valueLineArr[1] + ";" + valueLineArr[2]);
+
+						script2.append("\n" + ";" + valueLineArr[1] + ";" + valueLineArr[3]);
+
 					}
 				}
-
 				script1.append("\n" + script2);
 
 				LOG.debug("Impex for Followed Brand Upload is - " + script1.toString());

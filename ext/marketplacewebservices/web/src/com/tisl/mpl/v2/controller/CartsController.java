@@ -155,6 +155,7 @@ import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartServi
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.order.data.CartDataList;
@@ -377,8 +378,8 @@ public class CartsController extends BaseCommerceController
 			return cmd1;
 		}
 		final CartModificationData cmd = new CartModificationData();
-		cmd.setDeliveryModeChanged(Boolean.valueOf(Boolean.TRUE.equals(cmd1.getDeliveryModeChanged())
-				|| Boolean.TRUE.equals(cmd2.getDeliveryModeChanged())));
+		cmd.setDeliveryModeChanged(Boolean
+				.valueOf(Boolean.TRUE.equals(cmd1.getDeliveryModeChanged()) || Boolean.TRUE.equals(cmd2.getDeliveryModeChanged())));
 		cmd.setEntry(cmd2.getEntry());
 		cmd.setQuantity(cmd2.getQuantity());
 		cmd.setQuantityAdded(cmd1.getQuantityAdded() + cmd2.getQuantityAdded());
@@ -430,8 +431,9 @@ public class CartsController extends BaseCommerceController
 		final OrderEntryData entryToBeModified = getCartEntry(currentCart, currentEntry.getProduct().getCode(), newPickupStore);
 		if (entryToBeModified != null && !entryToBeModified.equals(currentEntry))
 		{
-			throw new CartEntryException("Ambiguous cart entries! Entry number " + currentEntry.getEntryNumber()
-					+ " after change would be the same as entry " + entryToBeModified.getEntryNumber(),
+			throw new CartEntryException(
+					"Ambiguous cart entries! Entry number " + currentEntry.getEntryNumber()
+							+ " after change would be the same as entry " + entryToBeModified.getEntryNumber(),
 					CartEntryException.AMBIGIOUS_ENTRY, entryToBeModified.getEntryNumber().toString());
 		}
 	}
@@ -745,7 +747,8 @@ public class CartsController extends BaseCommerceController
 	 */
 	@RequestMapping(value = "/{cartId}/entries", method = RequestMethod.GET)
 	@ResponseBody
-	public OrderEntryListWsDTO getCartEntries(@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
+	public OrderEntryListWsDTO getCartEntries(
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -1542,8 +1545,8 @@ public class CartsController extends BaseCommerceController
 	{ TRUSTED_CLIENT })
 	@RequestMapping(value = "/{cartId}/promotions/{promotionId}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void removePromotion(@PathVariable final String promotionId) throws CommercePromotionRestrictionException,
-			NoCheckoutCartException
+	public void removePromotion(@PathVariable final String promotionId)
+			throws CommercePromotionRestrictionException, NoCheckoutCartException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -1585,8 +1588,8 @@ public class CartsController extends BaseCommerceController
 	{ ROLE_CLIENT, CUSTOMER, CUSTOMERMANAGER, TRUSTED_CLIENT, ROLE_GUEST })
 	@RequestMapping(value = "/{cartId}/vouchers", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public void applyVoucherForCart(@RequestParam(required = true) final String voucherId) throws NoCheckoutCartException,
-			VoucherOperationException
+	public void applyVoucherForCart(@RequestParam(required = true) final String voucherId)
+			throws NoCheckoutCartException, VoucherOperationException
 	{
 		super.applyVoucherForCartInternal(voucherId);
 	}
@@ -1601,8 +1604,8 @@ public class CartsController extends BaseCommerceController
 	{ ROLE_CLIENT, CUSTOMER, CUSTOMERMANAGER, TRUSTED_CLIENT, ROLE_GUEST })
 	@RequestMapping(value = "/{cartId}/vouchers/{voucherId}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void releaseVoucherFromCart(@PathVariable final String voucherId) throws NoCheckoutCartException,
-			VoucherOperationException
+	public void releaseVoucherFromCart(@PathVariable final String voucherId)
+			throws NoCheckoutCartException, VoucherOperationException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -2112,8 +2115,8 @@ public class CartsController extends BaseCommerceController
 	@RequestMapping(value = "/{cartId}/deleteEntries/{entryNumber}", method = RequestMethod.GET)
 	@ResponseBody
 	public CartDataDetailsWsDTO removeCartEntryMobile(@PathVariable final String cartId, @PathVariable final Long entryNumber,
-			@RequestParam(required = false) final String channel) throws CommerceCartModificationException, InvalidCartException,
-			ConversionException
+			@RequestParam(required = false) final String channel)
+			throws CommerceCartModificationException, InvalidCartException, ConversionException
 	{
 		final CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO(); //Object to store result
 		int count = 0;
@@ -2292,9 +2295,9 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.debug(MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-					cartDataDetails.setError(MarketplacecommerceservicesConstants.FIELD_QUANTITY
-							+ MarketplacecommerceservicesConstants.SINGLE_SPACE
-							+ MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
+					cartDataDetails.setError(
+							MarketplacecommerceservicesConstants.FIELD_QUANTITY + MarketplacecommerceservicesConstants.SINGLE_SPACE
+									+ MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
 					return cartDataDetails;
 				}
 
@@ -2333,11 +2336,11 @@ public class CartsController extends BaseCommerceController
 						{
 							//SDI-4069 Unable to Buy More Than 1 qty for Same Size Ring starts
 							if ((entryNumber == abstractOrderEntry.getEntryNumber().longValue())
-									&& (MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(abstractOrderEntry.getProduct()
-											.getProductCategoryType())))
+									&& (MarketplacewebservicesConstants.FINEJEWELLERY
+											.equalsIgnoreCase(abstractOrderEntry.getProduct().getProductCategoryType())))
 							{
-								maximum_configured_quantiy = siteConfigService.getInt(
-										MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+								maximum_configured_quantiy = siteConfigService
+										.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
 							}
 							else
 							{
@@ -2809,7 +2812,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -3152,8 +3155,8 @@ public class CartsController extends BaseCommerceController
 				LOG.debug("checkPinCodeAtCart-------" + cart.getCode());
 			}
 
-			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(
-					mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true, false, false), cart, pincode);
+			pinCodeResponse = mplCartWebService
+					.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true, false, false), cart, pincode);
 			if (null != pinCodeResponse)
 			{
 				response.setPinCodeResponseList(pinCodeResponse);
@@ -3702,11 +3705,13 @@ public class CartsController extends BaseCommerceController
 						applycouponDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 						return applycouponDto;
 					}
+					//cartModel.setChannel(SalesApplication.MOBILE);
 
-					final SalesApplication channelToSet = StringUtils.isNotEmpty(channel) ? SalesApplication.valueOf(channel)
-							: SalesApplication.MOBILE;
+					//final SalesApplication channelToSet = StringUtils.isNotEmpty(channel) ? SalesApplication.valueOf(channel)
+					//: SalesApplication.MOBILE;
 
-					cartModel.setChannel(channelToSet);
+					//cartModel.setChannel(channelToSet);
+
 					cartModel.setCheckForBankVoucher("true");
 					//modelService.save(cartModel);
 					getModelService().save(cartModel);
@@ -3918,8 +3923,8 @@ public class CartsController extends BaseCommerceController
 				{
 					discountAmount = cartModel.getTotalDiscounts().doubleValue();
 				}
-				final Double totalWithoutCoupon = Double.valueOf(cartModel.getTotalPrice().doubleValue()
-						+ Double.valueOf(discountAmount).doubleValue());
+				final Double totalWithoutCoupon = Double
+						.valueOf(cartModel.getTotalPrice().doubleValue() + Double.valueOf(discountAmount).doubleValue());
 				if (null != totalWithoutCoupon)
 				{
 					releaseCouponDto.setTotalWithoutCoupon(totalWithoutCoupon);
@@ -3981,8 +3986,8 @@ public class CartsController extends BaseCommerceController
 					discountAmount = orderModel.getTotalDiscounts().doubleValue();
 				}
 				releaseCouponDto = mplCouponWebFacade.releaseVoucher(couponCode, null, orderModel, paymentMode);
-				final Double totalWithoutCoupon = Double.valueOf(orderModel.getTotalPrice().doubleValue()
-						+ Double.valueOf(discountAmount).doubleValue());
+				final Double totalWithoutCoupon = Double
+						.valueOf(orderModel.getTotalPrice().doubleValue() + Double.valueOf(discountAmount).doubleValue());
 				if (null != totalWithoutCoupon)
 				{
 					releaseCouponDto.setTotalWithoutCoupon(totalWithoutCoupon);
@@ -4256,8 +4261,8 @@ public class CartsController extends BaseCommerceController
 		{
 			if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
 			{
-				productDiscount = (null != entry.getTotalProductLevelDisc() && entry.getTotalProductLevelDisc().doubleValue() > 0) ? entry
-						.getTotalProductLevelDisc().doubleValue() : 0;
+				productDiscount = (null != entry.getTotalProductLevelDisc() && entry.getTotalProductLevelDisc().doubleValue() > 0)
+						? entry.getTotalProductLevelDisc().doubleValue() : 0;
 			}
 		}
 		if (CollectionUtils.isNotEmpty(discountList))
@@ -4271,7 +4276,8 @@ public class CartsController extends BaseCommerceController
 					{
 
 						final double value = discount.getAppliedValue();
-						if ((voucher instanceof PromotionVoucherModel) && !(voucher instanceof MplCartOfferVoucherModel))
+						if ((voucher instanceof PromotionVoucherModel) && !(voucher instanceof MplCartOfferVoucherModel)
+								&& !(voucher instanceof MplNoCostEMIVoucherModel))
 						{
 							if (value > 0.0d)
 							{
@@ -4699,10 +4705,9 @@ public class CartsController extends BaseCommerceController
 		{
 			if (null != orderEntryModel.getGiveAway() && !orderEntryModel.getGiveAway().booleanValue())
 			{
-				if (null != orderEntryModel.getMplDeliveryMode()
-						&& null != orderEntryModel.getMplDeliveryMode().getDeliveryMode()
-						&& MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase((orderEntryModel.getMplDeliveryMode()
-								.getDeliveryMode().getCode())))
+				if (null != orderEntryModel.getMplDeliveryMode() && null != orderEntryModel.getMplDeliveryMode().getDeliveryMode()
+						&& MarketplacecommerceservicesConstants.CLICK_COLLECT
+								.equalsIgnoreCase((orderEntryModel.getMplDeliveryMode().getDeliveryMode().getCode())))
 				{
 					++cncDelModeCount;
 				}
@@ -4762,8 +4767,8 @@ public class CartsController extends BaseCommerceController
 			cartModel = mplPaymentWebFacade.findCartValues(cartId);
 			final InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
 			deliverySlotsRequestData.setCartId(cartModel.getGuid());
-			final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade.convertDeliverySlotsDatatoWsdto(
-					deliverySlotsRequestData, cartModel);
+			final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade
+					.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData, cartModel);
 
 			if (CollectionUtils.isNotEmpty(deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()))
 			{
@@ -5080,8 +5085,8 @@ public class CartsController extends BaseCommerceController
 			{
 				discountAmount = cartModel.getTotalDiscounts().doubleValue();
 			}
-			final Double totalWithoutCoupon = Double.valueOf(cartModel.getTotalPrice().doubleValue()
-					+ Double.valueOf(discountAmount).doubleValue());
+			final Double totalWithoutCoupon = Double
+					.valueOf(cartModel.getTotalPrice().doubleValue() + Double.valueOf(discountAmount).doubleValue());
 			if (null != totalWithoutCoupon)
 			{
 				releaseCouponDto.setTotalWithoutCoupon(totalWithoutCoupon);
@@ -5097,8 +5102,8 @@ public class CartsController extends BaseCommerceController
 			releaseCouponDto = mplCouponWebFacade.releaseVoucher(couponCode, cartModel, null, paymentMode);
 
 			getTotalPrice(releaseCouponDto, cartModel, true);
-			releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
-					.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+			releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv())
+					.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 
 			final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
 			releaseCouponDto.setCartAmount(pricePwa);
@@ -5192,6 +5197,210 @@ public class CartsController extends BaseCommerceController
 	public void setAddToCartHelper(final AddToCartHelper addToCartHelper)
 	{
 		this.addToCartHelper = addToCartHelper;
+	}
+
+	/**
+	 * The Method applies No Cost EMI Coupon
+	 *
+	 * @param couponCode
+	 * @param cartGuid
+	 * @param channel
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{cartId}/applyNoCostEMI", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ApplyCouponsDTO applyNoCostEMI(@RequestParam final String couponCode,
+			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String channel)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException
+	{
+		CartModel cartModel = null;
+		OrderModel orderModel = null;
+		ApplyCouponsDTO applycouponDto = new ApplyCouponsDTO();
+
+		try
+		{
+			LOG.debug("No Cost EMI>>> Evaluation Controller Call");
+			LOG.debug(couponCode);
+
+			//Fetching orderModel based on guid TPR-629
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+			}
+
+			if (orderModel == null)
+			{
+				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+
+				if (null == cartModel)
+				{
+					LOG.debug("Error due to Invalid Cart Guid >>" + cartGuid);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
+				}
+				else
+				{
+					applycouponDto = mplCouponWebFacade.applyNoCostEMI(couponCode, cartModel, null);
+					applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, cartModel);
+				}
+
+
+			}
+			else
+			{
+				applycouponDto = mplCouponWebFacade.applyNoCostEMI(couponCode, null, orderModel);
+				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
+			}
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				applycouponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				applycouponDto.setErrorCode(e.getErrorCode());
+			}
+			applycouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+			if (null != cartModel)
+			{
+				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
+				applycouponDto.setCartAmount(pricePwa);
+				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, cartModel);
+			}
+			else if (null != orderModel)
+			{
+				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
+				applycouponDto.setCartAmount(pricePwa);
+				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				applycouponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				applycouponDto.setErrorCode(e.getErrorCode());
+			}
+			applycouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+			if (null != cartModel)
+			{
+				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
+				applycouponDto.setCartAmount(pricePwa);
+				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, cartModel);
+			}
+			else if (null != orderModel)
+			{
+				final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
+				applycouponDto.setCartAmount(pricePwa);
+				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
+			}
+		}
+
+		return applycouponDto;
+	}
+
+	/****
+	 * This Method is Hit For the release of No Cost EMI Coupons
+	 *
+	 * @param couponCode
+	 * @param cartGuid
+	 * @param paymentMode
+	 * @return releaseCouponDto
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 * @throws NumberFormatException
+	 * @throws JaloInvalidParameterException
+	 * @throws VoucherOperationException
+	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloPriceFactoryException
+	 * @throws CalculationException
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{cartId}/releaseNoCostEMI", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ReleaseCouponsDTO releaseNoCostEMI(@RequestParam final String couponCode,
+			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
+			JaloPriceFactoryException, CalculationException
+	{
+		ReleaseCouponsDTO releaseCouponDto = new ReleaseCouponsDTO();
+
+		CartModel cartModel = null;
+		OrderModel orderModel = null;
+
+		try
+		{
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+			}
+
+			if (null == orderModel)
+			{
+				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+
+				if (cartModel == null)
+				{
+					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartGuid);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
+				}
+				else
+				{
+					releaseCouponDto = mplCouponWebFacade.releaseNoCostEMI(couponCode, cartModel, null, paymentMode);
+					getTotalPrice(releaseCouponDto, cartModel, false);
+				}
+			}
+			else
+			{
+				releaseCouponDto = mplCouponWebFacade.releaseNoCostEMI(couponCode, null, orderModel, paymentMode);
+				getTotalPrice(releaseCouponDto, orderModel, false);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorCode())
+			{
+				releaseCouponDto.setErrorCode(e.getErrorCode());
+			}
+			if (null != e.getErrorMessage())
+			{
+				releaseCouponDto.setError(e.getErrorMessage());
+			}
+			releaseCouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorCode())
+			{
+				releaseCouponDto.setErrorCode(e.getErrorCode());
+			}
+			if (null != e.getErrorMessage())
+			{
+				releaseCouponDto.setError(e.getErrorMessage());
+			}
+			releaseCouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return releaseCouponDto;
 	}
 
 }
