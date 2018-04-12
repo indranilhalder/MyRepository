@@ -21,8 +21,14 @@ import {
   JUS_PAY_CHARGED,
   FAILURE_LOWERCASE
 } from "../../lib/constants";
+import {
+  setDataLayer,
+  ADOBE_CART_TYPE,
+  ADOBE_ORDER_CONFIRMATION,
+  ADOBE_CHECKOUT_TYPE
+} from "../../lib/adobeUtils";
 
-export const CLEAR_CART_DETAILS="CLEAR_CART_DETAILS"
+export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
 export const USER_CART_PATH = "v2/mpl/users";
 export const CART_PATH = "v2/mpl";
 export const ALL_STORES_PATH = "v2/mpl/allStores";
@@ -359,7 +365,12 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayer(
+        ADOBE_CART_TYPE,
+        resultJson,
+        getState().icid.value,
+        getState().icid.icidType
+      );
       dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(cartDetailsFailure(e.message));
@@ -394,7 +405,8 @@ export function getCartDetailsCNC(
   accessToken,
   cartId,
   pinCode,
-  isSoftReservation
+  isSoftReservation,
+  isSetDataLayer: false
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(cartDetailsCNCRequest());
@@ -440,6 +452,15 @@ export function getCartDetailsCNC(
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
+      }
+      // setting data layer only for first time
+      if (isSetDataLayer) {
+        setDataLayer(
+          ADOBE_CHECKOUT_TYPE,
+          resultJson,
+          getState().icid.value,
+          getState().icid.icidType
+        );
       }
       dispatch(cartDetailsCNCSuccess(resultJson));
     } catch (e) {
@@ -2218,7 +2239,6 @@ export function createJusPayOrder(
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-
         throw new Error(resultJsonStatus.message);
       }
       dispatch(
@@ -2846,6 +2866,12 @@ export function orderConfirmation(orderId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayer(
+        ADOBE_ORDER_CONFIRMATION,
+        resultJson,
+        getState().icid.value,
+        getState().icid.icidType
+      );
       dispatch(orderConfirmationSuccess(resultJson));
     } catch (e) {
       dispatch(orderConfirmationFailure(e.message));
@@ -3440,9 +3466,8 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
   };
 }
 
-export function clearCartDetails()
-{
+export function clearCartDetails() {
   return {
-    type: CLEAR_CART_DETAILS,
+    type: CLEAR_CART_DETAILS
   };
 }
