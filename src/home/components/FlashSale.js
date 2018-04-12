@@ -10,6 +10,7 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import TimerCounter from "../../general/components/TimerCounter.js";
 import { Icon } from "xelpmoc-core";
 import ClockImage from "../../pdp/components/img/clockWhite.svg";
+import moment from "moment";
 
 const OFFER_AND_ITEM_LIMIT = 4;
 
@@ -68,9 +69,29 @@ export default class FlashSale extends React.Component {
       return null;
     }
 
+    const startDateTime = new Date(
+      this.convertDateTimeFromIndianToAmerican(feedComponentData.startDate)
+    );
+
+    const endDateTime = new Date(
+      this.convertDateTimeFromIndianToAmerican(feedComponentData.endDate)
+    );
+
+    if (!moment(startDateTime).isValid()) {
+      return null;
+    }
+
+    if (!moment(endDateTime).isValid()) {
+      return null;
+    }
+
     if (feedComponentData.items) {
       items = feedComponentData.items.map(transformData);
     }
+
+    // Check for date validation
+
+    // feedComponentData.startDate = "13/04/2018 25:40:00";
 
     let offersAndItemsArray;
     if (feedComponentData.offers) {
@@ -79,14 +100,6 @@ export default class FlashSale extends React.Component {
     } else {
       offersAndItemsArray = items;
     }
-
-    const startDateTime = new Date(
-      this.convertDateTimeFromIndianToAmerican(feedComponentData.startDate)
-    );
-
-    const endDateTime = new Date(
-      this.convertDateTimeFromIndianToAmerican(feedComponentData.endDate)
-    );
 
     // if date time
 
