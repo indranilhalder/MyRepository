@@ -108,3 +108,16 @@
   background: #212121;
   border-radius: 50%;
 }
+.sideContent {
+  width: 50%;
+  line-height: 24px;
+  font-size: 14px;
+  font-family: regular;
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: 5px;
+}
+.sideHeader {
+  composes: sideContent;
+  font-family: semibold;
+}
