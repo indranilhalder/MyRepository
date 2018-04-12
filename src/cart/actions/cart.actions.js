@@ -21,7 +21,11 @@ import {
   JUS_PAY_CHARGED,
   FAILURE_LOWERCASE
 } from "../../lib/constants";
-import { setDataLayer, ADOBE_CHECKOUT_TYPE } from "../../lib/adobeUtils";
+import {
+  setDataLayer,
+  ADOBE_CART_TYPE,
+  ADOBE_CHECKOUT_TYPE
+} from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
 export const USER_CART_PATH = "v2/mpl/users";
@@ -360,7 +364,12 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayer(
+        ADOBE_CART_TYPE,
+        resultJson,
+        getState().icid.value,
+        getState().icid.icidType
+      );
       dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(cartDetailsFailure(e.message));

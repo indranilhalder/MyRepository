@@ -3,6 +3,7 @@ import { setInterval, clearInterval } from "timers";
 import * as constants from "../lib/constants.js";
 import { userAddressFailure } from "../cart/actions/cart.actions";
 import {
+  LOGIN_WITH_EMAIL,
   LOGIN_WITH_MOBILE,
   FACEBOOK_PLATFORM,
   GOOGLE_PLUS_PLATFORM
@@ -22,10 +23,6 @@ export const ADOBE_PDP_CPJ = "cpj_pdp";
 export const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
 export const ICID2 = "ICID2";
 export const CID = "CID";
-export const LOGIN_WITH_MOBIEL_NUMBER = "mobile";
-export const LOGIN_WITH_FACEBOOK = "google";
-export const LOGIN_WITH_GOOGLE = "google";
-export const LOGIN_WITH_EMAIL = "mobile";
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
 const MOBILE = "mobile";
@@ -47,6 +44,9 @@ export function setDataLayer(type, response, icid, icidType) {
   }
   if (type === ADOBE_CHECKOUT_TYPE) {
     window.digitalData = getDigitalDataForCheckout(type, response);
+  }
+  if (type === ADOBE_CART_TYPE) {
+    window.digitalData = getDigitalDataForCart(type, response);
   }
   if (icid) {
     window.digitalData.internal = {
@@ -225,9 +225,24 @@ function getDigitalDataForHome() {
   }
   return data;
 }
+function getDigitalDataForCart(type, cartResponse) {
+  let data = {
+    page: {
+      category: {
+        primaryCategory: "cart"
+      },
+      pageInfo: {
+        pageName: "cart"
+      }
+    }
+  };
 
+  data = addProductIdsToObj(data, cartResponse);
+
+  return data;
+}
 function getDigitalDataForCheckout(type, CheckoutResponse) {
-  const data = {
+  let data = {
     page: {
       category: {
         primaryCategory: "multistepcheckoutsummary"
@@ -237,13 +252,17 @@ function getDigitalDataForCheckout(type, CheckoutResponse) {
       }
     }
   };
-  if (
-    CheckoutResponse &&
-    CheckoutResponse.products &&
-    CheckoutResponse.products.length > 0
-  ) {
-    let productsIds = CheckoutResponse.products.map(product => {
-      return product.productcode && product.productcode.toLowerCase();
+  data = addProductIdsToObj(data, CheckoutResponse);
+  return data;
+}
+
+// this function will update data with  cpj.proudct.id with
+// reponse product's ids . this is using in many place thats why we
+// need to make separate function for product ids
+function addProductIdsToObj(data, response) {
+  if (response && response.products && response.products.length > 0) {
+    let productsIds = response.products.map(product => {
+      return product.productcode;
     });
     Object.assign(data, {
       cpj: { product: { id: JSON.stringify(productsIds) } }
@@ -251,7 +270,6 @@ function getDigitalDataForCheckout(type, CheckoutResponse) {
   }
   return data;
 }
-
 export async function getMcvId() {
   return new Promise((resolve, reject) => {
     let amcvCookieValue = getCookieValue(ADOBE_TARGET_COOKIE_NAME).split(
