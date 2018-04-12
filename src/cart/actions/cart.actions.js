@@ -452,9 +452,9 @@ export function getCartDetailsCNC(
           getState().icid.icidType
         );
       }
-      return dispatch(cartDetailsCNCSuccess(resultJson));
+      dispatch(cartDetailsCNCSuccess(resultJson));
     } catch (e) {
-      return dispatch(cartDetailsCNCFailure(e.message));
+      dispatch(cartDetailsCNCFailure(e.message));
     }
   };
 }
