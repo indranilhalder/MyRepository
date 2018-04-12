@@ -24,6 +24,7 @@ import {
 import {
   setDataLayer,
   ADOBE_CART_TYPE,
+  ADOBE_ORDER_CONFIRMATION,
   ADOBE_CHECKOUT_TYPE
 } from "../../lib/adobeUtils";
 
@@ -2865,6 +2866,12 @@ export function orderConfirmation(orderId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayer(
+        ADOBE_ORDER_CONFIRMATION,
+        resultJson,
+        getState().icid.value,
+        getState().icid.icidType
+      );
       dispatch(orderConfirmationSuccess(resultJson));
     } catch (e) {
       dispatch(orderConfirmationFailure(e.message));
