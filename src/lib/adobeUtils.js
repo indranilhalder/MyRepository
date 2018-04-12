@@ -19,7 +19,9 @@ const ADOBE_SATELLITE_CODE_FOR_PRODUCT_REMOVE_ON_CART = "'cpj_cart_removal'";
 export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
 export const ADOBE_CART_TYPE = "cart";
+export const ADOBE_CHECKOUT_TYPE = "checkout";
 export const ADOBE_PDP_CPJ = "cpj_pdp";
+export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
 export const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
 export const ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART =
   "ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART";
@@ -44,8 +46,14 @@ export function setDataLayer(type, response, icid, icidType) {
   if (type === ADOBE_PDP_TYPE) {
     window.digitalData = getDigitalDataForPdp(type, response);
   }
+  if (type === ADOBE_CHECKOUT_TYPE) {
+    window.digitalData = getDigitalDataForCheckout(type, response);
+  }
   if (type === ADOBE_CART_TYPE) {
     window.digitalData = getDigitalDataForCart(type, response);
+  }
+  if (type === ADOBE_ORDER_CONFIRMATION) {
+    window.digitalData = getDigitalDataForOrderConfirmation(type, response);
   }
   if (icid) {
     window.digitalData.internal = {
@@ -235,25 +243,65 @@ function getDigitalDataForCart(type, cartResponse) {
       }
     }
   };
-
-  data = addProductIdsToObj(data, cartResponse);
-
-  return data;
-}
-
-// this function will update data with  cpj.proudct.id with
-// reponse product's ids . this is using in many place thats why we
-// need to make separate function for product ids
-function addProductIdsToObj(data, response) {
-  if (response && response.products && response.products.length > 0) {
-    let productsIds = response.products.map(product => {
-      return product.productcode;
-    });
+  const productIds = getProductIdArray(cartResponse);
+  if (productIds) {
     Object.assign(data, {
-      cpj: { product: { id: JSON.stringify(productsIds) } }
+      cpj: { product: { id: JSON.stringify(productIds) } }
     });
   }
   return data;
+}
+function getDigitalDataForCheckout(type, CheckoutResponse) {
+  let data = {
+    page: {
+      category: {
+        primaryCategory: "multistepcheckoutsummary"
+      },
+      pageInfo: {
+        pageName: "multi checkout summary page"
+      }
+    }
+  };
+  const productIds = getProductIdArray(CheckoutResponse);
+  if (productIds) {
+    Object.assign(data, {
+      cpj: { product: { id: JSON.stringify(productIds) } }
+    });
+  }
+  return data;
+}
+
+function getDigitalDataForOrderConfirmation(type, response) {
+  let data = {
+    page: {
+      category: {
+        primaryCategory: "orderconfirmation"
+      },
+      pageInfo: {
+        pageName: "order confirmation page"
+      }
+    }
+  };
+
+  const productIds = getProductIdArray(response);
+  if (productIds) {
+    Object.assign(data, {
+      cpj: { product: { id: JSON.stringify(productIds) } }
+    });
+  }
+  return data;
+}
+// this function will update data with  cpj.proudct.id with
+// reponse product's ids . this is using in many place thats why we
+// need to make separate function for product ids
+function getProductIdArray(response) {
+  if (response && response.products && response.products.length > 0) {
+    return response.products.map(product => {
+      return product.productcode;
+    });
+  } else {
+    return null;
+  }
 }
 export async function getMcvId() {
   return new Promise((resolve, reject) => {

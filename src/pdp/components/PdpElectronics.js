@@ -248,6 +248,7 @@ export default class PdpElectronics extends React.Component {
             </div>
           )}
           <OfferCard
+            showDetails={this.props.showOfferDetails}
             potentialPromotions={productData.potentialPromotions}
             secondaryPromotions={productData.productOfferMsg}
           />
