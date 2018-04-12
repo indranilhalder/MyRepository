@@ -47,6 +47,8 @@ export default class OtpVerification extends React.Component {
     let mobileNumber;
     if (this.props.userObj && this.props.userObj.username) {
       mobileNumber = this.props.userObj.username;
+    } else if (this.props.userObj && this.props.userObj.mobileNumber) {
+      mobileNumber = this.props.userObj.mobileNumber;
     } else {
       mobileNumber = this.props.userObj;
     }
