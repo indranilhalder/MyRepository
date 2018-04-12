@@ -17,7 +17,6 @@ export default class OfferCard extends React.Component {
     }
   };
   render() {
-    console.log(this.props);
     if (this.props.potentialPromotions || this.props.secondaryPromotions) {
       return (
         <div className={styles.base} onClick={this.handleShowDetails}>
