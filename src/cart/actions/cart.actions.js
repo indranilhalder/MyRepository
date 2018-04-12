@@ -21,7 +21,12 @@ import {
   JUS_PAY_CHARGED,
   FAILURE_LOWERCASE
 } from "../../lib/constants";
-import { setDataLayer, ADOBE_CART_TYPE } from "../../lib/adobeUtils";
+import {
+  setDataLayer,
+  ADOBE_CART_TYPE,
+  setDataLayerForDirectCallsOnCart,
+  ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART
+} from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
 export const USER_CART_PATH = "v2/mpl/users";
@@ -366,9 +371,9 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
         getState().icid.value,
         getState().icid.icidType
       );
-      dispatch(cartDetailsSuccess(resultJson));
+      return dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
-      dispatch(cartDetailsFailure(e.message));
+      return dispatch(cartDetailsFailure(e.message));
     }
   };
 }
@@ -3245,6 +3250,7 @@ export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+
       dispatch(
         getCartDetails(
           JSON.parse(userDetails).userName,
@@ -3252,8 +3258,14 @@ export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
           cartId,
           pinCode
         )
-      ).then(() => {
-        dispatch(removeItemFromCartLoggedInSuccess());
+      ).then(cartDetails => {
+        if (cartDetails.status === SUCCESS) {
+          setDataLayerForDirectCallsOnCart(
+            ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART,
+            cartDetails.cartDetails
+          );
+          dispatch(removeItemFromCartLoggedInSuccess());
+        }
       });
     } catch (e) {
       dispatch(removeItemFromCartLoggedInFailure(e.message));

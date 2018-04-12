@@ -15,11 +15,14 @@ export const ADOBE_TARGET_SPLIT_VALUE = "%7C";
 export const ADOBE_TARGET_MCMID = "MCMID";
 export const ADOBE_TARGET_WAIT_TIME = 2000;
 const ADOBE_SATELLITE_CODE = "virtual_page_load";
+const ADOBE_SATELLITE_CODE_FOR_PRODUCT_REMOVE_ON_CART = "'cpj_cart_removal'";
 export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
 export const ADOBE_CART_TYPE = "cart";
 export const ADOBE_PDP_CPJ = "cpj_pdp";
 export const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
+export const ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART =
+  "ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART";
 export const ICID2 = "ICID2";
 export const CID = "CID";
 const GOOGLE = "google";
@@ -275,4 +278,9 @@ export async function getMcvId() {
       }, ADOBE_TARGET_WAIT_TIME);
     }
   });
+}
+export function setDataLayerForDirectCallsOnCart(type, response) {
+  console.log(response);
+  let data = {};
+  window._satellite.track(ADOBE_SATELLITE_CODE_FOR_PRODUCT_REMOVE_ON_CART);
 }
