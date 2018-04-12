@@ -255,7 +255,12 @@ function getDigitalDataForCheckout(type, CheckoutResponse) {
       }
     }
   };
-  data = addProductIdsToObj(data, CheckoutResponse);
+  const productIds = getProductIdArray(CheckoutResponse);
+  if (productIds) {
+    Object.assign(data, {
+      cpj: { product: { id: JSON.stringify(productIds) } }
+    });
+  }
   return data;
 }
 
