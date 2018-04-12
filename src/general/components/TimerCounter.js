@@ -12,9 +12,9 @@ const renderTimer = ({ days, hours, minutes, seconds }) => {
 };
 export default class Counter extends React.Component {
   render() {
-    let endTime = moment(new Date(this.props.endTime)).format(
-      "MM/DD/YYYY HH:mm:ss"
-    );
+    // the expectation is that the endTime comes in the American date format
+    // MM/DD/YYYY HH:mm:ss
+    let endTime = new Date(this.props.endTime);
     return endTime ? <Countdown date={endTime} renderer={renderTimer} /> : null;
   }
 }
