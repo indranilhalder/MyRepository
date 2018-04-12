@@ -237,16 +237,17 @@ export default class PdpJewellery extends React.Component {
               }}
             />
           </div>
-          {productData.details && (
-            <div className={styles.info}>
-              <span className={styles.textOffset}>
-                {productData.details[0].value}
-              </span>
-              <span className={styles.link} onClick={this.showStyleNote}>
-                <Link to="#styleNote"> Read More</Link>
-              </span>
-            </div>
-          )}
+          {productData.details &&
+            productData.details.lengtht > 0 && (
+              <div className={styles.info}>
+                <span className={styles.textOffset}>
+                  {productData.details[0].value}
+                </span>
+                <span className={styles.link} onClick={this.showStyleNote}>
+                  <Link to="#styleNote"> Read More</Link>
+                </span>
+              </div>
+            )}
           {productData.isEMIEligible === "Y" && (
             <div className={styles.info}>
               <span className={styles.textOffset}>
@@ -353,17 +354,21 @@ please try another pincode">
                 })}
               </Accordion>
             )}
-            {productData.warranty && (
-              <ProductFeature
-                heading="Warranty"
-                content={productData.warranty[0]}
-              />
-            )}
+            {productData.warranty &&
+              productData.warranty.length > 0 && (
+                <ProductFeature
+                  heading="Warranty"
+                  content={productData.warranty[0]}
+                />
+              )}
             {productData.knowMore && (
               <Accordion text="Know More" headerFontSize={16}>
-                {productData.knowMore.map(val => {
-                  return <div className={styles.list}>{val.knowMoreItem}</div>;
-                })}
+                {productData.knowMore &&
+                  productData.knowMore.map(val => {
+                    return (
+                      <div className={styles.list}>{val.knowMoreItem}</div>
+                    );
+                  })}
               </Accordion>
             )}
           </div>
