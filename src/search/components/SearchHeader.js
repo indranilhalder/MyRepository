@@ -16,13 +16,11 @@ export default class SearchHeader extends React.Component {
   onTypedSearch(val) {
     if (this.props.onSearch) {
       this.props.onSearch(val);
-      // this.setState({ searchString: val });
     }
   }
   searchString = () => {
     if (this.props.onSearchString) {
       this.props.onSearchString(this.props.searchString);
-      // this.setState({ searchBar: false, searchString: null });
     }
   };
   handleKeyUp = val => {
@@ -31,11 +29,7 @@ export default class SearchHeader extends React.Component {
     }
   };
   onClickIcon() {
-    if (this.props.display) {
-      this.searchString();
-    } else {
-      this.props.onSearchClick();
-    }
+    this.props.onSearchOrCloseIconClick();
   }
   render() {
     let search = searchIcon;
@@ -45,14 +39,15 @@ export default class SearchHeader extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.InformationHeader}>
-          {this.props.isGoBack && (
-            <div
-              className={styles.backHolder}
-              onClick={() => this.onClickBack()}
-            >
-              <Icon image={iconImageURL} size={16} />
-            </div>
-          )}
+          {this.props.isGoBack &&
+            !this.props.display && (
+              <div
+                className={styles.backHolder}
+                onClick={() => this.onClickBack()}
+              >
+                <Icon image={iconImageURL} size={16} />
+              </div>
+            )}
 
           <div
             className={styles.searchHolder}

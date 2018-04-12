@@ -99,8 +99,6 @@ class ProductListingsPage extends Component {
       return;
     }
 
-    console.log("DOES IT GET PAS THIS");
-
     if (
       this.props.location.state &&
       this.props.location.state.isFilter === true

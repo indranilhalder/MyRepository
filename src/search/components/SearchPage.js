@@ -13,7 +13,7 @@ export default class SearchPage extends React.Component {
     };
   }
 
-  handleSearchClick() {
+  onSearchOrCloseIconClick = () => {
     const showResults = this.state.showResults;
     this.props.clearSearchResults();
     this.setState({
@@ -21,12 +21,11 @@ export default class SearchPage extends React.Component {
       searchString: null,
       showSearchBar: !this.state.showSearchBar
     });
-  }
+  };
 
   handleBrandClick(webURL) {
     const brandCode = `${webURL}`.replace(TATA_CLIQ_ROOT, "$1");
     const searchQuery = this.state.searchString;
-    // this.setState({ showResults: false });
     this.props.clearSearchResults();
     this.setState({
       showResults: false,
@@ -41,10 +40,7 @@ export default class SearchPage extends React.Component {
 
   handleCategoryClick(webURL) {
     const categoryCode = `${webURL}`.replace(TATA_CLIQ_ROOT, "$1");
-
     const searchQuery = this.state.searchString;
-    // this.setState({ showResults: false });
-
     const url = `/search/?searchCategory=all&text=${searchQuery}:relevance:brand:${categoryCode}`;
     this.props.clearSearchResults();
     this.setState({
@@ -84,9 +80,7 @@ export default class SearchPage extends React.Component {
       <div className={styles.base}>
         <div className={styles.searchBar}>
           <SearchHeader
-            onSearchClick={val => {
-              this.handleSearchClick(val);
-            }}
+            onSearchOrCloseIconClick={this.onSearchOrCloseIconClick}
             onSearch={val => this.handleSearch(val)}
             onClickBack={() => {
               this.handleBackClick();

@@ -66,9 +66,6 @@ class HeaderWrapper extends React.Component {
   render() {
     const url = this.props.location.pathname;
 
-    console.log("URL");
-    console.log(url);
-    console.log(this.props);
     let shouldRenderSearch = false;
 
     let productCode = null;
@@ -89,13 +86,19 @@ class HeaderWrapper extends React.Component {
       url === HOME_ROUTER ||
       url === CATEGORIES_LANDING_PAGE ||
       url === DEFAULT_BRANDS_LANDING_PAGE ||
-      url === PRODUCT_LISTINGS ||
+      url === PRODUCT_LISTINGS
+    ) {
+      isGoBack = false;
+      shouldRenderSearch = true;
+    }
+
+    if (
       url === BRAND_AND_CATEGORY_PAGE ||
       url === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE ||
       url === BRAND_PRODUCT_LISTINGS_WITH_PAGE ||
       url === SEARCH_RESULTS_PAGE
     ) {
-      isGoBack = false;
+      isGoBack = true;
       shouldRenderSearch = true;
     }
 
