@@ -232,7 +232,7 @@ function getDigitalDataForCart(type, cartResponse) {
       }
     }
   };
-  const productIds = addProductIdsToObj(cartResponse);
+  const productIds = getProductIdArray(cartResponse);
   if (productIds) {
     Object.assign(data, {
       cpj: { product: { id: JSON.stringify(productIds) } }
@@ -244,13 +244,13 @@ function getDigitalDataForCart(type, cartResponse) {
 // this function will update data with  cpj.proudct.id with
 // reponse product's ids . this is using in many place thats why we
 // need to make separate function for product ids
-function addProductIdsToObj(response) {
+function getProductIdArray(response) {
   if (response && response.products && response.products.length > 0) {
     return response.products.map(product => {
       return product.productcode;
     });
   } else {
-    return false;
+    return null;
   }
 }
 export async function getMcvId() {
