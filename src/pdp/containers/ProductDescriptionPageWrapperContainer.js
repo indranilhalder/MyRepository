@@ -17,6 +17,7 @@ import {
 import {
   showModal,
   EMI_MODAL,
+  OFFER_MODAL,
   ADDRESS,
   SIZE_SELECTOR,
   SIZE_GUIDE
@@ -35,7 +36,9 @@ const mapDispatchToProps = dispatch => {
     showSizeSelector: data => {
       dispatch(showModal(SIZE_SELECTOR, data));
     },
-
+    showOfferDetails: data => {
+      dispatch(showModal(OFFER_MODAL, data));
+    },
     getProductSizeGuide: productCode => {
       dispatch(getProductSizeGuide(productCode));
     },

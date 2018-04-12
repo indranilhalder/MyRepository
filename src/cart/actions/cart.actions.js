@@ -24,7 +24,8 @@ import {
 import {
   setDataLayer,
   ADOBE_CART_TYPE,
-  ADOBE_ORDER_CONFIRMATION
+  ADOBE_ORDER_CONFIRMATION,
+  ADOBE_CHECKOUT_TYPE
 } from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
@@ -404,7 +405,8 @@ export function getCartDetailsCNC(
   accessToken,
   cartId,
   pinCode,
-  isSoftReservation
+  isSoftReservation,
+  isSetDataLayer: false
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(cartDetailsCNCRequest());
@@ -450,6 +452,15 @@ export function getCartDetailsCNC(
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
+      }
+      // setting data layer only for first time
+      if (isSetDataLayer) {
+        setDataLayer(
+          ADOBE_CHECKOUT_TYPE,
+          resultJson,
+          getState().icid.value,
+          getState().icid.icidType
+        );
       }
       dispatch(cartDetailsCNCSuccess(resultJson));
     } catch (e) {

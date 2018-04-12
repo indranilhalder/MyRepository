@@ -8,10 +8,18 @@ export default class OfferCard extends React.Component {
       this.props.onClick();
     }
   }
+  handleShowDetails = () => {
+    if (this.props.showDetails) {
+      this.props.showDetails({
+        potentialPromotions: this.props.potentialPromotions,
+        secondaryPromotions: this.props.secondaryPromotions
+      });
+    }
+  };
   render() {
     if (this.props.potentialPromotions || this.props.secondaryPromotions) {
       return (
-        <div className={styles.base}>
+        <div className={styles.base} onClick={this.handleShowDetails}>
           {this.props.potentialPromotions && (
             <div className={styles.headingText}>
               {this.props.potentialPromotions.title}
@@ -29,3 +37,18 @@ export default class OfferCard extends React.Component {
     }
   }
 }
+OfferCard.propTypes = {
+  potentialPromotions: PropTypes.shape({
+    title: PropTypes.string,
+    description: PropTypes.string,
+    endDate: PropTypes.string,
+    startDate: PropTypes.string
+  }),
+  secondaryPromotions: PropTypes.shape({
+    messageId: PropTypes.string,
+    messageDetails: PropTypes.string,
+    endDate: PropTypes.string,
+    startDate: PropTypes.string
+  }),
+  showDetails: PropTypes.func
+};
