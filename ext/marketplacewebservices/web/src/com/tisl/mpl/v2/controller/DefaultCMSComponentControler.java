@@ -133,7 +133,7 @@ public class DefaultCMSComponentControler
 	private final String pageComponent = "pageComponent";
 	private static final String heroBannerComp = "Hero Banner Component";
 
-	public SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	public SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
 
 	public static final String heroBannerError = "Error in getting HeroBannerComponent with id:";
 	public static final String connectBannerComponentError = "Error in getting connectBannerComponentModel with id:";
@@ -2663,11 +2663,11 @@ public class DefaultCMSComponentControler
 			}
 			uiCompPageObj.setItems(genericUICompPageWsDTO);
 			uiCompPageObj.setMessage(contentPage.getUid());
-			/*
-			 * if (null != contentPage.getReactPageType() && !contentPage.getReactPageType().isEmpty()) {
-			 * uiCompPageObj.setPageType(contentPage.getReactPageType()); } else {
-			 * uiCompPageObj.setPageType(StringUtils.EMPTY); }
-			 */
+			if(null != contentPage.getReactPageType() && !contentPage.getReactPageType().isEmpty()){
+				uiCompPageObj.setPageType(contentPage.getReactPageType());
+			}else{
+				uiCompPageObj.setPageType(StringUtils.EMPTY);
+			}
 			uiCompPageObj.setStatus(Success);
 			return uiCompPageObj;
 		}
