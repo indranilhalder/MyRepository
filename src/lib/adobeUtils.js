@@ -15,18 +15,27 @@ export const ADOBE_TARGET_SPLIT_VALUE = "%7C";
 export const ADOBE_TARGET_MCMID = "MCMID";
 export const ADOBE_TARGET_WAIT_TIME = 2000;
 const ADOBE_SATELLITE_CODE = "virtual_page_load";
+const ADOBE_PDP_CPJ = "cpj_pdp";
+const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
+const ADOBE_SAVE_PRODUCT = "cpj_button_save";
+const ADOBE_EMI_BANK_SELECT_ON_PDP = "'cpj_pdp_emi";
 const ADOBE_SATELLITE_CODE_FOR_PRODUCT_REMOVE_ON_CART = "'cpj_cart_removal'";
+
+export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
 export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
 export const ADOBE_CART_TYPE = "cart";
 export const ADOBE_CHECKOUT_TYPE = "checkout";
-export const ADOBE_PDP_CPJ = "cpj_pdp";
-export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
-export const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
-export const ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART =
-  "ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART";
 export const ICID2 = "ICID2";
 export const CID = "CID";
+export const SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT =
+  "SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT";
+export const SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT =
+  "SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT";
+export const SET_DATA_LAYER_FOR_EMI_BANK_EVENT =
+  "SET_DATA_LAYER_FOR_EMI_BANK_EVENT";
+export const ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART =
+  "ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART";
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
 const MOBILE = "mobile";
@@ -45,6 +54,7 @@ export function setDataLayer(type, response, icid, icidType) {
 
   if (type === ADOBE_PDP_TYPE) {
     window.digitalData = getDigitalDataForPdp(type, response);
+    window._satellite.track(ADOBE_PDP_CPJ);
   }
   if (type === ADOBE_CHECKOUT_TYPE) {
     window.digitalData = getDigitalDataForCheckout(type, response);
@@ -327,6 +337,24 @@ export async function getMcvId() {
     }
   });
 }
+export function setDataLayerForPdpDirectCalls(type, layerData: null) {
+  let data = window.digitalData;
+
+  if (type === SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT) {
+    window._satellite.track(ADOBE_ADD_TO_CART);
+  }
+  if (type === SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT) {
+    window._satellite.track(ADOBE_SAVE_PRODUCT);
+  }
+  if (type === SET_DATA_LAYER_FOR_EMI_BANK_EVENT) {
+    Object.assign(data.cpj, {
+      emi: { bank: layerData.replace(/ /g, "_").toLowerCase() }
+    });
+    window._satellite.track(ADOBE_EMI_BANK_SELECT_ON_PDP);
+  }
+  window.digitalData = data;
+}
+
 export function setDataLayerForDirectCallsOnCart(type, response) {
   console.log(response);
   let data = {};

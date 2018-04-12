@@ -9,7 +9,12 @@ import {
 } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-import { getMcvId } from "../../lib/adobeUtils.js";
+import {
+  getMcvId,
+  setDataLayerForPdpDirectCalls,
+  SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT,
+  SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT
+} from "../../lib/adobeUtils.js";
 import each from "lodash/each";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -334,7 +339,6 @@ export function removeProductFromWishList(productDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
       return dispatch(removeProductFromWishListSuccess());
     } catch (e) {
       return dispatch(removeProductFromWishListFailure(e.message));
@@ -383,6 +387,7 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
 
       // here we dispatch a modal to show something was added to the bag
       dispatch(displayToast("Added product to Bag"));
+      setDataLayerForPdpDirectCalls(SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT);
       dispatch(addProductToCartSuccess());
       // ADOBE_ADD_TO_CART
     } catch (e) {
@@ -764,7 +769,7 @@ export function getProductReviewsFailure(error) {
   };
 }
 
-export function getProductReviews(productCode, pageIndex) {
+export function getProductReviews(productCode, pageIndex, orderBy, sortBy) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -780,7 +785,7 @@ export function getProductReviews(productCode, pageIndex) {
     dispatch(getProductReviewsRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_SIZE_GUIDE_PATH}${productCode.toUpperCase()}/users/${userName}/reviews?access_token=${accessToken}&page=${pageIndex}&pageSize=${PAGE_NUMBER}&orderBy=${ORDER_BY}&sort=${SORT}`
+        `${PRODUCT_SIZE_GUIDE_PATH}${productCode.toUpperCase()}/users/${userName}/reviews?access_token=${accessToken}&page=${pageIndex}&pageSize=${PAGE_NUMBER}&orderBy=${orderBy}&sort=${sortBy}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
