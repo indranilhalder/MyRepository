@@ -19,10 +19,14 @@ export default class EmiModal extends React.Component {
     };
   }
   handleOpen(index) {
-    if (this.props.emiData.bankList[index].emiBank) {
+    if (
+      this.props.emiData.bankList[index] &&
+      this.props.emiData.bankList[index].emiBank
+    ) {
+      const bankName = this.props.emiData.bankList[index].emiBank;
       setDataLayerForPdpDirectCalls(
         SET_DATA_LAYER_FOR_EMI_BANK_EVENT,
-        this.props.emiData.bankList[index].emiBank
+        bankName
       );
     }
     if (index === this.state.openIndex) {
