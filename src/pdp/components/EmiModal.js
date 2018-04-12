@@ -5,6 +5,10 @@ import SlideModal from "../../general/components/SlideModal";
 import Accordion from "../../general/components/Accordion";
 import PropTypes from "prop-types";
 import styles from "./EmiModal.css";
+import {
+  setDataLayerForPdpDirectCalls,
+  SET_DATA_LAYER_FOR_EMI_BANK_EVENT
+} from "../../lib/adobeUtils";
 const EMI_INFO = "EMI for the product is provided by the following banks";
 export default class EmiModal extends React.Component {
   constructor(props) {
@@ -15,6 +19,12 @@ export default class EmiModal extends React.Component {
     };
   }
   handleOpen(index) {
+    if (this.props.emiData.bankList[index].emiBank) {
+      setDataLayerForPdpDirectCalls(
+        SET_DATA_LAYER_FOR_EMI_BANK_EVENT,
+        this.props.emiData.bankList[index].emiBank
+      );
+    }
     if (index === this.state.openIndex) {
       this.setState({ openIndex: null });
     } else {

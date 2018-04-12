@@ -9,7 +9,12 @@ import {
 } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-import { getMcvId } from "../../lib/adobeUtils.js";
+import {
+  getMcvId,
+  setDataLayerForPdpDirectCalls,
+  SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT,
+  SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT
+} from "../../lib/adobeUtils.js";
 import each from "lodash/each";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -282,7 +287,7 @@ export function addProductToWishList(userId, accessToken, productDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayerForPdpDirectCalls(SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT);
       dispatch(addProductToWishListSuccess());
     } catch (e) {
       dispatch(addProductToWishListFailure(e.message));
@@ -383,6 +388,7 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
 
       // here we dispatch a modal to show something was added to the bag
       dispatch(displayToast("Added product to Bag"));
+      setDataLayerForPdpDirectCalls(SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT);
       dispatch(addProductToCartSuccess());
       // ADOBE_ADD_TO_CART
     } catch (e) {
