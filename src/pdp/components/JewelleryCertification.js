@@ -2,7 +2,7 @@ import React from "react";
 import Logo from "../../general/components/Logo";
 import styles from "./JewelleryCertification.css";
 import PropTypes from "prop-types";
-import bsi from "./img/bsi.png";
+import bis from "./img/bsi.png";
 import caratLane from "./img/caratLane.png";
 import egl from "./img/egl.png";
 import gia from "./img/gia.png";
@@ -23,7 +23,7 @@ export default class JewelleryCertification extends React.Component {
       case "Platinum":
         image = platinum;
         break;
-      case "EGL":
+      case "AGL":
         image = egl;
         break;
       case "Carat lane":
@@ -41,8 +41,8 @@ export default class JewelleryCertification extends React.Component {
       case "GIA":
         image = gia;
         break;
-      case "BSI":
-        image = bsi;
+      case "BIS":
+        image = bis;
         break;
       case "SGL":
         image = sgl;
