@@ -3,6 +3,7 @@ import { setInterval, clearInterval } from "timers";
 import * as constants from "../lib/constants.js";
 import { userAddressFailure } from "../cart/actions/cart.actions";
 import {
+  LOGIN_WITH_EMAIL,
   LOGIN_WITH_MOBILE,
   FACEBOOK_PLATFORM,
   GOOGLE_PLUS_PLATFORM
@@ -19,23 +20,20 @@ const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
 const ADOBE_SAVE_PRODUCT = "cpj_button_save";
 const ADOBE_EMI_BANK_SELECT_ON_PDP = "'cpj_pdp_emi";
 
+export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
 export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
 export const ADOBE_CART_TYPE = "cart";
+export const ADOBE_CHECKOUT_TYPE = "checkout";
 
 export const ICID2 = "ICID2";
 export const CID = "CID";
-export const LOGIN_WITH_MOBIEL_NUMBER = "mobile";
-export const LOGIN_WITH_FACEBOOK = "google";
-export const LOGIN_WITH_GOOGLE = "google";
-export const LOGIN_WITH_EMAIL = "mobile";
 export const SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT =
   "SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT";
 export const SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT =
   "SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT";
 export const SET_DATA_LAYER_FOR_EMI_BANK_EVENT =
   "SET_DATA_LAYER_FOR_EMI_BANK_EVENT";
-
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
 const MOBILE = "mobile";
@@ -56,7 +54,15 @@ export function setDataLayer(type, response, icid, icidType) {
   if (type === ADOBE_PDP_TYPE) {
     window.digitalData = getDigitalDataForPdp(type, response);
   }
-
+  if (type === ADOBE_CHECKOUT_TYPE) {
+    window.digitalData = getDigitalDataForCheckout(type, response);
+  }
+  if (type === ADOBE_CART_TYPE) {
+    window.digitalData = getDigitalDataForCart(type, response);
+  }
+  if (type === ADOBE_ORDER_CONFIRMATION) {
+    window.digitalData = getDigitalDataForOrderConfirmation(type, response);
+  }
   if (icid) {
     window.digitalData.internal = {
       campaign: {
@@ -234,7 +240,77 @@ function getDigitalDataForHome() {
   }
   return data;
 }
+function getDigitalDataForCart(type, cartResponse) {
+  let data = {
+    page: {
+      category: {
+        primaryCategory: "cart"
+      },
+      pageInfo: {
+        pageName: "cart"
+      }
+    }
+  };
+  const productIds = getProductIdArray(cartResponse);
+  if (productIds) {
+    Object.assign(data, {
+      cpj: { product: { id: JSON.stringify(productIds) } }
+    });
+  }
+  return data;
+}
+function getDigitalDataForCheckout(type, CheckoutResponse) {
+  let data = {
+    page: {
+      category: {
+        primaryCategory: "multistepcheckoutsummary"
+      },
+      pageInfo: {
+        pageName: "multi checkout summary page"
+      }
+    }
+  };
+  const productIds = getProductIdArray(CheckoutResponse);
+  if (productIds) {
+    Object.assign(data, {
+      cpj: { product: { id: JSON.stringify(productIds) } }
+    });
+  }
+  return data;
+}
 
+function getDigitalDataForOrderConfirmation(type, response) {
+  let data = {
+    page: {
+      category: {
+        primaryCategory: "orderconfirmation"
+      },
+      pageInfo: {
+        pageName: "order confirmation page"
+      }
+    }
+  };
+
+  const productIds = getProductIdArray(response);
+  if (productIds) {
+    Object.assign(data, {
+      cpj: { product: { id: JSON.stringify(productIds) } }
+    });
+  }
+  return data;
+}
+// this function will update data with  cpj.proudct.id with
+// reponse product's ids . this is using in many place thats why we
+// need to make separate function for product ids
+function getProductIdArray(response) {
+  if (response && response.products && response.products.length > 0) {
+    return response.products.map(product => {
+      return product.productcode;
+    });
+  } else {
+    return null;
+  }
+}
 export async function getMcvId() {
   return new Promise((resolve, reject) => {
     let amcvCookieValue = getCookieValue(ADOBE_TARGET_COOKIE_NAME).split(
@@ -263,15 +339,12 @@ export function setDataLayerForPdpDirectCalls(type, layerData: null) {
   let data = window.digitalData;
 
   if (type === SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT) {
-    debugger;
     window._satellite.track(ADOBE_ADD_TO_CART);
   }
   if (type === SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT) {
-    debugger;
     window._satellite.track(ADOBE_SAVE_PRODUCT);
   }
   if (type === SET_DATA_LAYER_FOR_EMI_BANK_EVENT) {
-    debugger;
     Object.assign(data.cpj, {
       emi: { bank: layerData.replace(/ /g, "_").toLowerCase() }
     });

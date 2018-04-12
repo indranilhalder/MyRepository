@@ -169,6 +169,9 @@ export default class ModalRoot extends React.Component {
     customerDetails.lastName = this.state.lastName;
     this.props.getOtpToActivateWallet(customerDetails);
   }
+  resendOtpForUpdateProfile = () => {
+    this.props.updateProfile(this.props.ownProps);
+  };
 
   addGiftCard = val => {
     if (this.props.redeemCliqVoucher) {
@@ -204,6 +207,9 @@ export default class ModalRoot extends React.Component {
           userObj={this.props.ownProps}
           closeModal={() => this.handleClose()}
           submitOtp={otpDetails => this.submitOtpForUpdateProfile(otpDetails)}
+          resendOtp={userName =>
+            this.resendOtpForUpdateProfile(this.props.ownProps)
+          }
         />
       ),
       ForgotPasswordOtpVerification: (
