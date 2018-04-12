@@ -7408,8 +7408,8 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String platform, @RequestParam(required = false) final String bankName,
 			@RequestBody(required = false) final InventoryReservListRequestWsDTO item,
 			@RequestParam(required = false) final String token, @RequestParam(required = false) final String cardRefNo,
-			@RequestParam(required = false) final String cardFingerPrint, @RequestParam(required = false) final String juspayUrl)
-			throws EtailNonBusinessExceptions
+			@RequestParam(required = false) final String cardFingerPrint, @RequestParam(required = false) final String juspayUrl,
+			@RequestParam(required = false) final boolean isPwa) throws EtailNonBusinessExceptions
 	{
 		OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
 		String uid = "";
@@ -7676,6 +7676,24 @@ public class UsersController extends BaseCommerceController
 						}
 						else if (!checkcartVoucher1)
 						{ // only voucher
+							if (isPwa)
+							{
+								final List<DiscountModel> discountModelList = cart.getDiscounts();
+								if (CollectionUtils.isNotEmpty(discountModelList))
+								{
+									for (final DiscountModel discountModel : discountModelList)
+									{
+										if (discountModel instanceof MplCartOfferVoucherModel)
+										{
+											final MplCartOfferVoucherModel mplCartOfferVoucherModel = (MplCartOfferVoucherModel) discountModel;
+											orderCreateInJusPayWsDto.setCouponCode(mplCartOfferVoucherModel.getCode());
+											orderCreateInJusPayWsDto.setTitle(mplCartOfferVoucherModel.getName());
+											orderCreateInJusPayWsDto.setDescription(mplCartOfferVoucherModel.getDescription());
+										}
+
+									}
+								}
+							}
 							orderCreateInJusPayWsDto.setErrorMessage(MarketplacecommerceservicesConstants.CARTCOUPONFAILUREMESSAGE);
 							failFlag = true;
 							failErrorCode = MarketplacecommerceservicesConstants.B9078;
@@ -8046,6 +8064,24 @@ public class UsersController extends BaseCommerceController
 					}
 					else if (!checkcartVoucher1)
 					{ // only voucher
+						if (isPwa)
+						{
+							final List<DiscountModel> discountModelList = cart.getDiscounts();
+							if (CollectionUtils.isNotEmpty(discountModelList))
+							{
+								for (final DiscountModel discountModel : discountModelList)
+								{
+									if (discountModel instanceof MplCartOfferVoucherModel)
+									{
+										final MplCartOfferVoucherModel mplCartOfferVoucherModel = (MplCartOfferVoucherModel) discountModel;
+										orderCreateInJusPayWsDto.setCouponCode(mplCartOfferVoucherModel.getCode());
+										orderCreateInJusPayWsDto.setTitle(mplCartOfferVoucherModel.getName());
+										orderCreateInJusPayWsDto.setDescription(mplCartOfferVoucherModel.getDescription());
+									}
+
+								}
+							}
+						}
 						orderCreateInJusPayWsDto.setErrorMessage(MarketplacecommerceservicesConstants.CARTCOUPONFAILUREMESSAGE);
 						failFlag = true;
 						failErrorCode = MarketplacecommerceservicesConstants.B9078;

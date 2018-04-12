@@ -1185,6 +1185,9 @@
 		<property name="cartGuid" type="String"></property>
 		<property name="status" type="String"></property>
 		<property name="errorMessage" type="String"></property>
+		<property name="couponCode" type="String"></property>
+		<property name="description" type="String"></property>
+		<property name="title" type="String"></property>
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.StateWsDto">
