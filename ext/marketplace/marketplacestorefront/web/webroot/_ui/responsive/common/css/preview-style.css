@@ -1201,6 +1201,7 @@ body {
 
 .category-l2, .category-l3 {
 	display: none;
+	padding-left:20px;
 }
 
 .category-l1 a {

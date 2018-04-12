@@ -4,7 +4,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if( $(this).next('ul').length > 0 ){
 			
-			$(this).parent().siblings().find('ul').hide();
+			//$(this).parent().siblings().find('ul').hide();
 			$(this).parent().siblings().find('a').removeClass('active-ul');
 			
 			$(this).next('ul').toggle();
@@ -354,7 +354,8 @@ $(document).ready(function() {
 			// If the count down is over, write some text 
 			if (distance < 0) {
 				clearInterval(x);
-				document.getElementById("countdown").innerHTML = "Sale Started";
+				document.getElementById("countdown").innerHTML = "";
+				document.getElementById("timer-icon").style.display = "none";
 			}
 		}, 1000);
 	}
