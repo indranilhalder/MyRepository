@@ -41,7 +41,7 @@ export default class SearchPage extends React.Component {
   handleCategoryClick(webURL) {
     const categoryCode = `${webURL}`.replace(TATA_CLIQ_ROOT, "$1");
     const searchQuery = this.state.searchString;
-    const url = `/search/?searchCategory=all&text=${searchQuery}:relevance:brand:${categoryCode}`;
+    const url = `/search/?searchCategory=all&text=${searchQuery}:relevance:category:${categoryCode}`;
     this.props.clearSearchResults();
     this.setState({
       showResults: false,
