@@ -8,8 +8,8 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS
 } from "../../lib/constants";
-import each from "lodash/each";
-import delay from "lodash/delay";
+import each from "lodash.foreach";
+import delay from "lodash.delay";
 import {
   MSD_WIDGET_LIST,
   MSD_WIDGET_PLATFORM,

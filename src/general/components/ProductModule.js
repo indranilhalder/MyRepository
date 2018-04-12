@@ -55,7 +55,7 @@ export default class ProductModule extends React.Component {
               : styles.ListimageHolder
           }
         >
-          <ProductImage image={this.props.productImage} />
+          {/* <ProductImage image={this.props.productImage} /> */}
           {this.props.onConnect && (
             <ConnectButton onClick={this.handleConnect} />
           )}

@@ -6,35 +6,16 @@ import Route from "./general/Route";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
 import HomeContainer from "./home/containers/HomeContainer.js";
-import ProductListingsContainer from "./plp/containers/ProductListingsContainer";
-// import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
-// import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
-// import LoginContainer from "./auth/containers/LoginContainer";
 import ErrorContainer from "./general/containers/ErrorContainer.js";
-// import SignUpContainer from "./auth/containers/SignUpContainer.js";
-import FilterContainer from "./plp/containers/FilterContainer";
-import BrandsLandingPageDefaultContainer from "./blp/containers/BrandsLandingPageDefaultContainer";
-// import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
-// import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
-// import CartContainer from "./cart/containers/CartContainer";
-// import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
-// import CategoriesPageContainer from "./clp/containers/CategoriesPageContainer";
-// import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
-// import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
-// import CheckOutContainer from "./cart/containers/CheckOutContainer";
-import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
+
 import MobileFooter from "./general/components/MobileFooter.js";
 // importing All container for my Accounts
 
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderContainer from "./general/containers/HeaderContainer.js";
-import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
-
-import ReturnFlowContainer from "./account/containers/ReturnFlowContainer.js";
 
 import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
-import CancelOrderContainer from "./account/containers/CancelOrderContainer";
 
 import {
   HOME_ROUTER,
@@ -81,6 +62,50 @@ import {
   REQUESTING
 } from "../src/lib/constants";
 import Loadable from "react-loadable";
+
+const BrandLandingPageContainer = Loadable({
+  loader: () => import("./blp/containers/BrandLandingPageContainer"),
+  loading() {
+    return <div> Loading ... </div>;
+  }
+});
+
+const BrandsLandingPageDefaultContainer = Loadable({
+  loader: () => import("./blp/containers/BrandsLandingPageDefaultContainer"),
+  loading() {
+    return <div> Loading ... </div>;
+  }
+});
+
+const ProductListingsContainer = Loadable({
+  loader: () => import("./plp/containers/ProductListingsContainer"),
+  loading(error) {
+    console.log("ERROR");
+    console.log(error);
+    return <div> Loading ... </div>;
+  }
+});
+
+const CancelOrderContainer = Loadable({
+  loader: () => import("./account/containers/CancelOrderContainer"),
+  loading() {
+    return <div> Loading ... </div>;
+  }
+});
+
+const ReturnFlowContainer = Loadable({
+  loader: () => import("./account/containers/ReturnFlowContainer.js"),
+  loading() {
+    return <div> Loading ... </div>;
+  }
+});
+
+const OrderDetailsContainer = Loadable({
+  loader: () => import("./account/containers/OrderDetailsContainer.js"),
+  loading() {
+    return <div> Loading ... </div>;
+  }
+});
 
 const DisplayOrderSummaryContainer = Loadable({
   loader: () => import("./cart/containers/DisplayOrderSummaryContainer"),
@@ -372,11 +397,6 @@ class App extends Component {
               render={routeProps => <Auth {...routeProps} {...this.props} />}
             />
 
-            <Route
-              exact
-              path={PRODUCT_FILTER_ROUTER}
-              component={FilterContainer}
-            />
             <Route
               exact
               path={BRAND_LANDING_PAGE}

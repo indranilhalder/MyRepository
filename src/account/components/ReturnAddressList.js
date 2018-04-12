@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import CheckBox from "../../general/components/CheckBox.js";
 import ConfirmAddress from "../../cart/components/ConfirmAddress.js";
 import ReturnsFrame from "./ReturnsFrame.js";
-import filter from "lodash/filter";
+import filter from "lodash.filter";
 import ReturnDateTime from "./ReturnDateTime.js";
 import AddDeliveryAddress from "../../cart/components/AddDeliveryAddress.js";
 import * as Cookie from "../../lib/Cookie.js";

@@ -16,6 +16,7 @@ export const ADOBE_PDP_CPJ = "cpj_pdp";
 export const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
 
 export function setDataLayer(type, response, icid) {
+  return;
   let userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
 
   if (userDetails) {

@@ -3,7 +3,7 @@ import { YES, NO } from "../../lib/constants";
 import { transferPincodeToPdpPincode } from "./utils";
 import { CLEAR_ERROR } from "../../general/error.actions.js";
 
-import cloneDeep from "lodash/cloneDeep";
+import cloneDeep from "lodash.clonedeep";
 const productDescription = (
   state = {
     status: null,
