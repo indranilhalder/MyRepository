@@ -84,6 +84,7 @@ class ProductListingsPage extends Component {
   };
 
   componentDidUpdate() {
+    console.log("COMPONENT DID UPDATE");
     let page = null;
     if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
       page = this.props.match.params[1];
@@ -98,6 +99,8 @@ class ProductListingsPage extends Component {
       return;
     }
 
+    console.log("DOES IT GET PAS THIS");
+
     if (
       this.props.location.state &&
       this.props.location.state.isFilter === true
@@ -110,6 +113,8 @@ class ProductListingsPage extends Component {
       this.props.location.state.isFilter === false
     ) {
       const searchText = this.getSearchTextFromUrl();
+      console.log("SEARCH TEXT");
+      console.log(searchText);
       this.props.getProductListings(searchText, SUFFIX, 0);
     }
   }

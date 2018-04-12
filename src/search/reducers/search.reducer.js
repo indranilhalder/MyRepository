@@ -10,6 +10,12 @@ const search = (
   action
 ) => {
   switch (action.type) {
+    case searchActions.CLEAR_SEARCH_RESULTS:
+      return Object.assign({}, state, {
+        searchResult: {
+          loading: false
+        }
+      });
     case searchActions.SET_SEARCH_STRING:
       return Object.assign({}, state, {
         string: action.string
