@@ -21,6 +21,7 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.data.OrderHistoriesData;
 import de.hybris.platform.commercefacades.order.data.OrderHistoryData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
+import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
@@ -140,6 +141,7 @@ import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.v2.helper.OrdersHelper;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 import com.tisl.mpl.wsdto.GetOrderHistoryListWsDTO;
+import com.tisl.mpl.wsdto.MplCategoryHierarchydata;
 import com.tisl.mpl.wsdto.MplDeliveryAddressRequestWsDTO;
 import com.tisl.mpl.wsdto.MplDeliveryAddressResponseWsDTO;
 import com.tisl.mpl.wsdto.MplSDInfoWsDTO;
@@ -154,7 +156,7 @@ import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto; 
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;   
 
 /**
  * Web Service Controller for the ORDERS resource. Most methods check orders of the user. Methods require authentication
@@ -615,7 +617,8 @@ public class OrdersController extends BaseCommerceController
 	@RequestMapping(value = "/users/{userId}/orderConfirmation/{orderCode}", method = RequestMethod.GET)
 	//@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
 	@ResponseBody
-	public OrderConfirmationWsDTO orderConfirmation(@PathVariable final String orderCode, final HttpServletRequest request)
+	public OrderConfirmationWsDTO orderConfirmation(@PathVariable final String orderCode,
+			@RequestParam(required = false) final boolean isPwa, final HttpServletRequest request)
 	{
 		OrderConfirmationWsDTO response = new OrderConfirmationWsDTO();
 		OrderModel orderModel = null;
@@ -666,7 +669,7 @@ public class OrdersController extends BaseCommerceController
 			orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel); //TISPT-175 --- order details : reduce same call from two places
 			wishlistFacade.remProdFromWLForConf(orderDetail, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
-			response = processOrderCode(orderCode, orderModel, orderDetail, request);
+			response = processOrderCode(orderCode, orderModel, orderDetail, request, isPwa);
 			if (null != response && null != orderModel.getPayableWalletAmount()
 					&& orderModel.getPayableWalletAmount().doubleValue() > 0.0D)
 			{
@@ -768,7 +771,7 @@ public class OrdersController extends BaseCommerceController
 	 */
 	//TODO It was added in respect of CheckoutController.java
 	protected OrderConfirmationWsDTO processOrderCode(final String orderCode, final OrderModel orderModel,
-			final OrderData orderDetail, final HttpServletRequest request) throws EtailNonBusinessExceptions
+			final OrderData orderDetail, final HttpServletRequest request, final boolean isPwa) throws EtailNonBusinessExceptions
 	{
 		final OrderConfirmationWsDTO orderWsDTO = new OrderConfirmationWsDTO();
 		OrderProductWsDTO orderProductDTO = null;
@@ -822,12 +825,21 @@ public class OrdersController extends BaseCommerceController
 
 				for (final OrderEntryData entry : orderDetail.getEntries())
 				{
+					//List<MplCategoryHierarchydata> list = new ArrayList();
 					if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
 					{
 						orderWsDTO.setExchangeId(entry.getExchangeApplied());
 					}
 
+					//					for (final CategoryData catData : entry.getProduct().getCategories())
+					//					{
+					//						if (catData.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
+					//						{
+					//							list=constructCategoryHierarchy(list,catData);
+					//						}
+					//					}
 				}
+
 				/*
 				 * if (orderDetail.getTotalPriceWithTax() != null) {
 				 * orderWsDTO.setFinalAmount(orderDetail.getTotalPriceWithTax().getValue().toString()); } if
@@ -894,9 +906,26 @@ public class OrdersController extends BaseCommerceController
 					{
 						for (final OrderEntryData entry : sellerOrder.getEntries())
 						{
-
+							List<MplCategoryHierarchydata> list = new ArrayList();
 							orderProductDTO = new OrderProductWsDTO();
 							product = entry.getProduct();
+							if (isPwa)
+							{
+								if (CollectionUtils.isNotEmpty(product.getCategories()))
+								{
+									for (final CategoryData catData : product.getCategories())
+									{
+										if (catData.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
+										{
+											list = constructCategoryHierarchy(catData);
+										}
+									}
+								}
+							}
+							if (CollectionUtils.isNotEmpty(list))
+							{
+								orderProductDTO.setCategoryHierarchy(list);
+							}
 							orderProductDTO.setProductcode(product.getCode());
 							orderProductDTO.setProductName(product.getName());
 							if (null != product.getBrand())
@@ -1137,6 +1166,40 @@ public class OrdersController extends BaseCommerceController
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B9074);
 		}
 		return orderWsDTO;
+	}
+
+	/**
+	 * @param list
+	 * @param category
+	 * @return
+	 */
+	private List<MplCategoryHierarchydata> constructCategoryHierarchy(final CategoryData category)
+	{
+
+		// YTODO Auto-generated method stub
+		final List<MplCategoryHierarchydata> list = new ArrayList();
+		MplCategoryHierarchydata mplCategoryHierarchydata = new MplCategoryHierarchydata();
+
+		mplCategoryHierarchydata.setCategory_id(category.getCode());
+		mplCategoryHierarchydata.setCategory_name(category.getName());
+		list.add(mplCategoryHierarchydata);
+
+		if (CollectionUtils.isNotEmpty(category.getSuperCategories()))
+		{
+			for (final CategoryData catdata : category.getSuperCategories())
+			{
+				if (catdata.getCode().length() > 4)
+				{
+					mplCategoryHierarchydata = new MplCategoryHierarchydata();
+					mplCategoryHierarchydata.setCategory_id(catdata.getCode());
+					mplCategoryHierarchydata.setCategory_name(catdata.getName());
+					list.add(mplCategoryHierarchydata);
+				}
+			}
+		}
+
+		return list;
+
 	}
 
 	/* Setting Seller Information */
