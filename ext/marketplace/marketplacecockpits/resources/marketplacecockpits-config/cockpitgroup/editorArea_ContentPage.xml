@@ -14,6 +14,7 @@
 		<property qualifier="contentpage.associatedSeller"/>
 		<property qualifier="contentPage.categoryAssociated"/>
 		<property qualifier="contentpage.associatedProducts"/>
+		<property qualifier="contentpage.reactPageType"/>
 	</group>
 	
 	<group qualifier="visibility" visible="true" initially-opened="false">

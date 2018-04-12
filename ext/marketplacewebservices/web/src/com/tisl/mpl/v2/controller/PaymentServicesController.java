@@ -24,6 +24,7 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -67,6 +68,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.MplPromoPriceWsDTO;
 import com.tisl.mpl.data.SavedCardData;
@@ -92,10 +94,14 @@ import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.CliqCashWsDto;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
+import com.tisl.mpl.wsdto.NoCostEMIItemBreakUp;
 import com.tisl.mpl.wsdto.PaymentServiceWsDTO;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
 import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
+import com.tisl.mpl.wsdto.mplNoCostEMIBankTenureDTO;
+import com.tisl.mpl.wsdto.mplNoCostEMIEligibilityDTO;
+import com.tisl.wsdto.MplNoCostEMITermsDTO;
 
 
 /**
@@ -2161,6 +2167,361 @@ public class PaymentServicesController extends BaseController
 			paymentModesData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return paymentModesData;
+	}
+
+	/**
+	 * This method Provided noCost EMI available or not
+	 *
+	 * @param cartGuid
+	 * @return MplSavedCardDTO
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.NOCOSTEMICHECK, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
+	@ResponseBody
+	public mplNoCostEMIEligibilityDTO noCostEmiCheck(@RequestParam(required = false) final String cartGuid)
+	{
+		LOG.debug("cart guid ----" + cartGuid);
+		boolean emiFlag = false;
+		final mplNoCostEMIEligibilityDTO noCostEmiWsDTO = new mplNoCostEMIEligibilityDTO();
+		try
+		{
+			final Tuple2<?, ?> bankResult = getNoOfEligibleproducts(cartGuid);
+			emiFlag = ((Boolean) bankResult.getFirst()).booleanValue();
+			noCostEmiWsDTO.setIsNoCostEMIEligible(emiFlag);
+			noCostEmiWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+		}
+		catch (final EtailNonBusinessExceptions ex)
+		{
+			// Error message for EtailNonBusinessExceptions Exceptions
+			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+			if (null != ex.getErrorMessage())
+			{
+				noCostEmiWsDTO.setError(ex.getErrorMessage());
+				noCostEmiWsDTO.setErrorCode(ex.getErrorCode());
+			}
+			noCostEmiWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		catch (final EtailBusinessExceptions ex)
+		{
+			// Error message for EtailBusinessExceptions Exceptions
+			ExceptionUtil.etailBusinessExceptionHandler(ex, null);
+			if (null != ex.getErrorMessage())
+			{
+				noCostEmiWsDTO.setError(ex.getErrorMessage());
+				noCostEmiWsDTO.setErrorCode(ex.getErrorCode());
+			}
+			noCostEmiWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception ex)
+		{
+			// Error message for All Exceptions
+			if (null != ex.getMessage())
+			{
+				noCostEmiWsDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9047));
+				noCostEmiWsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9047);
+			}
+			noCostEmiWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return noCostEmiWsDTO;
+
+	}
+
+	private Tuple2<?, ?> getNoOfEligibleproducts(final String cartGuid) throws EtailBusinessExceptions,
+			EtailNonBusinessExceptions, Exception
+	{
+		int count = 0;
+		boolean emiFlag = false;
+		if (StringUtils.isNotEmpty(cartGuid))
+		{
+			final OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+
+			if (null == orderModel)
+			{ // for  cart model
+				final CartModel cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				if (null != cartModel && null != cartModel.getIsEGVCart() && !cartModel.getIsEGVCart().booleanValue())
+				{
+					if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+					{
+						for (final AbstractOrderEntryModel itemEntry : cartModel.getEntries())
+						{
+							if (null != itemEntry)
+							{
+								final String productCode = itemEntry.getProduct().getCode();
+								final String ussid = itemEntry.getSelectedUSSID();
+								String sellerId = StringUtils.isNotEmpty(ussid) ? sellerId = ussid.substring(0, 6) : null;
+
+								if (StringUtils.isNotEmpty(productCode) && StringUtils.isNotEmpty(sellerId))
+								{
+									LOG.debug("product seller id ----" + sellerId);
+									LOG.debug("product listing id ----" + productCode);
+
+									emiFlag = getMplPaymentFacade().isNoCostEmiAvailable(productCode, sellerId);
+
+									if (emiFlag)
+									{
+										count++;
+									}
+
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+			{ // for order model
+
+				if (null != orderModel.getIsEGVCart() && !orderModel.getIsEGVCart().booleanValue())
+				{
+
+					if (CollectionUtils.isNotEmpty(orderModel.getEntries()))
+					{
+						for (final AbstractOrderEntryModel itemEntry : orderModel.getEntries())
+						{
+							if (null != itemEntry)
+							{
+								final String productCode = itemEntry.getProduct().getCode();
+								final String ussid = itemEntry.getSelectedUSSID();
+								String sellerId = StringUtils.isNotEmpty(ussid) ? sellerId = ussid.substring(0, 6) : null;
+
+								if (StringUtils.isNotEmpty(productCode) && StringUtils.isNotEmpty(sellerId))
+								{
+									LOG.debug("product seller id ----" + sellerId);
+									LOG.debug("product listing id ----" + productCode);
+
+									emiFlag = getMplPaymentFacade().isNoCostEmiAvailable(productCode, sellerId);
+
+									if (emiFlag)
+									{
+										count++;
+									}
+
+								}
+
+							}
+						}
+					}
+				}
+			}
+
+		}
+
+		if (count > 0)
+		{
+			emiFlag = true;
+		}
+		return new Tuple2(Boolean.valueOf(emiFlag), String.valueOf(count));
+	}
+
+	/**
+	 * This method Provided nocost EMI bank names with coupon list
+	 *
+	 * @param cartGuid
+	 * @return mplNoCostEMIBankTenureDTO
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.NOCOSTEMITENURELIST, method = RequestMethod.POST, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
+	@ResponseBody
+	public mplNoCostEMIBankTenureDTO noCostEmiTenureList(@RequestParam(required = false) final String cartGuid)
+	{
+		mplNoCostEMIBankTenureDTO noCostEmiTenureList = new mplNoCostEMIBankTenureDTO();
+
+		try
+		{
+			noCostEmiTenureList = getMplPaymentFacade().noCostEmiBankTenureList();
+			if (noCostEmiTenureList != null)
+			{
+
+				final Tuple2<?, ?> emiResult = getNoOfEligibleproducts(cartGuid);
+				noCostEmiTenureList.setNumEligibleProducts((String) emiResult.getSecond());
+				noCostEmiTenureList.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				noCostEmiTenureList.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				noCostEmiTenureList.setErrorCode(e.getErrorCode());
+			}
+			noCostEmiTenureList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				noCostEmiTenureList.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				noCostEmiTenureList.setErrorCode(e.getErrorCode());
+			}
+			noCostEmiTenureList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			noCostEmiTenureList.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			noCostEmiTenureList.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			noCostEmiTenureList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return noCostEmiTenureList;
+
+	}
+
+	/**
+	 * Method to share terms and conditions for a NoCostEMIBank
+	 *
+	 * @return MplNoCostEMITermsDTO
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "{pk}/" + MarketplacewebservicesConstants.NOCOSTEMITNC, method = RequestMethod.GET, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
+	@ResponseBody
+	public MplNoCostEMITermsDTO getNoCostEmiTnc(@PathVariable final String pk)
+	{
+		LOG.debug("No cost emi-pk ----" + pk);
+		final MplNoCostEMITermsDTO noCostEMITermsDTO = new MplNoCostEMITermsDTO();
+		try
+		{
+
+			final EMIBankModel noCostEMIBankModel = mplPaymentWebFacade.getNoCostEMIBankByPk(pk);
+			if (noCostEMIBankModel != null)
+			{
+				noCostEMITermsDTO.setCode(noCostEMIBankModel.getPk().toString());
+				final String termsAndCondition = noCostEMIBankModel.getNoCostEmiTermsAndCondition();
+				if (StringUtils.isNotEmpty(termsAndCondition))
+				{
+					noCostEMITermsDTO.setTermsAndCondition(termsAndCondition);
+				}
+				else
+				{
+					noCostEMITermsDTO.setTermsAndCondition(StringUtils.EMPTY);
+				}
+				noCostEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			else
+			{
+				noCostEMITermsDTO.setError("Invalid pk for NoCostEMIBankModel");
+				noCostEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+		}
+		catch (final EtailNonBusinessExceptions ex)
+		{
+			// Error message for EtailNonBusinessExceptions Exceptions
+			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+			if (null != ex.getErrorMessage())
+			{
+				noCostEMITermsDTO.setError(ex.getErrorMessage());
+				noCostEMITermsDTO.setErrorCode(ex.getErrorCode());
+			}
+			noCostEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		catch (final EtailBusinessExceptions ex)
+		{
+			// Error message for EtailBusinessExceptions Exceptions
+			ExceptionUtil.etailBusinessExceptionHandler(ex, null);
+			if (null != ex.getErrorMessage())
+			{
+				noCostEMITermsDTO.setError(ex.getErrorMessage());
+				noCostEMITermsDTO.setErrorCode(ex.getErrorCode());
+			}
+			noCostEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception ex)
+		{
+			// Error message for All Exceptions
+			if (null != ex.getMessage())
+			{
+				noCostEMITermsDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9047));
+				noCostEMITermsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9047);
+			}
+			noCostEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return noCostEMITermsDTO;
+	}
+
+
+	/**
+	 * This method Provided nocost EMI bank names with coupon list
+	 *
+	 * @param cartGuid
+	 * @return mplNoCostEMIBankTenureDTO
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.NOCOSTEMIITEMBREAKUP, method = RequestMethod.GET, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
+	@ResponseBody
+	public NoCostEMIItemBreakUp noCostEmiItemBreakUp(@RequestParam(required = false) final String cartGuid)
+	{
+		NoCostEMIItemBreakUp noCostEMIItemBreakUp = new NoCostEMIItemBreakUp();
+		AbstractOrderModel abstractOrderModel = null;
+		try
+		{
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				abstractOrderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+			}
+			if (abstractOrderModel == null)
+			{
+				abstractOrderModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+			}
+			noCostEMIItemBreakUp = getMplPaymentFacade().lineBreakupForNoCostEMI(abstractOrderModel);
+
+			//final Tuple2<?, ?> emiResult = getNoOfEligibleproducts(cartGuid);
+			//noCostEMIItemBreakUp.setNumEligibleProducts((String) emiResult.getSecond());
+			noCostEMIItemBreakUp.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				noCostEMIItemBreakUp.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				noCostEMIItemBreakUp.setErrorCode(e.getErrorCode());
+			}
+			noCostEMIItemBreakUp.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				noCostEMIItemBreakUp.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				noCostEMIItemBreakUp.setErrorCode(e.getErrorCode());
+			}
+			noCostEMIItemBreakUp.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			noCostEMIItemBreakUp.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			noCostEMIItemBreakUp.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			noCostEMIItemBreakUp.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return noCostEMIItemBreakUp;
+
 	}
 
 	//Commenting due to SONAR Fix

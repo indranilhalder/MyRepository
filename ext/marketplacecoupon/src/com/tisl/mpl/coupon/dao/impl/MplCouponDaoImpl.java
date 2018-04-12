@@ -39,6 +39,7 @@ import com.tisl.mpl.coupon.constants.MarketplacecouponConstants;
 import com.tisl.mpl.coupon.dao.MplCouponDao;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 
 
 /**
@@ -567,5 +568,54 @@ public class MplCouponDaoImpl implements MplCouponDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return openVoucherList;
+	}
+
+
+	/**
+	 * Returns No Cost EMI Voucher Code Corresponding to Coupon Code
+	 *
+	 * @param emiCouponCode
+	 */
+	@Override
+	public String getNoCostEMIVoucherCode(final String emiCouponCode)
+	{
+		try
+		{
+			final String queryString = "select {pk} from {MplNoCostEMIVoucher} where {code}=?couponcode";
+
+			final FlexibleSearchQuery auditQuery = new FlexibleSearchQuery(queryString);
+			auditQuery.addQueryParameter("couponcode", emiCouponCode);
+
+			final List<VoucherModel> voucherList = flexibleSearchService.<VoucherModel> search(auditQuery).getResult();
+			if (CollectionUtils.isNotEmpty(voucherList))
+			{
+				//fetching the audit entries
+				final MplNoCostEMIVoucherModel voucher = (MplNoCostEMIVoucherModel) voucherList.get(0);
+				if (StringUtils.isNotEmpty(voucher.getVoucherCode()))
+				{
+					return voucher.getVoucherCode();
+				}
+
+			}
+			else
+			{
+				return MarketplacecommerceservicesConstants.EMPTY;
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return MarketplacecommerceservicesConstants.EMPTY;
+
+
 	}
 }

@@ -12,6 +12,7 @@ import de.hybris.platform.order.exceptions.CalculationException;
 
 import java.util.Map;
 
+import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.data.MplPromoPriceWsDTO;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -185,4 +186,10 @@ public interface MplPaymentWebFacade
 			String amount);
 
 	public PriceWsPwaDTO configureCartAmountPwa(final String code);
+
+	/**
+	 * @param pk
+	 * @return NoCostEMIBankModel
+	 */
+	EMIBankModel getNoCostEMIBankByPk(String pk);
 }

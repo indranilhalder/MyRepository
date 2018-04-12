@@ -123,6 +123,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
@@ -1649,16 +1650,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						//IQA Code review Fix
 						if (null != val.getDeliveryMode())
 						{
+
 							startValue = val.getDeliveryMode().getStart() != null ? val.getDeliveryMode().getStart().toString()
 									: MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+
 							endValue = val.getDeliveryMode().getEnd() != null ? val.getDeliveryMode().getEnd().toString()
 									: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 							if (StringUtils.isNotEmpty(val.getSellerArticleSKU()) && StringUtils.isNotEmpty(startValue)
 									&& StringUtils.isNotEmpty(endValue) && StringUtils.isNotEmpty(val.getDeliveryMode().getCode()))
 							{
-								selectedDelivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
-										val.getSellerArticleSKU(), val.getDeliveryMode().getCode(), startValue, endValue));
+								selectedDelivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(val.getSellerArticleSKU(),
+										val.getDeliveryMode().getCode(), startValue, endValue));
 							}
 
 						}
@@ -1905,17 +1908,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				//SDI-3159 Condition added if CLICK N COLLECT is not there
 				//IQA Code Review Fix
 				final MplZoneDeliveryModeValueModel valNew = abstractOrderEntry.getMplDeliveryMode();
-				if (null != abstractOrderEntry.getEdScheduledDate()
-						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
-								.getDeliveryMode().getCode())))
+				if (null != abstractOrderEntry.getEdScheduledDate() && (null != valNew
+						&& !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew.getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryDate(abstractOrderEntry.getEdScheduledDate());
 				}
 				//SDI-3159 Condition added if CLICK N COLLECT is not there
-				if (null != abstractOrderEntry.getTimeSlotTo()
-						&& null != abstractOrderEntry.getTimeSlotFrom()
-						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
-								.getDeliveryMode().getCode())))
+				if (null != abstractOrderEntry.getTimeSlotTo() && null != abstractOrderEntry.getTimeSlotFrom() && (null != valNew
+						&& !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew.getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
 							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
@@ -3359,8 +3359,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3628,7 +3628,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3714,6 +3714,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<>();
 		List<PinCodeResponseData> pinCodeRes = null;
+		List<PromotionResultModel> promotionResult = null;
 
 		int count = 0;
 
@@ -3800,6 +3801,23 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				cartDataDetails.setCartAmount(priceWsPwaDTO);
 			}
+
+
+			//Added for NEWUIUX-1768
+			if (CollectionUtils.isNotEmpty(cartModel.getAllPromotionResults()))
+			{
+				promotionResult = new ArrayList(cartModel.getAllPromotionResults());
+			}
+			List<CartOfferDetailsWsDTO> cartOfferList = null;
+			if (null != promotionResult && !promotionResult.isEmpty())
+			{
+				cartOfferList = offerDetails(promotionResult, cartModel);
+			}
+			if (null != cartOfferList && !cartOfferList.isEmpty())
+			{
+				cartDataDetails.setOfferDetails(cartOfferList);
+			}
+			//Changes for NEWUIUX-1768 end
 
 			//TPR-6980:Change in the logic of display of price disclaimer in the cart for Fine Jewellery
 			final String displayMsgFinal = mplCommerceCartService.populatePriceDisclaimerCart(cartModel);
@@ -4691,9 +4709,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				final Double netAmountAfrDiscount = oModel.getNetAmountAfterAllDisc();
 				final Double totalPrice = oModel.getTotalPrice();
 
-				mrp = (oModel.getMrp().doubleValue() * oModel.getQuantity().intValue());
+				mrp = oModel.getMrp().doubleValue() * oModel.getQuantity().intValue();
 				payableAmount += (((netAmountAfrDiscount.doubleValue() > 0) ? netAmountAfrDiscount.doubleValue()
-						: totalPrice.doubleValue()) - walletAmt) + oModel.getCurrDelCharge().doubleValue();
+						: totalPrice.doubleValue()) - walletAmt) + oModel.getCurrDelCharge().doubleValue()
+						+ oModel.getScheduledDeliveryCharge().doubleValue();
 				couponDiscount += oModel.getCouponValue().doubleValue();
 				mopPlusPromoDiscounty += (mrp - (oModel.getBasePrice().doubleValue() * oModel.getQuantity().intValue()))
 						+ oModel.getTotalProductLevelDisc().doubleValue() + oModel.getCartLevelDisc().doubleValue()
@@ -4860,7 +4879,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	public PriceWsPwaDTO configureCartAmountPwa(final AbstractOrderModel absOrder)
 	{
 		// YTODO Auto-generated method stub
-		final PriceWsPwaDTO priceWsPwaDTO = new PriceWsPwaDTO();
+		PriceWsPwaDTO priceWsPwaDTO = new PriceWsPwaDTO();
 		final CurrencyModel currency = commonI18NService.getCurrency(INR);
 
 		final List<AbstractOrderEntryModel> entryList = new ArrayList<>(absOrder.getEntries());
@@ -4904,7 +4923,88 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
 		priceWsPwaDTO.setTotalDiscountAmount(totalDiscount);
 
+		priceWsPwaDTO = modifyForNoCostEMI(priceWsPwaDTO, absOrder);
+
 		return priceWsPwaDTO;
+	}
+
+
+	/**
+	 * The Method Modifies Price Object based on NoCost EMI
+	 *
+	 * @param priceWsPwaDTO
+	 * @param absOrder
+	 * @return PriceWsPwaDTO
+	 */
+	private PriceWsPwaDTO modifyForNoCostEMI(final PriceWsPwaDTO priceWsPwaDTO, final AbstractOrderModel absOrder)
+	{
+		final PriceWsPwaDTO dto = priceWsPwaDTO;
+		final CurrencyModel currency = commonI18NService.getCurrency(INR);
+
+		double emiDiscount = 0;
+		double interestByBank = 0;
+		double lineInterest = 0;
+		double orderValue = 0;
+		double payableValue = 0;
+		int tenure = 0;
+
+		if (null != absOrder && CollectionUtils.isNotEmpty(absOrder.getDiscounts()))
+		{
+			for (final DiscountModel oModel : absOrder.getDiscounts())
+			{
+				if (oModel instanceof MplNoCostEMIVoucherModel)
+				{
+					final MplNoCostEMIVoucherModel coupon = (MplNoCostEMIVoucherModel) oModel;
+					final Double percentage = coupon.getValue();
+					tenure = coupon.getTenure().intValue();
+
+					for (final AbstractOrderEntryModel entry : absOrder.getEntries())
+					{
+						emiDiscount += (null != entry.getEmiCouponValue() && entry.getEmiCouponValue().doubleValue() > 0)
+								? entry.getEmiCouponValue().doubleValue() : 0;
+
+						final double netAmountAfterAllDiscount = (null != entry.getNetAmountAfterAllDisc()
+								&& entry.getNetAmountAfterAllDisc().doubleValue() > 0) ? entry.getNetAmountAfterAllDisc().doubleValue()
+										: 0;
+						final double linePrice = (netAmountAfterAllDiscount > 0) ? netAmountAfterAllDiscount
+								: entry.getTotalPrice().doubleValue();
+
+
+						orderValue += ((null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+								? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue())
+								+ (entry.getCurrDelCharge().doubleValue() + entry.getScheduledDeliveryCharge().doubleValue());
+
+						if (StringUtils.isEmpty(entry.getEmiCouponCode()))
+						{
+							lineInterest += ((percentage.doubleValue() * linePrice) / 100);
+						}
+					}
+
+					dto.setNoCostEMIDiscountValue(
+							priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(emiDiscount), currency));
+
+					interestByBank = emiDiscount + lineInterest;
+					dto.setNoCostEMIInterestValue(
+							priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(interestByBank), currency));
+
+					orderValue = orderValue + emiDiscount;
+					dto.setNoCostEMIOrderValue(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(orderValue), currency));
+
+					payableValue = (orderValue + interestByBank) - emiDiscount;
+					dto.setNoCostEMITotalPayable(
+							priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(payableValue), currency));
+
+					final double perMonthEMI = payableValue / tenure;
+					dto.setNoCostEMIPerMonthPayable(
+							priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(perMonthEMI), currency));
+
+					break;
+
+				}
+
+			}
+		}
+		return dto;
 	}
 
 	/*

@@ -67,6 +67,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.MplNoCostEMIVoucherModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.order.impl.MplDefaultCalculationService;
 import com.tisl.mpl.util.DiscountUtility;
@@ -1618,7 +1619,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 	private List<DiscountValue> setGlobalDiscount(final List<DiscountValue> discountList, final VoucherModel lastVoucher,
 			final double discountAmt)
-			{
+	{
 
 		DiscountValue discountValue = null;
 
@@ -1631,7 +1632,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			if (discount.getCode().equalsIgnoreCase(lastVoucher.getCode()))
 			{
 				discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discountAmt, discount.getCurrencyIsoCode());
-
 				iter.remove();
 				break;
 			}
@@ -1640,7 +1640,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		discountList.add(discountValue);
 		return discountList;
 
-			}
+	}
 
 
 	/**
@@ -2903,7 +2903,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			for (final DiscountModel discount : discounts)
 			{
-				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel))
+				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel)
+						&& !(discount instanceof MplNoCostEMIVoucherModel))
 				{
 					couponCode = discount.getCode();
 					flag = true;
@@ -2970,7 +2971,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			for (final DiscountModel discount : voucherList)
 			{
-				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel))
+				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel)
+						&& !(discount instanceof MplNoCostEMIVoucherModel))
 				{
 
 					final PromotionVoucherModel voucher = (PromotionVoucherModel) discount;
@@ -3025,9 +3027,35 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 						globalDiscountList.add(cartdiscountValue);
 					}
-
-
 				}
+				else if(discount instanceof MplNoCostEMIVoucherModel)
+				{
+					MplNoCostEMIVoucherModel emiCoupon = (MplNoCostEMIVoucherModel) discount;
+					final String code = emiCoupon.getCode();
+					
+					final double couponDiscount = getEMIDiscount(oModel.getEntries());
+					DiscountValue cartdiscountValue = null;
+
+					if (CollectionUtils.isNotEmpty(globalDiscountList))
+					{
+						final Iterator iter = globalDiscountList.iterator();
+						while (iter.hasNext())
+						{
+							final DiscountValue discountVal = (DiscountValue) iter.next();
+							if (discountVal.getCode().equalsIgnoreCase(code))
+							{
+								cartdiscountValue = new DiscountValue(discountVal.getCode(), couponDiscount, true, couponDiscount,
+										discountVal.getCurrencyIsoCode());
+
+								iter.remove();
+								break;
+							}
+						}
+
+						globalDiscountList.add(cartdiscountValue);
+					}
+				}
+				
 			}
 
 		}
@@ -3037,6 +3065,28 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		getModelService().refresh(oModel);
 
 		return oModel;
+	}
+
+	/****
+	 * Get Go Cost EMI Discount
+	 * @param entries
+	 * @return emiDiscount
+	 */
+	private double getEMIDiscount(List<AbstractOrderEntryModel> entries)
+	{
+		refreshOrderEntries(entries);
+		double emiDiscount = 0;
+		if (CollectionUtils.isNotEmpty(entries))
+		{
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				final double val = (null != entry.getEmiCouponValue() && entry.getEmiCouponValue().doubleValue() > 0) ? entry
+						.getEmiCouponValue().doubleValue() : 0;
+						emiDiscount += val;
+			}
+		}
+		return emiDiscount;
+	
 	}
 
 	/**
@@ -3519,6 +3569,678 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			oModel.setSubtotal(Double.valueOf(subtotal));
 			modelService.save(oModel);
 		}
+	}
+
+	/**
+	 * The Method Returns Updated Discount Values
+	 * 
+	 * NO COST EMI
+	 * 
+	 * @param oModel
+	 * @param voucher
+	 */
+	@Override
+	public AbstractOrderModel getUpdatedDiscountValuesNoCotEMI(AbstractOrderModel oModel, VoucherModel voucher)
+	{
+		getModelService().refresh(oModel);
+		final List<DiscountValue> globalDiscountList = new ArrayList<>(oModel.getGlobalDiscountValues());
+
+		List<DiscountModel> discountList = new ArrayList<>(oModel.getDiscounts());
+
+		final Tuple2<Boolean, String> cartCouponObj = isUserVoucherPresent(discountList);
+
+		//For User Coupon
+		if (cartCouponObj.getFirst().booleanValue())
+		{
+			final String code = cartCouponObj.getSecond();
+			final double couponDiscount = getCouponDiscount(oModel.getEntries());
+			DiscountValue cartdiscountValue = null;
+
+			if (CollectionUtils.isNotEmpty(globalDiscountList))
+			{
+				final Iterator iter = globalDiscountList.iterator();
+				while (iter.hasNext())
+				{
+					final DiscountValue discount = (DiscountValue) iter.next();
+					if (discount.getCode().equalsIgnoreCase(code))
+					{
+						cartdiscountValue = new DiscountValue(discount.getCode(), couponDiscount, true, couponDiscount,
+								discount.getCurrencyIsoCode());
+
+						iter.remove();
+						break;
+					}
+				}
+
+				globalDiscountList.add(cartdiscountValue);
+			}
+
+		}
+
+		//For Cart Coupon
+
+		final Tuple2<Boolean, String> bankCouponObj = isCartVoucherApplicable(discountList);
+		if (bankCouponObj.getFirst().booleanValue())
+		{
+			final String code = bankCouponObj.getSecond();
+			final double couponDiscount = getCartCouponDiscount(oModel.getEntries());
+			DiscountValue cartdiscountValue = null;
+
+			if (CollectionUtils.isNotEmpty(globalDiscountList))
+			{
+				final Iterator iter = globalDiscountList.iterator();
+				while (iter.hasNext())
+				{
+					final DiscountValue discount = (DiscountValue) iter.next();
+					if (discount.getCode().equalsIgnoreCase(code))
+					{
+						cartdiscountValue = new DiscountValue(discount.getCode(), couponDiscount, true, couponDiscount,
+								discount.getCurrencyIsoCode());
+						iter.remove();
+						break;
+					}
+				}
+				globalDiscountList.add(cartdiscountValue);
+			}
+		}
+
+		// For No Cost EMI Block
+		final double discountAmt = getNoCostEMIDiscountAmount(oModel, voucher);
+
+		if (CollectionUtils.isNotEmpty(globalDiscountList))
+		{
+			DiscountValue discountValue = null;
+			final Iterator iter = globalDiscountList.iterator();
+
+			while (iter.hasNext())
+			{
+				final DiscountValue discount = (DiscountValue) iter.next();
+				if (discount.getCode().equalsIgnoreCase(voucher.getCode()))
+				{
+					discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discountAmt,
+							discount.getCurrencyIsoCode());
+
+					iter.remove();
+					break;
+				}
+			}
+
+			globalDiscountList.add(discountValue);
+		}
+
+		oModel.setGlobalDiscountValues(globalDiscountList);
+		getModelService().save(oModel);
+		getModelService().refresh(oModel);
+
+		return oModel;
+
+	}
+	
+	/***
+	 * The Method Return No Cost EMI Discount Amount 
+	 * 
+	 * @param oModel
+	 * @param voucher
+	 * @return
+	 */
+	private double getNoCostEMIDiscountAmount(final AbstractOrderModel oModel, final VoucherModel voucher)
+	{
+		final List<AbstractOrderEntryModel> entries = getOrderEntryModelFromVouEntries(voucher, oModel);
+		double subtotal = getSubtotalForCoupon(entries);
+
+		if(null != oModel.getSplitModeInfo() && oModel.getSplitModeInfo().equalsIgnoreCase("Split"))
+		{
+				double walletAmount= null != oModel.getTotalWalletAmount() ? oModel.getTotalWalletAmount().doubleValue() :0.0d; 
+				subtotal -= walletAmount; 
+		}
+		return getDiscountValue(voucher, subtotal);
+	}
+	
+	/***
+	 * The Method Returns Applicability and code for Bank Coupons 
+	 * 
+	 * @param discounts
+	 * @return Tuple2
+	 */
+	private Tuple2<Boolean, String> isCartVoucherApplicable(final List<DiscountModel> discounts)
+	{
+		boolean flag = false;
+		String couponCode = MarketplacecommerceservicesConstants.EMPTY;
+		if (CollectionUtils.isNotEmpty(discounts))
+		{
+			for (final DiscountModel discount : discounts)
+			{
+				if (discount instanceof MplCartOfferVoucherModel)
+				{
+					final MplCartOfferVoucherModel object = (MplCartOfferVoucherModel) discount;
+					flag = true;
+					couponCode = object.getCode();
+					break;
+				}
+			}
+		}
+
+		final Tuple2<Boolean, String> cartCouponObj = new Tuple2(Boolean.valueOf(flag), couponCode);
+
+		return cartCouponObj;
+	}
+
+	/***
+	 * The Method Checks cart after No Cost EMI apply
+	 * 
+	 * @param lastVoucher
+	 * @param cartModel
+	 * @param orderModel
+	 * @param applicableOrderEntryList
+	 */
+	@Override
+	public VoucherDiscountData checkCartNoCostEMIApply(VoucherModel lastVoucher, CartModel cartModel, OrderModel orderModel,
+			List<AbstractOrderEntryModel> applicableOrderEntryList)throws VoucherOperationException, EtailNonBusinessExceptions
+	{
+		VoucherDiscountData discountData = new VoucherDiscountData();
+		final long startTime = System.currentTimeMillis();
+		try
+		{
+			LOG.debug("Inside checking cart after applying NO Cost EMI voucher");
+		
+			if (cartModel != null)
+			{
+				final double cartSubTotal = getSubTotal(cartModel);
+				double voucherCalcValue = 0.0;
+				double discountCalcValue = 0.0;
+				double cliqCashAmount = 0.0D;
+				
+				if(null != cartModel.getPayableWalletAmount() && cartModel.getPayableWalletAmount().doubleValue() > 0.0D){
+					cliqCashAmount =  cartModel.getPayableWalletAmount().doubleValue();
+				}
+				
+				List<DiscountValue> discountList = new ArrayList<>(cartModel.getGlobalDiscountValues()); //Discount values against the cart
+				String voucherCode = null;
+
+				if (lastVoucher instanceof MplNoCostEMIVoucherModel)
+				{
+					voucherCode = ((MplNoCostEMIVoucherModel) lastVoucher).getVoucherCode();
+					discountData.setVoucherCode(voucherCode);
+				}
+
+				final List<DiscountModel> voucherList = cartModel.getDiscounts(); //List of discounts against the cart
+				if (CollectionUtils.isNotEmpty(discountList) && CollectionUtils.isNotEmpty(voucherList))
+				{
+					for (final DiscountValue discount : discountList)
+					{
+						if (null != discount.getCode() && discount.getCode().equalsIgnoreCase(lastVoucher.getCode()))
+						{
+							voucherCalcValue = discount.getValue();
+						}
+						discountCalcValue += discount.getValue();
+					}
+				}
+
+
+				if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
+						&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue()) //When discount value is greater than coupon max discount value
+				{
+					LOG.debug("No Cost EMI>> Max Discount Violated");
+					discountList = setGlobalDiscount(discountList, lastVoucher, lastVoucher.getMaxDiscountValue().doubleValue());
+					cartModel.setGlobalDiscountValues(discountList);
+					setTotalPrice(cartModel);
+					getModelService().save(cartModel);
+					discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel,
+							Double.valueOf(lastVoucher.getMaxDiscountValue().doubleValue())));
+				}
+				else if (voucherCalcValue != 0 && (cartSubTotal - (discountCalcValue + cliqCashAmount) <= 0) )//When discount value is greater than cart totals after applying promotion
+				{
+					LOG.debug("No Cost EMI >> cartSubTotal - (discountCalcValue + cliqCashAmount) <= 0");
+					discountData = releaseNoCostEMIAfterCheck(cartModel, null, voucherCode, null, applicableOrderEntryList,
+							voucherList);
+				}
+				else
+				{
+					double netAmountAfterAllDisc = 0.0D;
+					double productPrice = 0.0D;
+					int size = 0;
+
+					if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
+					{
+						LOG.debug("No Cost EMI>> Validating with NetAmountAfterAllDiscount");
+						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+						{
+							size += (null == entry.getQuantity()) ? 0 : entry.getQuantity().intValue(); //Size in total count of all the order entries present in cart
+						}
+						final BigDecimal cartTotalThreshold = BigDecimal.valueOf(0.01).multiply(BigDecimal.valueOf(size)); //Threshold is min value which is allowable after applying coupon
+						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+						{
+							netAmountAfterAllDisc += (null!=entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() >0) 
+									? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice()
+													.doubleValue();
+
+											productPrice += (null == entry.getTotalPrice()) ? 0.0d : entry.getTotalPrice().doubleValue();
+						}
+
+						if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)) //When discount value is greater than entry totals after applying promotion
+						{
+							LOG.debug("No Cost EMI>> Validating with NetAmountAfterAllDiscount 1");
+							discountData = releaseNoCostEMIAfterCheck(cartModel, null, voucherCode, Double.valueOf(productPrice),
+									applicableOrderEntryList, voucherList);
+						}
+						else if (voucherCalcValue != 0
+								&& (netAmountAfterAllDisc - voucherCalcValue) > 0
+								&& ((BigDecimal.valueOf(netAmountAfterAllDisc).subtract(BigDecimal.valueOf(voucherCalcValue)))
+										.compareTo(cartTotalThreshold) == -1)) //When cart value after applying discount is less than .01*count of applicable entries
+						{
+							LOG.debug("No Cost EMI>> Validating with NetAmountAfterAllDiscount 2");
+							discountData = releaseNoCostEMIAfterCheck(cartModel, null, voucherCode, Double.valueOf(productPrice),
+									applicableOrderEntryList, voucherList);
+						}
+						else
+						{
+							discountData
+							.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(voucherCalcValue)));
+						}
+					}
+					else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList)) //When applicable entries list is empty
+					{
+						LOG.debug("No Cost EMI>>No Applicable List");
+						discountData = releaseNoCostEMIAfterCheck(cartModel, null, voucherCode, null, applicableOrderEntryList,
+								voucherList);
+					}
+					else
+					{
+						discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(voucherCalcValue)));
+					}
+				}
+			}
+			else if (orderModel != null)
+			{
+				//For order
+				final double cartSubTotal = getSubTotal(orderModel);
+				double voucherCalcValue = 0.0;
+				double discountCalcValue = 0.0;
+				List<DiscountValue> discountList = orderModel.getGlobalDiscountValues(); //Discount values against the cart
+				String voucherCode = null;
+				if (lastVoucher instanceof MplNoCostEMIVoucherModel)
+				{
+					voucherCode = ((MplCartOfferVoucherModel) lastVoucher).getVoucherCode();
+					discountData.setVoucherCode(voucherCode);
+				}
+
+				final List<DiscountModel> voucherList = new ArrayList<>(orderModel.getDiscounts()); //List of discounts against the cart
+				if (CollectionUtils.isNotEmpty(discountList) && CollectionUtils.isNotEmpty(voucherList))
+				{
+					for (final DiscountValue discount : discountList)
+					{
+						if (null != discount.getCode() && discount.getCode().equalsIgnoreCase(lastVoucher.getCode()))
+						{
+							voucherCalcValue = discount.getValue();
+						}
+						discountCalcValue += discount.getValue();
+					}
+				}
+
+				if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
+						&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue()) //When discount value is greater than coupon max discount value
+				{
+					LOG.debug("No Cost EMI>> Max Discount Violated");
+					discountList = setGlobalDiscount(discountList, lastVoucher, lastVoucher.getMaxDiscountValue().doubleValue());
+					orderModel.setGlobalDiscountValues(discountList);
+					setTotalPrice(orderModel);
+					getModelService().save(orderModel);
+
+					discountData.setCouponDiscount(getDiscountUtility().createPrice(orderModel,
+							Double.valueOf(lastVoucher.getMaxDiscountValue().doubleValue())));
+				}
+				else if (voucherCalcValue != 0 && (cartSubTotal - discountCalcValue) <= 0) //When discount value is greater than cart totals after applying promotion
+				{
+					LOG.debug("No Cost EMI >> cartSubTotal - (discountCalcValue + cliqCashAmount) <= 0");
+					discountData = releaseNoCostEMIAfterCheck(null, orderModel, voucherCode, null, applicableOrderEntryList,
+							voucherList);
+				}
+				else
+				{
+					double netAmountAfterAllDisc = 0.0D;
+					double productPrice = 0.0D;
+					int size = 0;
+
+					if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
+					{
+						LOG.debug(STEP15);
+						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+						{
+							size += (null == entry.getQuantity()) ? 0 : entry.getQuantity().intValue(); //Size in total count of all the order entries present in cart
+						}
+						final BigDecimal cartTotalThreshold = BigDecimal.valueOf(0.01).multiply(BigDecimal.valueOf(size)); //Threshold is min value which is allowable after applying coupon
+						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+						{
+							netAmountAfterAllDisc += (null!= entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue()>0) 
+									? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice()
+													.doubleValue();
+
+											productPrice += (null == entry.getTotalPrice()) ? 0.0d : entry.getTotalPrice().doubleValue();
+						}
+						if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)) //When discount value is greater than entry totals after applying promotion
+						{
+							LOG.debug("No Cost EMI>> Validating with NetAmountAfterAllDiscount 1");
+							discountData = releaseNoCostEMIAfterCheck(null, orderModel, voucherCode, Double.valueOf(productPrice),
+									applicableOrderEntryList, voucherList);
+						}
+						else if (voucherCalcValue != 0
+								&& (netAmountAfterAllDisc - voucherCalcValue) > 0
+								&& ((BigDecimal.valueOf(netAmountAfterAllDisc).subtract(BigDecimal.valueOf(voucherCalcValue)))
+										.compareTo(cartTotalThreshold) == -1)) //When cart value after applying discount is less than .01*count of applicable entries
+						{
+							LOG.debug("No Cost EMI>> Validating with NetAmountAfterAllDiscount 2");
+							discountData = releaseNoCostEMIAfterCheck(null, orderModel, voucherCode, Double.valueOf(productPrice),
+									applicableOrderEntryList, voucherList);
+						}
+						else
+							//In other cases, just set the coupon discount for the discount data
+						{
+							discountData.setCouponDiscount(getDiscountUtility()
+									.createPrice(orderModel, Double.valueOf(voucherCalcValue)));
+						}
+					}
+					else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList)) //When applicable entries list is empty
+					{
+						LOG.debug("No Cost EMI>>No Applicable List");
+						discountData = releaseNoCostEMIAfterCheck(null, orderModel, voucherCode, null, applicableOrderEntryList,
+								voucherList);
+					}
+					else
+						//In other cases, just set the coupon discount for the discount data
+					{
+						discountData.setCouponDiscount(getDiscountUtility().createPrice(orderModel, Double.valueOf(voucherCalcValue)));
+					}
+				}
+			}
+
+
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final NumberFormatException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0015);
+		}
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting service checkCartAfterApply====== " + (endTime - startTime));
+		return discountData;
+
+	
+	}
+
+	/***
+	 * Releases No COST EMI Coupon after Check
+	 * 
+	 * @param cartModel
+	 * @param orderModel
+	 * @param voucherCode
+	 * @param productPrice
+	 * @param applicableOrderEntryList
+	 * @param voucherList
+	 * @return discountData
+	 * @throws VoucherOperationException
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public VoucherDiscountData releaseNoCostEMIAfterCheck(final CartModel cartModel, final OrderModel orderModel,
+			final String voucherCode, final Double productPrice, final List<AbstractOrderEntryModel> applicableOrderEntryList,
+			final List<DiscountModel> voucherList) throws VoucherOperationException, EtailNonBusinessExceptions
+	{
+
+		final VoucherDiscountData discountData = new VoucherDiscountData();
+		String msg = null;
+		try
+		{
+			if (null != cartModel)
+			{
+				//For cart
+				releaseNoCostEMIVoucher(voucherCode, cartModel, null);
+				recalculateCartForCoupon(cartModel, null); //Recalculates cart after releasing voucher
+				modifyDiscountValues(cartModel);
+				final Double total = setTotalPrice(cartModel);
+				cartModel.setTotalPrice(total);
+				getModelService().save(cartModel);
+
+				discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(0)));
+				if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
+				{
+					msg = MarketplacecommerceservicesConstants.NOTAPPLICABLE;
+				}
+				else if (null != productPrice && productPrice.doubleValue() < 1)
+				{
+					msg = MarketplacecommerceservicesConstants.EXCFREEBIE;
+				}
+				else
+				{
+					msg = MarketplacecommerceservicesConstants.PRICEEXCEEDED;
+				}
+
+			}
+			else if (null != orderModel)
+			{
+				releaseNoCostEMIVoucher(voucherCode, null, orderModel);
+				recalculateCartForCoupon(null, orderModel); //Recalculates cart after releasing voucher
+				modifyDiscountValues(orderModel);
+				final Double total = setTotalPrice(orderModel);
+				orderModel.setTotalPrice(total);
+
+				getModelService().save(orderModel); //TPR-1079
+
+				discountData.setCouponDiscount(getDiscountUtility().createPrice(orderModel, Double.valueOf(0))); //TPR-1079/
+				if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
+				{
+					msg = MarketplacecommerceservicesConstants.NOTAPPLICABLE;
+				}
+				else if (null != productPrice && productPrice.doubleValue() < 1)
+				{
+					msg = MarketplacecommerceservicesConstants.EXCFREEBIE;
+				}
+				else
+				{
+					msg = MarketplacecommerceservicesConstants.PRICEEXCEEDED;
+				}
+
+			}
+			discountData.setRedeemErrorMsg(msg);
+
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		return discountData;
+	
+	}
+
+	/***
+	 * Releases NO Cost EMI Coupons 
+	 * 
+	 * @param voucherCode
+	 * @param cartModel
+	 * @param orderModel
+	 */
+	@Override
+	public void releaseNoCostEMIVoucher(String voucherCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException
+	{
+		try
+		{
+			LOG.debug("No Cost EMI>>> Inside Release No Cost EMI Coupon");
+			validateVoucherCodeParameter(voucherCode);
+			final VoucherModel voucher = getVoucherService().getVoucher(voucherCode); //Finds voucher for the selected code
+			if (voucher == null)
+			{
+				throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
+			}
+			else if (cartModel != null)
+			{
+				final List<AbstractOrderEntryModel> entryList = new ArrayList<>();
+				getVoucherService().releaseVoucher(voucherCode, cartModel); //Releases the voucher from the cart
+				LOG.debug("No Cost EMI Coupon Released");
+
+				for (final AbstractOrderEntryModel entry : cartModel.getEntries())//Resets the coupon details against the entries
+				{
+					entry.setEmiCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+					entry.setEmiCouponValue(Double.valueOf(0.00D));
+					entryList.add(entry);
+				}
+				if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
+				{
+					getModelService().saveAll(entryList);
+				}
+
+				LOG.debug("No Cost EMI>>> Coupon Code and Value Resetted");
+			}
+			else if (null != orderModel)
+			{
+				if (!OrderStatus.PAYMENT_SUCCESSFUL.equals(orderModel.getStatus())
+						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
+				{
+					getVoucherService().releaseVoucher(voucherCode, orderModel); //Releases the voucher from the order
+					LOG.debug("No Cost EMI Coupon Released");
+					
+					final List<AbstractOrderEntryModel> entryList = new ArrayList<>();
+
+					for (final AbstractOrderEntryModel entry : orderModel.getEntries())//Resets the coupon details against the entries
+					{
+						entry.setEmiCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+						entry.setEmiCouponValue(Double.valueOf(0.00D));
+						entryList.add(entry);
+					}
+					if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
+					{
+						getModelService().saveAll(entryList);
+					}
+
+					LOG.debug("No Cost EMI>>> Coupon Code and Value Resetted");
+				}
+			}
+
+		}
+		catch (final JaloPriceFactoryException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0018);
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final ConsistencyCheckException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0018);
+		}	
+	}
+
+	/***
+	 * The Method is for apportion of No Cost EMI Voucher
+	 * 
+	 * @param voucher
+	 * @param abstractOrderModel
+	 * @param voucherCode
+	 * @param applicableOrderEntryList
+	 */
+	@Override
+	public void setApportionedValueForNoCostEMI(VoucherModel voucher, AbstractOrderModel abstractOrderModel, String voucherCode,
+			List<AbstractOrderEntryModel> applicableOrderEntryList)
+	{
+		try
+		{
+			final long startTime = System.currentTimeMillis();
+			LOG.debug("No Cost EMI>>>Inside setApportionedValueForVoucher ");
+			
+			if (CollectionUtils.isNotEmpty(abstractOrderModel.getDiscounts()))
+			{
+				double totalApplicablePrice = 0.0D;
+				final BigDecimal percentageDiscount = null;
+				updateAppOrderEntriesForFreebieBogo(applicableOrderEntryList);
+
+				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+				{
+					totalApplicablePrice += entry.getTotalPrice() == null ? 0.0D : entry.getTotalPrice().doubleValue();
+				}
+
+				final List<DiscountValue> discountList = abstractOrderModel.getGlobalDiscountValues(); //Discount values against the cart
+				final List<DiscountModel> voucherList = abstractOrderModel.getDiscounts(); //List of discounts against the cart
+				double discountValue = 0.0;
+				
+				if (CollectionUtils.isNotEmpty(discountList) && CollectionUtils.isNotEmpty(voucherList))
+				{
+					for (final DiscountValue discount : discountList)
+					{
+						if (null != discount.getCode() && discount.getCode().equalsIgnoreCase(voucher.getCode()))
+						{
+							discountValue += discount.getValue();
+						}
+
+					}
+				}
+
+				final double formattedDiscVal = Math.round(discountValue * 100.0) / 100.0;
+
+				LOG.debug("Step 19:::percentageDiscount is " + percentageDiscount);
+
+				BigDecimal totalAmtDeductedOnItemLevel = BigDecimal.valueOf(0);
+
+				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+				{
+					BigDecimal entryLevelApportionedPrice = null;
+					double currNetAmtAftrAllDisc = 0.00D;
+
+					final double entryTotalPrice = entry.getTotalPrice().doubleValue();
+					final BigDecimal discountPriceValue = BigDecimal.valueOf(formattedDiscVal);
+
+					if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
+					{
+						entryLevelApportionedPrice = getApportionedValueForSingleEntry(discountPriceValue, totalAmtDeductedOnItemLevel);
+					}
+					else
+					{
+						entryLevelApportionedPrice = getApportionedValueForEntry(discountPriceValue, entryTotalPrice,
+								totalApplicablePrice);
+						totalAmtDeductedOnItemLevel = totalAmtDeductedOnItemLevel.add(entryLevelApportionedPrice);
+					}
+
+					LOG.debug("No Cost EMI>>>" + entryLevelApportionedPrice);
+
+					entry.setEmiCouponCode(null == voucherCode ? voucher.getCode() : voucherCode);
+					entry.setEmiCouponValue(Double.valueOf(entryLevelApportionedPrice.doubleValue()));
+
+					if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode()))
+							|| StringUtils.isNotEmpty(entry.getCouponCode()) || StringUtils.isNotEmpty(entry.getCartCouponCode()))
+					{
+						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() == null ? 0.00D : entry
+								.getNetAmountAfterAllDisc().doubleValue();
+						currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(netAmtAftrAllDisc, entryLevelApportionedPrice);
+					}
+					else
+					{
+						currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(entryTotalPrice, entryLevelApportionedPrice);
+					}
+
+					LOG.debug("Step 21:::currNetAmtAftrAllDisc is " + currNetAmtAftrAllDisc);
+
+					entry.setNetAmountAfterAllDisc(Double.valueOf(currNetAmtAftrAllDisc));
+				}
+
+				getModelService().saveAll(applicableOrderEntryList);
+
+				final Double totalPrice = setTotalPrice(abstractOrderModel);
+				abstractOrderModel.setTotalPrice(totalPrice);
+				getModelService().save(abstractOrderModel);
+			}
+
+			final long endTime = System.currentTimeMillis();
+			LOG.debug("Exiting service setApportionedValueForVoucher====== " + (endTime - startTime));
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+
+
+	
+		
 	}
 
 }

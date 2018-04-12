@@ -168,7 +168,9 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 			/* TISMOBQ-42 */
 			if (StringUtils.isNotEmpty(productCode) && null != productData && StringUtils.isNotEmpty(productData.getRootCategory()))
 			{
-				if (null != isPwa)
+				if (null != isPwa
+						&& (!productData.getRootCategory().equalsIgnoreCase(FOOTWEAR) && !productData.getRootCategory()
+								.equalsIgnoreCase(ACCESSORIES)))
 				{
 					sizeGuideDatas = getProductSizeguidePwa(productCode, productData.getRootCategory());
 				}
@@ -182,7 +184,9 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 			if (null != sizeGuideDatas)
 			{
 				sizeGuideDataList = new ArrayList<SizeGuideWsData>();
-				if (null != isPwa)
+				if (null != isPwa
+						&& (!productData.getRootCategory().equalsIgnoreCase(FOOTWEAR) && !productData.getRootCategory()
+								.equalsIgnoreCase(ACCESSORIES)))
 				{
 					for (final String size : sizeGuideDatas.keySet())
 					{
@@ -560,8 +564,8 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.facade.product.SizeGuideFacade#getWSProductSizeguide(java.lang.String)
 	 */
 
