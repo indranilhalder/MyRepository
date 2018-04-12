@@ -48,11 +48,11 @@ export function setDataLayer(type, response, icid, icidType) {
 
   if (type === ADOBE_HOME_TYPE) {
     window.digitalData = getDigitalDataForHome();
-    window._satellite.track(ADOBE_PDP_CPJ);
   }
 
   if (type === ADOBE_PDP_TYPE) {
     window.digitalData = getDigitalDataForPdp(type, response);
+    window._satellite.track(ADOBE_PDP_CPJ);
   }
   if (type === ADOBE_CHECKOUT_TYPE) {
     window.digitalData = getDigitalDataForCheckout(type, response);
