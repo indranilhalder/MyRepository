@@ -57,7 +57,7 @@ export default class GiftCard extends React.Component {
   }
 
   selectAmount(val, amount) {
-    this.setState({ amountText: val, amount: amount });
+    this.setState({ amountText: amount });
   }
 
   onSubmitDetails() {
@@ -69,10 +69,10 @@ export default class GiftCard extends React.Component {
         giftCardDetails.quantity = QUANTITY;
         giftCardDetails.messageOnCard = this.state.message;
         giftCardDetails.productID = PRODUCT_ID;
-        giftCardDetails.priceSelectedByUserPerQuantity = this.state.amount;
+        giftCardDetails.priceSelectedByUserPerQuantity = this.state.amountText;
         giftCardDetails.receiverEmailID = this.state.email;
         giftCardDetails.mobileNumber = MOBILE_NUMBER;
-        if (!this.state.amount) {
+        if (!this.state.amountText) {
           this.props.displayToast("Please select the amount");
           return false;
         }
@@ -178,7 +178,7 @@ export default class GiftCard extends React.Component {
                     : this.state.amountText
                 }
                 onChange={amountText =>
-                  this.setState({ amountText: amountText, amount: amountText })
+                  this.setState({ amountText: amountText })
                 }
                 textStyle={{ fontSize: 14 }}
                 height={33}
