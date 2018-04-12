@@ -52,7 +52,11 @@ export default class ReturnModes extends React.Component {
         <div className={styles.content}>
           <div className={styles.card}>
             <OrderCard
-              productImage={productInfo.product.imageURL}
+              imageUrl={
+                productInfo &&
+                productInfo.product &&
+                productInfo.product.imageURL
+              }
               productName={productInfo.product.name}
               price={productInfo.totalPrice.value}
             >

@@ -73,7 +73,11 @@ export default class ReturnReasonForm extends React.Component {
         </div>
         <div className={styles.content}>
           <OrderCard
-            productImage={data.orderProductWsDTO[0].imageURL}
+            imageUrl={
+              data &&
+              data.orderProductWsDTO[0] &&
+              data.orderProductWsDTO[0].imageURL
+            }
             productName={`${data.orderProductWsDTO[0].productBrand} ${
               data.orderProductWsDTO[0].productName
             }`}
