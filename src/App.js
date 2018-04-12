@@ -7,49 +7,35 @@ import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
 import HomeContainer from "./home/containers/HomeContainer.js";
 import ProductListingsContainer from "./plp/containers/ProductListingsContainer";
-import ProductDescriptionContainer from "./pdp/containers/ProductDescriptionContainer";
-import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
-import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
-import LoginContainer from "./auth/containers/LoginContainer";
+// import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
+// import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
+// import LoginContainer from "./auth/containers/LoginContainer";
 import ErrorContainer from "./general/containers/ErrorContainer.js";
-import SignUpContainer from "./auth/containers/SignUpContainer.js";
+// import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
 import BrandsLandingPageDefaultContainer from "./blp/containers/BrandsLandingPageDefaultContainer";
-import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
+// import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
 import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
-import CartContainer from "./cart/containers/CartContainer";
+// import CartContainer from "./cart/containers/CartContainer";
 import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
 import CategoriesPageContainer from "./clp/containers/CategoriesPageContainer";
 import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
 import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
-import CheckOutContainer from "./cart/containers/CheckOutContainer";
+// import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import BrandLandingPageContainer from "./blp/containers/BrandLandingPageContainer";
 import MobileFooter from "./general/components/MobileFooter.js";
 // importing All container for my Accounts
-import MyAccountContainer from "./account/containers/MyAccountContainer";
-import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCouponsContainer";
 
-import MyAccountBrandsContainer from "./account/containers/MyAccountBrandsContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import HeaderContainer from "./general/containers/HeaderContainer.js";
-import AllOrderContainer from "./account/containers/AllOrderContainer";
-import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
-import AddressBookContainer from "./account/containers/AddressBookContainer.js";
 
 import ReturnFlowContainer from "./account/containers/ReturnFlowContainer.js";
 
-import EditAddressBookContainer from "./account/containers/EditAddressBookContainer.js";
-import AddAddressContainer from "./account/containers/AddAddressContainer.js";
-import SaveListContainer from "./account/containers/SaveListContainer";
-import CliqCashContainer from "./account/containers/CliqCashContainer.js";
-import GiftCardContainer from "./account/containers/GiftCardContainer";
 import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
-
-import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 import CancelOrderContainer from "./account/containers/CancelOrderContainer";
-import UpdateProfileContainer from "./account/containers/UpdateProfileContainer.js";
+
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -78,22 +64,9 @@ import {
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
-  MY_ACCOUNT_ORDERS_PAGE,
-  SAVE_LIST_PAGE,
-  MY_ACCOUNT_PAGE,
-  MY_ACCOUNT_SAVED_CARDS_PAGE,
-  MY_ACCOUNT_ADDRESS_PAGE,
-  MY_ACCOUNT_ALERTS_PAGE,
-  MY_ACCOUNT_COUPON_PAGE,
-  MY_ACCOUNT_BRANDS_PAGE,
-  ACCOUNT_SAVED_CARD_ROUTER,
-  MY_ACCOUNT_CLIQ_CASH_PAGE,
   ORDER_PREFIX,
   RETURNS,
   SHORT_URL_ORDER_DETAIL,
-  MY_ACCOUNT_GIFT_CARD_PAGE,
-  MY_ACCOUNT_ADDRESS_EDIT_PAGE,
-  MY_ACCOUNT_ADDRESS_ADD_PAGE,
   CATEGORY_PAGE_WITH_QUERY_PARAMS,
   CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
   BRAND_PAGE_WITH_QUERY_PARAMS,
@@ -105,18 +78,60 @@ import {
   CANCEL_PREFIX,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
-  MY_ACCOUNT_UPDATE_PROFILE_PAGE,
   REQUESTING
 } from "../src/lib/constants";
-import {
-  globalAccessTokenSuccess,
-  customerAccessToken
-} from "./auth/actions/user.actions";
-import { cartDetailsCNCFailure } from "./cart/actions/cart.actions";
+import Loadable from "react-loadable";
 
-const auth = {
-  isAuthenticated: false
-};
+const LoginContainer = Loadable({
+  loader: () => import("./auth/containers/LoginContainer"),
+  loading() {
+    return <div> Loading...</div>;
+  }
+});
+
+const SignUpContainer = Loadable({
+  loader: () => import("./auth/containers/SignUpContainer.js"),
+  loading() {
+    return <div> Loading... </div>;
+  }
+});
+
+const ProductDescriptionPageWrapperContainer = Loadable({
+  loader: () =>
+    import("./pdp/containers/ProductDescriptionPageWrapperContainer"),
+  loading() {
+    return <div> Loading...</div>;
+  }
+});
+
+const CheckOutContainer = Loadable({
+  loader: () => import("./cart/containers/CheckOutContainer"),
+  loading() {
+    return <div> Loading...</div>;
+  }
+});
+
+const CartContainer = Loadable({
+  loader: () => import("./cart/containers/CartContainer"),
+  loading() {
+    return <div> Loading ... </div>;
+  }
+});
+
+const ProductReviewContainer = Loadable({
+  loader: () => import("./pdp/containers/ProductReviewContainer"),
+  loading() {
+    return <div> Loading... </div>;
+  }
+});
+
+const ProductSellerContainer = Loadable({
+  loader: () => import("./pdp/containers/ProductSellerContainer"),
+  loading() {
+    return <div> Loading... </div>;
+  }
+});
+
 class App extends Component {
   async componentDidMount() {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -125,8 +140,6 @@ class App extends Component {
     let cartDetailsForLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
-
-    console.log(loggedInUserDetails);
 
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
@@ -226,55 +239,6 @@ class App extends Component {
               )}
             />
             <Route path={RETURNS} component={ReturnFlowContainer} />
-
-            <Route
-              path={`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`}
-              component={SaveListContainer}
-            />
-            <Route
-              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ORDERS_PAGE}`}
-              component={AllOrderContainer}
-            />
-            <Route
-              exact
-              path={MY_ACCOUNT_PAGE}
-              component={MyAccountContainer}
-            />
-            <Route
-              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_SAVED_CARDS_PAGE}`}
-              component={SavedCardContainer}
-            />
-            <Route
-              exact
-              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ALERTS_PAGE}`}
-              component={UserAlertsAndCouponsContainer}
-            />
-            <Route
-              exact
-              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`}
-              component={UserAlertsAndCouponsContainer}
-            />
-            <Route
-              exact
-              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_GIFT_CARD_PAGE}`}
-              component={GiftCardContainer}
-            />
-            <Route
-              exact
-              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_CLIQ_CASH_PAGE}`}
-              component={CliqCashContainer}
-            />
-
-            <Route
-              exact
-              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_BRANDS_PAGE}`}
-              component={MyAccountBrandsContainer}
-            />
-            <Route
-              exact
-              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`}
-              component={UpdateProfileContainer}
-            />
 
             <Route
               path={`${SHORT_URL_ORDER_DETAIL}`}
@@ -410,21 +374,7 @@ class App extends Component {
               path={CATEGORIES_LANDING_PAGE}
               component={CategoriesPageContainer}
             />
-            <Route
-              exact
-              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_PAGE}`}
-              component={AddressBookContainer}
-            />
-            <Route
-              exact
-              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_EDIT_PAGE}`}
-              component={EditAddressBookContainer}
-            />
-            <Route
-              exact
-              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_ADD_PAGE}`}
-              component={AddAddressContainer}
-            />
+
             {/* This *has* to be at the bottom */}
             <Route
               exact

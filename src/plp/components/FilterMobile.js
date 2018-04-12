@@ -8,7 +8,6 @@ import styles from "./FilterMobile.css";
 import queryString from "query-string";
 import { createUrlFromQueryAndCategory } from "./FilterUtils.js";
 
-const FILTER_HEADER = "Refine by";
 const BRAND = "brand";
 export default class FilterMobile extends React.Component {
   constructor(props) {

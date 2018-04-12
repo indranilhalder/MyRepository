@@ -97,8 +97,6 @@ export default class Plp extends React.Component {
   }
 
   render() {
-    let filterClass = styles.filter;
-
     if (this.props.loading && !this.props.isFilter) {
       return this.renderLoader();
     }
