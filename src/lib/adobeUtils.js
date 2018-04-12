@@ -222,7 +222,7 @@ function getDigitalDataForHome() {
   return data;
 }
 function getDigitalDataForCart(type, cartResponse) {
-  const data = {
+  let data = {
     page: {
       category: {
         primaryCategory: "cart"
@@ -232,22 +232,26 @@ function getDigitalDataForCart(type, cartResponse) {
       }
     }
   };
-  if (
-    cartResponse &&
-    cartResponse.products &&
-    cartResponse.products.length > 0
-  ) {
-    let productsIds = cartResponse.products.map(product => {
+
+  data = addProductIdsToObj(data, cartResponse);
+
+  return data;
+}
+
+// this function will update data with  cpj.proudct.id with
+// reponse product's ids . this is using in many place thats why we
+// need to make separate function for product ids
+function addProductIdsToObj(data, response) {
+  if (response && response.products && response.products.length > 0) {
+    let productsIds = response.products.map(product => {
       return product.productcode;
     });
     Object.assign(data, {
       cpj: { product: { id: JSON.stringify(productsIds) } }
     });
   }
-
   return data;
 }
-
 export async function getMcvId() {
   return new Promise((resolve, reject) => {
     let amcvCookieValue = getCookieValue(ADOBE_TARGET_COOKIE_NAME).split(
