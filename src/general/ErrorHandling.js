@@ -4,6 +4,7 @@ import {
   ERROR,
   FAILURE_LOWERCASE
 } from "../lib/constants.js";
+const UN_ABLE_TO_UPDATE_MASTER = "Unable to validate Otp";
 export function getFailureResponse(response) {
   if (response.errors) {
     if (response.errors[0].message) {
@@ -24,7 +25,8 @@ export function getFailureResponse(response) {
     response.status === FAILURE ||
     response.status === FAILURE_UPPERCASE ||
     response.status === ERROR ||
-    response.status === FAILURE_LOWERCASE
+    response.status === FAILURE_LOWERCASE ||
+    response.status === UN_ABLE_TO_UPDATE_MASTER
   ) {
     if (response.error) {
       return { status: true, message: response.error };
