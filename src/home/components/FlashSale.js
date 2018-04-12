@@ -10,7 +10,6 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import TimerCounter from "../../general/components/TimerCounter.js";
 import { Icon } from "xelpmoc-core";
 import ClockImage from "../../pdp/components/img/clockWhite.svg";
-import moment from "moment";
 
 const OFFER_AND_ITEM_LIMIT = 4;
 
@@ -81,9 +80,6 @@ export default class FlashSale extends React.Component {
       offersAndItemsArray = items;
     }
 
-    // WE do this because new Date(Datestr) gives back date time in the american format, but the string is in non-american format.
-    // So we need to do a diff of the correct date.
-
     const startDateTime = new Date(
       this.convertDateTimeFromIndianToAmerican(feedComponentData.startDate)
     );
@@ -91,11 +87,6 @@ export default class FlashSale extends React.Component {
     const endDateTime = new Date(
       this.convertDateTimeFromIndianToAmerican(feedComponentData.endDate)
     );
-
-    // console.log("START DATE TIME");
-    // console.log(startDateTime);
-    // console.log("END DATE TIME");
-    // console.log(endDateTime);
 
     // if date time
 
