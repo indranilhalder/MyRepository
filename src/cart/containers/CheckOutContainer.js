@@ -68,7 +68,8 @@ const mapDispatchToProps = dispatch => {
           accessToken,
           cartId,
           pinCode,
-          isSoftReservation
+          isSoftReservation,
+          true // this is using to setting data layer for first time when page loads
         )
       );
     },
