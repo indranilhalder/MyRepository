@@ -31,7 +31,7 @@ export default class AddDeliveryAddress extends React.Component {
       line3: "",
       town: "",
       salutaion: "",
-      defaultFlag: false
+      defaultFlag: true
     };
   }
 
@@ -243,7 +243,6 @@ export default class AddDeliveryAddress extends React.Component {
             offset={0}
             elementWidthMobile={50}
             onSelect={val => this.onChange({ addressType: val[0] })}
-            selected={this.state.addressType}
           >
             {dataLabel.map((val, i) => {
               return (
