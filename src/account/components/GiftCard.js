@@ -22,7 +22,6 @@ const MOBILE_NUMBER = "999999999";
 export default class GiftCard extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this.props.history);
     this.state = {
       email: this.props.email ? this.props.email : "",
       senderName: this.props.senderName ? this.props.senderName : "",
