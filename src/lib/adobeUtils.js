@@ -17,6 +17,7 @@ const ADOBE_SATELLITE_CODE = "virtual_page_load";
 export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
 export const ADOBE_CART_TYPE = "cart";
+export const ADOBE_CHECKOUT_TYPE = "checkout";
 export const ADOBE_PDP_CPJ = "cpj_pdp";
 export const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
 export const ICID2 = "ICID2";
@@ -44,7 +45,9 @@ export function setDataLayer(type, response, icid, icidType) {
   if (type === ADOBE_PDP_TYPE) {
     window.digitalData = getDigitalDataForPdp(type, response);
   }
-
+  if (type === ADOBE_CHECKOUT_TYPE) {
+    window.digitalData = getDigitalDataForCheckout(type, response);
+  }
   if (icid) {
     window.digitalData.internal = {
       campaign: {
@@ -218,6 +221,32 @@ function getDigitalDataForHome() {
             window.digitalData.page.pageInfo.pageName
         }
       }
+    });
+  }
+  return data;
+}
+
+function getDigitalDataForCheckout(type, CheckoutResponse) {
+  const data = {
+    page: {
+      category: {
+        primaryCategory: "multistepcheckoutsummary"
+      },
+      pageInfo: {
+        pageName: "multi checkout summary page"
+      }
+    }
+  };
+  if (
+    CheckoutResponse &&
+    CheckoutResponse.products &&
+    CheckoutResponse.products.length > 0
+  ) {
+    let productsIds = CheckoutResponse.products.map(product => {
+      return product.productcode && product.productcode.toLowerCase();
+    });
+    Object.assign(data, {
+      cpj: { product: { id: JSON.stringify(productsIds) } }
     });
   }
   return data;

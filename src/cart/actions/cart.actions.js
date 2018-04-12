@@ -21,8 +21,9 @@ import {
   JUS_PAY_CHARGED,
   FAILURE_LOWERCASE
 } from "../../lib/constants";
+import { setDataLayer, ADOBE_CHECKOUT_TYPE } from "../../lib/adobeUtils";
 
-export const CLEAR_CART_DETAILS="CLEAR_CART_DETAILS"
+export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
 export const USER_CART_PATH = "v2/mpl/users";
 export const CART_PATH = "v2/mpl";
 export const ALL_STORES_PATH = "v2/mpl/allStores";
@@ -394,7 +395,8 @@ export function getCartDetailsCNC(
   accessToken,
   cartId,
   pinCode,
-  isSoftReservation
+  isSoftReservation,
+  isSetDataLayer: false
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(cartDetailsCNCRequest());
@@ -441,9 +443,18 @@ export function getCartDetailsCNC(
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(cartDetailsCNCSuccess(resultJson));
+      // setting data layer only for first time
+      if (isSetDataLayer) {
+        setDataLayer(
+          ADOBE_CHECKOUT_TYPE,
+          resultJson,
+          getState().icid.value,
+          getState().icid.icidType
+        );
+      }
+      return dispatch(cartDetailsCNCSuccess(resultJson));
     } catch (e) {
-      dispatch(cartDetailsCNCFailure(e.message));
+      return dispatch(cartDetailsCNCFailure(e.message));
     }
   };
 }
@@ -2218,7 +2229,6 @@ export function createJusPayOrder(
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-
         throw new Error(resultJsonStatus.message);
       }
       dispatch(
@@ -3440,9 +3450,8 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
   };
 }
 
-export function clearCartDetails()
-{
+export function clearCartDetails() {
   return {
-    type: CLEAR_CART_DETAILS,
+    type: CLEAR_CART_DETAILS
   };
 }
