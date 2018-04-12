@@ -3,6 +3,7 @@ import { setInterval, clearInterval } from "timers";
 import * as constants from "../lib/constants.js";
 import { userAddressFailure } from "../cart/actions/cart.actions";
 import {
+  LOGIN_WITH_EMAIL,
   LOGIN_WITH_MOBILE,
   FACEBOOK_PLATFORM,
   GOOGLE_PLUS_PLATFORM
@@ -21,10 +22,6 @@ export const ADOBE_PDP_CPJ = "cpj_pdp";
 export const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
 export const ICID2 = "ICID2";
 export const CID = "CID";
-export const LOGIN_WITH_MOBIEL_NUMBER = "mobile";
-export const LOGIN_WITH_FACEBOOK = "google";
-export const LOGIN_WITH_GOOGLE = "google";
-export const LOGIN_WITH_EMAIL = "mobile";
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
 const MOBILE = "mobile";
@@ -44,7 +41,9 @@ export function setDataLayer(type, response, icid, icidType) {
   if (type === ADOBE_PDP_TYPE) {
     window.digitalData = getDigitalDataForPdp(type, response);
   }
-
+  if (type === ADOBE_CART_TYPE) {
+    window.digitalData = getDigitalDataForCart(type, response);
+  }
   if (icid) {
     window.digitalData.internal = {
       campaign: {
@@ -220,6 +219,32 @@ function getDigitalDataForHome() {
       }
     });
   }
+  return data;
+}
+function getDigitalDataForCart(type, cartResponse) {
+  const data = {
+    page: {
+      category: {
+        primaryCategory: "cart"
+      },
+      pageInfo: {
+        pageName: "cart"
+      }
+    }
+  };
+  if (
+    cartResponse &&
+    cartResponse.products &&
+    cartResponse.products.length > 0
+  ) {
+    let productsIds = cartResponse.products.map(product => {
+      return product.productcode;
+    });
+    Object.assign(data, {
+      cpj: { product: { id: JSON.stringify(productsIds) } }
+    });
+  }
+
   return data;
 }
 
