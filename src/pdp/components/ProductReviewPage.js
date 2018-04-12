@@ -205,10 +205,14 @@ class ProductReviewPage extends Component {
                 productName={this.props.productDetails.brandName}
                 productMaterial={this.props.productDetails.productName}
                 price={
+                  this.props.productDetails &&
+                  this.props.productDetails.winningSellerPrice &&
                   this.props.productDetails.winningSellerPrice
                     .formattedValueNoDecimal
                 }
                 discountPrice={
+                  this.props.productDetails &&
+                  this.props.productDetails.mrpPrice &&
                   this.props.productDetails.mrpPrice.formattedValueNoDecimal
                 }
                 averageRating={this.props.productDetails.averageRating}
