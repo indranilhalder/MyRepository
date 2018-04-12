@@ -4,17 +4,24 @@ import ThemeProduct from "../../general/components/ThemeProduct";
 import Logo from "../../general/components/Logo";
 import PropTypes from "prop-types";
 import styles from "./ThemeProductWidget.css";
-import { PRODUCT_LISTINGS } from "../../lib/constants";
 import { transformData } from "./utils.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+import { MSD_WIDGET_PLATFORM } from "../../lib/config.js";
 
 export default class ThemeProductWidget extends React.Component {
   handleClick() {
-    const urlSuffix = this.props.feedComponentData.data[0].webURL.replace(
-      TATA_CLIQ_ROOT,
-      "$1"
-    );
-    this.props.history.push(urlSuffix);
+    let widgetData = this.props.feedComponentData;
+    if (
+      widgetData.postParams &&
+      widgetData.postParams.widgetPlatform === MSD_WIDGET_PLATFORM
+    ) {
+      widgetData = widgetData.data[0];
+    }
+
+    if (widgetData.webURL) {
+      const urlSuffix = widgetData.webURL.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
+    }
   }
 
   componentDidUpdate() {
@@ -37,8 +44,13 @@ export default class ThemeProductWidget extends React.Component {
 
   render() {
     let items = [];
-    let widgetData =
-      this.props.feedComponentData.data && this.props.feedComponentData.data[0];
+    let widgetData = this.props.feedComponentData;
+    if (
+      widgetData.postParams &&
+      widgetData.widgetPlatform === MSD_WIDGET_PLATFORM
+    ) {
+      widgetData = widgetData.data;
+    }
     if (!widgetData) {
       return null;
     }
