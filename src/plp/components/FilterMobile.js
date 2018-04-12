@@ -91,18 +91,25 @@ export default class FilterMobile extends React.Component {
   };
   render() {
     const { facetData, facetdatacategory } = this.props;
-    let filteredFacetData = facetData[this.state.filterSelectedIndex].values;
-    if (facetData[this.state.filterSelectedIndex].key === BRAND) {
-      filteredFacetData = facetData[
-        this.state.filterSelectedIndex
-      ].values.filter(val => {
-        return this.state.brandSearchString === ""
-          ? val
-          : val.name
-              .toLowerCase()
-              .includes(this.state.brandSearchString.toLowerCase());
-      });
+    let filteredFacetData = null;
+    if (facetData) {
+      filteredFacetData = facetData[this.state.filterSelectedIndex].values;
+      if (
+        facetData &&
+        facetData[this.state.filterSelectedIndex].key === BRAND
+      ) {
+        filteredFacetData = facetData[
+          this.state.filterSelectedIndex
+        ].values.filter(val => {
+          return this.state.brandSearchString === ""
+            ? val
+            : val.name
+                .toLowerCase()
+                .includes(this.state.brandSearchString.toLowerCase());
+        });
+      }
     }
+
     return (
       <React.Fragment>
         <div
@@ -170,18 +177,19 @@ export default class FilterMobile extends React.Component {
                       />
                     </div>
                   )}
-                  {filteredFacetData.map((val, i) => {
-                    return (
-                      <FilterSelect
-                        onClick={this.onFilterClick}
-                        selected={val.selected}
-                        hexColor={val.hexColor}
-                        label={val.name}
-                        count={val.count}
-                        url={val.url}
-                      />
-                    );
-                  })}
+                  {filteredFacetData &&
+                    filteredFacetData.map((val, i) => {
+                      return (
+                        <FilterSelect
+                          onClick={this.onFilterClick}
+                          selected={val.selected}
+                          hexColor={val.hexColor}
+                          label={val.name}
+                          count={val.count}
+                          url={val.url}
+                        />
+                      );
+                    })}
                 </React.Fragment>
               )}
             </div>

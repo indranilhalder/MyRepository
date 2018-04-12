@@ -168,7 +168,12 @@ export function getProductDescription(productCode) {
         resultJson.status === SUCCESS_UPPERCASE ||
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
-        setDataLayer(ADOBE_PDP_TYPE, resultJson, getState().icid.value);
+        setDataLayer(
+          ADOBE_PDP_TYPE,
+          resultJson,
+          getState().icid.value,
+          getState().icid.icidType
+        );
         dispatch(getProductDescriptionSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.error}`);
