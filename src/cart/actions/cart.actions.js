@@ -21,7 +21,11 @@ import {
   JUS_PAY_CHARGED,
   FAILURE_LOWERCASE
 } from "../../lib/constants";
-import { setDataLayer, ADOBE_CART_TYPE } from "../../lib/adobeUtils";
+import {
+  setDataLayer,
+  ADOBE_CART_TYPE,
+  ADOBE_ORDER_CONFIRMATION
+} from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
 export const USER_CART_PATH = "v2/mpl/users";
@@ -2851,6 +2855,12 @@ export function orderConfirmation(orderId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayer(
+        ADOBE_ORDER_CONFIRMATION,
+        resultJson,
+        getState().icid.value,
+        getState().icid.icidType
+      );
       dispatch(orderConfirmationSuccess(resultJson));
     } catch (e) {
       dispatch(orderConfirmationFailure(e.message));

@@ -19,6 +19,7 @@ export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
 export const ADOBE_CART_TYPE = "cart";
 export const ADOBE_PDP_CPJ = "cpj_pdp";
+export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
 export const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
 export const ICID2 = "ICID2";
 export const CID = "CID";
@@ -43,6 +44,9 @@ export function setDataLayer(type, response, icid, icidType) {
   }
   if (type === ADOBE_CART_TYPE) {
     window.digitalData = getDigitalDataForCart(type, response);
+  }
+  if (type === ADOBE_ORDER_CONFIRMATION) {
+    window.digitalData = getDigitalDataForOrderConfirmation(type, response);
   }
   if (icid) {
     window.digitalData.internal = {
@@ -238,6 +242,22 @@ function getDigitalDataForCart(type, cartResponse) {
   return data;
 }
 
+function getDigitalDataForOrderConfirmation(type, response) {
+  let data = {
+    page: {
+      category: {
+        primaryCategory: "orderconfirmation"
+      },
+      pageInfo: {
+        pageName: "order confirmation page"
+      }
+    }
+  };
+
+  data = addProductIdsToObj(data, response);
+
+  return data;
+}
 // this function will update data with  cpj.proudct.id with
 // reponse product's ids . this is using in many place thats why we
 // need to make separate function for product ids
