@@ -11,8 +11,8 @@ export default class OfferCard extends React.Component {
   handleShowDetails = () => {
     if (this.props.showDetails) {
       this.props.showDetails({
-        potentialPromotions: { ...this.props.potentialPromotions },
-        secondaryPromotions: { ...this.props.secondaryPromotions }
+        potentialPromotions: this.props.potentialPromotions,
+        secondaryPromotions: this.props.secondaryPromotions
       });
     }
   };
