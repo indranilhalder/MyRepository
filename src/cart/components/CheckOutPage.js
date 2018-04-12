@@ -186,9 +186,11 @@ class CheckOutPage extends React.Component {
             cartData.userAddress.addresses.map(address => {
               return {
                 addressTitle: address.addressType,
-                addressDescription: `${address.line1} ${
-                  address.line2
-                }  ${address.state && address.state} ${address.postalCode}`,
+                addressDescription: `${address.line1 ? address.line1 : ""} ${
+                  address.line2 ? address.line2 : ""
+                }  ${address.state ? address.state : ""} ${
+                  address.postalCode ? address.postalCode : ""
+                }`,
                 value: address.id,
                 selected: address.defaultAddress
               };

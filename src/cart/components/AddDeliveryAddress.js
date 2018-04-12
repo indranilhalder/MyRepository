@@ -19,7 +19,7 @@ export default class AddDeliveryAddress extends React.Component {
     super(props);
     this.state = {
       countryIso: "",
-      addressType: "",
+      addressType: "Home",
       phone: "",
       firstName: "",
       lastName: "",
@@ -243,6 +243,7 @@ export default class AddDeliveryAddress extends React.Component {
             offset={0}
             elementWidthMobile={50}
             onSelect={val => this.onChange({ addressType: val[0] })}
+            selected={[this.state.addressType]}
           >
             {dataLabel.map((val, i) => {
               return (
