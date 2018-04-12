@@ -17,6 +17,7 @@ export default class OfferCard extends React.Component {
     }
   };
   render() {
+    console.log(this.props);
     if (this.props.potentialPromotions || this.props.secondaryPromotions) {
       return (
         <div className={styles.base} onClick={this.handleShowDetails}>
@@ -37,3 +38,18 @@ export default class OfferCard extends React.Component {
     }
   }
 }
+OfferCard.propTypes = {
+  potentialPromotions: PropTypes.shape({
+    title: PropTypes.string,
+    description: PropTypes.string,
+    endDate: PropTypes.string,
+    startDate: PropTypes.string
+  }),
+  secondaryPromotions: PropTypes.shape({
+    messageId: PropTypes.string,
+    messageDetails: PropTypes.string,
+    endDate: PropTypes.string,
+    startDate: PropTypes.string
+  }),
+  showDetails: PropTypes.func
+};

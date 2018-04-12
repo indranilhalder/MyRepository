@@ -1,5 +1,6 @@
 import React from "react";
 import SlideModal from "../../general/components/SlideModal";
+import PropTypes from "prop-types";
 import styles from "./OfferModal.css";
 export default class OfferModal extends React.Component {
   render() {
@@ -67,3 +68,17 @@ export default class OfferModal extends React.Component {
     );
   }
 }
+OfferModal.propTypes = {
+  potentialPromotions: PropTypes.shape({
+    title: PropTypes.string,
+    description: PropTypes.string,
+    endDate: PropTypes.string,
+    startDate: PropTypes.string
+  }),
+  secondaryPromotions: PropTypes.shape({
+    messageId: PropTypes.string,
+    messageDetails: PropTypes.string,
+    endDate: PropTypes.string,
+    startDate: PropTypes.string
+  })
+};
