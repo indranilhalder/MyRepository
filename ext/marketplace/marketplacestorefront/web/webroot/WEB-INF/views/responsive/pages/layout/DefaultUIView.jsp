@@ -26,7 +26,7 @@
 		<div class="wrapper background">
 			<cms:pageSlot position="DefaultNewUIContentSlot" var="feature">
 				<c:if test="${feature.typeCode eq 'HeroBannerComponent'}">
-					<div class="hero-slider">
+					<div class="hero-slider mb40">
 						<c:forEach items="${feature.items}" var="heroElements">
 							<div>
 								<c:if test="${heroElements.typeCode eq 'HeroBannerElement'}">
@@ -118,7 +118,7 @@
 							<%-- 	 	<jsp:useBean id="now" class="java.util.Date" /> --%>
 							<%-- 		<fmt:formatDate type="date" value="${now}" /> --%>
 							<input type="hidden" name="end_time" id="end_time"
-								value="2018-04-03 13:00:00"> <i class="fa fa-clock-o"
+								value="${feature.endDate}"> <i class="fa fa-clock-o" id="timer-icon"
 								aria-hidden="true"></i>
 							<div class="time-digits" id="countdown"></div>
 						</div>
@@ -152,7 +152,7 @@
 											
 											<div class="col-xs-12 flash-sales-widget-product-offer">${flashsalesitemElements.productCode.name}</div>
 											<fmt:parseNumber var="productPrice" type="number"
-														value="${bannerProdCarouselElement.productCode.mrp}" />
+														value="${flashsalesitemElements.productCode.mrp}" />
 												<div class="col-xs-12 flash-sales-widget-product-name">Rs. ${productPrice}</div>
 											
 										</a>
@@ -220,7 +220,7 @@
 													<fmt:parseNumber var="productPrice" type="number"
 														value="${bannerProdCarouselElement.productCode.mrp}" />
 
-													<div class="product-price">${productPrice}</div>
+													<div class="product-price">Rs. ${productPrice}</div>
 												</c:if>
 											</a>
 										</div>
@@ -239,7 +239,7 @@
 							poster="${feature.imageURL.URL}"></video>
 						<!-- 						<img src=""> -->
 						<div class="video-product-carousel-container" id="vpc-container">
-							<div class="col-xs-12 video-product-title">${feature.title}</div>
+							<div class="col-xs-12 video-product-title">${feature.brandLogo.URL}</div>
 							<div class="col-xs-12 text-center mtb15">
 								<i class="fa fa-play-circle-o fa-3x" aria-hidden="true"
 									id="play-video"></i>
@@ -260,7 +260,7 @@
 											<div class="product-name">${videoProdCarouselElement.productCode.name}</div>
 												<fmt:parseNumber var="productPrice" type="number"
 													value="${videoProdCarouselElement.productCode.mrp}" />
-												<div class="product-price">${productPrice}</div>
+												<div class="product-price">Rs. ${productPrice}</div>
 											</c:if>
 										</a>
 									</c:if>
@@ -349,7 +349,7 @@
 													<div class="product-name">${themeProductWidgetElement.productCode.name}</div>
 														<fmt:parseNumber var="productPrice" type="number"
 															value="${themeProductWidgetElement.productCode.mrp}" />
-														<div class="product-price">${productPrice}</div>
+														<div class="product-price">Rs. ${productPrice}</div>
 													</c:if>
 												</a>
 											</div>
@@ -403,7 +403,7 @@
 											<div class="product-name">${automatedBrandProductCarElement.productCode.name}</div>
 												<fmt:parseNumber var="productPrice" type="number"
 													value="${automatedBrandProductCarElement.productCode.mrp}" />
-												<div class="product-price">${productPrice}</div>
+												<div class="product-price">Rs. ${productPrice}</div>
 											</c:if>
 										</a>
 									</div>
@@ -546,7 +546,7 @@
 											test="${not empty curatedProductsWidgetElement.productCode}">
 											<fmt:parseNumber var="productPrice" type="number"
 												value="${curatedProductsWidgetElement.productCode.mrp}" />
-											<div class="product-price">${productPrice}</div>
+											<div class="product-price">Rs. ${productPrice}</div>
 										</c:if>
 									</div>
 								</c:if>
@@ -802,7 +802,7 @@
 											test="${not empty autoProductRecommendationElement.productCode}">
 											<fmt:parseNumber var="productPrice" type="number"
 												value="${autoProductRecommendationElement.productCode.mrp}" />
-											<div class="product-price">${productPrice}</div>
+											<div class="product-price">Rs. ${productPrice}</div>
 										</c:if>
 									</c:if>
 								</div>
