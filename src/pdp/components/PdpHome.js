@@ -15,7 +15,7 @@ import PdpDeliveryModes from "./PdpDeliveryModes";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
-import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import Accordion from "../../general/components/Accordion.js";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -310,6 +310,31 @@ export default class PdpApparel extends React.Component {
               <ProductFeatures features={productData.classifications} />
             </div>
           )}
+          <div className={styles.details}>
+            {productData.classificationList &&
+              productData.classificationList.map(value => {
+                return (
+                  <Accordion text={value.key}>
+                    {value.value.classificationList.map(val => {
+                      return (
+                        <div>
+                          <div className={styles.header}>val.key</div>
+                          <div>
+                            {val.value.classificationList.map(list => {
+                              return (
+                                <div className={styles.contentTextFistorHome}>
+                                  {list.key} : {list.value}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </Accordion>
+                );
+              })}
+          </div>
           {productData.APlusContent && (
             <AllDescription
               productContent={productData.APlusContent.productContent}
