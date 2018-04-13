@@ -33,8 +33,6 @@ export default class Plp extends React.Component {
 
   onClear = () => {
     this.props.history.push(this.props.clearUrl);
-    this.props.hideFilter();
-    this.props.setUrlToReturnToAfterClearToNull();
   };
 
   handleScroll = () => {
