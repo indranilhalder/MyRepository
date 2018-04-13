@@ -47,7 +47,12 @@ export default class CancelReasonForm extends React.Component {
       >
         <div className={styles.content}>
           <OrderCard
-            productImage={data.orderProductWsDTO[0].imageURL}
+            imageUrl={
+              data &&
+              data.orderProductWsDTO &&
+              data.orderProductWsDTO[0] &&
+              data.orderProductWsDTO[0].imageURL
+            }
             productName={`${data.orderProductWsDTO[0].productBrand} ${
               data.orderProductWsDTO[0].productName
             }`}
