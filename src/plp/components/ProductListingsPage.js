@@ -66,7 +66,6 @@ class ProductListingsPage extends Component {
   }
 
   componentDidUpdate() {
-    console.log("COMPONENT DID UPDATE CALLED");
     let page = null;
     if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
       page = this.props.match.params[1];
