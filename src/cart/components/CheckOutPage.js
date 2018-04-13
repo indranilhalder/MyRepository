@@ -188,11 +188,10 @@ class CheckOutPage extends React.Component {
             cartData.userAddress.addresses.map(address => {
               return {
                 addressTitle: address.addressType,
-                addressDescription: `${address.line1 &&
-                  address.line1} ${address.town &&
-                  address.town} ${address.city &&
-                  address.city}, ${address.state && address.state} ${
-                  address.postalCode
+                addressDescription: `${address.line1 ? address.line1 : ""} ${
+                  address.line2 ? address.line2 : ""
+                }  ${address.state ? address.state : ""} ${
+                  address.postalCode ? address.postalCode : ""
                 }`,
                 value: address.id,
                 selected: address.defaultAddress
@@ -652,7 +651,7 @@ class CheckOutPage extends React.Component {
         if (this.props.selectDeliveryMode) {
           this.props.selectDeliveryMode(
             this.state.ussIdAndDeliveryModesObj,
-            this.state.selectedAddress.postalCode
+            localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
           );
           // this.props.getOrderSummary(this.state.selectedAddress.postalCode);
         }
