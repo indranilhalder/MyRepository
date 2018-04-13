@@ -1469,3 +1469,7 @@ body {
 .slick-arrow{
 	display:none;
 }
+
+.brandslist-leftsection .text-bold{
+	clear:left;
+}

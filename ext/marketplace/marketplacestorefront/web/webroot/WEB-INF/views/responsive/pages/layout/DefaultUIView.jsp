@@ -534,13 +534,13 @@
 								</a>
 								<c:if
 									test="${curatedProductsWidgetElement.typeCode eq 'CuratedProductsWidgetElement'}">
-									<div class="brand-name">${curatedProductsWidgetElement.productCode.name}
+									<div class="brand-name">${curatedProductsWidgetElement.description}
 										<a href="#" class="pull-right"> <i
 											class="fa fa-bookmark-o" aria-hidden="true"></i>
 										</a>
 									</div>
 									<a href="${curatedProductsWidgetElement.webURL}">
-										<div class="product-name">${curatedProductsWidgetElement.description}</div>
+										<div class="product-name">${curatedProductsWidgetElement.productCode.name}</div>
 									</a>
 									<div class="product-price">
 										<c:if
@@ -791,7 +791,7 @@
 											src="${autoProductRecommendationElement.productCode.thumbnail.URL}"
 											class="br4" />
 										</a>
-										<div class="brand-name">${autoProductRecommendationElement.productCode.name}
+										<div class="brand-name">${autoProductRecommendationElement.title}
 											<a href="#" class="pull-right"> <i
 												class="fa fa-bookmark-o" aria-hidden="true"></i>
 											</a>
