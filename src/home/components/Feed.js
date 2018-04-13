@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { setDataLayer } from "../../lib/adobeUtils.js";
 import WidgetContainer from "../containers/WidgetContainer";
+// import WidgetContainer from "./IntersectionObservedWidget";
 import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
 import VideoProductCarousel from "./VideoProductCarousel.js";
