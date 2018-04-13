@@ -48,6 +48,7 @@ export default class FlashSale extends React.Component {
 
   render() {
     const { feedComponentData, ...rest } = this.props;
+    console.log(feedComponentData);
     let items = [];
 
     if (!feedComponentData.endDate || !feedComponentData.startDate) {
@@ -101,9 +102,12 @@ export default class FlashSale extends React.Component {
       <div
         className={styles.base}
         style={{
-          background: feedComponentData.backgroundImageURL
-            ? `url(${feedComponentData.backgroundImageURL})`
-            : `${feedComponentData.backgroundHexCode}`
+          background: `${feedComponentData.backgroundHexCode} url(${
+            feedComponentData.backgroundImageURL
+          })`
+          // background: feedComponentData.backgroundImageURL
+          //   ? `url(${feedComponentData.backgroundImageURL})`
+          //   : `${feedComponentData.backgroundHexCode}`
         }}
       >
         <div className={styles.header}>
