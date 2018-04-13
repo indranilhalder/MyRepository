@@ -40,8 +40,15 @@ export default class Widget extends React.Component {
   // }
 
   onChange = ({ isIntersecting, intersectionRatio }) => {
-    if (isIntersecting && intersectionRatio >= 0.3) {
-      if (this.props.feedComponentData.fetchURL) {
+    console.log("WIDGET ON CHANGE");
+    console.log(isIntersecting);
+    console.log(intersectionRatio);
+
+    if (isIntersecting) {
+      if (
+        this.props.feedComponentData.fetchURL &&
+        this.props.feedComponentData.status !== SUCCESS
+      ) {
         this.props.getComponentData(
           this.props.feedComponentData.fetchURL,
           this.props.positionInFeed,
