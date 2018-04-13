@@ -30,7 +30,10 @@ export default class FollowingBrands extends React.Component {
 
     return (
       <div className={styles.base}>
-        <Carousel header={this.props.feedComponentData.title}>
+        <Carousel
+          header={this.props.feedComponentData.title}
+          elementWidthMobile={30}
+        >
           {followWidgetData.data &&
             followWidgetData.data.map((datum, i) => {
               return (

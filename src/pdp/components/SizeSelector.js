@@ -34,41 +34,44 @@ export default class SizeSelector extends React.Component {
       .map(val => {
         return val.sizelink;
       });
-
-    return (
-      <div className={styles.base}>
-        <div className={styles.header}>
-          {this.props.headerText}
-          <div className={styles.button}>
-            <UnderLinedButton
-              disabled={!this.props.hasSizeGuide}
-              label={SIZE_GUIDE}
-              onClick={() => {
-                this.handleShowSize();
-              }}
-            />
-          </div>
-        </div>
-        <Carousel elementWidthMobile="auto" limit={1}>
-          {sizes.map((datum, i) => {
-            return (
-              <SizeSelect
-                key={i}
-                selected={
-                  this.props.sizeSelected
-                    ? datum.productCode === this.props.productId
-                    : false
-                }
-                size={datum.size}
-                value={datum.size}
-                fontSize={this.props.textSize}
-                onSelect={() => this.updateSize(datum.url)}
+    if (sizes.length !== 0) {
+      return (
+        <div className={styles.base}>
+          <div className={styles.header}>
+            {this.props.headerText}
+            <div className={styles.button}>
+              <UnderLinedButton
+                disabled={!this.props.hasSizeGuide}
+                label={SIZE_GUIDE}
+                onClick={() => {
+                  this.handleShowSize();
+                }}
               />
-            );
-          })}
-        </Carousel>
-      </div>
-    );
+            </div>
+          </div>
+          <Carousel elementWidthMobile="auto" limit={1}>
+            {sizes.map((datum, i) => {
+              return (
+                <SizeSelect
+                  key={i}
+                  selected={
+                    this.props.sizeSelected
+                      ? datum.productCode === this.props.productId
+                      : false
+                  }
+                  size={datum.size}
+                  value={datum.size}
+                  fontSize={this.props.textSize}
+                  onSelect={() => this.updateSize(datum.url)}
+                />
+              );
+            })}
+          </Carousel>
+        </div>
+      );
+    } else {
+      return null;
+    }
   }
 }
 

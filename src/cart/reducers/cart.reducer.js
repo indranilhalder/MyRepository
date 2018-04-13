@@ -49,7 +49,6 @@ const cart = (
 
     emiBankDetails: null,
     emiBankStatus: null,
-    emiBankError: null,
 
     orderSummary: null,
     orderSummaryStatus: null,
@@ -203,6 +202,10 @@ const cart = (
       });
 
     case cartActions.CART_DETAILS_SUCCESS:
+      if (action.cartDetails && action.cartDetails.appliedCoupon) {
+        Cookies.createCookie(COUPON_COOKIE, action.cartDetails.appliedCoupon);
+      }
+
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
         cartDetails: action.cartDetails,
@@ -681,6 +684,7 @@ const cart = (
 
       // here is where I need to destroy the cart details
       Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      Cookies.deleteCookie(COUPON_COOKIE);
       return Object.assign({}, state, {
         jusPayStatus: action.status,
         cliqCashJusPayDetails: action.cliqCashJusPayDetails,
@@ -777,6 +781,7 @@ const cart = (
 
       // here is where I need to destroy the cart details
       Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      Cookies.deleteCookie(COUPON_COOKIE);
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetails: action.justPayPaymentDetails,
