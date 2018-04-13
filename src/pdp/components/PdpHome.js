@@ -155,6 +155,7 @@ export default class PdpApparel extends React.Component {
 
   render() {
     const productData = this.props.productDetails;
+    console.log(productData);
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -222,9 +223,7 @@ export default class PdpApparel extends React.Component {
                   showSizeGuide={
                     productData.showSizeGuide ? this.props.showSizeGuide : null
                   }
-                  sizes={productData.variantOptions.map(value => {
-                    return value.sizelink;
-                  })}
+                  data={productData.variantOptions}
                   maxQuantity={productData.maxQuantityAllowed}
                   onQuantitySelect={val => this.props.handleQuantitySelect(val)}
                 />
