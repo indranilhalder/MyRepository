@@ -48,7 +48,10 @@ export default class ReturnSummary extends React.Component {
 
         <div className={styles.card}>
           <OrderCard
-            productImage={
+            imageUrl={
+              this.props.returnProducts &&
+              this.props.returnProducts.orderProductWsDTO &&
+              this.props.returnProducts.orderProductWsDTO[0] &&
               this.props.returnProducts.orderProductWsDTO[0].imageURL
             }
             productName={`${

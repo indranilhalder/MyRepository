@@ -8,27 +8,19 @@ import PropTypes from "prop-types";
 import { Icon } from "xelpmoc-core";
 import Input2 from "../../general/components/Input2.js";
 export default class SearchHeader extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      searchBar: false,
-      searchString: null
-    };
-  }
   onClickBack() {
     if (this.props.onClickBack) {
       this.props.onClickBack();
     }
   }
-  onSearch(val) {
+  onTypedSearch(val) {
     if (this.props.onSearch) {
       this.props.onSearch(val);
-      this.setState({ searchString: val });
     }
   }
   searchString = () => {
     if (this.props.onSearchString) {
-      this.props.onSearchString(this.state.searchString);
+      this.props.onSearchString(this.props.searchString);
     }
   };
   handleKeyUp = val => {
@@ -37,36 +29,25 @@ export default class SearchHeader extends React.Component {
     }
   };
   onClickIcon() {
-    if (this.state.searchBar) {
-      this.setState({ searchBar: false }, () => {
-        if (this.props.onSearchClick) {
-          this.props.onSearchClick(false);
-        }
-      });
-    } else {
-      this.setState({ searchBar: true }, () => {
-        if (this.props.onSearchClick) {
-          this.props.onSearchClick(true);
-        }
-      });
-    }
+    this.props.onSearchOrCloseIconClick();
   }
   render() {
     let search = searchIcon;
-    if (this.state.searchBar) {
+    if (this.props.display) {
       search = cancelIcon;
     }
     return (
       <div className={styles.base}>
         <div className={styles.InformationHeader}>
-          {this.props.isGoBack && (
-            <div
-              className={styles.backHolder}
-              onClick={() => this.onClickBack()}
-            >
-              <Icon image={iconImageURL} size={16} />
-            </div>
-          )}
+          {this.props.isGoBack &&
+            !this.props.display && (
+              <div
+                className={styles.backHolder}
+                onClick={() => this.onClickBack()}
+              >
+                <Icon image={iconImageURL} size={16} />
+              </div>
+            )}
 
           <div
             className={styles.searchHolder}
@@ -74,12 +55,12 @@ export default class SearchHeader extends React.Component {
           >
             <Icon image={search} size={16} />
           </div>
-          {!this.state.searchBar && (
+          {!this.props.display && (
             <div className={styles.searchWithText}>
               <div className={styles.textBox}>{this.props.text}</div>
             </div>
           )}
-          {this.state.searchBar && (
+          {this.props.display && (
             <div className={styles.searchWithInputRedHolder}>
               <div
                 className={styles.searchRedHolder}
@@ -91,7 +72,7 @@ export default class SearchHeader extends React.Component {
               </div>
               <div className={styles.input}>
                 <Input2
-                  onChange={val => this.onSearch(val)}
+                  onChange={val => this.onTypedSearch(val)}
                   textStyle={{ fontSize: 14 }}
                   height={30}
                   isWhite={true}

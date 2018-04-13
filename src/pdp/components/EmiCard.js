@@ -61,11 +61,15 @@ export default class EmiCard extends React.Component {
           </div>
           <div className={styles.row}>
             <div className={styles.label}>Monthly Installments</div>
-            <div className={styles.amount}>{this.state.monthlyInstallment}</div>
+            <div className={styles.amount}>{`Rs, ${
+              this.state.monthlyInstallment
+            }`}</div>
           </div>
           <div className={styles.row}>
             <div className={styles.label}>Total Interest paid to bank</div>
-            <div className={styles.amount}>{this.state.interestPayable}</div>
+            <div className={styles.amount}>{`Rs, ${
+              this.state.interestPayable
+            }`}</div>
           </div>
         </div>
       );

@@ -25,7 +25,8 @@ import {
   YES,
   YOUR_BAG,
   MY_ACCOUNT_PAGE,
-  SAVE_LIST_PAGE
+  SAVE_LIST_PAGE,
+  COUPON_COOKIE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import {
