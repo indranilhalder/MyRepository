@@ -31,6 +31,7 @@ export default class CheckoutEmi extends React.Component {
               softReservationForPayment={cardDetails =>
                 this.softReservationForPayment(cardDetails)
               }
+              displayToast={this.props.displayToast}
             />
           )}
         {!this.props.cart.emiBankDetails && (
