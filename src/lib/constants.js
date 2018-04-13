@@ -185,8 +185,11 @@ export const CATEGORIES = "Categories";
 export const CHECKOUT = "Checkout";
 export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
+export const ABOUTUS = "About Us";
 
 // COPY
+//STATIC PAGE
+export const ABOUT_US = "/aboutUs";
 
 export const REVIEW_SUBMIT_TOAST_TEXT =
   "Your review has been submitted and will be displayed after moderation";

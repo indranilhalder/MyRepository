@@ -16,10 +16,9 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    giftCardsDetails: state.profile.giftCards,
-    giftCardDetailsStatus: state.profile.giftCardDetailsStatus,
-    giftCardDetails: state.profile.giftCardDetails,
-    loadingForGiftCardDetails: state.profile.loadingForGiftCardDetails
+    aboutUs: state.staticPage.aboutUs,
+    aboutUsStatus: state.staticPage.aboutUsStatus,
+    aboutUsLoading: state.staticPage.aboutUsLoading
   };
 };
 

@@ -2,13 +2,22 @@ import React from "react";
 import styles from "./AboutUs.css";
 import PropTypes from "prop-types";
 import SimpleBannerComponent from "./SimpleBannerComponent.js";
+import { ABOUTUS } from "../../lib/constants";
 export default class AboutUs extends React.Component {
+  componentDidMount() {
+    this.props.getAboutUsDetails();
+  }
+  componentDidUpdate() {
+    this.props.setHeaderText(ABOUTUS);
+  }
   render() {
+    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.aboutUsDataHolder}>
-          {this.props.items &&
-            this.props.items.map((val, i) => {
+          {this.props.aboutUs &&
+            this.props.aboutUs.items &&
+            this.props.aboutUs.items.map((val, i) => {
               return (
                 <div className={styles.dataHolder}>
                   {val.componentName === "simpleBannerComponent" &&

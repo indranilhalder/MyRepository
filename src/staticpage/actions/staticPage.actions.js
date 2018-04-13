@@ -37,9 +37,10 @@ export function getAboutUsDetails() {
   return async (dispatch, getState, { api }) => {
     dispatch(aboutUsRequest());
     try {
-      const result = await api.get();
-      const resultJson = await result.json();
+      const result = await api.get(`${PATH}/cms/defaultpage?pageId=aboutus`);
 
+      const resultJson = await result.json();
+      console.log(resultJson);
       if (
         resultJson.status === SUCCESS ||
         resultJson.status === SUCCESS_UPPERCASE ||
