@@ -49,7 +49,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     modalStatus: state.modal.modalDisplayed,
-    cart: state.cart,
+    cartLoading: state.cart.loading,
     globalAccessTokenStatus: state.user.globalAccessTokenStatus,
     customerAccessTokenStatus: state.user.customerAccessTokenStatus,
     refreshCustomerAccessTokenStatus:
