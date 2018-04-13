@@ -399,15 +399,6 @@ class CheckOutPage extends React.Component {
         nextProps.cart.cartDetailsCNC.products
       ) {
         nextProps.cart.cartDetailsCNC.products.forEach(product => {
-          //check for delivery modes is exit or not for every pincode
-          // if we don;t have any delivery modes for any product
-          // then we ned to navigate user to mybag
-
-          if (!product.elligibleDeliveryMode) {
-            this.navigateToMyBag();
-          }
-          // end of navigate user to myBag
-
           if (
             product.elligibleDeliveryMode &&
             product.elligibleDeliveryMode.findIndex(mode => {
@@ -544,10 +535,6 @@ class CheckOutPage extends React.Component {
       this.props.location.state.isFromGiftCard
     ) {
       this.setState({ isGiftCard: true });
-      let guIdObject = new FormData();
-      guIdObject.append(CART_GU_ID, this.props.location.state.egvCartGuid);
-      this.props.getPaymentModes(guIdObject);
-      this.props.getNetBankDetails();
     } else {
       if (this.props.getCartDetailsCNC) {
         let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -568,25 +555,53 @@ class CheckOutPage extends React.Component {
         this.props.getUserAddress(
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
         );
-        if (cartDetailsLoggedInUser) {
-          let guIdObject = new FormData();
-          guIdObject.append(
-            CART_GU_ID,
-            JSON.parse(cartDetailsLoggedInUser).guid
-          );
-
-          this.props.getPaymentModes(guIdObject);
-        }
-
-        this.props.getCODEligibility();
-        this.props.getNetBankDetails();
-        if (this.props.location && this.props.location.state) {
-          this.props.getEmiBankDetails(this.props.location.state.productValue);
-        }
       }
     }
   }
 
+  getEmiBankDetails = () => {
+    if (this.props.getEmiBankDetails) {
+      this.props.getEmiBankDetails(
+        this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
+      );
+    }
+  };
+
+  getNetBankDetails = () => {
+    if (this.props.getNetBankDetails) {
+      this.props.getNetBankDetails();
+    }
+  };
+
+  getCODEligibility = () => {
+    if (this.props.getCODEligibility) {
+      this.props.getCODEligibility();
+    }
+  };
+
+  getPaymentModes = () => {
+    if (
+      this.state.isGiftCard &&
+      this.props.location &&
+      this.props.location.state &&
+      this.props.location.state.egvCartGuid
+    ) {
+      let guIdObject = new FormData();
+      guIdObject.append(CART_GU_ID, this.props.location.state.egvCartGuid);
+      this.props.getPaymentModes(guIdObject);
+      this.props.getNetBankDetails();
+    } else {
+      let cartDetailsLoggedInUser = Cookie.getCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER
+      );
+      if (cartDetailsLoggedInUser) {
+        let guIdObject = new FormData();
+        guIdObject.append(CART_GU_ID, JSON.parse(cartDetailsLoggedInUser).guid);
+
+        this.props.getPaymentModes(guIdObject);
+      }
+    }
+  };
   onSelectAddress(selectedAddress) {
     let addressSelected = find(
       this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
@@ -1020,6 +1035,10 @@ class CheckOutPage extends React.Component {
                 addGiftCard={() => this.addGiftCard()}
                 binValidationForPaytm={val => this.binValidationForPaytm(val)}
                 displayToast={message => this.props.displayToast(message)}
+                getPaymentModes={() => this.getPaymentModes()}
+                getCODEligibility={() => this.getCODEligibility()}
+                getNetBankDetails={() => this.getNetBankDetails()}
+                getEmiBankDetails={() => this.getEmiBankDetails()}
               />
             </div>
           )}

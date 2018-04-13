@@ -19,9 +19,23 @@ export default class CheckoutEmi extends React.Component {
     }
   };
 
+  getEmiBankDetails = () => {
+    if (this.props.getEmiBankDetails) {
+      this.props.getEmiBankDetails();
+    }
+  };
+
   render() {
     return (
-      <MenuDetails text="Easy monthly installments" icon={emiIcon}>
+      <MenuDetails
+        text="Easy monthly installments"
+        icon={emiIcon}
+        getEmiBankDetails={() => this.getEmiBankDetails()}
+        emiList={
+          this.props.cart.emiBankDetails &&
+          this.props.cart.emiBankDetails.bankList
+        }
+      >
         {this.props.cart.emiBankDetails &&
           this.props.cart.emiBankDetails.bankList && (
             <EmiAccordion
