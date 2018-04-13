@@ -10,11 +10,10 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import TimerCounter from "../../general/components/TimerCounter.js";
 import { Icon } from "xelpmoc-core";
 import ClockImage from "../../pdp/components/img/clockWhite.svg";
+import { convertDateTimeFromIndianToAmerican } from "../../home/dateTimeUtils.js";
 import moment from "moment";
 
 const OFFER_AND_ITEM_LIMIT = 4;
-
-const DATE_TIME_REGEX = /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})/;
 
 export default class FlashSale extends React.Component {
   componentDidUpdate() {
@@ -47,20 +46,6 @@ export default class FlashSale extends React.Component {
     this.props.history.push(urlSuffix);
   };
 
-  convertDateTimeFromIndianToAmerican = str => {
-    const match = DATE_TIME_REGEX.exec(str);
-
-    const day = match[1];
-    const month = match[2];
-    const year = match[3];
-    const hours = match[4];
-    const minutes = match[5];
-    const seconds = match[6];
-
-    const dateTimeInAmericanFormat = `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`;
-    return dateTimeInAmericanFormat;
-  };
-
   render() {
     const { feedComponentData, ...rest } = this.props;
     let items = [];
@@ -70,11 +55,11 @@ export default class FlashSale extends React.Component {
     }
 
     const startDateTime = new Date(
-      this.convertDateTimeFromIndianToAmerican(feedComponentData.startDate)
+      convertDateTimeFromIndianToAmerican(feedComponentData.startDate)
     );
 
     const endDateTime = new Date(
-      this.convertDateTimeFromIndianToAmerican(feedComponentData.endDate)
+      convertDateTimeFromIndianToAmerican(feedComponentData.endDate)
     );
 
     if (!moment(startDateTime).isValid()) {
@@ -82,6 +67,17 @@ export default class FlashSale extends React.Component {
     }
 
     if (!moment(endDateTime).isValid()) {
+      return null;
+    }
+
+    // if date time
+
+    const now = Date.now();
+
+    // if now is > start and < end, show
+    // if now is < start do not show
+    // if now is > end do not show
+    if (now > endDateTime || now < startDateTime) {
       return null;
     }
 
@@ -99,17 +95,6 @@ export default class FlashSale extends React.Component {
       offersAndItemsArray = concat(offers, items);
     } else {
       offersAndItemsArray = items;
-    }
-
-    // if date time
-
-    const now = Date.now();
-
-    // if now is > start and < end, show
-    // if now is < start do not show
-    // if now is > end do not show
-    if (now > endDateTime || now < startDateTime) {
-      return null;
     }
 
     return (
