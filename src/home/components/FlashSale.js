@@ -105,9 +105,6 @@ export default class FlashSale extends React.Component {
           background: `${feedComponentData.backgroundHexCode} url(${
             feedComponentData.backgroundImageURL
           })`
-          // background: feedComponentData.backgroundImageURL
-          //   ? `url(${feedComponentData.backgroundImageURL})`
-          //   : `${feedComponentData.backgroundHexCode}`
         }}
       >
         <div className={styles.header}>
