@@ -48,7 +48,6 @@ export default class FlashSale extends React.Component {
 
   render() {
     const { feedComponentData, ...rest } = this.props;
-    console.log(feedComponentData);
     let items = [];
 
     if (!feedComponentData.endDate || !feedComponentData.startDate) {
