@@ -49,7 +49,6 @@ const cart = (
 
     emiBankDetails: null,
     emiBankStatus: null,
-    emiBankError: null,
 
     orderSummary: null,
     orderSummaryStatus: null,
