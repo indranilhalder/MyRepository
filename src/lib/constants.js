@@ -190,3 +190,6 @@ export const EDIT_YOUR_ADDRESS = "Edit Your Address";
 
 export const REVIEW_SUBMIT_TOAST_TEXT =
   "Your review has been submitted and will be displayed after moderation";
+
+export const CDN_URL_ROOT =
+  "https://assetsuat2.tataunistore.com/medias/sys_master/pwaImg/";
