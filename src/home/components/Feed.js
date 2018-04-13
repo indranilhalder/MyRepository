@@ -90,10 +90,18 @@ const typeComponentMapping = {
 };
 
 class Feed extends Component {
-  componentWillUpdate() {
-    // check if hte user is logged in
-    // then send the name
-    this.props.setHeaderText(this.props.headerMessage);
+  componentDidUpdate() {
+    if (this.props.homeFeedData && !this.props.headerMessage) {
+      const titleObj = this.props.homeFeedData.find(data => {
+        return data.type === "Landing Page Title Component";
+      });
+      if (titleObj) {
+        this.props.setHeaderText(titleObj.title);
+      }
+    }
+    if (this.props.headerMessage) {
+      this.props.setHeaderText(this.props.headerMessage);
+    }
   }
 
   renderFeedComponent(feedDatum, i) {
@@ -147,7 +155,6 @@ class Feed extends Component {
     if (this.props.loading) {
       return this.renderLoader();
     }
-
     let propsForHeader = {};
     if (this.props.isHomeFeedPage) {
       propsForHeader = {

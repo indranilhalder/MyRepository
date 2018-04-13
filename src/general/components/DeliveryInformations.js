@@ -30,7 +30,7 @@ export default class DeliveryInformations extends React.Component {
     }
   }
   onPiq() {
-    if (this.props.onPiq) {
+    if (this.props.onPiq && this.props.isClickable) {
       this.props.onPiq();
     }
   }
@@ -47,11 +47,14 @@ export default class DeliveryInformations extends React.Component {
     if (!this.props.available) {
       typeName = `${typeName}`;
     }
+
     return (
       <div className={styles.base}>
         <div
           className={
-            !this.props.available ? styles.notAvailable : styles.dataHolder
+            this.props.available || this.props.type === COLLECT
+              ? styles.dataHolder
+              : styles.notAvailable
           }
         >
           {this.props.onSelect &&
@@ -62,7 +65,9 @@ export default class DeliveryInformations extends React.Component {
                   this.handleSelect();
                 }}
               >
-                <CheckBox selected={this.props.selected} />
+                {this.props.isClickable && (
+                  <CheckBox selected={this.props.selected} />
+                )}
               </div>
             )}
           {this.props.arrowClick &&

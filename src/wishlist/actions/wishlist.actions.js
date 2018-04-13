@@ -13,7 +13,9 @@ import * as Cookie from "../../lib/Cookie";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 import {
   setDataLayerForPdpDirectCalls,
-  SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT
+  ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART,
+  setDataLayerForCartDirectCalls,
+  SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP
 } from "../../lib/adobeUtils";
 export const GET_WISH_LIST_ITEMS_REQUEST = "GET_WISH_LIST_ITEMS_REQUEST";
 export const GET_WISH_LIST_ITEMS_SUCCESS = "GET_WISH_LIST_ITEMS_SUCCESS";
@@ -109,10 +111,7 @@ export function addProductToWishListFailure(error) {
   };
 }
 
-export function addProductToWishList(
-  productDetails,
-  setDataLayerOnSelect: false
-) {
+export function addProductToWishList(productDetails, setDataLayerType: null) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -136,8 +135,12 @@ export function addProductToWishList(
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      if (setDataLayerOnSelect) {
-        setDataLayerForPdpDirectCalls(SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT);
+      if (setDataLayerType === SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP) {
+        setDataLayerForPdpDirectCalls(
+          SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP
+        );
+      } else if (setDataLayerType === ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART) {
+        setDataLayerForCartDirectCalls(ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART);
       }
       return dispatch(addProductToWishListSuccess(productDetails));
     } catch (e) {
