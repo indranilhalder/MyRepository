@@ -3828,6 +3828,11 @@ public class CartsController extends BaseCommerceController
 						.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 
 				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, cartModel);
+				if (isPwa)
+				{
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
+					applycouponDto.setCartAmount(pricePwa);
+				}
 			}
 			else if (null != orderModel)
 			{
@@ -3835,6 +3840,11 @@ public class CartsController extends BaseCommerceController
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 
 				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
+				if (isPwa)
+				{
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
+					applycouponDto.setCartAmount(pricePwa);
+				}
 
 			}
 
@@ -3858,6 +3868,11 @@ public class CartsController extends BaseCommerceController
 						.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 
 				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, cartModel);
+				if (isPwa)
+				{
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(cartModel);
+					applycouponDto.setCartAmount(pricePwa);
+				}
 			}
 			else if (null != orderModel)
 			{
@@ -3865,6 +3880,11 @@ public class CartsController extends BaseCommerceController
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 
 				applycouponDto = mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
+				if (isPwa)
+				{
+					final PriceWsPwaDTO pricePwa = mplCartWebService.configureCartAmountPwa(orderModel);
+					applycouponDto.setCartAmount(pricePwa);
+				}
 
 			}
 		}
