@@ -16,7 +16,6 @@ import MDSpinner from "react-md-spinner";
 import HeaderContainer from "./general/containers/HeaderContainer.js";
 
 import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
-
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -59,100 +58,114 @@ import {
   CANCEL_PREFIX,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
-  REQUESTING
+  REQUESTING,
+  MY_ACCOUNT_PAGE
 } from "../src/lib/constants";
 import Loadable from "react-loadable";
+
+const Loader = () => {
+  return (
+    <div className={AppStyles.loadingIndicator}>
+      <MDSpinner />
+    </div>
+  );
+};
+
+const MyAccountWrapper = Loadable({
+  loader: () => import("./account/components/MyAccountWrapper"),
+  loading() {
+    return <Loader />;
+  }
+});
 
 const BrandLandingPageContainer = Loadable({
   loader: () => import("./blp/containers/BrandLandingPageContainer"),
   loading() {
-    return <div> Loading ... </div>;
+    return <Loader />;
   }
 });
 
 const BrandsLandingPageDefaultContainer = Loadable({
   loader: () => import("./blp/containers/BrandsLandingPageDefaultContainer"),
   loading() {
-    return <div> Loading ... </div>;
+    return <Loader />;
   }
 });
 
 const ProductListingsContainer = Loadable({
   loader: () => import("./plp/containers/ProductListingsContainer"),
   loading(error) {
-    console.log("ERROR");
-    console.log(error);
-    return <div> Loading ... </div>;
+    return <Loader />;
   }
 });
 
 const CancelOrderContainer = Loadable({
   loader: () => import("./account/containers/CancelOrderContainer"),
   loading() {
-    return <div> Loading ... </div>;
+    return <Loader />;
   }
 });
 
 const ReturnFlowContainer = Loadable({
   loader: () => import("./account/containers/ReturnFlowContainer.js"),
   loading() {
-    return <div> Loading ... </div>;
+    return <Loader />;
   }
 });
 
 const OrderDetailsContainer = Loadable({
   loader: () => import("./account/containers/OrderDetailsContainer.js"),
   loading() {
-    return <div> Loading ... </div>;
+    return <Loader />;
   }
 });
 
 const DisplayOrderSummaryContainer = Loadable({
   loader: () => import("./cart/containers/DisplayOrderSummaryContainer"),
   loading() {
-    return <div> Loading...</div>;
+    return <Loader />;
   }
 });
 
 const CheckoutAddressContainer = Loadable({
   loader: () => import("./cart/containers/CheckoutAddressContainer"),
   loading() {
-    return <div> Loading...</div>;
+    return <Loader />;
   }
 });
 
 const PlpBrandCategoryWrapperContainer = Loadable({
   loader: () => import("./plp/containers/PlpBrandCategoryWrapperContainer"),
   loading() {
-    return <div> Loading...</div>;
+    return <Loader />;
   }
 });
 
 const DeliveryModesContainer = Loadable({
   loader: () => import("./cart/containers/DeliveryModesContainer"),
   loading() {
-    return <div> Loading...</div>;
+    return <Loader />;
   }
 });
 
 const CategoriesPageContainer = Loadable({
   loader: () => import("./clp/containers/CategoriesPageContainer"),
   loading() {
-    return <div> Loading...</div>;
+    return <Loader />;
   }
 });
 
 const LoginContainer = Loadable({
   loader: () => import("./auth/containers/LoginContainer"),
   loading() {
-    return <div> Loading...</div>;
+    return <Loader />;
   }
 });
 
 const SignUpContainer = Loadable({
   loader: () => import("./auth/containers/SignUpContainer.js"),
   loading() {
-    return <div> Loading... </div>;
+    return <Loader />;
   }
 });
 
@@ -160,35 +173,35 @@ const ProductDescriptionPageWrapperContainer = Loadable({
   loader: () =>
     import("./pdp/containers/ProductDescriptionPageWrapperContainer"),
   loading() {
-    return <div> Loading...</div>;
+    return <Loader />;
   }
 });
 
 const CheckOutContainer = Loadable({
   loader: () => import("./cart/containers/CheckOutContainer"),
   loading() {
-    return <div> Loading...</div>;
+    return <Loader />;
   }
 });
 
 const CartContainer = Loadable({
   loader: () => import("./cart/containers/CartContainer"),
   loading() {
-    return <div> Loading ... </div>;
+    return <Loader />;
   }
 });
 
 const ProductReviewContainer = Loadable({
   loader: () => import("./pdp/containers/ProductReviewContainer"),
   loading() {
-    return <div> Loading... </div>;
+    return <Loader />;
   }
 });
 
 const ProductSellerContainer = Loadable({
   loader: () => import("./pdp/containers/ProductSellerContainer"),
   loading() {
-    return <div> Loading... </div>;
+    return <Loader />;
   }
 });
 
@@ -273,6 +286,7 @@ class App extends Component {
         <div className={className}>
           <HeaderContainer />
           <Switch>
+            <Route exact path={MY_ACCOUNT_PAGE} component={MyAccountWrapper} />
             <Route
               exact
               path={CATEGORY_PRODUCT_LISTINGS_WITH_PAGE}
