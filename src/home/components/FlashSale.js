@@ -3,7 +3,7 @@ import Grid from "../../general/components/Grid";
 import ProductModule from "../../general/components/ProductModule";
 import PropTypes from "prop-types";
 import styles from "./FlashSale.css";
-import concat from "lodash/concat";
+import concat from "lodash.concat";
 import { transformData } from "./utils.js";
 import Button from "../../general/components/Button.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";

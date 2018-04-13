@@ -1,5 +1,5 @@
 import React from "react";
-import cloneDeep from "lodash/cloneDeep";
+import cloneDeep from "lodash.clonedeep";
 import { Route } from "react-router-dom";
 import ReturnCliqAndPiqContainer from "../containers/ReturnCliqAndPiqContainer.js";
 

@@ -3,7 +3,7 @@ import FilterContainer from "../containers/FilterContainer";
 import ProductGrid from "./ProductGrid";
 import PlpMobileFooter from "./PlpMobileFooter";
 import styles from "./Plp.css";
-import throttle from "lodash/throttle";
+import throttle from "lodash.throttle";
 import Loader from "../../general/components/Loader";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SCROLL_CHECK_INTERVAL = 500;
@@ -117,6 +117,9 @@ export default class Plp extends React.Component {
   };
 
   render() {
+    if (this.props.loading && !this.props.isFilter) {
+      return this.renderLoader();
+    }
     return (
       this.props.productListings && (
         <div className={styles.base}>

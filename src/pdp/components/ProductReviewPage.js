@@ -15,7 +15,7 @@ import {
   SUCCESS,
   LOGIN_PATH
 } from "../../lib/constants";
-import find from "lodash/find";
+import find from "lodash.find";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
