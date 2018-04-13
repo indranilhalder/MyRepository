@@ -3266,7 +3266,6 @@ export function removeItemFromCartLoggedInFailure(error) {
 
 // Action Creator for remove Item from Cart Logged In
 export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
-  console.log("call me ");
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
