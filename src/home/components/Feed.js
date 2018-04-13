@@ -90,10 +90,15 @@ const typeComponentMapping = {
 };
 
 class Feed extends Component {
-  componentWillUpdate() {
+  componentDidUpdate() {
     // check if hte user is logged in
     // then send the name
-    this.props.setHeaderText(this.props.headerMessage);
+    if (this.props.homeFeedData && !this.props.headerMessage) {
+      this.props.setHeaderText(this.props.homeFeedData[0].title);
+    }
+    if (this.props.headerMessage) {
+      this.props.setHeaderText(this.props.headerMessage);
+    }
   }
 
   renderFeedComponent(feedDatum, i) {
@@ -147,7 +152,6 @@ class Feed extends Component {
     if (this.props.loading) {
       return this.renderLoader();
     }
-
     let propsForHeader = {};
     if (this.props.isHomeFeedPage) {
       propsForHeader = {
