@@ -251,6 +251,9 @@ export default class PdpApparel extends React.Component {
                 />
               </React.Fragment>
             )}
+            <div className={styles.monogrammingText}>
+              Customisation Available - Contact seller for Free Monogramming
+            </div>
           </div>
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.pinCode ? (
