@@ -340,16 +340,20 @@ please try another pincode">
                 <React.Fragment>
                   <Accordion text="Product Details" headerFontSize={16}>
                     {productData.classifications.map(val => {
-                      return val.specifications.map(value => {
-                        return (
-                          <React.Fragment>
-                            <div className={styles.sideHeader}>{value.key}</div>
-                            <div className={styles.sideContent}>
-                              {value.value}
-                            </div>
-                          </React.Fragment>
-                        );
-                      });
+                      if (val.specifications) {
+                        return val.specifications.map(value => {
+                          return (
+                            <React.Fragment>
+                              <div className={styles.sideHeader}>
+                                {value.key}
+                              </div>
+                              <div className={styles.sideContent}>
+                                {value.value}
+                              </div>
+                            </React.Fragment>
+                          );
+                        });
+                      }
                     })}
                   </Accordion>
                   {productData.styleNote && (
