@@ -15,7 +15,7 @@ import {
   IS_NEW,
   IS_OFFER_EXISTING
 } from "../../lib/constants";
-import { setDataLayerForPlpDirectCalls } from "../../lib/adobeUtils";
+
 export default class ProductModule extends React.Component {
   onDownload = () => {
     if (this.props.onDownload) {
@@ -33,7 +33,6 @@ export default class ProductModule extends React.Component {
     }
 
     if (this.props.onClick) {
-      setDataLayerForPlpDirectCalls(this.props);
       this.props.onClick(urlSuffix);
     }
   };

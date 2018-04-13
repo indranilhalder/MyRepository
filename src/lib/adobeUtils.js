@@ -494,7 +494,7 @@ function getDigitalDataForPlp(type, response) {
     });
   }
 
-  const hierarchy = getHierarchyArray(response.seo.breadcrumbs);
+  const hierarchy = getHierarchyArray(response);
   if (hierarchy) {
     Object.assign(data.page, {
       display: {
