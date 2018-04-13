@@ -126,8 +126,6 @@ export function setDataLayer(type, response, icid, icidType) {
 }
 
 function getDigitalDataForPdp(type, pdpResponse) {
-  console.log(pdpResponse);
-
   const data = {
     cpj: {
       product: {
@@ -393,7 +391,6 @@ export function setDataLayerForPdpDirectCalls(type, layerData: null) {
   window.digitalData = data;
 }
 function getDigitalDataForPlp(type, response) {
-  console.log(response);
   let data = {
     page: {
       category: {
