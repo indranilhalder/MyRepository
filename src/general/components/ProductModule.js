@@ -15,6 +15,7 @@ import {
   IS_NEW,
   IS_OFFER_EXISTING
 } from "../../lib/constants";
+
 export default class ProductModule extends React.Component {
   onDownload = () => {
     if (this.props.onDownload) {
@@ -66,6 +67,7 @@ export default class ProductModule extends React.Component {
               isOfferExisting={this.props.isOfferExisting}
               onlineExclusive={this.props.onlineExclusive}
               outOfStock={this.props.outOfStock}
+              newProduct={this.props.newProduct}
             />
           </div>
         </div>

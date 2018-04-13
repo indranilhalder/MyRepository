@@ -9,15 +9,16 @@ import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
 import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
+import ProductFeature from "./ProductFeature";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
 import PdpDeliveryModes from "./PdpDeliveryModes";
 import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
-import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import Accordion from "../../general/components/Accordion.js";
 import Logo from "../../general/components/Logo.js";
-import Carousel from "../../general/components/Carousel.js";
+import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import ProductModule from "../../general/components/ProductModule.js";
 import Button from "../../general/components/Button.js";
 import styles from "./ProductDescriptionPage.css";
@@ -324,9 +325,64 @@ please try another pincode">
               numberOfReview={productData.numberOfReviews}
             />
           </div>
-          {productData.classifications && (
+          {productData.rootCategory !== "Watches" && (
+            <React.Fragment>
+              {productData.classifications && (
+                <div className={styles.details}>
+                  <ProductFeatures features={productData.classifications} />
+                </div>
+              )}
+            </React.Fragment>
+          )}
+          {productData.rootCategory === "Watches" && (
             <div className={styles.details}>
-              <ProductFeatures features={productData.classifications} />
+              {productData.classifications && (
+                <React.Fragment>
+                  <Accordion text="Product Details" headerFontSize={16}>
+                    {productData.classifications.map(val => {
+                      if (val.specifications) {
+                        return val.specifications.map(value => {
+                          return (
+                            <React.Fragment>
+                              <div className={styles.sideHeader}>
+                                {value.key}
+                              </div>
+                              <div className={styles.sideContent}>
+                                {value.value}
+                              </div>
+                            </React.Fragment>
+                          );
+                        });
+                      }
+                    })}
+                  </Accordion>
+                  {productData.styleNote && (
+                    <ProductFeature
+                      heading="Style Note"
+                      content={productData.styleNote}
+                    />
+                  )}
+                  {productData.warranty &&
+                    productData.warranty.length > 0 && (
+                      <ProductFeature
+                        heading="Warranty"
+                        content={productData.warranty[0]}
+                      />
+                    )}
+                  {productData.knowMore && (
+                    <Accordion text="Know More" headerFontSize={16}>
+                      {productData.knowMore &&
+                        productData.knowMore.map(val => {
+                          return (
+                            <div className={styles.list}>
+                              {val.knowMoreItem}
+                            </div>
+                          );
+                        })}
+                    </Accordion>
+                  )}
+                </React.Fragment>
+              )}
             </div>
           )}
           {productData.APlusContent && (

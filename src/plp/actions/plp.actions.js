@@ -3,6 +3,7 @@ import {
   showSecondaryLoader,
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
+import { setDataLayer, ADOBE_PLP_TYPE } from "../../lib/adobeUtils";
 export const PRODUCT_LISTINGS_REQUEST = "PRODUCT_LISTINGS_REQUEST";
 export const PRODUCT_LISTINGS_SUCCESS = "PRODUCT_LISTINGS_SUCCESS";
 export const PRODUCT_LISTINGS_FAILURE = "PRODUCT_LISTINGS_FAILURE";
@@ -91,6 +92,7 @@ export function getProductListings(
       if (resultJson.error) {
         throw new Error(`${resultJson.error}`);
       }
+      setDataLayer(ADOBE_PLP_TYPE, resultJson);
       if (paginated) {
         if (resultJson.searchresult) {
           dispatch(getProductListingsPaginatedSuccess(resultJson, true));

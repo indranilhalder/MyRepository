@@ -32,35 +32,41 @@ export default class ColourSelector extends React.Component {
         return val.colorlink;
       });
 
-    return (
-      <div
-        className={this.props.noBackground ? styles.noBackground : styles.base}
-      >
-        <Carousel
-          elementWidthMobile="auto"
-          headerComponent={
-            <div className={styles.header}>
-              Colour{" "}
-              <span className={styles.colourName}>
-                {this.state.displayColour}
-              </span>
-            </div>
+    if (colors.length !== 0) {
+      return (
+        <div
+          className={
+            this.props.noBackground ? styles.noBackground : styles.base
           }
         >
-          {colors.map((datum, i) => {
-            return (
-              <ColourSelect
-                key={i}
-                colour={datum.colorHexCode}
-                value={datum.color}
-                selected={datum.color === selectedColour}
-                onSelect={() => this.updateColour(datum.colorurl)}
-              />
-            );
-          })}
-        </Carousel>
-      </div>
-    );
+          <Carousel
+            elementWidthMobile="auto"
+            headerComponent={
+              <div className={styles.header}>
+                Colour{" "}
+                <span className={styles.colourName}>
+                  {this.state.displayColour}
+                </span>
+              </div>
+            }
+          >
+            {colors.map((datum, i) => {
+              return (
+                <ColourSelect
+                  key={i}
+                  colour={datum.colorHexCode}
+                  value={datum.color}
+                  selected={datum.color === selectedColour}
+                  onSelect={() => this.updateColour(datum.colorurl)}
+                />
+              );
+            })}
+          </Carousel>
+        </div>
+      );
+    } else {
+      return null;
+    }
   }
 }
 ColourSelector.propTypes = {
