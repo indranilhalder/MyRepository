@@ -94,7 +94,12 @@ class Feed extends Component {
     // check if hte user is logged in
     // then send the name
     if (this.props.homeFeedData && !this.props.headerMessage) {
-      this.props.setHeaderText(this.props.homeFeedData[0].title);
+      const titleObj = this.props.homeFeedData.find(data => {
+        return data.type === "Landing Page Title Component";
+      });
+      if (titleObj) {
+        this.props.setHeaderText(titleObj.title);
+      }
     }
     if (this.props.headerMessage) {
       this.props.setHeaderText(this.props.headerMessage);
@@ -149,6 +154,7 @@ class Feed extends Component {
   }
 
   render() {
+    console.log(this.props);
     if (this.props.loading) {
       return this.renderLoader();
     }
