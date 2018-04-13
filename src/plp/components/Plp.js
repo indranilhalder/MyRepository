@@ -127,7 +127,7 @@ export default class Plp extends React.Component {
           </div>
           <FilterContainer
             backPage={this.backPage}
-            showFilter={this.props.isFilterOpen}
+            isFilterOpen={this.props.isFilterOpen}
             onApply={this.onApply}
             onClear={this.onClear}
             onL3CategorySelect={this.onL3CategorySelect}

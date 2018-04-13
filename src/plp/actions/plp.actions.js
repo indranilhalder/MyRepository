@@ -20,8 +20,10 @@ export const HIDE_FILTER = "HIDE_FILTER";
 export const SET_FILTER_SELECTED_DATA = "SET_FILTER_SELECTED_DATA";
 export const RESET_FILTER_SELECTED_DATA = "RESET_FILTER_SELECTED_DATA";
 
-export const SET_CLEAR_URL = "SET_CLEAR_URL";
-export const SET_CLEAR_URL_TO_NULL = "SET_CLEAR_URL_TO_NULL";
+export const SET_URL_TO_RETURN_TO_AFTER_CLEAR =
+  "SET_URL_TO_RETURN_TO_AFTER_CLEAR";
+export const SET_URL_TO_RETURN_TO_AFTER_CLEAR_TO_NULL =
+  "SET_URL_TO_RETURN_TO_AFTER_CLEAR_TO_NULL";
 
 export const UPDATE_FACETS = "UPDATE_FACETS";
 
@@ -43,14 +45,14 @@ export function resetFilterSelectedData() {
 
 export function setClearUrl(url) {
   return {
-    type: SET_CLEAR_URL,
+    type: SET_URL_TO_RETURN_TO_AFTER_CLEAR,
     urlToReturnToAfterClear: url
   };
 }
 
 export function setClearUrlToNull() {
   return {
-    type: SET_CLEAR_URL_TO_NULL
+    type: SET_URL_TO_RETURN_TO_AFTER_CLEAR_TO_NULL
   };
 }
 

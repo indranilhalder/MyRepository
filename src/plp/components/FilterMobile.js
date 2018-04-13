@@ -82,7 +82,7 @@ export default class FilterMobile extends React.Component {
     return (
       <React.Fragment>
         <div
-          className={this.props.showFilter ? styles.filterOpen : styles.base}
+          className={this.props.isFilterOpen ? styles.filterOpen : styles.base}
         >
           <div className={styles.pageHeader} />
           <div className={styles.tabHolder}>
@@ -165,7 +165,9 @@ export default class FilterMobile extends React.Component {
           </div>
         </div>
         <div
-          className={this.props.showFilter ? styles.footerOpen : styles.footer}
+          className={
+            this.props.isFilterOpen ? styles.footerOpen : styles.footer
+          }
         >
           <div className={styles.buttonHolder}>
             <div className={styles.button} onClick={this.props.onClear}>

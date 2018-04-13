@@ -29,11 +29,11 @@ const productListings = (
         filterTabIndex: 0,
         isCategorySelected: true
       });
-    case plpActions.SET_CLEAR_URL:
+    case plpActions.SET_URL_TO_RETURN_TO_AFTER_CLEAR:
       return Object.assign({}, state, {
         urlToReturnToAfterClear: action.urlToReturnToAfterClear
       });
-    case plpActions.SET_CLEAR_URL_TO_NULL:
+    case plpActions.SET_URL_TO_RETURN_TO_AFTER_CLEAR_TO_NULL:
       return Object.assign({}, state, {
         urlToReturnToAfterClear: null
       });
