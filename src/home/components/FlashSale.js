@@ -10,6 +10,7 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import TimerCounter from "../../general/components/TimerCounter.js";
 import { Icon } from "xelpmoc-core";
 import ClockImage from "../../pdp/components/img/clockWhite.svg";
+import { convertDateTimeFromIndianToAmerican } from "../../home/dateTimeUtils.js";
 import moment from "moment";
 
 const OFFER_AND_ITEM_LIMIT = 4;
@@ -53,29 +54,21 @@ export default class FlashSale extends React.Component {
       return null;
     }
 
-    if (feedComponentData.items) {
-      items = feedComponentData.items.map(transformData);
-    }
-
-    let offersAndItemsArray;
-    if (feedComponentData.offers) {
-      const offers = feedComponentData.offers.map(transformData);
-      offersAndItemsArray = concat(offers, items);
-    } else {
-      offersAndItemsArray = items;
-    }
-
-    // WE do this because new Date(Datestr) gives back date time in the american format, but the string is in non-american format.
-    // So we need to do a diff of the correct date.
-
     const startDateTime = new Date(
-      moment(new Date(feedComponentData.startDate)).format(
-        "MM/DD/YYYY HH:mm:ss"
-      )
+      convertDateTimeFromIndianToAmerican(feedComponentData.startDate)
     );
+
     const endDateTime = new Date(
-      moment(new Date(feedComponentData.endDate)).format("MM/DD/YYYY HH:mm:ss")
+      convertDateTimeFromIndianToAmerican(feedComponentData.endDate)
     );
+
+    if (!moment(startDateTime).isValid()) {
+      return null;
+    }
+
+    if (!moment(endDateTime).isValid()) {
+      return null;
+    }
 
     // if date time
 
@@ -88,13 +81,29 @@ export default class FlashSale extends React.Component {
       return null;
     }
 
+    if (feedComponentData.items) {
+      items = feedComponentData.items.map(transformData);
+    }
+
+    // Check for date validation
+
+    // feedComponentData.startDate = "13/04/2018 25:40:00";
+
+    let offersAndItemsArray;
+    if (feedComponentData.offers) {
+      const offers = feedComponentData.offers.map(transformData);
+      offersAndItemsArray = concat(offers, items);
+    } else {
+      offersAndItemsArray = items;
+    }
+
     return (
       <div
         className={styles.base}
         style={{
-          backgroundImage: feedComponentData.backgroundImageURL
-            ? `url(${feedComponentData.backgroundImageURL})`
-            : `${feedComponentData.backgroundHexCode}`
+          background: `${feedComponentData.backgroundHexCode} url(${
+            feedComponentData.backgroundImageURL
+          })`
         }}
       >
         <div className={styles.header}>
@@ -105,7 +114,7 @@ export default class FlashSale extends React.Component {
                 <Icon image={ClockImage} size={20} />
               </div>
               <div className={styles.countDownHolder}>
-                <TimerCounter endTime={feedComponentData.endDate} />
+                <TimerCounter endTime={endDateTime} />
               </div>
             </div>
           </div>

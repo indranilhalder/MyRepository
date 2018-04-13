@@ -19,6 +19,7 @@ export default class PdfFooter extends React.Component {
             type={WISHLIST_FOOTER_BUTTON_TYPE}
             productListingId={this.props.productListingId}
             winningUssID={this.props.winningUssID}
+            setDataLayerOnSelect={true} // this is using for setting data layer on pdp page
           />
         </div>
         <div className={styles.footerButtonHolder}>

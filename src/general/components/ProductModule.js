@@ -66,6 +66,7 @@ export default class ProductModule extends React.Component {
               isOfferExisting={this.props.isOfferExisting}
               onlineExclusive={this.props.onlineExclusive}
               outOfStock={this.props.outOfStock}
+              newProduct={this.props.newProduct}
             />
           </div>
         </div>
