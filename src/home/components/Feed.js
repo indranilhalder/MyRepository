@@ -91,8 +91,6 @@ const typeComponentMapping = {
 
 class Feed extends Component {
   componentDidUpdate() {
-    // check if hte user is logged in
-    // then send the name
     if (this.props.homeFeedData && !this.props.headerMessage) {
       const titleObj = this.props.homeFeedData.find(data => {
         return data.type === "Landing Page Title Component";
@@ -154,7 +152,6 @@ class Feed extends Component {
   }
 
   render() {
-    console.log(this.props);
     if (this.props.loading) {
       return this.renderLoader();
     }
