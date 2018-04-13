@@ -618,15 +618,16 @@ class CheckOutPage extends React.Component {
   }
 
   availabilityOfUserCoupon = () => {
-    let couponCookie = Cookie.getCookie(COUPON_COOKIE);
-    let cartDetailsCouponDiscount = this.props.cart.cartDetailsCNC.cartAmount
-      .couponDiscountAmount;
+    if (!this.state.isGiftCard) {
+      let couponCookie = Cookie.getCookie(COUPON_COOKIE);
+      let cartDetailsCouponDiscount = this.props.cart.cartDetailsCNC.cartAmount
+        .couponDiscountAmount;
 
-    if (couponCookie && !cartDetailsCouponDiscount) {
-      this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
-      return false;
+      if (couponCookie && !cartDetailsCouponDiscount) {
+        this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
+        return false;
+      }
     }
-
     return true;
   };
   handleSubmit = () => {
@@ -923,6 +924,7 @@ class CheckOutPage extends React.Component {
             hideSecondaryLoader={this.props.hideSecondaryLoader}
             loading={this.props.cart.loading}
             onChange={val => this.onChange(val)}
+            displayToast={message => this.props.displayToast(message)}
           />
         </div>
       );
