@@ -52,8 +52,6 @@ export default class FilterMobile extends React.Component {
   };
 
   onL3Click = val => {
-    console.log("ON L3 CLICK");
-    console.log(val);
     this.onCategorySelect(val, false);
   };
 

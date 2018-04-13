@@ -16,8 +16,6 @@ export default class Plp extends React.Component {
       const pathName = this.props.location.pathname;
       const search = this.props.location.search;
       const url = `${pathName}${search}`;
-      console.log("SET CLEAR URL");
-      console.log(url);
       this.props.setClearUrl(url);
       this.props.showFilter();
     }

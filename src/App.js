@@ -169,25 +169,6 @@ class App extends Component {
     }
   }
 
-  // shouldComponentUpdate(nextProps) {
-  //   const props = this.props;
-  //   if (
-  //     props.modalStatus !== nextProps.modalStatus ||
-  //     props.cartLoading !== nextProps.cartLoading ||
-  //     props.globalAccessTokenStatus !== nextProps.globalAccessTokenStatus ||
-  //     props.customerAccessTokenStatus !== nextProps.customerAccessTokenStatus ||
-  //     props.refreshCustomerAccessTokenStatus !==
-  //       nextProps.refreshCustomerAccessTokenStatus ||
-  //     props.cartIdForLoggedInUserStatus !==
-  //       nextProps.cartIdForLoggedInUserStatus ||
-  //     props.cartIdForAnonymousUserStatus !==
-  //       nextProps.cartIdForAnonymousUserStatus ||
-  //     props.redirectToAfterAuthUrl !== nextProps.redirectToAfterAuthUrl
-  //   ) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
   renderLoader() {
     return (
       <div className={AppStyles.loadingIndicator}>
