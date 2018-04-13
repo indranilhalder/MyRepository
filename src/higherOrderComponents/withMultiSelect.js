@@ -9,6 +9,7 @@ export default function withMultiSelect(Component, ownProps) {
     }
     selectItem(val, i) {
       let selected = this.state.selected;
+
       if (selected.includes(val)) {
         selected = selected.filter(label => val !== label);
       } else {
