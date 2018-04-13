@@ -16,7 +16,7 @@ class ConnectKnowMore extends React.Component {
           this.handleClick();
         }}
       >
-        know more
+        {this.props.btnText}
       </div>
     );
   }
