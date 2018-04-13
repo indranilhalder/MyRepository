@@ -10,11 +10,16 @@ export default class FaqPage extends React.Component {
             return (
               <div>
                 {val.componentName === "cmsParagraphComponent" &&
-                  val.cmsParagraphComponent && (
-                    <div className={styles.header}>
-                      {val.cmsParagraphComponent.content}
-                    </div>
+                  !val.cmsParagraphComponent.content.includes(
+                    "collapsible-panels"
+                  ) && (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: val.cmsParagraphComponent.content
+                      }}
+                    />
                   )}
+
                 {val.componentName === "accountNavigationComponent" &&
                   val.accountNavigationComponent && (
                     <div className={styles.navigationHolder}>
@@ -33,6 +38,18 @@ export default class FaqPage extends React.Component {
                         }}
                       />
                     </div>
+                  )}
+                {val.componentName === "cmsParagraphComponent" &&
+                  val.cmsParagraphComponent.content.includes(
+                    "collapsible-panels"
+                  ) && (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: val.cmsParagraphComponent.content.search(
+                          "collapsible-panels"
+                        )
+                      }}
+                    />
                   )}
               </div>
             );
