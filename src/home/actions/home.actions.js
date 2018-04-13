@@ -10,11 +10,7 @@ import {
 } from "../../lib/constants";
 import each from "lodash/each";
 import delay from "lodash/delay";
-import {
-  MSD_WIDGET_LIST,
-  MSD_WIDGET_PLATFORM,
-  MSD_API_KEY
-} from "../../lib/config.js";
+import { MSD_WIDGET_PLATFORM } from "../../lib/config.js";
 import { setDataLayer, ADOBE_HOME_TYPE } from "../../lib/adobeUtils.js";
 import * as Cookie from "../../lib/Cookie";
 
@@ -320,7 +316,13 @@ export function homeFeed(brandIdOrCategoryId: null) {
       }
       let parsedResultJson = JSON.parse(resultJson.content);
       parsedResultJson = parsedResultJson.items;
-      setDataLayer(ADOBE_HOME_TYPE);
+
+      setDataLayer(
+        ADOBE_HOME_TYPE,
+        null,
+        getState().icid.value,
+        getState().icid.icidType
+      );
       dispatch(homeFeedSuccess(parsedResultJson, feedTypeRequest));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));

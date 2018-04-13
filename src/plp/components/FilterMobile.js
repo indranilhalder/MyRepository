@@ -91,18 +91,25 @@ export default class FilterMobile extends React.Component {
   };
   render() {
     const { facetData, facetdatacategory } = this.props;
-    let filteredFacetData = facetData[this.state.filterSelectedIndex].values;
-    if (facetData[this.state.filterSelectedIndex].key === BRAND) {
-      filteredFacetData = facetData[
-        this.state.filterSelectedIndex
-      ].values.filter(val => {
-        return this.state.brandSearchString === ""
-          ? val
-          : val.name
-              .toLowerCase()
-              .includes(this.state.brandSearchString.toLowerCase());
-      });
+    let filteredFacetData = null;
+    if (facetData) {
+      filteredFacetData = facetData[this.state.filterSelectedIndex].values;
+      if (
+        facetData &&
+        facetData[this.state.filterSelectedIndex].key === BRAND
+      ) {
+        filteredFacetData = facetData[
+          this.state.filterSelectedIndex
+        ].values.filter(val => {
+          return this.state.brandSearchString === ""
+            ? val
+            : val.name
+                .toLowerCase()
+                .includes(this.state.brandSearchString.toLowerCase());
+        });
+      }
     }
+
     return (
       <React.Fragment>
         <div
@@ -165,22 +172,24 @@ export default class FilterMobile extends React.Component {
                   {facetData[this.state.filterSelectedIndex].key === BRAND && (
                     <div className={styles.search}>
                       <SearchInput
-                        placeholder="Search brands"
+                        placeholder="Search by brands"
                         onChange={val => this.onBrandSearch(val)}
                       />
                     </div>
                   )}
-                  {filteredFacetData.map((val, i) => {
-                    return (
-                      <FilterSelect
-                        onClick={this.onFilterClick}
-                        selected={val.selected}
-                        hexColor={val.hexColor}
-                        label={val.name}
-                        url={val.url}
-                      />
-                    );
-                  })}
+                  {filteredFacetData &&
+                    filteredFacetData.map((val, i) => {
+                      return (
+                        <FilterSelect
+                          onClick={this.onFilterClick}
+                          selected={val.selected}
+                          hexColor={val.hexColor}
+                          label={val.name}
+                          count={val.count}
+                          url={val.url}
+                        />
+                      );
+                    })}
                 </React.Fragment>
               )}
             </div>
@@ -191,7 +200,7 @@ export default class FilterMobile extends React.Component {
         >
           <div className={styles.buttonHolder}>
             <div className={styles.button} onClick={() => this.onClear()}>
-              Clear
+              Reset
             </div>
           </div>
           <div className={styles.buttonHolder}>

@@ -4,21 +4,28 @@ import AddToWishListButton from "../components/AddToWishListButton";
 import { addProductToWishList } from "../actions/wishlist.actions";
 import { SUCCESS } from "../../lib/constants";
 import { withRouter } from "react-router-dom";
+import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 
 const toastMessageOnSuccessAddToWishlist = "Added";
 
 const toastMessageOnAlreadyInWishlist = "Already in wishlist";
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     addProductToWishList: async productObj => {
-      const wishlistResponse = await dispatch(addProductToWishList(productObj));
+      const wishlistResponse = await dispatch(
+        addProductToWishList(productObj, ownProps.setDataLayerOnSelect)
+      );
       if (wishlistResponse.status === SUCCESS) {
         dispatch(displayToast(toastMessageOnSuccessAddToWishlist));
       }
     },
     displayToast: () => {
       dispatch(displayToast(toastMessageOnAlreadyInWishlist));
+    },
+
+    setUrlToRedirectToAfterAuth: url => {
+      dispatch(setUrlToRedirectToAfterAuth(url));
     }
   };
 };

@@ -3,11 +3,20 @@ const auth = (
   state = {
     authCallsInProcess: false,
     authCallsIsSucceed: false,
-    error: null
+    error: null,
+    redirectToAfterAuthUrl: null
   },
   action
 ) => {
   switch (action.type) {
+    case authActions.SET_URL_TO_REDIRECT_TO_AFTER_AUTH:
+      return Object.assign({}, state, {
+        redirectToAfterAuthUrl: action.url
+      });
+    case authActions.CLEAR_URL_TO_REDIRECT_TO_AFTER_AUTH:
+      return Object.assign({}, state, {
+        redirectToAfterAuthUrl: null
+      });
     case authActions.ALL_AUTH_CALLS_REQUEST:
       return Object.assign({}, state, {
         status: action.status,

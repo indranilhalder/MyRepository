@@ -24,12 +24,18 @@ export default class CheckoutNetBanking extends React.Component {
   };
 
   render() {
-    let validNetBankingDetails = filter(
-      this.props.cart.netBankDetails.bankList,
-      bank => {
-        return bank.isAvailable === "true";
-      }
-    );
+    let validNetBankingDetails;
+    if (
+      this.props.cart.netBankDetails &&
+      this.props.cart.netBankDetails.bankList
+    ) {
+      validNetBankingDetails = filter(
+        this.props.cart.netBankDetails.bankList,
+        bank => {
+          return bank.isAvailable === "true";
+        }
+      );
+    }
 
     return (
       <ManueDetails text="Net banking" icon={netBankingIcon}>

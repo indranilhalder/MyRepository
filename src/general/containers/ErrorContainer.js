@@ -73,7 +73,8 @@ const mapStateToProps = state => {
     jusPayTokenizeError: state.cart.jusPayTokenizeError,
     createJusPayOrderError: state.cart.createJusPayOrderError,
     getUserAddressError: state.cart.getUserAddressError,
-    netBankDetailsError: state.cart.netBankDetailsError
+    netBankDetailsError: state.cart.netBankDetailsError,
+    updateProfileError: state.profile.updateProfileError
   };
 };
 

@@ -6,7 +6,9 @@ import WriteReview from "./WriteReview";
 import PropTypes from "prop-types";
 import RatingHolder from "./RatingHolder";
 import PdpFrame from "./PdpFrame";
+import throttle from "lodash/throttle";
 import { Redirect } from "react-router-dom";
+import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
 import {
   MOBILE_PDP_VIEW,
   PRODUCT_REVIEWS_PATH_SUFFIX,
@@ -26,23 +28,80 @@ import {
 } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
 const PRODUCT_QUANTITY = "1";
+
 class ProductReviewPage extends Component {
-  state = {
-    visible: false
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: false,
+      sort: "byDate",
+      orderBy: "asc"
+    };
+    this.filterOptions = [
+      { label: "Oldest First", value: "byDate_asc" },
+      { label: "Newest First", value: "byDate_desc" },
+      { label: "Negative First", value: "byRating_asc" },
+      { label: "Positive First", value: "byRating_desc" }
+    ];
+  }
+
+  handleScroll = () => {
+    return throttle(() => {
+      if (
+        this.props.reviews &&
+        this.props.reviews.pageNumber + 1 < this.props.reviews.totalNoOfPages
+      ) {
+        const windowHeight =
+          "innerHeight" in window
+            ? window.innerHeight
+            : document.documentElement.offsetHeight;
+        const body = document.body;
+        const html = document.documentElement;
+        const docHeight = Math.max(
+          body.scrollHeight,
+          body.offsetHeight,
+          html.clientHeight,
+          html.scrollHeight,
+          html.offsetHeight
+        );
+        const windowBottom = windowHeight + window.pageYOffset;
+        if (windowBottom >= docHeight) {
+          window.scrollBy(0, -200);
+          this.props.getProductReviews(
+            this.props.match.params[0],
+            this.props.reviews.pageNumber + 1,
+            this.state.orderBy,
+            this.state.sort
+          );
+        }
+      }
+    }, 2000);
   };
 
   componentDidMount() {
+    this.throttledScroll = this.handleScroll();
+    window.addEventListener("scroll", this.throttledScroll);
     if (!this.props.productDetails) {
       this.props.getProductDescription(this.props.match.params[0]);
     }
-    this.props.getProductReviews(this.props.match.params[0]);
+    this.props.getProductReviews(
+      this.props.match.params[0],
+      0,
+      this.state.orderBy,
+      this.state.sort
+    );
+  }
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.throttledScroll);
   }
 
   reviewSection = () => {
-    if (this.state.visible === false) {
-      this.setState({ visible: true });
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (!userDetails || !customerCookie) {
+      this.props.history.push(LOGIN_PATH);
     } else {
-      this.setState({ visible: false });
+      this.setState(prevState => ({ visible: !prevState.visible }));
     }
   };
 
@@ -128,15 +187,26 @@ class ProductReviewPage extends Component {
       this.setState({ visible: false });
     }
   }
-  navigateToLogin() {
-    return <Redirect to={LOGIN_PATH} />;
-  }
+
+  changeFilterValues = val => {
+    let filterValues = val.split("_");
+    this.setState({ sort: filterValues[0], orderBy: filterValues[1] });
+
+    this.props.getProductReviews(
+      this.props.match.params[0],
+      0,
+      filterValues[1],
+      filterValues[0]
+    );
+  };
+
   render() {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    if (!userDetails || !customerCookie) {
-      return this.navigateToLogin();
+    if (this.props.loadingForAddProduct || this.props.loading) {
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
     }
+
     if (this.props.productDetails) {
       const mobileGalleryImages =
         this.props.productDetails &&
@@ -163,10 +233,14 @@ class ProductReviewPage extends Component {
                 productName={this.props.productDetails.brandName}
                 productMaterial={this.props.productDetails.productName}
                 price={
+                  this.props.productDetails &&
+                  this.props.productDetails.winningSellerPrice &&
                   this.props.productDetails.winningSellerPrice
                     .formattedValueNoDecimal
                 }
                 discountPrice={
+                  this.props.productDetails &&
+                  this.props.productDetails.mrpPrice &&
                   this.props.productDetails.mrpPrice.formattedValueNoDecimal
                 }
                 averageRating={this.props.productDetails.averageRating}
@@ -174,14 +248,30 @@ class ProductReviewPage extends Component {
               />
               <RatingHolder ratingData={this.props.ratingData} />
             </div>
-            <div className={styles.reviewHolder}>
+            <div className={styles.dropDownHolder}>
+              <div className={styles.dropDownBox}>
+                <SelectBoxMobile
+                  theme="hollowBox"
+                  label="Oldest First"
+                  onChange={changedValue =>
+                    this.changeFilterValues(changedValue)
+                  }
+                  options={this.filterOptions}
+                  textStyle={{ fontSize: 14 }}
+                />
+              </div>
               <div className={styles.reviewText} onClick={this.reviewSection}>
                 {WRITE_REVIEW_TEXT}
               </div>
+            </div>
+            <div className={styles.reviewHolder}>
               {this.renderReviewSection()}
             </div>
             {this.props.reviews && (
-              <ReviewList reviewList={this.props.reviews.reviews} />
+              <ReviewList
+                reviewList={this.props.reviews.reviews}
+                totalNoOfReviews={this.props.reviews.totalNoOfPages}
+              />
             )}
           </div>
         </PdpFrame>

@@ -7,27 +7,72 @@ export default class SearchPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showResults: false
+      showResults: false,
+      showSearchBar: false,
+      searchString: null
     };
   }
 
-  handleSearchClick(val) {
-    this.setState({ showResults: val });
+  onSearchOrCloseIconClick = () => {
+    const showResults = this.state.showResults;
+    this.props.clearSearchResults();
+    this.setState({
+      showResults: !showResults,
+      searchString: null,
+      showSearchBar: !this.state.showSearchBar
+    });
+  };
+
+  handleBrandClick(webURL) {
+    const brandCode = `${webURL}`.replace(TATA_CLIQ_ROOT, "$1");
+    const searchQuery = this.state.searchString;
+    this.props.clearSearchResults();
+    this.setState({
+      showResults: false,
+      searchString: null,
+      showSearchBar: false
+    });
+    const url = `/search/?searchCategory=all&text=${searchQuery}:relevance:brand:${brandCode}`;
+    this.props.history.push(url, {
+      isFilter: false
+    });
   }
 
   handleCategoryClick(webURL) {
-    const urlSuffix = `c-${webURL.toLowerCase()}`.replace(TATA_CLIQ_ROOT, "$1");
-    this.props.history.push(urlSuffix);
+    const categoryCode = `${webURL}`.replace(TATA_CLIQ_ROOT, "$1");
+    const searchQuery = this.state.searchString;
+    const url = `/search/?searchCategory=all&text=${searchQuery}:relevance:category:${categoryCode}`;
+    this.props.clearSearchResults();
+    this.setState({
+      showResults: false,
+      searchString: null,
+      showSearchBar: false
+    });
+
+    this.props.history.push(url, {
+      isFilter: false
+    });
   }
-  handleSearch(val) {
+  handleSearch(val, e) {
     if (this.props.getSearchResults) {
+      this.setState({ searchString: val });
       this.props.getSearchResults(val);
     }
   }
   handleBackClick() {
-    if (this.props.onBack) {
-      this.props.onBack();
+    if (this.props.canGoBack) {
+      this.props.canGoBack();
     }
+  }
+  handleOnSearchString(searchString) {
+    this.props.history.push(
+      `/search/?searchCategory=all&text=${searchString}`,
+      {
+        isFilter: false
+      }
+    );
+    this.props.clearSearchResults();
+    this.setState({ showResults: false, searchString, showSearchBar: false });
   }
   render() {
     const data = this.props.searchResult;
@@ -35,15 +80,17 @@ export default class SearchPage extends React.Component {
       <div className={styles.base}>
         <div className={styles.searchBar}>
           <SearchHeader
-            onSearchClick={val => {
-              this.handleSearchClick(val);
-            }}
+            onSearchOrCloseIconClick={this.onSearchOrCloseIconClick}
             onSearch={val => this.handleSearch(val)}
             onClickBack={() => {
               this.handleBackClick();
             }}
-            canGoBack={this.props.canGoBack}
+            isGoBack={this.props.hasBackButton}
             text={this.props.header}
+            toggleSearchBar={this.toggleSearchBar}
+            display={this.state.showSearchBar}
+            onSearchString={val => this.handleOnSearchString(val)}
+            searchString={this.state.searchString}
           />
         </div>
         {this.state.showResults && (
@@ -57,7 +104,7 @@ export default class SearchPage extends React.Component {
                     text={val.categoryName}
                     value={val.categoryCode}
                     onClick={() => {
-                      this.handleCategoryClick(val.categoryCode);
+                      this.handleBrandClick(val.categoryCode);
                     }}
                   />
                 );
