@@ -31,7 +31,7 @@ class ProductCouponDetails extends Component {
   };
 
   setUserCoupons = couponCode => {
-    if (couponCode instanceof Array) {
+    if (couponCode.length > 0 && couponCode instanceof Array) {
       this.setState({ couponVal: couponCode[0] });
     } else if (couponCode) {
       this.setState({ couponVal: couponCode });
