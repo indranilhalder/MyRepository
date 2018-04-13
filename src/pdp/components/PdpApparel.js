@@ -83,7 +83,7 @@ export default class PdpApparel extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (this.checkIfSizeSelected()) {
+    if (this.checkIfSizeSelected() || this.checkIfSizeDoesNotExist()) {
       if (userDetails) {
         if (cartDetailsLoggedInUser && customerCookie) {
           this.props.addProductToCart(
@@ -149,9 +149,16 @@ export default class PdpApparel extends React.Component {
       return false;
     }
   };
-
+  checkIfSizeDoesNotExist = () => {
+    return this.props.productDetails.variantOptions
+      ? this.props.productDetails.variantOptions.filter(val => {
+          return val.sizelink.isAvailable;
+        }).length === 0
+        ? true
+        : false
+      : true;
+  };
   render() {
-    console.log(this.props.productDetails);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -181,9 +188,6 @@ export default class PdpApparel extends React.Component {
         price = productData.mrpPrice.formattedValueNoDecimal;
       }
 
-      if (productData.winningSellerPrice) {
-        discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
-      }
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
