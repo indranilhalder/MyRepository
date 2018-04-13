@@ -9,34 +9,40 @@ const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SCROLL_CHECK_INTERVAL = 500;
 const OFFSET_BOTTOM = 800;
 export default class Plp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showFilter: props.showFilter
-    };
-  }
-
   toggleFilter = () => {
-    this.setState({ showFilter: !this.state.showFilter });
-    if (this.props.onFilter) {
-      this.props.onFilter(!this.state.showFilter);
+    if (this.props.isFilterOpen) {
+      this.props.hideFilter();
+    } else {
+      const pathName = this.props.location.pathname;
+      const search = this.props.location.search;
+      const url = `${pathName}${search}`;
+      console.log("SET CLEAR URL");
+      console.log(url);
+      this.props.setClearUrl(url);
+      this.props.showFilter();
     }
   };
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ showFilter: nextProps.showFilter });
-  }
-  onApply = val => {
-    this.toggleFilter();
-    if (this.props.onApply) {
-      this.props.onApply(val);
-    }
+  onApply = () => {
+    const pathName = this.props.location.pathname;
+    const search = this.props.location.search;
+    const url = `${pathName}${search}`;
+    this.props.history.push(url, {
+      isFilter: false
+    });
+    this.props.hideFilter();
+  };
+
+  onClear = () => {
+    this.props.history.push(this.props.clearUrl);
+    this.props.hideFilter();
+    this.props.setClearUrlToNull();
   };
 
   handleScroll = () => {
     return throttle(() => {
       if (
-        !this.state.showFilter &&
+        !this.props.isFilterOpen &&
         this.props.productListings &&
         this.props.pageNumber <
           this.props.productListings.pagination.totalPages - 1
@@ -78,20 +84,22 @@ export default class Plp extends React.Component {
         splitSlug = this.props.match.params.slug.replace(/-/g, " ");
         splitSlug = splitSlug.replace(/\b\w/g, l => l.toUpperCase());
       }
-      if (this.state.showFilter) {
+      if (this.props.showFilter) {
         this.props.setHeaderText("Refine by");
       } else {
         this.props.setHeaderText(
-          `${splitSlug} (${this.props.productListings.pagination.totalResults})`
+          `${splitSlug[splitSlug.length - 1]} (${
+            this.props.productListings.pagination.totalResults
+          })`
         );
       }
     }
   }
   backPage = () => {
-    if (this.state.showFilter) {
-      this.setState({ showFilter: !this.state.showFilter });
+    if (this.props.isFilterOpen) {
+      this.props.hideFilter();
     } else {
-      this.props.history.goBack();
+      this.props.showFilter();
     }
   };
   onSortClick = () => {
@@ -103,6 +111,10 @@ export default class Plp extends React.Component {
   renderLoader() {
     return <Loader />;
   }
+
+  onL3CategorySelect = () => {
+    this.props.hideFilter();
+  };
 
   render() {
     return (
@@ -117,7 +129,10 @@ export default class Plp extends React.Component {
           </div>
           <FilterContainer
             backPage={this.backPage}
-            showFilter={this.state.showFilter}
+            showFilter={this.props.isFilterOpen}
+            onApply={this.onApply}
+            onClear={this.onClear}
+            onL3CategorySelect={this.onL3CategorySelect}
           />
           <div className={styles.footer}>
             <PlpMobileFooter

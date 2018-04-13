@@ -131,7 +131,7 @@ class App extends Component {
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
     // Case 1. THe user is not logged in.
-    if (!globalAccessToken && !this.props.cart.loading) {
+    if (!globalAccessToken && !this.props.cartLoading) {
       await this.props.getGlobalAccessToken();
       globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     }
@@ -142,7 +142,7 @@ class App extends Component {
     }
 
     if (customerAccessToken) {
-      if (!cartDetailsForLoggedInUser && !this.props.cart.loading) {
+      if (!cartDetailsForLoggedInUser && !this.props.cartLoading) {
         this.props.generateCartIdForLoggedInUser();
       }
     }
@@ -168,6 +168,26 @@ class App extends Component {
       }
     }
   }
+
+  // shouldComponentUpdate(nextProps) {
+  //   const props = this.props;
+  //   if (
+  //     props.modalStatus !== nextProps.modalStatus ||
+  //     props.cartLoading !== nextProps.cartLoading ||
+  //     props.globalAccessTokenStatus !== nextProps.globalAccessTokenStatus ||
+  //     props.customerAccessTokenStatus !== nextProps.customerAccessTokenStatus ||
+  //     props.refreshCustomerAccessTokenStatus !==
+  //       nextProps.refreshCustomerAccessTokenStatus ||
+  //     props.cartIdForLoggedInUserStatus !==
+  //       nextProps.cartIdForLoggedInUserStatus ||
+  //     props.cartIdForAnonymousUserStatus !==
+  //       nextProps.cartIdForAnonymousUserStatus ||
+  //     props.redirectToAfterAuthUrl !== nextProps.redirectToAfterAuthUrl
+  //   ) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
   renderLoader() {
     return (
       <div className={AppStyles.loadingIndicator}>

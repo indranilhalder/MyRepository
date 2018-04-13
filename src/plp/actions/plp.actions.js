@@ -14,11 +14,57 @@ export const FILTER_PRODUCT_LISTINGS_PATH = "searchProducts";
 export const GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS =
   "GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS";
 
+export const SHOW_FILTER = "SHOW_FILTER";
+export const HIDE_FILTER = "HIDE_FILTER";
+
+export const SET_FILTER_SELECTED_DATA = "SET_FILTER_SELECTED_DATA";
+export const RESET_FILTER_SELECTED_DATA = "RESET_FILTER_SELECTED_DATA";
+
+export const SET_CLEAR_URL = "SET_CLEAR_URL";
+export const SET_CLEAR_URL_TO_NULL = "SET_CLEAR_URL_TO_NULL";
+
 export const UPDATE_FACETS = "UPDATE_FACETS";
 
 export const SET_PAGE = "SET_PAGE";
 
-const FAILURE = "FAILURE";
+export function setFilterSelectedData(isCategorySelected, filterTabIndex) {
+  return {
+    type: SET_FILTER_SELECTED_DATA,
+    isCategorySelected,
+    filterTabIndex
+  };
+}
+
+export function resetFilterSelectedData() {
+  return {
+    type: RESET_FILTER_SELECTED_DATA
+  };
+}
+
+export function setClearUrl(url) {
+  return {
+    type: SET_CLEAR_URL,
+    urlToReturnToAfterClear: url
+  };
+}
+
+export function setClearUrlToNull() {
+  return {
+    type: SET_CLEAR_URL_TO_NULL
+  };
+}
+
+export function showFilter() {
+  return {
+    type: SHOW_FILTER
+  };
+}
+
+export function hideFilter() {
+  return {
+    type: HIDE_FILTER
+  };
+}
 
 export function setPage(pageNumber) {
   return {

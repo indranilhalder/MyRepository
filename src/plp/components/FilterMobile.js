@@ -8,54 +8,26 @@ import styles from "./FilterMobile.css";
 import queryString from "query-string";
 import { createUrlFromQueryAndCategory } from "./FilterUtils.js";
 
-const FILTER_HEADER = "Refine by";
 const BRAND = "brand";
 export default class FilterMobile extends React.Component {
   constructor(props) {
     super(props);
-    const url = `${props.location.pathname}${props.location.search}`;
-    let showCategory = true;
-    if (!props.facetdatacategory) {
-      showCategory = false;
-    }
     this.state = {
-      showCategory,
-      url,
-      brandSearchString: "",
-      filterSelectedIndex: 0
+      brandSearchString: ""
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    const facetdatacategory = nextProps.facetdatacategory;
-    if (facetdatacategory && this.state.showCategory === false) {
-      this.setState({ showCategory: true });
-    }
-
-    if (!facetdatacategory && this.state.showCategory === true) {
-      this.setState({ showCategory: false });
-    }
-  }
   selectTab(val) {
-    this.setState({ showCategory: false, filterSelectedIndex: val });
+    this.props.setFilterSelectedData(false, val);
     this.setState({ brandSearchString: "" });
   }
   selectCategories() {
-    this.setState({ showCategory: true });
+    this.props.resetFilterSelectedData();
     this.setState({ brandSearchString: "" });
   }
 
-  onClear = () => {
-    this.props.history.push(this.state.url, { isFilter: false });
-  };
-
   onApply = () => {
-    const pathName = this.props.location.pathname;
-    const search = this.props.location.search;
-    const url = `${pathName}${search}`;
-    this.props.history.push(url, {
-      isFilter: false
-    });
+    this.props.onApply();
   };
   onBrandSearch = val => {
     this.setState({ brandSearchString: val });
@@ -66,6 +38,9 @@ export default class FilterMobile extends React.Component {
     const pathName = this.props.location.pathname;
     const url = createUrlFromQueryAndCategory(query, pathName, val);
     this.props.history.push(url, { isFilter });
+    if (isFilter === false) {
+      this.props.onL3CategorySelect();
+    }
   };
 
   onL1Click = val => {
@@ -77,13 +52,9 @@ export default class FilterMobile extends React.Component {
   };
 
   onL3Click = val => {
+    console.log("ON L3 CLICK");
+    console.log(val);
     this.onCategorySelect(val, false);
-  };
-
-  handleBackClick = () => {
-    if (this.props.backPage) {
-      this.props.backPage();
-    }
   };
 
   onFilterClick = val => {
@@ -93,13 +64,13 @@ export default class FilterMobile extends React.Component {
     const { facetData, facetdatacategory } = this.props;
     let filteredFacetData = null;
     if (facetData) {
-      filteredFacetData = facetData[this.state.filterSelectedIndex].values;
+      filteredFacetData = facetData[this.props.filterSelectedIndex].values;
       if (
         facetData &&
-        facetData[this.state.filterSelectedIndex].key === BRAND
+        facetData[this.props.filterSelectedIndex].key === BRAND
       ) {
         filteredFacetData = facetData[
-          this.state.filterSelectedIndex
+          this.props.filterSelectedIndex
         ].values.filter(val => {
           return this.state.brandSearchString === ""
             ? val
@@ -124,7 +95,7 @@ export default class FilterMobile extends React.Component {
                   onClick={() => {
                     this.selectCategories();
                   }}
-                  selected={this.state.showCategory}
+                  selected={this.props.isCategorySelected}
                 />
               )}
 
@@ -135,8 +106,8 @@ export default class FilterMobile extends React.Component {
                       name={val.name}
                       selectedFilterCount={val.selectedFilterCount}
                       selected={
-                        i === this.state.filterSelectedIndex &&
-                        !this.state.showCategory
+                        i === this.props.filterSelectedIndex &&
+                        !this.props.isCategorySelected
                       }
                       onClick={() => {
                         this.selectTab(i);
@@ -148,7 +119,7 @@ export default class FilterMobile extends React.Component {
           </div>
           <div className={styles.contenHolder}>
             <div className={styles.slider}>
-              {this.state.showCategory &&
+              {this.props.isCategorySelected &&
                 facetdatacategory &&
                 facetdatacategory.filters.map((val, i) => {
                   return (
@@ -167,9 +138,9 @@ export default class FilterMobile extends React.Component {
                     </FilterCategoryL1>
                   );
                 })}
-              {!this.state.showCategory && (
+              {!this.props.isCategorySelected && (
                 <React.Fragment>
-                  {facetData[this.state.filterSelectedIndex].key === BRAND && (
+                  {facetData[this.props.filterSelectedIndex].key === BRAND && (
                     <div className={styles.search}>
                       <SearchInput
                         placeholder="Search by brands"
@@ -199,7 +170,7 @@ export default class FilterMobile extends React.Component {
           className={this.props.showFilter ? styles.footerOpen : styles.footer}
         >
           <div className={styles.buttonHolder}>
-            <div className={styles.button} onClick={() => this.onClear()}>
+            <div className={styles.button} onClick={this.props.onClear}>
               Reset
             </div>
           </div>
