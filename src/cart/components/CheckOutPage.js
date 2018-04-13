@@ -992,9 +992,8 @@ class CheckOutPage extends React.Component {
 
           <Checkout
             label={
-              this.state.confirmAddress &&
-              !this.state.deliverMode &&
-              !this.state.isGiftCard
+              (this.state.confirmAddress && !this.state.deliverMode) ||
+              this.state.isGiftCard
                 ? PROCEED
                 : CONTINUE
             }
