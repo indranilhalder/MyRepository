@@ -28,6 +28,8 @@ import {
   SAVE_LIST_PAGE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
+const PRODUCT_NOT_SERVICEABLE_MESSAGE =
+  "Product is not Serviceable,Please try with another pin code";
 
 class CartPage extends React.Component {
   constructor(props) {
@@ -90,11 +92,14 @@ class CartPage extends React.Component {
         let productServiceAvailability = filter(
           this.props.cart.cartDetails.products,
           product => {
-            if (product.pinCodeResponse) {
-              return product.pinCodeResponse.isServicable === "N";
-            }
+            return (
+              product.pinCodeResponse === undefined ||
+              (product.pinCodeResponse &&
+                product.pinCodeResponse.isServicable === "N")
+            );
           }
         );
+
         if (productServiceAvailability.length > 0) {
           this.setState({
             isServiceable: false
@@ -177,8 +182,8 @@ class CartPage extends React.Component {
       }
       if (!pinCode) {
         this.props.displayToast("Please enter Pin code / Zip code");
-      } else {
-        this.setState({ isServiceable: false });
+      } else if (!this.state.isServiceable) {
+        this.props.displayToast(PRODUCT_NOT_SERVICEABLE_MESSAGE);
       }
     } else {
       const url = this.props.location.pathname;
@@ -297,17 +302,22 @@ class CartPage extends React.Component {
           cartDetails.products[0].elligibleDeliveryMode
         ) {
           deliveryCharge =
-            cartDetails.products[0].elligibleDeliveryMode[0].charge
-              .formattedValue;
+            Math.round(
+              cartDetails.products[0].elligibleDeliveryMode[0].charge.value *
+                100
+            ) / 100;
         }
         if (cartDetails.cartAmount.totalDiscountAmount) {
           totalDiscount =
-            cartDetails.cartAmount.totalDiscountAmount.formattedValue;
+            Math.round(cartDetails.cartAmount.totalDiscountAmount.value * 100) /
+            100;
         }
 
         if (cartDetails.cartAmount.couponDiscountAmount) {
           couponDiscount =
-            cartDetails.cartAmount.couponDiscountAmount.formattedValue;
+            Math.round(
+              cartDetails.cartAmount.couponDiscountAmount.value * 100
+            ) / 100;
         }
       }
 
@@ -379,6 +389,7 @@ class CartPage extends React.Component {
                           : product.availableStockCount
                       }
                       qtySelectedByUser={product.qtySelectedByUser}
+                      isClickable={false}
                     />
                   </div>
                 );
@@ -394,12 +405,23 @@ class CartPage extends React.Component {
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
-                  amount={cartDetails.cartAmount.paybleAmount.formattedValue}
-                  bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
-                  coupons={couponDiscount}
-                  discount={totalDiscount}
-                  delivery={deliveryCharge}
-                  payable={cartDetails.cartAmount.paybleAmount.formattedValue}
+                  amount={
+                    Math.round(
+                      cartDetails.cartAmount.paybleAmount.value * 100
+                    ) / 100
+                  }
+                  bagTotal={
+                    Math.round(cartDetails.cartAmount.bagTotal.value * 100) /
+                    100
+                  }
+                  coupons={`Rs. ${couponDiscount}`}
+                  discount={`Rs. ${totalDiscount}`}
+                  delivery={`Rs. ${deliveryCharge}`}
+                  payable={
+                    Math.round(
+                      cartDetails.cartAmount.paybleAmount.value * 100
+                    ) / 100
+                  }
                   onCheckout={() => this.renderToCheckOutPage()}
                 />
               )}

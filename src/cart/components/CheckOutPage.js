@@ -237,6 +237,7 @@ class CheckOutPage extends React.Component {
                   }
                   onPiq={() => this.getAllStores(val.USSID)}
                   onClickImage={() => this.onClickImage(val.productcode)}
+                  isClickable={true}
                 />
               </div>
             );
@@ -255,22 +256,31 @@ class CheckOutPage extends React.Component {
       currentSelectedProduct.pinCodeResponse.validDeliveryModes;
     const someData = firstSlaveData
       .map(slaves => {
-        return slaves.CNCServiceableSlavesData.map(slave => {
-          return slave.serviceableSlaves.map(serviceableSlave => {
-            return serviceableSlave;
-          });
-        });
+        return (
+          slaves.CNCServiceableSlavesData &&
+          slaves.CNCServiceableSlavesData.map(slave => {
+            return (
+              slave &&
+              slave.serviceableSlaves.map(serviceableSlave => {
+                return serviceableSlave;
+              })
+            );
+          })
+        );
       })
       .map(val => {
-        return val.map(v => {
-          return v;
-        });
+        return (
+          val &&
+          val.map(v => {
+            return v;
+          })
+        );
       });
 
     const allStoreIds = [].concat
       .apply([], [].concat.apply([], someData))
       .map(store => {
-        return store.slaveId;
+        return store && store.slaveId;
       });
     const availableStores = this.props.cart.storeDetails
       ? this.props.cart.storeDetails.filter(val => {
@@ -430,17 +440,25 @@ class CheckOutPage extends React.Component {
         this.setState({
           isRemainingAmount:
             nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
-          payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount,
+          payableAmount:
+            Math.round(
+              nextProps.cart.cliqCashPaymentDetails.paybleAmount.value * 100
+            ) / 100,
           cliqCashAmount:
-            nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value,
-          bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
+            Math.round(
+              nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value * 100
+            ) / 100,
+          bagAmount:
+            Math.round(
+              nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
+            ) / 100
         });
       }
     } else if (this.state.isGiftCard) {
       this.setState({
         isRemainingAmount: true,
-        payableAmount: this.props.location.state.amount,
-        bagAmount: this.props.location.state.amount
+        payableAmount: Math.round(this.props.location.state.amount * 100) / 100,
+        bagAmount: Math.round(this.props.location.state.amount * 100) / 100
       });
     } else {
       if (nextProps.cart.cartDetailsCNC && this.state.isRemainingAmount) {
@@ -451,14 +469,20 @@ class CheckOutPage extends React.Component {
           nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance
         ) {
           cliqCashAmount =
-            nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance.value;
+            Math.round(
+              nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance * 100
+            ) / 100;
         }
         this.setState({
           payableAmount:
-            nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount
-              .formattedValue,
+            Math.round(
+              nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value * 100
+            ) / 100,
           cliqCashAmount: cliqCashAmount,
-          bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
+          bagAmount:
+            Math.round(
+              nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
+            ) / 100
         });
       }
     }
@@ -807,6 +831,7 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
+    console.log(this.props.cart);
     if (
       this.props.cart.paymentModesStatus === REQUESTING ||
       this.props.cart.codEligibilityStatus === REQUESTING ||
@@ -845,17 +870,26 @@ class CheckOutPage extends React.Component {
         this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode[0]
           .charge
       ) {
-        deliveryCharge = this.props.cart.cartDetailsCNC.products[0]
-          .elligibleDeliveryMode[0].charge.formattedValue;
+        deliveryCharge =
+          Math.round(
+            this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode[0]
+              .charge.value * 100
+          ) / 100;
       }
       if (this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount) {
-        totalDiscount = this.props.cart.cartDetailsCNC.cartAmount
-          .totalDiscountAmount.formattedValue;
+        totalDiscount =
+          Math.round(
+            this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
+              .value * 100
+          ) / 100;
       }
 
       if (this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount) {
-        couponDiscount = this.props.cart.cartDetailsCNC.cartAmount
-          .couponDiscountAmount.formattedValue;
+        couponDiscount =
+          Math.round(
+            this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
+              .value * 100
+          ) / 100;
       }
     }
     if (
@@ -982,9 +1016,9 @@ class CheckOutPage extends React.Component {
             amount={this.state.payableAmount}
             bagTotal={this.state.bagAmount}
             payable={this.state.payableAmount}
-            coupons={couponDiscount}
-            discount={totalDiscount}
-            delivery={deliveryCharge}
+            coupons={`Rs. ${couponDiscount}`}
+            discount={`Rs. ${totalDiscount}`}
+            delivery={`Rs. ${deliveryCharge}`}
             onCheckout={this.handleSubmit}
           />
         </div>
