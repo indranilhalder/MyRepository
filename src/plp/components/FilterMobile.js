@@ -7,7 +7,6 @@ import SearchInput from "../../general/components/SearchInput";
 import styles from "./FilterMobile.css";
 import queryString from "query-string";
 import { createUrlFromQueryAndCategory } from "./FilterUtils.js";
-import { createUnzip } from "zlib";
 
 const BRAND = "brand";
 export default class FilterMobile extends React.Component {
