@@ -1,4 +1,3 @@
-import moment from "moment";
 const DATE_TIME_REGEX_FORMAT_1 = /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})/;
 const DATE_TIME_REGEX_FORMAT_2 = /^(\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}):(\d{2})/;
 const DATE_TIME_REGEX_FORMAT_3 = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/;

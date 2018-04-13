@@ -280,7 +280,7 @@ class App extends Component {
       cartIdForLoggedInUserStatus === REQUESTING ||
       cartIdForAnonymousUserStatus === REQUESTING
     ) {
-      return this.renderLoader();
+      return this.renderDummySkeleton();
     }
 
     if (this.props.modalStatus) {

@@ -1504,9 +1504,7 @@ export function followAndUnFollowBrandInCommerceFailure(error) {
 }
 
 export function updateProfile(accountDetails, otp) {
-  let dateOfBirth = moment(accountDetails.dateOfBirth).format(
-    DATE_FORMAT_TO_UPDATE_PROFILE
-  );
+  let dateOfBirth = "hello";
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {

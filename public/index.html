@@ -23,29 +23,24 @@
 
 
 
-  <% if("%REACT_APP_STAGE%" === "production") { %>
-    <script src="//assets.adobedtm.com/9fd06d4068c619c47b289b9c496761efd086a233/satelliteLib-08855880a6fbd52183d526aa0c8510335499cc15.js"></script>
 
-    <% } else { %>
-      <script src="//assets.adobedtm.com/9fd06d4068c619c47b289b9c496761efd086a233/satelliteLib-08855880a6fbd52183d526aa0c8510335499cc15-staging.js"></script>
-      <% } %>
-        <style>
-          #root {
-            width: 100%;
-            overflow: hidden;
-          }
+  <style>
+    #root {
+      width: 100%;
+      overflow: hidden;
+    }
 
-          #modal-root {
-            width: 100vw;
-            position: absolute;
-            left: 0;
-            top: 0;
-          }
+    #modal-root {
+      width: 100vw;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
 
-          #modal-root>div {
-            width: 100%;
-          }
-        </style>
+    #modal-root>div {
+      width: 100%;
+    }
+  </style>
 </head>
 
 <body>
@@ -65,7 +60,13 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  <script type="text/javascript">_satellite.pageBottom();</script>
+  <% if("%REACT_APP_STAGE%" === "production") { %>
+    <script src="//assets.adobedtm.com/9fd06d4068c619c47b289b9c496761efd086a233/satelliteLib-08855880a6fbd52183d526aa0c8510335499cc15.js"></script>
+
+    <% } else { %>
+      <script src="//assets.adobedtm.com/9fd06d4068c619c47b289b9c496761efd086a233/satelliteLib-08855880a6fbd52183d526aa0c8510335499cc15-staging.js"></script>
+      <% } %>
+        <script type="text/javascript">_satellite.pageBottom();</script>
 </body>
 
 </html>
