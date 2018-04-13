@@ -4,7 +4,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if( $(this).next('ul').length > 0 ){
 			
-			//$(this).parent().siblings().find('ul').hide();
+			$(this).parent().siblings().find('ul').hide();
 			$(this).parent().siblings().find('a').removeClass('active-ul');
 			
 			$(this).next('ul').toggle();
@@ -362,17 +362,18 @@ $(document).ready(function() {
 	//countdown js ends
 
 	//play video js starts
-	function playPause(myVideo) { 
+	/*function playPause(myVideo) { 
 		if (myVideo.paused) {
 			myVideo.play(); 
 		}
 		else {
 			myVideo.pause(); 
 		}
-	} 
+	} */
 	$('#play-video').click(function() {
-		var myVideo = document.getElementById("video-el"); 
-		playPause(myVideo);
+		//var myVideo = document.getElementById("video-el"); 
+		//playPause(myVideo);
+		$("#video-el")[0].src += "?autoplay=1";
 		$('#vpc-container').hide();
 	});
 	//play video js ends
