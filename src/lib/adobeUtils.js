@@ -21,7 +21,7 @@ const ADOBE_SAVE_PRODUCT = "cpj_button_save";
 const ADOBE_EMI_BANK_SELECT_ON_PDP = "'cpj_pdp_emi";
 
 // direct call url for cart page
-const ADPBE_DIRECT_CALL_FOR_LANDING_USER = "cpj_cart_page";
+const ADOBE_DIRECT_CALL_FOR_LANDING_USER = "cpj_cart_page";
 const ADOBE_DIRECT_CALL_ON_CART_FOR_REMOVE_TRIGGER = "cpj_cart_removal";
 const ADOVE_DIRECT_CALL_ON_CLICK_CHECKOUT = "cpj_cart_checkout";
 const ADOVE_DIRECT_CALL_FOR_CHANGE_QUANTITY_ON_CART =
@@ -49,7 +49,7 @@ export const SET_DATA_LAYER_FOR_EMI_BANK_EVENT =
 export const ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART =
   "ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART";
 
-export const ADOBE_CALLS_FOR_REMOVE_IMEM = "ADOBE_CALLS_FOR_REMOVE_IMEM";
+export const ADOBE_REMOVE_ITEM = "ADOBE_REMOVE_ITEM";
 export const ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT =
   "ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT";
 export const ADOBE_CALLS_FOR_CHANGE_QUANTITY =
@@ -85,7 +85,7 @@ export function setDataLayer(type, response, icid, icidType) {
   }
   if (type === ADOBE_CART_TYPE) {
     window.digitalData = getDigitalDataForCart(type, response);
-    window._satellite.track(ADPBE_DIRECT_CALL_FOR_LANDING_USER);
+    window._satellite.track(ADOBE_DIRECT_CALL_FOR_LANDING_USER);
   }
   if (type === ADOBE_ORDER_CONFIRMATION) {
     window.digitalData = getDigitalDataForOrderConfirmation(type, response);
@@ -382,13 +382,14 @@ export function setDataLayerForPdpDirectCalls(type, layerData: null) {
 
 export function setDataLayerForCartDirectCalls(type, response) {
   let data = window.digitalData;
-  if (type === ADOBE_CALLS_FOR_REMOVE_IMEM) {
+  if (type === ADOBE_REMOVE_ITEM) {
     const productIds = getProductIdArray(response);
     if (productIds) {
       Object.assign(data, {
         cpj: { product: { id: JSON.stringify(productIds) } }
       });
     }
+
     window.digitalData = data;
 
     window._satellite.track(ADOBE_DIRECT_CALL_ON_CART_FOR_REMOVE_TRIGGER);
@@ -404,6 +405,7 @@ export function setDataLayerForCartDirectCalls(type, response) {
       coupon: { code: response }
     });
     window.digitalData = data;
+
     window._satellite.track(ADOBE_DIRECT_CALL_FOR_APPLY_COUPON_SUCCESS);
   }
   if (type === ADOBE_CALLS_FOR_APPLY_COUPON_FAIL) {
@@ -411,6 +413,7 @@ export function setDataLayerForCartDirectCalls(type, response) {
       coupon: { code: response }
     });
     window.digitalData = data;
+
     window._satellite.track(ADOBE_DIRECT_CALL_FOR_APPLY_COUPON_FAIL);
   }
   if (type === ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART) {

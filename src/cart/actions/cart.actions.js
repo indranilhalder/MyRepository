@@ -25,7 +25,7 @@ import {
   setDataLayer,
   ADOBE_CART_TYPE,
   setDataLayerForCartDirectCalls,
-  ADOBE_CALLS_FOR_REMOVE_IMEM,
+  ADOBE_REMOVE_ITEM,
   ADOBE_ORDER_CONFIRMATION,
   ADOBE_CHECKOUT_TYPE,
   ADOBE_CALLS_FOR_CHANGE_QUANTITY,
@@ -3298,7 +3298,7 @@ export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
       ).then(cartDetails => {
         if (cartDetails.status === SUCCESS) {
           setDataLayerForCartDirectCalls(
-            ADOBE_CALLS_FOR_REMOVE_IMEM,
+            ADOBE_REMOVE_ITEM,
             cartDetails.cartDetails
           );
           dispatch(removeItemFromCartLoggedInSuccess());
@@ -3362,7 +3362,7 @@ export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
       ).then(cartDetails => {
         if (cartDetails.status === SUCCESS) {
           setDataLayerForCartDirectCalls(
-            ADOBE_CALLS_FOR_REMOVE_IMEM,
+            ADOBE_REMOVE_ITEM,
             cartDetails.cartDetails
           );
           dispatch(removeItemFromCartLoggedOutSuccess());
