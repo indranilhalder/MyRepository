@@ -18,6 +18,8 @@ export default class ConnectWidget extends React.Component {
     if (this.props.feedComponentData["sub-type"] === "bannerInCard") {
       className = styles.inCard;
     }
+
+    console.log(this.props.feedComponentData);
     return (
       <div
         className={styles.holder}
