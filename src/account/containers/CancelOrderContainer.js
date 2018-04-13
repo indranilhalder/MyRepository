@@ -26,6 +26,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       } else {
         dispatch(displayToast(ERROR_MESSAGE_IN_CANCELING_ORDER));
       }
+    },
+    displayToast: message => {
+      dispatch(displayToast(message));
     }
   };
 };
