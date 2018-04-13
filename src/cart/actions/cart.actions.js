@@ -25,9 +25,12 @@ import {
   setDataLayer,
   ADOBE_CART_TYPE,
   setDataLayerForDirectCallsOnCart,
-  ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART,
+  ADOBE_CALLS_FOR_REMOVE_IMEM,
   ADOBE_ORDER_CONFIRMATION,
-  ADOBE_CHECKOUT_TYPE
+  ADOBE_CHECKOUT_TYPE,
+  ADOBE_CALLS_FOR_CHANGE_QUANTITY,
+  ADOBE_CALLS_FOR_APPLY_COUPON_SUCCESS,
+  ADOBE_CALLS_FOR_APPLY_COUPON_FAIL
 } from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
@@ -515,9 +518,16 @@ export function applyUserCouponForAnonymous(couponCode) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
+        setDataLayerForDirectCallsOnCart(
+          ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
+          couponCode
+        );
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayerForDirectCallsOnCart(
+        ADOBE_CALLS_FOR_APPLY_COUPON_SUCCESS,
+        couponCode
+      );
       dispatch(applyUserCouponSuccess(resultJson, couponCode));
     } catch (e) {
       dispatch(applyUserCouponFailure(e.message));
@@ -552,8 +562,16 @@ export function applyUserCouponForLoggedInUsers(couponCode) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
+        setDataLayerForDirectCallsOnCart(
+          ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
+          couponCode
+        );
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForDirectCallsOnCart(
+        ADOBE_CALLS_FOR_APPLY_COUPON_SUCCESS,
+        couponCode
+      );
       dispatch(applyUserCouponSuccess(resultJson, couponCode));
     } catch (e) {
       dispatch(applyUserCouponFailure(e.message));
@@ -3248,6 +3266,7 @@ export function removeItemFromCartLoggedInFailure(error) {
 
 // Action Creator for remove Item from Cart Logged In
 export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
+  console.log("call me ");
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -3279,7 +3298,7 @@ export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
       ).then(cartDetails => {
         if (cartDetails.status === SUCCESS) {
           setDataLayerForDirectCallsOnCart(
-            ADOBE_DIRECT_CALLS_FOR_REMOVE_PRODUCT_ON_CART,
+            ADOBE_CALLS_FOR_REMOVE_IMEM,
             cartDetails.cartDetails
           );
           dispatch(removeItemFromCartLoggedInSuccess());
@@ -3340,8 +3359,14 @@ export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
           JSON.parse(cartDetailsAnonymous).guid,
           pinCode
         )
-      ).then(() => {
-        dispatch(removeItemFromCartLoggedOutSuccess());
+      ).then(cartDetails => {
+        if (cartDetails.status === SUCCESS) {
+          setDataLayerForDirectCallsOnCart(
+            ADOBE_CALLS_FOR_REMOVE_IMEM,
+            cartDetails.cartDetails
+          );
+          dispatch(removeItemFromCartLoggedOutSuccess());
+        }
       });
     } catch (e) {
       dispatch(removeItemFromCartLoggedOutFailure(e.message));
@@ -3403,8 +3428,11 @@ export function updateQuantityInCartLoggedIn(selectedItem, quantity, pinCode) {
           cartId,
           pinCode
         )
-      ).then(() => {
-        dispatch(updateQuantityInCartLoggedInSuccess(resultJson));
+      ).then(cartDetails => {
+        if (cartDetails.status === SUCCESS) {
+          setDataLayerForDirectCallsOnCart(ADOBE_CALLS_FOR_CHANGE_QUANTITY);
+          dispatch(updateQuantityInCartLoggedInSuccess(resultJson));
+        }
       });
     } catch (e) {
       dispatch(updateQuantityInCartLoggedInFailure(e.message));
@@ -3466,8 +3494,11 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
           JSON.parse(cartDetailsAnonymous).guid,
           pinCode
         )
-      ).then(() => {
-        dispatch(updateQuantityInCartLoggedOutSuccess(resultJson));
+      ).then(cartDetails => {
+        if (cartDetails.status === SUCCESS) {
+          setDataLayerForDirectCallsOnCart(ADOBE_CALLS_FOR_CHANGE_QUANTITY);
+          dispatch(updateQuantityInCartLoggedOutSuccess(resultJson));
+        }
       });
     } catch (e) {
       dispatch(updateQuantityInCartLoggedOutFailure(e.message));
