@@ -1,6 +1,6 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
-import ProductDetailsMainCard from "./ProductDetailsMainCard";
+
 import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import { Image } from "xelpmoc-core";
 import ProductGalleryMobile from "./ProductGalleryMobile";
@@ -8,6 +8,7 @@ import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
 import PriceBreakUp from "./PriceBreakUp";
 import OfferCard from "./OfferCard";
+import ProductFeature from "./ProductFeature";
 import PdpLink from "./PdpLink";
 import PdpDeliveryModes from "./PdpDeliveryModes";
 import JewelleryClassification from "./JewelleryClassification";
@@ -15,7 +16,7 @@ import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
-import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import Accordion from "../../general/components/Accordion.js";
 import JewelleryCertification from "./JewelleryCertification.js";
 import { HashLink as Link } from "react-router-hash-link";
 import styles from "./ProductDescriptionPage.css";
@@ -44,7 +45,8 @@ export default class PdpJewellery extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showPriceBreakUp: false
+      showPriceBreakUp: false,
+      showStyleNote: false
     };
   }
   visitBrand() {
@@ -135,6 +137,9 @@ export default class PdpJewellery extends React.Component {
   showPriceBreakUp() {
     this.setState({ showPriceBreakUp: true });
   }
+  showStyleNote = () => {
+    this.setState({ showStyleNote: true });
+  };
   showEmiModal = () => {
     const cartValue = this.props.productDetails.winningSellerPrice.value;
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -232,26 +237,32 @@ export default class PdpJewellery extends React.Component {
               }}
             />
           </div>
-          {productData.isEMIEligible === "Y" && (
-            <div className={styles.separator}>
+          {productData.details &&
+            productData.details.length > 0 && (
               <div className={styles.info}>
-                Emi available on this product.
-                <span className={styles.link} onClick={this.showEmiModal}>
-                  View Plans
+                <span className={styles.textOffset}>
+                  {productData.details[0].value}
+                </span>
+                <span className={styles.link} onClick={this.showStyleNote}>
+                  <Link to="#styleNote"> Read More</Link>
                 </span>
               </div>
+            )}
+          {productData.isEMIEligible === "Y" && (
+            <div className={styles.info}>
+              <span className={styles.textOffset}>
+                Emi available on this product.
+              </span>
+              <span className={styles.link} onClick={this.showEmiModal}>
+                View Plans
+              </span>
             </div>
           )}
-
-          {productData.potentialPromotions && (
-            <OfferCard
-              endTime={productData.potentialPromotions.endDate}
-              startDate={productData.potentialPromotions.startDate}
-              heading={productData.potentialPromotions.title}
-              description={productData.potentialPromotions.description}
-              onClick={this.goToCouponPage}
-            />
-          )}
+          <OfferCard
+            showDetails={this.props.showOfferDetails}
+            potentialPromotions={productData.potentialPromotions}
+            secondaryPromotions={productData.productOfferMsg}
+          />
 
           {productData.variantOptions && (
             <React.Fragment>
@@ -303,15 +314,6 @@ please try another pincode">
               </PdpLink>
             </div>
           )}
-
-          <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
-          </div>
-
           <div className={styles.details} id="priceBreakup">
             {productData.priceBreakUpDetailsMap && (
               <PriceBreakUp
@@ -325,6 +327,52 @@ please try another pincode">
               />
             )}
           </div>
+          <div className={styles.separator}>
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
+          </div>
+          <div className={styles.details} id="styleNote">
+            {productData.styleNote && (
+              <ProductFeature
+                isOpen={this.state.showStyleNote}
+                heading="Style Note"
+                content={productData.styleNote}
+              />
+            )}
+            {productData.returnAndRefund && (
+              <Accordion text="Return & Refunds" headerFontSize={16}>
+                {productData.returnAndRefund.map(val => {
+                  return (
+                    <div
+                      className={styles.list}
+                      dangerouslySetInnerHTML={{ __html: val.refundReturnItem }}
+                    />
+                  );
+                })}
+              </Accordion>
+            )}
+            {productData.warranty &&
+              productData.warranty.length > 0 && (
+                <ProductFeature
+                  heading="Warranty"
+                  content={productData.warranty[0]}
+                />
+              )}
+            {productData.knowMore && (
+              <Accordion text="Know More" headerFontSize={16}>
+                {productData.knowMore &&
+                  productData.knowMore.map(val => {
+                    return (
+                      <div className={styles.list}>{val.knowMoreItem}</div>
+                    );
+                  })}
+              </Accordion>
+            )}
+          </div>
+
           {productData.APlusContent && (
             <AllDescription
               productContent={productData.APlusContent.productContent}

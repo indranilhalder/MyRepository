@@ -6,7 +6,7 @@ import Input from "../../general/components/Input";
 import PasswordInput from "./PasswordInput";
 import styles from "./Login.css";
 import LoginButton from "./LogInButton";
-import { SUCCESS } from "../../lib/constants";
+import { SUCCESS, HOME_DELIVERY } from "../../lib/constants";
 import AuthFrame from "./AuthFrame.js";
 import MDSpinner from "react-md-spinner";
 import {
@@ -28,7 +28,12 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.authCallsIsSucceed) {
-      this.props.history.push(HOME_ROUTER);
+      if (this.props.redirectToAfterAuthUrl) {
+        this.props.history.push(this.props.redirectToAfterAuthUrl);
+        this.props.clearUrlToRedirectToAfterAuth();
+      } else {
+        this.props.history.push(HOME_ROUTER);
+      }
     }
   }
 

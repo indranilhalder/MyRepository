@@ -9,6 +9,7 @@ import Sort from "../../plp/components/SortModal";
 import AddressModalContainer from "../../plp/containers/AddressModalContainer";
 import SizeGuideModal from "../../pdp/components/SizeGuideModal";
 import EmiModal from "../../pdp/containers/EmiListContainer";
+import OfferModal from "../../pdp/components/OfferModal";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
 import SizeSelectModal from "../../pdp/components/SizeSelectModal.js";
 import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
@@ -131,10 +132,10 @@ export default class ModalRoot extends React.Component {
   resendOtp = () => {
     if (this.props.getOtpToActivateWallet) {
       let kycDetails = {};
-      kycDetails.firstName = this.props.ownProps.firstName;
-      kycDetails.lastName = this.props.ownProps.lastName;
-      kycDetails.mobileNumber = this.props.ownProps.mobileNumber;
-      this.props.getOtpToActivateWallet(kycDetails, true);
+      kycDetails.firstName = this.state.firstName;
+      kycDetails.lastName = this.state.lastName;
+      kycDetails.mobileNumber = this.state.mobileNumber;
+      this.props.getOtpToActivateWallet(kycDetails);
     }
   };
 
@@ -168,6 +169,9 @@ export default class ModalRoot extends React.Component {
     customerDetails.lastName = this.state.lastName;
     this.props.getOtpToActivateWallet(customerDetails);
   }
+  resendOtpForUpdateProfile = () => {
+    this.props.updateProfile(this.props.ownProps);
+  };
 
   addGiftCard = val => {
     if (this.props.redeemCliqVoucher) {
@@ -186,7 +190,7 @@ export default class ModalRoot extends React.Component {
       NewPassword: (
         <NewPassword
           {...this.props.ownProps}
-          handleCancel={() => this.handleClose}
+          handleCancel={() => this.handleClose()}
           onContinue={userDetails => this.resetPassword(userDetails)}
         />
       ),
@@ -203,6 +207,9 @@ export default class ModalRoot extends React.Component {
           userObj={this.props.ownProps}
           closeModal={() => this.handleClose()}
           submitOtp={otpDetails => this.submitOtpForUpdateProfile(otpDetails)}
+          resendOtp={userName =>
+            this.resendOtpForUpdateProfile(this.props.ownProps)
+          }
         />
       ),
       ForgotPasswordOtpVerification: (
@@ -302,6 +309,12 @@ export default class ModalRoot extends React.Component {
         <GiftCardModal
           closeModal={() => this.handleClose()}
           addGiftCard={val => this.addGiftCard(val)}
+        />
+      ),
+      OfferModal: (
+        <OfferModal
+          closeModal={() => this.handleClose()}
+          {...this.props.ownProps}
         />
       )
     };

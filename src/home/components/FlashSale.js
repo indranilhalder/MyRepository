@@ -10,6 +10,7 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import TimerCounter from "../../general/components/TimerCounter.js";
 import { Icon } from "xelpmoc-core";
 import ClockImage from "../../pdp/components/img/clockWhite.svg";
+import { convertDateTimeFromIndianToAmerican } from "../../home/dateTimeUtils.js";
 import moment from "moment";
 
 const OFFER_AND_ITEM_LIMIT = 4;
@@ -49,9 +50,44 @@ export default class FlashSale extends React.Component {
     const { feedComponentData, ...rest } = this.props;
     let items = [];
 
+    if (!feedComponentData.endDate || !feedComponentData.startDate) {
+      return null;
+    }
+
+    const startDateTime = new Date(
+      convertDateTimeFromIndianToAmerican(feedComponentData.startDate)
+    );
+
+    const endDateTime = new Date(
+      convertDateTimeFromIndianToAmerican(feedComponentData.endDate)
+    );
+
+    if (!moment(startDateTime).isValid()) {
+      return null;
+    }
+
+    if (!moment(endDateTime).isValid()) {
+      return null;
+    }
+
+    // if date time
+
+    const now = Date.now();
+
+    // if now is > start and < end, show
+    // if now is < start do not show
+    // if now is > end do not show
+    if (now > endDateTime || now < startDateTime) {
+      return null;
+    }
+
     if (feedComponentData.items) {
       items = feedComponentData.items.map(transformData);
     }
+
+    // Check for date validation
+
+    // feedComponentData.startDate = "13/04/2018 25:40:00";
 
     let offersAndItemsArray;
     if (feedComponentData.offers) {
@@ -61,27 +97,13 @@ export default class FlashSale extends React.Component {
       offersAndItemsArray = items;
     }
 
-    // WE do this because new Date(Datestr) gives back date time in the american format, but the string is in non-american format.
-    // So we need to do a diff of the correct date.
-    // TODO - optimize.
-    const today = new Date();
-    const themeOfferDate = new Date(
-      moment(new Date(this.props.feedComponentData.endDate)).format(
-        "DD/MM/YYYY"
-      )
-    );
-
-    if (themeOfferDate < today) {
-      return null;
-    }
-
     return (
       <div
         className={styles.base}
         style={{
-          backgroundImage: feedComponentData.backgroundImageURL
-            ? `url(${feedComponentData.backgroundImageURL})`
-            : `${feedComponentData.backgroundHexCode}`
+          background: `${feedComponentData.backgroundHexCode} url(${
+            feedComponentData.backgroundImageURL
+          })`
         }}
       >
         <div className={styles.header}>
@@ -92,7 +114,7 @@ export default class FlashSale extends React.Component {
                 <Icon image={ClockImage} size={20} />
               </div>
               <div className={styles.countDownHolder}>
-                <TimerCounter endTime={feedComponentData.endDate} />
+                <TimerCounter endTime={endDateTime} />
               </div>
             </div>
           </div>

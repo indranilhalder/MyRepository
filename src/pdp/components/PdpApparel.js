@@ -9,12 +9,13 @@ import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
 import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
+import ProductFeature from "./ProductFeature";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import PdpDeliveryModes from "./PdpDeliveryModes";
 import Overlay from "./Overlay";
-import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import Accordion from "../../general/components/Accordion.js";
 import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
 import * as Cookie from "../../lib/Cookie";
 import {
@@ -82,7 +83,7 @@ export default class PdpApparel extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (this.checkIfSizeSelected()) {
+    if (this.checkIfSizeSelected() || this.checkIfSizeDoesNotExist()) {
       if (userDetails) {
         if (cartDetailsLoggedInUser && customerCookie) {
           this.props.addProductToCart(
@@ -148,7 +149,15 @@ export default class PdpApparel extends React.Component {
       return false;
     }
   };
-
+  checkIfSizeDoesNotExist = () => {
+    return this.props.productDetails.variantOptions
+      ? this.props.productDetails.variantOptions.filter(val => {
+          return val.sizelink.isAvailable;
+        }).length === 0
+        ? true
+        : false
+      : true;
+  };
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -179,9 +188,6 @@ export default class PdpApparel extends React.Component {
         price = productData.mrpPrice.formattedValueNoDecimal;
       }
 
-      if (productData.winningSellerPrice) {
-        discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
-      }
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
@@ -217,16 +223,11 @@ export default class PdpApparel extends React.Component {
               </div>
             </div>
           )}
-
-          {productData.potentialPromotions && (
-            <OfferCard
-              endTime={productData.potentialPromotions.endDate}
-              startDate={productData.potentialPromotions.startDate}
-              heading={productData.potentialPromotions.title}
-              description={productData.potentialPromotions.description}
-              onClick={this.goToCouponPage}
-            />
-          )}
+          <OfferCard
+            showDetails={this.props.showOfferDetails}
+            potentialPromotions={productData.potentialPromotions}
+            secondaryPromotions={productData.productOfferMsg}
+          />
           {productData.variantOptions && (
             <React.Fragment>
               <SizeSelector
@@ -315,6 +316,31 @@ export default class PdpApparel extends React.Component {
               productContent={productData.APlusContent.productContent}
             />
           )}
+          <div className={styles.details}>
+            {productData.styleNote && (
+              <ProductFeature
+                heading="Style Note"
+                content={productData.styleNote}
+              />
+            )}
+            {productData.knowMore && (
+              <Accordion text="Know More" headerFontSize={16}>
+                {productData.knowMore &&
+                  productData.knowMore.map(val => {
+                    return (
+                      <div className={styles.list}>{val.knowMoreItem}</div>
+                    );
+                  })}
+              </Accordion>
+            )}
+            {productData.brandInfo && (
+              <ProductFeature
+                heading="Brand Info"
+                content={productData.brandInfo}
+              />
+            )}
+          </div>
+          <div className={styles.blankSeparator} />
           <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );

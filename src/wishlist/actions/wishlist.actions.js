@@ -10,7 +10,13 @@ import {
   SUCCESS_FOR_ADDING_TO_WSHLIST
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-
+import * as ErrorHandling from "../../general/ErrorHandling.js";
+import {
+  setDataLayerForPdpDirectCalls,
+  ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART,
+  setDataLayerForCartDirectCalls,
+  SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP
+} from "../../lib/adobeUtils";
 export const GET_WISH_LIST_ITEMS_REQUEST = "GET_WISH_LIST_ITEMS_REQUEST";
 export const GET_WISH_LIST_ITEMS_SUCCESS = "GET_WISH_LIST_ITEMS_SUCCESS";
 export const GET_WISH_LIST_ITEMS_FAILURE = "GET_WISH_LIST_ITEMS_FAILURE";
@@ -75,6 +81,7 @@ export function getWishListItems(productDetails) {
       if (resultJson.errors) {
         throw new Error(`${resultJson.errors[0].message}`);
       }
+
       return dispatch(getWishListItemsSuccess(resultJson.wishList[0]));
     } catch (e) {
       return dispatch(getWishListItemsFailure(e.message));
@@ -104,7 +111,7 @@ export function addProductToWishListFailure(error) {
   };
 }
 
-export function addProductToWishList(productDetails) {
+export function addProductToWishList(productDetails, setDataLayerType: null) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -123,11 +130,19 @@ export function addProductToWishList(productDetails) {
         productToBeAdd
       );
       const resultJson = await result.json();
-      if (resultJson.status === SUCCESS_FOR_ADDING_TO_WSHLIST) {
-        return dispatch(addProductToWishListSuccess(productDetails));
-      } else {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      if (setDataLayerType === SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP) {
+        setDataLayerForPdpDirectCalls(
+          SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP
+        );
+      } else if (setDataLayerType === ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART) {
+        setDataLayerForCartDirectCalls(ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART);
+      }
+      return dispatch(addProductToWishListSuccess(productDetails));
     } catch (e) {
       return dispatch(addProductToWishListFailure(e.message));
     }

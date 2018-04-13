@@ -1,4 +1,9 @@
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
+import { setDataLayer, ADOBE_PLP_TYPE } from "../../lib/adobeUtils";
 export const PRODUCT_LISTINGS_REQUEST = "PRODUCT_LISTINGS_REQUEST";
 export const PRODUCT_LISTINGS_SUCCESS = "PRODUCT_LISTINGS_SUCCESS";
 export const PRODUCT_LISTINGS_FAILURE = "PRODUCT_LISTINGS_FAILURE";
@@ -41,6 +46,7 @@ export function getProductListingsRequest(paginated: false) {
   return {
     type: PRODUCT_LISTINGS_REQUEST,
     status: REQUESTING,
+
     isPaginated: paginated
   };
 }
@@ -68,6 +74,7 @@ export function getProductListings(
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductListingsRequest(paginated));
+    dispatch(showSecondaryLoader());
     try {
       const searchState = getState().search;
       const pageNumber = getState().productListings.pageNumber;
@@ -85,17 +92,22 @@ export function getProductListings(
       if (resultJson.error) {
         throw new Error(`${resultJson.error}`);
       }
+      setDataLayer(ADOBE_PLP_TYPE, resultJson);
       if (paginated) {
         if (resultJson.searchresult) {
           dispatch(getProductListingsPaginatedSuccess(resultJson, true));
+          dispatch(hideSecondaryLoader());
         }
       } else if (isFilter) {
         dispatch(updateFacets(resultJson));
+        dispatch(hideSecondaryLoader());
       } else {
         dispatch(getProductListingsSuccess(resultJson, paginated));
+        dispatch(hideSecondaryLoader());
       }
     } catch (e) {
       dispatch(getProductListingsFailure(e.message, paginated));
+      dispatch(hideSecondaryLoader());
     }
   };
 }

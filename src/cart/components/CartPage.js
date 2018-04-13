@@ -23,9 +23,16 @@ import {
   LOGIN_PATH,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   YES,
-  YOUR_BAG
+  YOUR_BAG,
+  MY_ACCOUNT_PAGE,
+  SAVE_LIST_PAGE,
+  COUPON_COOKIE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
+import {
+  setDataLayerForCartDirectCalls,
+  ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT
+} from "../../lib/adobeUtils";
 
 class CartPage extends React.Component {
   constructor(props) {
@@ -165,6 +172,7 @@ class CartPage extends React.Component {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (customerCookie) {
       if (pinCode && this.state.isServiceable === true) {
+        setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT);
         this.props.history.push({
           pathname: CHECKOUT_ROUTER,
           state: {
@@ -179,6 +187,8 @@ class CartPage extends React.Component {
         this.setState({ isServiceable: false });
       }
     } else {
+      const url = this.props.location.pathname;
+      this.props.setUrlToRedirectToAfterAuth(url);
       this.props.history.push(LOGIN_PATH);
     }
   }
@@ -207,6 +217,18 @@ class CartPage extends React.Component {
         JSON.parse(cartDetailsAnonymous).guid,
         val
       );
+    }
+  };
+
+  goToWishList = () => {
+    if (this.props.history) {
+      const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+      const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+      if (!userDetails || !customerCookie) {
+        this.props.history.push(LOGIN_PATH);
+      } else {
+        this.props.history.push(`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`);
+      }
     }
   };
 
@@ -243,7 +265,7 @@ class CartPage extends React.Component {
         <div className={styles.content}>
           <EmptyBag
             onContinueShopping={() => this.navigateToHome()}
-            viewSavedProduct={() => this.navigateToHome()}
+            viewSavedProduct={() => this.goToWishList()}
           />
         </div>
       </div>
@@ -255,7 +277,7 @@ class CartPage extends React.Component {
       CART_DETAILS_FOR_ANONYMOUS
     );
 
-    if (this.props.cart.loading && !this.props.cart.cartDetails) {
+    if (this.props.cart.loading && this.props.cart.cartDetails === null) {
       return this.renderLoader();
     } else {
       if (this.props.cart.loading) {
@@ -369,7 +391,10 @@ class CartPage extends React.Component {
               })}
 
             {cartDetails.products && (
-              <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
+              <SavedProduct
+                saveProduct={() => this.goToWishList()}
+                onApplyCoupon={() => this.goToCouponPage()}
+              />
             )}
 
             {cartDetails.products &&
@@ -389,6 +414,12 @@ class CartPage extends React.Component {
       );
     } else {
       return this.renderEmptyBag();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.clearCartDetails) {
+      this.props.clearCartDetails();
     }
   }
 }

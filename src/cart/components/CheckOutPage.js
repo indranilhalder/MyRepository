@@ -38,7 +38,9 @@ import {
   ORDER,
   ORDER_CODE,
   REQUESTING,
-  THANK_YOU
+  THANK_YOU,
+  COUPON_COOKIE,
+  JUS_PAY_AUTHENTICATION_FAILED
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
@@ -50,10 +52,10 @@ const CART_GU_ID = "cartGuid";
 const DELIVERY_MODE_ADDRESS_ERROR = "No Delivery Modes At Selected Address";
 const CONTINUE = "Continue";
 const PROCEED = "Proceed";
+const COUPON_AVAILABILITY_ERROR_MESSAGE = "Your applied coupon has expired";
 class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       confirmAddress: false, //render the render delivery Modes if confirmAddress= true
       isSelectedDeliveryModes: false, // To select the delivery Modes
@@ -82,7 +84,11 @@ class CheckOutPage extends React.Component {
       ratingExperience: false
     };
   }
-
+  onClickImage(productCode) {
+    if (productCode) {
+      this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    }
+  }
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
@@ -232,6 +238,7 @@ class CheckOutPage extends React.Component {
                     )
                   }
                   onPiq={() => this.getAllStores(val.USSID)}
+                  onClickImage={() => this.onClickImage(val.productcode)}
                 />
               </div>
             );
@@ -586,61 +593,78 @@ class CheckOutPage extends React.Component {
   onChange(val) {
     this.setState(val);
   }
-  handleSubmit = () => {
-    if (
-      !this.state.confirmAddress &&
-      !this.state.isGiftCard &&
-      this.state.addressId &&
-      this.state.selectedAddress.postalCode
-    ) {
-      this.props.addAddressToCart(
-        this.state.addressId,
-        this.state.selectedAddress.postalCode
-      );
-      this.setState({ confirmAddress: true });
+
+  availabilityOfUserCoupon = () => {
+    let couponCookie = Cookie.getCookie(COUPON_COOKIE);
+    let cartDetailsCouponDiscount = this.props.cart.cartDetailsCNC.cartAmount
+      .couponDiscountAmount;
+
+    if (couponCookie && !cartDetailsCouponDiscount) {
+      this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
+      return false;
     }
-    if (
-      !this.state.deliverMode &&
-      this.state.confirmAddress &&
-      !this.state.isGiftCard
-    ) {
-      if (this.props.selectDeliveryMode) {
-        this.props.selectDeliveryMode(
-          this.state.ussIdAndDeliveryModesObj,
+
+    return true;
+  };
+  handleSubmit = () => {
+    if (this.availabilityOfUserCoupon()) {
+      if (
+        !this.state.confirmAddress &&
+        !this.state.isGiftCard &&
+        this.state.addressId &&
+        this.state.selectedAddress.postalCode
+      ) {
+        this.props.addAddressToCart(
+          this.state.addressId,
           this.state.selectedAddress.postalCode
         );
-        // this.props.getOrderSummary(this.state.selectedAddress.postalCode);
+        this.setState({ confirmAddress: true });
       }
-      this.setState({
-        deliverMode: true
-      });
-    }
+      if (
+        !this.state.deliverMode &&
+        this.state.confirmAddress &&
+        !this.state.isGiftCard
+      ) {
+        if (this.props.selectDeliveryMode) {
+          this.props.selectDeliveryMode(
+            this.state.ussIdAndDeliveryModesObj,
+            this.state.selectedAddress.postalCode
+          );
+          // this.props.getOrderSummary(this.state.selectedAddress.postalCode);
+        }
+        this.setState({
+          deliverMode: true
+        });
+      }
 
-    if (this.state.savedCardDetails !== "") {
-      if (this.state.isGiftCard) {
-        this.props.createJusPayOrderForGiftCardFromSavedCards(
-          this.state.savedCardDetails,
-          this.props.location.state.egvCartGuid
-        );
-      } else {
-        this.props.softReservationPaymentForSavedCard(
-          this.state.savedCardDetails,
-          this.state.addressId,
-          this.state.paymentModeSelected
+      if (this.state.savedCardDetails !== "") {
+        if (this.state.isGiftCard) {
+          this.props.createJusPayOrderForGiftCardFromSavedCards(
+            this.state.savedCardDetails,
+            this.props.location.state.egvCartGuid
+          );
+        } else {
+          this.props.softReservationPaymentForSavedCard(
+            this.state.savedCardDetails,
+            this.state.addressId,
+            this.state.paymentModeSelected
+          );
+        }
+      }
+      if (!this.state.isRemainingAmount) {
+        this.props.softReservationForCliqCash(
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
         );
       }
-    }
-    if (!this.state.isRemainingAmount) {
-      this.props.softReservationForCliqCash(
-        localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
-      );
-    }
 
-    if (this.state.binValidationCOD) {
-      this.softReservationForCODPayment();
-    }
-    if (this.state.paymentModeSelected === PAYTM) {
-      this.softReservationPaymentForWallet(PAYTM);
+      if (this.state.binValidationCOD) {
+        this.softReservationForCODPayment();
+      }
+      if (this.state.paymentModeSelected === PAYTM) {
+        this.softReservationPaymentForWallet(PAYTM);
+      }
+    } else {
+      this.props.history.goBack();
     }
   };
 
@@ -863,6 +887,9 @@ class CheckOutPage extends React.Component {
           <AddDeliveryAddress
             addUserAddress={address => this.addAddress(address)}
             {...this.state}
+            showSecondaryLoader={this.props.showSecondaryLoader}
+            hideSecondaryLoader={this.props.hideSecondaryLoader}
+            loading={this.props.cart.loading}
             onChange={val => this.onChange(val)}
           />
         </div>
@@ -963,25 +990,21 @@ class CheckOutPage extends React.Component {
             </div>
           )}
 
-          {(this.state.isGiftCard || !this.state.showCliqAndPiq) &&
-            this.props.cart.cartDetailsCNC && (
-              <Checkout
-                label={
-                  this.state.confirmAddress &&
-                  !this.state.deliverMode &&
-                  !this.state.isGiftCard
-                    ? PROCEED
-                    : CONTINUE
-                }
-                amount={this.state.payableAmount}
-                bagTotal={this.state.bagAmount}
-                payable={this.state.payableAmount}
-                coupons={couponDiscount}
-                discount={totalDiscount}
-                delivery={deliveryCharge}
-                onCheckout={this.handleSubmit}
-              />
-            )}
+          <Checkout
+            label={
+              (this.state.confirmAddress && !this.state.deliverMode) ||
+              this.state.isGiftCard
+                ? PROCEED
+                : CONTINUE
+            }
+            amount={this.state.payableAmount}
+            bagTotal={this.state.bagAmount}
+            payable={this.state.payableAmount}
+            coupons={couponDiscount}
+            discount={totalDiscount}
+            delivery={deliveryCharge}
+            onCheckout={this.handleSubmit}
+          />
         </div>
       );
     } else if (this.state.orderConfirmation) {
@@ -1004,6 +1027,7 @@ class CheckOutPage extends React.Component {
                     this.props.cart.orderConfirmationDetails.orderRefNo
                   )
                 }
+                orderDetails={this.props.cart.orderConfirmationDetails}
               />
             </div>
           )}
@@ -1022,6 +1046,7 @@ class CheckOutPage extends React.Component {
                     this.props.cart.cliqCashJusPayDetails.orderId
                   )
                 }
+                orderDetails={this.props.cart.cliqCashJusPayDetails}
               />
             </div>
           )}

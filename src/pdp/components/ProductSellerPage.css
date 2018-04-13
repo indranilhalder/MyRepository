@@ -3,3 +3,38 @@
   height: auto;
   padding-top: 50px;
 }
+
+.OtherSeller {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  font-family: semibold;
+  font-size: 16px;
+  padding: 10px;
+}
+.priceWithSeller {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 10px;
+  font-family: regular;
+}
+.seller {
+  width: 50%;
+  height: auto;
+  font-size: 14px;
+  display: inline-block;
+  text-align: left;
+  font-family: regular;
+  padding: 2px;
+  line-height: 20px;
+}
+.price {
+  width: 50%;
+  height: auto;
+  font-size: 14px;
+  display: inline-block;
+  background-color: #fff;
+  text-align: right;
+  font-family: regular;
+}

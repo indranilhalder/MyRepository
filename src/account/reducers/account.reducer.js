@@ -387,7 +387,7 @@ const account = (
       return Object.assign({}, state, {
         wishlistStatus: action.status,
         wishlistError: action.error,
-        loaloadingForWishlistding: false
+        loadingForWishlist: false
       });
     case accountActions.GET_USER_DETAILS_REQUEST:
       return Object.assign({}, state, {
@@ -771,6 +771,12 @@ const account = (
         cancelProductError: action.error,
         loadingForCancelProduct: false
       });
+    case accountActions.CLEAR_GIFT_CARD_STATUS: {
+      return Object.assign({}, state, {
+        giftCardDetails: null,
+        giftCardDetailsStatus: null
+      });
+    }
 
     default:
       return state;

@@ -1,24 +1,28 @@
 import React from "react";
 import Carousel from "../../general/components/Carousel";
 import ProductCapsuleCircle from "../../general/components/ProductCapsuleCircle";
-import PropTypes from "prop-types";
 import styles from "./ProductCapsules.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import {
   CUSTOMER_ACCESS_TOKEN,
-  LOGGED_IN_USER_DETAILS
+  LOGGED_IN_USER_DETAILS,
+  MY_ACCOUNT_PAGE,
+  SAVE_LIST_PAGE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
 import Loader from "../../general/components/Loader";
 export default class ProductCapsules extends React.Component {
   handleClick() {
-    const urlSuffix = this.props.feedComponentData.webURL.replace(
-      TATA_CLIQ_ROOT,
-      "$1"
-    );
-    this.props.history.push(urlSuffix);
+    this.props.history.push(`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`);
   }
+
+  handleProductClick = val => {
+    if (val) {
+      const urlSuffix = val.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
+    }
+  };
 
   componentDidMount() {
     this.props.getProductCapsules(this.props.positionInFeed);
@@ -77,6 +81,8 @@ export default class ProductCapsules extends React.Component {
                     image={datum.imageURL}
                     label={datum.label}
                     key={i}
+                    url={datum.webURL}
+                    onClick={this.handleProductClick}
                   />
                 );
               }
