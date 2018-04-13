@@ -16,7 +16,7 @@ export default class Plp extends React.Component {
       const pathName = this.props.location.pathname;
       const search = this.props.location.search;
       const url = `${pathName}${search}`;
-      this.props.setClearUrl(url);
+      this.props.setUrlToReturnToAfterClear(url);
       this.props.showFilter();
     }
   };
@@ -34,7 +34,7 @@ export default class Plp extends React.Component {
   onClear = () => {
     this.props.history.push(this.props.clearUrl);
     this.props.hideFilter();
-    this.props.setClearUrlToNull();
+    this.props.setUrlToReturnToAfterClearToNull();
   };
 
   handleScroll = () => {

@@ -6,8 +6,8 @@ import { setHeaderText } from "../../general/header.actions";
 import {
   showFilter,
   hideFilter,
-  setClearUrl,
-  setClearUrlToNull
+  setUrlToReturnToAfterClear,
+  setUrlToReturnToAfterClearToNull
 } from "../../plp/actions/plp.actions.js";
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -27,11 +27,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     hideFilter: () => {
       dispatch(hideFilter());
     },
-    setClearUrl: url => {
-      dispatch(setClearUrl(url));
+    setUrlToReturnToAfterClear: url => {
+      dispatch(setUrlToReturnToAfterClear(url));
     },
-    setClearUrlToNull: () => {
-      dispatch(setClearUrlToNull());
+    setUrlToReturnToAfterClearToNull: () => {
+      dispatch(setUrlToReturnToAfterClearToNull());
     }
   };
 };

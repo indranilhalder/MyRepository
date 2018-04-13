@@ -43,14 +43,14 @@ export function resetFilterSelectedData() {
   };
 }
 
-export function setClearUrl(url) {
+export function setUrlToReturnToAfterClear(url) {
   return {
     type: SET_URL_TO_RETURN_TO_AFTER_CLEAR,
     urlToReturnToAfterClear: url
   };
 }
 
-export function setClearUrlToNull() {
+export function setUrlToReturnToAfterClearToNull() {
   return {
     type: SET_URL_TO_RETURN_TO_AFTER_CLEAR_TO_NULL
   };
