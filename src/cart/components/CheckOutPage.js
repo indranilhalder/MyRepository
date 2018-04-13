@@ -831,7 +831,6 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
-    console.log(this.props.cart);
     if (
       this.props.cart.paymentModesStatus === REQUESTING ||
       this.props.cart.codEligibilityStatus === REQUESTING ||
