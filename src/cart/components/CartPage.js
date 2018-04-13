@@ -30,7 +30,7 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import {
-  setDataLayerForDirectCallsOnCart,
+  setDataLayerForCartDirectCalls,
   ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT
 } from "../../lib/adobeUtils";
 
@@ -172,7 +172,7 @@ class CartPage extends React.Component {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (customerCookie) {
       if (pinCode && this.state.isServiceable === true) {
-        setDataLayerForDirectCallsOnCart(ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT);
+        setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT);
         this.props.history.push({
           pathname: CHECKOUT_ROUTER,
           state: {

@@ -24,7 +24,7 @@ import {
 import {
   setDataLayer,
   ADOBE_CART_TYPE,
-  setDataLayerForDirectCallsOnCart,
+  setDataLayerForCartDirectCalls,
   ADOBE_CALLS_FOR_REMOVE_IMEM,
   ADOBE_ORDER_CONFIRMATION,
   ADOBE_CHECKOUT_TYPE,
@@ -518,13 +518,13 @@ export function applyUserCouponForAnonymous(couponCode) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
-        setDataLayerForDirectCallsOnCart(
+        setDataLayerForCartDirectCalls(
           ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
           couponCode
         );
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayerForDirectCallsOnCart(
+      setDataLayerForCartDirectCalls(
         ADOBE_CALLS_FOR_APPLY_COUPON_SUCCESS,
         couponCode
       );
@@ -562,13 +562,13 @@ export function applyUserCouponForLoggedInUsers(couponCode) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
-        setDataLayerForDirectCallsOnCart(
+        setDataLayerForCartDirectCalls(
           ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
           couponCode
         );
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayerForDirectCallsOnCart(
+      setDataLayerForCartDirectCalls(
         ADOBE_CALLS_FOR_APPLY_COUPON_SUCCESS,
         couponCode
       );
@@ -3297,7 +3297,7 @@ export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
         )
       ).then(cartDetails => {
         if (cartDetails.status === SUCCESS) {
-          setDataLayerForDirectCallsOnCart(
+          setDataLayerForCartDirectCalls(
             ADOBE_CALLS_FOR_REMOVE_IMEM,
             cartDetails.cartDetails
           );
@@ -3361,7 +3361,7 @@ export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
         )
       ).then(cartDetails => {
         if (cartDetails.status === SUCCESS) {
-          setDataLayerForDirectCallsOnCart(
+          setDataLayerForCartDirectCalls(
             ADOBE_CALLS_FOR_REMOVE_IMEM,
             cartDetails.cartDetails
           );
@@ -3430,7 +3430,7 @@ export function updateQuantityInCartLoggedIn(selectedItem, quantity, pinCode) {
         )
       ).then(cartDetails => {
         if (cartDetails.status === SUCCESS) {
-          setDataLayerForDirectCallsOnCart(ADOBE_CALLS_FOR_CHANGE_QUANTITY);
+          setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_CHANGE_QUANTITY);
           dispatch(updateQuantityInCartLoggedInSuccess(resultJson));
         }
       });
@@ -3496,7 +3496,7 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
         )
       ).then(cartDetails => {
         if (cartDetails.status === SUCCESS) {
-          setDataLayerForDirectCallsOnCart(ADOBE_CALLS_FOR_CHANGE_QUANTITY);
+          setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_CHANGE_QUANTITY);
           dispatch(updateQuantityInCartLoggedOutSuccess(resultJson));
         }
       });

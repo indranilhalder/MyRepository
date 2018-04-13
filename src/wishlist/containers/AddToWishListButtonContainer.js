@@ -14,7 +14,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     addProductToWishList: async productObj => {
       const wishlistResponse = await dispatch(
-        addProductToWishList(productObj, ownProps.setDataLayerOnSelect)
+        addProductToWishList(productObj, ownProps.setDataLayerType)
       );
       if (wishlistResponse.status === SUCCESS) {
         dispatch(displayToast(toastMessageOnSuccessAddToWishlist));
