@@ -14,6 +14,7 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -25,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.SizeGuideModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.comparator.MplSizeGuideComparator;
 import com.tisl.mpl.facade.comparator.SizeGuideComparator;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
@@ -69,6 +71,9 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 	private ProductService productService;
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
+
+	@Resource(name = "MplSizeGuideComparator")
+	private MplSizeGuideComparator MplSizeGuideComparator;
 
 	/**
 	 * @description It is used for fetching all distinct Size Guides of an online product
@@ -457,11 +462,11 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 			throws CMSItemNotFoundException
 	{
 		List<SizeGuideModel> sizeGuideModels = null; //changed to null
-		List<SizeGuideData> sizeDataValues = null;
+		//final List<SizeGuideData> sizeDataValues = null;
 		SizeGuideData sizeGuideData = null;
 		final TreeMap<String, List<SizeGuideData>> sizeGuideDatas = new TreeMap<String, List<SizeGuideData>>();
-		final TreeMap<String, List<SizeGuideData>> sizeGuideSortedDatas = new TreeMap<String, List<SizeGuideData>>();
-		final List<SizeGuideData> sizeGuideDataListForFootwear = new ArrayList<SizeGuideData>();
+		final LinkedHashMap<String, List<SizeGuideData>> sizeGuideSortedDatas = new LinkedHashMap<String, List<SizeGuideData>>();
+		//	final List<SizeGuideData> sizeGuideDataListForFootwear = new ArrayList<SizeGuideData>();
 		try
 		{
 			sizeGuideModels = sizeGuideService.getProductSizeGuideList(productCode);
@@ -471,33 +476,39 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 				{
 					//convertor is added
 					sizeGuideData = getSizeGuideConverter().convert(sizeGuideModel);
-					if (categoryType.equalsIgnoreCase(FOOTWEAR) || categoryType.equalsIgnoreCase(ACCESSORIES))
-					{
-						sizeGuideDataListForFootwear.add(sizeGuideData);
-					}
-					else
-					{
-						addToMap(sizeGuideDatas, sizeGuideModel.getSize(), sizeGuideData);
-					}
+					//					if (categoryType.equalsIgnoreCase(FOOTWEAR) || categoryType.equalsIgnoreCase(ACCESSORIES))
+					//					{
+					//						sizeGuideDataListForFootwear.add(sizeGuideData);
+					//					}
+					//					else
+					//					{
+					addToMap(sizeGuideDatas, sizeGuideModel.getSize(), sizeGuideData);
+					//				}
 				}
 			}
 			/* sorting the Size guide map based on dimension */
 
-			if (categoryType.equalsIgnoreCase(FOOTWEAR) || categoryType.equalsIgnoreCase(ACCESSORIES))
-			{
-				Collections.sort(sizeGuideDataListForFootwear, sizeGuideComparator);
-				sizeGuideSortedDatas.put(productCode, sizeGuideDataListForFootwear);
-			}
-			else
-			{
-				for (final String key : sizeGuideDatas.keySet())
-				{
-					sizeDataValues = sizeGuideDatas.get(key);
-					Collections.sort(sizeDataValues, sizeGuideComparator);
-					sizeGuideSortedDatas.put(key, sizeDataValues);
-				}
+			//			if (categoryType.equalsIgnoreCase(FOOTWEAR) || categoryType.equalsIgnoreCase(ACCESSORIES))
+			//			{
+			//				Collections.sort(sizeGuideDataListForFootwear, sizeGuideComparator);
+			//				sizeGuideSortedDatas.put(productCode, sizeGuideDataListForFootwear);
+			//			}
+			//			else
+			//			{
+			final List<String> sortedKeyList = new ArrayList<String>();
 
+			for (final String key : sizeGuideDatas.keySet())
+			{
+				sortedKeyList.add(key);
 			}
+			Collections.sort(sortedKeyList, MplSizeGuideComparator);
+
+			for (final String key : sortedKeyList)
+			{
+				sizeGuideSortedDatas.put(key, sizeGuideDatas.get(key));
+			}
+
+			//	}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
