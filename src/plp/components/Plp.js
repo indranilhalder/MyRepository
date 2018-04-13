@@ -12,6 +12,7 @@ export default class Plp extends React.Component {
   toggleFilter = () => {
     if (this.props.isFilterOpen) {
       this.props.hideFilter();
+      this.props.setUrlToReturnToAfterClearToNull();
     } else {
       const pathName = this.props.location.pathname;
       const search = this.props.location.search;
@@ -29,10 +30,13 @@ export default class Plp extends React.Component {
       isFilter: false
     });
     this.props.hideFilter();
+    this.props.setUrlToReturnToAfterClearToNull();
   };
 
   onClear = () => {
-    this.props.history.push(this.props.clearUrl);
+    this.props.history.push(this.props.clearUrl, {
+      isFilter: true
+    });
   };
 
   handleScroll = () => {
