@@ -31,11 +31,14 @@ class ProductCouponDetails extends Component {
   };
 
   setUserCoupons = couponCode => {
-    if (couponCode.length > 0) {
+    if (couponCode instanceof Array) {
       this.setState({ couponVal: couponCode[0] });
+    } else if (couponCode) {
+      this.setState({ couponVal: couponCode });
     } else {
       this.setState({ couponVal: "" });
     }
+    console.log(this.state.couponVal);
   };
   releaseUserCoupon = couponCode => {
     if (this.props.releaseUserCoupon) {

@@ -18,6 +18,7 @@ export default class EmiAccordion extends React.Component {
       selectedPrice: ""
     };
   }
+
   handleSelectPlan(val) {
     if (val) {
       this.setState({

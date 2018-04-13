@@ -74,21 +74,23 @@ export default class SaveListDetails extends React.Component {
       this.props.removeProductFromWishList(productDetails);
     }
   }
+
   render() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
       return this.navigateToLogin();
     }
-    if (this.props.loading) {
+
+    const wishList = this.props.wishList;
+
+    if (!wishList && this.props.loading) {
       return (
         <div className={styles.loadingIndicator}>
           <MDSpinner />
         </div>
       );
     }
-    const wishList = this.props.wishList;
-
     return (
       <div className={styles.base}>
         {wishList &&
