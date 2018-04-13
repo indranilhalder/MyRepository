@@ -988,7 +988,6 @@ class CheckOutPage extends React.Component {
                 addGiftCard={() => this.addGiftCard()}
                 binValidationForPaytm={val => this.binValidationForPaytm(val)}
                 displayToast={message => this.props.displayToast(message)}
-                getEmiDetails={() => this.getEmiDetails()}
               />
             </div>
           )}
