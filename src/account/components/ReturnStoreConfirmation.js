@@ -39,7 +39,11 @@ export default class ReturnsStoreConfirmation extends React.Component {
         <OrderReturnAddressDetails />
         <div className={styles.card}>
           <OrderCard
-            productImage={data.orderProductWsDTO[0].imageURL}
+            imageUrl={
+              data &&
+              data.orderProductWsDTO[0] &&
+              data.orderProductWsDTO[0].imageURL
+            }
             productName={`${data.orderProductWsDTO[0].productBrand} ${
               data.orderProductWsDTO[0].productName
             }`}

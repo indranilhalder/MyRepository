@@ -1,7 +1,10 @@
 import { connect } from "react-redux";
 import SearchPage from "./components/SearchPage";
 import { withRouter } from "react-router-dom";
-import { getSearchResults } from "./actions/search.actions.js";
+import {
+  getSearchResults,
+  clearSearchResults
+} from "./actions/search.actions.js";
 const mapStateToProps = (state, ownProps) => {
   return {
     searchResult: state.search.searchResult.result,
@@ -15,6 +18,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     goBack: () => dispatch(ownProps.goBack()),
     getSearchResults: string => {
       dispatch(getSearchResults(string));
+    },
+    clearSearchResults: () => {
+      dispatch(clearSearchResults());
     }
   };
 };
