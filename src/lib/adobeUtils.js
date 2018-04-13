@@ -430,3 +430,29 @@ function getDigitalDataForPlp(type, response) {
   }
   return data;
 }
+
+export function setDataLayerForPlpDirectCalls(response) {
+  const data = window.digitalData;
+  let badge;
+  if (response.outOfStock) {
+    badge = "out of stock";
+  } else if (response.discountPercent && response.discountPercent !== "0") {
+    badge = `${response.discountPercent}% off`;
+  } else if (response.isOfferExisting) {
+    badge = "on offer";
+  } else if (response.onlineExclusive) {
+    badge = "exclusive";
+  } else if (response.newProduct) {
+    badge = "new";
+  }
+  if (badge) {
+    if (data.cpj && data.cpj.product) {
+      Object.assign(data.cpj.product, { badge });
+    } else if (data.cpj) {
+      Object.assign(data.cpj, { product: { badge } });
+    } else {
+      Object.assign(data, { cpj: { product: { badge } } });
+    }
+    window.digitalData = data;
+  }
+}
