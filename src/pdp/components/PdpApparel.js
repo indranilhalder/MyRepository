@@ -9,12 +9,13 @@ import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
 import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
+import ProductFeature from "./ProductFeature";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import PdpDeliveryModes from "./PdpDeliveryModes";
 import Overlay from "./Overlay";
-import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import Accordion from "../../general/components/Accordion.js";
 import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
 import * as Cookie from "../../lib/Cookie";
 import {
@@ -150,6 +151,7 @@ export default class PdpApparel extends React.Component {
   };
 
   render() {
+    console.log(this.props.productDetails);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -310,6 +312,31 @@ export default class PdpApparel extends React.Component {
               productContent={productData.APlusContent.productContent}
             />
           )}
+          <div className={styles.details}>
+            {productData.styleNote && (
+              <ProductFeature
+                heading="Style Note"
+                content={productData.styleNote}
+              />
+            )}
+            {productData.knowMore && (
+              <Accordion text="Know More" headerFontSize={16}>
+                {productData.knowMore &&
+                  productData.knowMore.map(val => {
+                    return (
+                      <div className={styles.list}>{val.knowMoreItem}</div>
+                    );
+                  })}
+              </Accordion>
+            )}
+            {productData.brandInfo && (
+              <ProductFeature
+                heading="Brand Info"
+                content={productData.brandInfo}
+              />
+            )}
+          </div>
+          <div className={styles.blankSeparator} />
           <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );
