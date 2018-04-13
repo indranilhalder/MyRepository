@@ -38,7 +38,6 @@ class ProductCouponDetails extends Component {
     } else {
       this.setState({ couponVal: "" });
     }
-    console.log(this.state.couponVal);
   };
   releaseUserCoupon = couponCode => {
     if (this.props.releaseUserCoupon) {
