@@ -15,6 +15,7 @@ import {
   IS_NEW,
   IS_OFFER_EXISTING
 } from "../../lib/constants";
+
 export default class ProductModule extends React.Component {
   onDownload = () => {
     if (this.props.onDownload) {

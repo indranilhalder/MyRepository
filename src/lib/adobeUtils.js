@@ -38,6 +38,8 @@ export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
 export const ADOBE_CART_TYPE = "cart";
 export const ADOBE_CHECKOUT_TYPE = "checkout";
+export const ADOBE_PLP_TYPE = "plp";
+
 export const ICID2 = "ICID2";
 export const CID = "CID";
 export const SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT =
@@ -71,13 +73,27 @@ export function setDataLayer(type, response, icid, icidType) {
   if (userDetails) {
     userDetails = JSON.parse(userDetails);
   }
-
   if (type === ADOBE_HOME_TYPE) {
     window.digitalData = getDigitalDataForHome();
   }
-
+  if (type === ADOBE_PLP_TYPE) {
+    window.digitalData = getDigitalDataForPlp(type, response);
+  }
   if (type === ADOBE_PDP_TYPE) {
-    window.digitalData = getDigitalDataForPdp(type, response);
+    const digitalDataForPDP = getDigitalDataForPdp(type, response);
+    //  this is neccasary for when user comes from plp page to pdp
+    //  then we are setting badges from plp page and we need to
+    //  pass that on pdp page
+    if (
+      window.digitalData &&
+      window.digitalData.cpj &&
+      window.digitalData.cpj.product &&
+      window.digitalData.cpj.product.badge
+    ) {
+      const badge = window.digitalData.cpj.badge;
+      Object.assign(digitalDataForPDP.cpj.product, { badge });
+    }
+    window.digitalData = digitalDataForPDP;
     window._satellite.track(ADOBE_PDP_CPJ);
   }
   if (type === ADOBE_CHECKOUT_TYPE) {
@@ -150,9 +166,6 @@ export function setDataLayer(type, response, icid, icidType) {
 }
 
 function getDigitalDataForPdp(type, pdpResponse) {
-  const categoryHierarchy = pdpResponse.categoryHierarchy.map(val => {
-    return val.category_name.toLowerCase().replace(/\s+/g, "_");
-  });
   const data = {
     cpj: {
       product: {
@@ -166,10 +179,7 @@ function getDigitalDataForPdp(type, pdpResponse) {
 
     page: {
       category: {
-        primaryCategory: "product",
-        subCategory1: categoryHierarchy[0],
-        subCategory2: categoryHierarchy[1],
-        subCategory3: categoryHierarchy[2]
+        primaryCategory: "product"
       },
 
       pageInfo: {
@@ -177,6 +187,10 @@ function getDigitalDataForPdp(type, pdpResponse) {
       }
     }
   };
+  const subCategories = getSubCategories(pdpResponse);
+  if (subCategories) {
+    Object.assign(data.page.category, { ...subCategories });
+  }
   if (pdpResponse && pdpResponse.seo && pdpResponse.seo.breadcrumbs) {
     const seoBreadCrumbs = pdpResponse.seo.breadcrumbs
       .map(val => {
@@ -338,6 +352,43 @@ function getProductIdArray(response) {
     return null;
   }
 }
+function getHierarchyArray(response) {
+  if (response.seo && response.seo.breadcrumbs) {
+    const hierarchyArray = response.seo.breadcrumbs
+      .reverse()
+      .map(breadcrumb => {
+        return breadcrumb.name.replace(/ /g, "_");
+      });
+    return ["home", ...hierarchyArray];
+  } else {
+    return null;
+  }
+}
+function getSubCategories(response) {
+  if (response.seo && response.seo.breadcrumbs) {
+    const breadcrumbs = response.seo.breadcrumbs.reverse();
+    const subCatagories = {};
+    if (breadcrumbs[0]) {
+      Object.assign(subCatagories, {
+        subCategory1: breadcrumbs[0].name.replace(/ /g, "_").toLowerCase()
+      });
+    }
+    if (breadcrumbs[1]) {
+      Object.assign(subCatagories, {
+        subCategory2: breadcrumbs[1].name.replace(/ /g, "_").toLowerCase()
+      });
+    }
+    if (breadcrumbs[2]) {
+      Object.assign(subCatagories, {
+        subCategory3: breadcrumbs[2].name.replace(/ /g, "_").toLowerCase()
+      });
+    }
+
+    return subCatagories;
+  } else {
+    return null;
+  }
+}
 export async function getMcvId() {
   return new Promise((resolve, reject) => {
     let amcvCookieValue = getCookieValue(ADOBE_TARGET_COOKIE_NAME).split(
@@ -418,5 +469,68 @@ export function setDataLayerForCartDirectCalls(type, response) {
   }
   if (type === ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART) {
     window._satellite.track(ADOBE_DIRECT_CALL_FOR_SAVE_PORDUCT_ON_CART);
+  }
+}
+function getDigitalDataForPlp(type, response) {
+  let data = {
+    page: {
+      category: {
+        primaryCategory: "category"
+      },
+      pageInfo: {
+        pageName: "product grid"
+      }
+    }
+  };
+  if (response.searchresult && response.searchresult.length > 0) {
+    const productCodes = response.searchresult.splice(0, 9).map(product => {
+      return product.productId.toLowerCase();
+    });
+    const impression = JSON.stringify(productCodes.join("|"));
+    Object.assign(data.page, {
+      products: {
+        impression
+      }
+    });
+  }
+
+  const hierarchy = getHierarchyArray(response);
+  if (hierarchy) {
+    Object.assign(data.page, {
+      display: {
+        hierarchy
+      }
+    });
+  }
+  const subCategories = getSubCategories(response);
+  if (subCategories) {
+    Object.assign(data.page.category, { ...subCategories });
+  }
+  return data;
+}
+
+export function setDataLayerForPlpDirectCalls(response) {
+  const data = window.digitalData;
+  let badge;
+  if (response.outOfStock) {
+    badge = "out of stock";
+  } else if (response.discountPercent && response.discountPercent !== "0") {
+    badge = `${response.discountPercent}% off`;
+  } else if (response.isOfferExisting) {
+    badge = "on offer";
+  } else if (response.onlineExclusive) {
+    badge = "exclusive";
+  } else if (response.newProduct) {
+    badge = "new";
+  }
+  if (badge) {
+    if (data.cpj && data.cpj.product) {
+      Object.assign(data.cpj.product, { badge });
+    } else if (data.cpj) {
+      Object.assign(data.cpj, { product: { badge } });
+    } else {
+      Object.assign(data, { cpj: { product: { badge } } });
+    }
+    window.digitalData = data;
   }
 }
