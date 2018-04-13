@@ -22,7 +22,6 @@ const mapStateToProps = state => {
     cartDetailsError: state.cart.cartDetailsError,
     cartDetailsCNCError: state.cart.cartDetailsCNCError,
     couponError: state.cart.couponError,
-    emiBankError: state.cart.emiBankError,
     softReserveError: state.cart.softReserveError,
     paymentsModeError: state.cart.paymentsModeError,
     bankOfferError: state.cart.bankOfferError,
