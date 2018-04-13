@@ -46,7 +46,6 @@ export function setDataLayer(type, response, icid, icidType) {
   if (userDetails) {
     userDetails = JSON.parse(userDetails);
   }
-
   if (type === ADOBE_HOME_TYPE) {
     window.digitalData = getDigitalDataForHome();
   }
@@ -54,7 +53,20 @@ export function setDataLayer(type, response, icid, icidType) {
     window.digitalData = getDigitalDataForPlp(type, response);
   }
   if (type === ADOBE_PDP_TYPE) {
-    window.digitalData = getDigitalDataForPdp(type, response);
+    const digitalDataForPDP = getDigitalDataForPdp(type, response);
+    //  this is neccasary for when user comes from plp page to pdp
+    //  then we are setting badges from plp page and we need to
+    //  pass that on pdp page
+    if (
+      window.digitalData &&
+      window.digitalData.cpj &&
+      window.digitalData.cpj.product &&
+      window.digitalData.cpj.product.badge
+    ) {
+      const badge = window.digitalData.cpj.badge;
+      Object.assign(digitalDataForPDP.cpj.product, { badge });
+    }
+    window.digitalData = digitalDataForPDP;
     window._satellite.track(ADOBE_PDP_CPJ);
   }
   if (type === ADOBE_CHECKOUT_TYPE) {
