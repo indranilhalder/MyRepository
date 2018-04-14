@@ -166,6 +166,17 @@ export default class PdpApparel extends React.Component {
       .map(image => {
         return image[0].value;
       });
+    let validSellersCount = 0;
+    if (
+      productData.otherSellers &&
+      productData.otherSellers.filter(val => {
+        return val.availableStock !== "0";
+      }).length > 0
+    ) {
+      validSellersCount = productData.otherSellers.filter(val => {
+        return val.availableStock !== "0" && val.availableStock !== "-1";
+      }).length;
+    }
     if (productData) {
       let price = "";
       let discountPrice = "";
@@ -294,9 +305,25 @@ export default class PdpApparel extends React.Component {
               </PdpLink>
             </div>
           )}
-          {productData.details && (
-            <div className={styles.details}>
-              <ProductDetails data={productData.details} />
+          {productData.winningSellerName && (
+            <div className={styles.separator}>
+              <PdpLink
+                onClick={() => this.goToSellerPage(validSellersCount)}
+                noLink={validSellersCount === 0}
+              >
+                <div className={styles.sellers}>
+                  Sold by{" "}
+                  <span className={styles.winningSellerText}>
+                    {productData.winningSellerName}
+                  </span>
+                  {validSellersCount !== 0 && (
+                    <React.Fragment>
+                      {" "}
+                      and {validSellersCount} other seller(s)
+                    </React.Fragment>
+                  )}
+                </div>
+              </PdpLink>
             </div>
           )}
 
@@ -372,6 +399,7 @@ export default class PdpApparel extends React.Component {
               productContent={productData.APlusContent.productContent}
             />
           )}
+          <div className={styles.blankSeparator} />
           <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );
