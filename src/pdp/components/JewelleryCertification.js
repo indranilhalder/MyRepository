@@ -12,40 +12,76 @@ import orra from "./img/orra.png";
 import platinum from "./img/platinum.png";
 import sgl from "./img/sgl.png";
 import tanishq from "./img/tanishq.png";
-
+import ibja from "./img/ibja.jpg";
+import igl from "./img/igl.png";
+import agl from "./img/agl.jpg";
+import ags from "./img/ags.png";
+import agta from "./img/agta.png";
+import dgla from "./img/dgla.jpg";
+import gii from "./img/gii.jpg";
+import gubelin from "./img/gubelin.jpg";
+import hrd from "./img/hrd.jpg";
+import pgi from "./img/pgi.png";
 export default class JewelleryCertification extends React.Component {
   getCertificationImage = val => {
     let image = "";
     switch (val) {
-      case "Orra":
-        image = orra;
-        break;
-      case "Platinum":
-        image = platinum;
-        break;
       case "AGL":
-        image = egl;
+        image = agl;
         break;
-      case "Carat lane":
-        image = caratLane;
+      case "AGS":
+        image = ags;
         break;
-      case "Tanishq":
-        image = tanishq;
-        break;
-      case "IGI":
-        image = igi;
-        break;
-      case "GSI":
-        image = gsi;
-        break;
-      case "GIA":
-        image = gia;
+      case "AGTA":
+        image = agta;
         break;
       case "BIS":
         image = bis;
         break;
+      case "DGLA":
+        image = dgla;
+        break;
+      case "EGL":
+        image = egl;
+        break;
+      case "GIA":
+        image = gia;
+        break;
+      case "GII":
+        image = gii;
+        break;
+      case "GSI":
+        image = gsi;
+        break;
+      case "Gubelin":
+        image = gubelin;
+        break;
+      case "HRD":
+        image = hrd;
+        break;
+      case "IBJA":
+        image = ibja;
+        break;
+      case "IGI":
+        image = igi;
+        break;
+      case "IGL":
+        image = igl;
+        break;
+      case "ORRA":
+        image = orra;
+        break;
+      case "PGI":
+        image = pgi;
+        break;
       case "SGL":
         image = sgl;
+        break;
+      case "Tanishq":
+        image = tanishq;
+        break;
+      case "CaratLane":
+        image = caratLane;
         break;
       default:
         image = "";
@@ -74,16 +110,25 @@ export default class JewelleryCertification extends React.Component {
 JewelleryCertification.propTypes = {
   certifications: PropTypes.arrayOf(
     PropTypes.oneOf([
-      "Orra",
-      "Platinum",
+      "AGL",
+      "AGS",
+      "AGTA",
+      "BIS",
+      "DGLA",
       "EGL",
-      "Carat Lane",
-      "Tanishq",
-      "IGI",
       "GSI",
       "GIA",
-      "BSI",
-      "SGL"
+      "GII",
+      "Gubelin",
+      "HRD",
+      "IBJA",
+      "IGI",
+      "IGL",
+      "ORRA",
+      "PGI",
+      "SGL",
+      "CaratLane",
+      "Tanishq"
     ])
   )
 };
