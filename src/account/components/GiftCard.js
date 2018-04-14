@@ -6,6 +6,8 @@ import Input2 from "../../general/components/Input2.js";
 import TextArea from "../../general/components/TextArea";
 import FooterButton from "../../general/components/FooterButton.js";
 import { Redirect } from "react-router-dom";
+import { Icon, CircleButton } from "xelpmoc-core";
+
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -171,20 +173,27 @@ export default class GiftCard extends React.Component {
             </div>
             <div className={styles.inputHolder}>
               <div className={styles.labelHeader}>Or</div>
-              <Input2
-                boxy={true}
-                placeholder="Enter Customer Amount"
-                value={
-                  this.props.amountText
-                    ? this.props.amountText
-                    : this.state.amountText
-                }
-                onChange={amountText =>
-                  this.setState({ amountText: amountText })
-                }
-                textStyle={{ fontSize: 14 }}
-                height={33}
-              />
+              <div className={styles.enterAmountHolder}>
+                {this.state.amountText !== "" && (
+                  <div className={styles.rupyLabel} />
+                )}
+                <Input2
+                  boxy={true}
+                  placeholder="Enter Customer Amount"
+                  value={
+                    this.props.amountText
+                      ? this.props.amountText
+                      : this.state.amountText
+                  }
+                  onChange={amountText =>
+                    this.setState({ amountText: amountText })
+                  }
+                  textStyle={{ fontSize: 14 }}
+                  height={33}
+                  leftChildSize={this.state.amountText !== "" ? 33 : 10}
+                  // leftChild={<CircleButton size={35} color={"transparent"} />}
+                />
+              </div>
             </div>
           </div>
           <div className={styles.formCard}>
