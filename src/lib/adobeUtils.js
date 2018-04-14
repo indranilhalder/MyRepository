@@ -32,6 +32,8 @@ const ADOBE_DIRECT_CALL_FOR_APPLY_COUPON_FAIL =
   "cpj_checkout_payment_coupon_fail";
 const ADOBE_DIRECT_CALL_FOR_SAVE_PORDUCT_ON_CART = "'cpj_button_save'";
 // end of direct call url for cart page
+const ADOBE_ORDER_CONFIRMATION_FAILURE = "cpj_order_fail";
+const ADOBE_ORDER_CONFIRMATION_SUCCESS = "cpj_order_successful";
 
 export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
 export const ADOBE_HOME_TYPE = "home";
@@ -62,6 +64,12 @@ export const ADOBE_CALLS_FOR_APPLY_COUPON_FAIL =
   "ADOBE_CALLS_FOR_APPLY_COUPON_FAIL";
 export const ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART =
   "ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART";
+
+export const ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS =
+  "ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS";
+export const ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE =
+  "ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE";
+
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
 const MOBILE = "mobile";
@@ -532,5 +540,25 @@ export function setDataLayerForPlpDirectCalls(response) {
       Object.assign(data, { cpj: { product: { badge } } });
     }
     window.digitalData = data;
+  }
+}
+
+export function setDataLayerForOrderConfirmationDirectCalls(
+  type,
+  failureReason
+) {
+  if (type === ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS) {
+    window._satellite.track(ADOBE_ORDER_CONFIRMATION_SUCCESS);
+  }
+  if (type === ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE) {
+    const data = {
+      cpj: {
+        order: {
+          failureReason
+        }
+      }
+    };
+    window.digitalData = data;
+    window._satellite.track(ADOBE_ORDER_CONFIRMATION_FAILURE);
   }
 }
