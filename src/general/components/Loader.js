@@ -3,7 +3,7 @@ import styles from "./Loader.css";
 import PropTypes from "prop-types";
 import MDSpinner from "react-md-spinner";
 
-export default class OrderCard extends React.Component {
+export default class Loader extends React.Component {
   onClick() {
     if (this.props.onClick) {
       this.props.onClick();

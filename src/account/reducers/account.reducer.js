@@ -158,7 +158,8 @@ const account = (
         getPinCodeError: null,
         updateReturnDetailsError: null,
         cancelProductDetailsError: null,
-        cancelProductError: null
+        cancelProductError: null,
+        verifyWalletError: null
       });
     case accountActions.GET_RETURN_REQUEST:
     case accountActions.RETURN_PRODUCT_DETAILS_REQUEST:
