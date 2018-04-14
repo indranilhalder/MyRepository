@@ -33,7 +33,11 @@ import {
   ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
   setDataLayerForOrderConfirmationDirectCalls,
   ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS,
-  ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE
+  ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE,
+  setDataLayerForCheckoutDirectCalls,
+  ADOBE_ADD_ADDRESS_TO_ORDER,
+  ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE,
+  ADOBE_CALL_FOR_SELECT_DELIVERY_MODE
 } from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
@@ -820,7 +824,8 @@ export function selectDeliveryMode(deliveryUssId, pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      // setting data layer after selecting delivery mode success
+      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_SELECT_DELIVERY_MODE);
       dispatch(
         getCartDetailsCNC(
           JSON.parse(userDetails).userName,
@@ -878,6 +883,7 @@ export function addAddressToCart(addressId, pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCheckoutDirectCalls(ADOBE_ADD_ADDRESS_TO_ORDER);
       dispatch(getCartDetailsCNC(userId, access_token, cartId, pinCode, false));
       dispatch(addAddressToCartSuccess());
     } catch (e) {
@@ -1538,6 +1544,11 @@ export function getPaymentModes(guIdDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      // here  we are setting data layer for when user lands on the payment modes
+      // page
+      setDataLayerForCheckoutDirectCalls(
+        ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE
+      );
       dispatch(paymentModesSuccess(resultJson));
     } catch (e) {
       dispatch(paymentModesFailure(e.message));

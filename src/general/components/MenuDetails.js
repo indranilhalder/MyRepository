@@ -4,6 +4,10 @@ import PropTypes from "prop-types";
 import { Collapse } from "react-collapse";
 import { Icon } from "xelpmoc-core";
 import couponIcon from "./img/credit-card.svg";
+import {
+  setDataLayerForCheckoutDirectCalls,
+  ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES
+} from "../../lib/adobeUtils";
 
 export default class MenuDetails extends React.Component {
   constructor(props) {
@@ -15,6 +19,12 @@ export default class MenuDetails extends React.Component {
 
   openMenu() {
     let isOpenMenu = !this.state.isOpen;
+    if (isOpenMenu) {
+      setDataLayerForCheckoutDirectCalls(
+        ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES,
+        this.props.text
+      );
+    }
     this.setState(
       {
         isOpen: isOpenMenu

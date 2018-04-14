@@ -44,6 +44,10 @@ import {
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
+import {
+  setDataLayerForCheckoutDirectCalls,
+  ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE
+} from "../../lib/adobeUtils";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";

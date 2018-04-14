@@ -35,6 +35,18 @@ const ADOBE_DIRECT_CALL_FOR_SAVE_PORDUCT_ON_CART = "'cpj_button_save'";
 const ADOBE_ORDER_CONFIRMATION_FAILURE = "cpj_order_fail";
 const ADOBE_ORDER_CONFIRMATION_SUCCESS = "cpj_order_successful";
 
+// checkout adobe constants
+const ADOBE_ADD_NEW_ADDRESS = "cpj_checkout_default_address";
+const ADOBE_CONFIRM_ADDRESS = "cpj_checkout_confirm_address";
+const ADOVE_DELIVERY_MODE_SELECTED = "cpj_checkout_delivery_option";
+const ADOBE_LANDS_ON_PAYMENT_MODES = "cpj_checkout_proceed_to_payment";
+const ADOBE_SELECT_PAYMENT_MODES = "cpj_checkout_payment_selection";
+const ADOBE_FINAL_PAYMENT = "cpj_place_order";
+const ADOBE_SEE_ALL_BANK_OFFERS = "CPJ_Checkout_Offer_Allbankoffer";
+const ADOBE_CLIQ_CASH_ON = "CPJ_Checkout_Payment_ToggleOn";
+const ADOBE_CLIQ_CASH_OFF = "CPJ_Checkout_Payment_ToggleOff";
+// end of checkout adobe constants
+
 export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
 export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
@@ -69,6 +81,26 @@ export const ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS =
   "ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS";
 export const ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE =
   "ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE";
+
+//  constants for checkout pages
+export const ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE =
+  "ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE";
+export const ADOBE_FINAL_PAYMENT_MODES = "ADOBE_FINAL_PAYMENT_MODES";
+export const ADOBE_ADD_ADDRESS_TO_ORDER = "ADOBE_ADD_ADDRESS_TO_ORDER";
+export const ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE =
+  "ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE";
+export const ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES =
+  "ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES";
+export const ADOBE_CALL_FOR_SELECT_DELIVERY_MODE =
+  "ADOBE_CALL_FOR_SELECT_DELIVERY_MODE";
+export const ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER =
+  "ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER";
+
+export const ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON =
+  "ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON";
+export const ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF =
+  "ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF";
+// end of constants for checkout pages
 
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
@@ -560,5 +592,55 @@ export function setDataLayerForOrderConfirmationDirectCalls(
     };
     window.digitalData = data;
     window._satellite.track(ADOBE_ORDER_CONFIRMATION_FAILURE);
+  }
+}
+export function setDataLayerForCheckoutDirectCalls(type, response) {
+  if (type === ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE) {
+    window._satellite.track(ADOBE_ADD_NEW_ADDRESS);
+  }
+  if (type === ADOBE_ADD_ADDRESS_TO_ORDER) {
+    window._satellite.track(ADOBE_CONFIRM_ADDRESS);
+  }
+  if (type === ADOBE_CALL_FOR_SELECT_DELIVERY_MODE) {
+    window._satellite.track(ADOVE_DELIVERY_MODE_SELECTED);
+  }
+  if (type === ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER) {
+    debugger;
+    window._satellite.track(ADOBE_SEE_ALL_BANK_OFFERS);
+  }
+  if (type === ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON) {
+    debugger;
+    window._satellite.track(ADOBE_CLIQ_CASH_ON);
+  }
+  if (type === ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF) {
+    window._satellite.track(ADOBE_CLIQ_CASH_OFF);
+  }
+  if (type === ADOBE_FINAL_PAYMENT_MODES) {
+    debugger;
+    const finalPaymentMode = localStorage.getItem(constants.PAYMENT_MODE_TYPE);
+
+    if (finalPaymentMode) {
+      const data = {
+        cpj: {
+          payment: {
+            finalMode: finalPaymentMode.replace(/ /g, "_").toLowerCase()
+          }
+        }
+      };
+      window.digitalData = data;
+    }
+    window._satellite.track(ADOBE_FINAL_PAYMENT);
+  }
+  if (type === ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE) {
+    window._satellite.track(ADOBE_LANDS_ON_PAYMENT_MODES);
+  }
+  if (type === ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES) {
+    if (response) {
+      const data = {
+        cpj: { payment: { mode: response.replace(/ /g, "_").toLowerCase() } }
+      };
+      window.digitalData = data;
+    }
+    window._satellite.track(ADOBE_SELECT_PAYMENT_MODES);
   }
 }
