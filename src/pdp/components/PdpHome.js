@@ -7,6 +7,7 @@ import ColourSelector from "./ColourSelector";
 import SizeQuantitySelect from "./SizeQuantitySelect";
 import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
+import ProductFeature from "./ProductFeature";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
@@ -227,11 +228,13 @@ export default class PdpApparel extends React.Component {
                   maxQuantity={productData.maxQuantityAllowed}
                   onQuantitySelect={val => this.props.handleQuantitySelect(val)}
                 />
-                {this.props.customiseMessage && (
-                  <div className={styles.customisation}>
-                    <div className={styles.customiseText}>
-                      Customisation available -{this.props.customiseMessage}
-                    </div>
+
+                <div className={styles.customisation}>
+                  <div className={styles.customiseText}>
+                    Customisation available - Contact seller for Free
+                    Monogramming
+                  </div>
+                  {this.props.goToBuyingGuide && (
                     <div className={styles.customisationButton}>
                       <UnderLinedButton
                         label="Checkout our buying guide"
@@ -239,8 +242,9 @@ export default class PdpApparel extends React.Component {
                         color="#ff1744"
                       />
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+
                 <ColourSelector
                   noBackground={true}
                   productId={productData.productListingId}
@@ -251,9 +255,6 @@ export default class PdpApparel extends React.Component {
                 />
               </React.Fragment>
             )}
-            <div className={styles.monogrammingText}>
-              Customisation Available - Contact seller for Free Monogramming
-            </div>
           </div>
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.pinCode ? (
@@ -298,42 +299,73 @@ export default class PdpApparel extends React.Component {
               <ProductDetails data={productData.details} />
             </div>
           )}
-          <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
-          </div>
+
           {productData.classifications && (
             <div className={styles.details}>
               <ProductFeatures features={productData.classifications} />
             </div>
           )}
           <div className={styles.details}>
-            {productData.classificationList &&
-              productData.classificationList.map(value => {
-                return (
-                  <Accordion text={value.key}>
-                    {value.value.classificationList.map(val => {
-                      return (
-                        <div>
-                          <div className={styles.header}>val.key</div>
-                          <div>
-                            {val.value.classificationList.map(list => {
-                              return (
-                                <div className={styles.contentTextFistorHome}>
-                                  {list.key} : {list.value}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </Accordion>
-                );
-              })}
+            <Accordion text="Product description" headerFontSize={16}>
+              {productData.classificationList &&
+                productData.classificationList.map(value => {
+                  return (
+                    <div>
+                      <div className={styles.header}>{value.key}</div>
+                      {value.value.classificationList &&
+                        value.value.classificationList.map(val => {
+                          return (
+                            <div>
+                              <div className={styles.contentTextForHome}>
+                                {val.key} : {val.value}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      {value.value.classificationValues &&
+                        value.value.classificationValues.map(val => {
+                          return (
+                            <div>
+                              <div className={styles.contentTextForHome}>
+                                {val}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      <div className={styles.blankSeparator} />
+                    </div>
+                  );
+                })}
+            </Accordion>
+            {productData.styleNote && (
+              <ProductFeature
+                heading="Style Note"
+                content={productData.styleNote}
+              />
+            )}
+            {productData.knowMore && (
+              <Accordion text="Know More" headerFontSize={16}>
+                {productData.knowMore &&
+                  productData.knowMore.map(val => {
+                    return (
+                      <div className={styles.list}>{val.knowMoreItem}</div>
+                    );
+                  })}
+              </Accordion>
+            )}
+            {productData.brandInfo && (
+              <ProductFeature
+                heading="Brand Info"
+                content={productData.brandInfo}
+              />
+            )}
+          </div>
+          <div className={styles.separator}>
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
           </div>
           {productData.APlusContent && (
             <AllDescription
