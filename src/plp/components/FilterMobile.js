@@ -35,11 +35,21 @@ export default class FilterMobile extends React.Component {
   onCategorySelect = (val, isFilter) => {
     const parsedQueryString = queryString.parse(this.props.location.search);
     let query = parsedQueryString.q;
-    const pathName = this.props.location.pathname;
-    const url = createUrlFromQueryAndCategory(query, pathName, val);
-    this.props.history.push(url, { isFilter });
-    if (isFilter === false) {
-      this.props.onL3CategorySelect();
+    if (query) {
+      const pathName = this.props.location.pathname;
+      const url = createUrlFromQueryAndCategory(query, pathName, val);
+      this.props.history.push(url, { isFilter });
+      if (isFilter === false) {
+        this.props.onL3CategorySelect();
+      }
+    } else {
+      const pathName = this.props.location.search;
+      const searchValue = this.props.location.search.replace("?", "");
+      const url = createUrlFromQueryAndCategory(searchValue, pathName, val);
+      this.props.history.push(url, { isFilter });
+      if (isFilter === false) {
+        this.props.onL3CategorySelect();
+      }
     }
   };
 

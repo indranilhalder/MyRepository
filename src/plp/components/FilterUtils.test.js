@@ -307,7 +307,7 @@ test("/search/?q=:text:category:<SOME_CATEGORY>:brand:<SOME_BRAND>", () => {
 
 test("/search/?searchCategory=all&text=shirt", () => {
   let searchValue = `searchCategory=all&text=shirt`;
-  let pathName = `/search.?q=searchCategory=all&text=shirt`;
+  let pathName = `/search/?searchCategory=all&text=shirt`;
   let endUrl = createUrlFromQueryAndCategory(
     searchValue,
     pathName,
@@ -315,6 +315,6 @@ test("/search/?searchCategory=all&text=shirt", () => {
   );
 
   expect(endUrl).toEqual(
-    `/search/?q=:shirt:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}`
+    `/search/?q=shirt:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}`
   );
 });
