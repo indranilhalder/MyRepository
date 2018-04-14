@@ -324,6 +324,7 @@ class CheckOutPage extends React.Component {
       >
         {this.props.cart.paymentModes &&
           this.props.cart.paymentModes.paymentOffers &&
+          this.props.cart.paymentModes.paymentOffers.coupons &&
           this.props.cart.paymentModes.paymentOffers.coupons[0] && (
             <BankOffer
               bankName={
