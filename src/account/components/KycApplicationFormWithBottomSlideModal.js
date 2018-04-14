@@ -20,6 +20,9 @@ export default class KycApplicationFormWithBottomSlideModal extends React.Compon
           onCancel={value => this.onCancel()}
           generateOtp={value => this.generateOtp(value)}
           mobileNumber={this.props.mobileNumber}
+          loadingForGetOtpToActivateWallet={
+            this.props.loadingForGetOtpToActivateWallet
+          }
         />
       </BottomSlideModal>
     );
