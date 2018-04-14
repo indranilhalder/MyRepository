@@ -18,7 +18,7 @@ export default class MobileDatePicker extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps && nextProps.value && nextProps.value !== this.state.value) {
-      let date = moment(nextProps.value).format("YYYY-MM-DD");
+      const date = moment(nextProps.value).format("YYYY-MM-DD");
       this.setState({ value: date });
     }
   }
