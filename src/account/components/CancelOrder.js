@@ -46,7 +46,10 @@ export default class CancelOrder extends React.Component {
     cancelProductDetails.ticketTypeCode = "C";
     cancelProductDetails.reasonCode = reason.cancelReasonCode;
     cancelProductDetails.refundType = "";
-    this.props.cancelProduct(cancelProductDetails);
+    this.props.cancelProduct(
+      cancelProductDetails,
+      this.props.cancelProductDetails
+    );
   };
   onCancel() {
     this.props.history.goBack();

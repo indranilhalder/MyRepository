@@ -39,6 +39,7 @@ export const ADOBE_PDP_TYPE = "pdp";
 export const ADOBE_CART_TYPE = "cart";
 export const ADOBE_CHECKOUT_TYPE = "checkout";
 export const ADOBE_PLP_TYPE = "plp";
+export const ADOBE_ORDER_CANCEL = "order_cancellation";
 
 export const ICID2 = "ICID2";
 export const CID = "CID";
@@ -533,4 +534,35 @@ export function setDataLayerForPlpDirectCalls(response) {
     }
     window.digitalData = data;
   }
+}
+export function setDataLayerForCancelProductDirectCalls(
+  cancelReasonObj,
+  cancelProductDetails
+) {
+  const data = {
+    cpj: {
+      product: {
+        id: cancelProductDetails.orderProductWsDTO[0].productcode
+      }
+    }
+  };
+  if (
+    cancelReasonObj.reasonCode &&
+    cancelProductDetails.returnReasonDetailsWsDTO
+  ) {
+    const cancelReason = cancelProductDetails.returnReasonDetailsWsDTO.find(
+      reason => {
+        return reason.code === cancelReasonObj.reasonCode;
+      }
+    ).reasonDescription;
+    Object.assign(data, {
+      order: {
+        return: {
+          reason: cancelReason
+        }
+      }
+    });
+  }
+  window.digitalData = data;
+  window._satellite.track(ADOBE_ORDER_CANCEL);
 }
