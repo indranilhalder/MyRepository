@@ -33,12 +33,11 @@ import {
   NO,
   DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
-
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import styles from "./ProductDescriptionPage.css";
 import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
-
 const PRODUCT_QUANTITY = "1";
-const DELIVERY_TEXT = "Delivery Options For";
+
 export default class PdpApparel extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
@@ -48,9 +47,10 @@ export default class PdpApparel extends React.Component {
   gotoPreviousPage = () => {
     this.props.history.goBack();
   };
-  goToBuyingGuide = () => {
-    if (this.props.goToBuyingGuide) {
-      this.props.goToBuyingGuide();
+  goToBuyingGuide = buyingGuideUrl => {
+    if (buyingGuideUrl) {
+      const urlSuffix = buyingGuideUrl.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
     }
   };
   goToSellerPage = () => {
@@ -245,11 +245,13 @@ export default class PdpApparel extends React.Component {
                     Customisation available - Contact seller for Free
                     Monogramming
                   </div>
-                  {this.props.goToBuyingGuide && (
+                  {productData.buyingGuideUrl && (
                     <div className={styles.customisationButton}>
                       <UnderLinedButton
                         label="Checkout our buying guide"
-                        onClick={() => this.goToBuyingGuide()}
+                        onClick={() =>
+                          this.goToBuyingGuide(productData.buyingGuideUrl)
+                        }
                         color="#ff1744"
                       />
                     </div>
