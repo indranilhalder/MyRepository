@@ -7,7 +7,7 @@ body {
   font-family: regular;
 }
 
-@font-face {
+/* @font-face {
   font-family: regular;
   src: url(./general/components/fonts/Rubik-Light.ttf);
 }
@@ -18,4 +18,4 @@ body {
 @font-face {
   font-family: bolder;
   src: url(./general/components/fonts/Rubik-Regular.ttf);
-}
+} */

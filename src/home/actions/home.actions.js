@@ -16,7 +16,6 @@ import * as Cookie from "../../lib/Cookie";
 
 import { getMcvId } from "../../lib/adobeUtils.js";
 import { getMsdFormData } from "../../lib/msdUtils.js";
-import { getMsdRequest } from "../../pdp/actions/pdp.actions";
 
 export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";

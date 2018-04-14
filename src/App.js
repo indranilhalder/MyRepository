@@ -273,15 +273,15 @@ class App extends Component {
       cartIdForAnonymousUserStatus
     } = this.props;
 
-    if (
-      globalAccessTokenStatus === REQUESTING ||
-      customerAccessTokenStatus === REQUESTING ||
-      refreshCustomerAccessTokenStatus === REQUESTING ||
-      cartIdForLoggedInUserStatus === REQUESTING ||
-      cartIdForAnonymousUserStatus === REQUESTING
-    ) {
-      return this.renderDummySkeleton();
-    }
+    // if (
+    //   globalAccessTokenStatus === REQUESTING ||
+    //   customerAccessTokenStatus === REQUESTING ||
+    //   refreshCustomerAccessTokenStatus === REQUESTING ||
+    //   cartIdForLoggedInUserStatus === REQUESTING ||
+    //   cartIdForAnonymousUserStatus === REQUESTING
+    // ) {
+    //   return this.renderDummySkeleton();
+    // }
 
     if (this.props.modalStatus) {
       className = AppStyles.blur;

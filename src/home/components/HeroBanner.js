@@ -51,13 +51,13 @@ export default class HeroBanner extends React.Component {
     }
   };
   render() {
-    // if (
-    //   !this.props.loading &&
-    //   this.props.feedComponentData.items &&
-    //   this.props.feedComponentData.items.length === 0
-    // ) {
-    //   return <div className={styles.dummy}>HERO BANNER GOES HERE</div>;
-    // }
+    if (
+      !this.props.loading &&
+      this.props.feedComponentData.items &&
+      this.props.feedComponentData.items.length === 0
+    ) {
+      return <div className={styles.dummy}>HERO BANNER GOES HERE</div>;
+    }
     return <div className={styles.base}>{this.renderBanner()}</div>;
   }
 }

@@ -1,4 +1,10 @@
 .base {
   width: 100%;
   height: auto;
+  margin-bottom: 500px;
+}
+
+.dummy {
+  height: 1500px;
+  background: gray;
 }
