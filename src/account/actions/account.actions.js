@@ -726,22 +726,19 @@ export function getOtpToActivateWallet(customerDetails, isFromCliqCash) {
         customerDetails
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        dispatch(hideModal());
-        if (isFromCliqCash) {
-          dispatch(VERIFY_OTP_FOR_CLIQ_CASH);
-        } else {
-          dispatch(showModal(VERIFY_OTP));
-        }
 
-        return dispatch(getOtpToActivateWalletSuccess(resultJson));
-      } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      dispatch(hideModal());
+      if (isFromCliqCash) {
+        dispatch(showModal(VERIFY_OTP_FOR_CLIQ_CASH));
+      } else {
+        dispatch(showModal(VERIFY_OTP));
+      }
+      return dispatch(getOtpToActivateWalletSuccess(resultJson));
     } catch (e) {
       dispatch(getOtpToActivateWalletFailure(e.message));
     }
@@ -787,22 +784,19 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
         customerDetailsWithOtp
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        dispatch(hideModal());
-        if (isFromCliqCash) {
-          dispatch(getCliqCashDetails());
-        } else {
-          dispatch(getGiftCardDetails());
-        }
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-        return dispatch(verifyWalletSuccess(resultJson));
-      } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      dispatch(hideModal());
+      if (isFromCliqCash) {
+        dispatch(getCliqCashDetails());
+      } else {
+        dispatch(getGiftCardDetails());
+      }
+
+      return dispatch(verifyWalletSuccess(resultJson));
     } catch (e) {
       dispatch(verifyWalletFailure(e.message));
     }

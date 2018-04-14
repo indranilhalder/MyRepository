@@ -6,6 +6,7 @@ import lockBlackIcon from "./img/lockBlackIcon.svg";
 import Styles from "./KycDetailsPopup.css";
 import Input2 from "../../general/components/Input2";
 import Button from "../../general/components/Button.js";
+import MDSpinner from "react-md-spinner";
 export default class KycDetailsPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -21,7 +22,7 @@ export default class KycDetailsPopup extends React.Component {
 
   submitOtp() {
     if (this.props.submitOtp) {
-      this.props.submitOtp(this.state);
+      this.props.submitOtp(this.state.otp);
     }
   }
   wrongNumber() {
@@ -57,7 +58,14 @@ export default class KycDetailsPopup extends React.Component {
         </div>
         <div className={Styles.buttonHolder}>
           <div className={Styles.leftButton}>
-            <ColourButton label={"Submit"} onClick={() => this.submitOtp()} />
+            {this.props.loadingForverifyWallet && (
+              <div className={Styles.spinner}>
+                <MDSpinner />
+              </div>
+            )}
+            {!this.props.loadingForverifyWallet && (
+              <ColourButton label={"Submit"} onClick={() => this.submitOtp()} />
+            )}
           </div>
           <div className={Styles.rightButton}>
             <ColourButton

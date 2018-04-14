@@ -43,7 +43,10 @@ const mapStateToProps = (state, ownProps) => {
     modalType: state.modal.modalType,
     ownProps: state.modal.ownProps,
     modalStatus: state.modal.modalDisplayed,
-    user: state.user
+    user: state.user,
+    loadingForGetOtpToActivateWallet:
+      state.profile.loadingForGetOtpToActivateWallet,
+    loadingForverifyWallet: state.profile.loadingForverifyWallet
   };
 };
 
