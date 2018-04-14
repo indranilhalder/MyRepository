@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "./XelpmocCoreImage.css";
+import styles from "./Image.css";
 const LOADING = "loading";
 const LOADED = "loaded";
 const ERROR = "error";
-export default class XelpmocCoreImage extends React.Component {
+export default class Image extends React.Component {
   constructor(props) {
     super(props);
     this.state = { imageStatus: LOADING };
@@ -45,13 +45,13 @@ export default class XelpmocCoreImage extends React.Component {
     );
   }
 }
-XelpmocCoreImage.propTypes = {
+Image.propTypes = {
   image: PropTypes.string.isRequired,
   fit: PropTypes.string,
   color: PropTypes.string
 };
 
-XelpmocCoreImage.defaultProps = {
+Image.defaultProps = {
   fit: "cover",
   color: "#fff"
 };

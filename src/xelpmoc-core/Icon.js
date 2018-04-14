@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "./XelpmocCoreIcon.css";
+import styles from "./Icon.css";
 
-export default class XelpmocCoreIcon extends React.Component {
+export default class Icon extends React.Component {
   render() {
     return (
       <div
@@ -21,13 +21,13 @@ export default class XelpmocCoreIcon extends React.Component {
   }
 }
 
-XelpmocCoreIcon.propTypes = {
+Icon.propTypes = {
   size: PropTypes.number.isRequired,
   backgroundSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   image: PropTypes.string.isRequired
 };
 
-XelpmocCoreIcon.defaultProps = {
+Icon.defaultProps = {
   size: 30,
   backgroundSize: "contain"
 };

@@ -8695,12 +8695,6 @@ xdg-basedir@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/xdg-basedir/-/xdg-basedir-3.0.0.tgz#496b2cc109eca8dbacfe2dc72b603c17c5870ad4"
 
-xelpmoc-core@^0.3.3:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/xelpmoc-core/-/xelpmoc-core-0.3.4.tgz#89e61eff59e5523b7236cd41c30f471fab112031"
-  dependencies:
-    classnames "^2.2.5"
-
 xml-name-validator@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-2.0.1.tgz#4d8b8f1eccd3419aa362061becef515e1e559635"

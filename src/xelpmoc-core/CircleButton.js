@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "./XelpmocCoreCircleButton.css";
+import styles from "./CircleButton.css";
 
-export default class XelpmocCoreCircleButton extends React.Component {
+export default class CircleButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -77,7 +77,7 @@ export default class XelpmocCoreCircleButton extends React.Component {
   }
 }
 
-XelpmocCoreCircleButton.propTypes = {
+CircleButton.propTypes = {
   size: PropTypes.number,
   color: PropTypes.string,
   icon: PropTypes.element,
@@ -92,7 +92,7 @@ XelpmocCoreCircleButton.propTypes = {
   })
 };
 
-XelpmocCoreCircleButton.defaultProps = {
+CircleButton.defaultProps = {
   size: 40,
   color: "#666",
   disabled: false,

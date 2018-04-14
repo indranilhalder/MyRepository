@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "./XelpmocCoreButton.css";
-export default class XelpmocCoreButton extends React.Component {
+import styles from "./Button.css";
+export default class Button extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -91,7 +91,7 @@ export default class XelpmocCoreButton extends React.Component {
   }
 }
 
-XelpmocCoreButton.propTypes = {
+Button.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
   backgroundColor: PropTypes.string,
@@ -114,7 +114,7 @@ XelpmocCoreButton.propTypes = {
   })
 };
 
-XelpmocCoreButton.defaultProps = {
+Button.defaultProps = {
   height: 40,
   backgroundColor: "#1cc7d0",
   disabled: false,

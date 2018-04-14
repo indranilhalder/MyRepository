@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./GiftCard.css";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image.js";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import TextArea from "../../general/components/TextArea";

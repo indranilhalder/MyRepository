@@ -10,6 +10,8 @@ const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const getClientEnvironment = require("./env");
 const paths = require("./paths");
 const PreloadWebpackPlugin = require("preload-webpack-plugin");
+console.log("DIR NAME");
+console.log(__dirname);
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -86,7 +88,8 @@ module.exports = {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       "react-native": "react-native-web",
-      "react-md-spinner": "react-loader-spinner"
+      "react-md-spinner": "react-loader-spinner",
+      "xelpmoc-core": "src/xelpmoc-core"
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -215,6 +218,11 @@ module.exports = {
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     // In development, this will be an empty string.
     new InterpolateHtmlPlugin(env.raw),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "vendor",
+      minChunks: ({ resource }) => /node_modules/.test(resource),
+      filename: "[name].js"
+    }),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,

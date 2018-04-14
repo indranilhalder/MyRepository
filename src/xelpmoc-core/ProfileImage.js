@@ -1,12 +1,12 @@
 import React from "react";
 import Image from "./Image";
 import PropTypes from "prop-types";
-import styles from "./XelpmocCoreProfileImage.css";
+import styles from "./ProfileImage.css";
 export const SIZE_1 = 1;
 export const SIZE_2 = 2;
 export const SIZE_3 = 3;
 export const SIZE_4 = 4;
-export default class XelpmocCoreProfileImage extends React.Component {
+export default class ProfileImage extends React.Component {
   constructor(props) {
     super(props);
     this.styles = this.props.styles ? this.props.styles : styles;
@@ -50,7 +50,7 @@ export default class XelpmocCoreProfileImage extends React.Component {
   }
 }
 
-XelpmocCoreProfileImage.propTypes = {
+ProfileImage.propTypes = {
   initials: PropTypes.string.isRequired,
   image: PropTypes.string,
   size: PropTypes.oneOf([SIZE_1, SIZE_2, SIZE_3, SIZE_4]),
@@ -60,7 +60,7 @@ XelpmocCoreProfileImage.propTypes = {
     width: PropTypes.number
   })
 };
-XelpmocCoreProfileImage.defaultProps = {
+ProfileImage.defaultProps = {
   initials: "NA",
   size: 2,
   border: {

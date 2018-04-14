@@ -1,11 +1,10 @@
 import React from "react";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import ColourButton from "../../general/components/ColourButton";
 import PropTypes from "prop-types";
 import lockBlackIcon from "./img/lockBlackIcon.svg";
 import Styles from "./KycDetailsPopup.css";
 import Input2 from "../../general/components/Input2";
-import Button from "../../general/components/Button.js";
 export default class KycDetailsPopup extends React.Component {
   constructor(props) {
     super(props);
