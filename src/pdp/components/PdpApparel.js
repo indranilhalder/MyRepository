@@ -137,7 +137,6 @@ export default class PdpApparel extends React.Component {
       });
     }
   };
-
   handleShowSizeguide() {
     if (this.props.getProductSizeGuide) {
       this.props.getProductSizeGuide();
