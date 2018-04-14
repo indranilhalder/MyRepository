@@ -1,6 +1,7 @@
 import cloneDeep from "lodash/cloneDeep";
 import * as wishlistActions from "../actions/wishlist.actions";
 import { SUCCESS } from "../../lib/constants";
+import { CLEAR_ERROR } from "../../general/error.actions.js";
 const wishlistItems = (
   state = {
     wishlistItems: [],
@@ -14,6 +15,10 @@ const wishlistItems = (
 ) => {
   let currentWishlistItems, indexToBeRemove;
   switch (action.type) {
+    case CLEAR_ERROR:
+      return Object.assign({}, state, {
+        error: null
+      });
     case wishlistActions.CREATE_WISHLIST_REQUEST:
       return Object.assign({}, state, {
         status: action.status
@@ -43,11 +48,19 @@ const wishlistItems = (
         error: action.error
       });
     case wishlistActions.GET_WISH_LIST_ITEMS_SUCCESS:
+      let wishListNewItems = state.wishlistItems;
+      let wishListName = null;
+      let wishListcount = null;
+      if (action.wishlist && action.wishlist.products) {
+        wishListNewItems = action.wishlist.products;
+        wishListName = action.wishlist.name;
+        wishListcount = action.wishlist.count;
+      }
       return Object.assign({}, state, {
         status: action.status,
-        wishlistItems: action.wishlist.products,
-        name: action.wishlist.name,
-        count: action.wishlist.count,
+        wishlistItems: wishListNewItems,
+        name: wishListName,
+        count: wishListcount,
         loading: false
       });
     case wishlistActions.ADD_PRODUCT_TO_WISH_LIST_SUCCESS:
