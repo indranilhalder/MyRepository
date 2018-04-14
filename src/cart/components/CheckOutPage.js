@@ -53,6 +53,8 @@ const DELIVERY_MODE_ADDRESS_ERROR = "No Delivery Modes At Selected Address";
 const CONTINUE = "Continue";
 const PROCEED = "Proceed";
 const COUPON_AVAILABILITY_ERROR_MESSAGE = "Your applied coupon has expired";
+const PRODUCT_NOT_SERVICEABLE_MESSAGE =
+  "Product is not Serviceable,Please try with another pin code";
 class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
@@ -320,20 +322,25 @@ class CheckOutPage extends React.Component {
         limit={1}
         onSelect={val => this.applyBankCoupons(val)}
       >
-        <BankOffer
-          bankName={
-            this.props.cart.paymentModes.paymentOffers.coupons[0].offerTitle
-          }
-          offerText={
-            this.props.cart.paymentModes.paymentOffers.coupons[0]
-              .offerMinCartValue
-          }
-          label={SEE_ALL_BANK_OFFERS}
-          applyBankOffers={() => this.openBankOffers()}
-          value={
-            this.props.cart.paymentModes.paymentOffers.coupons[0].offerCode
-          }
-        />
+        {this.props.cart.paymentModes &&
+          this.props.cart.paymentModes.paymentOffers &&
+          this.props.cart.paymentModes.paymentOffers.coupons &&
+          this.props.cart.paymentModes.paymentOffers.coupons[0] && (
+            <BankOffer
+              bankName={
+                this.props.cart.paymentModes.paymentOffers.coupons[0].offerTitle
+              }
+              offerText={
+                this.props.cart.paymentModes.paymentOffers.coupons[0]
+                  .offerMinCartValue
+              }
+              label={SEE_ALL_BANK_OFFERS}
+              applyBankOffers={() => this.openBankOffers()}
+              value={
+                this.props.cart.paymentModes.paymentOffers.coupons[0].offerCode
+              }
+            />
+          )}
       </GridSelect>
     );
   };
@@ -399,15 +406,6 @@ class CheckOutPage extends React.Component {
         nextProps.cart.cartDetailsCNC.products
       ) {
         nextProps.cart.cartDetailsCNC.products.forEach(product => {
-          //check for delivery modes is exit or not for every pincode
-          // if we don;t have any delivery modes for any product
-          // then we ned to navigate user to mybag
-
-          if (!product.elligibleDeliveryMode) {
-            this.navigateToMyBag();
-          }
-          // end of navigate user to myBag
-
           if (
             product.elligibleDeliveryMode &&
             product.elligibleDeliveryMode.findIndex(mode => {
@@ -544,10 +542,6 @@ class CheckOutPage extends React.Component {
       this.props.location.state.isFromGiftCard
     ) {
       this.setState({ isGiftCard: true });
-      let guIdObject = new FormData();
-      guIdObject.append(CART_GU_ID, this.props.location.state.egvCartGuid);
-      this.props.getPaymentModes(guIdObject);
-      this.props.getNetBankDetails();
     } else {
       if (this.props.getCartDetailsCNC) {
         let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -568,25 +562,52 @@ class CheckOutPage extends React.Component {
         this.props.getUserAddress(
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
         );
-        if (cartDetailsLoggedInUser) {
-          let guIdObject = new FormData();
-          guIdObject.append(
-            CART_GU_ID,
-            JSON.parse(cartDetailsLoggedInUser).guid
-          );
-
-          this.props.getPaymentModes(guIdObject);
-        }
-
-        this.props.getCODEligibility();
-        this.props.getNetBankDetails();
-        if (this.props.location && this.props.location.state) {
-          this.props.getEmiBankDetails(this.props.location.state.productValue);
-        }
       }
     }
   }
 
+  getEmiBankDetails = () => {
+    if (this.props.getEmiBankDetails) {
+      this.props.getEmiBankDetails(
+        this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
+      );
+    }
+  };
+
+  getNetBankDetails = () => {
+    if (this.props.getNetBankDetails) {
+      this.props.getNetBankDetails();
+    }
+  };
+
+  getCODEligibility = () => {
+    if (this.props.getCODEligibility) {
+      this.props.getCODEligibility();
+    }
+  };
+
+  getPaymentModes = () => {
+    if (
+      this.state.isGiftCard &&
+      this.props.location &&
+      this.props.location.state &&
+      this.props.location.state.egvCartGuid
+    ) {
+      let guIdObject = new FormData();
+      guIdObject.append(CART_GU_ID, this.props.location.state.egvCartGuid);
+      this.props.getPaymentModes(guIdObject);
+    } else {
+      let cartDetailsLoggedInUser = Cookie.getCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER
+      );
+      if (cartDetailsLoggedInUser) {
+        let guIdObject = new FormData();
+        guIdObject.append(CART_GU_ID, JSON.parse(cartDetailsLoggedInUser).guid);
+
+        this.props.getPaymentModes(guIdObject);
+      }
+    }
+  };
   onSelectAddress(selectedAddress) {
     let addressSelected = find(
       this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
@@ -618,16 +639,32 @@ class CheckOutPage extends React.Component {
   }
 
   availabilityOfUserCoupon = () => {
-    let couponCookie = Cookie.getCookie(COUPON_COOKIE);
-    let cartDetailsCouponDiscount = this.props.cart.cartDetailsCNC.cartAmount
-      .couponDiscountAmount;
+    if (!this.state.isGiftCard) {
+      let couponCookie = Cookie.getCookie(COUPON_COOKIE);
+      let cartDetailsCouponDiscount = this.props.cart.cartDetailsCNC.cartAmount
+        .couponDiscountAmount;
 
-    if (couponCookie && !cartDetailsCouponDiscount) {
-      this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
-      return false;
+      if (couponCookie && !cartDetailsCouponDiscount) {
+        this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
+        return false;
+      }
     }
-
     return true;
+  };
+
+  checkAvailabilityOfService = () => {
+    let productServiceAvailability = find(
+      this.props.cart.cartDetailsCNC.products,
+      product => {
+        return (
+          product.pinCodeResponse === undefined ||
+          (product.pinCodeResponse &&
+            product.pinCodeResponse.isServicable === "N")
+        );
+      }
+    );
+
+    return productServiceAvailability;
   };
   handleSubmit = () => {
     if (this.availabilityOfUserCoupon()) {
@@ -648,16 +685,22 @@ class CheckOutPage extends React.Component {
         this.state.confirmAddress &&
         !this.state.isGiftCard
       ) {
-        if (this.props.selectDeliveryMode) {
+        if (
+          this.props.selectDeliveryMode &&
+          !this.checkAvailabilityOfService()
+        ) {
           this.props.selectDeliveryMode(
             this.state.ussIdAndDeliveryModesObj,
             localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
           );
-          // this.props.getOrderSummary(this.state.selectedAddress.postalCode);
+          this.setState({
+            deliverMode: true
+          });
+        } else {
+          if (this.props.displayToast) {
+            this.props.displayToast(PRODUCT_NOT_SERVICEABLE_MESSAGE);
+          }
         }
-        this.setState({
-          deliverMode: true
-        });
       }
 
       if (this.state.savedCardDetails !== "") {
@@ -849,12 +892,7 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
-    if (
-      this.props.cart.paymentModesStatus === REQUESTING ||
-      this.props.cart.codEligibilityStatus === REQUESTING ||
-      this.props.netBankDetailsStatus === REQUESTING ||
-      this.props.cart.getUserAddressStatus === REQUESTING
-    ) {
+    if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
       if (
@@ -923,6 +961,7 @@ class CheckOutPage extends React.Component {
             hideSecondaryLoader={this.props.hideSecondaryLoader}
             loading={this.props.cart.loading}
             onChange={val => this.onChange(val)}
+            displayToast={message => this.props.displayToast(message)}
           />
         </div>
       );
@@ -1018,6 +1057,10 @@ class CheckOutPage extends React.Component {
                 addGiftCard={() => this.addGiftCard()}
                 binValidationForPaytm={val => this.binValidationForPaytm(val)}
                 displayToast={message => this.props.displayToast(message)}
+                getPaymentModes={() => this.getPaymentModes()}
+                getCODEligibility={() => this.getCODEligibility()}
+                getNetBankDetails={() => this.getNetBankDetails()}
+                getEmiBankDetails={() => this.getEmiBankDetails()}
               />
             </div>
           )}
