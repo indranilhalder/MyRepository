@@ -50,7 +50,6 @@ export default class CheckoutNetBanking extends React.Component {
         bankList={validNetBankingDetails}
       >
         <NetBanking
-          onSelect={val => console.log(val)}
           selected={["1"]}
           bankList={validNetBankingDetails}
           binValidationForNetBank={bankName =>
