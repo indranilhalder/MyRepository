@@ -191,7 +191,6 @@ export default class GiftCard extends React.Component {
                   textStyle={{ fontSize: 14 }}
                   height={33}
                   leftChildSize={this.state.amountText !== "" ? 33 : 10}
-                  // leftChild={<CircleButton size={35} color={"transparent"} />}
                 />
               </div>
             </div>
