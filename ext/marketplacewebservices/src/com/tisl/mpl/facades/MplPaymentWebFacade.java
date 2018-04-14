@@ -21,7 +21,6 @@ import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
-import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 
 
 /**
@@ -192,4 +191,10 @@ public interface MplPaymentWebFacade
 	 * @return NoCostEMIBankModel
 	 */
 	EMIBankModel getNoCostEMIBankByPk(String pk);
+
+	/**
+	 * @param code
+	 * @return EMIBankModel
+	 */
+	EMIBankModel getStandardEMIBankByCode(String code);
 }

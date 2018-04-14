@@ -71,7 +71,6 @@ import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
-import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 
 
 /**
@@ -837,7 +836,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1301,7 +1300,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	}
 
 	/**
-	 * NU-351 - Code to fetch NoCostEMIBankModel by pk
+	 * NU-351 - Code to fetch EMIBankModel by pk
 	 *
 	 * @param pk
 	 * @return NoCostEMIBankModel
@@ -1310,6 +1309,18 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	public EMIBankModel getNoCostEMIBankByPk(final String pk)
 	{
 		return getMplPaymentWebService().getNoCostEMIBankByPk(pk);
+	}
+
+	/**
+	 * NU-351 - Code to fetch EMIBankModel by code
+	 *
+	 * @param pk
+	 * @return NoCostEMIBankModel
+	 */
+	@Override
+	public EMIBankModel getStandardEMIBankByCode(final String code)
+	{
+		return getMplPaymentWebService().getStandardEMIBankByCode(code);
 	}
 
 	protected CheckoutCustomerStrategy getCheckoutCustomerStrategy()

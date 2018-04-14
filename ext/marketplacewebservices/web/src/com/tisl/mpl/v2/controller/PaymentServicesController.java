@@ -12,6 +12,7 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -94,14 +95,9 @@ import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.CliqCashWsDto;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
-import com.tisl.mpl.wsdto.NoCostEMIItemBreakUp;
 import com.tisl.mpl.wsdto.PaymentServiceWsDTO;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
-import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
-import com.tisl.mpl.wsdto.mplNoCostEMIBankTenureDTO;
-import com.tisl.mpl.wsdto.mplNoCostEMIEligibilityDTO;
-import com.tisl.wsdto.MplNoCostEMITermsDTO;
 
 
 /**
@@ -2451,6 +2447,80 @@ public class PaymentServicesController extends BaseController
 			noCostEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return noCostEMITermsDTO;
+	}
+
+
+	/**
+	 * Method to share terms and conditions for a NoCostEMIBank
+	 *
+	 * @return MplNoCostEMITermsDTO
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "{code}/" + MarketplacewebservicesConstants.STANDARDEMITNC, method = RequestMethod.GET, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
+	@ResponseBody
+	public MplStandardEMITermsDTO getStandardEmiTnc(@PathVariable final String code)
+	{
+		LOG.debug("Standard emi-code ----" + code);
+		final MplStandardEMITermsDTO standardEMITermsDTO = new MplStandardEMITermsDTO();
+		try
+		{
+
+			final EMIBankModel standardEMIBankModel = mplPaymentWebFacade.getNoCostEMIBankByPk(pk);
+			if (standardEMIBankModel != null)
+			{
+				standardEMITermsDTO.setCode(standardEMIBankModel.getPk().toString());
+				final String termsAndCondition = standardEMIBankModel.getNoCostEmiTermsAndCondition();
+				if (StringUtils.isNotEmpty(termsAndCondition))
+				{
+					standardEMITermsDTO.setTermsAndCondition(termsAndCondition);
+				}
+				else
+				{
+					standardEMITermsDTO.setTermsAndCondition(StringUtils.EMPTY);
+				}
+				standardEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			else
+			{
+				standardEMITermsDTO.setError("Invalid pk for NoCostEMIBankModel");
+				standardEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+		}
+		catch (final EtailNonBusinessExceptions ex)
+		{
+			// Error message for EtailNonBusinessExceptions Exceptions
+			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+			if (null != ex.getErrorMessage())
+			{
+				standardEMITermsDTO.setError(ex.getErrorMessage());
+				standardEMITermsDTO.setErrorCode(ex.getErrorCode());
+			}
+			standardEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		catch (final EtailBusinessExceptions ex)
+		{
+			// Error message for EtailBusinessExceptions Exceptions
+			ExceptionUtil.etailBusinessExceptionHandler(ex, null);
+			if (null != ex.getErrorMessage())
+			{
+				standardEMITermsDTO.setError(ex.getErrorMessage());
+				standardEMITermsDTO.setErrorCode(ex.getErrorCode());
+			}
+			standardEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception ex)
+		{
+			// Error message for All Exceptions
+			if (null != ex.getMessage())
+			{
+				standardEMITermsDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9047));
+				standardEMITermsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9047);
+			}
+			standardEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return standardEMITermsDTO;
 	}
 
 
