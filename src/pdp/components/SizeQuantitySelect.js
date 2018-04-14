@@ -67,7 +67,7 @@ export default class SizeQuantitySelect extends React.Component {
 
           <div className={styles.sizeQuantity}>
             <SelectBoxMobile
-              value="Qunatity"
+              value="1"
               options={fetchedQuantityList}
               onChange={value => this.updateQuantity(value)}
             />
