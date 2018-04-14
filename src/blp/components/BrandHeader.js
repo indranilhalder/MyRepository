@@ -5,7 +5,7 @@ import searchIcon from "./img/Search.svg";
 import iconImageURL from "../../general/components/img/arrowBack.svg";
 import searchRedIcon from "./img/SearchRed.svg";
 import PropTypes from "prop-types";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import Input2 from "../../general/components/Input2.js";
 export default class BrandHeader extends React.Component {
   constructor(props) {

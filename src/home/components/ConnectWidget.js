@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ConnectWidget.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 import iconImageURL from "./img/Connect_Small.svg";
 import MediaQuery from "react-responsive";

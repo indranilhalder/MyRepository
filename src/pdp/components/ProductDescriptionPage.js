@@ -7,7 +7,7 @@ import PdpFrame from "./PdpFrame";
 import OfferCard from "./OfferCard";
 import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import RatingAndTextLink from "./RatingAndTextLink";
 import PdpLink from "./PdpLink";
 import PdpPincode from "./PdpPincode";
@@ -231,8 +231,10 @@ class ProductDescriptionPage extends Component {
             )}
             {this.props.productDetails.isServiceableToPincode &&
             this.props.productDetails.isServiceableToPincode.status === NO ? (
-              <Overlay labelText="Not serviceable in you pincode,
-    please try another pincode">
+              <Overlay
+                labelText="Not serviceable in you pincode,
+    please try another pincode"
+              >
                 {this.renderDeliveryOptions(productData)}
               </Overlay>
             ) : (

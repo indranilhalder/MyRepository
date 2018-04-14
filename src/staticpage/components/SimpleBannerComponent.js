@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./SimpleBannerComponent.css";
 import PropTypes from "prop-types";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 export default class SimpleBannerComponent extends React.Component {
   handleClick(urlLink) {
     this.props.history.push(urlLink);

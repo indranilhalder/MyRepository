@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Button } from "xelpmoc-core";
+import Button from "../../xelpmoc-core/Button";
 import MediaQuery from "react-responsive";
 import Input from "../../general/components/Input";
 import PasswordInput from "./PasswordInput";

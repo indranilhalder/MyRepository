@@ -11,7 +11,7 @@ import BannerMobile from "../../general/components/BannerMobile";
 import Carousel from "../../general/components/Carousel";
 import BrandsSelect from "./BrandsSelect";
 import Input2 from "../../general/components/Input2";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import BrandsItem from "./BrandsItem";
 import styles from "./BrandsLandingPageDefault.css";
 import arrowIcon from "../../general/components/img/down-arrow.svg";

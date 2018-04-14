@@ -1,6 +1,6 @@
 import React from "react";
 import arrowIcon from "../../general/components/img/down-arrow.svg";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 import styles from "./PdpLink.css";
 export default class PdpLink extends React.Component {

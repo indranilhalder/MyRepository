@@ -8,7 +8,7 @@ import { transformData } from "./utils.js";
 import Button from "../../general/components/Button.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import TimerCounter from "../../general/components/TimerCounter.js";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import ClockImage from "../../pdp/components/img/clockWhite.svg";
 import { convertDateTimeFromIndianToAmerican } from "../../home/dateTimeUtils.js";
 
