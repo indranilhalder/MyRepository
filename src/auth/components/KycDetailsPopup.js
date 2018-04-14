@@ -58,12 +58,12 @@ export default class KycDetailsPopup extends React.Component {
         </div>
         <div className={Styles.buttonHolder}>
           <div className={Styles.leftButton}>
-            {this.props.loadingForverifyWallet && (
+            {this.props.loadingForVerifyWallet && (
               <div className={Styles.spinner}>
                 <MDSpinner />
               </div>
             )}
-            {!this.props.loadingForverifyWallet && (
+            {!this.props.loadingForVerifyWallet && (
               <ColourButton label={"Submit"} onClick={() => this.submitOtp()} />
             )}
           </div>

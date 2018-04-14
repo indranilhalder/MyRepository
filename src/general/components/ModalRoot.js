@@ -279,7 +279,7 @@ export default class ModalRoot extends React.Component {
           }
           {...this.props.ownProps}
           resendOtp={val => this.resendOtp(val, this.props.ownProps)}
-          loadingForverifyWallet={this.props.loadingForverifyWallet}
+          loadingForVerifyWallet={this.props.loadingForVerifyWallet}
           wrongNumber={() => this.wrongNumber()}
         />
       ),
@@ -302,7 +302,7 @@ export default class ModalRoot extends React.Component {
           resendOtp={val => this.resendOtp(val, this.props.ownProps)}
           wrongNumber={() => this.wrongNumber()}
           {...this.props.ownProps}
-          loadingForverifyWallet={this.props.loadingForverifyWallet}
+          loadingForVerifyWallet={this.props.loadingForVerifyWallet}
         />
       ),
       EmiModal: <EmiModal />,
