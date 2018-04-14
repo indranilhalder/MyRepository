@@ -28,6 +28,9 @@ export default class ReturnReasonAndModes extends React.Component {
   renderLoader() {
     return <Loader />;
   }
+  onCancel() {
+    this.props.history.goBack();
+  }
   onChange(val) {
     if (this.props.onChange) {
       this.props.onChange(val);
@@ -98,6 +101,7 @@ export default class ReturnReasonAndModes extends React.Component {
         onChange={comment => this.onChange({ comment })}
         onChangePrimary={reason => this.onChange({ reason })}
         onContinue={data => this.renderToModes(data)}
+        onCancel={() => this.onCancel()}
       />
     );
     const renderReturnMode = (
