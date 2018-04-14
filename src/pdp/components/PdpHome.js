@@ -36,9 +36,14 @@ import {
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import styles from "./ProductDescriptionPage.css";
 import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
-const PRODUCT_QUANTITY = "1";
 
 export default class PdpApparel extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      productQuantity: "1"
+    };
+  }
   visitBrand() {
     if (this.props.visitBrandStore) {
       this.props.visitBrandStore();
@@ -52,6 +57,9 @@ export default class PdpApparel extends React.Component {
       const urlSuffix = buyingGuideUrl.replace(TATA_CLIQ_ROOT, "$1");
       this.props.history.push(urlSuffix);
     }
+  };
+  updateQuantity = quantity => {
+    this.setState({ productQuantity: quantity });
   };
   goToSellerPage = () => {
     let expressionRuleFirst = "/p-(.*)/(.*)";
@@ -79,7 +87,7 @@ export default class PdpApparel extends React.Component {
   addToCart = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
-    productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.quantity = this.state.productQuantity;
     productDetails.ussId = this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -236,6 +244,7 @@ export default class PdpApparel extends React.Component {
                   }
                   data={productData.variantOptions}
                   maxQuantity={productData.maxQuantityAllowed}
+                  updateQuantity={this.updateQuantity}
                   onQuantitySelect={val => this.props.handleQuantitySelect(val)}
                 />
 

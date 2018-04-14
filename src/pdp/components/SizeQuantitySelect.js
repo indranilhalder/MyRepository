@@ -7,6 +7,12 @@ export default class SizeQuantitySelect extends React.Component {
   updateSize(productUrl) {
     this.props.history.push(productUrl);
   }
+  updateQuantity(quantity) {
+    if (this.props.updateQuantity) {
+      this.props.updateQuantity(quantity);
+    }
+  }
+
   handleShowSize() {
     if (this.props.showSizeGuide) {
       this.props.showSizeGuide();
@@ -37,7 +43,7 @@ export default class SizeQuantitySelect extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
-          Select a size
+          Select a size & quantity
           {this.props.showSizeGuide && (
             <div className={styles.button}>
               <UnderLinedButton
@@ -60,7 +66,11 @@ export default class SizeQuantitySelect extends React.Component {
           </div>
 
           <div className={styles.sizeQuantity}>
-            <SelectBoxMobile value="1" options={fetchedQuantityList} />
+            <SelectBoxMobile
+              value="Qunatity"
+              options={fetchedQuantityList}
+              onChange={value => this.updateQuantity(value)}
+            />
           </div>
         </div>
       </div>
