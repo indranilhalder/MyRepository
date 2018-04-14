@@ -23,6 +23,7 @@ export default class SelectBoxMobile extends React.Component {
         : this.props.options ? this.props.options[0].label : ""
     };
   }
+
   handleChange(event) {
     const selectedValue = event.target.value;
     const selectedLabel = this.props.options
@@ -41,6 +42,9 @@ export default class SelectBoxMobile extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.value !== this.state.value) {
       this.setState({ value: nextProps.value });
+    }
+    if (nextProps.label !== this.state.label) {
+      this.setState({ label: nextProps.label });
     }
   }
   render() {
