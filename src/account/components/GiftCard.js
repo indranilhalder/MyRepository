@@ -133,7 +133,9 @@ export default class GiftCard extends React.Component {
             {this.state.amountText === "" && (
               <span>Rs. 0 (Please select the amount from below)</span>
             )}
-            <span>{this.state.amountText}</span>
+            {this.state.amountText !== "" && (
+              <span className={styles.amountSign}>{this.state.amountText}</span>
+            )}
           </div>
           <div className={styles.giftCardTextHolder}>
             <div className={styles.infoHeder}>Gift Card</div>
