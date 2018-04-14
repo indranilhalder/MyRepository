@@ -267,7 +267,6 @@ const account = (
       });
 
     case accountActions.GET_OTP_TO_ACTIVATE_WALLET_FAILURE:
-      console.log(action.error);
       return Object.assign({}, state, {
         getOtpToActivateWalletStatus: action.status,
         getOtpToActivateWalletError: action.error,
