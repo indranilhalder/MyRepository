@@ -173,17 +173,13 @@ export default class PdpApparel extends React.Component {
       .map(image => {
         return image[0].value;
       });
-    let validSellersCount = 0;
-    if (
-      productData.otherSellers &&
-      productData.otherSellers.filter(val => {
-        return val.availableStock !== "0";
-      }).length > 0
-    ) {
-      validSellersCount = productData.otherSellers.filter(val => {
-        return val.availableStock !== "0" && val.availableStock !== "-1";
-      }).length;
-    }
+
+    const validSellersCount = productData.otherSellers
+      ? productData.otherSellers.filter(val => {
+          return val.availableStock !== "0" && val.availableStock !== "-1";
+        }).length
+      : 0;
+
     if (productData) {
       let price = "";
       let discountPrice = "";
@@ -303,18 +299,6 @@ export default class PdpApparel extends React.Component {
             />
           )}
 
-          {productData.otherSellersText && (
-            <div className={styles.separator}>
-              <PdpLink onClick={this.goToSellerPage}>
-                <div
-                  className={styles.sellers}
-                  dangerouslySetInnerHTML={{
-                    __html: productData.otherSellersText
-                  }}
-                />
-              </PdpLink>
-            </div>
-          )}
           {productData.winningSellerName && (
             <div className={styles.separator}>
               <PdpLink
