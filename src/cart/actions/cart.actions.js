@@ -1425,6 +1425,11 @@ export function addPickupPersonCNC(personMobile, personName) {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(addPickUpPersonSuccess(resultJson));
+      dispatch(getCartDetailsCNC(  JSON.parse(userDetails).userName,
+      JSON.parse(customerCookie).access_token,
+      cartId,
+      localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+      false))
     } catch (e) {
       dispatch(addPickUpPersonFailure(e.message));
     }
