@@ -201,11 +201,11 @@ export default class PdpJewellery extends React.Component {
       let price = "";
       let discountPrice = "";
       if (productData.mrpPrice) {
-        price = productData.mrpPrice.formattedValueNoDecimal;
+        discountPrice = productData.mrpPrice.formattedValueNoDecimal;
       }
 
       if (productData.winningSellerPrice) {
-        discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
+        price = productData.winningSellerPrice.formattedValueNoDecimal;
       }
       return (
         <PdpFrame
