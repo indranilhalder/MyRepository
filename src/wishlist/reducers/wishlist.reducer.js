@@ -48,7 +48,7 @@ const wishlistItems = (
         error: action.error
       });
     case wishlistActions.GET_WISH_LIST_ITEMS_SUCCESS:
-      let wishListNewItems = state.wishlistItems;
+      let wishListNewItems = cloneDeep(state.wishlistItems);
       let wishListName = null;
       let wishListcount = null;
       if (action.wishlist && action.wishlist.products) {
