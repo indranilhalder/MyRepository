@@ -16,6 +16,7 @@ import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
+import PdpPaymentInfo from "./PdpPaymentInfo";
 import Accordion from "../../general/components/Accordion.js";
 import JewelleryCertification from "./JewelleryCertification.js";
 import { HashLink as Link } from "react-router-hash-link";
@@ -200,11 +201,11 @@ export default class PdpJewellery extends React.Component {
       let price = "";
       let discountPrice = "";
       if (productData.mrpPrice) {
-        price = productData.mrpPrice.formattedValueNoDecimal;
+        discountPrice = productData.mrpPrice.formattedValueNoDecimal;
       }
 
       if (productData.winningSellerPrice) {
-        discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
+        price = productData.winningSellerPrice.formattedValueNoDecimal;
       }
       return (
         <PdpFrame
@@ -249,16 +250,11 @@ export default class PdpJewellery extends React.Component {
                 </span>
               </div>
             )}
-          {productData.isEMIEligible === "Y" && (
-            <div className={styles.info}>
-              <span className={styles.textOffset}>
-                Emi available on this product.
-              </span>
-              <span className={styles.link} onClick={this.showEmiModal}>
-                View Plans
-              </span>
-            </div>
-          )}
+          <PdpPaymentInfo
+            hasEmi={productData.isEMIEligible}
+            hasCod={productData.isCOD}
+            showEmiModal={this.showEmiModal}
+          />
           <OfferCard
             showDetails={this.props.showOfferDetails}
             potentialPromotions={productData.potentialPromotions}

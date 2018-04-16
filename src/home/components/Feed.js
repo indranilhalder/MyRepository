@@ -90,15 +90,32 @@ const typeComponentMapping = {
 };
 
 class Feed extends Component {
-  componentDidUpdate() {
+  componentDidMount() {
     if (this.props.homeFeedData && !this.props.headerMessage) {
-      const titleObj = this.props.homeFeedData.find(data => {
-        return data.type === "Landing Page Title Component";
-      });
+      const titleObj =
+        this.props.homeFeedData &&
+        this.props.homeFeedData.find(data => {
+          return data.type === "Landing Page Title Component";
+        });
+
       if (titleObj) {
         this.props.setHeaderText(titleObj.title);
       }
     }
+  }
+  componentDidUpdate() {
+    if (this.props.homeFeedData && !this.props.headerMessage) {
+      const titleObj =
+        this.props.homeFeedData &&
+        this.props.homeFeedData.find(data => {
+          return data.type === "Landing Page Title Component";
+        });
+
+      if (titleObj) {
+        this.props.setHeaderText(titleObj.title);
+      }
+    }
+
     if (this.props.headerMessage) {
       this.props.setHeaderText(this.props.headerMessage);
     }
@@ -165,7 +182,7 @@ class Feed extends Component {
       let landingPageTitleObj = this.props.homeFeedData[0]
         ? this.props.homeFeedData[0]
         : {};
-      if (landingPageTitleObj.type === "Landing Page Title") {
+      if (landingPageTitleObj.type === "Landing Page Title Component") {
         propsForHeader = {
           hasBackButton: true,
           text: landingPageTitleObj.title
