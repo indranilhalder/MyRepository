@@ -182,7 +182,6 @@ export default class ModalRoot extends React.Component {
     }
   };
   onClickWrongNumber() {
-    this.props.hideModal();
     this.props.showModal(RestorePasswords);
   }
   render() {
