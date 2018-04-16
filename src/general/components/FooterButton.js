@@ -11,7 +11,7 @@ export default class FooterButton extends React.Component {
   render() {
     return (
       <div
-        className={styles.base}
+        className={this.props.disabled ? styles.disabled : styles.base}
         style={{
           backgroundColor: this.props.backgroundColor,
           borderRight: `1px solid ${this.props.borderColor}`

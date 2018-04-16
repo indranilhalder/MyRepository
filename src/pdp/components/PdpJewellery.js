@@ -214,15 +214,21 @@ export default class PdpJewellery extends React.Component {
           addProductToBag={() => this.addToCart()}
           showPincodeModal={() => this.showPincodeModal()}
           productListingId={productData.productListingId}
+          outOfStock={productData.allOOStock}
           ussId={productData.winningUssID}
         >
-          <ProductGalleryMobile paddingBottom="114">
-            {mobileGalleryImages.map((val, idx) => {
-              return (
-                <Image image={val} key={idx} color="#ffffff" fit="contain" />
-              );
-            })}
-          </ProductGalleryMobile>
+          <div className={styles.gallery}>
+            <ProductGalleryMobile paddingBottom="114">
+              {mobileGalleryImages.map((val, idx) => {
+                return (
+                  <Image image={val} key={idx} color="#ffffff" fit="contain" />
+                );
+              })}
+            </ProductGalleryMobile>
+            {productData.allOOStock && (
+              <div className={styles.flag}>Out of stock</div>
+            )}
+          </div>
           <div className={styles.content}>
             <JewelleryDetailsAndLink
               productName={productData.brandName}
