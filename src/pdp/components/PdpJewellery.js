@@ -96,29 +96,33 @@ export default class PdpJewellery extends React.Component {
     );
 
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (this.checkIfSizeSelected()) {
-      if (userDetails) {
-        if (
-          cartDetailsLoggedInUser !== undefined &&
-          customerCookie !== undefined
-        ) {
+    if (this.props.productDetails.allOOStock) {
+      this.props.displayToast("Product is out of stock");
+    } else {
+      if (this.checkIfSizeSelected()) {
+        if (userDetails) {
+          if (
+            cartDetailsLoggedInUser !== undefined &&
+            customerCookie !== undefined
+          ) {
+            this.props.addProductToCart(
+              JSON.parse(userDetails).userName,
+              JSON.parse(cartDetailsLoggedInUser).code,
+              JSON.parse(customerCookie).access_token,
+              productDetails
+            );
+          }
+        } else if (cartDetailsAnonymous) {
           this.props.addProductToCart(
-            JSON.parse(userDetails).userName,
-            JSON.parse(cartDetailsLoggedInUser).code,
-            JSON.parse(customerCookie).access_token,
+            ANONYMOUS_USER,
+            JSON.parse(cartDetailsAnonymous).guid,
+            JSON.parse(globalCookie).access_token,
             productDetails
           );
         }
-      } else if (cartDetailsAnonymous) {
-        this.props.addProductToCart(
-          ANONYMOUS_USER,
-          JSON.parse(cartDetailsAnonymous).guid,
-          JSON.parse(globalCookie).access_token,
-          productDetails
-        );
+      } else {
+        this.showSizeSelector();
       }
-    } else {
-      this.showSizeSelector();
     }
   };
 
