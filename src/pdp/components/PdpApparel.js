@@ -7,6 +7,7 @@ import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
 import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
+import PdpPaymentInfo from "./PdpPaymentInfo";
 import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
 import ProductFeature from "./ProductFeature";
@@ -213,16 +214,11 @@ export default class PdpApparel extends React.Component {
               onClick={this.goToReviewPage}
             />
           </div>
-          {productData.emiInfo && (
-            <div className={styles.separator}>
-              <div className={styles.info}>
-                {productData.emiInfo.emiText}
-                <span className={styles.link} onClick={this.showEmiModal}>
-                  View Plans
-                </span>
-              </div>
-            </div>
-          )}
+          <PdpPaymentInfo
+            hasEmi={productData.isEMIEligible}
+            hasCod={productData.isCOD}
+            showEmiModal={this.showEmiModal}
+          />
           <OfferCard
             showDetails={this.props.showOfferDetails}
             potentialPromotions={productData.potentialPromotions}

@@ -4,6 +4,7 @@
   overflow: hidden;
   text-align: center;
   color: #212121;
+  white-space: normal;
 }
 .colorWhite {
   composes: base;

@@ -15,6 +15,7 @@ import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
 import PdpDeliveryModes from "./PdpDeliveryModes";
+import PdpPaymentInfo from "./PdpPaymentInfo";
 import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import Accordion from "../../general/components/Accordion.js";
 import Logo from "../../general/components/Logo.js";
@@ -238,16 +239,11 @@ export default class PdpElectronics extends React.Component {
               />
             )}
           </div>
-          {productData.isEMIEligible === "Y" && (
-            <div className={styles.separator}>
-              <div className={styles.info}>
-                Emi available on this product.
-                <span className={styles.link} onClick={this.showEmiModal}>
-                  View Plans
-                </span>
-              </div>
-            </div>
-          )}
+          <PdpPaymentInfo
+            hasEmi={productData.isEMIEligible}
+            hasCod={productData.isCOD}
+            showEmiModal={this.showEmiModal}
+          />
           <OfferCard
             showDetails={this.props.showOfferDetails}
             potentialPromotions={productData.potentialPromotions}
