@@ -986,6 +986,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String B9710 = "B9710";
 	public static final String B9110 = "B9110";
+
+	//NEWUIUX-1406
+	public static final String NU011 = "NU011";
+
+
+
 	//Added in R2.3 start
 	//Auto populating pincode details Error Codes Start
 	public static final String B9351 = "B9351";
