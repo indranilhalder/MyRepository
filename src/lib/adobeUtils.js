@@ -648,8 +648,10 @@ export function setDataLayerForLogin(type) {
     }
     window.digitalData = data;
     window.digitalData.flag = ADOBE_LOGIN_SUCCESS;
+    window._satellite.track(ADOBE_LOGIN_SUCCESS);
   }
   if (ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE) {
     window.digitalData.flag = ADOBE_LOGIN_FAILURE;
+    window._satellite.track(ADOBE_LOGIN_FAILURE);
   }
 }
