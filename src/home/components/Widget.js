@@ -1,70 +1,46 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { SUCCESS } from "../../lib/constants";
-import Observer from "@researchgate/react-intersection-observer";
+// import Observer from "@researchgate/react-intersection-observer";
 
 export default class Widget extends React.Component {
-  // componentDidMount() {
-  //   console.log("COMPONENT DID MOUNT");
-  //   if (
-  //     this.props.isVisible &&
-  //     this.props.feedComponentData.status !== SUCCESS
-  //   ) {
-  //     if (this.props.feedComponentData.fetchURL) {
-  //       this.props.getComponentData(
-  //         this.props.feedComponentData.fetchURL,
-  //         this.props.positionInFeed,
-  //         this.props.postData,
-  //         this.props.feedComponentData.backupURL,
-  //         this.props.feedComponentData.type
-  //       );
-  //     }
-  //   }
-  // }
-
-  // componentDidUpdate() {
-  //   if (
-  //     this.props.isVisible &&
-  //     this.props.feedComponentData.status !== SUCCESS
-  //   ) {
-  //     if (this.props.feedComponentData.fetchURL) {
-  //       this.props.getComponentData(
-  //         this.props.feedComponentData.fetchURL,
-  //         this.props.positionInFeed,
-  //         this.props.postData,
-  //         this.props.feedComponentData.backupURL,
-  //         this.props.feedComponentData.type
-  //       );
-  //     }
-  //   }
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      isVisible: false
+    };
+  }
+  componentDidMount() {
+    if (
+      this.props.feedComponentData.fetchURL &&
+      this.props.feedComponentData.status !== SUCCESS
+    ) {
+      this.props.getComponentData(
+        this.props.feedComponentData.fetchURL,
+        this.props.positionInFeed,
+        this.props.postData,
+        this.props.feedComponentData.backupURL,
+        this.props.feedComponentData.type
+      );
+    }
+  }
 
   onChange = ({ isIntersecting, intersectionRatio }) => {
-    console.log("WIDGET ON CHANGE");
-    console.log(isIntersecting);
-    console.log(intersectionRatio);
-
     if (isIntersecting) {
-      if (
-        this.props.feedComponentData.fetchURL &&
-        this.props.feedComponentData.status !== SUCCESS
-      ) {
-        this.props.getComponentData(
-          this.props.feedComponentData.fetchURL,
-          this.props.positionInFeed,
-          this.props.postData,
-          this.props.feedComponentData.backupURL,
-          this.props.feedComponentData.type
-        );
-      }
+      this.setState({ isVisible: true });
+      console.log("IS INTERSECTING");
     }
   };
 
   render() {
     return (
-      <Observer onChange={this.onChange}>
-        <div>{this.props.children(this.props)}</div>
-      </Observer>
+      // <Observer onChange={this.onChange}>
+      // {this.state.isVisible ? (
+      <div>{this.props.children(this.props)}</div>
+      // ) : (
+      // <div />
+      // /        )}
+      // </Observer>
     );
   }
 }

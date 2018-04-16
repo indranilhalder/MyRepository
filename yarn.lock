@@ -59,6 +59,14 @@
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@mapbox/point-geometry/-/point-geometry-0.1.0.tgz#8a83f9335c7860effa2eeeca254332aa0aeed8f2"
 
+"@researchgate/react-intersection-list@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@researchgate/react-intersection-list/-/react-intersection-list-1.0.2.tgz#7c0b857fedb9595db6381af12c0f6369ff150f78"
+  dependencies:
+    "@researchgate/react-intersection-observer" "^0.6.1"
+    prop-types "^15.6.0"
+    warning "^3.0.0"
+
 "@researchgate/react-intersection-observer@^0.6.1":
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/@researchgate/react-intersection-observer/-/react-intersection-observer-0.6.1.tgz#f98362ccb23450ce25a27e8d96a89cf987a15b73"

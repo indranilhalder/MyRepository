@@ -61,7 +61,8 @@ const home = (
         return {
           ...subData[subData.componentName],
           loading: false,
-          status: ""
+          status: "",
+          visible: false
         };
       });
       return Object.assign({}, state, {
