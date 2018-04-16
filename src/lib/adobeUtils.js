@@ -73,7 +73,6 @@ export function setDataLayer(type, response, icid, icidType) {
   if (userDetails) {
     userDetails = JSON.parse(userDetails);
   }
-  const previousData = window.digitalData;
   if (type === ADOBE_HOME_TYPE) {
     window.digitalData = getDigitalDataForHome();
   }
