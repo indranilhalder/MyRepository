@@ -196,7 +196,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -2541,7 +2541,8 @@ public class SearchSuggestUtilityMethods
 		priceData.setCurrencyIso(productMRP.getCurrencyIso());
 		priceData.setCurrencySymbol(productMRP.getFormattedValue().substring(0, 1));
 		priceData.setDoubleValue(productMRP.getDoubleValue());
-		priceData.setFormattedValue(productMRP.getFormattedValue().substring(1));
+		priceData.setFormattedValue(productMRP.getFormattedValue());
+		priceData.setFormattedValueNoDecimal(productMRP.getFormattedValueNoDecimal());
 		return priceData;
 	}
 
