@@ -38,6 +38,7 @@ export default class PdpFrame extends React.Component {
         <PdpFooter
           onAddToBag={() => this.onAddToBag()}
           productListingId={this.props.productListingId}
+          outOfStock={this.props.outOfStock}
           winningUssID={
             this.props.ussId
               ? this.props.ussId

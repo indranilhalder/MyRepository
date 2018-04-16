@@ -26,6 +26,24 @@
   margin-top: 20px;
   padding: 0 15px;
 }
+.gallery {
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+.flag {
+  width: 157px;
+  height: 40px;
+  color: #fff;
+  font-size: 18px;
+  padding: 10px 20px;
+  background: url(../components/img/flag.svg)no-repeat;
+  font-family: bolder;
+  background-size: contain;
+  position: absolute;
+  top: 90px;
+  left: 0px;
+}
 .link {
   font-size: 14px;
   color: #ff1744;
