@@ -322,7 +322,7 @@ function getDigitalDataForCheckout(type, CheckoutResponse) {
     window.digitalData.page.pageInfo.pageName
   ) {
     if (data.cpj) {
-      Object.assign(data.cpj, {
+      data = Object.assign(data.cpj, {
         pdp: {
           findingMethod:
             window.digitalData &&
@@ -331,7 +331,7 @@ function getDigitalDataForCheckout(type, CheckoutResponse) {
         }
       });
     } else {
-      Object.assign(data, {
+      data = Object.assign(data, {
         cpj: {
           pdp: {
             findingMethod:
