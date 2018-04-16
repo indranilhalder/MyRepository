@@ -1722,7 +1722,6 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	@Override
 	public EMIBankModel getStandardEMIBankByCode(final String code)
 	{
-		// YTODO Auto-generated method stub
-		return null;
+		return getMplPaymentWebDAO().getStandardEMIBankByCode(code);
 	}
 }

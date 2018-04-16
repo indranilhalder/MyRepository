@@ -21,6 +21,7 @@ import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
+import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 
 
 /**

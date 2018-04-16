@@ -71,6 +71,7 @@ import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
+import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 
 
 /**
@@ -1314,7 +1315,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	/**
 	 * NU-351 - Code to fetch EMIBankModel by code
 	 *
-	 * @param pk
+	 * @param code
 	 * @return NoCostEMIBankModel
 	 */
 	@Override

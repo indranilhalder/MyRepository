@@ -10,6 +10,7 @@ import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.List;
 
+import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.SavedCardModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.model.BankModel;
@@ -86,4 +87,10 @@ public interface MplPaymentWebDAO
 	 *
 	 */
 	List<OrderPromotionModel> orderPromotions();
+
+	/**
+	 * @param code
+	 * @return EMIBankModel
+	 */
+	EMIBankModel getStandardEMIBankByCode(String code);
 }
