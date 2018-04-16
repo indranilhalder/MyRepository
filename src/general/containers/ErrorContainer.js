@@ -5,7 +5,14 @@ import React from "react";
 import delay from "lodash/delay";
 import keys from "lodash/keys";
 import each from "lodash/each";
-
+import {
+  getGlobalAccessToken,
+  refreshToken
+} from "../../auth/actions/user.actions.js";
+import { CUSTOMER_ACCESS_TOKEN } from "../../lib/constants.js";
+import * as Cookie from "../../lib/Cookie.js";
+const ACCESS_TOKEN_EXPIRED_MESSAGE = "Access token expired";
+const ACCESS_TOKEN_INVALID_MESSAGE = "Invalid access token";
 const CLEAR_ERROR_DELAY = TOAST_DELAY + 1000;
 
 // The errors for user, pdp and plp are universal errors
@@ -85,6 +92,12 @@ const mapDispatchToProps = dispatch => {
     },
     clearError: () => {
       dispatch(clearError());
+    },
+    getGlobalAccessToken: () => {
+      dispatch(getGlobalAccessToken());
+    },
+    refreshToken: () => {
+      dispatch(refreshToken());
     }
   };
 };
@@ -125,6 +138,22 @@ class ErrorDisplay extends React.Component {
   }
 
   displayError(message) {
+    if (
+      message.startsWith(ACCESS_TOKEN_EXPIRED_MESSAGE) ||
+      message.startsWith(ACCESS_TOKEN_INVALID_MESSAGE)
+    ) {
+      let messageArray = message.split(":");
+      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+      customerCookie =
+        customerCookie && JSON.parse(customerCookie).access_token;
+
+      if (messageArray[1].replace(/\s+/g, "") === customerCookie) {
+        this.props.refreshToken();
+      } else {
+        this.props.getGlobalAccessToken();
+      }
+    }
+
     this.props.displayToast(message);
     delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
   }

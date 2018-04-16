@@ -55,6 +55,8 @@ const PROCEED = "Proceed";
 const COUPON_AVAILABILITY_ERROR_MESSAGE = "Your applied coupon has expired";
 const PRODUCT_NOT_SERVICEABLE_MESSAGE =
   "Product is not Serviceable,Please try with another pin code";
+const SELECT_DELIVERY_MODE_MESSAGE =
+  "Please Select the delivery mode for all the products";
 class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
@@ -689,13 +691,21 @@ class CheckOutPage extends React.Component {
           this.props.selectDeliveryMode &&
           !this.checkAvailabilityOfService()
         ) {
-          this.props.selectDeliveryMode(
-            this.state.ussIdAndDeliveryModesObj,
-            localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
-          );
-          this.setState({
-            deliverMode: true
-          });
+
+          if (
+            Object.entries(this.state.ussIdAndDeliveryModesObj).length ===
+            this.props.cart.cartDetailsCNC.products.length
+          ) {
+            this.props.selectDeliveryMode(
+              this.state.ussIdAndDeliveryModesObj,
+              localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+            );
+            this.setState({
+              deliverMode: true
+            });
+          } else {
+            this.props.displayToast(SELECT_DELIVERY_MODE_MESSAGE);
+          }
         } else {
           if (this.props.displayToast) {
             this.props.displayToast(PRODUCT_NOT_SERVICEABLE_MESSAGE);
