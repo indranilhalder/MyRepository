@@ -2212,6 +2212,8 @@ public class CartsController extends BaseCommerceController
 
 			cartModel.setChannel(channelToSet);
 			getModelService().save(cartModel);
+
+			removeCouponDetails(cartModel);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -2243,6 +2245,34 @@ public class CartsController extends BaseCommerceController
 	}
 
 	//End of delete cart entry
+
+	/**
+	 * The Method removes Coupon Details from Cart
+	 *
+	 * @param cartModel
+	 */
+	private void removeCouponDetails(final CartModel cartModel)
+	{
+		try
+		{
+			if (CollectionUtils.isEmpty(cartModel.getEntries()) && CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
+			{
+				mplCouponFacade.releaseVoucherInCheckout(cartModel);
+				getModelService().save(cartModel);
+			}
+
+		}
+		catch (final VoucherOperationException voucherException)
+		{
+			LOG.error("Error during Voucher Release", voucherException);
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Voucher Release", exception);
+		}
+
+
+	}
 
 	/**
 	 * Updates the quantity of a single cart entry and details of the store where the cart entry will be picked,for
