@@ -31,7 +31,9 @@ export default class FilterSelect extends React.Component {
           {this.props.icon && (
             <div className={styles.itemLogo}>{this.props.icon}</div>
           )}
-          {this.props.label}
+          <div className={styles.dataHolder}>
+            <div className={styles.data}>{this.props.label}</div>
+          </div>
         </div>
         <div className={styles.check}>
           <div className={countStyle}>{this.props.count}</div>
