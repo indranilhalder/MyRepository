@@ -21,12 +21,7 @@ export default class ContentCard extends React.Component {
         <div className={styles.content}>
           <div className={styles.overlay}>
             <div className={styles.header}>{this.props.header}</div>
-            <div
-              className={styles.label}
-              onClick={() => {
-                this.handleClick();
-              }}
-            >
+            <div className={styles.label}>
               {this.props.description}
               <div className={styles.buttonBox}>
                 <div className={styles.button}>
