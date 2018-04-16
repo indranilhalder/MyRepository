@@ -39,7 +39,11 @@ export default class PdpFrame extends React.Component {
           onAddToBag={() => this.onAddToBag()}
           productListingId={this.props.productListingId}
           winningUssID={
-            this.props.ussId ? this.props.ussId : this.props.winningUssID
+            this.props.ussId
+              ? this.props.ussId
+              : this.props.winningUssID
+                ? this.props.winningUssID
+                : this.props.USSID
           }
         />
       </div>
