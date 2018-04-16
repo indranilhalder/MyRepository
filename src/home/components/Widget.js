@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { SUCCESS } from "../../lib/constants";
-// import Observer from "@researchgate/react-intersection-observer";
 
 export default class Widget extends React.Component {
   constructor(props) {
@@ -25,23 +24,8 @@ export default class Widget extends React.Component {
     }
   }
 
-  onChange = ({ isIntersecting, intersectionRatio }) => {
-    if (isIntersecting) {
-      this.setState({ isVisible: true });
-      console.log("IS INTERSECTING");
-    }
-  };
-
   render() {
-    return (
-      // <Observer onChange={this.onChange}>
-      // {this.state.isVisible ? (
-      <div>{this.props.children(this.props)}</div>
-      // ) : (
-      // <div />
-      // /        )}
-      // </Observer>
-    );
+    return <div>{this.props.children(this.props)}</div>;
   }
 }
 
