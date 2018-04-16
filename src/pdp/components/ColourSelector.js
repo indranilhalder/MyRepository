@@ -43,10 +43,8 @@ export default class ColourSelector extends React.Component {
             elementWidthMobile="auto"
             headerComponent={
               <div className={styles.header}>
-                Colour{" "}
-                <span className={styles.colourName}>
-                  {this.state.displayColour}
-                </span>
+                Colour -{" "}
+                <span className={styles.colourName}>{selectedColour}</span>
               </div>
             }
           >

@@ -14,16 +14,28 @@ export default class MenuDetails extends React.Component {
   }
 
   openMenu() {
+    let isOpenMenu = !this.state.isOpen;
     this.setState(
-      prevState => ({
-        isOpen: !prevState.isOpen
-      }),
+      {
+        isOpen: isOpenMenu
+      },
       () => {
         if (this.props.onOpenMenu) {
           this.props.onOpenMenu(this.state.isOpen);
         }
       }
     );
+
+    if (isOpenMenu) {
+      if (this.props.text === "Net banking" && !this.props.bankList) {
+        this.props.getNetBankDetails();
+      } else if (
+        this.props.text === "Easy monthly installments" &&
+        !this.props.emiList
+      ) {
+        this.props.getEmiBankDetails();
+      }
+    }
   }
 
   render() {
