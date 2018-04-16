@@ -14,6 +14,9 @@ export default class ContentCard extends React.Component {
       <div
         className={styles.base}
         style={{ backgroundImage: `url(${this.props.image})` }}
+        onClick={() => {
+          this.handleClick();
+        }}
       >
         <div className={styles.content}>
           <div className={styles.overlay}>
