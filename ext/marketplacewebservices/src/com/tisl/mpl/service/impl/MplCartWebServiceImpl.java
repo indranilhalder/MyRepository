@@ -19,6 +19,7 @@ import de.hybris.platform.commercefacades.order.impl.DefaultCartFacade;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
@@ -81,6 +82,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,6 +93,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 import net.sourceforge.pmd.util.StringUtil;
 
@@ -138,6 +142,7 @@ import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.MaxLimitData;
 import com.tisl.mpl.wsdto.MaxLimitWsDto;
 import com.tisl.mpl.wsdto.MobdeliveryModeWsDTO;
+import com.tisl.mpl.wsdto.MplCategoryHierarchydata;
 import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 
@@ -608,8 +613,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public WebSerResponseWsDTO addProductToCart(final String productCode, final String cartId, final String quantity,
-			final String USSID, final boolean addedToCartWl, final String channel, final boolean isPwa) throws InvalidCartException,
-			CommerceCartModificationException
+			final String USSID, final boolean addedToCartWl, final String channel, final boolean isPwa) throws InvalidCartException,CommerceCartModificationException
 	{
 		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		final long quant = Long.parseLong(quantity);
@@ -3376,8 +3380,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3646,7 +3650,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3905,6 +3909,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	{
 		// YTODO Auto-generated method stub
 		final List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
+		final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 		ProductData productData = null;
 		final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<>();
 		String mediaFormat = null;
@@ -3913,9 +3918,19 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderModel.getEntries())
 			{
+				List<MplCategoryHierarchydata> list = new ArrayList();
 				productData = productFacade.getProductForOptions(abstractOrderEntry.getProduct(),
 						Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES));
-
+				for (final CategoryData catData : productData.getCategories())
+				{
+					if (catData.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
+					{
+						list = constructCategoryHierarchy(list, catData);
+						Collections.reverse(list);
+						gwlp.setCategoryHierarchy(list);
+						break;
+					}
+				}
 				int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 
 				//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
@@ -3925,7 +3940,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
 				}
 
-				final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 
 				if (StringUtils.isNotEmpty(abstractOrderEntry.getProduct().getName()))
 				{
@@ -5024,6 +5038,28 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		return dto;
 	}
 
+	public List<MplCategoryHierarchydata> constructCategoryHierarchy(final List<MplCategoryHierarchydata> list,
+			final CategoryData category)
+	{
+		// YTODO Auto-generated method stub
+
+		final MplCategoryHierarchydata mplCategoryHierarchydata = new MplCategoryHierarchydata();
+		MplCategoryHierarchydata mplCatHierarchy = null;
+		mplCategoryHierarchydata.setCategory_id(category.getCode());
+		mplCategoryHierarchydata.setCategory_name(category.getName());
+		list.add(mplCategoryHierarchydata);
+		for (final CategoryData catData : category.getSuperCategories())
+		{
+			if (catData.getCode().length() > 4)
+			{
+				mplCatHierarchy = new MplCategoryHierarchydata();
+				mplCatHierarchy.setCategory_id(catData.getCode());
+				mplCatHierarchy.setCategory_name(catData.getName());
+				list.add(mplCatHierarchy);
+			}
+		}
+		return list;
+	}
 	/*
 	 * For calculation delivery charge based on currDelCharge
 	 */

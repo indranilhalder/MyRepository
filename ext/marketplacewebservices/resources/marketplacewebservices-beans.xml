@@ -748,6 +748,8 @@
 		<property name="priceValue" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
 		<property name="availableStockCount" type="Integer" />
 		<property name="isOutOfStock" type="Boolean" />
+		<property name="categoryHierarchy"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.MplCategoryHierarchydata>"></property><!-- NEWUIUX 1823 -->
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
