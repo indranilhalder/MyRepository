@@ -235,11 +235,12 @@
 				<c:if test="${feature.typeCode eq 'VideoProductCarouselComponent'}">
 					<!--video product carousel-->
 					<div class="col-xs-12 mb40 pad0 video-product-carousel">
-						<video id="video-el" width="100%" src="${feature.videoURL}"
-							poster="${feature.imageURL.URL}"></video>
+						<iframe id="video-el" width="100%" height="230" src="${feature.videoURL}" frameborder="0" allow="encrypted-media"></iframe>
+						<%-- <video id="video-el" width="100%" src="${feature.videoURL}"
+							poster="${feature.imageURL.URL}"></video> --%>
 						<!-- 						<img src=""> -->
-						<div class="video-product-carousel-container" id="vpc-container">
-							<div class="col-xs-12 video-product-title">${feature.brandLogo.URL}</div>
+						<div class="video-product-carousel-container" id="vpc-container" style="background-image:url(${feature.imageURL.URL});">
+							<div class="col-xs-12 video-product-title"><img src="${feature.brandLogo.URL}" ></div>
 							<div class="col-xs-12 text-center mtb15">
 								<i class="fa fa-play-circle-o fa-3x" aria-hidden="true"
 									id="play-video"></i>
@@ -533,13 +534,13 @@
 								</a>
 								<c:if
 									test="${curatedProductsWidgetElement.typeCode eq 'CuratedProductsWidgetElement'}">
-									<div class="brand-name">${curatedProductsWidgetElement.productCode.name}
+									<div class="brand-name">${curatedProductsWidgetElement.description}
 										<a href="#" class="pull-right"> <i
 											class="fa fa-bookmark-o" aria-hidden="true"></i>
 										</a>
 									</div>
 									<a href="${curatedProductsWidgetElement.webURL}">
-										<div class="product-name">${curatedProductsWidgetElement.description}</div>
+										<div class="product-name">${curatedProductsWidgetElement.productCode.name}</div>
 									</a>
 									<div class="product-price">
 										<c:if
@@ -790,7 +791,7 @@
 											src="${autoProductRecommendationElement.productCode.thumbnail.URL}"
 											class="br4" />
 										</a>
-										<div class="brand-name">${autoProductRecommendationElement.productCode.name}
+										<div class="brand-name">${autoProductRecommendationElement.title}
 											<a href="#" class="pull-right"> <i
 												class="fa fa-bookmark-o" aria-hidden="true"></i>
 											</a>
@@ -822,18 +823,22 @@
 								test="${landingPageHierarchyElement.typeCode eq 'LandingPageHierarchyElement'}">
 								<ul class="category-l1">
 									<li><a href="${landingPageHierarchyElement.webURL}"
-										class="has-carrot">${landingPageHierarchyElement.title}</a> <c:forEach
+										class="has-carrot">${landingPageHierarchyElement.title}</a> 
+										<ul class="category-l2">
+										<c:forEach
 											items="${landingPageHierarchyElement.items}"
 											var="landingPageHierarchyElementList">
 											<c:if
 												test="${landingPageHierarchyElementList.typeCode eq 'LandingPageHierarchyElementList'}">
-												<ul class="category-l2">
+												
 													<li><a
 														href="${landingPageHierarchyElementList.webURL}">${landingPageHierarchyElementList.title}</a>
 													</li>
-												</ul>
+												
 											</c:if>
-										</c:forEach></li>
+										</c:forEach>
+										</ul>
+										</li>
 								</ul>
 							</c:if>
 						</c:forEach>
