@@ -1,8 +1,15 @@
 .holder {
   width: 100%;
   height: auto;
+  overflow: hidden;
   padding: 30px 0 30px 0;
   background: #ececec;
+}
+
+.element {
+  display: inline-block;
+  vertical-align: top;
+  padding: 0 10px;
 }
 .base {
   width: 100%;
