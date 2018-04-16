@@ -11,6 +11,7 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
+
 import {
   setDataLayerForPdpDirectCalls,
   ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART,
@@ -78,11 +79,15 @@ export function getWishListItems(productDetails) {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
-      return dispatch(getWishListItemsSuccess(resultJson.wishList[0]));
+      return dispatch(
+        getWishListItemsSuccess(resultJson.wishList && resultJson.wishList[0])
+      );
     } catch (e) {
       return dispatch(getWishListItemsFailure(e.message));
     }
@@ -189,15 +194,12 @@ export function removeProductFromWishList(productDetails) {
         productToBeRemove
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        return dispatch(removeProductFromWishListSuccess(productDetails));
-      } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      return dispatch(removeProductFromWishListSuccess(productDetails));
     } catch (e) {
       return dispatch(removeProductFromWishListFailure(e.message));
     }
@@ -238,9 +240,12 @@ export function createWishlist(productDetails) {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       return dispatch(createWishlistSuccess());
     } catch (e) {
       return dispatch(createWishlistFailure(e.message));
