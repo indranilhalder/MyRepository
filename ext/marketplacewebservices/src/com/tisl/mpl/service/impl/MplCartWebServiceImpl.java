@@ -96,6 +96,8 @@ import javax.annotation.Resource;
 
 import net.sourceforge.pmd.util.StringUtil;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -611,8 +613,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public WebSerResponseWsDTO addProductToCart(final String productCode, final String cartId, final String quantity,
-			final String USSID, final boolean addedToCartWl, final String channel) throws InvalidCartException,
-			CommerceCartModificationException
+			final String USSID, final boolean addedToCartWl, final String channel, final boolean isPwa) throws InvalidCartException,CommerceCartModificationException
 	{
 		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		final long quant = Long.parseLong(quantity);
@@ -662,18 +663,31 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						//							//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
 						//							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
 						//						}
-						if (productModel.getMaxOrderQuantity() == null && pr.getQuantity().longValue() >= maximum_configured_quantiy)
+						if (productModel.getMaxOrderQuantity() == null && pr.getQuantity().longValue() >= maximum_configured_quantiy
+								&& !isPwa)
 						{
 							//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
 						}
+						else if (productModel.getMaxOrderQuantity() == null
+								&& pr.getQuantity().longValue() >= maximum_configured_quantiy && isPwa)
+						{
+							//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU011);
+						}
 						else if (null != productModel.getMaxOrderQuantity())
 						{
 							if (productModel.getMaxOrderQuantity().intValue() <= 0
-									&& productModel.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy)
+									&& productModel.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy && !isPwa)
 							{
 								//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
 								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
+							}
+							else if (productModel.getMaxOrderQuantity().intValue() <= 0
+									&& productModel.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy && isPwa)
+							{
+								//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU011);
 							}
 							else if (null != productModel.getCode())
 							{
