@@ -15,28 +15,24 @@ export default class OfferWidget extends React.Component {
     const data = feedComponentData.items ? feedComponentData.items : false;
     return (
       <div className={styles.holder}>
-        {data &&
-          data.map((datum, i) => {
-            return (
-              <div className={styles.element} style={{ width: `${33.33}%` }}>
+        <Carousel
+          elementWidthMobile={90}
+          elementWidthDesktop={33.33}
+          header={this.props.feedComponentData.title}
+          scrollId={"offerWidgetScroll"}
+        >
+          {data &&
+            data.map((datum, i) => {
+              return (
                 <Offer
                   onClick={this.handleClick}
                   key={i}
                   datum={datum}
                   {...rest}
                 />
-              </div>
-            );
-          })}
-
-        {/*
-        <Carousel
-          elementWidthMobile={90}
-          elementWidthDesktop={33.33}
-          header={this.props.feedComponentData.title}
-        >
-
-        </Carousel> */}
+              );
+            })}
+        </Carousel>
       </div>
     );
   }

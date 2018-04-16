@@ -2,6 +2,7 @@ import React from "react";
 import MediaQuery from "react-responsive";
 import { default as styles } from "./Carousel.css";
 import Button from "./Button";
+import VisibilityChild from "../../home/components/VisibilityChild.js";
 import PropTypes from "prop-types";
 export default class Carousel extends React.Component {
   constructor(props) {
@@ -135,7 +136,11 @@ export default class Carousel extends React.Component {
             )}
           </MediaQuery>
           <div className={styles.sliderHolder}>
-            <div className={styles.slider} style={style}>
+            <div
+              className={styles.slider}
+              id={this.props.scrollId}
+              style={style}
+            >
               {this.props.children &&
                 this.props.children.map((child, i) => {
                   return (
@@ -147,7 +152,9 @@ export default class Carousel extends React.Component {
                             width: `${this.props.elementWidthDesktop}%`
                           }}
                         >
-                          {child}
+                          <VisibilityChild scrollId={`#${this.props.scrollId}`}>
+                            {child}
+                          </VisibilityChild>
                         </div>
                       </MediaQuery>
                       <MediaQuery query="(max-device-width: 1024px)">
@@ -160,7 +167,9 @@ export default class Carousel extends React.Component {
                                 : `${this.props.elementWidthMobile}%`
                           }}
                         >
-                          {child}
+                          <VisibilityChild scrollId={`#${this.props.scrollId}`}>
+                            {child}
+                          </VisibilityChild>{" "}
                         </div>
                       </MediaQuery>
                     </React.Fragment>
