@@ -38,6 +38,7 @@ FooterButton.propTyes = {
   borderColor: PropTypes.string,
   icon: PropTypes.string,
   onClick: PropTypes.func,
+  disabled: PropTypes.bool,
   labelStyle: PropTypes.shape({
     color: PropTypes.string,
     fontSize: PropTypes.number,
@@ -49,5 +50,6 @@ FooterButton.defaultProps = {
     color: "#8d8d8d",
     fontSize: 14,
     fontFamily: "semibold"
-  }
+  },
+  disabled: false
 };
