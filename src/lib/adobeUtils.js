@@ -211,7 +211,6 @@ function getDigitalDataForPdp(type, pdpResponse) {
       }
     });
   }
-  console.log(pdpResponse);
   if (pdpResponse.mrpPrice && pdpResponse.mrpPrice.doubleValue) {
     Object.assign(data.cpj.product, {
       price: pdpResponse.mrpPrice.doubleValue
