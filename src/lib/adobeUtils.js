@@ -73,6 +73,7 @@ export function setDataLayer(type, response, icid, icidType) {
   if (userDetails) {
     userDetails = JSON.parse(userDetails);
   }
+  const previousData = window.digitalData;
   if (type === ADOBE_HOME_TYPE) {
     window.digitalData = getDigitalDataForHome();
   }
@@ -162,6 +163,7 @@ export function setDataLayer(type, response, icid, icidType) {
       }
     };
   }
+
   window._satellite.track(ADOBE_SATELLITE_CODE);
 }
 
@@ -209,6 +211,7 @@ function getDigitalDataForPdp(type, pdpResponse) {
       }
     });
   }
+  console.log(pdpResponse);
   if (pdpResponse.mrpPrice && pdpResponse.mrpPrice.doubleValue) {
     Object.assign(data.cpj.product, {
       price: pdpResponse.mrpPrice.doubleValue
@@ -238,14 +241,12 @@ function getDigitalDataForPdp(type, pdpResponse) {
     window.digitalData.page &&
     window.digitalData.page.pageInfo.pageName
   ) {
-    Object.assign(data, {
-      cpj: {
-        pdp: {
-          findingMethod:
-            window.digitalData &&
-            window.digitalData.page &&
-            window.digitalData.page.pageInfo.pageName
-        }
+    Object.assign(data.cpj, {
+      pdp: {
+        findingMethod:
+          window.digitalData &&
+          window.digitalData.page &&
+          window.digitalData.page.pageInfo.pageName
       }
     });
   }
@@ -316,6 +317,33 @@ function getDigitalDataForCheckout(type, CheckoutResponse) {
     Object.assign(data, {
       cpj: { product: { id: JSON.stringify(productIds) } }
     });
+  }
+  if (
+    window.digitalData &&
+    window.digitalData.page &&
+    window.digitalData.page.pageInfo.pageName
+  ) {
+    if (data.cpj) {
+      Object.assign(data.cpj, {
+        pdp: {
+          findingMethod:
+            window.digitalData &&
+            window.digitalData.page &&
+            window.digitalData.page.pageInfo.pageName
+        }
+      });
+    } else {
+      Object.assign(data, {
+        cpj: {
+          pdp: {
+            findingMethod:
+              window.digitalData &&
+              window.digitalData.page &&
+              window.digitalData.page.pageInfo.pageName
+          }
+        }
+      });
+    }
   }
   return data;
 }
