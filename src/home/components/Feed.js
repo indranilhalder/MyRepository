@@ -97,7 +97,7 @@ class Feed extends Component {
         this.props.homeFeedData.find(data => {
           return data.type === "Landing Page Title Component";
         });
-      console.log(titleObj);
+
       if (titleObj) {
         this.props.setHeaderText(titleObj.title);
       }
