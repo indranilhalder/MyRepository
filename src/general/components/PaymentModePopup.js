@@ -3,7 +3,7 @@ import styles from "./PaymentModePopup.css";
 import WalletDetail from "./WalletDetails";
 import Button from "./Button";
 import image from "./img/citigroup.jpg";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 export default class PaymentModePopup extends React.Component {
   changePaymentMethod() {

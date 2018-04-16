@@ -1,29 +1,154 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import ModalPanel from "./ModalPanel";
-import NewPassword from "../../auth/components/NewPassword";
-import RestorePassword from "../../auth/components/RestorePassword";
-import OtpVerification from "../../auth/components/OtpVerification";
-import ConnectDetailsWithModal from "../../home/components/ConnectDetailsWithModal";
-import Sort from "../../plp/components/SortModal";
-import AddressModalContainer from "../../plp/containers/AddressModalContainer";
-import SizeGuideModal from "../../pdp/components/SizeGuideModal";
-import EmiModal from "../../pdp/containers/EmiListContainer";
-import OfferModal from "../../pdp/components/OfferModal";
-import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
-import SizeSelectModal from "../../pdp/components/SizeSelectModal.js";
-import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
-import KycDetailsPopup from "../../auth/components/KycDetailsPopup.js";
-import KycApplicationForm from "../../account/components/KycApplicationForm.js";
-import GiftCardModal from "../../cart/components/GiftCardModal";
-import UpdateRefundDetailsPopup from "../../account/components/UpdateRefundDetailsPopup.js";
-import KycApplicationFormWithBottomSlideModal from "../../account/components/KycApplicationFormWithBottomSlideModal";
-import KycDetailPopUpWithBottomSlideModal from "../../account/components/KycDetailPopUpWithBottomSlideModal";
+// import NewPassword from "../../auth/components/NewPassword";
+// import RestorePassword from "../../auth/components/RestorePassword";
+// import OtpVerification from "../../auth/components/OtpVerification";
+// import ConnectDetailsWithModal from "../../home/components/ConnectDetailsWithModal";
+// import Sort from "../../plp/components/SortModal";
+// import AddressModalContainer from "../../plp/containers/AddressModalContainer";
+// import SizeGuideModal from "../../pdp/components/SizeGuideModal";
+// import EmiModal from "../../pdp/containers/EmiListContainer";
+// import OfferModal from "../../pdp/components/OfferModal";
+// import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
+// import SizeSelectModal from "../../pdp/components/SizeSelectModal.js";
+// import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
+// import KycDetailsPopup from "../../auth/components/KycDetailsPopup.js";
+// import KycApplicationForm from "../../account/components/KycApplicationForm.js";
+// import GiftCardModal from "../../cart/components/GiftCardModal";
+// import UpdateRefundDetailsPopup from "../../account/components/UpdateRefundDetailsPopup.js";
+// import KycApplicationFormWithBottomSlideModal from "../../account/components/KycApplicationFormWithBottomSlideModal";
+// import KycDetailPopUpWithBottomSlideModal from "../../account/components/KycDetailPopUpWithBottomSlideModal";
+import Loadable from "react-loadable";
+import MDSpinner from "react-md-spinner";
+
 import * as Cookie from "../../lib/Cookie.js";
 import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
 const modalRoot = document.getElementById("modal-root");
 const GenerateOtp = "GenerateOtpForEgv";
 const RestorePasswords = "RestorePassword";
+
+const Loader = () => {
+  return (
+    <div>
+      <MDSpinner />
+    </div>
+  );
+};
+const NewPassword = Loadable({
+  loader: () => import("../../auth/components/NewPassword"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const RestorePassword = Loadable({
+  loader: () => import("../../auth/components/RestorePassword"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const OtpVerification = Loadable({
+  loader: () => import("../../auth/components/OtpVerification"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const ConnectDetailsWithModal = Loadable({
+  loader: () => import("../../home/components/ConnectDetailsWithModal"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const Sort = Loadable({
+  loader: () => import("../../plp/components/SortModal"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const SizeGuideModal = Loadable({
+  loader: () => import("../../pdp/components/SizeGuideModal"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const AddressModalContainer = Loadable({
+  loader: () => import("../../plp/containers/AddressModalContainer"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const EmiModal = Loadable({
+  loader: () => import("../../pdp/containers/EmiListContainer"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const OfferModal = Loadable({
+  loader: () => import("../../pdp/components/OfferModal"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const ProductCouponDetails = Loadable({
+  loader: () => import("../../pdp/components/ProductCouponDetails.js"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const SizeSelectModal = Loadable({
+  loader: () => import("../../pdp/components/SizeSelectModal.js"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const BankOffersDetails = Loadable({
+  loader: () => import("../../cart/components/BankOffersDetails.js"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const GiftCardModal = Loadable({
+  loader: () => import("../../cart/components/GiftCardModal"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const UpdateRefundDetailsPopup = Loadable({
+  loader: () => import("../../account/components/UpdateRefundDetailsPopup.js"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const KycApplicationFormWithBottomSlideModal = Loadable({
+  loader: () =>
+    import("../../account/components/KycApplicationFormWithBottomSlideModal"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const KycDetailPopUpWithBottomSlideModal = Loadable({
+  loader: () =>
+    import("../../account/components/KycDetailPopUpWithBottomSlideModal"),
+  loading() {
+    return <Loader />;
+  }
+});
+
 export default class ModalRoot extends React.Component {
   constructor(props) {
     super(props);

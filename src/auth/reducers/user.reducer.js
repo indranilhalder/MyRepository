@@ -1,7 +1,7 @@
 import * as userActions from "../actions/user.actions";
 import * as cartActions from "../../cart/actions/cart.actions";
 import { CLEAR_ERROR } from "../../general/error.actions.js";
-import { LOGOUT } from "../../account/actions/account.actions";
+// import { LOGOUT } from "../../account/actions/account.actions";
 import * as Cookies from "../../lib/Cookie";
 import {
   GLOBAL_ACCESS_TOKEN,
@@ -30,18 +30,18 @@ const user = (
 ) => {
   let userDetails = {};
   switch (action.type) {
-    case LOGOUT: {
-      Cookies.deleteCookie(CUSTOMER_ACCESS_TOKEN);
-      Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-      Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
-      Cookies.deleteCookie(LOGGED_IN_USER_DETAILS);
-      localStorage.clear();
-      return Object.assign({}, state, {
-        isLoggedIn: false,
-        error: null,
-        status: null
-      });
-    }
+    // case LOGOUT: {
+    //   Cookies.deleteCookie(CUSTOMER_ACCESS_TOKEN);
+    //   Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    //   Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+    //   Cookies.deleteCookie(LOGGED_IN_USER_DETAILS);
+    //   localStorage.clear();
+    //   return Object.assign({}, state, {
+    //     isLoggedIn: false,
+    //     error: null,
+    //     status: null
+    //   });
+    // }
     case CLEAR_ERROR:
       return Object.assign({}, state, {
         loading: false,

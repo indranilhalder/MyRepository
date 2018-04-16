@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import styles from "./BrandsToolTip.css";
 import deleteIcon from "../../general/components/img/delete.svg";
 export default class BrandsToolTip extends React.Component {

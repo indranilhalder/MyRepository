@@ -8,15 +8,14 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS
 } from "../../lib/constants";
-import each from "lodash/each";
-import delay from "lodash/delay";
+import each from "lodash.foreach";
+import delay from "lodash.delay";
 import { MSD_WIDGET_PLATFORM } from "../../lib/config.js";
 import { setDataLayer, ADOBE_HOME_TYPE } from "../../lib/adobeUtils.js";
 import * as Cookie from "../../lib/Cookie";
 
 import { getMcvId } from "../../lib/adobeUtils.js";
 import { getMsdFormData } from "../../lib/msdUtils.js";
-import { getMsdRequest } from "../../pdp/actions/pdp.actions";
 
 export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";

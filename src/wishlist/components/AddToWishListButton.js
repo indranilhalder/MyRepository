@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import downloadIcon from "./img/download.svg";
 import * as Cookie from "../../lib/Cookie";
 import FooterButton from "../../general/components/FooterButton.js";

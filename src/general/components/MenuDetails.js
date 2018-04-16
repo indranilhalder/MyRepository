@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./MenuDetails.css";
 import PropTypes from "prop-types";
 import { Collapse } from "react-collapse";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import couponIcon from "./img/credit-card.svg";
 
 export default class MenuDetails extends React.Component {

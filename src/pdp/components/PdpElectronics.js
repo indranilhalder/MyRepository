@@ -1,7 +1,7 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
@@ -290,8 +290,10 @@ export default class PdpElectronics extends React.Component {
           )}
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.status === NO ? (
-            <Overlay labelText="Not serviceable in you pincode,
-please try another pincode">
+            <Overlay
+              labelText="Not serviceable in you pincode,
+please try another pincode"
+            >
               <PdpDeliveryModes
                 eligibleDeliveryModes={productData.eligibleDeliveryModes}
                 deliveryModesATP={productData.deliveryModesATP}

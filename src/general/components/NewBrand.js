@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./NewBrand.css";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import PropTypes from "prop-types";
 import Follow from "./Follow";
 import Logo from "./Logo";

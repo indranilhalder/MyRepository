@@ -3,12 +3,6 @@ import PropTypes from "prop-types";
 import { SUCCESS } from "../../lib/constants";
 
 export default class Widget extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isVisible: false
-    };
-  }
   componentDidMount() {
     if (
       this.props.feedComponentData.fetchURL &&

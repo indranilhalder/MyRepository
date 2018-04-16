@@ -27,54 +27,49 @@
     -->
 
 
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: regular;
+    }
 
+    @font-face {
+      font-family: regular;
+      src: url(https://assets.tatacliq.com/medias/sys_master/pwaImg/Rubik-Light.ttf);
+    }
 
-  <% } else { %>
-    <script src="//assets.adobedtm.com/9fd06d4068c619c47b289b9c496761efd086a233/satelliteLib-08855880a6fbd52183d526aa0c8510335499cc15-staging.js"></script>
-    <% } %>
-      <style>
-        body {
-          margin: 0;
-          padding: 0;
-          font-family: regular;
-        }
+    @font-face {
+      font-family: semibold;
+      src: url(https://assets.tatacliq.com/medias/sys_master/pwaImg/Rubik-Medium.ttf);
+    }
 
-        @font-face {
-          font-family: regular;
-          src: url(https://assets.tatacliq.com/medias/sys_master/pwaImg/Rubik-Light.ttf);
-        }
+    @font-face {
+      font-family: bolder;
+      src: url(https://assets.tatacliq.com/medias/sys_master/pwaImg/Rubik-Regular.ttf);
+    }
 
-        @font-face {
-          font-family: semibold;
-          src: url(https://assets.tatacliq.com/medias/sys_master/pwaImg/Rubik-Medium.ttf);
-        }
+    #root {
+      width: 100%;
+      overflow: hidden;
+    }
 
-        @font-face {
-          font-family: bolder;
-          src: url(https://assets.tatacliq.com/medias/sys_master/pwaImg/Rubik-Regular.ttf);
-        }
+    <style>#root {
+      width: 100%;
+      overflow: hidden;
+    }
 
-        #root {
-          width: 100%;
-          overflow: hidden;
-        }
+    #modal-root {
+      width: 100vw;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
 
-        <style>#root {
-          width: 100%;
-          overflow: hidden;
-        }
-
-        #modal-root {
-          width: 100vw;
-          position: absolute;
-          left: 0;
-          top: 0;
-        }
-
-        #modal-root>div {
-          width: 100%;
-        }
-      </style>
+    #modal-root>div {
+      width: 100%;
+    }
+  </style>
 </head>
 
 <body>
@@ -93,8 +88,7 @@
 
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-
+      -->
   <% if("%REACT_APP_STAGE%" === "production") { %>
     <script src="//assets.adobedtm.com/9fd06d4068c619c47b289b9c496761efd086a233/satelliteLib-08855880a6fbd52183d526aa0c8510335499cc15.js"></script>
 

@@ -1,7 +1,7 @@
 // Probably rename this Feed, but no time right now.
 import * as homeActions from "../actions/home.actions";
-import cloneDeep from "lodash/cloneDeep";
-import map from "lodash/map";
+import cloneDeep from "lodash.clonedeep";
+import map from "lodash.map";
 import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
 import { transformFetchingItemsOrder } from "./utils";
 import { homeFeed } from "../actions/home.actions";

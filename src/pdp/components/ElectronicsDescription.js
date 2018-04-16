@@ -2,7 +2,7 @@ import React from "react";
 import ProductVideo from "../../general/components/ProductVideo";
 import styles from "./ElectronicsDescription.css";
 import PropTypes from "prop-types";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 export default class ElectronicsDescription extends React.Component {
   render() {
     if (this.props.value.textList) {

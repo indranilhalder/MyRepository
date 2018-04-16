@@ -1,7 +1,7 @@
 import React from "react";
 import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
-import concat from "lodash/concat";
+import concat from "lodash.concat";
 import { transformData } from "./utils.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 

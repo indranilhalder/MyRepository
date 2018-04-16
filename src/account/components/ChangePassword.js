@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Button } from "xelpmoc-core";
+import Button from "../../xelpmoc-core/Button";
 import MediaQuery from "react-responsive";
-import Input from "../../general/components/Input";
 import PasswordInput from "../../auth/components/PasswordInput.js";
-import MDSpinner from "react-md-spinner";
 import styles from "./ChangePassword.css";
 import AuthFrame from "../../auth/components/AuthFrame.js";
 

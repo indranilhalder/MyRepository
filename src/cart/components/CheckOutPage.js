@@ -1,5 +1,5 @@
 import React from "react";
-import cloneDeep from "lodash/cloneDeep";
+import cloneDeep from "lodash.clonedeep";
 import PropTypes from "prop-types";
 import DummyTab from "./DummyTab";
 import ConfirmAddress from "./ConfirmAddress";
@@ -14,8 +14,7 @@ import PaymentCardWrapper from "./PaymentCardWrapper.js";
 import CartItem from "./CartItem";
 import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
-import filter from "lodash/filter";
-import find from "lodash/find";
+import find from "lodash.find";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";

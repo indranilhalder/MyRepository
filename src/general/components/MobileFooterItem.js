@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./MobileFooterItem.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 export default class MobileFooterItem extends React.Component {
   handleSelect() {
     if (this.props.onSelect) {
