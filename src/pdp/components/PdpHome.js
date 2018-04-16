@@ -9,7 +9,7 @@ import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
 import ProductFeature from "./ProductFeature";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-import ProductDetails from "./ProductDetails";
+import PdpPaymentInfo from "./PdpPaymentInfo";
 import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
 import PdpDeliveryModes from "./PdpDeliveryModes";
@@ -216,16 +216,11 @@ export default class PdpApparel extends React.Component {
                 onClick={this.goToReviewPage}
               />
             </div>
-            {productData.emiInfo && (
-              <div className={styles.separator}>
-                <div className={styles.info}>
-                  {productData.emiInfo.emiText}
-                  <span className={styles.link} onClick={this.showEmiModal}>
-                    View Plans
-                  </span>
-                </div>
-              </div>
-            )}
+            <PdpPaymentInfo
+              hasEmi={productData.isEMIEligible}
+              hasCod={productData.isCOD}
+              showEmiModal={this.showEmiModal}
+            />
             <OfferCard
               showDetails={this.props.showOfferDetails}
               potentialPromotions={productData.potentialPromotions}
