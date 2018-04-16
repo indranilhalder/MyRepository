@@ -23,6 +23,7 @@ import * as Cookie from "../../lib/Cookie.js";
 import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
 const modalRoot = document.getElementById("modal-root");
 const GenerateOtp = "GenerateOtpForEgv";
+const RestorePasswords = "RestorePassword";
 export default class ModalRoot extends React.Component {
   constructor(props) {
     super(props);
@@ -180,7 +181,10 @@ export default class ModalRoot extends React.Component {
       this.props.redeemCliqVoucher(val, true);
     }
   };
-
+  onClickWrongNumber() {
+    this.props.hideModal();
+    this.props.showModal(RestorePasswords);
+  }
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -202,6 +206,7 @@ export default class ModalRoot extends React.Component {
           closeModal={() => this.handleClose()}
           resendOtp={userObj => this.resendOTP(userObj)}
           submitOtp={otpDetails => this.submitOtp(otpDetails)}
+          onClickWrongNumber={() => this.handleClose()}
         />
       ),
       UpdateProfileOtpVerification: (
@@ -220,6 +225,7 @@ export default class ModalRoot extends React.Component {
           submitOtp={otpDetails => this.submitOtpForgotPassword(otpDetails)}
           userObj={this.props.ownProps}
           resendOtp={userName => this.handleRestoreClick(userName)}
+          onClickWrongNumber={() => this.onClickWrongNumber()}
         />
       ),
       UpdateRefundDetailsPopup: (
