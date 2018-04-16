@@ -1188,6 +1188,9 @@
 		<property name="cartGuid" type="String"></property>
 		<property name="status" type="String"></property>
 		<property name="errorMessage" type="String"></property>
+		<property name="couponCode" type="String"></property>
+		<property name="description" type="String"></property>
+		<property name="title" type="String"></property>
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.StateWsDto">
@@ -1690,6 +1693,7 @@
 		<property name="awbPopupLink" type="String" />
 		<!-- TPR-1083 Start -->
 		<property name="exchangeId" type="String" />
+		<property name="categoryHierarchy" type="java.util.List&lt;com.tisl.mpl.wsdto.MplCategoryHierarchydata>"></property>
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.StatusResponseListDTO">
 		<property name="statusList"
@@ -4569,7 +4573,8 @@
 
 	<bean class="com.tisl.mpl.wsdto.UICompPageWiseWsDTO">
 	<property name="status" type="java.lang.String"/>   
-	<property name="message" type="java.lang.String"/>   
+	<property name="message" type="java.lang.String"/>  
+	<property name="pageType" type="java.lang.String"/> 
 		<property name="items"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.UICompPageElementWsDTO>" />
 	<property name="seo" type="com.tisl.wsdto.SeoContentData"/> 		

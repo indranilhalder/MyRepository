@@ -60,6 +60,7 @@ import com.tis.mpl.facade.imageupload.MplImageUploadFacade;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.util.ExceptionUtil;
 
@@ -92,7 +93,27 @@ public class ImageUploadController extends AbstractMplSearchPageController
 	@Resource(name = "mediaDao")
 	private MediaDao mediaDao;
 
+	@Autowired
+	private MplPaymentService mplPaymentService;
 
+
+
+	/**
+	 * @return the mplPaymentService
+	 */
+	public MplPaymentService getMplPaymentService()
+	{
+		return mplPaymentService;
+	}
+
+	/**
+	 * @param mplPaymentService
+	 *           the mplPaymentService to set
+	 */
+	public void setMplPaymentService(final MplPaymentService mplPaymentService)
+	{
+		this.mplPaymentService = mplPaymentService;
+	}
 
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
@@ -206,9 +227,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			final MultipartHttpServletRequest request) throws ServletException, IOException
 	{
 
-
 		final JSONArray returnObject = new JSONArray();
-		//final StringBuilder stringBuilder = new StringBuilder();
 		final List<String> list = new ArrayList<String>();
 		String fileUploadLocation = null;
 		String uploadFolderName = StringUtils.EMPTY;
@@ -258,14 +277,14 @@ public class ImageUploadController extends AbstractMplSearchPageController
 				{
 					final byte[] bytes = files.getBytes();
 					final Path path = Paths.get(fileUploadLocation + "/" + files.getOriginalFilename());
-					//f = new File(fileUploadLocation + files.getOriginalFilename());
 					Files.write(path, bytes);
 					final String fileExtension[] = files.getOriginalFilename().toString().split("\\.");
-					stringBuilder.append(";" + files.getOriginalFilename() + ";;image/" + fileExtension[1] + ";;" + siteResource + path
-							+ ";" + uploadFolderName + ";/n");
+					String updatedImageName = StringUtils.EMPTY;
+					updatedImageName = getMplPaymentService().createQCPaymentId() + "_" + fileExtension[0];
+
+					stringBuilder.append(";" + updatedImageName + ";;image/" + fileExtension[1] + ";;" + siteResource + path + ";"
+							+ uploadFolderName + ";/n");
 					LOG.info("Upload File Path" + path);
-
-
 
 					final InputStream inputStreamStaged = new ByteArrayInputStream(
 							(IMPORT_DATA_STAGED + stringBuilder.toString()).getBytes());
@@ -277,8 +296,6 @@ public class ImageUploadController extends AbstractMplSearchPageController
 
 					readerStaged = new CSVReader(inputStreamStaged, "UTF-8");
 					reader = new CSVReader(inputStream, "UTF-8");
-
-					//final String imageName[] = files.getOriginalFilename().toString().split("\\.");
 					getSessionService().setAttribute("uploadImageName", fileExtension[0]);
 
 					// import
@@ -309,21 +326,20 @@ public class ImageUploadController extends AbstractMplSearchPageController
 					}
 					path.toFile().delete();
 					getSessionService().removeAttribute("uploadImageName");
-					list.add(files.getOriginalFilename());
+					list.add(updatedImageName);
 				}
 				catch (final IOException e)
 				{
 					LOG.error("Error while loading Impex for Image Upload Controller: " + e.getMessage());
 				}
 			}
-			for (final String object : list)
+			for (final String imageId : list)
 			{
 				final org.json.simple.JSONObject jObject = new org.json.simple.JSONObject();
-				//final Media mediaData = getMediaByCode(object);
-				final List<MediaModel> mediaModel = mediaDao.findMediaByCode(object);
+				final List<MediaModel> mediaModel = mediaDao.findMediaByCode(imageId);
 				for (final MediaModel mediaData : mediaModel)
 				{
-					if (mediaData.getCatalogVersion().getVersion().equalsIgnoreCase("Online"))
+					if (null != mediaData.getCatalogVersion() && mediaData.getCatalogVersion().getVersion().equalsIgnoreCase("Online"))
 					{
 						jObject.put("imageName", mediaData.getCode());
 						if (!uploadFolderName.equalsIgnoreCase(IMAGESFOLDER_NAME))
@@ -343,6 +359,11 @@ public class ImageUploadController extends AbstractMplSearchPageController
 						jObject.put("size", mediaData.getSize());
 						jObject.put("creationTime", new Date());
 						returnObject.add(jObject);
+					}
+					else
+					{
+						jObject.put("imageName", mediaData.getCode());
+						jObject.put("imageUrl", "ReUpload Image Image URL Not Generated");
 					}
 
 				}

@@ -133,7 +133,7 @@ public class DefaultCMSComponentControler
 	private final String pageComponent = "pageComponent";
 	private static final String heroBannerComp = "Hero Banner Component";
 
-	public SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	public SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
 
 	public static final String heroBannerError = "Error in getting HeroBannerComponent with id:";
 	public static final String connectBannerComponentError = "Error in getting connectBannerComponentModel with id:";
@@ -238,10 +238,12 @@ public class DefaultCMSComponentControler
 											{
 												heroBannerCompListObj.setBrandLogo(StringUtils.EMPTY);
 											}
-											heroBannerCompListObj.setTitle(null != heroBannerElementModel.getTitle()
-													? heroBannerElementModel.getTitle() : StringUtils.EMPTY);
-											heroBannerCompListObj.setWebURL(null != heroBannerElementModel.getWebURL()
-													? heroBannerElementModel.getWebURL() : StringUtils.EMPTY);
+											heroBannerCompListObj
+													.setTitle(null != heroBannerElementModel.getTitle() ? heroBannerElementModel.getTitle()
+															: StringUtils.EMPTY);
+											heroBannerCompListObj
+													.setWebURL(null != heroBannerElementModel.getWebURL() ? heroBannerElementModel.getWebURL()
+															: StringUtils.EMPTY);
 											heroBannerCompListWsDTO.add(heroBannerCompListObj);
 										}
 									}
@@ -299,24 +301,32 @@ public class DefaultCMSComponentControler
 									{
 										connectBannerWsDTO.setIconImageURL(StringUtils.EMPTY);
 									}
-									connectBannerWsDTO.setBtnText(null != connectBannerComponentModel.getBtnText()
-											? connectBannerComponentModel.getBtnText() : StringUtils.EMPTY);
+									connectBannerWsDTO.setBtnText(
+											null != connectBannerComponentModel.getBtnText() ? connectBannerComponentModel.getBtnText()
+													: StringUtils.EMPTY);
 									connectBannerWsDTO.setDescription(null != connectBannerComponentModel.getDescription()
-											? connectBannerComponentModel.getDescription() : StringUtils.EMPTY);
-									connectBannerWsDTO.setSubType(null != connectBannerComponentModel.getSubType()
-											? connectBannerComponentModel.getSubType() : StringUtils.EMPTY);
-									connectBannerWsDTO.setTitle(null != connectBannerComponentModel.getTitle()
-											? connectBannerComponentModel.getTitle() : StringUtils.EMPTY);
-									connectBannerWsDTO.setWebURL(null != connectBannerComponentModel.getWebURL()
-											? connectBannerComponentModel.getWebURL() : StringUtils.EMPTY);
+											? connectBannerComponentModel.getDescription()
+											: StringUtils.EMPTY);
+									connectBannerWsDTO.setSubType(
+											null != connectBannerComponentModel.getSubType() ? connectBannerComponentModel.getSubType()
+													: StringUtils.EMPTY);
+									connectBannerWsDTO
+											.setTitle(null != connectBannerComponentModel.getTitle() ? connectBannerComponentModel.getTitle()
+													: StringUtils.EMPTY);
+									connectBannerWsDTO.setWebURL(
+											null != connectBannerComponentModel.getWebURL() ? connectBannerComponentModel.getWebURL()
+													: StringUtils.EMPTY);
 									connectBannerWsDTO.setStartHexCode(null != connectBannerComponentModel.getStartHexCode()
-											? connectBannerComponentModel.getStartHexCode() : StringUtils.EMPTY);
-									connectBannerWsDTO.setEndHexCode(null != connectBannerComponentModel.getEndHexCode()
-											? connectBannerComponentModel.getEndHexCode() : StringUtils.EMPTY);
+											? connectBannerComponentModel.getStartHexCode()
+											: StringUtils.EMPTY);
+									connectBannerWsDTO.setEndHexCode(
+											null != connectBannerComponentModel.getEndHexCode() ? connectBannerComponentModel.getEndHexCode()
+													: StringUtils.EMPTY);
 									connectBannerWsDTO.setType("Multipurpose Banner Component");
 									uiCompPageElementObj.setComponentName("multiPurposeBanner");
-									connectBannerWsDTO.setComponentId(null != connectBannerComponentModel.getUid()
-											? connectBannerComponentModel.getUid() : StringUtils.EMPTY);
+									connectBannerWsDTO.setComponentId(
+											null != connectBannerComponentModel.getUid() ? connectBannerComponentModel.getUid()
+													: StringUtils.EMPTY);
 								}
 								catch (final EtailNonBusinessExceptions e)
 								{
@@ -447,77 +457,91 @@ public class DefaultCMSComponentControler
 											for (final FlashSalesItemElementModel flashSalesElementModel : flashSalesComponentModel
 													.getItems())
 											{
-												final FlashSalesElementWsDTO flashSalesElementWsDTO = new FlashSalesElementWsDTO();
-
-												if (null != flashSalesElementModel && null != flashSalesElementModel.getProductCode()
-														&& null != flashSalesElementModel.getProductCode().getCode())
+												try
 												{
-													productCode = flashSalesElementModel.getProductCode().getCode();
-													final BuyBoxData buyboxdata = buyBoxFacade
-															.buyboxPrice(flashSalesElementModel.getProductCode().getCode());
-													String productUnitPrice = StringUtils.EMPTY;
-													String productPrice = StringUtils.EMPTY;
+													final FlashSalesElementWsDTO flashSalesElementWsDTO = new FlashSalesElementWsDTO();
 
-													if (buyboxdata != null)
+													if (null != flashSalesElementModel && null != flashSalesElementModel.getProductCode()
+															&& null != flashSalesElementModel.getProductCode().getCode())
 													{
-														final PriceData specialPrice = buyboxdata.getSpecialPrice();
-														final PriceData mrp = buyboxdata.getMrp();
-														final PriceData mop = buyboxdata.getPrice();
+														productCode = flashSalesElementModel.getProductCode().getCode();
+														final BuyBoxData buyboxdata = buyBoxFacade
+																.buyboxPrice(flashSalesElementModel.getProductCode().getCode());
+														String productUnitPrice = StringUtils.EMPTY;
+														String productPrice = StringUtils.EMPTY;
 
-														if (mrp != null)
+														if (buyboxdata != null)
 														{
-															productUnitPrice = mrp.getValue().toPlainString();
+															final PriceData specialPrice = buyboxdata.getSpecialPrice();
+															final PriceData mrp = buyboxdata.getMrp();
+															final PriceData mop = buyboxdata.getPrice();
+
+															if (mrp != null)
+															{
+																productUnitPrice = mrp.getValue().toPlainString();
+															}
+															if (specialPrice != null)
+															{
+																productPrice = specialPrice.getValue().toPlainString();
+															}
+															else if (null != mop && null != mop.getValue())
+															{
+																productPrice = mop.getValue().toPlainString();
+															}
 														}
-														if (specialPrice != null)
+
+														final FlashSalesDiscountPriceWsDTO flashSalesDiscountPriceWsDTO = new FlashSalesDiscountPriceWsDTO();
+														final FlashSalesMRPPriceWsDTO flashSalesMRPPriceWsDTO = new FlashSalesMRPPriceWsDTO();
+
+														flashSalesDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+														flashSalesDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+														if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 														{
-															productPrice = specialPrice.getValue().toPlainString();
+															flashSalesDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+															flashSalesMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 														}
-														else if (null != mop && null != mop.getValue())
+														flashSalesDiscountPriceWsDTO.setCurrencySymbol("₹");
+														flashSalesMRPPriceWsDTO.setCurrencySymbol("₹");
+														flashSalesMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+														flashSalesMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+
+														flashSalesElementWsDTO.setPrdId(flashSalesElementModel.getProductCode().getCode());
+														flashSalesElementWsDTO.setMrpPrice(flashSalesMRPPriceWsDTO);
+														flashSalesElementWsDTO.setDiscountedPrice(flashSalesDiscountPriceWsDTO);
+														flashSalesElementWsDTO.setTitle(null != flashSalesElementModel.getProductCode()
+																? flashSalesElementModel.getProductCode().getName() : StringUtils.EMPTY);
+														if (null != productModelUrlResolver)
 														{
-															productPrice = mop.getValue().toPlainString();
+															flashSalesElementWsDTO.setWebURL(siteUrl
+																	+ productModelUrlResolver.resolve(flashSalesElementModel.getProductCode()));
 														}
+														else
+														{
+															flashSalesElementWsDTO
+																	.setWebURL(siteUrl + "/" + flashSalesElementModel.getProductCode().getCode());
+														}
+														if (flashSalesElementModel.getProductCode().getPicture() != null
+																&& flashSalesElementModel.getProductCode().getPicture().getURL() != null)
+														{
+															flashSalesElementWsDTO
+																	.setImageURL(flashSalesElementModel.getProductCode().getPicture().getURL());
+														}
+														else
+														{
+															flashSalesElementWsDTO.setImageURL(StringUtils.EMPTY);
+														}
+														flashSalesElementWsDTOList.add(flashSalesElementWsDTO);
 													}
-
-													final FlashSalesDiscountPriceWsDTO flashSalesDiscountPriceWsDTO = new FlashSalesDiscountPriceWsDTO();
-													final FlashSalesMRPPriceWsDTO flashSalesMRPPriceWsDTO = new FlashSalesMRPPriceWsDTO();
-
-													flashSalesDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-													flashSalesDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-													if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-													{
-														flashSalesDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-														flashSalesMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-													}
-													flashSalesDiscountPriceWsDTO.setCurrencySymbol("₹");
-													flashSalesMRPPriceWsDTO.setCurrencySymbol("₹");
-													flashSalesMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-													flashSalesMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-
-													flashSalesElementWsDTO.setPrdId(flashSalesElementModel.getProductCode().getCode());
-													flashSalesElementWsDTO.setMrpPrice(flashSalesMRPPriceWsDTO);
-													flashSalesElementWsDTO.setDiscountedPrice(flashSalesDiscountPriceWsDTO);
-													flashSalesElementWsDTO.setTitle(flashSalesElementModel.getTitle());
-													if (null != productModelUrlResolver)
-													{
-														flashSalesElementWsDTO.setWebURL(siteUrl
-																+ productModelUrlResolver.resolve(flashSalesElementModel.getProductCode()));
-													}
-													else
-													{
-														flashSalesElementWsDTO
-																.setWebURL(siteUrl + "/" + flashSalesElementModel.getProductCode().getCode());
-													}
-													if (flashSalesElementModel.getProductCode().getPicture() != null
-															&& flashSalesElementModel.getProductCode().getPicture().getURL() != null)
-													{
-														flashSalesElementWsDTO
-																.setImageURL(flashSalesElementModel.getProductCode().getPicture().getURL());
-													}
-													else
-													{
-														flashSalesElementWsDTO.setImageURL(StringUtils.EMPTY);
-													}
-													flashSalesElementWsDTOList.add(flashSalesElementWsDTO);
+												}
+												catch (final EtailNonBusinessExceptions e)
+												{
+													LOG.error(fscProductError + productCode, e);
+													continue;
+												}
+												catch (final Exception e)
+												{
+													LOG.error(fscProductError + productCode, e);
+													continue;
 												}
 											}
 										}
@@ -666,9 +690,10 @@ public class DefaultCMSComponentControler
 									if (null != bannerProComponentModel.getItems() && bannerProComponentModel.getItems().size() > 0)
 									{
 										String productCode = StringUtils.EMPTY;
-										try
+
+										for (final BannerProdCarouselElementCompModel productObj : bannerProComponentModel.getItems())
 										{
-											for (final BannerProdCarouselElementCompModel productObj : bannerProComponentModel.getItems())
+											try
 											{
 												final BannerProCarouselElementWsDTO bannerProCarouselElementWsDTO = new BannerProCarouselElementWsDTO();
 												if (null != productObj && null != productObj.getProductCode()
@@ -718,8 +743,8 @@ public class DefaultCMSComponentControler
 													bannerProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
 													bannerProCarouselElementWsDTO.setMrpPrice(bannerProMRPPriceWsDTO);
 													bannerProCarouselElementWsDTO.setDiscountedPrice(bannerProDiscountPriceWsDTO);
-													bannerProCarouselElementWsDTO
-															.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
+													bannerProCarouselElementWsDTO.setTitle(null != productObj.getProductCode()
+															? productObj.getProductCode().getName() : StringUtils.EMPTY);
 													if (null != productModelUrlResolver)
 													{
 														bannerProCarouselElementWsDTO.setWebURL(
@@ -742,18 +767,20 @@ public class DefaultCMSComponentControler
 													}
 												}
 												bannerProCarouselList.add(bannerProCarouselElementWsDTO);
+
+											}
+											catch (final EtailNonBusinessExceptions e)
+											{
+												LOG.error(bannerProductCarouseError + productCode, e);
+												continue;
+											}
+											catch (final Exception e)
+											{
+												LOG.error(bannerProductCarouseError + productCode, e);
+												continue;
 											}
 										}
-										catch (final EtailNonBusinessExceptions e)
-										{
-											LOG.error(bannerProductCarouseError + productCode, e);
-											continue;
-										}
-										catch (final Exception e)
-										{
-											LOG.error(bannerProductCarouseError + productCode, e);
-											continue;
-										}
+
 									}
 									bannerProductCarouselWsDTO.setBtnText(null != bannerProComponentModel.getBtnText()
 											? bannerProComponentModel.getBtnText() : StringUtils.EMPTY);
@@ -815,84 +842,100 @@ public class DefaultCMSComponentControler
 										{
 											for (final VideoProductCarouselElementModel productObj : videoProComponentModel.getItems())
 											{
-												final VideoProductCarElementWsDTO videoProCarouselElementWsDTO = new VideoProductCarElementWsDTO();
-												if (null != productObj && null != productObj.getProductCode()
-														&& null != productObj.getProductCode().getCode())
+												try
 												{
-													productCode = productObj.getProductCode().getCode();
-													final BuyBoxData buyboxdata = buyBoxFacade
-															.buyboxPrice(productObj.getProductCode().getCode());
-													String productUnitPrice = StringUtils.EMPTY;
-													String productPrice = StringUtils.EMPTY;
 
-													if (buyboxdata != null)
+													final VideoProductCarElementWsDTO videoProCarouselElementWsDTO = new VideoProductCarElementWsDTO();
+													if (null != productObj && null != productObj.getProductCode()
+															&& null != productObj.getProductCode().getCode())
 													{
-														final PriceData specialPrice = buyboxdata.getSpecialPrice();
-														final PriceData mrp = buyboxdata.getMrp();
-														final PriceData mop = buyboxdata.getPrice();
+														productCode = productObj.getProductCode().getCode();
+														final BuyBoxData buyboxdata = buyBoxFacade
+																.buyboxPrice(productObj.getProductCode().getCode());
+														String productUnitPrice = StringUtils.EMPTY;
+														String productPrice = StringUtils.EMPTY;
 
-														if (mrp != null)
+														if (buyboxdata != null)
 														{
-															productUnitPrice = mrp.getValue().toPlainString();
-														}
-														if (specialPrice != null)
-														{
-															productPrice = specialPrice.getValue().toPlainString();
-														}
-														else if (null != mop && null != mop.getValue())
-														{
-															productPrice = mop.getValue().toPlainString();
-														}
-													}
+															final PriceData specialPrice = buyboxdata.getSpecialPrice();
+															final PriceData mrp = buyboxdata.getMrp();
+															final PriceData mop = buyboxdata.getPrice();
 
-													final VideoProductCarDiscountPriceWsDTO videoProDiscountPriceWsDTO = new VideoProductCarDiscountPriceWsDTO();
-													final VideoProductCarMRPPriceWsDTO videoProMRPPriceWsDTO = new VideoProductCarMRPPriceWsDTO();
+															if (mrp != null)
+															{
+																productUnitPrice = mrp.getValue().toPlainString();
+															}
+															if (specialPrice != null)
+															{
+																productPrice = specialPrice.getValue().toPlainString();
+															}
+															else if (null != mop && null != mop.getValue())
+															{
+																productPrice = mop.getValue().toPlainString();
+															}
+														}
 
-													videoProDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-													videoProDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-													if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-													{
-														videoProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-														videoProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+														final VideoProductCarDiscountPriceWsDTO videoProDiscountPriceWsDTO = new VideoProductCarDiscountPriceWsDTO();
+														final VideoProductCarMRPPriceWsDTO videoProMRPPriceWsDTO = new VideoProductCarMRPPriceWsDTO();
+
+														videoProDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+														videoProDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+														if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
+														{
+															videoProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+															videoProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+														}
+														videoProDiscountPriceWsDTO.setCurrencySymbol("₹");
+														videoProMRPPriceWsDTO.setCurrencySymbol("₹");
+														videoProMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+														videoProMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+														if (productObj.getProductCode() != null
+																&& productObj.getProductCode().getCode() != null)
+														{
+															videoProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
+														}
+														else
+														{
+															videoProCarouselElementWsDTO.setPrdId(StringUtils.EMPTY);
+														}
+														videoProCarouselElementWsDTO.setMrpPrice(videoProMRPPriceWsDTO);
+														videoProCarouselElementWsDTO.setDiscountedPrice(videoProDiscountPriceWsDTO);
+														videoProCarouselElementWsDTO.setTitle(null != productObj.getProductCode()
+																? productObj.getProductCode().getName() : StringUtils.EMPTY);
+														if (null != productModelUrlResolver)
+														{
+															videoProCarouselElementWsDTO.setWebURL(
+																	siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+														}
+														else
+														{
+															videoProCarouselElementWsDTO
+																	.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+														}
+														if (productObj.getProductCode() != null
+																&& productObj.getProductCode().getPicture() != null
+																&& productObj.getProductCode().getPicture().getURL() != null)
+														{
+															videoProCarouselElementWsDTO
+																	.setImageURL(productObj.getProductCode().getPicture().getURL());
+														}
+														else
+														{
+															videoProCarouselElementWsDTO.setImageURL(StringUtils.EMPTY);
+														}
 													}
-													videoProDiscountPriceWsDTO.setCurrencySymbol("₹");
-													videoProMRPPriceWsDTO.setCurrencySymbol("₹");
-													videoProMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-													videoProMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-													if (productObj.getProductCode() != null && productObj.getProductCode().getCode() != null)
-													{
-														videoProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
-													}
-													else
-													{
-														videoProCarouselElementWsDTO.setPrdId(StringUtils.EMPTY);
-													}
-													videoProCarouselElementWsDTO.setMrpPrice(videoProMRPPriceWsDTO);
-													videoProCarouselElementWsDTO.setDiscountedPrice(videoProDiscountPriceWsDTO);
-													videoProCarouselElementWsDTO
-															.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
-													if (null != productModelUrlResolver)
-													{
-														videoProCarouselElementWsDTO.setWebURL(
-																siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
-													}
-													else
-													{
-														videoProCarouselElementWsDTO
-																.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
-													}
-													if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
-															&& productObj.getProductCode().getPicture().getURL() != null)
-													{
-														videoProCarouselElementWsDTO
-																.setImageURL(productObj.getProductCode().getPicture().getURL());
-													}
-													else
-													{
-														videoProCarouselElementWsDTO.setImageURL(StringUtils.EMPTY);
-													}
+													videoProCarouselList.add(videoProCarouselElementWsDTO);
 												}
-												videoProCarouselList.add(videoProCarouselElementWsDTO);
+												catch (final EtailNonBusinessExceptions e)
+												{
+													LOG.error(VideoProductCarouselError + productCode, e);
+													continue;
+												}
+												catch (final Exception e)
+												{
+													LOG.error(VideoProductCarouselError + productCode, e);
+													continue;
+												}
 											}
 										}
 										catch (final EtailNonBusinessExceptions e)
@@ -1004,78 +1047,93 @@ public class DefaultCMSComponentControler
 										{
 											for (final ThemeOffersItemsElementModel productObj : themeOffersComponentModel.getItems())
 											{
-												final ThemeOffersElementWsDTO themeOffersElementWsDTO = new ThemeOffersElementWsDTO();
-
-												if (null != productObj && null != productObj.getProductCode()
-														&& null != productObj.getProductCode().getCode())
+												try
 												{
-													productCode = productObj.getProductCode().getCode();
-													final BuyBoxData buyboxdata = buyBoxFacade
-															.buyboxPrice(productObj.getProductCode().getCode());
-													String productUnitPrice = StringUtils.EMPTY;
-													String productPrice = StringUtils.EMPTY;
+													final ThemeOffersElementWsDTO themeOffersElementWsDTO = new ThemeOffersElementWsDTO();
 
-													if (buyboxdata != null)
+													if (null != productObj && null != productObj.getProductCode()
+															&& null != productObj.getProductCode().getCode())
 													{
-														final PriceData specialPrice = buyboxdata.getSpecialPrice();
-														final PriceData mrp = buyboxdata.getMrp();
-														final PriceData mop = buyboxdata.getPrice();
+														productCode = productObj.getProductCode().getCode();
+														final BuyBoxData buyboxdata = buyBoxFacade
+																.buyboxPrice(productObj.getProductCode().getCode());
+														String productUnitPrice = StringUtils.EMPTY;
+														String productPrice = StringUtils.EMPTY;
 
-														if (mrp != null)
+														if (buyboxdata != null)
 														{
-															productUnitPrice = mrp.getValue().toPlainString();
-														}
-														if (specialPrice != null)
-														{
-															productPrice = specialPrice.getValue().toPlainString();
-														}
-														else if (null != mop && null != mop.getValue())
-														{
-															productPrice = mop.getValue().toPlainString();
-														}
-													}
+															final PriceData specialPrice = buyboxdata.getSpecialPrice();
+															final PriceData mrp = buyboxdata.getMrp();
+															final PriceData mop = buyboxdata.getPrice();
 
-													final ThemeOffersDiscountPriceWsDTO thDiscountPriceWsDTO = new ThemeOffersDiscountPriceWsDTO();
-													final ThemeOffersMRPPriceWsDTO thMrpPriceWsDTO = new ThemeOffersMRPPriceWsDTO();
+															if (mrp != null)
+															{
+																productUnitPrice = mrp.getValue().toPlainString();
+															}
+															if (specialPrice != null)
+															{
+																productPrice = specialPrice.getValue().toPlainString();
+															}
+															else if (null != mop && null != mop.getValue())
+															{
+																productPrice = mop.getValue().toPlainString();
+															}
+														}
 
-													thDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-													thDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-													if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-													{
-														thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-														thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+														final ThemeOffersDiscountPriceWsDTO thDiscountPriceWsDTO = new ThemeOffersDiscountPriceWsDTO();
+														final ThemeOffersMRPPriceWsDTO thMrpPriceWsDTO = new ThemeOffersMRPPriceWsDTO();
+
+														thDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+														thDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+														if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
+														{
+															thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+															thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+														}
+														thDiscountPriceWsDTO.setCurrencySymbol("₹");
+														thMrpPriceWsDTO.setCurrencySymbol("₹");
+														thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+														thMrpPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+														themeOffersElementWsDTO.setPrdId(productObj.getProductCode().getCode());
+														themeOffersElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
+														themeOffersElementWsDTO.setDiscountedPrice(thDiscountPriceWsDTO);
+														themeOffersElementWsDTO.setTitle(null != productObj.getProductCode()
+																? productObj.getProductCode().getName() : StringUtils.EMPTY);
+														if (null != productModelUrlResolver)
+														{
+															themeOffersElementWsDTO.setWebURL(
+																	siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+														}
+														else
+														{
+															themeOffersElementWsDTO
+																	.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+														}
+														if (productObj.getProductCode() != null
+																&& productObj.getProductCode().getPicture() != null
+																&& productObj.getProductCode().getPicture().getURL() != null)
+														{
+															themeOffersElementWsDTO
+																	.setImageURL(productObj.getProductCode().getPicture().getURL());
+														}
+														else
+														{
+															themeOffersElementWsDTO.setImageURL(StringUtils.EMPTY);
+														}
 													}
-													thDiscountPriceWsDTO.setCurrencySymbol("₹");
-													thMrpPriceWsDTO.setCurrencySymbol("₹");
-													thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-													thMrpPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-													themeOffersElementWsDTO.setPrdId(productObj.getProductCode().getCode());
-													themeOffersElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
-													themeOffersElementWsDTO.setDiscountedPrice(thDiscountPriceWsDTO);
-													themeOffersElementWsDTO
-															.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
-													if (null != productModelUrlResolver)
-													{
-														themeOffersElementWsDTO.setWebURL(
-																siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
-													}
-													else
-													{
-														themeOffersElementWsDTO
-																.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
-													}
-													if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
-															&& productObj.getProductCode().getPicture().getURL() != null)
-													{
-														themeOffersElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
-													}
-													else
-													{
-														themeOffersElementWsDTO.setImageURL(StringUtils.EMPTY);
-													}
+													themeOffersElementList.add(themeOffersElementWsDTO);
+
 												}
-												themeOffersElementList.add(themeOffersElementWsDTO);
-
+												catch (final EtailNonBusinessExceptions e)
+												{
+													LOG.error(themeOffersError + productCode, e);
+													continue;
+												}
+												catch (final Exception e)
+												{
+													LOG.error(themeOffersError + productCode, e);
+													continue;
+												}
 											}
 										}
 										catch (final EtailNonBusinessExceptions e)
@@ -1153,77 +1211,92 @@ public class DefaultCMSComponentControler
 											for (final ThemeProductWidgetElementModel productObj : themeProductWidgetComponentModel
 													.getItems())
 											{
-												final ThemeProWidElementWsDTO themeProWidElementWsDTO = new ThemeProWidElementWsDTO();
-
-												if (null != productObj && null != productObj.getProductCode()
-														&& null != productObj.getProductCode().getCode())
+												try
 												{
-													productCode = productObj.getProductCode().getCode();
-													final BuyBoxData buyboxdata = buyBoxFacade
-															.buyboxPrice(productObj.getProductCode().getCode());
-													String productUnitPrice = StringUtils.EMPTY;
-													String productPrice = StringUtils.EMPTY;
+													final ThemeProWidElementWsDTO themeProWidElementWsDTO = new ThemeProWidElementWsDTO();
 
-													if (buyboxdata != null)
+													if (null != productObj && null != productObj.getProductCode()
+															&& null != productObj.getProductCode().getCode())
 													{
-														final PriceData specialPrice = buyboxdata.getSpecialPrice();
-														final PriceData mrp = buyboxdata.getMrp();
-														final PriceData mop = buyboxdata.getPrice();
+														productCode = productObj.getProductCode().getCode();
+														final BuyBoxData buyboxdata = buyBoxFacade
+																.buyboxPrice(productObj.getProductCode().getCode());
+														String productUnitPrice = StringUtils.EMPTY;
+														String productPrice = StringUtils.EMPTY;
 
-														if (mrp != null)
+														if (buyboxdata != null)
 														{
-															productUnitPrice = mrp.getValue().toPlainString();
-														}
-														if (specialPrice != null)
-														{
-															productPrice = specialPrice.getValue().toPlainString();
-														}
-														else if (null != mop && null != mop.getValue())
-														{
-															productPrice = mop.getValue().toPlainString();
-														}
-													}
+															final PriceData specialPrice = buyboxdata.getSpecialPrice();
+															final PriceData mrp = buyboxdata.getMrp();
+															final PriceData mop = buyboxdata.getPrice();
 
-													final ThemeProWidDiscountPriceWsDTO thDiscountPriceWsDTO = new ThemeProWidDiscountPriceWsDTO();
-													final ThemeProWidMRPPriceWsDTO thMrpPriceWsDTO = new ThemeProWidMRPPriceWsDTO();
+															if (mrp != null)
+															{
+																productUnitPrice = mrp.getValue().toPlainString();
+															}
+															if (specialPrice != null)
+															{
+																productPrice = specialPrice.getValue().toPlainString();
+															}
+															else if (null != mop && null != mop.getValue())
+															{
+																productPrice = mop.getValue().toPlainString();
+															}
+														}
 
-													thDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-													thDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-													if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-													{
-														thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-														thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+														final ThemeProWidDiscountPriceWsDTO thDiscountPriceWsDTO = new ThemeProWidDiscountPriceWsDTO();
+														final ThemeProWidMRPPriceWsDTO thMrpPriceWsDTO = new ThemeProWidMRPPriceWsDTO();
+
+														thDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+														thDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+														if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
+														{
+															thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+															thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+														}
+														thDiscountPriceWsDTO.setCurrencySymbol("₹");
+														thMrpPriceWsDTO.setCurrencySymbol("₹");
+														thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+														thMrpPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+														themeProWidElementWsDTO.setPrdId(productObj.getProductCode().getCode());
+														themeProWidElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
+														themeProWidElementWsDTO.setDiscountedPrice(thDiscountPriceWsDTO);
+														themeProWidElementWsDTO.setTitle(null != productObj.getProductCode().getName()
+																? productObj.getProductCode().getName() : StringUtils.EMPTY);
+														if (null != productModelUrlResolver)
+														{
+															themeProWidElementWsDTO.setWebURL(
+																	siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+														}
+														else
+														{
+															themeProWidElementWsDTO
+																	.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+														}
+														if (productObj.getProductCode() != null
+																&& productObj.getProductCode().getPicture() != null
+																&& productObj.getProductCode().getPicture().getURL() != null)
+														{
+															themeProWidElementWsDTO
+																	.setImageURL(productObj.getProductCode().getPicture().getURL());
+														}
+														else
+														{
+															themeProWidElementWsDTO.setImageURL(StringUtils.EMPTY);
+														}
 													}
-													thDiscountPriceWsDTO.setCurrencySymbol("₹");
-													thMrpPriceWsDTO.setCurrencySymbol("₹");
-													thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-													thMrpPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-													themeProWidElementWsDTO.setPrdId(productObj.getProductCode().getCode());
-													themeProWidElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
-													themeProWidElementWsDTO.setDiscountedPrice(thDiscountPriceWsDTO);
-													themeProWidElementWsDTO
-															.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
-													if (null != productModelUrlResolver)
-													{
-														themeProWidElementWsDTO.setWebURL(
-																siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
-													}
-													else
-													{
-														themeProWidElementWsDTO
-																.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
-													}
-													if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
-															&& productObj.getProductCode().getPicture().getURL() != null)
-													{
-														themeProWidElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
-													}
-													else
-													{
-														themeProWidElementWsDTO.setImageURL(StringUtils.EMPTY);
-													}
+													themeProWidElementList.add(themeProWidElementWsDTO);
 												}
-												themeProWidElementList.add(themeProWidElementWsDTO);
+												catch (final EtailNonBusinessExceptions e)
+												{
+													LOG.error(themeProductWidgetError + productCode, e);
+													continue;
+												}
+												catch (final Exception e)
+												{
+													LOG.error(themeProductWidgetError + productCode, e);
+													continue;
+												}
 											}
 										}
 										catch (final EtailNonBusinessExceptions e)
@@ -1387,92 +1460,110 @@ public class DefaultCMSComponentControler
 										for (final AutomatedBrandProductCarElementModel productObj : automatedBrandProCarCompModel
 												.getItems())
 										{
-
-											final AutomatedBrandProCarEleWsDTO automatedBrandProCarEleWsDTO = new AutomatedBrandProCarEleWsDTO();
-											String productCode = StringUtils.EMPTY;
 											try
 											{
-												if (null != productObj && null != productObj.getProductCode()
-														&& null != productObj.getProductCode().getCode())
+
+												final AutomatedBrandProCarEleWsDTO automatedBrandProCarEleWsDTO = new AutomatedBrandProCarEleWsDTO();
+												String productCode = StringUtils.EMPTY;
+												try
 												{
-													productCode = productObj.getProductCode().getCode();
-													final BuyBoxData buyboxdata = buyBoxFacade
-															.buyboxPrice(productObj.getProductCode().getCode());
-													String productUnitPrice = StringUtils.EMPTY;
-													String productPrice = StringUtils.EMPTY;
-
-													if (buyboxdata != null)
+													if (null != productObj && null != productObj.getProductCode()
+															&& null != productObj.getProductCode().getCode())
 													{
-														final PriceData specialPrice = buyboxdata.getSpecialPrice();
-														final PriceData mrp = buyboxdata.getMrp();
-														final PriceData mop = buyboxdata.getPrice();
+														productCode = productObj.getProductCode().getCode();
+														final BuyBoxData buyboxdata = buyBoxFacade
+																.buyboxPrice(productObj.getProductCode().getCode());
+														String productUnitPrice = StringUtils.EMPTY;
+														String productPrice = StringUtils.EMPTY;
 
-														if (mrp != null)
+														if (buyboxdata != null)
 														{
-															productUnitPrice = mrp.getValue().toPlainString();
-														}
-														if (specialPrice != null)
-														{
-															productPrice = specialPrice.getValue().toPlainString();
-														}
-														else if (null != mop && null != mop.getValue())
-														{
-															productPrice = mop.getValue().toPlainString();
-														}
-													}
+															final PriceData specialPrice = buyboxdata.getSpecialPrice();
+															final PriceData mrp = buyboxdata.getMrp();
+															final PriceData mop = buyboxdata.getPrice();
 
-													final AutoBrandProCarEleDiscountPriceWsDTO autoDiscountPriceWsDTO = new AutoBrandProCarEleDiscountPriceWsDTO();
-													final AutoBrandProCarEleMRPPriceWsDTO autoMrpPriceWsDTO = new AutoBrandProCarEleMRPPriceWsDTO();
+															if (mrp != null)
+															{
+																productUnitPrice = mrp.getValue().toPlainString();
+															}
+															if (specialPrice != null)
+															{
+																productPrice = specialPrice.getValue().toPlainString();
+															}
+															else if (null != mop && null != mop.getValue())
+															{
+																productPrice = mop.getValue().toPlainString();
+															}
+														}
 
-													autoDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-													autoDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-													if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-													{
-														autoDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-														autoMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-													}
-													autoDiscountPriceWsDTO.setCurrencySymbol("₹");
-													autoMrpPriceWsDTO.setCurrencySymbol("₹");
-													autoMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-													autoMrpPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-													automatedBrandProCarEleWsDTO.setPrdId(productObj.getProductCode().getCode());
-													automatedBrandProCarEleWsDTO.setMrpPrice(autoMrpPriceWsDTO);
-													automatedBrandProCarEleWsDTO.setDiscountedPrice(autoDiscountPriceWsDTO);
-													automatedBrandProCarEleWsDTO
-															.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
-													if (null != productModelUrlResolver)
-													{
-														automatedBrandProCarEleWsDTO.setWebURL(
-																siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
-													}
-													else
-													{
-														automatedBrandProCarEleWsDTO
-																.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
-													}
-													if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
-															&& productObj.getProductCode().getPicture().getURL() != null)
-													{
-														automatedBrandProCarEleWsDTO
-																.setImageURL(productObj.getProductCode().getPicture().getURL());
-													}
-													else
-													{
-														automatedBrandProCarEleWsDTO.setImageURL(StringUtils.EMPTY);
+														final AutoBrandProCarEleDiscountPriceWsDTO autoDiscountPriceWsDTO = new AutoBrandProCarEleDiscountPriceWsDTO();
+														final AutoBrandProCarEleMRPPriceWsDTO autoMrpPriceWsDTO = new AutoBrandProCarEleMRPPriceWsDTO();
+
+														autoDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+														autoDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+														if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
+														{
+															autoDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+															autoMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+														}
+														autoDiscountPriceWsDTO.setCurrencySymbol("₹");
+														autoMrpPriceWsDTO.setCurrencySymbol("₹");
+														autoMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+														autoMrpPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+														automatedBrandProCarEleWsDTO.setPrdId(productObj.getProductCode().getCode());
+														automatedBrandProCarEleWsDTO.setMrpPrice(autoMrpPriceWsDTO);
+														automatedBrandProCarEleWsDTO.setDiscountedPrice(autoDiscountPriceWsDTO);
+														automatedBrandProCarEleWsDTO.setTitle(null != productObj.getProductCode()
+																? productObj.getProductCode().getName() : StringUtils.EMPTY);
+														if (null != productModelUrlResolver)
+														{
+															automatedBrandProCarEleWsDTO.setWebURL(
+																	siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+														}
+														else
+														{
+															automatedBrandProCarEleWsDTO
+																	.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+														}
+														if (productObj.getProductCode() != null
+																&& productObj.getProductCode().getPicture() != null
+																&& productObj.getProductCode().getPicture().getURL() != null)
+														{
+															automatedBrandProCarEleWsDTO
+																	.setImageURL(productObj.getProductCode().getPicture().getURL());
+														}
+														else
+														{
+															automatedBrandProCarEleWsDTO.setImageURL(StringUtils.EMPTY);
+														}
 													}
 												}
+												catch (final EtailNonBusinessExceptions e)
+												{
+													LOG.error(AutomatedBrandProCarError + productCode, e);
+													continue;
+												}
+												catch (final Exception e)
+												{
+													LOG.error(AutomatedBrandProCarError + productCode, e);
+													continue;
+												}
+												automatedBrandProCarEleList.add(automatedBrandProCarEleWsDTO);
 											}
 											catch (final EtailNonBusinessExceptions e)
 											{
-												LOG.error(AutomatedBrandProCarError + productCode, e);
+												automatedBrandProCarWsDTO.setComponentId(null != automatedBrandProCarCompModel.getUid()
+														? automatedBrandProCarCompModel.getUid() : StringUtils.EMPTY);
+												LOG.error(abpcError + automatedBrandProCarCompModel.getUid(), e);
 												continue;
 											}
 											catch (final Exception e)
 											{
-												LOG.error(AutomatedBrandProCarError + productCode, e);
+												automatedBrandProCarWsDTO.setComponentId(null != automatedBrandProCarCompModel.getUid()
+														? automatedBrandProCarCompModel.getUid() : StringUtils.EMPTY);
+												LOG.error(abpcError + automatedBrandProCarCompModel.getUid(), e);
 												continue;
 											}
-											automatedBrandProCarEleList.add(automatedBrandProCarEleWsDTO);
 										}
 									}
 									if (null != automatedBrandProCarCompModel.getBrandLogo()
@@ -1779,81 +1870,95 @@ public class DefaultCMSComponentControler
 										{
 											for (final CuratedProductsWidgetElementModel productObj : curatedProWidgetCompModel.getItems())
 											{
-												final CuratedProWidgetElementWsDTO curatedProWidgetElementWsDTO = new CuratedProWidgetElementWsDTO();
-												if (null != productObj && null != productObj.getProductCode()
-														&& null != productObj.getProductCode().getCode())
+												try
 												{
-													productCode = productObj.getProductCode().getCode();
-													final BuyBoxData buyboxdata = buyBoxFacade
-															.buyboxPrice(productObj.getProductCode().getCode());
-													String productUnitPrice = StringUtils.EMPTY;
-													String productPrice = StringUtils.EMPTY;
-
-													if (buyboxdata != null)
+													final CuratedProWidgetElementWsDTO curatedProWidgetElementWsDTO = new CuratedProWidgetElementWsDTO();
+													if (null != productObj && null != productObj.getProductCode()
+															&& null != productObj.getProductCode().getCode())
 													{
-														final PriceData specialPrice = buyboxdata.getSpecialPrice();
-														final PriceData mrp = buyboxdata.getMrp();
-														final PriceData mop = buyboxdata.getPrice();
+														productCode = productObj.getProductCode().getCode();
+														final BuyBoxData buyboxdata = buyBoxFacade
+																.buyboxPrice(productObj.getProductCode().getCode());
+														String productUnitPrice = StringUtils.EMPTY;
+														String productPrice = StringUtils.EMPTY;
 
-														if (mrp != null)
+														if (buyboxdata != null)
 														{
-															productUnitPrice = mrp.getValue().toPlainString();
+															final PriceData specialPrice = buyboxdata.getSpecialPrice();
+															final PriceData mrp = buyboxdata.getMrp();
+															final PriceData mop = buyboxdata.getPrice();
+
+															if (mrp != null)
+															{
+																productUnitPrice = mrp.getValue().toPlainString();
+															}
+															if (specialPrice != null)
+															{
+																productPrice = specialPrice.getValue().toPlainString();
+															}
+															else if (null != mop && null != mop.getValue())
+															{
+																productPrice = mop.getValue().toPlainString();
+															}
 														}
-														if (specialPrice != null)
+
+														final CuratedProWidgetEleDiscountPriceWsDTO curatedProWidgetEleDiscountPriceWsDTO = new CuratedProWidgetEleDiscountPriceWsDTO();
+														final CuratedProWidgetEleMRPPriceWsDTO curatedProWidgetEleMRPPriceWsDTO = new CuratedProWidgetEleMRPPriceWsDTO();
+
+														curatedProWidgetEleDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+														curatedProWidgetEleDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+														if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 														{
-															productPrice = specialPrice.getValue().toPlainString();
+															curatedProWidgetEleMRPPriceWsDTO
+																	.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+															curatedProWidgetEleDiscountPriceWsDTO
+																	.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 														}
-														else if (null != mop && null != mop.getValue())
+														curatedProWidgetEleDiscountPriceWsDTO.setCurrencySymbol("₹");
+														curatedProWidgetEleMRPPriceWsDTO.setCurrencySymbol("₹");
+														curatedProWidgetEleMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+														curatedProWidgetEleMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+
+														curatedProWidgetElementWsDTO.setPrdId(productObj.getProductCode().getCode());
+														curatedProWidgetElementWsDTO.setMrpPrice(curatedProWidgetEleMRPPriceWsDTO);
+														curatedProWidgetElementWsDTO.setDiscountedPrice(curatedProWidgetEleDiscountPriceWsDTO);
+														curatedProWidgetElementWsDTO.setTitle(null != productObj.getProductCode()
+																? productObj.getProductCode().getName() : StringUtils.EMPTY);
+														curatedProWidgetElementWsDTO.setDescription(null != productObj.getDescription()
+																? productObj.getDescription() : StringUtils.EMPTY);
+														if (null != productModelUrlResolver)
 														{
-															productPrice = mop.getValue().toPlainString();
+															curatedProWidgetElementWsDTO.setWebURL(
+																	siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+														}
+														else
+														{
+															curatedProWidgetElementWsDTO
+																	.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+														}
+														if (null != productObj.getProductCode().getPicture()
+																&& null != productObj.getProductCode().getPicture().getURL())
+														{
+															curatedProWidgetElementWsDTO
+																	.setImageURL(productObj.getProductCode().getPicture().getURL());
+														}
+														else
+														{
+															curatedProWidgetElementWsDTO.setImageURL("");
 														}
 													}
-
-													final CuratedProWidgetEleDiscountPriceWsDTO curatedProWidgetEleDiscountPriceWsDTO = new CuratedProWidgetEleDiscountPriceWsDTO();
-													final CuratedProWidgetEleMRPPriceWsDTO curatedProWidgetEleMRPPriceWsDTO = new CuratedProWidgetEleMRPPriceWsDTO();
-
-													curatedProWidgetEleDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-													curatedProWidgetEleDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-													if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-													{
-														curatedProWidgetEleMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-														curatedProWidgetEleDiscountPriceWsDTO
-																.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-													}
-													curatedProWidgetEleDiscountPriceWsDTO.setCurrencySymbol("₹");
-													curatedProWidgetEleMRPPriceWsDTO.setCurrencySymbol("₹");
-													curatedProWidgetEleMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-													curatedProWidgetEleMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-
-													curatedProWidgetElementWsDTO.setPrdId(productObj.getProductCode().getCode());
-													curatedProWidgetElementWsDTO.setMrpPrice(curatedProWidgetEleMRPPriceWsDTO);
-													curatedProWidgetElementWsDTO.setDiscountedPrice(curatedProWidgetEleDiscountPriceWsDTO);
-													curatedProWidgetElementWsDTO
-															.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
-													curatedProWidgetElementWsDTO.setDescription(null != productObj.getDescription()
-															? productObj.getDescription() : StringUtils.EMPTY);
-													if (null != productModelUrlResolver)
-													{
-														curatedProWidgetElementWsDTO.setWebURL(
-																siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
-													}
-													else
-													{
-														curatedProWidgetElementWsDTO
-																.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
-													}
-													if (null != productObj.getProductCode().getPicture()
-															&& null != productObj.getProductCode().getPicture().getURL())
-													{
-														curatedProWidgetElementWsDTO
-																.setImageURL(productObj.getProductCode().getPicture().getURL());
-													}
-													else
-													{
-														curatedProWidgetElementWsDTO.setImageURL("");
-													}
+													curatedProWidgetElementList.add(curatedProWidgetElementWsDTO);
 												}
-												curatedProWidgetElementList.add(curatedProWidgetElementWsDTO);
+												catch (final EtailNonBusinessExceptions e)
+												{
+													LOG.error(CuratedProductWidgetEror + productCode, e);
+													continue;
+												}
+												catch (final Exception e)
+												{
+													LOG.error(CuratedProductWidgetEror + productCode, e);
+													continue;
+												}
 											}
 										}
 										catch (final EtailNonBusinessExceptions e)
@@ -2392,80 +2497,100 @@ public class DefaultCMSComponentControler
 											for (final AutoProductRecommendationElementModel productObj : autoProductRecommendationComponentModel
 													.getItems())
 											{
-												final AutoProductRecommendationListWsDTO autoProductRecommendationListWsDTO = new AutoProductRecommendationListWsDTO();
-												if (null != productObj && null != productObj.getProductCode()
-														&& null != productObj.getProductCode().getCode())
+												try
 												{
-													productCode = productObj.getProductCode().getCode();
-													final BuyBoxData buyboxdata = buyBoxFacade
-															.buyboxPrice(productObj.getProductCode().getCode());
-													String productUnitPrice = StringUtils.EMPTY;
-													String productPrice = StringUtils.EMPTY;
-
-													if (buyboxdata != null)
+													final AutoProductRecommendationListWsDTO autoProductRecommendationListWsDTO = new AutoProductRecommendationListWsDTO();
+													if (null != productObj && null != productObj.getProductCode()
+															&& null != productObj.getProductCode().getCode())
 													{
-														final PriceData specialPrice = buyboxdata.getSpecialPrice();
-														final PriceData mrp = buyboxdata.getMrp();
-														final PriceData mop = buyboxdata.getPrice();
+														productCode = productObj.getProductCode().getCode();
+														final BuyBoxData buyboxdata = buyBoxFacade
+																.buyboxPrice(productObj.getProductCode().getCode());
+														String productUnitPrice = StringUtils.EMPTY;
+														String productPrice = StringUtils.EMPTY;
 
-														if (mrp != null)
+														if (buyboxdata != null)
 														{
-															productUnitPrice = mrp.getValue().toPlainString();
+															final PriceData specialPrice = buyboxdata.getSpecialPrice();
+															final PriceData mrp = buyboxdata.getMrp();
+															final PriceData mop = buyboxdata.getPrice();
+
+															if (mrp != null)
+															{
+																productUnitPrice = mrp.getValue().toPlainString();
+															}
+															if (specialPrice != null)
+															{
+																productPrice = specialPrice.getValue().toPlainString();
+															}
+															else if (null != mop && null != mop.getValue())
+															{
+																productPrice = mop.getValue().toPlainString();
+															}
 														}
-														if (specialPrice != null)
+
+														final AutoProductRecomDiscountPriceWsDTO autoProductRecomDiscountPriceWsDTO = new AutoProductRecomDiscountPriceWsDTO();
+														final AutoProductRecomMRPPriceWsDTO autoProductRecomMRPPriceWsDTO = new AutoProductRecomMRPPriceWsDTO();
+
+														autoProductRecomDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+														autoProductRecomDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+														if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 														{
-															productPrice = specialPrice.getValue().toPlainString();
+															autoProductRecomMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+															autoProductRecomDiscountPriceWsDTO
+																	.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 														}
-														else if (null != mop && null != mop.getValue())
-														{
-															productPrice = mop.getValue().toPlainString();
-														}
-													}
+														autoProductRecomDiscountPriceWsDTO.setCurrencySymbol("₹");
+														autoProductRecomMRPPriceWsDTO.setCurrencySymbol("₹");
+														autoProductRecomMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+														autoProductRecomMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
 
-													final AutoProductRecomDiscountPriceWsDTO autoProductRecomDiscountPriceWsDTO = new AutoProductRecomDiscountPriceWsDTO();
-													final AutoProductRecomMRPPriceWsDTO autoProductRecomMRPPriceWsDTO = new AutoProductRecomMRPPriceWsDTO();
-
-													autoProductRecomDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-													autoProductRecomDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-													if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-													{
-														autoProductRecomMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-														autoProductRecomDiscountPriceWsDTO
-																.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-													}
-													autoProductRecomDiscountPriceWsDTO.setCurrencySymbol("₹");
-													autoProductRecomMRPPriceWsDTO.setCurrencySymbol("₹");
-													autoProductRecomMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-													autoProductRecomMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-
-													autoProductRecommendationListWsDTO.setPrdId(productObj.getProductCode().getCode());
-													autoProductRecommendationListWsDTO.setMrpPrice(autoProductRecomMRPPriceWsDTO);
-													autoProductRecommendationListWsDTO.setDiscountedPrice(autoProductRecomDiscountPriceWsDTO);
-													autoProductRecommendationListWsDTO
-															.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
-
-													if (null != productModelUrlResolver)
-													{
-														autoProductRecommendationListWsDTO.setWebURL(
-																siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
-													}
-													else
-													{
+														autoProductRecommendationListWsDTO.setPrdId(productObj.getProductCode().getCode());
+														autoProductRecommendationListWsDTO.setMrpPrice(autoProductRecomMRPPriceWsDTO);
 														autoProductRecommendationListWsDTO
-																.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+																.setDiscountedPrice(autoProductRecomDiscountPriceWsDTO);
+														autoProductRecommendationListWsDTO.setTitle(null != productObj.getProductCode()
+																? productObj.getProductCode().getName() : StringUtils.EMPTY);
+
+														if (null != productModelUrlResolver)
+														{
+															autoProductRecommendationListWsDTO.setWebURL(
+																	siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+														}
+														else
+														{
+															autoProductRecommendationListWsDTO
+																	.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+														}
+														if (null != productObj.getProductCode().getPicture()
+																&& null != productObj.getProductCode().getPicture().getURL())
+														{
+															autoProductRecommendationListWsDTO
+																	.setImageURL(productObj.getProductCode().getPicture().getURL());
+														}
+														else
+														{
+															autoProductRecommendationListWsDTO.setImageURL(StringUtils.EMPTY);
+														}
 													}
-													if (null != productObj.getProductCode().getPicture()
-															&& null != productObj.getProductCode().getPicture().getURL())
-													{
-														autoProductRecommendationListWsDTO
-																.setImageURL(productObj.getProductCode().getPicture().getURL());
-													}
-													else
-													{
-														autoProductRecommendationListWsDTO.setImageURL(StringUtils.EMPTY);
-													}
+													autoProductRecommendationList.add(autoProductRecommendationListWsDTO);
 												}
-												autoProductRecommendationList.add(autoProductRecommendationListWsDTO);
+												catch (final EtailNonBusinessExceptions e)
+												{
+													LOG.error(
+															"AutoProductRecommendationComponentModel Product is not properly enriched or either out of stock code:-"
+																	+ productCode,
+															e);
+													continue;
+												}
+												catch (final Exception e)
+												{
+													LOG.error(
+															"AutoProductRecommendationComponentModel Product is not properly enriched or either out of stock code:-"
+																	+ productCode,
+															e);
+													continue;
+												}
 											}
 										}
 										catch (final EtailNonBusinessExceptions e)
@@ -2602,19 +2727,21 @@ public class DefaultCMSComponentControler
 					}
 				}
 			}
-			if (null != categoryId && !categoryId.isEmpty())
+			try
 			{
-				try
+				final SeoContentData seoContentData = new SeoContentData();
+				if (null != categoryId && !categoryId.isEmpty())
 				{
-					final SeoContentData seoContentData = new SeoContentData();
-					categoryModels = mplCmsComponentService.getCategoryByCode(categoryId);
-					if (null != categoryModels && !categoryModels.isEmpty())
+					if (categoryId
+							.startsWith(configurationService.getConfiguration().getString("marketplace.mplcatalog.salescategory.code"))
+							|| categoryId.startsWith(
+									configurationService.getConfiguration().getString("marketplace.mplcatalog.salesbrand.code")))
 					{
-						for (final CategoryModel categoryModel : categoryModels)
-						{
+						categoryModels = mplCmsComponentService.getCategoryByCode(categoryId);
 
-							if (categoryModel.getCode().startsWith(
-									configurationService.getConfiguration().getString("marketplace.mplcatalog.salescategory.code")))
+						if (null != categoryModels && !categoryModels.isEmpty())
+						{
+							for (final CategoryModel categoryModel : categoryModels)
 							{
 								if (toDisplay == null)
 								{
@@ -2622,32 +2749,40 @@ public class DefaultCMSComponentControler
 								}
 							}
 
-						}
-						if (toDisplay != null)
-						{
-							if (!categoryService.isRoot(toDisplay))
+							if (toDisplay != null)
 							{
-								breadcrumbs.add(getCategoryBreadcrumb(toDisplay, breadcrumbDTO));
+								if (!categoryService.isRoot(toDisplay))
+								{
+									breadcrumbs.add(getCategoryBreadcrumb(toDisplay, breadcrumbDTO));
+								}
 							}
 						}
 					}
-					seoContentData.setAlternateURL(StringUtils.EMPTY);
-					seoContentData.setCanonicalURL(StringUtils.EMPTY);
-					seoContentData.setBreadcrumbs(breadcrumbs);
-					seoContentData
-							.setDescription(null != contentPage.getDescription() ? contentPage.getDescription() : StringUtils.EMPTY);
-					seoContentData.setImageURL(StringUtils.EMPTY);
-					seoContentData.setKeywords(null != contentPage.getKeywords() ? contentPage.getKeywords() : StringUtils.EMPTY);
-					seoContentData.setTitle(null != contentPage.getTitle() ? contentPage.getTitle() : StringUtils.EMPTY);
-					uiCompPageObj.setSeo(seoContentData);
 				}
-				catch (final Exception e)
-				{
-					LOG.error("Error in getting SEO: ", e);
-				}
+				seoContentData.setAlternateURL(StringUtils.EMPTY);
+				seoContentData.setCanonicalURL(StringUtils.EMPTY);
+				seoContentData.setBreadcrumbs(breadcrumbs);
+				seoContentData
+						.setDescription(null != contentPage.getDescription() ? contentPage.getDescription() : StringUtils.EMPTY);
+				seoContentData.setImageURL(StringUtils.EMPTY);
+				seoContentData.setKeywords(null != contentPage.getKeywords() ? contentPage.getKeywords() : StringUtils.EMPTY);
+				seoContentData.setTitle(null != contentPage.getTitle() ? contentPage.getTitle() : StringUtils.EMPTY);
+				uiCompPageObj.setSeo(seoContentData);
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Error in getting SEO: ", e);
 			}
 			uiCompPageObj.setItems(genericUICompPageWsDTO);
-			uiCompPageObj.setMessage("HOMEPAGE");
+			uiCompPageObj.setMessage(contentPage.getUid());
+			if (null != contentPage.getReactPageType() && !contentPage.getReactPageType().isEmpty())
+			{
+				uiCompPageObj.setPageType(contentPage.getReactPageType());
+			}
+			else
+			{
+				uiCompPageObj.setPageType(StringUtils.EMPTY);
+			}
 			uiCompPageObj.setStatus(Success);
 			return uiCompPageObj;
 		}
@@ -2913,80 +3048,93 @@ public class DefaultCMSComponentControler
 								{
 									for (final FlashSalesItemElementModel flashSalesElementModel : flashSalesComponentModel.getItems())
 									{
-										final FlashSalesElementWsDTO flashSalesElementWsDTO = new FlashSalesElementWsDTO();
-
-										if (null != flashSalesElementModel && null != flashSalesElementModel.getProductCode()
-												&& null != flashSalesElementModel.getProductCode().getCode())
+										try
 										{
-											productCode = flashSalesElementModel.getProductCode().getCode();
-											final BuyBoxData buyboxdata = buyBoxFacade
-													.buyboxPrice(flashSalesElementModel.getProductCode().getCode());
-											//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
-											String productUnitPrice = StringUtils.EMPTY;
-											String productPrice = StringUtils.EMPTY;
+											final FlashSalesElementWsDTO flashSalesElementWsDTO = new FlashSalesElementWsDTO();
 
-											if (buyboxdata != null)
+											if (null != flashSalesElementModel && null != flashSalesElementModel.getProductCode()
+													&& null != flashSalesElementModel.getProductCode().getCode())
 											{
-												final PriceData specialPrice = buyboxdata.getSpecialPrice();
-												final PriceData mrp = buyboxdata.getMrp();
-												final PriceData mop = buyboxdata.getPrice();
+												productCode = flashSalesElementModel.getProductCode().getCode();
+												final BuyBoxData buyboxdata = buyBoxFacade
+														.buyboxPrice(flashSalesElementModel.getProductCode().getCode());
+												//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
+												String productUnitPrice = StringUtils.EMPTY;
+												String productPrice = StringUtils.EMPTY;
 
-												if (mrp != null)
+												if (buyboxdata != null)
 												{
-													productUnitPrice = mrp.getValue().toPlainString();
+													final PriceData specialPrice = buyboxdata.getSpecialPrice();
+													final PriceData mrp = buyboxdata.getMrp();
+													final PriceData mop = buyboxdata.getPrice();
+
+													if (mrp != null)
+													{
+														productUnitPrice = mrp.getValue().toPlainString();
+													}
+													if (specialPrice != null)
+													{
+														productPrice = specialPrice.getValue().toPlainString();
+													}
+													else if (null != mop && null != mop.getValue())
+													{
+														productPrice = mop.getValue().toPlainString();
+													}
 												}
-												if (specialPrice != null)
+
+												final FlashSalesDiscountPriceWsDTO flashSalesDiscountPriceWsDTO = new FlashSalesDiscountPriceWsDTO();
+												final FlashSalesMRPPriceWsDTO flashSalesMRPPriceWsDTO = new FlashSalesMRPPriceWsDTO();
+
+												flashSalesDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+												if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 												{
-													productPrice = specialPrice.getValue().toPlainString();
+													flashSalesDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+													flashSalesMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 												}
-												else if (null != mop && null != mop.getValue())
+												flashSalesDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+												flashSalesDiscountPriceWsDTO.setCurrencySymbol("₹");
+												flashSalesMRPPriceWsDTO.setCurrencySymbol("₹");
+												flashSalesMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+												flashSalesMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+
+												flashSalesElementWsDTO.setPrdId(flashSalesElementModel.getProductCode().getCode());
+												flashSalesElementWsDTO.setMrpPrice(flashSalesMRPPriceWsDTO);
+												flashSalesElementWsDTO.setDiscountedPrice(flashSalesDiscountPriceWsDTO);
+												flashSalesElementWsDTO.setTitle(null != flashSalesElementModel.getProductCode()
+														? flashSalesElementModel.getProductCode().getName() : StringUtils.EMPTY);
+												if (null != productModelUrlResolver)
 												{
-													productPrice = mop.getValue().toPlainString();
+													flashSalesElementWsDTO.setWebURL(
+															siteUrl + productModelUrlResolver.resolve(flashSalesElementModel.getProductCode()));
 												}
-											}
+												else
+												{
+													flashSalesElementWsDTO
+															.setWebURL(siteUrl + "/" + flashSalesElementModel.getProductCode().getCode());
+												}
 
-											final FlashSalesDiscountPriceWsDTO flashSalesDiscountPriceWsDTO = new FlashSalesDiscountPriceWsDTO();
-											final FlashSalesMRPPriceWsDTO flashSalesMRPPriceWsDTO = new FlashSalesMRPPriceWsDTO();
-
-											flashSalesDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-											if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-											{
-												flashSalesDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-												flashSalesMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+												if (flashSalesElementModel.getProductCode().getPicture() != null
+														&& flashSalesElementModel.getProductCode().getPicture().getURL() != null)
+												{
+													flashSalesElementWsDTO
+															.setImageURL(flashSalesElementModel.getProductCode().getPicture().getURL());
+												}
+												else
+												{
+													flashSalesElementWsDTO.setImageURL(StringUtils.EMPTY);
+												}
+												flashSalesElementWsDTOList.add(flashSalesElementWsDTO);
 											}
-											flashSalesDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-											flashSalesDiscountPriceWsDTO.setCurrencySymbol("₹");
-											flashSalesMRPPriceWsDTO.setCurrencySymbol("₹");
-											flashSalesMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-											flashSalesMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-
-											flashSalesElementWsDTO.setPrdId(flashSalesElementModel.getProductCode().getCode());
-											flashSalesElementWsDTO.setMrpPrice(flashSalesMRPPriceWsDTO);
-											flashSalesElementWsDTO.setDiscountedPrice(flashSalesDiscountPriceWsDTO);
-											flashSalesElementWsDTO.setTitle(null != flashSalesElementModel.getTitle()
-													? flashSalesElementModel.getTitle() : StringUtils.EMPTY);
-											if (null != productModelUrlResolver)
-											{
-												flashSalesElementWsDTO.setWebURL(
-														siteUrl + productModelUrlResolver.resolve(flashSalesElementModel.getProductCode()));
-											}
-											else
-											{
-												flashSalesElementWsDTO
-														.setWebURL(siteUrl + "/" + flashSalesElementModel.getProductCode().getCode());
-											}
-
-											if (flashSalesElementModel.getProductCode().getPicture() != null
-													&& flashSalesElementModel.getProductCode().getPicture().getURL() != null)
-											{
-												flashSalesElementWsDTO
-														.setImageURL(flashSalesElementModel.getProductCode().getPicture().getURL());
-											}
-											else
-											{
-												flashSalesElementWsDTO.setImageURL(StringUtils.EMPTY);
-											}
-											flashSalesElementWsDTOList.add(flashSalesElementWsDTO);
+										}
+										catch (final EtailNonBusinessExceptions e)
+										{
+											LOG.error(fscProductError + productCode, e);
+											continue;
+										}
+										catch (final Exception e)
+										{
+											LOG.error(fscProductError + productCode, e);
+											continue;
 										}
 									}
 								}
@@ -3133,9 +3281,10 @@ public class DefaultCMSComponentControler
 							if (null != bannerProComponentModel.getItems() && bannerProComponentModel.getItems().size() > 0)
 							{
 								String productCode = StringUtils.EMPTY;
-								try
+
+								for (final BannerProdCarouselElementCompModel productObj : bannerProComponentModel.getItems())
 								{
-									for (final BannerProdCarouselElementCompModel productObj : bannerProComponentModel.getItems())
+									try
 									{
 										final BannerProCarouselElementWsDTO bannerProCarouselElementWsDTO = new BannerProCarouselElementWsDTO();
 										if (null != productObj && null != productObj.getProductCode()
@@ -3185,8 +3334,8 @@ public class DefaultCMSComponentControler
 											bannerProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
 											bannerProCarouselElementWsDTO.setMrpPrice(bannerProMRPPriceWsDTO);
 											bannerProCarouselElementWsDTO.setDiscountedPrice(bannerProDiscountPriceWsDTO);
-											bannerProCarouselElementWsDTO
-													.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
+											bannerProCarouselElementWsDTO.setTitle(null != productObj.getProductCode()
+													? productObj.getProductCode().getName() : StringUtils.EMPTY);
 											if (null != productModelUrlResolver)
 											{
 												bannerProCarouselElementWsDTO
@@ -3209,18 +3358,20 @@ public class DefaultCMSComponentControler
 											}
 										}
 										bannerProCarouselList.add(bannerProCarouselElementWsDTO);
+
+									}
+									catch (final EtailNonBusinessExceptions e)
+									{
+										LOG.error(bannerProductCarouseError + productCode, e);
+										continue;
+									}
+									catch (final Exception e)
+									{
+										LOG.error(bannerProductCarouseError + productCode, e);
+										continue;
 									}
 								}
-								catch (final EtailNonBusinessExceptions e)
-								{
-									LOG.error(bannerProductCarouseError + productCode, e);
-									continue;
-								}
-								catch (final Exception e)
-								{
-									LOG.error(bannerProductCarouseError + productCode, e);
-									continue;
-								}
+
 							}
 							bannerProductCarouselWsDTO.setBtnText(null != bannerProComponentModel.getBtnText()
 									? bannerProComponentModel.getBtnText() : StringUtils.EMPTY);
@@ -3281,81 +3432,96 @@ public class DefaultCMSComponentControler
 								{
 									for (final VideoProductCarouselElementModel productObj : videoProComponentModel.getItems())
 									{
-										final VideoProductCarElementWsDTO videoProCarouselElementWsDTO = new VideoProductCarElementWsDTO();
-										if (null != productObj && null != productObj.getProductCode()
-												&& null != productObj.getProductCode().getCode())
+										try
 										{
-											productCode = productObj.getProductCode().getCode();
-											final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
-											String productUnitPrice = StringUtils.EMPTY;
-											String productPrice = StringUtils.EMPTY;
-
-											if (buyboxdata != null)
+											final VideoProductCarElementWsDTO videoProCarouselElementWsDTO = new VideoProductCarElementWsDTO();
+											if (null != productObj && null != productObj.getProductCode()
+													&& null != productObj.getProductCode().getCode())
 											{
-												final PriceData specialPrice = buyboxdata.getSpecialPrice();
-												final PriceData mrp = buyboxdata.getMrp();
-												final PriceData mop = buyboxdata.getPrice();
+												productCode = productObj.getProductCode().getCode();
+												final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
+												String productUnitPrice = StringUtils.EMPTY;
+												String productPrice = StringUtils.EMPTY;
 
-												if (mrp != null)
+												if (buyboxdata != null)
 												{
-													productUnitPrice = mrp.getValue().toPlainString();
-												}
-												if (specialPrice != null)
-												{
-													productPrice = specialPrice.getValue().toPlainString();
-												}
-												else if (null != mop && null != mop.getValue())
-												{
-													productPrice = mop.getValue().toPlainString();
-												}
-											}
+													final PriceData specialPrice = buyboxdata.getSpecialPrice();
+													final PriceData mrp = buyboxdata.getMrp();
+													final PriceData mop = buyboxdata.getPrice();
 
-											final VideoProductCarDiscountPriceWsDTO videoProDiscountPriceWsDTO = new VideoProductCarDiscountPriceWsDTO();
-											final VideoProductCarMRPPriceWsDTO videoProMRPPriceWsDTO = new VideoProductCarMRPPriceWsDTO();
+													if (mrp != null)
+													{
+														productUnitPrice = mrp.getValue().toPlainString();
+													}
+													if (specialPrice != null)
+													{
+														productPrice = specialPrice.getValue().toPlainString();
+													}
+													else if (null != mop && null != mop.getValue())
+													{
+														productPrice = mop.getValue().toPlainString();
+													}
+												}
 
-											videoProDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-											videoProDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-											if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-											{
-												videoProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-												videoProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+												final VideoProductCarDiscountPriceWsDTO videoProDiscountPriceWsDTO = new VideoProductCarDiscountPriceWsDTO();
+												final VideoProductCarMRPPriceWsDTO videoProMRPPriceWsDTO = new VideoProductCarMRPPriceWsDTO();
+
+												videoProDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+												videoProDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+												if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
+												{
+													videoProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+													videoProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+												}
+												videoProDiscountPriceWsDTO.setCurrencySymbol("₹");
+												videoProMRPPriceWsDTO.setCurrencySymbol("₹");
+												videoProMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+												videoProMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+												if (productObj.getProductCode() != null && productObj.getProductCode().getCode() != null)
+												{
+													videoProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
+												}
+												else
+												{
+													videoProCarouselElementWsDTO.setPrdId(StringUtils.EMPTY);
+												}
+												videoProCarouselElementWsDTO.setMrpPrice(videoProMRPPriceWsDTO);
+												videoProCarouselElementWsDTO.setDiscountedPrice(videoProDiscountPriceWsDTO);
+												videoProCarouselElementWsDTO.setTitle(null != productObj.getProductCode()
+														? productObj.getProductCode().getName() : StringUtils.EMPTY);
+												if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
+														&& productObj.getProductCode().getPicture().getURL() != null)
+												{
+													videoProCarouselElementWsDTO
+															.setImageURL(productObj.getProductCode().getPicture().getURL());
+												}
+												else
+												{
+													videoProCarouselElementWsDTO.setImageURL(StringUtils.EMPTY);
+												}
+												if (null != productModelUrlResolver)
+												{
+													videoProCarouselElementWsDTO
+															.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+												}
+												else
+												{
+													videoProCarouselElementWsDTO
+															.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+												}
 											}
-											videoProDiscountPriceWsDTO.setCurrencySymbol("₹");
-											videoProMRPPriceWsDTO.setCurrencySymbol("₹");
-											videoProMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-											videoProMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-											if (productObj.getProductCode() != null && productObj.getProductCode().getCode() != null)
-											{
-												videoProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
-											}
-											else
-											{
-												videoProCarouselElementWsDTO.setPrdId(StringUtils.EMPTY);
-											}
-											videoProCarouselElementWsDTO.setMrpPrice(videoProMRPPriceWsDTO);
-											videoProCarouselElementWsDTO.setDiscountedPrice(videoProDiscountPriceWsDTO);
-											videoProCarouselElementWsDTO
-													.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
-											if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
-													&& productObj.getProductCode().getPicture().getURL() != null)
-											{
-												videoProCarouselElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
-											}
-											else
-											{
-												videoProCarouselElementWsDTO.setImageURL(StringUtils.EMPTY);
-											}
-											if (null != productModelUrlResolver)
-											{
-												videoProCarouselElementWsDTO
-														.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
-											}
-											else
-											{
-												videoProCarouselElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
-											}
+											videoProCarouselList.add(videoProCarouselElementWsDTO);
 										}
-										videoProCarouselList.add(videoProCarouselElementWsDTO);
+										catch (final EtailNonBusinessExceptions e)
+										{
+											LOG.error(VideoProductCarouselError + productCode, e);
+											continue;
+										}
+										catch (final Exception e)
+										{
+											LOG.error(VideoProductCarouselError + productCode, e);
+											continue;
+										}
 									}
 								}
 								catch (final EtailNonBusinessExceptions e)
@@ -3466,77 +3632,90 @@ public class DefaultCMSComponentControler
 								{
 									for (final ThemeOffersItemsElementModel productObj : themeOffersComponentModel.getItems())
 									{
-										final ThemeOffersElementWsDTO themeOffersElementWsDTO = new ThemeOffersElementWsDTO();
-
-										if (null != productObj && null != productObj.getProductCode()
-												&& null != productObj.getProductCode().getCode())
+										try
 										{
-											productCode = productObj.getProductCode().getCode();
-											final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
-											String productUnitPrice = StringUtils.EMPTY;
-											String productPrice = StringUtils.EMPTY;
+											final ThemeOffersElementWsDTO themeOffersElementWsDTO = new ThemeOffersElementWsDTO();
 
-											if (buyboxdata != null)
+											if (null != productObj && null != productObj.getProductCode()
+													&& null != productObj.getProductCode().getCode())
 											{
-												final PriceData specialPrice = buyboxdata.getSpecialPrice();
-												final PriceData mrp = buyboxdata.getMrp();
-												final PriceData mop = buyboxdata.getPrice();
+												productCode = productObj.getProductCode().getCode();
+												final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
+												String productUnitPrice = StringUtils.EMPTY;
+												String productPrice = StringUtils.EMPTY;
 
-												if (mrp != null)
+												if (buyboxdata != null)
 												{
-													productUnitPrice = mrp.getValue().toPlainString();
-												}
-												if (specialPrice != null)
-												{
-													productPrice = specialPrice.getValue().toPlainString();
-												}
-												else if (null != mop && null != mop.getValue())
-												{
-													productPrice = mop.getValue().toPlainString();
-												}
-											}
+													final PriceData specialPrice = buyboxdata.getSpecialPrice();
+													final PriceData mrp = buyboxdata.getMrp();
+													final PriceData mop = buyboxdata.getPrice();
 
-											final ThemeOffersDiscountPriceWsDTO thDiscountPriceWsDTO = new ThemeOffersDiscountPriceWsDTO();
-											final ThemeOffersMRPPriceWsDTO thMrpPriceWsDTO = new ThemeOffersMRPPriceWsDTO();
+													if (mrp != null)
+													{
+														productUnitPrice = mrp.getValue().toPlainString();
+													}
+													if (specialPrice != null)
+													{
+														productPrice = specialPrice.getValue().toPlainString();
+													}
+													else if (null != mop && null != mop.getValue())
+													{
+														productPrice = mop.getValue().toPlainString();
+													}
+												}
 
-											thDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-											thDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-											if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-											{
-												thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-												thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+												final ThemeOffersDiscountPriceWsDTO thDiscountPriceWsDTO = new ThemeOffersDiscountPriceWsDTO();
+												final ThemeOffersMRPPriceWsDTO thMrpPriceWsDTO = new ThemeOffersMRPPriceWsDTO();
+
+												thDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+												thDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+												if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
+												{
+													thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+													thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+												}
+												thDiscountPriceWsDTO.setCurrencySymbol("₹");
+												thMrpPriceWsDTO.setCurrencySymbol("₹");
+												thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+												thMrpPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+												themeOffersElementWsDTO.setPrdId(productObj.getProductCode().getCode());
+												themeOffersElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
+												themeOffersElementWsDTO.setDiscountedPrice(thDiscountPriceWsDTO);
+												themeOffersElementWsDTO.setTitle(null != productObj.getProductCode()
+														? productObj.getProductCode().getName() : StringUtils.EMPTY);
+												if (null != productModelUrlResolver)
+												{
+													themeOffersElementWsDTO
+															.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+												}
+												else
+												{
+													themeOffersElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+												}
+												if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
+														&& productObj.getProductCode().getPicture().getURL() != null)
+												{
+													themeOffersElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
+												}
+												else
+												{
+													themeOffersElementWsDTO.setImageURL(StringUtils.EMPTY);
+												}
+
 											}
-											thDiscountPriceWsDTO.setCurrencySymbol("₹");
-											thMrpPriceWsDTO.setCurrencySymbol("₹");
-											thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-											thMrpPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-											themeOffersElementWsDTO.setPrdId(productObj.getProductCode().getCode());
-											themeOffersElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
-											themeOffersElementWsDTO.setDiscountedPrice(thDiscountPriceWsDTO);
-											themeOffersElementWsDTO
-													.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
-											if (null != productModelUrlResolver)
-											{
-												themeOffersElementWsDTO
-														.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
-											}
-											else
-											{
-												themeOffersElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
-											}
-											if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
-													&& productObj.getProductCode().getPicture().getURL() != null)
-											{
-												themeOffersElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
-											}
-											else
-											{
-												themeOffersElementWsDTO.setImageURL(StringUtils.EMPTY);
-											}
+											themeOffersElementList.add(themeOffersElementWsDTO);
 
 										}
-										themeOffersElementList.add(themeOffersElementWsDTO);
-
+										catch (final EtailNonBusinessExceptions e)
+										{
+											LOG.error(themeOffersError + productCode, e);
+											continue;
+										}
+										catch (final Exception e)
+										{
+											LOG.error(themeOffersError + productCode, e);
+											continue;
+										}
 									}
 								}
 								catch (final EtailNonBusinessExceptions e)
@@ -3612,76 +3791,89 @@ public class DefaultCMSComponentControler
 								{
 									for (final ThemeProductWidgetElementModel productObj : themeProductWidgetComponentModel.getItems())
 									{
-										final ThemeProWidElementWsDTO themeProWidElementWsDTO = new ThemeProWidElementWsDTO();
-
-										if (null != productObj && null != productObj.getProductCode()
-												&& null != productObj.getProductCode().getCode())
+										try
 										{
-											productCode = productObj.getProductCode().getCode();
-											final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
-											//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
-											String productUnitPrice = StringUtils.EMPTY;
-											String productPrice = StringUtils.EMPTY;
+											final ThemeProWidElementWsDTO themeProWidElementWsDTO = new ThemeProWidElementWsDTO();
 
-											if (buyboxdata != null)
+											if (null != productObj && null != productObj.getProductCode()
+													&& null != productObj.getProductCode().getCode())
 											{
-												final PriceData specialPrice = buyboxdata.getSpecialPrice();
-												final PriceData mrp = buyboxdata.getMrp();
-												final PriceData mop = buyboxdata.getPrice();
+												productCode = productObj.getProductCode().getCode();
+												final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
+												//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
+												String productUnitPrice = StringUtils.EMPTY;
+												String productPrice = StringUtils.EMPTY;
 
-												if (mrp != null)
+												if (buyboxdata != null)
 												{
-													productUnitPrice = mrp.getValue().toPlainString();
-												}
-												if (specialPrice != null)
-												{
-													productPrice = specialPrice.getValue().toPlainString();
-												}
-												else if (null != mop && null != mop.getValue())
-												{
-													productPrice = mop.getValue().toPlainString();
-												}
-											}
+													final PriceData specialPrice = buyboxdata.getSpecialPrice();
+													final PriceData mrp = buyboxdata.getMrp();
+													final PriceData mop = buyboxdata.getPrice();
 
-											final ThemeProWidDiscountPriceWsDTO thDiscountPriceWsDTO = new ThemeProWidDiscountPriceWsDTO();
-											final ThemeProWidMRPPriceWsDTO thMrpPriceWsDTO = new ThemeProWidMRPPriceWsDTO();
+													if (mrp != null)
+													{
+														productUnitPrice = mrp.getValue().toPlainString();
+													}
+													if (specialPrice != null)
+													{
+														productPrice = specialPrice.getValue().toPlainString();
+													}
+													else if (null != mop && null != mop.getValue())
+													{
+														productPrice = mop.getValue().toPlainString();
+													}
+												}
 
-											thDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-											thDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-											if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-											{
-												thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-												thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+												final ThemeProWidDiscountPriceWsDTO thDiscountPriceWsDTO = new ThemeProWidDiscountPriceWsDTO();
+												final ThemeProWidMRPPriceWsDTO thMrpPriceWsDTO = new ThemeProWidMRPPriceWsDTO();
+
+												thDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+												thDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+												if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
+												{
+													thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+													thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+												}
+												thMrpPriceWsDTO.setCurrencySymbol("₹");
+												thDiscountPriceWsDTO.setCurrencySymbol("₹");
+												thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+												thMrpPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+												themeProWidElementWsDTO.setPrdId(productObj.getProductCode().getCode());
+												themeProWidElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
+												themeProWidElementWsDTO.setDiscountedPrice(thDiscountPriceWsDTO);
+												themeProWidElementWsDTO.setTitle(null != productObj.getProductCode()
+														? productObj.getProductCode().getName() : StringUtils.EMPTY);
+												if (null != productModelUrlResolver)
+												{
+													themeProWidElementWsDTO
+															.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+												}
+												else
+												{
+													themeProWidElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+												}
+												if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
+														&& productObj.getProductCode().getPicture().getURL() != null)
+												{
+													themeProWidElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
+												}
+												else
+												{
+													themeProWidElementWsDTO.setImageURL(StringUtils.EMPTY);
+												}
 											}
-											thMrpPriceWsDTO.setCurrencySymbol("₹");
-											thDiscountPriceWsDTO.setCurrencySymbol("₹");
-											thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-											thMrpPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-											themeProWidElementWsDTO.setPrdId(productObj.getProductCode().getCode());
-											themeProWidElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
-											themeProWidElementWsDTO.setDiscountedPrice(thDiscountPriceWsDTO);
-											themeProWidElementWsDTO
-													.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
-											if (null != productModelUrlResolver)
-											{
-												themeProWidElementWsDTO
-														.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
-											}
-											else
-											{
-												themeProWidElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
-											}
-											if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
-													&& productObj.getProductCode().getPicture().getURL() != null)
-											{
-												themeProWidElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
-											}
-											else
-											{
-												themeProWidElementWsDTO.setImageURL(StringUtils.EMPTY);
-											}
+											themeProWidElementList.add(themeProWidElementWsDTO);
 										}
-										themeProWidElementList.add(themeProWidElementWsDTO);
+										catch (final EtailNonBusinessExceptions e)
+										{
+											LOG.error(themeProductWidgetError + productCode, e);
+											continue;
+										}
+										catch (final Exception e)
+										{
+											LOG.error(themeProductWidgetError + productCode, e);
+											continue;
+										}
 									}
 								}
 								catch (final EtailNonBusinessExceptions e)
@@ -3841,87 +4033,105 @@ public class DefaultCMSComponentControler
 							{
 								for (final AutomatedBrandProductCarElementModel productObj : automatedBrandProCarCompModel.getItems())
 								{
-
-									final AutomatedBrandProCarEleWsDTO automatedBrandProCarEleWsDTO = new AutomatedBrandProCarEleWsDTO();
-									String productCode = StringUtils.EMPTY;
 									try
 									{
-										if (null != productObj && null != productObj.getProductCode()
-												&& null != productObj.getProductCode().getCode())
+										final AutomatedBrandProCarEleWsDTO automatedBrandProCarEleWsDTO = new AutomatedBrandProCarEleWsDTO();
+										String productCode = StringUtils.EMPTY;
+										try
 										{
-											productCode = productObj.getProductCode().getCode();
-											final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
-											String productUnitPrice = StringUtils.EMPTY;
-											String productPrice = StringUtils.EMPTY;
-
-											if (buyboxdata != null)
+											if (null != productObj && null != productObj.getProductCode()
+													&& null != productObj.getProductCode().getCode())
 											{
-												final PriceData specialPrice = buyboxdata.getSpecialPrice();
-												final PriceData mrp = buyboxdata.getMrp();
-												final PriceData mop = buyboxdata.getPrice();
+												productCode = productObj.getProductCode().getCode();
+												final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
+												String productUnitPrice = StringUtils.EMPTY;
+												String productPrice = StringUtils.EMPTY;
 
-												if (mrp != null)
+												if (buyboxdata != null)
 												{
-													productUnitPrice = mrp.getValue().toPlainString();
-												}
-												if (specialPrice != null)
-												{
-													productPrice = specialPrice.getValue().toPlainString();
-												}
-												else if (null != mop && null != mop.getValue())
-												{
-													productPrice = mop.getValue().toPlainString();
-												}
-											}
+													final PriceData specialPrice = buyboxdata.getSpecialPrice();
+													final PriceData mrp = buyboxdata.getMrp();
+													final PriceData mop = buyboxdata.getPrice();
 
-											final AutoBrandProCarEleDiscountPriceWsDTO autoDiscountPriceWsDTO = new AutoBrandProCarEleDiscountPriceWsDTO();
-											final AutoBrandProCarEleMRPPriceWsDTO autoMrpPriceWsDTO = new AutoBrandProCarEleMRPPriceWsDTO();
+													if (mrp != null)
+													{
+														productUnitPrice = mrp.getValue().toPlainString();
+													}
+													if (specialPrice != null)
+													{
+														productPrice = specialPrice.getValue().toPlainString();
+													}
+													else if (null != mop && null != mop.getValue())
+													{
+														productPrice = mop.getValue().toPlainString();
+													}
+												}
 
-											autoDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-											autoDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-											if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-											{
-												autoDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-												autoMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+												final AutoBrandProCarEleDiscountPriceWsDTO autoDiscountPriceWsDTO = new AutoBrandProCarEleDiscountPriceWsDTO();
+												final AutoBrandProCarEleMRPPriceWsDTO autoMrpPriceWsDTO = new AutoBrandProCarEleMRPPriceWsDTO();
+
+												autoDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+												autoDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+												if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
+												{
+													autoDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+													autoMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+												}
+												autoDiscountPriceWsDTO.setCurrencySymbol("₹");
+												autoMrpPriceWsDTO.setCurrencySymbol("₹");
+												autoMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+												autoMrpPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+												automatedBrandProCarEleWsDTO.setPrdId(productObj.getProductCode().getCode());
+												automatedBrandProCarEleWsDTO.setMrpPrice(autoMrpPriceWsDTO);
+												automatedBrandProCarEleWsDTO.setDiscountedPrice(autoDiscountPriceWsDTO);
+												automatedBrandProCarEleWsDTO.setTitle(null != productObj.getProductCode()
+														? productObj.getProductCode().getName() : StringUtils.EMPTY);
+												if (null != productModelUrlResolver)
+												{
+													automatedBrandProCarEleWsDTO
+															.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+												}
+												else
+												{
+													automatedBrandProCarEleWsDTO
+															.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+												}
+												if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
+														&& productObj.getProductCode().getPicture().getURL() != null)
+												{
+													automatedBrandProCarEleWsDTO
+															.setImageURL(productObj.getProductCode().getPicture().getURL());
+												}
+												else
+												{
+													automatedBrandProCarEleWsDTO.setImageURL(StringUtils.EMPTY);
+												}
 											}
-											autoDiscountPriceWsDTO.setCurrencySymbol("₹");
-											autoMrpPriceWsDTO.setCurrencySymbol("₹");
-											autoMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-											autoMrpPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-											automatedBrandProCarEleWsDTO.setPrdId(productObj.getProductCode().getCode());
-											automatedBrandProCarEleWsDTO.setMrpPrice(autoMrpPriceWsDTO);
-											automatedBrandProCarEleWsDTO.setDiscountedPrice(autoDiscountPriceWsDTO);
-											automatedBrandProCarEleWsDTO
-													.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
-											if (null != productModelUrlResolver)
-											{
-												automatedBrandProCarEleWsDTO
-														.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
-											}
-											else
-											{
-												automatedBrandProCarEleWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
-											}
-											if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
-													&& productObj.getProductCode().getPicture().getURL() != null)
-											{
-												automatedBrandProCarEleWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
-											}
-											else
-											{
-												automatedBrandProCarEleWsDTO.setImageURL(StringUtils.EMPTY);
-											}
+											automatedBrandProCarEleList.add(automatedBrandProCarEleWsDTO);
 										}
-										automatedBrandProCarEleList.add(automatedBrandProCarEleWsDTO);
+										catch (final EtailNonBusinessExceptions e)
+										{
+											LOG.error(AutomatedBrandProCarError + productCode, e);
+											continue;
+										}
+										catch (final Exception e)
+										{
+											LOG.error(AutomatedBrandProCarError + productCode, e);
+											continue;
+										}
 									}
 									catch (final EtailNonBusinessExceptions e)
 									{
-										LOG.error(AutomatedBrandProCarError + productCode, e);
+										automatedBrandProCarWsDTO.setComponentId(null != automatedBrandProCarCompModel.getUid()
+												? automatedBrandProCarCompModel.getUid() : StringUtils.EMPTY);
+										LOG.error(abpcError + automatedBrandProCarCompModel.getUid(), e);
 										continue;
 									}
 									catch (final Exception e)
 									{
-										LOG.error(AutomatedBrandProCarError + productCode, e);
+										automatedBrandProCarWsDTO.setComponentId(null != automatedBrandProCarCompModel.getUid()
+												? automatedBrandProCarCompModel.getUid() : StringUtils.EMPTY);
+										LOG.error(abpcError + automatedBrandProCarCompModel.getUid(), e);
 										continue;
 									}
 								}
@@ -4222,75 +4432,91 @@ public class DefaultCMSComponentControler
 								{
 									for (final CuratedProductsWidgetElementModel productObj : curatedProWidgetCompModel.getItems())
 									{
-										final CuratedProWidgetElementWsDTO curatedProWidgetElementWsDTO = new CuratedProWidgetElementWsDTO();
-										if (null != productObj && null != productObj.getProductCode()
-												&& null != productObj.getProductCode().getCode())
+										try
 										{
-											productCode = productObj.getProductCode().getCode();
-											final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
-											String productUnitPrice = StringUtils.EMPTY;
-											String productPrice = StringUtils.EMPTY;
-
-											if (buyboxdata != null)
+											final CuratedProWidgetElementWsDTO curatedProWidgetElementWsDTO = new CuratedProWidgetElementWsDTO();
+											if (null != productObj && null != productObj.getProductCode()
+													&& null != productObj.getProductCode().getCode())
 											{
-												final PriceData specialPrice = buyboxdata.getSpecialPrice();
-												final PriceData mrp = buyboxdata.getMrp();
-												final PriceData mop = buyboxdata.getPrice();
+												productCode = productObj.getProductCode().getCode();
+												final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
+												String productUnitPrice = StringUtils.EMPTY;
+												String productPrice = StringUtils.EMPTY;
 
-												if (mrp != null)
+												if (buyboxdata != null)
 												{
-													productUnitPrice = mrp.getValue().toPlainString();
+													final PriceData specialPrice = buyboxdata.getSpecialPrice();
+													final PriceData mrp = buyboxdata.getMrp();
+													final PriceData mop = buyboxdata.getPrice();
+
+													if (mrp != null)
+													{
+														productUnitPrice = mrp.getValue().toPlainString();
+													}
+													if (specialPrice != null)
+													{
+														productPrice = specialPrice.getValue().toPlainString();
+													}
+													else if (null != mop && null != mop.getValue())
+													{
+														productPrice = mop.getValue().toPlainString();
+													}
 												}
-												if (specialPrice != null)
+
+												final CuratedProWidgetEleDiscountPriceWsDTO curatedProWidgetEleDiscountPriceWsDTO = new CuratedProWidgetEleDiscountPriceWsDTO();
+												final CuratedProWidgetEleMRPPriceWsDTO curatedProWidgetEleMRPPriceWsDTO = new CuratedProWidgetEleMRPPriceWsDTO();
+
+												curatedProWidgetEleDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+												curatedProWidgetEleDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+												if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 												{
-													productPrice = specialPrice.getValue().toPlainString();
+													curatedProWidgetEleMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+													curatedProWidgetEleDiscountPriceWsDTO
+															.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 												}
-												else if (null != mop && null != mop.getValue())
+												curatedProWidgetEleDiscountPriceWsDTO.setCurrencySymbol("₹");
+												curatedProWidgetEleMRPPriceWsDTO.setCurrencySymbol("₹");
+												curatedProWidgetEleMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+												curatedProWidgetEleMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+
+												curatedProWidgetElementWsDTO.setPrdId(productObj.getProductCode().getCode());
+												curatedProWidgetElementWsDTO.setMrpPrice(curatedProWidgetEleMRPPriceWsDTO);
+												curatedProWidgetElementWsDTO.setDiscountedPrice(curatedProWidgetEleDiscountPriceWsDTO);
+												curatedProWidgetElementWsDTO.setTitle(null != productObj.getProductCode()
+														? productObj.getProductCode().getName() : StringUtils.EMPTY);
+												if (null != productModelUrlResolver)
 												{
-													productPrice = mop.getValue().toPlainString();
+													curatedProWidgetElementWsDTO
+															.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+												}
+												else
+												{
+													curatedProWidgetElementWsDTO
+															.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+												}
+												if (null != productObj.getProductCode().getPicture()
+														&& null != productObj.getProductCode().getPicture().getURL())
+												{
+													curatedProWidgetElementWsDTO
+															.setImageURL(productObj.getProductCode().getPicture().getURL());
+												}
+												else
+												{
+													curatedProWidgetElementWsDTO.setImageURL(StringUtils.EMPTY);
 												}
 											}
-
-											final CuratedProWidgetEleDiscountPriceWsDTO curatedProWidgetEleDiscountPriceWsDTO = new CuratedProWidgetEleDiscountPriceWsDTO();
-											final CuratedProWidgetEleMRPPriceWsDTO curatedProWidgetEleMRPPriceWsDTO = new CuratedProWidgetEleMRPPriceWsDTO();
-
-											curatedProWidgetEleDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-											curatedProWidgetEleDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-											if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-											{
-												curatedProWidgetEleMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-												curatedProWidgetEleDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-											}
-											curatedProWidgetEleDiscountPriceWsDTO.setCurrencySymbol("₹");
-											curatedProWidgetEleMRPPriceWsDTO.setCurrencySymbol("₹");
-											curatedProWidgetEleMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-											curatedProWidgetEleMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-
-											curatedProWidgetElementWsDTO.setPrdId(productObj.getProductCode().getCode());
-											curatedProWidgetElementWsDTO.setMrpPrice(curatedProWidgetEleMRPPriceWsDTO);
-											curatedProWidgetElementWsDTO.setDiscountedPrice(curatedProWidgetEleDiscountPriceWsDTO);
-											curatedProWidgetElementWsDTO
-													.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
-											if (null != productModelUrlResolver)
-											{
-												curatedProWidgetElementWsDTO
-														.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
-											}
-											else
-											{
-												curatedProWidgetElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
-											}
-											if (null != productObj.getProductCode().getPicture()
-													&& null != productObj.getProductCode().getPicture().getURL())
-											{
-												curatedProWidgetElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
-											}
-											else
-											{
-												curatedProWidgetElementWsDTO.setImageURL(StringUtils.EMPTY);
-											}
+											curatedProWidgetElementList.add(curatedProWidgetElementWsDTO);
 										}
-										curatedProWidgetElementList.add(curatedProWidgetElementWsDTO);
+										catch (final EtailNonBusinessExceptions e)
+										{
+											LOG.error(CuratedProductWidgetEror + productCode, e);
+											continue;
+										}
+										catch (final Exception e)
+										{
+											LOG.error(CuratedProductWidgetEror + productCode, e);
+											continue;
+										}
 									}
 								}
 								catch (final EtailNonBusinessExceptions e)
@@ -4688,79 +4914,98 @@ public class DefaultCMSComponentControler
 									for (final AutoProductRecommendationElementModel productObj : autoProductRecommendationComponentModel
 											.getItems())
 									{
-										final AutoProductRecommendationListWsDTO autoProductRecommendationListWsDTO = new AutoProductRecommendationListWsDTO();
-										if (null != productObj && null != productObj.getProductCode()
-												&& null != productObj.getProductCode().getCode())
+										try
 										{
-											productCode = productObj.getProductCode().getCode();
-											final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
-											//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
-											String productUnitPrice = StringUtils.EMPTY;
-											String productPrice = StringUtils.EMPTY;
-
-											if (buyboxdata != null)
+											final AutoProductRecommendationListWsDTO autoProductRecommendationListWsDTO = new AutoProductRecommendationListWsDTO();
+											if (null != productObj && null != productObj.getProductCode()
+													&& null != productObj.getProductCode().getCode())
 											{
-												final PriceData specialPrice = buyboxdata.getSpecialPrice();
-												final PriceData mrp = buyboxdata.getMrp();
-												final PriceData mop = buyboxdata.getPrice();
+												productCode = productObj.getProductCode().getCode();
+												final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
+												//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
+												String productUnitPrice = StringUtils.EMPTY;
+												String productPrice = StringUtils.EMPTY;
 
-												if (mrp != null)
+												if (buyboxdata != null)
 												{
-													productUnitPrice = mrp.getValue().toPlainString();
+													final PriceData specialPrice = buyboxdata.getSpecialPrice();
+													final PriceData mrp = buyboxdata.getMrp();
+													final PriceData mop = buyboxdata.getPrice();
+
+													if (mrp != null)
+													{
+														productUnitPrice = mrp.getValue().toPlainString();
+													}
+													if (specialPrice != null)
+													{
+														productPrice = specialPrice.getValue().toPlainString();
+													}
+													else if (null != mop && null != mop.getValue())
+													{
+														productPrice = mop.getValue().toPlainString();
+													}
 												}
-												if (specialPrice != null)
+
+												final AutoProductRecomDiscountPriceWsDTO autoProductRecomDiscountPriceWsDTO = new AutoProductRecomDiscountPriceWsDTO();
+												final AutoProductRecomMRPPriceWsDTO autoProductRecomMRPPriceWsDTO = new AutoProductRecomMRPPriceWsDTO();
+
+												autoProductRecomDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
+												autoProductRecomDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
+												if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 												{
-													productPrice = specialPrice.getValue().toPlainString();
+													autoProductRecomMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+													autoProductRecomDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 												}
-												else if (null != mop && null != mop.getValue())
+												autoProductRecomDiscountPriceWsDTO.setCurrencySymbol("₹");
+												autoProductRecomMRPPriceWsDTO.setCurrencySymbol("₹");
+												autoProductRecomMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
+												autoProductRecomMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
+
+												autoProductRecommendationListWsDTO.setPrdId(productObj.getProductCode().getCode());
+												autoProductRecommendationListWsDTO.setMrpPrice(autoProductRecomMRPPriceWsDTO);
+												autoProductRecommendationListWsDTO.setDiscountedPrice(autoProductRecomDiscountPriceWsDTO);
+												autoProductRecommendationListWsDTO.setTitle(null != productObj.getProductCode()
+														? productObj.getProductCode().getName() : StringUtils.EMPTY);
+
+												if (null != productModelUrlResolver)
 												{
-													productPrice = mop.getValue().toPlainString();
+													autoProductRecommendationListWsDTO
+															.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+												}
+												else
+												{
+													autoProductRecommendationListWsDTO
+															.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+												}
+												if (null != productObj.getProductCode().getPicture()
+														&& null != productObj.getProductCode().getPicture().getURL())
+												{
+													autoProductRecommendationListWsDTO
+															.setImageURL(productObj.getProductCode().getPicture().getURL());
+												}
+												else
+												{
+													autoProductRecommendationListWsDTO.setImageURL(StringUtils.EMPTY);
 												}
 											}
-
-											final AutoProductRecomDiscountPriceWsDTO autoProductRecomDiscountPriceWsDTO = new AutoProductRecomDiscountPriceWsDTO();
-											final AutoProductRecomMRPPriceWsDTO autoProductRecomMRPPriceWsDTO = new AutoProductRecomMRPPriceWsDTO();
-
-											autoProductRecomDiscountPriceWsDTO.setFormattedValue(stringUtil(productPrice));
-											autoProductRecomDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-											if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
-											{
-												autoProductRecomMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-												autoProductRecomDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-											}
-											autoProductRecomDiscountPriceWsDTO.setCurrencySymbol("₹");
-											autoProductRecomMRPPriceWsDTO.setCurrencySymbol("₹");
-											autoProductRecomMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
-											autoProductRecomMRPPriceWsDTO.setFormattedValue(stringUtil(productUnitPrice));
-
-											autoProductRecommendationListWsDTO.setPrdId(productObj.getProductCode().getCode());
-											autoProductRecommendationListWsDTO.setMrpPrice(autoProductRecomMRPPriceWsDTO);
-											autoProductRecommendationListWsDTO.setDiscountedPrice(autoProductRecomDiscountPriceWsDTO);
-											autoProductRecommendationListWsDTO
-													.setTitle(null != productObj.getTitle() ? productObj.getTitle() : StringUtils.EMPTY);
-
-											if (null != productModelUrlResolver)
-											{
-												autoProductRecommendationListWsDTO
-														.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
-											}
-											else
-											{
-												autoProductRecommendationListWsDTO
-														.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
-											}
-											if (null != productObj.getProductCode().getPicture()
-													&& null != productObj.getProductCode().getPicture().getURL())
-											{
-												autoProductRecommendationListWsDTO
-														.setImageURL(productObj.getProductCode().getPicture().getURL());
-											}
-											else
-											{
-												autoProductRecommendationListWsDTO.setImageURL(StringUtils.EMPTY);
-											}
+											autoProductRecommendationList.add(autoProductRecommendationListWsDTO);
 										}
-										autoProductRecommendationList.add(autoProductRecommendationListWsDTO);
+										catch (final EtailNonBusinessExceptions e)
+										{
+											LOG.error(
+													"AutoProductRecommendationComponentModel Product is not properly enriched or either out of stock code:-"
+															+ productCode,
+													e);
+											continue;
+										}
+										catch (final Exception e)
+										{
+											LOG.error(
+													"AutoProductRecommendationComponentModel Product is not properly enriched or either out of stock code:-"
+															+ productCode,
+													e);
+											continue;
+										}
 									}
 								}
 								catch (final EtailNonBusinessExceptions e)
