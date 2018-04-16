@@ -19,7 +19,6 @@ export default class ConnectWidget extends React.Component {
       className = styles.inCard;
     }
 
-    console.log(this.props.feedComponentData);
     return (
       <div
         className={styles.holder}

@@ -19,6 +19,7 @@ export default class OfferWidget extends React.Component {
           elementWidthMobile={90}
           elementWidthDesktop={33.33}
           header={this.props.feedComponentData.title}
+          scrollId={"offerWidgetScroll"}
         >
           {data &&
             data.map((datum, i) => {

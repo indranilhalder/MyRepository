@@ -1,9 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { SUCCESS } from "../../lib/constants";
 
 export default class Widget extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isVisible: false
+    };
+  }
   componentDidMount() {
-    if (this.props.feedComponentData.fetchURL) {
+    if (
+      this.props.feedComponentData.fetchURL &&
+      this.props.feedComponentData.status !== SUCCESS
+    ) {
       this.props.getComponentData(
         this.props.feedComponentData.fetchURL,
         this.props.positionInFeed,
@@ -15,7 +25,7 @@ export default class Widget extends React.Component {
   }
 
   render() {
-    return <React.Fragment>{this.props.children(this.props)}</React.Fragment>;
+    return <div>{this.props.children(this.props)}</div>;
   }
 }
 

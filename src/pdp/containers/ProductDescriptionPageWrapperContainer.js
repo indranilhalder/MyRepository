@@ -10,6 +10,7 @@ import {
   pdpAboutBrand,
   getProductPinCode
 } from "../actions/pdp.actions";
+import { displayToast } from "../../general/toast.actions.js";
 import {
   showSecondaryLoader,
   hideSecondaryLoader
@@ -74,6 +75,9 @@ const mapDispatchToProps = dispatch => {
     },
     showSecondaryLoader: () => {
       dispatch(showSecondaryLoader());
+    },
+    displayToast: val => {
+      dispatch(displayToast(val));
     }
   };
 };

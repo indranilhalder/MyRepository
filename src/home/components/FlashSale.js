@@ -20,7 +20,6 @@ export default class FlashSale extends React.Component {
     const offers = this.props.feedComponentData.offers;
     const itemIds = this.props.feedComponentData.itemIds;
     let itemIdsToAdd;
-    console.log("COMPONENT DID UPDATE CALLED");
 
     if (offers.length < OFFER_AND_ITEM_LIMIT && itemIds) {
       const numberOfItemsToTake = OFFER_AND_ITEM_LIMIT - offers.length;
