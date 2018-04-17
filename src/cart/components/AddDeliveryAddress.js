@@ -37,6 +37,24 @@ export default class AddDeliveryAddress extends React.Component {
 
   onChange(val) {
     this.setState(val);
+    if (this.props.getAddressDetails) {
+      let addressDetails = {};
+      addressDetails.countryIso = ISO_CODE;
+      addressDetails.addressType = this.state.addressType;
+      addressDetails.phone = this.state.phone;
+      addressDetails.firstName = this.state.firstName;
+      addressDetails.lastName = "";
+      addressDetails.postalCode = this.state.postalCode;
+      addressDetails.line1 = this.state.line1;
+      addressDetails.state = this.state.state;
+      addressDetails.emailId = this.state.emailId;
+      addressDetails.line2 = this.state.line2;
+      addressDetails.line3 = this.state.line3;
+      addressDetails.town = this.state.town;
+      addressDetails.salutaion = this.state.salutaion;
+      addressDetails.defaultFlag = this.state.defaultFlag;
+      this.props.getAddressDetails(addressDetails);
+    }
   }
   onChangeDefaultFlag() {
     this.setState(prevState => ({
@@ -261,14 +279,16 @@ export default class AddDeliveryAddress extends React.Component {
         </div>
         <div className={styles.buttonHolder}>
           <div className={styles.saveAndContinueButton}>
-            <Button
-              type="primary"
-              label={SAVE_TEXT}
-              width={176}
-              height={38}
-              onClick={() => this.addNewAddress()}
-              textStyle={{ color: "#FFF", fontSize: 14 }}
-            />
+            {!this.props.isFirstAddress && (
+              <Button
+                type="primary"
+                label={SAVE_TEXT}
+                width={176}
+                height={38}
+                onClick={() => this.addNewAddress()}
+                textStyle={{ color: "#FFF", fontSize: 14 }}
+              />
+            )}
           </div>
         </div>
       </div>
