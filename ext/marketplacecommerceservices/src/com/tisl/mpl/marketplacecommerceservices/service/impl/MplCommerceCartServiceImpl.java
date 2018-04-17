@@ -473,8 +473,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					 */
 					SellerInformationModel sellerInfoModel = null;
 					Collection<RichAttributeModel> richAttributeModel = null;
-					if ((null != entry.getProduct())
-							&& (entry.getProduct().getRootCategory()
+					ProductData prodata = entry.getProduct();
+					if ((null != prodata)
+							&& (prodata.getRootCategory()
 									.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)))
 					{
 						//Below will execute for fine jewellery
@@ -537,7 +538,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	public Map<String, String> getOrderEntryFullfillmentMode(final OrderData orderData) throws CMSItemNotFoundException
 	{
 		final Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
-
+		SellerInformationModel sellerInfoModel = new SellerInformationModel();
+		Collection<RichAttributeModel> colofrichatr=sellerInfoModel.getRichAttribute();
 		/********************* TPR-1081 *********************/
 		if (orderData == null)
 		{
@@ -547,12 +549,12 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			for (final OrderEntryData orderEntryData : orderData.getEntries())
 			{
-				final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(orderEntryData
+				 sellerInfoModel = mplSellerInformationService.getSellerDetail(orderEntryData
 						.getSelectedUssid());
-				if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-						&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+				if (sellerInfoModel != null && colofrichatr != null
+						&& ((List<RichAttributeModel>) colofrichatr).get(0).getDeliveryFulfillModes() != null)
 				{
-					final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+					final String fulfillmentType = ((List<RichAttributeModel>) colofrichatr).get(0)
 							.getDeliveryFulfillModes().getCode();
 					fullfillmentDataMap.put(orderEntryData.getEntryNumber().toString(), fulfillmentType.toLowerCase());
 				}
@@ -564,12 +566,12 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				for (final OrderEntryData orderEntryData : sellerOrderData.getEntries())
 				{
-					final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(orderEntryData
+					 sellerInfoModel = mplSellerInformationService.getSellerDetail(orderEntryData
 							.getSelectedUssid());
-					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-							&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+					if (sellerInfoModel != null && colofrichatr != null
+							&& ((List<RichAttributeModel>) colofrichatr).get(0).getDeliveryFulfillModes() != null)
 					{
-						final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
+						final String fulfillmentType = ((List<RichAttributeModel>) colofrichatr).get(0)
 								.getDeliveryFulfillModes().getCode();
 						fullfillmentDataMap.put(orderEntryData.getTransactionId(), fulfillmentType.toLowerCase());
 					}
@@ -3820,12 +3822,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				for (final OrderEntryData cartEntry : cartDataEntryList)
 				{
-					if (cartEntry != null && cartEntry.getSelectedUssid() != null && cartEntry.getMplDeliveryMode() != null
-							&& cartEntry.getMplDeliveryMode().getCode() != null && pinCodeEntry != null
+					MarketplaceDeliveryModeData deliverymodedata=cartEntry.getMplDeliveryMode();
+					if (cartEntry != null && cartEntry.getSelectedUssid() != null && deliverymodedata != null
+							&& deliverymodedata.getCode() != null && pinCodeEntry != null
 							&& pinCodeEntry.getValidDeliveryModes() != null && codEligible
 							&& cartEntry.getSelectedUssid().equalsIgnoreCase(pinCodeEntry.getUssid()))
 					{
-						final String selectedDeliveryMode = cartEntry.getMplDeliveryMode().getCode();
+						final String selectedDeliveryMode = deliverymodedata.getCode();
 
 						for (final DeliveryDetailsData deliveryDetailsData : pinCodeEntry.getValidDeliveryModes())
 						{
@@ -3867,9 +3870,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									marketplaceDeliveryModeData.getSellerArticleSKU());
 
 							List<RichAttributeModel> richAttributeModel = null;
-							if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+							Collection<RichAttributeModel> richatrribute=sellerInfoModel.getRichAttribute();
+							if (sellerInfoModel != null && richatrribute != null)
 							{
-								richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+								richAttributeModel = (List<RichAttributeModel>) richatrribute;
 							}
 
 							if (richAttributeModel != null && richAttributeModel.get(0).getDeliveryFulfillModes() != null)
