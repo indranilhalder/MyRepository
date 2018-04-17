@@ -35,6 +35,12 @@ export default class AddDeliveryAddress extends React.Component {
     };
   }
 
+  getPinCodeDetails = val => {
+    this.setState({ postalCode: val });
+    if (val.length === 6 && this.props.getPinCode) {
+      this.props.getPinCode(val);
+    }
+  };
   onChange(val) {
     this.setState(val);
   }
@@ -47,6 +53,14 @@ export default class AddDeliveryAddress extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.addUserAddressStatus === SUCCESS) {
       this.props.history.goBack();
+    }
+    if (nextProps.getPinCodeDetails) {
+      this.setState({
+        state:
+          nextProps.getPinCodeDetails &&
+          nextProps.getPinCodeDetails.state &&
+          nextProps.getPinCodeDetails.state.name
+      });
     }
   }
 
@@ -131,7 +145,7 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <Input2
             placeholder="Enter a pincode/zipcode*"
-            onChange={postalCode => this.onChange({ postalCode })}
+            onChange={postalCode => this.getPinCodeDetails(postalCode)}
             textStyle={{ fontSize: 14 }}
             value={
               this.props.postalCode

@@ -352,6 +352,8 @@ class CheckOutPage extends React.Component {
           addUserAddress={address => this.addAddress(address)}
           {...this.state}
           onChange={val => this.onChange(val)}
+          getPinCode={val => this.getPinCodeDetails(val)}
+          getPinCodeDetails={this.props.getPinCodeDetails}
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -637,6 +639,12 @@ class CheckOutPage extends React.Component {
   onChange(val) {
     this.setState(val);
   }
+
+  getPinCodeDetails = pinCode => {
+    if (this.props.getPinCode) {
+      this.props.getPinCode(pinCode);
+    }
+  };
 
   availabilityOfUserCoupon = () => {
     if (!this.state.isGiftCard) {
@@ -962,6 +970,8 @@ class CheckOutPage extends React.Component {
             loading={this.props.cart.loading}
             onChange={val => this.onChange(val)}
             displayToast={message => this.props.displayToast(message)}
+            getPinCode={val => this.getPinCodeDetails(val)}
+            getPinCodeDetails={this.props.getPinCodeDetails}
           />
         </div>
       );
