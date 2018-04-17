@@ -620,7 +620,7 @@ export function loadGoogleSignInApi() {
             .init({
               client_id: clientId,
               fetch_basic_profile: true,
-              ux_mode: "popup",
+              ux_mode: "redirect",
               scope: scope
                 ? (Array.isArray(scope) && scope.join(" ")) || scope
                 : null
