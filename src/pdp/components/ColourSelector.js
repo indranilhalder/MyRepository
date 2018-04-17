@@ -35,9 +35,6 @@ export default class ColourSelector extends React.Component {
 
     const colors = this.props.data
       .filter(val => {
-        return val.sizelink.isAvailable;
-      })
-      .filter(val => {
         return val.sizelink.size === selectedSize;
       })
       .map(val => {

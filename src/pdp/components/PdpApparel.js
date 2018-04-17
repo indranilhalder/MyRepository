@@ -84,7 +84,10 @@ export default class PdpApparel extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (this.props.productDetails.allOOStock) {
+    if (
+      this.props.productDetails.allOOStock ||
+      this.props.productDetails.winningSellerAvailableStock === "0"
+    ) {
       this.props.displayToast("Product is out of stock");
     } else {
       if (this.checkIfSizeSelected() || this.checkIfSizeDoesNotExist()) {
@@ -187,6 +190,7 @@ export default class PdpApparel extends React.Component {
     }
 
     if (productData) {
+      console.log(productData);
       let price = "";
       let discountPrice = "";
       if (productData.mrpPrice) {
@@ -202,7 +206,10 @@ export default class PdpApparel extends React.Component {
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
           productListingId={productData.productListingId}
-          outOfStock={productData.allOOStock}
+          outOfStock={
+            productData.allOOStock ||
+            productData.winningSellerAvailableStock === "0"
+          }
           ussId={productData.winningUssID}
         >
           <div className={styles.gallery}>
@@ -211,7 +218,8 @@ export default class PdpApparel extends React.Component {
                 return <Image image={val} key={idx} />;
               })}
             </ProductGalleryMobile>
-            {productData.allOOStock && (
+            {(productData.allOOStock ||
+              productData.winningSellerAvailableStock === "0") && (
               <div className={styles.flag}>Out of stock</div>
             )}
           </div>

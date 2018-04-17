@@ -96,7 +96,10 @@ export default class PdpJewellery extends React.Component {
     );
 
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (this.props.productDetails.allOOStock) {
+    if (
+      this.props.productDetails.allOOStock ||
+      this.props.productDetails.winningSellerAvailableStock === "0"
+    ) {
       this.props.displayToast("Product is out of stock");
     } else {
       if (this.checkIfSizeSelected()) {
@@ -218,7 +221,10 @@ export default class PdpJewellery extends React.Component {
           addProductToBag={() => this.addToCart()}
           showPincodeModal={() => this.showPincodeModal()}
           productListingId={productData.productListingId}
-          outOfStock={productData.allOOStock}
+          outOfStock={
+            productData.allOOStock ||
+            productData.winningSellerAvailableStock === "0"
+          }
           ussId={productData.winningUssID}
         >
           <div className={styles.gallery}>
@@ -229,7 +235,8 @@ export default class PdpJewellery extends React.Component {
                 );
               })}
             </ProductGalleryMobile>
-            {productData.allOOStock && (
+            {(productData.allOOStock ||
+              productData.winningSellerAvailableStock === "0") && (
               <div className={styles.flag}>Out of stock</div>
             )}
           </div>

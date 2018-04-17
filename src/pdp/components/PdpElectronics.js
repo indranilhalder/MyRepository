@@ -92,7 +92,10 @@ export default class PdpElectronics extends React.Component {
     );
 
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (this.props.productDetails.allOOStock) {
+    if (
+      this.props.productDetails.allOOStock ||
+      this.props.productDetails.winningSellerAvailableStock === "0"
+    ) {
       this.props.displayToast("Product is out of stock");
     } else {
       if (userDetails) {
@@ -196,7 +199,10 @@ export default class PdpElectronics extends React.Component {
           productListingId={productData.productListingId}
           ussId={productData.winningUssID}
           showPincodeModal={() => this.showPincodeModal()}
-          outOfStock={productData.allOOStock}
+          outOfStock={
+            productData.allOOStock ||
+            productData.winningSellerAvailableStock === "0"
+          }
         >
           <div className={styles.gallery}>
             <ProductGalleryMobile
@@ -219,7 +225,8 @@ export default class PdpElectronics extends React.Component {
                 );
               })}
             </ProductGalleryMobile>
-            {productData.allOOStock && (
+            {(productData.allOOStock ||
+              productData.winningSellerAvailableStock === "0") && (
               <div className={styles.flag}>Out of stock</div>
             )}
           </div>
