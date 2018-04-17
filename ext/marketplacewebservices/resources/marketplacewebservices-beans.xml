@@ -1214,6 +1214,7 @@
 
 	<bean class="com.tisl.mpl.wsdto.EMIBankWsDTO">
 		<property name="emiBank" type="String" />
+		<property name="pk" type="String" />
 		<property name="name" type="String" />
 		<property name="code" type="String" />
 		<property name="emiLowerLimit" type="String" />
@@ -4945,6 +4946,10 @@
 	<bean class="com.tisl.wsdto.MplNoCostEMITermsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="termsAndCondition" type="String" />
 		<property name="code" type="String" />
+	</bean>
+	<bean class="com.tisl.wsdto.MplStandardEMITermsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="termsAndCondition" type="String" />
+		<property name="pk" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.NoCostEMIItemBreakUp" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="itemBreakUpDetailList" type="java.util.List&lt;com.tisl.mpl.wsdto.ItemBreakUpDetailListDTO>" />

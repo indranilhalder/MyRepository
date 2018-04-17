@@ -102,6 +102,7 @@ import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 import com.tisl.mpl.wsdto.mplNoCostEMIBankTenureDTO;
 import com.tisl.mpl.wsdto.mplNoCostEMIEligibilityDTO;
 import com.tisl.wsdto.MplNoCostEMITermsDTO;
+import com.tisl.wsdto.MplStandardEMITermsDTO;
 
 
 /**
@@ -2451,6 +2452,81 @@ public class PaymentServicesController extends BaseController
 			noCostEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return noCostEMITermsDTO;
+	}
+
+
+	/**
+	 * Method to share terms and conditions for a NoCostEMIBank based on bankCode which is unique in EMIBankModel
+	 *
+	 * @return MplNoCostEMITermsDTO
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "{pk}/" + MarketplacewebservicesConstants.STANDARDEMITNC, method = RequestMethod.GET, produces = MarketplacewebservicesConstants.APPLICATIONPRODUCES)
+	@ResponseBody
+	public MplStandardEMITermsDTO getStandardEmiTnc(@PathVariable final String pk)
+	{
+		LOG.debug("Standard emi bankPk ----" + pk);
+		final MplStandardEMITermsDTO standardEMITermsDTO = new MplStandardEMITermsDTO();
+		try
+		{
+
+			//final EMIBankModel standardEMIBankModel = mplPaymentWebFacade.getStandardEMIBankByCode(code);
+			final EMIBankModel standardEMIBankModel = mplPaymentWebFacade.getNoCostEMIBankByPk(pk);
+			if (standardEMIBankModel != null)
+			{
+				standardEMITermsDTO.setPk(standardEMIBankModel.getPk().toString());
+				final String termsAndCondition = standardEMIBankModel.getStandardEmiTermsAndCondition();
+				if (StringUtils.isNotEmpty(termsAndCondition))
+				{
+					standardEMITermsDTO.setTermsAndCondition(termsAndCondition);
+				}
+				else
+				{
+					standardEMITermsDTO.setTermsAndCondition(StringUtils.EMPTY);
+				}
+				standardEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			else
+			{
+				standardEMITermsDTO.setError("Invalid code for EMIBankModel");
+				standardEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+		}
+		catch (final EtailNonBusinessExceptions ex)
+		{
+			// Error message for EtailNonBusinessExceptions Exceptions
+			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+			if (null != ex.getErrorMessage())
+			{
+				standardEMITermsDTO.setError(ex.getErrorMessage());
+				standardEMITermsDTO.setErrorCode(ex.getErrorCode());
+			}
+			standardEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		catch (final EtailBusinessExceptions ex)
+		{
+			// Error message for EtailBusinessExceptions Exceptions
+			ExceptionUtil.etailBusinessExceptionHandler(ex, null);
+			if (null != ex.getErrorMessage())
+			{
+				standardEMITermsDTO.setError(ex.getErrorMessage());
+				standardEMITermsDTO.setErrorCode(ex.getErrorCode());
+			}
+			standardEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception ex)
+		{
+			// Error message for All Exceptions
+			if (null != ex.getMessage())
+			{
+				standardEMITermsDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9047));
+				standardEMITermsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9047);
+			}
+			standardEMITermsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return standardEMITermsDTO;
 	}
 
 

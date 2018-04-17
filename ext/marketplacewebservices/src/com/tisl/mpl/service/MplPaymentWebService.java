@@ -124,4 +124,12 @@ public interface MplPaymentWebService
 	 */
 	public EMIBankModel getNoCostEMIBankByPk(String pk);
 
+	/**
+	 * NU-351: Method to fetch StandardEMIBankModel
+	 * 
+	 * @param code
+	 * @return EMIBankModel
+	 */
+	public EMIBankModel getStandardEMIBankByCode(String code);
+
 }

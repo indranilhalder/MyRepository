@@ -123,6 +123,7 @@ public class MplNetBankingFacadeImpl implements MplNetBankingFacade
 								{
 									eMIBankWsDTO.setEmiUpperLimit(emibanking.getEmiUpperLimit().toString());
 								}
+								eMIBankWsDTO.setPk(emibanking.getPk().toString());
 								emiBankWsListDTO.add(eMIBankWsDTO);
 							}
 
@@ -223,6 +224,7 @@ public class MplNetBankingFacadeImpl implements MplNetBankingFacade
 								{
 									eMIBankWsDTO.setCode(emibanking.getCode());
 								}
+								eMIBankWsDTO.setPk(emibanking.getPk().toString());
 
 								final List<EMITermRateDataForMobile> emiTermBankList = getBankTerms(eMIBankWsDTO.getEmiBank(), productValue);
 								//IQA code Review fix

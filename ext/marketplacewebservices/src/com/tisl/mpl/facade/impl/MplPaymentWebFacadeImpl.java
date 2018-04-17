@@ -837,7 +837,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1301,7 +1301,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	}
 
 	/**
-	 * NU-351 - Code to fetch NoCostEMIBankModel by pk
+	 * NU-351 - Code to fetch EMIBankModel by pk
 	 *
 	 * @param pk
 	 * @return NoCostEMIBankModel
@@ -1310,6 +1310,18 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	public EMIBankModel getNoCostEMIBankByPk(final String pk)
 	{
 		return getMplPaymentWebService().getNoCostEMIBankByPk(pk);
+	}
+
+	/**
+	 * NU-351 - Code to fetch EMIBankModel by code
+	 *
+	 * @param code
+	 * @return NoCostEMIBankModel
+	 */
+	@Override
+	public EMIBankModel getStandardEMIBankByCode(final String code)
+	{
+		return getMplPaymentWebService().getStandardEMIBankByCode(code);
 	}
 
 	protected CheckoutCustomerStrategy getCheckoutCustomerStrategy()

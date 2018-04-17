@@ -210,6 +210,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 				final String queryString = MarketplacecommerceservicesConstants.EMIBANKSQUERY;
 				bankListQuery = new FlexibleSearchQuery(queryString);
 				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.MPLCARTVALUE, cartValue);
+				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ISSTANDARDEMI, "1");
 			}
 			else
 			{
@@ -217,6 +218,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 				bankListQuery = new FlexibleSearchQuery(queryString);
 				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.MPLCARTVALUE, cartValue);
 				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.BANKNAME, emiBankName.toUpperCase());
+				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ISSTANDARDEMI, "1");
 			}
 
 			//fetching EMI bank list from DB using flexible search query
@@ -272,6 +274,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 				final String queryString = MarketplacecommerceservicesConstants.EMIBANKSQUERYPRODUCTVALUE;
 				bankListQuery = new FlexibleSearchQuery(queryString);
 				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.MPLPRODUCTVALUE, productValue);
+				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ISSTANDARDEMI, "1");
 
 			}
 			else
@@ -280,6 +283,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 				bankListQuery = new FlexibleSearchQuery(queryString);
 				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.MPLPRODUCTVALUE, productValue);
 				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.BANKNAME, emiBankName.toUpperCase());
+				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ISSTANDARDEMI, "1");
 
 			}
 
