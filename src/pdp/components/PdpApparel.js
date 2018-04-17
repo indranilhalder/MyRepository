@@ -192,6 +192,9 @@ export default class PdpApparel extends React.Component {
       if (productData.mrpPrice) {
         price = productData.mrpPrice.formattedValueNoDecimal;
       }
+      if (productData.winningSellerPrice) {
+        discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
+      }
 
       return (
         <PdpFrame
@@ -222,6 +225,7 @@ export default class PdpApparel extends React.Component {
               discountPrice={discountPrice}
               averageRating={productData.averageRating}
               onClick={this.goToReviewPage}
+              discount={productData.discount}
             />
           </div>
           <PdpPaymentInfo
