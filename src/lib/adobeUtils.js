@@ -50,6 +50,7 @@ export const ADOBE_CART_TYPE = "cart";
 export const ADOBE_CHECKOUT_TYPE = "checkout";
 export const ADOBE_PLP_TYPE = "plp";
 export const ADOBE_ORDER_CANCEL = "order_cancellation";
+export const ADOBE_ORDER_RETURN_CANCEL = "order_returns_cancel";
 
 export const ICID2 = "ICID2";
 export const CID = "CID";
@@ -92,6 +93,13 @@ export const ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS =
   "ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS";
 export const ADOBE_DIRECT_CALL_FOR_PINCODE_FAILURE =
   "ADOBE_DIRECT_CALL_FOR_PINCODE_FAILURE";
+
+// const for myAccount adobe calls
+export const ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS =
+  "ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS";
+export const ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL =
+  "ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL";
+// end of const for my account adobe call
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
 const MOBILE = "mobile";
@@ -722,5 +730,26 @@ export function setDataLayerForOrderConfirmationDirectCalls(
     };
     window.digitalData = data;
     window._satellite.track(ADOBE_ORDER_CONFIRMATION_FAILURE);
+  }
+}
+
+export function setDataLayerForMyAccountDirectCalls(
+  type,
+  productDetails,
+  reasonObj: null
+) {
+  if (type === ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS) {
+    const data = {
+      cpj: {
+        product: {
+          id: productDetails.productcode
+        }
+      }
+    };
+    window.digitalData = data;
+    window._satellite.track(ADOBE_ORDER_CANCEL);
+  }
+  if (type === ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL) {
+    window._satellite.track(ADOBE_ORDER_RETURN_CANCEL);
   }
 }

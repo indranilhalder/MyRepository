@@ -48,7 +48,7 @@ export default class CancelOrder extends React.Component {
     cancelProductDetails.refundType = "";
     this.props.cancelProduct(
       cancelProductDetails,
-      this.props.cancelProductDetails
+      this.props.cancelProductDetails.orderProductWsDTO[0]
     );
   };
   onCancel() {
@@ -67,6 +67,7 @@ export default class CancelOrder extends React.Component {
     return <Loader />;
   }
   render() {
+    console.log(this.props);
     let cancelProductDetails = this.props.cancelProductDetails;
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
