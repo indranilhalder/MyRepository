@@ -1310,6 +1310,14 @@ public class DefaultCMSComponentControler
 									{
 										themeProductWidgetWsDTO.setImageURL(StringUtils.EMPTY);
 									}
+									if (themeProductWidgetComponentModel.getWebURL() != null)
+									{
+										themeProductWidgetWsDTO.setWebURL(themeProductWidgetComponentModel.getWebURL());
+									}
+									else
+									{
+										themeProductWidgetWsDTO.setWebURL(StringUtils.EMPTY);
+									}
 									if (themeProductWidgetComponentModel.getBrandLogo() != null
 											&& themeProductWidgetComponentModel.getBrandLogo().getURL() != null)
 									{
@@ -3927,6 +3935,14 @@ public class DefaultCMSComponentControler
 							else
 							{
 								themeProductWidgetWsDTO.setBrandLogo(StringUtils.EMPTY);
+							}
+							if (themeProductWidgetComponentModel.getWebURL() != null)
+							{
+								themeProductWidgetWsDTO.setWebURL(themeProductWidgetComponentModel.getWebURL());
+							}
+							else
+							{
+								themeProductWidgetWsDTO.setWebURL(StringUtils.EMPTY);
 							}
 							themeProductWidgetWsDTO.setBtnText(null != themeProductWidgetComponentModel.getBtnText()
 									? themeProductWidgetComponentModel.getBtnText() : StringUtils.EMPTY);

@@ -4199,6 +4199,7 @@
 	<property name="btnText" type="java.lang.String"/>
 	<property name="imageURL" type="java.lang.String"/>
 	<property name="brandLogo" type="java.lang.String"/> 
+	<property name="webURL" type="java.lang.String"/> 
 	<property name="items"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ThemeProWidElementWsDTO>" />
 	</bean>
