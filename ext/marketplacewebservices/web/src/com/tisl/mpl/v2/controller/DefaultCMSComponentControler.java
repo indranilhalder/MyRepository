@@ -60,6 +60,7 @@ import com.tisl.mpl.model.cms.components.BannerSeparatorComponentModel;
 import com.tisl.mpl.model.cms.components.BrandTabAZBrandElementModel;
 import com.tisl.mpl.model.cms.components.BrandsTabAZElementModel;
 import com.tisl.mpl.model.cms.components.BrandsTabAZListComponentModel;
+import com.tisl.mpl.model.cms.components.CMSTextComponentModel;
 import com.tisl.mpl.model.cms.components.ConnectBannerComponentModel;
 import com.tisl.mpl.model.cms.components.ContentWidgetComponentModel;
 import com.tisl.mpl.model.cms.components.ContentWidgetElementModel;
@@ -2441,6 +2442,40 @@ public class DefaultCMSComponentControler
 								cmsParagraphComponentWsDTO.setType("CMS Paragraph Component");
 								uiCompPageElementWsDTO.setComponentName("cmsParagraphComponent");
 								uiCompPageElementWsDTO.setCmsParagraphComponent(cmsParagraphComponentWsDTO);
+								genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+							}
+						}
+						
+						if (abstractCMSComponentModel instanceof CMSTextComponentModel)
+						{
+
+							final CMSTextComponentModel cmsTextComponentModel = (CMSTextComponentModel) abstractCMSComponentModel;
+							if (null != cmsTextComponentModel.getVisible()
+									&& cmsTextComponentModel.getVisible().booleanValue())
+							{
+								final CMSTextComponentWsDTO cmsTextComponentWsDTO = new CMSTextComponentWsDTO();
+								final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+
+								try
+								{
+									cmsTextComponentWsDTO.setContent(
+											null != cmsTextComponentModel.getTextValue() ? cmsTextComponentModel.getTextValue()
+													: StringUtils.EMPTY);
+								}
+								catch (final EtailNonBusinessExceptions e)
+								{
+
+									LOG.error(cmsParagraphError + cmsTextComponentModel.getUid(), e);
+									continue;
+								}
+								catch (final Exception e)
+								{
+									LOG.error(cmsParagraphError + cmsTextComponentModel.getUid(), e);
+									continue;
+								}
+								cmsTextComponentWsDTO.setType("CMS Text Component");
+								uiCompPageElementWsDTO.setComponentName("cmsTextComponent");
+								uiCompPageElementWsDTO.setCmsTextComponent(cmsTextComponentWsDTO);
 								genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 							}
 						}

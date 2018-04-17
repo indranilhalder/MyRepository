@@ -4503,6 +4503,11 @@
 		 <property name="type" type="String"/>
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.CMSTextComponentWsDTO">
+		<property name="content" type="java.lang.String"/>
+		<property name="type" type="java.lang.String"/>
+	</bean>
+	
 	<bean class="com.tisl.mpl.wsdto.UICompPageElementWsDTO">
 		<property name="componentName" type="java.lang.String"/>
 		<property name="heroBannerComponent"
@@ -4560,7 +4565,9 @@
 		<property name="accountNavigationComponent" 
 			type="com.tisl.mpl.wsdto.AccountNavigationComponentWsDTO"/>	
 		<property name="cmsParagraphComponent"
-		    type="com.tisl.mpl.wsdto.CMSParagraphComponentWsDTO" />	
+		    type="com.tisl.mpl.wsdto.CMSParagraphComponentWsDTO" />
+	    <property name="cmsTextComponent"
+		    type="com.tisl.mpl.wsdto.CMSTextComponentWsDTO" />	
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.UICompPageWiseWsDTO">
