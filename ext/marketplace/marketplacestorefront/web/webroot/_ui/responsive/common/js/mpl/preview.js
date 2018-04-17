@@ -59,18 +59,25 @@ $(document).ready(function() {
 		filter = input.value.toUpperCase();
 		ul = document.getElementById("brandslist-leftsection"+data);
 		li = ul.getElementsByTagName("li");
+		
 		for (i = 0; i < li.length; i++) {
-			//a = li[i].getElementsByTagName("a")[0];
-			if (li[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
-				li[i].style.display = "block";
-				//li[i].parentElement.previousElementSibling.style.display = "block";
-				//li[i].parentElement.style.display = "block";
-			} else {
-				li[i].style.display = "none";
-				//li[i].parentElement.previousElementSibling.style.display = "none";
-				//li[i].parentElement.style.display = "none";
-			}
-		}
+	       a = li[i].getElementsByTagName("a")[0];
+	       if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+	           li[i].style.display = "";
+	          li[i].parentElement.previousElementSibling.style.display = "";
+	           //li[i].parentElement.style.display = "";
+	       } else {
+	           li[i].style.display = "none";
+	           li[i].parentElement.previousElementSibling.style.display = "none";
+	           //li[i].parentElement.style.display = "none";
+	       }
+	   }
+	   $('#brandslist-leftsection'+data+' .brandname-list').each(function(){
+		   if($(this).children(':visible').length == 1){
+			   $(this).prev().show();
+		   }
+	   });
+		
 	});		
 
 	$('.brandinitials-section li a').click(function(e) {
@@ -354,24 +361,26 @@ $(document).ready(function() {
 			// If the count down is over, write some text 
 			if (distance < 0) {
 				clearInterval(x);
-				document.getElementById("countdown").innerHTML = "Sale Started";
+				document.getElementById("countdown").innerHTML = "";
+				document.getElementById("timer-icon").style.display = "none";
 			}
 		}, 1000);
 	}
 	//countdown js ends
 
 	//play video js starts
-	function playPause(myVideo) { 
+	/*function playPause(myVideo) { 
 		if (myVideo.paused) {
 			myVideo.play(); 
 		}
 		else {
 			myVideo.pause(); 
 		}
-	} 
+	} */
 	$('#play-video').click(function() {
-		var myVideo = document.getElementById("video-el"); 
-		playPause(myVideo);
+		//var myVideo = document.getElementById("video-el"); 
+		//playPause(myVideo);
+		$("#video-el")[0].src += "?autoplay=1";
 		$('#vpc-container').hide();
 	});
 	//play video js ends

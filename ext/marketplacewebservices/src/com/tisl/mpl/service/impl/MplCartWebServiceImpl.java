@@ -19,6 +19,7 @@ import de.hybris.platform.commercefacades.order.impl.DefaultCartFacade;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
@@ -81,6 +82,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,6 +93,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+
+import net.sourceforge.pmd.util.StringUtil;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -136,10 +142,9 @@ import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.MaxLimitData;
 import com.tisl.mpl.wsdto.MaxLimitWsDto;
 import com.tisl.mpl.wsdto.MobdeliveryModeWsDTO;
+import com.tisl.mpl.wsdto.MplCategoryHierarchydata;
 import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-
-import net.sourceforge.pmd.util.StringUtil;
 
 
 
@@ -537,8 +542,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			parameter.setEnableHooks(true);
 
-			final CartModel cartForGuidAndSiteAndUser = mplCommerceCartService.getMplCommerceCartDao()
-					.getCartForGuidAndSiteAndUser(toMergeCartGuid, currentBaseSite, currentUser);
+			final CartModel cartForGuidAndSiteAndUser = mplCommerceCartService.getMplCommerceCartDao().getCartForGuidAndSiteAndUser(
+					toMergeCartGuid, currentBaseSite, currentUser);
 
 			if (null != cartForGuidAndSiteAndUser.getCode())
 			{
@@ -608,8 +613,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public WebSerResponseWsDTO addProductToCart(final String productCode, final String cartId, final String quantity,
-			final String USSID, final boolean addedToCartWl, final String channel)
-			throws InvalidCartException, CommerceCartModificationException
+			final String USSID, final boolean addedToCartWl, final String channel, final boolean isPwa) throws InvalidCartException,CommerceCartModificationException
 	{
 		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		final long quant = Long.parseLong(quantity);
@@ -645,8 +649,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
 						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 						{
-							maximum_configured_quantiy = siteConfigService
-									.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+							maximum_configured_quantiy = siteConfigService.getInt(
+									MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
 						}
 						//SDI-4069 ends
 
@@ -659,18 +663,31 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						//							//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
 						//							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
 						//						}
-						if (productModel.getMaxOrderQuantity() == null && pr.getQuantity().longValue() >= maximum_configured_quantiy)
+						if (productModel.getMaxOrderQuantity() == null && pr.getQuantity().longValue() >= maximum_configured_quantiy
+								&& !isPwa)
 						{
 							//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
 						}
+						else if (productModel.getMaxOrderQuantity() == null
+								&& pr.getQuantity().longValue() >= maximum_configured_quantiy && isPwa)
+						{
+							//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU011);
+						}
 						else if (null != productModel.getMaxOrderQuantity())
 						{
 							if (productModel.getMaxOrderQuantity().intValue() <= 0
-									&& productModel.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy)
+									&& productModel.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy && !isPwa)
 							{
 								//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
 								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
+							}
+							else if (productModel.getMaxOrderQuantity().intValue() <= 0
+									&& productModel.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy && isPwa)
+							{
+								//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU011);
 							}
 							else if (null != productModel.getCode())
 							{
@@ -733,9 +750,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			for (final SellerInformationModel seller : selectedProductModel.getSellerInformationRelator())
 			{
-				if (seller.getSellerArticleSKU().equalsIgnoreCase(USSID) && (seller.getSellerAssociationStatus() != null
-						&& (seller.getSellerAssociationStatus().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)
-								|| (seller.getEndDate() != null && new Date().after(seller.getEndDate())))))
+				if (seller.getSellerArticleSKU().equalsIgnoreCase(USSID)
+						&& (seller.getSellerAssociationStatus() != null && (seller.getSellerAssociationStatus().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO) || (seller.getEndDate() != null && new Date()
+								.after(seller.getEndDate())))))
 				{
 					delisted = true;
 					break;
@@ -895,8 +913,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							maxSlabProductQuantity = bundlingPromo.getMaxSlabProuductQuantity();
 							LOG.debug("The no. of allowed cart products is " + maxSlabProductQuantity);
 						}
-						if (StringUtils.isNotEmpty(
-								((BundlingPromotionWithPercentageSlabModel) productPromotion.getPromotion()).getMessageFired()))
+						if (StringUtils.isNotEmpty(((BundlingPromotionWithPercentageSlabModel) productPromotion.getPromotion())
+								.getMessageFired()))
 						{
 							firedMessage = ((BundlingPromotionWithPercentageSlabModel) productPromotion.getPromotion())
 									.getMessageFired();
@@ -1119,8 +1137,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
 				if (MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
 				{
-					maximum_configured_quantiy = siteConfigService
-							.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+					maximum_configured_quantiy = siteConfigService.getInt(
+							MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
 				}
 				//SDI-4069 ends
 
@@ -1191,8 +1209,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					gwlp.setIsLuxury(productData.getLuxIndicator());
 					mediaFormat = MarketplacecommerceservicesConstants.LUXURY_CARTICON;
 				}
-				else if ((null == productData.getLuxIndicator()) || (null != productData.getLuxIndicator()
-						&& (MarketplaceCoreConstants.Marketplace).equalsIgnoreCase(productData.getLuxIndicator())))
+				else if ((null == productData.getLuxIndicator())
+						|| (null != productData.getLuxIndicator() && (MarketplaceCoreConstants.Marketplace)
+								.equalsIgnoreCase(productData.getLuxIndicator())))
 				{
 					gwlp.setIsLuxury(MarketplaceCoreConstants.Marketplace);
 					mediaFormat = MarketplacecommerceservicesConstants.THUMBNAIL;
@@ -1398,8 +1417,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 
 
-									delivery.setDeliveryCost(
-											String.valueOf(deliveryMode.getDeliveryCost().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+									delivery.setDeliveryCost(String.valueOf(deliveryMode.getDeliveryCost().getValue()
+											.setScale(2, BigDecimal.ROUND_HALF_UP)));
 								}
 								else
 								{
@@ -1408,8 +1427,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 
 
-										delivery.setDeliveryCost(String
-												.valueOf(deliveryMode.getDeliveryCost().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+										delivery.setDeliveryCost(String.valueOf(deliveryMode.getDeliveryCost().getValue()
+												.setScale(2, BigDecimal.ROUND_HALF_UP)));
 									}
 								}
 								if (StringUtils.isNotEmpty(deliveryMode.getDescription()))
@@ -1457,13 +1476,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 										startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode.getDeliveryMode()
 
 
-												.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+										.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
 										endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
 
 
 
-												.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+										.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 									}
 									if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode())
@@ -1473,9 +1492,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 
 
-										delivery.setDesc(
-												getMplCommerceCartService().getDeliveryModeDescription(deliveryMode.getSellerArticleSKU(),
-														deliveryMode.getDeliveryMode().getCode(), startValue, endValue));
+										delivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
+												deliveryMode.getSellerArticleSKU(), deliveryMode.getDeliveryMode().getCode(), startValue,
+												endValue));
 									}
 									if (null != deliveryMode.getDeliveryMode()
 											&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getName()))
@@ -1547,13 +1566,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 										startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode.getDeliveryMode()
 
 
-												.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+										.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
 										endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
 
 
 
-												.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+										.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 									}
 									if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode())
@@ -1563,9 +1582,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 
 
-										delivery.setDesc(
-												getMplCommerceCartService().getDeliveryModeDescription(deliveryMode.getSellerArticleSKU(),
-														deliveryMode.getDeliveryMode().getCode(), startValue, endValue));
+										delivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
+												deliveryMode.getSellerArticleSKU(), deliveryMode.getDeliveryMode().getCode(), startValue,
+												endValue));
 									}
 									if (null != deliveryMode.getDeliveryMode()
 											&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getName()))
@@ -1660,8 +1679,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							if (StringUtils.isNotEmpty(val.getSellerArticleSKU()) && StringUtils.isNotEmpty(startValue)
 									&& StringUtils.isNotEmpty(endValue) && StringUtils.isNotEmpty(val.getDeliveryMode().getCode()))
 							{
-								selectedDelivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(val.getSellerArticleSKU(),
-										val.getDeliveryMode().getCode(), startValue, endValue));
+								selectedDelivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
+										val.getSellerArticleSKU(), val.getDeliveryMode().getCode(), startValue, endValue));
 							}
 
 						}
@@ -1908,14 +1927,17 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				//SDI-3159 Condition added if CLICK N COLLECT is not there
 				//IQA Code Review Fix
 				final MplZoneDeliveryModeValueModel valNew = abstractOrderEntry.getMplDeliveryMode();
-				if (null != abstractOrderEntry.getEdScheduledDate() && (null != valNew
-						&& !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew.getDeliveryMode().getCode())))
+				if (null != abstractOrderEntry.getEdScheduledDate()
+						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
+								.getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryDate(abstractOrderEntry.getEdScheduledDate());
 				}
 				//SDI-3159 Condition added if CLICK N COLLECT is not there
-				if (null != abstractOrderEntry.getTimeSlotTo() && null != abstractOrderEntry.getTimeSlotFrom() && (null != valNew
-						&& !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew.getDeliveryMode().getCode())))
+				if (null != abstractOrderEntry.getTimeSlotTo()
+						&& null != abstractOrderEntry.getTimeSlotFrom()
+						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
+								.getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
 							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
@@ -1963,8 +1985,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private List<DeliveryDetailsData> arrangeDeliveryOnPriority(final String ussid, final List<DeliveryDetailsData> pinCodeReslist)
 	{
 		final List<DeliveryDetailsData> delDataPriorityList = new ArrayList<DeliveryDetailsData>();
-		final List<MplZoneDeliveryModeValueModel> deliveryModeList = getMplDeliveryCostService()
-				.getDeliveryModesAndCost(MarketplacecommerceservicesConstants.INR, ussid);
+		final List<MplZoneDeliveryModeValueModel> deliveryModeList = getMplDeliveryCostService().getDeliveryModesAndCost(
+				MarketplacecommerceservicesConstants.INR, ussid);
 		final List<DeliveryModeModel> delModeList = new ArrayList<DeliveryModeModel>();
 		for (final MplZoneDeliveryModeValueModel delModel : deliveryModeList)
 		{
@@ -2071,10 +2093,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 
 
-									.filter(im -> im != null)
+							.filter(im -> im != null)
 
 
-									.filter(im -> im.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL))
+							.filter(im -> im.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL))
 									.map(s -> s.getUrl()).findFirst().get();
 							gwlpFreeItem.setImageURL(imgUrl);
 						}
@@ -2224,13 +2246,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							}
 
 
-							cartOffer.setPotentialProducts(
-									productList.stream().filter(p -> p != null).map(p -> p.getCode()).collect(Collectors.toList()));
+							cartOffer.setPotentialProducts(productList.stream().filter(p -> p != null).map(p -> p.getCode())
+									.collect(Collectors.toList()));
 
 
 
-							cartOffer.setPotentialCategories(
-									categoryList.stream().filter(c -> c != null).map(c -> c.getCode()).collect(Collectors.toList()));
+							cartOffer.setPotentialCategories(categoryList.stream().filter(c -> c != null).map(c -> c.getCode())
+									.collect(Collectors.toList()));
 
 						}
 					}
@@ -2364,7 +2386,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				final Double totalPriceWithoutDeliveryCharge = new Double(cartModel.getTotalPrice().doubleValue()
 
 
-						- cartModel.getDeliveryCost().doubleValue());
+				- cartModel.getDeliveryCost().doubleValue());
 
 				final PriceData totalPrice = discountUtility.createPrice(cartModel,
 						Double.valueOf(totalPriceWithoutDeliveryCharge.toString()));
@@ -2556,7 +2578,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					final Double totalPriceWithoutDeliveryCharge = new Double(cartModel.getTotalPrice().doubleValue()
 
 
-							- cartModel.getDeliveryCost().doubleValue() + actualDelCharge);
+					- cartModel.getDeliveryCost().doubleValue() + actualDelCharge);
 
 					final PriceData totalPrice = discountUtility.createPrice(cartModel,
 							Double.valueOf(totalPriceWithoutDeliveryCharge.toString()));
@@ -2676,8 +2698,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			//TISEE-957 isCodEligible flag update
 			if (null != responseData)
 			{
-				final boolean isCOdEligible = mplCartFacade.addCartCodEligible(deliveryModeDataMap, responseData, cartModel,
-						cartData);
+				final boolean isCOdEligible = mplCartFacade
+						.addCartCodEligible(deliveryModeDataMap, responseData, cartModel, cartData);
 
 
 
@@ -3043,8 +3065,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					&& null != orderModel.getDeliveryCost() && null != orderModel.getDeliveryCost()
 					&& null != orderModel.getTotalDiscounts())
 			{
-				final double totalafterpromotion = orderModel.getSubtotal().doubleValue() + orderModel.getDeliveryCost().doubleValue()
-						- Double.parseDouble(orderModel.getTotalDiscounts().toString());
+				final double totalafterpromotion = orderModel.getSubtotal().doubleValue()
+						+ orderModel.getDeliveryCost().doubleValue() - Double.parseDouble(orderModel.getTotalDiscounts().toString());
 				final PriceData totalPrice = discountUtility.createPrice(orderModel, Double.valueOf(totalafterpromotion));
 				if (null != totalPrice && null != totalPrice.getValue())
 				{
@@ -3091,7 +3113,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						deliveryCost = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(entry.getMplDeliveryMode()
 
 
-								.getValue().doubleValue()), orderModel.getCurrency().getIsocode());
+						.getValue().doubleValue()), orderModel.getCurrency().getIsocode());
 						deliveryModeData.setDeliveryCost(deliveryCost);
 					}
 				}
@@ -3163,8 +3185,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						}
 						else
 						{
-							LOG.debug(
-									"isMaxProductQuantityAlreadyAdded::Product already present in the cart so now we will check the qunatity present in the cart already");
+							LOG.debug("isMaxProductQuantityAlreadyAdded::Product already present in the cart so now we will check the qunatity present in the cart already");
 
 							if (entry.getQuantity().longValue() >= stock)
 							{
@@ -3359,8 +3380,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3402,8 +3423,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
 						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 						{
-							maximum_configured_quantiy = siteConfigService
-									.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+							maximum_configured_quantiy = siteConfigService.getInt(
+									MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
 						}
 						//SDI-4069 ends
 						if (StringUtils.isNotEmpty(pr.getExchangeId()))
@@ -3450,9 +3471,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			for (final SellerInformationModel seller : selectedProductModel.getSellerInformationRelator())
 			{
-				if (seller.getSellerArticleSKU().equalsIgnoreCase(USSID) && (seller.getSellerAssociationStatus() != null
-						&& (seller.getSellerAssociationStatus().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)
-								|| (seller.getEndDate() != null && new Date().after(seller.getEndDate())))))
+				if (seller.getSellerArticleSKU().equalsIgnoreCase(USSID)
+						&& (seller.getSellerAssociationStatus() != null && (seller.getSellerAssociationStatus().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO) || (seller.getEndDate() != null && new Date()
+								.after(seller.getEndDate())))))
 				{
 					delisted = true;
 					break;
@@ -3482,8 +3504,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					entryModel.setAddToCartFromWl(Boolean.valueOf(addedToCartWl));
 					if (LOG.isDebugEnabled())
 					{
-						LOG.debug(
-								"*********** Add to cart from WL mobile web service *************" + addedToCart + "::USSID::" + USSID);
+						LOG.debug("*********** Add to cart from WL mobile web service *************" + addedToCart + "::USSID::"
+								+ USSID);
 					}
 					entryModelList.add(entryModel);
 				}
@@ -3628,7 +3650,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3887,6 +3909,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	{
 		// YTODO Auto-generated method stub
 		final List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
+		final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 		ProductData productData = null;
 		final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<>();
 		String mediaFormat = null;
@@ -3895,19 +3918,28 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderModel.getEntries())
 			{
+				List<MplCategoryHierarchydata> list = new ArrayList();
 				productData = productFacade.getProductForOptions(abstractOrderEntry.getProduct(),
 						Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES));
-
+				for (final CategoryData catData : productData.getCategories())
+				{
+					if (catData.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
+					{
+						list = constructCategoryHierarchy(list, catData);
+						Collections.reverse(list);
+						gwlp.setCategoryHierarchy(list);
+						break;
+					}
+				}
 				int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 
 				//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
 				if (MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
 				{
-					maximum_configured_quantiy = siteConfigService
-							.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+					maximum_configured_quantiy = siteConfigService.getInt(
+							MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
 				}
 
-				final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 
 				if (StringUtils.isNotEmpty(abstractOrderEntry.getProduct().getName()))
 				{
@@ -3920,8 +3952,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					gwlp.setIsLuxury(productData.getLuxIndicator());
 					mediaFormat = MarketplacecommerceservicesConstants.LUXURY_CARTICON;
 				}
-				else if ((null == productData.getLuxIndicator()) || (null != productData.getLuxIndicator()
-						&& (MarketplaceCoreConstants.Marketplace).equalsIgnoreCase(productData.getLuxIndicator())))
+				else if ((null == productData.getLuxIndicator())
+						|| (null != productData.getLuxIndicator() && (MarketplaceCoreConstants.Marketplace)
+								.equalsIgnoreCase(productData.getLuxIndicator())))
 				{
 					gwlp.setIsLuxury(MarketplaceCoreConstants.Marketplace);
 					mediaFormat = MarketplacecommerceservicesConstants.THUMBNAIL;
@@ -4046,8 +4079,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					gwlp.setIsLuxury(productData.getLuxIndicator());
 					mediaFormat = MarketplacecommerceservicesConstants.LUXURY_CARTICON;
 				}
-				else if ((null == productData.getLuxIndicator()) || (null != productData.getLuxIndicator()
-						&& (MarketplaceCoreConstants.Marketplace).equalsIgnoreCase(productData.getLuxIndicator())))
+				else if ((null == productData.getLuxIndicator())
+						|| (null != productData.getLuxIndicator() && (MarketplaceCoreConstants.Marketplace)
+								.equalsIgnoreCase(productData.getLuxIndicator())))
 				{
 					gwlp.setIsLuxury(MarketplaceCoreConstants.Marketplace);
 					mediaFormat = MarketplacecommerceservicesConstants.THUMBNAIL;
@@ -4359,13 +4393,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 								startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode.getDeliveryMode()
 
 
-										.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+								.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
 								endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
 
 
 
-										.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+								.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 							}
 							if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()) && StringUtils.isNotEmpty(startValue)
@@ -4443,13 +4477,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 								startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode.getDeliveryMode()
 
 
-										.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+								.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
 								endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
 
 
 
-										.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+								.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 							}
 							if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()) && StringUtils.isNotEmpty(startValue)
@@ -4540,12 +4574,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (null != abstractOrderEntry.getMplDeliveryMode()
 						&& null != abstractOrderEntry.getMplDeliveryMode().getDeliveryMode())
 				{
-					startValue = abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getStart() != null
-							? abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getStart().toString()
+					startValue = abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getStart() != null ? abstractOrderEntry
+							.getMplDeliveryMode().getDeliveryMode().getStart().toString()
 							: MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
-					endValue = abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getEnd() != null
-							? abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getEnd().toString()
+					endValue = abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getEnd() != null ? abstractOrderEntry
+							.getMplDeliveryMode().getDeliveryMode().getEnd().toString()
 							: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 					if (StringUtils.isNotEmpty(abstractOrderEntry.getMplDeliveryMode().getSellerArticleSKU())
@@ -4701,17 +4735,17 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			if (!oModel.getGiveAway().booleanValue())
 			{
-				final double walletAmt = oModel.getWalletApportionPaymentInfo() != null
-						? (StringUtils.isNotEmpty(oModel.getWalletApportionPaymentInfo().getQcApportionPartValue())
-								? Double.parseDouble(oModel.getWalletApportionPaymentInfo().getQcApportionPartValue()) : 0.00d)
-						: 0.00d;
+				final double walletAmt = oModel.getWalletApportionPaymentInfo() != null ? (StringUtils.isNotEmpty(oModel
+						.getWalletApportionPaymentInfo().getQcApportionPartValue()) ? Double.parseDouble(oModel
+						.getWalletApportionPaymentInfo().getQcApportionPartValue()) : 0.00d) : 0.00d;
 
 				final Double netAmountAfrDiscount = oModel.getNetAmountAfterAllDisc();
 				final Double totalPrice = oModel.getTotalPrice();
 
 				mrp = oModel.getMrp().doubleValue() * oModel.getQuantity().intValue();
-				payableAmount += (((netAmountAfrDiscount.doubleValue() > 0) ? netAmountAfrDiscount.doubleValue()
-						: totalPrice.doubleValue()) - walletAmt) + oModel.getCurrDelCharge().doubleValue()
+				payableAmount += (((netAmountAfrDiscount.doubleValue() > 0) ? netAmountAfrDiscount.doubleValue() : totalPrice
+						.doubleValue()) - walletAmt)
+						+ oModel.getCurrDelCharge().doubleValue()
 						+ oModel.getScheduledDeliveryCharge().doubleValue();
 				couponDiscount += oModel.getCouponValue().doubleValue();
 				mopPlusPromoDiscounty += (mrp - (oModel.getBasePrice().doubleValue() * oModel.getQuantity().intValue()))
@@ -4960,18 +4994,17 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 					for (final AbstractOrderEntryModel entry : absOrder.getEntries())
 					{
-						emiDiscount += (null != entry.getEmiCouponValue() && entry.getEmiCouponValue().doubleValue() > 0)
-								? entry.getEmiCouponValue().doubleValue() : 0;
+						emiDiscount += (null != entry.getEmiCouponValue() && entry.getEmiCouponValue().doubleValue() > 0) ? entry
+								.getEmiCouponValue().doubleValue() : 0;
 
-						final double netAmountAfterAllDiscount = (null != entry.getNetAmountAfterAllDisc()
-								&& entry.getNetAmountAfterAllDisc().doubleValue() > 0) ? entry.getNetAmountAfterAllDisc().doubleValue()
-										: 0;
-						final double linePrice = (netAmountAfterAllDiscount > 0) ? netAmountAfterAllDiscount
-								: entry.getTotalPrice().doubleValue();
+						final double netAmountAfterAllDiscount = (null != entry.getNetAmountAfterAllDisc() && entry
+								.getNetAmountAfterAllDisc().doubleValue() > 0) ? entry.getNetAmountAfterAllDisc().doubleValue() : 0;
+						final double linePrice = (netAmountAfterAllDiscount > 0) ? netAmountAfterAllDiscount : entry.getTotalPrice()
+								.doubleValue();
 
 
-						orderValue += ((null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0)
-								? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue())
+						orderValue += ((null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0) ? entry
+								.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue())
 								+ (entry.getCurrDelCharge().doubleValue() + entry.getScheduledDeliveryCharge().doubleValue());
 
 						if (StringUtils.isEmpty(entry.getEmiCouponCode()))
@@ -4980,23 +5013,21 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						}
 					}
 
-					dto.setNoCostEMIDiscountValue(
-							priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(emiDiscount), currency));
+					dto.setNoCostEMIDiscountValue(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(emiDiscount), currency));
 
 					interestByBank = emiDiscount + lineInterest;
-					dto.setNoCostEMIInterestValue(
-							priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(interestByBank), currency));
+					dto.setNoCostEMIInterestValue(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(interestByBank),
+							currency));
 
 					orderValue = orderValue + emiDiscount;
 					dto.setNoCostEMIOrderValue(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(orderValue), currency));
 
 					payableValue = (orderValue + interestByBank) - emiDiscount;
-					dto.setNoCostEMITotalPayable(
-							priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(payableValue), currency));
+					dto.setNoCostEMITotalPayable(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(payableValue), currency));
 
 					final double perMonthEMI = payableValue / tenure;
-					dto.setNoCostEMIPerMonthPayable(
-							priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(perMonthEMI), currency));
+					dto.setNoCostEMIPerMonthPayable(priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(perMonthEMI),
+							currency));
 
 					break;
 
@@ -5007,6 +5038,28 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		return dto;
 	}
 
+	public List<MplCategoryHierarchydata> constructCategoryHierarchy(final List<MplCategoryHierarchydata> list,
+			final CategoryData category)
+	{
+		// YTODO Auto-generated method stub
+
+		final MplCategoryHierarchydata mplCategoryHierarchydata = new MplCategoryHierarchydata();
+		MplCategoryHierarchydata mplCatHierarchy = null;
+		mplCategoryHierarchydata.setCategory_id(category.getCode());
+		mplCategoryHierarchydata.setCategory_name(category.getName());
+		list.add(mplCategoryHierarchydata);
+		for (final CategoryData catData : category.getSuperCategories())
+		{
+			if (catData.getCode().length() > 4)
+			{
+				mplCatHierarchy = new MplCategoryHierarchydata();
+				mplCatHierarchy.setCategory_id(catData.getCode());
+				mplCatHierarchy.setCategory_name(catData.getName());
+				list.add(mplCatHierarchy);
+			}
+		}
+		return list;
+	}
 	/*
 	 * For calculation delivery charge based on currDelCharge
 	 */

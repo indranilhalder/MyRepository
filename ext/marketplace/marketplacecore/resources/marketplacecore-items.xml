@@ -17089,7 +17089,14 @@
 					<attribute type="BrandTabAZBrandCollection" qualifier="brands">
 						<modifiers read="true" write="true" search="true"
 						 optional="true" />
-						<persistence type="property" />
+						<persistence type="property">
+						<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype>
+								<value>HYBRIS.LONG_STRING</value>
+							</columntype>
+						</persistence>
 					</attribute>
 				</attributes>
 			</itemtype>

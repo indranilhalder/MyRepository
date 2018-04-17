@@ -26,7 +26,7 @@
 		<div class="wrapper background">
 			<cms:pageSlot position="DefaultNewUIContentSlot" var="feature">
 				<c:if test="${feature.typeCode eq 'HeroBannerComponent'}">
-					<div class="hero-slider">
+					<div class="hero-slider mb40">
 						<c:forEach items="${feature.items}" var="heroElements">
 							<div>
 								<c:if test="${heroElements.typeCode eq 'HeroBannerElement'}">
@@ -118,7 +118,7 @@
 							<%-- 	 	<jsp:useBean id="now" class="java.util.Date" /> --%>
 							<%-- 		<fmt:formatDate type="date" value="${now}" /> --%>
 							<input type="hidden" name="end_time" id="end_time"
-								value="2018-04-03 13:00:00"> <i class="fa fa-clock-o"
+								value="${feature.endDate}"> <i class="fa fa-clock-o" id="timer-icon"
 								aria-hidden="true"></i>
 							<div class="time-digits" id="countdown"></div>
 						</div>
@@ -152,7 +152,7 @@
 											
 											<div class="col-xs-12 flash-sales-widget-product-offer">${flashsalesitemElements.productCode.name}</div>
 											<fmt:parseNumber var="productPrice" type="number"
-														value="${bannerProdCarouselElement.productCode.mrp}" />
+														value="${flashsalesitemElements.productCode.mrp}" />
 												<div class="col-xs-12 flash-sales-widget-product-name">Rs. ${productPrice}</div>
 											
 										</a>
@@ -220,7 +220,7 @@
 													<fmt:parseNumber var="productPrice" type="number"
 														value="${bannerProdCarouselElement.productCode.mrp}" />
 
-													<div class="product-price">${productPrice}</div>
+													<div class="product-price">Rs. ${productPrice}</div>
 												</c:if>
 											</a>
 										</div>
@@ -235,11 +235,12 @@
 				<c:if test="${feature.typeCode eq 'VideoProductCarouselComponent'}">
 					<!--video product carousel-->
 					<div class="col-xs-12 mb40 pad0 video-product-carousel">
-						<video id="video-el" width="100%" src="${feature.videoURL}"
-							poster="${feature.imageURL.URL}"></video>
+						<iframe id="video-el" width="100%" height="230" src="${feature.videoURL}" frameborder="0" allow="encrypted-media"></iframe>
+						<%-- <video id="video-el" width="100%" src="${feature.videoURL}"
+							poster="${feature.imageURL.URL}"></video> --%>
 						<!-- 						<img src=""> -->
-						<div class="video-product-carousel-container" id="vpc-container">
-							<div class="col-xs-12 video-product-title">${feature.title}</div>
+						<div class="video-product-carousel-container" id="vpc-container" style="background-image:url(${feature.imageURL.URL});">
+							<div class="col-xs-12 video-product-title"><img src="${feature.brandLogo.URL}" ></div>
 							<div class="col-xs-12 text-center mtb15">
 								<i class="fa fa-play-circle-o fa-3x" aria-hidden="true"
 									id="play-video"></i>
@@ -260,7 +261,7 @@
 											<div class="product-name">${videoProdCarouselElement.productCode.name}</div>
 												<fmt:parseNumber var="productPrice" type="number"
 													value="${videoProdCarouselElement.productCode.mrp}" />
-												<div class="product-price">${productPrice}</div>
+												<div class="product-price">Rs. ${productPrice}</div>
 											</c:if>
 										</a>
 									</c:if>
@@ -349,7 +350,7 @@
 													<div class="product-name">${themeProductWidgetElement.productCode.name}</div>
 														<fmt:parseNumber var="productPrice" type="number"
 															value="${themeProductWidgetElement.productCode.mrp}" />
-														<div class="product-price">${productPrice}</div>
+														<div class="product-price">Rs. ${productPrice}</div>
 													</c:if>
 												</a>
 											</div>
@@ -403,7 +404,7 @@
 											<div class="product-name">${automatedBrandProductCarElement.productCode.name}</div>
 												<fmt:parseNumber var="productPrice" type="number"
 													value="${automatedBrandProductCarElement.productCode.mrp}" />
-												<div class="product-price">${productPrice}</div>
+												<div class="product-price">Rs. ${productPrice}</div>
 											</c:if>
 										</a>
 									</div>
@@ -533,20 +534,20 @@
 								</a>
 								<c:if
 									test="${curatedProductsWidgetElement.typeCode eq 'CuratedProductsWidgetElement'}">
-									<div class="brand-name">${curatedProductsWidgetElement.productCode.name}
+									<div class="brand-name">${curatedProductsWidgetElement.description}
 										<a href="#" class="pull-right"> <i
 											class="fa fa-bookmark-o" aria-hidden="true"></i>
 										</a>
 									</div>
 									<a href="${curatedProductsWidgetElement.webURL}">
-										<div class="product-name">${curatedProductsWidgetElement.description}</div>
+										<div class="product-name">${curatedProductsWidgetElement.productCode.name}</div>
 									</a>
 									<div class="product-price">
 										<c:if
 											test="${not empty curatedProductsWidgetElement.productCode}">
 											<fmt:parseNumber var="productPrice" type="number"
 												value="${curatedProductsWidgetElement.productCode.mrp}" />
-											<div class="product-price">${productPrice}</div>
+											<div class="product-price">Rs. ${productPrice}</div>
 										</c:if>
 									</div>
 								</c:if>
@@ -790,7 +791,7 @@
 											src="${autoProductRecommendationElement.productCode.thumbnail.URL}"
 											class="br4" />
 										</a>
-										<div class="brand-name">${autoProductRecommendationElement.productCode.name}
+										<div class="brand-name">${autoProductRecommendationElement.title}
 											<a href="#" class="pull-right"> <i
 												class="fa fa-bookmark-o" aria-hidden="true"></i>
 											</a>
@@ -802,7 +803,7 @@
 											test="${not empty autoProductRecommendationElement.productCode}">
 											<fmt:parseNumber var="productPrice" type="number"
 												value="${autoProductRecommendationElement.productCode.mrp}" />
-											<div class="product-price">${productPrice}</div>
+											<div class="product-price">Rs. ${productPrice}</div>
 										</c:if>
 									</c:if>
 								</div>
@@ -822,18 +823,22 @@
 								test="${landingPageHierarchyElement.typeCode eq 'LandingPageHierarchyElement'}">
 								<ul class="category-l1">
 									<li><a href="${landingPageHierarchyElement.webURL}"
-										class="has-carrot">${landingPageHierarchyElement.title}</a> <c:forEach
+										class="has-carrot">${landingPageHierarchyElement.title}</a> 
+										<ul class="category-l2">
+										<c:forEach
 											items="${landingPageHierarchyElement.items}"
 											var="landingPageHierarchyElementList">
 											<c:if
 												test="${landingPageHierarchyElementList.typeCode eq 'LandingPageHierarchyElementList'}">
-												<ul class="category-l2">
+												
 													<li><a
 														href="${landingPageHierarchyElementList.webURL}">${landingPageHierarchyElementList.title}</a>
 													</li>
-												</ul>
+												
 											</c:if>
-										</c:forEach></li>
+										</c:forEach>
+										</ul>
+										</li>
 								</ul>
 							</c:if>
 						</c:forEach>
