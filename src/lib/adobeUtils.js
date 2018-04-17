@@ -1,4 +1,5 @@
 import { getCookieValue, getCookie } from "./Cookie.js";
+import cloneDeep from "lodash/cloneDeep";
 import { setInterval, clearInterval } from "timers";
 import * as constants from "../lib/constants.js";
 import { userAddressFailure } from "../cart/actions/cart.actions";
@@ -18,9 +19,11 @@ const ADOBE_SATELLITE_CODE = "virtual_page_load";
 const ADOBE_PDP_CPJ = "cpj_pdp";
 const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
 const ADOBE_SAVE_PRODUCT = "cpj_button_save";
-const ADOBE_EMI_BANK_SELECT_ON_PDP = "'cpj_pdp_emi";
+const ADOBE_EMI_BANK_SELECT_ON_PDP = "cpj_pdp_emi";
 
 // direct call url for cart page
+const PINCODE_SUCCESS = "pin_successful";
+const PINCODE_FAILURE = "pin_failed";
 const ADOBE_DIRECT_CALL_FOR_LANDING_USER = "cpj_cart_page";
 const ADOBE_DIRECT_CALL_ON_CART_FOR_REMOVE_TRIGGER = "cpj_cart_removal";
 const ADOVE_DIRECT_CALL_ON_CLICK_CHECKOUT = "cpj_cart_checkout";
@@ -30,8 +33,15 @@ const ADOBE_DIRECT_CALL_FOR_APPLY_COUPON_SUCCESS =
   "cpj_checkout_payment_coupon_success";
 const ADOBE_DIRECT_CALL_FOR_APPLY_COUPON_FAIL =
   "cpj_checkout_payment_coupon_fail";
-const ADOBE_DIRECT_CALL_FOR_SAVE_PORDUCT_ON_CART = "'cpj_button_save'";
+const ADOBE_DIRECT_CALL_FOR_SAVE_PORDUCT_ON_CART = "cpj_button_save'";
 // end of direct call url for cart page
+const ADOBE_ORDER_CONFIRMATION_FAILURE = "cpj_order_fail";
+const ADOBE_ORDER_CONFIRMATION_SUCCESS = "cpj_order_successful";
+
+// direct call for login tracking
+const ADOBE_LOGIN_SUCCESS = "login_successful";
+const ADOBE_LOGIN_FAILURE = "login_failed";
+// end of direct call for login tracking
 
 export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
 export const ADOBE_HOME_TYPE = "home";
@@ -39,6 +49,7 @@ export const ADOBE_PDP_TYPE = "pdp";
 export const ADOBE_CART_TYPE = "cart";
 export const ADOBE_CHECKOUT_TYPE = "checkout";
 export const ADOBE_PLP_TYPE = "plp";
+export const ADOBE_ORDER_CANCEL = "order_cancellation";
 
 export const ICID2 = "ICID2";
 export const CID = "CID";
@@ -62,13 +73,34 @@ export const ADOBE_CALLS_FOR_APPLY_COUPON_FAIL =
   "ADOBE_CALLS_FOR_APPLY_COUPON_FAIL";
 export const ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART =
   "ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART";
+
+export const ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS =
+  "ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS";
+export const ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE =
+  "ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE";
+
+// const for setting data layer for the login track
+
+export const ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS =
+  "ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS";
+export const ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE =
+  "ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE";
+
+// end of const for setting data layer for the login track
+
+export const ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS =
+  "ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS";
+export const ADOBE_DIRECT_CALL_FOR_PINCODE_FAILURE =
+  "ADOBE_DIRECT_CALL_FOR_PINCODE_FAILURE";
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
 const MOBILE = "mobile";
 const EMAIL = "email";
 const INTERNAL_CAMPAIGN = "internal_campaign";
 const EXTERNAM_CAMPAIGN = "external_campaign";
-export function setDataLayer(type, response, icid, icidType) {
+export function setDataLayer(type, apiResponse, icid, icidType) {
+  const response = cloneDeep(apiResponse);
+
   let userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
   if (userDetails) {
     userDetails = JSON.parse(userDetails);
@@ -162,6 +194,7 @@ export function setDataLayer(type, response, icid, icidType) {
       }
     };
   }
+
   window._satellite.track(ADOBE_SATELLITE_CODE);
 }
 
@@ -238,14 +271,12 @@ function getDigitalDataForPdp(type, pdpResponse) {
     window.digitalData.page &&
     window.digitalData.page.pageInfo.pageName
   ) {
-    Object.assign(data, {
-      cpj: {
-        pdp: {
-          findingMethod:
-            window.digitalData &&
-            window.digitalData.page &&
-            window.digitalData.page.pageInfo.pageName
-        }
+    Object.assign(data.cpj, {
+      pdp: {
+        findingMethod:
+          window.digitalData &&
+          window.digitalData.page &&
+          window.digitalData.page.pageInfo.pageName
       }
     });
   }
@@ -316,6 +347,33 @@ function getDigitalDataForCheckout(type, CheckoutResponse) {
     Object.assign(data, {
       cpj: { product: { id: JSON.stringify(productIds) } }
     });
+  }
+  if (
+    window.digitalData &&
+    window.digitalData.page &&
+    window.digitalData.page.pageInfo.pageName
+  ) {
+    if (data.cpj) {
+      data = Object.assign(data.cpj, {
+        pdp: {
+          findingMethod:
+            window.digitalData &&
+            window.digitalData.page &&
+            window.digitalData.page.pageInfo.pageName
+        }
+      });
+    } else {
+      data = Object.assign(data, {
+        cpj: {
+          pdp: {
+            findingMethod:
+              window.digitalData &&
+              window.digitalData.page &&
+              window.digitalData.page.pageInfo.pageName
+          }
+        }
+      });
+    }
   }
   return data;
 }
@@ -470,6 +528,14 @@ export function setDataLayerForCartDirectCalls(type, response) {
   if (type === ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART) {
     window._satellite.track(ADOBE_DIRECT_CALL_FOR_SAVE_PORDUCT_ON_CART);
   }
+  if (type === ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS) {
+    window.digitalData = { page: { pin: { value: response } } };
+    window._satellite.track(PINCODE_SUCCESS);
+  }
+  if (type === ADOBE_DIRECT_CALL_FOR_PINCODE_FAILURE) {
+    window.digitalData = { page: { pin: { value: response } } };
+    window._satellite.track(PINCODE_FAILURE);
+  }
 }
 function getDigitalDataForPlp(type, response) {
   let data = {
@@ -486,14 +552,13 @@ function getDigitalDataForPlp(type, response) {
     const productCodes = response.searchresult.splice(0, 9).map(product => {
       return product.productId.toLowerCase();
     });
-    const impression = JSON.stringify(productCodes.join("|"));
+    const impression = productCodes.join("|");
     Object.assign(data.page, {
       products: {
         impression
       }
     });
   }
-
   const hierarchy = getHierarchyArray(response);
   if (hierarchy) {
     Object.assign(data.page, {
@@ -532,5 +597,130 @@ export function setDataLayerForPlpDirectCalls(response) {
       Object.assign(data, { cpj: { product: { badge } } });
     }
     window.digitalData = data;
+  }
+}
+export function setDataLayerForLogin(type) {
+  let userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
+  const data = {};
+  if (ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS) {
+    if (userDetails) {
+      if (userDetails.loginType === LOGIN_WITH_EMAIL) {
+        Object.assign(data, {
+          account: {
+            login: {
+              customerID: userDetails.customerId,
+              type: EMAIL
+            }
+          }
+        });
+      } else if (userDetails.loginType === LOGIN_WITH_MOBILE) {
+        if (data.account) {
+          Object.assign(data.account, {
+            login: {
+              customerID: userDetails.customerId,
+              type: MOBILE
+            }
+          });
+        } else {
+          Object.assign(data, {
+            account: {
+              login: {
+                customerID: userDetails.customerId,
+                type: MOBILE
+              }
+            }
+          });
+        }
+      } else if (userDetails.loginType === FACEBOOK_PLATFORM) {
+        if (data.account) {
+          Object.assign(data.account, {
+            login: {
+              customerID: userDetails.customerId,
+              type: FACEBOOK
+            }
+          });
+        } else {
+          Object.assign(data, {
+            account: {
+              login: {
+                customerID: userDetails.customerId,
+                type: FACEBOOK
+              }
+            }
+          });
+        }
+      } else if (userDetails.loginType === GOOGLE_PLUS_PLATFORM) {
+        if (data.account) {
+          Object.assign(data.account, {
+            login: {
+              customerID: userDetails.customerId,
+              type: GOOGLE
+            }
+          });
+        } else {
+          Object.assign(data, {
+            account: {
+              login: {
+                customerID: userDetails.customerId,
+                type: GOOGLE
+              }
+            }
+          });
+        }
+      }
+    }
+    if (
+      window.digitalData &&
+      window.digitalData.page &&
+      window.digitalData.page.pageInfo.pageName
+    ) {
+      if (data.account) {
+        if (data.account.login) {
+          Object.assign(data.account.login, {
+            location: window.digitalData.page.pageInfo.pageName
+          });
+        } else {
+          Object.assign(data.account, {
+            login: {
+              location: window.digitalData.page.pageInfo.pageName
+            }
+          });
+        }
+      } else {
+        Object.assign(data, {
+          account: {
+            login: {
+              location: window.digitalData.page.pageInfo.pageName
+            }
+          }
+        });
+      }
+    }
+    window.digitalData = data;
+    window.digitalData.flag = ADOBE_LOGIN_SUCCESS;
+    window._satellite.track(ADOBE_LOGIN_SUCCESS);
+  }
+  if (ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE) {
+    window.digitalData.flag = ADOBE_LOGIN_FAILURE;
+    window._satellite.track(ADOBE_LOGIN_FAILURE);
+  }
+}
+export function setDataLayerForOrderConfirmationDirectCalls(
+  type,
+  failureReason
+) {
+  if (type === ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS) {
+    window._satellite.track(ADOBE_ORDER_CONFIRMATION_SUCCESS);
+  }
+  if (type === ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE) {
+    const data = {
+      cpj: {
+        order: {
+          failureReason
+        }
+      }
+    };
+    window.digitalData = data;
+    window._satellite.track(ADOBE_ORDER_CONFIRMATION_FAILURE);
   }
 }

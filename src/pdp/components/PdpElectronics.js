@@ -15,6 +15,7 @@ import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
 import PdpDeliveryModes from "./PdpDeliveryModes";
+import PdpPaymentInfo from "./PdpPaymentInfo";
 import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import Accordion from "../../general/components/Accordion.js";
 import Logo from "../../general/components/Logo.js";
@@ -91,25 +92,36 @@ export default class PdpElectronics extends React.Component {
     );
 
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (userDetails) {
+    if (!this.props.productDetails.winningSellerPrice) {
+      this.props.displayToast("Product is not saleable");
+    } else {
       if (
-        cartDetailsLoggedInUser !== undefined &&
-        customerCookie !== undefined
+        this.props.productDetails.allOOStock ||
+        this.props.productDetails.winningSellerAvailableStock === "0"
       ) {
-        this.props.addProductToCart(
-          JSON.parse(userDetails).userName,
-          JSON.parse(cartDetailsLoggedInUser).code,
-          JSON.parse(customerCookie).access_token,
-          productDetails
-        );
+        this.props.displayToast("Product is out of stock");
+      } else {
+        if (userDetails) {
+          if (
+            cartDetailsLoggedInUser !== undefined &&
+            customerCookie !== undefined
+          ) {
+            this.props.addProductToCart(
+              JSON.parse(userDetails).userName,
+              JSON.parse(cartDetailsLoggedInUser).code,
+              JSON.parse(customerCookie).access_token,
+              productDetails
+            );
+          }
+        } else if (cartDetailsAnonymous) {
+          this.props.addProductToCart(
+            ANONYMOUS_USER,
+            JSON.parse(cartDetailsAnonymous).guid,
+            JSON.parse(globalCookie).access_token,
+            productDetails
+          );
+        }
       }
-    } else if (cartDetailsAnonymous) {
-      this.props.addProductToCart(
-        ANONYMOUS_USER,
-        JSON.parse(cartDetailsAnonymous).guid,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
     }
   };
 
@@ -191,27 +203,41 @@ export default class PdpElectronics extends React.Component {
           productListingId={productData.productListingId}
           ussId={productData.winningUssID}
           showPincodeModal={() => this.showPincodeModal()}
+          outOfStock={
+            productData.allOOStock ||
+            !productData.winningSellerPrice ||
+            productData.winningSellerAvailableStock === "0"
+          }
         >
-          <ProductGalleryMobile
-            paddingBottom={
-              productData.rootCategory === "Watches" ? "114" : "89.4"
-            }
-          >
-            {mobileGalleryImages.map((val, idx) => {
-              return (
-                <Image
-                  image={val}
-                  key={idx}
-                  color={
-                    productData.rootCategory === "Watches"
-                      ? "#ffffff"
-                      : "#f5f5f5"
-                  }
-                  fit="contain"
-                />
-              );
-            })}
-          </ProductGalleryMobile>
+          <div className={styles.gallery}>
+            <ProductGalleryMobile
+              paddingBottom={
+                productData.rootCategory === "Watches" ? "114" : "89.4"
+              }
+            >
+              {mobileGalleryImages.map((val, idx) => {
+                return (
+                  <Image
+                    image={val}
+                    key={idx}
+                    color={
+                      productData.rootCategory === "Watches"
+                        ? "#ffffff"
+                        : "#f5f5f5"
+                    }
+                    fit="contain"
+                  />
+                );
+              })}
+            </ProductGalleryMobile>
+            {(productData.allOOStock ||
+              productData.winningSellerAvailableStock === "0") && (
+              <div className={styles.flag}>Out of stock</div>
+            )}
+            {!productData.winningSellerPrice && (
+              <div className={styles.flag}>Not Saleable</div>
+            )}
+          </div>
           <div className={styles.content}>
             {productData.rootCategory !== "Watches" && (
               <ProductDetailsMainCard
@@ -223,6 +249,7 @@ export default class PdpElectronics extends React.Component {
                 discountPrice={discountPrice}
                 averageRating={productData.averageRating}
                 onClick={this.goToReviewPage}
+                discount={productData.discount}
               />
             )}
             {productData.rootCategory === "Watches" && (
@@ -238,16 +265,11 @@ export default class PdpElectronics extends React.Component {
               />
             )}
           </div>
-          {productData.isEMIEligible === "Y" && (
-            <div className={styles.separator}>
-              <div className={styles.info}>
-                Emi available on this product.
-                <span className={styles.link} onClick={this.showEmiModal}>
-                  View Plans
-                </span>
-              </div>
-            </div>
-          )}
+          <PdpPaymentInfo
+            hasEmi={productData.isEMIEligible}
+            hasCod={productData.isCOD}
+            showEmiModal={this.showEmiModal}
+          />
           <OfferCard
             showDetails={this.props.showOfferDetails}
             potentialPromotions={productData.potentialPromotions}

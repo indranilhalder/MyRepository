@@ -85,7 +85,9 @@ class CheckOutPage extends React.Component {
       cliqCashAmount: "",
       bagAmount: "",
       selectedDeliveryDetails: null,
-      ratingExperience: false
+      ratingExperience: false,
+      isFirstAddress: false,
+      addressDetails: null
     };
   }
   onClickImage(productCode) {
@@ -348,12 +350,24 @@ class CheckOutPage extends React.Component {
   };
 
   renderInitialAddAddressForm() {
+    if (!this.state.isFirstAddress) {
+      this.setState({ isFirstAddress: true });
+    }
+
     return (
       <div className={styles.addInitialAddAddress}>
         <AddDeliveryAddress
           addUserAddress={address => this.addAddress(address)}
           {...this.state}
           onChange={val => this.onChange(val)}
+          isFirstAddress={true}
+          showSecondaryLoader={this.props.showSecondaryLoader}
+          hideSecondaryLoader={this.props.hideSecondaryLoader}
+          loading={this.props.cart.loading}
+          displayToast={message => this.props.displayToast(message)}
+          getAddressDetails={val => this.setState({ addressDetails: val })}
+          getPinCode={val => this.getPinCodeDetails(val)}
+          getPinCodeDetails={this.props.getPinCodeDetails}
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -370,23 +384,34 @@ class CheckOutPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // adding default address is selected
+
     if (
-      nextProps.cart.status === SUCCESS &&
+      nextProps.cart.getUserAddressStatus === SUCCESS &&
       !this.state.addressId &&
       nextProps.cart &&
       nextProps.cart.userAddress &&
       nextProps.cart.userAddress.addresses
     ) {
       let defaultAddressId = null;
-      let defaultAddress = nextProps.cart.userAddress.addresses.find(
-        address => {
+      let defaultAddress;
+      if (this.state.isFirstAddress) {
+        defaultAddress = nextProps.cart.userAddress.addresses[0];
+        this.setState({ isFirstAddress: false, confirmAddress: true });
+        this.props.addAddressToCart(
+          defaultAddress.id,
+          defaultAddress.postalCode
+        );
+      } else {
+        defaultAddress = nextProps.cart.userAddress.addresses.find(address => {
           return address.defaultAddress;
-        }
-      );
+        });
+      }
+
       if (defaultAddress) {
         defaultAddressId = defaultAddress.id;
       }
       this.updateLocalStoragePinCode(defaultAddress.postalCode);
+
       this.setState({
         addressId: defaultAddressId,
         selectedAddress: defaultAddress
@@ -640,6 +665,12 @@ class CheckOutPage extends React.Component {
     this.setState(val);
   }
 
+  getPinCodeDetails = pinCode => {
+    if (this.props.getPinCode) {
+      this.props.getPinCode(pinCode);
+    }
+  };
+
   availabilityOfUserCoupon = () => {
     if (!this.state.isGiftCard) {
       let couponCookie = Cookie.getCookie(COUPON_COOKIE);
@@ -670,6 +701,9 @@ class CheckOutPage extends React.Component {
   };
   handleSubmit = () => {
     if (this.availabilityOfUserCoupon()) {
+      if (this.state.isFirstAddress) {
+        this.addAddress(this.state.addressDetails);
+      }
       if (
         !this.state.confirmAddress &&
         !this.state.isGiftCard &&
@@ -968,7 +1002,10 @@ class CheckOutPage extends React.Component {
             hideSecondaryLoader={this.props.hideSecondaryLoader}
             loading={this.props.cart.loading}
             onChange={val => this.onChange(val)}
+            isFirstAddress={false}
             displayToast={message => this.props.displayToast(message)}
+            getPinCode={val => this.getPinCodeDetails(val)}
+            getPinCodeDetails={this.props.getPinCodeDetails}
           />
         </div>
       );
