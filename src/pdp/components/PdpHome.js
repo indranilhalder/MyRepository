@@ -96,29 +96,33 @@ export default class PdpApparel extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (
-      this.props.productDetails.allOOStock ||
-      this.props.productDetails.winningSellerAvailableStock === "0"
-    ) {
-      this.props.displayToast("Product is out of stock");
+    if (!this.props.productDetails.winningSellerPrice) {
+      this.props.displayToast("Product is not saleable");
     } else {
-      if (userDetails) {
-        if (cartDetailsLoggedInUser && customerCookie) {
-          this.props.addProductToCart(
-            JSON.parse(userDetails).userName,
-            JSON.parse(cartDetailsLoggedInUser).code,
-            JSON.parse(customerCookie).access_token,
-            productDetails
-          );
-        }
+      if (
+        this.props.productDetails.allOOStock ||
+        this.props.productDetails.winningSellerAvailableStock === "0"
+      ) {
+        this.props.displayToast("Product is out of stock");
       } else {
-        if (cartDetailsAnonymous && globalCookie) {
-          this.props.addProductToCart(
-            ANONYMOUS_USER,
-            JSON.parse(cartDetailsAnonymous).guid,
-            JSON.parse(globalCookie).access_token,
-            productDetails
-          );
+        if (userDetails) {
+          if (cartDetailsLoggedInUser && customerCookie) {
+            this.props.addProductToCart(
+              JSON.parse(userDetails).userName,
+              JSON.parse(cartDetailsLoggedInUser).code,
+              JSON.parse(customerCookie).access_token,
+              productDetails
+            );
+          }
+        } else {
+          if (cartDetailsAnonymous && globalCookie) {
+            this.props.addProductToCart(
+              ANONYMOUS_USER,
+              JSON.parse(cartDetailsAnonymous).guid,
+              JSON.parse(globalCookie).access_token,
+              productDetails
+            );
+          }
         }
       }
     }
@@ -204,6 +208,7 @@ export default class PdpApparel extends React.Component {
           productListingId={productData.productListingId}
           outOfStock={
             productData.allOOStock ||
+            !productData.winningSellerPrice ||
             productData.winningSellerAvailableStock === "0"
           }
           ussId={productData.winningUssID}
@@ -217,6 +222,9 @@ export default class PdpApparel extends React.Component {
             {(productData.allOOStock ||
               productData.winningSellerAvailableStock === "0") && (
               <div className={styles.flag}>Out of stock</div>
+            )}
+            {!productData.winningSellerPrice && (
+              <div className={styles.flag}>Not Saleable</div>
             )}
           </div>
           <div className={styles.whiteBackground}>
