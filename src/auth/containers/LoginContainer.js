@@ -26,6 +26,11 @@ import {
   singleAuthCallHasFailed,
   setIfAllAuthCallsHaveSucceeded
 } from "../../auth/actions/auth.actions";
+import {
+  setDataLayerForLogin,
+  ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS,
+  ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE
+} from "../../lib/adobeUtils";
 export const OTP_VERIFICATION_REQUIRED_MESSAGE = "OTP VERIFICATION REQUIRED";
 
 const mapDispatchToProps = dispatch => {
@@ -52,6 +57,7 @@ const mapDispatchToProps = dispatch => {
       } else if (userDetailsResponse.status === SUCCESS) {
         const loginUserResponse = await dispatch(loginUser(userDetails));
         if (loginUserResponse.status === SUCCESS) {
+          setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS);
           const cartVal = await dispatch(getCartId());
           if (
             cartVal.status === SUCCESS &&
@@ -97,6 +103,8 @@ const mapDispatchToProps = dispatch => {
           loginUserResponse.error === OTP_VERIFICATION_REQUIRED_MESSAGE
         ) {
           dispatch(showModal(OTP_LOGIN_MODAL, userDetails));
+        } else {
+          setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE);
         }
       }
     },

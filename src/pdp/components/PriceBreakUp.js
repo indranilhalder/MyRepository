@@ -15,9 +15,11 @@ export default class PriceBreakUp extends React.Component {
             return (
               <div className={styles.content}>
                 <div className={styles.header}>{val.name}</div>
-                <div className={styles.description}>
-                  {val.price.formattedValue}
-                </div>
+                {val.price && (
+                  <div className={styles.description}>
+                    {val.price.formattedValue}
+                  </div>
+                )}
               </div>
             );
           })}

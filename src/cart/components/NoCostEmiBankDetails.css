@@ -1,0 +1,125 @@
+.base {
+  width: 100%;
+  height: auto;
+  background: #f8f8f8;
+}
+.bankLogoHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 10px;
+}
+.bankLogo {
+  width: 25%;
+  height: auto;
+  padding: 5px;
+  display: inline-block;
+}
+.emiDetailsPlan {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+}
+.labelHeader {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+  color: #000;
+  font-size: 14px;
+  font-family: regular;
+  font-style: italic;
+}
+.monthsLabel {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 14px;
+  margin-bottom: 10px;
+  font-family: regular;
+}
+.monthsHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.monthWithCheckbox {
+  width: 50%;
+  height: 22px;
+  margin-bottom: 10px;
+  position: relative;
+  padding-left: 25px;
+  line-height: 22px;
+  color: #000;
+  font-size: 14px;
+  display: inline-block;
+}
+.checkbox {
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.monthsPlanDataHolder {
+  width: 100%;
+  height: auto;
+}
+.amountPlaneForMonth {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  border-bottom: 1px solid #ececec;
+}
+.amountData {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+  display: inline-block;
+  color: #000;
+}
+.amountLabel {
+  width: 60%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 14px;
+  font-family: regular;
+}
+.totalAmountLabel {
+  composes: amountData;
+  font-family: semibold;
+}
+.amount {
+  width: 40%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 14px;
+  font-family: semibold;
+  text-align: right;
+}
+.discount {
+  composes: amountData;
+  color: #ff1744;
+}
+.totalAmountDisplay {
+  composes: amountPlaneForMonth;
+  border-bottom: none;
+}
+.itemLevelButtonHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  text-align: left;
+  padding: 0px 15px 15px;
+}
+.itemLevelButton {
+  width: auto;
+  height: 25px;
+  display: inline-block;
+}
+.selectHolder {
+  width: 100%;
+  height: auto;
+  padding: 0px 15px 15px;
+}

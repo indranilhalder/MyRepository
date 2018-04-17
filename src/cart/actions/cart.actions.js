@@ -30,7 +30,10 @@ import {
   ADOBE_CHECKOUT_TYPE,
   ADOBE_CALLS_FOR_CHANGE_QUANTITY,
   ADOBE_CALLS_FOR_APPLY_COUPON_SUCCESS,
-  ADOBE_CALLS_FOR_APPLY_COUPON_FAIL
+  ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
+  setDataLayerForOrderConfirmationDirectCalls,
+  ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS,
+  ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE
 } from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
@@ -2838,8 +2841,15 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
+        setDataLayerForOrderConfirmationDirectCalls(
+          ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE,
+          resultJsonStatus.message
+        );
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForOrderConfirmationDirectCalls(
+        ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS
+      );
       dispatch(updateTransactionDetailsSuccess(resultJson));
       dispatch(orderConfirmation(resultJson.orderId));
     } catch (e) {
