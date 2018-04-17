@@ -9,16 +9,17 @@ export default class SizeSelect extends React.Component {
     }
   }
   render() {
-    let classSelected = styles.textHolder;
-    let classActive = styles.base;
-    if (this.props.selected) {
-      classSelected = styles.selected;
-      classActive = styles.baseActive;
-    }
+    // if (this.props.selected) {
+    //   console.log(this.props.size);
+    // }
+
     return (
-      <div className={classActive} onClick={() => this.handleClick()}>
+      <div
+        className={this.props.selected ? styles.baseActive : styles.base}
+        onClick={() => this.handleClick()}
+      >
         <div
-          className={classSelected}
+          className={this.props.selected ? styles.selected : styles.textHolder}
           style={{ fontSize: this.props.fontSize }}
         >
           {this.props.size}
