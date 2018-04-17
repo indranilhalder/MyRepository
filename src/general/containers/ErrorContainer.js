@@ -142,12 +142,10 @@ class ErrorDisplay extends React.Component {
       message.startsWith(ACCESS_TOKEN_EXPIRED_MESSAGE) ||
       message.startsWith(ACCESS_TOKEN_INVALID_MESSAGE)
     ) {
-      let messageArray = message.split(":");
       let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
       customerCookie =
         customerCookie && JSON.parse(customerCookie).access_token;
-
-      if (messageArray[1].replace(/\s+/g, "") === customerCookie) {
+      if (message.indexOf({ customerCookie }).length >= 0) {
         this.props.refreshToken();
       } else {
         this.props.getGlobalAccessToken();

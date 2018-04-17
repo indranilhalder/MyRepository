@@ -19,7 +19,7 @@ import find from "lodash/find";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
-
+import size from "lodash/size";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -691,11 +691,8 @@ class CheckOutPage extends React.Component {
           this.props.selectDeliveryMode &&
           !this.checkAvailabilityOfService()
         ) {
-
-          if (
-            Object.entries(this.state.ussIdAndDeliveryModesObj).length ===
-            this.props.cart.cartDetailsCNC.products.length
-          ) {
+          let sizeNew = size(this.state.ussIdAndDeliveryModesObj);
+          if (sizeNew === this.props.cart.cartDetailsCNC.products.length) {
             this.props.selectDeliveryMode(
               this.state.ussIdAndDeliveryModesObj,
               localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
