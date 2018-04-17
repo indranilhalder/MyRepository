@@ -46,7 +46,8 @@ import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import MDSpinner from "react-md-spinner";
 import {
   setDataLayerForCheckoutDirectCalls,
-  ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE
+  ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE,
+  ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE
 } from "../../lib/adobeUtils";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
@@ -522,6 +523,9 @@ class CheckOutPage extends React.Component {
   }
 
   componentDidMount() {
+    setDataLayerForCheckoutDirectCalls(
+      ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE
+    );
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;

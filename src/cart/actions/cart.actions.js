@@ -37,7 +37,9 @@ import {
   setDataLayerForCheckoutDirectCalls,
   ADOBE_ADD_ADDRESS_TO_ORDER,
   ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE,
-  ADOBE_CALL_FOR_SELECT_DELIVERY_MODE
+  ADOBE_CALL_FOR_SELECT_DELIVERY_MODE,
+  ADOBE_CALL_FOR_APPLY_COUPON_FAILURE,
+  ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS
 } from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
@@ -1597,8 +1599,16 @@ export function applyBankOffer(couponCode) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
+        setDataLayerForCheckoutDirectCalls(
+          ADOBE_CALL_FOR_APPLY_COUPON_FAILURE,
+          couponCode
+        );
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCheckoutDirectCalls(
+        ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS,
+        couponCode
+      );
       dispatch(applyBankOfferSuccess(resultJson));
     } catch (e) {
       dispatch(applyBankOfferFailure(e.message));
