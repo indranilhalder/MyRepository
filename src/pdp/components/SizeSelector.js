@@ -32,8 +32,9 @@ export default class SizeSelector extends React.Component {
         return selectedColour ? val.colorlink.color === selectedColour : true;
       })
       .map(val => {
-        return val.sizelink;
+        return val;
       });
+
     if (sizes.length !== 0) {
       return (
         <div className={styles.base}>
@@ -55,14 +56,15 @@ export default class SizeSelector extends React.Component {
                 <SizeSelect
                   key={i}
                   selected={
-                    this.props.sizeSelected
-                      ? datum.productCode === this.props.productId
+                    datum.colorlink.selected &&
+                    this.props.history.location.state
+                      ? this.props.history.location.state.isSizeSelected
                       : false
                   }
-                  size={datum.size}
-                  value={datum.size}
+                  size={datum.sizelink.size}
+                  value={datum.sizelink.size}
                   fontSize={this.props.textSize}
-                  onSelect={() => this.updateSize(datum.url)}
+                  onSelect={() => this.updateSize(datum.sizelink.url)}
                 />
               );
             })}

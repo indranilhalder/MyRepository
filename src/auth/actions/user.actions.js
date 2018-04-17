@@ -112,28 +112,6 @@ const GOOGLE_PLATFORM_URL = "//apis.google.com/js/platform.js";
 export const SOCIAL_CHANNEL_GOOGLE_PLUS = "G";
 export const SOCIAL_CHANNEL_FACEBOOK = "F";
 
-export function getFailureResponse(response) {
-  if (response.errors) {
-    return { status: true, message: response.errors[0].message };
-  }
-  if (response.error) {
-    return { status: true, message: response.error };
-  }
-  if (response.error_message) {
-    return { status: true, message: response.error_message };
-  }
-  if (
-    response.status === FAILURE ||
-    response.status === FAILURE_UPPERCASE ||
-    response.status === ERROR ||
-    response.status === FAILURE_LOWERCASE
-  ) {
-    return { status: true, message: response.message };
-  } else {
-    return { status: false };
-  }
-}
-
 export function loginUserRequest() {
   return {
     type: LOGIN_USER_REQUEST,
@@ -173,7 +151,7 @@ export function loginUser(userLoginDetails) {
       }
       const result = await api.post(url);
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -223,8 +201,9 @@ export function signUpUser(userObj) {
       );
 
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(showModal(SIGN_UP_OTP_VERIFICATION, userObj));
       dispatch(signUpUserSuccess());
@@ -269,9 +248,9 @@ export function otpVerification(otpDetails, userDetails) {
         }&password=${userDetails.password}&emailId=${userDetails.emailId}`
       );
       const resultJson = await result.json();
-
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.error}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(hideModal());
       return dispatch(otpVerificationSuccess(resultJson, userDetails.username));
@@ -313,8 +292,9 @@ export function forgotPassword(userDetails) {
         }&platformNumber=2&isPwa=true&username=${userDetails}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       // TODO: dispatch a modal here
       dispatch(showModal(FORGOT_PASSWORD_OTP_VERIFICATION, userDetails));
@@ -358,8 +338,9 @@ export function forgotPasswordOtpVerification(otpDetails, userDetails) {
         }&platformNumber=2&otp=${otpDetails}&isPwa=true&username=${userDetails}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       // TODO: dispatch a modal here
       dispatch(
@@ -407,8 +388,9 @@ export function resetPassword(userDetails) {
       }&otp=${userDetails.otp}`;
       const result = await api.post(url);
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       // TODO: dispatch a modal here
       dispatch(resetPasswordSuccess(resultJson));
@@ -449,8 +431,9 @@ export function getGlobalAccessToken() {
       );
       const resultJson = await result.json();
 
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       return dispatch(globalAccessTokenSuccess(resultJson));
@@ -493,8 +476,9 @@ export function refreshToken() {
         }&client_id=${CLIENT_ID}&client_secret=secret&grant_type=refresh_token`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       // TODO: dispatch a modal here
       return dispatch(refreshTokenSuccess(resultJson));
@@ -542,7 +526,7 @@ export function customerAccessToken(userDetails) {
         }`
       );
       const resultJson = await result.json();
-      const resultJsonStatus = getFailureResponse(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -707,8 +691,9 @@ export function generateCustomerLevelAccessTokenForSocialMedia(
         `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${userName}&social_token=${accessToken}&isSocialMedia=Y&social_channel=${socialChannel}&userId_param=${id}`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       return dispatch(customerAccessTokenSuccess(resultJson));
@@ -760,7 +745,7 @@ export function socialMediaRegistration(
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (resultJsonStatus) {
+      if (resultJsonStatus.status) {
         throw new Error(`${resultJsonStatus.message}`);
       }
       return dispatch(socialMediaRegistrationSuccess(resultJson));
@@ -803,8 +788,9 @@ export function socialMediaLogin(userName, platform, customerAccessToken) {
       );
       const resultJson = await result.json();
 
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       return dispatch(socialMediaLoginSuccess(resultJson, platform));
@@ -848,8 +834,9 @@ export function getCustomerProfile() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       // TODO: dispatch a modal here
       dispatch(getCustomerProfileSuccess(resultJson));
