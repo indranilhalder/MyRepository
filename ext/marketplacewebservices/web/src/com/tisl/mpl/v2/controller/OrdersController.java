@@ -66,6 +66,7 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -156,7 +157,7 @@ import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;   
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 
 /**
  * Web Service Controller for the ORDERS resource. Most methods check orders of the user. Methods require authentication
@@ -227,9 +228,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 * 
+	 *
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 * 
+	 *
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -473,9 +474,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 * 
+	 *
 	 * @param orderNumber
-	 * 
+	 *
 	 * @param lineID
 	 */
 
@@ -1194,6 +1195,7 @@ public class OrdersController extends BaseCommerceController
 					mplCategoryHierarchydata.setCategory_id(catdata.getCode());
 					mplCategoryHierarchydata.setCategory_name(catdata.getName());
 					list.add(mplCategoryHierarchydata);
+					Collections.reverse(list);
 				}
 			}
 		}
@@ -1245,11 +1247,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
