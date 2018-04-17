@@ -12,25 +12,16 @@ export default class ColourSelector extends React.Component {
   }
   updateColour(productUrl, selectedColour, currentColour) {
     if (selectedColour !== currentColour) {
-      if (this.props.history.location.state) {
-        if (this.props.history.location.state.isSizeSelected) {
-          this.props.history.push({
-            pathname: productUrl,
-            state: { isSizeSelected: true }
-          });
-        } else {
-          this.props.history.push({ pathname: productUrl });
-        }
-      } else {
-        this.props.history.push({ pathname: productUrl });
-      }
-    }
-
-    if (this.props.history.location.state) {
-      if (this.props.history.location.state.isSizeSelected) {
+      if (
+        this.props.history.location.state &&
+        this.props.history.location.state.isSizeSelected
+      ) {
         this.props.history.push({
+          pathname: productUrl,
           state: { isSizeSelected: true }
         });
+      } else {
+        this.props.history.push({ pathname: productUrl });
       }
     }
   }
