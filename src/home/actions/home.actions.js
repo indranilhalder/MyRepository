@@ -308,9 +308,6 @@ export function homeFeedBackUp() {
         dispatch(new Error(failureResponse.message));
       }
 
-      console.log("RESULT JSON");
-      console.log(resultJson);
-
       dispatch(homeFeedBackupSuccess(resultJson.items));
     } catch (e) {
       dispatch(homeFeedBackUpFailure(e.message));
@@ -373,16 +370,18 @@ export function homeFeed(brandIdOrCategoryId: null) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson}`);
       }
+
       let parsedResultJson = JSON.parse(resultJson.content);
+
       parsedResultJson = parsedResultJson.items;
 
+      dispatch(homeFeedSuccess(parsedResultJson, feedTypeRequest));
       setDataLayer(
         ADOBE_HOME_TYPE,
         null,
         getState().icid.value,
         getState().icid.icidType
       );
-      dispatch(homeFeedSuccess(parsedResultJson, feedTypeRequest));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
     }
@@ -500,7 +499,13 @@ export function getComponentData(
       let postData;
       let result;
       let resultJson;
-
+      delay(() => {
+        const isFetchUrlDataLoading = getState().home.homeFeed[positionInFeed]
+          .loading;
+        if (isFetchUrlDataLoading && backUpUrl) {
+          dispatch(getComponentDataBackUp(backUpUrl, positionInFeed));
+        }
+      }, 1);
       if (postParams && postParams.widgetPlatform === MSD_WIDGET_PLATFORM) {
         const widgetSpecificPostData = getMsdPostData(type);
 
@@ -542,14 +547,6 @@ export function getComponentData(
 
         dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
-        delay(() => {
-          const isFetchUrlDataLoading = getState().home.homeFeed[positionInFeed]
-            .loading;
-          if (isFetchUrlDataLoading && backUpUrl) {
-            dispatch(getComponentDataBackUp(backUpUrl, positionInFeed));
-          }
-        }, ADOBE_TARGET_DELAY);
-
         const mcvId = await getMcvId();
         resultJson = await api.postAdobeTargetUrl(
           fetchURL,

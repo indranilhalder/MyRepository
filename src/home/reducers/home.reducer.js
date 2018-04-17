@@ -78,7 +78,8 @@ const home = (
       });
 
     case homeActions.HOME_FEED_SUCCESS:
-      if (state.useBackUpData) {
+      console.log("HOME FEED SUCCESS");
+      if (!state.useBackUpData) {
         homeFeedClonedData = cloneDeep(action.data);
         homeFeedData = map(homeFeedClonedData, subData => {
           // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
