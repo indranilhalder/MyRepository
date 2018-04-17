@@ -12,6 +12,7 @@
 			<property qualifier="ThemeProductWidgetComponent.brandLogo" />
 			<property qualifier="ThemeProductWidgetComponent.btnText" />
 			<property qualifier="ThemeProductWidgetComponent.title" />
+			<property qualifier="ThemeProductWidgetComponent.webURL" />
 			<property qualifier="ThemeProductWidgetComponent.items" />
 	</group>
 

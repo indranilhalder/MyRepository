@@ -24,10 +24,13 @@
 					<td><div style="height:6px"/></td>
 				</tr>
 				<tr>
+					<td><cockpit code="property" value="ThemeProductWidgetComponent.webURL"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
 					<td><cockpit code="property" value="ThemeProductWidgetComponent.items"/></td>
 					<td><div style="height:6px"/></td>
 				</tr>
-
 			</tbody>
 		</table>
 	]]>
