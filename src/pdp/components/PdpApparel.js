@@ -190,7 +190,6 @@ export default class PdpApparel extends React.Component {
     }
 
     if (productData) {
-      console.log(productData);
       let price = "";
       let discountPrice = "";
       if (productData.mrpPrice) {
