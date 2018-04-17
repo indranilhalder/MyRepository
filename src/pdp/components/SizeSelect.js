@@ -9,10 +9,6 @@ export default class SizeSelect extends React.Component {
     }
   }
   render() {
-    // if (this.props.selected) {
-    //   console.log(this.props.size);
-    // }
-
     return (
       <div
         className={this.props.selected ? styles.baseActive : styles.base}
