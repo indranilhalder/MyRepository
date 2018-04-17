@@ -16,3 +16,25 @@
   width: 100%;
   height: auto;
 }
+.answer {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 14px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table td,
+table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+}

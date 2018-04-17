@@ -52,7 +52,12 @@ export default class Accordion extends React.Component {
             className={activeheader}
             style={{ fontSize: this.props.headerFontSize }}
           >
-            {this.props.text}
+            {this.props.text && <div>{this.props.text}</div>}
+            {this.props.faqQuestion && (
+              <div
+                dangerouslySetInnerHTML={{ __html: this.props.faqQuestion }}
+              />
+            )}
             <div className={iconActive} />
           </div>
         </div>

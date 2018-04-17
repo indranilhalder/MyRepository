@@ -1,15 +1,32 @@
 import React from "react";
 import styles from "./FaqPage.css";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import Accordion from "../../general/components/Accordion.js";
 export default class FaqPage extends React.Component {
+  renderQuestionAnswer(dautm) {
+    const tm = JSON.parse(dautm);
+    console.log(tm);
+    return (
+      tm &&
+      tm.map((val, i) => {
+        return (
+          <Accordion
+            faqQuestion={val.question_component}
+            activeBackground="#f8f8f8"
+          >
+            <div dangerouslySetInnerHTML={{ __html: val.answer }} />
+          </Accordion>
+        );
+      })
+    );
+  }
+
   render() {
-    var tm = this.props.items.cmsTextComponent.content;
-    let data = JSON.parse(tm);
-    console.log(data);
     return (
       <div className={styles.base}>
         {this.props.items &&
           this.props.items.map((val, i) => {
+            console.log(this.props.items);
             return (
               <div>
                 {val.componentName === "cmsParagraphComponent" &&
@@ -37,6 +54,8 @@ export default class FaqPage extends React.Component {
                       />
                     </div>
                   )}
+                {val.componentName === "cmsTextComponent" &&
+                  this.renderQuestionAnswer(val.cmsTextComponent.content)}
               </div>
             );
           })}
