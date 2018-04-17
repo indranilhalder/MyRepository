@@ -28,7 +28,11 @@ import {
 } from "../../general/modal.actions.js";
 import moment from "moment";
 import { getPaymentModes } from "../../cart/actions/cart.actions.js";
-import { getMcvId } from "../../lib/adobeUtils";
+import {
+  getMcvId,
+  setDataLayerForMyAccountDirectCalls,
+  ADOBE_MY_ACCOUNT_ORDER_RETURN
+} from "../../lib/adobeUtils";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
@@ -457,7 +461,7 @@ export function newReturnInitiateFailure(error) {
   };
 }
 
-export function newReturnInitial(returnDetails) {
+export function newReturnInitial(returnDetails, product) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -477,7 +481,11 @@ export function newReturnInitial(returnDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayerForMyAccountDirectCalls(
+        ADOBE_MY_ACCOUNT_ORDER_RETURN,
+        product,
+        returnDetails
+      );
       dispatch(newReturnInitiateSuccess(resultJson));
     } catch (e) {
       dispatch(newReturnInitiateFailure(e.message));
