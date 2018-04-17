@@ -3,6 +3,9 @@ import styles from "./FaqPage.css";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 export default class FaqPage extends React.Component {
   render() {
+    var tm = this.props.items.cmsTextComponent.content;
+    let data = JSON.parse(tm);
+    console.log(data);
     return (
       <div className={styles.base}>
         {this.props.items &&
@@ -10,16 +13,11 @@ export default class FaqPage extends React.Component {
             return (
               <div>
                 {val.componentName === "cmsParagraphComponent" &&
-                  !val.cmsParagraphComponent.content.includes(
-                    "collapsible-panels"
-                  ) && (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: val.cmsParagraphComponent.content
-                      }}
-                    />
+                  val.cmsParagraphComponent && (
+                    <div className={styles.header}>
+                      {val.cmsParagraphComponent.content}
+                    </div>
                   )}
-
                 {val.componentName === "accountNavigationComponent" &&
                   val.accountNavigationComponent && (
                     <div className={styles.navigationHolder}>
@@ -38,18 +36,6 @@ export default class FaqPage extends React.Component {
                         }}
                       />
                     </div>
-                  )}
-                {val.componentName === "cmsParagraphComponent" &&
-                  val.cmsParagraphComponent.content.includes(
-                    "collapsible-panels"
-                  ) && (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: val.cmsParagraphComponent.content.search(
-                          "collapsible-panels"
-                        )
-                      }}
-                    />
                   )}
               </div>
             );
