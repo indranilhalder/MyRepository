@@ -96,8 +96,6 @@ import javax.annotation.Resource;
 
 import net.sourceforge.pmd.util.StringUtil;
 
-import net.sourceforge.pmd.util.StringUtil;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -613,7 +611,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public WebSerResponseWsDTO addProductToCart(final String productCode, final String cartId, final String quantity,
-			final String USSID, final boolean addedToCartWl, final String channel, final boolean isPwa) throws InvalidCartException,CommerceCartModificationException
+			final String USSID, final boolean addedToCartWl, final String channel, final boolean isPwa) throws InvalidCartException,
+			CommerceCartModificationException
 	{
 		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		final long quant = Long.parseLong(quantity);
@@ -1070,6 +1069,909 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 		return cartDataDetails;
+	}
+
+	/**
+	 * @param abstractOrderModel
+	 * @param deliveryModeDataMap
+	 * @param isPinCodeCheckRequired
+	 * @param resetRequired
+	 * @param pincodeList
+	 * @param pincode
+	 * @return
+	 * @throws EtailBusinessExceptions
+	 * @throws EtailNonBusinessExceptions
+	 */
+	public List<GetWishListProductWsDTO> productDetailsdtm(final AbstractOrderModel abstractOrderModel,
+			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
+			final boolean resetRequired, final List<PinCodeResponseData> pincodeList, final String pincode)
+			throws EtailBusinessExceptions, EtailNonBusinessExceptions
+
+	{
+
+		String mediaFormat = null;
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug(String.format("productDetails: |  cartId : %s | isPinCodeCheckRequired %s", abstractOrderModel.getCode(),
+					Boolean.valueOf(isPinCodeCheckRequired)));
+		}
+
+		final List<GetWishListProductWsDTO> gwlpList = new ArrayList<>();
+		final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
+		ProductData productData = null;
+		final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<>();
+		List<PromotionResultModel> promotionResult = null;
+		try
+		{
+
+
+			if (CollectionUtils.isNotEmpty(abstractOrderModel.getAllPromotionResults()))
+			{
+				promotionResult = new ArrayList(abstractOrderModel.getAllPromotionResults());
+			}
+
+			//Removed checkedPincode
+			//	if (null != finalCart.getEntries() && !finalCart.getEntries().isEmpty())
+			/* TISPT- 96 { */
+			for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderModel.getEntries())
+			{
+
+				productData = productFacade.getProductForOptions(abstractOrderEntry.getProduct(),
+						Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES));
+				for (final CategoryData catData : productData.getCategories())
+				{
+					List<MplCategoryHierarchydata> list = new ArrayList();
+					if (catData.getCode().contains(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
+					{
+						list = constructCategoryHierarchy(list, catData);
+						Collections.reverse(list);
+						gwlp.setCategoryHierarchy(list);
+						break;
+					}
+				}
+				//TISJEW-3517
+				boolean isExchangeApplicable = false;
+				int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+
+				//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
+				if (MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
+				{
+					maximum_configured_quantiy = siteConfigService.getInt(
+							MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+				}
+				//SDI-4069 ends
+
+
+				//TPR-1083
+				if (StringUtils.isNotEmpty(abstractOrderEntry.getExchangeId()))
+				{
+					gwlp.setExchangeId(abstractOrderEntry.getExchangeId());
+					if (StringUtils.isNotEmpty(pincode) && exchangeService.isBackwardServiceble(pincode))
+					{
+						gwlp.setExchangeMessage(MarketplacewebservicesConstants.EXCHANGEAPPLIED);
+						//TISJEW-3517
+						isExchangeApplicable = true;
+					}
+					else
+					{
+						gwlp.setExchangeMessage(MarketplacewebservicesConstants.EXCHANGENOTAPPLIED
+								+ MarketplacecommerceservicesConstants.SINGLE_SPACE + pincode);
+					}
+				}
+				if (null != abstractOrderEntry.getDeliveryPointOfService())
+				{
+					PointOfServiceData pointOfServiceData = null;
+					pointOfServiceData = pointOfServiceConverter.convert(abstractOrderEntry.getDeliveryPointOfService());
+					gwlp.setStoreDetails(mplDataMapper.map(pointOfServiceData, PointOfServiceWsDTO.class, "DEFAULT"));
+				}
+				if (null != abstractOrderEntry.getEntryNumber())
+				{
+					gwlp.setEntryNumber(abstractOrderEntry.getEntryNumber().toString());
+				}
+				if (StringUtils.isNotEmpty(abstractOrderEntry.getProduct().getCode()))
+				{
+					gwlp.setProductcode(abstractOrderEntry.getProduct().getCode());
+				}
+				if (StringUtils.isNotEmpty(abstractOrderEntry.getProduct().getName()))
+				{
+					gwlp.setProductName(abstractOrderEntry.getProduct().getName());
+				}
+				if (null != productData.getBrand() && StringUtils.isNotEmpty(productData.getBrand().getBrandname()))
+				{
+					gwlp.setProductBrand(productData.getBrand().getBrandname());
+				}
+
+				//TPR-1083
+				if (StringUtils.isNotEmpty(abstractOrderEntry.getExchangeId()))
+				{
+					gwlp.setMaxQuantityAllowed(MarketplacewebservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_FOR_EXCHANGE);
+				}
+				//TPR-6117 STARTS
+				else if (abstractOrderEntry.getProduct().getMaxOrderQuantity() != null
+						&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() > 0
+						&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
+				{
+					gwlp.setMaxQuantityAllowed(abstractOrderEntry.getProduct().getMaxOrderQuantity().toString());
+				}
+				else
+				{
+					//final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+					gwlp.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy));
+				}
+
+				//TPR-6117 Ends
+
+				//Luxury LW-174
+				if (null != productData.getLuxIndicator()
+						&& (MarketplaceCoreConstants.LUXURY).equalsIgnoreCase(productData.getLuxIndicator()))
+				{
+					gwlp.setIsLuxury(productData.getLuxIndicator());
+					mediaFormat = MarketplacecommerceservicesConstants.LUXURY_CARTICON;
+				}
+				else if ((null == productData.getLuxIndicator())
+						|| (null != productData.getLuxIndicator() && (MarketplaceCoreConstants.Marketplace)
+								.equalsIgnoreCase(productData.getLuxIndicator())))
+				{
+					gwlp.setIsLuxury(MarketplaceCoreConstants.Marketplace);
+					mediaFormat = MarketplacecommerceservicesConstants.THUMBNAIL;
+				}
+
+				//Luxury LW-174 Ends
+
+				if (null != abstractOrderEntry.getGiveAway() && abstractOrderEntry.getGiveAway().booleanValue())
+				{
+					gwlp.setIsGiveAway(MarketplacecommerceservicesConstants.Y);
+				}
+				else
+				{
+					gwlp.setIsGiveAway(MarketplacecommerceservicesConstants.N);
+				}
+				if (CollectionUtils.isNotEmpty(abstractOrderEntry.getAssociatedItems()))
+				{
+					gwlp.setAssociatedBaseProducts(abstractOrderEntry.getAssociatedItems());
+				}
+				if (StringUtils.isNotEmpty(productData.getRootCategory()))
+				{
+					gwlp.setRootCategory(productData.getRootCategory());
+				}
+				else
+				{
+					LOG.debug("*************** Mobile webservice root category is empty ********************");
+				}
+
+				final String catId = mplProductWebService.getCategoryCodeOfProduct(productData);
+				if (null != catId && !catId.isEmpty())
+				{
+					gwlp.setProductCategoryId(catId);
+				}
+				if (CollectionUtils.isNotEmpty(productData.getImages()))
+				{
+					//Set product image(thumbnail) url
+					for (final ImageData img : productData.getImages())
+					{
+						if (null != img && null != img.getUrl() && StringUtils.isNotEmpty(img.getFormat())
+						//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
+								&& img.getFormat().equalsIgnoreCase(mediaFormat))
+						{
+							gwlp.setImageURL(img.getUrl());
+						}
+
+					}
+				}
+				else
+				{
+					LOG.debug("*************** Mobile webservice images are empty ********************");
+				}
+
+				if (StringUtils.isNotEmpty(productData.getColour()))
+				{
+					gwlp.setColor(productData.getColour());
+				}
+				else
+				{
+					LOG.debug("*************** Mobile webservice color is empty ********************");
+				}
+				if (StringUtils.isNotEmpty(productData.getSize()))
+				{
+					gwlp.setSize(productData.getSize());
+				}
+				else
+				{
+					LOG.debug("*************** Mobile webservice size is empty ********************");
+				}
+				/* capacity */
+				if (abstractOrderEntry.getProduct() instanceof PcmProductVariantModel)
+				{
+					final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) abstractOrderEntry.getProduct();
+					final String selectedCapacity = selectedVariantModel.getCapacity();
+					final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
+					if (null != baseProduct.getVariants() && null != selectedCapacity)
+					{
+						for (final VariantProductModel vm : baseProduct.getVariants())
+						{
+							final PcmProductVariantModel pm = (PcmProductVariantModel) vm;
+							if (!selectedCapacity.isEmpty() && null != pm.getCapacity() && selectedCapacity.equals(pm.getCapacity()))
+							{
+
+								gwlp.setCapacity(pm.getCapacity());
+							}
+							else
+							{
+								LOG.debug("*************** Mobile webservice product capacity empty********************");
+							}
+						}
+					}
+				}
+
+				/* capacity */
+				if (StringUtils.isNotEmpty(abstractOrderEntry.getSelectedUSSID()))
+				{
+					gwlp.setUSSID(abstractOrderEntry.getSelectedUSSID());
+
+				}
+
+				if (null != abstractOrderEntry.getQuantity() && StringUtils.isNotEmpty((abstractOrderEntry.getQuantity().toString())))
+				{
+					gwlp.setQtySelectedByUser(abstractOrderEntry.getQuantity().toString());
+
+				}
+
+				final Predicate<SellerInformationData> pred1 = o -> o != null;
+				//final Predicate<SellerInformationData> pred2 = o -> o.getUssid().equals(abstractOrderEntry.getSelectedUSSID());
+
+				//for jewellery fetching psmussid
+				Predicate<SellerInformationData> pred2 = o -> o != null;
+				if (StringUtils.equalsIgnoreCase(abstractOrderEntry.getProduct().getProductCategoryType(),
+						MarketplacewebservicesConstants.FINEJEWELLERY))
+
+				{
+					final String ussid = mplJewelleryService.getJewelleryInfoByUssid(abstractOrderEntry.getSelectedUSSID()).get(0)
+							.getPCMUSSID();
+					LOG.debug("pcm ussid : " + ussid);
+					pred2 = o -> o.getUssid().equals(ussid);
+				}
+				else
+				{
+					pred2 = o -> o.getUssid().equals(abstractOrderEntry.getSelectedUSSID());
+				}
+				//Ends for jewellery
+
+				if (null != productData.getSeller() && productData.getSeller().size() > 0)
+				{
+					productData.getSeller().stream().filter(pred1.and(pred2)).findFirst().ifPresent(c -> {
+						gwlp.setSellerId(c.getSellerID());
+						gwlp.setSellerName(c.getSellername());
+						gwlp.setFullfillmentType(c.getFullfillment());
+					});
+				}
+				if (null != productData.getSeller() && productData.getSeller().size() > 0)
+				{
+					productData.getSeller().stream().filter(pred1.and(pred2)).findFirst().ifPresent(c -> {
+						gwlp.setSellerId(c.getSellerID());
+						gwlp.setSellerName(c.getSellername());
+						gwlp.setFullfillmentType(c.getFullfillment());
+					});
+				}
+				if (null != abstractOrderEntry.getFulfillmentMode())
+				{
+					gwlp.setFullfillmentType(abstractOrderEntry.getFulfillmentMode());
+				}
+				///Delivery mode ///
+				final List<MobdeliveryModeWsDTO> deliveryList = new ArrayList<MobdeliveryModeWsDTO>();
+				MobdeliveryModeWsDTO delivery = null;
+				if (isPinCodeCheckRequired)
+				{
+					try
+					{
+
+						if (null != deliveryModeDataMap && !deliveryModeDataMap.isEmpty())
+						{
+							for (final Map.Entry<String, List<MarketplaceDeliveryModeData>> entry : deliveryModeDataMap.entrySet())
+							{
+								if (entry.getValue() != null && null != entry.getKey() && null != abstractOrderEntry.getEntryNumber()
+										&& entry.getKey().equalsIgnoreCase(abstractOrderEntry.getEntryNumber().toString()))
+								{
+									for (final MarketplaceDeliveryModeData modeData : entry.getValue())
+									{
+
+										if (modeData.getSellerArticleSKU().equalsIgnoreCase(abstractOrderEntry.getSelectedUSSID()))
+										{
+											//TISUT-1795 TISST-13632
+											deliveryModeList.add(modeData);
+										}
+									}
+
+									break;
+								}
+							}
+						}
+						//	if (deliveryModeList.size() >= 1)
+						//	{ TISPT-96
+						for (final MarketplaceDeliveryModeData deliveryMode : deliveryModeList)
+						{
+							if (null != abstractOrderEntry.getSelectedUSSID() && !abstractOrderEntry.getSelectedUSSID().isEmpty()
+									&& null != deliveryMode.getSellerArticleSKU() && !deliveryMode.getSellerArticleSKU().isEmpty()
+									&& abstractOrderEntry.getSelectedUSSID().equalsIgnoreCase(deliveryMode.getSellerArticleSKU()))
+							{
+								delivery = new MobdeliveryModeWsDTO();
+								if (StringUtils.isNotEmpty(deliveryMode.getCode()))
+								{
+									delivery.setCode(deliveryMode.getCode());
+								}
+								if (StringUtils.isNotEmpty(deliveryMode.getName()))
+								{
+									delivery.setName(deliveryMode.getName());
+								}
+
+								//SDI-4197 starts
+								if (null != deliveryMode.getPriority())
+								{
+									delivery.setPriority(deliveryMode.getPriority().intValue());
+								}
+								//SDI-4197 ends
+								//TPR-4421
+								if (null != deliveryMode.getDeliveryCost() && null != deliveryMode.getDeliveryCost().getValue())
+								{
+
+
+
+
+									delivery.setDeliveryCost(String.valueOf(deliveryMode.getDeliveryCost().getValue()
+											.setScale(2, BigDecimal.ROUND_HALF_UP)));
+								}
+								else
+								{
+									//	for defect TISEE-5534
+									if (null != deliveryMode.getDeliveryCost() && null != deliveryMode.getDeliveryCost().getValue())
+									{
+
+
+										delivery.setDeliveryCost(String.valueOf(deliveryMode.getDeliveryCost().getValue()
+												.setScale(2, BigDecimal.ROUND_HALF_UP)));
+									}
+								}
+								if (StringUtils.isNotEmpty(deliveryMode.getDescription()))
+								{
+									delivery.setDesc(deliveryMode.getDescription());
+								}
+								deliveryList.add(delivery);
+							}
+						}
+						//}// TISPT-96 comments
+					}
+					catch (final Exception e)
+					{
+						LOG.error(MarketplacewebservicesConstants.CART_PINCODE_ERROR_OMS_CHECK, e);
+					}
+				}
+				else
+				{
+					Collection<MplZoneDeliveryModeValueModel> deliverymodeList = null;
+					try
+					{
+						if (null != abstractOrderEntry.getMplZoneDeliveryModeValue())
+						{
+							deliverymodeList = abstractOrderEntry.getMplZoneDeliveryModeValue();
+							for (final MplZoneDeliveryModeValueModel deliveryMode : deliverymodeList)
+							{
+								delivery = new MobdeliveryModeWsDTO();
+								if (null != deliveryMode.getDeliveryMode()
+										&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()))
+								{
+									delivery.setCode(deliveryMode.getDeliveryMode().getCode());
+
+									//SDI-4197 starts
+									if (null != deliveryMode.getDeliveryMode().getPriority())
+									{
+										delivery.setPriority(deliveryMode.getDeliveryMode().getPriority().intValue());
+									}
+									//SDI-4197 ends
+
+									//TISEE-950
+									String startValue = null;
+									String endValue = null;
+									if (null != deliveryMode.getDeliveryMode())
+									{
+										startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode.getDeliveryMode()
+
+
+										.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+
+										endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
+
+
+
+										.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+
+									}
+									if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode())
+											&& StringUtils.isNotEmpty(startValue) && StringUtils.isNotEmpty(endValue)
+											&& StringUtils.isNotEmpty(deliveryMode.getSellerArticleSKU())
+											&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()))
+									{
+
+
+										delivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
+												deliveryMode.getSellerArticleSKU(), deliveryMode.getDeliveryMode().getCode(), startValue,
+												endValue));
+									}
+									if (null != deliveryMode.getDeliveryMode()
+											&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getName()))
+									{
+										delivery.setName(deliveryMode.getDeliveryMode().getName());
+									}
+
+
+									//TPR-4421
+									if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
+											&& gwlp.getFullfillmentType().equalsIgnoreCase("tship"))
+									{
+										delivery.setDeliveryCost("0.0");
+									}
+									else
+
+
+
+									{
+										if (LOG.isDebugEnabled())
+										{
+											LOG.debug(LOG1 + deliveryMode.getValue().toString() + FOR + gwlp.getFullfillmentType());
+										}
+										if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
+												&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
+										{
+											delivery.setDeliveryCost(deliveryMode.getValue().toString());
+
+										}
+									}
+									//SDI-4197 starts
+									if (null != deliveryMode.getDeliveryMode().getPriority())
+									{
+										delivery.setPriority(deliveryMode.getDeliveryMode().getPriority().intValue());
+									}
+									//SDI-4197 ends
+
+								}
+
+								deliveryList.add(delivery);
+							}
+						}
+						else
+						{
+							final String ussid = abstractOrderEntry.getSelectedUSSID();
+							if (ussid != null && !ussid.isEmpty())
+							{
+								abstractOrderEntry.setSelectedUSSID(ussid);
+								final List<MplZoneDeliveryModeValueModel> MplZoneDeliveryModeValueModel = getMplDeliveryCostService()
+										.getDeliveryModesAndCost(MarketplacecommerceservicesConstants.INR, ussid);
+								abstractOrderEntry.setMplZoneDeliveryModeValue(MplZoneDeliveryModeValueModel);
+								modelService.save(abstractOrderEntry);
+							}
+
+							deliverymodeList = abstractOrderEntry.getMplZoneDeliveryModeValue();
+							for (final MplZoneDeliveryModeValueModel deliveryMode : deliverymodeList)
+							{
+								delivery = new MobdeliveryModeWsDTO();
+								if (null != deliveryMode.getDeliveryMode()
+										&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()))
+								{
+									delivery.setCode(deliveryMode.getDeliveryMode().getCode());
+
+									//TISEE-950
+									String startValue = null;
+									String endValue = null;
+									if (null != deliveryMode.getDeliveryMode())
+									{
+										startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode.getDeliveryMode()
+
+
+										.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+
+										endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
+
+
+
+										.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+
+									}
+									if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode())
+											&& StringUtils.isNotEmpty(startValue) && StringUtils.isNotEmpty(endValue)
+											&& StringUtils.isNotEmpty(deliveryMode.getSellerArticleSKU())
+											&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()))
+									{
+
+
+										delivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
+												deliveryMode.getSellerArticleSKU(), deliveryMode.getDeliveryMode().getCode(), startValue,
+												endValue));
+									}
+									if (null != deliveryMode.getDeliveryMode()
+											&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getName()))
+									{
+										delivery.setName(deliveryMode.getDeliveryMode().getName());
+									}
+
+									//TPR-4421
+									if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
+											&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP))
+									{
+										if (LOG.isDebugEnabled())
+										{
+											LOG.debug("************ Mobile webservice Tship product ************* Delivery cost 0"
+													+ gwlp.getFullfillmentType());
+										}
+										delivery.setDeliveryCost(MarketplacecommerceservicesConstants.ZeroDeliveryCost);
+									}
+									else
+
+
+
+									{
+										if (LOG.isDebugEnabled())
+										{
+											LOG.debug(LOG1 + deliveryMode.getValue().toString() + FOR + gwlp.getFullfillmentType());
+										}
+										if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
+												&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
+										{
+											delivery.setDeliveryCost(deliveryMode.getValue().toString());
+
+										}
+									}
+									//SDI-4197 starts
+									if (null != deliveryMode.getDeliveryMode().getPriority())
+									{
+										delivery.setPriority(deliveryMode.getDeliveryMode().getPriority().intValue());
+									}
+									//SDI-4197 ends
+
+								}
+								deliveryList.add(delivery);
+
+							}
+						}
+
+
+					}
+					catch (final Exception e)
+					{
+						LOG.error(MarketplacewebservicesConstants.CART_PINCODE_ERROR, e);
+						//throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9041);
+					}
+				}
+				if (!deliveryList.isEmpty())
+				{
+					//SDI-4197 starts
+					deliveryList.sort(Comparator.comparing(MobdeliveryModeWsDTO::getPriority));
+					//SDI-4197 ends
+					gwlp.setElligibleDeliveryMode(deliveryList);
+				}
+				if (!resetRequired)
+				{
+					MobdeliveryModeWsDTO selectedDelivery = null;
+					final MplZoneDeliveryModeValueModel val = abstractOrderEntry.getMplDeliveryMode();
+					if (null != val && null != val.getDeliveryMode())
+					{
+						selectedDelivery = new MobdeliveryModeWsDTO();
+						if (null != val.getDeliveryMode() && StringUtils.isNotEmpty(val.getDeliveryMode().getCode()))
+						{
+							selectedDelivery.setCode(val.getDeliveryMode().getCode());
+						}
+						if (null != val.getDeliveryMode() && StringUtils.isNotEmpty(val.getDeliveryMode().getName()))
+						{
+							selectedDelivery.setName(val.getDeliveryMode().getName());
+						}
+
+						//TISEE-950
+						String startValue = null;
+						String endValue = null;
+						//IQA Code review Fix
+						if (null != val.getDeliveryMode())
+						{
+
+							startValue = val.getDeliveryMode().getStart() != null ? val.getDeliveryMode().getStart().toString()
+									: MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+
+							endValue = val.getDeliveryMode().getEnd() != null ? val.getDeliveryMode().getEnd().toString()
+									: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+
+							if (StringUtils.isNotEmpty(val.getSellerArticleSKU()) && StringUtils.isNotEmpty(startValue)
+									&& StringUtils.isNotEmpty(endValue) && StringUtils.isNotEmpty(val.getDeliveryMode().getCode()))
+							{
+								selectedDelivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
+										val.getSellerArticleSKU(), val.getDeliveryMode().getCode(), startValue, endValue));
+							}
+
+						}
+
+						//TPR-4421
+						if (null != gwlp.getFullfillmentType() && !gwlp.getFullfillmentType().isEmpty()
+								&& gwlp.getFullfillmentType().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP)
+								&& delivery != null)
+						{
+							delivery.setDeliveryCost(MarketplacecommerceservicesConstants.ZeroDeliveryCost);
+						}
+						else
+
+
+						{
+
+							if (null != abstractOrderEntry.getCurrDelCharge())
+
+							{
+
+								selectedDelivery.setDeliveryCost(String.valueOf(abstractOrderEntry.getCurrDelCharge()));
+								if (LOG.isDebugEnabled())
+								{
+									LOG.debug(LOG1 + abstractOrderEntry.getCurrDelCharge() + FOR + gwlp.getFullfillmentType());
+								}
+							}
+
+						}
+					}
+					if (null != selectedDelivery)
+					{
+						gwlp.setSelectedDeliveryMode(selectedDelivery);
+					}
+				}
+
+				//Set the price
+				double entryPrice = 0;
+				if (null != abstractOrderEntry.getTotalMrp() && null != abstractOrderEntry.getQuantity())
+				{
+					//entryPrice = abstractOrderEntry.getBasePrice().doubleValue() * abstractOrderEntry.getQuantity().doubleValue();
+					//setting mrp here--tpr-3823
+					entryPrice = abstractOrderEntry.getTotalMrp().doubleValue();
+
+				}
+				final Double price = new Double(entryPrice);
+				gwlp.setPrice(price);
+
+				if (null != abstractOrderEntry.getTotalPrice()
+						&& Double.compare(entryPrice, abstractOrderEntry.getTotalPrice().doubleValue()) != 0)
+				{
+					gwlp.setOfferPrice(abstractOrderEntry.getTotalPrice().toString());
+
+				}
+
+				if (null != abstractOrderEntry.getNetAmountAfterAllDisc()
+						&& abstractOrderEntry.getNetAmountAfterAllDisc().doubleValue() > 0.0D)
+				{
+					final PriceData cartLevelDisc = discountUtility.createPrice(abstractOrderModel,
+							Double.valueOf(abstractOrderEntry.getNetAmountAfterAllDisc().doubleValue()));
+					if (null != cartLevelDisc && null != cartLevelDisc.getValue())
+					{
+						gwlp.setCartLevelDiscount(String.valueOf(cartLevelDisc.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					}
+				}
+
+				final DecimalFormat df2 = new DecimalFormat(".##");
+				//product level Disc
+				if (null != abstractOrderEntry.getTotalPrice() && null != abstractOrderEntry.getTotalProductLevelDisc()
+						&& abstractOrderEntry.getTotalProductLevelDisc().doubleValue() > 0.0D)
+				{
+					gwlp.setProductLevelDisc(new Double(df2.format(abstractOrderEntry.getTotalPrice())));//ProductLevel Price after Discount
+
+					//product level Disc Value
+					//gwlp.setProductLevelDiscount(new Double(df2.format(abstractOrderEntry.getTotalProductLevelDisc())));
+					//Re-using this field for product discount number rather than difference  of two prices
+				}
+
+
+				//setting separately here productPerDiscDisplay for  all cases
+				if (null != abstractOrderEntry.getProductPerDiscDisplay())
+				{
+					//setting productPerDiscDisplay here--tpr-3823
+					gwlp.setProductLevelDiscount(new Double(df2.format(abstractOrderEntry.getProductPerDiscDisplay())));
+				}
+
+				MplPromotionData appliedResponseData = new MplPromotionData();
+				// promotion description
+				if (null != promotionResult && !promotionResult.isEmpty())
+				{
+					for (final PromotionResultModel promo : promotionResult)
+					{
+						if (null != promo)
+						{
+							if (promo.getPromotion() instanceof ProductPromotionModel)
+							{
+
+								final ProductPromotionModel productPromotion = (ProductPromotionModel) promo.getPromotion();
+								//								Collection<ProductModel> promoProducts = null;
+								//								if (null != productPromotion.getProducts() && !productPromotion.getProducts().isEmpty())
+								//								{
+								//									promoProducts = productPromotion.getProducts();
+								//								}
+								//								if (null != promoProducts && !promoProducts.isEmpty())
+								//								{
+								final String promoCode = abstractOrderEntry.getProductPromoCode();
+								if (StringUtils.isNotEmpty(promoCode)
+										&& StringUtils.equalsIgnoreCase(promoCode, promo.getPromotion().getCode()))
+								{
+									//									for (final ProductModel products : promoProducts)
+									//									{
+									//										if (null != products.getCode() && null != abstractOrderEntry.getProduct()
+									//												&& null != abstractOrderEntry.getProduct().getCode()
+									//												&& products.getCode().equals(abstractOrderEntry.getProduct().getCode()))
+									//										{
+
+									gwlp.setProductLevelDiscDesc(productPromotion.getDescription());
+									//////////////////////////
+
+									if (null != promo.getCertainty() && promo.getCertainty().floatValue() == 1.0F)
+									{
+										if (abstractOrderModel instanceof CartModel)
+										{
+											appliedResponseData = mplDiscountUtil.populateData(productPromotion,
+													(CartModel) abstractOrderModel);
+										}
+
+										if (null != appliedResponseData && null != appliedResponseData.getDiscountPrice())
+										{
+											gwlp.setDiscountPrice(appliedResponseData.getDiscountPrice());
+
+										}
+										if (null != appliedResponseData && null != appliedResponseData.getIsPercentage())
+										{
+											gwlp.setIsPercentage(appliedResponseData.getIsPercentage());
+										}
+										if (null != appliedResponseData && null != appliedResponseData.getPercentagePromotion())
+										{
+											gwlp.setPercentagePromotion(appliedResponseData.getPercentagePromotion());
+										}
+									}
+									///////////////////////////////
+									//}
+									//	}
+								}
+							}
+							if (promo.getPromotion() instanceof OrderPromotionModel)
+							{
+								final OrderPromotionModel orderPromotionModel = (OrderPromotionModel) promo.getPromotion();
+								if (null != orderPromotionModel && null != orderPromotionModel.getCode()
+										&& null != abstractOrderEntry.getCartPromoCode()
+										&& orderPromotionModel.getCode().equals(abstractOrderEntry.getCartPromoCode())
+										&& null != orderPromotionModel.getDescription())
+								{
+									gwlp.setCartLevelDiscDesc(orderPromotionModel.getDescription());
+									/////////////////////////
+									if (null != promo.getCertainty() && promo.getCertainty().floatValue() == 1.0F)
+									{
+										if (abstractOrderModel instanceof CartModel)
+										{
+											appliedResponseData = mplDiscountUtil.populateCartPromoData(orderPromotionModel,
+													(CartModel) abstractOrderModel);
+										}
+										if (null != appliedResponseData && null != appliedResponseData.getDiscountPrice())
+										{
+											gwlp.setCartDiscountPrice(appliedResponseData.getDiscountPrice());
+										}
+										if (null != appliedResponseData && null != appliedResponseData.getIsPercentage())
+										{
+											gwlp.setCartIsPercentage(appliedResponseData.getIsPercentage());
+										}
+										if (null != appliedResponseData && null != appliedResponseData.getPercentagePromotion())
+										{
+											gwlp.setCartPercentagePromotion(appliedResponseData.getPercentagePromotion());
+										}
+									}
+									////////////////////////
+
+								}
+							}
+						}
+
+					}
+				}
+
+				if (null != abstractOrderEntry.getGiveAway() && abstractOrderEntry.getGiveAway().booleanValue()
+						&& null != abstractOrderEntry.getBasePrice() && abstractOrderEntry.getBasePrice().doubleValue() > 0)
+				{
+					gwlp.setPrice(new Double(abstractOrderEntry.getBasePrice().doubleValue()));
+				}
+				//CAR-57
+				PinCodeResponseData obj = null;
+				if (null != pincodeList)
+				{
+					for (final PinCodeResponseData pinCodeObj : pincodeList)
+					{
+						if (pinCodeObj.getUssid().equalsIgnoreCase(gwlp.getUSSID()))
+						{
+							obj = new PinCodeResponseData();
+							if (null != pinCodeObj.getCod())
+							{
+								obj.setCod(pinCodeObj.getCod());
+							}
+							if (null != pinCodeObj.getIsCODLimitFailed())
+							{
+								obj.setIsCODLimitFailed(pinCodeObj.getIsCODLimitFailed());
+							}
+							if (null != pinCodeObj.getIsPrepaidEligible())
+							{
+								obj.setIsPrepaidEligible(pinCodeObj.getIsPrepaidEligible());
+							}
+							if (null != pinCodeObj.getIsServicable())
+							{
+								obj.setIsServicable(pinCodeObj.getIsServicable());
+							}
+							if (null != pinCodeObj.getUssid())
+							{
+								obj.setUssid(pinCodeObj.getUssid());
+							}
+							if (null != pinCodeObj.getValidDeliveryModes())
+							{
+								//TISUAT-6157
+								List<DeliveryDetailsData> deliveryModePriorityList = new ArrayList<DeliveryDetailsData>();
+								deliveryModePriorityList = arrangeDeliveryOnPriority(pinCodeObj.getUssid(),
+										pinCodeObj.getValidDeliveryModes());
+								//obj.setValidDeliveryModes(pinCodeObj.getValidDeliveryModes());
+								obj.setValidDeliveryModes(deliveryModePriorityList);
+							}
+							//TISJEW-3517
+							if (isExchangeApplicable)
+							{
+								obj.setExchangeServiceable(isExchangeApplicable);
+							}
+							break;
+						}
+
+					}
+				}
+				if (null != obj)
+				{
+					gwlp.setPinCodeResponse(obj);
+				}
+
+				/* Added in R2.3 TISRLUAT-812 start */
+				//SDI-3159 Condition added if CLICK N COLLECT is not there
+				//IQA Code Review Fix
+				final MplZoneDeliveryModeValueModel valNew = abstractOrderEntry.getMplDeliveryMode();
+				if (null != abstractOrderEntry.getEdScheduledDate()
+						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
+								.getDeliveryMode().getCode())))
+				{
+					gwlp.setScheduleDeliveryDate(abstractOrderEntry.getEdScheduledDate());
+				}
+				//SDI-3159 Condition added if CLICK N COLLECT is not there
+				if (null != abstractOrderEntry.getTimeSlotTo()
+						&& null != abstractOrderEntry.getTimeSlotFrom()
+						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
+								.getDeliveryMode().getCode())))
+				{
+					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
+							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
+				}
+				gwlpList.add(gwlp);
+
+				//	}
+			}
+			//}
+		}
+		catch (
+
+		final EtailBusinessExceptions e)
+
+		{
+			throw e;
+		}
+		catch (
+
+		final EtailNonBusinessExceptions e)
+
+		{
+			throw e;
+		}
+		catch (
+
+		final Exception e)
+
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		//End of AbstractOrderEntryModel for loop,Product Details
+		return gwlpList;
+
 	}
 
 	/**
@@ -2524,12 +3426,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (StringUtils.isNotEmpty(pincode))
 				{
 					//CAR-57
-					gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false, pinCodeRes, pincode);
+					gwlpList = productDetailsdtm(cartModel, deliveryModeDataMap, true, false, pinCodeRes, pincode);
 				}
 				else
 				{
 					//CAR-57
-					gwlpList = productDetails(cartModel, deliveryModeDataMap, false, false, pinCodeRes, pincode);
+					gwlpList = productDetailsdtm(cartModel, deliveryModeDataMap, false, false, pinCodeRes, pincode);
 				}
 
 
