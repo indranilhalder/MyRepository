@@ -46,7 +46,6 @@ const mapDispatchToProps = dispatch => {
       const facebookResponse = await dispatch(facebookLogin(isSignUp));
       if (facebookResponse.status === ERROR) {
         dispatch(singleAuthCallHasFailed(facebookResponse.error));
-        // dispatch(logout());
         return;
       }
       // if user doesn't have any email id linked to their fb account then
