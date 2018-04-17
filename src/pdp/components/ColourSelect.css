@@ -17,7 +17,7 @@
   margin: auto;
   line-height: 20px;
   display: inline-block;
-  background: url(../../general/components/img/3w.svg)no-repeat;
+  background: url(../components/img/tick.svg)no-repeat;
   background-position: center;
   background-size: contain;
   opacity: 0;
