@@ -281,6 +281,7 @@ export function homeFeedRequest(feedType) {
   };
 }
 export function homeFeedSuccess(data, feedType) {
+  console.log("HOME FEED SUCCESS");
   return {
     type: HOME_FEED_SUCCESS,
     status: SUCCESS,
@@ -348,8 +349,6 @@ export function homeFeed(brandIdOrCategoryId: null) {
 
         delay(() => {
           const isHomeFeedLoading = getState().home.loading;
-          console.log("IS HOME FEED LOADING");
-          console.log(isHomeFeedLoading);
           if (isHomeFeedLoading) {
             dispatch(homeFeedBackUp());
           }
@@ -499,13 +498,7 @@ export function getComponentData(
       let postData;
       let result;
       let resultJson;
-      delay(() => {
-        const isFetchUrlDataLoading = getState().home.homeFeed[positionInFeed]
-          .loading;
-        if (isFetchUrlDataLoading && backUpUrl) {
-          dispatch(getComponentDataBackUp(backUpUrl, positionInFeed));
-        }
-      }, 1);
+
       if (postParams && postParams.widgetPlatform === MSD_WIDGET_PLATFORM) {
         const widgetSpecificPostData = getMsdPostData(type);
 
@@ -547,6 +540,13 @@ export function getComponentData(
 
         dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
+        delay(() => {
+          const isFetchUrlDataLoading = getState().home.homeFeed[positionInFeed]
+            .loading;
+          if (isFetchUrlDataLoading && backUpUrl) {
+            dispatch(getComponentDataBackUp(backUpUrl, positionInFeed));
+          }
+        }, ADOBE_TARGET_DELAY);
         const mcvId = await getMcvId();
         resultJson = await api.postAdobeTargetUrl(
           fetchURL,

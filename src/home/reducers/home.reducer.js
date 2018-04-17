@@ -78,7 +78,6 @@ const home = (
       });
 
     case homeActions.HOME_FEED_SUCCESS:
-      console.log("HOME FEED SUCCESS");
       if (!state.useBackUpData) {
         homeFeedClonedData = cloneDeep(action.data);
         homeFeedData = map(homeFeedClonedData, subData => {
@@ -96,9 +95,9 @@ const home = (
           feedType: action.feedType
         });
       }
-      break;
+      return state;
     case homeActions.HOME_FEED_FAILURE:
-      if (state.useBackUpData) {
+      if (!state.useBackUpData) {
         return Object.assign({}, state, {
           status: action.status,
           error: action.error,
