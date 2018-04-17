@@ -18,12 +18,13 @@
   color: #000;
   font-size: 14px;
   font-family: regular;
+  padding-left: 40px;
 }
 .iconHolder {
   width: 30px;
   height: 30px;
   position: absolute;
-  right: 0;
+  right: 15px;
   top: 0;
   bottom: 0;
   margin: auto;
@@ -34,7 +35,7 @@
   height: 100%;
   position: absolute;
   background: url(./img/minus.svg)no-repeat;
-  background-size: auto 70%;
+  background-size: auto 55%;
   background-position: center;
   transition: 300ms;
   left: 0;
@@ -49,11 +50,11 @@
   height: 100%;
   position: absolute;
   background: url(./img/minus.svg)no-repeat;
-  background-size: auto 70%;
+  background-size: auto 55%;
   background-position: center;
   transition: 300ms;
-  left: 2px;
-  top: 0;
+  left: 1px;
+  top: 1px;
   right: 0;
   bottom: 0;
   margin: auto;
