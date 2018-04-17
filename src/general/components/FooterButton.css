@@ -1,22 +1,26 @@
-.base{
-  width:100%;
-  height:60px;
-  display:inline-block;
-  text-align:center;
-  vertical-align:middle;
-  line-height:60px;
+.base {
+  width: 100%;
+  height: 60px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 60px;
 }
-.iconHolder{
-  width:20px;
-  height:20px;
-  display:inline-block;
-  vertical-align:middle;
+.disabled {
+  composes: base;
+  opacity: 0.3;
+}
+.iconHolder {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
   margin-right: 10px;
 }
-.labelHolder{
-  width:auto;
-  height:20px;
-  line-height:20px;
-  display:inline-block;
-  vertical-align:middle;
+.labelHolder {
+  width: auto;
+  height: 20px;
+  line-height: 20px;
+  display: inline-block;
+  vertical-align: middle;
 }

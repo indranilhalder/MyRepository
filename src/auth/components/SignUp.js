@@ -26,8 +26,11 @@ class SignUp extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user) {
-      if (nextProps.user.isLoggedIn === true) {
+    if (nextProps.authCallsIsSucceed) {
+      if (this.props.redirectToAfterAuthUrl) {
+        this.props.history.push(this.props.redirectToAfterAuthUrl);
+        this.props.clearUrlToRedirectToAfterAuth();
+      } else {
         this.props.history.push(HOME_ROUTER);
       }
     }
@@ -79,7 +82,9 @@ class SignUp extends Component {
     if (this.props.onPhoneNumberChange) {
       this.props.onPhoneNumberChange(val);
     }
-    this.setState({ phoneNumberValue: val });
+    if (val.length <= 10) {
+      this.setState({ phoneNumberValue: val });
+    }
   }
 
   onChangeEmail(val) {
@@ -112,7 +117,7 @@ class SignUp extends Component {
       footerClick = () => this.navigateToLogin();
       showSocialButtons = true;
     }
-    if (this.props.user.loading) {
+    if (this.props.authCallsInProcess) {
       return (
         <div className={styles.loadingIndicator}>
           <MDSpinner />

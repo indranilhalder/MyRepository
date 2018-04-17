@@ -22,7 +22,10 @@ export default class ProductDetailsMainCard extends React.Component {
     const displayPrice = this.props.discountPrice
       ? this.props.discountPrice
       : this.props.price;
-
+    let averageRating = "";
+    if (this.props.averageRating) {
+      averageRating = Math.floor(this.props.averageRating);
+    }
     return (
       <div className={styles.base}>
         <div className={styles.productInfo}>
@@ -41,7 +44,12 @@ export default class ProductDetailsMainCard extends React.Component {
             <div className={styles.price}>{displayPrice}</div>
             {this.props.discountPrice &&
               this.props.discountPrice !== this.props.price && (
-                <div className={styles.priceCancelled}>{this.props.price}</div>
+                <div className={styles.priceCancelled}>
+                  <span className={styles.cancelPrice}>{this.props.price}</span>
+                  <span className={styles.discount}>
+                    {this.props.discount && `(${this.props.discount}%)`}
+                  </span>
+                </div>
               )}
           </div>
         </div>
@@ -53,7 +61,7 @@ export default class ProductDetailsMainCard extends React.Component {
                   className={styles.ratingText}
                   onClick={() => this.handleClick()}
                 >
-                  Rating {this.props.averageRating}/5
+                  Rating {`${averageRating}`} /5
                 </div>
               )}
               <div className={styles.arrowHolder}>
@@ -72,5 +80,6 @@ ProductDetailsMainCard.propTypes = {
   price: PropTypes.string,
   discountPrice: PropTypes.string,
   averageRating: PropTypes.number,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  discount: PropTypes.string
 };

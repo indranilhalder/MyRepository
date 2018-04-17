@@ -10,11 +10,8 @@ import {
 } from "../../lib/constants";
 import each from "lodash/each";
 import delay from "lodash/delay";
-import {
-  MSD_WIDGET_LIST,
-  MSD_WIDGET_PLATFORM,
-  MSD_API_KEY
-} from "../../lib/config.js";
+import { MSD_WIDGET_PLATFORM } from "../../lib/config.js";
+import { setDataLayer, ADOBE_HOME_TYPE } from "../../lib/adobeUtils.js";
 import * as Cookie from "../../lib/Cookie";
 
 import { getMcvId } from "../../lib/adobeUtils.js";
@@ -130,12 +127,13 @@ export function getItemsRequest(positionInFeed) {
     status: REQUESTING
   };
 }
-export function getItemsSuccess(positionInFeed, items) {
+export function getItemsSuccess(positionInFeed, items, itemIds) {
   return {
     type: GET_ITEMS_SUCCESS,
     status: SUCCESS,
     items,
-    positionInFeed
+    positionInFeed,
+    itemIds
   };
 }
 export function getItemsFailure(positionInFeed, errorMsg) {
@@ -160,7 +158,7 @@ export function getItems(positionInFeed, itemIds) {
         throw new Error(`${resultJson.message}`);
       }
 
-      dispatch(getItemsSuccess(positionInFeed, resultJson.results));
+      dispatch(getItemsSuccess(positionInFeed, resultJson.results, itemIds));
     } catch (e) {
       dispatch(getItemsFailure(positionInFeed, e.message));
     }
@@ -318,6 +316,13 @@ export function homeFeed(brandIdOrCategoryId: null) {
       }
       let parsedResultJson = JSON.parse(resultJson.content);
       parsedResultJson = parsedResultJson.items;
+
+      setDataLayer(
+        ADOBE_HOME_TYPE,
+        null,
+        getState().icid.value,
+        getState().icid.icidType
+      );
       dispatch(homeFeedSuccess(parsedResultJson, feedTypeRequest));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));

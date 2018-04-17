@@ -2,6 +2,8 @@ import { connect } from "react-redux";
 import { signUpUser } from "../actions/user.actions.js";
 import { withRouter } from "react-router-dom";
 import { displayToast } from "../../general/toast.actions.js";
+import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
+
 import SignUp from "../components/SignUp.js";
 const mapDispatchToProps = dispatch => {
   return {
@@ -10,13 +12,18 @@ const mapDispatchToProps = dispatch => {
     },
     displayToast: message => {
       dispatch(displayToast(message));
+    },
+    clearUrlToRedirectToAfterAuth: () => {
+      dispatch(clearUrlToRedirectToAfterAuth());
     }
   };
 };
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    authCallsInProcess: state.auth.authCallsInProcess,
+    authCallsIsSucceed: state.auth.authCallsIsSucceed,
+    redirectToAfterAuthUrl: state.auth.redirectToAfterAuthUrl
   };
 };
 

@@ -36,16 +36,21 @@ export default class PdpFrame extends React.Component {
       <div className={styles.base}>
         {this.props.children}
         <PdpFooter
-          onSave={() => this.onSave()}
           onAddToBag={() => this.onAddToBag()}
           productListingId={this.props.productListingId}
-          winningUssID={this.props.ussId}
+          outOfStock={this.props.outOfStock}
+          winningUssID={
+            this.props.ussId
+              ? this.props.ussId
+              : this.props.winningUssID
+                ? this.props.winningUssID
+                : this.props.USSID
+          }
         />
       </div>
     );
   }
 }
 PdpFrame.propTypes = {
-  onSave: PropTypes.func,
   onAddToBag: PropTypes.func
 };

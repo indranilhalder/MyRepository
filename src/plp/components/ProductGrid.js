@@ -12,7 +12,7 @@ import {
   PRODUCT_DESCRIPTION_ROUTER,
   IS_OFFER_EXISTING
 } from "../../lib/constants";
-
+import { setDataLayerForPlpDirectCalls } from "../../lib/adobeUtils";
 const LIST = "list";
 const GRID = "grid";
 const PRODUCT = "product";
@@ -22,7 +22,7 @@ export default class ProductGrid extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: LIST
+      view: GRID
     };
   }
 
@@ -39,7 +39,8 @@ export default class ProductGrid extends React.Component {
     }
   }
 
-  goToProductDescription = url => {
+  goToProductDescription = (url, productObj) => {
+    setDataLayerForPlpDirectCalls(productObj);
     this.props.history.push(url);
   };
 
@@ -57,10 +58,11 @@ export default class ProductGrid extends React.Component {
         onlineExclusive={data.onlineExclusive}
         outOfStock={!data.cumulativeStockLevel}
         onOffer={data.isOfferExisting}
+        newProduct={data.newProduct}
         averageRating={data.averageRating}
         totalNoOfReviews={data.totalNoOfReviews}
         view={this.state.view}
-        onClick={url => this.goToProductDescription(url)}
+        onClick={url => this.goToProductDescription(url, data)}
         productCategory={data.productCategoryType}
         productId={data.productId}
         showWishListButton={false}

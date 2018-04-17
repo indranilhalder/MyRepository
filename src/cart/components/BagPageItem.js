@@ -4,6 +4,11 @@ import ProductImage from "../../general/components/ProductImage.js";
 import PropTypes from "prop-types";
 const NOT_SERVICEABLE = "Service Not Available";
 export default class BagPageItem extends React.Component {
+  onClick() {
+    if (this.props.onClickImage) {
+      this.props.onClickImage();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -31,7 +36,10 @@ export default class BagPageItem extends React.Component {
           )}
         </div>
         <div className={styles.productImage}>
-          <ProductImage image={this.props.productImage} />
+          <ProductImage
+            image={this.props.productImage}
+            onClickImage={() => this.onClick()}
+          />
         </div>
       </div>
     );

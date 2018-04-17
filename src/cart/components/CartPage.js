@@ -23,9 +23,20 @@ import {
   LOGIN_PATH,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   YES,
-  YOUR_BAG
+  YOUR_BAG,
+  MY_ACCOUNT_PAGE,
+  SAVE_LIST_PAGE,
+  COUPON_COOKIE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
+import {
+  setDataLayerForCartDirectCalls,
+  ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT
+} from "../../lib/adobeUtils";
+
+const PRODUCT_NOT_SERVICEABLE_MESSAGE =
+  "Product is not Serviceable,Please try with another pin code";
+
 
 class CartPage extends React.Component {
   constructor(props) {
@@ -88,11 +99,14 @@ class CartPage extends React.Component {
         let productServiceAvailability = filter(
           this.props.cart.cartDetails.products,
           product => {
-            if (product.pinCodeResponse) {
-              return product.pinCodeResponse.isServicable === "N";
-            }
+            return (
+              product.pinCodeResponse === undefined ||
+              (product.pinCodeResponse &&
+                product.pinCodeResponse.isServicable === "N")
+            );
           }
         );
+
         if (productServiceAvailability.length > 0) {
           this.setState({
             isServiceable: false
@@ -165,6 +179,7 @@ class CartPage extends React.Component {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (customerCookie) {
       if (pinCode && this.state.isServiceable === true) {
+        setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT);
         this.props.history.push({
           pathname: CHECKOUT_ROUTER,
           state: {
@@ -175,10 +190,12 @@ class CartPage extends React.Component {
       }
       if (!pinCode) {
         this.props.displayToast("Please enter Pin code / Zip code");
-      } else {
-        this.setState({ isServiceable: false });
+      } else if (!this.state.isServiceable) {
+        this.props.displayToast(PRODUCT_NOT_SERVICEABLE_MESSAGE);
       }
     } else {
+      const url = this.props.location.pathname;
+      this.props.setUrlToRedirectToAfterAuth(url);
       this.props.history.push(LOGIN_PATH);
     }
   }
@@ -210,26 +227,80 @@ class CartPage extends React.Component {
     }
   };
 
+  goToWishList = () => {
+    if (this.props.history) {
+      const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+      const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+      if (!userDetails || !customerCookie) {
+        this.props.history.push(LOGIN_PATH);
+      } else {
+        this.props.history.push(`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`);
+      }
+    }
+  };
+
   changePinCode = () => {
     this.setState({ changePinCode: true });
+  };
+
+  renderEmptyBag = () => {
+    let defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
+    return (
+      <div className={styles.base}>
+        <div className={styles.content}>
+          {(!defaultPinCode || this.state.changePinCode) && (
+            <div className={styles.search}>
+              <SearchAndUpdate
+                value={defaultPinCode}
+                checkPinCodeAvailability={val =>
+                  this.checkPinCodeAvailability(val)
+                }
+                labelText="check"
+              />
+            </div>
+          )}
+          {!this.state.changePinCode &&
+            defaultPinCode && (
+              <TextWithUnderLine
+                heading={defaultPinCode}
+                onClick={() => this.changePinCode()}
+                buttonLabel="Change"
+              />
+            )}
+        </div>
+        <div className={styles.content}>
+          <EmptyBag
+            onContinueShopping={() => this.navigateToHome()}
+            viewSavedProduct={() => this.goToWishList()}
+          />
+        </div>
+      </div>
+    );
   };
   render() {
     const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const cartDetailsForAnonymous = Cookie.getCookie(
       CART_DETAILS_FOR_ANONYMOUS
     );
-    if (this.props.cart.loading && this.props.cart.cartDetails) {
-      this.props.showSecondaryLoader();
+
+    if (this.props.cart.loading && this.props.cart.cartDetails === null) {
+      return this.renderLoader();
     } else {
-      this.props.hideSecondaryLoader();
+      if (this.props.cart.loading) {
+        this.props.showSecondaryLoader();
+      } else {
+        this.props.hideSecondaryLoader();
+      }
     }
 
     if (!globalAccessToken && !cartDetailsForAnonymous) {
       return <Redirect exact to={HOME_ROUTER} />;
     }
-    if (this.props.cart.cartDetails) {
+
+    if (this.props.cart.cartDetails && this.props.cart.cartDetails.products) {
       const cartDetails = this.props.cart.cartDetails;
-      let defaultPinCode;
+      let defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
       let deliveryCharge = 0;
       let couponDiscount = 0;
       let totalDiscount = 0;
@@ -239,20 +310,22 @@ class CartPage extends React.Component {
           cartDetails.products[0].elligibleDeliveryMode
         ) {
           deliveryCharge =
-            cartDetails.products[0].elligibleDeliveryMode[0].charge
-              .formattedValue;
+            Math.round(
+              cartDetails.products[0].elligibleDeliveryMode[0].charge.value *
+                100
+            ) / 100;
         }
         if (cartDetails.cartAmount.totalDiscountAmount) {
           totalDiscount =
-            cartDetails.cartAmount.totalDiscountAmount.formattedValue;
+            Math.round(cartDetails.cartAmount.totalDiscountAmount.value * 100) /
+            100;
         }
 
         if (cartDetails.cartAmount.couponDiscountAmount) {
           couponDiscount =
-            cartDetails.cartAmount.couponDiscountAmount.formattedValue;
-        }
-        if (cartDetails.products) {
-          defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+            Math.round(
+              cartDetails.cartAmount.couponDiscountAmount.value * 100
+            ) / 100;
         }
       }
 
@@ -263,7 +336,6 @@ class CartPage extends React.Component {
               <div className={styles.search}>
                 <SearchAndUpdate
                   value={defaultPinCode}
-                  getPinCode={val => this.setState({ pinCode: val })}
                   checkPinCodeAvailability={val =>
                     this.checkPinCodeAvailability(val)
                   }
@@ -325,29 +397,39 @@ class CartPage extends React.Component {
                           : product.availableStockCount
                       }
                       qtySelectedByUser={product.qtySelectedByUser}
+                      isClickable={false}
                     />
                   </div>
                 );
               })}
 
             {cartDetails.products && (
-              <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
-            )}
-            {!cartDetails.products && (
-              <EmptyBag
-                onContinueShopping={() => this.navigateToHome()}
-                viewSavedProduct={() => this.navigateToHome()}
+              <SavedProduct
+                saveProduct={() => this.goToWishList()}
+                onApplyCoupon={() => this.goToCouponPage()}
               />
             )}
+
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
-                  amount={cartDetails.cartAmount.paybleAmount.formattedValue}
-                  bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
-                  coupons={couponDiscount}
-                  discount={totalDiscount}
-                  delivery={deliveryCharge}
-                  payable={cartDetails.cartAmount.paybleAmount.formattedValue}
+                  amount={
+                    Math.round(
+                      cartDetails.cartAmount.paybleAmount.value * 100
+                    ) / 100
+                  }
+                  bagTotal={
+                    Math.round(cartDetails.cartAmount.bagTotal.value * 100) /
+                    100
+                  }
+                  coupons={`Rs. ${couponDiscount}`}
+                  discount={`Rs. ${totalDiscount}`}
+                  delivery={`Rs. ${deliveryCharge}`}
+                  payable={
+                    Math.round(
+                      cartDetails.cartAmount.paybleAmount.value * 100
+                    ) / 100
+                  }
                   onCheckout={() => this.renderToCheckOutPage()}
                 />
               )}
@@ -355,7 +437,13 @@ class CartPage extends React.Component {
         </div>
       );
     } else {
-      return this.renderLoader();
+      return this.renderEmptyBag();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.clearCartDetails) {
+      this.props.clearCartDetails();
     }
   }
 }

@@ -1,0 +1,17 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.galleryHolder {
+  width: 75%;
+  min-height: auto;
+  padding-bottom: 50%;
+  border-radius: 4px;
+  background: #d8d8d8;
+  border-radius: 4px;
+  margin-left: 15px;
+  display: inline-block;
+}

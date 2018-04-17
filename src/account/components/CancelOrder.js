@@ -10,7 +10,8 @@ import {
 } from "../../lib/constants";
 import CancelReasonForm from "./CancelReasonForm";
 import PropTypes from "prop-types";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
+const SELECT_REASON_MESSAGE = "Select the Reason";
 export default class CancelOrder extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -25,6 +26,19 @@ export default class CancelOrder extends React.Component {
     }
   }
   finalSubmit(reason) {
+    if (reason.cancelReasonCode) {
+      if (
+        window.confirm(
+          "All the related products in the promotion will get cancelled"
+        )
+      ) {
+        this.cancelOrder(reason);
+      }
+    } else {
+      this.props.displayToast(SELECT_REASON_MESSAGE);
+    }
+  }
+  cancelOrder = reason => {
     const cancelProductDetails = {};
     cancelProductDetails.transactionId = this.props.history.location.state.transactionId;
     cancelProductDetails.orderCode = this.props.match.params[0];
@@ -33,7 +47,7 @@ export default class CancelOrder extends React.Component {
     cancelProductDetails.reasonCode = reason.cancelReasonCode;
     cancelProductDetails.refundType = "";
     this.props.cancelProduct(cancelProductDetails);
-  }
+  };
   onCancel() {
     this.props.history.goBack();
   }
@@ -47,7 +61,7 @@ export default class CancelOrder extends React.Component {
     return <Redirect to={LOGIN_PATH} />;
   }
   renderLoader() {
-    return <MDSpinner />;
+    return <Loader />;
   }
   render() {
     let cancelProductDetails = this.props.cancelProductDetails;

@@ -19,7 +19,7 @@ export default class AddDeliveryAddress extends React.Component {
     super(props);
     this.state = {
       countryIso: "",
-      addressType: "",
+      addressType: "Home",
       phone: "",
       firstName: "",
       lastName: "",
@@ -31,7 +31,7 @@ export default class AddDeliveryAddress extends React.Component {
       line3: "",
       town: "",
       salutaion: "",
-      defaultFlag: false
+      defaultFlag: true
     };
   }
 
@@ -88,6 +88,16 @@ export default class AddDeliveryAddress extends React.Component {
   };
 
   render() {
+    if (this.props.loading) {
+      if (this.props.showSecondaryLoader) {
+        this.props.showSecondaryLoader();
+      }
+    } else {
+      if (this.props.hideSecondaryLoader) {
+        this.props.hideSecondaryLoader();
+      }
+    }
+
     const dataLabel = [
       {
         label: "Home"
@@ -233,7 +243,7 @@ export default class AddDeliveryAddress extends React.Component {
             offset={0}
             elementWidthMobile={50}
             onSelect={val => this.onChange({ addressType: val[0] })}
-            selected={this.state.addressType}
+            selected={[this.state.addressType]}
           >
             {dataLabel.map((val, i) => {
               return (

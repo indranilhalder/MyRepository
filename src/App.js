@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ModalContainer from "./general/containers/ModalContainer";
 import ToastContainer from "./general/containers/ToastContainer";
-import { Switch, Redirect } from "react-router-dom";
+import { Switch } from "react-router-dom";
 import Route from "./general/Route";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
@@ -105,8 +105,14 @@ import {
   CANCEL_PREFIX,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
-  MY_ACCOUNT_UPDATE_PROFILE_PAGE
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE,
+  REQUESTING
 } from "../src/lib/constants";
+import {
+  globalAccessTokenSuccess,
+  customerAccessToken
+} from "./auth/actions/user.actions";
+import { cartDetailsCNCFailure } from "./cart/actions/cart.actions";
 
 const auth = {
   isAuthenticated: false
@@ -115,17 +121,17 @@ class App extends Component {
   async componentDidMount() {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     let loggedInUserDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsForLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
 
+    console.log(loggedInUserDetails);
+
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
     // Case 1. THe user is not logged in.
-
-    if (!globalAccessToken && !this.props.cart.loading) {
+    if (!globalAccessToken && !this.props.cartLoading) {
       await this.props.getGlobalAccessToken();
       globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     }
@@ -136,8 +142,25 @@ class App extends Component {
     }
 
     if (customerAccessToken) {
-      if (!cartDetailsForLoggedInUser && !this.props.cart.loading) {
+      if (!cartDetailsForLoggedInUser && !this.props.cartLoading) {
         this.props.generateCartIdForLoggedInUser();
+      }
+    }
+    if (
+      customerAccessToken &&
+      cartDetailsForLoggedInUser &&
+      loggedInUserDetails
+    ) {
+      if (
+        this.props.location.pathname.indexOf(LOGIN_PATH) !== -1 ||
+        this.props.location.pathname.indexOf(SIGN_UP_PATH) !== -1
+      ) {
+        if (this.props.redirectToAfterAuthUrl) {
+          this.props.history.push(this.props.redirectToAfterAuthUrl);
+          this.props.clearUrlToRedirectToAfterAuth();
+        } else {
+          this.props.history.push(`${HOME_ROUTER}`);
+        }
       }
     } else {
       if (!cartDetailsForAnonymous && globalAccessToken) {
@@ -156,9 +179,28 @@ class App extends Component {
 
   render() {
     let className = AppStyles.base;
+    const {
+      globalAccessTokenStatus,
+      customerAccessTokenStatus,
+      refreshCustomerAccessTokenStatus,
+      cartIdForLoggedInUserStatus,
+      cartIdForAnonymousUserStatus
+    } = this.props;
+
+    if (
+      globalAccessTokenStatus === REQUESTING ||
+      customerAccessTokenStatus === REQUESTING ||
+      refreshCustomerAccessTokenStatus === REQUESTING ||
+      cartIdForLoggedInUserStatus === REQUESTING ||
+      cartIdForAnonymousUserStatus === REQUESTING
+    ) {
+      return this.renderLoader();
+    }
+
     if (this.props.modalStatus) {
       className = AppStyles.blur;
     }
+
     return (
       <React.Fragment>
         <div className={className}>

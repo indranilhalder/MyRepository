@@ -7,6 +7,9 @@ export default class PdpDeliveryModes extends React.Component {
   render() {
     const eligibleDeliveryModes = this.props.eligibleDeliveryModes;
     const deliveryModesATP = this.props.deliveryModesATP;
+    if (!eligibleDeliveryModes || !deliveryModesATP) {
+      return null;
+    }
     return (
       <div className={styles.base}>
         <DeliveryInformation

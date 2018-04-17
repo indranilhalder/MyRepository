@@ -6,7 +6,7 @@ import delay from "lodash/delay";
 import keys from "lodash/keys";
 import each from "lodash/each";
 
-const CLEAR_ERROR_DELAY = TOAST_DELAY + 500;
+const CLEAR_ERROR_DELAY = TOAST_DELAY + 1000;
 
 // The errors for user, pdp and plp are universal errors
 // This means that they need to be dealt with separately here (meaning that the entire reducer has an error key)
@@ -14,6 +14,7 @@ const CLEAR_ERROR_DELAY = TOAST_DELAY + 500;
 
 const mapStateToProps = state => {
   return {
+    loginError: state.auth.error,
     userError: state.user.error,
     pdpError: state.productDescription.error,
     plpError: state.productListings.error,
@@ -21,7 +22,6 @@ const mapStateToProps = state => {
     cartDetailsError: state.cart.cartDetailsError,
     cartDetailsCNCError: state.cart.cartDetailsCNCError,
     couponError: state.cart.couponError,
-    emiBankError: state.cart.emiBankError,
     softReserveError: state.cart.softReserveError,
     paymentsModeError: state.cart.paymentsModeError,
     bankOfferError: state.cart.bankOfferError,
@@ -54,7 +54,27 @@ const mapStateToProps = state => {
     getPinCodeError: state.profile.getPinCodeError,
     updateReturnDetailsError: state.profile.updateReturnDetailsError,
     cancelProductDetailsError: state.profile.cancelProductDetailsError,
-    cancelProductError: state.profile.cancelProductError
+    cancelProductError: state.profile.cancelProductError,
+    updateQuantityLoggedInError: state.cart.updateQuantityLoggedInError,
+    updateQuantityLoggedOutError: state.cart.updateQuantityLoggedOutError,
+    justPayPaymentDetailsError: state.cart.justPayPaymentDetailsError,
+    orderSummaryError: state.cart.orderSummaryError,
+    storeError: state.cart.storeError,
+    paymentModesError: state.cart.paymentModesError,
+    transactionCODError: state.cart.transactionCODError,
+    softReserveCODPaymentError: state.cart.softReserveCODPaymentError,
+    orderExperienceError: state.cart.orderExperienceError,
+    binValidationError: state.cart.binValidationError,
+    addToWishlistError: state.cart.addToWishlistError,
+    removeCartItemError: state.cart.removeCartItemError,
+    removeCartItemLoggedOutError: state.cart.removeCartItemLoggedOutError,
+    softReservationForPaymentError: state.cart.softReservationForPaymentError,
+    jusPayTokenizeError: state.cart.jusPayTokenizeError,
+    createJusPayOrderError: state.cart.createJusPayOrderError,
+    getUserAddressError: state.cart.getUserAddressError,
+    netBankDetailsError: state.cart.netBankDetailsError,
+    updateProfileError: state.profile.updateProfileError,
+    verifyWalletError: state.profile.verifyWalletError
   };
 };
 
@@ -74,35 +94,32 @@ class ErrorDisplay extends React.Component {
     const errorKeys = keys(this.props);
     let seenError = false;
 
-    if (prevProps.userError !== this.props.userError) {
-      if (this.props.userError !== "" && this.props.userError !== null) {
-        this.displayError(this.props.userError);
-        return;
-      }
+    if (this.props.userError !== "" && this.props.userError !== null) {
+      this.displayError(this.props.userError);
+      return;
     }
 
-    if (prevProps.plpError !== this.props.plpError) {
-      if (this.props.plpError !== "" && this.props.plpError !== null) {
-        this.displayError(this.props.plpError);
-        return;
-      }
+    if (this.props.plpError !== "" && this.props.plpError !== null) {
+      this.displayError(this.props.plpError);
+      return;
     }
 
-    if (prevProps.pdpError !== this.props.pdpError) {
-      if (this.props.pdpError !== "" && this.props.pdpError !== null) {
-        this.displayError(this.props.pdpError);
-        return;
-      }
+    if (this.props.pdpError !== "" && this.props.pdpError !== null) {
+      this.displayError(this.props.pdpError);
+      return;
     }
 
     each(errorKeys, key => {
-      const previousError = prevProps[key];
       const currentError = this.props[key];
-      if (previousError !== currentError) {
-        if (currentError !== "" && currentError !== null && !seenError) {
-          this.displayError(currentError);
-          seenError = true;
-        }
+
+      if (
+        currentError !== "" &&
+        currentError !== null &&
+        !seenError &&
+        typeof currentError === "string"
+      ) {
+        this.displayError(currentError);
+        seenError = true;
       }
     });
   }

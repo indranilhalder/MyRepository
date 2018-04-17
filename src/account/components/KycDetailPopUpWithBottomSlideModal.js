@@ -26,6 +26,7 @@ export default class KycDetailPopUpWithBottomSlideModal extends React.Component 
           submitOtp={value => this.submitOtp(value)}
           resendOtp={() => this.resendOtp()}
           wrongNumber={() => this.wrongNumber()}
+          loadingForVerifyWallet={this.props.loadingForVerifyWallet}
         />
       </BottomSlideModal>
     );

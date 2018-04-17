@@ -27,15 +27,22 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   let headerMessage = "Welcome Guest";
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
   if (userDetails) {
-    headerMessage = `Welcome ${JSON.parse(userDetails).firstName}`;
+    userDetails = JSON.parse(userDetails);
+    if (userDetails.firstName) {
+      headerMessage = `Welcome ${userDetails.firstName}`;
+    } else if (userDetails.userName) {
+      headerMessage = `Welcome ${userDetails.userName}`;
+    }
   }
   return {
     homeFeedData: state.home.homeFeed,
     isHomeFeedPage: true,
     loading: state.home.loading,
     type: state.cart.type,
-    headerMessage
+    headerMessage,
+    loginFromMyBag: state.cart.loginFromMyBag
   };
 };
 

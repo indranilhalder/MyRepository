@@ -57,9 +57,14 @@ export default class ConnectWidget extends React.Component {
                 <div className={styles.label}>
                   {this.props.feedComponentData.description}
                 </div>
-                <div className={styles.buttonBox}>
-                  <ConnectKnowMore url={this.props.feedComponentData.webURL} />
-                </div>
+                {this.props.feedComponentData.btnText && (
+                  <div className={styles.buttonBox}>
+                    <ConnectKnowMore
+                      url={this.props.feedComponentData.webURL}
+                      btnText={this.props.feedComponentData.btnText}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

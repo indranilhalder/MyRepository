@@ -6,7 +6,7 @@ import * as Cookie from "../../lib/Cookie";
 import FooterButton from "../../general/components/FooterButton.js";
 import saveIcon from "../../general/components/img/download.svg";
 import styles from "./AddToWishListButton.css";
-
+import downloadIconWhite from "../../general/components/img/downloadWhite.svg";
 import {
   LOGIN_PATH,
   LOGGED_IN_USER_DETAILS,
@@ -21,6 +21,8 @@ export default class AddToWishListButton extends React.Component {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
+      const url = this.props.location.pathname;
+      this.props.setUrlToRedirectToAfterAuth(url);
       this.props.history.push(LOGIN_PATH);
     } else {
       const { productListingId, winningUssID, wishlistItems } = this.props;
@@ -63,7 +65,10 @@ export default class AddToWishListButton extends React.Component {
     }
     return (
       <div onClick={e => this.onClick(e)}>
-        <Icon image={downloadIcon} size={this.props.size} />
+        <Icon
+          image={this.props.isWhite ? downloadIconWhite : downloadIcon}
+          size={this.props.size}
+        />
       </div>
     );
   }

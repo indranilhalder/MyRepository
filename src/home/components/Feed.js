@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
+import { setDataLayer } from "../../lib/adobeUtils.js";
 import WidgetContainer from "../containers/WidgetContainer";
 import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
@@ -39,7 +39,8 @@ import ProductCapsulesContainer from "../containers/ProductCapsulesContainer";
 import * as Cookie from "../../lib/Cookie";
 import {
   LOGGED_IN_USER_DETAILS,
-  CUSTOMER_ACCESS_TOKEN
+  CUSTOMER_ACCESS_TOKEN,
+  PRODUCT_CART_ROUTER
 } from "../../lib/constants";
 
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
@@ -89,11 +90,37 @@ const typeComponentMapping = {
 };
 
 class Feed extends Component {
-  componentWillUpdate() {
-    // check if hte user is logged in
-    // then send the name
-    this.props.setHeaderText(this.props.headerMessage);
+  componentDidMount() {
+    if (this.props.homeFeedData && !this.props.headerMessage) {
+      const titleObj =
+        this.props.homeFeedData &&
+        this.props.homeFeedData.find(data => {
+          return data.type === "Landing Page Title Component";
+        });
+
+      if (titleObj) {
+        this.props.setHeaderText(titleObj.title);
+      }
+    }
   }
+  componentDidUpdate() {
+    if (this.props.homeFeedData && !this.props.headerMessage) {
+      const titleObj =
+        this.props.homeFeedData &&
+        this.props.homeFeedData.find(data => {
+          return data.type === "Landing Page Title Component";
+        });
+
+      if (titleObj) {
+        this.props.setHeaderText(titleObj.title);
+      }
+    }
+
+    if (this.props.headerMessage) {
+      this.props.setHeaderText(this.props.headerMessage);
+    }
+  }
+
   renderFeedComponent(feedDatum, i) {
     if (feedDatum.type === "Product Capsules Component") {
       return <ProductCapsulesContainer positionInFeed={i} />;
@@ -145,7 +172,6 @@ class Feed extends Component {
     if (this.props.loading) {
       return this.renderLoader();
     }
-
     let propsForHeader = {};
     if (this.props.isHomeFeedPage) {
       propsForHeader = {
@@ -156,7 +182,7 @@ class Feed extends Component {
       let landingPageTitleObj = this.props.homeFeedData[0]
         ? this.props.homeFeedData[0]
         : {};
-      if (landingPageTitleObj.type === "Landing Page Title") {
+      if (landingPageTitleObj.type === "Landing Page Title Component") {
         propsForHeader = {
           hasBackButton: true,
           text: landingPageTitleObj.title

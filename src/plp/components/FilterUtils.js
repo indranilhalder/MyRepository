@@ -14,7 +14,7 @@ const SEARCH_TEXT_BEFORE_CATEGORY = /(.*):category:/;
 export function getSortFromQuery(str) {
   let sortToReturn = null;
   ARRAY_OF_SORTS.forEach(sort => {
-    if (str.indexOf(sort) > -1) {
+    if (str && str.indexOf(sort) > -1) {
       sortToReturn = sort;
     }
   });
@@ -37,7 +37,7 @@ export function createUrlFromQueryAndCategory(query, pathName, val) {
     if (query.indexOf("searchCategory") > -1) {
       // there is a text option here
       const textParam = TEXT_REGEX.exec(query);
-      url = `/search/?q=:${textParam[1]}:relevance:category:${val}`;
+      url = `/search/?q=${textParam[1]}:relevance:category:${val}`;
       return url;
     }
 

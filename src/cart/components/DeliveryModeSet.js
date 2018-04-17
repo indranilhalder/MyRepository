@@ -15,24 +15,28 @@ export default class DeliveryModeSet extends React.Component {
         confirmTitle="Delivery Mode"
         indexNumber="2"
       >
-        {this.props.productDelivery.map((data, i) => {
-          const selectedDeliveryModes = this.props.selectedDeliveryDetails[
-            data.USSID
-          ];
-          const deliveryOption = data.elligibleDeliveryMode.find(mode => {
-            return mode.code === selectedDeliveryModes;
-          });
+        {this.props.productDelivery &&
+          this.props.productDelivery.map((data, i) => {
+            const selectedDeliveryModes = this.props.selectedDeliveryDetails[
+              data.USSID
+            ];
+            const deliveryOption =
+              data &&
+              data.elligibleDeliveryMode &&
+              data.elligibleDeliveryMode.find(mode => {
+                return mode.code === selectedDeliveryModes;
+              });
 
-          return (
-            <div className={styles.base} key={i}>
-              <div className={styles.productName}>{data.productName}</div>
-              <div className={styles.deliveryWay}>
-                {deliveryOption &&
-                  `${deliveryOption.name}:${deliveryOption.desc}`}
+            return (
+              <div className={styles.base} key={i}>
+                <div className={styles.productName}>{data.productName}</div>
+                <div className={styles.deliveryWay}>
+                  {deliveryOption &&
+                    `${deliveryOption.name}:${deliveryOption.desc}`}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </DeliveryCard>
     );
   }

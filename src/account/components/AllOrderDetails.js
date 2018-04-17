@@ -119,9 +119,21 @@ export default class AllOrderDetails extends React.Component {
                     <OrderDelivered
                       deliveredAddress={`${
                         orderDetails.billingAddress.addressLine1
-                      } ${orderDetails.billingAddress.town} ${
+                          ? orderDetails.billingAddress.addressLine1
+                          : ""
+                      } ${
+                        orderDetails.billingAddress.town
+                          ? orderDetails.billingAddress.town
+                          : ""
+                      } ${
                         orderDetails.billingAddress.state
-                      } ${orderDetails.billingAddress.postalcode}`}
+                          ? orderDetails.billingAddress.state
+                          : ""
+                      } ${
+                        orderDetails.billingAddress.postalcode
+                          ? orderDetails.billingAddress.postalcode
+                          : ""
+                      }`}
                     />
                   )}
                 </div>

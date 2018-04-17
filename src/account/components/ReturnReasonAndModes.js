@@ -1,5 +1,5 @@
 import React from "react";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 import ReturnReasonForm from "./ReturnReasonForm.js";
 import ReturnModes from "./ReturnModes.js";
 import {
@@ -26,7 +26,10 @@ export default class ReturnReasonAndModes extends React.Component {
     this.orderCode = props.location.pathname.split("/")[2];
   }
   renderLoader() {
-    return <MDSpinner />;
+    return <Loader />;
+  }
+  onCancel() {
+    this.props.history.goBack();
   }
   onChange(val) {
     if (this.props.onChange) {
@@ -98,6 +101,7 @@ export default class ReturnReasonAndModes extends React.Component {
         onChange={comment => this.onChange({ comment })}
         onChangePrimary={reason => this.onChange({ reason })}
         onContinue={data => this.renderToModes(data)}
+        onCancel={() => this.onCancel()}
       />
     );
     const renderReturnMode = (
