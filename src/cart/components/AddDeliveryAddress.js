@@ -36,7 +36,9 @@ export default class AddDeliveryAddress extends React.Component {
   }
 
   getPinCodeDetails = val => {
-    this.setState({ postalCode: val });
+    if (val.length <= 6) {
+      this.setState({ postalCode: val });
+    }
     if (val.length === 6 && this.props.getPinCode) {
       this.props.getPinCode(val);
     }
