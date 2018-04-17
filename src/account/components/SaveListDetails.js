@@ -20,7 +20,7 @@ import MDSpinner from "react-md-spinner";
 import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "MMMM DD YYYY";
 const PRODUCT_QUANTITY = "1";
-const NO_SAVELIST_TEXT = "You do not have any products in you Saved list";
+const NO_SAVELIST_TEXT = "You do not have any products in your Saved list";
 export default class SaveListDetails extends React.Component {
   componentDidMount() {
     this.props.setHeaderText(SAVED_LIST);
