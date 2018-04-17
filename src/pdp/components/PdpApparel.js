@@ -7,6 +7,7 @@ import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
 import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
+import PdpPaymentInfo from "./PdpPaymentInfo";
 import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
 import ProductFeature from "./ProductFeature";
@@ -83,28 +84,32 @@ export default class PdpApparel extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (this.checkIfSizeSelected() || this.checkIfSizeDoesNotExist()) {
-      if (userDetails) {
-        if (cartDetailsLoggedInUser && customerCookie) {
-          this.props.addProductToCart(
-            JSON.parse(userDetails).userName,
-            JSON.parse(cartDetailsLoggedInUser).code,
-            JSON.parse(customerCookie).access_token,
-            productDetails
-          );
+    if (this.props.productDetails.allOOStock) {
+      this.props.displayToast("Product is out of stock");
+    } else {
+      if (this.checkIfSizeSelected() || this.checkIfSizeDoesNotExist()) {
+        if (userDetails) {
+          if (cartDetailsLoggedInUser && customerCookie) {
+            this.props.addProductToCart(
+              JSON.parse(userDetails).userName,
+              JSON.parse(cartDetailsLoggedInUser).code,
+              JSON.parse(customerCookie).access_token,
+              productDetails
+            );
+          }
+        } else {
+          if (cartDetailsAnonymous && globalCookie) {
+            this.props.addProductToCart(
+              ANONYMOUS_USER,
+              JSON.parse(cartDetailsAnonymous).guid,
+              JSON.parse(globalCookie).access_token,
+              productDetails
+            );
+          }
         }
       } else {
-        if (cartDetailsAnonymous && globalCookie) {
-          this.props.addProductToCart(
-            ANONYMOUS_USER,
-            JSON.parse(cartDetailsAnonymous).guid,
-            JSON.parse(globalCookie).access_token,
-            productDetails
-          );
-        }
+        this.showSizeSelector();
       }
-    } else {
-      this.showSizeSelector();
     }
   };
 
@@ -132,11 +137,11 @@ export default class PdpApparel extends React.Component {
         sizeSelected: this.checkIfSizeSelected(),
         productId: this.props.productDetails.productListingId,
         showSizeGuide: this.props.showSizeGuide,
+        hasSizeGuide: this.props.productDetails.showSizeGuide,
         data: this.props.productDetails.variantOptions
       });
     }
   };
-
   handleShowSizeguide() {
     if (this.props.getProductSizeGuide) {
       this.props.getProductSizeGuide();
@@ -187,6 +192,9 @@ export default class PdpApparel extends React.Component {
       if (productData.mrpPrice) {
         price = productData.mrpPrice.formattedValueNoDecimal;
       }
+      if (productData.winningSellerPrice) {
+        discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
+      }
 
       return (
         <PdpFrame
@@ -194,13 +202,19 @@ export default class PdpApparel extends React.Component {
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
           productListingId={productData.productListingId}
+          outOfStock={productData.allOOStock}
           ussId={productData.winningUssID}
         >
-          <ProductGalleryMobile>
-            {mobileGalleryImages.map((val, idx) => {
-              return <Image image={val} key={idx} />;
-            })}
-          </ProductGalleryMobile>
+          <div className={styles.gallery}>
+            <ProductGalleryMobile>
+              {mobileGalleryImages.map((val, idx) => {
+                return <Image image={val} key={idx} />;
+              })}
+            </ProductGalleryMobile>
+            {productData.allOOStock && (
+              <div className={styles.flag}>Out of stock</div>
+            )}
+          </div>
           <div className={styles.content}>
             <ProductDetailsMainCard
               productName={productData.brandName}
@@ -211,18 +225,14 @@ export default class PdpApparel extends React.Component {
               discountPrice={discountPrice}
               averageRating={productData.averageRating}
               onClick={this.goToReviewPage}
+              discount={productData.discount}
             />
           </div>
-          {productData.emiInfo && (
-            <div className={styles.separator}>
-              <div className={styles.info}>
-                {productData.emiInfo.emiText}
-                <span className={styles.link} onClick={this.showEmiModal}>
-                  View Plans
-                </span>
-              </div>
-            </div>
-          )}
+          <PdpPaymentInfo
+            hasEmi={productData.isEMIEligible}
+            hasCod={productData.isCOD}
+            showEmiModal={this.showEmiModal}
+          />
           <OfferCard
             showDetails={this.props.showOfferDetails}
             potentialPromotions={productData.potentialPromotions}

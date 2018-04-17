@@ -7,15 +7,16 @@ import ColourSelector from "./ColourSelector";
 import SizeQuantitySelect from "./SizeQuantitySelect";
 import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
+import ProductFeature from "./ProductFeature";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-import ProductDetails from "./ProductDetails";
+import PdpPaymentInfo from "./PdpPaymentInfo";
 import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
 import PdpDeliveryModes from "./PdpDeliveryModes";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
-import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import Accordion from "../../general/components/Accordion.js";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -32,13 +33,17 @@ import {
   NO,
   DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
-
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import styles from "./ProductDescriptionPage.css";
 import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
 
-const PRODUCT_QUANTITY = "1";
-const DELIVERY_TEXT = "Delivery Options For";
 export default class PdpApparel extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      productQuantity: "1"
+    };
+  }
   visitBrand() {
     if (this.props.visitBrandStore) {
       this.props.visitBrandStore();
@@ -47,10 +52,14 @@ export default class PdpApparel extends React.Component {
   gotoPreviousPage = () => {
     this.props.history.goBack();
   };
-  goToBuyingGuide = () => {
-    if (this.props.goToBuyingGuide) {
-      this.props.goToBuyingGuide();
+  goToBuyingGuide = buyingGuideUrl => {
+    if (buyingGuideUrl) {
+      const urlSuffix = buyingGuideUrl.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
     }
+  };
+  updateQuantity = quantity => {
+    this.setState({ productQuantity: quantity });
   };
   goToSellerPage = () => {
     let expressionRuleFirst = "/p-(.*)/(.*)";
@@ -78,7 +87,7 @@ export default class PdpApparel extends React.Component {
   addToCart = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
-    productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.quantity = this.state.productQuantity;
     productDetails.ussId = this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -87,24 +96,27 @@ export default class PdpApparel extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-
-    if (userDetails) {
-      if (cartDetailsLoggedInUser && customerCookie) {
-        this.props.addProductToCart(
-          JSON.parse(userDetails).userName,
-          JSON.parse(cartDetailsLoggedInUser).code,
-          JSON.parse(customerCookie).access_token,
-          productDetails
-        );
-      }
+    if (this.props.productDetails.allOOStock) {
+      this.props.displayToast("Product is out of stock");
     } else {
-      if (cartDetailsAnonymous && globalCookie) {
-        this.props.addProductToCart(
-          ANONYMOUS_USER,
-          JSON.parse(cartDetailsAnonymous).guid,
-          JSON.parse(globalCookie).access_token,
-          productDetails
-        );
+      if (userDetails) {
+        if (cartDetailsLoggedInUser && customerCookie) {
+          this.props.addProductToCart(
+            JSON.parse(userDetails).userName,
+            JSON.parse(cartDetailsLoggedInUser).code,
+            JSON.parse(customerCookie).access_token,
+            productDetails
+          );
+        }
+      } else {
+        if (cartDetailsAnonymous && globalCookie) {
+          this.props.addProductToCart(
+            ANONYMOUS_USER,
+            JSON.parse(cartDetailsAnonymous).guid,
+            JSON.parse(globalCookie).access_token,
+            productDetails
+          );
+        }
       }
     }
   };
@@ -164,6 +176,13 @@ export default class PdpApparel extends React.Component {
       .map(image => {
         return image[0].value;
       });
+
+    const validSellersCount = productData.otherSellers
+      ? productData.otherSellers.filter(val => {
+          return val.availableStock !== "0" && val.availableStock !== "-1";
+        }).length
+      : 0;
+
     if (productData) {
       let price = "";
       let discountPrice = "";
@@ -180,13 +199,19 @@ export default class PdpApparel extends React.Component {
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
           productListingId={productData.productListingId}
+          outOfStock={productData.allOOStock}
           ussId={productData.winningUssID}
         >
-          <ProductGalleryMobile>
-            {mobileGalleryImages.map((val, idx) => {
-              return <Image image={val} key={idx} />;
-            })}
-          </ProductGalleryMobile>
+          <div className={styles.gallery}>
+            <ProductGalleryMobile>
+              {mobileGalleryImages.map((val, idx) => {
+                return <Image image={val} key={idx} />;
+              })}
+            </ProductGalleryMobile>
+            {productData.allOOStock && (
+              <div className={styles.flag}>Out of stock</div>
+            )}
+          </div>
           <div className={styles.whiteBackground}>
             <div className={styles.content}>
               <ProductDetailsMainCard
@@ -198,18 +223,14 @@ export default class PdpApparel extends React.Component {
                 discountPrice={discountPrice}
                 averageRating={productData.averageRating}
                 onClick={this.goToReviewPage}
+                discount={productData.discount}
               />
             </div>
-            {productData.emiInfo && (
-              <div className={styles.separator}>
-                <div className={styles.info}>
-                  {productData.emiInfo.emiText}
-                  <span className={styles.link} onClick={this.showEmiModal}>
-                    View Plans
-                  </span>
-                </div>
-              </div>
-            )}
+            <PdpPaymentInfo
+              hasEmi={productData.isEMIEligible}
+              hasCod={productData.isCOD}
+              showEmiModal={this.showEmiModal}
+            />
             <OfferCard
               showDetails={this.props.showOfferDetails}
               potentialPromotions={productData.potentialPromotions}
@@ -222,26 +243,30 @@ export default class PdpApparel extends React.Component {
                   showSizeGuide={
                     productData.showSizeGuide ? this.props.showSizeGuide : null
                   }
-                  sizes={productData.variantOptions.map(value => {
-                    return value.sizelink;
-                  })}
+                  data={productData.variantOptions}
                   maxQuantity={productData.maxQuantityAllowed}
+                  updateQuantity={this.updateQuantity}
                   onQuantitySelect={val => this.props.handleQuantitySelect(val)}
                 />
-                {this.props.customiseMessage && (
-                  <div className={styles.customisation}>
-                    <div className={styles.customiseText}>
-                      Customisation available -{this.props.customiseMessage}
-                    </div>
+
+                <div className={styles.customisation}>
+                  <div className={styles.customiseText}>
+                    Customisation available - Contact seller for Free
+                    Monogramming
+                  </div>
+                  {productData.buyingGuideUrl && (
                     <div className={styles.customisationButton}>
                       <UnderLinedButton
                         label="Checkout our buying guide"
-                        onClick={() => this.goToBuyingGuide()}
+                        onClick={() =>
+                          this.goToBuyingGuide(productData.buyingGuideUrl)
+                        }
                         color="#ff1744"
                       />
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+
                 <ColourSelector
                   noBackground={true}
                   productId={productData.productListingId}
@@ -279,23 +304,88 @@ export default class PdpApparel extends React.Component {
             />
           )}
 
-          {productData.otherSellersText && (
+          {productData.winningSellerName && (
             <div className={styles.separator}>
-              <PdpLink onClick={this.goToSellerPage}>
-                <div
-                  className={styles.sellers}
-                  dangerouslySetInnerHTML={{
-                    __html: productData.otherSellersText
-                  }}
-                />
+              <PdpLink
+                onClick={() => this.goToSellerPage(validSellersCount)}
+                noLink={validSellersCount === 0}
+              >
+                <div className={styles.sellers}>
+                  Sold by{" "}
+                  <span className={styles.winningSellerText}>
+                    {productData.winningSellerName}
+                  </span>
+                  {validSellersCount !== 0 && (
+                    <React.Fragment>
+                      {" "}
+                      and {validSellersCount} other seller(s)
+                    </React.Fragment>
+                  )}
+                </div>
               </PdpLink>
             </div>
           )}
-          {productData.details && (
+
+          {productData.classifications && (
             <div className={styles.details}>
-              <ProductDetails data={productData.details} />
+              <ProductFeatures features={productData.classifications} />
             </div>
           )}
+          <div className={styles.details}>
+            <Accordion text="Product description" headerFontSize={16}>
+              {productData.classificationList &&
+                productData.classificationList.map(value => {
+                  return (
+                    <div>
+                      <div className={styles.header}>{value.key}</div>
+                      {value.value.classificationList &&
+                        value.value.classificationList.map(val => {
+                          return (
+                            <div>
+                              <div className={styles.contentTextForHome}>
+                                {val.key} : {val.value}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      {value.value.classificationValues &&
+                        value.value.classificationValues.map(val => {
+                          return (
+                            <div>
+                              <div className={styles.contentTextForHome}>
+                                {val}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      <div className={styles.blankSeparator} />
+                    </div>
+                  );
+                })}
+            </Accordion>
+            {productData.styleNote && (
+              <ProductFeature
+                heading="Style Note"
+                content={productData.styleNote}
+              />
+            )}
+            {productData.knowMore && (
+              <Accordion text="Know More" headerFontSize={16}>
+                {productData.knowMore &&
+                  productData.knowMore.map(val => {
+                    return (
+                      <div className={styles.list}>{val.knowMoreItem}</div>
+                    );
+                  })}
+              </Accordion>
+            )}
+            {productData.brandInfo && (
+              <ProductFeature
+                heading="Brand Info"
+                content={productData.brandInfo}
+              />
+            )}
+          </div>
           <div className={styles.separator}>
             <RatingAndTextLink
               onClick={this.goToReviewPage}
@@ -303,16 +393,12 @@ export default class PdpApparel extends React.Component {
               numberOfReview={productData.numberOfReviews}
             />
           </div>
-          {productData.classifications && (
-            <div className={styles.details}>
-              <ProductFeatures features={productData.classifications} />
-            </div>
-          )}
           {productData.APlusContent && (
             <AllDescription
               productContent={productData.APlusContent.productContent}
             />
           )}
+          <div className={styles.blankSeparator} />
           <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );

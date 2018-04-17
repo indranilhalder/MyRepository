@@ -172,6 +172,7 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
       }
     };
   }
+
   window._satellite.track(ADOBE_SATELLITE_CODE);
 }
 
@@ -248,14 +249,12 @@ function getDigitalDataForPdp(type, pdpResponse) {
     window.digitalData.page &&
     window.digitalData.page.pageInfo.pageName
   ) {
-    Object.assign(data, {
-      cpj: {
-        pdp: {
-          findingMethod:
-            window.digitalData &&
-            window.digitalData.page &&
-            window.digitalData.page.pageInfo.pageName
-        }
+    Object.assign(data.cpj, {
+      pdp: {
+        findingMethod:
+          window.digitalData &&
+          window.digitalData.page &&
+          window.digitalData.page.pageInfo.pageName
       }
     });
   }
@@ -326,6 +325,33 @@ function getDigitalDataForCheckout(type, CheckoutResponse) {
     Object.assign(data, {
       cpj: { product: { id: JSON.stringify(productIds) } }
     });
+  }
+  if (
+    window.digitalData &&
+    window.digitalData.page &&
+    window.digitalData.page.pageInfo.pageName
+  ) {
+    if (data.cpj) {
+      data = Object.assign(data.cpj, {
+        pdp: {
+          findingMethod:
+            window.digitalData &&
+            window.digitalData.page &&
+            window.digitalData.page.pageInfo.pageName
+        }
+      });
+    } else {
+      data = Object.assign(data, {
+        cpj: {
+          pdp: {
+            findingMethod:
+              window.digitalData &&
+              window.digitalData.page &&
+              window.digitalData.page.pageInfo.pageName
+          }
+        }
+      });
+    }
   }
   return data;
 }
