@@ -37,3 +37,7 @@ export default class EmiPanel extends React.Component {
     );
   }
 }
+EmiPanel.propTypes = {
+  onBankSelect: PropTypes.func,
+  onSelectMonth: PropTypes.func
+};
