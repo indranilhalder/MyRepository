@@ -30,6 +30,11 @@ import { SUCCESS, ERROR, FAILURE } from "../../lib/constants";
 import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
 import { displayToast } from "../../general/toast.actions.js";
 import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
+import {
+  setDataLayerForLogin,
+  ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS,
+  ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE
+} from "../../lib/adobeUtils";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -102,6 +107,7 @@ const mapDispatchToProps = dispatch => {
         );
 
         if (loginUserResponse.status === SUCCESS) {
+          setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS);
           const cartVal = await dispatch(getCartId());
 
           if (
@@ -140,6 +146,7 @@ const mapDispatchToProps = dispatch => {
             }
           }
         } else {
+          setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE);
           dispatch(singleAuthCallHasFailed(loginUserRequest.error));
           dispatch(logout());
         }
