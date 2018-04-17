@@ -281,7 +281,6 @@ export function homeFeedRequest(feedType) {
   };
 }
 export function homeFeedSuccess(data, feedType) {
-  console.log("HOME FEED SUCCESS");
   return {
     type: HOME_FEED_SUCCESS,
     status: SUCCESS,
