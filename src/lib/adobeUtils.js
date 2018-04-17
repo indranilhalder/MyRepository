@@ -36,6 +36,11 @@ const ADOBE_DIRECT_CALL_FOR_APPLY_COUPON_FAIL =
 const ADOBE_DIRECT_CALL_FOR_SAVE_PORDUCT_ON_CART = "cpj_button_save'";
 // end of direct call url for cart page
 
+// direct call for login tracking
+const ADOBE_LOGIN_SUCCESS = "login_successful";
+const ADOBE_LOGIN_FAILURE = "login_failed";
+// end of direct call for login tracking
+
 export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
 export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
@@ -66,6 +71,16 @@ export const ADOBE_CALLS_FOR_APPLY_COUPON_FAIL =
   "ADOBE_CALLS_FOR_APPLY_COUPON_FAIL";
 export const ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART =
   "ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART";
+
+// const for setting data layer for the login track
+
+export const ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS =
+  "ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS";
+export const ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE =
+  "ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE";
+
+// end of const for setting data layer for the login track
+
 export const ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS =
   "ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS";
 export const ADOBE_DIRECT_CALL_FOR_PINCODE_FAILURE =
@@ -575,5 +590,111 @@ export function setDataLayerForPlpDirectCalls(response) {
       Object.assign(data, { cpj: { product: { badge } } });
     }
     window.digitalData = data;
+  }
+}
+export function setDataLayerForLogin(type) {
+  let userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
+  const data = {};
+  if (ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS) {
+    if (userDetails) {
+      if (userDetails.loginType === LOGIN_WITH_EMAIL) {
+        Object.assign(data, {
+          account: {
+            login: {
+              customerID: userDetails.customerId,
+              type: EMAIL
+            }
+          }
+        });
+      } else if (userDetails.loginType === LOGIN_WITH_MOBILE) {
+        if (data.account) {
+          Object.assign(data.account, {
+            login: {
+              customerID: userDetails.customerId,
+              type: MOBILE
+            }
+          });
+        } else {
+          Object.assign(data, {
+            account: {
+              login: {
+                customerID: userDetails.customerId,
+                type: MOBILE
+              }
+            }
+          });
+        }
+      } else if (userDetails.loginType === FACEBOOK_PLATFORM) {
+        if (data.account) {
+          Object.assign(data.account, {
+            login: {
+              customerID: userDetails.customerId,
+              type: FACEBOOK
+            }
+          });
+        } else {
+          Object.assign(data, {
+            account: {
+              login: {
+                customerID: userDetails.customerId,
+                type: FACEBOOK
+              }
+            }
+          });
+        }
+      } else if (userDetails.loginType === GOOGLE_PLUS_PLATFORM) {
+        if (data.account) {
+          Object.assign(data.account, {
+            login: {
+              customerID: userDetails.customerId,
+              type: GOOGLE
+            }
+          });
+        } else {
+          Object.assign(data, {
+            account: {
+              login: {
+                customerID: userDetails.customerId,
+                type: GOOGLE
+              }
+            }
+          });
+        }
+      }
+    }
+    if (
+      window.digitalData &&
+      window.digitalData.page &&
+      window.digitalData.page.pageInfo.pageName
+    ) {
+      if (data.account) {
+        if (data.account.login) {
+          Object.assign(data.account.login, {
+            location: window.digitalData.page.pageInfo.pageName
+          });
+        } else {
+          Object.assign(data.account, {
+            login: {
+              location: window.digitalData.page.pageInfo.pageName
+            }
+          });
+        }
+      } else {
+        Object.assign(data, {
+          account: {
+            login: {
+              location: window.digitalData.page.pageInfo.pageName
+            }
+          }
+        });
+      }
+    }
+    window.digitalData = data;
+    window.digitalData.flag = ADOBE_LOGIN_SUCCESS;
+    window._satellite.track(ADOBE_LOGIN_SUCCESS);
+  }
+  if (ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE) {
+    window.digitalData.flag = ADOBE_LOGIN_FAILURE;
+    window._satellite.track(ADOBE_LOGIN_FAILURE);
   }
 }
