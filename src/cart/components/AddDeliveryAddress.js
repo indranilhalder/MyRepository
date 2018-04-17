@@ -18,7 +18,7 @@ export default class AddDeliveryAddress extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      countryIso: "",
+      countryIso: ISO_CODE,
       addressType: "Home",
       phone: "",
       firstName: "",
@@ -38,22 +38,7 @@ export default class AddDeliveryAddress extends React.Component {
   onChange(val) {
     this.setState(val);
     if (this.props.getAddressDetails) {
-      let addressDetails = {};
-      addressDetails.countryIso = ISO_CODE;
-      addressDetails.addressType = this.state.addressType;
-      addressDetails.phone = this.state.phone;
-      addressDetails.firstName = this.state.firstName;
-      addressDetails.lastName = "";
-      addressDetails.postalCode = this.state.postalCode;
-      addressDetails.line1 = this.state.line1;
-      addressDetails.state = this.state.state;
-      addressDetails.emailId = this.state.emailId;
-      addressDetails.line2 = this.state.line2;
-      addressDetails.line3 = this.state.line3;
-      addressDetails.town = this.state.town;
-      addressDetails.salutaion = this.state.salutaion;
-      addressDetails.defaultFlag = this.state.defaultFlag;
-      this.props.getAddressDetails(addressDetails);
+      this.props.getAddressDetails(this.state);
     }
   }
   onChangeDefaultFlag() {
@@ -70,22 +55,8 @@ export default class AddDeliveryAddress extends React.Component {
 
   addNewAddress = () => {
     //add new Address
-    let addressDetails = {};
-    addressDetails.countryIso = ISO_CODE;
-    addressDetails.addressType = this.state.addressType;
-    addressDetails.phone = this.state.phone;
-    addressDetails.firstName = this.state.firstName;
-    addressDetails.lastName = "";
-    addressDetails.postalCode = this.state.postalCode;
-    addressDetails.line1 = this.state.line1;
-    addressDetails.state = this.state.state;
-    addressDetails.emailId = this.state.emailId;
-    addressDetails.line2 = this.state.line2;
-    addressDetails.line3 = this.state.line3;
-    addressDetails.town = this.state.town;
-    addressDetails.salutaion = this.state.salutaion;
-    addressDetails.defaultFlag = this.state.defaultFlag;
-    this.props.addUserAddress(addressDetails);
+
+    this.props.addUserAddress(this.state);
   };
 
   clearAllValue = () => {
