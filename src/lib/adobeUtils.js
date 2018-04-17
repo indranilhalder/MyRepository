@@ -551,15 +551,3 @@ export function setDataLayerForPlpDirectCalls(response) {
     window.digitalData = data;
   }
 }
-export function setDataLayerForCancelProductDirectCalls(cancelReasonObj) {
-  const data = {
-    cpj: {
-      product: {
-        id: cancelReasonObj.orderCode
-      }
-    }
-  };
-
-  window.digitalData = data;
-  window._satellite.track(ADOBE_ORDER_CANCEL);
-}
