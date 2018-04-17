@@ -74,7 +74,12 @@ const mapStateToProps = state => {
     getUserAddressError: state.cart.getUserAddressError,
     netBankDetailsError: state.cart.netBankDetailsError,
     updateProfileError: state.profile.updateProfileError,
-    verifyWalletError: state.profile.verifyWalletError
+    verifyWalletError: state.profile.verifyWalletError,
+    emiEligibilityError: state.cart.emiEligibilityError,
+    bankAndTenureError: state.cart.bankAndTenureError,
+    emiTermsAndConditionError: state.cart.emiTermsAndConditionError,
+    noCostEmiError: state.cart.noCostEmiError,
+    emiItemBreakUpError: state.cart.emiItemBreakUpError
   };
 };
 

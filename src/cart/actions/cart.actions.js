@@ -264,6 +264,33 @@ export const DISPLAY_COUPON_REQUEST = "DISPLAY_COUPON_REQUEST";
 export const DISPLAY_COUPON_SUCCESS = "DISPLAY_COUPON_SUCCESS";
 export const DISPLAY_COUPON_FAILURE = "DISPLAY_COUPON_FAILURE";
 
+export const ELIGIBILITY_OF_NO_COST_EMI_REQUEST =
+  "ELIGIBILITY_OF_NO_COST_EMI_REQUEST";
+export const ELIGIBILITY_OF_NO_COST_EMI_SUCCESS =
+  "ELIGIBILITY_OF_NO_COST_EMI_SUCCESS";
+export const ELIGIBILITY_OF_NO_COST_EMI_FAILURE =
+  "ELIGIBILITY_OF_NO_COST_EMI_FAILURE";
+
+export const BANK_AND_TENURE_DETAILS_REQUEST="BANK_AND_TENURE_DETAILS_REQUEST";
+export const BANK_AND_TENURE_DETAILS_SUCCESS="BANK_AND_TENURE_DETAILS_SUCCESS";
+export const BANK_AND_TENURE_DETAILS_FAILURE="BANK_AND_TENURE_DETAILS_FAILURE"
+
+export const EMI_TERMS_AND_CONDITIONS_FOR_BANK_REQUEST="EMI_TERMS_AND_CONDITIONS_FOR_BANK_REQUEST";
+export const EMI_TERMS_AND_CONDITIONS_FOR_BANK_SUCCESS="EMI_TERMS_AND_CONDITIONS_FOR_BANK_SUCCESS";
+export const EMI_TERMS_AND_CONDITIONS_FOR_BANK_FAILURE="EMI_TERMS_AND_CONDITIONS_FOR_BANK_FAILURE"
+
+export const APPLY_NO_COST_EMI_REQUEST="APPLY_NO_COST_EMI_REQUEST";
+export const APPLY_NO_COST_EMI_SUCCESS="APPLY_NO_COST_EMI_SUCCESS";
+export const APPLY_NO_COST_EMI_FAILURE="APPLY_NO_COST_EMI_FAILURE"
+
+export const REMOVE_NO_COST_EMI_REQUEST="REMOVE_NO_COST_EMI_REQUEST";
+export const REMOVE_NO_COST_EMI_SUCCESS="REMOVE_NO_COST_EMI_SUCCESS";
+export const REMOVE_NO_COST_EMI_FAILURE="REMOVE_NO_COST_EMI_FAILURE"
+
+export const EMI_ITEM_BREAK_UP_DETAILS_REQUEST="EMI_ITEM_BREAK_UP_DETAILS_REQUEST";
+export const EMI_ITEM_BREAK_UP_DETAILS_SUCCESS="EMI_ITEM_BREAK_UP_DETAILS_SUCCESS";
+export const EMI_ITEM_BREAK_UP_DETAILS_FAILURE="EMI_ITEM_BREAK_UP_DETAILS_FAILURE"
+
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
@@ -3510,3 +3537,306 @@ export function clearCartDetails() {
     type: CLEAR_CART_DETAILS
   };
 }
+
+export function getEligibilityOfNoCostEmiRequest() {
+  return {
+    type: ELIGIBILITY_OF_NO_COST_EMI_REQUEST,
+    status: REQUESTING,
+  };
+}
+
+export function getEligibilityOfNoCostEmiSuccess(EmiEligibility) {
+  return {
+    type: ELIGIBILITY_OF_NO_COST_EMI_SUCCESS,
+    status: SUCCESS,
+    EmiEligibility
+  };
+}
+
+export function getEligibilityOfNoCostEmiFailure() {
+  return {
+    type: ELIGIBILITY_OF_NO_COST_EMI_FAILURE,
+    status: ERROR,
+  };
+}
+
+export function getEmiEligibility() {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    const cartId = JSON.parse(cartDetails).guid;
+    dispatch(getEligibilityOfNoCostEmiRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/payments/noCostEmiCheck?platformNumber=2&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartId}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(getEligibilityOfNoCostEmiSuccess(resultJson));
+    } catch (e) {
+      dispatch(getEligibilityOfNoCostEmiFailure(e.message));
+    }
+  };
+}
+
+export function getBankAndTenureDetailsRequest() {
+  return {
+    type: BANK_AND_TENURE_DETAILS_REQUEST,
+    status: REQUESTING,
+  };
+}
+
+export function getBankAndTenureDetailsSuccess(bankAndTenureDetails) {
+  return {
+    type: BANK_AND_TENURE_DETAILS_SUCCESS,
+    status: SUCCESS,
+    bankAndTenureDetails
+  };
+}
+
+export function getBankAndTenureDetailsFailure() {
+  return {
+    type: BANK_AND_TENURE_DETAILS_FAILURE,
+    status: ERROR,
+  };
+}
+
+export function getBankAndTenureDetails() {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    const cartId = JSON.parse(cartDetails).guid;
+    dispatch(getBankAndTenureDetailsRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/payments/noCostEmiTenureList?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartId}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(getBankAndTenureDetailsSuccess(resultJson));
+    } catch (e) {
+      dispatch(getBankAndTenureDetailsFailure(e.message));
+    }
+  };
+}
+
+export function getEmiTermsAndConditionsForBankRequest() {
+  return {
+    type: EMI_TERMS_AND_CONDITIONS_FOR_BANK_REQUEST,
+    status: REQUESTING,
+  };
+}
+
+export function getEmiTermsAndConditionsForBankSuccess(termsAndConditions) {
+  return {
+    type: EMI_TERMS_AND_CONDITIONS_FOR_BANK_SUCCESS,
+    status: SUCCESS,
+    termsAndConditions
+  };
+}
+
+export function getEmiTermsAndConditionsForBankFailure() {
+  return {
+    type: EMI_TERMS_AND_CONDITIONS_FOR_BANK_FAILURE,
+    status: ERROR,
+  };
+}
+
+export function getEmiTermsAndConditionsForBank(code) {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    dispatch(getEmiTermsAndConditionsForBankRequest());
+    try {
+
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/payments/${code}/noCostEmiTnc?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(getEmiTermsAndConditionsForBankSuccess(resultJson));
+    } catch (e) {
+      dispatch(getEmiTermsAndConditionsForBankFailure(e.message));
+    }
+  };
+}
+
+export function applyNoCostEmiRequest() {
+  return {
+    type: APPLY_NO_COST_EMI_REQUEST,
+    status: REQUESTING,
+  };
+}
+
+export function applyNoCostEmiSuccess(noCostEmiResult) {
+  return {
+    type: APPLY_NO_COST_EMI_SUCCESS,
+    status: SUCCESS,
+    noCostEmiResult
+  };
+}
+
+export function applyNoCostEmiFailure() {
+  return {
+    type: APPLY_NO_COST_EMI_FAILURE,
+    status: ERROR,
+  };
+}
+
+export function applyNoCostEmi(couponCode) {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    const cartId = JSON.parse(cartDetails).code;
+    const cartGuId = JSON.parse(cartDetails).guid;
+    dispatch(applyNoCostEmiRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/carts/${cartId}/applyNoCostEMI?couponCode=${couponCode}&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartGuId}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(applyNoCostEmiSuccess(resultJson));
+    } catch (e) {
+      dispatch(applyNoCostEmiFailure(e.message));
+    }
+  };
+}
+
+export function removeNoCostEmiRequest() {
+  return {
+    type: REMOVE_NO_COST_EMI_REQUEST,
+    status: REQUESTING,
+  };
+}
+
+export function removeNoCostEmiSuccess(noCostEmiResult) {
+  return {
+    type: REMOVE_NO_COST_EMI_SUCCESS,
+    status: SUCCESS,
+    noCostEmiResult
+  };
+}
+
+export function removeNoCostEmiFailure() {
+  return {
+    type: REMOVE_NO_COST_EMI_FAILURE,
+    status: ERROR,
+  };
+}
+
+export function removeNoCostEmi(couponCode) {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    const cartId = JSON.parse(cartDetails).code;
+    const cartGuId = JSON.parse(cartDetails).guid;
+    dispatch(removeNoCostEmiRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/carts/${cartId}/releaseNoCostEMI?couponCode=${couponCode}&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartGuId}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(removeNoCostEmiSuccess(resultJson));
+    } catch (e) {
+      dispatch(removeNoCostEmiFailure(e.message));
+    }
+  };
+}
+
+export function getItemBreakUpDetailsRequest() {
+  return {
+    type: EMI_ITEM_BREAK_UP_DETAILS_REQUEST,
+    status: REQUESTING,
+  };
+}
+
+export function getItemBreakUpDetailsSuccess(noCostEmiResult) {
+  return {
+    type: EMI_ITEM_BREAK_UP_DETAILS_SUCCESS,
+    status: SUCCESS,
+    noCostEmiResult
+  };
+}
+
+export function getItemBreakUpDetailsFailure() {
+  return {
+    type: EMI_ITEM_BREAK_UP_DETAILS_FAILURE,
+    status: ERROR,
+  };
+}
+
+export function getItemBreakUpDetails(couponCode) {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    const cartGuId = JSON.parse(cartDetails).guid;
+    dispatch(getItemBreakUpDetailsRequest());
+    try {
+
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/payments/noCostEmiItemBreakUp?couponCode=${couponCode}&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartGuId}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(getItemBreakUpDetailsSuccess(resultJson));
+    } catch (e) {
+      dispatch(getItemBreakUpDetailsFailure(e.message));
+    }
+  };
+}
+
