@@ -234,6 +234,7 @@ export default class PdpElectronics extends React.Component {
                 discountPrice={discountPrice}
                 averageRating={productData.averageRating}
                 onClick={this.goToReviewPage}
+                discount={productData.discount}
               />
             )}
             {productData.rootCategory === "Watches" && (
