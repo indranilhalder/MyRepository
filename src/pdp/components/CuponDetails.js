@@ -12,7 +12,10 @@ export default class CuponDetails extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.cuponCard} onClick={() => this.handleClick()}>
+        <div
+          className={styles.cuponCard}
+          onClick={val => this.handleClick(val)}
+        >
           {this.props.couponType === COUPON_TYPE && (
             <div className={styles.headerText}>
               <span>{this.props.promotionTitle}</span>
