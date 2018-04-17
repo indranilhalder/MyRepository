@@ -9,10 +9,12 @@ export default class NoCostEmiBankDetails extends React.Component {
     super(props);
     this.state = {
       isSelected: null,
-      selectMonth: null
+      selectMonth: null,
+      showAll: false
     };
   }
   selectOtherBank(val) {
+    this.setState({ isSelected: null });
     if (this.props.selectOtherBank) {
       this.props.selectOtherBank(val);
     }
@@ -84,6 +86,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             </div>
           )}
         </div>
+
         {val.totalAmount && (
           <div className={styles.itemLevelButtonHolder}>
             <div className={styles.itemLevelButton}>
@@ -105,19 +108,50 @@ export default class NoCostEmiBankDetails extends React.Component {
       <div className={styles.base}>
         <div className={styles.bankLogoHolder}>
           {this.props.bankList &&
-            this.props.bankList.map((val, i) => {
-              return (
-                <div className={styles.bankLogo}>
-                  <BankSelect
-                    image={val.image}
-                    value={val.bankName}
-                    key={i}
-                    selectItem={() => this.handleSelect(i)}
-                    selected={this.state.isSelected === i}
-                  />
-                </div>
-              );
-            })}
+            this.props.bankList
+              .filter((val, i) => {
+                return !this.state.showAll ? i < 4 : true;
+              })
+              .map((val, i) => {
+                return (
+                  <div className={styles.bankLogo}>
+                    <BankSelect
+                      image={val.imageUrl}
+                      value={val.imageUrl}
+                      key={i}
+                      selectItem={() => this.handleSelect(i)}
+                      selected={this.state.isSelected === i}
+                    />
+                  </div>
+                );
+              })}
+        </div>
+        <div className={styles.selectHolder}>
+          <SelectBoxMobile
+            height={33}
+            label="Other Bank"
+            options={
+              this.props.bankList &&
+              this.props.bankList.map((val, i) => {
+                return {
+                  value: val.bankName,
+                  label: val.bankName
+                };
+              })
+            }
+            onChange={val => this.selectOtherBank(val)}
+          />
+        </div>
+        <div className={styles.itemLevelButtonHolder}>
+          <div className={styles.itemLevelButton}>
+            <UnderLinedButton
+              size="14px"
+              fontFamily="regular"
+              color="#000"
+              label="View T&C"
+              onClick={() => this.termsAndCondition()}
+            />
+          </div>
         </div>
         {this.state.isSelected !== null && (
           <div className={styles.emiDetailsPlan}>
@@ -153,33 +187,6 @@ export default class NoCostEmiBankDetails extends React.Component {
               this.state.selectMonth
             ]
           )}
-        <div className={styles.selectHolder}>
-          <SelectBoxMobile
-            height={33}
-            label="Other Bank"
-            options={
-              this.props.bankList &&
-              this.props.bankList.map((val, i) => {
-                return {
-                  value: val.otherBank,
-                  label: val.otherBank
-                };
-              })
-            }
-            onChange={val => this.selectOtherBank(val)}
-          />
-        </div>
-        <div className={styles.itemLevelButtonHolder}>
-          <div className={styles.itemLevelButton}>
-            <UnderLinedButton
-              size="14px"
-              fontFamily="regular"
-              color="#000"
-              label="Terms & Conditions"
-              onClick={() => this.termsAndCondition()}
-            />
-          </div>
-        </div>
       </div>
     );
   }
