@@ -54,7 +54,7 @@ class CuratedProductsComponent extends React.Component {
               width={100}
               onClick={this.handleSeeAll}
               label={feedComponentData.btnText}
-              color="white"
+              color="#000"
             />
           )}
         </div>
