@@ -13,14 +13,18 @@ import delay from "lodash/delay";
 import { MSD_WIDGET_PLATFORM } from "../../lib/config.js";
 import { setDataLayer, ADOBE_HOME_TYPE } from "../../lib/adobeUtils.js";
 import * as Cookie from "../../lib/Cookie";
+import * as ErrorHandling from "../../general/ErrorHandling.js";
 
 import { getMcvId } from "../../lib/adobeUtils.js";
 import { getMsdFormData } from "../../lib/msdUtils.js";
-import { getMsdRequest } from "../../pdp/actions/pdp.actions";
 
 export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
 export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
+
+export const HOME_FEED_BACK_UP_FAILURE = "HOME_FEED_BACK_UP_FAILURE";
+export const HOME_FEED_BACK_UP_REQUEST = "HOME_FEED_BACK_UP_REQUEST";
+export const HOME_FEED_BACK_UP_SUCCESS = "HOME_FEED_BACK_UP_SUCCESS";
 export const HOME_FEED_NULL_DATA_SUCCESS = "HOME_FEED_NULL_DATA_SUCCESS";
 export const COMPONENT_DATA_REQUEST = "COMPONENT_DATA_REQUEST";
 export const COMPONENT_DATA_SUCCESS = "COMPONENT_DATA_SUCCESS";
@@ -245,6 +249,30 @@ export function selectSingleSelectResponse(value, questionId, positionInFeed) {
     }
   };
 }
+
+export function homeFeedBackUpRequest() {
+  return {
+    type: HOME_FEED_BACK_UP_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function homeFeedBackupSuccess(data) {
+  return {
+    type: HOME_FEED_BACK_UP_SUCCESS,
+    status: SUCCESS,
+    data
+  };
+}
+
+export function homeFeedBackUpFailure(error) {
+  return {
+    type: HOME_FEED_BACK_UP_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
 export function homeFeedRequest(feedType) {
   return {
     type: HOME_FEED_REQUEST,
@@ -265,6 +293,28 @@ export function homeFeedFailure(error) {
     type: HOME_FEED_FAILURE,
     status: ERROR,
     error
+  };
+}
+
+export function homeFeedBackUp() {
+  return async (dispatch, getState, { api }) => {
+    try {
+      const result = await api.get(
+        `v2/mpl/cms/defaultpage?pageId=defaulthomepage`
+      );
+      const resultJson = await result.json();
+      const failureResponse = ErrorHandling.getFailureResponse(resultJson);
+      if (failureResponse.status) {
+        dispatch(new Error(failureResponse.message));
+      }
+
+      console.log("RESULT JSON");
+      console.log(resultJson);
+
+      dispatch(homeFeedBackupSuccess(resultJson.items));
+    } catch (e) {
+      dispatch(homeFeedBackUpFailure(e.message));
+    }
   };
 }
 
@@ -298,6 +348,15 @@ export function homeFeed(brandIdOrCategoryId: null) {
         } else if (process.env.REACT_APP_STAGE === "p2") {
           mbox = ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME;
         }
+
+        delay(() => {
+          const isHomeFeedLoading = getState().home.loading;
+          console.log("IS HOME FEED LOADING");
+          console.log(isHomeFeedLoading);
+          if (isHomeFeedLoading) {
+            dispatch(homeFeedBackUp());
+          }
+        }, ADOBE_TARGET_DELAY);
 
         const mcvId = await getMcvId();
         resultJson = await api.postAdobeTargetUrl(
