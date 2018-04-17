@@ -1,0 +1,21 @@
+.base {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  color: #212121;
+  font-family: regular;
+  margin-top: 20px;
+  padding: 0 15px;
+}
+
+.link {
+  font-size: 14px;
+  color: #ff1744;
+  font-family: regular;
+  display: inline-block;
+  margin-left: 10px;
+}
+.content {
+  width: 100%;
+  height: auto;
+}

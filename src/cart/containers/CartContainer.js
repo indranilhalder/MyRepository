@@ -24,6 +24,12 @@ import {
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
 import { PRODUCT_COUPONS, showModal } from "../../general/modal.actions";
+import { SUCCESS } from "../../lib/constants";
+import {
+  setDataLayerForCartDirectCalls,
+  ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS,
+  ADOBE_DIRECT_CALL_FOR_PINCODE_FAILURE
+} from "../../lib/adobeUtils";
 const mapDispatchToProps = dispatch => {
   return {
     displayToast: toastMessage => {
@@ -38,8 +44,30 @@ const mapDispatchToProps = dispatch => {
     getEmiBankDetails: cartDetails => {
       dispatch(getEmiBankDetails(cartDetails));
     },
-    getCartDetails: (cartId, userId, accessToken, pinCode) => {
-      dispatch(getCartDetails(cartId, userId, accessToken, pinCode));
+    getCartDetails: async (
+      cartId,
+      userId,
+      accessToken,
+      pinCode,
+      setDataLayerForPincode: false
+    ) => {
+      const cartDetailsObj = await dispatch(
+        getCartDetails(cartId, userId, accessToken, pinCode)
+      );
+      // here we are setting data layer for pincode change on cart page
+      if (setDataLayerForPincode) {
+        if (cartDetailsObj.status === SUCCESS) {
+          setDataLayerForCartDirectCalls(
+            ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS,
+            pinCode
+          );
+        } else {
+          setDataLayerForCartDirectCalls(
+            ADOBE_DIRECT_CALL_FOR_PINCODE_FAILURE,
+            pinCode
+          );
+        }
+      }
     },
     setHeaderText: text => {
       dispatch(setHeaderText(text));

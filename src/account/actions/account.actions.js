@@ -1675,7 +1675,9 @@ export function getWishList() {
         throw new Error(resultJsonStatus.message);
       }
 
-      return dispatch(getWishlistSuccess(resultJson.wishList[0])); //we sre getting response wishlit[0]
+      return dispatch(
+        getWishlistSuccess(resultJson.wishList && resultJson.wishList[0])
+      ); //we sre getting response wishlit[0]
     } catch (e) {
       return dispatch(getWishlistFailure(e.message));
     }
