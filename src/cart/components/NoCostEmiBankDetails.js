@@ -101,7 +101,6 @@ export default class NoCostEmiBankDetails extends React.Component {
     );
   }
   render() {
-    console.log(this.props.bankList);
     return (
       <div className={styles.base}>
         <div className={styles.bankLogoHolder}>
