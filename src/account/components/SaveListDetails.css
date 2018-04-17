@@ -31,8 +31,23 @@
   border-radius: 4px;
 }
 .noSaveListBlock {
-  background: #fff;
-  margin: 10px;
-  padding: 20px;
-  border-radius: 4px;
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 73px 56px;
+}
+.noSaveListText {
+  text-align: center;
+  font-family: semibold;
+  font-size: 14px;
+  margin: auto;
+  line-height: 25px;
+}
+.buttonHolder {
+  padding-top: 44px;
+  text-align: center;
+}
+.button {
+  text-align: center;
+  display: inline-block;
 }
