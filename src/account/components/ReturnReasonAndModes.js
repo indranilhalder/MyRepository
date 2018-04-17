@@ -107,7 +107,11 @@ export default class ReturnReasonAndModes extends React.Component {
     const renderReturnMode = (
       <ReturnModes
         {...this.props}
-        productInfo={this.props.returnRequest.returnEntry.orderEntries[0]}
+        productInfo={
+          this.props.returnRequest &&
+          this.props.returnRequest.returnEntry &&
+          this.props.returnRequest.returnEntry.orderEntries[0]
+        }
         selectMode={mode => this.onSelectMode(mode)}
       />
     );
