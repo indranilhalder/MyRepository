@@ -2479,10 +2479,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 		if (cartModel != null)
 		{
+			ProductModel prodmod = null;
 			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 			{
-				final ProductModel prodmod = cartEntryModel.getProduct();
-				if (cartEntryModel != null && cartEntryModel.getProduct() == null)
+				prodmod = cartEntryModel.getProduct();
+				if (cartEntryModel != null && prodmod == null)
 				{
 					final CartModificationData cartModification = updateCartEntryMobile(cartEntryModel.getEntryNumber().longValue(),
 							0, cartModel);
@@ -2530,17 +2531,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					if (CollectionUtils.isNotEmpty(sellerInformationModelList)
 							&& sellerinfomodel != null
 							&& ((sellerinfomodel.getSellerAssociationStatus() != null && sellerinfomodel.getSellerAssociationStatus()
-									.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)) || (sellerinfomodel
-
-
-
-
-
-
-
-
-
-							.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
+									.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)) || (sellerinfomodel.getEndDate() != null && sysDate
+									.after(sellerinfomodel.getEndDate()))))
 					{
 						LOG.debug(">> Removing Cart entry for delisted ussid for " + cartEntryModel.getSelectedUSSID());
 						final CartModificationData cartModification = updateCartEntryMobile(

@@ -538,8 +538,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	public Map<String, String> getOrderEntryFullfillmentMode(final OrderData orderData) throws CMSItemNotFoundException
 	{
 		final Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
-		SellerInformationModel sellerInfoModel = new SellerInformationModel();
-		Collection<RichAttributeModel> colofrichatr=sellerInfoModel.getRichAttribute();
+		
 		/********************* TPR-1081 *********************/
 		if (orderData == null)
 		{
@@ -547,10 +546,12 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		}
 		else if (CollectionUtils.isEmpty(orderData.getSellerOrderList()))
 		{
+			Collection<RichAttributeModel> colofrichatr=null;
 			for (final OrderEntryData orderEntryData : orderData.getEntries())
 			{
-				 sellerInfoModel = mplSellerInformationService.getSellerDetail(orderEntryData
+				final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(orderEntryData
 						.getSelectedUssid());
+				 colofrichatr=sellerInfoModel.getRichAttribute();
 				if (sellerInfoModel != null && colofrichatr != null
 						&& ((List<RichAttributeModel>) colofrichatr).get(0).getDeliveryFulfillModes() != null)
 				{
@@ -564,14 +565,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			for (final OrderData sellerOrderData : orderData.getSellerOrderList())
 			{
+				Collection<RichAttributeModel> colofrichatrTemp=null;
 				for (final OrderEntryData orderEntryData : sellerOrderData.getEntries())
 				{
-					 sellerInfoModel = mplSellerInformationService.getSellerDetail(orderEntryData
+					final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(orderEntryData
 							.getSelectedUssid());
-					if (sellerInfoModel != null && colofrichatr != null
-							&& ((List<RichAttributeModel>) colofrichatr).get(0).getDeliveryFulfillModes() != null)
+					 colofrichatrTemp=sellerInfoModel.getRichAttribute();
+					if (sellerInfoModel != null && colofrichatrTemp != null
+							&& ((List<RichAttributeModel>) colofrichatrTemp).get(0).getDeliveryFulfillModes() != null)
 					{
-						final String fulfillmentType = ((List<RichAttributeModel>) colofrichatr).get(0)
+						final String fulfillmentType = ((List<RichAttributeModel>) colofrichatrTemp).get(0)
 								.getDeliveryFulfillModes().getCode();
 						fullfillmentDataMap.put(orderEntryData.getTransactionId(), fulfillmentType.toLowerCase());
 					}
@@ -3820,9 +3823,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			for (final PinCodeResponseData pinCodeEntry : pincodeResponseData)
 			{
+				MarketplaceDeliveryModeData deliverymodedata=null;
 				for (final OrderEntryData cartEntry : cartDataEntryList)
 				{
-					MarketplaceDeliveryModeData deliverymodedata=cartEntry.getMplDeliveryMode();
+					 deliverymodedata=cartEntry.getMplDeliveryMode();
 					if (cartEntry != null && cartEntry.getSelectedUssid() != null && deliverymodedata != null
 							&& deliverymodedata.getCode() != null && pinCodeEntry != null
 							&& pinCodeEntry.getValidDeliveryModes() != null && codEligible

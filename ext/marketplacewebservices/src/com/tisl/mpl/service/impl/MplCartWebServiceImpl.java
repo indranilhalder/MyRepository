@@ -4348,9 +4348,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (null != abstractOrderEntry.getMplZoneDeliveryModeValue())
 				{
 					deliverymodeList = abstractOrderEntry.getMplZoneDeliveryModeValue();
+					DeliveryModeModel deliverymodemod = null;
 					for (final MplZoneDeliveryModeValueModel deliveryMode : deliverymodeList)
 					{
-						final DeliveryModeModel deliverymodemod = deliveryMode.getDeliveryMode();
+						deliverymodemod = deliveryMode.getDeliveryMode();
 
 						delivery = new MobdeliveryModeWsDTO();
 						if (null != deliverymodemod && StringUtils.isNotEmpty(deliverymodemod.getCode()))
@@ -4439,43 +4440,44 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					}
 
 					deliverymodeList = abstractOrderEntry.getMplZoneDeliveryModeValue();
+					DeliveryModeModel delmodemodTemp = null;
 					for (final MplZoneDeliveryModeValueModel deliveryMode : deliverymodeList)
 					{
-						final DeliveryModeModel delmodemod = deliveryMode.getDeliveryMode();
+						delmodemodTemp = deliveryMode.getDeliveryMode();
 						delivery = new MobdeliveryModeWsDTO();
-						if (null != delmodemod && StringUtils.isNotEmpty(delmodemod.getCode()))
+						if (null != delmodemodTemp && StringUtils.isNotEmpty(delmodemodTemp.getCode()))
 						{
-							delivery.setCode(delmodemod.getCode());
+							delivery.setCode(delmodemodTemp.getCode());
 
 							//TISEE-950
 							String startValue = null;
 							String endValue = null;
-							if (null != delmodemod)
+							if (null != delmodemodTemp)
 							{
-								startValue = delmodemod.getStart() != null ? delmodemod
+								startValue = delmodemodTemp.getStart() != null ? delmodemodTemp
 
 
 								.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
-								endValue = delmodemod.getEnd() != null ? delmodemod
+								endValue = delmodemodTemp.getEnd() != null ? delmodemodTemp
 
 
 
 								.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 							}
-							if (StringUtils.isNotEmpty(delmodemod.getCode()) && StringUtils.isNotEmpty(startValue)
+							if (StringUtils.isNotEmpty(delmodemodTemp.getCode()) && StringUtils.isNotEmpty(startValue)
 									&& StringUtils.isNotEmpty(endValue) && StringUtils.isNotEmpty(deliveryMode.getSellerArticleSKU())
-									&& StringUtils.isNotEmpty(delmodemod.getCode()))
+									&& StringUtils.isNotEmpty(delmodemodTemp.getCode()))
 							{
 
 
 								delivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
-										deliveryMode.getSellerArticleSKU(), delmodemod.getCode(), startValue, endValue));
+										deliveryMode.getSellerArticleSKU(), delmodemodTemp.getCode(), startValue, endValue));
 							}
-							if (null != delmodemod && StringUtils.isNotEmpty(delmodemod.getName()))
+							if (null != delmodemodTemp && StringUtils.isNotEmpty(delmodemodTemp.getName()))
 							{
-								delivery.setName(delmodemod.getName());
+								delivery.setName(delmodemodTemp.getName());
 							}
 
 							//TPR-4421
@@ -4502,9 +4504,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 								}
 							}
 							//SDI-4197 starts
-							if (null != delmodemod.getPriority())
+							if (null != delmodemodTemp.getPriority())
 							{
-								delivery.setPriority(delmodemod.getPriority().intValue());
+								delivery.setPriority(delmodemodTemp.getPriority().intValue());
 							}
 							//SDI-4197 ends
 
