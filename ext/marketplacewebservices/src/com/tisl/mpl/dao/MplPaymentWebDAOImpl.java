@@ -7,6 +7,7 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.SavedCardModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.model.BankModel;
@@ -414,5 +416,33 @@ public class MplPaymentWebDAOImpl implements MplPaymentWebDAO
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+
+
+	/**
+	 * Fetch EMIBankModel by code NU-351
+	 */
+	@Override
+	public EMIBankModel getStandardEMIBankByCode(final String code)
+	{
+		EMIBankModel newEMIBankModel = null;
+		try
+		{
+			final EMIBankModel emiBankModel = new EMIBankModel();
+			emiBankModel.setCode(code);
+			emiBankModel.setIsStandardEmi(Boolean.TRUE);
+			newEMIBankModel = flexibleSearchService.getModelByExample(emiBankModel);
+		}
+		catch (final ModelNotFoundException e)
+		{
+			LOG.error("In getStandardEMIBankByCode ModelNotFound for code", e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B6010);
+		}
+		catch (final AmbiguousIdentifierException e)
+		{
+			LOG.error("In getStandardEMIBankByCode More than one model found  for code", e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B6011);
+		}
+		return newEMIBankModel;
 	}
 }

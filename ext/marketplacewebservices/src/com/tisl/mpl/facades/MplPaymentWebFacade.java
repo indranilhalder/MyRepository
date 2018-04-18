@@ -192,4 +192,10 @@ public interface MplPaymentWebFacade
 	 * @return NoCostEMIBankModel
 	 */
 	EMIBankModel getNoCostEMIBankByPk(String pk);
+
+	/**
+	 * @param code
+	 * @return EMIBankModel
+	 */
+	EMIBankModel getStandardEMIBankByCode(String code);
 }

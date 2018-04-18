@@ -702,6 +702,7 @@ public class MarketplacewebservicesConstants
 	//nocostemi
 	public static final String NOCOSTEMICHECK = "/noCostEmiCheck";
 	public static final String NOCOSTEMITNC = "/noCostEmiTnc";
+	public static final String STANDARDEMITNC = "/standardEmiTnc";
 	public static final String NOCOSTEMITENURELIST = "/noCostEmiTenureList";
 
 	public static final String NOCOSTEMIITEMBREAKUP = "/noCostEmiItemBreakUp";

@@ -163,7 +163,11 @@
 					</list>
 				</entry>
 				  
-
+				<entry key="CMSTextComponent">
+                    <list>
+                        <value>CMSTextComponent.textValue</value>
+                    </list>
+                </entry>
 				  <entry key="HeroBannerComponent">
                     <list>
                         <value>HeroBannerComponent.items</value>

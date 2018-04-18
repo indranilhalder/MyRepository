@@ -289,12 +289,19 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String PAYMENTTYPESQUERY = "select {p:pk} from {PaymentType As p JOIN BaseStore AS b ON {p.basestore}={b.pk}} WHERE {b.uid}=?store"
 			.intern();
-	public static final String EMIBANKSQUERY = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?cartValue and {b.emiUpperLimit}>=?cartValue and {b.name}={m.pk}  order by {m.bankname}"
+	//NU-351 Starts
+//	public static final String EMIBANKSQUERY = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?cartValue and {b.emiUpperLimit}>=?cartValue and {b.name}={m.pk}  order by {m.bankname}"
+//			.intern();
+	public static final String EMIBANKSQUERY = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?cartValue and {b.emiUpperLimit}>=?cartValue and {b.name}={m.pk} and {b.isStandardEmi}=?isStandardEmi order by {m.bankname}"
 			.intern();
-
 	//TISPRO-179
-	public static final String EMIBANK_FOR_BANKNAMES_QUERY = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?cartValue and {b.emiUpperLimit}>=?cartValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName order by {m.bankname}"
+//	public static final String EMIBANK_FOR_BANKNAMES_QUERY = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?cartValue and {b.emiUpperLimit}>=?cartValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName order by {m.bankname}"
+//				.intern();
+	public static final String EMIBANK_FOR_BANKNAMES_QUERY = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?cartValue and {b.emiUpperLimit}>=?cartValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName  and {b.isStandardEmi}=?isStandardEmi order by {m.bankname}"
 			.intern();
+	//NU-351 Ends
+
+	
 
 	public static final String EMIBANTERMSSQUERY = "select {e:pk} from {emibank as e},{bank as b} where {e.name}={b.pk} and {b.bankName}=?bank"
 			.intern();
@@ -1014,6 +1021,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TPR-7448 Starts here
 	public static final String B6009 = "B6009";
 	//TPR-7448 Ends here
+	public static final String B6010 = "B6010";
+	public static final String B6011 = "B6011";
 
 	//Search error codes starts
 	public static final String B7000 = "B7000";
@@ -2561,10 +2570,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//NU-61
 
 	public static final String MPLPRODUCTVALUE = "productValue".intern();
-	public static final String EMIBANKSQUERYPRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk}  order by {m.bankname}"
+	//NU-351 Starts
+	//public static final String EMIBANKSQUERYPRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk}  order by {m.bankname}".intern();
+	public static final String EMIBANKSQUERYPRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk} and {b.isStandardEmi}=?isStandardEmi order by {m.bankname}"
+					.intern();
+	//public static final String EMIBANK_FOR_BANKNAMES_QUERY_PRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName order by {m.bankname}".intern();
+	public static final String EMIBANK_FOR_BANKNAMES_QUERY_PRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName and {b.isStandardEmi}=?isStandardEmi order by {m.bankname}"
 			.intern();
-	public static final String EMIBANK_FOR_BANKNAMES_QUERY_PRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName order by {m.bankname}"
-			.intern();
+	//NU-351 Ends
+	
 	//NU-56
 	public static final String SUCCESS_MSG_CUST_EXP = "Thank you for sharing your valuable feedback.";
 	public static final String SUCCESS_FLAG_CUST_EXP = "Success";
@@ -2601,4 +2615,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String NU009 = "NU009";
 	public static final String NU010 = "NU010";
+
+
+	
+	public static final String ISSTANDARDEMI = "isStandardEmi".intern();
 }
