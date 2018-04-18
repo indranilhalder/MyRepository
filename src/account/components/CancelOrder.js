@@ -48,7 +48,7 @@ export default class CancelOrder extends React.Component {
     cancelProductDetails.refundType = "";
     this.props.cancelProduct(
       cancelProductDetails,
-      this.props.cancelProductDetails
+      this.props.cancelProductDetails.orderProductWsDTO[0]
     );
   };
   onCancel() {

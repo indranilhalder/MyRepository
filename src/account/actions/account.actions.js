@@ -31,7 +31,19 @@ import {
 } from "../../general/modal.actions.js";
 import moment from "moment";
 import { getPaymentModes } from "../../cart/actions/cart.actions.js";
-import { getMcvId } from "../../lib/adobeUtils";
+import {
+  getMcvId,
+  setDataLayerForMyAccountDirectCalls,
+  ADOBE_MY_ACCOUNT_ORDER_RETURN,
+  setDataLayer,
+  ADOBE_MY_ACCOUNT_SAVED_LIST,
+  ADOBE_MY_ACCOUNT_BRANDS,
+  ADOBE_MY_ACCOUNT_ORDER_HISTORY,
+  ADOBE_MY_ACCOUNT_GIFT_CARD,
+  ADOBE_MY_ACCOUNT_CLIQ_CASH,
+  AODBE_MY_ACCOUNT_SETTINGS,
+  ADOBE_MY_ACCOUNT_ORDER_DETAILS
+} from "../../lib/adobeUtils";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
@@ -460,7 +472,7 @@ export function newReturnInitiateFailure(error) {
   };
 }
 
-export function newReturnInitial(returnDetails) {
+export function newReturnInitial(returnDetails, product) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -480,7 +492,11 @@ export function newReturnInitial(returnDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayerForMyAccountDirectCalls(
+        ADOBE_MY_ACCOUNT_ORDER_RETURN,
+        product,
+        returnDetails
+      );
       dispatch(newReturnInitiateSuccess(resultJson));
     } catch (e) {
       dispatch(newReturnInitiateFailure(e.message));
@@ -631,6 +647,7 @@ export function getGiftCardDetails() {
         if (!resultJson.isWalletCreated && !resultJson.isWalletOtpVerified) {
           dispatch(showModal(GENERATE_OTP_FOR_EGV));
         }
+        setDataLayer(ADOBE_MY_ACCOUNT_GIFT_CARD);
         return dispatch(giftCardSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.errors[0].message}`);
@@ -898,6 +915,7 @@ export function getSavedCardDetails(userId, customerAccessToken) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayer(ADOBE_MY_ACCOUNT_SAVED_LIST);
       dispatch(getSavedCardSuccess(resultJson));
     } catch (e) {
       dispatch(getSavedCardFailure(e.message));
@@ -1031,6 +1049,7 @@ export function getAllOrdersDetails() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayer(ADOBE_MY_ACCOUNT_ORDER_HISTORY);
       dispatch(getAllOrdersSuccess(resultJson));
     } catch (e) {
       dispatch(getAllOrdersFailure(e.message));
@@ -1079,6 +1098,7 @@ export function getUserDetails() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayer(AODBE_MY_ACCOUNT_SETTINGS);
       dispatch(getUserDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(getUserDetailsFailure(e.message));
@@ -1343,6 +1363,7 @@ export function fetchOrderDetails(orderId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayer(ADOBE_MY_ACCOUNT_ORDER_DETAILS);
       dispatch(fetchOrderDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(fetchOrderDetailsFailure(e.message));
@@ -1804,7 +1825,7 @@ export function getCliqCashDetails() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayer(ADOBE_MY_ACCOUNT_CLIQ_CASH);
       if (!resultJson.isWalletCreated && !resultJson.isWalletOtpVerified) {
         dispatch(showModal(GENERATE_OTP_FOR_CLIQ_CASH));
       }

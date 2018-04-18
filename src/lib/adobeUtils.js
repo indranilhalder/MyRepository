@@ -38,10 +38,41 @@ const ADOBE_DIRECT_CALL_FOR_SAVE_PORDUCT_ON_CART = "cpj_button_save'";
 const ADOBE_ORDER_CONFIRMATION_FAILURE = "cpj_order_fail";
 const ADOBE_ORDER_CONFIRMATION_SUCCESS = "cpj_order_successful";
 
+// checkout adobe constants
+const ADOBE_LANDING_ON_ADDRESS_PAGE = "cpj_checkout_proceed_to_address";
+const ADOBE_ADD_NEW_ADDRESS = "cpj_checkout_add_address";
+const ADOBE_CONFIRM_ADDRESS = "cpj_checkout_confirm_address";
+const ADOBE_SELECT_DELIVERY_MODES = "cpj_checkout_delivery_option_select";
+const ADOVE_PROCEED_FROM_DELIVERY_MODE = "cpj_checkout_delivery_option";
+const ADOBE_LANDS_ON_PAYMENT_MODES = "cpj_checkout_proceed_to_payment";
+const ADOBE_SELECT_PAYMENT_MODES = "cpj_checkout_payment_selection";
+const ADOBE_FINAL_PAYMENT = "cpj_place_order";
+const ADOBE_SEE_ALL_BANK_OFFERS = "CPJ_Checkout_Offer_Allbankoffer";
+const ADOBE_CLIQ_CASH_ON = "CPJ_Checkout_Payment_ToggleOn";
+const ADOBE_CLIQ_CASH_OFF = "CPJ_Checkout_Payment_ToggleOff";
+const ADOBE_CHECKOUT_APPLY_COUPON_SUCCESS =
+  "cpj_checkout_payment_coupon_success";
+const ADOBE_CHECKOUT_APPLY_COUPON_FAILURE = "cpj_checkout_payment_coupon_fail";
+// end of checkout adobe constants
 // direct call for login tracking
 const ADOBE_LOGIN_SUCCESS = "login_successful";
 const ADOBE_LOGIN_FAILURE = "login_failed";
 // end of direct call for login tracking
+
+// type of hierarchy for MY_ACCOUNT
+const MY_ACCOUNT_OVERVIEW = "myaccount_overview";
+const MY_ACCOUNT_SAVED_LIST = "myaccount_default_wishlist";
+const MY_ACCOUNT_ADDRESS_BOOK = "myaccount_address_book";
+const MY_ACCOUNT_BRANDS = "myaccount_brands";
+const MY_ACCOUNT_ORDER_HISTORY = "myaccount_order_history";
+const MY_ACCOUNT_ORDER_DETAIL = "myaacount_order_details_page";
+const MY_ACCOUNT_SAVED_PAYMENTS = "myaccount_payment_details";
+const MY_ACCOUNT_ALERTS = "myaccount_alerts";
+const MY_ACCOUNT_COUPONS = "myaccount_coupons";
+const MY_ACCOUNT_GIFT_CARD = "myaccount_gift_card";
+const MY_ACCOUNT_CLIQ_CASH = "myaccount_cliq_cash";
+const MY_ACCOUNT_SETTING = "myaccount_update_setting";
+// end of type of hierarchy for my Account
 
 export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
 export const ADOBE_HOME_TYPE = "home";
@@ -50,7 +81,8 @@ export const ADOBE_CART_TYPE = "cart";
 export const ADOBE_CHECKOUT_TYPE = "checkout";
 export const ADOBE_PLP_TYPE = "plp";
 export const ADOBE_ORDER_CANCEL = "order_cancellation";
-
+export const ADOBE_ORDER_RETURN_CANCEL = "order_returns_cancel";
+export const ADOBE_ORDER_RETURN = "cpj_order_return";
 export const ICID2 = "ICID2";
 export const CID = "CID";
 export const SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT =
@@ -79,6 +111,35 @@ export const ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS =
 export const ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE =
   "ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE";
 
+//  constants for checkout pages
+export const ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE =
+  "ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE";
+export const ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE =
+  "ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE";
+export const ADOBE_FINAL_PAYMENT_MODES = "ADOBE_FINAL_PAYMENT_MODES";
+export const ADOBE_ADD_ADDRESS_TO_ORDER = "ADOBE_ADD_ADDRESS_TO_ORDER";
+export const ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE =
+  "ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE";
+export const ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES =
+  "ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES";
+export const ADOBE_CALL_FOR_SELECT_DELIVERY_MODE =
+  "ADOBE_CALL_FOR_SELECT_DELIVERY_MODE";
+export const ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE =
+  "ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE";
+export const ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER =
+  "ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER";
+
+export const ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON =
+  "ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON";
+export const ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF =
+  "ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF";
+export const ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS =
+  "ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS";
+export const ADOBE_CALL_FOR_APPLY_COUPON_FAILURE =
+  "ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_FAILURE";
+
+// end of constants for checkout pages
+
 // const for setting data layer for the login track
 
 export const ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS =
@@ -88,10 +149,34 @@ export const ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE =
 
 // end of const for setting data layer for the login track
 
+// const or setting myAccount section
+export const ADOBE_MY_ACCOUNT_LANDING_PAGE = "ADOBE_MY_ACCOUNT_LANDING_PAGE";
+export const ADOBE_MY_ACCOUNT_SAVED_LIST = "ADOBE_MY_ACCOUNT_SAVED_LIST";
+export const ADOBE_MY_ACCOUNT_ADDRESS_BOOK = "ADOBE_MY_ACCOUNT_ADDRESS_BOOK";
+export const ADOBE_MY_ACCOUNT_BRANDS = "ADOBE_MY_ACCOUNT_BRANDS";
+export const ADOBE_MY_ACCOUNT_ORDER_HISTORY = "ADOBE_MY_ACCOUNT_ORDER_HISTORY";
+export const ADOBE_MY_ACCOUNT_ORDER_DETAILS = "ADOBE_MY_ACCOUNT_ORDER_DETAILS";
+export const ADOBE_MY_ACCOUNT_SAVED_PAYMENTS =
+  "ADOBE_MY_ACCOUNT_SAVED_PAYMENTS";
+export const ADOBE_MY_ACCOUNT_ALERTS = "ADOBE_MY_ACCOUNT_ALERTS";
+export const ADOBE_MY_ACCOUNT_COUPONS = "ADOBE_MY_ACCOUNT_COUPONS";
+export const ADOBE_MY_ACCOUNT_GIFT_CARD = "ADOBE_MY_ACCOUNT_GIFT_CARD";
+export const ADOBE_MY_ACCOUNT_CLIQ_CASH = "ADOBE_MY_ACCOUNT_CLIQ_CASH";
+export const AODBE_MY_ACCOUNT_SETTINGS = "AODBE_MY_ACCOUNT_SETTINGS";
+// end of my Account section
+
 export const ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS =
   "ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS";
 export const ADOBE_DIRECT_CALL_FOR_PINCODE_FAILURE =
   "ADOBE_DIRECT_CALL_FOR_PINCODE_FAILURE";
+
+// const for myAccount adobe calls
+export const ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS =
+  "ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS";
+export const ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL =
+  "ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL";
+export const ADOBE_MY_ACCOUNT_ORDER_RETURN = "ADOBE_MY_ACCOUNT_ORDER_RETURN";
+// end of const for my account adobe call
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
 const MOBILE = "mobile";
@@ -137,6 +222,42 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   }
   if (type === ADOBE_ORDER_CONFIRMATION) {
     window.digitalData = getDigitalDataForOrderConfirmation(type, response);
+  }
+  if (type === ADOBE_MY_ACCOUNT_LANDING_PAGE) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_OVERVIEW);
+  }
+  if (type === ADOBE_MY_ACCOUNT_SAVED_LIST) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_SAVED_LIST);
+  }
+  if (type === ADOBE_MY_ACCOUNT_ADDRESS_BOOK) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ADDRESS_BOOK);
+  }
+  if (type === ADOBE_MY_ACCOUNT_BRANDS) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_BRANDS);
+  }
+  if (type === ADOBE_MY_ACCOUNT_ORDER_HISTORY) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ORDER_HISTORY);
+  }
+  if (type === ADOBE_MY_ACCOUNT_SAVED_PAYMENTS) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_SAVED_PAYMENTS);
+  }
+  if (type === ADOBE_MY_ACCOUNT_ALERTS) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ALERTS);
+  }
+  if (type === ADOBE_MY_ACCOUNT_COUPONS) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_COUPONS);
+  }
+  if (type === ADOBE_MY_ACCOUNT_GIFT_CARD) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_GIFT_CARD);
+  }
+  if (type === ADOBE_MY_ACCOUNT_CLIQ_CASH) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_CLIQ_CASH);
+  }
+  if (type === AODBE_MY_ACCOUNT_SETTINGS) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_SETTING);
+  }
+  if (type === ADOBE_MY_ACCOUNT_ORDER_DETAILS) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ORDER_DETAIL);
   }
   if (icid) {
     window.digitalData.internal = {
@@ -723,4 +844,215 @@ export function setDataLayerForOrderConfirmationDirectCalls(
     window.digitalData = data;
     window._satellite.track(ADOBE_ORDER_CONFIRMATION_FAILURE);
   }
+}
+export function setDataLayerForCheckoutDirectCalls(type, response) {
+  let data = cloneDeep(window.digitalData);
+  if (type === ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE) {
+    window._satellite.track(ADOBE_LANDING_ON_ADDRESS_PAGE);
+  }
+  if (type === ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE) {
+    window._satellite.track(ADOBE_ADD_NEW_ADDRESS);
+  }
+  if (type === ADOBE_ADD_ADDRESS_TO_ORDER) {
+    window._satellite.track(ADOBE_CONFIRM_ADDRESS);
+  }
+  if (
+    type === ADOBE_CALL_FOR_SELECT_DELIVERY_MODE ||
+    type === ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE
+  ) {
+    // herer we are getting all delivery modes and ussid in form of object
+    // like {"MP12345678":"home_delivery","MP987654321":"expres_delivery"}
+    // so here we need ot pass only "home_delivery"|"express_delivery"
+    const deliveryModesObj = Object.values(response).join("|");
+    if (data) {
+      if (data.cpj) {
+        if (data.cpj.checkout) {
+          Object.assign(data.cpj.checkout, {
+            deliveryOption: deliveryModesObj
+          });
+        } else {
+          Object.assign(data.cpj, {
+            checkout: { deliveryOption: deliveryModesObj }
+          });
+        }
+      } else {
+        Object.assign(data, {
+          cpj: { checkout: { deliveryOption: deliveryModesObj } }
+        });
+      }
+    } else {
+      Object.assign(data, {
+        cpj: { checkout: { deliveryOption: deliveryModesObj } }
+      });
+    }
+
+    window.digitalData = data;
+    if (type === ADOBE_CALL_FOR_SELECT_DELIVERY_MODE) {
+      window._satellite.track(ADOBE_SELECT_DELIVERY_MODES);
+    } else {
+      window._satellite.track(ADOVE_PROCEED_FROM_DELIVERY_MODE);
+    }
+  }
+  if (type === ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER) {
+    window._satellite.track(ADOBE_SEE_ALL_BANK_OFFERS);
+  }
+  if (type === ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON) {
+    window._satellite.track(ADOBE_CLIQ_CASH_ON);
+  }
+  if (type === ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF) {
+    window._satellite.track(ADOBE_CLIQ_CASH_OFF);
+  }
+  if (
+    type === ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS ||
+    type === ADOBE_CALL_FOR_APPLY_COUPON_FAILURE
+  ) {
+    if (data) {
+      if (data.cpj) {
+        if (data.cpj.coupon) {
+          data = Object.assign(data.cpj.coupon, {
+            code: response
+          });
+        } else {
+          data = Object.assign(data.cpj, {
+            coupon: { code: response }
+          });
+        }
+      } else {
+        data = Object.assign(data, {
+          cpj: { coupon: { code: response } }
+        });
+      }
+    } else {
+      Object.assign(data, { cpj: { coupon: { code: response } } });
+    }
+    window.digitalData = data;
+    if (type === ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS) {
+      window._satellite.track(ADOBE_CHECKOUT_APPLY_COUPON_SUCCESS);
+    } else {
+      window._satellite.track(ADOBE_CHECKOUT_APPLY_COUPON_FAILURE);
+    }
+  }
+
+  if (type === ADOBE_FINAL_PAYMENT_MODES) {
+    const finalPaymentMode = localStorage.getItem(constants.PAYMENT_MODE_TYPE);
+
+    if (finalPaymentMode) {
+      if (data) {
+        if (data.cpj) {
+          if (data.cpj.payment) {
+            Object.assign(data.cpj.payment, {
+              finalMode: finalPaymentMode.replace(/ /g, "_").toLowerCase()
+            });
+          } else {
+            Object.assign(data.cpj, {
+              payment: {
+                finalMode: finalPaymentMode.replace(/ /g, "_").toLowerCase()
+              }
+            });
+          }
+        } else {
+          Object.assign(data, {
+            cpj: {
+              payment: {
+                finalMode: finalPaymentMode.replace(/ /g, "_").toLowerCase()
+              }
+            }
+          });
+        }
+      } else {
+        Object.assign(data, {
+          cpj: {
+            payment: {
+              finalMode: finalPaymentMode.replace(/ /g, "_").toLowerCase()
+            }
+          }
+        });
+      }
+      window.digitalData = data;
+    }
+    window._satellite.track(ADOBE_FINAL_PAYMENT);
+  }
+  if (type === ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE) {
+    window._satellite.track(ADOBE_LANDS_ON_PAYMENT_MODES);
+  }
+  if (type === ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES) {
+    if (response) {
+      if (data) {
+        if (data.cpj) {
+          if (data.cpj.payment) {
+            Object.assign(data.cpj.payment, {
+              finalMode: response.replace(/ /g, "_").toLowerCase()
+            });
+          } else {
+            Object.assign(data.cpj, {
+              payment: {
+                finalMode: response.replace(/ /g, "_").toLowerCase()
+              }
+            });
+          }
+        } else {
+          Object.assign(data, {
+            cpj: {
+              payment: {
+                finalMode: response.replace(/ /g, "_").toLowerCase()
+              }
+            }
+          });
+        }
+      } else {
+        Object.assign(data, {
+          cpj: {
+            payment: {
+              finalMode: response.replace(/ /g, "_").toLowerCase()
+            }
+          }
+        });
+      }
+      window.digitalData = data;
+    }
+    window._satellite.track(ADOBE_SELECT_PAYMENT_MODES);
+  }
+}
+export function setDataLayerForMyAccountDirectCalls(
+  type,
+  productDetails,
+  reasonObj: null
+) {
+  let data = cloneDeep(window.digitalData);
+  if (type === ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS) {
+    data = Object.assign(data, {
+      cpj: {
+        product: {
+          id: productDetails.productcode
+        }
+      }
+    });
+    window.digitalData = data;
+    window._satellite.track(ADOBE_ORDER_CANCEL);
+  }
+  if (type === ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL) {
+    window._satellite.track(ADOBE_ORDER_RETURN_CANCEL);
+  }
+  if (type === ADOBE_MY_ACCOUNT_ORDER_RETURN) {
+    data = {
+      cpj: {
+        product: {
+          id: productDetails.productcode,
+          price: productDetails.price
+        }
+      }
+    };
+    window.digitalData = data;
+    window._satellite.track(ADOBE_ORDER_RETURN);
+  }
+}
+export function getDigitalDataForMyAccount(pageTitle) {
+  const data = {
+    page: {
+      pageInfo: { pageName: pageTitle },
+      category: { primaryCategory: pageTitle },
+      display: { hierarchy: ["home", "my_tata_cliq", pageTitle] }
+    }
+  };
+  return data;
 }
