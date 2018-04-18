@@ -68,6 +68,8 @@ import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.variants.model.VariantProductModel;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -407,7 +409,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -619,6 +621,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			if (null != productCode)
 			{
 				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showOfferMessage(productCode, null);
+				final DateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSSSSS");
 				if (MapUtils.isNotEmpty(offerMessageMap) && null != buyBoxData && null != buyBoxData.getSellerId()
 						&& offerMessageMap.containsKey(buyBoxData.getSellerId()))
 				{
@@ -644,13 +647,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 								if (null != entry1 && null != entry1.getValue()
 										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGESTARTDATE))
 								{
-
-									ProductOfferMsgDTO.setStartDate(entry1.getValue());
+									final Date date = df.parse(entry1.getValue().toString());
+									ProductOfferMsgDTO.setStartDate(date.toString());
 								}
 								if (null != entry1 && null != entry1.getValue()
 										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGEENDDATE))
 								{
-									ProductOfferMsgDTO.setEndDate(entry1.getValue());
+									final Date date = df.parse(entry1.getValue().toString());
+									ProductOfferMsgDTO.setEndDate(date.toString());
 								}
 							}
 							productDetailMobile.setProductOfferMsg(ProductOfferMsgDTO);
@@ -2180,12 +2184,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 *
+	 * 
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 *
-	 *
+	 * 
+	 * 
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
@@ -3247,7 +3251,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getEgvProduct()
 	 */
 	@Override
@@ -3596,7 +3600,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetails(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -5160,7 +5164,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#isCustomerApplicableforReview(de.hybris.platform.core.model.user.
 	 * UserModel , de.hybris.platform.core.model.product.ProductModel)
 	 */
