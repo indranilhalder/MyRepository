@@ -333,7 +333,7 @@
 						<div class="col-xs-12 theme-product-widget-container">
 							<div class="col-xs-6 heading">${feature.title}</div>
 							<div class="col-xs-6">
-								<a href="#" class="shop-all-btn">${feature.btnText}</a>
+								<a href="${feature.webURL}" class="shop-all-btn">${feature.btnText}</a>
 							</div>
 							<div class="col-xs-12 pad0 theme-product-widget-slider">
 
