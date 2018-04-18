@@ -10,6 +10,7 @@ import CheckoutSavedCard from "./CheckoutSavedCard.js";
 import CheckoutCOD from "./CheckoutCOD.js";
 import { PAYTM } from "../../lib/constants";
 import PaytmOption from "./PaytmOption.js";
+
 let cliqCashToggleState = false;
 
 // prettier-ignore
