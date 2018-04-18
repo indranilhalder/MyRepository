@@ -1,11 +1,15 @@
 import React from "react";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import styles from "./SizeQuantitySelect.css";
 
 export default class SizeQuantitySelect extends React.Component {
   updateSize(productUrl) {
     this.props.history.push(productUrl);
+    this.props.history.push({
+      pathname: `${productUrl}`,
+      state: { isSizeSelected: true }
+    });
   }
   updateQuantity(quantity) {
     if (this.props.updateQuantity) {
@@ -32,10 +36,13 @@ export default class SizeQuantitySelect extends React.Component {
       .map(val => {
         return val.sizelink;
       });
-    let fetchedQuantityList = [];
+    sizes.unshift({ size: "Size", value: "size" });
+    console.log(sizes);
+
+    let fetchedQuantityList = [{ value: "quantity", label: "Quantity" }];
     if (this.props.maxQuantity) {
       for (let i = 1; i <= parseInt(this.props.maxQuantity, 10); i++) {
-        fetchedQuantityList.push({ value: i.toString() });
+        fetchedQuantityList.push({ value: i.toString(), label: i });
       }
     } else {
       fetchedQuantityList = ["1"];
@@ -44,33 +51,51 @@ export default class SizeQuantitySelect extends React.Component {
       <div className={styles.base}>
         <div className={styles.header}>
           Select a size & quantity
-          {this.props.showSizeGuide && (
-            <div className={styles.button}>
-              <UnderLinedButton
-                label="Size Guide"
-                onClick={() => {
-                  this.handleShowSize();
-                }}
-              />
-            </div>
-          )}
+          <div className={styles.button}>
+            <UnderLinedButton
+              disabled={!this.props.showSizeGuide}
+              label="Size Guide"
+              onClick={() => {
+                this.handleShowSize();
+              }}
+            />
+          </div>
         </div>
         <div className={styles.selectHolder}>
           <div className={styles.sizeSelect}>
-            <SelectBoxMobile
-              options={sizes.map(val => {
-                return { label: val.size, value: val.url };
-              })}
-              onChange={value => this.updateSize(value)}
-            />
+            <div
+              className={
+                this.props.sizeError ? styles.errorBoundary : styles.boundary
+              }
+            >
+              <SelectBoxMobile2
+                theme="hollowBox"
+                value="Size"
+                label="Size"
+                options={sizes.map(val => {
+                  return { label: val.size, value: val.url };
+                })}
+                onChange={value => this.updateSize(value)}
+              />
+            </div>
           </div>
 
           <div className={styles.sizeQuantity}>
-            <SelectBoxMobile
-              value="1"
-              options={fetchedQuantityList}
-              onChange={value => this.updateQuantity(value)}
-            />
+            <div
+              className={
+                this.props.quantityError
+                  ? styles.errorBoundary
+                  : styles.boundary
+              }
+            >
+              <SelectBoxMobile2
+                theme="hollowBox"
+                value="Quantity"
+                label="Quantity"
+                options={fetchedQuantityList}
+                onChange={value => this.updateQuantity(value)}
+              />
+            </div>
           </div>
         </div>
       </div>
