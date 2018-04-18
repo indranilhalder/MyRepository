@@ -38,6 +38,22 @@ const ADOBE_DIRECT_CALL_FOR_SAVE_PORDUCT_ON_CART = "cpj_button_save'";
 const ADOBE_ORDER_CONFIRMATION_FAILURE = "cpj_order_fail";
 const ADOBE_ORDER_CONFIRMATION_SUCCESS = "cpj_order_successful";
 
+// checkout adobe constants
+const ADOBE_LANDING_ON_ADDRESS_PAGE = "cpj_checkout_proceed_to_address";
+const ADOBE_ADD_NEW_ADDRESS = "cpj_checkout_add_address";
+const ADOBE_CONFIRM_ADDRESS = "cpj_checkout_confirm_address";
+const ADOBE_SELECT_DELIVERY_MODES = "cpj_checkout_delivery_option_select";
+const ADOVE_PROCEED_FROM_DELIVERY_MODE = "cpj_checkout_delivery_option";
+const ADOBE_LANDS_ON_PAYMENT_MODES = "cpj_checkout_proceed_to_payment";
+const ADOBE_SELECT_PAYMENT_MODES = "cpj_checkout_payment_selection";
+const ADOBE_FINAL_PAYMENT = "cpj_place_order";
+const ADOBE_SEE_ALL_BANK_OFFERS = "CPJ_Checkout_Offer_Allbankoffer";
+const ADOBE_CLIQ_CASH_ON = "CPJ_Checkout_Payment_ToggleOn";
+const ADOBE_CLIQ_CASH_OFF = "CPJ_Checkout_Payment_ToggleOff";
+const ADOBE_CHECKOUT_APPLY_COUPON_SUCCESS =
+  "cpj_checkout_payment_coupon_success";
+const ADOBE_CHECKOUT_APPLY_COUPON_FAILURE = "cpj_checkout_payment_coupon_fail";
+// end of checkout adobe constants
 // direct call for login tracking
 const ADOBE_LOGIN_SUCCESS = "login_successful";
 const ADOBE_LOGIN_FAILURE = "login_failed";
@@ -94,6 +110,35 @@ export const ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS =
   "ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS";
 export const ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE =
   "ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE";
+
+//  constants for checkout pages
+export const ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE =
+  "ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE";
+export const ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE =
+  "ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE";
+export const ADOBE_FINAL_PAYMENT_MODES = "ADOBE_FINAL_PAYMENT_MODES";
+export const ADOBE_ADD_ADDRESS_TO_ORDER = "ADOBE_ADD_ADDRESS_TO_ORDER";
+export const ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE =
+  "ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE";
+export const ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES =
+  "ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES";
+export const ADOBE_CALL_FOR_SELECT_DELIVERY_MODE =
+  "ADOBE_CALL_FOR_SELECT_DELIVERY_MODE";
+export const ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE =
+  "ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE";
+export const ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER =
+  "ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER";
+
+export const ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON =
+  "ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON";
+export const ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF =
+  "ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF";
+export const ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS =
+  "ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS";
+export const ADOBE_CALL_FOR_APPLY_COUPON_FAILURE =
+  "ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_FAILURE";
+
+// end of constants for checkout pages
 
 // const for setting data layer for the login track
 
@@ -800,7 +845,174 @@ export function setDataLayerForOrderConfirmationDirectCalls(
     window._satellite.track(ADOBE_ORDER_CONFIRMATION_FAILURE);
   }
 }
+export function setDataLayerForCheckoutDirectCalls(type, response) {
+  let data = cloneDeep(window.digitalData);
+  if (type === ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE) {
+    window._satellite.track(ADOBE_LANDING_ON_ADDRESS_PAGE);
+  }
+  if (type === ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE) {
+    window._satellite.track(ADOBE_ADD_NEW_ADDRESS);
+  }
+  if (type === ADOBE_ADD_ADDRESS_TO_ORDER) {
+    window._satellite.track(ADOBE_CONFIRM_ADDRESS);
+  }
+  if (
+    type === ADOBE_CALL_FOR_SELECT_DELIVERY_MODE ||
+    type === ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE
+  ) {
+    // herer we are getting all delivery modes and ussid in form of object
+    // like {"MP12345678":"home_delivery","MP987654321":"expres_delivery"}
+    // so here we need ot pass only "home_delivery"|"express_delivery"
+    const deliveryModesObj = Object.values(response).join("|");
+    if (data) {
+      if (data.cpj) {
+        if (data.cpj.checkout) {
+          Object.assign(data.cpj.checkout, {
+            deliveryOption: deliveryModesObj
+          });
+        } else {
+          Object.assign(data.cpj, {
+            checkout: { deliveryOption: deliveryModesObj }
+          });
+        }
+      } else {
+        Object.assign(data, {
+          cpj: { checkout: { deliveryOption: deliveryModesObj } }
+        });
+      }
+    } else {
+      Object.assign(data, {
+        cpj: { checkout: { deliveryOption: deliveryModesObj } }
+      });
+    }
 
+    window.digitalData = data;
+    if (type === ADOBE_CALL_FOR_SELECT_DELIVERY_MODE) {
+      window._satellite.track(ADOBE_SELECT_DELIVERY_MODES);
+    } else {
+      window._satellite.track(ADOVE_PROCEED_FROM_DELIVERY_MODE);
+    }
+  }
+  if (type === ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER) {
+    window._satellite.track(ADOBE_SEE_ALL_BANK_OFFERS);
+  }
+  if (type === ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON) {
+    window._satellite.track(ADOBE_CLIQ_CASH_ON);
+  }
+  if (type === ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF) {
+    window._satellite.track(ADOBE_CLIQ_CASH_OFF);
+  }
+  if (
+    type === ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS ||
+    type === ADOBE_CALL_FOR_APPLY_COUPON_FAILURE
+  ) {
+    if (data) {
+      if (data.cpj) {
+        if (data.cpj.coupon) {
+          data = Object.assign(data.cpj.coupon, {
+            code: response
+          });
+        } else {
+          data = Object.assign(data.cpj, {
+            coupon: { code: response }
+          });
+        }
+      } else {
+        data = Object.assign(data, {
+          cpj: { coupon: { code: response } }
+        });
+      }
+    } else {
+      Object.assign(data, { cpj: { coupon: { code: response } } });
+    }
+    window.digitalData = data;
+    if (type === ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS) {
+      window._satellite.track(ADOBE_CHECKOUT_APPLY_COUPON_SUCCESS);
+    } else {
+      window._satellite.track(ADOBE_CHECKOUT_APPLY_COUPON_FAILURE);
+    }
+  }
+
+  if (type === ADOBE_FINAL_PAYMENT_MODES) {
+    const finalPaymentMode = localStorage.getItem(constants.PAYMENT_MODE_TYPE);
+
+    if (finalPaymentMode) {
+      if (data) {
+        if (data.cpj) {
+          if (data.cpj.payment) {
+            Object.assign(data.cpj.payment, {
+              finalMode: finalPaymentMode.replace(/ /g, "_").toLowerCase()
+            });
+          } else {
+            Object.assign(data.cpj, {
+              payment: {
+                finalMode: finalPaymentMode.replace(/ /g, "_").toLowerCase()
+              }
+            });
+          }
+        } else {
+          Object.assign(data, {
+            cpj: {
+              payment: {
+                finalMode: finalPaymentMode.replace(/ /g, "_").toLowerCase()
+              }
+            }
+          });
+        }
+      } else {
+        Object.assign(data, {
+          cpj: {
+            payment: {
+              finalMode: finalPaymentMode.replace(/ /g, "_").toLowerCase()
+            }
+          }
+        });
+      }
+      window.digitalData = data;
+    }
+    window._satellite.track(ADOBE_FINAL_PAYMENT);
+  }
+  if (type === ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE) {
+    window._satellite.track(ADOBE_LANDS_ON_PAYMENT_MODES);
+  }
+  if (type === ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES) {
+    if (response) {
+      if (data) {
+        if (data.cpj) {
+          if (data.cpj.payment) {
+            Object.assign(data.cpj.payment, {
+              finalMode: response.replace(/ /g, "_").toLowerCase()
+            });
+          } else {
+            Object.assign(data.cpj, {
+              payment: {
+                finalMode: response.replace(/ /g, "_").toLowerCase()
+              }
+            });
+          }
+        } else {
+          Object.assign(data, {
+            cpj: {
+              payment: {
+                finalMode: response.replace(/ /g, "_").toLowerCase()
+              }
+            }
+          });
+        }
+      } else {
+        Object.assign(data, {
+          cpj: {
+            payment: {
+              finalMode: response.replace(/ /g, "_").toLowerCase()
+            }
+          }
+        });
+      }
+      window.digitalData = data;
+    }
+    window._satellite.track(ADOBE_SELECT_PAYMENT_MODES);
+  }
+}
 export function setDataLayerForMyAccountDirectCalls(
   type,
   productDetails,
