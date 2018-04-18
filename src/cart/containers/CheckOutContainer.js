@@ -84,9 +84,6 @@ const mapDispatchToProps = dispatch => {
     },
     addUserAddress: (userAddress, getCartDetailCNCObj) => {
       dispatch(addUserAddress(userAddress)).then(() => {
-        setDataLayerForCheckoutDirectCalls(
-          ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE
-        );
         dispatch(
           getCartDetailsCNC(
             getCartDetailCNCObj.userId,
@@ -158,7 +155,6 @@ const mapDispatchToProps = dispatch => {
       dispatch(binValidation(paymentMode, binNo));
     },
     softReservationForPayment: (cardDetails, address, paymentMode) => {
-      setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPayment(cardDetails, address, paymentMode));
     },
     updateTransactionDetails: (paymentMode, juspayOrderID, cartId) => {
@@ -174,7 +170,6 @@ const mapDispatchToProps = dispatch => {
       dispatch(updateTransactionDetailsForCOD(paymentMode, juspayOrderID));
     },
     softReservationForCODPayment: pinCode => {
-      setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForCODPayment(pinCode));
     },
     captureOrderExperience: async (orderId, Rating) => {
@@ -202,13 +197,11 @@ const mapDispatchToProps = dispatch => {
       );
     },
     softReservationPaymentForSavedCard: (cardDetails, address, paymentMode) => {
-      setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(
         softReservationPaymentForSavedCard(cardDetails, address, paymentMode)
       );
     },
     softReservationForCliqCash: pinCode => {
-      setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForCliqCash(pinCode));
     },
     jusPayTokenizeForGiftCard: (cardDetails, paymentMode, guId) => {

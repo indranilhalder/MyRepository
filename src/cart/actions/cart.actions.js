@@ -39,7 +39,9 @@ import {
   ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE,
   ADOBE_CALL_FOR_SELECT_DELIVERY_MODE,
   ADOBE_CALL_FOR_APPLY_COUPON_FAILURE,
-  ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS
+  ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS,
+  ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE,
+  ADOBE_FINAL_PAYMENT_MODES
 } from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
@@ -777,7 +779,9 @@ export function addUserAddress(userAddress, fromAccount) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayerForCheckoutDirectCalls(
+        ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE
+      );
       dispatch(addUserAddressSuccess());
     } catch (e) {
       dispatch(addUserAddressFailure(e.message));
@@ -1930,6 +1934,7 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPaymentSuccess(resultJson));
       dispatch(jusPayTokenize(cardDetails, address, productItems, paymentMode));
     } catch (e) {
@@ -2055,7 +2060,7 @@ export function softReservationPaymentForSavedCard(
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(createJusPayOrderForSavedCards(cardDetails, productItems));
     } catch (e) {
       dispatch(softReservationForPaymentFailure(e.message));
@@ -2110,7 +2115,7 @@ export function softReservationForCliqCash(pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPaymentSuccess(resultJson));
       dispatch(createJusPayOrderForCliqCash(pinCode, productItems));
     } catch (e) {
@@ -3212,6 +3217,7 @@ export function softReservationForCODPayment(pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(updateTransactionDetailsForCOD(CASH_ON_DELIVERY, ""));
       dispatch(softReservationForCODPaymentSuccess(resultJson));
     } catch (e) {
