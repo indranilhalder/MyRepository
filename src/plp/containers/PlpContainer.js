@@ -9,7 +9,7 @@ import {
   setUrlToReturnToAfterClear,
   setUrlToReturnToAfterClearToNull
 } from "../../plp/actions/plp.actions.js";
-import { showToast, displayToast } from "../../general/toast.actions";
+import { displayToast } from "../../general/toast.actions";
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {

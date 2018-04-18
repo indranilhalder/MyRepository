@@ -10,6 +10,7 @@ import {
 const SEARCH_CATEGORY_TO_IGNORE = "all";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SKU_SUFFIX = `&isFilter=false&channel=mobile`;
+const PAGE_REGEX = /page-(\d)/;
 
 class ProductListingsPage extends Component {
   getSearchTextFromUrl() {
@@ -71,13 +72,23 @@ class ProductListingsPage extends Component {
       return;
     }
 
+    page = 0;
+
     if (this.props.location.state && this.props.location.state.isFilter) {
       const suffix = "&isFilter=true";
       const searchText = this.getSearchTextFromUrl();
-      this.props.getProductListings(searchText, suffix, 0, true);
+      const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
+      if (pageMatch) {
+        page = pageMatch[1] ? pageMatch[1] : 0;
+      }
+      this.props.getProductListings(searchText, suffix, page, true);
     } else {
       const searchText = this.getSearchTextFromUrl();
-      this.props.getProductListings(searchText, SUFFIX, 0);
+      const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
+      if (pageMatch) {
+        page = pageMatch[1] ? pageMatch[1] : 0;
+      }
+      this.props.getProductListings(searchText, SUFFIX, page);
     }
   }
 
@@ -109,20 +120,28 @@ class ProductListingsPage extends Component {
     ) {
       return;
     }
-
+    page = 0;
     if (
       this.props.location.state &&
       this.props.location.state.isFilter === true
     ) {
       const suffix = "&isFilter=true";
       const searchText = this.getSearchTextFromUrl();
-      this.props.getProductListings(searchText, suffix, 0, true);
+      const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
+      if (pageMatch) {
+        page = pageMatch[1] ? pageMatch[1] : 0;
+      }
+      this.props.getProductListings(searchText, suffix, page, true);
     } else if (
       this.props.location.state &&
       this.props.location.state.isFilter === false
     ) {
       const searchText = this.getSearchTextFromUrl();
-      this.props.getProductListings(searchText, SUFFIX, 0);
+      const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
+      if (pageMatch) {
+        page = pageMatch[1] ? pageMatch[1] : 0;
+      }
+      this.props.getProductListings(searchText, SUFFIX, page);
     }
   }
 
@@ -131,9 +150,6 @@ class ProductListingsPage extends Component {
     if (this.props.location.state && this.props.location.state.isFilter) {
       isFilter = true;
     }
-
-    console.log("IS FILTER TRUE?");
-    console.log(isFilter);
 
     return (
       <PlpContainer

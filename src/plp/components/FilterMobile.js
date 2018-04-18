@@ -65,7 +65,8 @@ export default class FilterMobile extends React.Component {
   };
 
   onFilterClick = val => {
-    this.props.history.push(val, { isFilter: true });
+    const url = val.replace("{pageNo}", 0);
+    this.props.history.push(url, { isFilter: true });
   };
   render() {
     const { facetData, facetdatacategory } = this.props;
