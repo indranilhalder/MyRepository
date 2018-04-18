@@ -132,6 +132,9 @@ class ProductListingsPage extends Component {
       isFilter = true;
     }
 
+    console.log("IS FILTER TRUE?");
+    console.log(isFilter);
+
     return (
       <PlpContainer
         paginate={this.props.paginate}

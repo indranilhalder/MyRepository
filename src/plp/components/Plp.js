@@ -34,9 +34,15 @@ export default class Plp extends React.Component {
   };
 
   onClear = () => {
-    this.props.history.push(this.props.clearUrl, {
-      isFilter: true
-    });
+    if (this.props.clearUrl) {
+      this.props.history.push(this.props.clearUrl, {
+        isFilter: true
+      });
+    } else {
+      this.props.displayToast(
+        "There is nothing to clear, you hit this url directly, try going back"
+      );
+    }
   };
 
   handleScroll = () => {

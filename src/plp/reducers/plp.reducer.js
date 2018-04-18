@@ -46,10 +46,15 @@ const productListings = (
         isFilterOpen: false
       });
     case plpActions.UPDATE_FACETS:
-      const productListings = cloneDeep(state.productListings);
-      productListings.facetdata = action.productListings.facetdata;
-      productListings.facetdatacategory =
-        action.productListings.facetdatacategory;
+      let productListings = cloneDeep(state.productListings);
+      if (!productListings) {
+        productListings = action.productListings;
+      } else {
+        productListings.facetdata = action.productListings.facetdata;
+        productListings.facetdatacategory =
+          action.productListings.facetdatacategory;
+      }
+
       return Object.assign({}, state, {
         productListings,
         loading: false

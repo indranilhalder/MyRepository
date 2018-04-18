@@ -65,10 +65,7 @@ export default class FilterMobile extends React.Component {
   };
 
   onFilterClick = val => {
-    console.log("ON FILTER");
-    console.log(val);
-
-    // this.props.history.push(val, { isFilter: true });
+    this.props.history.push(val, { isFilter: true });
   };
   render() {
     const { facetData, facetdatacategory } = this.props;
@@ -102,6 +99,7 @@ export default class FilterMobile extends React.Component {
               {this.props.facetdatacategory && (
                 <FilterTab
                   name="Categories"
+                  F
                   onClick={() => {
                     this.selectCategories();
                   }}
