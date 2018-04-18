@@ -7,6 +7,7 @@ import {
   FAILURE
 } from "../../lib/constants";
 import moment from "moment";
+import * as ErrorHandling from "../../general/ErrorHandling.js";
 export const GET_ABOUT_US_REQUEST = "GET_ABOUT_US_REQUEST";
 export const GET_ABOUT_US_SUCCESS = "GET_ABOUT_US_SUCCESS";
 export const GET_ABOUT_US_FAILURE = "GET_ABOUT_US_FAILURE";
@@ -40,7 +41,8 @@ export function getAboutUsDetails() {
       const result = await api.get(`${PATH}/cms/defaultpage?pageId=aboutus`);
 
       const resultJson = await result.json();
-      console.log(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
       if (
         resultJson.status === SUCCESS ||
         resultJson.status === SUCCESS_UPPERCASE ||
@@ -48,7 +50,7 @@ export function getAboutUsDetails() {
       ) {
         return dispatch(aboutUsSuccess(resultJson));
       } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+        throw new Error(resultJsonStatus.message);
       }
     } catch (e) {
       dispatch(aboutUsFailure(e.message));
