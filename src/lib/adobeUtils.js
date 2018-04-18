@@ -16,6 +16,7 @@ export const ADOBE_TARGET_SPLIT_VALUE = "%7C";
 export const ADOBE_TARGET_MCMID = "MCMID";
 export const ADOBE_TARGET_WAIT_TIME = 2000;
 const ADOBE_SATELLITE_CODE = "virtual_page_load";
+const INTERNAL_CAMPAIGN_TRACK = "internal_campaign";
 const ADOBE_PDP_CPJ = "cpj_pdp";
 const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
 const ADOBE_SAVE_PRODUCT = "cpj_button_save";
@@ -268,6 +269,7 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   }
   if (icidType === ICID2) {
     window.digitalData.flag = INTERNAL_CAMPAIGN;
+    window._satellite.track(INTERNAL_CAMPAIGN_TRACK);
   } else if (icidType === CID) {
     window.digitalData.flag = EXTERNAM_CAMPAIGN;
   }
