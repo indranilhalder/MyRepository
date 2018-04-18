@@ -11,9 +11,6 @@
     -->
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-  <link rel="preload" as="font" href="https://assets.tatacliq.com/medias/sys_master/pwaImg/Rubik-Light.ttf" />
-  <link rel="preload" as="font" href="https://assets.tatacliq.com/medias/sys_master/pwaImg/Rubik-Medium.ttf" />
-  <link rel="preload" as="font" href="https://assets.tatacliq.com/medias/sys_master/pwaImg/Rubik-Regular.ttf" />
 
 
   <!--
@@ -36,17 +33,17 @@
 
     @font-face {
       font-family: regular;
-      src: url(https://assets.tatacliq.com/medias/sys_master/pwaImg/Rubik-Light.ttf);
+      src: url('./fonts/rubik-v7-latin-regular.woff') format('woff')
     }
 
     @font-face {
       font-family: semibold;
-      src: url(https://assets.tatacliq.com/medias/sys_master/pwaImg/Rubik-Medium.ttf);
+      src: url('./fonts/rubik-v7-latin-500.woff2') format('woff2'), url('./fonts/rubik-v7-latin-500.woff') format('woff')
     }
 
     @font-face {
       font-family: bolder;
-      src: url(https://assets.tatacliq.com/medias/sys_master/pwaImg/Rubik-Regular.ttf);
+      src: url('./fonts/rubik-v7-latin-700.woff2') format('woff2'), url('./fonts/rubik-v7-latin-700.woff') format('woff')
     }
 
     #root {
@@ -54,10 +51,6 @@
       overflow: hidden;
     }
 
-    <style>#root {
-      width: 100%;
-      overflow: hidden;
-    }
 
     #modal-root {
       width: 100vw;
