@@ -28,6 +28,10 @@ import {
   PRODUCT_REVIEWS_PATH_SUFFIX,
   CANCEL
 } from "../../lib/constants";
+import {
+  setDataLayer,
+  ADOBE_MY_ACCOUNT_ORDER_DETAILS
+} from "../../lib/adobeUtils";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_RETURN = "Return";
 const PRODUCT_CANCEL = "Cancel";
@@ -76,6 +80,7 @@ export default class OrderDetails extends React.Component {
     );
   }
   componentDidMount() {
+    setDataLayer(ADOBE_MY_ACCOUNT_ORDER_DETAILS);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (

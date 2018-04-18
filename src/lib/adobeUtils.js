@@ -49,6 +49,7 @@ const MY_ACCOUNT_SAVED_LIST = "myaccount_default_wishlist";
 const MY_ACCOUNT_ADDRESS_BOOK = "myaccount_address_book";
 const MY_ACCOUNT_BRANDS = "myaccount_brands";
 const MY_ACCOUNT_ORDER_HISTORY = "myaccount_order_history";
+const MY_ACCOUNT_ORDER_DETAIL = "myaacount_order_details_page";
 const MY_ACCOUNT_SAVED_PAYMENTS = "myaccount_payment_details";
 const MY_ACCOUNT_ALERTS = "myaccount_alerts";
 const MY_ACCOUNT_COUPONS = "myaccount_coupons";
@@ -109,6 +110,7 @@ export const ADOBE_MY_ACCOUNT_SAVED_LIST = "ADOBE_MY_ACCOUNT_SAVED_LIST";
 export const ADOBE_MY_ACCOUNT_ADDRESS_BOOK = "ADOBE_MY_ACCOUNT_ADDRESS_BOOK";
 export const ADOBE_MY_ACCOUNT_BRANDS = "ADOBE_MY_ACCOUNT_BRANDS";
 export const ADOBE_MY_ACCOUNT_ORDER_HISTORY = "ADOBE_MY_ACCOUNT_ORDER_HISTORY";
+export const ADOBE_MY_ACCOUNT_ORDER_DETAILS = "ADOBE_MY_ACCOUNT_ORDER_DETAILS";
 export const ADOBE_MY_ACCOUNT_SAVED_PAYMENTS =
   "ADOBE_MY_ACCOUNT_SAVED_PAYMENTS";
 export const ADOBE_MY_ACCOUNT_ALERTS = "ADOBE_MY_ACCOUNT_ALERTS";
@@ -209,7 +211,9 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   if (type === AODBE_MY_ACCOUNT_SETTINGS) {
     window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_SETTING);
   }
-
+  if (type === ADOBE_MY_ACCOUNT_ORDER_DETAILS) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ORDER_DETAIL);
+  }
   if (icid) {
     window.digitalData.internal = {
       campaign: {
