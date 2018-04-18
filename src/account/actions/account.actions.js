@@ -1638,11 +1638,10 @@ export function followAndUnFollowBrand(
         updatedBrandObj
       );
       const followInFeedBackApiResultJson = await followInFeedBackApiResult.json();
-      if (
-        followInFeedBackApiResultJson.status === SUCCESS ||
-        followInFeedBackApiResultJson.status === SUCCESS_UPPERCASE ||
-        followInFeedBackApiResultJson.status === SUCCESS_CAMEL_CASE
-      ) {
+      const followInFeedBackApiResultJsonStatus = ErrorHandling.getFailureResponse(
+        followInFeedBackApiResultJson
+      );
+      if (!followInFeedBackApiResultJsonStatus.status) {
         // here we are hitting call for update follow brand on p2 and we don;t have to
         // wait for this response . we just need to wait for msd follow and un follow brand
         // api response if it success then we have to update our reducer with success
