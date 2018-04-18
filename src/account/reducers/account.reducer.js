@@ -468,7 +468,15 @@ const account = (
         followedBrandsError: action.error,
         loadingForFollowedBrands: false
       });
-
+    case accountActions.FOLLOW_AND_UN_FOLLOW_BRANDS_IN_MY_ACCOUNT_SUCCESS:
+      const currentBrands = cloneDeep(state.followedBrands);
+      const indexToBeRemove = currentBrands.findIndex(brand => {
+        return brand.id === action.brandId;
+      });
+      currentBrands.splice(indexToBeRemove, 1);
+      return Object.assign({}, state, {
+        followedBrands: currentBrands
+      });
     case accountActions.FETCH_ORDER_DETAILS_REQUEST:
       return Object.assign({}, state, {
         fetchOrderDetailsStatus: action.status,

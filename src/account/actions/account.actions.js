@@ -1590,8 +1590,8 @@ export function followAndUnFollowBrand(
 ) {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const followedText = Boolean(followStatus === "true" || followStatus === true)
-    ? FOLLOW
-    : UNFOLLOW;
+    ? UNFOLLOW
+    : FOLLOW;
   //here sometimes  we are getting isFollowingStatus type of string "true" or "false"
   // so here we are converting it in to bool
   const updatedFollowedStatus = !Boolean(
@@ -1631,9 +1631,10 @@ export function followAndUnFollowBrand(
             JSON.parse(customerCookie).access_token
           }/updateFollowedBrands?brands=${brandId}&follow=${updatedFollowedStatus}&isPwa=true`
         );
+
         // dispatch success for following brand on the basis of page type
         if (pageType === HOME_FEED_FOLLOW_AND_UN_FOLLOW) {
-          dispatch(
+          return dispatch(
             followAndUnFollowBrandSuccessForHomeFeed(
               brandId,
               updatedFollowedStatus,
@@ -1641,11 +1642,11 @@ export function followAndUnFollowBrand(
             )
           );
         } else if (pageType === PDP_FOLLOW_AND_UN_FOLLOW) {
-          dispatch(
+          return dispatch(
             followAndUnFollowBrandSuccessForPdp(brandId, updatedFollowedStatus)
           );
         } else if (pageType === MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW) {
-          dispatch(
+          return dispatch(
             followAndUnFollowBrandSuccessForMyAccount(
               brandId,
               updatedFollowedStatus
@@ -1656,7 +1657,7 @@ export function followAndUnFollowBrand(
         throw new Error(`Error in following Brand for feedback Api`);
       }
     } catch (e) {
-      dispatch(followAndUnFollowBrandFailure(e.message));
+      return dispatch(followAndUnFollowBrandFailure(e.message));
     }
   };
 }

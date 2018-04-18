@@ -5,7 +5,7 @@ import {
   getFollowedBrands,
   followAndUnFollowBrand
 } from "../actions/account.actions";
-import { SUCCESS } from "../../lib/constants";
+import { SUCCESS, MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW } from "../../lib/constants";
 import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = dispatch => {
   return {
@@ -16,19 +16,13 @@ const mapDispatchToProps = dispatch => {
       dispatch(setHeaderText(text));
     },
     followAndUnFollowBrand: (brandId, followStatus) => {
-      try {
-        dispatch(followAndUnFollowBrand(brandId, followStatus)).then(
-          response => {
-            if (response.status === SUCCESS) {
-              return dispatch(getFollowedBrands());
-            } else {
-              return response;
-            }
-          }
-        );
-      } catch (e) {
-        console.log(e.message);
-      }
+      dispatch(
+        followAndUnFollowBrand(
+          brandId,
+          followStatus,
+          MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW
+        )
+      );
     }
   };
 };
