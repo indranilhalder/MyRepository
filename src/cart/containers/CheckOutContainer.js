@@ -55,6 +55,7 @@ import {
   BANK_OFFERS,
   GIFT_CARD_MODAL
 } from "../../general/modal.actions";
+import { getPinCode } from "../../account/actions/account.actions.js";
 import { displayToast } from "../../general/toast.actions";
 import { SUCCESS } from "../../lib/constants";
 import { setHeaderText } from "../../general/header.actions.js";
@@ -227,6 +228,7 @@ const mapDispatchToProps = dispatch => {
     hideSecondaryLoader: () => {
       dispatch(hideSecondaryLoader());
     },
+
     getEmiEligibility: () => {
       dispatch(getEmiEligibility());
     },
@@ -244,12 +246,17 @@ const mapDispatchToProps = dispatch => {
     },
     getItemBreakUpDetails: () => {
       dispatch(getItemBreakUpDetails());
+    },
+    getPinCode: pinCode => {
+      dispatch(getPinCode(pinCode));
+
     }
   };
 };
 const mapStateToProps = state => {
   return {
-    cart: state.cart
+    cart: state.cart,
+    getPinCodeDetails: state.profile.getPinCodeDetails
   };
 };
 

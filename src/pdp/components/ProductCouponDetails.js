@@ -13,7 +13,7 @@ class ProductCouponDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      couponVal: ""
+      couponVal: [Cookie.getCookie(COUPON_COOKIE)]
     };
   }
 
@@ -31,9 +31,7 @@ class ProductCouponDetails extends Component {
   };
 
   setUserCoupons = couponCode => {
-    if (couponCode.length > 0 && couponCode instanceof Array) {
-      this.setState({ couponVal: couponCode[0] });
-    } else if (couponCode) {
+    if (couponCode) {
       this.setState({ couponVal: couponCode });
     } else {
       this.setState({ couponVal: "" });
@@ -64,6 +62,7 @@ class ProductCouponDetails extends Component {
             offset={0}
             limit={1}
             onSelect={val => this.setUserCoupons(val)}
+            selected={this.state.couponVal}
           >
             {this.props.opencouponsList &&
               this.props.opencouponsList.map((value, i) => {
