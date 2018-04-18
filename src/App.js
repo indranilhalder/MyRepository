@@ -100,7 +100,7 @@ import {
   BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
   CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
   BRAND_PRODUCT_LISTINGS_WITH_PAGE,
-  STATIC_CATEGORY_PAGES,
+  SKU_PAGE,
   BRAND_AND_CATEGORY_PAGE,
   CANCEL_PREFIX,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
@@ -132,7 +132,7 @@ class App extends Component {
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
     // Case 1. THe user is not logged in.
-    if (!globalAccessToken && !this.props.cart.loading) {
+    if (!globalAccessToken && !this.props.cartLoading) {
       await this.props.getGlobalAccessToken();
       globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     }
@@ -143,7 +143,7 @@ class App extends Component {
     }
 
     if (customerAccessToken) {
-      if (!cartDetailsForLoggedInUser && !this.props.cart.loading) {
+      if (!cartDetailsForLoggedInUser && !this.props.cartLoading) {
         this.props.generateCartIdForLoggedInUser();
       }
     }
@@ -169,6 +169,7 @@ class App extends Component {
       }
     }
   }
+
   renderLoader() {
     return (
       <div className={AppStyles.loadingIndicator}>
@@ -417,11 +418,7 @@ class App extends Component {
               component={AddAddressContainer}
             />
             {/* This *has* to be at the bottom */}
-            <Route
-              exact
-              path={STATIC_CATEGORY_PAGES}
-              component={PlpBrandCategoryWrapperContainer}
-            />
+            <Route exact path={SKU_PAGE} component={ProductListingsContainer} />
           </Switch>
           <SecondaryLoaderContainer />
           <MobileFooter />

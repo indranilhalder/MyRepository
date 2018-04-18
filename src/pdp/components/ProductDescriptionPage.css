@@ -23,8 +23,26 @@
   font-size: 14px;
   color: #212121;
   font-family: regular;
-  margin-top: 30px;
+  margin-top: 20px;
   padding: 0 15px;
+}
+.gallery {
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+.flag {
+  width: 157px;
+  height: 40px;
+  color: #fff;
+  font-size: 18px;
+  padding: 10px 20px;
+  background: url(../components/img/flag.svg)no-repeat;
+  font-family: bolder;
+  background-size: contain;
+  position: absolute;
+  top: 90px;
+  left: 0px;
 }
 .link {
   font-size: 14px;
@@ -40,11 +58,12 @@
   height: auto;
   background: #fff;
   padding: 15px;
+  margin-top: 30px;
 }
 .separator {
   width: 100%;
   height: auto;
-  margin: 30px 0;
+  margin-top: 30px;
 }
 .sellers {
   font-size: 14px;
@@ -120,4 +139,29 @@
 .sideHeader {
   composes: sideContent;
   font-family: semibold;
+}
+.header {
+  composes: sideHeader;
+  width: 100%;
+}
+.blankSeparator {
+  width: 100%;
+  height: auto;
+  margin-top: 30px;
+}
+.monogrammingText {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  color: #171d1c;
+  line-height: 21px;
+  padding: 0 20px 20px 20px;
+}
+.contentTextForHome {
+  width: 100%;
+  font-size: 14px;
+  line-height: 22px;
+  font-family: regular;
+  color: #212121;
+  margin-top: 10px;
 }

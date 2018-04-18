@@ -11,9 +11,12 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
+
 import {
   setDataLayerForPdpDirectCalls,
-  SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT
+  ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART,
+  setDataLayerForCartDirectCalls,
+  SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP
 } from "../../lib/adobeUtils";
 export const GET_WISH_LIST_ITEMS_REQUEST = "GET_WISH_LIST_ITEMS_REQUEST";
 export const GET_WISH_LIST_ITEMS_SUCCESS = "GET_WISH_LIST_ITEMS_SUCCESS";
@@ -76,11 +79,15 @@ export function getWishListItems(productDetails) {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
-      return dispatch(getWishListItemsSuccess(resultJson.wishList[0]));
+      return dispatch(
+        getWishListItemsSuccess(resultJson.wishList && resultJson.wishList[0])
+      );
     } catch (e) {
       return dispatch(getWishListItemsFailure(e.message));
     }
@@ -109,10 +116,7 @@ export function addProductToWishListFailure(error) {
   };
 }
 
-export function addProductToWishList(
-  productDetails,
-  setDataLayerOnSelect: false
-) {
+export function addProductToWishList(productDetails, setDataLayerType: null) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -136,8 +140,12 @@ export function addProductToWishList(
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      if (setDataLayerOnSelect) {
-        setDataLayerForPdpDirectCalls(SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT);
+      if (setDataLayerType === SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP) {
+        setDataLayerForPdpDirectCalls(
+          SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP
+        );
+      } else if (setDataLayerType === ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART) {
+        setDataLayerForCartDirectCalls(ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART);
       }
       return dispatch(addProductToWishListSuccess(productDetails));
     } catch (e) {
@@ -186,15 +194,12 @@ export function removeProductFromWishList(productDetails) {
         productToBeRemove
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        return dispatch(removeProductFromWishListSuccess(productDetails));
-      } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      return dispatch(removeProductFromWishListSuccess(productDetails));
     } catch (e) {
       return dispatch(removeProductFromWishListFailure(e.message));
     }
@@ -235,9 +240,12 @@ export function createWishlist(productDetails) {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       return dispatch(createWishlistSuccess());
     } catch (e) {
       return dispatch(createWishlistFailure(e.message));

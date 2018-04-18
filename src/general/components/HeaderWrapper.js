@@ -32,6 +32,11 @@ import { SIGN_UP } from "../../auth/actions/user.actions";
 const PRODUCT_CODE_REGEX = /p-(.*)/;
 class HeaderWrapper extends React.Component {
   onBackClick = () => {
+    if (this.props.isPlpFilterOpen) {
+      this.props.hideFilter();
+      return;
+    }
+
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
 
@@ -92,16 +97,6 @@ class HeaderWrapper extends React.Component {
       shouldRenderSearch = true;
     }
 
-    if (
-      url === BRAND_AND_CATEGORY_PAGE ||
-      url === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE ||
-      url === BRAND_PRODUCT_LISTINGS_WITH_PAGE ||
-      url === SEARCH_RESULTS_PAGE
-    ) {
-      isGoBack = true;
-      shouldRenderSearch = true;
-    }
-
     if (this.props.history.length === 0) {
       isGoBack = false;
     }
@@ -109,20 +104,6 @@ class HeaderWrapper extends React.Component {
     if (url === LOGIN_PATH || url === SIGN_UP_PATH) {
       shouldRenderHeader = false;
     }
-
-    // if we are on home, category landing, brand landing, we cannot go back.
-
-    /*
-    When can we not go back?
-    If we are on home, category landing, brand landing, then we cannot go back.
-    If we are not on any of those and we have history stack, then we can go back.
-
-    What if we are on view sellers or view reviews?
-      If there is no back and we are on a
-
-
-
-*/
 
     let headerToRender = (
       <InformationHeader

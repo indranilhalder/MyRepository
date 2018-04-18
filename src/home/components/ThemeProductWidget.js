@@ -63,7 +63,11 @@ export default class ThemeProductWidget extends React.Component {
       <div
         className={styles.base}
         style={{
-          backgroundImage: `url(${widgetData.imageURL})`
+          backgroundImage: `url(${
+            widgetData.data ? widgetData.data[0].imageURL : widgetData.imageURL
+          })`,
+          backgroundSize: "cover",
+          backgroundPosition: "center"
         }}
       >
         <div className={styles.overlay} />

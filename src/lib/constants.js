@@ -27,7 +27,7 @@ export const CUSTOMER_ACCESS_TOKEN = "customerAccessToken";
 export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
 export const DEFAULT_PIN_CODE_LOCAL_STORAGE = "defaultPinCode";
 
-export const STATIC_CATEGORY_PAGES = "/(.*)";
+export const SKU_PAGE = "/(.*)";
 
 export const REFRESH_TOKEN = "refresh_token";
 export const BRAND_PAGE = "/c-(mbh[a-zA-Z0-9]+)";

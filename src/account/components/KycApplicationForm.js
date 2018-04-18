@@ -3,6 +3,7 @@ import styles from "./KycApplicationForm.css";
 import PropTypes from "prop-types";
 import Button from "../../general/components/Button.js";
 import Input2 from "../../general/components/Input2.js";
+import MDSpinner from "react-md-spinner";
 
 export default class KycApplicationForm extends React.Component {
   constructor(props) {
@@ -81,15 +82,22 @@ export default class KycApplicationForm extends React.Component {
             </div>
             <div className={styles.buttonHolder}>
               <div className={styles.button}>
-                <Button
-                  type="primary"
-                  backgroundColor="#ff1744"
-                  height={36}
-                  label="Generate OTP"
-                  width={211}
-                  textStyle={{ color: "#FFF", fontSize: 14 }}
-                  onClick={() => this.generateOtp()}
-                />
+                {this.props.loadingForGetOtpToActivateWallet && (
+                  <div className={styles.loader}>
+                    <MDSpinner />
+                  </div>
+                )}
+                {!this.props.loadingForGetOtpToActivateWallet && (
+                  <Button
+                    type="primary"
+                    backgroundColor="#ff1744"
+                    height={36}
+                    label="Generate OTP"
+                    width={211}
+                    textStyle={{ color: "#FFF", fontSize: 14 }}
+                    onClick={() => this.generateOtp()}
+                  />
+                )}
               </div>
             </div>
             <div className={styles.buttonHolder}>

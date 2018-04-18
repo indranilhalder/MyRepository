@@ -10,8 +10,8 @@ import HomeImage from "./img/homeDelivery.svg";
 import arrowIcon from "./img/arrowBackblack.svg";
 import CollectImage from "./img/collect.svg";
 import { EXPRESS, COLLECT } from "../../lib/constants";
-const EXPRESS_TEXT = "Express delivery";
-const HOME_TEXT = "Home delivery";
+const EXPRESS_TEXT = "Express Shipping";
+const HOME_TEXT = "Standard Shipping";
 const COLLECT_TEXT = "CLiQ & PiQ";
 export default class DeliveryInformations extends React.Component {
   handleClick() {
@@ -30,7 +30,7 @@ export default class DeliveryInformations extends React.Component {
     }
   }
   onPiq() {
-    if (this.props.onPiq) {
+    if (this.props.onPiq && this.props.isClickable) {
       this.props.onPiq();
     }
   }
@@ -47,11 +47,14 @@ export default class DeliveryInformations extends React.Component {
     if (!this.props.available) {
       typeName = `${typeName}`;
     }
+
     return (
       <div className={styles.base}>
         <div
           className={
-            !this.props.available ? styles.notAvailable : styles.dataHolder
+            this.props.available || this.props.type === COLLECT
+              ? styles.dataHolder
+              : styles.notAvailable
           }
         >
           {this.props.onSelect &&
@@ -62,7 +65,9 @@ export default class DeliveryInformations extends React.Component {
                   this.handleSelect();
                 }}
               >
-                <CheckBox selected={this.props.selected} />
+                {this.props.isClickable && (
+                  <CheckBox selected={this.props.selected} />
+                )}
               </div>
             )}
           {this.props.arrowClick &&

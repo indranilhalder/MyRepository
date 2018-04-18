@@ -24,8 +24,16 @@ import {
 import {
   setDataLayer,
   ADOBE_CART_TYPE,
+  setDataLayerForCartDirectCalls,
+  ADOBE_REMOVE_ITEM,
   ADOBE_ORDER_CONFIRMATION,
-  ADOBE_CHECKOUT_TYPE
+  ADOBE_CHECKOUT_TYPE,
+  ADOBE_CALLS_FOR_CHANGE_QUANTITY,
+  ADOBE_CALLS_FOR_APPLY_COUPON_SUCCESS,
+  ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
+  setDataLayerForOrderConfirmationDirectCalls,
+  ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS,
+  ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE
 } from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
@@ -371,9 +379,9 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
         getState().icid.value,
         getState().icid.icidType
       );
-      dispatch(cartDetailsSuccess(resultJson));
+      return dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
-      dispatch(cartDetailsFailure(e.message));
+      return dispatch(cartDetailsFailure(e.message));
     }
   };
 }
@@ -513,9 +521,16 @@ export function applyUserCouponForAnonymous(couponCode) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
+        setDataLayerForCartDirectCalls(
+          ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
+          couponCode
+        );
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayerForCartDirectCalls(
+        ADOBE_CALLS_FOR_APPLY_COUPON_SUCCESS,
+        couponCode
+      );
       dispatch(applyUserCouponSuccess(resultJson, couponCode));
     } catch (e) {
       dispatch(applyUserCouponFailure(e.message));
@@ -550,8 +565,16 @@ export function applyUserCouponForLoggedInUsers(couponCode) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
+        setDataLayerForCartDirectCalls(
+          ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
+          couponCode
+        );
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCartDirectCalls(
+        ADOBE_CALLS_FOR_APPLY_COUPON_SUCCESS,
+        couponCode
+      );
       dispatch(applyUserCouponSuccess(resultJson, couponCode));
     } catch (e) {
       dispatch(applyUserCouponFailure(e.message));
@@ -1405,6 +1428,15 @@ export function addPickupPersonCNC(personMobile, personName) {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(addPickUpPersonSuccess(resultJson));
+      dispatch(
+        getCartDetailsCNC(
+          JSON.parse(userDetails).userName,
+          JSON.parse(customerCookie).access_token,
+          cartId,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+          false
+        )
+      );
     } catch (e) {
       dispatch(addPickUpPersonFailure(e.message));
     }
@@ -2813,8 +2845,15 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
+        setDataLayerForOrderConfirmationDirectCalls(
+          ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE,
+          resultJsonStatus.message
+        );
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForOrderConfirmationDirectCalls(
+        ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS
+      );
       dispatch(updateTransactionDetailsSuccess(resultJson));
       dispatch(orderConfirmation(resultJson.orderId));
     } catch (e) {
@@ -3266,6 +3305,7 @@ export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+
       dispatch(
         getCartDetails(
           JSON.parse(userDetails).userName,
@@ -3273,8 +3313,14 @@ export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
           cartId,
           pinCode
         )
-      ).then(() => {
-        dispatch(removeItemFromCartLoggedInSuccess());
+      ).then(cartDetails => {
+        if (cartDetails.status === SUCCESS) {
+          setDataLayerForCartDirectCalls(
+            ADOBE_REMOVE_ITEM,
+            cartDetails.cartDetails
+          );
+          dispatch(removeItemFromCartLoggedInSuccess());
+        }
       });
     } catch (e) {
       dispatch(removeItemFromCartLoggedInFailure(e.message));
@@ -3331,8 +3377,14 @@ export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
           JSON.parse(cartDetailsAnonymous).guid,
           pinCode
         )
-      ).then(() => {
-        dispatch(removeItemFromCartLoggedOutSuccess());
+      ).then(cartDetails => {
+        if (cartDetails.status === SUCCESS) {
+          setDataLayerForCartDirectCalls(
+            ADOBE_REMOVE_ITEM,
+            cartDetails.cartDetails
+          );
+          dispatch(removeItemFromCartLoggedOutSuccess());
+        }
       });
     } catch (e) {
       dispatch(removeItemFromCartLoggedOutFailure(e.message));
@@ -3394,8 +3446,11 @@ export function updateQuantityInCartLoggedIn(selectedItem, quantity, pinCode) {
           cartId,
           pinCode
         )
-      ).then(() => {
-        dispatch(updateQuantityInCartLoggedInSuccess(resultJson));
+      ).then(cartDetails => {
+        if (cartDetails.status === SUCCESS) {
+          setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_CHANGE_QUANTITY);
+          dispatch(updateQuantityInCartLoggedInSuccess(resultJson));
+        }
       });
     } catch (e) {
       dispatch(updateQuantityInCartLoggedInFailure(e.message));
@@ -3457,8 +3512,11 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
           JSON.parse(cartDetailsAnonymous).guid,
           pinCode
         )
-      ).then(() => {
-        dispatch(updateQuantityInCartLoggedOutSuccess(resultJson));
+      ).then(cartDetails => {
+        if (cartDetails.status === SUCCESS) {
+          setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_CHANGE_QUANTITY);
+          dispatch(updateQuantityInCartLoggedOutSuccess(resultJson));
+        }
       });
     } catch (e) {
       dispatch(updateQuantityInCartLoggedOutFailure(e.message));

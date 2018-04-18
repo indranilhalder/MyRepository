@@ -4,7 +4,11 @@ import Carousel from "../../general/components/Carousel";
 import styles from "./FollowingBrands.css";
 import PropTypes from "prop-types";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
-
+import * as Cookie from "../../lib/Cookie";
+import {
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS
+} from "../../lib/constants";
 export default class FollowingBrands extends React.Component {
   newFollow = () => {
     if (this.props.onFollow) {
@@ -27,23 +31,30 @@ export default class FollowingBrands extends React.Component {
 
   render() {
     const followWidgetData = this.props.feedComponentData;
-
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     return (
       <div className={styles.base}>
-        <Carousel header={this.props.feedComponentData.title}>
-          {followWidgetData.data &&
-            followWidgetData.data.map((datum, i) => {
-              return (
-                <BrandImage
-                  key={i}
-                  image={datum.imageURL}
-                  value={datum.webURL}
-                  fit={datum.type}
-                  onClick={this.handleBrandImageClick}
-                />
-              );
-            })}
-        </Carousel>
+        {userDetails &&
+          customerCookie && (
+            <Carousel
+              header={this.props.feedComponentData.title}
+              elementWidthMobile={30}
+            >
+              {followWidgetData.data &&
+                followWidgetData.data.map((datum, i) => {
+                  return (
+                    <BrandImage
+                      key={i}
+                      image={datum.imageURL}
+                      value={datum.webURL}
+                      fit={datum.type}
+                      onClick={this.handleBrandImageClick}
+                    />
+                  );
+                })}
+            </Carousel>
+          )}
       </div>
     );
   }
