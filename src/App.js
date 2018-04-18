@@ -47,6 +47,8 @@ import CliqCashContainer from "./account/containers/CliqCashContainer.js";
 import GiftCardContainer from "./account/containers/GiftCardContainer";
 import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
 import AboutUsContainer from "./staticpage/containers/AboutUsContainer";
+import FaqContainer from "./staticpage/containers/FaqContainer";
+import TermsAndConditionContainer from "./staticpage/containers/TermsAndConditionContainer";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 import CancelOrderContainer from "./account/containers/CancelOrderContainer";
 import UpdateProfileContainer from "./account/containers/UpdateProfileContainer.js";
@@ -107,7 +109,9 @@ import {
   PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
   MY_ACCOUNT_UPDATE_PROFILE_PAGE,
   REQUESTING,
-  ABOUT_US
+  ABOUT_US,
+  FAQ,
+  TNC
 } from "../src/lib/constants";
 import {
   globalAccessTokenSuccess,
@@ -209,6 +213,8 @@ class App extends Component {
           <Switch>
             {" "}
             <Route exact path={ABOUT_US} component={AboutUsContainer} />
+            <Route exact path={TNC} component={TermsAndConditionContainer} />
+            <Route exact path={FAQ} component={FaqContainer} />
             <Route
               exact
               path={CATEGORY_PRODUCT_LISTINGS_WITH_PAGE}

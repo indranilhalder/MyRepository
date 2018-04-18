@@ -12,7 +12,17 @@ const staticPage = (
     aboutUs: null,
     aboutUsStatus: null,
     aboutUsError: null,
-    aboutUsLoading: false
+    aboutUsLoading: false,
+
+    faq: null,
+    faqStatus: null,
+    faqError: null,
+    faqLoading: false,
+
+    termsAndCondition: null,
+    termsAndConditionStatus: null,
+    termsAndConditionError: null,
+    termsAndConditionLoading: false
   },
   action
 ) => {
@@ -35,6 +45,46 @@ const staticPage = (
         aboutUsStatus: action.status,
         aboutUsError: action.error,
         aboutUsLoading: false
+      });
+
+    case staticPageAction.GET_FAQ_REQUEST:
+      return Object.assign({}, state, {
+        faqStatus: action.status,
+        faqLoading: true
+      });
+
+    case staticPageAction.GET_FAQ_SUCCESS:
+      return Object.assign({}, state, {
+        faqStatus: action.status,
+        faq: action.faq,
+        faqLoading: false
+      });
+
+    case staticPageAction.GET_FAQ_FAILURE:
+      return Object.assign({}, state, {
+        faqStatus: action.status,
+        faqError: action.error,
+        faqLoading: false
+      });
+
+    case staticPageAction.TERMS_CONDITION_REQUEST:
+      return Object.assign({}, state, {
+        termsAndConditionStatus: action.status,
+        termsAndConditionLoading: true
+      });
+
+    case staticPageAction.TERMS_CONDITION_SUCCESS:
+      return Object.assign({}, state, {
+        termsAndConditionStatus: action.status,
+        termsAndCondition: action.termsAndCondition,
+        termsAndConditionLoading: false
+      });
+
+    case staticPageAction.TERMS_CONDITION_FAILURE:
+      return Object.assign({}, state, {
+        termsAndConditionStatus: action.status,
+        termsAndConditionError: action.error,
+        termsAndConditionLoading: false
       });
     default:
       return state;

@@ -186,10 +186,13 @@ export const CHECKOUT = "Checkout";
 export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
 export const ABOUTUS = "About Us";
+export const FAQ_PAGE = "Faq";
+export const TERMS_CONDITION = "Terms & Condition";
 
 // COPY
 //STATIC PAGE
 export const ABOUT_US = "/aboutUs";
-
+export const FAQ = "/faq";
+export const TNC = "/tncPayment";
 export const REVIEW_SUBMIT_TOAST_TEXT =
   "Your review has been submitted and will be displayed after moderation";

@@ -2,15 +2,22 @@ import React from "react";
 import styles from "./FaqPage.css";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 import Accordion from "../../general/components/Accordion.js";
-
+import { FAQ_PAGE } from "../../lib/constants";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 export default class FaqPage extends React.Component {
+  componentDidMount() {
+    this.props.getFaqDetails();
+  }
+  componentDidUpdate() {
+    this.props.setHeaderText(FAQ_PAGE);
+  }
   handleItemClick = url => {
     const urlSuffix = url.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   };
 
   renderQuestionAnswer(dautm) {
+    console.log(dautm);
     const tm = JSON.parse(dautm);
 
     return (
@@ -35,10 +42,12 @@ export default class FaqPage extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <div className={styles.base}>
-        {this.props.items &&
-          this.props.items.map((val, i) => {
+        {this.props.faq &&
+          this.props.faq.items &&
+          this.props.faq.items.map((val, i) => {
             return (
               <div>
                 {val.componentName === "cmsParagraphComponent" &&
