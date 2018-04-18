@@ -136,11 +136,7 @@ export default class Carousel extends React.Component {
             )}
           </MediaQuery>
           <div className={styles.sliderHolder}>
-            <div
-              className={styles.slider}
-              id={this.props.scrollId}
-              style={style}
-            >
+            <div className={styles.slider} style={style}>
               {this.props.children &&
                 this.props.children.map((child, i) => {
                   return (
@@ -152,9 +148,7 @@ export default class Carousel extends React.Component {
                             width: `${this.props.elementWidthDesktop}%`
                           }}
                         >
-                          <VisibilityChild scrollId={`#${this.props.scrollId}`}>
-                            {child}
-                          </VisibilityChild>
+                          <VisibilityChild>{child}</VisibilityChild>
                         </div>
                       </MediaQuery>
                       <MediaQuery query="(max-device-width: 1024px)">
@@ -167,9 +161,7 @@ export default class Carousel extends React.Component {
                                 : `${this.props.elementWidthMobile}%`
                           }}
                         >
-                          <VisibilityChild scrollId={`#${this.props.scrollId}`}>
-                            {child}
-                          </VisibilityChild>{" "}
+                          <VisibilityChild>{child}</VisibilityChild>{" "}
                         </div>
                       </MediaQuery>
                     </React.Fragment>

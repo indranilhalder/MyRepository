@@ -15,7 +15,6 @@ export default class VisibilityChild extends React.Component {
   render() {
     const options = {
       onChange: this.handleIntersection,
-      root: this.props.scrollId,
       rootMargin: "0% 0% -25%"
     };
 

@@ -10,8 +10,6 @@ const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const getClientEnvironment = require("./env");
 const paths = require("./paths");
 const PreloadWebpackPlugin = require("preload-webpack-plugin");
-console.log("DIR NAME");
-console.log(__dirname);
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.

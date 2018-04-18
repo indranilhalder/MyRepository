@@ -117,9 +117,6 @@ export default class Plp extends React.Component {
   };
 
   render() {
-    if (this.props.loading && !this.props.isFilter) {
-      return this.renderLoader();
-    }
     return (
       this.props.productListings && (
         <div className={styles.base}>
