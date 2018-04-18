@@ -43,7 +43,8 @@ import {
   ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE,
   ADOBE_FINAL_PAYMENT_MODES,
   ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON,
-  ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF
+  ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF,
+  ADOBE_MY_ACCOUNT_ADDRESS_BOOK
 } from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
@@ -715,6 +716,7 @@ export function getUserAddress() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayer(ADOBE_MY_ACCOUNT_ADDRESS_BOOK);
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
       dispatch(userAddressFailure(e.message));
@@ -1442,6 +1444,15 @@ export function addPickupPersonCNC(personMobile, personName) {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(addPickUpPersonSuccess(resultJson));
+      dispatch(
+        getCartDetailsCNC(
+          JSON.parse(userDetails).userName,
+          JSON.parse(customerCookie).access_token,
+          cartId,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+          false
+        )
+      );
     } catch (e) {
       dispatch(addPickUpPersonFailure(e.message));
     }

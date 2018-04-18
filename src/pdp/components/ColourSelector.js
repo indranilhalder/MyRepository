@@ -10,8 +10,20 @@ export default class ColourSelector extends React.Component {
       displayColour: this.props.selected ? this.props.selected[0] : [""]
     };
   }
-  updateColour(productUrl) {
-    this.props.history.push(productUrl);
+  updateColour(productUrl, selectedColour, currentColour) {
+    if (selectedColour !== currentColour) {
+      if (
+        this.props.history.location.state &&
+        this.props.history.location.state.isSizeSelected
+      ) {
+        this.props.history.push({
+          pathname: productUrl,
+          state: { isSizeSelected: true }
+        });
+      } else {
+        this.props.history.push({ pathname: productUrl });
+      }
+    }
   }
   render() {
     const selectedSize = this.props.data.filter(val => {
@@ -22,9 +34,6 @@ export default class ColourSelector extends React.Component {
     })[0].colorlink.color;
 
     const colors = this.props.data
-      .filter(val => {
-        return val.sizelink.isAvailable;
-      })
       .filter(val => {
         return val.sizelink.size === selectedSize;
       })
@@ -43,10 +52,8 @@ export default class ColourSelector extends React.Component {
             elementWidthMobile="auto"
             headerComponent={
               <div className={styles.header}>
-                Colour{" "}
-                <span className={styles.colourName}>
-                  {this.state.displayColour}
-                </span>
+                Colour -{" "}
+                <span className={styles.colourName}>{selectedColour}</span>
               </div>
             }
           >
@@ -57,7 +64,13 @@ export default class ColourSelector extends React.Component {
                   colour={datum.colorHexCode}
                   value={datum.color}
                   selected={datum.color === selectedColour}
-                  onSelect={() => this.updateColour(datum.colorurl)}
+                  onSelect={() =>
+                    this.updateColour(
+                      datum.colorurl,
+                      selectedColour,
+                      datum.color
+                    )
+                  }
                 />
               );
             })}

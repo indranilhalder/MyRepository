@@ -1,0 +1,23 @@
+.base {
+  width: 100%;
+  height: 100vh;
+  background: #ececec;
+  padding-top: 15px;
+}
+.skeletonHolder {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+.dataSkeletonHolder {
+  width: 100%;
+  height: auto;
+  margin-top: 30px;
+  margin-bottom: 25px;
+  padding-left: 15px;
+}
+.dataSkeleton {
+  width: 50%;
+  height: 20px;
+  background: #d8d8d8;
+}

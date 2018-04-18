@@ -20,6 +20,7 @@ import {
 } from "../../lib/constants";
 
 import { HOME_ROUTER } from "../../lib/constants";
+
 const dateFormat = "DD MMM YYYY";
 export default class AllOrderDetails extends React.Component {
   onClickImage(productCode) {
@@ -119,9 +120,21 @@ export default class AllOrderDetails extends React.Component {
                     <OrderDelivered
                       deliveredAddress={`${
                         orderDetails.billingAddress.addressLine1
-                      } ${orderDetails.billingAddress.town} ${
+                          ? orderDetails.billingAddress.addressLine1
+                          : ""
+                      } ${
+                        orderDetails.billingAddress.town
+                          ? orderDetails.billingAddress.town
+                          : ""
+                      } ${
                         orderDetails.billingAddress.state
-                      } ${orderDetails.billingAddress.postalcode}`}
+                          ? orderDetails.billingAddress.state
+                          : ""
+                      } ${
+                        orderDetails.billingAddress.postalcode
+                          ? orderDetails.billingAddress.postalcode
+                          : ""
+                      }`}
                     />
                   )}
                 </div>

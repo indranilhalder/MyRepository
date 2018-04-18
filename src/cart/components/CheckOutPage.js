@@ -90,7 +90,9 @@ class CheckOutPage extends React.Component {
       cliqCashAmount: "",
       bagAmount: "",
       selectedDeliveryDetails: null,
-      ratingExperience: false
+      ratingExperience: false,
+      isFirstAddress: false,
+      addressDetails: null
     };
   }
   onClickImage(productCode) {
@@ -356,12 +358,24 @@ class CheckOutPage extends React.Component {
   };
 
   renderInitialAddAddressForm() {
+    if (!this.state.isFirstAddress) {
+      this.setState({ isFirstAddress: true });
+    }
+
     return (
       <div className={styles.addInitialAddAddress}>
         <AddDeliveryAddress
           addUserAddress={address => this.addAddress(address)}
           {...this.state}
           onChange={val => this.onChange(val)}
+          isFirstAddress={true}
+          showSecondaryLoader={this.props.showSecondaryLoader}
+          hideSecondaryLoader={this.props.hideSecondaryLoader}
+          loading={this.props.cart.loading}
+          displayToast={message => this.props.displayToast(message)}
+          getAddressDetails={val => this.setState({ addressDetails: val })}
+          getPinCode={val => this.getPinCodeDetails(val)}
+          getPinCodeDetails={this.props.getPinCodeDetails}
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -378,23 +392,34 @@ class CheckOutPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // adding default address is selected
+
     if (
-      nextProps.cart.status === SUCCESS &&
+      nextProps.cart.getUserAddressStatus === SUCCESS &&
       !this.state.addressId &&
       nextProps.cart &&
       nextProps.cart.userAddress &&
       nextProps.cart.userAddress.addresses
     ) {
       let defaultAddressId = null;
-      let defaultAddress = nextProps.cart.userAddress.addresses.find(
-        address => {
+      let defaultAddress;
+      if (this.state.isFirstAddress) {
+        defaultAddress = nextProps.cart.userAddress.addresses[0];
+        this.setState({ isFirstAddress: false, confirmAddress: true });
+        this.props.addAddressToCart(
+          defaultAddress.id,
+          defaultAddress.postalCode
+        );
+      } else {
+        defaultAddress = nextProps.cart.userAddress.addresses.find(address => {
           return address.defaultAddress;
-        }
-      );
+        });
+      }
+
       if (defaultAddress) {
         defaultAddressId = defaultAddress.id;
       }
       this.updateLocalStoragePinCode(defaultAddress.postalCode);
+
       this.setState({
         addressId: defaultAddressId,
         selectedAddress: defaultAddress
@@ -471,7 +496,8 @@ class CheckOutPage extends React.Component {
             ) / 100,
           bagAmount:
             Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
+              nextProps.cart.cartDetailsCNC.cartAmount &&
+                nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
             ) / 100
         });
       }
@@ -497,12 +523,15 @@ class CheckOutPage extends React.Component {
         this.setState({
           payableAmount:
             Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value * 100
+              nextProps.cart.cartDetailsCNC.cartAmount &&
+                nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value *
+                  100
             ) / 100,
           cliqCashAmount: cliqCashAmount,
           bagAmount:
             Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
+              nextProps.cart.cartDetailsCNC.cartAmount &&
+                nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
             ) / 100
         });
       }
@@ -594,7 +623,8 @@ class CheckOutPage extends React.Component {
   getEmiBankDetails = () => {
     if (this.props.getEmiBankDetails) {
       this.props.getEmiBankDetails(
-        this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
+        this.props.cart.cartDetailsCNC.cartAmount &&
+          this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
       );
     }
   };
@@ -663,11 +693,18 @@ class CheckOutPage extends React.Component {
     this.setState(val);
   }
 
+  getPinCodeDetails = pinCode => {
+    if (this.props.getPinCode) {
+      this.props.getPinCode(pinCode);
+    }
+  };
+
   availabilityOfUserCoupon = () => {
     if (!this.state.isGiftCard) {
       let couponCookie = Cookie.getCookie(COUPON_COOKIE);
-      let cartDetailsCouponDiscount = this.props.cart.cartDetailsCNC.cartAmount
-        .couponDiscountAmount;
+      let cartDetailsCouponDiscount =
+        this.props.cart.cartDetailsCNC.cartAmount &&
+        this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount;
 
       if (couponCookie && !cartDetailsCouponDiscount) {
         this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
@@ -693,6 +730,9 @@ class CheckOutPage extends React.Component {
   };
   handleSubmit = () => {
     if (this.availabilityOfUserCoupon()) {
+      if (this.state.isFirstAddress) {
+        this.addAddress(this.state.addressDetails);
+      }
       if (
         !this.state.confirmAddress &&
         !this.state.isGiftCard &&
@@ -927,7 +967,8 @@ class CheckOutPage extends React.Component {
       if (
         this.props.cart.loading ||
         this.props.cart.jusPaymentLoader ||
-        this.props.cart.selectDeliveryModeLoader
+        this.props.cart.selectDeliveryModeLoader ||
+        (!this.props.cart.paymentModes && this.state.deliverMode)
       ) {
         this.props.showSecondaryLoader();
       } else {
@@ -960,7 +1001,10 @@ class CheckOutPage extends React.Component {
               .charge.value * 100
           ) / 100;
       }
-      if (this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount) {
+      if (
+        this.props.cart.cartDetailsCNC.cartAmount &&
+        this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
+      ) {
         totalDiscount =
           Math.round(
             this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
@@ -968,7 +1012,10 @@ class CheckOutPage extends React.Component {
           ) / 100;
       }
 
-      if (this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount) {
+      if (
+        this.props.cart.cartDetailsCNC.cartAmount &&
+        this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
+      ) {
         couponDiscount =
           Math.round(
             this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
@@ -990,7 +1037,10 @@ class CheckOutPage extends React.Component {
             hideSecondaryLoader={this.props.hideSecondaryLoader}
             loading={this.props.cart.loading}
             onChange={val => this.onChange(val)}
+            isFirstAddress={false}
             displayToast={message => this.props.displayToast(message)}
+            getPinCode={val => this.getPinCodeDetails(val)}
+            getPinCodeDetails={this.props.getPinCodeDetails}
           />
         </div>
       );
@@ -1094,21 +1144,23 @@ class CheckOutPage extends React.Component {
             </div>
           )}
 
-          <Checkout
-            label={
-              (this.state.confirmAddress && !this.state.deliverMode) ||
-              this.state.isGiftCard
-                ? PROCEED
-                : CONTINUE
-            }
-            amount={this.state.payableAmount}
-            bagTotal={this.state.bagAmount}
-            payable={this.state.payableAmount}
-            coupons={`Rs. ${couponDiscount}`}
-            discount={`Rs. ${totalDiscount}`}
-            delivery={`Rs. ${deliveryCharge}`}
-            onCheckout={this.handleSubmit}
-          />
+          {!this.state.showCliqAndPiq && (
+            <Checkout
+              label={
+                (this.state.confirmAddress && !this.state.deliverMode) ||
+                this.state.isGiftCard
+                  ? PROCEED
+                  : CONTINUE
+              }
+              amount={this.state.payableAmount}
+              bagTotal={this.state.bagAmount}
+              payable={this.state.payableAmount}
+              coupons={`Rs. ${couponDiscount}`}
+              discount={`Rs. ${totalDiscount}`}
+              delivery={`Rs. ${deliveryCharge}`}
+              onCheckout={this.handleSubmit}
+            />
+          )}
         </div>
       );
     } else if (this.state.orderConfirmation) {

@@ -1,0 +1,84 @@
+.base {
+  width: 100%;
+  height: auto;
+  background: #f8f8f8;
+  padding: 15px;
+}
+.productHeader {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+  color: #000;
+  font-size: 14px;
+  font-family: semibold;
+}
+.emiOptionHolder {
+  width: 100%;
+  height: 25px;
+  position: relative;
+  padding-right: 100px;
+  line-height: 25px;
+  color: #888888;
+  font-size: 14px;
+  font-style: italic;
+  font-family: regular;
+}
+.moveToWishListButton {
+  width: auto;
+  height: 25px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-style: initial;
+}
+.amountPlaneForMonth {
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid #ececec;
+  margin-top: 15px;
+}
+
+.amountData {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+  display: inline-block;
+  color: #000;
+  font-family: regular;
+}
+.quantity {
+  composes: amountData;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-family: regular;
+}
+.amountLabel {
+  width: 60%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 14px;
+}
+.totalAmountLabel {
+  composes: amountData;
+  font-family: semibold;
+  margin-bottom: 8px;
+}
+.amount {
+  width: 40%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 14px;
+  font-family: semibold;
+  text-align: right;
+}
+.discount {
+  composes: amountData;
+  color: #ff1744;
+}
+.totalAmountDisplay {
+  composes: amountPlaneForMonth;
+  border-bottom: none;
+  margin-top: 10px;
+}

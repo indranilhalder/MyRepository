@@ -81,9 +81,7 @@ class ProductReviewPage extends Component {
   componentDidMount() {
     this.throttledScroll = this.handleScroll();
     window.addEventListener("scroll", this.throttledScroll);
-    if (!this.props.productDetails) {
-      this.props.getProductDescription(this.props.match.params[0]);
-    }
+    this.props.getProductDescription(this.props.match.params[0]);
     this.props.getProductReviews(
       this.props.match.params[0],
       0,
@@ -222,6 +220,7 @@ class ProductReviewPage extends Component {
 
       return (
         <PdpFrame
+          {...this.props.productDetails}
           addProductToBag={() => this.addProductToBag()}
           addProductToWishList={() => this.addProductToWishList()}
           gotoPreviousPage={() => this.goBack()}
