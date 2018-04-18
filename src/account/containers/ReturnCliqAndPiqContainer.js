@@ -9,8 +9,8 @@ const mapDispatchToProps = dispatch => {
     addUserAddress: (addressDetails, fromAccount) => {
       dispatch(addUserAddress(addressDetails, fromAccount));
     },
-    newReturnInitial: returnDetails => {
-      dispatch(newReturnInitial(returnDetails));
+    newReturnInitial: (returnDetails, product) => {
+      dispatch(newReturnInitial(returnDetails, product));
     },
     returnPinCode: productDetails => {
       dispatch(returnPinCode(productDetails));

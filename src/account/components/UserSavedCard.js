@@ -8,6 +8,10 @@ import {
 
 import SavedPaymentCard from "./SavedPaymentCard.js";
 import styles from "./UserSavedCard.css";
+import {
+  setDataLayer,
+  ADOBE_MY_ACCOUNT_SAVED_PAYMENTS
+} from "../../lib/adobeUtils";
 const CARD_FORMAT = /\B(?=(\d{4})+(?!\d))/g;
 const NO_SAVED_CARDS = "No Saved Cards";
 export default class UserSavedCard extends React.Component {

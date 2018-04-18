@@ -43,6 +43,13 @@ import {
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
+import {
+  setDataLayerForCheckoutDirectCalls,
+  ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE,
+  ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE,
+  ADOBE_CALL_FOR_SELECT_DELIVERY_MODE,
+  ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE
+} from "../../lib/adobeUtils";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
@@ -136,7 +143,10 @@ class CheckOutPage extends React.Component {
     );
 
     Object.assign(currentSelectedDeliveryModes, newDeliveryObj);
-
+    setDataLayerForCheckoutDirectCalls(
+      ADOBE_CALL_FOR_SELECT_DELIVERY_MODE,
+      currentSelectedDeliveryModes
+    );
     this.setState({
       ussIdAndDeliveryModesObj: currentSelectedDeliveryModes,
       isSelectedDeliveryModes: true
@@ -451,6 +461,18 @@ class CheckOutPage extends React.Component {
           }
         });
       }
+      if (
+        this.props.cart.cartDetailsCNC &&
+        this.state.confirmAddress &&
+        !this.state.deliverMode &&
+        !this.state.isGiftCard &&
+        !this.state.showCliqAndPiq
+      ) {
+        setDataLayerForCheckoutDirectCalls(
+          ADOBE_CALL_FOR_SELECT_DELIVERY_MODE,
+          defaultSelectedDeliveryModes
+        );
+      }
       this.setState({ ussIdAndDeliveryModesObj: defaultSelectedDeliveryModes });
     }
 
@@ -546,6 +568,9 @@ class CheckOutPage extends React.Component {
   }
 
   componentDidMount() {
+    setDataLayerForCheckoutDirectCalls(
+      ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE
+    );
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
@@ -728,6 +753,10 @@ class CheckOutPage extends React.Component {
           this.props.selectDeliveryMode &&
           !this.checkAvailabilityOfService()
         ) {
+          setDataLayerForCheckoutDirectCalls(
+            ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE,
+            this.state.ussIdAndDeliveryModesObj
+          );
           this.props.selectDeliveryMode(
             this.state.ussIdAndDeliveryModesObj,
             localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)

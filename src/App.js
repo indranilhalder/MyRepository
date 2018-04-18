@@ -59,7 +59,9 @@ import {
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
   REQUESTING,
-  MY_ACCOUNT_PAGE
+  MY_ACCOUNT_PAGE,
+  ABOUT_US,
+  MY_ACCOUNT
 } from "../src/lib/constants";
 import Loadable from "react-loadable";
 
@@ -205,6 +207,13 @@ const ProductSellerContainer = Loadable({
   }
 });
 
+const AboutUsContainer = Loadable({
+  loader: () => import("./staticpage/containers/AboutUsContainer"),
+  loading() {
+    return <Loader />;
+  }
+});
+
 class App extends Component {
   async componentDidMount() {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -292,7 +301,8 @@ class App extends Component {
         <div className={className}>
           <HeaderContainer />
           <Switch>
-            <Route exact path={MY_ACCOUNT_PAGE} component={MyAccountWrapper} />
+            <Route path={MY_ACCOUNT} component={MyAccountWrapper} />{" "}
+            <Route exact path={ABOUT_US} component={AboutUsContainer} />
             <Route
               exact
               path={CATEGORY_PRODUCT_LISTINGS_WITH_PAGE}
@@ -319,72 +329,60 @@ class App extends Component {
               )}
             />
             <Route path={RETURNS} component={ReturnFlowContainer} />
-
             <Route
               path={`${SHORT_URL_ORDER_DETAIL}`}
               component={OrderDetailsContainer}
             />
             <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
-
             <Route
               exact
               path={BRAND_AND_CATEGORY_PAGE}
               component={ProductListingsContainer}
             />
-
             <Route
               exact
               path={CATEGORY_PAGE}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={BRAND_PAGE}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={BRAND_PAGE_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={CATEGORY_PAGE_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={BRAND_PAGE_WITH_SLUG}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               strict
               path={CATEGORY_PAGE_WITH_SLUG}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               path={PRODUCT_DESCRIPTION_REVIEWS}
               component={ProductReviewContainer}
             />
-
             <Route
               path={PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG}
               component={ProductReviewContainer}
@@ -403,20 +401,17 @@ class App extends Component {
               path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
               component={ProductDescriptionPageWrapperContainer}
             />
-
             <Route
               exact
               path={PRODUCT_LISTINGS}
               component={ProductListingsContainer}
             />
-
             <Route exact path={HOME_ROUTER} component={HomeContainer} />
             <Route
               exact
               path={MAIN_ROUTER}
               render={routeProps => <Auth {...routeProps} {...this.props} />}
             />
-
             <Route
               exact
               path={BRAND_LANDING_PAGE}
@@ -449,7 +444,6 @@ class App extends Component {
               path={CATEGORIES_LANDING_PAGE}
               component={CategoriesPageContainer}
             />
-
             {/* This *has* to be at the bottom */}
             <Route exact path={SKU_PAGE} component={ProductListingsContainer} />
           </Switch>

@@ -41,3 +41,8 @@
   composes: icon;
   transform: rotate(180deg);
 }
+.faqQuestion {
+  width: 100%;
+  height: auto;
+  padding: 0px 15px;
+}

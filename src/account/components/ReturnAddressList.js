@@ -266,7 +266,10 @@ export default class ReturnAddressList extends React.Component {
         returnCliqAndPiqObject.IFSCCode = this.props.bankDetail.code;
       }
     }
-    this.props.newReturnInitial(returnCliqAndPiqObject);
+    this.props.newReturnInitial(
+      returnCliqAndPiqObject,
+      this.props.returnProductDetails.orderProductWsDTO[0]
+    );
   };
   renderReturnSummary = () => {
     return (

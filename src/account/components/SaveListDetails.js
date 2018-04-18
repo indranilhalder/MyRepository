@@ -80,6 +80,7 @@ export default class SaveListDetails extends React.Component {
     this.props.history.push(HOME_ROUTER);
   }
   render() {
+    console.log("SAVE LIST DETAILS RENDERED");
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
