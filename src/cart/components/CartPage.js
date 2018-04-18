@@ -214,14 +214,16 @@ class CartPage extends React.Component {
         JSON.parse(userDetails).userName,
         JSON.parse(customerCookie).access_token,
         JSON.parse(cartDetailsLoggedInUser).code,
-        val
+        val,
+        true // this is for setting data layer for change pincode
       );
     } else {
       this.props.getCartDetails(
         ANONYMOUS_USER,
         JSON.parse(globalCookie).access_token,
         JSON.parse(cartDetailsAnonymous).guid,
-        val
+        val,
+        true // this is for setting data layer for change pincode
       );
     }
   };

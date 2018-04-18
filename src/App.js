@@ -53,7 +53,7 @@ import {
   BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
   CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
   BRAND_PRODUCT_LISTINGS_WITH_PAGE,
-  STATIC_CATEGORY_PAGES,
+  SKU_PAGE,
   BRAND_AND_CATEGORY_PAGE,
   CANCEL_PREFIX,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
@@ -451,11 +451,7 @@ class App extends Component {
             />
 
             {/* This *has* to be at the bottom */}
-            <Route
-              exact
-              path={STATIC_CATEGORY_PAGES}
-              component={PlpBrandCategoryWrapperContainer}
-            />
+            <Route exact path={SKU_PAGE} component={ProductListingsContainer} />
           </Switch>
           <SecondaryLoaderContainer />
           <MobileFooter />

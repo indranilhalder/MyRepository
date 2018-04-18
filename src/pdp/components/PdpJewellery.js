@@ -96,32 +96,39 @@ export default class PdpJewellery extends React.Component {
     );
 
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (this.props.productDetails.allOOStock) {
-      this.props.displayToast("Product is out of stock");
+    if (!this.props.productDetails.winningSellerPrice) {
+      this.props.displayToast("Product is not saleable");
     } else {
-      if (this.checkIfSizeSelected()) {
-        if (userDetails) {
-          if (
-            cartDetailsLoggedInUser !== undefined &&
-            customerCookie !== undefined
-          ) {
+      if (
+        this.props.productDetails.allOOStock ||
+        this.props.productDetails.winningSellerAvailableStock === "0"
+      ) {
+        this.props.displayToast("Product is out of stock");
+      } else {
+        if (this.checkIfSizeSelected()) {
+          if (userDetails) {
+            if (
+              cartDetailsLoggedInUser !== undefined &&
+              customerCookie !== undefined
+            ) {
+              this.props.addProductToCart(
+                JSON.parse(userDetails).userName,
+                JSON.parse(cartDetailsLoggedInUser).code,
+                JSON.parse(customerCookie).access_token,
+                productDetails
+              );
+            }
+          } else if (cartDetailsAnonymous) {
             this.props.addProductToCart(
-              JSON.parse(userDetails).userName,
-              JSON.parse(cartDetailsLoggedInUser).code,
-              JSON.parse(customerCookie).access_token,
+              ANONYMOUS_USER,
+              JSON.parse(cartDetailsAnonymous).guid,
+              JSON.parse(globalCookie).access_token,
               productDetails
             );
           }
-        } else if (cartDetailsAnonymous) {
-          this.props.addProductToCart(
-            ANONYMOUS_USER,
-            JSON.parse(cartDetailsAnonymous).guid,
-            JSON.parse(globalCookie).access_token,
-            productDetails
-          );
+        } else {
+          this.showSizeSelector();
         }
-      } else {
-        this.showSizeSelector();
       }
     }
   };
@@ -218,7 +225,11 @@ export default class PdpJewellery extends React.Component {
           addProductToBag={() => this.addToCart()}
           showPincodeModal={() => this.showPincodeModal()}
           productListingId={productData.productListingId}
-          outOfStock={productData.allOOStock}
+          outOfStock={
+            productData.allOOStock ||
+            !productData.winningSellerPrice ||
+            productData.winningSellerAvailableStock === "0"
+          }
           ussId={productData.winningUssID}
         >
           <div className={styles.gallery}>
@@ -229,8 +240,12 @@ export default class PdpJewellery extends React.Component {
                 );
               })}
             </ProductGalleryMobile>
-            {productData.allOOStock && (
+            {(productData.allOOStock ||
+              productData.winningSellerAvailableStock === "0") && (
               <div className={styles.flag}>Out of stock</div>
+            )}
+            {!productData.winningSellerPrice && (
+              <div className={styles.flag}>Not Saleable</div>
             )}
           </div>
           <div className={styles.content}>

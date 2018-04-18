@@ -77,6 +77,24 @@ export default class GiftCard extends React.Component {
           this.props.displayToast("Please select the amount");
           return false;
         }
+        if (
+          !(
+            this.state.amountText <=
+              this.props.giftCardsDetails.amountOptions.maxPrice.value &&
+            this.state.amountText >=
+              this.props.giftCardsDetails.amountOptions.minPrice.value
+          )
+        ) {
+          this.props.displayToast(
+            `Amount Should be less then ${
+              this.props.giftCardsDetails.amountOptions.maxPrice.value
+            } and greater than ${
+              this.props.giftCardsDetails.amountOptions.minPrice.value
+            } `
+          );
+          return false;
+        }
+
         if (!this.state.email) {
           this.props.displayToast("Please fill recipient e-mail address");
           return false;

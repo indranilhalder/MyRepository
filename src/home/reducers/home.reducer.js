@@ -5,6 +5,7 @@ import map from "lodash.map";
 import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
 import { transformFetchingItemsOrder } from "./utils";
 import { homeFeed } from "../actions/home.actions";
+import { SUCCESS } from "../../lib/constants";
 const home = (
   state = {
     homeFeed: [], //array of objects
@@ -15,7 +16,9 @@ const home = (
     feedType: null,
     productCapsules: null,
     productCapsulesStatus: null,
-    productCapsulesLoading: null
+    productCapsulesLoading: null,
+    backUpLoading: false,
+    useBackUpData: false
   },
   action
 ) => {
@@ -25,6 +28,33 @@ const home = (
     homeFeedClonedData,
     clonedComponent;
   switch (action.type) {
+    case homeActions.HOME_FEED_BACK_UP_FAILURE:
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.status,
+        error: action.error
+      });
+    case homeActions.HOME_FEED_BACK_UP_REQUEST:
+      return Object.assign({}, state, {
+        loading: true,
+        useBackUpData: true,
+        status: action.status
+      });
+    case homeActions.HOME_FEED_BACK_UP_SUCCESS:
+      homeFeedClonedData = cloneDeep(action.data);
+      homeFeedData = map(homeFeedClonedData, subData => {
+        // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
+        return {
+          ...subData[subData.componentName],
+          loading: false,
+          status: ""
+        };
+      });
+      return Object.assign({}, state, {
+        homeFeed: homeFeedData,
+        status: action.status,
+        loading: false
+      });
     case homeActions.GET_PRODUCT_CAPSULES_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
@@ -47,6 +77,7 @@ const home = (
         productCapsulesLoading: false,
         homeFeed: homeFeedData
       });
+
     case homeActions.HOME_FEED_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
@@ -55,28 +86,35 @@ const home = (
       });
 
     case homeActions.HOME_FEED_SUCCESS:
-      homeFeedClonedData = cloneDeep(action.data);
-      homeFeedData = map(homeFeedClonedData, subData => {
-        // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
-        return {
-          ...subData[subData.componentName],
+      if (!state.useBackUpData) {
+        homeFeedClonedData = cloneDeep(action.data);
+        homeFeedData = map(homeFeedClonedData, subData => {
+          // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
+          return {
+            ...subData[subData.componentName],
+            loading: false,
+            status: ""
+          };
+        });
+        return Object.assign({}, state, {
+          status: action.status,
+          homeFeed: homeFeedData,
           loading: false,
-          status: "",
-          visible: false
-        };
-      });
-      return Object.assign({}, state, {
-        status: action.status,
-        homeFeed: homeFeedData,
-        loading: false,
-        feedType: action.feedType
-      });
+          visible: false,
+          feedType: action.feedType
+        });
+      }
+      return state;
     case homeActions.HOME_FEED_FAILURE:
-      return Object.assign({}, state, {
-        status: action.status,
-        error: action.error,
-        loading: false
-      });
+      if (!state.useBackUpData) {
+        return Object.assign({}, state, {
+          status: action.status,
+          error: action.error,
+          loading: false
+        });
+      }
+      return state;
+
     case homeActions.SINGLE_SELECT_REQUEST:
     case homeActions.MULTI_SELECT_SUBMIT_REQUEST:
       homeFeedData = cloneDeep(state.homeFeed);
