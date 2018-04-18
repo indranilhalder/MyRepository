@@ -833,7 +833,6 @@ export function setDataLayerForMyAccountDirectCalls(
     window.digitalData = data;
     window._satellite.track(ADOBE_ORDER_RETURN);
   }
-  debugger;
 }
 export function getDigitalDataForMyAccount(pageTitle) {
   const data = {
