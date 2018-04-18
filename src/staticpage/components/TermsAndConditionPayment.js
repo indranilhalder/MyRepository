@@ -10,7 +10,6 @@ export default class TermsAndConditionPayment extends React.Component {
     this.props.setHeaderText(TERMS_CONDITION);
   }
   render() {
-    console.log(this.props);
     return (
       <div className={styles.base}>
         {this.props.termsAndCondition &&

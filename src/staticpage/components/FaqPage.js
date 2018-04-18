@@ -17,7 +17,6 @@ export default class FaqPage extends React.Component {
   };
 
   renderQuestionAnswer(dautm) {
-    console.log(dautm);
     const tm = JSON.parse(dautm);
 
     return (

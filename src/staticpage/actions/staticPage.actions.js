@@ -53,7 +53,6 @@ export function getAboutUsDetails() {
       );
 
       const resultJson = await result.json();
-
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -92,9 +91,7 @@ export function getFaqDetails() {
     dispatch(aboutUsRequest());
     try {
       const result = await api.get(`${PATH}/cms/defaultpage?pageId=${FAQ}`);
-
       const resultJson = await result.json();
-      console.log(resultJson);
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -134,7 +131,6 @@ export function getTermsAndConditionDetails() {
       const result = await api.get(`${PATH}/cms/defaultpage?pageId=${TNC}`);
 
       const resultJson = await result.json();
-      console.log(resultJson);
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
