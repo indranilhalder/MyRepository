@@ -49,7 +49,6 @@ export default class EmiPanel extends React.Component {
     }
   };
   getItemBreakUpDetails = couponCode => {
-    console.log(couponCode);
     if (this.props.getItemBreakUpDetails) {
       this.props.getItemBreakUpDetails(couponCode);
     }
