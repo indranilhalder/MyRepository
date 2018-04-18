@@ -46,7 +46,7 @@ import SaveListContainer from "./account/containers/SaveListContainer";
 import CliqCashContainer from "./account/containers/CliqCashContainer.js";
 import GiftCardContainer from "./account/containers/GiftCardContainer";
 import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
-
+import AboutUsContainer from "./staticpage/containers/AboutUsContainer";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 import CancelOrderContainer from "./account/containers/CancelOrderContainer";
 import UpdateProfileContainer from "./account/containers/UpdateProfileContainer.js";
@@ -106,7 +106,8 @@ import {
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
   MY_ACCOUNT_UPDATE_PROFILE_PAGE,
-  REQUESTING
+  REQUESTING,
+  ABOUT_US
 } from "../src/lib/constants";
 import {
   globalAccessTokenSuccess,
@@ -206,6 +207,8 @@ class App extends Component {
         <div className={className}>
           <HeaderContainer />
           <Switch>
+            {" "}
+            <Route exact path={ABOUT_US} component={AboutUsContainer} />
             <Route
               exact
               path={CATEGORY_PRODUCT_LISTINGS_WITH_PAGE}
@@ -232,7 +235,6 @@ class App extends Component {
               )}
             />
             <Route path={RETURNS} component={ReturnFlowContainer} />
-
             <Route
               path={`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`}
               component={SaveListContainer}
@@ -270,7 +272,6 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_CLIQ_CASH_PAGE}`}
               component={CliqCashContainer}
             />
-
             <Route
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_BRANDS_PAGE}`}
@@ -281,72 +282,60 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`}
               component={UpdateProfileContainer}
             />
-
             <Route
               path={`${SHORT_URL_ORDER_DETAIL}`}
               component={OrderDetailsContainer}
             />
             <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
-
             <Route
               exact
               path={BRAND_AND_CATEGORY_PAGE}
               component={ProductListingsContainer}
             />
-
             <Route
               exact
               path={CATEGORY_PAGE}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={BRAND_PAGE}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={BRAND_PAGE_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={CATEGORY_PAGE_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={BRAND_PAGE_WITH_SLUG}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               strict
               path={CATEGORY_PAGE_WITH_SLUG}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               path={PRODUCT_DESCRIPTION_REVIEWS}
               component={ProductReviewContainer}
             />
-
             <Route
               path={PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG}
               component={ProductReviewContainer}
@@ -365,20 +354,17 @@ class App extends Component {
               path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
               component={ProductDescriptionPageWrapperContainer}
             />
-
             <Route
               exact
               path={PRODUCT_LISTINGS}
               component={ProductListingsContainer}
             />
-
             <Route exact path={HOME_ROUTER} component={HomeContainer} />
             <Route
               exact
               path={MAIN_ROUTER}
               render={routeProps => <Auth {...routeProps} {...this.props} />}
             />
-
             <Route
               exact
               path={PRODUCT_FILTER_ROUTER}
