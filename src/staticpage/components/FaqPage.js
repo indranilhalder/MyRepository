@@ -2,7 +2,14 @@ import React from "react";
 import styles from "./FaqPage.css";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 import Accordion from "../../general/components/Accordion.js";
+
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 export default class FaqPage extends React.Component {
+  handleItemClick = url => {
+    const urlSuffix = url.replace(TATA_CLIQ_ROOT, "$1");
+    this.props.history.push(urlSuffix);
+  };
+
   renderQuestionAnswer(dautm) {
     const tm = JSON.parse(dautm);
     console.log(tm);
@@ -10,12 +17,17 @@ export default class FaqPage extends React.Component {
       tm &&
       tm.map((val, i) => {
         return (
-          <Accordion
-            faqQuestion={val.question_component}
-            activeBackground="#f8f8f8"
-          >
-            <div dangerouslySetInnerHTML={{ __html: val.answer }} />
-          </Accordion>
+          <div className={styles.questionAnswerHolder}>
+            <Accordion
+              faqQuestion={val.question_component}
+              activeBackground="#f8f8f8"
+            >
+              <div
+                className={styles.answer}
+                dangerouslySetInnerHTML={{ __html: val.answer }}
+              />
+            </Accordion>
+          </div>
         );
       })
     );
@@ -40,6 +52,7 @@ export default class FaqPage extends React.Component {
                     <div className={styles.navigationHolder}>
                       <SelectBoxMobile
                         label="Select"
+                        height={40}
                         options={val.accountNavigationComponent.nodeList.map(
                           (val, i) => {
                             return {
@@ -49,12 +62,13 @@ export default class FaqPage extends React.Component {
                           }
                         )}
                         onChange={ik => {
-                          this.props.history.push(ik);
+                          this.handleItemClick(ik);
                         }}
                       />
                     </div>
                   )}
                 {val.componentName === "cmsTextComponent" &&
+                  val.cmsTextComponent.content &&
                   this.renderQuestionAnswer(val.cmsTextComponent.content)}
               </div>
             );

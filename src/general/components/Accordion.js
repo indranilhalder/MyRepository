@@ -55,6 +55,7 @@ export default class Accordion extends React.Component {
             {this.props.text && <div>{this.props.text}</div>}
             {this.props.faqQuestion && (
               <div
+                className={styles.faqQuestion}
                 dangerouslySetInnerHTML={{ __html: this.props.faqQuestion }}
               />
             )}
