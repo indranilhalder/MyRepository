@@ -38,7 +38,8 @@ import {
   ADOBE_MY_ACCOUNT_ORDER_HISTORY,
   ADOBE_MY_ACCOUNT_GIFT_CARD,
   ADOBE_MY_ACCOUNT_CLIQ_CASH,
-  AODBE_MY_ACCOUNT_SETTINGS
+  AODBE_MY_ACCOUNT_SETTINGS,
+  ADOBE_MY_ACCOUNT_ORDER_DETAILS
 } from "../../lib/adobeUtils";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 
@@ -1359,7 +1360,7 @@ export function fetchOrderDetails(orderId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayer(ADOBE_MY_ACCOUNT_ORDER_DETAILS);
       dispatch(fetchOrderDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(fetchOrderDetailsFailure(e.message));

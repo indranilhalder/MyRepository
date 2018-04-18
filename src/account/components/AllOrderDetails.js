@@ -20,10 +20,7 @@ import {
 } from "../../lib/constants";
 
 import { HOME_ROUTER } from "../../lib/constants";
-import {
-  setDataLayer,
-  ADOBE_MY_ACCOUNT_ORDER_HISTORY
-} from "../../lib/adobeUtils";
+
 const dateFormat = "DD MMM YYYY";
 export default class AllOrderDetails extends React.Component {
   onClickImage(productCode) {
