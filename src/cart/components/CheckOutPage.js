@@ -604,6 +604,41 @@ class CheckOutPage extends React.Component {
     }
   };
 
+  getEmiEligibility = () => {
+    if (this.props.getEmiEligibility) {
+      this.props.getEmiEligibility();
+    }
+  };
+
+  getBankAndTenureDetails = () => {
+    if (this.props.getBankAndTenureDetails) {
+      this.props.getBankAndTenureDetails();
+    }
+  };
+
+  getEmiTermsAndConditionsForBank = (bankCode,bankName) => {
+    if (this.props.getEmiTermsAndConditionsForBank) {
+      this.props.getEmiTermsAndConditionsForBank(bankCode,bankName);
+    }
+  };
+  applyNoCostEmi = couponCode => {
+    if (this.props.applyNoCostEmi) {
+      this.props.applyNoCostEmi(couponCode);
+    }
+  };
+
+  removeNoCostEmi = couponCode => {
+    if (this.props.applyNoCostEmi) {
+      this.props.removeNoCostEmi(couponCode);
+    }
+  };
+
+  getItemBreakUpDetails = couponCode => {
+    if (this.props.getItemBreakUpDetails) {
+      this.props.getItemBreakUpDetails(couponCode);
+    }
+  };
+
   getNetBankDetails = () => {
     if (this.props.getNetBankDetails) {
       this.props.getNetBankDetails();
@@ -1111,6 +1146,16 @@ class CheckOutPage extends React.Component {
                 getCODEligibility={() => this.getCODEligibility()}
                 getNetBankDetails={() => this.getNetBankDetails()}
                 getEmiBankDetails={() => this.getEmiBankDetails()}
+                getEmiEligibility={() => this.getEmiEligibility()}
+                getBankAndTenureDetails={() => this.getBankAndTenureDetails()}
+                getEmiTermsAndConditionsForBank={(bankCode, bankName) =>
+                  this.getEmiTermsAndConditionsForBank(bankCode, bankName)
+                }
+                applyNoCostEmi={couponCode => this.applyNoCostEmi(couponCode)}
+                removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
+                getItemBreakUpDetails={couponCode =>
+                  this.getItemBreakUpDetails(couponCode)
+                }
               />
             </div>
           )}

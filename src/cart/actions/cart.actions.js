@@ -9,6 +9,11 @@ import * as Cookie from "../../lib/Cookie";
 import each from "lodash/each";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 import {
+  showModal,
+  EMI_ITEM_LEVEL_BREAKAGE,
+  EMI_BANK_TERMS_AND_CONDITIONS
+} from "../../general/modal.actions";
+import {
   CUSTOMER_ACCESS_TOKEN,
   GLOBAL_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -3675,14 +3680,14 @@ export function getEmiTermsAndConditionsForBankFailure() {
   };
 }
 
-export function getEmiTermsAndConditionsForBank(code) {
+export function getEmiTermsAndConditionsForBank(code,bankName) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     dispatch(getEmiTermsAndConditionsForBankRequest());
     try {
 
-      const result = await api.post(
+      const result = await api.get(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/${code}/noCostEmiTnc?access_token=${
@@ -3696,6 +3701,8 @@ export function getEmiTermsAndConditionsForBank(code) {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(getEmiTermsAndConditionsForBankSuccess(resultJson));
+      resultJson.bankName=bankName
+      dispatch(showModal(EMI_BANK_TERMS_AND_CONDITIONS,resultJson))
     } catch (e) {
       dispatch(getEmiTermsAndConditionsForBankFailure(e.message));
     }
@@ -3827,6 +3834,7 @@ export function getItemBreakUpDetailsFailure() {
 }
 
 export function getItemBreakUpDetails(couponCode) {
+  console.log(couponCode)
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -3835,7 +3843,7 @@ export function getItemBreakUpDetails(couponCode) {
     dispatch(getItemBreakUpDetailsRequest());
     try {
 
-      const result = await api.post(
+      const result = await api.get(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/noCostEmiItemBreakUp?couponCode=${couponCode}&access_token=${
@@ -3849,6 +3857,7 @@ export function getItemBreakUpDetails(couponCode) {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(getItemBreakUpDetailsSuccess(resultJson));
+      dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE,resultJson))
     } catch (e) {
       dispatch(getItemBreakUpDetailsFailure(e.message));
     }

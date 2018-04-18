@@ -21,6 +21,8 @@ import KycApplicationFormWithBottomSlideModal from "../../account/components/Kyc
 import KycDetailPopUpWithBottomSlideModal from "../../account/components/KycDetailPopUpWithBottomSlideModal";
 import * as Cookie from "../../lib/Cookie.js";
 import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
+import ItemLevelPopup from "../../cart/components/ItemLevelPopup.js";
+import TermsAndConditionsModal from "../../cart/components/TermsAndConditionsModal.js";
 const modalRoot = document.getElementById("modal-root");
 const GenerateOtp = "GenerateOtpForEgv";
 const RestorePasswords = "RestorePassword";
@@ -181,6 +183,11 @@ export default class ModalRoot extends React.Component {
       this.props.redeemCliqVoucher(val, true);
     }
   };
+
+  // moveToWishList=()=>
+  // {
+
+  // }
   onClickWrongNumber() {
     this.props.showModal(RestorePasswords);
   }
@@ -334,6 +341,19 @@ export default class ModalRoot extends React.Component {
         <OfferModal
           closeModal={() => this.handleClose()}
           {...this.props.ownProps}
+        />
+      ),
+      NoCostEmiItemBreakUp: (
+        <ItemLevelPopup
+          // moveToWishList={()=>this.moveToWishList()}
+          emiItemDetails={this.props.ownProps}
+          closeModal={() => this.handleClose()}
+        />
+      ),
+      EmiTermsAndConditions: (
+        <TermsAndConditionsModal
+          emiTermsAndConditions={this.props.ownProps}
+          closeModal={() => this.handleClose()}
         />
       )
     };

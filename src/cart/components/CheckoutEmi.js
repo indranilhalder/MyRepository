@@ -27,15 +27,15 @@ export default class CheckoutEmi extends React.Component {
 
   render() {
     return (
-      <MenuDetails
-        text="Easy monthly installments"
-        icon={emiIcon}
-        getEmiBankDetails={() => this.getEmiBankDetails()}
-        emiList={
-          this.props.cart.emiBankDetails &&
-          this.props.cart.emiBankDetails.bankList
-        }
-      >
+      // <MenuDetails
+      //   text="Standard Emi"
+      //   getEmiBankDetails={() => this.getEmiBankDetails()}
+      //   emiList={
+      //     this.props.cart.emiBankDetails &&
+      //     this.props.cart.emiBankDetails.bankList
+      //   }
+      // >
+      <div>
         {this.props.cart.emiBankDetails &&
           this.props.cart.emiBankDetails.bankList && (
             <EmiAccordion
@@ -51,7 +51,8 @@ export default class CheckoutEmi extends React.Component {
         {!this.props.cart.emiBankDetails && (
           <div className={styles.errorText}>{this.props.cart.emiBankError}</div>
         )}
-      </MenuDetails>
+      </div>
+      // </MenuDetails>
     );
   }
 }

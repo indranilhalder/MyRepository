@@ -235,21 +235,20 @@ const mapDispatchToProps = dispatch => {
     getBankAndTenureDetails: () => {
       dispatch(getBankAndTenureDetails());
     },
-    getEmiTermsAndConditionsForBank: () => {
-      dispatch(getEmiTermsAndConditionsForBank());
+    getEmiTermsAndConditionsForBank: (code, bankName) => {
+      dispatch(getEmiTermsAndConditionsForBank(code, bankName));
     },
-    applyNoCostEmi: () => {
-      dispatch(applyNoCostEmi());
+    applyNoCostEmi: couponCode => {
+      dispatch(applyNoCostEmi(couponCode));
     },
-    removeNoCostEmi: () => {
-      dispatch(removeNoCostEmi());
+    removeNoCostEmi: couponCode => {
+      dispatch(removeNoCostEmi(couponCode));
     },
-    getItemBreakUpDetails: () => {
-      dispatch(getItemBreakUpDetails());
+    getItemBreakUpDetails: couponCode => {
+      dispatch(getItemBreakUpDetails(couponCode));
     },
     getPinCode: pinCode => {
       dispatch(getPinCode(pinCode));
-
     }
   };
 };

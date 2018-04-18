@@ -2,44 +2,48 @@ import React from "react";
 import styles from "./ItemLevelPopup.css";
 import LevelBreakupCard from "./LevelBreakupCard.js";
 import PropTypes from "prop-types";
+import SlideModal from "../../general/components/SlideModal";
 export default class ItemLevelPopup extends React.Component {
   render() {
+    let emiItemDetails = this.props.emiItemDetails;
     return (
-      <div className={styles.base}>
-        <div className={styles.cardOfferDisplay}>
-          <div className={styles.cardName}>{`${this.props.cardName} for ${
-            this.props.timeLimit
-          }`}</div>
-          <div className={styles.offerText}>{this.props.defaultText}</div>
-        </div>
-        <div className={styles.levelBreakupHolder}>
-          {this.props.cardData &&
-            this.props.cardData.map((val, i) => {
-              return (
-                <LevelBreakupCard
-                  key={i}
-                  productName={val.productName}
-                  emiApplication={val.emiApplication}
-                  quantity={val.quantity}
-                  itemValue={val.itemValue}
-                  Interest={val.Interest}
-                  discount={val.discount}
-                  totalAmount={val.totalAmount}
-                  emiAmount={val.emiAmount}
-                />
-              );
-            })}
-        </div>
-        <div className={styles.emiInformationHolder}>
-          <div className={styles.emiInfoHeader}>Your EMI Information</div>
-          <div className={styles.emiPlanTextHolder}>
-            {this.props.emiOffer &&
-              this.props.emiOffer.map((val, i) => {
-                return <div className={styles.emiPlan}>{val.offerText}</div>;
+      <SlideModal closeModal={this.props.closeModal}>
+        <div className={styles.base}>
+          <div className={styles.cardOfferDisplay}>
+            <div className={styles.cardName}>{`${emiItemDetails.bankName} for ${
+              emiItemDetails.tenure
+            } months`}</div>
+            <div className={styles.offerText}>{this.props.defaultText}</div>
+          </div>
+          <div className={styles.levelBreakupHolder}>
+            {emiItemDetails &&
+              emiItemDetails.itemBreakUpDetailList.map((val, i) => {
+                return (
+                  <LevelBreakupCard
+                    key={i}
+                    productName={val.productTitle}
+                    emiApplication={val.isNoCostEMIEligible}
+                    quantity={val.quantity}
+                    itemValue={val.lineValue.value}
+                    Interest={val.lineBankInterst.value}
+                    discount={val.noCostEMILineDiscount.value}
+                    totalAmount={val.lineTotalValue.value}
+                    emiAmount={val.perMonthEMILineValue.value}
+                  />
+                );
               })}
           </div>
+          <div className={styles.emiInformationHolder}>
+            <div className={styles.emiInfoHeader}>Your EMI Information</div>
+            <div className={styles.emiPlanTextHolder}>
+              {this.props.emiOffer &&
+                this.props.emiOffer.map((val, i) => {
+                  return <div className={styles.emiPlan}>{val.offerText}</div>;
+                })}
+            </div>
+          </div>
         </div>
-      </div>
+      </SlideModal>
     );
   }
 }

@@ -214,10 +214,10 @@ const cart = (
         removeCartItemLoggedOutError: null,
         getUserAddressError: null,
         emiEligibilityError: null,
-        bankAndTenureError:null,
-        emiTermsAndConditionError:null,
-        noCostEmiError:null,
-        emiItemBreakUpError:null
+        bankAndTenureError: null,
+        emiTermsAndConditionError: null,
+        noCostEmiError: null,
+        emiItemBreakUpError: null
       });
     case cartActions.CART_DETAILS_REQUEST:
       return Object.assign({}, state, {
@@ -1161,9 +1161,14 @@ const cart = (
       });
 
     case cartActions.APPLY_NO_COST_EMI_SUCCESS:
+      carDetailsCopy = cloneDeep(state.cartDetailsCNC);
+      let emiCartAmount = action.noCostEmiResult.cartAmount;
+      carDetailsCopy.cartAmount = emiCartAmount;
+
       return Object.assign({}, state, {
         noCostEmiStatus: action.status,
         noCostEmiDetails: action.noCostEmiResult,
+        cartDetailsCNC: carDetailsCopy,
         loading: false
       });
 
@@ -1181,9 +1186,13 @@ const cart = (
       });
 
     case cartActions.REMOVE_NO_COST_EMI_SUCCESS:
+      carDetailsCopy = cloneDeep(state.cartDetailsCNC);
+      emiCartAmount = action.noCostEmiResult.cartAmount;
+      carDetailsCopy.cartAmount = emiCartAmount;
       return Object.assign({}, state, {
         noCostEmiStatus: action.status,
         noCostEmiDetails: action.noCostEmiResult,
+        cartDetailsCNC: carDetailsCopy,
         loading: false
       });
 

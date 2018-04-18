@@ -19,6 +19,21 @@ export default class NoCostEmi extends React.Component {
         if (this.props.onOpenMenu) {
           this.props.onOpenMenu(this.state.isOpen);
         }
+        if (
+          this.state.isOpen &&
+          this.props.text === "Standard Emi" &&
+          !this.props.emiList &&
+          this.props.getEmiBankDetails
+        ) {
+          this.props.getEmiBankDetails();
+        }
+        if (
+          this.state.isOpen &&
+          this.props.text === "No Cost Emi" &&
+          this.props.getBankAndTenureDetails
+        ) {
+          this.props.getBankAndTenureDetails();
+        }
       }
     );
   }
