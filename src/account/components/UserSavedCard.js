@@ -16,7 +16,6 @@ const CARD_FORMAT = /\B(?=(\d{4})+(?!\d))/g;
 const NO_SAVED_CARDS = "No Saved Cards";
 export default class UserSavedCard extends React.Component {
   componentDidMount() {
-    setDataLayer(ADOBE_MY_ACCOUNT_SAVED_PAYMENTS);
     this.props.setHeaderText(SAVED_PAYMENTS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -30,7 +29,6 @@ export default class UserSavedCard extends React.Component {
     }
   }
   componentDidUpdate() {
-    setDataLayer(ADOBE_MY_ACCOUNT_SAVED_PAYMENTS);
     this.props.setHeaderText(SAVED_PAYMENTS);
   }
   removeSavedCardDetails = () => {

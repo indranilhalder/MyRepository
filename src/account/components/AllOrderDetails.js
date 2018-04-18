@@ -36,7 +36,6 @@ export default class AllOrderDetails extends React.Component {
   }
   componentDidMount() {
     if (this.props.shouldCallHeaderContainer) {
-      setDataLayer(ADOBE_MY_ACCOUNT_ORDER_HISTORY);
       this.props.setHeaderText(ORDER_HISTORY);
     }
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -47,7 +46,6 @@ export default class AllOrderDetails extends React.Component {
   }
   componentDidUpdate() {
     if (this.props.shouldCallHeaderContainer) {
-      setDataLayer(ADOBE_MY_ACCOUNT_ORDER_HISTORY);
       this.props.setHeaderText(ORDER_HISTORY);
     }
   }

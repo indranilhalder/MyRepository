@@ -17,10 +17,6 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import MDSpinner from "react-md-spinner";
-import {
-  setDataLayer,
-  ADOBE_MY_ACCOUNT_SAVED_LIST
-} from "../../lib/adobeUtils";
 
 import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "MMMM DD YYYY";
@@ -28,7 +24,6 @@ const PRODUCT_QUANTITY = "1";
 const NO_SAVELIST_TEXT = "You do not have any products in your Saved list";
 export default class SaveListDetails extends React.Component {
   componentDidMount() {
-    setDataLayer(ADOBE_MY_ACCOUNT_SAVED_LIST);
     this.props.setHeaderText(SAVED_LIST);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -37,7 +32,6 @@ export default class SaveListDetails extends React.Component {
     }
   }
   componentDidUpdate() {
-    setDataLayer(ADOBE_MY_ACCOUNT_SAVED_LIST);
     this.props.setHeaderText(SAVED_LIST);
   }
   navigateToLogin() {
