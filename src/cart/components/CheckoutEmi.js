@@ -27,14 +27,6 @@ export default class CheckoutEmi extends React.Component {
 
   render() {
     return (
-      // <MenuDetails
-      //   text="Standard Emi"
-      //   getEmiBankDetails={() => this.getEmiBankDetails()}
-      //   emiList={
-      //     this.props.cart.emiBankDetails &&
-      //     this.props.cart.emiBankDetails.bankList
-      //   }
-      // >
       <div>
         {this.props.cart.emiBankDetails &&
           this.props.cart.emiBankDetails.bankList && (
@@ -52,7 +44,6 @@ export default class CheckoutEmi extends React.Component {
           <div className={styles.errorText}>{this.props.cart.emiBankError}</div>
         )}
       </div>
-      // </MenuDetails>
     );
   }
 }
