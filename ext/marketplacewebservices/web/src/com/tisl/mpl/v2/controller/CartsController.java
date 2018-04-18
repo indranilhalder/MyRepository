@@ -5344,7 +5344,9 @@ public class CartsController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/{cartId}/applyNoCostEMI", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@RequestMapping(value =
+	{ "/applyNoCostEMI",
+			"/{cartId}/applyNoCostEMI" }, method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ApplyCouponsDTO applyNoCostEMI(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String channel)
@@ -5467,7 +5469,9 @@ public class CartsController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/{cartId}/releaseNoCostEMI", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@RequestMapping(value =
+	{ "/releaseNoCostEMI",
+			"/{cartId}/releaseNoCostEMI" }, method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ReleaseCouponsDTO releaseNoCostEMI(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
