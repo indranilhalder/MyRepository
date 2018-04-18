@@ -611,7 +611,6 @@ export function setDataLayerForOrderConfirmationDirectCalls(
 }
 export function setDataLayerForCheckoutDirectCalls(type, response) {
   let data = cloneDeep(window.digitalData);
-  console.log(data);
   if (type === ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE) {
     window._satellite.track(ADOBE_LANDING_ON_ADDRESS_PAGE);
   }
@@ -629,8 +628,6 @@ export function setDataLayerForCheckoutDirectCalls(type, response) {
     // like {"MP12345678":"home_delivery","MP987654321":"expres_delivery"}
     // so here we need ot pass only "home_delivery"|"express_delivery"
     const deliveryModesObj = Object.values(response).join("|");
-    console.log(data);
-
     if (data) {
       if (data.cpj) {
         if (data.cpj.checkout) {
@@ -652,7 +649,6 @@ export function setDataLayerForCheckoutDirectCalls(type, response) {
         cpj: { checkout: { deliveryOption: deliveryModesObj } }
       });
     }
-    console.log(data);
 
     window.digitalData = data;
     if (type === ADOBE_CALL_FOR_SELECT_DELIVERY_MODE) {
