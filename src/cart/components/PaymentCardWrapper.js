@@ -10,11 +10,7 @@ import CheckoutSavedCard from "./CheckoutSavedCard.js";
 import CheckoutCOD from "./CheckoutCOD.js";
 import { PAYTM } from "../../lib/constants";
 import PaytmOption from "./PaytmOption.js";
-import {
-  setDataLayerForCheckoutDirectCalls,
-  ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON,
-  ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF
-} from "../../lib/adobeUtils";
+
 let cliqCashToggleState = false;
 
 // prettier-ignore
@@ -86,10 +82,8 @@ export default class PaymentCardWrapper extends React.Component {
   handleClick = toggleState => {
     cliqCashToggleState = toggleState;
     if (toggleState) {
-      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON);
       this.props.applyCliqCash();
     } else {
-      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF);
       this.props.removeCliqCash();
     }
   };

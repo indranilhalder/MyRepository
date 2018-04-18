@@ -41,7 +41,9 @@ import {
   ADOBE_CALL_FOR_APPLY_COUPON_FAILURE,
   ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS,
   ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE,
-  ADOBE_FINAL_PAYMENT_MODES
+  ADOBE_FINAL_PAYMENT_MODES,
+  ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON,
+  ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF
 } from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
@@ -1714,6 +1716,7 @@ export function applyCliqCash() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON);
       dispatch(applyCliqCashSuccess(resultJson));
     } catch (e) {
       dispatch(applyCliqCashFailure(e.message));
@@ -1767,6 +1770,7 @@ export function removeCliqCash() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF);
       dispatch(removeCliqCashSuccess(resultJson));
     } catch (e) {
       dispatch(removeCliqCashFailure(e.message));
