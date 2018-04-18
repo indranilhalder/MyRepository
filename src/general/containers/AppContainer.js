@@ -8,12 +8,12 @@ import {
 } from "../../auth/actions/user.actions";
 import {
   generateCartIdForLoggedInUser,
-  generateCartIdForAnonymous,
-  mergeCartId
+  generateCartIdForAnonymous
 } from "../../cart/actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import App from "../../App.js";
-
+import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
+import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 const mapDispatchToProps = dispatch => {
   return {
     showModal: type => {
@@ -22,8 +22,14 @@ const mapDispatchToProps = dispatch => {
     facebookLogin: type => {
       dispatch(facebookLogin(type));
     },
-    googlePlusLogin: type => {
-      dispatch(googlePlusLogin(type));
+    googlePlusLogin: async type => {
+      const response = await dispatch(googlePlusLogin(type));
+      if (response.code <= 400) {
+        dispatch(createWishlist());
+      }
+    },
+    clearUrlToRedirectToAfterAuth: () => {
+      dispatch(clearUrlToRedirectToAfterAuth());
     },
     getGlobalAccessToken: async () => {
       return await dispatch(getGlobalAccessToken());
@@ -43,7 +49,14 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     modalStatus: state.modal.modalDisplayed,
-    cart: state.cart
+    cartLoading: state.cart.loading,
+    globalAccessTokenStatus: state.user.globalAccessTokenStatus,
+    customerAccessTokenStatus: state.user.customerAccessTokenStatus,
+    refreshCustomerAccessTokenStatus:
+      state.user.refreshCustomerAccessTokenStatus,
+    cartIdForLoggedInUserStatus: state.cart.cartIdForLoggedInUserStatus,
+    cartIdForAnonymousUserStatus: state.cart.cartIdForAnonymousUserStatus,
+    redirectToAfterAuthUrl: state.auth.redirectToAfterAuthUrl
   };
 };
 

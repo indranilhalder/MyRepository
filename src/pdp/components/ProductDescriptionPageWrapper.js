@@ -3,6 +3,7 @@ import PdpElectronics from "./PdpElectronics";
 import PdpApparel from "./PdpApparel";
 import PdpJewellery from "./PdpJewellery";
 import PdpHome from "./PdpHome";
+
 import styles from "./ProductDescriptionPageWrapper.css";
 import ProductDescriptionPage from "./ProductDescriptionPage";
 import MDSpinner from "react-md-spinner";
@@ -28,6 +29,24 @@ const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidMount() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 0);
+      this.props.getProductDescription(this.props.match.params[0]);
+      this.props.getMsdRequest(this.props.match.params[0]);
+      this.props.pdpAboutBrand(this.props.match.params[0]);
+      if (defaultPinCode) {
+        this.props.getProductPinCode(
+          defaultPinCode,
+          this.props.match.params[0]
+        );
+      }
+    } else if (
+      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+    ) {
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 0);
       this.props.getProductDescription(this.props.match.params[1]);
       this.props.getMsdRequest(this.props.match.params[1]);
       this.props.pdpAboutBrand(this.props.match.params[1]);
@@ -37,18 +56,6 @@ export default class ProductDescriptionPageWrapper extends React.Component {
           this.props.match.params[1]
         );
       }
-    } else if (
-      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
-    ) {
-      this.props.getProductDescription(this.props.match.params[2]);
-      this.props.getMsdRequest(this.props.match.params[2]);
-      this.props.pdpAboutBrand(this.props.match.params[2]);
-      if (defaultPinCode) {
-        this.props.getProductPinCode(
-          defaultPinCode,
-          this.props.match.params[2]
-        );
-      }
     } else {
       //need to show error page
     }
@@ -56,7 +63,25 @@ export default class ProductDescriptionPageWrapper extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 0);
+
       if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+        this.props.getProductDescription(this.props.match.params[0]);
+        this.props.getMsdRequest(this.props.match.params[0]);
+        if (defaultPinCode) {
+          this.props.getProductPinCode(
+            defaultPinCode,
+            this.props.match.params[0]
+          );
+        }
+      } else if (
+        this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+      ) {
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+        }, 0);
         this.props.getProductDescription(this.props.match.params[1]);
         this.props.getMsdRequest(this.props.match.params[1]);
         if (defaultPinCode) {
@@ -65,23 +90,17 @@ export default class ProductDescriptionPageWrapper extends React.Component {
             this.props.match.params[1]
           );
         }
-      } else if (
-        this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
-      ) {
-        this.props.getProductDescription(this.props.match.params[2]);
-        this.props.getMsdRequest(this.props.match.params[2]);
-        if (defaultPinCode) {
-          this.props.getProductPinCode(
-            defaultPinCode,
-            this.props.match.params[2]
-          );
-        }
       } else {
         //need to show error page
       }
     }
   }
-
+  showLoader = () => {
+    this.props.showSecondaryLoader();
+  };
+  hideLoader = () => {
+    this.props.hideSecondaryLoader();
+  };
   renderRootCategory = datumType => {
     let pdpToRender = typeComponentMapping[datumType];
     if (!pdpToRender) {
@@ -99,7 +118,12 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   render() {
-    if (!this.props.loading && this.props.productDetails) {
+    if (this.props.loading) {
+      this.showLoader();
+    } else {
+      this.hideLoader();
+    }
+    if (this.props.productDetails) {
       return (
         <div>
           {this.renderRootCategory(this.props.productDetails.rootCategory)}

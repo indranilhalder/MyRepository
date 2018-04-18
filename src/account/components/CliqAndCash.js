@@ -7,38 +7,33 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button.js";
 import cliqCashIcon from "./img/cliqcash.png";
 import styles from "./CliqAndCash.css";
-import Error from "../../general/components/Error.js";
+
 import moment from "moment";
 import {
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_PAGE,
   SUCCESS,
-  FAILURE
+  FAILURE,
+  CLIQ_CASH
 } from "../../lib/constants.js";
+
 const DATE_FORMAT = "DD/MM/YYYY, hh:mm";
-const REGULAR_EXPRESSION_PIN_NUMBER = "/^d{6}$/";
-const REGULAR_EXPRESSION_VOUCHER_NUMBER = "/^d{12}$/";
+
 export default class CliqAndCash extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       cardNumber: this.props.cardNumber ? this.props.cardNumber : "",
       pinNumber: this.props.pinNumber ? this.props.cardNumber : "",
-      cliqCashUpdate: false,
-      error: false,
-      errorMessage: ""
+      cliqCashUpdate: false
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.cliqCashVoucherDetailsStatus === FAILURE) {
-      this.setState({
-        error: true,
-        errorMessage: nextProps.cliqCashVoucherDetailsError
-      });
-    }
+  componentDidUpdate() {
+    this.props.setHeaderText(CLIQ_CASH);
   }
   componentDidMount() {
+    this.props.setHeaderText(CLIQ_CASH);
     if (this.props.getCliqCashDetails) {
       this.props.getCliqCashDetails();
     }
@@ -49,10 +44,7 @@ export default class CliqAndCash extends React.Component {
     }
   }
   redeemCliqVoucher() {
-    if (
-      this.state.cardNumber.match(REGULAR_EXPRESSION_VOUCHER_NUMBER) &&
-      this.state.pinNumber.match(REGULAR_EXPRESSION_PIN_NUMBER)
-    ) {
+    if (this.state.cardNumber && this.state.pinNumber) {
       this.setState({ cliqCashUpdate: true });
       if (this.props.redeemCliqVoucher) {
         this.props.redeemCliqVoucher(this.state);
@@ -63,10 +55,14 @@ export default class CliqAndCash extends React.Component {
     this.props.history.push(`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_GIFT_CARD_PAGE}`);
   };
   render() {
+    if (this.props.loading) {
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
+    }
     if (this.props.cliqCashUserDetails) {
       return (
         <div className={styles.base}>
-          <Error message={this.state.errorMessage} show={this.state.error} />
           <div className={styles.logoHolder}>
             <Logo image={cliqCashIcon} />
           </div>

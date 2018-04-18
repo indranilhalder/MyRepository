@@ -3,20 +3,20 @@ import PropTypes from "prop-types";
 import styles from "./FooterButton.css";
 import { Icon } from "xelpmoc-core";
 export default class FooterButton extends React.Component {
-  handleClick() {
+  handleClick(e) {
     if (this.props.onClick) {
-      this.props.onClick();
+      this.props.onClick(e);
     }
   }
   render() {
     return (
       <div
-        className={styles.base}
+        className={this.props.disabled ? styles.disabled : styles.base}
         style={{
           backgroundColor: this.props.backgroundColor,
           borderRight: `1px solid ${this.props.borderColor}`
         }}
-        onClick={() => this.handleClick()}
+        onClick={e => this.handleClick(e)}
       >
         {this.props.icon && (
           <div className={styles.iconHolder}>
@@ -38,6 +38,7 @@ FooterButton.propTyes = {
   borderColor: PropTypes.string,
   icon: PropTypes.string,
   onClick: PropTypes.func,
+  disabled: PropTypes.bool,
   labelStyle: PropTypes.shape({
     color: PropTypes.string,
     fontSize: PropTypes.number,
@@ -49,5 +50,6 @@ FooterButton.defaultProps = {
     color: "#8d8d8d",
     fontSize: 14,
     fontFamily: "semibold"
-  }
+  },
+  disabled: false
 };

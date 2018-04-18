@@ -10,15 +10,17 @@ import AccountSetting from "./AccountSetting.js";
 import TabHolder from "./TabHolder";
 import TabData from "./TabData";
 import styles from "./MyAccount.css";
+import LogoutButtonContainer from "../containers/LogoutButtonContainer";
 import {
-  MY_ACCOUNT_PAGE,
-  MY_ACCOUNT_UPDATE_PROFILE_PAGE,
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
-  LOGIN_PATH
+  LOGIN_PATH,
+  MY_CLIQ,
+  MY_ACCOUNT_PAGE,
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE
 } from "../../lib/constants";
-import * as Cookie from "../../lib/Cookie";
 
+import * as Cookie from "../../lib/Cookie";
 export default class MyAccount extends React.Component {
   constructor(props) {
     super(props);
@@ -29,12 +31,18 @@ export default class MyAccount extends React.Component {
   tabSelect(val) {
     this.setState({ isSelected: val });
   }
+
   renderToAccountSetting() {
     this.props.history.push(
       `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`
     );
   }
+  componentDidUpdate() {
+    this.props.setHeaderText(MY_CLIQ);
+  }
+
   componentDidMount() {
+    this.props.setHeaderText(MY_CLIQ);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (userDetails && customerCookie) {
@@ -42,12 +50,14 @@ export default class MyAccount extends React.Component {
       this.props.getUserAlerts();
     }
   }
+
   navigateToLogin() {
+    const url = this.props.location.pathname;
+    this.props.setUrlToRedirectToAfterAuth(url);
     return <Redirect to={LOGIN_PATH} />;
   }
   render() {
     const userDetailsCookie = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetailsCookie || !customerCookie) {
       return this.navigateToLogin();
@@ -58,14 +68,22 @@ export default class MyAccount extends React.Component {
         <ProfileMenuGrid {...this.props} />
         <div className={styles.accountHolder}>
           <AccountSetting
-            image="http://tong.visitkorea.or.kr/cms/resource/58/1016958_image2_1.jpg"
+            image={userDetails.imageUrl}
             onClick={() => this.renderToAccountSetting()}
+            firstName={
+              userDetails &&
+              userDetails.firstName &&
+              userDetails.firstName.charAt(0)
+            }
             heading={
               userDetails &&
               userDetails.firstName &&
               `${userDetails.firstName} ${userDetails.lastName}`
             }
           />
+          <div className={styles.logoutButton}>
+            <LogoutButtonContainer />
+          </div>
         </div>
         <div className={styles.tabHolder}>
           <TabHolder>
@@ -93,7 +111,7 @@ export default class MyAccount extends React.Component {
           {this.state.isSelected === 0 && (
             <div className={styles.ordersHolder}>
               <div className={styles.recentOrderHolder}>
-                <AllOrderContainer />
+                <AllOrderContainer shouldCallHeaderContainer={false} />
               </div>
             </div>
           )}

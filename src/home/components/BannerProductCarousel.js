@@ -22,12 +22,16 @@ export default class BannerProductCarousal extends React.Component {
   }
   render() {
     const feedComponentData = this.props.feedComponentData;
-
-    let data = [];
-    if (feedComponentData.items) {
-      data = feedComponentData.items.map(transformData);
+    if (!feedComponentData) {
+      return null;
     }
 
+    let data = [];
+    if (feedComponentData.items && feedComponentData.items instanceof Array) {
+      data = feedComponentData.items.map(transformData);
+    } else {
+      return null;
+    }
     return (
       <FeedComponent
         banner={
@@ -35,6 +39,7 @@ export default class BannerProductCarousal extends React.Component {
             image={feedComponentData.imageURL}
             name={feedComponentData.title}
             label={feedComponentData.description}
+            onClick={() => this.handleClick()}
           />
         }
         carouselOptions={{

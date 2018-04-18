@@ -8,22 +8,37 @@ import {
   getProductDescription,
   addProductReview
 } from "../actions/pdp.actions";
+import { displayToast } from "../../general/toast.actions";
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    addProductToCart: productDetails => {
-      dispatch(addProductToCart(productDetails));
+    addProductToCart: (userId, cartId, accessToken, productDetails) => {
+      dispatch(addProductToCart(userId, cartId, accessToken, productDetails));
     },
-    addProductToWishList: productDetails => {
-      dispatch(addProductToWishList(productDetails));
+    addProductToWishList: (userId, accessToken, productDetails) => {
+      dispatch(addProductToWishList(userId, accessToken, productDetails));
     },
-    getProductReviews: productCode => {
-      dispatch(getProductReviews(productCode));
+    getProductReviews: (productCode, pageIndex, orderBy, sortBy) => {
+      dispatch(getProductReviews(productCode, pageIndex, orderBy, sortBy));
     },
     getProductDescription: productCode => {
       dispatch(getProductDescription(productCode));
     },
     addProductReview: (productCode, productReview) => {
       dispatch(addProductReview(productCode, productReview));
+    },
+
+    displayToast: message => {
+      dispatch(displayToast(message));
+    },
+    showSecondaryLoader: () => {
+      dispatch(showSecondaryLoader());
+    },
+    hideSecondaryLoader: () => {
+      dispatch(hideSecondaryLoader());
     }
   };
 };
@@ -32,7 +47,9 @@ const mapStateToProps = state => {
   return {
     productDetails: state.productDescription.productDetails,
     reviews: state.productDescription.reviews,
-    addReviewStatus: state.productDescription.addReviewStatus
+    addReviewStatus: state.productDescription.addReviewStatus,
+    loadingForAddProduct: state.productDescription.loadingForAddProduct,
+    loading: state.productDescription.loading
   };
 };
 

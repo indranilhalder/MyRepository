@@ -35,15 +35,14 @@ class WriteReview extends React.Component {
   onRatingChange = val => {
     this.setState({ rating: val });
   };
-
+  onCancel() {
+    if (this.props.onCancel) {
+      this.props.onCancel();
+    }
+  }
   onSubmit = () => {
     if (this.props.onSubmit) {
       const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-      console.log({
-        comment: this.state.comment,
-        rating: this.state.rating,
-        headline: this.state.title
-      });
       if (customerCookie) {
         this.props.onSubmit({
           comment: this.state.comment,
@@ -51,6 +50,8 @@ class WriteReview extends React.Component {
           headline: this.state.title
         });
       } else {
+        const url = this.props.location.pathname;
+        this.props.setUrlToRedirectToAfterAuth(url);
         this.props.history.push(LOGIN_PATH);
       }
     }
@@ -79,7 +80,9 @@ class WriteReview extends React.Component {
           onChange={val => this.onChangeComment(val)}
         />
         <div className={styles.container}>
-          <div className={styles.cancelButton}>cancel</div>
+          <div className={styles.cancelButton} onClick={() => this.onCancel()}>
+            cancel
+          </div>
           <div className={styles.submitButton}>
             <Button
               className={styles.ratingBar}
@@ -101,5 +104,6 @@ WriteReview.propTypes = {
   onChangeTitle: PropTypes.func,
   title: "",
   comment: "",
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  onCancel: PropTypes.func
 };

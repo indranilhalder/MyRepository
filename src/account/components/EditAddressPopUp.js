@@ -3,7 +3,7 @@ import styles from "./EditAddressPopUp.css";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import OrderReturn from "../../account/components/OrderReturn";
-import { SUCCESS } from "../../lib/constants";
+import { SUCCESS, EDIT_YOUR_ADDRESS } from "../../lib/constants";
 const CANCEL_TEXT = "Cancel";
 const SAVE_CHANGES = "Save changes";
 let addressDetails;
@@ -19,7 +19,7 @@ export default class EditAddressPopUp extends React.Component {
       lastName: addressDetails.lastName,
       postalCode: addressDetails.postalCode,
       line1: addressDetails.line1,
-      emailId: "",
+      emailId: addressDetails.emailId,
       line2: addressDetails.line2,
       line3: "",
       town: addressDetails.town,
@@ -30,8 +30,10 @@ export default class EditAddressPopUp extends React.Component {
     };
   }
   componentDidMount() {
+    this.props.setHeaderText(EDIT_YOUR_ADDRESS);
     this.props.getPinCode(this.state.postalCode);
   }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.getPinCodeDetails) {
       this.setState({
@@ -39,8 +41,14 @@ export default class EditAddressPopUp extends React.Component {
         cityName: nextProps.getPinCodeDetails.cityName
       });
     }
+  }
 
-    if (nextProps.editAddressStatus === SUCCESS) {
+  componentDidUpdate(prevProps, prevState) {
+    this.props.setHeaderText(EDIT_YOUR_ADDRESS);
+    if (
+      this.props.editAddressStatus !== prevProps.editAddressStatus &&
+      this.props.editAddressStatus === SUCCESS
+    ) {
       this.props.history.goBack();
     }
   }
@@ -62,82 +70,93 @@ export default class EditAddressPopUp extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.holder}>
-          <div className={styles.container}>
-            <Input2
-              value={this.state.firstName}
-              boxy={true}
-              textStyle={{ fontSize: 14 }}
-              height={33}
-              onChange={firstName => this.onChange({ firstName })}
-            />
-          </div>
-          <div className={styles.container}>
-            <Input2
-              value={this.state.phone}
-              boxy={true}
-              textStyle={{ fontSize: 14 }}
-              height={33}
-              onChange={phone => this.onChange({ phone })}
-            />
-          </div>
-          <div className={styles.container}>
-            <Input2
-              value={this.state.line1}
-              boxy={true}
-              textStyle={{ fontSize: 14 }}
-              height={33}
-              onChange={line1 => this.onChange({ line1 })}
-            />
-          </div>
-          <div className={styles.container}>
-            <Input2
-              value={this.state.line2}
-              boxy={true}
-              textStyle={{ fontSize: 14 }}
-              height={33}
-              onChange={line2 => this.onChange({ line2 })}
-            />
-          </div>
-          <div className={styles.container}>
-            <Input2
-              value={this.state.postalCode}
-              boxy={true}
-              textStyle={{ fontSize: 14 }}
-              height={33}
-              onChange={postalCode => this.onChange({ postalCode })}
-            />
-          </div>
-          {this.props.getPinCodeDetails && (
+          <div className={styles.formHolder}>
             <div className={styles.container}>
               <Input2
-                value={this.state.cityName}
+                value={this.state.firstName}
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
                 height={33}
-                onChange={cityName => this.onChange({ cityName })}
+                onChange={firstName => this.onChange({ firstName })}
               />
             </div>
-          )}
-          {this.props.getPinCodeDetails && (
             <div className={styles.container}>
               <Input2
-                value={this.state.state}
+                value={this.state.phone}
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
                 height={33}
-                onChange={state => this.onChange({ state })}
+                onChange={phone => this.onChange({ phone })}
               />
             </div>
-          )}
-        </div>
-        <div className={styles.buttonHolder}>
-          <OrderReturn
-            isEditable={true}
-            buttonLabel={CANCEL_TEXT}
-            underlineButtonLabel={SAVE_CHANGES}
-            writeReview={() => this.editAddress()}
-            replaceItem={() => this.cancelAddress()}
-          />
+            <div className={styles.container}>
+              <Input2
+                value={this.state.emailId}
+                boxy={true}
+                textStyle={{ fontSize: 14 }}
+                height={33}
+                onChange={emailId => this.onChange({ emailId })}
+              />
+            </div>
+            <div className={styles.container}>
+              <Input2
+                value={this.state.line1}
+                boxy={true}
+                textStyle={{ fontSize: 14 }}
+                height={33}
+                onChange={line1 => this.onChange({ line1 })}
+              />
+            </div>
+            <div className={styles.container}>
+              <Input2
+                value={this.state.line2}
+                boxy={true}
+                textStyle={{ fontSize: 14 }}
+                height={33}
+                onChange={line2 => this.onChange({ line2 })}
+              />
+            </div>
+            <div className={styles.container}>
+              <Input2
+                value={this.state.postalCode}
+                boxy={true}
+                textStyle={{ fontSize: 14 }}
+                height={33}
+                onChange={postalCode => this.onChange({ postalCode })}
+              />
+            </div>
+            {this.props.getPinCodeDetails && (
+              <div className={styles.container}>
+                <Input2
+                  value={this.state.cityName}
+                  boxy={true}
+                  textStyle={{ fontSize: 14 }}
+                  height={33}
+                  onChange={cityName => this.onChange({ cityName })}
+                />
+              </div>
+            )}
+            {this.props.getPinCodeDetails && (
+              <div className={styles.container}>
+                <Input2
+                  value={this.state.state}
+                  boxy={true}
+                  textStyle={{ fontSize: 14 }}
+                  height={33}
+                  onChange={state => this.onChange({ state })}
+                />
+              </div>
+            )}
+          </div>
+          <div className={styles.buttonHolder}>
+            <OrderReturn
+              isEditable={true}
+              buttonLabel={CANCEL_TEXT}
+              underlineButtonLabel={SAVE_CHANGES}
+              writeReview={() => this.editAddress()}
+              replaceItem={() => this.cancelAddress()}
+            />
+          </div>
         </div>
       </div>
     );

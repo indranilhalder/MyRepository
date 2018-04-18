@@ -2,8 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./SavedProduct.css";
 import Button from "../../general/components/Button.js";
-import GiftCard from "../../general/components/GiftCard.js";
 import Coupon from "../../general/components/Coupon.js";
+import * as Cookie from "../../lib/Cookie.js";
+import { COUPON_COOKIE } from "../../lib/constants.js";
 export default class SavedProduct extends React.Component {
   handleClick() {
     if (this.props.saveProduct) {
@@ -16,6 +17,14 @@ export default class SavedProduct extends React.Component {
     }
   }
   render() {
+    let couponCookie = Cookie.getCookie(COUPON_COOKIE);
+    let couponText = this.props.couponHeading;
+    let couponButtonText;
+
+    if (couponCookie) {
+      couponText = `Coupon: ${couponCookie}`;
+      couponButtonText = "Change";
+    }
     return (
       <div className={styles.base}>
         <div className={styles.buttonHolder}>
@@ -32,20 +41,16 @@ export default class SavedProduct extends React.Component {
         </div>
         <div className={styles.applyCoupon}>
           <Coupon
-            heading={this.props.cuponHeading}
+            heading={couponText}
             onClick={() => this.onApplyCoupon()}
-          />
-        </div>
-        <div className={styles.giftCard}>
-          <GiftCard
-            heading={this.props.giftCardHeading}
-            lable={this.props.giftCardLabel}
+            couponButtonText={couponButtonText}
           />
         </div>
       </div>
     );
   }
 }
+
 SavedProduct.propTypes = {
   saveProduct: PropTypes.func,
   onApplyCoupon: PropTypes.func,
@@ -54,7 +59,7 @@ SavedProduct.propTypes = {
   giftCardLabel: PropTypes.string
 };
 SavedProduct.defaultProps = {
-  cuponHeading: "Have a Coupon ?",
+  couponHeading: "Have a Coupon ?",
   giftCardHeading: "Surprise for a special one ?",
   giftCardLabel: "Gift wrap for free"
 };

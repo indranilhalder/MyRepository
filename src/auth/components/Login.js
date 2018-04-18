@@ -6,7 +6,9 @@ import Input from "../../general/components/Input";
 import PasswordInput from "./PasswordInput";
 import styles from "./Login.css";
 import LoginButton from "./LogInButton";
-import { SUCCESS } from "../../lib/constants";
+import { CART_DETAILS_FOR_ANONYMOUS } from "../../lib/constants";
+import * as Cookie from "../../lib/Cookie";
+
 import AuthFrame from "./AuthFrame.js";
 import MDSpinner from "react-md-spinner";
 import {
@@ -16,9 +18,7 @@ import {
   MAIN_ROUTER,
   SOCIAL_LOG_IN
 } from "../../lib/constants";
-// Forgot password --> shows a modal
-// Don't have an account --> sign up --> a route change.
-
+const MINIMUM_PASSWORD_LENGTH = "8";
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -29,8 +29,13 @@ class Login extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user.isLoggedIn === true) {
-      this.props.history.push(HOME_ROUTER);
+    if (nextProps.authCallsIsSucceed) {
+      if (this.props.redirectToAfterAuthUrl) {
+        this.props.history.push(this.props.redirectToAfterAuthUrl);
+        this.props.clearUrlToRedirectToAfterAuth();
+      } else {
+        this.props.history.push(HOME_ROUTER);
+      }
     }
   }
 
@@ -38,11 +43,39 @@ class Login extends Component {
     this.props.history.push(SIGN_UP_PATH);
   }
   onSubmit = () => {
+    const EMAIL_REGULAR_EXPRESSION = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    const MOBILE_PATTERN = /^[7,8,9]{1}[0-9]{9}$/;
     if (this.props.onSubmit) {
       let userDetails = {};
       userDetails.username = this.state.emailValue;
       userDetails.password = this.state.passwordValue;
-      this.props.onSubmit(userDetails);
+      if (!userDetails.username) {
+        this.props.displayToast("Please fill emailId or number");
+        return false;
+      }
+      if (userDetails.username.indexOf("@") !== -1) {
+        if (!EMAIL_REGULAR_EXPRESSION.test(userDetails.username)) {
+          this.props.displayToast("Please fill valid emailId");
+          return false;
+        }
+      } else {
+        if (!MOBILE_PATTERN.test(userDetails.username)) {
+          this.props.displayToast("Please fill valid mobile number");
+          return false;
+        }
+      }
+      if (!userDetails.password) {
+        this.props.displayToast("Please fill password");
+        return false;
+      }
+      if (userDetails.password.length < MINIMUM_PASSWORD_LENGTH) {
+        this.props.displayToast(
+          "Password length should be minimum 8 character"
+        );
+        return false;
+      } else {
+        this.props.onSubmit(userDetails);
+      }
     }
   };
 
@@ -82,7 +115,8 @@ class Login extends Component {
       footerClick = () => this.navigateToLogin();
       showSocialButtons = false;
     }
-    if (this.props.user.loading) {
+
+    if (this.props.authCallsInProcess) {
       return (
         <div className={styles.loadingIndicator}>
           <MDSpinner />

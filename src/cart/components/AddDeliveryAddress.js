@@ -10,14 +10,16 @@ import TextArea from "../../general/components/TextArea.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
 import { SUCCESS } from "../../lib/constants.js";
-const SAVE_TEXT = "Save & Continue";
+import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+const SAVE_TEXT = "Save Address";
+
 const ISO_CODE = "IN";
 export default class AddDeliveryAddress extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      countryIso: "",
-      addressType: "",
+      countryIso: ISO_CODE,
+      addressType: "Home",
       phone: "",
       firstName: "",
       lastName: "",
@@ -28,12 +30,24 @@ export default class AddDeliveryAddress extends React.Component {
       line2: "",
       line3: "",
       town: "",
-      defaultFlag: false
+      salutaion: "",
+      defaultFlag: true
     };
   }
 
+  getPinCodeDetails = val => {
+    if (val.length <= 6) {
+      this.setState({ postalCode: val });
+    }
+    if (val.length === 6 && this.props.getPinCode) {
+      this.props.getPinCode(val);
+    }
+  };
   onChange(val) {
     this.setState(val);
+    if (this.props.getAddressDetails) {
+      this.props.getAddressDetails(this.state);
+    }
   }
   onChangeDefaultFlag() {
     this.setState(prevState => ({
@@ -45,41 +59,50 @@ export default class AddDeliveryAddress extends React.Component {
     if (nextProps.addUserAddressStatus === SUCCESS) {
       this.props.history.goBack();
     }
+    if (nextProps.getPinCodeDetails) {
+      this.setState({
+        state:
+          nextProps.getPinCodeDetails &&
+          nextProps.getPinCodeDetails.state &&
+          nextProps.getPinCodeDetails.state.name
+      });
+    }
   }
 
   addNewAddress = () => {
     //add new Address
-    let addressDetails = {};
-    addressDetails.countryIso = ISO_CODE;
-    addressDetails.addressType = this.state.addressType;
-    addressDetails.phone = this.state.phone;
-    addressDetails.firstName = this.state.firstName;
-    addressDetails.lastName = "";
-    addressDetails.postalCode = this.state.postalCode;
-    addressDetails.line1 = this.state.line1;
-    addressDetails.state = this.state.state;
-    addressDetails.emailId = this.state.phone;
-    addressDetails.line2 = this.state.line2;
-    addressDetails.line3 = this.state.line3;
-    addressDetails.town = this.state.town;
-    addressDetails.defaultFlag = this.state.defaultFlag;
-    this.props.addUserAddress(addressDetails);
+
+    this.props.addUserAddress(this.state);
   };
 
   clearAllValue = () => {
-    this.onChange({
-      pinCodeValue: "",
-      fullNameValue: "",
-      phoneNumberValue: "",
-      stateName: "",
-      cityNameValue: "",
-      localityValue: "",
-      landmark: "",
-      titleValue: ""
+    this.setState({
+      postalCode: "",
+      firstName: "",
+      line2: "",
+      town: "",
+      city: "",
+      state: "",
+      phone: "",
+      line1: " ",
+      titleValue: "",
+      addressType: "",
+      salutaion: "",
+      defaultFlag: false
     });
   };
 
   render() {
+    if (this.props.loading) {
+      if (this.props.showSecondaryLoader) {
+        this.props.showSecondaryLoader();
+      }
+    } else {
+      if (this.props.hideSecondaryLoader) {
+        this.props.hideSecondaryLoader();
+      }
+    }
+
     const dataLabel = [
       {
         label: "Home"
@@ -89,6 +112,17 @@ export default class AddDeliveryAddress extends React.Component {
       },
       {
         label: "Others"
+      }
+    ];
+    const salutaion = [
+      {
+        label: "Mr."
+      },
+      {
+        label: "Mrs."
+      },
+      {
+        label: "Miss."
       }
     ];
     return (
@@ -102,14 +136,14 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <Input2
             placeholder="Enter a pincode/zipcode*"
-            onChange={postalCode => this.onChange({ postalCode })}
+            onChange={postalCode => this.getPinCodeDetails(postalCode)}
             textStyle={{ fontSize: 14 }}
-            height={33}
             value={
               this.props.postalCode
                 ? this.props.postalCode
                 : this.state.postalCode
             }
+            type={"number"}
             rightChildSize={33}
             rightChild={
               <CircleButton
@@ -121,15 +155,34 @@ export default class AddDeliveryAddress extends React.Component {
           />
         </div>
         <div className={styles.content}>
-          <Input2
-            option={this.state.options}
-            placeholder="Name*"
-            onChange={firstName => this.onChange({ firstName })}
-            textStyle={{ fontSize: 14 }}
-            height={33}
-          />
+          <div className={styles.salutation}>
+            <SelectBoxMobile
+              height={33}
+              label={salutaion[0].label}
+              options={salutaion.map((val, i) => {
+                return {
+                  value: val.label,
+                  label: val.label
+                };
+              })}
+              onChange={salutaion => this.onChange({ salutaion })}
+            />
+          </div>
+          <div className={styles.name}>
+            <Input2
+              option={this.state.options}
+              placeholder="Name*"
+              value={
+                this.props.firstName
+                  ? this.props.firstName
+                  : this.state.firstName
+              }
+              onChange={firstName => this.onChange({ firstName })}
+              textStyle={{ fontSize: 14 }}
+              height={33}
+            />
+          </div>
         </div>
-
         <div className={styles.content}>
           <TextArea
             placeholder="Address*"
@@ -150,9 +203,9 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <Input2
             boxy={true}
-            placeholder="Locality/town*"
-            value={this.props.town ? this.props.town : this.state.town}
-            onChange={town => this.onChange({ town })}
+            placeholder="Email"
+            value={this.props.emailId ? this.props.emailId : this.state.emailId}
+            onChange={emailId => this.onChange({ emailId })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -195,6 +248,7 @@ export default class AddDeliveryAddress extends React.Component {
             offset={0}
             elementWidthMobile={50}
             onSelect={val => this.onChange({ addressType: val[0] })}
+            selected={[this.state.addressType]}
           >
             {dataLabel.map((val, i) => {
               return (
@@ -212,14 +266,16 @@ export default class AddDeliveryAddress extends React.Component {
         </div>
         <div className={styles.buttonHolder}>
           <div className={styles.saveAndContinueButton}>
-            <Button
-              type="primary"
-              label={SAVE_TEXT}
-              width={176}
-              height={38}
-              onClick={() => this.addNewAddress()}
-              textStyle={{ color: "#FFF", fontSize: 14 }}
-            />
+            {!this.props.isFirstAddress && (
+              <Button
+                type="primary"
+                label={SAVE_TEXT}
+                width={176}
+                height={38}
+                onClick={() => this.addNewAddress()}
+                textStyle={{ color: "#FFF", fontSize: 14 }}
+              />
+            )}
           </div>
         </div>
       </div>

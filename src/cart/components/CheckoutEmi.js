@@ -19,25 +19,40 @@ export default class CheckoutEmi extends React.Component {
     }
   };
 
-  render() {
-    if (this.props.cart.emiBankStatus === SUCCESS) {
-      return (
-        <MenuDetails text="Easy monthly installments" icon={emiIcon}>
-          <EmiAccordion
-            emiList={this.props.cart.emiBankDetails.bankList}
-            onChangeCvv={i => this.onChangeCvv(i)}
-            binValidation={binNo => this.binValidation(binNo)}
-            softReservationForPayment={cardDetails =>
-              this.softReservationForPayment(cardDetails)
-            }
-          />
-        </MenuDetails>
-      );
-    } else {
-      return (
-        <div className={styles.errorText}>{this.props.cart.emiBankError}</div>
-      );
+  getEmiBankDetails = () => {
+    if (this.props.getEmiBankDetails) {
+      this.props.getEmiBankDetails();
     }
+  };
+
+  render() {
+    return (
+      <MenuDetails
+        text="Easy monthly installments"
+        icon={emiIcon}
+        getEmiBankDetails={() => this.getEmiBankDetails()}
+        emiList={
+          this.props.cart.emiBankDetails &&
+          this.props.cart.emiBankDetails.bankList
+        }
+      >
+        {this.props.cart.emiBankDetails &&
+          this.props.cart.emiBankDetails.bankList && (
+            <EmiAccordion
+              emiList={this.props.cart.emiBankDetails.bankList}
+              onChangeCvv={i => this.onChangeCvv(i)}
+              binValidation={binNo => this.binValidation(binNo)}
+              softReservationForPayment={cardDetails =>
+                this.softReservationForPayment(cardDetails)
+              }
+              displayToast={this.props.displayToast}
+            />
+          )}
+        {!this.props.cart.emiBankDetails && (
+          <div className={styles.errorText}>{this.props.cart.emiBankError}</div>
+        )}
+      </MenuDetails>
+    );
   }
 }
 

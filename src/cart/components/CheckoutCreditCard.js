@@ -24,14 +24,25 @@ export default class CheckoutCreditCard extends React.Component {
     }
   };
 
+  jusPayTokenizeForGiftCard = cardDetails => {
+    if (this.props.jusPayTokenizeForGiftCard) {
+      this.props.jusPayTokenizeForGiftCard(cardDetails);
+    }
+  };
+
   render() {
     return (
       <ManueDetails text="Credit Card" icon={creditCardIcon}>
         <CreditCardForm
           onChangeCvv={i => this.onChangeCvv(i)}
+          displayToast={this.props.displayToast}
           binValidation={binNo => this.binValidation(binNo)}
           softReservationForPayment={cardDetails =>
             this.softReservationForPayment(cardDetails)
+          }
+          isFromGiftCard={this.props.isFromGiftCard}
+          jusPayTokenizeForGiftCard={cardDetails =>
+            this.jusPayTokenizeForGiftCard(cardDetails)
           }
         />
       </ManueDetails>

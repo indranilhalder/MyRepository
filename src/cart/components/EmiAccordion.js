@@ -103,6 +103,7 @@ export default class EmiAccordion extends React.Component {
               softReservationForPayment={cardDetails =>
                 this.softReservationForPayment(cardDetails)
               }
+              displayToast={this.props.displayToast}
             />
           </React.Fragment>
         )}

@@ -5,24 +5,30 @@ import MoreBrands from "../../blp/components/MoreBrands";
 import BrandEdit from "../../blp/components/BrandEdit";
 import ProfilePicture from "../../blp/components/ProfilePicture";
 import * as styles from "./MyAccountBrands.css";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 import {
   TRUE,
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
   LOGIN_PATH,
-  DEFAULT_BRANDS_LANDING_PAGE
+  DEFAULT_BRANDS_LANDING_PAGE,
+  BRANDS
 } from "../../lib/constants";
+
 import * as Cookie from "../../lib/Cookie";
 
 export default class MyAccountBrands extends React.Component {
   componentDidMount() {
+    this.props.setHeaderText(BRANDS);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
     if (userDetails && customerCookie) {
       this.props.getFollowedBrands();
     }
+  }
+  componentDidUpdate() {
+    this.props.setHeaderText(BRANDS);
   }
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
@@ -36,7 +42,7 @@ export default class MyAccountBrands extends React.Component {
     }
   }
   renderLoader() {
-    return <MDSpinner />;
+    return <Loader />;
   }
 
   render() {

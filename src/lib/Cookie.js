@@ -1,16 +1,16 @@
 //TODO why are some cookies session and why are some timestamped?
 // What is the difference?
 
+// Taken from Quirks mode
+
 export function createCookie(name, value, days) {
-  let expires;
+  let expires = "";
   if (days) {
-    let date = new Date();
-    date.setSeconds(date.getSeconds() + days);
-    expires = `; expires=${date}`;
-  } else {
-    expires = "";
+    var date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000); // ) removed
+    expires = "; expires=" + date.toGMTString(); // + added
   }
-  document.cookie = `${name}=${value + expires}`;
+  document.cookie = name + "=" + value + expires + ";path=/"; // + and " added
 }
 
 export function getCookie(cookieName) {

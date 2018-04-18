@@ -1,24 +1,28 @@
 import React from "react";
 import Carousel from "../../general/components/Carousel";
 import ProductCapsuleCircle from "../../general/components/ProductCapsuleCircle";
-import PropTypes from "prop-types";
 import styles from "./ProductCapsules.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import {
   CUSTOMER_ACCESS_TOKEN,
-  LOGGED_IN_USER_DETAILS
+  LOGGED_IN_USER_DETAILS,
+  MY_ACCOUNT_PAGE,
+  SAVE_LIST_PAGE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 export default class ProductCapsules extends React.Component {
   handleClick() {
-    const urlSuffix = this.props.feedComponentData.webURL.replace(
-      TATA_CLIQ_ROOT,
-      "$1"
-    );
-    this.props.history.push(urlSuffix);
+    this.props.history.push(`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`);
   }
+
+  handleProductClick = val => {
+    if (val) {
+      const urlSuffix = val.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
+    }
+  };
 
   componentDidMount() {
     this.props.getProductCapsules(this.props.positionInFeed);
@@ -27,11 +31,12 @@ export default class ProductCapsules extends React.Component {
   render() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
     if (!userDetails || !customerCookie) {
       return null;
     }
     if (this.props.productCapsulesLoading) {
-      return <MDSpinner />;
+      return <Loader />;
     }
 
     if (!this.props.feedComponentData) {
@@ -40,8 +45,16 @@ export default class ProductCapsules extends React.Component {
 
     const productCapsulesData = this.props.feedComponentData;
     const data = this.props.feedComponentData.data;
+    if (!data) {
+      return null;
+    }
     let subHeader;
-    if (data && data.wishlistData) {
+    if (
+      data &&
+      data.wishlistData &&
+      data.wishlistData[0] &&
+      data.wishlistData[0].items
+    ) {
       subHeader = `You have ${
         data.wishlistData[0].items.length
       } products in your list`;
@@ -58,6 +71,7 @@ export default class ProductCapsules extends React.Component {
           withFooter={false}
         >
           {this.props.feedComponentData.data &&
+            this.props.feedComponentData.data.wishlistData &&
             this.props.feedComponentData.data.wishlistData[0] &&
             this.props.feedComponentData.data.wishlistData[0].items &&
             this.props.feedComponentData.data.wishlistData[0].items.map(
@@ -67,6 +81,8 @@ export default class ProductCapsules extends React.Component {
                     image={datum.imageURL}
                     label={datum.label}
                     key={i}
+                    url={datum.webURL}
+                    onClick={this.handleProductClick}
                   />
                 );
               }

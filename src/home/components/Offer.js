@@ -14,16 +14,12 @@ export default class Offer extends React.Component {
   render() {
     const { datum, key } = this.props;
     return (
-      <div className={styles.base} key={key}>
+      <div className={styles.base} key={key} onClick={this.handleClick}>
         <div className={styles.imageHolder}>
           <Image image={datum.imageURL} key={key} />
         </div>
-        <MediaQuery query="(min-device-width: 1025px)">
-          <div className={styles.overlay} onClick={this.handleClick} />
-        </MediaQuery>
-        <MediaQuery query="(max-device-width: 1024px)">
-          <div className={styles.overlay} />
-        </MediaQuery>
+        <div onClick={this.handleClick} />
+
         {datum.discountText &&
           datum.discountText !== " " && (
             <div className={styles.ovalImage}>
@@ -40,7 +36,6 @@ export default class Offer extends React.Component {
                 type="hollow"
                 color="#fff"
                 label={datum.btnText}
-                onClick={this.handleClick}
                 width={130}
               />
             </div>

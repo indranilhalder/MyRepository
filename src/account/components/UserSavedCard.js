@@ -2,12 +2,17 @@ import React from "react";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
-  LOGGED_IN_USER_DETAILS
+  LOGGED_IN_USER_DETAILS,
+  SAVED_PAYMENTS
 } from "../../lib/constants";
+
 import SavedPaymentCard from "./SavedPaymentCard.js";
+import styles from "./UserSavedCard.css";
 const CARD_FORMAT = /\B(?=(\d{4})+(?!\d))/g;
+const NO_SAVED_CARDS = "No Saved Cards";
 export default class UserSavedCard extends React.Component {
   componentDidMount() {
+    this.props.setHeaderText(SAVED_PAYMENTS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     if (customerCookie && userDetails) {
@@ -19,7 +24,9 @@ export default class UserSavedCard extends React.Component {
       }
     }
   }
-
+  componentDidUpdate() {
+    this.props.setHeaderText(SAVED_PAYMENTS);
+  }
   removeSavedCardDetails = () => {
     if (this.props.removeSavedCardDetails) {
       this.props.removeSavedCardDetails();
@@ -27,9 +34,12 @@ export default class UserSavedCard extends React.Component {
   };
 
   render() {
-    if (this.props.profile.savedCards) {
+    if (
+      this.props.profile.savedCards &&
+      this.props.profile.savedCards.savedCardDetailsMap
+    ) {
       return (
-        <div>
+        <div className={styles.base}>
           {this.props.profile.savedCards.savedCardDetailsMap &&
             this.props.profile.savedCards.savedCardDetailsMap.map((data, i) => {
               let cardNumber = `${data.value.cardISIN}xx xxxx ${
@@ -39,27 +49,29 @@ export default class UserSavedCard extends React.Component {
                 data.value.firstName
               }`;
               return (
-                <SavedPaymentCard
-                  key={i}
-                  bankLogo={""}
-                  bankName={data.value.cardIssuer}
-                  cardLogo={""}
-                  cardName={data.value.cardType}
-                  cardHolderName={cardHolderName}
-                  validityDate={`${data.value.expiryMonth}/${
-                    data.value.expiryYear
-                  }`}
-                  cardNumber={cardNumber}
-                  cardImage={data.cardImage}
-                  onChangeCvv={(cvv, cardNo) => this.onChangeCvv(cvv, cardNo)}
-                  removeSavedCardDetails={() => this.removeSavedCardDetails()}
-                />
+                <div className={styles.cardHolder}>
+                  <SavedPaymentCard
+                    key={i}
+                    bankLogo={""}
+                    bankName={data.value.cardIssuer}
+                    cardLogo={""}
+                    cardName={data.value.cardType}
+                    cardHolderName={cardHolderName}
+                    validityDate={`${data.value.expiryMonth}/${
+                      data.value.expiryYear
+                    }`}
+                    cardNumber={cardNumber}
+                    cardImage={data.cardImage}
+                    onChangeCvv={(cvv, cardNo) => this.onChangeCvv(cvv, cardNo)}
+                    removeSavedCardDetails={() => this.removeSavedCardDetails()}
+                  />
+                </div>
               );
             })}
         </div>
       );
     } else {
-      return null;
+      return <div className={styles.noSavedCardBlock}>{NO_SAVED_CARDS}</div>;
     }
   }
 }

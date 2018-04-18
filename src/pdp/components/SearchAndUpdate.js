@@ -9,7 +9,7 @@ export default class SearchAndUpdate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pinCode: null,
+      pinCode: this.props.value,
       errorMessage: null
     };
   }
@@ -47,7 +47,7 @@ export default class SearchAndUpdate extends React.Component {
                 size="14px"
                 fontFamily="regular"
                 color="#000"
-                label="Update"
+                label={this.props.labelText}
                 onClick={() => this.onUpdate()}
               />
             </div>
@@ -82,4 +82,8 @@ SearchAndUpdate.propTypes = {
   getLocation: PropTypes.func,
   onUpdate: PropTypes.func,
   errorMessage: PropTypes.string
+};
+
+SearchAndUpdate.defaultProps = {
+  labelText: "Update"
 };

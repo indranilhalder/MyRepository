@@ -38,6 +38,7 @@ class CuratedProductsComponent extends React.Component {
                   productImage={datum.image}
                   title={datum.title}
                   price={datum.price}
+                  discountPrice={datum.discountPrice}
                   description={datum.description}
                   webURL={datum.webURL}
                   onClick={this.onClick}
@@ -53,7 +54,7 @@ class CuratedProductsComponent extends React.Component {
               width={100}
               onClick={this.handleSeeAll}
               label={feedComponentData.btnText}
-              color="white"
+              color="#212121"
             />
           )}
         </div>

@@ -10,6 +10,9 @@ import HomeImage from "./img/homeDelivery.svg";
 import arrowIcon from "./img/arrowBackblack.svg";
 import CollectImage from "./img/collect.svg";
 import { EXPRESS, COLLECT } from "../../lib/constants";
+const EXPRESS_TEXT = "Express Shipping";
+const HOME_TEXT = "Standard Shipping";
+const COLLECT_TEXT = "CLiQ & PiQ";
 export default class DeliveryInformations extends React.Component {
   handleClick() {
     if (this.props.onClick) {
@@ -27,65 +30,83 @@ export default class DeliveryInformations extends React.Component {
     }
   }
   onPiq() {
-    if (this.props.onPiq) {
+    if (this.props.onPiq && this.props.isClickable) {
       this.props.onPiq();
     }
   }
   render() {
     let iconImage = HomeImage;
+    let typeName = HOME_TEXT;
     if (this.props.type === EXPRESS) {
       iconImage = ExpressImage;
+      typeName = EXPRESS_TEXT;
     } else if (this.props.type === COLLECT) {
       iconImage = CollectImage;
+      typeName = COLLECT_TEXT;
     }
+    if (!this.props.available) {
+      typeName = `${typeName}`;
+    }
+
     return (
       <div className={styles.base}>
-        {this.props.onSelect &&
-          this.props.type !== COLLECT && (
-            <div
-              className={styles.checkboxHolder}
-              onClick={() => {
-                this.handleSelect();
-              }}
-            >
-              <CheckBox selected={this.props.selected} />
-            </div>
-          )}
-        {this.props.arrowClick &&
-          this.props.type === COLLECT && (
-            <div
-              className={styles.arrowHolder}
-              onClick={() => this.arrowClick()}
-            >
-              <Icon image={arrowIcon} size={20} />
-            </div>
-          )}
-        <IconWithHeader image={iconImage} header={this.props.header}>
-          {this.props.placedTime && (
-            <div className={styles.placeTime}>{this.props.placedTime}</div>
-          )}
-          {this.props.deliverText && (
-            <div className={styles.placeTime}>
-              {this.props.deliverText}
-              <span className={styles.text}>{this.props.textHeading}</span>
-            </div>
-          )}
-
-          {this.props.type === COLLECT &&
-            this.props.showCliqAndPiqButton && (
-              <div className={styles.underLineButtonHolder}>
-                <span className={styles.buttonHolderPiq}>
-                  <UnderLinedButton
-                    size="14px"
-                    fontFamily="regular"
-                    color="#ff1744"
-                    label="Check for pick up options"
-                    onClick={() => this.onPiq()}
-                  />
-                </span>
+        <div
+          className={
+            this.props.available || this.props.type === COLLECT
+              ? styles.dataHolder
+              : styles.notAvailable
+          }
+        >
+          {this.props.onSelect &&
+            this.props.type !== COLLECT && (
+              <div
+                className={styles.checkboxHolder}
+                onClick={() => {
+                  this.handleSelect();
+                }}
+              >
+                {this.props.isClickable && (
+                  <CheckBox selected={this.props.selected} />
+                )}
               </div>
             )}
-        </IconWithHeader>
+          {this.props.arrowClick &&
+            this.props.type === COLLECT && (
+              <div
+                className={styles.arrowHolder}
+                onClick={() => this.arrowClick()}
+              >
+                <Icon image={arrowIcon} size={20} />
+              </div>
+            )}
+          <IconWithHeader image={iconImage} header={typeName}>
+            {this.props.placedTime &&
+              this.props.available && (
+                <div className={styles.placeTime}>{this.props.placedTime}</div>
+              )}
+            {this.props.deliverText && (
+              <div className={styles.placeTime}>
+                {this.props.deliverText}
+                <span className={styles.text}>{this.props.textHeading}</span>
+              </div>
+            )}
+
+            {this.props.type === COLLECT &&
+              this.props.showCliqAndPiqButton && (
+                <div className={styles.underLineButtonHolder}>
+                  <span className={styles.buttonHolderPiq}>
+                    <UnderLinedButton
+                      size="14px"
+                      fontFamily="regular"
+                      color="#ff1744"
+                      label="Check for pick up options"
+                      onClick={() => this.onPiq()}
+                    />
+                  </span>
+                </div>
+              )}
+          </IconWithHeader>
+        </div>
       </div>
     );
   }
@@ -100,7 +121,8 @@ DeliveryInformations.propTypes = {
   onClick: PropTypes.func,
   arrowClick: PropTypes.func,
   onPiq: PropTypes.func,
-  showCliqAndPiqButton: PropTypes.bool
+  showCliqAndPiqButton: PropTypes.bool,
+  available: PropTypes.bool
 };
 
 DeliveryInformations.propTypes = {

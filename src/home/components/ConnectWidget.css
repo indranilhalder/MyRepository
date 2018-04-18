@@ -7,6 +7,8 @@
 }
 .inCard {
   composes: base;
+  background-repeat: no-repeat;
+
   padding: 0 20px;
 }
 .inCard .buffer {

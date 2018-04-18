@@ -15,19 +15,34 @@ import {
   ORDER_CODE,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  LOGIN_PATH
+  LOGIN_PATH,
+  ORDER_HISTORY
 } from "../../lib/constants";
+
 import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
 export default class AllOrderDetails extends React.Component {
+  onClickImage(productCode) {
+    if (productCode) {
+      this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    }
+  }
   onViewDetails(orderId) {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   componentDidMount() {
+    if (this.props.shouldCallHeaderContainer) {
+      this.props.setHeaderText(ORDER_HISTORY);
+    }
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (userDetails && customerCookie) {
       this.props.getAllOrdersDetails();
+    }
+  }
+  componentDidUpdate() {
+    if (this.props.shouldCallHeaderContainer) {
+      this.props.setHeaderText(ORDER_HISTORY);
     }
   }
   renderToContinueShopping() {
@@ -85,6 +100,14 @@ export default class AllOrderDetails extends React.Component {
                       orderDetails.products &&
                       orderDetails.products[0].productName
                     }
+                    onClick={() =>
+                      this.onClickImage(
+                        orderDetails.products &&
+                          orderDetails.products[0] &&
+                          orderDetails.products.length &&
+                          orderDetails.products[0].productcode
+                      )
+                    }
                   />
                   <PriceAndLink
                     onViewDetails={() =>
@@ -96,9 +119,21 @@ export default class AllOrderDetails extends React.Component {
                     <OrderDelivered
                       deliveredAddress={`${
                         orderDetails.billingAddress.addressLine1
-                      } ${orderDetails.billingAddress.town} ${
+                          ? orderDetails.billingAddress.addressLine1
+                          : ""
+                      } ${
+                        orderDetails.billingAddress.town
+                          ? orderDetails.billingAddress.town
+                          : ""
+                      } ${
                         orderDetails.billingAddress.state
-                      } ${orderDetails.billingAddress.postalcode}`}
+                          ? orderDetails.billingAddress.state
+                          : ""
+                      } ${
+                        orderDetails.billingAddress.postalcode
+                          ? orderDetails.billingAddress.postalcode
+                          : ""
+                      }`}
                     />
                   )}
                 </div>
@@ -110,6 +145,7 @@ export default class AllOrderDetails extends React.Component {
   }
 }
 AllOrderDetails.propTypes = {
+  shouldCallHeaderContainer: PropTypes.bool,
   orderDetails: PropTypes.arrayOf(
     PropTypes.shape({
       orderDate: PropTypes.string,
@@ -125,4 +161,7 @@ AllOrderDetails.propTypes = {
       )
     })
   )
+};
+AllOrderDetails.defaultProps = {
+  shouldCallHeaderContainer: true
 };

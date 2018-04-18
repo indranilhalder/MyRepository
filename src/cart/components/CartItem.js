@@ -13,21 +13,17 @@ export default class CartItem extends React.Component {
     super(props);
     this.state = {
       showDelivery: this.props.showDelivery ? this.props.showDelivery : false,
-      selectedValue: "",
-      label: "See all",
-      maxQuantityAllowed: 1,
-      qtySelectedByUser: 1,
-      quantityList: []
+      label: "See all"
     };
   }
-  handleSave(product) {
-    if (this.props.onSave) {
-      this.props.onSave(product);
+  onClick() {
+    if (this.props.onClickImage) {
+      this.props.onClickImage();
     }
   }
-  handleRemove(index, pinCode) {
+  handleRemove(index) {
     if (this.props.onRemove) {
-      this.props.onRemove(index, pinCode);
+      this.props.onRemove(index);
     }
   }
   selectDeliveryMode(val) {
@@ -49,40 +45,17 @@ export default class CartItem extends React.Component {
     });
   }
 
-  componentWillMount() {
-    this.setQuantity();
-  }
   handleQuantityChange(changedValue) {
-    this.setState({ selectedValue: changedValue }, () => {
-      if (this.props.onQuantityChange) {
-        this.props.onQuantityChange(this.props.index, this.state.selectedValue);
-      }
-    });
+    const updatedQuantity = parseInt(changedValue, 10);
+    if (this.props.onQuantityChange) {
+      this.props.onQuantityChange(this.props.entryNumber, updatedQuantity);
+    }
   }
-  setQuantity = () => {
-    this.setState({
-      maxQuantityAllowed: parseInt(this.props.maxQuantityAllowed, 10),
-      qtySelectedByUser: parseInt(this.props.qtySelectedByUser, 10)
-    });
-
-    if (this.state.quantityList.length === 0) {
-      let fetchedQuantityList = [];
-      for (let i = 1; i <= parseInt(this.props.maxQuantityAllowed, 10); i++) {
-        fetchedQuantityList.push({ value: i.toString() });
-      }
-      this.setState({
-        quantityList: fetchedQuantityList
-      });
-    }
-  };
   render() {
-    let isServiceAble = false;
-    if (this.props.productIsServiceable) {
-      if (this.props.productIsServiceable.isServicable === "Y") {
-        isServiceAble = true;
-      }
+    const fetchedQuantityList = [];
+    for (let i = 1; i <= this.props.maxQuantityAllowed; i++) {
+      fetchedQuantityList.push({ value: i.toString() });
     }
-
     return (
       <div className={styles.base}>
         <div className={styles.productInformation}>
@@ -91,23 +64,27 @@ export default class CartItem extends React.Component {
             productName={this.props.productName}
             productDetails={this.props.productDetails}
             price={this.props.price}
-            isServiceAvailable={isServiceAble}
+            isServiceAvailable={this.props.productIsServiceable}
+            onClickImage={() => this.onClick()}
           />
         </div>
         {this.props.deliveryInformation &&
           this.props.deliveryInfoToggle && (
             <div className={styles.deliverTimeAndButton}>
-              <div className={styles.hideButton}>
-                <UnderLinedButton
-                  size="14px"
-                  fontFamily="regular"
-                  color="#000"
-                  label={this.state.label}
-                  onClick={() => this.onHide()}
-                />
-              </div>
+              {this.props.deliveryInformation.length > 1 && (
+                <div className={styles.hideButton}>
+                  <UnderLinedButton
+                    size="14px"
+                    fontFamily="regular"
+                    color="#000"
+                    label={this.state.label}
+                    onClick={() => this.onHide()}
+                  />
+                </div>
+              )}
               <span>
-                Express : <span>{this.props.deliverTime}</span>
+                {this.props.deliveryType} :{" "}
+                <span>{this.props.deliverTime}</span>
               </span>
             </div>
           )}
@@ -116,17 +93,18 @@ export default class CartItem extends React.Component {
           this.props.deliveryInformation && (
             <DeliveryInfoSelect
               deliveryInformation={this.props.deliveryInformation}
+              selected={this.props.selected}
               onSelect={val => this.selectDeliveryMode(val)}
               onPiq={val => this.getPickUpDetails()}
+              isClickable={this.props.isClickable}
             />
           )}
         {this.props.hasFooter && (
           <div className={styles.footer}>
             <BagPageFooter
-              onSave={() => this.handleSave(this.props.product)}
-              onRemove={() =>
-                this.handleRemove(this.props.index, this.state.pinCode)
-              }
+              productCode={this.props.product.productcode}
+              winningUssID={this.props.product.USSID}
+              onRemove={() => this.handleRemove(this.props.index)}
             />
             <div className={styles.dropdown}>
               <div className={styles.dropdownLabel}>
@@ -134,11 +112,9 @@ export default class CartItem extends React.Component {
               </div>
               <SelectBoxMobile
                 borderNone={true}
-                placeholder="1"
-                options={this.state.quantityList}
-                selected={this.state.selectedValue}
+                options={fetchedQuantityList}
                 onChange={val => this.handleQuantityChange(val)}
-                value={this.state.qtySelectedByUser}
+                value={this.props.qtySelectedByUser}
               />
             </div>
           </div>
@@ -148,7 +124,6 @@ export default class CartItem extends React.Component {
   }
 }
 CartItem.propTypes = {
-  onSave: PropTypes.func,
   onRemove: PropTypes.func,
   productImage: PropTypes.string,
   productName: PropTypes.string,

@@ -19,7 +19,7 @@ export default class AddressCarousel extends React.Component {
           onSelect={pincode => this.props.selectAddress(pincode[0])}
         >
           {data &&
-            data.length > 1 &&
+            data.length > 0 &&
             data.map((datum, i) => {
               return (
                 <Address

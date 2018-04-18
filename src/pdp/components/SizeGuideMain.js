@@ -3,7 +3,7 @@ import SizeGuideElement from "./SizeGuideElement";
 import styles from "./SizeGuideMain.css";
 import { Image } from "xelpmoc-core";
 import Accordion from "../../general/components/Accordion.js";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 
 export default class SizeGuideMain extends React.Component {
   componentDidMount() {
@@ -11,13 +11,7 @@ export default class SizeGuideMain extends React.Component {
   }
   render() {
     if (this.props.loading) {
-      return (
-        <div className={styles.base}>
-          <div className={styles.loadingIndicator}>
-            <MDSpinner />
-          </div>
-        </div>
-      );
+      return <Loader />;
     }
     if (this.props.sizeData && this.props.sizeData.sizeGuideList) {
       return (
@@ -27,24 +21,30 @@ export default class SizeGuideMain extends React.Component {
               <Image fit="contain" image={this.props.sizeData.imageURL} />
             </div>
           </div>
-          <div className={styles.sizeList}>
-            {this.props.sizeData.sizeGuideList.map((list, i) => {
-              return (
-                <Accordion
-                  text={list.dimensionSize}
-                  key={i}
-                  offset={20}
-                  activeBackground="#f8f8f8"
-                >
-                  <SizeGuideElement data={list.dimensionList} />
-                </Accordion>
-              );
-            })}
-          </div>
+          {this.props.sizeData.sizeGuideList && (
+            <div className={styles.sizeList}>
+              {this.props.sizeData.sizeGuideList.map((list, i) => {
+                return (
+                  <Accordion
+                    text={list.dimensionSize}
+                    key={i}
+                    offset={20}
+                    activeBackground="#f8f8f8"
+                  >
+                    <SizeGuideElement data={list.dimensionList} />
+                  </Accordion>
+                );
+              })}
+            </div>
+          )}
         </div>
       );
     } else {
-      return null;
+      return (
+        <div className={styles.noSizeGuideHolder}>
+          <div className={styles.noSizeGuide}>No Size Guide Available</div>
+        </div>
+      );
     }
   }
 }

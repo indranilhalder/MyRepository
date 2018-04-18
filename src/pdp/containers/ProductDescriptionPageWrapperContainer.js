@@ -10,9 +10,15 @@ import {
   pdpAboutBrand,
   getProductPinCode
 } from "../actions/pdp.actions";
+import { displayToast } from "../../general/toast.actions.js";
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
 import {
   showModal,
   EMI_MODAL,
+  OFFER_MODAL,
   ADDRESS,
   SIZE_SELECTOR,
   SIZE_GUIDE
@@ -31,7 +37,9 @@ const mapDispatchToProps = dispatch => {
     showSizeSelector: data => {
       dispatch(showModal(SIZE_SELECTOR, data));
     },
-
+    showOfferDetails: data => {
+      dispatch(showModal(OFFER_MODAL, data));
+    },
     getProductSizeGuide: productCode => {
       dispatch(getProductSizeGuide(productCode));
     },
@@ -61,6 +69,15 @@ const mapDispatchToProps = dispatch => {
     },
     getProductPinCode: (pinCode, productCode) => {
       dispatch(getProductPinCode(pinCode, productCode));
+    },
+    hideSecondaryLoader: () => {
+      dispatch(hideSecondaryLoader());
+    },
+    showSecondaryLoader: () => {
+      dispatch(showSecondaryLoader());
+    },
+    displayToast: val => {
+      dispatch(displayToast(val));
     }
   };
 };

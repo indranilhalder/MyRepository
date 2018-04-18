@@ -42,7 +42,6 @@ export function applySortToUrl(query, url, sortValue) {
   let match;
   if (query.length === 0) {
     // dealing with a brand or category landing page.
-
     if (CATEGORY_REGEX.test(url)) {
       match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
       match = match.replace(BRAND_CATEGORY_PREFIX, "");

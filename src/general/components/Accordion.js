@@ -10,9 +10,14 @@ export default class Accordion extends React.Component {
     };
   }
   openMenu() {
-    this.setState(prevState => ({
-      isOpen: !prevState.isOpen
-    }));
+    if (!this.props.controlled) {
+      this.setState(prevState => ({
+        isOpen: !prevState.isOpen
+      }));
+    }
+    if (this.props.onOpen) {
+      this.props.onOpen();
+    }
   }
   componentWillReceiveProps(props) {
     if (this.state.isOpen !== props.isOpen) {
@@ -47,7 +52,13 @@ export default class Accordion extends React.Component {
             className={activeheader}
             style={{ fontSize: this.props.headerFontSize }}
           >
-            {this.props.text}
+            {this.props.text && <div>{this.props.text}</div>}
+            {this.props.headerElement && (
+              <div
+                className={styles.faqQuestion}
+                dangerouslySetInnerHTML={{ __html: this.props.faqQuestion }}
+              />
+            )}
             <div className={iconActive} />
           </div>
         </div>
@@ -62,10 +73,16 @@ Accordion.propTypes = {
   headerFontSize: PropTypes.number,
   offset: PropTypes.number,
   searchImageURL: PropTypes.string,
-  activeBackground: PropTypes.string
+  activeBackground: PropTypes.string,
+  controlled: PropTypes.bool,
+  onOpen: PropTypes.func,
+  isOpen: PropTypes.bool,
+  headerElement: PropTypes.bool
 };
 
 Accordion.defaultProps = {
   headerFontSize: 14,
-  offset: 0
+  controlled: false,
+  offset: 0,
+  headerElement: false
 };

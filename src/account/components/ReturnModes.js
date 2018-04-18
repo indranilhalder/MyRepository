@@ -52,15 +52,26 @@ export default class ReturnModes extends React.Component {
         <div className={styles.content}>
           <div className={styles.card}>
             <OrderCard
-              productImage={productInfo.product.imageURL}
-              productName={productInfo.product.name}
-              price={productInfo.totalPrice.value}
+              imageUrl={
+                productInfo &&
+                productInfo.product &&
+                productInfo.product.imageURL
+              }
+              productName={
+                productInfo && productInfo.product && productInfo.product.name
+              }
+              price={
+                productInfo &&
+                productInfo.totalPrice &&
+                productInfo.totalPrice.value
+              }
             >
-              {productInfo.quantity && (
-                <div className={styles.quantity}>
-                  Qty {productInfo.quantity}
-                </div>
-              )}
+              {productInfo &&
+                productInfo.quantity && (
+                  <div className={styles.quantity}>
+                    Qty {productInfo.quantity}
+                  </div>
+                )}
             </OrderCard>
           </div>
           {data.returnModes.quickDrop && (

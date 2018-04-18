@@ -10,15 +10,23 @@ import {
 } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-import { getMcvId } from "../../lib/adobeUtils.js";
+import {
+  getMcvId,
+  setDataLayerForPdpDirectCalls,
+  SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT,
+  SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT
+} from "../../lib/adobeUtils.js";
 import each from "lodash/each";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   ANONYMOUS_USER
 } from "../../lib/constants";
-import { API_MSD_URL_ROOT } from "../../lib/apiRequest.js";
+import { setDataLayer, ADOBE_PDP_TYPE } from "../../lib/adobeUtils.js";
+import * as ErrorHandling from "../../general/ErrorHandling.js";
 
+import { API_MSD_URL_ROOT } from "../../lib/apiRequest.js";
+import { displayToast } from "../../general/toast.actions.js";
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
 export const PRODUCT_DESCRIPTION_SUCCESS = "PRODUCT_DESCRIPTION_SUCCESS";
 export const PRODUCT_DESCRIPTION_FAILURE = "PRODUCT_DESCRIPTION_FAILURE";
@@ -103,7 +111,6 @@ export const PDP_ABOUT_BRAND_FAILURE = "PDP_ABOUT_BRAND_FAILURE";
 
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
-export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
 export const PRODUCT_PDP_EMI_PATH =
   "v2/mpl/getBankDetailsforEMI?platformNumber=2";
 export const EMI_TERMS_PATH = "/v2/mpl/cms/products/getEmiTermsAndConditions";
@@ -119,12 +126,13 @@ const CLIENT_ID = "gauravj@dewsolutions.in";
 const ADD_PRODUCT_TO_WISH_LIST = "addToWishListInPDP";
 const ADD_PRODUCT_TO_CART = "addProductToCart";
 const REMOVE_FROM_WISH_LIST = "removeFromWl";
-const PRODUCT_SPECIFICATION_PATH = "/v2/mpl/products";
+const PRODUCT_SPECIFICATION_PATH = "/v2/mpl/products/productDetails";
 const PRODUCT_DESCRIPTION_PATH = "v2/mpl/products/productDetails";
+const PRODUCT_SIZE_GUIDE_PATH = "v2/mpl/products/";
 const ORDER_BY = "desc";
 const SORT = "byDate";
 const PAGE_VALUE = "0";
-const PAGE_NUMBER = "1";
+const PAGE_NUMBER = "3";
 const MSD_REQUEST_PATH = "widgets";
 const MSD_ABOUT_BRAND_REQUEST_PATH = "widgets";
 const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
@@ -161,7 +169,21 @@ export function getProductDescription(productCode) {
         `${PRODUCT_DESCRIPTION_PATH}/${productCode}?isPwa=true`
       );
       const resultJson = await result.json();
-      dispatch(getProductDescriptionSuccess(resultJson));
+      if (
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === SUCCESS_CAMEL_CASE
+      ) {
+        setDataLayer(
+          ADOBE_PDP_TYPE,
+          resultJson,
+          getState().icid.value,
+          getState().icid.icidType
+        );
+        dispatch(getProductDescriptionSuccess(resultJson));
+      } else {
+        throw new Error(`${resultJson.error}`);
+      }
     } catch (e) {
       dispatch(getProductDescriptionFailure(e.message));
     }
@@ -210,10 +232,14 @@ export function getProductPinCode(pinCode, productCode) {
         url = `${PRODUCT_DETAILS_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=${validProductCode}&pin=${pinCode}`;
       }
       const result = await api.post(url);
+
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(
         getProductPinCodeSuccess({
           pinCode,
@@ -257,8 +283,10 @@ export function addProductToWishList(userId, accessToken, productDetails) {
         }&productCode=${productDetails.code}&wishlistName=${MY_WISH_LIST}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(addProductToWishListSuccess());
@@ -307,15 +335,12 @@ export function removeProductFromWishList(productDetails) {
         removeProductFromWishListObject
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        return dispatch(removeProductFromWishListSuccess());
-      } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      return dispatch(removeProductFromWishListSuccess());
     } catch (e) {
       return dispatch(removeProductFromWishListFailure(e.message));
     }
@@ -355,11 +380,17 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
         }&addedToCartWl=false`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
+      // here we dispatch a modal to show something was added to the bag
+      dispatch(displayToast("Added product to Bag"));
+      setDataLayerForPdpDirectCalls(SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT);
       dispatch(addProductToCartSuccess());
+      // ADOBE_ADD_TO_CART
     } catch (e) {
       dispatch(addProductToCartFailure(e.message));
     }
@@ -393,12 +424,15 @@ export function getProductSizeGuide(productCode) {
     dispatch(getProductSizeGuideRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_DESCRIPTION_PATH}/${productCode}/sizeGuide?isPwa=true`
+        `${PRODUCT_SIZE_GUIDE_PATH}/${productCode}/sizeGuide?isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(getProductSizeGuideSuccess(resultJson));
     } catch (e) {
       dispatch(getProductSizeGuideFailure(e.message));
@@ -436,9 +470,12 @@ export function getEmiTerms(accessToken, productValue) {
       const url = `${EMI_TERMS_PATH}?access_token=${accessToken}&productValue=${productValue}`;
       const result = await api.get(url);
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(getEmiTermsSuccess(resultJson));
     } catch (e) {
       dispatch(getEmiTermsFailure(e.message));
@@ -474,9 +511,12 @@ export function getPdpEmi(token, cartValue) {
       const url = `${PRODUCT_PDP_EMI_PATH}&productValue=${cartValue}&access_token=${token}`;
       const result = await api.get(url);
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(getPdpEmiSuccess(resultJson));
     } catch (e) {
       dispatch(getPdpEmiFailure(e.message));
@@ -511,9 +551,12 @@ export function getProductWishList() {
     try {
       const result = await api.postMock(PRODUCT_WISH_LIST_PATH);
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(getProductWishListSuccess(resultJson));
     } catch (e) {
       dispatch(getProductWishListFailure(e.message));
@@ -550,9 +593,12 @@ export function getProductSpecification(productId) {
         `${PRODUCT_SPECIFICATION_PATH}/${productId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(ProductSpecificationSuccess(resultJson));
     } catch (e) {
       dispatch(ProductSpecificationFailure(e.message));
@@ -583,20 +629,26 @@ export function addProductReviewFailure(error) {
 }
 
 export function addProductReview(productCode, productReview) {
+  let reviewData = new FormData();
+  reviewData.append("comment", productReview.comment);
+  reviewData.append("rating", productReview.rating);
+  reviewData.append("headline", productReview.headline);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(addProductReviewRequest());
     try {
-      const result = await api.post(
-        `${PRODUCT_SPECIFICATION_PATH}/${productCode}/reviews?access_token=${
+      const result = await api.postFormData(
+        `${PRODUCT_SIZE_GUIDE_PATH}${productCode}/reviews?access_token=${
           JSON.parse(customerCookie).access_token
         }`,
-        productReview
+        reviewData
       );
       const resultJson = await result.json();
-      if (resultJson.errors.length > 0) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(addProductReviewSuccess(productReview));
     } catch (e) {
       dispatch(addProductReviewFailure(e.message));
@@ -638,9 +690,12 @@ export function editProductReview(productCode, productReviews) {
         }&headline=${productReviews.headLine}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(editProductReviewSuccess());
     } catch (e) {
       dispatch(editProductReviewFailure(e.message));
@@ -680,9 +735,12 @@ export function deleteProductReview(productCode, reviewId) {
         }`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(deleteProductReviewSuccess());
     } catch (e) {
       dispatch(deleteProductReviewFailure(e.message));
@@ -712,20 +770,30 @@ export function getProductReviewsFailure(error) {
   };
 }
 
-export function getProductReviews(productCode) {
-  let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+export function getProductReviews(productCode, pageIndex, orderBy, sortBy) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  let accessToken, userName;
+  if (customerCookie) {
+    userName = JSON.parse(userDetails).userName;
+    accessToken = JSON.parse(customerCookie).access_token;
+  } else {
+    userName = ANONYMOUS_USER;
+    accessToken = JSON.parse(globalCookie).access_token;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(getProductReviewsRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_SPECIFICATION_PATH}/${productCode.toUpperCase()}/users/anonymous/reviews?access_token=${
-          JSON.parse(globalAccessToken).access_token
-        }&page=${PAGE_VALUE}&pageSize=${PAGE_NUMBER}&orderBy=${ORDER_BY}&sort=${SORT}`
+        `${PRODUCT_SIZE_GUIDE_PATH}${productCode.toUpperCase()}/users/${userName}/reviews?access_token=${accessToken}&page=${pageIndex}&pageSize=${PAGE_NUMBER}&orderBy=${orderBy}&sort=${sortBy}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(getProductReviewsSuccess(resultJson));
     } catch (e) {
       dispatch(getProductReviewsFailure(e.message));
@@ -769,9 +837,12 @@ export function followUnFollowBrand(brandCode) {
         `${FOLLOW_UN_FOLLOW_PATH}/${mcvId}/updateFollowedBrands?brands=${brandCode}&follow=${isFollowing}&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(followUnFollowBrandSuccess({ isFollowing }));
     } catch (e) {
       dispatch(followUnFollowBrandFailure(e.message));
@@ -818,8 +889,10 @@ export function getMsdRequest(productCode) {
         msdRequestObject
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       if (resultJson.data[0].length > 0) {
@@ -880,8 +953,10 @@ export function pdpAboutBrand(productCode) {
         msdRequestObject
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       if (resultJson.data[0].itemIds.length > 0) {
@@ -910,10 +985,10 @@ export function getPdpItemsPdpSuccess(items, widgetKey) {
     widgetKey
   };
 }
-export function getPdpItemsFailure(positionInFeed, errorMsg) {
+export function getPdpItemsFailure(errorMsg) {
   return {
     type: GET_PDP_ITEMS_FAILURE,
-    errorMsg,
+    error: errorMsg,
     status: FAILURE
   };
 }
@@ -929,16 +1004,15 @@ export function getPdpItems(itemIds, widgetKey) {
       const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
       const result = await api.get(url);
       const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE_UPPERCASE
-      ) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(getPdpItemsPdpSuccess(resultJson.results, widgetKey));
     } catch (e) {
-      dispatch(getPdpItemsFailure(e.message));
+      dispatch(getPdpItemsFailure(`MSD ${e.message}`));
     }
   };
 }

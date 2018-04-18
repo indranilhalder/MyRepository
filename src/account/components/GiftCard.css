@@ -166,3 +166,24 @@
   margin: auto;
   text-align: center;
 }
+.amountSign {
+  background: url(./img/59.svg)no-repeat;
+  background-size: auto 40px;
+  background-position: left center;
+  padding-left: 30px;
+}
+.enterAmountHolder {
+  width: 100%;
+  height: 33px;
+  position: relative;
+}
+.rupyLabel {
+  width: 30px;
+  height: 33px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: url(./img/59.svg)no-repeat;
+  background-size: auto 40px;
+  background-position: 4px -2px;
+}

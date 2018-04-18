@@ -4,25 +4,45 @@ import Input2 from "../../general/components/Input2.js";
 import gpsIcon from "../../general/components/img/GPS.svg";
 import { Icon, CircleButton } from "xelpmoc-core";
 import styles from "./SearchLocationByPincode.css";
+import { DEFAULT_PIN_CODE_LOCAL_STORAGE } from "../../lib/constants";
 export default class SearchLocationByPincode extends React.Component {
-  getValue(val) {
-    if (this.props.changePincode) {
-      this.props.changePincode(val);
+  constructor(props) {
+    super(props);
+    this.state = {
+      pinCode: localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+        ? localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+        : null,
+      errorMessage: null
+    };
+  }
+  getValue(pinCode) {
+    if (pinCode.length <= 6) {
+      this.setState({ pinCode });
     }
   }
-  handleClick() {
-    if (this.props.getLocation) {
-      this.props.getLocation();
+
+  onUpdate() {
+    if (this.state.pinCode && this.state.pinCode.match(/^\d{6}$/)) {
+      if (this.props.changePincode) {
+        this.props.changePincode(this.state.pinCode);
+      }
+      this.setState({ errorMessage: null });
+    } else {
+      this.setState({ errorMessage: "Please enter a  valid pincode" });
     }
   }
   render() {
     return (
       <div className={styles.base}>
         <div className={styles.header}>{this.props.header}</div>
+        {this.state.errorMessage && (
+          <div className={styles.errorMessage}>{this.state.errorMessage}</div>
+        )}
         <div className={styles.inputHolder}>
           <Input2
-            placeholder={`Your pincode :${this.props.pincode}`}
+            placeholder={`Your pincode :${this.state.pincode}`}
             type="number"
+            value={this.state.pinCode && this.state.pinCode}
             boxy={true}
             onChange={val => this.getValue(val)}
             textStyle={{ fontSize: 14 }}
@@ -33,7 +53,7 @@ export default class SearchLocationByPincode extends React.Component {
                 size={35}
                 color={"transparent"}
                 icon={<Icon image={gpsIcon} size={20} />}
-                onClick={() => this.handleClick()}
+                onClick={() => this.onUpdate()}
               />
             }
           />

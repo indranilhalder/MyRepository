@@ -1,6 +1,6 @@
 import React from "react";
 import OrderCard from "./OrderCard";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import TextArea from "../../general/components/TextArea";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
@@ -25,11 +25,15 @@ export default class ReturnReasonForm extends React.Component {
       this.props.onContinue(reasonAndCommentObj);
     }
   }
-  onChangePrimary(code) {
+  onChangePrimary(val) {
+    const code = val.value;
+    const label = val.label;
     const data = this.props.returnProductDetails;
     this.setState({
       parentReasonCode: code,
+      reason: label,
       secondaryReasons: data.returnReasonMap
+
         .filter(val => {
           return val.parentReasonCode === code;
         })
@@ -49,8 +53,10 @@ export default class ReturnReasonForm extends React.Component {
   handleChange(val) {
     this.setState({ comment: val });
   }
-  onChangeSecondary(code) {
-    this.setState({ subReasonCode: code });
+  onChangeSecondary(val) {
+    const code = val.value;
+    const label = val.label;
+    this.setState({ subReasonCode: code, subReason: label });
   }
   handleCancel() {
     if (this.props.onCancel) {
@@ -73,7 +79,11 @@ export default class ReturnReasonForm extends React.Component {
         </div>
         <div className={styles.content}>
           <OrderCard
-            productImage={data.orderProductWsDTO[0].imageURL}
+            imageUrl={
+              data &&
+              data.orderProductWsDTO[0] &&
+              data.orderProductWsDTO[0].imageURL
+            }
             productName={`${data.orderProductWsDTO[0].productBrand} ${
               data.orderProductWsDTO[0].productName
             }`}
@@ -86,8 +96,8 @@ export default class ReturnReasonForm extends React.Component {
             )}
           </OrderCard>
           <div className={styles.select}>
-            <SelectBoxMobile
-              label="Select a reason"
+            <SelectBoxMobile2
+              label={this.state.reason ? this.state.reason : "Select a reason"}
               options={data.returnReasonMap.map((val, i) => {
                 return {
                   value: val.parentReasonCode,
@@ -99,8 +109,12 @@ export default class ReturnReasonForm extends React.Component {
           </div>
           {this.state.secondaryReasons && (
             <div className={styles.select}>
-              <SelectBoxMobile
-                label="Select a reason"
+              <SelectBoxMobile2
+                label={
+                  this.state.subReason
+                    ? this.state.subReason
+                    : "Select a reason"
+                }
                 options={this.state.secondaryReasons}
                 onChange={val => this.onChangeSecondary(val)}
               />

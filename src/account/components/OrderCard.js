@@ -4,11 +4,19 @@ import ProductImage from "../../general/components/ProductImage.js";
 import CheckBox from "../../general/components/CheckBox.js";
 import styles from "./OrderCard.css";
 export default class OrderCard extends React.Component {
+  onClick() {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
         <div className={styles.productImageHolder}>
-          <ProductImage image={this.props.imageUrl} />
+          <ProductImage
+            image={this.props.imageUrl}
+            onClickImage={() => this.onClick()}
+          />
         </div>
         <div className={styles.productDetails}>
           <div

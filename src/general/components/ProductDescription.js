@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Icon, CircleButton } from "xelpmoc-core";
 import PropTypes from "prop-types";
+import AddToWishListButtonContainer from "../../wishlist/containers/AddToWishListButtonContainer";
 import styles from "./ProductDescription.css";
 
 export default class ProductDescription extends Component {
@@ -34,16 +35,17 @@ export default class ProductDescription extends Component {
       <div className={styles.base}>
         <div className={headerClass}>
           <div className={headerText}>{this.props.title}</div>
-          {this.props.onDownload && (
-            <div className={styles.button}>
-              <CircleButton
-                size={20}
-                color={"transparent"}
-                icon={<Icon image={this.props.icon} size={15} />}
-                onClick={() => this.handleClick()}
-              />
-            </div>
-          )}
+
+          {this.props.productListingId &&
+            this.props.winningUssID && (
+              <div className={styles.button}>
+                <AddToWishListButtonContainer
+                  productListingId={this.props.productListingId}
+                  winningUssID={this.props.winningUssID}
+                  isWhite={this.props.isWhite}
+                />
+              </div>
+            )}
         </div>
         <div className={contentClass}>
           {this.props.description && (
@@ -69,8 +71,8 @@ export default class ProductDescription extends Component {
 ProductDescription.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
-  price: PropTypes.string,
-  discountPrice: PropTypes.string,
+  price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  discountPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   icon: PropTypes.string,
   onDownload: PropTypes.func,
   isWhite: PropTypes.bool

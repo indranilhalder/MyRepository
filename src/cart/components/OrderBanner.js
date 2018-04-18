@@ -17,15 +17,17 @@ export default class OrderBanner extends React.Component {
           <div className={styles.orderLabel}>{`Order Id: ${
             this.props.label
           }`}</div>
-          <div className={styles.buttonHolder}>
-            <Button
-              type="hollow"
-              color="#fff"
-              label={this.props.buttonText}
-              width={150}
-              onClick={() => this.handleClick()}
-            />
-          </div>
+          {this.props.isTrack && (
+            <div className={styles.buttonHolder}>
+              <Button
+                type="hollow"
+                color="#fff"
+                label={this.props.buttonText}
+                width={150}
+                onClick={() => this.handleClick()}
+              />
+            </div>
+          )}
         </div>
       </div>
     );
@@ -35,9 +37,11 @@ OrderBanner.propTypes = {
   headingText: PropTypes.string,
   label: PropTypes.string,
   buttonText: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  isTrack: PropTypes.bool
 };
 
 OrderBanner.defaultProps = {
-  buttonText: "Track Order"
+  buttonText: "Track Order",
+  isTrack: false
 };

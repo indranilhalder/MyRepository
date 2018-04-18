@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./MobileDatePicker.css";
+import moment from "moment";
 export default class MobileDatePicker extends React.Component {
   constructor(props) {
     super(props);
@@ -15,6 +16,12 @@ export default class MobileDatePicker extends React.Component {
       }
     });
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps && nextProps.value && nextProps.value !== this.state.value) {
+      const date = moment(nextProps.value).format("YYYY-MM-DD");
+      this.setState({ value: date });
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -23,6 +30,7 @@ export default class MobileDatePicker extends React.Component {
             type="date"
             className={styles.input}
             onChange={value => this.handleChange(value)}
+            value={this.state.value}
           />
         </div>
         <div className={styles.displayValue}>

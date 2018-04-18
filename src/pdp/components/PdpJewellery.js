@@ -1,6 +1,6 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
-import ProductDetailsMainCard from "./ProductDetailsMainCard";
+
 import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import { Image } from "xelpmoc-core";
 import ProductGalleryMobile from "./ProductGalleryMobile";
@@ -8,15 +8,16 @@ import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
 import PriceBreakUp from "./PriceBreakUp";
 import OfferCard from "./OfferCard";
+import ProductFeature from "./ProductFeature";
 import PdpLink from "./PdpLink";
-
-import ProductDetails from "./ProductDetails";
+import PdpDeliveryModes from "./PdpDeliveryModes";
 import JewelleryClassification from "./JewelleryClassification";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
-import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import PdpPaymentInfo from "./PdpPaymentInfo";
+import Accordion from "../../general/components/Accordion.js";
 import JewelleryCertification from "./JewelleryCertification.js";
 import { HashLink as Link } from "react-router-hash-link";
 import styles from "./ProductDescriptionPage.css";
@@ -45,7 +46,8 @@ export default class PdpJewellery extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showPriceBreakUp: false
+      showPriceBreakUp: false,
+      showStyleNote: false
     };
   }
   visitBrand() {
@@ -94,29 +96,40 @@ export default class PdpJewellery extends React.Component {
     );
 
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (this.checkIfSizeSelected()) {
-      if (userDetails) {
-        if (
-          cartDetailsLoggedInUser !== undefined &&
-          customerCookie !== undefined
-        ) {
-          this.props.addProductToCart(
-            JSON.parse(userDetails).userName,
-            JSON.parse(cartDetailsLoggedInUser).code,
-            JSON.parse(customerCookie).access_token,
-            productDetails
-          );
-        }
-      } else if (cartDetailsAnonymous) {
-        this.props.addProductToCart(
-          ANONYMOUS_USER,
-          JSON.parse(cartDetailsAnonymous).guid,
-          JSON.parse(globalCookie).access_token,
-          productDetails
-        );
-      }
+    if (!this.props.productDetails.winningSellerPrice) {
+      this.props.displayToast("Product is not saleable");
     } else {
-      this.showSizeSelector();
+      if (
+        this.props.productDetails.allOOStock ||
+        this.props.productDetails.winningSellerAvailableStock === "0"
+      ) {
+        this.props.displayToast("Product is out of stock");
+      } else {
+        if (this.checkIfSizeSelected()) {
+          if (userDetails) {
+            if (
+              cartDetailsLoggedInUser !== undefined &&
+              customerCookie !== undefined
+            ) {
+              this.props.addProductToCart(
+                JSON.parse(userDetails).userName,
+                JSON.parse(cartDetailsLoggedInUser).code,
+                JSON.parse(customerCookie).access_token,
+                productDetails
+              );
+            }
+          } else if (cartDetailsAnonymous) {
+            this.props.addProductToCart(
+              ANONYMOUS_USER,
+              JSON.parse(cartDetailsAnonymous).guid,
+              JSON.parse(globalCookie).access_token,
+              productDetails
+            );
+          }
+        } else {
+          this.showSizeSelector();
+        }
+      }
     }
   };
 
@@ -126,41 +139,21 @@ export default class PdpJewellery extends React.Component {
   };
   showPincodeModal() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-      this.props.showPincodeModal(this.props.match.params[1]);
+      this.props.showPincodeModal(this.props.match.params[0]);
     } else if (
       this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
     ) {
-      this.props.showPincodeModal(this.props.match.params[2]);
+      this.props.showPincodeModal(this.props.match.params[1]);
     }
   }
-  addToWishList = () => {
-    let productDetails = {};
-    productDetails.code = this.props.productDetails.productListingId;
-    productDetails.ussId = this.props.productDetails.winningUssID;
-
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
-    if (userDetails) {
-      this.props.addProductToWishList(
-        JSON.parse(userDetails).userName,
-        JSON.parse(customerCookie).access_token,
-        productDetails
-      );
-    } else {
-      this.props.addProductToWishList(
-        ANONYMOUS_USER,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
-    }
-  };
   showPriceBreakUp() {
     this.setState({ showPriceBreakUp: true });
   }
+  showStyleNote = () => {
+    this.setState({ showStyleNote: true });
+  };
   showEmiModal = () => {
-    const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
+    const cartValue = this.props.productDetails.winningSellerPrice.value;
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const globalAccessToken = JSON.parse(globalCookie).access_token;
     this.props.getPdpEmi(globalAccessToken, cartValue);
@@ -173,9 +166,8 @@ export default class PdpJewellery extends React.Component {
         sizeSelected: this.checkIfSizeSelected(),
         productId: this.props.productDetails.productListingId,
         showSizeGuide: this.props.showSizeGuide,
-        data: this.props.productDetails.variantOptions.map(value => {
-          return value.sizelink;
-        })
+        hasSizeGuide: this.props.productDetails.showSizeGuide,
+        data: this.props.productDetails.variantOptions
       });
     }
   };
@@ -186,27 +178,6 @@ export default class PdpJewellery extends React.Component {
       return false;
     }
   };
-  renderDeliveryOptions(productData) {
-    const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-
-    return (
-      productData.eligibleDeliveryModes &&
-      productData.eligibleDeliveryModes.map((val, idx) => {
-        return (
-          <DeliveryInformation
-            key={idx}
-            header={val.name}
-            placedTime={val.timeline}
-            type={val.code}
-            onClick={() => this.renderAddressModal()}
-            deliveryOptions={DELIVERY_TEXT}
-            label={defaultPinCode}
-            showCliqAndPiqButton={false}
-          />
-        );
-      })
-    );
-  }
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -219,8 +190,9 @@ export default class PdpJewellery extends React.Component {
         return image[0].value;
       });
     let otherSellersText;
-
+    let hasOtherSellers = false;
     if (productData.otherSellers && productData.otherSellers.length > 0) {
+      hasOtherSellers = true;
       otherSellersText = (
         <span>
           Sold by{" "}
@@ -231,31 +203,60 @@ export default class PdpJewellery extends React.Component {
           and {productData.otherSellers.length} other sellers;
         </span>
       );
+    } else {
+      hasOtherSellers = false;
+      otherSellersText = `Sold by ${productData.winningSellerName}`;
     }
 
     if (productData) {
+      let price = "";
+      let discountPrice = "";
+      if (productData.mrpPrice) {
+        discountPrice = productData.mrpPrice.formattedValueNoDecimal;
+      }
+
+      if (productData.winningSellerPrice) {
+        price = productData.winningSellerPrice.formattedValueNoDecimal;
+      }
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
-          addProductToWishList={() => this.addToWishList()}
           showPincodeModal={() => this.showPincodeModal()}
+          productListingId={productData.productListingId}
+          outOfStock={
+            productData.allOOStock ||
+            !productData.winningSellerPrice ||
+            productData.winningSellerAvailableStock === "0"
+          }
+          ussId={productData.winningUssID}
         >
-          <ProductGalleryMobile paddingBottom="114">
-            {mobileGalleryImages.map((val, idx) => {
-              return (
-                <Image image={val} key={idx} color="#ffffff" fit="contain" />
-              );
-            })}
-          </ProductGalleryMobile>
+          <div className={styles.gallery}>
+            <ProductGalleryMobile paddingBottom="114">
+              {mobileGalleryImages.map((val, idx) => {
+                return (
+                  <Image image={val} key={idx} color="#ffffff" fit="contain" />
+                );
+              })}
+            </ProductGalleryMobile>
+            {(productData.allOOStock ||
+              productData.winningSellerAvailableStock === "0") && (
+              <div className={styles.flag}>Out of stock</div>
+            )}
+            {!productData.winningSellerPrice && (
+              <div className={styles.flag}>Not Saleable</div>
+            )}
+          </div>
           <div className={styles.content}>
             <JewelleryDetailsAndLink
               productName={productData.brandName}
               productDescription={productData.productName}
-              price={productData.winningSellerMOP}
-              discountPrice={productData.mrp}
+              price={price}
+              discountPrice={discountPrice}
+              averageRating={productData.averageRating}
               discount={productData.discount}
+              brandUrl={productData.brandURL}
               hasPriceBreakUp={productData.priceBreakUpDetailsMap}
               history={this.props.history}
               showPriceBreakUp={() => {
@@ -263,26 +264,27 @@ export default class PdpJewellery extends React.Component {
               }}
             />
           </div>
-          {productData.isEMIEligible === "Y" && (
-            <div className={styles.separator}>
+          {productData.details &&
+            productData.details.length > 0 && (
               <div className={styles.info}>
-                Emi available on this product.
-                <span className={styles.link} onClick={this.showEmiModal}>
-                  View Plans
+                <span className={styles.textOffset}>
+                  {productData.details[0].value}
+                </span>
+                <span className={styles.link} onClick={this.showStyleNote}>
+                  <Link to="#styleNote"> Read More</Link>
                 </span>
               </div>
-            </div>
-          )}
-
-          {productData.potentialPromotions && (
-            <OfferCard
-              endTime={productData.potentialPromotions.endDate}
-              startDate={productData.potentialPromotions.startDate}
-              heading={productData.potentialPromotions.title}
-              description={productData.potentialPromotions.description}
-              onClick={this.goToCouponPage}
-            />
-          )}
+            )}
+          <PdpPaymentInfo
+            hasEmi={productData.isEMIEligible}
+            hasCod={productData.isCOD}
+            showEmiModal={this.showEmiModal}
+          />
+          <OfferCard
+            showDetails={this.props.showOfferDetails}
+            potentialPromotions={productData.potentialPromotions}
+            secondaryPromotions={productData.productOfferMsg}
+          />
 
           {productData.variantOptions && (
             <React.Fragment>
@@ -290,18 +292,9 @@ export default class PdpJewellery extends React.Component {
                 history={this.props.history}
                 sizeSelected={this.checkIfSizeSelected()}
                 productId={productData.productListingId}
+                hasSizeGuide={productData.showSizeGuide}
                 showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions.map(value => {
-                  return value.sizelink;
-                })}
-              />
-              <ColourSelector
-                data={productData.variantOptions.map(value => {
-                  return value.colorlink;
-                })}
-                history={this.props.history}
-                updateColour={val => {}}
-                getProductSpecification={this.props.getProductSpecification}
+                data={productData.variantOptions}
               />
             </React.Fragment>
           )}
@@ -324,28 +317,25 @@ export default class PdpJewellery extends React.Component {
           this.props.productDetails.isServiceableToPincode.status === NO ? (
             <Overlay labelText="Not serviceable in you pincode,
 please try another pincode">
-              {this.renderDeliveryOptions(productData)}
+              <PdpDeliveryModes
+                eligibleDeliveryModes={productData.eligibleDeliveryModes}
+                deliveryModesATP={productData.deliveryModesATP}
+              />
             </Overlay>
           ) : (
-            this.renderDeliveryOptions(productData)
+            <PdpDeliveryModes
+              eligibleDeliveryModes={productData.eligibleDeliveryModes}
+              deliveryModesATP={productData.deliveryModesATP}
+            />
           )}
 
-          {productData.otherSellers && (
+          {productData.winningSellerName && (
             <div className={styles.separator}>
-              <PdpLink onClick={this.goToSellerPage}>
+              <PdpLink onClick={this.goToSellerPage} noLink={!hasOtherSellers}>
                 <div className={styles.sellers}>{otherSellersText}</div>
               </PdpLink>
             </div>
           )}
-
-          <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
-          </div>
-
           <div className={styles.details} id="priceBreakup">
             {productData.priceBreakUpDetailsMap && (
               <PriceBreakUp
@@ -359,6 +349,52 @@ please try another pincode">
               />
             )}
           </div>
+          <div className={styles.separator}>
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
+          </div>
+          <div className={styles.details} id="styleNote">
+            {productData.styleNote && (
+              <ProductFeature
+                isOpen={this.state.showStyleNote}
+                heading="Style Note"
+                content={productData.styleNote}
+              />
+            )}
+            {productData.returnAndRefund && (
+              <Accordion text="Return & Refunds" headerFontSize={16}>
+                {productData.returnAndRefund.map(val => {
+                  return (
+                    <div
+                      className={styles.list}
+                      dangerouslySetInnerHTML={{ __html: val.refundReturnItem }}
+                    />
+                  );
+                })}
+              </Accordion>
+            )}
+            {productData.warranty &&
+              productData.warranty.length > 0 && (
+                <ProductFeature
+                  heading="Warranty"
+                  content={productData.warranty[0]}
+                />
+              )}
+            {productData.knowMore && (
+              <Accordion text="Know More" headerFontSize={16}>
+                {productData.knowMore &&
+                  productData.knowMore.map(val => {
+                    return (
+                      <div className={styles.list}>{val.knowMoreItem}</div>
+                    );
+                  })}
+              </Accordion>
+            )}
+          </div>
+
           {productData.APlusContent && (
             <AllDescription
               productContent={productData.APlusContent.productContent}

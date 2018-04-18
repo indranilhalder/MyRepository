@@ -48,6 +48,7 @@ export default class HollowHeader extends React.Component {
     );
   }
 }
+
 HollowHeader.propTypes = {
   goBack: PropTypes.func,
   orderProduct: PropTypes.func,

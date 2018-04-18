@@ -26,14 +26,41 @@ class SignUp extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user) {
-      if (nextProps.user.isLoggedIn === true) {
+    if (nextProps.authCallsIsSucceed) {
+      if (this.props.redirectToAfterAuthUrl) {
+        this.props.history.push(this.props.redirectToAfterAuthUrl);
+        this.props.clearUrlToRedirectToAfterAuth();
+      } else {
         this.props.history.push(HOME_ROUTER);
       }
     }
   }
   onSubmit() {
-    if (this.props.onSubmit) {
+    const EMAIL_REGULAR_EXPRESSION = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    const MOBILE_PATTERN = /^[7,8,9]{1}[0-9]{9}$/;
+    if (!this.state.phoneNumberValue) {
+      this.props.displayToast("Please fill mobile number ");
+      return false;
+    }
+    if (!MOBILE_PATTERN.test(this.state.phoneNumberValue)) {
+      this.props.displayToast("Please fill valid mobile number");
+      return false;
+    }
+    if (this.state.emailValue) {
+      if (!EMAIL_REGULAR_EXPRESSION.test(this.state.emailValue)) {
+        this.props.displayToast("Please fill valid emailId");
+        return false;
+      }
+    }
+
+    if (!this.state.passwordValue) {
+      this.props.displayToast("Please fill password");
+      return false;
+    }
+    if (this.state.passwordValue.length < "8") {
+      this.props.displayToast("Password length should be minimum 8 character");
+      return false;
+    } else {
       this.props.onSubmit({
         emailId: this.state.emailValue,
         username: this.state.phoneNumberValue,
@@ -41,7 +68,6 @@ class SignUp extends Component {
       });
     }
   }
-
   navigateToLogin() {
     this.props.history.push(LOGIN_PATH);
   }
@@ -56,7 +82,9 @@ class SignUp extends Component {
     if (this.props.onPhoneNumberChange) {
       this.props.onPhoneNumberChange(val);
     }
-    this.setState({ phoneNumberValue: val });
+    if (val.length <= 10) {
+      this.setState({ phoneNumberValue: val });
+    }
   }
 
   onChangeEmail(val) {
@@ -89,7 +117,7 @@ class SignUp extends Component {
       footerClick = () => this.navigateToLogin();
       showSocialButtons = true;
     }
-    if (this.props.user.loading) {
+    if (this.props.authCallsInProcess) {
       return (
         <div className={styles.loadingIndicator}>
           <MDSpinner />
@@ -114,7 +142,9 @@ class SignUp extends Component {
                     : this.state.phoneNumberValue
                 }
                 placeholder={"Phone number"}
+                type={"number"}
                 onChange={val => this.onPhoneNumberChange(val)}
+                maxLength={"10"}
               />
             </div>
             <div className={styles.input}>

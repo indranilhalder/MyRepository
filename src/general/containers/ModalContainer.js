@@ -12,30 +12,41 @@ import {
   loginUserRequest,
   customerAccessToken
 } from "../../auth/actions/user.actions";
-import { SUCCESS } from "../../lib/constants";
+import { redeemCliqVoucher } from "../../account/actions/account.actions";
+import { SUCCESS, FAILURE } from "../../lib/constants";
+import { updateProfile } from "../../account/actions/account.actions.js";
 
 import {
   applyBankOffer,
   releaseBankOffer,
-  applyUserCoupon,
-  releaseUserCoupon,
+  applyUserCouponForAnonymous,
   getUserAddress,
   mergeCartId,
   generateCartIdForLoggedInUser,
-  getCartId
+  getCartId,
+  applyUserCouponForLoggedInUsers,
+  releaseCouponForAnonymous,
+  releaseUserCoupon
 } from "../../cart/actions/cart.actions";
 import {
   getOtpToActivateWallet,
   verifyWallet,
   submitSelfCourierReturnInfo
 } from "../../account/actions/account.actions";
-
+import { createWishlist } from "../../wishlist/actions/wishlist.actions";
+import {
+  singleAuthCallHasFailed,
+  setIfAllAuthCallsHaveSucceeded
+} from "../../auth/actions/auth.actions.js";
 const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
     ownProps: state.modal.ownProps,
     modalStatus: state.modal.modalDisplayed,
-    user: state.user
+    user: state.user,
+    loadingForGetOtpToActivateWallet:
+      state.profile.loadingForGetOtpToActivateWallet,
+    loadingForVerifyWallet: state.profile.loadingForverifyWallet
   };
 };
 
@@ -57,30 +68,32 @@ const mapDispatchToProps = dispatch => {
       const otpResponse = await dispatch(
         otpVerification(otpDetails, userDetails)
       );
-      const customerAccessResponse = await dispatch(
-        customerAccessToken(userDetails)
-      );
-      if (customerAccessResponse.status === SUCCESS) {
-        if (otpResponse.status === SUCCESS) {
-          const loginUserResponse = await dispatch(loginUser(userDetails));
-          if (loginUserResponse.status === SUCCESS) {
-            const cartVal = await dispatch(getCartId());
-            if (
-              cartVal.status === SUCCESS &&
-              cartVal.cartDetails.guid &&
-              cartVal.cartDetails.code
-            ) {
-              // This is the anonymous case
-              // And I have an existing cart that needs to be merged.
-              dispatch(mergeCartId(cartVal.cartDetails.guid));
+      if (otpResponse.status === SUCCESS) {
+        const customerAccessResponse = await dispatch(
+          customerAccessToken(userDetails)
+        );
+        if (customerAccessResponse.status === SUCCESS) {
+          const createdCartVal = await dispatch(
+            generateCartIdForLoggedInUser()
+          );
+          if (createdCartVal.status === SUCCESS) {
+            await dispatch(createWishlist());
+            const mergeCartIdResponse = await dispatch(
+              mergeCartId(createdCartVal.cartDetails.guid)
+            );
+            if (mergeCartIdResponse.status === SUCCESS) {
+              dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
-              const createdCartVal = await dispatch(
-                generateCartIdForLoggedInUser()
-              );
-              dispatch(mergeCartId(createdCartVal.cartDetails.guid));
+              dispatch(singleAuthCallHasFailed(mergeCartIdResponse.error));
             }
+          } else if (createdCartVal.status === FAILURE) {
+            dispatch(singleAuthCallHasFailed(otpResponse.error));
           }
+        } else if (customerAccessResponse.status === FAILURE) {
+          dispatch(singleAuthCallHasFailed(otpResponse.error));
         }
+      } else if (otpResponse.status === FAILURE) {
+        dispatch(singleAuthCallHasFailed(otpResponse.error));
       }
     },
     resetPassword: userDetails => {
@@ -101,14 +114,24 @@ const mapDispatchToProps = dispatch => {
     releaseBankOffer: couponCode => {
       dispatch(releaseBankOffer(couponCode));
     },
-    applyUserCoupon: couponCode => {
-      dispatch(applyUserCoupon(couponCode));
+    applyUserCouponForAnonymous: couponCode => {
+      dispatch(applyUserCouponForAnonymous(couponCode));
     },
-    releaseUserCoupon: couponCode => {
-      dispatch(releaseUserCoupon(couponCode));
+    releaseCouponForAnonymous: (oldCouponCode, newCouponCode) => {
+      dispatch(releaseCouponForAnonymous(oldCouponCode, newCouponCode));
+    },
+    applyUserCouponForLoggedInUsers: couponCode => {
+      dispatch(applyUserCouponForLoggedInUsers(couponCode));
+    },
+    releaseUserCoupon: (oldCouponCode, newCouponCode) => {
+      dispatch(releaseUserCoupon(oldCouponCode, newCouponCode));
     },
     getUserAddress: () => {
       dispatch(getUserAddress());
+    },
+
+    updateProfile: (accountDetails, otp) => {
+      dispatch(updateProfile(accountDetails, otp));
     },
 
     getOtpToActivateWallet: (customerDetails, isFromCliqCash) => {
@@ -121,6 +144,9 @@ const mapDispatchToProps = dispatch => {
 
     submitSelfCourierReturnInfo: returnDetails => {
       dispatch(submitSelfCourierReturnInfo(returnDetails));
+    },
+    redeemCliqVoucher: (cliqCashDetails, fromCheckOut) => {
+      dispatch(redeemCliqVoucher(cliqCashDetails, fromCheckOut));
     }
   };
 };

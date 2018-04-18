@@ -8,7 +8,6 @@ import {
   getUserAddress,
   selectDeliveryMode,
   getOrderSummary,
-  getCoupons,
   applyUserCoupon,
   releaseUserCoupon,
   getAllStoresCNC,
@@ -34,9 +33,27 @@ import {
   softReservationPaymentForNetBanking,
   softReservationPaymentForSavedCard,
   orderConfirmation,
-  softReservationForCliqCash
+  softReservationForCliqCash,
+  jusPayTokenizeForGiftCard,
+  createJusPayOrderForGiftCardNetBanking,
+  createJusPayOrderForGiftCardFromSavedCards,
+  clearCaptureOrderExperience,
+  applyUserCouponForAnonymous
 } from "../actions/cart.actions";
-import { showModal, BANK_OFFERS } from "../../general/modal.actions";
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
+import {
+  showModal,
+  BANK_OFFERS,
+  GIFT_CARD_MODAL
+} from "../../general/modal.actions";
+import { getPinCode } from "../../account/actions/account.actions.js";
+import { displayToast } from "../../general/toast.actions";
+import { SUCCESS } from "../../lib/constants";
+import { setHeaderText } from "../../general/header.actions.js";
+
 const mapDispatchToProps = dispatch => {
   return {
     getCartDetailsCNC: (
@@ -52,7 +69,8 @@ const mapDispatchToProps = dispatch => {
           accessToken,
           cartId,
           pinCode,
-          isSoftReservation
+          isSoftReservation,
+          true // this is using to setting data layer for first time when page loads
         )
       );
     },
@@ -78,14 +96,15 @@ const mapDispatchToProps = dispatch => {
     getOrderSummary: pinCode => {
       dispatch(getOrderSummary(pinCode));
     },
-    getCoupons: () => {
-      dispatch(getCoupons());
-    },
-    applyUserCoupon: () => {
-      dispatch(applyUserCoupon());
+
+    applyUserCouponForAnonymous: couponCode => {
+      dispatch(applyUserCouponForAnonymous(couponCode));
     },
     releaseUserCoupon: () => {
       dispatch(releaseUserCoupon());
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     },
     selectDeliveryMode: (deliveryUssId, pinCode) => {
       dispatch(selectDeliveryMode(deliveryUssId, pinCode));
@@ -102,8 +121,8 @@ const mapDispatchToProps = dispatch => {
     softReservation: (pinCode, payload) => {
       dispatch(softReservation(pinCode, payload));
     },
-    getPaymentModes: () => {
-      dispatch(getPaymentModes());
+    getPaymentModes: guIdDetails => {
+      dispatch(getPaymentModes(guIdDetails));
     },
     showCouponModal: data => {
       dispatch(showModal(BANK_OFFERS, data));
@@ -147,15 +166,28 @@ const mapDispatchToProps = dispatch => {
     softReservationForCODPayment: pinCode => {
       dispatch(softReservationForCODPayment(pinCode));
     },
-    captureOrderExperience: (orderId, Rating) => {
-      dispatch(captureOrderExperience(orderId, Rating));
+    captureOrderExperience: async (orderId, Rating) => {
+      const response = await dispatch(captureOrderExperience(orderId, Rating));
+      if (response.status === SUCCESS) {
+        dispatch(displayToast(response.orderExperience.message));
+      }
     },
     binValidationForNetBanking: (paymentMode, binNo) => {
       dispatch(binValidationForNetBanking(paymentMode, binNo));
     },
-    softReservationPaymentForNetBanking: (paymentMode, bankName, pinCode) => {
+    softReservationPaymentForNetBanking: (
+      paymentMethodType,
+      paymentMode,
+      bankName,
+      pinCode
+    ) => {
       dispatch(
-        softReservationPaymentForNetBanking(paymentMode, bankName, pinCode)
+        softReservationPaymentForNetBanking(
+          paymentMethodType,
+          paymentMode,
+          bankName,
+          pinCode
+        )
       );
     },
     softReservationPaymentForSavedCard: (cardDetails, address, paymentMode) => {
@@ -165,12 +197,40 @@ const mapDispatchToProps = dispatch => {
     },
     softReservationForCliqCash: pinCode => {
       dispatch(softReservationForCliqCash(pinCode));
+    },
+    jusPayTokenizeForGiftCard: (cardDetails, paymentMode, guId) => {
+      dispatch(jusPayTokenizeForGiftCard(cardDetails, paymentMode, guId));
+    },
+    createJusPayOrderForGiftCardNetBanking: (bankName, guId) => {
+      dispatch(createJusPayOrderForGiftCardNetBanking(bankName, guId));
+    },
+    createJusPayOrderForGiftCardFromSavedCards: (cardDetails, guId) => {
+      dispatch(createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId));
+    },
+    addGiftCard: () => {
+      dispatch(showModal(GIFT_CARD_MODAL));
+    },
+    displayToast: message => {
+      dispatch(displayToast(message));
+    },
+    clearCaptureOrderExperience: () => {
+      dispatch(clearCaptureOrderExperience());
+    },
+    showSecondaryLoader: () => {
+      dispatch(showSecondaryLoader());
+    },
+    hideSecondaryLoader: () => {
+      dispatch(hideSecondaryLoader());
+    },
+    getPinCode: pinCode => {
+      dispatch(getPinCode(pinCode));
     }
   };
 };
 const mapStateToProps = state => {
   return {
-    cart: state.cart
+    cart: state.cart,
+    getPinCodeDetails: state.profile.getPinCodeDetails
   };
 };
 

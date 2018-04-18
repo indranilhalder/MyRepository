@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import ModalContainer from "./general/containers/ModalContainer";
-import { Route, Switch, Redirect } from "react-router-dom";
+import ToastContainer from "./general/containers/ToastContainer";
+import { Switch } from "react-router-dom";
+import Route from "./general/Route";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
 import HomeContainer from "./home/containers/HomeContainer.js";
@@ -9,6 +11,7 @@ import ProductDescriptionContainer from "./pdp/containers/ProductDescriptionCont
 import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
+import ErrorContainer from "./general/containers/ErrorContainer.js";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
 import BrandsLandingPageDefaultContainer from "./blp/containers/BrandsLandingPageDefaultContainer";
@@ -29,7 +32,7 @@ import UserAlertsAndCouponsContainer from "./account/containers/UserAlertsAndCou
 import MyAccountBrandsContainer from "./account/containers/MyAccountBrandsContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
-import HeaderWrapper from "./general/components/HeaderWrapper.js";
+import HeaderContainer from "./general/containers/HeaderContainer.js";
 import AllOrderContainer from "./account/containers/AllOrderContainer";
 import SavedCardContainer from "./account/containers/SavedCardContainer.js";
 import OrderDetailsContainer from "./account/containers/OrderDetailsContainer.js";
@@ -42,9 +45,11 @@ import AddAddressContainer from "./account/containers/AddAddressContainer.js";
 import SaveListContainer from "./account/containers/SaveListContainer";
 import CliqCashContainer from "./account/containers/CliqCashContainer.js";
 import GiftCardContainer from "./account/containers/GiftCardContainer";
-
+import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
+import AboutUsContainer from "./staticpage/containers/AboutUsContainer";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
-
+import CancelOrderContainer from "./account/containers/CancelOrderContainer";
+import UpdateProfileContainer from "./account/containers/UpdateProfileContainer.js";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -92,8 +97,23 @@ import {
   CATEGORY_PAGE_WITH_QUERY_PARAMS,
   CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
   BRAND_PAGE_WITH_QUERY_PARAMS,
-  BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS
+  BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
+  CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
+  BRAND_PRODUCT_LISTINGS_WITH_PAGE,
+  SKU_PAGE,
+  BRAND_AND_CATEGORY_PAGE,
+  CANCEL_PREFIX,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE,
+  REQUESTING,
+  ABOUT_US
 } from "../src/lib/constants";
+import {
+  globalAccessTokenSuccess,
+  customerAccessToken
+} from "./auth/actions/user.actions";
+import { cartDetailsCNCFailure } from "./cart/actions/cart.actions";
 
 const auth = {
   isAuthenticated: false
@@ -102,17 +122,17 @@ class App extends Component {
   async componentDidMount() {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     let loggedInUserDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsForLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
 
+    console.log(loggedInUserDetails);
+
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
     // Case 1. THe user is not logged in.
-
-    if (!globalAccessToken && !this.props.cart.loading) {
+    if (!globalAccessToken && !this.props.cartLoading) {
       await this.props.getGlobalAccessToken();
       globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     }
@@ -123,8 +143,25 @@ class App extends Component {
     }
 
     if (customerAccessToken) {
-      if (!cartDetailsForLoggedInUser && !this.props.cart.loading) {
+      if (!cartDetailsForLoggedInUser && !this.props.cartLoading) {
         this.props.generateCartIdForLoggedInUser();
+      }
+    }
+    if (
+      customerAccessToken &&
+      cartDetailsForLoggedInUser &&
+      loggedInUserDetails
+    ) {
+      if (
+        this.props.location.pathname.indexOf(LOGIN_PATH) !== -1 ||
+        this.props.location.pathname.indexOf(SIGN_UP_PATH) !== -1
+      ) {
+        if (this.props.redirectToAfterAuthUrl) {
+          this.props.history.push(this.props.redirectToAfterAuthUrl);
+          this.props.clearUrlToRedirectToAfterAuth();
+        } else {
+          this.props.history.push(`${HOME_ROUTER}`);
+        }
       }
     } else {
       if (!cartDetailsForAnonymous && globalAccessToken) {
@@ -143,14 +180,45 @@ class App extends Component {
 
   render() {
     let className = AppStyles.base;
+    const {
+      globalAccessTokenStatus,
+      customerAccessTokenStatus,
+      refreshCustomerAccessTokenStatus,
+      cartIdForLoggedInUserStatus,
+      cartIdForAnonymousUserStatus
+    } = this.props;
+
+    if (
+      globalAccessTokenStatus === REQUESTING ||
+      customerAccessTokenStatus === REQUESTING ||
+      refreshCustomerAccessTokenStatus === REQUESTING ||
+      cartIdForLoggedInUserStatus === REQUESTING ||
+      cartIdForAnonymousUserStatus === REQUESTING
+    ) {
+      return this.renderLoader();
+    }
+
     if (this.props.modalStatus) {
       className = AppStyles.blur;
     }
+
     return (
       <React.Fragment>
         <div className={className}>
-          <HeaderWrapper />
+          <HeaderContainer />
           <Switch>
+            {" "}
+            <Route exact path={ABOUT_US} component={AboutUsContainer} />
+            <Route
+              exact
+              path={CATEGORY_PRODUCT_LISTINGS_WITH_PAGE}
+              component={ProductListingsContainer}
+            />
+            <Route
+              exact
+              path={BRAND_PRODUCT_LISTINGS_WITH_PAGE}
+              component={ProductListingsContainer}
+            />
             <Route
               exact
               path={LOGIN_PATH}
@@ -158,6 +226,7 @@ class App extends Component {
                 <LoginContainer {...routeProps} {...this.props} />
               )}
             />
+            <Route path={CANCEL_PREFIX} component={CancelOrderContainer} />
             <Route
               exact
               path={SIGN_UP_PATH}
@@ -166,7 +235,6 @@ class App extends Component {
               )}
             />
             <Route path={RETURNS} component={ReturnFlowContainer} />
-
             <Route
               path={`${MY_ACCOUNT_PAGE}${SAVE_LIST_PAGE}`}
               component={SaveListContainer}
@@ -204,7 +272,6 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_CLIQ_CASH_PAGE}`}
               component={CliqCashContainer}
             />
-
             <Route
               exact
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_BRANDS_PAGE}`}
@@ -212,14 +279,8 @@ class App extends Component {
             />
             <Route
               exact
-              path={BRAND_PAGE}
-              component={PlpBrandCategoryWrapperContainer}
-            />
-
-            <Route
-              exact
-              path={BRAND_PAGE_WITH_QUERY_PARAMS}
-              component={PlpBrandCategoryWrapperContainer}
+              path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`}
+              component={UpdateProfileContainer}
             />
             <Route
               path={`${SHORT_URL_ORDER_DETAIL}`}
@@ -228,42 +289,55 @@ class App extends Component {
             <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
             <Route
               exact
+              path={BRAND_AND_CATEGORY_PAGE}
+              component={ProductListingsContainer}
+            />
+            <Route
+              exact
               path={CATEGORY_PAGE}
               component={PlpBrandCategoryWrapperContainer}
             />
-
+            <Route
+              exact
+              path={BRAND_PAGE}
+              component={PlpBrandCategoryWrapperContainer}
+            />
+            <Route
+              exact
+              path={BRAND_PAGE_WITH_QUERY_PARAMS}
+              component={PlpBrandCategoryWrapperContainer}
+            />
             <Route
               exact
               path={CATEGORY_PAGE_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={BRAND_PAGE_WITH_SLUG}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               strict
               path={CATEGORY_PAGE_WITH_SLUG}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               exact
               path={CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS}
               component={PlpBrandCategoryWrapperContainer}
             />
-
             <Route
               path={PRODUCT_DESCRIPTION_REVIEWS}
+              component={ProductReviewContainer}
+            />
+            <Route
+              path={PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG}
               component={ProductReviewContainer}
             />
             <Route
@@ -272,23 +346,25 @@ class App extends Component {
             />
             <Route
               exact
+              path={PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE}
+              component={ProductDescriptionPageWrapperContainer}
+            />
+            <Route
+              exact
               path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
               component={ProductDescriptionPageWrapperContainer}
             />
-
             <Route
               exact
               path={PRODUCT_LISTINGS}
               component={ProductListingsContainer}
             />
-
             <Route exact path={HOME_ROUTER} component={HomeContainer} />
             <Route
               exact
               path={MAIN_ROUTER}
               render={routeProps => <Auth {...routeProps} {...this.props} />}
             />
-
             <Route
               exact
               path={PRODUCT_FILTER_ROUTER}
@@ -341,10 +417,15 @@ class App extends Component {
               path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_ADD_PAGE}`}
               component={AddAddressContainer}
             />
+            {/* This *has* to be at the bottom */}
+            <Route exact path={SKU_PAGE} component={ProductListingsContainer} />
           </Switch>
+          <SecondaryLoaderContainer />
           <MobileFooter />
 
           <ModalContainer />
+          <ErrorContainer />
+          <ToastContainer />
         </div>
       </React.Fragment>
     );

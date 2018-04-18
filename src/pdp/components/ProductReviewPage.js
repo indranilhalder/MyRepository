@@ -6,10 +6,14 @@ import WriteReview from "./WriteReview";
 import PropTypes from "prop-types";
 import RatingHolder from "./RatingHolder";
 import PdpFrame from "./PdpFrame";
+import throttle from "lodash/throttle";
+import { Redirect } from "react-router-dom";
+import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
 import {
   MOBILE_PDP_VIEW,
   PRODUCT_REVIEWS_PATH_SUFFIX,
-  SUCCESS
+  SUCCESS,
+  LOGIN_PATH
 } from "../../lib/constants";
 import find from "lodash/find";
 import * as Cookie from "../../lib/Cookie";
@@ -19,67 +23,152 @@ import {
   GLOBAL_ACCESS_TOKEN,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  ANONYMOUS_USER
+  ANONYMOUS_USER,
+  REVIEW_SUBMIT_TOAST_TEXT
 } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
+const PRODUCT_QUANTITY = "1";
 
 class ProductReviewPage extends Component {
-  state = {
-    visible: false
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: false,
+      sort: "byDate",
+      orderBy: "asc"
+    };
+    this.filterOptions = [
+      { label: "Oldest First", value: "byDate_asc" },
+      { label: "Newest First", value: "byDate_desc" },
+      { label: "Negative First", value: "byRating_asc" },
+      { label: "Positive First", value: "byRating_desc" }
+    ];
+  }
+
+  handleScroll = () => {
+    return throttle(() => {
+      if (
+        this.props.reviews &&
+        this.props.reviews.pageNumber + 1 < this.props.reviews.totalNoOfPages
+      ) {
+        const windowHeight =
+          "innerHeight" in window
+            ? window.innerHeight
+            : document.documentElement.offsetHeight;
+        const body = document.body;
+        const html = document.documentElement;
+        const docHeight = Math.max(
+          body.scrollHeight,
+          body.offsetHeight,
+          html.clientHeight,
+          html.scrollHeight,
+          html.offsetHeight
+        );
+        const windowBottom = windowHeight + window.pageYOffset;
+        if (windowBottom >= docHeight) {
+          window.scrollBy(0, -200);
+          this.props.getProductReviews(
+            this.props.match.params[0],
+            this.props.reviews.pageNumber + 1,
+            this.state.orderBy,
+            this.state.sort
+          );
+        }
+      }
+    }, 2000);
   };
 
   componentDidMount() {
-    if (!this.props.productDetails) {
-      this.props.getProductDescription(this.props.match.params[1]);
-    }
-    this.props.getProductReviews(this.props.match.params[1]);
+    this.throttledScroll = this.handleScroll();
+    window.addEventListener("scroll", this.throttledScroll);
+    this.props.getProductDescription(this.props.match.params[0]);
+    this.props.getProductReviews(
+      this.props.match.params[0],
+      0,
+      this.state.orderBy,
+      this.state.sort
+    );
+  }
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.throttledScroll);
   }
 
   reviewSection = () => {
-    if (this.state.visible === false) {
-      this.setState({ visible: true });
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (!userDetails || !customerCookie) {
+      this.props.history.push(LOGIN_PATH);
     } else {
-      this.setState({ visible: false });
+      this.setState(prevState => ({ visible: !prevState.visible }));
     }
   };
 
   onSubmit = productReview => {
-    this.props.addProductReview(
-      this.props.productDetails.productListingId,
-      productReview
-    );
+    if (!productReview.rating) {
+      this.props.displayToast("Please give rating");
+      return false;
+    }
+    if (!productReview.headline) {
+      this.props.displayToast("Please enter title");
+      return false;
+    }
+    if (!productReview.comment) {
+      this.props.displayToast("Please enter comment");
+      return false;
+    } else {
+      this.props.addProductReview(
+        this.props.productDetails.productListingId,
+        productReview
+      );
+      this.setState({ visible: false });
+    }
   };
+  onCancel() {
+    this.setState({ visible: false });
+  }
   renderReviewSection = () => {
     if (this.state.visible) {
-      return <WriteReview onSubmit={this.onSubmit} />;
+      return (
+        <WriteReview
+          onSubmit={val => this.onSubmit(val)}
+          onCancel={() => this.onCancel()}
+        />
+      );
     }
   };
 
   addProductToBag = () => {
     let productDetails = {};
+    productDetails.code = this.props.productDetails.productListingId;
+    productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.ussId = this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (userDetails) {
-      productDetails.userId = JSON.parse(userDetails).customerInfo.mobileNumber;
-      productDetails.accessToken = JSON.parse(customerCookie).access_token;
-      productDetails.cartId = JSON.parse(cartDetailsLoggedInUser).code;
-    } else {
-      productDetails.userId = ANONYMOUS_USER;
-      productDetails.accessToken = JSON.parse(globalCookie).access_token;
-      productDetails.cartId = JSON.parse(cartDetailsForAnonymous).guid;
-    }
-    this.props.addProductToCart(productDetails);
-  };
-  addProductToWishList = () => {
-    if (this.props.addProductToWishList) {
-      let productDetails = {};
-      productDetails.listingId = this.props.productDetails.productListingId;
-      this.props.addProductToWishList(productDetails);
+      if (
+        cartDetailsLoggedInUser !== undefined &&
+        customerCookie !== undefined
+      ) {
+        this.props.addProductToCart(
+          JSON.parse(userDetails).userName,
+          JSON.parse(cartDetailsLoggedInUser).code,
+          JSON.parse(customerCookie).access_token,
+          productDetails
+        );
+      }
+    } else if (cartDetailsForAnonymous) {
+      this.props.addProductToCart(
+        ANONYMOUS_USER,
+        JSON.parse(cartDetailsForAnonymous).guid,
+        JSON.parse(globalCookie).access_token,
+        productDetails
+      );
     }
   };
 
@@ -97,7 +186,25 @@ class ProductReviewPage extends Component {
     }
   }
 
+  changeFilterValues = val => {
+    let filterValues = val.split("_");
+    this.setState({ sort: filterValues[0], orderBy: filterValues[1] });
+
+    this.props.getProductReviews(
+      this.props.match.params[0],
+      0,
+      filterValues[1],
+      filterValues[0]
+    );
+  };
+
   render() {
+    if (this.props.loadingForAddProduct || this.props.loading) {
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
+    }
+
     if (this.props.productDetails) {
       const mobileGalleryImages =
         this.props.productDetails &&
@@ -113,9 +220,10 @@ class ProductReviewPage extends Component {
 
       return (
         <PdpFrame
+          {...this.props.productDetails}
           addProductToBag={() => this.addProductToBag()}
           addProductToWishList={() => this.addProductToWishList()}
-          gotoPreviousPage={this.goBack}
+          gotoPreviousPage={() => this.goBack()}
         >
           <div className={styles.base}>
             <div className={styles.productBackground}>
@@ -123,20 +231,46 @@ class ProductReviewPage extends Component {
                 productImage={mobileGalleryImages[0]}
                 productName={this.props.productDetails.brandName}
                 productMaterial={this.props.productDetails.productName}
-                price={this.props.productDetails.winningSellerMOP}
-                discountPrice={this.props.productDetails.mrp}
+                price={
+                  this.props.productDetails &&
+                  this.props.productDetails.winningSellerPrice &&
+                  this.props.productDetails.winningSellerPrice
+                    .formattedValueNoDecimal
+                }
+                discountPrice={
+                  this.props.productDetails &&
+                  this.props.productDetails.mrpPrice &&
+                  this.props.productDetails.mrpPrice.formattedValueNoDecimal
+                }
                 averageRating={this.props.productDetails.averageRating}
                 totalNoOfReviews={this.props.productDetails.productReviewsCount}
               />
-
               <RatingHolder ratingData={this.props.ratingData} />
             </div>
-            <div className={styles.reviewText} onClick={this.reviewSection}>
-              {WRITE_REVIEW_TEXT}
+            <div className={styles.dropDownHolder}>
+              <div className={styles.dropDownBox}>
+                <SelectBoxMobile
+                  theme="hollowBox"
+                  label="Oldest First"
+                  onChange={changedValue =>
+                    this.changeFilterValues(changedValue)
+                  }
+                  options={this.filterOptions}
+                  textStyle={{ fontSize: 14 }}
+                />
+              </div>
+              <div className={styles.reviewText} onClick={this.reviewSection}>
+                {WRITE_REVIEW_TEXT}
+              </div>
             </div>
-            {this.renderReviewSection()}
+            <div className={styles.reviewHolder}>
+              {this.renderReviewSection()}
+            </div>
             {this.props.reviews && (
-              <ReviewList reviewList={this.props.reviews.reviews} />
+              <ReviewList
+                reviewList={this.props.reviews.reviews}
+                totalNoOfReviews={this.props.reviews.totalNoOfPages}
+              />
             )}
           </div>
         </PdpFrame>

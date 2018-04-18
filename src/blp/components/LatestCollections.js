@@ -19,7 +19,7 @@ export default class LatestCollections extends React.Component {
     return (
       <div
         className={styles.base}
-        style={{ "background-color": feedComponentData.startHexCode }}
+        style={{ backgroundColor: feedComponentData.startHexCode }}
       >
         <div
           className={styles.LatestCollectionsHolder}

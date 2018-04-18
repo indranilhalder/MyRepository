@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./ProductDetailsMainCard.css";
 import StarRating from "../../general/components/StarRating.js";
 import { Icon } from "xelpmoc-core";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import arrowIcon from "../../general/components/img/arrow.svg";
 import PropTypes from "prop-types";
 export default class ProductDetailsMainCard extends React.Component {
@@ -10,16 +11,31 @@ export default class ProductDetailsMainCard extends React.Component {
       this.props.onClick();
     }
   }
+
+  handleBrandClick() {
+    if (this.props.brandUrl) {
+      const urlSuffix = this.props.brandUrl.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
+    }
+  }
   render() {
     const displayPrice = this.props.discountPrice
       ? this.props.discountPrice
       : this.props.price;
-
+    let averageRating = "";
+    if (this.props.averageRating) {
+      averageRating = Math.floor(this.props.averageRating);
+    }
     return (
       <div className={styles.base}>
         <div className={styles.productInfo}>
           <div className={styles.productDescriptionSection}>
-            <div className={styles.productName}>{this.props.productName}</div>
+            <div
+              className={styles.productName}
+              onClick={() => this.handleBrandClick()}
+            >
+              {this.props.productName}
+            </div>
             <div className={styles.productDescription}>
               {this.props.productDescription}
             </div>
@@ -28,27 +44,32 @@ export default class ProductDetailsMainCard extends React.Component {
             <div className={styles.price}>{displayPrice}</div>
             {this.props.discountPrice &&
               this.props.discountPrice !== this.props.price && (
-                <div className={styles.priceCancelled}>{this.props.price}</div>
+                <div className={styles.priceCancelled}>
+                  <span className={styles.cancelPrice}>{this.props.price}</span>
+                  <span className={styles.discount}>
+                    {this.props.discount && `(${this.props.discount}%)`}
+                  </span>
+                </div>
               )}
           </div>
         </div>
-        <div className={styles.ratingHolder}>
-          {this.props.averageRating && (
+        {this.props.averageRating && (
+          <div className={styles.ratingHolder}>
             <StarRating averageRating={this.props.averageRating}>
               {this.props.averageRating && (
                 <div
                   className={styles.ratingText}
                   onClick={() => this.handleClick()}
                 >
-                  Rating {this.props.averageRating}/5
+                  Rating {`${averageRating}`} /5
                 </div>
               )}
               <div className={styles.arrowHolder}>
                 <Icon image={arrowIcon} size={15} />
               </div>
             </StarRating>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -59,5 +80,6 @@ ProductDetailsMainCard.propTypes = {
   price: PropTypes.string,
   discountPrice: PropTypes.string,
   averageRating: PropTypes.number,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  discount: PropTypes.string
 };

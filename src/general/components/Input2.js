@@ -30,6 +30,11 @@ export default class Input2 extends React.Component {
       }
     });
   }
+  handleKeyUp = event => {
+    if (this.props.onKeyUp) {
+      this.props.onKeyUp(event);
+    }
+  };
   render() {
     let className = styles.base;
     if (this.props.isWhite) {
@@ -60,7 +65,9 @@ export default class Input2 extends React.Component {
               onBlur={event => this.handleBlur(event)}
               onChange={event => this.handleChange(event)}
               style={{ ...this.props.textStyle }}
+              onKeyUp={event => this.handleKeyUp(event)}
               value={this.props.value}
+              maxLength={this.props.maxLength}
             />
           </div>
           {this.props.leftChild && (

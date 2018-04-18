@@ -2,21 +2,27 @@ import React from "react";
 import styles from "./AddressBook.css";
 import Button from "../../general/components/Button.js";
 import AddressItemFooter from "./AddressItemFooter.js";
-import MDSpinner from "react-md-spinner";
+import Loader from "../../general/components/Loader";
 import {
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
-  MY_ACCOUNT_ADDRESS_ADD_PAGE
+  MY_ACCOUNT_ADDRESS_ADD_PAGE,
+  ADDRESS_BOOK
 } from "../../lib/constants.js";
+
 const ADDRESS_BOOK_HEADER = "Add a new address";
 const DELETE_LABEL = "Delete";
 const EDIT_LABEL = "Edit";
+const NO_ADDRESS_TEXT = "No Saved Address";
 
 export default class AddressBook extends React.Component {
   componentDidMount() {
+    this.props.setHeaderText(ADDRESS_BOOK);
     this.props.getUserAddress();
   }
-
+  componentDidUpdate() {
+    this.props.setHeaderText(ADDRESS_BOOK);
+  }
   removeAddress = addressId => {
     if (this.props.removeAddress) {
       this.props.removeAddress(addressId);
@@ -24,11 +30,7 @@ export default class AddressBook extends React.Component {
   };
 
   renderLoader = () => {
-    return (
-      <div className={styles.loadingIndicator}>
-        <MDSpinner />
-      </div>
-    );
+    return <Loader />;
   };
 
   editAddress = address => {
@@ -74,6 +76,10 @@ export default class AddressBook extends React.Component {
               </div>
             );
           })}
+        {this.props.userAddress &&
+          !this.props.userAddress.addresses && (
+            <div className={styles.noAddressBlock}>{NO_ADDRESS_TEXT}</div>
+          )}
         <div className={styles.buttonHolder}>
           <div className={styles.button}>
             <Button
@@ -90,9 +96,16 @@ export default class AddressBook extends React.Component {
     );
   };
   render() {
-    if (this.props.renderLoader) {
+    if (this.props.loading && !this.props.userAddress) {
       return this.renderLoader();
+    } else {
+      if (this.props.loading) {
+        this.props.showSecondaryLoader();
+      } else {
+        this.props.hideSecondaryLoader();
+      }
     }
+
     return this.renderAddressBook();
   }
 }

@@ -23,6 +23,7 @@ export default class SelectBoxMobile extends React.Component {
         : this.props.options ? this.props.options[0].label : ""
     };
   }
+
   handleChange(event) {
     const selectedValue = event.target.value;
     const selectedLabel = this.props.options
@@ -37,6 +38,14 @@ export default class SelectBoxMobile extends React.Component {
         this.props.onChange(this.state.value);
       }
     });
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value !== this.state.value) {
+      this.setState({ value: nextProps.value });
+    }
+    if (nextProps.label !== this.state.label) {
+      this.setState({ label: nextProps.label });
+    }
   }
   render() {
     let arrow = GreyArrow;
@@ -71,6 +80,7 @@ export default class SelectBoxMobile extends React.Component {
           name={this.props.name}
           className={styles.hideSelect}
           onChange={event => this.handleChange(event)}
+          value={this.state.value}
         >
           {this.props.options &&
             this.props.options.map((item, i) => {

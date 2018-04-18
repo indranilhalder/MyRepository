@@ -1,0 +1,27 @@
+.base {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  position: relative;
+  padding: 15px 65px 15px 15px;
+  border-radius: 4px;
+}
+.headingText {
+  width: 100%;
+  color: #000000;
+  font-size: 14px;
+  font-family: regular;
+  margin: auto;
+  text-align: left;
+  line-height: 25px;
+}
+.button {
+  width: auto;
+  height: 25px;
+  position: absolute;
+  right: 15px;
+  line-height: 16px;
+  top: 0px;
+  bottom: 0;
+  margin: auto;
+}

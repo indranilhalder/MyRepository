@@ -7,6 +7,7 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash/each";
+import * as ErrorHandling from "../../general/ErrorHandling.js";
 import {
   CUSTOMER_ACCESS_TOKEN,
   GLOBAL_ACCESS_TOKEN,
@@ -15,8 +16,27 @@ import {
   FAILURE_UPPERCASE,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  JUS_PAY_PENDING,
+  JUS_PAY_CHARGED,
+  FAILURE_LOWERCASE
 } from "../../lib/constants";
+import {
+  setDataLayer,
+  ADOBE_CART_TYPE,
+  setDataLayerForCartDirectCalls,
+  ADOBE_REMOVE_ITEM,
+  ADOBE_ORDER_CONFIRMATION,
+  ADOBE_CHECKOUT_TYPE,
+  ADOBE_CALLS_FOR_CHANGE_QUANTITY,
+  ADOBE_CALLS_FOR_APPLY_COUPON_SUCCESS,
+  ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
+  setDataLayerForOrderConfirmationDirectCalls,
+  ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS,
+  ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE
+} from "../../lib/adobeUtils";
+
+export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
 export const USER_CART_PATH = "v2/mpl/users";
 export const CART_PATH = "v2/mpl";
 export const ALL_STORES_PATH = "v2/mpl/allStores";
@@ -63,12 +83,19 @@ export const EMI_BANKING_DETAILS_REQUEST = "EMI_BANKING_DETAILS_REQUEST";
 export const EMI_BANKING_DETAILS_SUCCESS = "EMI_BANKING_DETAILS_SUCCESS";
 export const EMI_BANKING_DETAILS_FAILURE = "EMI_BANKING_DETAILS_FAILURE";
 
-export const GENERATE_CART_ID_REQUEST = "GENERATE_CART_ID_REQUEST";
-export const GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS =
-  "GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS";
-export const GENERATE_CART_ID_FAILURE = "GENERATE_CART_ID_FAILURE";
-export const GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS =
-  "GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS";
+export const GENERATE_CART_ID_FOR_ANONYMOUS_USER_REQUEST =
+  "GENERATE_CART_ID_FOR_ANONYMOUS_USER_REQUEST";
+export const GENERATE_CART_ID_FOR_ANONYMOUS_USER_SUCCESS =
+  "GENERATE_CART_ID_FOR_ANONYMOUS_USER_SUCCESS";
+export const GENERATE_CART_ID_FOR_ANONYMOUS_USER_FAILURE =
+  "GENERATE_CART_ID_FOR_ANONYMOUS_USER_FAILURE";
+
+export const GENERATE_CART_ID_FOR_LOGGED_IN_USER_REQUEST =
+  "GENERATE_CART_ID_FOR_LOGGED_IN_USER_REQUEST";
+export const GENERATE_CART_ID_FOR_LOGGED_IN_USER_SUCCESS =
+  "GENERATE_CART_ID_FOR_LOGGED_IN_USER_SUCCESS";
+export const GENERATE_CART_ID_FOR_LOGGED_IN_USER_FAILURE =
+  "GENERATE_CART_ID_FOR_LOGGED_IN_USER_FAILURE";
 
 export const CART_DETAILS_REQUEST = "CART_DETAILS_REQUEST";
 export const CART_DETAILS_SUCCESS = "CART_DETAILS_SUCCESS";
@@ -154,6 +181,8 @@ export const JUS_PAY_PAYMENT_METHOD_TYPE_REQUEST =
   "JUS_PAY_PAYMENT_METHOD_TYPE_REQUEST";
 export const JUS_PAY_PAYMENT_METHOD_TYPE_SUCCESS =
   "JUS_PAY_PAYMENT_METHOD_TYPE_SUCCESS";
+export const JUS_PAY_PAYMENT_METHOD_TYPE_FOR_GIFT_CARD_SUCCESS =
+  "JUS_PAY_PAYMENT_METHOD_TYPE_FOR_GIFT_CARD_SUCCESS";
 export const JUS_PAY_PAYMENT_METHOD_TYPE_FAILURE =
   "JUS_PAY_PAYMENT_METHOD_TYPE_FAILURE";
 
@@ -197,6 +226,8 @@ export const ORDER_EXPERIENCE_CAPTURE_SUCCESS =
 export const ORDER_EXPERIENCE_CAPTURE_FAILURE =
   "ORDER_EXPERIENCE_CAPTURE_FAILURE";
 
+export const CLEAR_ORDER_EXPERIENCE_CAPTURE = "CLEAR_ORDER_EXPERIENCE_CAPTURE";
+
 export const ADD_PRODUCT_TO_WISH_LIST_REQUEST =
   "ADD_PRODUCT_TO_WISH_LIST_REQUEST";
 export const ADD_PRODUCT_TO_WISH_LIST_SUCCESS =
@@ -232,12 +263,80 @@ export const UPDATE_QUANTITY_IN_CART_LOGGED_OUT_SUCCESS =
 export const UPDATE_QUANTITY_IN_CART_LOGGED_OUT_FAILURE =
   "UPDATE_QUANTITY_IN_CART_LOGGED_OUT_FAILURE";
 
+export const DISPLAY_COUPON_REQUEST = "DISPLAY_COUPON_REQUEST";
+export const DISPLAY_COUPON_SUCCESS = "DISPLAY_COUPON_SUCCESS";
+export const DISPLAY_COUPON_FAILURE = "DISPLAY_COUPON_FAILURE";
+
 export const PAYMENT_MODE = "credit card";
-const pincode = 229001;
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
 const MY_WISH_LIST = "MyWishList";
 export const ANONYMOUS_USER = "anonymous";
+
+export function displayCouponRequest() {
+  return {
+    type: DISPLAY_COUPON_REQUEST,
+    status: REQUESTING
+  };
+}
+export function displayCouponSuccess(couponDetails) {
+  return {
+    type: DISPLAY_COUPON_SUCCESS,
+    status: SUCCESS,
+    couponDetails
+  };
+}
+
+export function displayCouponFailure(error) {
+  return {
+    type: DISPLAY_COUPON_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function displayCouponsForLoggedInUser(userId, accessToken, cartId) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(displayCouponRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${userId}/displayCouponOffers?access_token=${accessToken}&cartGuid=${cartId}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+
+      dispatch(displayCouponSuccess(resultJson));
+    } catch (e) {
+      dispatch(displayCouponFailure(e.message));
+    }
+  };
+}
+
+export function displayCouponsForAnonymous(userId, accessToken) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(displayCouponRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${userId}/displayOpenCouponOffers?access_token=${accessToken}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(displayCouponSuccess(resultJson));
+    } catch (e) {
+      dispatch(displayCouponFailure(e.message));
+    }
+  };
+}
 
 export function cartDetailsRequest() {
   return {
@@ -270,12 +369,19 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
         `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetails?access_token=${accessToken}&isPwa=true&platformNumber=2&pincode=${pinCode}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
-      dispatch(cartDetailsSuccess(resultJson));
+      setDataLayer(
+        ADOBE_CART_TYPE,
+        resultJson,
+        getState().icid.value,
+        getState().icid.icidType
+      );
+      return dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
-      dispatch(cartDetailsFailure(e.message));
+      return dispatch(cartDetailsFailure(e.message));
     }
   };
 }
@@ -307,7 +413,8 @@ export function getCartDetailsCNC(
   accessToken,
   cartId,
   pinCode,
-  isSoftReservation
+  isSoftReservation,
+  isSetDataLayer: false
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(cartDetailsCNCRequest());
@@ -349,58 +456,23 @@ export function getCartDetailsCNC(
 
         dispatch(softReservation(pinCode, productItems));
       }
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      // setting data layer only for first time
+      if (isSetDataLayer) {
+        setDataLayer(
+          ADOBE_CHECKOUT_TYPE,
+          resultJson,
+          getState().icid.value,
+          getState().icid.icidType
+        );
       }
       dispatch(cartDetailsCNCSuccess(resultJson));
     } catch (e) {
       dispatch(cartDetailsCNCFailure(e.message));
-    }
-  };
-}
-
-export function getCouponsRequest() {
-  return {
-    type: GET_COUPON_REQUEST,
-    status: REQUESTING
-  };
-}
-export function getCouponsSuccess(coupons) {
-  return {
-    type: GET_COUPON_SUCCESS,
-    status: SUCCESS,
-    coupons
-  };
-}
-
-export function getCouponsFailure(error) {
-  return {
-    type: GET_CART_ID_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-export function getCoupons(couponCode) {
-  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  return async (dispatch, getState, { api }) => {
-    dispatch(getCouponsRequest());
-    try {
-      const result = await api.get(
-        `${USER_CART_PATH}/${
-          JSON.parse(userDetails).userName
-        }/getCoupons?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&currentPage=0&usedCoupon=N&isPwa=true&platformNumber=2`
-      );
-      const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
-      }
-      dispatch(getCouponsSuccess(resultJson));
-    } catch (e) {
-      dispatch(getCouponsFailure(e.message));
     }
   };
 }
@@ -411,10 +483,12 @@ export function applyUserCouponRequest() {
     status: REQUESTING
   };
 }
-export function applyUserCouponSuccess() {
+export function applyUserCouponSuccess(couponResult, couponCode) {
   return {
     type: APPLY_USER_COUPON_SUCCESS,
-    status: SUCCESS
+    status: SUCCESS,
+    couponResult,
+    couponCode
   };
 }
 
@@ -426,26 +500,82 @@ export function applyUserCouponFailure(error) {
   };
 }
 
-export function applyUserCoupon(couponCode) {
-  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+export function applyUserCouponForAnonymous(couponCode) {
+  const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+  const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  let cartId = JSON.parse(cartDetailsAnonymous).guid;
   return async (dispatch, getState, { api }) => {
     dispatch(applyUserCouponRequest());
+    let couponObject = new FormData();
+    couponObject.append("access_token", JSON.parse(globalCookie).access_token);
+    couponObject.append("couponCode", couponCode);
+    couponObject.append("channel", "Mobile");
+
     try {
-      const result = await api.get(
-        `${USER_CART_PATH}/${
-          JSON.parse(userDetails).userName
-        }/carts/applyCoupons?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartId}&couponCode=${couponCode}`
+      const result = await api.postFormData(
+        `${USER_CART_PATH}/anonymous/carts/${cartId}/applyCouponsAnonymous?`,
+        couponObject
       );
+
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        setDataLayerForCartDirectCalls(
+          ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
+          couponCode
+        );
+        throw new Error(resultJsonStatus.message);
       }
-      dispatch(applyUserCouponSuccess());
+      setDataLayerForCartDirectCalls(
+        ADOBE_CALLS_FOR_APPLY_COUPON_SUCCESS,
+        couponCode
+      );
+      dispatch(applyUserCouponSuccess(resultJson, couponCode));
+    } catch (e) {
+      dispatch(applyUserCouponFailure(e.message));
+    }
+  };
+}
+
+export function applyUserCouponForLoggedInUsers(couponCode) {
+  return async (dispatch, getState, { api }) => {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    let cartGuId = JSON.parse(cartDetails).guid;
+
+    dispatch(applyUserCouponRequest());
+    let couponObject = new FormData();
+
+    couponObject.append("couponCode", couponCode);
+    couponObject.append("cartGuid", cartGuId);
+
+    try {
+      const result = await api.postFormData(
+        `${USER_CART_PATH}/${JSON.parse(userDetails).userName}/carts/${
+          JSON.parse(cartDetails).code
+        }/applyCoupons?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2`,
+        couponObject
+      );
+
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        setDataLayerForCartDirectCalls(
+          ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
+          couponCode
+        );
+        throw new Error(resultJsonStatus.message);
+      }
+      setDataLayerForCartDirectCalls(
+        ADOBE_CALLS_FOR_APPLY_COUPON_SUCCESS,
+        couponCode
+      );
+      dispatch(applyUserCouponSuccess(resultJson, couponCode));
     } catch (e) {
       dispatch(applyUserCouponFailure(e.message));
     }
@@ -473,7 +603,37 @@ export function releaseUserCouponFailure(error) {
   };
 }
 
-export function releaseUserCoupon(couponCode) {
+export function releaseCouponForAnonymous(oldCouponCode, newCouponCode) {
+  const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+  const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  let cartId = JSON.parse(cartDetailsAnonymous).guid;
+
+  return async (dispatch, getState, { api }) => {
+    dispatch(releaseUserCouponRequest());
+    let couponObject = new FormData();
+    couponObject.append("access_token", JSON.parse(globalCookie).access_token);
+    couponObject.append("couponCode", oldCouponCode);
+
+    try {
+      const result = await api.postFormData(
+        `${USER_CART_PATH}/anonymous/carts/${cartId}/releaseCouponsAnonymous?`,
+        couponObject
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(releaseUserCouponSuccess());
+      dispatch(applyUserCouponForAnonymous(newCouponCode));
+    } catch (e) {
+      dispatch(releaseUserCouponFailure(e.message));
+    }
+  };
+}
+
+export function releaseUserCoupon(oldCouponCode, newCouponCode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -487,13 +647,16 @@ export function releaseUserCoupon(couponCode) {
           JSON.parse(userDetails).userName
         }/carts/${cartId}/releaseCoupons?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=2&couponCode=${couponCode}&cartGuid=${cartGuId}`
+        }&isPwa=true&platformNumber=2&couponCode=${oldCouponCode}&cartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(releaseUserCouponSuccess());
+      dispatch(applyUserCouponForLoggedInUsers(newCouponCode));
     } catch (e) {
       dispatch(releaseUserCouponFailure(e.message));
     }
@@ -537,8 +700,10 @@ export function getUserAddress() {
         }&access_token=${JSON.parse(customerCookie).access_token}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
@@ -553,7 +718,6 @@ export function addUserAddressRequest(error) {
     status: REQUESTING
   };
 }
-
 export function addUserAddressSuccess() {
   return {
     type: ADD_USER_ADDRESS_SUCCESS,
@@ -602,8 +766,10 @@ export function addUserAddress(userAddress, fromAccount) {
         }&town=${userAddress.town}&defaultFlag=${userAddress.defaultFlag}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(addUserAddressSuccess());
@@ -639,7 +805,7 @@ export function selectDeliveryMode(deliveryUssId, pinCode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
 
   return async (dispatch, getState, { api }) => {
-    dispatch(userAddressRequest());
+    dispatch(selectDeliveryModeRequest());
     try {
       const result = await api.post(
         `${USER_CART_PATH}/${JSON.parse(userDetails).userName}/carts/${
@@ -649,8 +815,10 @@ export function selectDeliveryMode(deliveryUssId, pinCode) {
         }&deliverymodeussId=${JSON.stringify(deliveryUssId)}&removeExchange=0`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(
@@ -696,7 +864,7 @@ export function addAddressToCart(addressId, pinCode) {
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
-    dispatch(userAddressRequest());
+    dispatch(addAddressToCartRequest());
     try {
       let userId = JSON.parse(userDetails).userName;
       let access_token = JSON.parse(customerCookie).access_token;
@@ -705,8 +873,10 @@ export function addAddressToCart(addressId, pinCode) {
         `${USER_CART_PATH}/${userId}/addAddressToOrder?channel=mobile&access_token=${access_token}&addressId=${addressId}&cartId=${cartId}&removeExchangeFromCart=0`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(getCartDetailsCNC(userId, access_token, cartId, pinCode, false));
       dispatch(addAddressToCartSuccess());
@@ -752,8 +922,10 @@ export function getNetBankDetails() {
         }`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(netBankingDetailsSuccess(resultJson));
@@ -796,8 +968,10 @@ export function getEmiBankDetails(price) {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(resultJson.message);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(emiBankingDetailsSuccess(resultJson));
@@ -807,32 +981,33 @@ export function getEmiBankDetails(price) {
   };
 }
 
-export function generateCartIdRequest() {
+export function generateCartidForLoggedInUserRequest() {
   return {
-    type: GENERATE_CART_ID_REQUEST,
+    type: GENERATE_CART_ID_FOR_LOGGED_IN_USER_REQUEST,
     status: REQUESTING
+  };
+}
+
+export function generateCartIdForLoggedInUserFailure(error) {
+  return {
+    type: GENERATE_CART_ID_FOR_LOGGED_IN_USER_FAILURE,
+    status: FAILURE,
+    error
   };
 }
 export function generateCartIdForLoggedInUserSuccess(cartDetails) {
   return {
-    type: GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS,
+    type: GENERATE_CART_ID_FOR_LOGGED_IN_USER_SUCCESS,
     status: SUCCESS,
     cartDetails
   };
 }
 
-export function generateCartIdFailure(error) {
-  return {
-    type: GENERATE_CART_ID_FAILURE,
-    status: ERROR,
-    error
-  };
-}
 export function generateCartIdForLoggedInUser() {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
-    dispatch(generateCartIdRequest());
+    dispatch(generateCartidForLoggedInUserRequest());
 
     try {
       const result = await api.post(
@@ -843,29 +1018,47 @@ export function generateCartIdForLoggedInUser() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       return dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
     } catch (e) {
-      return dispatch(generateCartIdFailure(e.message));
+      return dispatch(generateCartIdForLoggedInUserFailure(e.message));
     }
   };
 }
 
-export function generateCartIdAnonymousSuccess(cartDetails) {
+export function generateCartIdForAnonymousUserSuccess(cartDetails) {
   return {
-    type: GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS,
+    type: GENERATE_CART_ID_FOR_ANONYMOUS_USER_SUCCESS,
     status: SUCCESS,
     cartDetails
+  };
+}
+
+export function generateCartdIdForAnonymousUserRequest() {
+  return {
+    type: GENERATE_CART_ID_FOR_ANONYMOUS_USER_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function generateCartIdForAnonymousUserFailure(error) {
+  return {
+    type: GENERATE_CART_ID_FOR_ANONYMOUS_USER_FAILURE,
+    error,
+    status: FAILURE
   };
 }
 
 export function generateCartIdForAnonymous() {
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
-    dispatch(generateCartIdRequest());
+    dispatch(generateCartdIdForAnonymousUserRequest());
 
     try {
       const result = await api.post(
@@ -874,12 +1067,14 @@ export function generateCartIdForAnonymous() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
-      return dispatch(generateCartIdAnonymousSuccess(resultJson));
+      return dispatch(generateCartIdForAnonymousUserSuccess(resultJson));
     } catch (e) {
-      return dispatch(generateCartIdFailure(e.message));
+      return dispatch(generateCartIdForAnonymousUserFailure(e.message));
     }
   };
 }
@@ -946,8 +1141,11 @@ export function getOrderSummary(pincode) {
         }&pincode=${pincode}&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(orderSumarySuccess(resultJson));
     } catch (e) {
@@ -971,8 +1169,9 @@ export function getCartId() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       return dispatch(getCartIdSuccess(resultJson));
     } catch (e) {
@@ -1007,7 +1206,6 @@ export function mergeCartId(cartGuId) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-
   return async (dispatch, getState, { api }) => {
     dispatch(mergeCardIdRequest());
     try {
@@ -1023,8 +1221,9 @@ export function mergeCartId(cartGuId) {
         }&toMergeCartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       return dispatch(mergeCartIdSuccess(resultJson));
@@ -1070,8 +1269,10 @@ export function checkPinCodeServiceAvailability(
         `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=${productCode}&pin=${pinCode}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(checkPinCodeServiceAvailabilitySuccess(resultJson));
     } catch (e) {
@@ -1115,8 +1316,10 @@ export function getAllStoresCNC(pinCode) {
         }`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(getAllStoresCNCSuccess(resultJson.stores));
     } catch (e) {
@@ -1166,8 +1369,10 @@ export function addStoreCNC(ussId, slaveId) {
         }&slaveId=${slaveId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(addStoreCNCSuccess(resultJson));
     } catch (e) {
@@ -1217,10 +1422,21 @@ export function addPickupPersonCNC(personMobile, personName) {
         }&isPwa=true&platformNumber=2&personMobile=${personMobile}&personName=${personName}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(addPickUpPersonSuccess(resultJson));
+      dispatch(
+        getCartDetailsCNC(
+          JSON.parse(userDetails).userName,
+          JSON.parse(customerCookie).access_token,
+          cartId,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+          false
+        )
+      );
     } catch (e) {
       dispatch(addPickUpPersonFailure(e.message));
     }
@@ -1270,8 +1486,10 @@ export function softReservation(pinCode, payload) {
       );
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(getOrderSummary());
       dispatch(softReservationSuccess(resultJson.reservationItem));
@@ -1306,7 +1524,7 @@ export function paymentModesFailure(error) {
 }
 
 // Action Creator for Soft Reservation
-export function getPaymentModes(pinCode, payload) {
+export function getPaymentModes(guIdDetails) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -1315,19 +1533,20 @@ export function getPaymentModes(pinCode, payload) {
   return async (dispatch, getState, { api }) => {
     dispatch(paymentModesRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/getPaymentModes?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=2&cartGuid=${cartId}`,
-        payload
+        }&isPwa=true&platformNumber=2`,
+        guIdDetails
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
-      }
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
       dispatch(paymentModesSuccess(resultJson));
     } catch (e) {
       dispatch(paymentModesFailure(e.message));
@@ -1373,8 +1592,10 @@ export function applyBankOffer(couponCode) {
         }&isPwa=true&platformNumber=2&paymentMode=${PAYMENT_MODE}&couponCode=${couponCode}&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(applyBankOfferSuccess(resultJson));
     } catch (e) {
@@ -1419,8 +1640,10 @@ export function releaseBankOffer(couponCode) {
         }&paymentMode=${PAYMENT_MODE}&couponCode=${couponCode}&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(releaseBankOfferSuccess());
     } catch (e) {
@@ -1470,10 +1693,11 @@ export function applyCliqCash() {
         }&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
-      }
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
       dispatch(applyCliqCashSuccess(resultJson));
     } catch (e) {
       dispatch(applyCliqCashFailure(e.message));
@@ -1522,8 +1746,10 @@ export function removeCliqCash() {
         }&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(removeCliqCashSuccess(resultJson));
     } catch (e) {
@@ -1562,19 +1788,24 @@ export function binValidation(paymentMode, binNo) {
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
+    let paymentTypeObject = new FormData();
+    paymentTypeObject.append("cartGuid", cartId);
+    paymentTypeObject.append("binNo", binNo);
     dispatch(binValidationRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/binValidation?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=2&paymentMode=${paymentMode}&binNo=${binNo}&cartGuid=${cartId}`
+        }&isPwa=true&platformNumber=2&paymentMode=${paymentMode}`,
+        paymentTypeObject
       );
       const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (resultJson.error) {
-        throw new Error(resultJson.error);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(binValidationSuccess(resultJson));
@@ -1590,18 +1821,24 @@ export function binValidationForNetBanking(paymentMode, bankName) {
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
+    let paymentTypeObject = new FormData();
+    paymentTypeObject.append("cartGuid", cartId);
+    paymentTypeObject.append("binNo", "");
     dispatch(binValidationRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/binValidation?channel=mobile&access_token=${
           JSON.parse(customerCookie).access_token
-        }&bankName=${bankName}&binNo=&cartGuid=${cartId}&paymentMode=${paymentMode}`
+        }&bankName=${bankName}&paymentMode=${paymentMode}`,
+        paymentTypeObject
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(binValidationSuccess(resultJson));
@@ -1676,9 +1913,10 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
         productItems
       );
       const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(softReservationForPaymentSuccess(resultJson));
       dispatch(jusPayTokenize(cardDetails, address, productItems, paymentMode));
@@ -1689,6 +1927,7 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
 }
 
 export function softReservationPaymentForNetBanking(
+  paymentMethodType,
   paymentMode,
   bankName,
   pinCode
@@ -1734,11 +1973,20 @@ export function softReservationPaymentForNetBanking(
         productItems
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
-      dispatch(createJusPayOrderForNetBanking(bankName, pinCode, productItems));
+      dispatch(
+        createJusPayOrderForNetBanking(
+          paymentMethodType,
+          bankName,
+          pinCode,
+          productItems
+        )
+      );
     } catch (e) {
       dispatch(softReservationForPaymentFailure(e.message));
     }
@@ -1790,9 +2038,10 @@ export function softReservationPaymentForSavedCard(
         productItems
       );
       const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(createJusPayOrderForSavedCards(cardDetails, productItems));
@@ -1844,17 +2093,14 @@ export function softReservationForCliqCash(pinCode) {
         productItems
       );
       const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        dispatch(softReservationForPaymentSuccess(resultJson));
-        dispatch(createJusPayOrderForCliqCash(pinCode, productItems));
-      } else {
-        throw new Error(resultJson.error);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
+      dispatch(softReservationForPaymentSuccess(resultJson));
+      dispatch(createJusPayOrderForCliqCash(pinCode, productItems));
     } catch (e) {
       dispatch(softReservationForPaymentFailure(e.message));
     }
@@ -1893,20 +2139,22 @@ export function jusPayTokenize(
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(jusPayTokenizeRequest());
+    let cardObject = new FormData();
+    cardObject.append("card_exp_month", cardDetails.monthValue);
+    cardObject.append("card_exp_year", cardDetails.yearValue);
+    cardObject.append("card_number", cardDetails.cardNumber);
+    cardObject.append("card_security_code", cardDetails.cvvNumber);
+    cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+    cardObject.append("name_on_card", cardDetails.cardName);
     try {
-      const result = await api.postJusPay(
-        `card/tokenize?card_exp_month=${cardDetails.monthValue}&card_exp_year=${
-          cardDetails.yearValue
-        }&card_number=${cardDetails.cardNumber}&card_security_code=${
-          cardDetails.cvvNumber
-        }&merchant_id=${getState().cart.paymentModes.merchantID}&name_on_card=${
-          cardDetails.cardName
-        }`
-      );
+      const result = await api.postJusPay(`card/tokenize?`, cardObject);
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      dispatch(jusPayTokenizeSuccess(resultJson.token));
       dispatch(
         createJusPayOrder(
           resultJson.token,
@@ -1914,6 +2162,38 @@ export function jusPayTokenize(
           address,
           cardDetails,
           paymentMode
+        )
+      );
+    } catch (e) {
+      dispatch(jusPayTokenizeFailure(e.message));
+    }
+  };
+}
+
+export function jusPayTokenizeForGiftCard(cardDetails, paymentMode, guId) {
+  return async (dispatch, getState, { api }) => {
+    let cardObject = new FormData();
+    cardObject.append("card_exp_month", cardDetails.monthValue);
+    cardObject.append("card_exp_year", cardDetails.yearValue);
+    cardObject.append("card_number", cardDetails.cardNumber);
+    cardObject.append("card_security_code", cardDetails.cvvNumber);
+    cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+    cardObject.append("name_on_card", cardDetails.cardName);
+    dispatch(jusPayTokenizeRequest());
+    try {
+      const result = await api.postJusPay(`card/tokenize?`, cardObject);
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(
+        createJusPayOrderForGiftCard(
+          resultJson.token,
+          cardDetails,
+          paymentMode,
+          guId
         )
       );
     } catch (e) {
@@ -1989,8 +2269,9 @@ export function createJusPayOrder(
         cartItem
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(
         jusPayPaymentMethodType(
@@ -2005,7 +2286,54 @@ export function createJusPayOrder(
   };
 }
 
-export function createJusPayOrderForNetBanking(bankName, pinCode, cartItem) {
+export function createJusPayOrderForGiftCard(
+  token,
+  cardDetails,
+  paymentMode,
+  guId
+) {
+  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  let cartId = JSON.parse(cartDetails).guid;
+  return async (dispatch, getState, { api }) => {
+    let orderDetails = getState().cart.cartDetailsCNC;
+    dispatch(createJusPayOrderRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/createJuspayOrder?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&firstName=&lastName=&addressLine1=&addressLine2=&addressLine3=&country=&city=&state=&pincode=&cardSaved=true&sameAsShipping=true&cartGuid=${guId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(
+        jusPayPaymentMethodTypeForGiftCard(
+          resultJson.juspayOrderId,
+          cardDetails,
+          paymentMode,
+          guId
+        )
+      );
+    } catch (e) {
+      dispatch(createJusPayOrderFailure(e.message));
+    }
+  };
+}
+
+export function createJusPayOrderForNetBanking(
+  paymentMethodType,
+  bankName,
+  pinCode,
+  cartItem
+) {
   let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -2024,12 +2352,52 @@ export function createJusPayOrderForNetBanking(bankName, pinCode, cartItem) {
         cartItem
       );
       const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(
-        jusPayPaymentMethodTypeForNetBanking(resultJson.juspayOrderId, bankName)
+        jusPayPaymentMethodTypeForNetBanking(
+          paymentMethodType,
+          resultJson.juspayOrderId,
+          bankName
+        )
+      );
+    } catch (e) {
+      dispatch(createJusPayOrderFailure(e.message));
+    }
+  };
+}
+
+export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
+  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+  return async (dispatch, getState, { api }) => {
+    dispatch(createJusPayOrderRequest());
+
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=&city=&cartGuid=${guId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&juspayUrl=${jusPayUrl}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(
+        jusPayPaymentMethodTypeForGiftCardNetBanking(
+          resultJson.juspayOrderId,
+          bankName,
+          guId
+        )
       );
     } catch (e) {
       dispatch(createJusPayOrderFailure(e.message));
@@ -2062,14 +2430,56 @@ export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
         cartItem
       );
       const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(
         jusPayPaymentMethodTypeForSavedCards(
           resultJson.juspayOrderId,
           cardDetails
+        )
+      );
+    } catch (e) {
+      dispatch(createJusPayOrderFailure(e.message));
+    }
+  };
+}
+
+export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
+  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+  return async (dispatch, getState, { api }) => {
+    dispatch(createJusPayOrderRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&addressLine3=&sameAsShipping=null&cardSaved=false&bankName=${
+          cardDetails.cardIssuer
+        }&
+        cardFingerPrint=${cardDetails.cardFingerprint}&platform=2&pincode=${
+          cardDetails.pinCode
+        }&city=&cartGuid=${guId}&token=&cardRefNo=${
+          cardDetails.cardReferenceNumber
+        }&country=&addressLine1=&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&juspayUrl=${jusPayUrl}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(
+        jusPayPaymentMethodTypeForGiftCardFromSavedCards(
+          resultJson.juspayOrderId,
+          cardDetails,
+          guId
         )
       );
     } catch (e) {
@@ -2097,16 +2507,13 @@ export function createJusPayOrderForCliqCash(pinCode, cartItem) {
         cartItem
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        dispatch(createJusPayOrderSuccessForCliqCash(resultJson));
-        dispatch(generateCartIdForLoggedInUser());
-      } else {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      dispatch(createJusPayOrderSuccessForCliqCash(resultJson));
+      dispatch(generateCartIdForLoggedInUser());
     } catch (e) {
       dispatch(createJusPayOrderFailure(e.message));
     }
@@ -2152,11 +2559,70 @@ export function jusPayPaymentMethodTypeSuccess(justPayPaymentDetails) {
   };
 }
 
+export function jusPayPaymentMethodTypeForGiftCardSuccess(
+  justPayPaymentDetails,
+  guId
+) {
+  // Here we need to dispatch an action to cre
+  return {
+    type: JUS_PAY_PAYMENT_METHOD_TYPE_FOR_GIFT_CARD_SUCCESS,
+    status: SUCCESS,
+    justPayPaymentDetails,
+    guId
+  };
+}
+
 export function jusPayPaymentMethodTypeFailure(error) {
   return {
     type: JUS_PAY_PAYMENT_METHOD_TYPE_FAILURE,
     status: ERROR,
     error
+  };
+}
+
+export function jusPayPaymentMethodTypeForGiftCard(
+  juspayOrderId,
+  cardDetails,
+  paymentMode,
+  guId
+) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(jusPayPaymentMethodTypeRequest());
+    try {
+      let cardObject = new FormData();
+      cardObject.append("payment_method_type", "CARD");
+      cardObject.append("redirect_after_payment", "true");
+      cardObject.append("format", "json");
+      cardObject.append("card_exp_month", cardDetails.monthValue);
+      cardObject.append("card_exp_year", cardDetails.yearValue);
+      cardObject.append("card_number", cardDetails.cardNumber);
+      cardObject.append("card_security_code", cardDetails.cvvNumber);
+      cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+      cardObject.append("name_on_card", cardDetails.cardName);
+      cardObject.append("order_id", juspayOrderId);
+      cardObject.append("save_to_locker", "1");
+      if (paymentMode === PAYMENT_EMI) {
+        cardObject.append("emi_bank", cardDetails.emi_bank);
+        cardObject.append("emi_tenure", cardDetails.emi_tenure);
+        cardObject.append("is_emi", cardDetails.is_emi);
+      }
+      const result = await api.postJusPay(`txns?`, cardObject);
+      const resultJson = await result.json();
+
+      if (
+        resultJson.status === JUS_PAY_PENDING ||
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === JUS_PAY_CHARGED
+      ) {
+        dispatch(jusPayPaymentMethodTypeForGiftCardSuccess(resultJson, guId));
+      } else {
+        throw new Error(resultJson.error_message);
+      }
+    } catch (e) {
+      dispatch(jusPayPaymentMethodTypeFailure(e.message));
+    }
   };
 }
 
@@ -2169,42 +2635,38 @@ export function jusPayPaymentMethodType(
   return async (dispatch, getState, { api }) => {
     dispatch(jusPayPaymentMethodTypeRequest());
     try {
-      let url;
+      let cardObject = new FormData();
+      cardObject.append("payment_method_type", "CARD");
+      cardObject.append("redirect_after_payment", "true");
+      cardObject.append("format", "json");
+      cardObject.append("card_exp_month", cardDetails.monthValue);
+      cardObject.append("card_exp_year", cardDetails.yearValue);
+      cardObject.append("card_number", cardDetails.cardNumber);
+      cardObject.append("card_security_code", cardDetails.cvvNumber);
+      cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+      cardObject.append("name_on_card", cardDetails.cardName);
+      cardObject.append("order_id", juspayOrderId);
+      cardObject.append("save_to_locker", "1");
       if (paymentMode === PAYMENT_EMI) {
-        url = `txns?payment_method_type=CARD&redirect_after_payment=true&format=json&card_exp_month=${
-          cardDetails.monthValue
-        }&card_exp_year=${cardDetails.yearValue}&card_number=${
-          cardDetails.cardNumber
-        }&emi_bank=${cardDetails.emi_bank}&emi_tenure=${
-          cardDetails.emi_tenure
-        }&is_emi=${cardDetails.is_emi}&card_security_code=${
-          cardDetails.cvvNumber
-        }&merchant_id=${getState().cart.paymentModes.merchantID}&name_on_card=${
-          cardDetails.cardName
-        }&order_id=${juspayOrderId}&save_to_locker=1`;
-      } else {
-        url = `txns?payment_method_type=CARD&redirect_after_payment=true&format=json&card_exp_month=${
-          cardDetails.monthValue
-        }&card_exp_year=${cardDetails.yearValue}&card_number=${
-          cardDetails.cardNumber
-        }&card_security_code=${cardDetails.cvvNumber}&merchant_id=${
-          getState().cart.paymentModes.merchantID
-        }&name_on_card=${
-          cardDetails.cardName
-        }&order_id=${juspayOrderId}&save_to_locker=true`;
+        cardObject.append("emi_bank", cardDetails.emi_bank);
+        cardObject.append("emi_tenure", cardDetails.emi_tenure);
+        cardObject.append("is_emi", cardDetails.is_emi);
       }
-      const result = await api.postJusPay(url);
-      const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE) {
+      const result = await api.postJusPay(`txns?`, cardObject);
+      const resultJson = await result.json();
+      if (
+        resultJson.status === JUS_PAY_PENDING ||
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === JUS_PAY_CHARGED
+      ) {
+        dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+        dispatch(generateCartIdForLoggedInUser());
+      } else {
         throw new Error(resultJson.error_message);
       }
-
-      // so this happens
-      // here I need to dispatch an action to get a new cart
-      // that cart will be for a logged in user.
-      dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
-      dispatch(generateCartIdForLoggedInUser());
     } catch (e) {
       dispatch(jusPayPaymentMethodTypeFailure(e.message));
     }
@@ -2217,43 +2679,141 @@ export function jusPayPaymentMethodTypeForSavedCards(
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(jusPayPaymentMethodTypeRequest());
+    let cardObject = new FormData();
+    cardObject.append("payment_method_type", "CARD");
+    cardObject.append("redirect_after_payment", "true");
+    cardObject.append("format", "json");
+    cardObject.append("card_security_code", cardDetails.cvvNumber);
+    cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+    cardObject.append("card_token", cardDetails.cardToken);
+    cardObject.append("order_id", juspayOrderId);
+
     try {
-      const result = await api.postJusPay(
-        `txns?payment_method_type=CARD&redirect_after_payment=true&format=json&card_security_code=${
-          cardDetails.cvvNumber
-        }&card_token=${cardDetails.cardToken}&merchant_id=${
-          getState().cart.paymentModes.merchantID
-        }&order_id=${juspayOrderId}`
-      );
+      const result = await api.postJusPay(`txns?`, cardObject);
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === JUS_PAY_PENDING ||
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === JUS_PAY_CHARGED
+      ) {
+        dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+        dispatch(generateCartIdForLoggedInUser());
+      } else {
         throw new Error(resultJson.error_message);
       }
-      dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
-      dispatch(generateCartIdForLoggedInUser());
     } catch (e) {
       dispatch(jusPayPaymentMethodTypeFailure(e.message));
     }
   };
 }
 
-export function jusPayPaymentMethodTypeForNetBanking(juspayOrderId, bankName) {
+export function jusPayPaymentMethodTypeForGiftCardFromSavedCards(
+  juspayOrderId,
+  cardDetails,
+  guId
+) {
   return async (dispatch, getState, { api }) => {
+    let cardObject = new FormData();
+    cardObject.append("payment_method_type", "CARD");
+    cardObject.append("redirect_after_payment", "true");
+    cardObject.append("format", "json");
+    cardObject.append("card_security_code", cardDetails.cvvNumber);
+    cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+    cardObject.append("card_token", cardDetails.cardToken);
+    cardObject.append("order_id", juspayOrderId);
     dispatch(jusPayPaymentMethodTypeRequest());
+
     try {
-      const result = await api.postJusPay(
-        `txns?payment_method_type=NB&redirect_after_payment=true&format=json&merchant_id=${
-          getState().cart.paymentModes.merchantID
-        }&order_id=${juspayOrderId}&payment_method=${bankName}`
-      );
+      const result = await api.postJusPay(`txns?`, cardObject);
       const resultJson = await result.json();
 
-      if (resultJson.status === FAILURE) {
+      if (
+        resultJson.status === JUS_PAY_PENDING ||
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === JUS_PAY_CHARGED
+      ) {
+        dispatch(jusPayPaymentMethodTypeForGiftCardSuccess(resultJson, guId));
+      } else {
         throw new Error(resultJson.error_message);
       }
-      dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
-      dispatch(generateCartIdForLoggedInUser());
+    } catch (e) {
+      dispatch(jusPayPaymentMethodTypeFailure(e.message));
+    }
+  };
+}
+
+export function jusPayPaymentMethodTypeForNetBanking(
+  paymentMethodType,
+  juspayOrderId,
+  bankName
+) {
+  return async (dispatch, getState, { api }) => {
+    let cardObject = new FormData();
+    cardObject.append("payment_method_type", paymentMethodType);
+    cardObject.append("redirect_after_payment", "true");
+    cardObject.append("format", "json");
+    cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+    cardObject.append("order_id", juspayOrderId);
+    cardObject.append("payment_method", bankName);
+
+    dispatch(jusPayPaymentMethodTypeRequest());
+    dispatch(jusPayPaymentMethodTypeRequest());
+    try {
+      const result = await api.postJusPay(`txns?`, cardObject);
+      const resultJson = await result.json();
+
+      if (
+        resultJson.status === JUS_PAY_PENDING ||
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === JUS_PAY_CHARGED
+      ) {
+        dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+        dispatch(generateCartIdForLoggedInUser());
+      } else {
+        throw new Error(resultJson.error_message);
+      }
+    } catch (e) {
+      dispatch(jusPayPaymentMethodTypeFailure(e.message));
+    }
+  };
+}
+
+export function jusPayPaymentMethodTypeForGiftCardNetBanking(
+  juspayOrderId,
+  bankName,
+  guId
+) {
+  return async (dispatch, getState, { api }) => {
+    let cardObject = new FormData();
+    cardObject.append("payment_method_type", "NB");
+    cardObject.append("redirect_after_payment", "true");
+    cardObject.append("format", "json");
+    cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
+    cardObject.append("order_id", juspayOrderId);
+    cardObject.append("payment_method", bankName);
+    dispatch(jusPayPaymentMethodTypeRequest());
+    try {
+      const result = await api.postJusPay(`txns?`, cardObject);
+      const resultJson = await result.json();
+
+      if (
+        resultJson.status === JUS_PAY_PENDING ||
+        resultJson.status === SUCCESS ||
+        resultJson.status === SUCCESS_CAMEL_CASE ||
+        resultJson.status === SUCCESS_UPPERCASE ||
+        resultJson.status === JUS_PAY_CHARGED
+      ) {
+        dispatch(jusPayPaymentMethodTypeForGiftCardSuccess(resultJson, guId));
+      } else {
+        throw new Error(resultJson.error_message);
+      }
     } catch (e) {
       dispatch(jusPayPaymentMethodTypeFailure(e.message));
     }
@@ -2266,25 +2826,36 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
   return async (dispatch, getState, { api }) => {
+    let paymentObject = new FormData();
+    paymentObject.append("paymentMode", paymentMode);
+    paymentObject.append("juspayOrderID", juspayOrderID);
+    paymentObject.append("cartGuid", cartId);
+
     dispatch(updateTransactionDetailsRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/updateTransactionDetailsforCard?access_token=${
           JSON.parse(customerCookie).access_token
-        }&platformNumber=2&isPwa=true&paymentMode=${paymentMode}&juspayOrderID=${juspayOrderID}&cartGuid=${cartId}`
+        }&platformNumber=2&isPwa=true`,
+        paymentObject
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_CAMEL_CASE ||
-        resultJson === SUCCESS_UPPERCASE
-      ) {
-        dispatch(updateTransactionDetailsSuccess(resultJson));
-        dispatch(orderConfirmation(resultJson.orderId));
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        setDataLayerForOrderConfirmationDirectCalls(
+          ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE,
+          resultJsonStatus.message
+        );
+        throw new Error(resultJsonStatus.message);
       }
-      throw new Error(resultJson.error);
+      setDataLayerForOrderConfirmationDirectCalls(
+        ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS
+      );
+      dispatch(updateTransactionDetailsSuccess(resultJson));
+      dispatch(orderConfirmation(resultJson.orderId));
     } catch (e) {
       dispatch(updateTransactionDetailsFailure(e.message));
     }
@@ -2329,10 +2900,17 @@ export function orderConfirmation(orderId) {
         }&platformNumber=2`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
-      }
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      setDataLayer(
+        ADOBE_ORDER_CONFIRMATION,
+        resultJson,
+        getState().icid.value,
+        getState().icid.icidType
+      );
       dispatch(orderConfirmationSuccess(resultJson));
     } catch (e) {
       dispatch(orderConfirmationFailure(e.message));
@@ -2363,6 +2941,12 @@ export function captureOrderExperienceFailure(error) {
   };
 }
 
+export function clearCaptureOrderExperience() {
+  return {
+    type: CLEAR_ORDER_EXPERIENCE_CAPTURE
+  };
+}
+
 // Action Creator for Order Confirmation
 export function captureOrderExperience(orderId, rating) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -2378,13 +2962,15 @@ export function captureOrderExperience(orderId, rating) {
         }&ratings=${rating}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
-      dispatch(captureOrderExperienceSuccess(resultJson));
+      return dispatch(captureOrderExperienceSuccess(resultJson));
     } catch (e) {
-      dispatch(captureOrderExperienceFailure(e.message));
+      return dispatch(captureOrderExperienceFailure(e.message));
     }
   };
 }
@@ -2430,8 +3016,10 @@ export function getCODEligibility() {
         }&isPwa=true&platformNumber=2&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(getCODEligibilitySuccess(resultJson));
     } catch (e) {
@@ -2471,18 +3059,24 @@ export function binValidationForCOD(paymentMode) {
   const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   const cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
+    let paymentTypeObject = new FormData();
+    paymentTypeObject.append("cartGuid", cartId);
+
     dispatch(binValidationForCODRequest());
     try {
-      const result = await api.post(
+      const result = await api.postFormData(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/binValidation?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=2&paymentMode=${paymentMode}&cartGuid=${cartId}`
+        }&isPwa=true&platformNumber=2&paymentMode=${paymentMode}`,
+        paymentTypeObject
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(binValidationForCODSuccess(resultJson));
     } catch (e) {
@@ -2531,8 +3125,10 @@ export function updateTransactionDetailsForCOD(paymentMode, juspayOrderID) {
         }&platformNumber=2&isPwa=true&paymentMode=${paymentMode}&juspayOrderID=${juspayOrderID}&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(orderConfirmation(resultJson.orderId));
     } catch (e) {
@@ -2599,8 +3195,10 @@ export function softReservationForCODPayment(pinCode) {
         productItems
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(updateTransactionDetailsForCOD(CASH_ON_DELIVERY, ""));
       dispatch(softReservationForCODPaymentSuccess(resultJson));
@@ -2651,8 +3249,10 @@ export function addProductToWishList(productDetails) {
         }&wishlistName=${MY_WISH_LIST}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(addProductToWishListSuccess());
     } catch (e) {
@@ -2700,9 +3300,12 @@ export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
         }&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
       dispatch(
         getCartDetails(
           JSON.parse(userDetails).userName,
@@ -2710,8 +3313,14 @@ export function removeItemFromCartLoggedIn(cartListItemPosition, pinCode) {
           cartId,
           pinCode
         )
-      ).then(() => {
-        dispatch(removeItemFromCartLoggedInSuccess());
+      ).then(cartDetails => {
+        if (cartDetails.status === SUCCESS) {
+          setDataLayerForCartDirectCalls(
+            ADOBE_REMOVE_ITEM,
+            cartDetails.cartDetails
+          );
+          dispatch(removeItemFromCartLoggedInSuccess());
+        }
       });
     } catch (e) {
       dispatch(removeItemFromCartLoggedInFailure(e.message));
@@ -2756,8 +3365,10 @@ export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
         }&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(
         getCartDetails(
@@ -2766,8 +3377,14 @@ export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
           JSON.parse(cartDetailsAnonymous).guid,
           pinCode
         )
-      ).then(() => {
-        dispatch(removeItemFromCartLoggedOutSuccess());
+      ).then(cartDetails => {
+        if (cartDetails.status === SUCCESS) {
+          setDataLayerForCartDirectCalls(
+            ADOBE_REMOVE_ITEM,
+            cartDetails.cartDetails
+          );
+          dispatch(removeItemFromCartLoggedOutSuccess());
+        }
       });
     } catch (e) {
       dispatch(removeItemFromCartLoggedOutFailure(e.message));
@@ -2817,8 +3434,10 @@ export function updateQuantityInCartLoggedIn(selectedItem, quantity, pinCode) {
         }&isPwa=true&platformNumber=2&quantity=${quantity}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(
         getCartDetails(
@@ -2827,8 +3446,11 @@ export function updateQuantityInCartLoggedIn(selectedItem, quantity, pinCode) {
           cartId,
           pinCode
         )
-      ).then(() => {
-        dispatch(updateQuantityInCartLoggedInSuccess(resultJson));
+      ).then(cartDetails => {
+        if (cartDetails.status === SUCCESS) {
+          setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_CHANGE_QUANTITY);
+          dispatch(updateQuantityInCartLoggedInSuccess(resultJson));
+        }
       });
     } catch (e) {
       dispatch(updateQuantityInCartLoggedInFailure(e.message));
@@ -2877,8 +3499,10 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
       );
 
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE_UPPERCASE) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(
@@ -2888,11 +3512,20 @@ export function updateQuantityInCartLoggedOut(selectedItem, quantity, pinCode) {
           JSON.parse(cartDetailsAnonymous).guid,
           pinCode
         )
-      ).then(() => {
-        dispatch(updateQuantityInCartLoggedOutSuccess(resultJson));
+      ).then(cartDetails => {
+        if (cartDetails.status === SUCCESS) {
+          setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_CHANGE_QUANTITY);
+          dispatch(updateQuantityInCartLoggedOutSuccess(resultJson));
+        }
       });
     } catch (e) {
       dispatch(updateQuantityInCartLoggedOutFailure(e.message));
     }
+  };
+}
+
+export function clearCartDetails() {
+  return {
+    type: CLEAR_CART_DETAILS
   };
 }

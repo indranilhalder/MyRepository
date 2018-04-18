@@ -13,7 +13,7 @@ import queryString from "query-string";
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-import { HOME_ROUTER } from "../../lib/constants";
+import { SUCCESS } from "../../lib/constants";
 import {
   CASH_ON_DELIVERY,
   ORDER_PREFIX,
@@ -25,14 +25,20 @@ import {
   RETURNS_REASON,
   SHORT_URL_ORDER_DETAIL,
   SEARCH_RESULTS_PAGE,
-  PRODUCT_REVIEWS_PATH_SUFFIX
+  PRODUCT_REVIEWS_PATH_SUFFIX,
+  CANCEL
 } from "../../lib/constants";
 const dateFormat = "DD MMM YYYY";
-const PRODUCT_Returned = "Return Product";
-const PRODUCT_Cancel = "Cancel Product";
+const PRODUCT_RETURN = "Return";
+const PRODUCT_CANCEL = "Cancel";
 const AWB_POPUP_TRUE = "Y";
 const AWB_POPUP_FALSE = "N";
 export default class OrderDetails extends React.Component {
+  onClickImage(productCode) {
+    if (productCode) {
+      this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    }
+  }
   requestInvoice(ussid, sellerOrderNo) {
     if (this.props.sendInvoice) {
       this.props.sendInvoice(ussid, sellerOrderNo);
@@ -55,6 +61,15 @@ export default class OrderDetails extends React.Component {
       });
     }
   }
+  cancelItem(transactionId, ussid, orderCode) {
+    this.props.history.push({
+      pathname: `${CANCEL}/${orderCode}`,
+      state: {
+        transactionId: transactionId,
+        ussid: ussid
+      }
+    });
+  }
   writeReview(productCode) {
     this.props.history.push(
       `${SEARCH_RESULTS_PAGE}p-${productCode.toLowerCase()}${PRODUCT_REVIEWS_PATH_SUFFIX}`
@@ -63,7 +78,6 @@ export default class OrderDetails extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
     if (
       userDetails &&
       customerCookie &&
@@ -71,6 +85,7 @@ export default class OrderDetails extends React.Component {
     ) {
       const orderCode = queryString.parse(this.props.location.search).orderCode;
       this.props.fetchOrderDetails(orderCode);
+      this.props.setHeaderText(`#${orderCode}`);
     } else if (
       userDetails &&
       customerCookie &&
@@ -78,6 +93,7 @@ export default class OrderDetails extends React.Component {
     ) {
       const orderCode = this.props.match.params.orderCode;
       this.props.fetchOrderDetails(orderCode);
+      this.props.setHeaderText(`#${orderCode}`);
     }
   }
   updateRefundDetailsPopUp(orderId, transactionId) {
@@ -88,8 +104,34 @@ export default class OrderDetails extends React.Component {
       this.props.showModal(orderDetails);
     }
   }
+
+  componentDidUpdate(prevProps) {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (
+      userDetails &&
+      customerCookie &&
+      this.props.match.path === `${ORDER_PREFIX}`
+    ) {
+      const orderCode = queryString.parse(this.props.location.search).orderCode;
+      this.props.setHeaderText(`#${orderCode}`);
+    } else if (
+      userDetails &&
+      customerCookie &&
+      this.props.match.path === `${SHORT_URL_ORDER_DETAIL}`
+    ) {
+      const orderCode = this.props.match.params.orderCode;
+      this.props.setHeaderText(`#${orderCode}`);
+    }
+  }
+
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.sendInvoiceSatus === SUCCESS) {
+      this.props.displayToast("Invoice has been sent");
+    }
   }
   render() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -98,7 +140,6 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
-
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -119,6 +160,7 @@ export default class OrderDetails extends React.Component {
                   price={products.price}
                   discountPrice={""}
                   productName={products.productName}
+                  onClick={() => this.onClickImage(products.productcode)}
                 />
 
                 <div className={styles.payment}>
@@ -133,8 +175,8 @@ export default class OrderDetails extends React.Component {
 
                 <OrderPaymentMethod
                   phoneNumber={
-                    orderDetails.billingAddress &&
-                    orderDetails.billingAddress.phone
+                    orderDetails.deliveryAddress &&
+                    orderDetails.deliveryAddress.phone
                   }
                   paymentMethod={orderDetails.paymentMethod}
                   isInvoiceAvailable={products.isInvoiceAvailable}
@@ -163,18 +205,57 @@ export default class OrderDetails extends React.Component {
                 )}
                 {products.awbPopupLink === AWB_POPUP_FALSE && (
                   <div className={styles.buttonHolder}>
-                    <OrderReturn
-                      buttonLabel={
-                        products.isReturned === false
-                          ? PRODUCT_Cancel
-                          : PRODUCT_Returned
-                      }
-                      isEditable={true}
-                      replaceItem={() => this.replaceItem()}
-                      writeReview={val =>
-                        this.writeReview(products.productcode)
-                      }
-                    />
+                    <div className={styles.buttonHolderForUpdate}>
+                      <div className={styles.replaceHolder}>
+                        {products.isReturned && (
+                          <div
+                            className={styles.review}
+                            onClick={() =>
+                              this.replaceItem(
+                                products.sellerorderno,
+                                orderDetails.paymentMethod,
+                                products.transactionId
+                              )
+                            }
+                          >
+                            <UnderLinedButton
+                              label={PRODUCT_RETURN}
+                              color="#000"
+                            />
+                          </div>
+                        )}
+                        {products.cancel && (
+                          <div
+                            className={styles.review}
+                            onClick={() =>
+                              this.cancelItem(
+                                products.transactionId,
+                                products.USSID,
+                                products.sellerorderno
+                              )
+                            }
+                          >
+                            <UnderLinedButton
+                              label={PRODUCT_CANCEL}
+                              color="#000"
+                            />
+                          </div>
+                        )}
+                      </div>
+                      <div className={styles.reviewHolder}>
+                        <div
+                          className={styles.replace}
+                          onClick={val =>
+                            this.writeReview(products.productcode)
+                          }
+                        >
+                          <UnderLinedButton
+                            label="Write a review"
+                            color="#ff1744"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
                 {products.awbPopupLink === AWB_POPUP_TRUE && (
@@ -197,19 +278,40 @@ export default class OrderDetails extends React.Component {
                         </div>
                       </div>
                       <div className={styles.reviewHolder}>
-                        <div
-                          className={styles.review}
-                          replaceItem={() => this.replaceItem()}
-                        >
-                          <UnderLinedButton
-                            label={
-                              products.isReturned === false
-                                ? PRODUCT_Cancel
-                                : PRODUCT_Returned
+                        {products.isReturned && (
+                          <div
+                            className={styles.review}
+                            onClick={() =>
+                              this.replaceItem(
+                                products.sellerorderno,
+                                orderDetails.paymentMethod,
+                                products.transactionId
+                              )
                             }
-                            color="#ff1744"
-                          />
-                        </div>
+                          >
+                            <UnderLinedButton
+                              label={PRODUCT_RETURN}
+                              color="#ff1744"
+                            />
+                          </div>
+                        )}
+                        {products.cancel && (
+                          <div
+                            className={styles.review}
+                            onClick={() =>
+                              this.cancelItem(
+                                products.transactionId,
+                                products.USSID,
+                                products.sellerorderno
+                              )
+                            }
+                          >
+                            <UnderLinedButton
+                              label={PRODUCT_CANCEL}
+                              color="#ff1744"
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -4,7 +4,7 @@ export default class DeliveryInfoSelect extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCode: ""
+      selectedCode: props.selected
     };
   }
   handleSelect(val) {
@@ -31,6 +31,8 @@ export default class DeliveryInfoSelect extends React.Component {
               onSelect={val => this.handleSelect(val)}
               onPiq={val => this.onPiq(val)}
               showCliqAndPiqButton={true}
+              available={datum.desc}
+              isClickable={this.props.isClickable}
             />
           );
         })}

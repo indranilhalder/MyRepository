@@ -9,9 +9,12 @@ export const SIZE_GUIDE = "SizeGuide";
 export const SORT = "Sort";
 export const ADDRESS = "Address";
 export const EMI_MODAL = "EmiModal";
+export const OFFER_MODAL = "OfferModal";
 export const SIZE_SELECTOR = "SizeSelector";
 export const BANK_OFFERS = "BankOffers";
 export const OTP_LOGIN_MODAL = "OtpLoginModal";
+export const UPDATE_PROFILE_OTP_VERIFICATION = "UpdateProfileOtpVerification";
+export const GIFT_CARD_MODAL = "GiftCardModal";
 
 export const GENERATE_OTP_FOR_CLIQ_CASH = "generateOtpForCliqCash";
 export const VERIFY_OTP_FOR_CLIQ_CASH = "verifyOtpForCliqCash";

@@ -26,9 +26,13 @@ import {
   VERIFY_OTP_FOR_CLIQ_CASH,
   GENERATE_OTP_FOR_EGV,
   hideModal,
-  VERIFY_OTP
+  VERIFY_OTP,
+  GIFT_CARD_MODAL
 } from "../../general/modal.actions.js";
+import moment from "moment";
+import { getPaymentModes } from "../../cart/actions/cart.actions.js";
 import { getMcvId } from "../../lib/adobeUtils";
+import * as ErrorHandling from "../../general/ErrorHandling.js";
 
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
@@ -155,6 +159,27 @@ export const SUBMIT_SELF_COURIER_INFO_SUCCESS =
 export const SUBMIT_SELF_COURIER_INFO_FAILURE =
   "SUBMIT_SELF_COURIER_INFO_FAILURE";
 
+export const CANCEL_PRODUCT_REQUEST = "CANCEL_PRODUCT_REQUEST";
+export const CANCEL_PRODUCT_SUCCESS = "CANCEL_PRODUCT_SUCCESS";
+export const CANCEL_PRODUCT_FAILURE = "CANCEL_PRODUCT_FAILURE";
+
+export const GET_CANCEL_PRODUCT_DETAILS_REQUEST =
+  "GET_CANCEL_PRODUCT_DETAILS_REQUEST";
+export const GET_CANCEL_PRODUCT_DETAILS_SUCCESS =
+  "GET_CANCEL_PRODUCT_DETAILS_SUCCESS";
+export const GET_CANCEL_PRODUCT_DETAILS_FAILURE =
+  "GET_CANCEL_PRODUCT_DETAILS_FAILURE";
+
+export const UPDATE_PROFILE_REQUEST = "UPDATE_PROFILE_REQUEST";
+export const UPDATE_PROFILE_SUCCESS = "UPDATE_PROFILE_SUCCESS";
+export const UPDATE_PROFILE_FAILURE = "UPDATE_PROFILE_FAILURE";
+export const LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER =
+  "LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER";
+export const UPDATE_PROFILE_OTP_VERIFICATION = "UpdateProfileOtpVerification";
+export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
+export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
+export const CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAILURE";
+
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -162,15 +187,144 @@ export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
 
 export const PIN_PATH = "v2/mpl/";
+export const PATH = "v2/mpl";
 
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
-
+export const LOGOUT = "LOGOUT";
+export const CLEAR_GIFT_CARD_STATUS = "CLEAR_GIFT_CARD_STATUS";
 const API_KEY_FOR_MSD = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
 const NUMBER_OF_RESULTS_FOR_BRANDS = [25];
 const WIDGETS_LIST_FOR_BRANDS = [112];
 const CARD_TYPE = "BOTH";
 const FOLLOW = "follow";
 const UNFOLLOW = "unfollow";
+const DATE_FORMAT_TO_UPDATE_PROFILE = "DD/MM/YYYY";
+
+const CART_GU_ID = "cartGuid";
+// cencel product
+
+export function getDetailsOfCancelledProductRequest() {
+  return {
+    type: GET_CANCEL_PRODUCT_DETAILS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getDetailsOfCancelledProductSuccess(
+  getDetailsOfCancelledProduct
+) {
+  return {
+    type: GET_CANCEL_PRODUCT_DETAILS_SUCCESS,
+    status: SUCCESS,
+    getDetailsOfCancelledProduct
+  };
+}
+export function getDetailsOfCancelledProductFailure(error) {
+  return {
+    type: GET_CANCEL_PRODUCT_DETAILS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function getDetailsOfCancelledProduct(cancelProductDetails) {
+  let cancelProductObject = new FormData();
+  cancelProductObject.append(
+    "transactionId",
+    cancelProductDetails.transactionId
+  );
+  cancelProductObject.append("orderCode", cancelProductDetails.orderCode);
+  cancelProductObject.append("USSID", cancelProductDetails.USSID);
+  cancelProductObject.append(
+    "returnCancelFlag",
+    cancelProductDetails.returnCancelFlag
+  );
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(getDetailsOfCancelledProductRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/returnProductDetails?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2`,
+        cancelProductObject
+      );
+      const resultJson = await result.json();
+
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      return dispatch(getDetailsOfCancelledProductSuccess(resultJson));
+    } catch (e) {
+      dispatch(getDetailsOfCancelledProductFailure(e.message));
+    }
+  };
+}
+
+//cancel final order
+
+export function cancelProductRequest() {
+  return {
+    type: CANCEL_PRODUCT_REQUEST,
+    status: REQUESTING
+  };
+}
+export function cancelProductSuccess(cancelProduct) {
+  return {
+    type: CANCEL_PRODUCT_SUCCESS,
+    status: SUCCESS,
+    cancelProduct
+  };
+}
+export function cancelProductFailure(error) {
+  return {
+    type: CANCEL_PRODUCT_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function cancelProduct(cancelProductDetails) {
+  let cancelProductObject = new FormData();
+  cancelProductObject.append(
+    "transactionId",
+    cancelProductDetails.transactionId
+  );
+  cancelProductObject.append("orderCode", cancelProductDetails.orderCode);
+  cancelProductObject.append("ussid", cancelProductDetails.USSID);
+  cancelProductObject.append(
+    "ticketTypeCode",
+    cancelProductDetails.ticketTypeCode
+  );
+  cancelProductObject.append("reasonCode", cancelProductDetails.reasonCode);
+  cancelProductObject.append("refundType", cancelProductDetails.refundType);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(cancelProductRequest());
+    try {
+      const result = await api.postFormData(
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/initiateRefund?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&login=${JSON.parse(userDetails).userName}&isPwa=true`,
+        cancelProductObject
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      return dispatch(cancelProductSuccess(resultJson));
+    } catch (e) {
+      return dispatch(cancelProductFailure(e.message));
+    }
+  };
+}
+
 export function returnProductDetailsRequest() {
   return {
     type: RETURN_PRODUCT_DETAILS_REQUEST,
@@ -218,12 +372,9 @@ export function returnProductDetails(productDetails) {
       );
 
       const resultJson = await result.json();
-      if (
-        resultJson.errors ||
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE_UPPERCASE
-      ) {
-        throw new Error(resultJson.errors[0].message);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(returnProductDetailsSuccess(resultJson));
     } catch (e) {
@@ -275,9 +426,9 @@ export function getReturnRequest(orderCode, transactionId) {
       );
 
       const resultJson = await result.json();
-
-      if (resultJson.errors) {
-        throw new Error(resultJson.errors[0].message);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(getReturnRequestSuccess(resultJson));
     } catch (e) {
@@ -325,11 +476,9 @@ export function newReturnInitial(returnDetails) {
         returnDetails
       );
       const resultJson = await result.json();
-
-      if (resultJson.errors) {
-        throw new Error(resultJson.errors[0].message);
-      } else if (resultJson.status === FAILURE) {
-        throw new Error(resultJson.status);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(newReturnInitiateSuccess(resultJson));
@@ -379,12 +528,9 @@ export function returnPinCode(productDetails) {
         }&transactionId=${productDetails.transactionId}`
       );
       const resultJson = await result.json();
-
-      if (
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.status === FAILURE
-      ) {
-        throw new Error(resultJson.error);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(returnPInCodeSuccess(resultJson));
@@ -433,9 +579,9 @@ export function quickDropStore(pincode, ussId) {
       );
 
       const resultJson = await result.json();
-
-      if (resultJson.errors) {
-        throw new Error(resultJson.errors[0].message);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(quickDropStoreSuccess(resultJson.returnStoreDetailsList));
     } catch (e) {
@@ -534,15 +680,11 @@ export function createGiftCardDetails(giftCardDetails) {
         giftCardDetails
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        return dispatch(createGiftCardSuccess(resultJson));
-      } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      return dispatch(createGiftCardSuccess(resultJson));
     } catch (e) {
       dispatch(createGiftCardFailure(e.message));
     }
@@ -587,22 +729,19 @@ export function getOtpToActivateWallet(customerDetails, isFromCliqCash) {
         customerDetails
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        dispatch(hideModal());
-        if (isFromCliqCash) {
-          dispatch(VERIFY_OTP_FOR_CLIQ_CASH);
-        } else {
-          dispatch(showModal(VERIFY_OTP));
-        }
 
-        return dispatch(getOtpToActivateWalletSuccess(resultJson));
-      } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      dispatch(hideModal());
+      if (isFromCliqCash) {
+        dispatch(showModal(VERIFY_OTP_FOR_CLIQ_CASH));
+      } else {
+        dispatch(showModal(VERIFY_OTP));
+      }
+      return dispatch(getOtpToActivateWalletSuccess(resultJson));
     } catch (e) {
       dispatch(getOtpToActivateWalletFailure(e.message));
     }
@@ -648,22 +787,19 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
         customerDetailsWithOtp
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        dispatch(hideModal());
-        if (isFromCliqCash) {
-          dispatch(getCliqCashDetails());
-        } else {
-          dispatch(getGiftCardDetails());
-        }
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-        return dispatch(verifyWalletSuccess(resultJson));
-      } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+      dispatch(hideModal());
+      if (isFromCliqCash) {
+        dispatch(getCliqCashDetails());
+      } else {
+        dispatch(getGiftCardDetails());
+      }
+
+      return dispatch(verifyWalletSuccess(resultJson));
     } catch (e) {
       dispatch(verifyWalletFailure(e.message));
     }
@@ -714,16 +850,13 @@ export function submitSelfCourierReturnInfo(returnDetails) {
         returnDetailsObject
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        dispatch(hideModal());
-        dispatch(submitSelfCourierReturnInfoSuccess(resultJson));
-      } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
+      dispatch(submitSelfCourierReturnInfoSuccess(resultJson));
     } catch (e) {
       dispatch(submitSelfCourierReturnInfoFailure(e.message));
     }
@@ -760,9 +893,10 @@ export function getSavedCardDetails(userId, customerAccessToken) {
         `${USER_PATH}/${userId}/payments/savedCards?access_token=${customerAccessToken}&cardType=${CARD_TYPE}`
       );
       const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (resultJson.errors) {
-        throw new Error(resultJson.errors[0].message);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(getSavedCardSuccess(resultJson));
     } catch (e) {
@@ -803,11 +937,10 @@ export function getPinCode(pinCode) {
         }`
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE_UPPERCASE
-      ) {
-        throw new Error(resultJson.errors[0].message);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(getPinCodeSuccess(resultJson));
     } catch (e) {
@@ -845,9 +978,10 @@ export function removeSavedCardDetails(userId, customerAccessToken) {
         `${USER_PATH}/${userId}/payments/savedCards?access_token=${customerAccessToken}&cardType=${CARD_TYPE}`
       );
       const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (resultJson.errors) {
-        throw new Error(resultJson.errors[0].message);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(removeSavedCardSuccess(resultJson));
     } catch (e) {
@@ -892,8 +1026,10 @@ export function getAllOrdersDetails() {
         }&pageSize=${PAGE_SIZE}&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(getAllOrdersSuccess(resultJson));
     } catch (e) {
@@ -938,12 +1074,10 @@ export function getUserDetails() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (
-        resultJson.errors ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.status === FAILURE
-      ) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(getUserDetailsSuccess(resultJson));
     } catch (e) {
@@ -988,12 +1122,10 @@ export function getUserCoupons() {
         }&pageSize=${PAGE_SIZE}&usedCoupon=N&isPwa=true&platformNumber=2&channel=mobile`
       );
       const resultJson = await result.json();
-      if (
-        resultJson.errors ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.status === FAILURE
-      ) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(getUserCouponsSuccess(resultJson));
     } catch (e) {
@@ -1038,12 +1170,10 @@ export function getUserAlerts() {
         }&emailId=${JSON.parse(userDetails).userName}`
       );
       const resultJson = await result.json();
-      if (
-        resultJson.errors ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.status === FAILURE
-      ) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(getUserAlertsSuccess(resultJson));
     } catch (e) {
@@ -1094,8 +1224,10 @@ export function removeAddress(addressId) {
         addressObject
       );
       const resultJson = await result.json();
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(removeAddressSuccess(addressId));
     } catch (e) {
@@ -1180,9 +1312,10 @@ export function editAddress(addressDetails) {
         addressObject
       );
       const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (resultJson.errors) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(editAddressSuccess(resultJson));
     } catch (e) {
@@ -1205,12 +1338,10 @@ export function fetchOrderDetails(orderId) {
         }`
       );
       const resultJson = await result.json();
-      if (
-        resultJson.errors ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.status === FAILURE
-      ) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(fetchOrderDetailsSuccess(resultJson));
     } catch (e) {
@@ -1255,16 +1386,97 @@ export function sendInvoice(lineID, orderNumber) {
         }&orderNumber=${orderNumber}&lineID=${lineID}`
       );
       const resultJson = await result.json();
-      if (
-        resultJson.errors ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.status === FAILURE
-      ) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
       dispatch(sendInvoiceSuccess(resultJson));
     } catch (e) {
       dispatch(sendInvoiceFailure(e.message));
+    }
+  };
+}
+
+export function updateProfileRequest() {
+  return {
+    type: UPDATE_PROFILE_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function logoutUserByMobileNumber() {
+  return {
+    type: LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER
+  };
+}
+
+export function updateProfileSuccess(userDetails) {
+  return {
+    type: UPDATE_PROFILE_SUCCESS,
+    status: SUCCESS,
+    userDetails
+  };
+}
+
+export function updateProfileFailure(error) {
+  return {
+    type: UPDATE_PROFILE_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function updateProfile(accountDetails, otp) {
+  let dateOfBirth = moment(accountDetails.dateOfBirth).format(
+    DATE_FORMAT_TO_UPDATE_PROFILE
+  );
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(updateProfileRequest());
+    let updateProfileUrl;
+    try {
+      updateProfileUrl = `${USER_PATH}/${
+        JSON.parse(userDetails).userName
+      }/updateprofile?isPwa=true&access_token=${
+        JSON.parse(customerCookie).access_token
+      }&ProfileDataRequired=true&firstName=${
+        accountDetails.firstName
+      }&lastName=${accountDetails.lastName}&dateOfBirth=${dateOfBirth}&gender=${
+        accountDetails.gender
+      }&mobilenumber=${accountDetails.mobileNumber}&emailId=${
+        accountDetails.emailId
+      }`;
+      if (otp) {
+        updateProfileUrl = `${updateProfileUrl}&otp=${otp}`;
+      }
+      const result = await api.post(updateProfileUrl);
+      const resultJson = await result.json();
+
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+
+      if (resultJson.status === "OTP SENT TO MOBILE NUMBER: PLEASE VALIDATE") {
+        dispatch(showModal(UPDATE_PROFILE_OTP_VERIFICATION, accountDetails));
+      } else {
+        if (otp) {
+          if (
+            resultJson.status === SUCCESS ||
+            resultJson.status === SUCCESS_CAMEL_CASE ||
+            resultJson.status === SUCCESS_UPPERCASE
+          ) {
+            dispatch(logoutUserByMobileNumber());
+          }
+        } else {
+          return dispatch(updateProfileSuccess(resultJson));
+        }
+      }
+    } catch (e) {
+      return dispatch(updateProfileFailure(e.message));
     }
   };
 }
@@ -1305,12 +1517,10 @@ export function getFollowedBrands() {
     try {
       const result = await api.postMsd(`${MSD_ROOT_PATH}/widgets`, msdFormData);
       const resultJson = await result.json();
-      if (
-        resultJson.errors ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.status === FAILURE
-      ) {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       dispatch(getFollowedBrandsSuccess(resultJson.data[0]));
@@ -1410,42 +1620,35 @@ export function followAndUnFollowBrand(
         followInFeedBackApiResultJson.status === SUCCESS_UPPERCASE ||
         followInFeedBackApiResultJson.status === SUCCESS_CAMEL_CASE
       ) {
+        // here we are hitting call for update follow brand on p2 and we don;t have to
+        // wait for this response . we just need to wait for msd follow and un follow brand
+        // api response if it success then we have to update our reducer with success
+
         const followInCommerceApiResult = await api.post(
           `${PRODUCT_PATH}/${
             JSON.parse(customerCookie).access_token
           }/updateFollowedBrands?brands=${brandId}&follow=${updatedFollowedStatus}&isPwa=true`
         );
-        const followInCommerceApiResultJson = await followInCommerceApiResult.json();
-
-        if (
-          followInCommerceApiResultJson.status === SUCCESS ||
-          followInCommerceApiResultJson.status === SUCCESS_UPPERCASE ||
-          followInCommerceApiResultJson.status === SUCCESS_CAMEL_CASE
-        ) {
-          // dispatch success for following brand on the basis of page type
-          if (pageType === HOME_FEED_FOLLOW_AND_UN_FOLLOW) {
-            dispatch(
-              followAndUnFollowBrandSuccessForHomeFeed(
-                brandId,
-                updatedFollowedStatus,
-                positionInFeed
-              )
-            );
-          } else if (pageType === PDP_FOLLOW_AND_UN_FOLLOW) {
-            dispatch(
-              followAndUnFollowBrandSuccessForPdp(
-                brandId,
-                updatedFollowedStatus
-              )
-            );
-          } else if (pageType === MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW) {
-            dispatch(
-              followAndUnFollowBrandSuccessForMyAccount(
-                brandId,
-                updatedFollowedStatus
-              )
-            );
-          }
+        // dispatch success for following brand on the basis of page type
+        if (pageType === HOME_FEED_FOLLOW_AND_UN_FOLLOW) {
+          dispatch(
+            followAndUnFollowBrandSuccessForHomeFeed(
+              brandId,
+              updatedFollowedStatus,
+              positionInFeed
+            )
+          );
+        } else if (pageType === PDP_FOLLOW_AND_UN_FOLLOW) {
+          dispatch(
+            followAndUnFollowBrandSuccessForPdp(brandId, updatedFollowedStatus)
+          );
+        } else if (pageType === MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW) {
+          dispatch(
+            followAndUnFollowBrandSuccessForMyAccount(
+              brandId,
+              updatedFollowedStatus
+            )
+          );
         }
       } else {
         throw new Error(`Error in following Brand for feedback Api`);
@@ -1491,18 +1694,40 @@ export function getWishList() {
         }&isPwa=true&platformNumber=${PLATFORM_NUMBER}`
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        return dispatch(getWishlistSuccess(resultJson.wishList[0])); //we sre getting response wishlit[0]
-      } else {
-        throw new Error(`${resultJson.errors[0].message}`);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
+
+      return dispatch(
+        getWishlistSuccess(resultJson.wishList && resultJson.wishList[0])
+      ); //we sre getting response wishlit[0]
     } catch (e) {
       return dispatch(getWishlistFailure(e.message));
     }
+  };
+}
+
+export function changePasswordRequest() {
+  return {
+    type: CHANGE_PASSWORD_REQUEST,
+    status: REQUESTING
+  };
+}
+export function changePasswordSuccess(passwordDetails) {
+  return {
+    type: CHANGE_PASSWORD_SUCCESS,
+    status: SUCCESS,
+    passwordDetails
+  };
+}
+
+export function changePasswordFailure(error) {
+  return {
+    type: CHANGE_PASSWORD_FAILURE,
+    status: ERROR,
+    error
   };
 }
 
@@ -1528,6 +1753,35 @@ export function getCliqCashFailure(error) {
   };
 }
 
+export function changePassword(passwordDetails) {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(changePasswordRequest());
+    try {
+      const result = await api.post(
+        `${PATH}/forgottenpasswordtokens/${
+          JSON.parse(userDetails).userName
+        }/resetCustomerPassword?isPwa=true&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&old=${passwordDetails.oldPassword}&newPassword=${
+          passwordDetails.newPassword
+        }`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+
+      return dispatch(changePasswordSuccess(resultJson));
+    } catch (e) {
+      return dispatch(changePasswordFailure(e.message));
+    }
+  };
+}
+
 export function getCliqCashDetails() {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -1542,16 +1796,10 @@ export function getCliqCashDetails() {
         }&isPwa=true&platformNumber=${PLATFORM_NUMBER}`
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.errors
-      ) {
-        if (resultJson.errors) {
-          throw new Error(`${resultJson.errors[0].message}`);
-        } else {
-          throw new Error(`${resultJson.error}`);
-        }
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
       }
 
       if (!resultJson.isWalletCreated && !resultJson.isWalletOtpVerified) {
@@ -1580,7 +1828,6 @@ export function redeemCliqVoucherSuccess(cliqCashVoucherDetails) {
 }
 
 export function redeemCliqVoucherFailure(error) {
-  console.log(error);
   return {
     type: REDEEM_CLIQ_VOUCHER_FAILURE,
     status: FAILURE,
@@ -1588,10 +1835,11 @@ export function redeemCliqVoucherFailure(error) {
   };
 }
 
-export function redeemCliqVoucher(cliqCashDetails) {
+export function redeemCliqVoucher(cliqCashDetails, fromCheckout) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     dispatch(redeemCliqVoucherRequest());
     try {
       const result = await api.postFormData(
@@ -1604,21 +1852,32 @@ export function redeemCliqVoucher(cliqCashDetails) {
         }`
       );
       const resultJson = await result.json();
-      if (
-        resultJson.status === FAILURE ||
-        resultJson.status === FAILURE_UPPERCASE ||
-        resultJson.errors
-      ) {
-        if (resultJson.errors) {
-          throw new Error(`${resultJson.errors[0].message}`);
-        } else {
-          throw new Error(`${resultJson.error}`);
-        }
-      }
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      if (fromCheckout) {
+        dispatch(hideModal(GIFT_CARD_MODAL));
+        let guIdObject = new FormData();
+        guIdObject.append(CART_GU_ID, JSON.parse(cartDetails).guid);
+        dispatch(getPaymentModes(guIdObject));
+      }
       dispatch(redeemCliqVoucherSuccess(resultJson));
     } catch (e) {
       dispatch(redeemCliqVoucherFailure(e.message));
     }
+  };
+}
+export function logout() {
+  return {
+    type: LOGOUT,
+    status: SUCCESS
+  };
+}
+
+export function clearGiftCardStatus() {
+  return {
+    type: CLEAR_GIFT_CARD_STATUS
   };
 }

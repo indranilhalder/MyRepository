@@ -8,7 +8,11 @@ import { Icon } from "xelpmoc-core";
 import styles from "./ProductGrid.css";
 import gridImage from "./img/grid.svg";
 import listImage from "./img/list.svg";
-import { PRODUCT_DESCRIPTION_ROUTER } from "../../lib/constants";
+import {
+  PRODUCT_DESCRIPTION_ROUTER,
+  IS_OFFER_EXISTING
+} from "../../lib/constants";
+import { setDataLayerForPlpDirectCalls } from "../../lib/adobeUtils";
 const LIST = "list";
 const GRID = "grid";
 const PRODUCT = "product";
@@ -18,7 +22,7 @@ export default class ProductGrid extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: LIST
+      view: GRID
     };
   }
 
@@ -35,7 +39,8 @@ export default class ProductGrid extends React.Component {
     }
   }
 
-  goToProductDescription = url => {
+  goToProductDescription = (url, productObj) => {
+    setDataLayerForPlpDirectCalls(productObj);
     this.props.history.push(url);
   };
 
@@ -45,16 +50,22 @@ export default class ProductGrid extends React.Component {
       <ProductModule
         productImage={data.imageURL}
         title={data.brandname}
-        price={data.price.mrpPrice.formattedValue}
-        discountPrice={data.price.sellingPrice.formattedValue}
+        price={data.price.mrpPrice.doubleValue}
+        discountPrice={data.price.sellingPrice.doubleValue}
         description={data.productname}
-        offerText={data.offerText}
+        discountPercent={data.discountPercent}
+        isOfferExisting={data.isOfferExisting}
+        onlineExclusive={data.onlineExclusive}
+        outOfStock={!data.cumulativeStockLevel}
+        onOffer={data.isOfferExisting}
+        newProduct={data.newProduct}
         averageRating={data.averageRating}
         totalNoOfReviews={data.totalNoOfReviews}
         view={this.state.view}
-        onClick={url => this.goToProductDescription(url)}
+        onClick={url => this.goToProductDescription(url, data)}
         productCategory={data.productCategoryType}
         productId={data.productId}
+        showWishListButton={false}
       />
     );
     // } else if (data.type === PLPAD) {
@@ -69,6 +80,10 @@ export default class ProductGrid extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
+          <div className={styles.product}>
+            {this.props.totalResults ? this.props.totalResults : 0} Products
+          </div>
+
           {/* <div className={styles.area}>{this.props.area}</div> */}
           {/* <div
             className={styles.areaChange}
