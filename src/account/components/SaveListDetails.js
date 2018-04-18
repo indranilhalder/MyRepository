@@ -16,12 +16,17 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import MDSpinner from "react-md-spinner";
+import {
+  setDataLayer,
+  ADOBE_MY_ACCOUNT_SAVED_LIST
+} from "../../lib/adobeUtils";
 
 const dateFormat = "MMMM DD YYYY";
 const PRODUCT_QUANTITY = "1";
 const NO_SAVELIST_TEXT = "No Saved List";
 export default class SaveListDetails extends React.Component {
   componentDidMount() {
+    setDataLayer(ADOBE_MY_ACCOUNT_SAVED_LIST);
     this.props.setHeaderText(SAVED_LIST);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);

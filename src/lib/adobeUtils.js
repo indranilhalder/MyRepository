@@ -43,6 +43,20 @@ const ADOBE_LOGIN_SUCCESS = "login_successful";
 const ADOBE_LOGIN_FAILURE = "login_failed";
 // end of direct call for login tracking
 
+// type of hierarchy for MY_ACCOUNT
+const MY_ACCOUNT_OVERVIEW = "myaccount_overview";
+const MY_ACCOUNT_SAVED_LIST = "myaccount_default_wishlist";
+const MY_ACCOUNT_ADDRESS_BOOK = "myaccount_address_book";
+const MY_ACCOUNT_BRANDS = "myaccount_brands";
+const MY_ACCOUNT_ORDER_HISTORY = "myaccount_order_history";
+const MY_ACCOUNT_SAVED_PAYMENTS = "myaccount_payment_details";
+const MY_ACCOUNT_ALERTS = "myaccount_alerts";
+const MY_ACCOUNT_COUPONS = "myaccount_coupons";
+const MY_ACCOUNT_GIFT_CARD = "myaccount_gift_card";
+const MY_ACCOUNT_CLIQ_CASH = "myaccount_cliq_cash";
+const MY_ACCOUNT_SETTING = "myaccount_update_setting";
+// end of type of hierarchy for my Account
+
 export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
 export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
@@ -88,6 +102,21 @@ export const ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE =
   "ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE";
 
 // end of const for setting data layer for the login track
+
+// const or setting myAccount section
+export const ADOBE_MY_ACCOUNT_LANDING_PAGE = "ADOBE_MY_ACCOUNT_LANDING_PAGE";
+export const ADOBE_MY_ACCOUNT_SAVED_LIST = "ADOBE_MY_ACCOUNT_SAVED_LIST";
+export const ADOBE_MY_ACCOUNT_ADDRESS_BOOK = "ADOBE_MY_ACCOUNT_ADDRESS_BOOK";
+export const ADOBE_MY_ACCOUNT_BRANDS = "ADOBE_MY_ACCOUNT_BRANDS";
+export const ADOBE_MY_ACCOUNT_ORDER_HISTORY = "ADOBE_MY_ACCOUNT_ORDER_HISTORY";
+export const ADOBE_MY_ACCOUNT_SAVED_PAYMENTS =
+  "ADOBE_MY_ACCOUNT_SAVED_PAYMENTS";
+export const ADOBE_MY_ACCOUNT_ALERTS = "ADOBE_MY_ACCOUNT_ALERTS";
+export const ADOBE_MY_ACCOUNT_COUPONS = "ADOBE_MY_ACCOUNT_COUPONS";
+export const ADOBE_MY_ACCOUNT_GIFT_CARD = "ADOBE_MY_ACCOUNT_GIFT_CARD";
+export const ADOBE_MY_ACCOUNT_CLIQ_CASH = "ADOBE_MY_ACCOUNT_CLIQ_CASH";
+export const AODBE_MY_ACCOUNT_SETTINGS = "AODBE_MY_ACCOUNT_SETTINGS";
+// end of my Account section
 
 export const ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS =
   "ADOBE_DIRECT_CALL_FOR_PINCODE_SUCCESS";
@@ -147,6 +176,40 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   if (type === ADOBE_ORDER_CONFIRMATION) {
     window.digitalData = getDigitalDataForOrderConfirmation(type, response);
   }
+  if (type === ADOBE_MY_ACCOUNT_LANDING_PAGE) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_OVERVIEW);
+  }
+  if (type === ADOBE_MY_ACCOUNT_SAVED_LIST) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_SAVED_LIST);
+  }
+  if (type === ADOBE_MY_ACCOUNT_ADDRESS_BOOK) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ADDRESS_BOOK);
+  }
+  if (type === ADOBE_MY_ACCOUNT_BRANDS) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_BRANDS);
+  }
+  if (type === ADOBE_MY_ACCOUNT_ORDER_HISTORY) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ORDER_HISTORY);
+  }
+  if (type === ADOBE_MY_ACCOUNT_SAVED_PAYMENTS) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_SAVED_PAYMENTS);
+  }
+  if (type === ADOBE_MY_ACCOUNT_ALERTS) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ALERTS);
+  }
+  if (type === ADOBE_MY_ACCOUNT_COUPONS) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_COUPONS);
+  }
+  if (type === ADOBE_MY_ACCOUNT_GIFT_CARD) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_GIFT_CARD);
+  }
+  if (type === ADOBE_MY_ACCOUNT_CLIQ_CASH) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_CLIQ_CASH);
+  }
+  if (type === AODBE_MY_ACCOUNT_SETTINGS) {
+    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_SETTING);
+  }
+
   if (icid) {
     window.digitalData.internal = {
       campaign: {
@@ -739,14 +802,15 @@ export function setDataLayerForMyAccountDirectCalls(
   productDetails,
   reasonObj: null
 ) {
+  let data = cloneDeep(window.digitalData);
   if (type === ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS) {
-    const data = {
+    data = Object.assign(data, {
       cpj: {
         product: {
           id: productDetails.productcode
         }
       }
-    };
+    });
     window.digitalData = data;
     window._satellite.track(ADOBE_ORDER_CANCEL);
   }
@@ -754,7 +818,7 @@ export function setDataLayerForMyAccountDirectCalls(
     window._satellite.track(ADOBE_ORDER_RETURN_CANCEL);
   }
   if (type === ADOBE_MY_ACCOUNT_ORDER_RETURN) {
-    const data = {
+    data = {
       cpj: {
         product: {
           id: productDetails.productcode,
@@ -765,4 +829,15 @@ export function setDataLayerForMyAccountDirectCalls(
     window.digitalData = data;
     window._satellite.track(ADOBE_ORDER_RETURN);
   }
+  debugger;
+}
+export function getDigitalDataForMyAccount(pageTitle) {
+  const data = {
+    page: {
+      pageInfo: { pageName: pageTitle },
+      category: { primaryCategory: pageTitle },
+      display: { hierarchy: ["home", "my_tata_cliq", pageTitle] }
+    }
+  };
+  return data;
 }

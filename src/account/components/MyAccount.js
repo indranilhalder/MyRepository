@@ -21,6 +21,10 @@ import {
 } from "../../lib/constants";
 
 import * as Cookie from "../../lib/Cookie";
+import {
+  setDataLayer,
+  ADOBE_MY_ACCOUNT_LANDING_PAGE
+} from "../../lib/adobeUtils";
 export default class MyAccount extends React.Component {
   constructor(props) {
     super(props);
@@ -43,6 +47,7 @@ export default class MyAccount extends React.Component {
 
   componentDidMount() {
     this.props.setHeaderText(MY_CLIQ);
+    setDataLayer(ADOBE_MY_ACCOUNT_LANDING_PAGE);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (userDetails && customerCookie) {
