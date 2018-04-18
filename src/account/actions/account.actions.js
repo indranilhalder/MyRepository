@@ -1589,7 +1589,9 @@ export function followAndUnFollowBrand(
   positionInFeed: null
 ) {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  const followedText = followStatus ? UNFOLLOW : FOLLOW;
+  const followedText = Boolean(followStatus === "true" || followStatus === true)
+    ? FOLLOW
+    : UNFOLLOW;
   //here sometimes  we are getting isFollowingStatus type of string "true" or "false"
   // so here we are converting it in to bool
   const updatedFollowedStatus = !Boolean(
