@@ -20,9 +20,12 @@ export default class DeliveryModeSet extends React.Component {
             const selectedDeliveryModes = this.props.selectedDeliveryDetails[
               data.USSID
             ];
-            const deliveryOption = data.elligibleDeliveryMode.find(mode => {
-              return mode.code === selectedDeliveryModes;
-            });
+            const deliveryOption =
+              data &&
+              data.elligibleDeliveryMode &&
+              data.elligibleDeliveryMode.find(mode => {
+                return mode.code === selectedDeliveryModes;
+              });
 
             return (
               <div className={styles.base} key={i}>

@@ -9,15 +9,17 @@ import OfferCard from "./OfferCard";
 import PdpLink from "./PdpLink";
 import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
+import ProductFeature from "./ProductFeature";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
 import PdpDeliveryModes from "./PdpDeliveryModes";
+import PdpPaymentInfo from "./PdpPaymentInfo";
 import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
-import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import Accordion from "../../general/components/Accordion.js";
 import Logo from "../../general/components/Logo.js";
-import Carousel from "../../general/components/Carousel.js";
+import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import ProductModule from "../../general/components/ProductModule.js";
 import Button from "../../general/components/Button.js";
 import styles from "./ProductDescriptionPage.css";
@@ -90,25 +92,36 @@ export default class PdpElectronics extends React.Component {
     );
 
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (userDetails) {
+    if (!this.props.productDetails.winningSellerPrice) {
+      this.props.displayToast("Product is not saleable");
+    } else {
       if (
-        cartDetailsLoggedInUser !== undefined &&
-        customerCookie !== undefined
+        this.props.productDetails.allOOStock ||
+        this.props.productDetails.winningSellerAvailableStock === "0"
       ) {
-        this.props.addProductToCart(
-          JSON.parse(userDetails).userName,
-          JSON.parse(cartDetailsLoggedInUser).code,
-          JSON.parse(customerCookie).access_token,
-          productDetails
-        );
+        this.props.displayToast("Product is out of stock");
+      } else {
+        if (userDetails) {
+          if (
+            cartDetailsLoggedInUser !== undefined &&
+            customerCookie !== undefined
+          ) {
+            this.props.addProductToCart(
+              JSON.parse(userDetails).userName,
+              JSON.parse(cartDetailsLoggedInUser).code,
+              JSON.parse(customerCookie).access_token,
+              productDetails
+            );
+          }
+        } else if (cartDetailsAnonymous) {
+          this.props.addProductToCart(
+            ANONYMOUS_USER,
+            JSON.parse(cartDetailsAnonymous).guid,
+            JSON.parse(globalCookie).access_token,
+            productDetails
+          );
+        }
       }
-    } else if (cartDetailsAnonymous) {
-      this.props.addProductToCart(
-        ANONYMOUS_USER,
-        JSON.parse(cartDetailsAnonymous).guid,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
     }
   };
 
@@ -190,27 +203,41 @@ export default class PdpElectronics extends React.Component {
           productListingId={productData.productListingId}
           ussId={productData.winningUssID}
           showPincodeModal={() => this.showPincodeModal()}
+          outOfStock={
+            productData.allOOStock ||
+            !productData.winningSellerPrice ||
+            productData.winningSellerAvailableStock === "0"
+          }
         >
-          <ProductGalleryMobile
-            paddingBottom={
-              productData.rootCategory === "Watches" ? "114" : "89.4"
-            }
-          >
-            {mobileGalleryImages.map((val, idx) => {
-              return (
-                <Image
-                  image={val}
-                  key={idx}
-                  color={
-                    productData.rootCategory === "Watches"
-                      ? "#ffffff"
-                      : "#f5f5f5"
-                  }
-                  fit="contain"
-                />
-              );
-            })}
-          </ProductGalleryMobile>
+          <div className={styles.gallery}>
+            <ProductGalleryMobile
+              paddingBottom={
+                productData.rootCategory === "Watches" ? "114" : "89.4"
+              }
+            >
+              {mobileGalleryImages.map((val, idx) => {
+                return (
+                  <Image
+                    image={val}
+                    key={idx}
+                    color={
+                      productData.rootCategory === "Watches"
+                        ? "#ffffff"
+                        : "#f5f5f5"
+                    }
+                    fit="contain"
+                  />
+                );
+              })}
+            </ProductGalleryMobile>
+            {(productData.allOOStock ||
+              productData.winningSellerAvailableStock === "0") && (
+              <div className={styles.flag}>Out of stock</div>
+            )}
+            {!productData.winningSellerPrice && (
+              <div className={styles.flag}>Not Saleable</div>
+            )}
+          </div>
           <div className={styles.content}>
             {productData.rootCategory !== "Watches" && (
               <ProductDetailsMainCard
@@ -222,6 +249,7 @@ export default class PdpElectronics extends React.Component {
                 discountPrice={discountPrice}
                 averageRating={productData.averageRating}
                 onClick={this.goToReviewPage}
+                discount={productData.discount}
               />
             )}
             {productData.rootCategory === "Watches" && (
@@ -237,16 +265,11 @@ export default class PdpElectronics extends React.Component {
               />
             )}
           </div>
-          {productData.isEMIEligible === "Y" && (
-            <div className={styles.separator}>
-              <div className={styles.info}>
-                Emi available on this product.
-                <span className={styles.link} onClick={this.showEmiModal}>
-                  View Plans
-                </span>
-              </div>
-            </div>
-          )}
+          <PdpPaymentInfo
+            hasEmi={productData.isEMIEligible}
+            hasCod={productData.isCOD}
+            showEmiModal={this.showEmiModal}
+          />
           <OfferCard
             showDetails={this.props.showOfferDetails}
             potentialPromotions={productData.potentialPromotions}
@@ -324,9 +347,64 @@ please try another pincode">
               numberOfReview={productData.numberOfReviews}
             />
           </div>
-          {productData.classifications && (
+          {productData.rootCategory !== "Watches" && (
+            <React.Fragment>
+              {productData.classifications && (
+                <div className={styles.details}>
+                  <ProductFeatures features={productData.classifications} />
+                </div>
+              )}
+            </React.Fragment>
+          )}
+          {productData.rootCategory === "Watches" && (
             <div className={styles.details}>
-              <ProductFeatures features={productData.classifications} />
+              {productData.classifications && (
+                <React.Fragment>
+                  <Accordion text="Product Details" headerFontSize={16}>
+                    {productData.classifications.map(val => {
+                      if (val.specifications) {
+                        return val.specifications.map(value => {
+                          return (
+                            <React.Fragment>
+                              <div className={styles.sideHeader}>
+                                {value.key}
+                              </div>
+                              <div className={styles.sideContent}>
+                                {value.value}
+                              </div>
+                            </React.Fragment>
+                          );
+                        });
+                      }
+                    })}
+                  </Accordion>
+                  {productData.styleNote && (
+                    <ProductFeature
+                      heading="Style Note"
+                      content={productData.styleNote}
+                    />
+                  )}
+                  {productData.warranty &&
+                    productData.warranty.length > 0 && (
+                      <ProductFeature
+                        heading="Warranty"
+                        content={productData.warranty[0]}
+                      />
+                    )}
+                  {productData.knowMore && (
+                    <Accordion text="Know More" headerFontSize={16}>
+                      {productData.knowMore &&
+                        productData.knowMore.map(val => {
+                          return (
+                            <div className={styles.list}>
+                              {val.knowMoreItem}
+                            </div>
+                          );
+                        })}
+                    </Accordion>
+                  )}
+                </React.Fragment>
+              )}
             </div>
           )}
           {productData.APlusContent && (

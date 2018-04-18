@@ -96,6 +96,7 @@ export default class CartItem extends React.Component {
               selected={this.props.selected}
               onSelect={val => this.selectDeliveryMode(val)}
               onPiq={val => this.getPickUpDetails()}
+              isClickable={this.props.isClickable}
             />
           )}
         {this.props.hasFooter && (

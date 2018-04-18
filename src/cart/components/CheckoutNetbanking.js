@@ -23,6 +23,11 @@ export default class CheckoutNetBanking extends React.Component {
     }
   };
 
+  getNetBankDetails = () => {
+    if (this.props.getNetBankDetails) {
+      this.props.getNetBankDetails();
+    }
+  };
   render() {
     let validNetBankingDetails;
     if (
@@ -38,9 +43,13 @@ export default class CheckoutNetBanking extends React.Component {
     }
 
     return (
-      <ManueDetails text="Net banking" icon={netBankingIcon}>
+      <ManueDetails
+        text="Net banking"
+        icon={netBankingIcon}
+        getNetBankDetails={() => this.getNetBankDetails()}
+        bankList={validNetBankingDetails}
+      >
         <NetBanking
-          onSelect={val => console.log(val)}
           selected={["1"]}
           bankList={validNetBankingDetails}
           binValidationForNetBank={bankName =>

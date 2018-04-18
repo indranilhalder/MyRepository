@@ -8,6 +8,7 @@ import RatingHolder from "./RatingHolder";
 import PdpFrame from "./PdpFrame";
 import throttle from "lodash/throttle";
 import { Redirect } from "react-router-dom";
+import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
 import {
   MOBILE_PDP_VIEW,
   PRODUCT_REVIEWS_PATH_SUFFIX,
@@ -27,12 +28,21 @@ import {
 } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
 const PRODUCT_QUANTITY = "1";
+
 class ProductReviewPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: false
+      visible: false,
+      sort: "byDate",
+      orderBy: "asc"
     };
+    this.filterOptions = [
+      { label: "Oldest First", value: "byDate_asc" },
+      { label: "Newest First", value: "byDate_desc" },
+      { label: "Negative First", value: "byRating_asc" },
+      { label: "Positive First", value: "byRating_desc" }
+    ];
   }
 
   handleScroll = () => {
@@ -59,7 +69,9 @@ class ProductReviewPage extends Component {
           window.scrollBy(0, -200);
           this.props.getProductReviews(
             this.props.match.params[0],
-            this.props.reviews.pageNumber + 1
+            this.props.reviews.pageNumber + 1,
+            this.state.orderBy,
+            this.state.sort
           );
         }
       }
@@ -69,10 +81,13 @@ class ProductReviewPage extends Component {
   componentDidMount() {
     this.throttledScroll = this.handleScroll();
     window.addEventListener("scroll", this.throttledScroll);
-    if (!this.props.productDetails) {
-      this.props.getProductDescription(this.props.match.params[0]);
-    }
-    this.props.getProductReviews(this.props.match.params[0], 0);
+    this.props.getProductDescription(this.props.match.params[0]);
+    this.props.getProductReviews(
+      this.props.match.params[0],
+      0,
+      this.state.orderBy,
+      this.state.sort
+    );
   }
   componentWillUnmount() {
     window.removeEventListener("scroll", this.throttledScroll);
@@ -171,6 +186,18 @@ class ProductReviewPage extends Component {
     }
   }
 
+  changeFilterValues = val => {
+    let filterValues = val.split("_");
+    this.setState({ sort: filterValues[0], orderBy: filterValues[1] });
+
+    this.props.getProductReviews(
+      this.props.match.params[0],
+      0,
+      filterValues[1],
+      filterValues[0]
+    );
+  };
+
   render() {
     if (this.props.loadingForAddProduct || this.props.loading) {
       this.props.showSecondaryLoader();
@@ -193,10 +220,10 @@ class ProductReviewPage extends Component {
 
       return (
         <PdpFrame
+          {...this.props.productDetails}
           addProductToBag={() => this.addProductToBag()}
+          addProductToWishList={() => this.addProductToWishList()}
           gotoPreviousPage={() => this.goBack()}
-          productListingId={this.props.productDetails.productListingId}
-          ussId={this.props.productDetails.winningUssID}
         >
           <div className={styles.base}>
             <div className={styles.productBackground}>
@@ -220,14 +247,30 @@ class ProductReviewPage extends Component {
               />
               <RatingHolder ratingData={this.props.ratingData} />
             </div>
-            <div className={styles.reviewHolder}>
+            <div className={styles.dropDownHolder}>
+              <div className={styles.dropDownBox}>
+                <SelectBoxMobile
+                  theme="hollowBox"
+                  label="Oldest First"
+                  onChange={changedValue =>
+                    this.changeFilterValues(changedValue)
+                  }
+                  options={this.filterOptions}
+                  textStyle={{ fontSize: 14 }}
+                />
+              </div>
               <div className={styles.reviewText} onClick={this.reviewSection}>
                 {WRITE_REVIEW_TEXT}
               </div>
+            </div>
+            <div className={styles.reviewHolder}>
               {this.renderReviewSection()}
             </div>
             {this.props.reviews && (
-              <ReviewList reviewList={this.props.reviews.reviews} />
+              <ReviewList
+                reviewList={this.props.reviews.reviews}
+                totalNoOfReviews={this.props.reviews.totalNoOfPages}
+              />
             )}
           </div>
         </PdpFrame>

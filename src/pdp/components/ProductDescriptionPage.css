@@ -26,23 +26,44 @@
   margin-top: 20px;
   padding: 0 15px;
 }
+.gallery {
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+.flag {
+  width: 157px;
+  height: 40px;
+  color: #fff;
+  font-size: 18px;
+  padding: 10px 20px;
+  background: url(../components/img/flag.svg)no-repeat;
+  font-family: bolder;
+  background-size: contain;
+  position: absolute;
+  top: 90px;
+  left: 0px;
+}
 .link {
   font-size: 14px;
   color: #ff1744;
   font-family: regular;
-  margin-left: 10px;
   display: inline-block;
+}
+.textOffset {
+  margin-right: 10px;
 }
 .details {
   width: 100%;
   height: auto;
   background: #fff;
   padding: 15px;
+  margin-top: 30px;
 }
 .separator {
   width: 100%;
   height: auto;
-  margin: 30px 0;
+  margin-top: 30px;
 }
 .sellers {
   font-size: 14px;
@@ -82,4 +103,65 @@
   font-family: regular;
   margin-top: 5px;
   padding: 0 15px;
+}
+
+.list {
+  width: 100%;
+  line-height: 24px;
+  font-size: 14px;
+  font-family: regular;
+  padding-left: 20px;
+  margin-bottom: 5px;
+  position: relative;
+}
+.list a {
+  color: #ff1744;
+}
+.list:before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  left: 5px;
+  top: 7px;
+  background: #212121;
+  border-radius: 50%;
+}
+.sideContent {
+  width: 50%;
+  line-height: 24px;
+  font-size: 14px;
+  font-family: regular;
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: 5px;
+}
+.sideHeader {
+  composes: sideContent;
+  font-family: semibold;
+}
+.header {
+  composes: sideHeader;
+  width: 100%;
+}
+.blankSeparator {
+  width: 100%;
+  height: auto;
+  margin-top: 30px;
+}
+.monogrammingText {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  color: #171d1c;
+  line-height: 21px;
+  padding: 0 20px 20px 20px;
+}
+.contentTextForHome {
+  width: 100%;
+  font-size: 14px;
+  line-height: 22px;
+  font-family: regular;
+  color: #212121;
+  margin-top: 10px;
 }

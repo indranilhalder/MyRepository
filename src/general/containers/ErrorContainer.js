@@ -22,7 +22,6 @@ const mapStateToProps = state => {
     cartDetailsError: state.cart.cartDetailsError,
     cartDetailsCNCError: state.cart.cartDetailsCNCError,
     couponError: state.cart.couponError,
-    emiBankError: state.cart.emiBankError,
     softReserveError: state.cart.softReserveError,
     paymentsModeError: state.cart.paymentsModeError,
     bankOfferError: state.cart.bankOfferError,
@@ -73,7 +72,9 @@ const mapStateToProps = state => {
     jusPayTokenizeError: state.cart.jusPayTokenizeError,
     createJusPayOrderError: state.cart.createJusPayOrderError,
     getUserAddressError: state.cart.getUserAddressError,
-    netBankDetailsError: state.cart.netBankDetailsError
+    netBankDetailsError: state.cart.netBankDetailsError,
+    updateProfileError: state.profile.updateProfileError,
+    verifyWalletError: state.profile.verifyWalletError
   };
 };
 

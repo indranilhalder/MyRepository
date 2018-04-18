@@ -8,13 +8,43 @@ const productListings = (
     loading: false,
     productListings: null,
     pageNumber: 0,
-    paginatedLoading: false
+    paginatedLoading: false,
+    isFilterOpen: false,
+    urlToReturnToAfterClear: null,
+    filterTabIndex: 0,
+    isCategorySelected: true
   },
   action
 ) => {
   let existingProductListings;
   let toUpdate;
   switch (action.type) {
+    case plpActions.SET_FILTER_SELECTED_DATA:
+      return Object.assign({}, state, {
+        filterTabIndex: action.filterTabIndex,
+        isCategorySelected: action.isCategorySelected
+      });
+    case plpActions.RESET_FILTER_SELECTED_DATA:
+      return Object.assign({}, state, {
+        filterTabIndex: 0,
+        isCategorySelected: true
+      });
+    case plpActions.SET_URL_TO_RETURN_TO_AFTER_CLEAR:
+      return Object.assign({}, state, {
+        urlToReturnToAfterClear: action.urlToReturnToAfterClear
+      });
+    case plpActions.SET_URL_TO_RETURN_TO_AFTER_CLEAR_TO_NULL:
+      return Object.assign({}, state, {
+        urlToReturnToAfterClear: null
+      });
+    case plpActions.SHOW_FILTER:
+      return Object.assign({}, state, {
+        isFilterOpen: true
+      });
+    case plpActions.HIDE_FILTER:
+      return Object.assign({}, state, {
+        isFilterOpen: false
+      });
     case plpActions.UPDATE_FACETS:
       const productListings = cloneDeep(state.productListings);
       productListings.facetdata = action.productListings.facetdata;

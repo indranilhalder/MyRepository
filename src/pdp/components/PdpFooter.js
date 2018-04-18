@@ -5,6 +5,7 @@ import FooterButton from "../../general/components/FooterButton.js";
 import addToBagIcon from "./img/order-historyWhite.svg";
 import { WISHLIST_FOOTER_BUTTON_TYPE } from "../../wishlist/components/AddToWishListButton";
 import AddToWishListButtonContainer from "../../wishlist/containers/AddToWishListButtonContainer";
+import { SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP } from "../../lib/adobeUtils";
 export default class PdfFooter extends React.Component {
   onAddToBag() {
     if (this.props.onAddToBag) {
@@ -19,6 +20,7 @@ export default class PdfFooter extends React.Component {
             type={WISHLIST_FOOTER_BUTTON_TYPE}
             productListingId={this.props.productListingId}
             winningUssID={this.props.winningUssID}
+            setDataLayerType={SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP} // this is using for setting data layer on pdp page
           />
         </div>
         <div className={styles.footerButtonHolder}>
@@ -26,6 +28,7 @@ export default class PdfFooter extends React.Component {
             icon={addToBagIcon}
             backgroundColor="#ff1744"
             label="Add to bag"
+            disabled={this.props.outOfStock}
             onClick={() => this.onAddToBag()}
             labelStyle={{
               color: "#fff",

@@ -6,7 +6,9 @@ import Input from "../../general/components/Input";
 import PasswordInput from "./PasswordInput";
 import styles from "./Login.css";
 import LoginButton from "./LogInButton";
-import { SUCCESS, HOME_DELIVERY } from "../../lib/constants";
+import { CART_DETAILS_FOR_ANONYMOUS } from "../../lib/constants";
+import * as Cookie from "../../lib/Cookie";
+
 import AuthFrame from "./AuthFrame.js";
 import MDSpinner from "react-md-spinner";
 import {

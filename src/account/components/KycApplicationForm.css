@@ -53,3 +53,10 @@
 .buttonHolder:last-child {
   margin-bottom: 0px;
 }
+
+.loader {
+  width: 211px;
+  height: 36px;
+  background-color: #ff1744;
+  border-radius: 18px;
+}

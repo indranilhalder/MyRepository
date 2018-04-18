@@ -12,13 +12,14 @@ export default class FaqPage extends React.Component {
 
   renderQuestionAnswer(dautm) {
     const tm = JSON.parse(dautm);
-    console.log(tm);
+
     return (
       tm &&
       tm.map((val, i) => {
         return (
           <div className={styles.questionAnswerHolder}>
             <Accordion
+              headerElement={true}
               faqQuestion={val.question_component}
               activeBackground="#f8f8f8"
             >
@@ -38,7 +39,6 @@ export default class FaqPage extends React.Component {
       <div className={styles.base}>
         {this.props.items &&
           this.props.items.map((val, i) => {
-            console.log(this.props.items);
             return (
               <div>
                 {val.componentName === "cmsParagraphComponent" &&

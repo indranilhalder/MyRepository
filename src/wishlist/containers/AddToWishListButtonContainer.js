@@ -10,10 +10,12 @@ const toastMessageOnSuccessAddToWishlist = "Added";
 
 const toastMessageOnAlreadyInWishlist = "Already in wishlist";
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     addProductToWishList: async productObj => {
-      const wishlistResponse = await dispatch(addProductToWishList(productObj));
+      const wishlistResponse = await dispatch(
+        addProductToWishList(productObj, ownProps.setDataLayerType)
+      );
       if (wishlistResponse.status === SUCCESS) {
         dispatch(displayToast(toastMessageOnSuccessAddToWishlist));
       }
