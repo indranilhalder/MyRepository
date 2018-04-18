@@ -1,6 +1,6 @@
 import React from "react";
 import Video from "./Video";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import Logo from "./Logo";
 import PropTypes from "prop-types";
 import styles from "./ProductVideo.css";

@@ -1,9 +1,9 @@
 import React from "react";
-import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import MediaQuery from "react-responsive";
 import styles from "./ConnectButton.css";
-import { Icon, CircleButton } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
+import CircleButton from "../../xelpmoc-core/CircleButton";
 import iconImageURL from "../../home/components/img/Connect_Small.svg";
 export default class ConnectButton extends React.Component {
   handleClick = () => {

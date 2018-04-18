@@ -4,7 +4,7 @@ import ProductModule from "../../general/components/ProductModule";
 import IconicFilter from "./IconicFilter";
 import PlpAds from "./PlpAds";
 import PlpComponent from "./PlpComponent";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import styles from "./ProductGrid.css";
 import gridImage from "./img/grid.svg";
 import listImage from "./img/list.svg";

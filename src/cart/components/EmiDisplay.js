@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./EmiDisplay.css";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import image from "../../general/components/img/check.svg";
 import PropTypes from "prop-types";

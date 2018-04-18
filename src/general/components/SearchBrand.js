@@ -2,7 +2,8 @@ import React from "react";
 import styles from "./SearchBrand.css";
 import PropTypes from "prop-types";
 import Input2 from "./Input2.js";
-import { Icon, CircleButton } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
+import CircleButton from "../../xelpmoc-core/CircleButton";
 import informationIcon from "./img/Search.svg";
 export default class SearchBrand extends React.Component {
   handleClick = () => {

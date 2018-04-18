@@ -1,5 +1,5 @@
 import React from "react";
-import cloneDeep from "lodash/cloneDeep";
+import cloneDeep from "lodash.clonedeep";
 import PropTypes from "prop-types";
 import DummyTab from "./DummyTab";
 import ConfirmAddress from "./ConfirmAddress";
@@ -14,8 +14,7 @@ import PaymentCardWrapper from "./PaymentCardWrapper.js";
 import CartItem from "./CartItem";
 import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
-import filter from "lodash/filter";
-import find from "lodash/find";
+import find from "lodash.find";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
@@ -43,7 +42,7 @@ import {
   JUS_PAY_AUTHENTICATION_FAILED
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
   setDataLayerForCheckoutDirectCalls,
   ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE,
@@ -114,7 +113,7 @@ class CheckOutPage extends React.Component {
     return (
       <div className={styles.cartLoader}>
         <div className={styles.spinner}>
-          <MDSpinner />
+          <SecondaryLoader />
         </div>
       </div>
     );

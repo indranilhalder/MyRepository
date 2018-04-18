@@ -13,13 +13,11 @@ class DiscoverMoreCarousel extends React.Component {
   };
   render() {
     const discoverMoreCarouselData = this.props.feedComponentData;
-    if (!(discoverMoreCarouselData instanceof Array)) {
-      return null;
-    }
     return (
       <div className={styles.base}>
         <Carousel header={discoverMoreCarouselData.title}>
           {discoverMoreCarouselData.data &&
+            discoverMoreCarouselData.data.map &&
             discoverMoreCarouselData.data.map((datum, i) => {
               return (
                 <CircleProductImage

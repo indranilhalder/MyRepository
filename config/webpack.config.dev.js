@@ -9,6 +9,7 @@ const eslintFormatter = require("react-dev-utils/eslintFormatter");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const getClientEnvironment = require("./env");
 const paths = require("./paths");
+const PreloadWebpackPlugin = require("preload-webpack-plugin");
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -84,7 +85,8 @@ module.exports = {
     alias: {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-      "react-native": "react-native-web"
+      "react-native": "react-native-web",
+      "xelpmoc-core": "src/xelpmoc-core"
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -213,10 +215,19 @@ module.exports = {
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     // In development, this will be an empty string.
     new InterpolateHtmlPlugin(env.raw),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "vendor",
+      minChunks: ({ resource }) => /node_modules/.test(resource),
+      filename: "[name].js"
+    }),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml
+    }),
+    new PreloadWebpackPlugin({
+      rel: "preload",
+      include: "initial"
     }),
     // Add module names to factory functions so they appear in browser profiler.
     new webpack.NamedModulesPlugin(),

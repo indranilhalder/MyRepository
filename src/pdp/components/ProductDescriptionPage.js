@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import ProductDetails from "./ProductDetails";
@@ -7,7 +7,7 @@ import PdpFrame from "./PdpFrame";
 import OfferCard from "./OfferCard";
 import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import RatingAndTextLink from "./RatingAndTextLink";
 import PdpLink from "./PdpLink";
 import PdpPincode from "./PdpPincode";
@@ -53,7 +53,7 @@ class ProductDescriptionPage extends Component {
   renderLoader() {
     return (
       <div className={styles.loadingIndicator}>
-        <MDSpinner />
+        <SecondaryLoader />
       </div>
     );
   }
@@ -231,8 +231,10 @@ class ProductDescriptionPage extends Component {
             )}
             {this.props.productDetails.isServiceableToPincode &&
             this.props.productDetails.isServiceableToPincode.status === NO ? (
-              <Overlay labelText="Not serviceable in you pincode,
-    please try another pincode">
+              <Overlay
+                labelText="Not serviceable in you pincode,
+    please try another pincode"
+              >
                 {this.renderDeliveryOptions(productData)}
               </Overlay>
             ) : (

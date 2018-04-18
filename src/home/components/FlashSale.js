@@ -3,15 +3,14 @@ import Grid from "../../general/components/Grid";
 import ProductModule from "../../general/components/ProductModule";
 import PropTypes from "prop-types";
 import styles from "./FlashSale.css";
-import concat from "lodash/concat";
+import concat from "lodash.concat";
 import { transformData } from "./utils.js";
 import Button from "../../general/components/Button.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import TimerCounter from "../../general/components/TimerCounter.js";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import ClockImage from "../../pdp/components/img/clockWhite.svg";
 import { convertDateTimeFromIndianToAmerican } from "../../home/dateTimeUtils.js";
-import moment from "moment";
 
 const OFFER_AND_ITEM_LIMIT = 4;
 
@@ -61,15 +60,6 @@ export default class FlashSale extends React.Component {
     const endDateTime = new Date(
       convertDateTimeFromIndianToAmerican(feedComponentData.endDate)
     );
-
-    if (!moment(startDateTime).isValid()) {
-      return null;
-    }
-
-    if (!moment(endDateTime).isValid()) {
-      return null;
-    }
-
     // if date time
 
     const now = Date.now();
