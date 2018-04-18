@@ -42,6 +42,7 @@ export default class MyAccount extends React.Component {
     );
   }
   componentDidUpdate() {
+    setDataLayer(ADOBE_MY_ACCOUNT_LANDING_PAGE);
     this.props.setHeaderText(MY_CLIQ);
   }
 

@@ -113,6 +113,7 @@ export default class OrderDetails extends React.Component {
   componentDidUpdate(prevProps) {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    setDataLayer(ADOBE_MY_ACCOUNT_ORDER_DETAILS);
     if (
       userDetails &&
       customerCookie &&

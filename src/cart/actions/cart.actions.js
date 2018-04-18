@@ -33,7 +33,8 @@ import {
   ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
   setDataLayerForOrderConfirmationDirectCalls,
   ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS,
-  ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE
+  ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE,
+  ADOBE_MY_ACCOUNT_ADDRESS_BOOK
 } from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
@@ -705,6 +706,7 @@ export function getUserAddress() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayer(ADOBE_MY_ACCOUNT_ADDRESS_BOOK);
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
       dispatch(userAddressFailure(e.message));

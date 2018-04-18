@@ -9,10 +9,6 @@ import {
   MY_ACCOUNT_ADDRESS_ADD_PAGE,
   ADDRESS_BOOK
 } from "../../lib/constants.js";
-import {
-  setDataLayer,
-  ADOBE_MY_ACCOUNT_ADDRESS_BOOK
-} from "../../lib/adobeUtils";
 
 const ADDRESS_BOOK_HEADER = "Add a new address";
 const DELETE_LABEL = "Delete";
@@ -21,7 +17,6 @@ const NO_ADDRESS_TEXT = "No Saved Address";
 
 export default class AddressBook extends React.Component {
   componentDidMount() {
-    setDataLayer(ADOBE_MY_ACCOUNT_ADDRESS_BOOK);
     this.props.setHeaderText(ADDRESS_BOOK);
     this.props.getUserAddress();
   }

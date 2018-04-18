@@ -37,6 +37,7 @@ export default class SaveListDetails extends React.Component {
     }
   }
   componentDidUpdate() {
+    setDataLayer(ADOBE_MY_ACCOUNT_SAVED_LIST);
     this.props.setHeaderText(SAVED_LIST);
   }
   navigateToLogin() {

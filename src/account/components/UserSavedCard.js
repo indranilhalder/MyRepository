@@ -30,6 +30,7 @@ export default class UserSavedCard extends React.Component {
     }
   }
   componentDidUpdate() {
+    setDataLayer(ADOBE_MY_ACCOUNT_SAVED_PAYMENTS);
     this.props.setHeaderText(SAVED_PAYMENTS);
   }
   removeSavedCardDetails = () => {

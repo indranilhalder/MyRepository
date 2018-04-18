@@ -47,6 +47,7 @@ export default class AllOrderDetails extends React.Component {
   }
   componentDidUpdate() {
     if (this.props.shouldCallHeaderContainer) {
+      setDataLayer(ADOBE_MY_ACCOUNT_ORDER_HISTORY);
       this.props.setHeaderText(ORDER_HISTORY);
     }
   }
