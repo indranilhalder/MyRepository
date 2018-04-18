@@ -6,12 +6,12 @@ import {
   ERROR,
   FAILURE
 } from "../../lib/constants";
-import moment from "moment";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 export const GET_ABOUT_US_REQUEST = "GET_ABOUT_US_REQUEST";
 export const GET_ABOUT_US_SUCCESS = "GET_ABOUT_US_SUCCESS";
 export const GET_ABOUT_US_FAILURE = "GET_ABOUT_US_FAILURE";
 export const PATH = "v2/mpl";
+export const ABOUT_US = "aboutus";
 
 //ABOUT US
 export function aboutUsRequest() {
@@ -38,7 +38,9 @@ export function getAboutUsDetails() {
   return async (dispatch, getState, { api }) => {
     dispatch(aboutUsRequest());
     try {
-      const result = await api.get(`${PATH}/cms/defaultpage?pageId=aboutus`);
+      const result = await api.get(
+        `${PATH}/cms/defaultpage?pageId=${ABOUT_US}`
+      );
 
       const resultJson = await result.json();
 
