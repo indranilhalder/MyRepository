@@ -43,7 +43,6 @@ export default class ThemeProductWidget extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     let items = [];
     let widgetData = this.props.feedComponentData;
     if (
