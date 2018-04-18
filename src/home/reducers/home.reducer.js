@@ -100,7 +100,6 @@ const home = (
           status: action.status,
           homeFeed: homeFeedData,
           loading: false,
-          visible: false,
           feedType: action.feedType
         });
       }

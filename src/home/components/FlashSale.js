@@ -60,15 +60,6 @@ export default class FlashSale extends React.Component {
     const endDateTime = new Date(
       convertDateTimeFromIndianToAmerican(feedComponentData.endDate)
     );
-
-    // if (!moment(startDateTime).isValid()) {
-    //   return null;
-    // }
-
-    // if (!moment(endDateTime).isValid()) {
-    //   return null;
-    // }
-
     // if date time
 
     const now = Date.now();
