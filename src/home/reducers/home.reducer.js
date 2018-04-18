@@ -196,15 +196,16 @@ const home = (
       });
     case FOLLOW_AND_UN_FOLLOW_BRANDS_IN_HOME_FEED_SUCCESS:
       homeFeedData = cloneDeep(state.homeFeed);
-      const brandComponentData = homeFeedData[action.positionInFeed];
-      const indexOfBrandToBeUpdate = brandComponentData.data.findIndex(
-        brand => {
-          return brand.id === action.brandId;
-        }
-      );
-      brandComponentData.data[indexOfBrandToBeUpdate].isFollowing =
+
+      const clonedComponent = homeFeedData[action.positionInFeed];
+      const indexOfBrandToBeUpdated = clonedComponent.findIndex(item => {
+        return item.id === action.brandId;
+      });
+
+      clonedComponent.data[indexOfBrandToBeUpdated].isFollowing =
         action.followStatus;
-      homeFeedData[action.positionInFeed] = brandComponentData;
+      homeFeedData[action.positionInFeed] = clonedComponent;
+
       return Object.assign({}, state, {
         homeFeed: homeFeedData,
         status: action.status
