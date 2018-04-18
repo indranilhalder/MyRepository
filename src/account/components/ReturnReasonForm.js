@@ -1,6 +1,6 @@
 import React from "react";
 import OrderCard from "./OrderCard";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import TextArea from "../../general/components/TextArea";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
@@ -96,7 +96,7 @@ export default class ReturnReasonForm extends React.Component {
             )}
           </OrderCard>
           <div className={styles.select}>
-            <SelectBoxMobile
+            <SelectBoxMobile2
               label={this.state.reason ? this.state.reason : "Select a reason"}
               options={data.returnReasonMap.map((val, i) => {
                 return {
@@ -109,7 +109,7 @@ export default class ReturnReasonForm extends React.Component {
           </div>
           {this.state.secondaryReasons && (
             <div className={styles.select}>
-              <SelectBoxMobile
+              <SelectBoxMobile2
                 label={
                   this.state.subReason
                     ? this.state.subReason

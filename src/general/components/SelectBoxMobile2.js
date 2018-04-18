@@ -25,7 +25,6 @@ export default class SelectBoxMobile extends React.Component {
   }
 
   handleChange(event) {
-    console.log(event.target);
     const selectedValue = event.target.value;
     const index = event.nativeEvent.target.selectedIndex;
     const selectedLabel = event.nativeEvent.target[index].label;
