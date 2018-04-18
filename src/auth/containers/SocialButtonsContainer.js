@@ -12,20 +12,52 @@ import {
   loginUser,
   loginUserRequest,
   customerAccessToken,
-  socialMediaRegistration
+  socialMediaRegistration,
+  loadGoogleSignInApi
 } from "../../auth/actions/user.actions";
+import {
+  singleAuthCallHasFailed,
+  setIfAllAuthCallsHaveSucceeded,
+  authCallsAreInProgress
+} from "../../auth/actions/auth.actions";
 import {
   mergeCartId,
   generateCartIdForLoggedInUser,
   getCartId
 } from "../../cart/actions/cart.actions";
-import { SUCCESS } from "../../lib/constants";
+import { logout } from "../../account/actions/account.actions.js";
+import { SUCCESS, ERROR, FAILURE } from "../../lib/constants";
 import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
+import { displayToast } from "../../general/toast.actions.js";
+import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
+import {
+  setDataLayerForLogin,
+  ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS,
+  ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE
+} from "../../lib/adobeUtils";
 
 const mapDispatchToProps = dispatch => {
   return {
+    clearUrlToRedirectToAfterAuth: () => {
+      dispatch(clearUrlToRedirectToAfterAuth());
+    },
     facebookLogin: async isSignUp => {
+      dispatch(authCallsAreInProgress());
       const facebookResponse = await dispatch(facebookLogin(isSignUp));
+      if (facebookResponse.status === ERROR) {
+        dispatch(singleAuthCallHasFailed(facebookResponse.error));
+        return;
+      }
+      // if user doesn't have any email id linked to their fb account then
+      // we have to show toast that
+      if (!facebookResponse.email) {
+        dispatch(
+          singleAuthCallHasFailed(
+            "Something went wrong. Please try with different account"
+          )
+        );
+        return;
+      }
       if (isSignUp) {
         const signUpResponse = await dispatch(
           socialMediaRegistration(
@@ -38,11 +70,17 @@ const mapDispatchToProps = dispatch => {
         );
 
         if (signUpResponse.status !== SUCCESS) {
-          //TODO dispatch toast here.
-          return false;
+          dispatch(singleAuthCallHasFailed(signUpResponse.error));
+          dispatch(logout());
+          return;
         }
         if (signUpResponse.status === SUCCESS) {
-          dispatch(createWishlist());
+          const wishListResponse = await dispatch(createWishlist());
+          if (wishListResponse.status === ERROR) {
+            dispatch(singleAuthCallHasFailed(signUpResponse.error));
+            dispatch(logout());
+            return;
+          }
         }
       }
 
@@ -68,34 +106,80 @@ const mapDispatchToProps = dispatch => {
         );
 
         if (loginUserResponse.status === SUCCESS) {
+          setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS);
           const cartVal = await dispatch(getCartId());
+
           if (
             cartVal.status === SUCCESS &&
             cartVal.cartDetails.guid &&
             cartVal.cartDetails.code
           ) {
-            dispatch(mergeCartId(cartVal.cartDetails.guid));
+            const mergeCartResponse = await dispatch(
+              mergeCartId(cartVal.cartDetails.guid)
+            );
+
+            if (mergeCartResponse.status === SUCCESS) {
+              dispatch(setIfAllAuthCallsHaveSucceeded());
+            } else {
+              dispatch(singleAuthCallHasFailed(mergeCartResponse.error));
+              dispatch(logout());
+            }
           } else {
             const createdCartVal = await dispatch(
               generateCartIdForLoggedInUser()
             );
-            if (isSignUp) {
-              dispatch(mergeCartId(createdCartVal.cartDetails.guid));
+
+            if (
+              createdCartVal.status === ERROR ||
+              createdCartVal.status === FAILURE
+            ) {
+              dispatch(singleAuthCallHasFailed(createdCartVal.error));
+              dispatch(logout());
+            } else {
+              const mergeCartResponse = await dispatch(
+                mergeCartId(createdCartVal.cartDetails.guid)
+              );
+              if (mergeCartResponse.status === SUCCESS) {
+                dispatch(setIfAllAuthCallsHaveSucceeded());
+              }
             }
           }
+        } else {
+          setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE);
+          dispatch(singleAuthCallHasFailed(loginUserRequest.error));
+          dispatch(logout());
         }
+      } else {
+        dispatch(
+          singleAuthCallHasFailed(customerAccessTokenActionResponse.error)
+        );
+        dispatch(logout());
       }
     },
     googlePlusLogin: async isSignUp => {
-      const googlePlusResponse = await dispatch(googlePlusLogin(isSignUp));
-      if (googlePlusResponse.status && googlePlusResponse.status !== SUCCESS) {
+      dispatch(authCallsAreInProgress());
+
+      const loadGoogleSdkResponse = await loadGoogleSignInApi();
+      if (loadGoogleSdkResponse.status === ERROR) {
+        dispatch(singleAuthCallHasFailed(loadGoogleSdkResponse.description));
+        // as loading the google sign in api has nothing with redux state
+        // we manually trigger the toast error here
+        dispatch(displayToast("SDK Failed to load, check Google Client ID"));
         return;
       }
+
+      const googlePlusResponse = await dispatch(googlePlusLogin(isSignUp));
+      if (googlePlusResponse.status && googlePlusResponse.status !== SUCCESS) {
+        dispatch(singleAuthCallHasFailed());
+        dispatch(logout());
+        return;
+      }
+
       if (isSignUp) {
         const signUpResponse = await dispatch(
           socialMediaRegistration(
-            googlePlusResponse.emails[0].value,
-            googlePlusResponse.emails[0].value,
+            googlePlusResponse.email,
+            googlePlusResponse.email,
             googlePlusResponse.id,
             GOOGLE_PLUS_PLATFORM,
             SOCIAL_CHANNEL_GOOGLE_PLUS
@@ -103,14 +187,24 @@ const mapDispatchToProps = dispatch => {
         );
 
         if (signUpResponse.status !== SUCCESS) {
-          // TODO toast
+          dispatch(singleAuthCallHasFailed(signUpResponse.error));
+          dispatch(logout());
           return;
+        }
+
+        if (signUpResponse.status === SUCCESS) {
+          const wishListResponse = await dispatch(createWishlist());
+          if (wishListResponse.status === ERROR) {
+            dispatch(singleAuthCallHasFailed(signUpResponse.error));
+            dispatch(logout());
+            return;
+          }
         }
       }
 
       const customerAccessTokenActionResponse = await dispatch(
         generateCustomerLevelAccessTokenForSocialMedia(
-          googlePlusResponse.emails[0].value,
+          googlePlusResponse.email,
           googlePlusResponse.id,
           googlePlusResponse.accessToken,
           GOOGLE_PLUS_PLATFORM,
@@ -121,30 +215,60 @@ const mapDispatchToProps = dispatch => {
       if (customerAccessTokenActionResponse.status === SUCCESS) {
         const loginUserResponse = await dispatch(
           socialMediaLogin(
-            googlePlusResponse.emails[0].value,
+            googlePlusResponse.email,
             GOOGLE_PLUS_PLATFORM,
             customerAccessTokenActionResponse.customerAccessTokenDetails
               .access_token
           )
         );
-
         if (loginUserResponse.status === SUCCESS) {
           const cartVal = await dispatch(getCartId());
+
           if (
             cartVal.status === SUCCESS &&
+            cartVal.cartDetails &&
             cartVal.cartDetails.guid &&
             cartVal.cartDetails.code
           ) {
-            dispatch(mergeCartId(cartVal.cartDetails.guid));
+            const mergeCartResponse = await dispatch(
+              mergeCartId(cartVal.cartDetails.guid)
+            );
+
+            if (mergeCartResponse.status === SUCCESS) {
+              dispatch(setIfAllAuthCallsHaveSucceeded());
+            } else {
+              dispatch(singleAuthCallHasFailed(mergeCartResponse.error));
+              dispatch(logout());
+            }
           } else {
             const createdCartVal = await dispatch(
               generateCartIdForLoggedInUser()
             );
-            if (isSignUp) {
-              dispatch(mergeCartId(createdCartVal.cartDetails.guid));
+
+            if (
+              createdCartVal.status === ERROR ||
+              createdCartVal.status === FAILURE
+            ) {
+              dispatch(singleAuthCallHasFailed(createdCartVal.error));
+              dispatch(logout());
+            } else {
+              const mergeCartResponse = await dispatch(
+                mergeCartId(createdCartVal.cartDetails.guid)
+              );
+              if (mergeCartResponse.status === SUCCESS) {
+                dispatch(setIfAllAuthCallsHaveSucceeded());
+              }
             }
           }
+        } else {
+          dispatch(singleAuthCallHasFailed(loginUserRequest.error));
+          dispatch(logout());
         }
+      } else {
+        dispatch(
+          singleAuthCallHasFailed(customerAccessTokenActionResponse.error)
+        );
+        dispatch(logout());
       }
     }
   };
@@ -152,7 +276,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    signUp: ownProps.isSignUp
+    signUp: ownProps.isSignUp,
+    redirectToAfterAuthUrl: state.auth.redirectToAfterAuthUrl
   };
 };
 

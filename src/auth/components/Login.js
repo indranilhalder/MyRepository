@@ -6,7 +6,9 @@ import Input from "../../general/components/Input";
 import PasswordInput from "./PasswordInput";
 import styles from "./Login.css";
 import LoginButton from "./LogInButton";
-import { SUCCESS } from "../../lib/constants";
+import { CART_DETAILS_FOR_ANONYMOUS } from "../../lib/constants";
+import * as Cookie from "../../lib/Cookie";
+
 import AuthFrame from "./AuthFrame.js";
 import MDSpinner from "react-md-spinner";
 import {
@@ -28,7 +30,12 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.authCallsIsSucceed) {
-      this.props.history.push(HOME_ROUTER);
+      if (this.props.redirectToAfterAuthUrl) {
+        this.props.history.push(this.props.redirectToAfterAuthUrl);
+        this.props.clearUrlToRedirectToAfterAuth();
+      } else {
+        this.props.history.push(HOME_ROUTER);
+      }
     }
   }
 
@@ -108,6 +115,7 @@ class Login extends Component {
       footerClick = () => this.navigateToLogin();
       showSocialButtons = false;
     }
+
     if (this.props.authCallsInProcess) {
       return (
         <div className={styles.loadingIndicator}>

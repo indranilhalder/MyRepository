@@ -8,15 +8,12 @@ import desktopFacebookImage from "./img/facebook_desktop.svg";
 import googlePlus from "./img/googlePlus.svg";
 import desktopGooglePlus from "./img/googlePlus_desktop.svg";
 import PropTypes from "prop-types";
-import config from "../../lib/config";
-import { SOCIAL_SIGN_UP } from "../../lib/constants";
+
+import { SOCIAL_SIGN_UP, HOME_ROUTER } from "../../lib/constants";
 const FACEBOOK_VERSION = "v2.11";
 const FACEBOOK_SDK = "https://connect.facebook.net/en_US/sdk.js";
-const GOOGLE_PLUS_SDK =
-  "https://apis.google.com/js/client:platform.js?onload=gPOnLoad";
 const SCRIPT = "script";
 const FACEBOOK_JSDK = "facebook-jssdk";
-const TYPE = "text/javascript";
 const SIGN_IN_TEXT = "Sign in with your social account";
 const SIGN_UP_TEXT = "Sign Up with your social account";
 export default class SocialButtons extends Component {
@@ -41,22 +38,17 @@ export default class SocialButtons extends Component {
       js.src = FACEBOOK_SDK;
       fjs.parentNode.insertBefore(js, fjs);
     })(document, SCRIPT, FACEBOOK_JSDK);
-
-    //Load Google Sdk
-    (() => {
-      var e = document.createElement(SCRIPT);
-      e.type = TYPE;
-      e.async = true;
-      e.src = GOOGLE_PLUS_SDK;
-      var t = document.getElementsByTagName(SCRIPT)[0];
-      t.parentNode.insertBefore(e, t);
-    })();
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.user) {
       if (nextProps.user.isLoggedIn === true) {
-        this.props.history.push("/");
+        if (this.props.redirectToAfterAuthUrl) {
+          this.props.history.push(this.props.redirectToAfterAuthUrl);
+          this.props.clearUrlToRedirectToAfterAuth();
+        } else {
+          this.props.history.push(HOME_ROUTER);
+        }
       }
     }
   }

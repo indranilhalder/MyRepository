@@ -3,11 +3,13 @@ import { getWishList } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import SaveListDetails from "../components/SaveListDetails";
 import { setHeaderText } from "../../general/header.actions";
+import { displayToast } from "../../general/toast.actions";
 import {
   removeProductFromWishList,
   addProductToCart
 } from "../../pdp/actions/pdp.actions";
 import { SUCCESS } from "../../lib/constants";
+const REMOVED_SAVELIST = "Removed Successfully";
 const mapDispatchToProps = dispatch => {
   return {
     getWishList: () => {
@@ -22,6 +24,7 @@ const mapDispatchToProps = dispatch => {
     removeProductFromWishList: productDetails => {
       dispatch(removeProductFromWishList(productDetails)).then(response => {
         if (response.status === SUCCESS) {
+          dispatch(displayToast(REMOVED_SAVELIST));
           return dispatch(getWishList());
         } else {
           return response;
@@ -32,7 +35,8 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   return {
-    wishList: state.profile.wishlist
+    wishList: state.profile.wishlist,
+    loading: state.profile.loadingForWishlist
   };
 };
 

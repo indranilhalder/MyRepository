@@ -1,0 +1,77 @@
+.base {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  padding: 15px;
+  border-radius: 4px;
+}
+.orderIdHolder {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+}
+.informationDataHolder {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+}
+.addressHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+.deliveredTo {
+  width: 100%;
+  color: #181818;
+  font-size: 14px;
+  font-family: semibold;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+.address {
+  width: 100%;
+  height: auto;
+  color: #181818;
+  font-family: regular;
+  font-size: 14px;
+  line-height: 22px;
+  display: inline-block;
+}
+.orderSoldBy {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.labelText {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
+  color: #181818;
+  font-size: 14px;
+  font-family: semibold;
+}
+.infoText {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  color: #181818;
+  padding-left: 5px;
+  font-size: 14px;
+  font-family: regular;
+}
+.quantityHolder {
+  composes: orderSoldBy;
+  margin-bottom: 0px;
+  margin-top: 5px;
+}
+.quantityLabel {
+  composes: labelText;
+  font-family: regular;
+}
+.quantityAmount {
+  composes: infoText;
+}

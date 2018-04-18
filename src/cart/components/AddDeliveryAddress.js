@@ -18,8 +18,8 @@ export default class AddDeliveryAddress extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      countryIso: "",
-      addressType: "",
+      countryIso: ISO_CODE,
+      addressType: "Home",
       phone: "",
       firstName: "",
       lastName: "",
@@ -31,12 +31,23 @@ export default class AddDeliveryAddress extends React.Component {
       line3: "",
       town: "",
       salutaion: "",
-      defaultFlag: false
+      defaultFlag: true
     };
   }
 
+  getPinCodeDetails = val => {
+    if (val.length <= 6) {
+      this.setState({ postalCode: val });
+    }
+    if (val.length === 6 && this.props.getPinCode) {
+      this.props.getPinCode(val);
+    }
+  };
   onChange(val) {
     this.setState(val);
+    if (this.props.getAddressDetails) {
+      this.props.getAddressDetails(this.state);
+    }
   }
   onChangeDefaultFlag() {
     this.setState(prevState => ({
@@ -48,26 +59,20 @@ export default class AddDeliveryAddress extends React.Component {
     if (nextProps.addUserAddressStatus === SUCCESS) {
       this.props.history.goBack();
     }
+    if (nextProps.getPinCodeDetails) {
+      this.setState({
+        state:
+          nextProps.getPinCodeDetails &&
+          nextProps.getPinCodeDetails.state &&
+          nextProps.getPinCodeDetails.state.name
+      });
+    }
   }
 
   addNewAddress = () => {
     //add new Address
-    let addressDetails = {};
-    addressDetails.countryIso = ISO_CODE;
-    addressDetails.addressType = this.state.addressType;
-    addressDetails.phone = this.state.phone;
-    addressDetails.firstName = this.state.firstName;
-    addressDetails.lastName = "";
-    addressDetails.postalCode = this.state.postalCode;
-    addressDetails.line1 = this.state.line1;
-    addressDetails.state = this.state.state;
-    addressDetails.emailId = this.state.emailId;
-    addressDetails.line2 = this.state.line2;
-    addressDetails.line3 = this.state.line3;
-    addressDetails.town = this.state.town;
-    addressDetails.salutaion = this.state.salutaion;
-    addressDetails.defaultFlag = this.state.defaultFlag;
-    this.props.addUserAddress(addressDetails);
+
+    this.props.addUserAddress(this.state);
   };
 
   clearAllValue = () => {
@@ -88,6 +93,16 @@ export default class AddDeliveryAddress extends React.Component {
   };
 
   render() {
+    if (this.props.loading) {
+      if (this.props.showSecondaryLoader) {
+        this.props.showSecondaryLoader();
+      }
+    } else {
+      if (this.props.hideSecondaryLoader) {
+        this.props.hideSecondaryLoader();
+      }
+    }
+
     const dataLabel = [
       {
         label: "Home"
@@ -121,7 +136,7 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <Input2
             placeholder="Enter a pincode/zipcode*"
-            onChange={postalCode => this.onChange({ postalCode })}
+            onChange={postalCode => this.getPinCodeDetails(postalCode)}
             textStyle={{ fontSize: 14 }}
             value={
               this.props.postalCode
@@ -233,7 +248,7 @@ export default class AddDeliveryAddress extends React.Component {
             offset={0}
             elementWidthMobile={50}
             onSelect={val => this.onChange({ addressType: val[0] })}
-            selected={this.state.addressType}
+            selected={[this.state.addressType]}
           >
             {dataLabel.map((val, i) => {
               return (
@@ -251,14 +266,16 @@ export default class AddDeliveryAddress extends React.Component {
         </div>
         <div className={styles.buttonHolder}>
           <div className={styles.saveAndContinueButton}>
-            <Button
-              type="primary"
-              label={SAVE_TEXT}
-              width={176}
-              height={38}
-              onClick={() => this.addNewAddress()}
-              textStyle={{ color: "#FFF", fontSize: 14 }}
-            />
+            {!this.props.isFirstAddress && (
+              <Button
+                type="primary"
+                label={SAVE_TEXT}
+                width={176}
+                height={38}
+                onClick={() => this.addNewAddress()}
+                textStyle={{ color: "#FFF", fontSize: 14 }}
+              />
+            )}
           </div>
         </div>
       </div>

@@ -49,7 +49,6 @@ const cart = (
 
     emiBankDetails: null,
     emiBankStatus: null,
-    emiBankError: null,
 
     orderSummary: null,
     orderSummaryStatus: null,
@@ -203,6 +202,10 @@ const cart = (
       });
 
     case cartActions.CART_DETAILS_SUCCESS:
+      if (action.cartDetails && action.cartDetails.appliedCoupon) {
+        Cookies.createCookie(COUPON_COOKIE, action.cartDetails.appliedCoupon);
+      }
+
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
         cartDetails: action.cartDetails,
@@ -224,15 +227,7 @@ const cart = (
       });
 
     case cartActions.APPLY_USER_COUPON_SUCCESS:
-      let couponList = cloneDeep(state.coupons.opencouponsList);
-
-      let couponDetails = find(couponList, coupon => {
-        return coupon.couponCode === action.couponCode;
-      });
-      let date = couponDetails.couponExpiryDate;
-      let expiryTime = new Date(date.split(IST_TIME_ZONE).join());
-      let expiryCouponDate = expiryTime.getTime();
-      Cookies.createCookie(COUPON_COOKIE, action.couponCode, expiryCouponDate);
+      Cookies.createCookie(COUPON_COOKIE, action.couponCode);
 
       let carDetailsCopy = cloneDeep(state.cartDetails);
       let cartAmount = action.couponResult.cartAmount;
@@ -512,13 +507,8 @@ const cart = (
       });
 
     case cartActions.ADD_PICKUP_PERSON_SUCCESS:
-      const currentCartDetailsCNC = cloneDeep(state.cartDetails);
-      updatedCartDetailsCNC = Object.assign({}, action.cartDetailsCNC, {
-        cartAmount: currentCartDetailsCNC.cartAmount
-      });
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
-        cartDetailsCNC: updatedCartDetailsCNC,
         loading: false
       });
 
@@ -681,6 +671,7 @@ const cart = (
 
       // here is where I need to destroy the cart details
       Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      Cookies.deleteCookie(COUPON_COOKIE);
       return Object.assign({}, state, {
         jusPayStatus: action.status,
         cliqCashJusPayDetails: action.cliqCashJusPayDetails,
@@ -777,6 +768,7 @@ const cart = (
 
       // here is where I need to destroy the cart details
       Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      Cookies.deleteCookie(COUPON_COOKIE);
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetails: action.justPayPaymentDetails,
@@ -1069,6 +1061,13 @@ const cart = (
         jusPayTokenizeStatus: action.status,
         jusPayTokenizeError: action.error,
         jusPaymentLoader: false
+      });
+
+    case cartActions.CLEAR_CART_DETAILS:
+      return Object.assign({}, state, {
+        cartDetails: null,
+        cartDetailsStatus: null,
+        cartDetailsError: null
       });
 
     default:

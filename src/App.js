@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ModalContainer from "./general/containers/ModalContainer";
 import ToastContainer from "./general/containers/ToastContainer";
-import { Switch, Redirect } from "react-router-dom";
+import { Switch } from "react-router-dom";
 import Route from "./general/Route";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
@@ -100,7 +100,7 @@ import {
   BRAND_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
   CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
   BRAND_PRODUCT_LISTINGS_WITH_PAGE,
-  STATIC_CATEGORY_PAGES,
+  SKU_PAGE,
   BRAND_AND_CATEGORY_PAGE,
   CANCEL_PREFIX,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
@@ -121,17 +121,17 @@ class App extends Component {
   async componentDidMount() {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     let loggedInUserDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsForLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
 
+    console.log(loggedInUserDetails);
+
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
 
     // Case 1. THe user is not logged in.
-
-    if (!globalAccessToken && !this.props.cart.loading) {
+    if (!globalAccessToken && !this.props.cartLoading) {
       await this.props.getGlobalAccessToken();
       globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     }
@@ -142,7 +142,7 @@ class App extends Component {
     }
 
     if (customerAccessToken) {
-      if (!cartDetailsForLoggedInUser && !this.props.cart.loading) {
+      if (!cartDetailsForLoggedInUser && !this.props.cartLoading) {
         this.props.generateCartIdForLoggedInUser();
       }
     }
@@ -155,7 +155,12 @@ class App extends Component {
         this.props.location.pathname.indexOf(LOGIN_PATH) !== -1 ||
         this.props.location.pathname.indexOf(SIGN_UP_PATH) !== -1
       ) {
-        this.props.history.push(`${HOME_ROUTER}`);
+        if (this.props.redirectToAfterAuthUrl) {
+          this.props.history.push(this.props.redirectToAfterAuthUrl);
+          this.props.clearUrlToRedirectToAfterAuth();
+        } else {
+          this.props.history.push(`${HOME_ROUTER}`);
+        }
       }
     } else {
       if (!cartDetailsForAnonymous && globalAccessToken) {
@@ -163,25 +168,7 @@ class App extends Component {
       }
     }
   }
-  componentDidUpdate() {
-    let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let loggedInUserDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let cartDetailsForLoggedInUser = Cookie.getCookie(
-      CART_DETAILS_FOR_LOGGED_IN_USER
-    );
-    if (
-      customerAccessToken &&
-      cartDetailsForLoggedInUser &&
-      loggedInUserDetails
-    ) {
-      if (
-        this.props.location.pathname.indexOf(LOGIN_PATH) !== -1 ||
-        this.props.location.pathname.indexOf(SIGN_UP_PATH) !== -1
-      ) {
-        this.props.history.push(`${HOME_ROUTER}`);
-      }
-    }
-  }
+
   renderLoader() {
     return (
       <div className={AppStyles.loadingIndicator}>
@@ -197,7 +184,7 @@ class App extends Component {
       customerAccessTokenStatus,
       refreshCustomerAccessTokenStatus,
       cartIdForLoggedInUserStatus,
-      cartIdForAnonymousUSerStatus
+      cartIdForAnonymousUserStatus
     } = this.props;
 
     if (
@@ -205,7 +192,7 @@ class App extends Component {
       customerAccessTokenStatus === REQUESTING ||
       refreshCustomerAccessTokenStatus === REQUESTING ||
       cartIdForLoggedInUserStatus === REQUESTING ||
-      cartIdForAnonymousUSerStatus === REQUESTING
+      cartIdForAnonymousUserStatus === REQUESTING
     ) {
       return this.renderLoader();
     }
@@ -445,11 +432,7 @@ class App extends Component {
               component={AddAddressContainer}
             />
             {/* This *has* to be at the bottom */}
-            <Route
-              exact
-              path={STATIC_CATEGORY_PAGES}
-              component={PlpBrandCategoryWrapperContainer}
-            />
+            <Route exact path={SKU_PAGE} component={ProductListingsContainer} />
           </Switch>
           <SecondaryLoaderContainer />
           <MobileFooter />

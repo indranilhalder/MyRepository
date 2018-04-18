@@ -4,6 +4,14 @@
   display: inline-block;
   padding: 15px;
   background: #ececec;
+  min-height: 100vh;
+}
+
+.loadingIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 .headerHolder {
   width: 100%;
@@ -21,4 +29,25 @@
   background: #fff;
   padding: 15px 0px 25px;
   border-radius: 4px;
+}
+.noSaveListBlock {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 73px 56px;
+}
+.noSaveListText {
+  text-align: center;
+  font-family: semibold;
+  font-size: 14px;
+  margin: auto;
+  line-height: 25px;
+}
+.buttonHolder {
+  padding-top: 44px;
+  text-align: center;
+}
+.button {
+  text-align: center;
+  display: inline-block;
 }

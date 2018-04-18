@@ -2,7 +2,7 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  padding: 15px 0;
+  margin-top: 15px;
 }
 .productInfo {
   width: 100%;
@@ -82,5 +82,12 @@
 }
 .priceCancelled {
   composes: discountPrice;
+}
+.cancelPrice {
   text-decoration: line-through;
+}
+.discount {
+  width: auto;
+  color: #ff1744;
+  padding-left: 5px;
 }

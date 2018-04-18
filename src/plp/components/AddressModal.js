@@ -4,6 +4,11 @@ import BottomSlideModal from "../../general/components/BottomSlideModal";
 import SearchAndUpdate from "../../pdp/components/SearchAndUpdate";
 import PropTypes from "prop-types";
 import styles from "./AddressModal.css";
+import * as Cookie from "../../lib/Cookie";
+import {
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS
+} from "../../lib/constants";
 
 export default class AddressModal extends React.Component {
   checkPinCodeAvailability(pincode) {
@@ -11,7 +16,10 @@ export default class AddressModal extends React.Component {
     this.props.closeModal();
   }
   componentDidMount() {
-    this.props.getUserAddress();
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+    if (customerCookie && userDetails) this.props.getUserAddress();
   }
   render() {
     return (

@@ -9,6 +9,7 @@ import Sort from "../../plp/components/SortModal";
 import AddressModalContainer from "../../plp/containers/AddressModalContainer";
 import SizeGuideModal from "../../pdp/components/SizeGuideModal";
 import EmiModal from "../../pdp/containers/EmiListContainer";
+import OfferModal from "../../pdp/components/OfferModal";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
 import SizeSelectModal from "../../pdp/components/SizeSelectModal.js";
 import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
@@ -22,9 +23,11 @@ import * as Cookie from "../../lib/Cookie.js";
 import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
 const modalRoot = document.getElementById("modal-root");
 const GenerateOtp = "GenerateOtpForEgv";
+const RestorePasswords = "RestorePassword";
 export default class ModalRoot extends React.Component {
   constructor(props) {
     super(props);
+
     this.el = document.createElement("div");
     this.state = {
       loggedIn: false,
@@ -113,28 +116,29 @@ export default class ModalRoot extends React.Component {
   }
 
   generateOtpForCliqCash = kycDetails => {
+    this.setState(kycDetails);
     if (this.props.getOtpToActivateWallet) {
       this.props.getOtpToActivateWallet(kycDetails, true);
     }
   };
   verifyOtpForCliqCash = otpDetails => {
-    let kycDetails = {};
-    kycDetails.firstName = this.props.ownProps.firstName;
-    kycDetails.lastName = this.props.ownProps.lastName;
-    kycDetails.mobileNumber = this.props.ownProps.mobileNumber;
-    kycDetails.otp = otpDetails;
+    let customerDetailsWithOtp = {};
+    customerDetailsWithOtp.firstName = this.state.firstName;
+    customerDetailsWithOtp.mobileNumber = this.state.mobileNumber;
+    customerDetailsWithOtp.lastName = this.state.lastName;
+    customerDetailsWithOtp.otp = otpDetails;
     if (this.props.verifyWallet) {
-      this.props.verifyWallet(kycDetails, true);
+      this.props.verifyWallet(customerDetailsWithOtp, true);
     }
   };
 
   resendOtp = () => {
     if (this.props.getOtpToActivateWallet) {
       let kycDetails = {};
-      kycDetails.firstName = this.props.ownProps.firstName;
-      kycDetails.lastName = this.props.ownProps.lastName;
-      kycDetails.mobileNumber = this.props.ownProps.mobileNumber;
-      this.props.getOtpToActivateWallet(kycDetails, true);
+      kycDetails.firstName = this.state.firstName;
+      kycDetails.lastName = this.state.lastName;
+      kycDetails.mobileNumber = this.state.mobileNumber;
+      this.props.getOtpToActivateWallet(kycDetails);
     }
   };
 
@@ -146,7 +150,7 @@ export default class ModalRoot extends React.Component {
     customerDetailsWithOtp.firstName = this.state.firstName;
     customerDetailsWithOtp.mobileNumber = this.state.mobileNumber;
     customerDetailsWithOtp.lastName = this.state.lastName;
-    customerDetailsWithOtp.otp = val.otp;
+    customerDetailsWithOtp.otp = val;
     this.props.verifyWallet(customerDetailsWithOtp);
   }
   wrongNumber() {
@@ -168,13 +172,18 @@ export default class ModalRoot extends React.Component {
     customerDetails.lastName = this.state.lastName;
     this.props.getOtpToActivateWallet(customerDetails);
   }
+  resendOtpForUpdateProfile = () => {
+    this.props.updateProfile(this.props.ownProps);
+  };
 
   addGiftCard = val => {
     if (this.props.redeemCliqVoucher) {
       this.props.redeemCliqVoucher(val, true);
     }
   };
-
+  onClickWrongNumber() {
+    this.props.showModal(RestorePasswords);
+  }
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -186,7 +195,7 @@ export default class ModalRoot extends React.Component {
       NewPassword: (
         <NewPassword
           {...this.props.ownProps}
-          handleCancel={() => this.handleClose}
+          handleCancel={() => this.handleClose()}
           onContinue={userDetails => this.resetPassword(userDetails)}
         />
       ),
@@ -196,6 +205,7 @@ export default class ModalRoot extends React.Component {
           closeModal={() => this.handleClose()}
           resendOtp={userObj => this.resendOTP(userObj)}
           submitOtp={otpDetails => this.submitOtp(otpDetails)}
+          onClickWrongNumber={() => this.handleClose()}
         />
       ),
       UpdateProfileOtpVerification: (
@@ -203,6 +213,9 @@ export default class ModalRoot extends React.Component {
           userObj={this.props.ownProps}
           closeModal={() => this.handleClose()}
           submitOtp={otpDetails => this.submitOtpForUpdateProfile(otpDetails)}
+          resendOtp={userName =>
+            this.resendOtpForUpdateProfile(this.props.ownProps)
+          }
         />
       ),
       ForgotPasswordOtpVerification: (
@@ -211,6 +224,7 @@ export default class ModalRoot extends React.Component {
           submitOtp={otpDetails => this.submitOtpForgotPassword(otpDetails)}
           userObj={this.props.ownProps}
           resendOtp={userName => this.handleRestoreClick(userName)}
+          onClickWrongNumber={() => this.onClickWrongNumber()}
         />
       ),
       UpdateRefundDetailsPopup: (
@@ -256,14 +270,22 @@ export default class ModalRoot extends React.Component {
           closeModal={() => this.handleClose()}
           generateOtp={KycDetails => this.generateOtpForCliqCash(KycDetails)}
           {...this.props.ownProps}
+          loadingForGetOtpToActivateWallet={
+            this.props.loadingForGetOtpToActivateWallet
+          }
         />
       ),
       verifyOtpForCliqCash: (
         <KycDetailPopUpWithBottomSlideModal
           closeModal={() => this.handleClose()}
-          submitOtp={otpDetails => this.verifyOtpForCliqCash(otpDetails)}
+          mobileNumber={this.state.mobileNumber}
+          submitOtp={otpDetails =>
+            this.verifyOtpForCliqCash(otpDetails, this.props.ownProps)
+          }
           {...this.props.ownProps}
-          resendOtp={() => this.resendOtp()}
+          resendOtp={val => this.resendOtp(val, this.props.ownProps)}
+          loadingForVerifyWallet={this.props.loadingForVerifyWallet}
+          wrongNumber={() => this.wrongNumber()}
         />
       ),
       SizeGuide: <SizeGuideModal closeModal={() => this.handleClose()} />,
@@ -272,6 +294,9 @@ export default class ModalRoot extends React.Component {
           closeModal={() => this.handleClose()}
           generateOtp={val => this.generateOtp(val, this.props.ownProps)}
           {...this.props.ownProps}
+          loadingForGetOtpToActivateWallet={
+            this.props.loadingForGetOtpToActivateWallet
+          }
         />
       ),
       verifyOtp: (
@@ -282,6 +307,7 @@ export default class ModalRoot extends React.Component {
           resendOtp={val => this.resendOtp(val, this.props.ownProps)}
           wrongNumber={() => this.wrongNumber()}
           {...this.props.ownProps}
+          loadingForVerifyWallet={this.props.loadingForVerifyWallet}
         />
       ),
       EmiModal: <EmiModal />,
@@ -302,6 +328,12 @@ export default class ModalRoot extends React.Component {
         <GiftCardModal
           closeModal={() => this.handleClose()}
           addGiftCard={val => this.addGiftCard(val)}
+        />
+      ),
+      OfferModal: (
+        <OfferModal
+          closeModal={() => this.handleClose()}
+          {...this.props.ownProps}
         />
       )
     };

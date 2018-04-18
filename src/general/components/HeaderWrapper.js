@@ -21,13 +21,22 @@ import {
   MY_ACCOUNT_PAGE,
   JUS_PAY_CHARGED,
   JUS_PAY_PENDING,
-  JUS_PAY_AUTHENTICATION_FAILED
+  JUS_PAY_AUTHENTICATION_FAILED,
+  CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
+  BRAND_PRODUCT_LISTINGS_WITH_PAGE,
+  BRAND_AND_CATEGORY_PAGE,
+  SEARCH_RESULTS_PAGE
 } from "../../../src/lib/constants";
 import { SIGN_UP } from "../../auth/actions/user.actions";
 
 const PRODUCT_CODE_REGEX = /p-(.*)/;
 class HeaderWrapper extends React.Component {
   onBackClick = () => {
+    if (this.props.isPlpFilterOpen) {
+      this.props.hideFilter();
+      return;
+    }
+
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
 
@@ -36,7 +45,7 @@ class HeaderWrapper extends React.Component {
       value === JUS_PAY_PENDING ||
       value === JUS_PAY_AUTHENTICATION_FAILED
     ) {
-      window.history.go(-2);
+      window.history.go(-3);
     } else {
       this.props.history.goBack();
     }
@@ -61,6 +70,7 @@ class HeaderWrapper extends React.Component {
 
   render() {
     const url = this.props.location.pathname;
+
     let shouldRenderSearch = false;
 
     let productCode = null;
@@ -69,46 +79,37 @@ class HeaderWrapper extends React.Component {
       shouldRenderSearch = true;
     }
 
-    let canGoBack = true;
+    let isGoBack = true;
     let shouldRenderHeader = true;
-    // let headerText = this.props.headerText;
+
+    if (this.props.location.pathname.includes("/")) {
+      isGoBack = true;
+      shouldRenderSearch = true;
+    }
+
     if (
       url === HOME_ROUTER ||
       url === CATEGORIES_LANDING_PAGE ||
       url === DEFAULT_BRANDS_LANDING_PAGE ||
       url === PRODUCT_LISTINGS
     ) {
-      canGoBack = false;
+      isGoBack = false;
       shouldRenderSearch = true;
     }
 
     if (this.props.history.length === 0) {
-      canGoBack = false;
+      isGoBack = false;
     }
 
     if (url === LOGIN_PATH || url === SIGN_UP_PATH) {
       shouldRenderHeader = false;
     }
 
-    // if we are on home, category landing, brand landing, we cannot go back.
-
-    /*
-    When can we not go back?
-    If we are on home, category landing, brand landing, then we cannot go back.
-    If we are not on any of those and we have history stack, then we can go back.
-
-    What if we are on view sellers or view reviews?
-      If there is no back and we are on a
-
-
-
-*/
-
     let headerToRender = (
       <InformationHeader
         goBack={this.onBackClick}
         text={this.props.headerText}
-        hasBackButton={canGoBack}
+        hasBackButton={isGoBack}
       />
     );
     if (productCode) {
@@ -121,7 +122,11 @@ class HeaderWrapper extends React.Component {
       );
     } else if (shouldRenderSearch) {
       headerToRender = (
-        <SearchContainer text={this.props.headerText} canGoBack={canGoBack} />
+        <SearchContainer
+          text={this.props.headerText}
+          canGoBack={this.onBackClick}
+          hasBackButton={isGoBack}
+        />
       );
     }
 

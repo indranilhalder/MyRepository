@@ -42,11 +42,18 @@ export default class OtpVerification extends React.Component {
       this.setState({ otp: val });
     }
   }
+  onClickWrongNumber() {
+    if (this.props.onClickWrongNumber) {
+      this.props.onClickWrongNumber();
+    }
+  }
 
   render() {
     let mobileNumber;
     if (this.props.userObj && this.props.userObj.username) {
       mobileNumber = this.props.userObj.username;
+    } else if (this.props.userObj && this.props.userObj.mobileNumber) {
+      mobileNumber = this.props.userObj.mobileNumber;
     } else {
       mobileNumber = this.props.userObj;
     }
@@ -110,8 +117,13 @@ export default class OtpVerification extends React.Component {
             </div>
             <div>
               <div className={ownStyles.content}>
-                Please enter the OTP sent to {mobileNumber}.
-                <span className={ownStyles.span}>Wrong number?</span>
+                Waiting to automatically detect an SMS sent to +91{mobileNumber}.
+                <span
+                  className={ownStyles.span}
+                  onClick={() => this.onClickWrongNumber()}
+                >
+                  Wrong number?
+                </span>
               </div>
             </div>
             <div className={ownStyles.input}>
@@ -121,7 +133,7 @@ export default class OtpVerification extends React.Component {
                 onChange={val => {
                   this.handleOtpInput(val);
                 }}
-                type="tel"
+                type="password"
               />
             </div>
             <div className={ownStyles.buttonHolder}>

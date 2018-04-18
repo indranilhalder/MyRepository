@@ -6,35 +6,47 @@ import styles from "./Plp.css";
 import throttle from "lodash/throttle";
 import Loader from "../../general/components/Loader";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
-
+const SCROLL_CHECK_INTERVAL = 500;
+const OFFSET_BOTTOM = 800;
 export default class Plp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showFilter: props.showFilter
-    };
-  }
-
   toggleFilter = () => {
-    this.setState({ showFilter: !this.state.showFilter });
-    if (this.props.onFilter) {
-      this.props.onFilter(!this.state.showFilter);
+    if (this.props.isFilterOpen) {
+      this.props.hideFilter();
+      this.props.setUrlToReturnToAfterClearToNull();
+    } else {
+      const pathName = this.props.location.pathname;
+      const search = this.props.location.search;
+      const url = `${pathName}${search}`;
+      this.props.setUrlToReturnToAfterClear(url);
+      this.props.showFilter();
     }
   };
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ showFilter: nextProps.showFilter });
-  }
-  onApply = val => {
-    this.toggleFilter();
-    if (this.props.onApply) {
-      this.props.onApply(val);
-    }
+  onApply = () => {
+    const pathName = this.props.location.pathname;
+    const search = this.props.location.search;
+    const url = `${pathName}${search}`;
+    this.props.history.push(url, {
+      isFilter: false
+    });
+    this.props.hideFilter();
+    this.props.setUrlToReturnToAfterClearToNull();
+  };
+
+  onClear = () => {
+    this.props.history.push(this.props.clearUrl, {
+      isFilter: true
+    });
   };
 
   handleScroll = () => {
     return throttle(() => {
-      if (!this.state.showFilter) {
+      if (
+        !this.props.isFilterOpen &&
+        this.props.productListings &&
+        this.props.pageNumber <
+          this.props.productListings.pagination.totalPages - 1
+      ) {
         const windowHeight =
           "innerHeight" in window
             ? window.innerHeight
@@ -49,12 +61,11 @@ export default class Plp extends React.Component {
           html.offsetHeight
         );
         const windowBottom = windowHeight + window.pageYOffset;
-        if (windowBottom >= docHeight) {
-          window.scrollBy(0, -200);
+        if (windowBottom >= docHeight - OFFSET_BOTTOM) {
           this.props.paginate(this.props.pageNumber + 1, SUFFIX);
         }
       }
-    }, 2000);
+    }, SCROLL_CHECK_INTERVAL);
   };
 
   componentWillUnmount() {
@@ -73,17 +84,22 @@ export default class Plp extends React.Component {
         splitSlug = this.props.match.params.slug.replace(/-/g, " ");
         splitSlug = splitSlug.replace(/\b\w/g, l => l.toUpperCase());
       }
-
-      this.props.setHeaderText(
-        `${splitSlug} (${this.props.productListings.pagination.totalResults})`
-      );
+      if (this.props.showFilter) {
+        this.props.setHeaderText("Refine by");
+      } else {
+        this.props.setHeaderText(
+          `${splitSlug[splitSlug.length - 1]} (${
+            this.props.productListings.pagination.totalResults
+          })`
+        );
+      }
     }
   }
   backPage = () => {
-    if (this.state.showFilter) {
-      this.setState({ showFilter: !this.state.showFilter });
+    if (this.props.isFilterOpen) {
+      this.props.hideFilter();
     } else {
-      this.props.history.goBack();
+      this.props.showFilter();
     }
   };
   onSortClick = () => {
@@ -96,13 +112,11 @@ export default class Plp extends React.Component {
     return <Loader />;
   }
 
+  onL3CategorySelect = () => {
+    this.props.hideFilter();
+  };
+
   render() {
-    let filterClass = styles.filter;
-
-    if (this.props.loading && !this.props.isFilter) {
-      return this.renderLoader();
-    }
-
     return (
       this.props.productListings && (
         <div className={styles.base}>
@@ -115,7 +129,10 @@ export default class Plp extends React.Component {
           </div>
           <FilterContainer
             backPage={this.backPage}
-            showFilter={this.state.showFilter}
+            isFilterOpen={this.props.isFilterOpen}
+            onApply={this.onApply}
+            onClear={this.onClear}
+            onL3CategorySelect={this.onL3CategorySelect}
           />
           <div className={styles.footer}>
             <PlpMobileFooter

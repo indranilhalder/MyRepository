@@ -6,6 +6,8 @@ import Input2 from "../../general/components/Input2.js";
 import TextArea from "../../general/components/TextArea";
 import FooterButton from "../../general/components/FooterButton.js";
 import { Redirect } from "react-router-dom";
+import { Icon, CircleButton } from "xelpmoc-core";
+
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -50,28 +52,81 @@ export default class GiftCard extends React.Component {
       });
     }
   }
+  componentWillMount() {
+    if (this.props.clearGiftCardStatus) {
+      this.props.clearGiftCardStatus();
+    }
+  }
 
   selectAmount(val, amount) {
-    this.setState({ amountText: val, amount: amount });
+    this.setState({ amountText: amount });
   }
 
   onSubmitDetails() {
     if (this.props.createGiftCardDetails) {
-      const giftCardDetails = {};
-      giftCardDetails.from = this.state.senderName;
-      giftCardDetails.quantity = QUANTITY;
-      giftCardDetails.messageOnCard = this.state.message;
-      giftCardDetails.productID = PRODUCT_ID;
-      giftCardDetails.priceSelectedByUserPerQuantity = this.state.amount;
-      giftCardDetails.receiverEmailID = this.state.email;
-      giftCardDetails.mobileNumber = MOBILE_NUMBER;
-      this.props.createGiftCardDetails(giftCardDetails);
+      const EMAIL_REGULAR_EXPRESSION = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      if (this.props.createGiftCardDetails) {
+        const giftCardDetails = {};
+        giftCardDetails.from = this.state.senderName;
+        giftCardDetails.quantity = QUANTITY;
+        giftCardDetails.messageOnCard = this.state.message;
+        giftCardDetails.productID = PRODUCT_ID;
+        giftCardDetails.priceSelectedByUserPerQuantity = this.state.amountText;
+        giftCardDetails.receiverEmailID = this.state.email;
+        giftCardDetails.mobileNumber = MOBILE_NUMBER;
+        if (!this.state.amountText) {
+          this.props.displayToast("Please select the amount");
+          return false;
+        }
+        if (
+          !(
+            this.state.amountText <=
+              this.props.giftCardsDetails.amountOptions.maxPrice.value &&
+            this.state.amountText >=
+              this.props.giftCardsDetails.amountOptions.minPrice.value
+          )
+        ) {
+          this.props.displayToast(
+            `Amount Should be less then ${
+              this.props.giftCardsDetails.amountOptions.maxPrice.value
+            } and greater than ${
+              this.props.giftCardsDetails.amountOptions.minPrice.value
+            } `
+          );
+          return false;
+        }
+
+        if (!this.state.email) {
+          this.props.displayToast("Please fill recipient e-mail address");
+          return false;
+        }
+        if (!EMAIL_REGULAR_EXPRESSION.test(this.state.email)) {
+          this.props.displayToast("Please fill valid  e-mail address");
+          return false;
+        }
+        if (!this.state.senderName) {
+          this.props.displayToast("Please enter sender name");
+          return false;
+        }
+        if (!this.state.message) {
+          this.props.displayToast("Please enter message");
+          return false;
+        } else {
+          this.props.createGiftCardDetails(giftCardDetails);
+        }
+      }
     }
   }
   navigateToLogin() {
     return <Redirect to={LOGIN_PATH} />;
   }
   render() {
+    if (this.props.loadingForGiftCardDetails) {
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
+    }
+
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
@@ -98,7 +153,9 @@ export default class GiftCard extends React.Component {
             {this.state.amountText === "" && (
               <span>Rs. 0 (Please select the amount from below)</span>
             )}
-            <span>{this.state.amountText}</span>
+            {this.state.amountText !== "" && (
+              <span className={styles.amountSign}>{this.state.amountText}</span>
+            )}
           </div>
           <div className={styles.giftCardTextHolder}>
             <div className={styles.infoHeder}>Gift Card</div>
@@ -134,18 +191,26 @@ export default class GiftCard extends React.Component {
             </div>
             <div className={styles.inputHolder}>
               <div className={styles.labelHeader}>Or</div>
-              <Input2
-                boxy={true}
-                placeholder="Enter Customer Amount"
-                value={
-                  this.props.amountText
-                    ? this.props.amountText
-                    : this.state.amountText
-                }
-                onChange={amountText => this.setState({ amountText })}
-                textStyle={{ fontSize: 14 }}
-                height={33}
-              />
+              <div className={styles.enterAmountHolder}>
+                {this.state.amountText !== "" && (
+                  <div className={styles.rupyLabel} />
+                )}
+                <Input2
+                  boxy={true}
+                  placeholder="Enter Customer Amount"
+                  value={
+                    this.props.amountText
+                      ? this.props.amountText
+                      : this.state.amountText
+                  }
+                  onChange={amountText =>
+                    this.setState({ amountText: amountText })
+                  }
+                  textStyle={{ fontSize: 14 }}
+                  height={33}
+                  leftChildSize={this.state.amountText !== "" ? 33 : 10}
+                />
+              </div>
             </div>
           </div>
           <div className={styles.formCard}>
@@ -223,6 +288,7 @@ export default class GiftCard extends React.Component {
     );
   }
 }
+
 GiftCard.propTypes = {
   giftCardImage: PropTypes.obj,
   email: PropTypes.string,

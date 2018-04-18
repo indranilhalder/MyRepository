@@ -17,11 +17,7 @@ export default class BrandImage extends React.Component {
       <div className={styles.base} onClick={() => this.handleClick()}>
         <div className={iconClass} />
         <div className={styles.imageHolder}>
-          <Image
-            image={this.props.image}
-            color="transparent"
-            fit={this.props.fit}
-          />
+          <Image image={this.props.image} color="transparent" fit="contain" />
         </div>
       </div>
     );
