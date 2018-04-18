@@ -165,3 +165,14 @@
   color: #212121;
   margin-top: 10px;
 }
+
+.accordionContent {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 22px;
+  font-family: regular;
+  color: #212121;
+  padding-bottom: 15px;
+}
