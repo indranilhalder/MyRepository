@@ -1,26 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import ModalPanel from "./ModalPanel";
-// import NewPassword from "../../auth/components/NewPassword";
-// import RestorePassword from "../../auth/components/RestorePassword";
-// import OtpVerification from "../../auth/components/OtpVerification";
-// import ConnectDetailsWithModal from "../../home/components/ConnectDetailsWithModal";
-// import Sort from "../../plp/components/SortModal";
-// import AddressModalContainer from "../../plp/containers/AddressModalContainer";
-// import SizeGuideModal from "../../pdp/components/SizeGuideModal";
-// import EmiModal from "../../pdp/containers/EmiListContainer";
-// import OfferModal from "../../pdp/components/OfferModal";
-// import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
-// import SizeSelectModal from "../../pdp/components/SizeSelectModal.js";
-// import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
-// import KycDetailsPopup from "../../auth/components/KycDetailsPopup.js";
-// import KycApplicationForm from "../../account/components/KycApplicationForm.js";
-// import GiftCardModal from "../../cart/components/GiftCardModal";
-// import UpdateRefundDetailsPopup from "../../account/components/UpdateRefundDetailsPopup.js";
-// import KycApplicationFormWithBottomSlideModal from "../../account/components/KycApplicationFormWithBottomSlideModal";
-// import KycDetailPopUpWithBottomSlideModal from "../../account/components/KycDetailPopUpWithBottomSlideModal";
 import Loadable from "react-loadable";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 
 import * as Cookie from "../../lib/Cookie.js";
 import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
@@ -31,7 +13,7 @@ const RestorePasswords = "RestorePassword";
 const Loader = () => {
   return (
     <div>
-      <MDSpinner />
+      <SecondaryLoader />
     </div>
   );
 };

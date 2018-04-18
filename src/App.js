@@ -12,7 +12,7 @@ import MobileFooter from "./general/components/MobileFooter.js";
 // importing All container for my Accounts
 
 import * as Cookie from "./lib/Cookie";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "./general/components/SecondaryLoader";
 import HeaderContainer from "./general/containers/HeaderContainer.js";
 
 import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
@@ -66,7 +66,7 @@ import Loadable from "react-loadable";
 const Loader = () => {
   return (
     <div className={AppStyles.loadingIndicator}>
-      <MDSpinner />
+      <SecondaryLoader />
     </div>
   );
 };
@@ -258,7 +258,7 @@ class App extends Component {
   renderLoader() {
     return (
       <div className={AppStyles.loadingIndicator}>
-        <MDSpinner />
+        <SecondaryLoader />
       </div>
     );
   }

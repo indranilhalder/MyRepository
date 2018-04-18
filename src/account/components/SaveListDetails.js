@@ -15,7 +15,7 @@ import {
   SAVED_LIST
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 
 const dateFormat = "MMMM DD YYYY";
 const PRODUCT_QUANTITY = "1";
@@ -87,7 +87,7 @@ export default class SaveListDetails extends React.Component {
     if (!wishList && this.props.loading) {
       return (
         <div className={styles.loadingIndicator}>
-          <MDSpinner />
+          <SecondaryLoader />
         </div>
       );
     }

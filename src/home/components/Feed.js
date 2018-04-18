@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { setDataLayer } from "../../lib/adobeUtils.js";
 import WidgetContainer from "../containers/WidgetContainer";
 import HomeSkeleton from "../../general/components/HomeSkeleton.js";
 import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
@@ -25,7 +24,6 @@ import CuratedFeature from "../../blp/components/CuratedFeature";
 import LatestCollections from "../../blp/components/LatestCollections";
 import MonoBanner from "./MonoBanner";
 import styles from "./Feed.css";
-import MDSpinner from "react-md-spinner";
 import TopCategories from "../../blp/components/TopCategories";
 import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
 import ProductCapsulesContainer from "../containers/ProductCapsulesContainer";
@@ -143,14 +141,6 @@ class Feed extends Component {
     );
   }
 
-  renderLoader() {
-    return (
-      <div className={styles.loadingIndicator}>
-        <MDSpinner />
-      </div>
-    );
-  }
-
   componentWillMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -172,7 +162,7 @@ class Feed extends Component {
 
   render() {
     if (this.props.loading) {
-      return this.renderLoader();
+      return <HomeSkeleton />;
     }
     let propsForHeader = {};
     if (this.props.isHomeFeedPage) {

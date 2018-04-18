@@ -42,7 +42,7 @@ import {
   JUS_PAY_AUTHENTICATION_FAILED
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
@@ -104,7 +104,7 @@ class CheckOutPage extends React.Component {
     return (
       <div className={styles.cartLoader}>
         <div className={styles.spinner}>
-          <MDSpinner />
+          <SecondaryLoader />
         </div>
       </div>
     );

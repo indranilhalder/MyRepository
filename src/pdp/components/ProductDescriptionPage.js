@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import ProductDetails from "./ProductDetails";
@@ -53,7 +53,7 @@ class ProductDescriptionPage extends Component {
   renderLoader() {
     return (
       <div className={styles.loadingIndicator}>
-        <MDSpinner />
+        <SecondaryLoader />
       </div>
     );
   }

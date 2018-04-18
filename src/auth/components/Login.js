@@ -8,7 +8,8 @@ import styles from "./Login.css";
 import LoginButton from "./LogInButton";
 import { SUCCESS, HOME_DELIVERY } from "../../lib/constants";
 import AuthFrame from "./AuthFrame.js";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
+
 import {
   LOGIN_PATH,
   SIGN_UP_PATH,
@@ -117,7 +118,7 @@ class Login extends Component {
     if (this.props.authCallsInProcess) {
       return (
         <div className={styles.loadingIndicator}>
-          <MDSpinner />
+          <SecondaryLoader />
         </div>
       );
     }

@@ -4,7 +4,7 @@ import Checkout from "./Checkout";
 import SearchAndUpdate from "../../pdp/components/SearchAndUpdate";
 import styles from "./CartPage.css";
 import PropTypes from "prop-types";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 import { SUCCESS, HOME_ROUTER } from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
 import filter from "lodash.filter";
@@ -122,7 +122,7 @@ class CartPage extends React.Component {
     return (
       <div className={styles.cartLoader}>
         <div className={styles.spinner}>
-          <MDSpinner />
+          <SecondaryLoader />
         </div>
       </div>
     );
