@@ -1,0 +1,72 @@
+.base {
+  width: 100%;
+  height: auto;
+  background: #fff;
+}
+.cardOfferDisplay {
+  width: 100%;
+  height: auto;
+  padding: 15px 15px 30px 15px;
+}
+.cardName {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  color: #000;
+  font-family: semibold;
+  margin-bottom: 10px;
+}
+.offerText {
+  width: 100%;
+  height: auto;
+  padding: 0px 35px 0px 0px;
+  color: #000;
+  font-size: 12px;
+  line-height: normal;
+  background: url(./img/icon.svg)no-repeat;
+  background-size: auto 22px;
+  background-position: right top;
+}
+.levelBreakupHolder {
+  width: 100%;
+  height: auto;
+}
+.emiInformationHolder {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+}
+.emiInfoHeader {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  color: #000;
+  font-size: 14px;
+  font-family: semibold;
+}
+.emiPlanTextHolder {
+  width: 100%;
+  height: auto;
+  padding: 0px 0px 0px 15px;
+}
+.emiPlan {
+  width: 100%;
+  height: auto;
+  padding-left: 20px;
+  position: relative;
+  color: #000;
+  font-size: 14px;
+  font-family: regular;
+  line-height: normal;
+  margin-bottom: 10px;
+}
+.emiPlan::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  background: #000;
+  border-radius: 50%;
+  position: absolute;
+  left: 5px;
+  top: 5px;
+}
