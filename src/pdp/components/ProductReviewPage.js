@@ -8,7 +8,7 @@ import RatingHolder from "./RatingHolder";
 import PdpFrame from "./PdpFrame";
 import throttle from "lodash/throttle";
 import { Redirect } from "react-router-dom";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2.js";
 import {
   MOBILE_PDP_VIEW,
   PRODUCT_REVIEWS_PATH_SUFFIX,
@@ -35,7 +35,8 @@ class ProductReviewPage extends Component {
     this.state = {
       visible: false,
       sort: "byDate",
-      orderBy: "asc"
+      orderBy: "asc",
+      sortValue: ""
     };
     this.filterOptions = [
       { label: "Oldest First", value: "byDate_asc" },
@@ -187,8 +188,12 @@ class ProductReviewPage extends Component {
   }
 
   changeFilterValues = val => {
-    let filterValues = val.split("_");
-    this.setState({ sort: filterValues[0], orderBy: filterValues[1] });
+    let filterValues = val.value.split("_");
+    this.setState({
+      sort: filterValues[0],
+      orderBy: filterValues[1],
+      sortValue: val.label
+    });
 
     this.props.getProductReviews(
       this.props.match.params[0],
@@ -248,30 +253,39 @@ class ProductReviewPage extends Component {
               <RatingHolder ratingData={this.props.ratingData} />
             </div>
             <div className={styles.dropDownHolder}>
-              <div className={styles.dropDownBox}>
-                <SelectBoxMobile
-                  theme="hollowBox"
-                  label="Oldest First"
-                  onChange={changedValue =>
-                    this.changeFilterValues(changedValue)
-                  }
-                  options={this.filterOptions}
-                  textStyle={{ fontSize: 14 }}
-                />
+              <div className={styles.dropdown}>
+                <div className={styles.dropDownBox}>
+                  <SelectBoxMobile2
+                    label={
+                      this.state.sortValue
+                        ? this.state.sortValue
+                        : "Oldest First"
+                    }
+                    onChange={changedValue =>
+                      this.changeFilterValues(changedValue)
+                    }
+                    options={this.filterOptions}
+                    textStyle={{ fontSize: 14 }}
+                  />
+                </div>
+                <div className={styles.reviewText} onClick={this.reviewSection}>
+                  {WRITE_REVIEW_TEXT}
+                </div>
+                {this.state.visible && (
+                  <div className={styles.reviewHolder}>
+                    {this.renderReviewSection()}
+                  </div>
+                )}
               </div>
-              <div className={styles.reviewText} onClick={this.reviewSection}>
-                {WRITE_REVIEW_TEXT}
+              <div className={styles.reviews}>
+                {this.props.reviews && (
+                  <ReviewList
+                    reviewList={this.props.reviews.reviews}
+                    totalNoOfReviews={this.props.reviews.totalNoOfPages}
+                  />
+                )}
               </div>
             </div>
-            <div className={styles.reviewHolder}>
-              {this.renderReviewSection()}
-            </div>
-            {this.props.reviews && (
-              <ReviewList
-                reviewList={this.props.reviews.reviews}
-                totalNoOfReviews={this.props.reviews.totalNoOfPages}
-              />
-            )}
           </div>
         </PdpFrame>
       );
