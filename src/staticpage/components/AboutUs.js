@@ -11,7 +11,6 @@ export default class AboutUs extends React.Component {
     this.props.setHeaderText(ABOUTUS);
   }
   render() {
-    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.aboutUsDataHolder}>
