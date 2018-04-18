@@ -41,17 +41,12 @@ export function getAboutUsDetails() {
       const result = await api.get(`${PATH}/cms/defaultpage?pageId=aboutus`);
 
       const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
-      if (
-        resultJson.status === SUCCESS ||
-        resultJson.status === SUCCESS_UPPERCASE ||
-        resultJson.status === SUCCESS_CAMEL_CASE
-      ) {
-        return dispatch(aboutUsSuccess(resultJson));
-      } else {
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      return dispatch(aboutUsSuccess(resultJson));
     } catch (e) {
       dispatch(aboutUsFailure(e.message));
     }
