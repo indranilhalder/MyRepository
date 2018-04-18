@@ -925,6 +925,7 @@ public class OrdersController extends BaseCommerceController
 							}
 							if (CollectionUtils.isNotEmpty(list))
 							{
+								Collections.reverse(list);
 								orderProductDTO.setCategoryHierarchy(list);
 							}
 							orderProductDTO.setProductcode(product.getCode());
@@ -1195,7 +1196,6 @@ public class OrdersController extends BaseCommerceController
 					mplCategoryHierarchydata.setCategory_id(catdata.getCode());
 					mplCategoryHierarchydata.setCategory_name(catdata.getName());
 					list.add(mplCategoryHierarchydata);
-					Collections.reverse(list);
 				}
 			}
 		}
