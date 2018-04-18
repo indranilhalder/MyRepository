@@ -1162,7 +1162,10 @@ const cart = (
 
     case cartActions.APPLY_NO_COST_EMI_SUCCESS:
       carDetailsCopy = cloneDeep(state.cartDetailsCNC);
-      let emiCartAmount = action.noCostEmiResult.cartAmount;
+      let emiCartAmount =
+        action.noCostEmiResult && action.noCostEmiResult.cartAmount
+          ? action.noCostEmiResult.cartAmount
+          : state.cartDetailsCNC.emiCartAmount;
       carDetailsCopy.cartAmount = emiCartAmount;
 
       return Object.assign({}, state, {
@@ -1187,7 +1190,10 @@ const cart = (
 
     case cartActions.REMOVE_NO_COST_EMI_SUCCESS:
       carDetailsCopy = cloneDeep(state.cartDetailsCNC);
-      emiCartAmount = action.noCostEmiResult.cartAmount;
+      emiCartAmount =
+        action.noCostEmiResult && action.noCostEmiResult.cartAmount
+          ? action.noCostEmiResult.cartAmount
+          : state.cartDetailsCNC.emiCartAmount;
       carDetailsCopy.cartAmount = emiCartAmount;
       return Object.assign({}, state, {
         noCostEmiStatus: action.status,

@@ -7,9 +7,9 @@ import { SUCCESS } from "../../lib/constants";
 import styles from "./CheckoutEmi.css";
 
 export default class CheckoutEmi extends React.Component {
-  binValidation = (paymentMode, binNo) => {
+  binValidation = binNo => {
     if (this.props.binValidation) {
-      this.props.binValidation(paymentMode, binNo);
+      this.props.binValidation(binNo);
     }
   };
 

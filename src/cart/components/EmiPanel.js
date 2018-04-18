@@ -6,6 +6,7 @@ import eWalletIcon from "./img/netBanking.svg";
 import NoCostEmi from "./NoCostEmi.js";
 import CheckoutEmi from "./CheckoutEmi.js";
 import NoCostEmiBankDetails from "./NoCostEmiBankDetails.js";
+const PAYMENT_MODE = "EMI";
 export default class EmiPanel extends React.Component {
   componentDidMount = () => {
     if (this.props.getEmiEligibility) {
@@ -54,6 +55,21 @@ export default class EmiPanel extends React.Component {
     }
   };
 
+  binValidation = binNo => {
+    if (this.props.binValidation) {
+      this.props.binValidation(PAYMENT_MODE, binNo);
+    }
+  };
+
+  softReservationForPayment = cardDetails => {
+    if (this.props.softReservationForPayment) {
+      this.props.softReservationForPayment(cardDetails);
+    }
+  };
+
+  changeNoCostEmiPlan = () => {
+    this.props.changeNoCostEmiPlan();
+  };
   render() {
     return (
       <div className={styles.base}>
@@ -92,6 +108,13 @@ export default class EmiPanel extends React.Component {
                     getItemBreakUpDetails={couponCode =>
                       this.getItemBreakUpDetails(couponCode)
                     }
+                    isNoCostEmiProceeded={this.props.isNoCostEmiProceeded}
+                    binValidation={binNo => this.binValidation(binNo)}
+                    softReservationForPayment={cardDetails =>
+                      this.softReservationForPayment(cardDetails)
+                    }
+                    displayToast={this.props.displayToast}
+                    changeNoCostEmiPlan={() => this.changeNoCostEmiPlan()}
                   />
                 </NoCostEmi>
               </div>
