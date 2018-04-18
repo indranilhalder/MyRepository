@@ -1,5 +1,5 @@
 import React from "react";
-import filter from "lodash/filter";
+import filter from "lodash.filter";
 import CliqCashToggle from "./CliqCashToggle";
 import styles from "./PaymentCardWrapper.css";
 import CheckoutEmi from "./CheckoutEmi.js";

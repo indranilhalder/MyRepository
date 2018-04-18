@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./FooterButton.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 export default class FooterButton extends React.Component {
   handleClick(e) {
     if (this.props.onClick) {

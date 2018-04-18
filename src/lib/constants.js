@@ -78,6 +78,7 @@ export const ORDER_PREFIX = "/my-account/order/(.*)";
 export const ORDER_CODE = "orderCode";
 export const ORDER = "/order";
 // MyAccount Routes
+export const MY_ACCOUNT_PAGE_ROOT = "/my-account/.*";
 export const MY_ACCOUNT_PAGE = "/my-account";
 export const MY_ACCOUNT_WISHLIST_PAGE = "/wishList";
 export const MY_ACCOUNT_ORDERS_PAGE = "/orders";
@@ -193,3 +194,6 @@ export const ABOUT_US = "/aboutUs";
 
 export const REVIEW_SUBMIT_TOAST_TEXT =
   "Your review has been submitted and will be displayed after moderation";
+
+export const CDN_URL_ROOT =
+  "https://assets.tatacliq.com/medias/sys_master/pwaImg/";

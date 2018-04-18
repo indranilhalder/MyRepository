@@ -1,5 +1,4 @@
 import React from "react";
-import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import Logo from "../../general/components/Logo";
 import Input2 from "../../general/components/Input2.js";

@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./BagHeaderWithImage.css";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import ProductImage from "./ProductImage";
 import PropTypes from "prop-types";
 

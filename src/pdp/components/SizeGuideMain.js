@@ -1,7 +1,7 @@
 import React from "react";
 import SizeGuideElement from "./SizeGuideElement";
 import styles from "./SizeGuideMain.css";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import Accordion from "../../general/components/Accordion.js";
 import Loader from "../../general/components/Loader";
 

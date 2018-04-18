@@ -6,7 +6,7 @@ import {
   SUCCESS_UPPERCASE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-import each from "lodash/each";
+import each from "lodash.foreach";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 import {
   CUSTOMER_ACCESS_TOKEN,

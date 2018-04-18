@@ -25,6 +25,7 @@ import icid from "../src/general/icid.reducer.js";
 import wishlistItems from "./wishlist/reducers/wishlist.reducer";
 import auth from "./auth/reducers/auth.reducer";
 import cart from "./cart/reducers/cart.reducer";
+
 import "babel-polyfill";
 
 const rootReducer = combineReducers({

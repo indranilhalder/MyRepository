@@ -6,7 +6,7 @@ import PdpHome from "./PdpHome";
 
 import styles from "./ProductDescriptionPageWrapper.css";
 import ProductDescriptionPage from "./ProductDescriptionPage";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
@@ -112,7 +112,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   renderLoader() {
     return (
       <div className={styles.loadingIndicator}>
-        <MDSpinner />
+        <SecondaryLoader />
       </div>
     );
   }

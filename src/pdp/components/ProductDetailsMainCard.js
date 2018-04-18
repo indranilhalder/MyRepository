@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./ProductDetailsMainCard.css";
 import StarRating from "../../general/components/StarRating.js";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import arrowIcon from "../../general/components/img/arrow.svg";
 import PropTypes from "prop-types";

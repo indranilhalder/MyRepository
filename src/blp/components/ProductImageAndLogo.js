@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ProductImageAndLogo.css";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import Logo from "../../general/components/Logo";
 import PropTypes from "prop-types";
 export default class ProductImageAndLogo extends React.Component {
