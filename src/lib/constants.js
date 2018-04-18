@@ -185,9 +185,6 @@ export const CATEGORIES = "Categories";
 export const CHECKOUT = "Checkout";
 export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
-export const ABOUTUS = "About Us";
-export const FAQ_PAGE = "Faq";
-export const TERMS_CONDITION = "Terms & Condition";
 
 // COPY
 //STATIC PAGE
