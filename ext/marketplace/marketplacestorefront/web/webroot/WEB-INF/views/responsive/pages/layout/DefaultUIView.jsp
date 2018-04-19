@@ -853,9 +853,7 @@
 		</div>
 	</div>
 </div>
-<!-- <script type="text/javascript" src="https://static.tatacliq.com/_ui/responsive/common/js/jquery-2.1.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
-<script type="text/javascript" src="/_ui/responsive/common/js/mpl/slick.min.js"></script>
+
 <script type="text/javascript" src="/_ui/responsive/common/js/mpl/preview.js"></script>
 	</html>
 </template:page>
