@@ -43,7 +43,8 @@ class CartPage extends React.Component {
     this.state = {
       pinCode: "",
       isServiceable: false,
-      changePinCode: false
+      changePinCode: false,
+      appliedCouponCode: null
     };
   }
   navigateToHome() {
@@ -91,6 +92,17 @@ class CartPage extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    let cartCouponCode =
+      nextProps.cart &&
+      nextProps.cart.cartDetails &&
+      nextProps.cart.cartDetails.appliedCoupon
+        ? nextProps.cart.cartDetails.appliedCoupon
+        : undefined;
+    this.setState({
+      appliedCouponCode: cartCouponCode
+    });
+  }
   componentDidUpdate(prevProps, prevState) {
     this.props.setHeaderText(YOUR_BAG);
     if (prevProps.cart) {
@@ -408,6 +420,7 @@ class CartPage extends React.Component {
               <SavedProduct
                 saveProduct={() => this.goToWishList()}
                 onApplyCoupon={() => this.goToCouponPage()}
+                appliedCouponCode={this.state.appliedCouponCode}
               />
             )}
 

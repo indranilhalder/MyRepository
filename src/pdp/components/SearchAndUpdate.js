@@ -86,5 +86,5 @@ SearchAndUpdate.propTypes = {
 };
 
 SearchAndUpdate.defaultProps = {
-  labelText: "Update"
+  labelText: "Check"
 };
