@@ -19,7 +19,8 @@ import * as Cookie from "../../lib/Cookie";
 const PRODUCT_ID = "MP000000000127263";
 const QUANTITY = "1";
 const MOBILE_NUMBER = "999999999";
-
+const MINIMUM_PRICE = 15;
+const MAXIMUM_PRICE = 10000;
 export default class GiftCard extends React.Component {
   constructor(props) {
     super(props);
@@ -79,18 +80,12 @@ export default class GiftCard extends React.Component {
         }
         if (
           !(
-            this.state.amountText <=
-              this.props.giftCardsDetails.amountOptions.maxPrice.value &&
-            this.state.amountText >=
-              this.props.giftCardsDetails.amountOptions.minPrice.value
+            this.state.amountText <= MAXIMUM_PRICE &&
+            this.state.amountText >= MINIMUM_PRICE
           )
         ) {
           this.props.displayToast(
-            `Amount Should be less then ${
-              this.props.giftCardsDetails.amountOptions.maxPrice.value
-            } and greater than ${
-              this.props.giftCardsDetails.amountOptions.minPrice.value
-            } `
+            `Amount Should be less then ${MAXIMUM_PRICE} and greater than ${MINIMUM_PRICE} `
           );
           return false;
         }
