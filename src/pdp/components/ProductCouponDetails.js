@@ -10,6 +10,8 @@ import StaticDarkHeader from "../../general/components/StaticDarkHeader";
 import styles from "./ProductCouponDetails.css";
 import * as Cookie from "../../lib/Cookie.js";
 import { COUPON_COOKIE } from "../../lib/constants.js";
+const REMOVE = "Remove";
+const APPLY = "Apply";
 const USER_COUPON_NOTE =
   "Note : Bank promotions  can be applied  during payment";
 
@@ -17,36 +19,43 @@ class ProductCouponDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      couponVal: [Cookie.getCookie(COUPON_COOKIE)]
+      previousCouponVal: Cookie.getCookie(COUPON_COOKIE),
+      couponVal: Cookie.getCookie(COUPON_COOKIE)
     };
   }
 
-  applyUserCoupon = couponCode => {
-    let couponCookie = Cookie.getCookie(COUPON_COOKIE);
-    if (couponCode) {
-      if (couponCookie) {
-        this.props.releaseUserCoupon(couponCookie, couponCode);
-      } else {
-        if (this.props.applyUserCoupon) {
-          this.props.applyUserCoupon(couponCode);
+  applyUserCoupon() {
+    if (this.state.couponVal) {
+      if (this.state.couponVal !== this.state.previousCouponVal) {
+        if (this.state.previousCouponVal) {
+          this.setState({
+            previousCouponVal: this.state.couponVal
+          });
+          this.props.selecteBankOffer(this.state.couponVal);
+          this.props.releasePreviousAndApplyNewBankOffer(
+            this.state.previousCouponVal,
+            this.state.couponVal
+          );
+        } else {
+          this.props.selecteBankOffer(this.state.couponVal);
+          this.props.applyBankOffer(this.state.couponVal);
+          this.setState({
+            previousCouponVal: this.state.couponVal
+          });
         }
+      } else {
+        this.props.selecteBankOffer("");
+        this.setState({
+          previousCouponVal: "",
+          couponVal: ""
+        });
+        this.props.releaseBankOffer(this.state.couponVal);
       }
     }
+  }
+  onSelectCouponCode = val => {
+    this.setState({ couponVal: val[0] });
   };
-
-  setUserCoupons = couponCode => {
-    if (couponCode) {
-      this.setState({ couponVal: couponCode });
-    } else {
-      this.setState({ couponVal: "" });
-    }
-  };
-  releaseUserCoupon = couponCode => {
-    if (this.props.releaseUserCoupon) {
-      this.props.releaseUserCoupon(couponCode);
-    }
-  };
-
   render() {
     return (
       <SlideModal {...this.props}>
@@ -56,9 +65,15 @@ class ProductCouponDetails extends Component {
           </div>
           <div className={styles.searchHolder}>
             <SearchCupon
+              label={
+                this.state.previousCouponVal &&
+                this.state.previousCouponVal === this.state.couponVal
+                  ? REMOVE
+                  : APPLY
+              }
               couponCode={this.state.couponVal}
-              getValue={coupon => this.setUserCoupons(coupon)}
-              applyUserCoupon={couponCode => this.applyUserCoupon(couponCode)}
+              getValue={couponVal => this.setState({ couponVal })}
+              applyUserCoupon={() => this.applyUserCoupon()}
             />
           </div>
           <div className={styles.disclaimer}>
@@ -73,8 +88,8 @@ class ProductCouponDetails extends Component {
             elementWidthMobile={100}
             offset={0}
             limit={1}
-            onSelect={val => this.setUserCoupons(val)}
-            selected={this.state.couponVal}
+            onSelect={val => this.onSelectCouponCode(val)}
+            selected={[this.state.couponVal]}
           >
             {this.props.opencouponsList &&
               this.props.opencouponsList.map((value, i) => {

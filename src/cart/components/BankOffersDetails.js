@@ -5,7 +5,8 @@ import SlideModal from "../../general/components/SlideModal";
 import styles from "./BankOffersDetails.css";
 import GridSelect from "../../general/components/GridSelect";
 const COUPON_HEADER = "Bank promotions";
-
+const REMOVE = "Remove";
+const APPLY = "Apply";
 class BankOffersDetails extends Component {
   constructor(props) {
     super(props);
@@ -14,17 +15,7 @@ class BankOffersDetails extends Component {
       selectedBankOfferCode: props.selectedBankOfferCode
     };
   }
-  applyBankCoupons = val => {
-    if (this.props.applyBankOffer) {
-      this.props.applyBankOffer(val);
-    }
-  };
 
-  releaseBankOffer = val => {
-    if (this.props.releaseBankOffer) {
-      this.props.releaseBankOffer(val);
-    }
-  };
   applyUserCoupon() {
     if (this.state.selectedBankOfferCode) {
       if (
@@ -72,14 +63,14 @@ class BankOffersDetails extends Component {
                 this.state.previousSelectedCouponCode &&
                 this.state.previousSelectedCouponCode ===
                   this.state.selectedBankOfferCode
-                  ? "Remove"
-                  : "Apply"
+                  ? REMOVE
+                  : APPLY
               }
               couponCode={this.state.selectedBankOfferCode}
               getValue={selectedBankOfferCode =>
                 this.setState({ selectedBankOfferCode })
               }
-              applyUserCoupon={couponCode => this.applyUserCoupon(couponCode)}
+              applyUserCoupon={() => this.applyUserCoupon()}
             />
           </div>
           <GridSelect

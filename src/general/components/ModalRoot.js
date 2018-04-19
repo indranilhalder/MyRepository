@@ -369,8 +369,12 @@ export default class ModalRoot extends React.Component {
         <ProductCouponDetails
           closeModal={() => this.handleClose()}
           applyUserCoupon={couponCode => this.applyUserCoupon(couponCode)}
-          releaseUserCoupon={(oldCouponCode, newCouponCode) =>
-            this.releaseUserCoupon(oldCouponCode, newCouponCode)
+          releaseUserCoupon={couponCode => this.releaseUserCoupon(couponCode)}
+          releasePreviousAndApplyNewUserOffer={(oldCouponCode, newCouponCode) =>
+            this.releasePreviousAndApplyNewUserOffer(
+              oldCouponCode,
+              newCouponCode
+            )
           }
           {...this.props.ownProps}
         />
