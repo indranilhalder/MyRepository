@@ -1286,9 +1286,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				List<RichAttributeModel> sellerRichAttributeModel = null;
 				int sellerHandlingTime = 0;
 				String sellerRichAttrForHandlingTime = null;
-				if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+				final Collection<RichAttributeModel> colofrichattr = sellerInfoModel.getRichAttribute();
+				if (sellerInfoModel != null && colofrichattr != null)
 				{
-					sellerRichAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+					sellerRichAttributeModel = (List<RichAttributeModel>) colofrichattr;
 					if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getSellerHandlingTime() != null)
 					{
 						sellerRichAttrForHandlingTime = sellerRichAttributeModel.get(0).getSellerHandlingTime().toString();
@@ -2478,10 +2479,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 		if (cartModel != null)
 		{
+			ProductModel prodmod = null;
 			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 			{
-
-				if (cartEntryModel != null && cartEntryModel.getProduct() == null)
+				prodmod = cartEntryModel.getProduct();
+				if (cartEntryModel != null && prodmod == null)
 				{
 					final CartModificationData cartModification = updateCartEntryMobile(cartEntryModel.getEntryNumber().longValue(),
 							0, cartModel);
@@ -2493,13 +2495,12 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					delistedStatus = true;
 				}
 				else if (cartEntryModel != null && StringUtils.isNotEmpty(cartEntryModel.getSelectedUSSID())
-						&& !cartEntryModel.getGiveAway().booleanValue() && null != cartEntryModel.getProduct()
-						&& null != cartEntryModel.getProduct().getCatalogVersion())
+						&& !cartEntryModel.getGiveAway().booleanValue() && null != prodmod && null != prodmod.getCatalogVersion())
 				{
 					final Date sysDate = new Date();
 					//final String ussid = cartEntryModel.getSelectedUSSID();
 					String ussid = "";
-					if (cartEntryModel.getProduct().getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+					if (prodmod.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
 
 					{
 						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(cartEntryModel
@@ -2524,25 +2525,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 					//					final List<SellerInformationModel> sellerInformationModelList = getMplDelistingService().getModelforUSSID(ussid,
 					//							onlineCatalog);
-					sellerInformationModelList = getMplDelistingService().getModelforUSSID(ussid,
-							cartEntryModel.getProduct().getCatalogVersion());
-
+					sellerInformationModelList = getMplDelistingService().getModelforUSSID(ussid, prodmod.getCatalogVersion());
+					final SellerInformationModel sellerinfomodel = sellerInformationModelList.get(0);
 
 					if (CollectionUtils.isNotEmpty(sellerInformationModelList)
-							&& sellerInformationModelList.get(0) != null
-							&& ((sellerInformationModelList.get(0).getSellerAssociationStatus() != null && sellerInformationModelList
-									.get(0).getSellerAssociationStatus().getCode()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)) || (sellerInformationModelList.get(0)
-
-
-
-
-
-
-
-
-
-							.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
+							&& sellerinfomodel != null
+							&& ((sellerinfomodel.getSellerAssociationStatus() != null && sellerinfomodel.getSellerAssociationStatus()
+									.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)) || (sellerinfomodel.getEndDate() != null && sysDate
+									.after(sellerinfomodel.getEndDate()))))
 					{
 						LOG.debug(">> Removing Cart entry for delisted ussid for " + cartEntryModel.getSelectedUSSID());
 						final CartModificationData cartModification = updateCartEntryMobile(

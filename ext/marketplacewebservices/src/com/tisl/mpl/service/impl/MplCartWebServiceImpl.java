@@ -96,6 +96,8 @@ import javax.annotation.Resource;
 
 import net.sourceforge.pmd.util.StringUtil;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -611,7 +613,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public WebSerResponseWsDTO addProductToCart(final String productCode, final String cartId, final String quantity,
+
 			final String USSID, final boolean addedToCartWl, final String channel, final boolean isPwa) throws InvalidCartException,
+
+			
+
 			CommerceCartModificationException
 	{
 		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
@@ -1937,6 +1943,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						&& null != abstractOrderEntry.getTimeSlotFrom()
 						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
 								.getDeliveryMode().getCode())))
+
 				{
 					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
 							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
@@ -2840,6 +2847,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						&& null != abstractOrderEntry.getTimeSlotFrom()
 						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
 								.getDeliveryMode().getCode())))
+
 				{
 					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
 							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
@@ -3557,7 +3565,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 			Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
-			if ((null != cartData && cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
+			final List<OrderEntryData> orderentrydata = cartData.getEntries();
+			if ((null != cartData && orderentrydata != null && !orderentrydata.isEmpty()))
 			{
 				fullfillmentDataMap = mplCartFacade.getFullfillmentMode(cartData);
 				if (!StringUtil.isEmpty(pincode))
@@ -5267,57 +5276,61 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		}
 		else
 		{
+
+
 			Collection<MplZoneDeliveryModeValueModel> deliverymodeList = null;
 			try
 			{
+
 				if (null != abstractOrderEntry.getMplZoneDeliveryModeValue())
 				{
 					deliverymodeList = abstractOrderEntry.getMplZoneDeliveryModeValue();
+					DeliveryModeModel deliverymodemod = null;
 					for (final MplZoneDeliveryModeValueModel deliveryMode : deliverymodeList)
 					{
+						deliverymodemod = deliveryMode.getDeliveryMode();
+
 						delivery = new MobdeliveryModeWsDTO();
-						if (null != deliveryMode.getDeliveryMode() && StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()))
+						if (null != deliverymodemod && StringUtils.isNotEmpty(deliverymodemod.getCode()))
 						{
-							delivery.setCode(deliveryMode.getDeliveryMode().getCode());
+							delivery.setCode(deliverymodemod.getCode());
 
 							//SDI-4197 starts
-							if (null != deliveryMode.getDeliveryMode().getPriority())
+							if (null != deliverymodemod.getPriority())
 							{
-								delivery.setPriority(deliveryMode.getDeliveryMode().getPriority().intValue());
+								delivery.setPriority(deliverymodemod.getPriority().intValue());
 							}
 							//SDI-4197 ends
 
 							//TISEE-950
 							String startValue = null;
 							String endValue = null;
-							if (null != deliveryMode.getDeliveryMode())
+							if (null != deliverymodemod)
 							{
-								startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode.getDeliveryMode()
+								startValue = deliverymodemod.getStart() != null ? deliverymodemod
 
 
 								.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
-								endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
+								endValue = deliverymodemod.getEnd() != null ? deliverymodemod
 
 
 
 								.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 							}
-							if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()) && StringUtils.isNotEmpty(startValue)
+							if (StringUtils.isNotEmpty(deliverymodemod.getCode()) && StringUtils.isNotEmpty(startValue)
 									&& StringUtils.isNotEmpty(endValue) && StringUtils.isNotEmpty(deliveryMode.getSellerArticleSKU())
-									&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()))
+									&& StringUtils.isNotEmpty(deliverymodemod.getCode()))
 							{
 
 
-								delivery
-										.setDesc(getMplCommerceCartService().getDeliveryModeDescription(deliveryMode.getSellerArticleSKU(),
-												deliveryMode.getDeliveryMode().getCode(), startValue, endValue));
+								delivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
+										deliveryMode.getSellerArticleSKU(), deliverymodemod.getCode(), startValue, endValue));
 							}
-							if (null != deliveryMode.getDeliveryMode()
-									&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getName()))
+							if (null != deliverymodemod && StringUtils.isNotEmpty(deliverymodemod.getName()))
 							{
-								delivery.setName(deliveryMode.getDeliveryMode().getName());
+								delivery.setName(deliverymodemod.getName());
 							}
 
 
@@ -5340,9 +5353,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 								}
 							}
 							//SDI-4197 starts
-							if (null != deliveryMode.getDeliveryMode().getPriority())
+							if (null != deliverymodemod.getPriority())
 							{
-								delivery.setPriority(deliveryMode.getDeliveryMode().getPriority().intValue());
+								delivery.setPriority(deliverymodemod.getPriority().intValue());
 							}
 							//SDI-4197 ends
 
@@ -5364,44 +5377,44 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					}
 
 					deliverymodeList = abstractOrderEntry.getMplZoneDeliveryModeValue();
+					DeliveryModeModel delmodemodTemp = null;
 					for (final MplZoneDeliveryModeValueModel deliveryMode : deliverymodeList)
 					{
+						delmodemodTemp = deliveryMode.getDeliveryMode();
 						delivery = new MobdeliveryModeWsDTO();
-						if (null != deliveryMode.getDeliveryMode() && StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()))
+						if (null != delmodemodTemp && StringUtils.isNotEmpty(delmodemodTemp.getCode()))
 						{
-							delivery.setCode(deliveryMode.getDeliveryMode().getCode());
+							delivery.setCode(delmodemodTemp.getCode());
 
 							//TISEE-950
 							String startValue = null;
 							String endValue = null;
-							if (null != deliveryMode.getDeliveryMode())
+							if (null != delmodemodTemp)
 							{
-								startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode.getDeliveryMode()
+								startValue = delmodemodTemp.getStart() != null ? delmodemodTemp
 
 
 								.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
-								endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
+								endValue = delmodemodTemp.getEnd() != null ? delmodemodTemp
 
 
 
 								.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 							}
-							if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()) && StringUtils.isNotEmpty(startValue)
+							if (StringUtils.isNotEmpty(delmodemodTemp.getCode()) && StringUtils.isNotEmpty(startValue)
 									&& StringUtils.isNotEmpty(endValue) && StringUtils.isNotEmpty(deliveryMode.getSellerArticleSKU())
-									&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode()))
+									&& StringUtils.isNotEmpty(delmodemodTemp.getCode()))
 							{
 
 
-								delivery
-										.setDesc(getMplCommerceCartService().getDeliveryModeDescription(deliveryMode.getSellerArticleSKU(),
-												deliveryMode.getDeliveryMode().getCode(), startValue, endValue));
+								delivery.setDesc(getMplCommerceCartService().getDeliveryModeDescription(
+										deliveryMode.getSellerArticleSKU(), delmodemodTemp.getCode(), startValue, endValue));
 							}
-							if (null != deliveryMode.getDeliveryMode()
-									&& StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getName()))
+							if (null != delmodemodTemp && StringUtils.isNotEmpty(delmodemodTemp.getName()))
 							{
-								delivery.setName(deliveryMode.getDeliveryMode().getName());
+								delivery.setName(delmodemodTemp.getName());
 							}
 
 							//TPR-4421
@@ -5428,9 +5441,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 								}
 							}
 							//SDI-4197 starts
-							if (null != deliveryMode.getDeliveryMode().getPriority())
+							if (null != delmodemodTemp.getPriority())
 							{
-								delivery.setPriority(deliveryMode.getDeliveryMode().getPriority().intValue());
+								delivery.setPriority(delmodemodTemp.getPriority().intValue());
 							}
 							//SDI-4197 ends
 
