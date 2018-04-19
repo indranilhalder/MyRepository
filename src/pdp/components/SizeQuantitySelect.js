@@ -5,7 +5,6 @@ import styles from "./SizeQuantitySelect.css";
 
 export default class SizeQuantitySelect extends React.Component {
   updateSize(productUrl) {
-    this.props.history.push(productUrl);
     this.props.history.push({
       pathname: `${productUrl}`,
       state: { isSizeSelected: true }
