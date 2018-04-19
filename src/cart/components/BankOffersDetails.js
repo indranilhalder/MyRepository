@@ -10,7 +10,6 @@ class BankOffersDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAlreadySetCoupon: false,
       previousSelectedCouponCode: props.selectedBankOfferCode,
       selectedBankOfferCode: props.selectedBankOfferCode
     };
