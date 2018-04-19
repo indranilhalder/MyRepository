@@ -238,12 +238,24 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 				custModel = extUserService.getUserForUid(StringUtils.lowerCase(authentication.getName()));
 			}
 			boolean userRegisteredBySocialMedia = false;
+			boolean isUserTypeSocialMedia = false;
 			if (null != custModel.getCustomerRegisteredBySocialMedia())
 			{
 				userRegisteredBySocialMedia = custModel.getCustomerRegisteredBySocialMedia().booleanValue();
 			}
+			if (null != custModel.getType() && StringUtils.isNotEmpty(custModel.getType().getCode()))
+			{
+				if (custModel.getType().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FACEBOOK))
+				{
+					isUserTypeSocialMedia = true;
+				}
+				if (custModel.getType().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.GOOGLE))
+				{
+					isUserTypeSocialMedia = true;
+				}
+			}
 			boolean isSocial = false;
-			if (isSocialMedia && userRegisteredBySocialMedia)
+			if (isSocialMedia && (userRegisteredBySocialMedia || isUserTypeSocialMedia))
 			{
 				isSocial = true;
 			}

@@ -43,6 +43,10 @@ public class CartMatchingFilter extends AbstractUrlMatchingFilter
 	private static final String RELEASECARTCOUPON = "releaseCartCoupons";
 	private static final String ORDER_SUMMARY = "displayOrderSummary";
 	private static final String RESEND_OTP_COD = "resendOtpforcod";
+
+	private static final String APPLYNOCOSTEMI = "applyNoCostEMI";
+	private static final String RELEASE_NOCOSTEMI = "releaseNoCostEMI";
+
 	@Autowired
 	private UserService userService;
 
@@ -58,12 +62,12 @@ public class CartMatchingFilter extends AbstractUrlMatchingFilter
 					+ request.getPathInfo());
 		}
 
-		if (matchesUrl(request, regexp) && null != getValue(request, regexp)
-				&& !request.getRequestURI().contains(GETTOPTWOWISHLIST)
+		if (matchesUrl(request, regexp) && null != getValue(request, regexp) && !request.getRequestURI().contains(GETTOPTWOWISHLIST)
 				&& !request.getRequestURI().contains(SOFTCARTRESERVATIONFORPAYMENT) && !request.getRequestURI().contains(APPLYCOUPON)
 				&& !request.getRequestURI().contains(RELEASECARTCOUPON) && !request.getRequestURI().contains(APPLYCARTCOUPON)
 				&& !request.getRequestURI().contains(RELEASECOUPON) && !request.getRequestURI().contains(ORDER_SUMMARY)
-				&& !request.getRequestURI().contains(RESEND_OTP_COD))
+				&& !request.getRequestURI().contains(RESEND_OTP_COD) && !request.getRequestURI().contains(APPLYNOCOSTEMI)
+				&& !request.getRequestURI().contains(RELEASE_NOCOSTEMI))
 		{
 
 			final String cartId = getValue(request, regexp);
