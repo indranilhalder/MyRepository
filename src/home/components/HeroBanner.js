@@ -1,7 +1,9 @@
 import React from "react";
 import BannerImage from "../../general/components/BannerImage";
 import Banner from "../../general/components/Banner";
-import PropTypes, { instanceOf } from "prop-types";
+import PropTypes from "prop-types";
+import HeroBannerSkeleton from "../../general/components/HeroBannerSkeleton";
+import HomeSkeleton from "../../general/components/HomeSkeleton.js";
 import styles from "./HeroBanner.css";
 export default class HeroBanner extends React.Component {
   renderBanner = () => {
@@ -47,7 +49,7 @@ export default class HeroBanner extends React.Component {
         );
       }
     } else {
-      return null;
+      return <HomeSkeleton />;
     }
   };
   render() {

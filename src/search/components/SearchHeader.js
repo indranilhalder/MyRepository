@@ -5,7 +5,7 @@ import searchIcon from "./img/search.svg";
 import iconImageURL from "../../general/components/img/arrowBack.svg";
 import searchRedIcon from "./img/searchRed.svg";
 import PropTypes from "prop-types";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import Input2 from "../../general/components/Input2.js";
 export default class SearchHeader extends React.Component {
   onClickBack() {

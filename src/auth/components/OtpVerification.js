@@ -1,6 +1,7 @@
 import React from "react";
 import AuthPopUp from "./AuthPopUp";
-import { Icon, Button } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
+import Button from "../../xelpmoc-core/Button";
 import MediaQuery from "react-responsive";
 import PropTypes from "prop-types";
 import lockIcon from "./img/otpLock.svg";

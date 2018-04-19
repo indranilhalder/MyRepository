@@ -2,16 +2,6 @@ import React from "react";
 import styles from "./MobileFooter.css";
 import MobileFooterItem from "./MobileFooterItem";
 import PropTypes from "prop-types";
-import homeIcon from "./img/home_icon.png";
-import categoriesIcon from "./img/categories_icon.png";
-import brandsIcon from "./img/brands_icon.png";
-import userIcon from "./img/myCliq_icon.png";
-import myBagIcon from "./img/myBag_icon.png";
-import homeIconRed from "./img/home_icon_red.png";
-import categoriesIconRed from "./img/categories_icon_red.png";
-import brandsIconRed from "./img/brands_icon_red.png";
-import userIconRed from "./img/myCliq_icon_red.png";
-import myBagIconRed from "./img/myBag_icon_red.png";
 import { withRouter } from "react-router-dom";
 import {
   HOME_ROUTER,
@@ -21,7 +11,8 @@ import {
   PRODUCT_CART_DELIVERY_MODES,
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
-  EDIT_ADDRESS_BOOK
+  EDIT_ADDRESS_BOOK,
+  CDN_URL_ROOT
 } from "../../../src/lib/constants";
 import { CATEGORY_REGEX } from "../../plp/components/PlpBrandCategoryWrapper";
 const HOME = "home";
@@ -29,7 +20,16 @@ const CATEGORIES = "categories";
 const BRANDS = "brands";
 const PROFILE = "profile";
 const BAG = "bag";
-
+const userIcon = `${CDN_URL_ROOT}myCliq_icon.png`;
+const homeIcon = `${CDN_URL_ROOT}home_icon.png`;
+const brandsIcon = `${CDN_URL_ROOT}brands_icon.png`;
+const myBagIcon = `${CDN_URL_ROOT}myBag_icon.png`;
+const categoriesIcon = `${CDN_URL_ROOT}categories_icon.png`;
+const brandsIconRed = `${CDN_URL_ROOT}brands_icon_red.png`;
+const userIconRed = `${CDN_URL_ROOT}myCliq_icon_red.png`;
+const categoriesIconRed = `${CDN_URL_ROOT}categories_icon_red.png`;
+const homeIconRed = `${CDN_URL_ROOT}home_icon_red.png`;
+const myBagIconRed = `${CDN_URL_ROOT}myBag_icon_red.png`;
 class MobileFooter extends React.Component {
   handleSelect(val) {
     if (this.props.history) {

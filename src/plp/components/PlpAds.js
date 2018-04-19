@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./PlpAds.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 import Button from "../../general/components/Button";
 

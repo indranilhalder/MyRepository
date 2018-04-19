@@ -1,5 +1,5 @@
 import React from "react";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import PropTypes from "prop-types";
 import styles from "./BankSelect.css";
 export default class BankSelect extends React.Component {

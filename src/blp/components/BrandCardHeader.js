@@ -1,5 +1,5 @@
 import React from "react";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import styles from "./BrandCardHeader.css";
 import Logo from "../../general/components/Logo";
 import CoreButton from "../../general/components/Button";

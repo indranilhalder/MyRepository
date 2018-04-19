@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 import tataLogo from "./img/tata_Logo.svg";
 import { default as styles } from "./AuthFrame.css";

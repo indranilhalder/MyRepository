@@ -3,7 +3,7 @@ import styles from "./KycApplicationForm.css";
 import PropTypes from "prop-types";
 import Button from "../../general/components/Button.js";
 import Input2 from "../../general/components/Input2.js";
-import MDSpinner from "react-md-spinner";
+import MDSpinner from "../../general/components/SecondaryLoader";
 
 export default class KycApplicationForm extends React.Component {
   constructor(props) {

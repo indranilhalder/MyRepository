@@ -1,0 +1,24 @@
+.base {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.base img {
+  display: none;
+}
+
+.actual {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: 300ms;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.failed {
+  composes: actual;
+  background-position: center;
+  background-size: 40%;
+}

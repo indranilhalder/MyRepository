@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import chashIcon from "./img/cod.svg";
 import arrowIcon from "../../general/components/img/down-arrow.svg";
 import styles from "./CodUnavailable.css";
