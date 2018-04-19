@@ -5,26 +5,40 @@ import styles from "./SizeQuantitySelect.css";
 
 export default class SizeQuantitySelect extends React.Component {
   updateSize(productUrl) {
-    this.props.history.push({
-      pathname: `${productUrl}`,
-      state: { isSizeSelected: true }
-    });
+    if (this.props.updateSize) {
+      this.props.updateSize();
+      this.props.history.push({
+        pathname: `${productUrl}`,
+        state: { isSizeSelected: true }
+      });
+    }
   }
   updateQuantity(quantity) {
     if (this.props.updateQuantity) {
       this.props.updateQuantity(quantity);
+      if (this.props.checkIfSizeSelected()) {
+        this.props.history.push({
+          state: { isQuantitySelected: true, isSizeSelected: true }
+        });
+      } else {
+        this.props.history.push({
+          state: { isQuantitySelected: true }
+        });
+      }
     }
   }
-
   handleShowSize() {
     if (this.props.showSizeGuide) {
       this.props.showSizeGuide();
     }
   }
   render() {
-    const selectedColour = this.props.data.filter(val => {
+    const selectedVariant = this.props.data.filter(val => {
       return val.colorlink.selected;
-    })[0].colorlink.color;
+    })[0];
+    const selectedColour = selectedVariant.colorlink.color;
+    const selectedUrl = selectedVariant.sizelink.url;
+    const selectedSize = selectedVariant.sizelink.size;
     const sizes = this.props.data
       .filter(val => {
         return val.sizelink.isAvailable;
@@ -35,10 +49,11 @@ export default class SizeQuantitySelect extends React.Component {
       .map(val => {
         return val.sizelink;
       });
-    sizes.unshift({ size: "Size", value: "size" });
-    console.log(sizes);
-
-    let fetchedQuantityList = [{ value: "quantity", label: "Quantity" }];
+    if (!this.props.checkIfSizeSelected())
+      sizes.unshift({ size: "Size", value: "size" });
+    let fetchedQuantityList = [];
+    if (!this.props.checkIfQuantitySelected())
+      fetchedQuantityList = [{ value: "quantity", label: "Quantity" }];
     if (this.props.maxQuantity) {
       for (let i = 1; i <= parseInt(this.props.maxQuantity, 10); i++) {
         fetchedQuantityList.push({ value: i.toString(), label: i });
@@ -69,12 +84,12 @@ export default class SizeQuantitySelect extends React.Component {
             >
               <SelectBoxMobile2
                 theme="hollowBox"
-                value="Size"
-                label="Size"
+                value={this.props.checkIfSizeSelected() ? selectedUrl : "size"}
+                label={this.props.checkIfSizeSelected() ? selectedSize : "Size"}
                 options={sizes.map(val => {
                   return { label: val.size, value: val.url };
                 })}
-                onChange={value => this.updateSize(value)}
+                onChange={value => this.updateSize(value.value)}
               />
             </div>
           </div>
@@ -89,8 +104,16 @@ export default class SizeQuantitySelect extends React.Component {
             >
               <SelectBoxMobile2
                 theme="hollowBox"
-                value="Quantity"
-                label="Quantity"
+                value={
+                  this.props.checkIfQuantitySelected()
+                    ? this.props.productQuantity.value
+                    : "quantity"
+                }
+                label={
+                  this.props.checkIfQuantitySelected()
+                    ? this.props.productQuantity.label
+                    : "Quantity"
+                }
                 options={fetchedQuantityList}
                 onChange={value => this.updateQuantity(value)}
               />
