@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./InsuranceCopy.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import propTypes from "prop-types";
 
 export default class InsuranceCopy extends React.Component {

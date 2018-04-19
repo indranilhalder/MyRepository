@@ -1,5 +1,5 @@
 import React from "react";
-import filter from "lodash/filter";
+import filter from "lodash.filter";
 import CliqCashToggle from "./CliqCashToggle";
 import styles from "./PaymentCardWrapper.css";
 import EmiPanel from "./EmiPanel.js";
@@ -10,6 +10,7 @@ import CheckoutSavedCard from "./CheckoutSavedCard.js";
 import CheckoutCOD from "./CheckoutCOD.js";
 import { PAYTM } from "../../lib/constants";
 import PaytmOption from "./PaytmOption.js";
+
 let cliqCashToggleState = false;
 
 // prettier-ignore

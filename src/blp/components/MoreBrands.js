@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./MoreBrands.css";
 import Button from "../../general/components/Button.js";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import plusIcon from "../../general/components/img/circle_plus_white.svg";
 import ButtonWithIcon from "../../general/components/ButtonWithIcon.js";
 export default class MoreBrands extends React.Component {

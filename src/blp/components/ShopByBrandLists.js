@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./ShopByBrandLists.css";
 import PropTypes from "prop-types";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import arrowIcon from "../../general/components/img/arrow.svg";
 export default class ShopByBrandLists extends React.Component {
   handleClick(val) {

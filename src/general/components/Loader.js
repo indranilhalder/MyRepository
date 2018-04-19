@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Loader.css";
 import PropTypes from "prop-types";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "./SecondaryLoader";
 
 export default class Loader extends React.Component {
   onClick() {
@@ -13,7 +13,7 @@ export default class Loader extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.spinner}>
-          <MDSpinner />
+          <SecondaryLoader />
         </div>
       </div>
     );

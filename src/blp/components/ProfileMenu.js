@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./ProfileMenu.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 export default class ProfileMenu extends React.Component {
   onSave(value) {
     if (this.props.onSave) {

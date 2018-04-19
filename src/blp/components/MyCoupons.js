@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./MyCoupons.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 import couponIcon from "../../general/components/img/coupon-1.svg";
 export default class MyCoupons extends React.Component {

@@ -1,18 +1,17 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Button } from "xelpmoc-core";
+import Button from "../../xelpmoc-core/Button";
 import MediaQuery from "react-responsive";
 import Input from "../../general/components/Input";
 import PasswordInput from "./PasswordInput";
 import styles from "./SignUp.css";
 import AuthFrame from "./AuthFrame.js";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
   LOGIN_PATH,
   SIGN_UP_PATH,
   HOME_ROUTER,
-  MAIN_ROUTER,
-  SOCIAL_SIGN_UP
+  MAIN_ROUTER
 } from "../../lib/constants";
 
 class SignUp extends Component {
@@ -120,7 +119,7 @@ class SignUp extends Component {
     if (this.props.authCallsInProcess) {
       return (
         <div className={styles.loadingIndicator}>
-          <MDSpinner />
+          <SecondaryLoader />
         </div>
       );
     }

@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./ShopCollection.css";
-import { Image, Icon } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
+import Icon from "../../xelpmoc-core/Icon";
 import Button from "../../general/components/Button";
 import PropTypes from "prop-types";
 import Logo from "../../general/components/Logo";

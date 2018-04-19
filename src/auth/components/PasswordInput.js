@@ -2,7 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import show_password from "../../general/components/img/show_pwd.svg";
 import Input from "../../general/components/Input";
-import { CircleButton, Icon } from "xelpmoc-core";
+import CircleButton from "../../xelpmoc-core/CircleButton";
+import Icon from "../../xelpmoc-core/Icon";
 import styles from "./PasswordInput.css";
 
 class PasswordInput extends React.Component {
