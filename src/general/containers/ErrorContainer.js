@@ -30,7 +30,6 @@ const mapStateToProps = state => {
     transactionDetailsError: state.cart.transactionDetailsError,
     orderConfirmationDetailsError: state.cart.orderConfirmationDetailsError,
     jusPayPaymentDetailsError: state.cart.jusPayPaymentDetailsError,
-    codEligibilityError: state.cart.codEligibilityError,
     binValidationCODError: state.cart.binValidationCODError,
     wishlistError: state.wishlistItems.error,
     reviewsError: state.productDescription.reviewsError,

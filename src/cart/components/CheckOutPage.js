@@ -93,7 +93,8 @@ class CheckOutPage extends React.Component {
       isFirstAddress: false,
       addressDetails: null,
       isNoCostEmiApplied: false,
-      isNoCostEmiProceeded: false
+      isNoCostEmiProceeded: false,
+      selectedBankOfferCode: null
     };
   }
   onClickImage(productCode) {
@@ -110,6 +111,9 @@ class CheckOutPage extends React.Component {
       this.props.displayToast(DELIVERY_MODE_ADDRESS_ERROR);
     }
     this.props.history.goBack();
+  }
+  selecteBankOffer(couponCode) {
+    this.setState({ selectedBankOfferCode: couponCode });
   }
   renderLoader() {
     return (
@@ -886,7 +890,13 @@ class CheckOutPage extends React.Component {
     }
   };
   openBankOffers = () => {
-    this.props.showCouponModal(this.props.cart.paymentModes.paymentOffers);
+    this.props.showCouponModal({
+      selectedBankOfferCode: this.state.selectedBankOfferCode,
+      coupons: this.props.cart.paymentModes.paymentOffers,
+      selecteBankOffer: val => {
+        this.selecteBankOffer(val);
+      }
+    });
   };
 
   applyCliqCash = () => {
@@ -1033,18 +1043,8 @@ class CheckOutPage extends React.Component {
       this.props.cart.cartDetailsCNC &&
       this.props.cart.cartDetailsCNC.products
     ) {
-      if (
-        this.props.cart.cartDetailsCNC.products &&
-        this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode &&
-        this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode[0] &&
-        this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode[0]
-          .charge
-      ) {
-        deliveryCharge =
-          Math.round(
-            this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode[0]
-              .charge.value * 100
-          ) / 100;
+      if (this.props.cart.cartDetailsCNC.deliveryCharge) {
+        deliveryCharge = this.props.cart.cartDetailsCNC.deliveryCharge;
       }
       if (
         this.props.cart.cartDetailsCNC.cartAmount &&
