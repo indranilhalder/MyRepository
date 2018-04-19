@@ -32,6 +32,7 @@ const mapStateToProps = (state, ownProps) => {
   } else {
     isCategorySelected = state.productListings.isCategorySelected;
   }
+
   return {
     ...ownProps,
     facetData: state.productListings.productListings.facetdata,

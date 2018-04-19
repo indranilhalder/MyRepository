@@ -25,10 +25,9 @@ export default class FilterCategoryL1 extends React.Component {
           {this.props.name}
           <div className={styles.count}>{this.props.count}</div>
         </div>
-        {this.props.children &&
-          this.state.isOpen && (
-            <div className={styles.content}>{this.props.children}</div>
-          )}
+        {this.props.children && (
+          <div className={styles.content}>{this.props.children}</div>
+        )}
       </div>
     );
   }

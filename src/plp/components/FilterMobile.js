@@ -34,22 +34,21 @@ export default class FilterMobile extends React.Component {
   };
   onCategorySelect = (val, isFilter) => {
     const parsedQueryString = queryString.parse(this.props.location.search);
+    // special case the search category case
+    let url;
     let query = parsedQueryString.q;
-    if (query) {
-      const pathName = this.props.location.pathname;
-      const url = createUrlFromQueryAndCategory(query, pathName, val);
-      this.props.history.push(url, { isFilter });
-      if (isFilter === false) {
-        this.props.onL3CategorySelect();
-      }
+    let pathName = this.props.location.pathname;
+    if (parsedQueryString.searchCategory) {
+      const searchValue = this.props.location.search;
+      url = `${pathName}${searchValue}`;
+      url = createUrlFromQueryAndCategory(searchValue, url, val);
     } else {
-      const pathName = this.props.location.search;
-      const searchValue = this.props.location.search.replace("?", "");
-      const url = createUrlFromQueryAndCategory(searchValue, pathName, val);
-      this.props.history.push(url, { isFilter });
-      if (isFilter === false) {
-        this.props.onL3CategorySelect();
-      }
+      url = createUrlFromQueryAndCategory(query, pathName, val);
+    }
+
+    this.props.history.push(url, { isFilter });
+    if (isFilter === false) {
+      this.props.onL3CategorySelect();
     }
   };
 
@@ -66,7 +65,8 @@ export default class FilterMobile extends React.Component {
   };
 
   onFilterClick = val => {
-    this.props.history.push(val, { isFilter: true });
+    const url = val.replace("{pageNo}", 0);
+    this.props.history.push(url, { isFilter: true });
   };
   render() {
     const { facetData, facetdatacategory } = this.props;
