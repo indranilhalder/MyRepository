@@ -84,6 +84,7 @@ export default class Plp extends React.Component {
   }
   componentDidUpdate(prevProps) {
     if (this.props.productListings !== null) {
+      console.log(this.props.productListings.seo);
       if (this.props.isFilterOpen) {
         this.props.setHeaderText("Refine by");
       } else {
@@ -93,8 +94,17 @@ export default class Plp extends React.Component {
           this.props.productListings.seo.breadcrumbs[0].name
         )
           this.props.setHeaderText(
-            this.props.productListings.seo.breadcrumbs[0].name
+            `${this.props.productListings.seo.breadcrumbs[0].name} (${
+              this.props.productListings.pagination.totalResults
+            })`
           );
+        else {
+          this.props.setHeaderText(
+            `Search results (${
+              this.props.productListings.pagination.totalResults
+            })`
+          );
+        }
       }
     }
   }
