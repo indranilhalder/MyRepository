@@ -42,25 +42,35 @@ export default class ReturnReasonAndModes extends React.Component {
     }
   }
   renderToModes(data) {
-    this.props.onChange({ data });
-    if (this.props.isCOD) {
-      this.props.history.push({
-        pathname: `${RETURNS_PREFIX}/${
-          this.orderCode
-        }${RETURNS_STORE_BANK_FORM}`,
-        state: {
-          authorizedRequest: true
-        }
-      });
+    console.log(data);
+    if (!data.reason) {
+      this.props.displayToast("Please select reason ");
+      return false;
+    }
+    if (!data.comment) {
+      this.props.displayToast("Please enter comment ");
+      return false;
     } else {
-      this.props.history.push({
-        pathname: `${RETURNS_PREFIX}/${
-          this.orderCode
-        }${RETURN_LANDING}${RETURNS_MODES}`,
-        state: {
-          authorizedRequest: true
-        }
-      });
+      this.props.onChange({ data });
+      if (this.props.isCOD) {
+        this.props.history.push({
+          pathname: `${RETURNS_PREFIX}/${
+            this.orderCode
+          }${RETURNS_STORE_BANK_FORM}`,
+          state: {
+            authorizedRequest: true
+          }
+        });
+      } else {
+        this.props.history.push({
+          pathname: `${RETURNS_PREFIX}/${
+            this.orderCode
+          }${RETURN_LANDING}${RETURNS_MODES}`,
+          state: {
+            authorizedRequest: true
+          }
+        });
+      }
     }
   }
   onSelectMode(mode) {
