@@ -470,7 +470,7 @@ const account = (
       });
     case accountActions.FOLLOW_AND_UN_FOLLOW_BRANDS_IN_MY_ACCOUNT_SUCCESS:
       const currentBrands = cloneDeep(state.followedBrands);
-      const indexToBeRemoved = currentBrands.findIndex(brand => {
+      const indexToBeRemoved = currentBrands.indexOf(brand => {
         return brand.id === action.brandId;
       });
       currentBrands.splice(indexToBeRemoved, 1);
