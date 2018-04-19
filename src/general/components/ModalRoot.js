@@ -195,6 +195,15 @@ export default class ModalRoot extends React.Component {
   releaseBankOffer = couponCode => {
     this.props.releaseBankOffer(couponCode);
   };
+  releasePreviousAndApplyNewBankOffer = (
+    previousCouponCode,
+    newSelectedCouponCode
+  ) => {
+    this.props.releasePreviousAndApplyNewBankOffer(
+      previousCouponCode,
+      newSelectedCouponCode
+    );
+  };
   applyUserCoupon = couponCode => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     if (userDetails) {
@@ -369,6 +378,15 @@ export default class ModalRoot extends React.Component {
       BankOffers: (
         <BankOffersDetails
           closeModal={() => this.handleClose()}
+          releasePreviousAndApplyNewBankOffer={(
+            previousCouponCode,
+            newSelectedCouponCode
+          ) =>
+            this.releasePreviousAndApplyNewBankOffer(
+              previousCouponCode,
+              newSelectedCouponCode
+            )
+          }
           applyBankOffer={couponCode => this.applyBankOffer(couponCode)}
           releaseBankOffer={couponCode => this.releaseBankOffer(couponCode)}
           {...this.props.ownProps}

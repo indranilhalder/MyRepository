@@ -114,6 +114,17 @@ const mapDispatchToProps = dispatch => {
     releaseBankOffer: couponCode => {
       dispatch(releaseBankOffer(couponCode));
     },
+    releasePreviousAndApplyNewBankOffer: async (
+      previousCouponCode,
+      newSelectedCouponCode
+    ) => {
+      const releaseCouponReq = await dispatch(
+        releaseBankOffer(previousCouponCode)
+      );
+      if (releaseCouponReq.status === SUCCESS) {
+        dispatch(applyBankOffer(newSelectedCouponCode));
+      }
+    },
     applyUserCouponForAnonymous: couponCode => {
       dispatch(applyUserCouponForAnonymous(couponCode));
     },
