@@ -44,6 +44,8 @@
 	src="${commonResourcePath}/js/plugins/jquery.elevatezoom.js"></script>
 	<script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/jquery.visible.js"></script>
+<script type="text/javascript"
+	src="${commonResourcePath}/js/plugins/slick.min.js"></script>	
 <%-- Custom ACC JS --%>
 
 <%-- <script type="text/javascript"

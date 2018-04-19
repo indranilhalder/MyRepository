@@ -89,6 +89,7 @@
 						<value>BannerProductCarouselComponent.items</value>
 						<value>VideoProductCarouselComponent.items</value>
 						<value>ThemeOffersComponent.items</value>
+						<value>ThemeOffersComponent.offers</value>
 						<value>ThemeProductWidgetComponent.items</value>
 						<value>BannerSeparatorComponent.items</value>
 						<value>AutomatedBrandProductCarouselComponent.items</value>
@@ -202,6 +203,7 @@
 				<entry key="ThemeOffersComponent">
                     <list>
                         <value>ThemeOffersComponent.items</value>
+						<value>ThemeOffersComponent.offers</value>
                     </list>
                 </entry>
 				<entry key="ThemeProductWidgetComponent">

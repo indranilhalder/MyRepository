@@ -4587,6 +4587,7 @@
 	<property name="status" type="java.lang.String"/>   
 	<property name="message" type="java.lang.String"/>  
 	<property name="pageType" type="java.lang.String"/> 
+	<property name="pageName" type="java.lang.String"/> 
 		<property name="items"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.UICompPageElementWsDTO>" />
 	<property name="seo" type="com.tisl.wsdto.SeoContentData"/> 		

@@ -2814,6 +2814,7 @@ public class DefaultCMSComponentControler
 			{
 				uiCompPageObj.setPageType(StringUtils.EMPTY);
 			}
+			uiCompPageObj.setPageName(null != contentPage.getName() ? contentPage.getName() : StringUtils.EMPTY);
 			uiCompPageObj.setStatus(Success);
 			return uiCompPageObj;
 		}
