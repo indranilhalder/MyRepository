@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./LatestCollections.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import iconImageURL from "../../general/components/img/whiteArrow.svg";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 

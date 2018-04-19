@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./BrandImage.css";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import PropTypes from "prop-types";
 export default class BrandImage extends React.Component {
   handleClick() {

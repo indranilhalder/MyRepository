@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import styles from "./SavedCard.css";

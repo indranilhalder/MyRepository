@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Coupon.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 import couponIcon from "./img/coupon-1.svg";
 import UnderLinedButton from "../../general/components/UnderLinedButton";

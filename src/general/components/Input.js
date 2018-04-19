@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Input.css";
-import { Input as CoreInput } from "xelpmoc-core";
+import CoreInput from "../../xelpmoc-core/Input";
 
 export default class Input extends React.Component {
   render() {

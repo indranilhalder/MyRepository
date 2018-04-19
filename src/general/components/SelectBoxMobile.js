@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import styles from "./SelectBoxMobile.css";
 import GreyArrow from "./img/down-arrow-grey.svg";
 import BlackArrow from "./img/down-arrow.svg";
@@ -17,10 +17,14 @@ export default class SelectBoxMobile extends React.Component {
     this.state = {
       value: this.props.value
         ? this.props.value
-        : this.props.options ? this.props.options[0].value : "",
+        : this.props.options
+          ? this.props.options[0].value
+          : "",
       label: this.props.label
         ? this.props.label
-        : this.props.options ? this.props.options[0].label : ""
+        : this.props.options
+          ? this.props.options[0].label
+          : ""
     };
   }
 

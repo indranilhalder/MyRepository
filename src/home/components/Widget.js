@@ -1,9 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { SUCCESS } from "../../lib/constants";
 
 export default class Widget extends React.Component {
   componentDidMount() {
-    if (this.props.feedComponentData.fetchURL) {
+    if (
+      this.props.feedComponentData.fetchURL &&
+      this.props.feedComponentData.status !== SUCCESS
+    ) {
       this.props.getComponentData(
         this.props.feedComponentData.fetchURL,
         this.props.positionInFeed,
