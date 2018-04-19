@@ -213,7 +213,7 @@ const home = (
       homeFeedData = cloneDeep(state.homeFeed);
 
       clonedComponent = homeFeedData[action.positionInFeed];
-      const indexOfBrandToBeUpdated = clonedComponent.findIndex(item => {
+      const indexOfBrandToBeUpdated = clonedComponent.indexOf(item => {
         return item.id === action.brandId;
       });
 
