@@ -91,7 +91,9 @@ class CheckOutPage extends React.Component {
       selectedDeliveryDetails: null,
       ratingExperience: false,
       isFirstAddress: false,
-      addressDetails: null
+      addressDetails: null,
+      isNoCostEmiApplied: false,
+      isNoCostEmiProceeded: false
     };
   }
   onClickImage(productCode) {
@@ -628,6 +630,45 @@ class CheckOutPage extends React.Component {
     }
   };
 
+  getEmiEligibility = () => {
+    if (this.props.getEmiEligibility) {
+      this.setState({ isNoCostEmiApplied: false, isNoCostEmiProceeded: false });
+      this.props.getEmiEligibility();
+    }
+  };
+
+  getBankAndTenureDetails = () => {
+    if (this.props.getBankAndTenureDetails) {
+      this.setState({ isNoCostEmiApplied: false, isNoCostEmiProceeded: false });
+      this.props.getBankAndTenureDetails();
+    }
+  };
+
+  getEmiTermsAndConditionsForBank = (bankCode, bankName) => {
+    if (this.props.getEmiTermsAndConditionsForBank) {
+      this.props.getEmiTermsAndConditionsForBank(bankCode, bankName);
+    }
+  };
+  applyNoCostEmi = couponCode => {
+    if (this.props.applyNoCostEmi) {
+      this.setState({ isNoCostEmiApplied: true, isNoCostEmiProceeded: false });
+      this.props.applyNoCostEmi(couponCode);
+    }
+  };
+
+  removeNoCostEmi = couponCode => {
+    if (this.props.applyNoCostEmi) {
+      this.setState({ isNoCostEmiApplied: false, isNoCostEmiProceeded: false });
+      this.props.removeNoCostEmi(couponCode);
+    }
+  };
+
+  getItemBreakUpDetails = couponCode => {
+    if (this.props.getItemBreakUpDetails) {
+      this.props.getItemBreakUpDetails(couponCode);
+    }
+  };
+
   getNetBankDetails = () => {
     if (this.props.getNetBankDetails) {
       this.props.getNetBankDetails();
@@ -703,7 +744,8 @@ class CheckOutPage extends React.Component {
       let couponCookie = Cookie.getCookie(COUPON_COOKIE);
       let cartDetailsCouponDiscount =
         this.props.cart.cartDetailsCNC.cartAmount &&
-        this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount;
+        (this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount ||
+          this.props.cart.cartDetailsCNC.cartAmount.appliedCouponDiscount);
 
       if (couponCookie && !cartDetailsCouponDiscount) {
         this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
@@ -731,6 +773,10 @@ class CheckOutPage extends React.Component {
     if (this.availabilityOfUserCoupon()) {
       if (this.state.isFirstAddress) {
         this.addAddress(this.state.addressDetails);
+      }
+
+      if (this.state.isNoCostEmiApplied) {
+        this.setState({ isNoCostEmiProceeded: true });
       }
       if (
         !this.state.confirmAddress &&
@@ -1139,6 +1185,23 @@ class CheckOutPage extends React.Component {
                 getCODEligibility={() => this.getCODEligibility()}
                 getNetBankDetails={() => this.getNetBankDetails()}
                 getEmiBankDetails={() => this.getEmiBankDetails()}
+                getEmiEligibility={() => this.getEmiEligibility()}
+                getBankAndTenureDetails={() => this.getBankAndTenureDetails()}
+                getEmiTermsAndConditionsForBank={(bankCode, bankName) =>
+                  this.getEmiTermsAndConditionsForBank(bankCode, bankName)
+                }
+                applyNoCostEmi={couponCode => this.applyNoCostEmi(couponCode)}
+                removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
+                getItemBreakUpDetails={couponCode =>
+                  this.getItemBreakUpDetails(couponCode)
+                }
+                isNoCostEmiProceeded={this.state.isNoCostEmiProceeded}
+                changeNoCostEmiPlan={() =>
+                  this.setState({
+                    isNoCostEmiApplied: false,
+                    isNoCostEmiProceeded: false
+                  })
+                }
               />
             </div>
           )}
