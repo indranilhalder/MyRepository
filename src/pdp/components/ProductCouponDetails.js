@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import CuponDetails from "./CuponDetails.js";
 import SlideModal from "../../general/components/SlideModal";
+import arrowIcon from "../../general/components/img/down-arrow.svg";
+import Icon from "../../xelpmoc-core/Icon";
 import SearchCupon from "./SearchCupon.js";
 import PropTypes from "prop-types";
 import GridSelect from "../../general/components/GridSelect";
@@ -8,6 +10,8 @@ import StaticDarkHeader from "../../general/components/StaticDarkHeader";
 import styles from "./ProductCouponDetails.css";
 import * as Cookie from "../../lib/Cookie.js";
 import { COUPON_COOKIE } from "../../lib/constants.js";
+const USER_COUPON_NOTE =
+  "Note : Bank promotions  can be applied  during payment";
 
 class ProductCouponDetails extends Component {
   constructor(props) {
@@ -56,6 +60,14 @@ class ProductCouponDetails extends Component {
               getValue={coupon => this.setUserCoupons(coupon)}
               applyUserCoupon={couponCode => this.applyUserCoupon(couponCode)}
             />
+          </div>
+          <div className={styles.disclaimer}>
+            <span>Note:</span> {USER_COUPON_NOTE}
+          </div>
+          <div className={styles.link}>
+            <div className={styles.linkArrow}>
+              <Icon image={arrowIcon} size={10} />
+            </div>Login to view personal coupons
           </div>
           <GridSelect
             elementWidthMobile={100}
