@@ -544,7 +544,7 @@ const account = (
 
     case accountActions.REMOVE_ADDRESS_SUCCESS:
       const currentAddresses = cloneDeep(state.userAddress);
-      const indexOfAddressToBeRemove = currentAddresses.addresses.findIndex(
+      const indexOfAddressToBeRemove = currentAddresses.addresses.indexOf(
         address => {
           return address.id === action.addressId;
         }
