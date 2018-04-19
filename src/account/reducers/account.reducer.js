@@ -6,7 +6,7 @@ import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN
 } from "../../lib/constants.js";
-
+import findIndex from "lodash.findindex";
 import { SUCCESS } from "../../lib/constants";
 import { CLEAR_ERROR } from "../../general/error.actions";
 
@@ -470,7 +470,7 @@ const account = (
       });
     case accountActions.FOLLOW_AND_UN_FOLLOW_BRANDS_IN_MY_ACCOUNT_SUCCESS:
       const currentBrands = cloneDeep(state.followedBrands);
-      const indexToBeRemoved = currentBrands.indexOf(brand => {
+      const indexToBeRemoved = findIndex(currentBrands, brand => {
         return brand.id === action.brandId;
       });
       currentBrands.splice(indexToBeRemoved, 1);
@@ -544,7 +544,8 @@ const account = (
 
     case accountActions.REMOVE_ADDRESS_SUCCESS:
       const currentAddresses = cloneDeep(state.userAddress);
-      const indexOfAddressToBeRemove = currentAddresses.addresses.indexOf(
+      const indexOfAddressToBeRemove = findIndex(
+        currentAddresses.addresses,
         address => {
           return address.id === action.addressId;
         }
