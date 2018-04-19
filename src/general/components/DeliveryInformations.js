@@ -4,7 +4,7 @@ import styles from "./DeliveryInformations.css";
 import UnderLinedButton from "./UnderLinedButton";
 import CheckBox from "./CheckBox";
 import PropTypes from "prop-types";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import ExpressImage from "./img/expressDelivery.svg";
 import HomeImage from "./img/homeDelivery.svg";
 import arrowIcon from "./img/arrowBackblack.svg";

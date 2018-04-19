@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 
 import styles from "./LoadingScreen.css";
 
@@ -9,7 +9,7 @@ export default class LoadingScreen extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.spinner}>
-          <MDSpinner />
+          <SecondaryLoader />
         </div>
         <div className={styles.headerText}>{this.props.header}</div>
         <div className={styles.bodyText}>{this.props.body}</div>

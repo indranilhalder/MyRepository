@@ -1,46 +1,37 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { setDataLayer } from "../../lib/adobeUtils.js";
 import WidgetContainer from "../containers/WidgetContainer";
+import HomeSkeleton from "../../general/components/HomeSkeleton.js";
 import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
 import VideoProductCarousel from "./VideoProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
 import HeroBanner from "./HeroBanner.js";
 import FollowBase from "./FollowBase.js";
-import SearchContainer from "../../search/SearchContainer";
 import ConnectWidget from "./ConnectWidget";
 import BrandCardHeader from "../../blp/components/BrandCardHeader";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
-import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
-import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
-import ProductCapsules from "./ProductCapsules.js";
 import FollowingBrands from "./FollowingBrands";
 import ContentWidgetWrapper from "./ContentWidgetWrapper";
 import FlashSale from "./FlashSale";
 import AllBrandTypes from "../../blp/components/AllBrandTypes";
 import OfferWidget from "./OfferWidget.js";
-import DiscoverMore500 from "./DiscoverMore500.js";
 import ThemeOffer from "./ThemeOffer.js";
 import ThemeProductWidget from "./ThemeProductWidget.js";
-import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionContainer.js";
 import DiscoverMore from "./DiscoverMore.js";
 import CuratedProductsComponent from "./CuratedProductsComponent";
 import CuratedFeature from "../../blp/components/CuratedFeature";
 import LatestCollections from "../../blp/components/LatestCollections";
 import MonoBanner from "./MonoBanner";
 import styles from "./Feed.css";
-import MDSpinner from "react-md-spinner";
 import TopCategories from "../../blp/components/TopCategories";
 import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
-import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
-import queryString from "query-string";
 import ProductCapsulesContainer from "../containers/ProductCapsulesContainer";
 import * as Cookie from "../../lib/Cookie";
+import List from "@researchgate/react-intersection-list";
 import {
   LOGGED_IN_USER_DETAILS,
-  CUSTOMER_ACCESS_TOKEN,
-  PRODUCT_CART_ROUTER
+  CUSTOMER_ACCESS_TOKEN
 } from "../../lib/constants";
 
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
@@ -121,15 +112,16 @@ class Feed extends Component {
     }
   }
 
-  renderFeedComponent(feedDatum, i) {
+  renderFeedComponent = (index, key) => {
+    const feedDatum = this.props.homeFeedData[index];
     if (feedDatum.type === "Product Capsules Component") {
-      return <ProductCapsulesContainer positionInFeed={i} />;
+      return <ProductCapsulesContainer positionInFeed={index} />;
     }
     return (
       typeComponentMapping[feedDatum.type] && (
         <WidgetContainer
-          positionInFeed={i}
-          key={i}
+          positionInFeed={index}
+          key={index}
           type={typeKeyMapping[feedDatum.type]}
           postData={feedDatum.postParams}
         >
@@ -138,7 +130,7 @@ class Feed extends Component {
         </WidgetContainer>
       )
     );
-  }
+  };
 
   renderFeedComponents() {
     return (
@@ -146,14 +138,6 @@ class Feed extends Component {
       this.props.homeFeedData.map((feedDatum, i) => {
         return this.renderFeedComponent(feedDatum, i);
       })
-    );
-  }
-
-  renderLoader() {
-    return (
-      <div className={styles.loadingIndicator}>
-        <MDSpinner />
-      </div>
     );
   }
 
@@ -168,9 +152,17 @@ class Feed extends Component {
     }
   }
 
+  renderFeed = (items, ref) => {
+    return (
+      <div className={styles.base} ref={ref}>
+        <div className={styles.center}>{items}</div>
+      </div>
+    );
+  };
+
   render() {
     if (this.props.loading) {
-      return this.renderLoader();
+      return <HomeSkeleton />;
     }
     let propsForHeader = {};
     if (this.props.isHomeFeedPage) {
@@ -189,11 +181,15 @@ class Feed extends Component {
         };
       }
     }
-    return (
-      <div className={styles.base}>
-        <div className={styles.center}>{this.renderFeedComponents()}</div>
-      </div>
-    );
+    return this.props.homeFeedData ? (
+      <List
+        pageSize={1}
+        currentLength={this.props.homeFeedData.length}
+        itemsRenderer={this.renderFeed}
+      >
+        {this.renderFeedComponent}
+      </List>
+    ) : null;
   }
 }
 

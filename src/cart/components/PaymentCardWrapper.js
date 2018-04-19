@@ -1,8 +1,8 @@
 import React from "react";
-import filter from "lodash/filter";
+import filter from "lodash.filter";
 import CliqCashToggle from "./CliqCashToggle";
 import styles from "./PaymentCardWrapper.css";
-import CheckoutEmi from "./CheckoutEmi.js";
+import EmiPanel from "./EmiPanel.js";
 import CheckoutCreditCard from "./CheckoutCreditCard.js";
 import CheckoutDebitCard from "./CheckoutDebitCard.js";
 import CheckoutNetbanking from "./CheckoutNetbanking.js";
@@ -19,7 +19,7 @@ const typeComponentMapping = {
     "Debit Card": props => <CheckoutDebitCard {...props} />,
     "Netbanking": props => <CheckoutNetbanking {...props} />,
      "COD": props => <CheckoutCOD {...props}/>,
-    "EMI": props => <CheckoutEmi {...props} />,
+    "EMI": props => <EmiPanel {...props} />,
     "PAYTM": props => <PaytmOption {...props} />,
 };
 

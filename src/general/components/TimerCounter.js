@@ -1,7 +1,6 @@
 import React from "react";
 import Countdown from "react-countdown-now";
 import PropTypes from "prop-types";
-import moment from "moment";
 const renderTimer = ({ days, hours, minutes, seconds }) => {
   const finalHour = days * 24 + parseInt(hours, 10);
   return (
@@ -15,9 +14,16 @@ export default class Counter extends React.Component {
     // the expectation is that the endTime comes in the American date format
     // MM/DD/YYYY HH:mm:ss
     let endTime = new Date(this.props.endTime);
-    return endTime ? <Countdown date={endTime} renderer={renderTimer} /> : null;
+    return endTime ? (
+      <Countdown
+        date={endTime}
+        renderer={renderTimer}
+        onComplete={this.props.onComplete}
+      />
+    ) : null;
   }
 }
 Counter.propTypes = {
-  endTime: PropTypes.string
+  endTime: PropTypes.string,
+  onComplete: PropTypes.func
 };

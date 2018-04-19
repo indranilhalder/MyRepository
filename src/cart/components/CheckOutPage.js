@@ -1,5 +1,5 @@
 import React from "react";
-import cloneDeep from "lodash/cloneDeep";
+import cloneDeep from "lodash.clonedeep";
 import PropTypes from "prop-types";
 import DummyTab from "./DummyTab";
 import ConfirmAddress from "./ConfirmAddress";
@@ -14,8 +14,7 @@ import PaymentCardWrapper from "./PaymentCardWrapper.js";
 import CartItem from "./CartItem";
 import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
-import filter from "lodash/filter";
-import find from "lodash/find";
+import find from "lodash.find";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
@@ -43,7 +42,7 @@ import {
   JUS_PAY_AUTHENTICATION_FAILED
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
   setDataLayerForCheckoutDirectCalls,
   ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE,
@@ -92,7 +91,9 @@ class CheckOutPage extends React.Component {
       selectedDeliveryDetails: null,
       ratingExperience: false,
       isFirstAddress: false,
-      addressDetails: null
+      addressDetails: null,
+      isNoCostEmiApplied: false,
+      isNoCostEmiProceeded: false
     };
   }
   onClickImage(productCode) {
@@ -114,7 +115,7 @@ class CheckOutPage extends React.Component {
     return (
       <div className={styles.cartLoader}>
         <div className={styles.spinner}>
-          <MDSpinner />
+          <SecondaryLoader />
         </div>
       </div>
     );
@@ -629,6 +630,45 @@ class CheckOutPage extends React.Component {
     }
   };
 
+  getEmiEligibility = () => {
+    if (this.props.getEmiEligibility) {
+      this.setState({ isNoCostEmiApplied: false, isNoCostEmiProceeded: false });
+      this.props.getEmiEligibility();
+    }
+  };
+
+  getBankAndTenureDetails = () => {
+    if (this.props.getBankAndTenureDetails) {
+      this.setState({ isNoCostEmiApplied: false, isNoCostEmiProceeded: false });
+      this.props.getBankAndTenureDetails();
+    }
+  };
+
+  getEmiTermsAndConditionsForBank = (bankCode, bankName) => {
+    if (this.props.getEmiTermsAndConditionsForBank) {
+      this.props.getEmiTermsAndConditionsForBank(bankCode, bankName);
+    }
+  };
+  applyNoCostEmi = couponCode => {
+    if (this.props.applyNoCostEmi) {
+      this.setState({ isNoCostEmiApplied: true, isNoCostEmiProceeded: false });
+      this.props.applyNoCostEmi(couponCode);
+    }
+  };
+
+  removeNoCostEmi = couponCode => {
+    if (this.props.applyNoCostEmi) {
+      this.setState({ isNoCostEmiApplied: false, isNoCostEmiProceeded: false });
+      this.props.removeNoCostEmi(couponCode);
+    }
+  };
+
+  getItemBreakUpDetails = couponCode => {
+    if (this.props.getItemBreakUpDetails) {
+      this.props.getItemBreakUpDetails(couponCode);
+    }
+  };
+
   getNetBankDetails = () => {
     if (this.props.getNetBankDetails) {
       this.props.getNetBankDetails();
@@ -704,7 +744,8 @@ class CheckOutPage extends React.Component {
       let couponCookie = Cookie.getCookie(COUPON_COOKIE);
       let cartDetailsCouponDiscount =
         this.props.cart.cartDetailsCNC.cartAmount &&
-        this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount;
+        (this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount ||
+          this.props.cart.cartDetailsCNC.cartAmount.appliedCouponDiscount);
 
       if (couponCookie && !cartDetailsCouponDiscount) {
         this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
@@ -732,6 +773,10 @@ class CheckOutPage extends React.Component {
     if (this.availabilityOfUserCoupon()) {
       if (this.state.isFirstAddress) {
         this.addAddress(this.state.addressDetails);
+      }
+
+      if (this.state.isNoCostEmiApplied) {
+        this.setState({ isNoCostEmiProceeded: true });
       }
       if (
         !this.state.confirmAddress &&
@@ -1140,6 +1185,23 @@ class CheckOutPage extends React.Component {
                 getCODEligibility={() => this.getCODEligibility()}
                 getNetBankDetails={() => this.getNetBankDetails()}
                 getEmiBankDetails={() => this.getEmiBankDetails()}
+                getEmiEligibility={() => this.getEmiEligibility()}
+                getBankAndTenureDetails={() => this.getBankAndTenureDetails()}
+                getEmiTermsAndConditionsForBank={(bankCode, bankName) =>
+                  this.getEmiTermsAndConditionsForBank(bankCode, bankName)
+                }
+                applyNoCostEmi={couponCode => this.applyNoCostEmi(couponCode)}
+                removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
+                getItemBreakUpDetails={couponCode =>
+                  this.getItemBreakUpDetails(couponCode)
+                }
+                isNoCostEmiProceeded={this.state.isNoCostEmiProceeded}
+                changeNoCostEmiPlan={() =>
+                  this.setState({
+                    isNoCostEmiApplied: false,
+                    isNoCostEmiProceeded: false
+                  })
+                }
               />
             </div>
           )}

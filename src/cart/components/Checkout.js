@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styles from "./Checkout.css";
 import Button from "../../general/components/Button.js";
 import infoIcon from "./img/Info.svg";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 export default class Checkout extends React.Component {
   constructor(props) {
     super(props);

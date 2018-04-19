@@ -1,7 +1,7 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ColourSelector from "./ColourSelector";
 import SizeQuantitySelect from "./SizeQuantitySelect";
@@ -41,7 +41,9 @@ export default class PdpApparel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      productQuantity: "1"
+      productQuantityOption: "Quantity",
+      sizeError: false,
+      quantityError: false
     };
   }
   visitBrand() {
@@ -59,7 +61,10 @@ export default class PdpApparel extends React.Component {
     }
   };
   updateQuantity = quantity => {
-    this.setState({ productQuantity: quantity });
+    this.setState({ productQuantityOption: quantity, quantityError: false });
+  };
+  updateSize = () => {
+    this.setState({ sizeError: false });
   };
   goToSellerPage = () => {
     let expressionRuleFirst = "/p-(.*)/(.*)";
@@ -87,7 +92,7 @@ export default class PdpApparel extends React.Component {
   addToCart = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
-    productDetails.quantity = this.state.productQuantity;
+    productDetails.quantity = this.state.productQuantityOption.value;
     productDetails.ussId = this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -105,23 +110,31 @@ export default class PdpApparel extends React.Component {
       ) {
         this.props.displayToast("Product is out of stock");
       } else {
-        if (userDetails) {
-          if (cartDetailsLoggedInUser && customerCookie) {
-            this.props.addProductToCart(
-              JSON.parse(userDetails).userName,
-              JSON.parse(cartDetailsLoggedInUser).code,
-              JSON.parse(customerCookie).access_token,
-              productDetails
-            );
-          }
+        if (!this.checkIfSizeSelected()) {
+          this.props.displayToast("Please select a size to continue");
+          this.setState({ sizeError: true });
+        } else if (!this.checkIfQuantitySelected()) {
+          this.props.displayToast("Please select a quantity to continue");
+          this.setState({ quantityError: true });
         } else {
-          if (cartDetailsAnonymous && globalCookie) {
-            this.props.addProductToCart(
-              ANONYMOUS_USER,
-              JSON.parse(cartDetailsAnonymous).guid,
-              JSON.parse(globalCookie).access_token,
-              productDetails
-            );
+          if (userDetails) {
+            if (cartDetailsLoggedInUser && customerCookie) {
+              this.props.addProductToCart(
+                JSON.parse(userDetails).userName,
+                JSON.parse(cartDetailsLoggedInUser).code,
+                JSON.parse(customerCookie).access_token,
+                productDetails
+              );
+            }
+          } else {
+            if (cartDetailsAnonymous && globalCookie) {
+              this.props.addProductToCart(
+                ANONYMOUS_USER,
+                JSON.parse(cartDetailsAnonymous).guid,
+                JSON.parse(globalCookie).access_token,
+                productDetails
+              );
+            }
           }
         }
       }
@@ -165,12 +178,23 @@ export default class PdpApparel extends React.Component {
       this.props.showPincodeModal(this.props.match.params[1]);
     }
   }
-
-  handleQuantitySelect(val) {
-    if (this.props.onQuantitySelect) {
-      this.props.onQuantitySelect();
+  checkIfSizeSelected = () => {
+    if (this.props.location.state && this.props.location.state.isSizeSelected) {
+      return true;
+    } else {
+      return false;
     }
-  }
+  };
+  checkIfQuantitySelected = () => {
+    if (
+      this.props.location.state &&
+      this.props.location.state.isQuantitySelected
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   render() {
     const productData = this.props.productDetails;
@@ -255,13 +279,18 @@ export default class PdpApparel extends React.Component {
               <React.Fragment>
                 <SizeQuantitySelect
                   history={this.props.history}
+                  sizeError={this.state.sizeError}
+                  quantityError={this.state.quantityError}
                   showSizeGuide={
                     productData.showSizeGuide ? this.props.showSizeGuide : null
                   }
                   data={productData.variantOptions}
                   maxQuantity={productData.maxQuantityAllowed}
                   updateQuantity={this.updateQuantity}
-                  onQuantitySelect={val => this.props.handleQuantitySelect(val)}
+                  updateSize={this.updateSize}
+                  checkIfSizeSelected={this.checkIfSizeSelected}
+                  checkIfQuantitySelected={this.checkIfQuantitySelected}
+                  productQuantity={this.state.productQuantityOption}
                 />
 
                 <div className={styles.customisation}>
@@ -287,7 +316,6 @@ export default class PdpApparel extends React.Component {
                   productId={productData.productListingId}
                   data={productData.variantOptions}
                   history={this.props.history}
-                  updateColour={val => {}}
                   getProductSpecification={this.props.getProductSpecification}
                 />
               </React.Fragment>
@@ -305,8 +333,10 @@ export default class PdpApparel extends React.Component {
           )}
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.status === NO ? (
-            <Overlay labelText="Not serviceable in you pincode,
-  please try another pincode">
+            <Overlay
+              labelText="Not serviceable in you pincode,
+  please try another pincode"
+            >
               <PdpDeliveryModes
                 eligibleDeliveryModes={productData.eligibleDeliveryModes}
                 deliveryModesATP={productData.deliveryModesATP}

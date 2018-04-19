@@ -1,7 +1,7 @@
 import React from "react";
 import searchIcon from "./img/Search.svg";
 import Input2 from "./Input2";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 import styles from "./SearchInput.css";
 

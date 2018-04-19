@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./StoresLocationCard.css";
 import PropTypes from "prop-types";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 
 export default class StoresLocationCard extends React.Component {
   render() {

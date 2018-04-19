@@ -1,7 +1,6 @@
 .base {
   width: 100%;
   height: auto;
-  display: inline-block;
 }
 .holder {
   width: 100%;
@@ -44,5 +43,7 @@
 .faqQuestion {
   width: 100%;
   height: auto;
-  padding: 0px 15px;
+  padding: 10px 30px 15px 15px;
+  line-height: normal;
+  font-size: 13px;
 }

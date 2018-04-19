@@ -3,19 +3,24 @@ import Grid from "../../general/components/Grid";
 import ProductModule from "../../general/components/ProductModule";
 import PropTypes from "prop-types";
 import styles from "./FlashSale.css";
-import concat from "lodash/concat";
+import concat from "lodash.concat";
 import { transformData } from "./utils.js";
 import Button from "../../general/components/Button.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import TimerCounter from "../../general/components/TimerCounter.js";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import ClockImage from "../../pdp/components/img/clockWhite.svg";
 import { convertDateTimeFromIndianToAmerican } from "../../home/dateTimeUtils.js";
-import moment from "moment";
 
 const OFFER_AND_ITEM_LIMIT = 4;
 
 export default class FlashSale extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapse: false
+    };
+  }
   componentDidUpdate() {
     const offers = this.props.feedComponentData.offers;
     const itemIds = this.props.feedComponentData.itemIds;
@@ -46,11 +51,19 @@ export default class FlashSale extends React.Component {
     this.props.history.push(urlSuffix);
   };
 
+  onComplete = () => {
+    this.setState({ collapse: true });
+  };
+
   render() {
     const { feedComponentData, ...rest } = this.props;
     let items = [];
 
-    if (!feedComponentData.endDate || !feedComponentData.startDate) {
+    if (
+      !feedComponentData.endDate ||
+      !feedComponentData.startDate ||
+      this.state.collapse
+    ) {
       return null;
     }
 
@@ -61,15 +74,6 @@ export default class FlashSale extends React.Component {
     const endDateTime = new Date(
       convertDateTimeFromIndianToAmerican(feedComponentData.endDate)
     );
-
-    if (!moment(startDateTime).isValid()) {
-      return null;
-    }
-
-    if (!moment(endDateTime).isValid()) {
-      return null;
-    }
-
     // if date time
 
     const now = Date.now();
@@ -114,7 +118,10 @@ export default class FlashSale extends React.Component {
                 <Icon image={ClockImage} size={20} />
               </div>
               <div className={styles.countDownHolder}>
-                <TimerCounter endTime={endDateTime} />
+                <TimerCounter
+                  endTime={endDateTime}
+                  onComplete={this.onComplete}
+                />
               </div>
             </div>
           </div>

@@ -4,8 +4,8 @@ import { YES, NO } from "../../lib/constants";
 import { transferPincodeToPdpPincode } from "./utils";
 import { CLEAR_ERROR } from "../../general/error.actions.js";
 
-import concat from "lodash/concat";
-import cloneDeep from "lodash/cloneDeep";
+import concat from "lodash.concat";
+import cloneDeep from "lodash.clonedeep";
 const productDescription = (
   state = {
     status: null,

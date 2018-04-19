@@ -1,5 +1,5 @@
 import React from "react";
-import { Button as CoreButton } from "xelpmoc-core";
+import CoreButton from "../../xelpmoc-core/Button";
 import PropTypes from "prop-types";
 
 export default class Button extends React.Component {

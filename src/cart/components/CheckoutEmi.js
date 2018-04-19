@@ -7,9 +7,9 @@ import { SUCCESS } from "../../lib/constants";
 import styles from "./CheckoutEmi.css";
 
 export default class CheckoutEmi extends React.Component {
-  binValidation = (paymentMode, binNo) => {
+  binValidation = binNo => {
     if (this.props.binValidation) {
-      this.props.binValidation(paymentMode, binNo);
+      this.props.binValidation(binNo);
     }
   };
 
@@ -27,15 +27,7 @@ export default class CheckoutEmi extends React.Component {
 
   render() {
     return (
-      <MenuDetails
-        text="Easy monthly installments"
-        icon={emiIcon}
-        getEmiBankDetails={() => this.getEmiBankDetails()}
-        emiList={
-          this.props.cart.emiBankDetails &&
-          this.props.cart.emiBankDetails.bankList
-        }
-      >
+      <div>
         {this.props.cart.emiBankDetails &&
           this.props.cart.emiBankDetails.bankList && (
             <EmiAccordion
@@ -51,7 +43,7 @@ export default class CheckoutEmi extends React.Component {
         {!this.props.cart.emiBankDetails && (
           <div className={styles.errorText}>{this.props.cart.emiBankError}</div>
         )}
-      </MenuDetails>
+      </div>
     );
   }
 }

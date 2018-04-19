@@ -1,9 +1,9 @@
 import React from "react";
 import styles from "./ProfilePicture.css";
-import { ProfileImage } from "xelpmoc-core";
+import ProfileImage from "../../xelpmoc-core/ProfileImage";
 import editIcon from "../../general/components/img/tick.svg";
 import PropTypes from "prop-types";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 export default class ProfilePicture extends React.Component {
   onEdit() {
     if (this.props.onEdit) {
