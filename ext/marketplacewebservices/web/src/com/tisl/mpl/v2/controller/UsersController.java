@@ -11643,6 +11643,11 @@ public class UsersController extends BaseCommerceController
 									if (mobileUserService.validateOtp(mobilenumber, otp, OTPTypeEnum.REG))
 									{
 										customerToSave.setMobileNumber(mobilenumber);
+										//NEWUIUX-2434
+										if (customerToSave.getEmailId() != null && !customerToSave.getEmailId().contains("@"))
+										{
+											customerToSave.setDisplayUid(mobilenumber);
+										}
 
 									}
 									else

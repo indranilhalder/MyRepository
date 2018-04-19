@@ -8,12 +8,8 @@
 	</group>
 
 	<group qualifier="editorial" visible="true" initially-opened="false">
-			<property qualifier="ThemeProductWidgetComponent.imageURL" />
-			<property qualifier="ThemeProductWidgetComponent.brandLogo" />
-			<property qualifier="ThemeProductWidgetComponent.btnText" />
-			<property qualifier="ThemeProductWidgetComponent.title" />
-			<property qualifier="ThemeProductWidgetComponent.webURL" />
-			<property qualifier="ThemeProductWidgetComponent.items" />
+		<property qualifier="CMSTextComponent.banner" />
+		<property qualifier="CMSTextComponent.textValue" />
 	</group>
 
 	<group qualifier="visibility" visible="true" initially-opened="false">

@@ -993,6 +993,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String B9710 = "B9710";
 	public static final String B9110 = "B9110";
+
+	//NEWUIUX-1406
+	public static final String NU011 = "NU011";
+
+
+
 	//Added in R2.3 start
 	//Auto populating pincode details Error Codes Start
 	public static final String B9351 = "B9351";
@@ -1015,6 +1021,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TPR-7448 Starts here
 	public static final String B6009 = "B6009";
 	//TPR-7448 Ends here
+	public static final String B6010 = "B6010";
+	public static final String B6011 = "B6011";
 
 	//Search error codes starts
 	public static final String B7000 = "B7000";
@@ -2607,6 +2615,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String NU009 = "NU009";
 	public static final String NU010 = "NU010";
+
 
 	
 	public static final String ISSTANDARDEMI = "isStandardEmi".intern();

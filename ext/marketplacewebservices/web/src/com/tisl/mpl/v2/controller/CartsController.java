@@ -76,6 +76,7 @@ import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
@@ -1958,8 +1959,8 @@ public class CartsController extends BaseCommerceController
 			@RequestParam(required = false, defaultValue = "1") final String quantity,
 			@RequestParam(required = true) final boolean addedToCartWl, @RequestParam(required = false) final String channel,
 			@RequestParam(required = false) final String l3code, @RequestParam(required = false) final String exchangeParam,
-			@RequestParam(required = false) final String brandParam, @RequestParam(required = false) final String pinParam)
-			throws InvalidCartException, CommerceCartModificationException
+			@RequestParam(required = false) final String brandParam, @RequestParam(required = false) final String pinParam,
+			@RequestParam(required = false) final boolean isPwa) throws InvalidCartException, CommerceCartModificationException
 	{
 		WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		if (LOG.isDebugEnabled())
@@ -1992,7 +1993,7 @@ public class CartsController extends BaseCommerceController
 			}
 			else
 			{
-				result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl, channel);
+				result = mplCartWebService.addProductToCart(productCode, cartId, quantity, USSID, addedToCartWl, channel, isPwa);
 			}
 
 		}
@@ -2212,6 +2213,8 @@ public class CartsController extends BaseCommerceController
 
 			cartModel.setChannel(channelToSet);
 			getModelService().save(cartModel);
+
+			removeCouponDetails(cartModel);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -2245,6 +2248,115 @@ public class CartsController extends BaseCommerceController
 	//End of delete cart entry
 
 	/**
+	 * The Method removes Coupon Details from Cart
+	 *
+	 * @param cartModel
+	 */
+	private void removeCouponDetails(final CartModel cartModel)
+	{
+		try
+		{
+			final List<DiscountModel> discountList = new ArrayList<>(cartModel.getDiscounts());
+
+			if (CollectionUtils.isEmpty(cartModel.getEntries()) && CollectionUtils.isNotEmpty(discountList))
+			{
+				mplCouponFacade.releaseVoucherInCheckout(cartModel);
+				getModelService().save(cartModel);
+			}
+			else if (CollectionUtils.isNotEmpty(discountList))
+			{
+				final Tuple2<Boolean, String> couponTuple = getMarCouponData(discountList);
+				final Tuple2<Boolean, String> bankTuple = getBankCouponData(discountList);
+
+				if (couponTuple.getFirst().booleanValue() || bankTuple.getFirst().booleanValue())
+				{
+					mplCouponFacade.releaseVoucherInCheckout(cartModel);
+					getModelService().refresh(cartModel);
+				}
+
+				if (couponTuple.getFirst().booleanValue())
+				{
+					LOG.error("Trying to reapply Marketplable Coupon ");
+					mplCouponFacade.applyVoucher(couponTuple.getSecond(), cartModel, null);
+					getModelService().refresh(cartModel);
+					LOG.error("Marketplace Coupon reapplied");
+				}
+
+				if (bankTuple.getFirst().booleanValue())
+				{
+					LOG.error("Trying to reapply Marketplable Coupon ");
+					mplCouponFacade.applyCartVoucher(bankTuple.getSecond(), cartModel, null);
+
+					LOG.error("Bank Coupon reapplied");
+				}
+			}
+
+		}
+		catch (final VoucherOperationException voucherException)
+		{
+			LOG.error("Error during Voucher Release", voucherException);
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Voucher Release", exception);
+		}
+
+
+	}
+
+	/**
+	 * The Method returns Types of Coupon Applicable
+	 *
+	 * @param discountList
+	 * @return
+	 */
+	private Tuple2<Boolean, String> getBankCouponData(final List<DiscountModel> discountList)
+	{
+		boolean marCouponPresent = false;
+		String voucherCode = MarketplacecommerceservicesConstants.EMPTY.intern();
+
+		for (final DiscountModel discount : discountList)
+		{
+			if ((discount instanceof MplCartOfferVoucherModel))
+			{
+				marCouponPresent = true;
+				final MplCartOfferVoucherModel coupon = (MplCartOfferVoucherModel) discount;
+				voucherCode = coupon.getCode();
+			}
+		}
+
+		final Tuple2<Boolean, String> cartCouponObj = new Tuple2(Boolean.valueOf(marCouponPresent), voucherCode);
+		return cartCouponObj;
+
+	}
+
+	/**
+	 * The Method returns Types of Coupon Applicable
+	 *
+	 * @param discountList
+	 * @return cartCouponObj
+	 */
+	private Tuple2<Boolean, String> getMarCouponData(final List<DiscountModel> discountList)
+	{
+		boolean marCouponPresent = false;
+		String voucherCode = MarketplacecommerceservicesConstants.EMPTY.intern();
+
+		for (final DiscountModel discount : discountList)
+		{
+			if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel)
+					&& !(discount instanceof MplNoCostEMIVoucherModel))
+			{
+				marCouponPresent = true;
+				final PromotionVoucherModel coupon = (PromotionVoucherModel) discount;
+				voucherCode = coupon.getVoucherCode();
+			}
+		}
+
+		final Tuple2<Boolean, String> cartCouponObj = new Tuple2(Boolean.valueOf(marCouponPresent), voucherCode);
+		return cartCouponObj;
+	}
+
+	/**
 	 * Updates the quantity of a single cart entry and details of the store where the cart entry will be picked,for
 	 * Mobile.
 	 *
@@ -2260,7 +2372,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public CartDataDetailsWsDTO updateCartEntryMobile(@PathVariable final String cartId, @PathVariable final String baseSiteId,
 			@PathVariable final long entryNumber, @RequestParam(required = true) final Long quantity,
-			@RequestParam(required = false) final String pickupStore,
+			@RequestParam(required = false) final String pickupStore, @RequestParam(required = false) final boolean isPwa,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 			throws CommerceCartModificationException
 	{
@@ -2350,9 +2462,13 @@ public class CartsController extends BaseCommerceController
 							/////////// TISSAM-14
 							for (final AbstractOrderEntryModel pr : cartModel.getEntries())
 							{
-								if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
+								if (pr.getQuantity().longValue() >= maximum_configured_quantiy && !isPwa)
 								{
 									throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
+								}
+								if (pr.getQuantity().longValue() >= maximum_configured_quantiy && isPwa)
+								{
+									throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU011);
 								}
 								/*
 								 * if ((abstractOrderEntry.getQuantity().longValue() + pr.getQuantity().longValue()) >
@@ -5228,7 +5344,9 @@ public class CartsController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/{cartId}/applyNoCostEMI", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@RequestMapping(value =
+	{ "/applyNoCostEMI",
+			"/{cartId}/applyNoCostEMI" }, method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ApplyCouponsDTO applyNoCostEMI(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String channel)
@@ -5351,7 +5469,9 @@ public class CartsController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/{cartId}/releaseNoCostEMI", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@RequestMapping(value =
+	{ "/releaseNoCostEMI",
+			"/{cartId}/releaseNoCostEMI" }, method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ReleaseCouponsDTO releaseNoCostEMI(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)

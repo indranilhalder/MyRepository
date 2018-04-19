@@ -748,6 +748,8 @@
 		<property name="priceValue" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
 		<property name="availableStockCount" type="Integer" />
 		<property name="isOutOfStock" type="Boolean" />
+		<property name="categoryHierarchy"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.MplCategoryHierarchydata>"></property><!-- NEWUIUX 1823 -->
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -4208,6 +4210,7 @@
 	<property name="btnText" type="java.lang.String"/>
 	<property name="imageURL" type="java.lang.String"/>
 	<property name="brandLogo" type="java.lang.String"/> 
+	<property name="webURL" type="java.lang.String"/> 
 	<property name="items"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ThemeProWidElementWsDTO>" />
 	</bean>
@@ -4512,6 +4515,11 @@
 		 <property name="type" type="String"/>
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.CMSTextComponentWsDTO">
+		<property name="content" type="java.lang.String"/>
+		<property name="type" type="java.lang.String"/>
+	</bean>
+	
 	<bean class="com.tisl.mpl.wsdto.UICompPageElementWsDTO">
 		<property name="componentName" type="java.lang.String"/>
 		<property name="heroBannerComponent"
@@ -4569,7 +4577,9 @@
 		<property name="accountNavigationComponent" 
 			type="com.tisl.mpl.wsdto.AccountNavigationComponentWsDTO"/>	
 		<property name="cmsParagraphComponent"
-		    type="com.tisl.mpl.wsdto.CMSParagraphComponentWsDTO" />	
+		    type="com.tisl.mpl.wsdto.CMSParagraphComponentWsDTO" />
+	    <property name="cmsTextComponent"
+		    type="com.tisl.mpl.wsdto.CMSTextComponentWsDTO" />	
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.UICompPageWiseWsDTO">

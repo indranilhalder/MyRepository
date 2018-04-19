@@ -9,12 +9,8 @@
 		</group>
 		<group qualifier="Properties" visible="true" initially-opened="true">
 			<label key="config.wizardConfig.properties" />
-			<property qualifier="ThemeProductWidgetComponent.imageURL" />
-			<property qualifier="ThemeProductWidgetComponent.brandLogo" />
-			<property qualifier="ThemeProductWidgetComponent.btnText" />
-			<property qualifier="ThemeProductWidgetComponent.title" />
-			<property qualifier="ThemeProductWidgetComponent.webURL" />
-			<property qualifier="ThemeProductWidgetComponent.items" />
+			<property qualifier="CMSTextComponent.banner" />
+		<property qualifier="CMSTextComponent.textValue" />
 		</group>
 	</displayed-properties>
 </wizard-config>

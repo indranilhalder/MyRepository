@@ -294,7 +294,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * To get all categories shop by department
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getallCategories()
 	 */
 
@@ -675,7 +675,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getAboutusBanner()
 	 */
 	@Override
@@ -747,7 +747,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getHelpnServices()
 	 */
 	@Override
@@ -1405,6 +1405,11 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 				heroBannerlist.setBrandLogo("");
 			}
+			heroBannerData.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
+		}
+		else
+		{
+			heroBannerData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		final List<HeroBannerCompListWsDTO> items = new ArrayList<HeroBannerCompListWsDTO>();
 

@@ -900,7 +900,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			{
 				for (final DiscountModel oModel : discountList)
 				{
-					if (oModel instanceof PromotionVoucherModel && !(oModel instanceof MplCartOfferVoucherModel))
+					if (oModel instanceof PromotionVoucherModel && !(oModel instanceof MplCartOfferVoucherModel)
+							&& !(oModel instanceof MplNoCostEMIVoucherModel))
 					{
 						final PromotionVoucherModel coupon = (PromotionVoucherModel) oModel;
 						getVoucherService().releaseVoucher(coupon.getVoucherCode(), cart);
@@ -932,12 +933,27 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							{
 								entry.setCartCouponCode(MarketplacecommerceservicesConstants.EMPTY);
 								entry.setCartCouponValue(Double.valueOf(0.00D));
+							}
+							if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
+							{
+								getModelService().saveAll(entryList);
+							}
+						}
 
-								//TPR-7408 starts here
-								entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
-								entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
-								entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
-								//TPR-7408 ends here
+					}
+
+					else if (oModel instanceof MplNoCostEMIVoucherModel)
+					{
+
+						final MplNoCostEMIVoucherModel coupon = (MplNoCostEMIVoucherModel) oModel;
+						getVoucherService().releaseVoucher(coupon.getVoucherCode(), cart);
+						final List<AbstractOrderEntryModel> entryList = cart.getEntries();
+						if (CollectionUtils.isNotEmpty(entryList))
+						{
+							for (final AbstractOrderEntryModel entry : entryList)
+							{
+								entry.setEmiCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+								entry.setEmiCouponValue(Double.valueOf(0.00D));
 							}
 							if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
 							{
