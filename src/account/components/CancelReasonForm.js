@@ -1,6 +1,6 @@
 import React from "react";
 import OrderCard from "./OrderCard";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import TextArea from "../../general/components/TextArea";
 import ReturnsFrame from "./ReturnsFrame";
 import styles from "./CancelReasonForm.css";
@@ -25,8 +25,10 @@ export default class CancelReasonForm extends React.Component {
       this.props.onContinue(this.state);
     }
   }
-  onChangePrimary(code) {
-    this.setState({ cancelReasonCode: code });
+  onChangePrimary(val) {
+    const code = val.value;
+    const label = val.label;
+    this.setState({ cancelReasonCode: code, reason: label });
   }
   handleChange(val) {
     this.setState({ comment: val });
@@ -72,8 +74,8 @@ export default class CancelReasonForm extends React.Component {
             )}
           </OrderCard>
           <div className={styles.select}>
-            <SelectBoxMobile
-              label="Select a reason"
+            <SelectBoxMobile2
+              label={this.state.reason ? this.state.reason : "Select a reason"}
               options={data.returnReasonDetailsWsDTO.map((val, i) => {
                 return {
                   value: val.code,
