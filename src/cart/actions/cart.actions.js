@@ -26,6 +26,7 @@ import {
   JUS_PAY_CHARGED,
   FAILURE_LOWERCASE
 } from "../../lib/constants";
+
 import {
   setDataLayer,
   ADOBE_CART_TYPE,
@@ -3440,6 +3441,7 @@ export function removeItemFromCartLoggedOut(cartListItemPosition, pinCode) {
     const cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     dispatch(removeItemFromCartLoggedOutRequest());
+
     try {
       const result = await api.get(
         `${USER_CART_PATH}/anonymous/carts/${

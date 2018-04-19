@@ -5,13 +5,15 @@ import {
 } from "../actions/account.actions.js";
 import { connect } from "react-redux";
 import ReturnFlow from "../components/ReturnFlow";
-
+import { displayToast } from "../../general/toast.actions.js";
 const mapDispatchToProps = dispatch => {
   return {
     getReturnRequest: (orderCode, transactionId) => {
       dispatch(getReturnRequest(orderCode, transactionId));
     },
-
+    displayToast: message => {
+      dispatch(displayToast(message));
+    },
     returnProductDetailsFunc: productDetails => {
       dispatch(returnProductDetails(productDetails));
     }

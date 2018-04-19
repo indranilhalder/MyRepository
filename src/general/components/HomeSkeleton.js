@@ -8,15 +8,20 @@ export default class HomeSkeleton extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.skeletonHolder}>
+          <div className={styles.overlaySkeleton} />
           <HeroBannerSkeleton />
         </div>
         <div className={styles.skeletonHolder}>
+          <div className={styles.overlaySkeleton} />
           <VideoSkeleton />
         </div>
         <div className={styles.dataSkeletonHolder}>
-          <div className={styles.dataSkeleton} />
+          <div className={styles.dataSkeleton}>
+            <div className={styles.overlaySkeleton} />
+          </div>
         </div>
         <div className={styles.skeletonHolder}>
+          <div className={styles.overlaySkeleton} />
           <CarouselSkeleton />
         </div>
       </div>
