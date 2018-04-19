@@ -17,7 +17,6 @@ export default class ShopCollection extends React.Component {
         <div className={styles.imageHolder}>
           <Image image={this.props.image} />
         </div>
-        <div className={styles.overlay} />
         <div className={styles.textLine}>
           <div className={styles.headingHolder}>
             {this.props.logo && (
