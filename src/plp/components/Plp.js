@@ -130,7 +130,6 @@ export default class Plp extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     return (
       this.props.productListings && (
         <div className={styles.base}>
