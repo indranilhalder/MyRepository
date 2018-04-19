@@ -187,7 +187,6 @@ const mapDispatchToProps = dispatch => {
 
         if (signUpResponse.status !== SUCCESS) {
           dispatch(singleAuthCallHasFailed(signUpResponse.error));
-          dispatch(logout());
           return;
         }
 
@@ -195,7 +194,6 @@ const mapDispatchToProps = dispatch => {
           const wishListResponse = await dispatch(createWishlist());
           if (wishListResponse.status === ERROR) {
             dispatch(singleAuthCallHasFailed(signUpResponse.error));
-            dispatch(logout());
             return;
           }
         }
@@ -237,7 +235,6 @@ const mapDispatchToProps = dispatch => {
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
               dispatch(singleAuthCallHasFailed(mergeCartResponse.error));
-              dispatch(logout());
             }
           } else {
             const createdCartVal = await dispatch(
