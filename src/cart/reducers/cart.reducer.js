@@ -229,6 +229,8 @@ const cart = (
     case cartActions.CART_DETAILS_SUCCESS:
       if (action.cartDetails && action.cartDetails.appliedCoupon) {
         Cookies.createCookie(COUPON_COOKIE, action.cartDetails.appliedCoupon);
+      } else {
+        Cookies.deleteCookie(COUPON_COOKIE);
       }
 
       return Object.assign({}, state, {
@@ -257,6 +259,7 @@ const cart = (
       let carDetailsCopy = cloneDeep(state.cartDetails);
       let cartAmount = action.couponResult.cartAmount;
       carDetailsCopy.cartAmount = cartAmount;
+      carDetailsCopy.appliedCoupon = action.couponCode;
       return Object.assign({}, state, {
         couponStatus: action.status,
         cartDetails: carDetailsCopy,
@@ -277,9 +280,15 @@ const cart = (
       });
 
     case cartActions.RELEASE_USER_COUPON_SUCCESS:
+      carDetailsCopy = cloneDeep(state.cartDetails);
+      cartAmount = action.couponResult && action.couponResult.cartAmount;
+      carDetailsCopy.cartAmount = cartAmount;
+      delete carDetailsCopy["appliedCoupon"];
+
       Cookies.deleteCookie(COUPON_COOKIE);
       return Object.assign({}, state, {
         couponStatus: action.status,
+        cartDetails: carDetailsCopy,
         loading: false
       });
 

@@ -631,10 +631,11 @@ export function releaseUserCouponRequest() {
     status: REQUESTING
   };
 }
-export function releaseUserCouponSuccess() {
+export function releaseUserCouponSuccess(couponResult) {
   return {
     type: RELEASE_USER_COUPON_SUCCESS,
-    status: SUCCESS
+    status: SUCCESS,
+    couponResult
   };
 }
 
@@ -668,8 +669,11 @@ export function releaseCouponForAnonymous(oldCouponCode, newCouponCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(releaseUserCouponSuccess());
+      dispatch(releaseUserCouponSuccess(resultJson));
+      if(newCouponCode)
+      {
       dispatch(applyUserCouponForAnonymous(newCouponCode));
+      }
     } catch (e) {
       dispatch(releaseUserCouponFailure(e.message));
     }
@@ -698,8 +702,11 @@ export function releaseUserCoupon(oldCouponCode, newCouponCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(releaseUserCouponSuccess());
+      dispatch(releaseUserCouponSuccess(resultJson));
+      if(newCouponCode)
+      {
       dispatch(applyUserCouponForLoggedInUsers(newCouponCode));
+      }
     } catch (e) {
       dispatch(releaseUserCouponFailure(e.message));
     }
@@ -1599,8 +1606,9 @@ export function getPaymentModes(guIdDetails) {
       }
       // here  we are setting data layer for when user lands on the payment modes
       // page
+
       dispatch(paymentModesSuccess(resultJson));
-      setDataLayerForCheckoutDirectCalls(
+          setDataLayerForCheckoutDirectCalls(
         ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE
       );
     } catch (e) {

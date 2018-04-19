@@ -17,12 +17,11 @@ export default class SavedProduct extends React.Component {
     }
   }
   render() {
-    let couponCookie = Cookie.getCookie(COUPON_COOKIE);
     let couponText = this.props.couponHeading;
     let couponButtonText;
 
-    if (couponCookie) {
-      couponText = `Coupon: ${couponCookie}`;
+    if (this.props.appliedCouponCode) {
+      couponText = `Coupon: ${this.props.appliedCouponCode}`;
       couponButtonText = "Change";
     }
     return (
