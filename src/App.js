@@ -60,8 +60,8 @@ import {
   PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
   REQUESTING,
   MY_ACCOUNT_PAGE,
-  ABOUT_US,
-  MY_ACCOUNT
+  MY_ACCOUNT,
+  STATIC_PAGE
 } from "../src/lib/constants";
 import Loadable from "react-loadable";
 
@@ -72,6 +72,13 @@ const Loader = () => {
     </div>
   );
 };
+
+const StaticPageContainer = Loadable({
+  loader: () => import("./staticpage/containers/StaticPageContainer.js"),
+  loading() {
+    return <Loader />;
+  }
+});
 
 const MyAccountWrapper = Loadable({
   loader: () => import("./account/components/MyAccountWrapper"),
@@ -207,13 +214,6 @@ const ProductSellerContainer = Loadable({
   }
 });
 
-const AboutUsContainer = Loadable({
-  loader: () => import("./staticpage/containers/AboutUsContainer"),
-  loading() {
-    return <Loader />;
-  }
-});
-
 class App extends Component {
   async componentDidMount() {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -302,7 +302,6 @@ class App extends Component {
           <HeaderContainer />
           <Switch>
             <Route path={MY_ACCOUNT} component={MyAccountWrapper} />{" "}
-            <Route exact path={ABOUT_US} component={AboutUsContainer} />
             <Route
               exact
               path={CATEGORY_PRODUCT_LISTINGS_WITH_PAGE}
@@ -446,6 +445,7 @@ class App extends Component {
             />
             {/* This *has* to be at the bottom */}
             <Route exact path={SKU_PAGE} component={ProductListingsContainer} />
+            <Route exact path={STATIC_PAGE} component={StaticPageContainer} />
           </Switch>
           <SecondaryLoaderContainer />
           <MobileFooter />

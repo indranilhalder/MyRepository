@@ -7,50 +7,49 @@ import {
   FAILURE
 } from "../../lib/constants";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
-export const GET_ABOUT_US_REQUEST = "GET_ABOUT_US_REQUEST";
-export const GET_ABOUT_US_SUCCESS = "GET_ABOUT_US_SUCCESS";
-export const GET_ABOUT_US_FAILURE = "GET_ABOUT_US_FAILURE";
-export const PATH = "v2/mpl";
-export const ABOUT_US = "aboutus";
 
-//ABOUT US
-export function aboutUsRequest() {
+export const GET_STATIC_PAGE_REQUEST = "GET_STATIC_PAGE_REQUEST";
+export const GET_STATIC_PAGE_FAILURE = "GET_STATIC_PAGE_FAILURE";
+export const GET_STATIC_PAGE_SUCCESS = "GET_STATIC_PAGE_SUCCESS";
+export const PATH = "v2/mpl";
+
+export function getStaticPageRequest() {
   return {
-    type: GET_ABOUT_US_REQUEST,
+    type: GET_STATIC_PAGE_REQUEST,
     status: REQUESTING
   };
 }
-export function aboutUsSuccess(aboutUs) {
+
+export function getStaticPageSuccess(data) {
   return {
-    type: GET_ABOUT_US_SUCCESS,
+    type: GET_STATIC_PAGE_SUCCESS,
     status: SUCCESS,
-    aboutUs
+    data
   };
 }
-export function aboutUsFailure(error) {
+
+export function getStaticPageFailure(error) {
   return {
-    type: GET_ABOUT_US_FAILURE,
-    status: ERROR,
+    type: GET_STATIC_PAGE_FAILURE,
+    status: FAILURE,
     error
   };
 }
-export function getAboutUsDetails() {
-  return async (dispatch, getState, { api }) => {
-    dispatch(aboutUsRequest());
-    try {
-      const result = await api.get(
-        `${PATH}/cms/defaultpage?pageId=${ABOUT_US}`
-      );
 
+export function getStaticPage(pageId) {
+  return async (dispatch, getSate, { api }) => {
+    dispatch(getStaticPageRequest());
+    try {
+      const result = await api.get(`${PATH}/cms/defaultpage?pageId=${pageId}`);
       const resultJson = await result.json();
 
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      return dispatch(aboutUsSuccess(resultJson));
+      return dispatch(getStaticPageSuccess(resultJson));
     } catch (e) {
-      dispatch(aboutUsFailure(e.message));
+      return dispatch(getStaticPageFailure(e.message));
     }
   };
 }
