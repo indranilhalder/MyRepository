@@ -15,6 +15,7 @@ import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 const SAVE_TEXT = "Save Address";
 
 const ISO_CODE = "IN";
+const OTHER_LANDMARK = "other";
 export default class AddDeliveryAddress extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +33,10 @@ export default class AddDeliveryAddress extends React.Component {
       line3: "",
       town: "",
       salutaion: "",
-      defaultFlag: true
+      defaultFlag: true,
+      isOtherLandMarkSelected: false,
+      selectedLandmarkLabel: "Landmark",
+      landmarkList: []
     };
   }
 
@@ -61,15 +65,35 @@ export default class AddDeliveryAddress extends React.Component {
       this.props.history.goBack();
     }
     if (nextProps.getPinCodeDetails) {
+      const landmarkList = [
+        ...nextProps.getPinCodeDetails.landMarks,
+        { landmark: OTHER_LANDMARK }
+      ];
       this.setState({
         state:
           nextProps.getPinCodeDetails &&
           nextProps.getPinCodeDetails.state &&
-          nextProps.getPinCodeDetails.state.name
+          nextProps.getPinCodeDetails.state.name,
+        city:
+          nextProps.getPinCodeDetails && nextProps.getPinCodeDetails.cityName,
+        landmarkList
       });
     }
   }
-
+  onSelectLandmark = landmark => {
+    if (landmark === OTHER_LANDMARK) {
+      this.setState({
+        isOtherLandMarkSelected: true,
+        selectedLandmarkLabel: landmark
+      });
+    } else {
+      this.setState({
+        isOtherLandMarkSelected: false,
+        landmark,
+        selectedLandmarkLabel: landmark
+      });
+    }
+  };
   addNewAddress = () => {
     //add new Address
 
@@ -192,15 +216,33 @@ export default class AddDeliveryAddress extends React.Component {
           />
         </div>
         <div className={styles.content}>
-          <Input2
-            boxy={true}
-            placeholder="Landmark*"
-            value={this.props.line2 ? this.props.line2 : this.state.line2}
-            onChange={line2 => this.onChange({ line2 })}
-            textStyle={{ fontSize: 14 }}
+          <SelectBoxMobile
             height={33}
+            label={this.state.selectedLandmarkLabel}
+            options={
+              this.state.landmarkList.length > 0 &&
+              this.state.landmarkList.map((val, i) => {
+                return {
+                  value: val.landmark,
+                  label: val.landmark
+                };
+              })
+            }
+            onChange={landmark => this.onSelectLandmark(landmark)}
           />
         </div>
+        {this.state.isOtherLandMarkSelected && (
+          <div className={styles.content}>
+            <Input2
+              boxy={true}
+              placeholder="Landmark*"
+              value={this.props.line2 ? this.props.line2 : this.state.line2}
+              onChange={line2 => this.onChange({ line2 })}
+              textStyle={{ fontSize: 14 }}
+              height={33}
+            />
+          </div>
+        )}
         <div className={styles.content}>
           <Input2
             boxy={true}

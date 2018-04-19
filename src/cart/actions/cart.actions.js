@@ -640,10 +640,11 @@ export function releaseUserCouponRequest() {
     status: REQUESTING
   };
 }
-export function releaseUserCouponSuccess() {
+export function releaseUserCouponSuccess(couponResult) {
   return {
     type: RELEASE_USER_COUPON_SUCCESS,
-    status: SUCCESS
+    status: SUCCESS,
+    couponResult
   };
 }
 
@@ -677,8 +678,11 @@ export function releaseCouponForAnonymous(oldCouponCode, newCouponCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(releaseUserCouponSuccess());
+      dispatch(releaseUserCouponSuccess(resultJson));
+      if(newCouponCode)
+      {
       dispatch(applyUserCouponForAnonymous(newCouponCode));
+      }
     } catch (e) {
       dispatch(releaseUserCouponFailure(e.message));
     }
@@ -707,8 +711,11 @@ export function releaseUserCoupon(oldCouponCode, newCouponCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(releaseUserCouponSuccess());
+      dispatch(releaseUserCouponSuccess(resultJson));
+      if(newCouponCode)
+      {
       dispatch(applyUserCouponForLoggedInUsers(newCouponCode));
+      }
     } catch (e) {
       dispatch(releaseUserCouponFailure(e.message));
     }
@@ -875,8 +882,7 @@ export function selectDeliveryMode(deliveryUssId, pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      // setting data layer after selecting delivery mode success
-      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_SELECT_DELIVERY_MODE);
+
       dispatch(
         getCartDetailsCNC(
           JSON.parse(userDetails).userName,
@@ -887,6 +893,8 @@ export function selectDeliveryMode(deliveryUssId, pinCode) {
         )
       );
       dispatch(selectDeliveryModeSuccess(resultJson));
+     // setting data layer after selecting delivery mode success
+      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_SELECT_DELIVERY_MODE);
     } catch (e) {
       dispatch(selectDeliveryModeFailure(e.message));
     }
@@ -934,9 +942,10 @@ export function addAddressToCart(addressId, pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayerForCheckoutDirectCalls(ADOBE_ADD_ADDRESS_TO_ORDER);
       dispatch(getCartDetailsCNC(userId, access_token, cartId, pinCode, false));
       dispatch(addAddressToCartSuccess());
+      setDataLayerForCheckoutDirectCalls(ADOBE_ADD_ADDRESS_TO_ORDER);
+
     } catch (e) {
       dispatch(userAddressFailure(e.message));
     }
@@ -1606,10 +1615,11 @@ export function getPaymentModes(guIdDetails) {
       }
       // here  we are setting data layer for when user lands on the payment modes
       // page
-      setDataLayerForCheckoutDirectCalls(
+
+      dispatch(paymentModesSuccess(resultJson));
+          setDataLayerForCheckoutDirectCalls(
         ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE
       );
-      dispatch(paymentModesSuccess(resultJson));
     } catch (e) {
       dispatch(paymentModesFailure(e.message));
     }
