@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./GiftCardPopup.css";
 import PropTypes from "prop-types";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import Button from "../../general/components/Button.js";
 import Input2 from "../../general/components/Input2.js";
 import giftImageURL from "../../general/components/img/Gift.svg";

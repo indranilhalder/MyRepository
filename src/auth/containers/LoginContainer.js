@@ -10,6 +10,8 @@ import {
   generateCartIdForLoggedInUser,
   getCartId
 } from "../../cart/actions/cart.actions";
+import * as Cookie from "../../lib/Cookie";
+
 import { withRouter } from "react-router-dom";
 import {
   showModal,
@@ -18,7 +20,11 @@ import {
 } from "../../general/modal.actions.js";
 import { homeFeed } from "../../home/actions/home.actions";
 import Login from "../components/Login.js";
-import { SUCCESS, REQUESTING, FAILURE, ERROR } from "../../lib/constants";
+import {
+  SUCCESS,
+  CART_DETAILS_FOR_ANONYMOUS,
+  ERROR
+} from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
 import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 
@@ -82,12 +88,12 @@ const mapDispatchToProps = dispatch => {
             const newCartIdObj = await dispatch(
               generateCartIdForLoggedInUser()
             );
+
             if (newCartIdObj.status === SUCCESS) {
               const mergeCartIdResponse = await dispatch(
                 mergeCartId(cartVal.cartDetails.guid)
               );
               // merging cart id with new cart id
-
               if (mergeCartIdResponse.status === SUCCESS) {
                 dispatch(setIfAllAuthCallsHaveSucceeded());
               } else if (mergeCartIdResponse.status === ERROR) {

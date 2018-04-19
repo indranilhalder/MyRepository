@@ -2,7 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import gpsIcon from "../../general/components/img/GPS.svg";
-import { Icon, CircleButton } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
+import CircleButton from "../../xelpmoc-core/CircleButton";
 import styles from "./SearchLocationByPincode.css";
 import { DEFAULT_PIN_CODE_LOCAL_STORAGE } from "../../lib/constants";
 export default class SearchLocationByPincode extends React.Component {

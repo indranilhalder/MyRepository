@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./MarkerStoreCenter.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 export default class MarkerStoreCenter extends React.Component {
   render() {

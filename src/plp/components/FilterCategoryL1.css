@@ -8,12 +8,12 @@
   height: 40px;
   line-height: 40px;
   position: relative;
-  padding-right: 40px;
-
+  padding-right: 50px;
+  font-size: 14px;
   color: #212121;
 }
 .count {
-  width: 40px;
+  width: 50px;
   height: 40px;
   line-height: 40px;
   font-size: 14px;

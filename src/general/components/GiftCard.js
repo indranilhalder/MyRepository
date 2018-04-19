@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./GiftCard.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 import giftImageURL from "./img/Gift.svg";
 

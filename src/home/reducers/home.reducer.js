@@ -1,9 +1,10 @@
 // Probably rename this Feed, but no time right now.
 import * as homeActions from "../actions/home.actions";
-import cloneDeep from "lodash/cloneDeep";
-import map from "lodash/map";
+import cloneDeep from "lodash.clonedeep";
+import map from "lodash.map";
 import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
 import { transformFetchingItemsOrder } from "./utils";
+import { homeFeed } from "../actions/home.actions";
 import { SUCCESS } from "../../lib/constants";
 const home = (
   state = {
@@ -21,7 +22,11 @@ const home = (
   },
   action
 ) => {
-  let homeFeedData, toUpdate, componentData, homeFeedClonedData;
+  let homeFeedData,
+    toUpdate,
+    componentData,
+    homeFeedClonedData,
+    clonedComponent;
   switch (action.type) {
     case homeActions.HOME_FEED_BACK_UP_FAILURE:
       return Object.assign({}, state, {
@@ -62,12 +67,15 @@ const home = (
         error: action.error
       });
     case homeActions.GET_PRODUCT_CAPSULES_SUCCESS:
-      homeFeedClonedData = cloneDeep(state.homeFeed);
-      homeFeedClonedData[action.positionInFeed].data = action.productCapsules;
+      homeFeedData = state.homeFeed;
+      clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
+      clonedComponent.data = action.productCapsules;
+
+      homeFeedData[action.positionInFeed].data = clonedComponent;
       return Object.assign({}, state, {
         status: action.status,
         productCapsulesLoading: false,
-        homeFeed: homeFeedClonedData
+        homeFeed: homeFeedData
       });
 
     case homeActions.HOME_FEED_REQUEST:
@@ -137,25 +145,29 @@ const home = (
       });
 
     case homeActions.COMPONENT_BACK_UP_REQUEST:
-      homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].useBackUpData = false;
-      homeFeedData[action.positionInFeed].backUpLoading = true;
+      homeFeedData = state.homeFeed;
+      clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
+      clonedComponent.useBackUpData = false;
+      clonedComponent.backUpLoading = true;
+      homeFeedData[action.positionInFeed] = clonedComponent;
       return Object.assign({}, state, {
         status: action.status,
         homeFeed: homeFeedData
       });
 
     case homeActions.COMPONENT_BACK_UP_FAILURE:
-      homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].useBackUpData = false;
-      homeFeedData[action.positionInFeed].backUpLoading = false;
-      homeFeedData[action.positionInFeed].error = action.error;
+      homeFeedData = state.homeFeed;
+      clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
+      clonedComponent.useBackUpData = false;
+      clonedComponent.backUpLoading = false;
+      clonedComponent.error = action.error;
+      homeFeedData[action.positionInFeed] = clonedComponent;
       return Object.assign({}, state, {
         homeFeed: homeFeedData
       });
 
     case homeActions.COMPONENT_BACK_UP_SUCCESS:
-      homeFeedData = cloneDeep(state.homeFeed);
+      homeFeedData = state.homeFeed;
       homeFeedData[action.positionInFeed].useBackUpData = false;
       homeFeedData[action.positionInFeed].backUpLoading = false;
       toUpdate = action.data[action.data.componentName];
@@ -174,21 +186,24 @@ const home = (
       });
 
     case homeActions.COMPONENT_DATA_REQUEST:
-      homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].loading = true;
+      homeFeedData = state.homeFeed;
+      clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
+      clonedComponent.loading = true;
+      homeFeedData[action.positionInFeed] = clonedComponent;
       return Object.assign({}, state, {
         status: action.status,
         homeFeed: homeFeedData
       });
 
     case homeActions.GET_ITEMS_SUCCESS:
-      homeFeedData = cloneDeep(state.homeFeed);
-      const orderedItems = transformFetchingItemsOrder(
+      homeFeedData = state.homeFeed;
+      clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
+      clonedComponent.items = transformFetchingItemsOrder(
         action.itemIds,
         action.items
       );
 
-      homeFeedData[action.positionInFeed].items = orderedItems;
+      homeFeedData[action.positionInFeed] = clonedComponent;
       return Object.assign({}, state, {
         homeFeed: homeFeedData,
         status: action.status
@@ -196,7 +211,7 @@ const home = (
 
     case homeActions.COMPONENT_DATA_SUCCESS:
       if (!state.homeFeed[action.positionInFeed].useBackUpData) {
-        homeFeedData = cloneDeep(state.homeFeed);
+        homeFeedData = state.homeFeed;
         componentData = {
           loading: false,
           status: action.status
@@ -227,9 +242,11 @@ const home = (
       break;
 
     case homeActions.COMPONENT_DATA_FAILURE:
-      homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].loading = false;
-      homeFeedData[action.positionInFeed].status = action.error;
+      homeFeedData = state.homeFeed;
+      clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
+      clonedComponent.loading = true;
+      clonedComponent.status = action.error;
+      homeFeedData[action.positionInFeed] = clonedComponent;
 
       return Object.assign({}, state, {
         status: action.status,

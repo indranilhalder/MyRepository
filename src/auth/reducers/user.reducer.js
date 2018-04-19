@@ -1,5 +1,4 @@
 import * as userActions from "../actions/user.actions";
-import * as cartActions from "../../cart/actions/cart.actions";
 import { CLEAR_ERROR } from "../../general/error.actions.js";
 import { LOGOUT } from "../../account/actions/account.actions";
 import * as Cookies from "../../lib/Cookie";

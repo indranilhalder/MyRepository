@@ -2,9 +2,9 @@ import { connect } from "react-redux";
 import { displayToast, TOAST_DELAY } from "../toast.actions.js";
 import { clearError } from "../error.actions.js";
 import React from "react";
-import delay from "lodash/delay";
-import keys from "lodash/keys";
-import each from "lodash/each";
+import delay from "lodash.delay";
+import keys from "lodash.keys";
+import each from "lodash.foreach";
 import {
   getGlobalAccessToken,
   refreshToken
@@ -13,6 +13,7 @@ import { CUSTOMER_ACCESS_TOKEN } from "../../lib/constants.js";
 import * as Cookie from "../../lib/Cookie.js";
 const ACCESS_TOKEN_EXPIRED_MESSAGE = "Access token expired";
 const ACCESS_TOKEN_INVALID_MESSAGE = "Invalid access token";
+
 const CLEAR_ERROR_DELAY = TOAST_DELAY + 1000;
 
 // The errors for user, pdp and plp are universal errors
@@ -81,7 +82,12 @@ const mapStateToProps = state => {
     getUserAddressError: state.cart.getUserAddressError,
     netBankDetailsError: state.cart.netBankDetailsError,
     updateProfileError: state.profile.updateProfileError,
-    verifyWalletError: state.profile.verifyWalletError
+    verifyWalletError: state.profile.verifyWalletError,
+    emiEligibilityError: state.cart.emiEligibilityError,
+    bankAndTenureError: state.cart.bankAndTenureError,
+    emiTermsAndConditionError: state.cart.emiTermsAndConditionError,
+    noCostEmiError: state.cart.noCostEmiError,
+    emiItemBreakUpError: state.cart.emiItemBreakUpError
   };
 };
 

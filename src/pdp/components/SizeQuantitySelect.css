@@ -24,6 +24,16 @@
   height: auto;
   padding: 0 15px;
 }
+.boundary {
+  width: 100%;
+  height: auto;
+  border: 1px solid #d2d2d2;
+  border-radius: 2px;
+}
+.errorBoundary {
+  composes: boundary;
+  border: 1px solid #ff1744;
+}
 .select {
   width: 50%;
   display: inline-block;

@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./AccountSetting.css";
-import { ProfileImage } from "xelpmoc-core";
+import ProfileImage from "../../xelpmoc-core/ProfileImage";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 export default class AccountSetting extends React.Component {

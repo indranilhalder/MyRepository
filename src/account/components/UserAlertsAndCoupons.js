@@ -17,6 +17,11 @@ import {
 } from "../../lib/constants";
 
 import * as styles from "./UserAlertsAndCoupons.css";
+import {
+  setDataLayer,
+  ADOBE_MY_ACCOUNT_ALERTS,
+  ADOBE_MY_ACCOUNT_COUPONS
+} from "../../lib/adobeUtils";
 
 const URL_PATH_ALERTS = `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ALERTS_PAGE}`;
 const URL_PATH_COUPONS = `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_COUPON_PAGE}`;
@@ -24,6 +29,12 @@ const COUPONS = "coupons";
 const ALERTS = "alerts";
 export default class UserAlertsAndCoupons extends React.Component {
   componentDidMount() {
+    const { pathname } = this.props.history.location;
+    if (pathname === URL_PATH_ALERTS) {
+      setDataLayer(ADOBE_MY_ACCOUNT_ALERTS);
+    } else if (pathname === URL_PATH_COUPONS) {
+      setDataLayer(ADOBE_MY_ACCOUNT_COUPONS);
+    }
     this.props.setHeaderText(ALERTS_COUPON);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -36,6 +47,12 @@ export default class UserAlertsAndCoupons extends React.Component {
     }
   }
   componentDidUpdate() {
+    const { pathname } = this.props.history.location;
+    if (pathname === URL_PATH_ALERTS) {
+      setDataLayer(ADOBE_MY_ACCOUNT_ALERTS);
+    } else if (pathname === URL_PATH_COUPONS) {
+      setDataLayer(ADOBE_MY_ACCOUNT_COUPONS);
+    }
     this.props.setHeaderText(ALERTS_COUPON);
   }
   renderToAlerts() {

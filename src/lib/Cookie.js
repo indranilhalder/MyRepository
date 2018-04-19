@@ -4,11 +4,12 @@
 // Taken from Quirks mode
 
 export function createCookie(name, value, days) {
+  let expires = "";
   if (days) {
     var date = new Date();
     date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000); // ) removed
-    var expires = "; expires=" + date.toGMTString(); // + added
-  } else var expires = "";
+    expires = "; expires=" + date.toGMTString(); // + added
+  }
   document.cookie = name + "=" + value + expires + ";path=/"; // + and " added
 }
 
