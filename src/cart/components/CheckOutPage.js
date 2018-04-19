@@ -19,7 +19,7 @@ import find from "lodash/find";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
-import size from "lodash/size";
+import size from "lodash.size";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
