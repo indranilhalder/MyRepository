@@ -10,7 +10,7 @@ export default class NoCostEmiBankDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isSelected: null,
+      selectBankIndex: null,
       selectMonth: null,
       showAll: false,
       selectedBankName: null,
@@ -20,7 +20,7 @@ export default class NoCostEmiBankDetails extends React.Component {
     };
   }
   selectOtherBank(val) {
-    this.setState({ isSelected: null });
+    this.setState({ selectBankIndex: null });
     if (this.props.selectOtherBank) {
       this.props.selectOtherBank(val);
     }
@@ -31,17 +31,18 @@ export default class NoCostEmiBankDetails extends React.Component {
     }
   }
   handleSelect(index) {
-    this.setState({
-      isSelected: index,
-      selectMonth: null,
-      selectedBankName: this.props.bankList[index].bankName,
-      selectedBankCode: this.props.bankList[index].code
-    });
-    if (this.state.isSelected === index) {
+    if (this.state.selectBankIndex === index) {
       this.setState({
-        isSelected: null,
+        selectBankIndex: null,
         selectedBankName: null,
         selectedBankCode: null
+      });
+    } else {
+      this.setState({
+        selectBankIndex: index,
+        selectMonth: null,
+        selectedBankName: this.props.bankList[index].bankName,
+        selectedBankCode: this.props.bankList[index].code
       });
     }
   }
@@ -66,17 +67,22 @@ export default class NoCostEmiBankDetails extends React.Component {
   };
 
   onSelectMonth(index, val) {
-    this.setState({
-      selectMonth: index,
-      selectedCouponCode: val.emicouponCode,
-      selectedTenure: val.tenure
-    });
     if (this.state.selectMonth === index) {
-      this.setState({ selectMonth: null, selectedCouponCode: null });
+      this.setState({
+        selectMonth: null,
+        selectedCouponCode: null,
+        selectedTenure: null
+      });
       this.props.removeNoCostEmi(val.emicouponCode);
-    }
-    if (val && this.props.applyNoCostEmi) {
-      this.props.applyNoCostEmi(val.emicouponCode);
+    } else {
+      if (val && this.props.applyNoCostEmi) {
+        this.setState({
+          selectMonth: index,
+          selectedCouponCode: val.emicouponCode,
+          selectedTenure: val.tenure
+        });
+        this.props.applyNoCostEmi(val.emicouponCode);
+      }
     }
   }
   renderMonthsPlan(val) {
@@ -161,7 +167,7 @@ export default class NoCostEmiBankDetails extends React.Component {
 
   changeNoCostEmiPlan() {
     this.setState({
-      isSelected: null,
+      selectBankIndex: null,
       selectMonth: null,
       showAll: false,
       selectedBankName: null,
@@ -191,7 +197,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                           value={val.code}
                           key={i}
                           selectItem={() => this.handleSelect(i)}
-                          selected={this.state.isSelected === i}
+                          selected={this.state.selectBankIndex === i}
                         />
                       </div>
                     );
@@ -224,7 +230,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                 />
               </div>
             </div>
-            {this.state.isSelected !== null && (
+            {this.state.selectBankIndex !== null && (
               <div className={styles.emiDetailsPlan}>
                 <div className={styles.labelHeader}>
                   `* No cost EMI available only on ${this.props.productCount}{" "}
@@ -232,10 +238,10 @@ export default class NoCostEmiBankDetails extends React.Component {
                 </div>
                 <div className={styles.monthsLabel}>Tenure (Months)</div>
                 <div className={styles.monthsHolder}>
-                  {this.props.bankList[this.state.isSelected]
+                  {this.props.bankList[this.state.selectBankIndex]
                     .noCostEMICouponList &&
                     this.props.bankList[
-                      this.state.isSelected
+                      this.state.selectBankIndex
                     ].noCostEMICouponList.map((val, i) => {
                       return (
                         <div

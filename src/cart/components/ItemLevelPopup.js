@@ -17,6 +17,7 @@ export default class ItemLevelPopup extends React.Component {
           </div>
           <div className={styles.levelBreakupHolder}>
             {emiItemDetails &&
+              emiItemDetails.itemBreakUpDetailList &&
               emiItemDetails.itemBreakUpDetailList.map((val, i) => {
                 return (
                   <LevelBreakupCard

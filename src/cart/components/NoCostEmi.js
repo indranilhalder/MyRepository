@@ -2,6 +2,8 @@ import React from "react";
 import styles from "./NoCostEmi.css";
 import PropTypes from "prop-types";
 import { Collapse } from "react-collapse";
+const STANDARD_EMI = "Standard Emi";
+const NO_COST_EMI = "No Cost Emi";
 export default class NoCostEmi extends React.Component {
   constructor(props) {
     super(props);
@@ -21,7 +23,7 @@ export default class NoCostEmi extends React.Component {
         }
         if (
           this.state.isOpen &&
-          this.props.text === "Standard Emi" &&
+          this.props.text === STANDARD_EMI &&
           !this.props.emiList &&
           this.props.getEmiBankDetails
         ) {
@@ -29,7 +31,7 @@ export default class NoCostEmi extends React.Component {
         }
         if (
           this.state.isOpen &&
-          this.props.text === "No Cost Emi" &&
+          this.props.text === NO_COST_EMI &&
           this.props.getBankAndTenureDetails
         ) {
           this.props.getBankAndTenureDetails();

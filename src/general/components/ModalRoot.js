@@ -183,11 +183,6 @@ export default class ModalRoot extends React.Component {
       this.props.redeemCliqVoucher(val, true);
     }
   };
-
-  // moveToWishList=()=>
-  // {
-
-  // }
   onClickWrongNumber() {
     this.props.showModal(RestorePasswords);
   }
@@ -345,7 +340,6 @@ export default class ModalRoot extends React.Component {
       ),
       NoCostEmiItemBreakUp: (
         <ItemLevelPopup
-          // moveToWishList={()=>this.moveToWishList()}
           emiItemDetails={this.props.ownProps}
           closeModal={() => this.handleClose()}
         />

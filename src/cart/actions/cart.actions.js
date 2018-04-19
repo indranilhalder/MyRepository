@@ -3565,11 +3565,11 @@ export function getEligibilityOfNoCostEmiRequest() {
   };
 }
 
-export function getEligibilityOfNoCostEmiSuccess(EmiEligibility) {
+export function getEligibilityOfNoCostEmiSuccess(emiEligibility) {
   return {
     type: ELIGIBILITY_OF_NO_COST_EMI_SUCCESS,
     status: SUCCESS,
-    EmiEligibility
+    emiEligibility
   };
 }
 

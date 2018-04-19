@@ -1104,7 +1104,7 @@ const cart = (
     case cartActions.ELIGIBILITY_OF_NO_COST_EMI_SUCCESS:
       return Object.assign({}, state, {
         emiEligibilityStatus: action.status,
-        emiEligibilityDetails: action.EmiEligibility,
+        emiEligibilityDetails: action.emiEligibility,
         loading: false
       });
 
