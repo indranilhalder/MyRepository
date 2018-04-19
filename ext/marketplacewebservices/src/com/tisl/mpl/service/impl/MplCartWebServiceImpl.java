@@ -1943,7 +1943,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						&& null != abstractOrderEntry.getTimeSlotFrom()
 						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
 								.getDeliveryMode().getCode())))
-<<<<<<< HEAD
+
 				{
 					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
 							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
@@ -2847,8 +2847,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						&& null != abstractOrderEntry.getTimeSlotFrom()
 						&& (null != valNew && !MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(valNew
 								.getDeliveryMode().getCode())))
-=======
->>>>>>> refs/remotes/origin/api_phase2_master_iqa_13/04/2018
+
 				{
 					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
 							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
