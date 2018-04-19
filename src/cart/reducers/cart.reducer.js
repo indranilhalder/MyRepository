@@ -435,9 +435,13 @@ const cart = (
       });
 
     case cartActions.ORDER_SUMMARY_SUCCESS:
+      carDetailsCopy = cloneDeep(state.cartDetailsCNC);
+      carDetailsCopy.deliveryCharge =
+        action.orderSummary && action.orderSummary.deliveryCharge;
       return Object.assign({}, state, {
         orderSummaryStatus: action.status,
         orderSummary: action.orderSummary,
+        cartDetailsCNC: carDetailsCopy,
         selectDeliveryModeLoader: false
       });
 

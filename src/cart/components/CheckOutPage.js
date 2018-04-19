@@ -1033,18 +1033,8 @@ class CheckOutPage extends React.Component {
       this.props.cart.cartDetailsCNC &&
       this.props.cart.cartDetailsCNC.products
     ) {
-      if (
-        this.props.cart.cartDetailsCNC.products &&
-        this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode &&
-        this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode[0] &&
-        this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode[0]
-          .charge
-      ) {
-        deliveryCharge =
-          Math.round(
-            this.props.cart.cartDetailsCNC.products[0].elligibleDeliveryMode[0]
-              .charge.value * 100
-          ) / 100;
+      if (this.props.cart.cartDetailsCNC.deliveryCharge) {
+        deliveryCharge = this.props.cart.cartDetailsCNC.deliveryCharge;
       }
       if (
         this.props.cart.cartDetailsCNC.cartAmount &&
