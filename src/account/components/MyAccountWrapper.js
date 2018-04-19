@@ -13,7 +13,8 @@ import {
   MY_ACCOUNT_BRANDS_PAGE,
   MY_ACCOUNT_CLIQ_CASH_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
-  MY_ACCOUNT_ADDRESS_ADD_PAGE
+  MY_ACCOUNT_ADDRESS_ADD_PAGE,
+  ORDER_PREFIX
 } from "../../lib/constants.js";
 import AllOrderContainer from "../containers/AllOrderContainer";
 
@@ -30,6 +31,7 @@ import CliqCashContainer from "../containers/CliqCashContainer.js";
 import GiftCardContainer from "../containers/GiftCardContainer";
 import SavedCardContainer from "../containers/SavedCardContainer.js";
 import AddressBookContainer from "../containers/AddressBookContainer.js";
+import OrderDetailsContainer from "../containers/OrderDetailsContainer.js";
 
 export default class MyAccountWrapper extends React.Component {
   render() {
@@ -96,6 +98,7 @@ export default class MyAccountWrapper extends React.Component {
           path={`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_ADDRESS_ADD_PAGE}`}
           component={AddAddressContainer}
         />
+        <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
       </Switch>
     );
   }
