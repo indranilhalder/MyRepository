@@ -7,6 +7,10 @@ import SearchInput from "../../general/components/SearchInput";
 import styles from "./FilterMobile.css";
 import queryString from "query-string";
 import { createUrlFromQueryAndCategory } from "./FilterUtils.js";
+import {
+  CATEGORY_CAPTURE_REGEX,
+  BRAND_CAPTURE_REGEX
+} from "../../plp/components/PlpBrandCategoryWrapper";
 
 const BRAND = "brand";
 export default class FilterMobile extends React.Component {
@@ -16,6 +20,48 @@ export default class FilterMobile extends React.Component {
       brandSearchString: ""
     };
   }
+
+  onClear = () => {
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    const query = parsedQueryString.q;
+
+    if (query) {
+      // I know that there is a query.
+      // if the first char is a :, then we know this is a brand or a category that we are dealing with
+
+      // if it is not, then we know that it's a search string.
+
+      const firstChar = query.charAt(0);
+      if (firstChar !== ":") {
+        const splitQuery = query.split(":");
+        const searchText = splitQuery[0];
+        const url = `${this.props.location.pathname}?q=${searchText}`;
+
+        this.props.history.push(url, {
+          isFilter: false
+        });
+      } else {
+        let brandOrCategoryId = null;
+        brandOrCategoryId = /category:([a-zA-Z0-9]+)/.exec(query);
+        if (!brandOrCategoryId) {
+          brandOrCategoryId = /brand:([a-zA-Z0-9]+)/.exec(query);
+        }
+
+        if (brandOrCategoryId) {
+          const brandOrCategoryIdIndex = brandOrCategoryId.index;
+          const clearedQuery = query.substring(
+            0,
+            brandOrCategoryIdIndex + brandOrCategoryId[0].length
+          );
+
+          const url = `${this.props.location.pathname}?q=${clearedQuery}`;
+          this.props.history.push(url, {
+            isFilter: false
+          });
+        }
+      }
+    }
+  };
 
   selectTab(val) {
     this.props.setFilterSelectedData(false, val);
@@ -66,6 +112,7 @@ export default class FilterMobile extends React.Component {
 
   onFilterClick = val => {
     const url = val.replace("{pageNo}", 0);
+
     this.props.history.push(url, { isFilter: true });
   };
   render() {
@@ -180,7 +227,7 @@ export default class FilterMobile extends React.Component {
           }
         >
           <div className={styles.buttonHolder}>
-            <div className={styles.button} onClick={this.props.onClear}>
+            <div className={styles.button} onClick={this.onClear}>
               Reset
             </div>
           </div>
