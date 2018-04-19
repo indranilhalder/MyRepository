@@ -414,6 +414,12 @@ please try another pincode"
                     })}
                 </Accordion>
               )}
+              {productData.brandInfo && (
+                <ProductFeature
+                  heading="Brand Info"
+                  content={productData.brandInfo}
+                />
+              )}
             </div>
           )}
           {productData.rootCategory === "Watches" && (
@@ -444,6 +450,12 @@ please try another pincode"
                           );
                         })}
                     </Accordion>
+                  )}
+                  {productData.brandInfo && (
+                    <ProductFeature
+                      heading="Brand Info"
+                      content={productData.brandInfo}
+                    />
                   )}
                 </React.Fragment>
               )}
