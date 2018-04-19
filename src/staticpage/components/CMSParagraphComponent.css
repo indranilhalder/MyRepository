@@ -1,31 +1,11 @@
-.base {
-  width: 100%;
-  height: auto;
-  min-height: 100vh;
-  background: #ececec;
-}
-.aboutUsDataHolder {
-  width: 100%;
-  height: auto;
-  background: #fff;
-}
-.bannerHolder {
-  width: 100%;
-  height: auto;
-  margin-bottom: 15px;
-}
-.dataHolder {
-  width: 100%;
-  height: auto;
-}
 .contentHolder {
   width: 100%;
   height: auto;
   font-size: 14px;
   color: #212121;
   line-height: 22px;
-  margin-bottom: 25px;
-  padding: 0px 15px;
+  font-family: regular;
+  padding: 15px 15px 15px;
   display: inline-block;
 }
 .contentHolder h3,
@@ -37,6 +17,14 @@ h2 {
 }
 .contentHolder p {
   padding-bottom: 5px;
+}
+.contentHolder span {
+  color: #000;
+  font-size: 14px !important;
+  font-family: regular !important;
+}
+.contentHolder strong {
+  font-family: semibold;
 }
 .contentHolder ul {
   padding: 0px 0px 0px 20px;

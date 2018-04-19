@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./IconWithHeader.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 
 export default class IconWithHeader extends React.Component {

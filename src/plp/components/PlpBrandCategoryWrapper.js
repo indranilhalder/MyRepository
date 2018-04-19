@@ -29,10 +29,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
 
     let categoryOrBrandId = null;
 
-    if (this.props.match.path === STATIC_CATEGORY_PAGES) {
-      categoryOrBrandId = this.props.match.params[0];
-    }
-
     if (CATEGORY_REGEX.test(url)) {
       categoryOrBrandId = url.match(CATEGORY_CAPTURE_REGEX)[0];
     }
@@ -50,10 +46,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     const url = this.props.location.pathname;
 
     let categoryOrBrandId = null;
-
-    if (this.props.match.path === STATIC_CATEGORY_PAGES) {
-      categoryOrBrandId = this.props.match.params[0];
-    }
 
     if (CATEGORY_REGEX.test(url)) {
       categoryOrBrandId = url.match(CATEGORY_CAPTURE_REGEX)[0];

@@ -1,6 +1,6 @@
 import React from "react";
 import Video from "./Video";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import Logo from "./Logo";
 import PropTypes from "prop-types";
 import styles from "./ProductVideo.css";
@@ -19,7 +19,7 @@ export default class ProductVideo extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.video} style={{ backgroundColor: "#212121" }}>
-          <Video url={this.props.url} playing={this.state.playing} />
+          <Video url={this.props.url} playing={this.state.playing} controls />
         </div>
         <div
           className={overlayClass}

@@ -3,7 +3,7 @@ import styles from "./StarRating.css";
 import PropTypes from "prop-types";
 import FilledStar from "./img/star-fill.svg";
 import Star from "./img/star-stroke.svg";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 export default class StarRating extends React.Component {
   render() {
     const starSpans = [];

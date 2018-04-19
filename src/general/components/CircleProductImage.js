@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./CircleProductImage.css";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import PropTypes from "prop-types";
 export default class CircleProductImage extends React.Component {
   handleClick() {

@@ -79,7 +79,9 @@ export default class ReturnToStore extends React.Component {
         IFSCCode: this.props.bankDetail.code
       });
     }
-    this.props.newReturnInitial(productObj);
+    // here we are product object has all data we we need to send in api for return product
+    // and product is actual object
+    this.props.newReturnInitial(productObj, product);
   }
   renderLoader() {
     return <Loader />;

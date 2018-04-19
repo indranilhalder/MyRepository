@@ -16,7 +16,8 @@ import {
   SAVED_LIST
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
+
 import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "MMMM DD YYYY";
 const PRODUCT_QUANTITY = "1";
@@ -79,6 +80,7 @@ export default class SaveListDetails extends React.Component {
     this.props.history.push(HOME_ROUTER);
   }
   render() {
+    console.log("SAVE LIST DETAILS RENDERED");
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
@@ -90,7 +92,7 @@ export default class SaveListDetails extends React.Component {
     if (!wishList && this.props.loading) {
       return (
         <div className={styles.loadingIndicator}>
-          <MDSpinner />
+          <SecondaryLoader />
         </div>
       );
     }

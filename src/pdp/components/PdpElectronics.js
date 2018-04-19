@@ -1,7 +1,7 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
@@ -306,8 +306,10 @@ export default class PdpElectronics extends React.Component {
           )}
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.status === NO ? (
-            <Overlay labelText="Not serviceable in you pincode,
-please try another pincode">
+            <Overlay
+              labelText="Not serviceable in you pincode,
+please try another pincode"
+            >
               <PdpDeliveryModes
                 eligibleDeliveryModes={productData.eligibleDeliveryModes}
                 deliveryModesATP={productData.deliveryModesATP}
@@ -335,9 +337,53 @@ please try another pincode">
               </PdpLink>
             </div>
           )}
-          {productData.details && (
+          {productData.rootCategory !== "Watches" && (
             <div className={styles.details}>
-              <ProductDetails data={productData.details} />
+              {productData.details && (
+                <Accordion
+                  text="Product Details"
+                  headerFontSize={16}
+                  isOpen={true}
+                >
+                  <div className={styles.accordionContent}>
+                    {productData.productDescription}
+                    <div style={{ marginTop: 10 }}>
+                      {productData.details &&
+                        productData.details.map(val => {
+                          return <div className={styles.list}>{val.value}</div>;
+                        })}
+                    </div>
+                  </div>
+                </Accordion>
+              )}
+            </div>
+          )}
+          {productData.rootCategory === "Watches" && (
+            <div className={styles.details}>
+              {productData.classifications && (
+                <Accordion
+                  text="Product Details"
+                  headerFontSize={16}
+                  isOpen={true}
+                >
+                  {productData.classifications.map(val => {
+                    if (val.specifications) {
+                      return val.specifications.map(value => {
+                        return (
+                          <div style={{ paddingBottom: 10 }}>
+                            <div className={styles.sideHeader}>{value.key}</div>
+                            <div className={styles.sideContent}>
+                              {value.value}
+                            </div>
+                          </div>
+                        );
+                      });
+                    } else {
+                      return null;
+                    }
+                  })}
+                </Accordion>
+              )}
             </div>
           )}
           <div className={styles.separator}>
@@ -348,36 +394,38 @@ please try another pincode">
             />
           </div>
           {productData.rootCategory !== "Watches" && (
-            <React.Fragment>
+            <div className={styles.details}>
               {productData.classifications && (
-                <div className={styles.details}>
-                  <ProductFeatures features={productData.classifications} />
-                </div>
+                <ProductFeatures features={productData.classifications} />
               )}
-            </React.Fragment>
+              {productData.styleNote && (
+                <ProductFeature
+                  heading="Style Note"
+                  content={productData.styleNote}
+                />
+              )}
+              {productData.knowMore && (
+                <Accordion text="Know More" headerFontSize={16}>
+                  {productData.knowMore &&
+                    productData.knowMore.map(val => {
+                      return (
+                        <div className={styles.list}>{val.knowMoreItem}</div>
+                      );
+                    })}
+                </Accordion>
+              )}
+              {productData.brandInfo && (
+                <ProductFeature
+                  heading="Brand Info"
+                  content={productData.brandInfo}
+                />
+              )}
+            </div>
           )}
           {productData.rootCategory === "Watches" && (
             <div className={styles.details}>
               {productData.classifications && (
                 <React.Fragment>
-                  <Accordion text="Product Details" headerFontSize={16}>
-                    {productData.classifications.map(val => {
-                      if (val.specifications) {
-                        return val.specifications.map(value => {
-                          return (
-                            <React.Fragment>
-                              <div className={styles.sideHeader}>
-                                {value.key}
-                              </div>
-                              <div className={styles.sideContent}>
-                                {value.value}
-                              </div>
-                            </React.Fragment>
-                          );
-                        });
-                      }
-                    })}
-                  </Accordion>
                   {productData.styleNote && (
                     <ProductFeature
                       heading="Style Note"
@@ -403,6 +451,12 @@ please try another pincode">
                         })}
                     </Accordion>
                   )}
+                  {productData.brandInfo && (
+                    <ProductFeature
+                      heading="Brand Info"
+                      content={productData.brandInfo}
+                    />
+                  )}
                 </React.Fragment>
               )}
             </div>
@@ -412,7 +466,6 @@ please try another pincode">
               productContent={productData.APlusContent.productContent}
             />
           )}
-
           <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );
