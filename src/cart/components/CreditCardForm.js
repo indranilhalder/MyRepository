@@ -86,7 +86,6 @@ export default class CreditCardForm extends React.Component {
   onYearChange(val) {
     this.setState({ yearValue: val });
   }
-
   payBill = cardDetails => {
     let cardValues = {};
     cardValues.cardNumber = this.state.cardNumberValue;

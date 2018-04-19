@@ -78,10 +78,12 @@ export default class GiftCard extends React.Component {
           return false;
         }
         if (
-          this.state.amountText >=
-            this.props.giftCardsDetails.amountOptions.maxPrice.value ||
-          this.state.amountText <=
-            this.props.giftCardsDetails.amountOptions.minPrice.value
+          !(
+            this.state.amountText <=
+              this.props.giftCardsDetails.amountOptions.maxPrice.value &&
+            this.state.amountText >=
+              this.props.giftCardsDetails.amountOptions.minPrice.value
+          )
         ) {
           this.props.displayToast(
             `Amount Should be less then ${
