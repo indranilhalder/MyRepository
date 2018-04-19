@@ -93,7 +93,8 @@ class CheckOutPage extends React.Component {
       isFirstAddress: false,
       addressDetails: null,
       isNoCostEmiApplied: false,
-      isNoCostEmiProceeded: false
+      isNoCostEmiProceeded: false,
+      selectedBankOfferCode: null
     };
   }
   onClickImage(productCode) {
@@ -110,6 +111,9 @@ class CheckOutPage extends React.Component {
       this.props.displayToast(DELIVERY_MODE_ADDRESS_ERROR);
     }
     this.props.history.goBack();
+  }
+  selecteBankOffer(couponCode) {
+    this.setState({ selectedBankOfferCode: couponCode });
   }
   renderLoader() {
     return (
@@ -886,7 +890,13 @@ class CheckOutPage extends React.Component {
     }
   };
   openBankOffers = () => {
-    this.props.showCouponModal(this.props.cart.paymentModes.paymentOffers);
+    this.props.showCouponModal({
+      selectedBankOfferCode: this.state.selectedBankOfferCode,
+      coupons: this.props.cart.paymentModes.paymentOffers,
+      selecteBankOffer: val => {
+        this.selecteBankOffer(val);
+      }
+    });
   };
 
   applyCliqCash = () => {
