@@ -40,9 +40,7 @@ export default class SizeQuantitySelect extends React.Component {
     const selectedUrl = selectedVariant.sizelink.url;
     const selectedSize = selectedVariant.sizelink.size;
     const sizes = this.props.data
-      .filter(val => {
-        return val.sizelink.isAvailable;
-      })
+
       .filter(val => {
         return selectedColour ? val.colorlink.color === selectedColour : true;
       })

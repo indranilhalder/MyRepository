@@ -41,7 +41,7 @@ export default class PdpApparel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      productQuantity: "Quantity",
+      productQuantityOption: "Quantity",
       sizeError: false,
       quantityError: false
     };
@@ -61,7 +61,7 @@ export default class PdpApparel extends React.Component {
     }
   };
   updateQuantity = quantity => {
-    this.setState({ productQuantity: quantity, quantityError: false });
+    this.setState({ productQuantityOption: quantity, quantityError: false });
   };
   updateSize = () => {
     this.setState({ sizeError: false });
@@ -92,7 +92,7 @@ export default class PdpApparel extends React.Component {
   addToCart = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
-    productDetails.quantity = this.state.productQuantity.value;
+    productDetails.quantity = this.state.productQuantityOption.value;
     productDetails.ussId = this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -290,7 +290,7 @@ export default class PdpApparel extends React.Component {
                   updateSize={this.updateSize}
                   checkIfSizeSelected={this.checkIfSizeSelected}
                   checkIfQuantitySelected={this.checkIfQuantitySelected}
-                  productQuantity={this.state.productQuantity}
+                  productQuantity={this.state.productQuantityOption}
                 />
 
                 <div className={styles.customisation}>
