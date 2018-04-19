@@ -6,7 +6,7 @@ import {
   SUCCESS_UPPERCASE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-import each from "lodash/each";
+import each from "lodash.foreach";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -33,7 +33,18 @@ import {
   ADOBE_CALLS_FOR_APPLY_COUPON_FAIL,
   setDataLayerForOrderConfirmationDirectCalls,
   ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS,
-  ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE
+  ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE,
+  setDataLayerForCheckoutDirectCalls,
+  ADOBE_ADD_ADDRESS_TO_ORDER,
+  ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE,
+  ADOBE_CALL_FOR_SELECT_DELIVERY_MODE,
+  ADOBE_CALL_FOR_APPLY_COUPON_FAILURE,
+  ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS,
+  ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE,
+  ADOBE_FINAL_PAYMENT_MODES,
+  ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON,
+  ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF,
+  ADOBE_MY_ACCOUNT_ADDRESS_BOOK
 } from "../../lib/adobeUtils";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
@@ -705,6 +716,7 @@ export function getUserAddress() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayer(ADOBE_MY_ACCOUNT_ADDRESS_BOOK);
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
       dispatch(userAddressFailure(e.message));
@@ -771,7 +783,9 @@ export function addUserAddress(userAddress, fromAccount) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayerForCheckoutDirectCalls(
+        ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE
+      );
       dispatch(addUserAddressSuccess());
     } catch (e) {
       dispatch(addUserAddressFailure(e.message));
@@ -820,7 +834,8 @@ export function selectDeliveryMode(deliveryUssId, pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      // setting data layer after selecting delivery mode success
+      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_SELECT_DELIVERY_MODE);
       dispatch(
         getCartDetailsCNC(
           JSON.parse(userDetails).userName,
@@ -878,6 +893,7 @@ export function addAddressToCart(addressId, pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCheckoutDirectCalls(ADOBE_ADD_ADDRESS_TO_ORDER);
       dispatch(getCartDetailsCNC(userId, access_token, cartId, pinCode, false));
       dispatch(addAddressToCartSuccess());
     } catch (e) {
@@ -1428,11 +1444,15 @@ export function addPickupPersonCNC(personMobile, personName) {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(addPickUpPersonSuccess(resultJson));
-      dispatch(getCartDetailsCNC(  JSON.parse(userDetails).userName,
-      JSON.parse(customerCookie).access_token,
-      cartId,
-      localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
-      false))
+      dispatch(
+        getCartDetailsCNC(
+          JSON.parse(userDetails).userName,
+          JSON.parse(customerCookie).access_token,
+          cartId,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+          false
+        )
+      );
     } catch (e) {
       dispatch(addPickUpPersonFailure(e.message));
     }
@@ -1543,6 +1563,11 @@ export function getPaymentModes(guIdDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      // here  we are setting data layer for when user lands on the payment modes
+      // page
+      setDataLayerForCheckoutDirectCalls(
+        ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE
+      );
       dispatch(paymentModesSuccess(resultJson));
     } catch (e) {
       dispatch(paymentModesFailure(e.message));
@@ -1591,8 +1616,16 @@ export function applyBankOffer(couponCode) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
+        setDataLayerForCheckoutDirectCalls(
+          ADOBE_CALL_FOR_APPLY_COUPON_FAILURE,
+          couponCode
+        );
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCheckoutDirectCalls(
+        ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS,
+        couponCode
+      );
       dispatch(applyBankOfferSuccess(resultJson));
     } catch (e) {
       dispatch(applyBankOfferFailure(e.message));
@@ -1694,6 +1727,7 @@ export function applyCliqCash() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON);
       dispatch(applyCliqCashSuccess(resultJson));
     } catch (e) {
       dispatch(applyCliqCashFailure(e.message));
@@ -1747,6 +1781,7 @@ export function removeCliqCash() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF);
       dispatch(removeCliqCashSuccess(resultJson));
     } catch (e) {
       dispatch(removeCliqCashFailure(e.message));
@@ -1914,6 +1949,7 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPaymentSuccess(resultJson));
       dispatch(jusPayTokenize(cardDetails, address, productItems, paymentMode));
     } catch (e) {
@@ -2039,7 +2075,7 @@ export function softReservationPaymentForSavedCard(
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(createJusPayOrderForSavedCards(cardDetails, productItems));
     } catch (e) {
       dispatch(softReservationForPaymentFailure(e.message));
@@ -2094,7 +2130,7 @@ export function softReservationForCliqCash(pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPaymentSuccess(resultJson));
       dispatch(createJusPayOrderForCliqCash(pinCode, productItems));
     } catch (e) {
@@ -3196,6 +3232,7 @@ export function softReservationForCODPayment(pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(updateTransactionDetailsForCOD(CASH_ON_DELIVERY, ""));
       dispatch(softReservationForCODPaymentSuccess(resultJson));
     } catch (e) {

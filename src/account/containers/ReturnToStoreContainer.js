@@ -7,8 +7,8 @@ const mapDispatchToProps = dispatch => {
     quickDropStore: (pincode, ussId) => {
       dispatch(quickDropStore(pincode, ussId));
     },
-    newReturnInitial: productObj => {
-      dispatch(newReturnInitial(productObj));
+    newReturnInitial: (productObjToBeReturn, product) => {
+      dispatch(newReturnInitial(productObjToBeReturn, product));
     }
   };
 };

@@ -3,7 +3,7 @@ import FilterContainer from "../containers/FilterContainer";
 import ProductGrid from "./ProductGrid";
 import PlpMobileFooter from "./PlpMobileFooter";
 import styles from "./Plp.css";
-import throttle from "lodash/throttle";
+import throttle from "lodash.throttle";
 import Loader from "../../general/components/Loader";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SCROLL_CHECK_INTERVAL = 500;

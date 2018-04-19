@@ -1,4 +1,4 @@
-import cloneDeep from "lodash/cloneDeep";
+import cloneDeep from "lodash.clonedeep";
 import * as accountActions from "../actions/account.actions";
 import * as cartActions from "../../cart/actions/cart.actions";
 import * as Cookie from "../../lib/Cookie.js";
