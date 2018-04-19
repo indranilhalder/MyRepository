@@ -38,7 +38,13 @@ import {
   createJusPayOrderForGiftCardNetBanking,
   createJusPayOrderForGiftCardFromSavedCards,
   clearCaptureOrderExperience,
-  applyUserCouponForAnonymous
+  applyUserCouponForAnonymous,
+  getEmiEligibility,
+  getBankAndTenureDetails,
+  getEmiTermsAndConditionsForBank,
+  applyNoCostEmi,
+  removeNoCostEmi,
+  getItemBreakUpDetails
 } from "../actions/cart.actions";
 import {
   showSecondaryLoader,
@@ -228,6 +234,25 @@ const mapDispatchToProps = dispatch => {
     },
     hideSecondaryLoader: () => {
       dispatch(hideSecondaryLoader());
+    },
+
+    getEmiEligibility: () => {
+      dispatch(getEmiEligibility());
+    },
+    getBankAndTenureDetails: () => {
+      dispatch(getBankAndTenureDetails());
+    },
+    getEmiTermsAndConditionsForBank: (code, bankName) => {
+      dispatch(getEmiTermsAndConditionsForBank(code, bankName));
+    },
+    applyNoCostEmi: couponCode => {
+      dispatch(applyNoCostEmi(couponCode));
+    },
+    removeNoCostEmi: couponCode => {
+      dispatch(removeNoCostEmi(couponCode));
+    },
+    getItemBreakUpDetails: couponCode => {
+      dispatch(getItemBreakUpDetails(couponCode));
     },
     getPinCode: pinCode => {
       dispatch(getPinCode(pinCode));

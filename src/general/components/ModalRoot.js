@@ -6,6 +6,8 @@ import SecondaryLoader from "../../general/components/SecondaryLoader";
 
 import * as Cookie from "../../lib/Cookie.js";
 import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
+import ItemLevelPopup from "../../cart/components/ItemLevelPopup.js";
+import TermsAndConditionsModal from "../../cart/components/TermsAndConditionsModal.js";
 const modalRoot = document.getElementById("modal-root");
 const GenerateOtp = "GenerateOtpForEgv";
 const RestorePasswords = "RestorePassword";
@@ -441,6 +443,18 @@ export default class ModalRoot extends React.Component {
         <OfferModal
           closeModal={() => this.handleClose()}
           {...this.props.ownProps}
+        />
+      ),
+      NoCostEmiItemBreakUp: (
+        <ItemLevelPopup
+          emiItemDetails={this.props.ownProps}
+          closeModal={() => this.handleClose()}
+        />
+      ),
+      EmiTermsAndConditions: (
+        <TermsAndConditionsModal
+          emiTermsAndConditions={this.props.ownProps}
+          closeModal={() => this.handleClose()}
         />
       )
     };

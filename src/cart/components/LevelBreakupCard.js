@@ -9,12 +9,16 @@ export default class LevelBreakupCard extends React.Component {
     }
   }
   render() {
+    let emiText = "Standard EMI applicable";
+    if (this.props.emiApplication) {
+      emiText = "No Cost EMI applicable";
+    }
     return (
       <div className={styles.base}>
         <div className={styles.productHeader}>{this.props.productName}</div>
         <div className={styles.emiOptionHolder}>
-          {`${this.props.emiApplication} EMI applicable`}
-          {this.props.moveToWishlist && (
+          {emiText}
+          {!this.props.emiApplication && (
             <div className={styles.moveToWishListButton}>
               <UnderLinedButton
                 size="14px"
@@ -32,27 +36,36 @@ export default class LevelBreakupCard extends React.Component {
           </div>
           <div className={styles.amountData}>
             <div className={styles.amountLabel}>Item Value</div>
-            <div className={styles.amount}>{`Rs.${this.props.itemValue}`}</div>
+            <div className={styles.amount}>{`Rs.${Math.round(
+              this.props.itemValue * 100
+            ) / 100}`}</div>
           </div>
           <div className={styles.amountData}>
             <div className={styles.amountLabel}>Interest (charged by bank)</div>
-            <div className={styles.amount}>{`Rs.${this.props.Interest}`}</div>
+            <div className={styles.amount}>{`Rs.${Math.round(
+              this.props.Interest * 100
+            ) / 100}`}</div>
           </div>
           <div className={styles.discount}>
             <div className={styles.amountLabel}>No Cost EMI Discount</div>
-            <div className={styles.amount}>{`Rs.${this.props.discount}`}</div>
+            <div className={styles.amount}>{`Rs.${Math.round(
+              this.props.discount * 100
+            ) / 100}`}</div>
           </div>
         </div>
         <div className={styles.totalAmountDisplay}>
           <div className={styles.totalAmountLabel}>
             <div className={styles.amountLabel}>Total Amount Payable</div>
-            <div className={styles.amount}>{`Rs.${
-              this.props.totalAmount
-            }`}</div>
+            <div className={styles.amount}>{`Rs.${Math.round(
+              this.props.totalAmount * 100
+            ) / 100}
+            `}</div>
           </div>
           <div className={styles.amountData}>
             <div className={styles.amountLabel}>EMI p.m</div>
-            <div className={styles.amount}>{`Rs.${this.props.emiAmount}`}</div>
+            <div className={styles.amount}>{`Rs.${Math.round(
+              this.props.emiAmount * 100
+            ) / 100}`}</div>
           </div>
         </div>
       </div>
