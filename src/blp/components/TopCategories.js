@@ -14,6 +14,7 @@ export default class TopCategories extends React.Component {
     this.props.history.push(urlSuffix);
   };
   render() {
+    console.log(this.props);
     if (this.props.feedComponentData.items.length < 3) {
       return null;
     }
@@ -27,6 +28,9 @@ export default class TopCategories extends React.Component {
 
     return (
       <div className={styles.base}>
+        <div className={styles.headerText}>
+          {this.props.feedComponentData.title}
+        </div>
         <div className={styles.categorieHolder}>
           <div className={styles.leftSection}>
             <div
