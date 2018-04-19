@@ -1,7 +1,6 @@
 .base {
   width: 100%;
   height: auto;
-  margin-bottom: 15px;
 }
 .header {
   width: 100%;
@@ -11,7 +10,7 @@
   padding-right: 40px;
 }
 .subCategoryRegular {
-  font-size: 16px;
+  font-size: 14px;
   font-family: regular;
   width: 100%;
   height: auto;
@@ -32,6 +31,6 @@
   text-align: right;
 }
 .subListHolder {
-  width: 100%;
-  height: auto;
+  composes: base;
+  padding-left: 10px;
 }
