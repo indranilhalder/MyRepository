@@ -26,14 +26,14 @@
 		<div class="wrapper background">
 			<cms:pageSlot position="DefaultNewUIContentSlot" var="feature">
 				<c:if test="${feature.typeCode eq 'HeroBannerComponent'}">
-					<div class="hero-slider mb40">
+					<div class="col-xs-12 pad0 hero-slider mb40">
 						<c:forEach items="${feature.items}" var="heroElements">
 							<div>
 								<c:if test="${heroElements.typeCode eq 'HeroBannerElement'}">
 									<a href="${heroElements.webURL}"> <img alt=""
-										src="${heroElements.imageURL.URL}">
+										src="${heroElements.imageURL.URL}" class="img-responsive">
 										<div class="hero-subsection">
-											<img class="brand-logo" src="${heroElements.brandLogo.URL}">
+											<img class="brand-logo img-responsive" src="${heroElements.brandLogo.URL}">
 											<div class="banner-title">${heroElements.title}</div>
 										</div>
 									</a>
@@ -49,7 +49,7 @@
 						class="col-xs-12 mb40 ${fn:containsIgnoreCase(feature.subType, 'endToEnd') ? 'connect-banner-full-width':'connect-banner'}"
 						style="background-image:url('${feature.backgroundImageURL.URL}') , linear-gradient(292deg, ${feature.startHexCode}, ${feature.endHexCode});">
 						<div class="col-xs-2 pad0">
-							<img src="${feature.iconImageURL.URL}">
+							<img src="${feature.iconImageURL.URL}" class="img-responsive">
 						</div>
 						<div class="col-xs-10 pad0">
 							<div class="col-xs-12 connect-banner-text1">${feature.title}</div>
@@ -69,7 +69,7 @@
 									<c:if
 										test="${offersWidgetElement.typeCode eq 'OffersWidgetElement'}">
 										<div>
-											<img src="${offersWidgetElement.imageURL.URL}" />
+											<img src="${offersWidgetElement.imageURL.URL}" class="img-responsive"/>
 											<div class="offer">
 												<span>${offersWidgetElement.discountText}</span>
 											</div>
@@ -177,7 +177,7 @@
 									<c:if
 										test="${contentwidgetElement.typeCode eq 'ContentWidgetElement'}">
 										<div>
-											<img src="${contentwidgetElement.imageURL.URL}" class="br4" />
+											<img src="${contentwidgetElement.imageURL.URL}" class="br4 img-responsive" />
 											<div class="content-subsection">
 												<div class="col-xs-12 pad0 content-title">${contentwidgetElement.title}</div>
 												<div class="col-xs-12 pad0 content-desc">${contentwidgetElement.description}
@@ -196,7 +196,7 @@
 				<c:if test="${feature.typeCode eq 'BannerProductCarouselComponent'}">
 					<!--banner product carousel-->
 					<div class="col-xs-12 mb40 pad0 banner-product-carousel">
-						<img src="${feature.imageURL.URL}">
+						<img src="${feature.imageURL.URL}" class="img-responsive">
 						<div class="col-xs-12 pad0 overlay-text">
 							<div class="col-xs-12 banner-product-title">${feature.title}</div>
 							<div class="col-xs-12 banner-product-desc">${feature.description}</div>
@@ -211,7 +211,7 @@
 											<a href="#"> <c:if
 													test="${not empty bannerProdCarouselElement.productCode}">
 													<img
-														src="${bannerProdCarouselElement.productCode.thumbnail.URL}" />
+														src="${bannerProdCarouselElement.productCode.thumbnail.URL}" class="img-responsive"/>
 												
 												<div class="product-name">${bannerProdCarouselElement.productCode.name}</div>
 												</c:if>
@@ -240,7 +240,7 @@
 							poster="${feature.imageURL.URL}"></video> --%>
 						<!-- 						<img src=""> -->
 						<div class="video-product-carousel-container" id="vpc-container" style="background-image:url(${feature.imageURL.URL});">
-							<div class="col-xs-12 video-product-title"><img src="${feature.brandLogo.URL}" ></div>
+							<div class="col-xs-12 video-product-title"><img src="${feature.brandLogo.URL}" class="img-responsive"></div>
 							<div class="col-xs-12 text-center mtb15">
 								<i class="fa fa-play-circle-o fa-3x" aria-hidden="true"
 									id="play-video"></i>
@@ -257,7 +257,7 @@
 										<a href="#"> <c:if
 												test="${not empty videoProdCarouselElement.productCode}">
 												<img
-													src="${videoProdCarouselElement.productCode.thumbnail.URL}" />
+													src="${videoProdCarouselElement.productCode.thumbnail.URL}" class="img-responsive"/>
 											<div class="product-name">${videoProdCarouselElement.productCode.name}</div>
 												<fmt:parseNumber var="productPrice" type="number"
 													value="${videoProdCarouselElement.productCode.mrp}" />
@@ -286,7 +286,7 @@
 									test="${themeOffersCompOfferElement.typeCode eq 'ThemeOffersCompOfferElement'}">
 									<div>
 										<a href="${themeOffersCompOfferElement.webURL}"> <img
-											src="${themeOffersCompOfferElement.imageURL.URL}">
+											src="${themeOffersCompOfferElement.imageURL.URL}" class="img-responsive">
 											<div class="brand-name">${themeOffersCompOfferElement.title}</div>
 											<div class="product-name">${themeOffersCompOfferElement.description}</div>
 										</a>
@@ -301,7 +301,7 @@
 										<a href="${themeOffersItemsElement.webURL}"> <c:if
 												test="${not empty themeOffersItemsElement.productCode}">
 												<img
-													src="${themeOffersItemsElement.productCode.thumbnail.URL}">
+													src="${themeOffersItemsElement.productCode.thumbnail.URL}" class="img-responsive">
 											
 											<div class="brand-name">${themeOffersItemsElement.productCode.name}</div>
 												<fmt:parseNumber var="productPrice" type="number"
@@ -329,7 +329,7 @@
 
 					<div class="col-xs-12 pad0 theme-product-widget mb40"
 						style="background-image:url('${feature.imageURL.URL}'),linear-gradient(to bottom, #5b0627, #5b0627);">
-						<img src="${feature.brandLogo.URL}" class="brand-logo" />
+						<img src="${feature.brandLogo.URL}" class="brand-logo img-responsive" />
 						<div class="col-xs-12 theme-product-widget-container">
 							<div class="col-xs-6 heading">${feature.title}</div>
 							<div class="col-xs-6">
@@ -346,7 +346,7 @@
 												<a href="#"> <c:if
 														test="${not empty themeProductWidgetElement.productCode}">
 														<img
-															src="${themeProductWidgetElement.productCode.thumbnail.URL}" />
+															src="${themeProductWidgetElement.productCode.thumbnail.URL}" class="img-responsive"/>
 													<div class="product-name">${themeProductWidgetElement.productCode.name}</div>
 														<fmt:parseNumber var="productPrice" type="number"
 															value="${themeProductWidgetElement.productCode.mrp}" />
@@ -368,7 +368,7 @@
 						style="background-image: linear-gradient(285deg, ${feature.startHexCode}, ${feature.endHexCode});">
 						<a href="${feature.webURL}">
 							<div class="col-xs-2">
-								<img src="${feature.iconImageURL.URL}" class="pull-left mt2">
+								<img src="${feature.iconImageURL.URL}" class="pull-left mt2 img-responsive">
 							</div>
 							<div class="col-xs-10 pad0">
 								<div class="col-xs-12 pad0 title">${feature.title}</div>
@@ -383,10 +383,10 @@
 
 					<!--Automated brand product carousel-->
 					<div class="col-xs-12 mb40 pad0 auto-brand-product-carousel">
-						<img src="${feature.imageURL.URL}">
+						<img src="${feature.imageURL.URL}" class="img-responsive">
 
 						<div class="col-xs-12 auto-brand-product-logo">
-							<img src="${feature.brandLogo.URL}" />
+							<img src="${feature.brandLogo.URL}" class="img-responsive"/>
 						</div>
 						<div class="col-xs-12 auto-brand-product-desc">
 							${feature.description}</div>
@@ -400,7 +400,7 @@
 										<a href="${automatedBrandProductCarElement.webURL}"> <c:if
 												test="${not empty automatedBrandProductCarElement.productCode}">
 												<img
-													src="${automatedBrandProductCarElement.productCode.thumbnail.URL}" />
+													src="${automatedBrandProductCarElement.productCode.thumbnail.URL}" class="img-responsive"/>
 											<div class="product-name">${automatedBrandProductCarElement.productCode.name}</div>
 												<fmt:parseNumber var="productPrice" type="number"
 													value="${automatedBrandProductCarElement.productCode.mrp}" />
@@ -457,9 +457,9 @@
 									<div>
 										<a href="${subBrandBannerBLPElement.webURL}"> <img
 											src="${subBrandBannerBLPElement.imageURL.URL}"
-											class="sub-brand-img" /> <img
+											class="sub-brand-img img-responsive" /> <img
 											src="${subBrandBannerBLPElement.brandLogo.URL}"
-											class="sub-brand-logo" />
+											class="sub-brand-logo img-responsive" />
 										</a>
 									</div>
 
@@ -529,7 +529,7 @@
 
 										<img
 											src="${curatedProductsWidgetElement.productCode.thumbnail.URL}"
-											class="br4" />
+											class="br4 img-responsive" />
 									</c:if>
 								</a>
 								<c:if
@@ -639,9 +639,9 @@
 														test="${not empty heroElements && heroElements.typeCode eq 'HeroBannerElement'}">
 														<div>
 															<a href="${heroElements.webURL}"> <img
-																src="${heroElements.imageURL.URL}">
+																src="${heroElements.imageURL.URL}" class="img-responsive">
 																<div class="brands-slider-subsection">
-																	<img class="brand-logo"
+																	<img class="brand-logo img-responsive"
 																		src="${heroElements.brandLogo.URL}">
 																</div> <%-- 								    	<div class="banner-title">${heroElements.title}</div> --%>
 															</a>
@@ -764,7 +764,7 @@
 									<div class="col-xs-12 pad0 mb40 landing-page-header-component"
 										style="background-image:url(${landingPageHeaderElement.imageURL.URL})">
 										<a href="${landingPageHeaderElement.webURL}"
-											class="follow-brand">follow</a> <img class="banner-logo"
+											class="follow-brand">follow</a> <img class="banner-logo img-responsive"
 											src="${landingPageHeaderElement.brandLogo.URL}" />
 										<div class="banner-desc">
 											${landingPageHeaderElement.title}</div>
@@ -789,7 +789,7 @@
 
 										<a href="${autoProductRecommendationElement.webURL}"> <img
 											src="${autoProductRecommendationElement.productCode.thumbnail.URL}"
-											class="br4" />
+											class="br4 img-responsive" />
 										</a>
 										<div class="brand-name">${autoProductRecommendationElement.title}
 											<a href="#" class="pull-right"> <i
