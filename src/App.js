@@ -332,7 +332,6 @@ class App extends Component {
               path={`${SHORT_URL_ORDER_DETAIL}`}
               component={OrderDetailsContainer}
             />
-            <Route path={`${ORDER_PREFIX}`} component={OrderDetailsContainer} />
             <Route
               exact
               path={BRAND_AND_CATEGORY_PAGE}
