@@ -1,7 +1,7 @@
 import React from "react";
 import AuthPopUp from "./AuthPopUp";
 import PropTypes from "prop-types";
-import { Button } from "xelpmoc-core";
+import Button from "../../xelpmoc-core/Button";
 import PasswordInput from "../../auth/components/PasswordInput";
 import { default as styles } from "./AuthPopUp.css";
 import { default as ownStyles } from "./RestorePassword.css";

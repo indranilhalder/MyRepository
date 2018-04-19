@@ -17,6 +17,10 @@ import {
   RETURNS_STORE_BANK_FORM,
   SELF_COURIER
 } from "../../lib/constants";
+import {
+  setDataLayerForMyAccountDirectCalls,
+  ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL
+} from "../../lib/adobeUtils";
 const REG_X_FOR_REASON = /reason/i;
 const REG_X_FOR_MODES = /modes/i;
 
@@ -29,6 +33,7 @@ export default class ReturnReasonAndModes extends React.Component {
     return <Loader />;
   }
   onCancel() {
+    setDataLayerForMyAccountDirectCalls(ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL);
     this.props.history.goBack();
   }
   onChange(val) {

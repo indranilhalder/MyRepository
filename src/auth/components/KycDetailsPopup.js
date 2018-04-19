@@ -1,12 +1,11 @@
 import React from "react";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import ColourButton from "../../general/components/ColourButton";
 import PropTypes from "prop-types";
 import lockBlackIcon from "./img/lockBlackIcon.svg";
 import Styles from "./KycDetailsPopup.css";
 import Input2 from "../../general/components/Input2";
-import Button from "../../general/components/Button.js";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 export default class KycDetailsPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -60,7 +59,7 @@ export default class KycDetailsPopup extends React.Component {
           <div className={Styles.leftButton}>
             {this.props.loadingForVerifyWallet && (
               <div className={Styles.spinner}>
-                <MDSpinner />
+                <SecondaryLoader />
               </div>
             )}
             {!this.props.loadingForVerifyWallet && (

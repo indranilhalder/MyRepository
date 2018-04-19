@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./CategoryImage.css";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import PropTypes from "prop-types";
 export default class CategoryImage extends React.Component {
   render() {

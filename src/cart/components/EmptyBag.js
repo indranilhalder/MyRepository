@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styles from "./EmptyBag.css";
 import Button from "../../general/components/Button.js";
 import bagIcon from "../../general/components/img/order-history.svg";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 export default class EmptyBag extends React.Component {
   handleOnContinue() {
     if (this.props.onContinueShopping) {

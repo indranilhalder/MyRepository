@@ -38,14 +38,7 @@ class ProductListingsPage extends Component {
     }
 
     if (this.props.match.path === SKU_PAGE) {
-      const url = this.props.match.params[0];
-      let skuId;
-      if (url.indexOf("/") > -1) {
-        const urlSplitBySlash = url.split("/");
-        skuId = urlSplitBySlash[urlSplitBySlash.length - 1];
-      } else {
-        skuId = this.props.match.params[0];
-      }
+      const skuId = this.props.match.params.slug;
       const searchText = `:relevance:collectionIds:${skuId}`;
       this.props.getProductListings(searchText, SKU_SUFFIX, 0);
       return;
@@ -84,17 +77,10 @@ class ProductListingsPage extends Component {
   componentDidUpdate() {
     let page = null;
 
-    if (this.props.match === SKU_PAGE) {
-      const url = this.props.params[0];
-      let skuId;
-      if (url.indexOf("/") > -1) {
-        const urlSplitBySlash = url.split("/");
-        skuId = urlSplitBySlash[urlSplitBySlash.length - 1];
-      } else {
-        skuId = this.props.params[0];
-      }
-      const searchText = `searchText=:relevance:collectionIds:${skuId}`;
-      this.props.getProductListings(searchText, SUFFIX, 0);
+    if (this.props.match.path === SKU_PAGE) {
+      const skuId = this.props.match.params.slug;
+      const searchText = `:relevance:collectionIds:${skuId}`;
+      this.props.getProductListings(searchText, SKU_SUFFIX, 0);
       return;
     }
     if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {

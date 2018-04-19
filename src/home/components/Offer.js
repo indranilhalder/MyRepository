@@ -3,7 +3,7 @@ import styles from "./Offer.css";
 import MediaQuery from "react-responsive";
 import PropTypes from "prop-types";
 import Button from "../../general/components/Button";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 
 export default class Offer extends React.Component {
   handleClick = e => {

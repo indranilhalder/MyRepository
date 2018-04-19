@@ -2,9 +2,9 @@ import { connect } from "react-redux";
 import { displayToast, TOAST_DELAY } from "../toast.actions.js";
 import { clearError } from "../error.actions.js";
 import React from "react";
-import delay from "lodash/delay";
-import keys from "lodash/keys";
-import each from "lodash/each";
+import delay from "lodash.delay";
+import keys from "lodash.keys";
+import each from "lodash.foreach";
 
 const CLEAR_ERROR_DELAY = TOAST_DELAY + 1000;
 
