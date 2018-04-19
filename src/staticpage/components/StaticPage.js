@@ -18,8 +18,6 @@ const typeComponentMapping = {
     );
   },
   "CMS Text Component": props => {
-    console.log("IN CMS TEXT COMPONENT");
-    console.log(props.data.content);
     let parsedContent;
     try {
       parsedContent = JSON.parse(props.data.content);
@@ -40,16 +38,22 @@ const typeComponentMapping = {
 
 export default class StaticPage extends Component {
   componentDidMount() {
-    this.props.getStaticPage(this.props.match.params.slug);
+    const slug = this.props.match.params.slug;
+    this.props.getStaticPage(slug);
+    this.props.setHeaderText(slug.charAt(0).toUpperCase() + slug.slice(1));
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.slug !== prevProps.match.params.slug) {
-      this.props.getStaticPage(this.props.match.params.slug);
+      const slug = this.props.match.params.slug;
+      this.props.getStaticPage(slug);
+      this.props.setHeaderText(slug.charAt(0).toUpperCase() + slug.slice(1));
     }
   }
 
   render() {
+    console.log("STATIC PAGE");
+    console.log(this.props);
     if (this.props.loading || !this.props.data) {
       return <SecondaryLoader />;
     } else {
