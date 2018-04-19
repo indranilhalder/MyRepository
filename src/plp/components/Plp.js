@@ -87,9 +87,14 @@ export default class Plp extends React.Component {
       if (this.props.isFilterOpen) {
         this.props.setHeaderText("Refine by");
       } else {
-        this.props.setHeaderText(
+        if (
+          this.props.productListings.seo &&
+          this.props.productListings.seo.breadcrumbs[0] &&
           this.props.productListings.seo.breadcrumbs[0].name
-        );
+        )
+          this.props.setHeaderText(
+            this.props.productListings.seo.breadcrumbs[0].name
+          );
       }
     }
   }
