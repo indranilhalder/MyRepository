@@ -70,7 +70,6 @@ export default class ThemeProductWidget extends React.Component {
           backgroundPosition: "center"
         }}
       >
-        <div className={styles.overlay} />
         <div className={styles.logo}>
           <Logo image={widgetData.brandLogo} />
         </div>
