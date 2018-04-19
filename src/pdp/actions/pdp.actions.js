@@ -15,7 +15,8 @@ import {
   SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT,
   SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT
 } from "../../lib/adobeUtils.js";
-import each from "lodash/each";
+import each from "lodash.foreach";
+
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -119,12 +120,7 @@ export const ABOUT_THE_BRAND_WIDGET_KEY = "aboutTheBrand";
 export const RECOMMENDED_PRODUCTS_WIDGET_KEY = "recommendedProducts";
 export const SIMILAR_PRODUCTS_WIDGET_KEY = "similarProducts";
 
-const CHANNEL = "channel";
 const MY_WISH_LIST = "MyWishList";
-const CLIENT_ID = "gauravj@dewsolutions.in";
-const ADD_PRODUCT_TO_WISH_LIST = "addToWishListInPDP";
-const ADD_PRODUCT_TO_CART = "addProductToCart";
-const REMOVE_FROM_WISH_LIST = "removeFromWl";
 const PRODUCT_SPECIFICATION_PATH = "/v2/mpl/products/productDetails";
 const PRODUCT_DESCRIPTION_PATH = "v2/mpl/products/productDetails";
 const PRODUCT_SIZE_GUIDE_PATH = "v2/mpl/products/";
@@ -133,9 +129,8 @@ const SORT = "byDate";
 const PAGE_VALUE = "0";
 const PAGE_NUMBER = "3";
 const MSD_REQUEST_PATH = "widgets";
-const MSD_ABOUT_BRAND_REQUEST_PATH = "widgets";
 const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
-const WIDGET_LIST = [0, 8];
+const WIDGET_LIST = [0, 4];
 const WIDGET_LIST_FOR_ABOUT_BRAND = [114];
 const NUMBER_RESULTS = [10, 10];
 

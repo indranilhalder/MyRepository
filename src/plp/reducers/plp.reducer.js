@@ -1,6 +1,6 @@
 import * as plpActions from "../actions/plp.actions";
-import concat from "lodash/concat";
-import cloneDeep from "lodash/cloneDeep";
+import concat from "lodash.concat";
+import cloneDeep from "lodash.clonedeep";
 const productListings = (
   state = {
     status: null,

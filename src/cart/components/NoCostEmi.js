@@ -2,6 +2,8 @@ import React from "react";
 import styles from "./NoCostEmi.css";
 import PropTypes from "prop-types";
 import { Collapse } from "react-collapse";
+const STANDARD_EMI = "Standard Emi";
+const NO_COST_EMI = "No Cost Emi";
 export default class NoCostEmi extends React.Component {
   constructor(props) {
     super(props);
@@ -18,6 +20,21 @@ export default class NoCostEmi extends React.Component {
       () => {
         if (this.props.onOpenMenu) {
           this.props.onOpenMenu(this.state.isOpen);
+        }
+        if (
+          this.state.isOpen &&
+          this.props.text === STANDARD_EMI &&
+          !this.props.emiList &&
+          this.props.getEmiBankDetails
+        ) {
+          this.props.getEmiBankDetails();
+        }
+        if (
+          this.state.isOpen &&
+          this.props.text === NO_COST_EMI &&
+          this.props.getBankAndTenureDetails
+        ) {
+          this.props.getBankAndTenureDetails();
         }
       }
     );

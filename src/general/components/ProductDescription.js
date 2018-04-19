@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Icon, CircleButton } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import AddToWishListButtonContainer from "../../wishlist/containers/AddToWishListButtonContainer";
 import styles from "./ProductDescription.css";

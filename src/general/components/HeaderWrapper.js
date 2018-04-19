@@ -1,10 +1,10 @@
 import React from "react";
 import InformationHeader from "./InformationHeader.js";
+import SearchContainer from "../../search/SearchContainer.js";
 import HollowHeader from "./HollowHeader.js";
 import { withRouter } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import styles from "./HeaderWrapper.css";
-import SearchContainer from "../../search/SearchContainer.js";
 import queryString, { parse } from "query-string";
 import {
   HOME_ROUTER,

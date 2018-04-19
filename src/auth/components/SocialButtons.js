@@ -2,7 +2,8 @@ import React, { Component } from "react";
 
 import styles from "./SocialButtons.css";
 import MediaQuery from "react-responsive";
-import { CircleButton, Icon } from "xelpmoc-core";
+import CircleButton from "../../xelpmoc-core/CircleButton";
+import Icon from "../../xelpmoc-core/Icon";
 import facebookImage from "./img/facebook.svg";
 import desktopFacebookImage from "./img/facebook_desktop.svg";
 import googlePlus from "./img/googlePlus.svg";

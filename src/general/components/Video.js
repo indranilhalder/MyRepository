@@ -9,11 +9,13 @@ export default class Video extends React.Component {
         playing={this.props.playing}
         width="100%"
         height="100%"
+        controls={this.props.controls}
       />
     );
   }
 }
 Video.propTypes = {
   url: PropTypes.string,
-  playing: PropTypes.bool
+  playing: PropTypes.bool,
+  controls: PropTypes.bool
 };
