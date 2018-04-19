@@ -160,6 +160,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(authCallsAreInProgress());
 
       const loadGoogleSdkResponse = await loadGoogleSignInApi();
+      console.log("LOAD GOOGLE RESPOSNE");
+      console.log(loadGoogleSdkResponse);
       if (loadGoogleSdkResponse.status === ERROR) {
         dispatch(singleAuthCallHasFailed(loadGoogleSdkResponse.description));
         // as loading the google sign in api has nothing with redux state
@@ -169,6 +171,8 @@ const mapDispatchToProps = dispatch => {
       }
 
       const googlePlusResponse = await dispatch(googlePlusLogin(isSignUp));
+      console.log("GOOGLE PLUS RESPONSE");
+      console.log(googlePlusResponse);
       if (googlePlusResponse.status && googlePlusResponse.status !== SUCCESS) {
         dispatch(singleAuthCallHasFailed());
         dispatch(logout());

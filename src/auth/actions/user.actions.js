@@ -620,7 +620,7 @@ export function loadGoogleSignInApi() {
             .init({
               client_id: clientId,
               fetch_basic_profile: true,
-              ux_mode: "redirect",
+              ux_mode: "popup",
               scope: scope
                 ? (Array.isArray(scope) && scope.join(" ")) || scope
                 : null
@@ -635,7 +635,8 @@ export function loadGoogleSignInApi() {
                   provider: "google",
                   type: "load",
                   error: "Failed to load SDK",
-                  status: ERROR
+                  status: ERROR,
+                  err
                 });
               }
             );
