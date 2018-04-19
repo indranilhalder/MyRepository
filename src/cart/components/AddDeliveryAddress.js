@@ -36,7 +36,7 @@ export default class AddDeliveryAddress extends React.Component {
       defaultFlag: true,
       isOtherLandMarkSelected: false,
       selectedLandmarkLabel: "Landmark",
-      landmarkList: [{}]
+      landmarkList: []
     };
   }
 
@@ -219,12 +219,15 @@ export default class AddDeliveryAddress extends React.Component {
           <SelectBoxMobile
             height={33}
             label={this.state.selectedLandmarkLabel}
-            options={this.state.landmarkList.map((val, i) => {
-              return {
-                value: val.landmark,
-                label: val.landmark
-              };
-            })}
+            options={
+              this.state.landmarkList.length > 0 &&
+              this.state.landmarkList.map((val, i) => {
+                return {
+                  value: val.landmark,
+                  label: val.landmark
+                };
+              })
+            }
             onChange={landmark => this.onSelectLandmark(landmark)}
           />
         </div>
