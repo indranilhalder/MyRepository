@@ -3573,10 +3573,11 @@ export function getEligibilityOfNoCostEmiSuccess(EmiEligibility) {
   };
 }
 
-export function getEligibilityOfNoCostEmiFailure() {
+export function getEligibilityOfNoCostEmiFailure(error) {
   return {
     type: ELIGIBILITY_OF_NO_COST_EMI_FAILURE,
     status: ERROR,
+    error
   };
 }
 
@@ -3623,10 +3624,11 @@ export function getBankAndTenureDetailsSuccess(bankAndTenureDetails) {
   };
 }
 
-export function getBankAndTenureDetailsFailure() {
+export function getBankAndTenureDetailsFailure(error) {
   return {
     type: BANK_AND_TENURE_DETAILS_FAILURE,
     status: ERROR,
+    error
   };
 }
 
@@ -3673,10 +3675,11 @@ export function getEmiTermsAndConditionsForBankSuccess(termsAndConditions) {
   };
 }
 
-export function getEmiTermsAndConditionsForBankFailure() {
+export function getEmiTermsAndConditionsForBankFailure(error) {
   return {
     type: EMI_TERMS_AND_CONDITIONS_FOR_BANK_FAILURE,
     status: ERROR,
+    error
   };
 }
 
@@ -3724,10 +3727,11 @@ export function applyNoCostEmiSuccess(noCostEmiResult) {
   };
 }
 
-export function applyNoCostEmiFailure() {
+export function applyNoCostEmiFailure(error) {
   return {
     type: APPLY_NO_COST_EMI_FAILURE,
     status: ERROR,
+    error
   };
 }
 
@@ -3775,10 +3779,11 @@ export function removeNoCostEmiSuccess(noCostEmiResult) {
   };
 }
 
-export function removeNoCostEmiFailure() {
+export function removeNoCostEmiFailure(error) {
   return {
     type: REMOVE_NO_COST_EMI_FAILURE,
     status: ERROR,
+    error
   };
 }
 
@@ -3826,10 +3831,11 @@ export function getItemBreakUpDetailsSuccess(noCostEmiResult) {
   };
 }
 
-export function getItemBreakUpDetailsFailure() {
+export function getItemBreakUpDetailsFailure(error) {
   return {
     type: EMI_ITEM_BREAK_UP_DETAILS_FAILURE,
     status: ERROR,
+    error
   };
 }
 
