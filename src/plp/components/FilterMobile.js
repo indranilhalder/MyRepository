@@ -100,7 +100,6 @@ export default class FilterMobile extends React.Component {
               {this.props.facetdatacategory && (
                 <FilterTab
                   name="Categories"
-                  F
                   onClick={() => {
                     this.selectCategories();
                   }}

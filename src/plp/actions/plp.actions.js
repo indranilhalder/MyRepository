@@ -99,8 +99,6 @@ export function getProductListingsRequest(paginated: false) {
   };
 }
 export function getProductListingsSuccess(productListings, isPaginated: false) {
-  console.log("PRODUCT LISTINGS");
-  console.log(productListings);
   return {
     type: PRODUCT_LISTINGS_SUCCESS,
     status: SUCCESS,
@@ -123,7 +121,6 @@ export function getProductListings(
   isFilter: false
 ) {
   return async (dispatch, getState, { api }) => {
-    console.log("GET PRODUCT LISTINGS");
     dispatch(getProductListingsRequest(paginated));
     dispatch(showSecondaryLoader());
     try {
