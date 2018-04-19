@@ -19,7 +19,7 @@ export default class ProductVideo extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.video} style={{ backgroundColor: "#212121" }}>
-          <Video url={this.props.url} playing={this.state.playing} />
+          <Video url={this.props.url} playing={this.state.playing} controls />
         </div>
         <div
           className={overlayClass}

@@ -17,7 +17,19 @@ class BankOffersDetails extends Component {
       this.props.releaseBankOffer(val);
     }
   };
-
+  onSelectCouponCode = val => {
+    if (val[0]) {
+      if (this.props.applyBankOffer) {
+        this.props.applyBankOffer(val);
+        this.props.selecteBankOffer(val[0]);
+      }
+    } else {
+      if (this.props.releaseBankOffer) {
+        this.props.selecteBankOffer(null);
+        this.props.releaseBankOffer(val);
+      }
+    }
+  };
   render() {
     return (
       <div className={styles.base}>
@@ -27,10 +39,11 @@ class BankOffersDetails extends Component {
             elementWidthMobile={100}
             offset={0}
             limit={1}
-            onSelect={val => this.applyBankCoupons(val)}
+            onSelect={val => this.onSelectCouponCode(val)}
+            selected={[this.props.selectedBankOfferCode]}
           >
             {this.props.coupons &&
-              this.props.coupons.map((value, i) => {
+              this.props.coupons.coupons.map((value, i) => {
                 return (
                   <BankCoupons
                     offerDescription={value.offerDescription}
