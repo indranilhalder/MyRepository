@@ -38,7 +38,13 @@ import {
   createJusPayOrderForGiftCardNetBanking,
   createJusPayOrderForGiftCardFromSavedCards,
   clearCaptureOrderExperience,
-  applyUserCouponForAnonymous
+  applyUserCouponForAnonymous,
+  getEmiEligibility,
+  getBankAndTenureDetails,
+  getEmiTermsAndConditionsForBank,
+  applyNoCostEmi,
+  removeNoCostEmi,
+  getItemBreakUpDetails
 } from "../actions/cart.actions";
 import {
   showSecondaryLoader,
@@ -49,9 +55,16 @@ import {
   BANK_OFFERS,
   GIFT_CARD_MODAL
 } from "../../general/modal.actions";
+import { getPinCode } from "../../account/actions/account.actions.js";
 import { displayToast } from "../../general/toast.actions";
 import { SUCCESS } from "../../lib/constants";
 import { setHeaderText } from "../../general/header.actions.js";
+import {
+  setDataLayerForCheckoutDirectCalls,
+  ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE,
+  ADOBE_FINAL_PAYMENT_MODES,
+  ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER
+} from "../../lib/adobeUtils";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -77,7 +90,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(getUserAddress());
     },
     addUserAddress: (userAddress, getCartDetailCNCObj) => {
-      dispatch(addUserAddress(userAddress)).then(() =>
+      dispatch(addUserAddress(userAddress)).then(() => {
         dispatch(
           getCartDetailsCNC(
             getCartDetailCNCObj.userId,
@@ -86,8 +99,8 @@ const mapDispatchToProps = dispatch => {
             getCartDetailCNCObj.pinCode,
             getCartDetailCNCObj.isSoftReservation
           )
-        )
-      );
+        );
+      });
     },
     addAddressToCart: (addressId, pinCode) => {
       dispatch(addAddressToCart(addressId, pinCode));
@@ -124,6 +137,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(getPaymentModes(guIdDetails));
     },
     showCouponModal: data => {
+      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER);
       dispatch(showModal(BANK_OFFERS, data));
     },
     applyBankOffer: couponCode => {
@@ -220,12 +234,35 @@ const mapDispatchToProps = dispatch => {
     },
     hideSecondaryLoader: () => {
       dispatch(hideSecondaryLoader());
+    },
+
+    getEmiEligibility: () => {
+      dispatch(getEmiEligibility());
+    },
+    getBankAndTenureDetails: () => {
+      dispatch(getBankAndTenureDetails());
+    },
+    getEmiTermsAndConditionsForBank: (code, bankName) => {
+      dispatch(getEmiTermsAndConditionsForBank(code, bankName));
+    },
+    applyNoCostEmi: couponCode => {
+      dispatch(applyNoCostEmi(couponCode));
+    },
+    removeNoCostEmi: couponCode => {
+      dispatch(removeNoCostEmi(couponCode));
+    },
+    getItemBreakUpDetails: couponCode => {
+      dispatch(getItemBreakUpDetails(couponCode));
+    },
+    getPinCode: pinCode => {
+      dispatch(getPinCode(pinCode));
     }
   };
 };
 const mapStateToProps = state => {
   return {
-    cart: state.cart
+    cart: state.cart,
+    getPinCodeDetails: state.profile.getPinCodeDetails
   };
 };
 

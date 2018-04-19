@@ -4,10 +4,10 @@ import Checkout from "./Checkout";
 import SearchAndUpdate from "../../pdp/components/SearchAndUpdate";
 import styles from "./CartPage.css";
 import PropTypes from "prop-types";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 import { SUCCESS, HOME_ROUTER } from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
-import filter from "lodash/filter";
+import filter from "lodash.filter";
 import { Redirect } from "react-router-dom";
 import { MAIN_ROUTER } from "../../lib/constants";
 import TextWithUnderLine from "./TextWithUnderLine.js";
@@ -36,7 +36,6 @@ import {
 
 const PRODUCT_NOT_SERVICEABLE_MESSAGE =
   "Product is not Serviceable,Please try with another pin code";
-
 
 class CartPage extends React.Component {
   constructor(props) {
@@ -123,7 +122,7 @@ class CartPage extends React.Component {
     return (
       <div className={styles.cartLoader}>
         <div className={styles.spinner}>
-          <MDSpinner />
+          <SecondaryLoader />
         </div>
       </div>
     );
@@ -215,14 +214,16 @@ class CartPage extends React.Component {
         JSON.parse(userDetails).userName,
         JSON.parse(customerCookie).access_token,
         JSON.parse(cartDetailsLoggedInUser).code,
-        val
+        val,
+        true // this is for setting data layer for change pincode
       );
     } else {
       this.props.getCartDetails(
         ANONYMOUS_USER,
         JSON.parse(globalCookie).access_token,
         JSON.parse(cartDetailsAnonymous).guid,
-        val
+        val,
+        true // this is for setting data layer for change pincode
       );
     }
   };

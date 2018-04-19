@@ -4,6 +4,7 @@ import styles from "./SaveListDetails.css";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
 import moment from "moment";
+import Button from "../../general/components/Button";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -15,11 +16,12 @@ import {
   SAVED_LIST
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-import MDSpinner from "react-md-spinner";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 
+import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "MMMM DD YYYY";
 const PRODUCT_QUANTITY = "1";
-const NO_SAVELIST_TEXT = "No Saved List";
+const NO_SAVELIST_TEXT = "You do not have any products in your Saved list";
 export default class SaveListDetails extends React.Component {
   componentDidMount() {
     this.props.setHeaderText(SAVED_LIST);
@@ -74,8 +76,11 @@ export default class SaveListDetails extends React.Component {
       this.props.removeProductFromWishList(productDetails);
     }
   }
-
+  renderToContinueShopping() {
+    this.props.history.push(HOME_ROUTER);
+  }
   render() {
+    console.log("SAVE LIST DETAILS RENDERED");
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
@@ -87,7 +92,7 @@ export default class SaveListDetails extends React.Component {
     if (!wishList && this.props.loading) {
       return (
         <div className={styles.loadingIndicator}>
-          <MDSpinner />
+          <SecondaryLoader />
         </div>
       );
     }
@@ -116,7 +121,21 @@ export default class SaveListDetails extends React.Component {
             );
           })}
         {(!wishList || !wishList.products) && (
-          <div className={styles.noSaveListBlock}>{NO_SAVELIST_TEXT}</div>
+          <div className={styles.noSaveListBlock}>
+            <div className={styles.noSaveListText}>{NO_SAVELIST_TEXT}</div>
+            <div className={styles.buttonHolder}>
+              <div className={styles.button}>
+                <Button
+                  borderRadius={22.5}
+                  label={this.props.btnText}
+                  backgroundColor={this.props.backgroundColor}
+                  onClick={() => this.renderToContinueShopping()}
+                  width={180}
+                  textStyle={{ color: this.props.color, fontSize: 14 }}
+                />
+              </div>
+            </div>
+          </div>
         )}
       </div>
     );
@@ -139,4 +158,9 @@ SaveListDetails.propTypes = {
   ),
   addProductToWishList: PropTypes.func,
   removeProductFromWishList: PropTypes.func
+};
+SaveListDetails.defaultProps = {
+  color: "#fff",
+  backgroundColor: "#ff1744",
+  btnText: "Continue Shopping"
 };

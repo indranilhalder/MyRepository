@@ -26,6 +26,24 @@
   margin-top: 20px;
   padding: 0 15px;
 }
+.gallery {
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+.flag {
+  width: 157px;
+  height: 40px;
+  color: #fff;
+  font-size: 18px;
+  padding: 10px 20px;
+  background: url(../components/img/flag.svg)no-repeat;
+  font-family: bolder;
+  background-size: contain;
+  position: absolute;
+  top: 90px;
+  left: 0px;
+}
 .link {
   font-size: 14px;
   color: #ff1744;
@@ -39,7 +57,7 @@
   width: 100%;
   height: auto;
   background: #fff;
-  padding: 15px;
+  padding: 0 15px;
   margin-top: 30px;
 }
 .separator {
@@ -146,4 +164,15 @@
   font-family: regular;
   color: #212121;
   margin-top: 10px;
+}
+
+.accordionContent {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 22px;
+  font-family: regular;
+  color: #212121;
+  padding-bottom: 15px;
 }

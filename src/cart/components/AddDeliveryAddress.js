@@ -2,7 +2,8 @@ import React from "react";
 import styles from "./AddDeliveryAddress.css";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
-import { Icon, CircleButton } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
+import CircleButton from "../../xelpmoc-core/CircleButton";
 import informationIcon from "../../general/components/img/GPS.svg";
 import GridSelect from "../../general/components/GridSelect";
 import CheckboxAndText from "./CheckboxAndText";
@@ -18,7 +19,7 @@ export default class AddDeliveryAddress extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      countryIso: "",
+      countryIso: ISO_CODE,
       addressType: "Home",
       phone: "",
       firstName: "",
@@ -35,8 +36,19 @@ export default class AddDeliveryAddress extends React.Component {
     };
   }
 
+  getPinCodeDetails = val => {
+    if (val.length <= 6) {
+      this.setState({ postalCode: val });
+    }
+    if (val.length === 6 && this.props.getPinCode) {
+      this.props.getPinCode(val);
+    }
+  };
   onChange(val) {
     this.setState(val);
+    if (this.props.getAddressDetails) {
+      this.props.getAddressDetails(this.state);
+    }
   }
   onChangeDefaultFlag() {
     this.setState(prevState => ({
@@ -48,26 +60,20 @@ export default class AddDeliveryAddress extends React.Component {
     if (nextProps.addUserAddressStatus === SUCCESS) {
       this.props.history.goBack();
     }
+    if (nextProps.getPinCodeDetails) {
+      this.setState({
+        state:
+          nextProps.getPinCodeDetails &&
+          nextProps.getPinCodeDetails.state &&
+          nextProps.getPinCodeDetails.state.name
+      });
+    }
   }
 
   addNewAddress = () => {
     //add new Address
-    let addressDetails = {};
-    addressDetails.countryIso = ISO_CODE;
-    addressDetails.addressType = this.state.addressType;
-    addressDetails.phone = this.state.phone;
-    addressDetails.firstName = this.state.firstName;
-    addressDetails.lastName = "";
-    addressDetails.postalCode = this.state.postalCode;
-    addressDetails.line1 = this.state.line1;
-    addressDetails.state = this.state.state;
-    addressDetails.emailId = this.state.emailId;
-    addressDetails.line2 = this.state.line2;
-    addressDetails.line3 = this.state.line3;
-    addressDetails.town = this.state.town;
-    addressDetails.salutaion = this.state.salutaion;
-    addressDetails.defaultFlag = this.state.defaultFlag;
-    this.props.addUserAddress(addressDetails);
+
+    this.props.addUserAddress(this.state);
   };
 
   clearAllValue = () => {
@@ -131,7 +137,7 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <Input2
             placeholder="Enter a pincode/zipcode*"
-            onChange={postalCode => this.onChange({ postalCode })}
+            onChange={postalCode => this.getPinCodeDetails(postalCode)}
             textStyle={{ fontSize: 14 }}
             value={
               this.props.postalCode
@@ -261,14 +267,16 @@ export default class AddDeliveryAddress extends React.Component {
         </div>
         <div className={styles.buttonHolder}>
           <div className={styles.saveAndContinueButton}>
-            <Button
-              type="primary"
-              label={SAVE_TEXT}
-              width={176}
-              height={38}
-              onClick={() => this.addNewAddress()}
-              textStyle={{ color: "#FFF", fontSize: 14 }}
-            />
+            {!this.props.isFirstAddress && (
+              <Button
+                type="primary"
+                label={SAVE_TEXT}
+                width={176}
+                height={38}
+                onClick={() => this.addNewAddress()}
+                textStyle={{ color: "#FFF", fontSize: 14 }}
+              />
+            )}
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import MediaQuery from "react-responsive";
 import CoreButton from "./Button";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 import CircleIconWhite from "./img/circle_plus_white.svg";
 import CircleIconBlack from "./img/circle_plus_black.svg";
 

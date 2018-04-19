@@ -13,3 +13,7 @@ export default class SecondaryLoader extends React.Component {
     }
   }
 }
+
+SecondaryLoader.defaultProps = {
+  display: true
+};

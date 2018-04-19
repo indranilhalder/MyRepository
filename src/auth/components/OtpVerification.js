@@ -1,6 +1,7 @@
 import React from "react";
 import AuthPopUp from "./AuthPopUp";
-import { Icon, Button } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
+import Button from "../../xelpmoc-core/Button";
 import MediaQuery from "react-responsive";
 import PropTypes from "prop-types";
 import lockIcon from "./img/otpLock.svg";
@@ -117,7 +118,7 @@ export default class OtpVerification extends React.Component {
             </div>
             <div>
               <div className={ownStyles.content}>
-                Waiting to automatically detect an SMS sent to {mobileNumber}.
+                Waiting to automatically detect an SMS sent to +91{mobileNumber}.
                 <span
                   className={ownStyles.span}
                   onClick={() => this.onClickWrongNumber()}

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import checkIcon from "./img/check.svg";
 import styles from "./GetLocationDetails.css";
 const integerDayMapping = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thur", "Fri"];

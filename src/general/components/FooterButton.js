@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./FooterButton.css";
-import { Icon } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
 export default class FooterButton extends React.Component {
   handleClick(e) {
     if (this.props.onClick) {
@@ -11,7 +11,7 @@ export default class FooterButton extends React.Component {
   render() {
     return (
       <div
-        className={styles.base}
+        className={this.props.disabled ? styles.disabled : styles.base}
         style={{
           backgroundColor: this.props.backgroundColor,
           borderRight: `1px solid ${this.props.borderColor}`
@@ -38,6 +38,7 @@ FooterButton.propTyes = {
   borderColor: PropTypes.string,
   icon: PropTypes.string,
   onClick: PropTypes.func,
+  disabled: PropTypes.bool,
   labelStyle: PropTypes.shape({
     color: PropTypes.string,
     fontSize: PropTypes.number,
@@ -49,5 +50,6 @@ FooterButton.defaultProps = {
     color: "#8d8d8d",
     fontSize: 14,
     fontFamily: "semibold"
-  }
+  },
+  disabled: false
 };

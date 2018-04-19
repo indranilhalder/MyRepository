@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import gpsIcon from "../../general/components/img/GPS.svg";
-import { Icon, CircleButton } from "xelpmoc-core";
+import Icon from "../../xelpmoc-core/Icon";
+import CircleButton from "../../xelpmoc-core/CircleButton";
 import styles from "./SearchAndUpdate.css";
 export default class SearchAndUpdate extends React.Component {
   constructor(props) {

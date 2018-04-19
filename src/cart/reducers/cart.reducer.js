@@ -1,5 +1,5 @@
 import * as cartActions from "../actions/cart.actions";
-import cloneDeep from "lodash/cloneDeep";
+import cloneDeep from "lodash.clonedeep";
 import * as Cookies from "../../lib/Cookie";
 import { CLEAR_ERROR } from "../../general/error.actions.js";
 import {
@@ -8,7 +8,7 @@ import {
   OLD_CART_GU_ID,
   COUPON_COOKIE
 } from "../../lib/constants";
-import find from "lodash/find";
+import find from "lodash.find";
 const IST_TIME_ZONE = "IST";
 const cart = (
   state = {
@@ -152,7 +152,27 @@ const cart = (
     jusPaymentLoader: false,
     selectDeliveryModeLoader: false,
     transactionStatus: null,
-    loginFromMyBag: false
+    loginFromMyBag: false,
+
+    emiEligibilityStatus: null,
+    emiEligibilityDetails: null,
+    emiEligibilityError: null,
+
+    bankAndTenureStatus: null,
+    bankAndTenureDetails: null,
+    bankAndTenureError: null,
+
+    emiTermsAndConditionStatus: null,
+    emiTermsAndConditionDetails: null,
+    emiTermsAndConditionError: null,
+
+    noCostEmiStatus: null,
+    noCostEmiDetails: null,
+    noCostEmiError: null,
+
+    emiItemBreakUpStatus: null,
+    emiItemBreakUpDetails: null,
+    emiItemBreakUpError: null
   },
   action
 ) => {
@@ -192,7 +212,12 @@ const cart = (
         addToWishlistError: null,
         removeCartItemError: null,
         removeCartItemLoggedOutError: null,
-        getUserAddressError: null
+        getUserAddressError: null,
+        emiEligibilityError: null,
+        bankAndTenureError: null,
+        emiTermsAndConditionError: null,
+        noCostEmiError: null,
+        emiItemBreakUpError: null
       });
     case cartActions.CART_DETAILS_REQUEST:
       return Object.assign({}, state, {
@@ -227,15 +252,7 @@ const cart = (
       });
 
     case cartActions.APPLY_USER_COUPON_SUCCESS:
-      let couponList = cloneDeep(state.coupons.opencouponsList);
-
-      let couponDetails = find(couponList, coupon => {
-        return coupon.couponCode === action.couponCode;
-      });
-      let date = couponDetails.couponExpiryDate;
-      let expiryTime = new Date(date.split(IST_TIME_ZONE).join());
-      let expiryCouponDate = expiryTime.getTime();
-      Cookies.createCookie(COUPON_COOKIE, action.couponCode, expiryCouponDate);
+      Cookies.createCookie(COUPON_COOKIE, action.couponCode);
 
       let carDetailsCopy = cloneDeep(state.cartDetails);
       let cartAmount = action.couponResult.cartAmount;
@@ -515,13 +532,8 @@ const cart = (
       });
 
     case cartActions.ADD_PICKUP_PERSON_SUCCESS:
-      const currentCartDetailsCNC = cloneDeep(state.cartDetails);
-      updatedCartDetailsCNC = Object.assign({}, action.cartDetailsCNC, {
-        cartAmount: currentCartDetailsCNC.cartAmount
-      });
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
-        cartDetailsCNC: updatedCartDetailsCNC,
         loading: false
       });
 
@@ -1081,6 +1093,140 @@ const cart = (
         cartDetails: null,
         cartDetailsStatus: null,
         cartDetailsError: null
+      });
+
+    case cartActions.ELIGIBILITY_OF_NO_COST_EMI_REQUEST:
+      return Object.assign({}, state, {
+        emiEligibilityStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ELIGIBILITY_OF_NO_COST_EMI_SUCCESS:
+      return Object.assign({}, state, {
+        emiEligibilityStatus: action.status,
+        emiEligibilityDetails: action.emiEligibility,
+        loading: false
+      });
+
+    case cartActions.ELIGIBILITY_OF_NO_COST_EMI_FAILURE:
+      return Object.assign({}, state, {
+        emiEligibilityStatus: action.status,
+        emiEligibilityError: action.error,
+        loading: false
+      });
+
+    case cartActions.BANK_AND_TENURE_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        bankAndTenureStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.BANK_AND_TENURE_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        bankAndTenureStatus: action.status,
+        bankAndTenureDetails: action.bankAndTenureDetails,
+        loading: false
+      });
+
+    case cartActions.BANK_AND_TENURE_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        bankAndTenureStatus: action.status,
+        bankAndTenureError: action.error,
+        loading: false
+      });
+
+    case cartActions.EMI_TERMS_AND_CONDITIONS_FOR_BANK_REQUEST:
+      return Object.assign({}, state, {
+        emiTermsAndConditionStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.EMI_TERMS_AND_CONDITIONS_FOR_BANK_SUCCESS:
+      return Object.assign({}, state, {
+        emiTermsAndConditionStatus: action.status,
+        emiTermsAndConditionDetails: action.termsAndConditions,
+        loading: false
+      });
+
+    case cartActions.EMI_TERMS_AND_CONDITIONS_FOR_BANK_FAILURE:
+      return Object.assign({}, state, {
+        emiTermsAndConditionStatus: action.status,
+        emiTermsAndConditionError: action.error,
+        loading: false
+      });
+    case cartActions.APPLY_NO_COST_EMI_REQUEST:
+      return Object.assign({}, state, {
+        noCostEmiStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.APPLY_NO_COST_EMI_SUCCESS:
+      carDetailsCopy = cloneDeep(state.cartDetailsCNC);
+      let emiCartAmount =
+        action.noCostEmiResult && action.noCostEmiResult.cartAmount
+          ? action.noCostEmiResult.cartAmount
+          : state.cartDetailsCNC.emiCartAmount;
+      carDetailsCopy.cartAmount = emiCartAmount;
+
+      return Object.assign({}, state, {
+        noCostEmiStatus: action.status,
+        noCostEmiDetails: action.noCostEmiResult,
+        cartDetailsCNC: carDetailsCopy,
+        loading: false
+      });
+
+    case cartActions.APPLY_NO_COST_EMI_FAILURE:
+      return Object.assign({}, state, {
+        noCostEmiStatus: action.status,
+        noCostEmiError: action.error,
+        loading: false
+      });
+
+    case cartActions.REMOVE_NO_COST_EMI_REQUEST:
+      return Object.assign({}, state, {
+        noCostEmiStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.REMOVE_NO_COST_EMI_SUCCESS:
+      carDetailsCopy = cloneDeep(state.cartDetailsCNC);
+      emiCartAmount =
+        action.noCostEmiResult && action.noCostEmiResult.cartAmount
+          ? action.noCostEmiResult.cartAmount
+          : state.cartDetailsCNC.emiCartAmount;
+      carDetailsCopy.cartAmount = emiCartAmount;
+      return Object.assign({}, state, {
+        noCostEmiStatus: action.status,
+        noCostEmiDetails: action.noCostEmiResult,
+        cartDetailsCNC: carDetailsCopy,
+        loading: false
+      });
+
+    case cartActions.REMOVE_NO_COST_EMI_FAILURE:
+      return Object.assign({}, state, {
+        noCostEmiStatus: action.status,
+        noCostEmiError: action.error,
+        loading: false
+      });
+
+    case cartActions.EMI_ITEM_BREAK_UP_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        emiItemBreakUpStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.EMI_ITEM_BREAK_UP_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        emiItemBreakUpStatus: action.status,
+        emiItemBreakUpDetails: action.noCostEmiResult,
+        loading: false
+      });
+
+    case cartActions.EMI_ITEM_BREAK_UP_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        emiItemBreakUpStatus: action.status,
+        emiItemBreakUpError: action.error,
+        loading: false
       });
 
     default:

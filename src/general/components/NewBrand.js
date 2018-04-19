@@ -1,9 +1,8 @@
 import React from "react";
 import styles from "./NewBrand.css";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import PropTypes from "prop-types";
 import Follow from "./Follow";
-import Logo from "./Logo";
 
 export default class NewBrand extends React.Component {
   handleClick() {
@@ -39,7 +38,7 @@ export default class NewBrand extends React.Component {
               </div>
             </div>
             <div className={styles.brandLogo}>
-              <Logo image={this.props.logo} />
+              <img className={styles.image} src={this.props.logo} alt="" />
             </div>
           </div>
         </div>

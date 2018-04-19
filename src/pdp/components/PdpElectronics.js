@@ -1,7 +1,7 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
-import { Image } from "xelpmoc-core";
+import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
@@ -92,25 +92,36 @@ export default class PdpElectronics extends React.Component {
     );
 
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (userDetails) {
+    if (!this.props.productDetails.winningSellerPrice) {
+      this.props.displayToast("Product is not saleable");
+    } else {
       if (
-        cartDetailsLoggedInUser !== undefined &&
-        customerCookie !== undefined
+        this.props.productDetails.allOOStock ||
+        this.props.productDetails.winningSellerAvailableStock === "0"
       ) {
-        this.props.addProductToCart(
-          JSON.parse(userDetails).userName,
-          JSON.parse(cartDetailsLoggedInUser).code,
-          JSON.parse(customerCookie).access_token,
-          productDetails
-        );
+        this.props.displayToast("Product is out of stock");
+      } else {
+        if (userDetails) {
+          if (
+            cartDetailsLoggedInUser !== undefined &&
+            customerCookie !== undefined
+          ) {
+            this.props.addProductToCart(
+              JSON.parse(userDetails).userName,
+              JSON.parse(cartDetailsLoggedInUser).code,
+              JSON.parse(customerCookie).access_token,
+              productDetails
+            );
+          }
+        } else if (cartDetailsAnonymous) {
+          this.props.addProductToCart(
+            ANONYMOUS_USER,
+            JSON.parse(cartDetailsAnonymous).guid,
+            JSON.parse(globalCookie).access_token,
+            productDetails
+          );
+        }
       }
-    } else if (cartDetailsAnonymous) {
-      this.props.addProductToCart(
-        ANONYMOUS_USER,
-        JSON.parse(cartDetailsAnonymous).guid,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
     }
   };
 
@@ -192,27 +203,41 @@ export default class PdpElectronics extends React.Component {
           productListingId={productData.productListingId}
           ussId={productData.winningUssID}
           showPincodeModal={() => this.showPincodeModal()}
+          outOfStock={
+            productData.allOOStock ||
+            !productData.winningSellerPrice ||
+            productData.winningSellerAvailableStock === "0"
+          }
         >
-          <ProductGalleryMobile
-            paddingBottom={
-              productData.rootCategory === "Watches" ? "114" : "89.4"
-            }
-          >
-            {mobileGalleryImages.map((val, idx) => {
-              return (
-                <Image
-                  image={val}
-                  key={idx}
-                  color={
-                    productData.rootCategory === "Watches"
-                      ? "#ffffff"
-                      : "#f5f5f5"
-                  }
-                  fit="contain"
-                />
-              );
-            })}
-          </ProductGalleryMobile>
+          <div className={styles.gallery}>
+            <ProductGalleryMobile
+              paddingBottom={
+                productData.rootCategory === "Watches" ? "114" : "89.4"
+              }
+            >
+              {mobileGalleryImages.map((val, idx) => {
+                return (
+                  <Image
+                    image={val}
+                    key={idx}
+                    color={
+                      productData.rootCategory === "Watches"
+                        ? "#ffffff"
+                        : "#f5f5f5"
+                    }
+                    fit="contain"
+                  />
+                );
+              })}
+            </ProductGalleryMobile>
+            {(productData.allOOStock ||
+              productData.winningSellerAvailableStock === "0") && (
+              <div className={styles.flag}>Out of stock</div>
+            )}
+            {!productData.winningSellerPrice && (
+              <div className={styles.flag}>Not Saleable</div>
+            )}
+          </div>
           <div className={styles.content}>
             {productData.rootCategory !== "Watches" && (
               <ProductDetailsMainCard
@@ -224,6 +249,7 @@ export default class PdpElectronics extends React.Component {
                 discountPrice={discountPrice}
                 averageRating={productData.averageRating}
                 onClick={this.goToReviewPage}
+                discount={productData.discount}
               />
             )}
             {productData.rootCategory === "Watches" && (
@@ -280,8 +306,10 @@ export default class PdpElectronics extends React.Component {
           )}
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.status === NO ? (
-            <Overlay labelText="Not serviceable in you pincode,
-please try another pincode">
+            <Overlay
+              labelText="Not serviceable in you pincode,
+please try another pincode"
+            >
               <PdpDeliveryModes
                 eligibleDeliveryModes={productData.eligibleDeliveryModes}
                 deliveryModesATP={productData.deliveryModesATP}
@@ -309,9 +337,53 @@ please try another pincode">
               </PdpLink>
             </div>
           )}
-          {productData.details && (
+          {productData.rootCategory !== "Watches" && (
             <div className={styles.details}>
-              <ProductDetails data={productData.details} />
+              {productData.details && (
+                <Accordion
+                  text="Product Details"
+                  headerFontSize={16}
+                  isOpen={true}
+                >
+                  <div className={styles.accordionContent}>
+                    {productData.productDescription}
+                    <div style={{ marginTop: 10 }}>
+                      {productData.details &&
+                        productData.details.map(val => {
+                          return <div className={styles.list}>{val.value}</div>;
+                        })}
+                    </div>
+                  </div>
+                </Accordion>
+              )}
+            </div>
+          )}
+          {productData.rootCategory === "Watches" && (
+            <div className={styles.details}>
+              {productData.classifications && (
+                <Accordion
+                  text="Product Details"
+                  headerFontSize={16}
+                  isOpen={true}
+                >
+                  {productData.classifications.map(val => {
+                    if (val.specifications) {
+                      return val.specifications.map(value => {
+                        return (
+                          <div style={{ paddingBottom: 10 }}>
+                            <div className={styles.sideHeader}>{value.key}</div>
+                            <div className={styles.sideContent}>
+                              {value.value}
+                            </div>
+                          </div>
+                        );
+                      });
+                    } else {
+                      return null;
+                    }
+                  })}
+                </Accordion>
+              )}
             </div>
           )}
           <div className={styles.separator}>
@@ -322,36 +394,38 @@ please try another pincode">
             />
           </div>
           {productData.rootCategory !== "Watches" && (
-            <React.Fragment>
+            <div className={styles.details}>
               {productData.classifications && (
-                <div className={styles.details}>
-                  <ProductFeatures features={productData.classifications} />
-                </div>
+                <ProductFeatures features={productData.classifications} />
               )}
-            </React.Fragment>
+              {productData.styleNote && (
+                <ProductFeature
+                  heading="Style Note"
+                  content={productData.styleNote}
+                />
+              )}
+              {productData.knowMore && (
+                <Accordion text="Know More" headerFontSize={16}>
+                  {productData.knowMore &&
+                    productData.knowMore.map(val => {
+                      return (
+                        <div className={styles.list}>{val.knowMoreItem}</div>
+                      );
+                    })}
+                </Accordion>
+              )}
+              {productData.brandInfo && (
+                <ProductFeature
+                  heading="Brand Info"
+                  content={productData.brandInfo}
+                />
+              )}
+            </div>
           )}
           {productData.rootCategory === "Watches" && (
             <div className={styles.details}>
               {productData.classifications && (
                 <React.Fragment>
-                  <Accordion text="Product Details" headerFontSize={16}>
-                    {productData.classifications.map(val => {
-                      if (val.specifications) {
-                        return val.specifications.map(value => {
-                          return (
-                            <React.Fragment>
-                              <div className={styles.sideHeader}>
-                                {value.key}
-                              </div>
-                              <div className={styles.sideContent}>
-                                {value.value}
-                              </div>
-                            </React.Fragment>
-                          );
-                        });
-                      }
-                    })}
-                  </Accordion>
                   {productData.styleNote && (
                     <ProductFeature
                       heading="Style Note"
@@ -377,6 +451,12 @@ please try another pincode">
                         })}
                     </Accordion>
                   )}
+                  {productData.brandInfo && (
+                    <ProductFeature
+                      heading="Brand Info"
+                      content={productData.brandInfo}
+                    />
+                  )}
                 </React.Fragment>
               )}
             </div>
@@ -386,7 +466,6 @@ please try another pincode">
               productContent={productData.APlusContent.productContent}
             />
           )}
-
           <PDPRecommendedSectionsContainer />
         </PdpFrame>
       );

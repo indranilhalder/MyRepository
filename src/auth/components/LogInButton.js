@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "xelpmoc-core";
+import Button from "../../xelpmoc-core/Button";
 import MediaQuery from "react-responsive";
 import PropTypes from "prop-types";
 export default class LogInButton extends React.Component {
