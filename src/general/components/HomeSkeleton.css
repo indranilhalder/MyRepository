@@ -12,6 +12,7 @@
   animation: shine infinite;
   animation-duration: 400ms;
   animation-delay: 200ms;
+  animation-timing-function: ease-in-out;
   left: 0;
   top: 0;
 }
