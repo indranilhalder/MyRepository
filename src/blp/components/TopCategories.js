@@ -27,6 +27,9 @@ export default class TopCategories extends React.Component {
 
     return (
       <div className={styles.base}>
+        <div className={styles.headerText}>
+          {this.props.feedComponentData.title}
+        </div>
         <div className={styles.categorieHolder}>
           <div className={styles.leftSection}>
             <div
@@ -34,9 +37,8 @@ export default class TopCategories extends React.Component {
               onClick={() => this.handleClick(TOP_RIGHT_PRODUCT_INDEX)}
             >
               <div className={styles.bigImageHolder}>
-                <div className={styles.overlay}>
-                  <div className={styles.labelText}>{topProduct.title}</div>
-                </div>
+                <div className={styles.labelText}>{topProduct.title}</div>
+
                 <Image image={topProduct.imageURL} fit="cover" />
               </div>
             </div>
@@ -48,11 +50,10 @@ export default class TopCategories extends React.Component {
             >
               <div className={styles.twoByTwoImageHolder}>
                 <div className={styles.tShirtHolder}>
-                  <div className={styles.overlay}>
-                    <div className={styles.labelText}>
-                      {topRightProduct.title}
-                    </div>
+                  <div className={styles.labelText}>
+                    {topRightProduct.title}
                   </div>
+
                   <Image image={topRightProduct.imageURL} fit="cover" />
                 </div>
               </div>
@@ -63,11 +64,10 @@ export default class TopCategories extends React.Component {
             >
               <div className={styles.twoByTwoImageHolder}>
                 <div className={styles.tShirtHolder}>
-                  <div className={styles.overlay}>
-                    <div className={styles.labelText}>
-                      {bottomRightProduct.title}
-                    </div>
+                  <div className={styles.labelText}>
+                    {bottomRightProduct.title}
                   </div>
+
                   <Image image={bottomRightProduct.imageURL} fit="cover" />
                 </div>
               </div>

@@ -130,7 +130,7 @@ const PAGE_VALUE = "0";
 const PAGE_NUMBER = "3";
 const MSD_REQUEST_PATH = "widgets";
 const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
-const WIDGET_LIST = [0, 8];
+const WIDGET_LIST = [0, 4];
 const WIDGET_LIST_FOR_ABOUT_BRAND = [114];
 const NUMBER_RESULTS = [10, 10];
 

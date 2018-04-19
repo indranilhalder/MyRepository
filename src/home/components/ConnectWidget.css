@@ -17,6 +17,7 @@
 .buffer {
   width: 100%;
   height: auto;
+  min-height: 125px;
   overflow: hidden;
   padding: 30px;
   margin: 20px 0;
