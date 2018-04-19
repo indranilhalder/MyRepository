@@ -9,7 +9,7 @@
   width: 100%;
   height: auto;
   line-height: 24px;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   color: #212121;
   font-size: 20px;
   font-family: semibold;
@@ -54,14 +54,7 @@
 .tShirtHolder {
   composes: bigImageHolder;
 }
-.overlay {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  position: absolute;
-  z-index: 10;
-  border-radius: 4px;
-}
+
 .labelText {
   width: 100%;
   height: 20px;
@@ -75,6 +68,7 @@
   text-align: center;
   line-height: 20px;
   font-family: semibold;
+  z-index: 5;
 }
 .rightSection {
   width: 50%;
