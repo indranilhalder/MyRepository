@@ -53,8 +53,8 @@ export default class CreditCardForm extends React.Component {
       ExpiryMonth: props.ExpiryMonth ? props.ExpiryMonth : null,
       ExpiryYear: props.ExpiryYear ? props.ExpiryYear : null,
       value: props.value ? props.value : "",
-      monthValue: this.monthOptions[0].label,
-      yearValue: "" + this.expiryYearObject[0].label
+      monthValue: "",
+      yearValue: ""
     };
   }
   onSaveData() {
@@ -86,7 +86,6 @@ export default class CreditCardForm extends React.Component {
   onYearChange(val) {
     this.setState({ yearValue: val });
   }
-
   payBill = cardDetails => {
     let cardValues = {};
     cardValues.cardNumber = this.state.cardNumberValue;
@@ -152,7 +151,9 @@ export default class CreditCardForm extends React.Component {
             <div className={styles.dropDownBox}>
               <SelectBoxMobile
                 theme="hollowBox"
-                label="Expiry Month"
+                label={
+                  this.state.monthValue ? this.state.monthValue : "Expiry Month"
+                }
                 onChange={changedValue => this.monthChange(changedValue)}
                 options={this.monthOptions}
                 textStyle={{ fontSize: 14 }}
@@ -163,7 +164,9 @@ export default class CreditCardForm extends React.Component {
               <SelectBoxMobile
                 theme="hollowBox"
                 options={this.expiryYearObject}
-                label="Expiry year"
+                label={
+                  this.state.yearValue ? this.state.yearValue : "Expiry year"
+                }
                 onChange={expiryYear => this.onYearChange(expiryYear)}
                 value={this.state.yearValue}
               />
