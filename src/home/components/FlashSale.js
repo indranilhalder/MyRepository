@@ -15,6 +15,12 @@ import { convertDateTimeFromIndianToAmerican } from "../../home/dateTimeUtils.js
 const OFFER_AND_ITEM_LIMIT = 4;
 
 export default class FlashSale extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapse: false
+    };
+  }
   componentDidUpdate() {
     const offers = this.props.feedComponentData.offers;
     const itemIds = this.props.feedComponentData.itemIds;
@@ -45,11 +51,19 @@ export default class FlashSale extends React.Component {
     this.props.history.push(urlSuffix);
   };
 
+  onComplete = () => {
+    this.setState({ collapse: true });
+  };
+
   render() {
     const { feedComponentData, ...rest } = this.props;
     let items = [];
 
-    if (!feedComponentData.endDate || !feedComponentData.startDate) {
+    if (
+      !feedComponentData.endDate ||
+      !feedComponentData.startDate ||
+      this.state.collapse
+    ) {
       return null;
     }
 
@@ -104,7 +118,10 @@ export default class FlashSale extends React.Component {
                 <Icon image={ClockImage} size={20} />
               </div>
               <div className={styles.countDownHolder}>
-                <TimerCounter endTime={endDateTime} />
+                <TimerCounter
+                  endTime={endDateTime}
+                  onComplete={this.onComplete}
+                />
               </div>
             </div>
           </div>
