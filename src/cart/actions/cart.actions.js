@@ -290,25 +290,34 @@ export const ELIGIBILITY_OF_NO_COST_EMI_SUCCESS =
 export const ELIGIBILITY_OF_NO_COST_EMI_FAILURE =
   "ELIGIBILITY_OF_NO_COST_EMI_FAILURE";
 
-export const BANK_AND_TENURE_DETAILS_REQUEST="BANK_AND_TENURE_DETAILS_REQUEST";
-export const BANK_AND_TENURE_DETAILS_SUCCESS="BANK_AND_TENURE_DETAILS_SUCCESS";
-export const BANK_AND_TENURE_DETAILS_FAILURE="BANK_AND_TENURE_DETAILS_FAILURE"
+export const BANK_AND_TENURE_DETAILS_REQUEST =
+  "BANK_AND_TENURE_DETAILS_REQUEST";
+export const BANK_AND_TENURE_DETAILS_SUCCESS =
+  "BANK_AND_TENURE_DETAILS_SUCCESS";
+export const BANK_AND_TENURE_DETAILS_FAILURE =
+  "BANK_AND_TENURE_DETAILS_FAILURE";
 
-export const EMI_TERMS_AND_CONDITIONS_FOR_BANK_REQUEST="EMI_TERMS_AND_CONDITIONS_FOR_BANK_REQUEST";
-export const EMI_TERMS_AND_CONDITIONS_FOR_BANK_SUCCESS="EMI_TERMS_AND_CONDITIONS_FOR_BANK_SUCCESS";
-export const EMI_TERMS_AND_CONDITIONS_FOR_BANK_FAILURE="EMI_TERMS_AND_CONDITIONS_FOR_BANK_FAILURE"
+export const EMI_TERMS_AND_CONDITIONS_FOR_BANK_REQUEST =
+  "EMI_TERMS_AND_CONDITIONS_FOR_BANK_REQUEST";
+export const EMI_TERMS_AND_CONDITIONS_FOR_BANK_SUCCESS =
+  "EMI_TERMS_AND_CONDITIONS_FOR_BANK_SUCCESS";
+export const EMI_TERMS_AND_CONDITIONS_FOR_BANK_FAILURE =
+  "EMI_TERMS_AND_CONDITIONS_FOR_BANK_FAILURE";
 
-export const APPLY_NO_COST_EMI_REQUEST="APPLY_NO_COST_EMI_REQUEST";
-export const APPLY_NO_COST_EMI_SUCCESS="APPLY_NO_COST_EMI_SUCCESS";
-export const APPLY_NO_COST_EMI_FAILURE="APPLY_NO_COST_EMI_FAILURE"
+export const APPLY_NO_COST_EMI_REQUEST = "APPLY_NO_COST_EMI_REQUEST";
+export const APPLY_NO_COST_EMI_SUCCESS = "APPLY_NO_COST_EMI_SUCCESS";
+export const APPLY_NO_COST_EMI_FAILURE = "APPLY_NO_COST_EMI_FAILURE";
 
-export const REMOVE_NO_COST_EMI_REQUEST="REMOVE_NO_COST_EMI_REQUEST";
-export const REMOVE_NO_COST_EMI_SUCCESS="REMOVE_NO_COST_EMI_SUCCESS";
-export const REMOVE_NO_COST_EMI_FAILURE="REMOVE_NO_COST_EMI_FAILURE"
+export const REMOVE_NO_COST_EMI_REQUEST = "REMOVE_NO_COST_EMI_REQUEST";
+export const REMOVE_NO_COST_EMI_SUCCESS = "REMOVE_NO_COST_EMI_SUCCESS";
+export const REMOVE_NO_COST_EMI_FAILURE = "REMOVE_NO_COST_EMI_FAILURE";
 
-export const EMI_ITEM_BREAK_UP_DETAILS_REQUEST="EMI_ITEM_BREAK_UP_DETAILS_REQUEST";
-export const EMI_ITEM_BREAK_UP_DETAILS_SUCCESS="EMI_ITEM_BREAK_UP_DETAILS_SUCCESS";
-export const EMI_ITEM_BREAK_UP_DETAILS_FAILURE="EMI_ITEM_BREAK_UP_DETAILS_FAILURE"
+export const EMI_ITEM_BREAK_UP_DETAILS_REQUEST =
+  "EMI_ITEM_BREAK_UP_DETAILS_REQUEST";
+export const EMI_ITEM_BREAK_UP_DETAILS_SUCCESS =
+  "EMI_ITEM_BREAK_UP_DETAILS_SUCCESS";
+export const EMI_ITEM_BREAK_UP_DETAILS_FAILURE =
+  "EMI_ITEM_BREAK_UP_DETAILS_FAILURE";
 
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
@@ -1274,7 +1283,7 @@ export function mergeCartId(cartGuId) {
         throw new Error(resultJsonStatus.message);
       }
 
-      return dispatch(mergeCartIdSuccess(resultJson));
+      return dispatch(mergeCartIdFailure("test"));
     } catch (e) {
       return dispatch(mergeCartIdFailure(e.message));
     }
@@ -3598,7 +3607,7 @@ export function clearCartDetails() {
 export function getEligibilityOfNoCostEmiRequest() {
   return {
     type: ELIGIBILITY_OF_NO_COST_EMI_REQUEST,
-    status: REQUESTING,
+    status: REQUESTING
   };
 }
 
@@ -3649,7 +3658,7 @@ export function getEmiEligibility() {
 export function getBankAndTenureDetailsRequest() {
   return {
     type: BANK_AND_TENURE_DETAILS_REQUEST,
-    status: REQUESTING,
+    status: REQUESTING
   };
 }
 
@@ -3700,7 +3709,7 @@ export function getBankAndTenureDetails() {
 export function getEmiTermsAndConditionsForBankRequest() {
   return {
     type: EMI_TERMS_AND_CONDITIONS_FOR_BANK_REQUEST,
-    status: REQUESTING,
+    status: REQUESTING
   };
 }
 
@@ -3720,13 +3729,12 @@ export function getEmiTermsAndConditionsForBankFailure(error) {
   };
 }
 
-export function getEmiTermsAndConditionsForBank(code,bankName) {
+export function getEmiTermsAndConditionsForBank(code, bankName) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     dispatch(getEmiTermsAndConditionsForBankRequest());
     try {
-
       const result = await api.get(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
@@ -3741,8 +3749,8 @@ export function getEmiTermsAndConditionsForBank(code,bankName) {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(getEmiTermsAndConditionsForBankSuccess(resultJson));
-      resultJson.bankName=bankName
-      dispatch(showModal(EMI_BANK_TERMS_AND_CONDITIONS,resultJson))
+      resultJson.bankName = bankName;
+      dispatch(showModal(EMI_BANK_TERMS_AND_CONDITIONS, resultJson));
     } catch (e) {
       dispatch(getEmiTermsAndConditionsForBankFailure(e.message));
     }
@@ -3752,7 +3760,7 @@ export function getEmiTermsAndConditionsForBank(code,bankName) {
 export function applyNoCostEmiRequest() {
   return {
     type: APPLY_NO_COST_EMI_REQUEST,
-    status: REQUESTING,
+    status: REQUESTING
   };
 }
 
@@ -3804,7 +3812,7 @@ export function applyNoCostEmi(couponCode) {
 export function removeNoCostEmiRequest() {
   return {
     type: REMOVE_NO_COST_EMI_REQUEST,
-    status: REQUESTING,
+    status: REQUESTING
   };
 }
 
@@ -3856,7 +3864,7 @@ export function removeNoCostEmi(couponCode) {
 export function getItemBreakUpDetailsRequest() {
   return {
     type: EMI_ITEM_BREAK_UP_DETAILS_REQUEST,
-    status: REQUESTING,
+    status: REQUESTING
   };
 }
 
@@ -3884,7 +3892,6 @@ export function getItemBreakUpDetails(couponCode) {
     const cartGuId = JSON.parse(cartDetails).guid;
     dispatch(getItemBreakUpDetailsRequest());
     try {
-
       const result = await api.get(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
@@ -3899,10 +3906,9 @@ export function getItemBreakUpDetails(couponCode) {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(getItemBreakUpDetailsSuccess(resultJson));
-      dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE,resultJson))
+      dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE, resultJson));
     } catch (e) {
       dispatch(getItemBreakUpDetailsFailure(e.message));
     }
   };
 }
-

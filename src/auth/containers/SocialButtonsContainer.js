@@ -15,6 +15,8 @@ import {
   socialMediaRegistration,
   loadGoogleSignInApi
 } from "../../auth/actions/user.actions";
+import * as Cookies from "../../lib/Cookie";
+
 import {
   singleAuthCallHasFailed,
   setIfAllAuthCallsHaveSucceeded,
@@ -25,8 +27,13 @@ import {
   generateCartIdForLoggedInUser,
   getCartId
 } from "../../cart/actions/cart.actions";
-import { logout } from "../../account/actions/account.actions.js";
-import { SUCCESS, ERROR, FAILURE } from "../../lib/constants";
+import {
+  SUCCESS,
+  ERROR,
+  FAILURE,
+  CART_DETAILS_FOR_ANONYMOUS,
+  CART_DETAILS_FOR_LOGGED_IN_USER
+} from "../../lib/constants";
 import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
 import { displayToast } from "../../general/toast.actions.js";
 import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
@@ -71,14 +78,12 @@ const mapDispatchToProps = dispatch => {
 
         if (signUpResponse.status !== SUCCESS) {
           dispatch(singleAuthCallHasFailed(signUpResponse.error));
-          dispatch(logout());
           return;
         }
         if (signUpResponse.status === SUCCESS) {
           const wishListResponse = await dispatch(createWishlist());
           if (wishListResponse.status === ERROR) {
             dispatch(singleAuthCallHasFailed(signUpResponse.error));
-            dispatch(logout());
             return;
           }
         }
@@ -121,8 +126,12 @@ const mapDispatchToProps = dispatch => {
             if (mergeCartResponse.status === SUCCESS) {
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
-              dispatch(singleAuthCallHasFailed(mergeCartResponse.error));
-              dispatch(logout());
+              Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+              Cookies.createCookie(
+                CART_DETAILS_FOR_LOGGED_IN_USER,
+                JSON.stringify(cartVal.cartDetails)
+              );
+              dispatch(setIfAllAuthCallsHaveSucceeded());
             }
           } else {
             const createdCartVal = await dispatch(
@@ -134,7 +143,6 @@ const mapDispatchToProps = dispatch => {
               createdCartVal.status === FAILURE
             ) {
               dispatch(singleAuthCallHasFailed(createdCartVal.error));
-              dispatch(logout());
             } else {
               const mergeCartResponse = await dispatch(
                 mergeCartId(createdCartVal.cartDetails.guid)
@@ -147,13 +155,11 @@ const mapDispatchToProps = dispatch => {
         } else {
           setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE);
           dispatch(singleAuthCallHasFailed(loginUserRequest.error));
-          dispatch(logout());
         }
       } else {
         dispatch(
           singleAuthCallHasFailed(customerAccessTokenActionResponse.error)
         );
-        dispatch(logout());
       }
     },
     googlePlusLogin: async isSignUp => {
@@ -234,7 +240,15 @@ const mapDispatchToProps = dispatch => {
             if (mergeCartResponse.status === SUCCESS) {
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
-              dispatch(singleAuthCallHasFailed(mergeCartResponse.error));
+              Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+              Cookies.createCookie(
+                CART_DETAILS_FOR_LOGGED_IN_USER,
+                JSON.stringify(cartVal.cartDetails)
+              );
+              dispatch(setIfAllAuthCallsHaveSucceeded());
+
+              // merge cart has failed, so all I need to do is remove the cart details for anonymous
+              // and use the cart as a logged in cart.
             }
           } else {
             const createdCartVal = await dispatch(
@@ -246,7 +260,6 @@ const mapDispatchToProps = dispatch => {
               createdCartVal.status === FAILURE
             ) {
               dispatch(singleAuthCallHasFailed(createdCartVal.error));
-              dispatch(logout());
             } else {
               const mergeCartResponse = await dispatch(
                 mergeCartId(createdCartVal.cartDetails.guid)
@@ -258,13 +271,11 @@ const mapDispatchToProps = dispatch => {
           }
         } else {
           dispatch(singleAuthCallHasFailed(loginUserRequest.error));
-          dispatch(logout());
         }
       } else {
         dispatch(
           singleAuthCallHasFailed(customerAccessTokenActionResponse.error)
         );
-        dispatch(logout());
       }
     }
   };
