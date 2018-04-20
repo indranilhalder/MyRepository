@@ -587,6 +587,16 @@ class CheckOutPage extends React.Component {
     return true;
   }
 
+  componentWillUnmount() {
+    // if user go back from checkout page then
+    // we have relsease coupon if user applied any coupon
+    if (
+      this.props.history.action === "POP" &&
+      this.state.selectedBankOfferCode
+    ) {
+      this.props.releaseBankOffer(this.state.selectedBankOfferCode);
+    }
+  }
   componentDidMount() {
     setDataLayerForCheckoutDirectCalls(
       ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE
