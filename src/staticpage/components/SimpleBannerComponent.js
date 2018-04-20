@@ -14,8 +14,10 @@ export default class SimpleBannerComponent extends React.Component {
       >
         <div className={styles.imageHolder}>
           <Image image={this.props.data.media} fit="cover" />
-          {this.props.data.title && (
-            <div className={styles.displayTitle}>{this.props.data.title}</div>
+          {this.props.feedComponentData.title && (
+            <div className={styles.displayTitle}>
+              {this.props.feedComponentData.title}
+            </div>
           )}
         </div>
       </div>

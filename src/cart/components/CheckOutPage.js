@@ -18,7 +18,7 @@ import find from "lodash.find";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
-
+import size from "lodash.size";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -61,6 +61,8 @@ const PROCEED = "Proceed";
 const COUPON_AVAILABILITY_ERROR_MESSAGE = "Your applied coupon has expired";
 const PRODUCT_NOT_SERVICEABLE_MESSAGE =
   "Product is not Serviceable,Please try with another pin code";
+const SELECT_DELIVERY_MODE_MESSAGE =
+  "Please Select the delivery mode for all the products";
 class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
@@ -803,17 +805,23 @@ class CheckOutPage extends React.Component {
           this.props.selectDeliveryMode &&
           !this.checkAvailabilityOfService()
         ) {
+          let sizeNew = size(this.state.ussIdAndDeliveryModesObj);
+          if (sizeNew === this.props.cart.cartDetailsCNC.products.length) {
+            this.props.selectDeliveryMode(
+              this.state.ussIdAndDeliveryModesObj,
+              localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+            );
+            this.setState({
+              deliverMode: true
+            });
+          } else {
+            this.props.displayToast(SELECT_DELIVERY_MODE_MESSAGE);
+          }
+
           setDataLayerForCheckoutDirectCalls(
             ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE,
             this.state.ussIdAndDeliveryModesObj
           );
-          this.props.selectDeliveryMode(
-            this.state.ussIdAndDeliveryModesObj,
-            localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
-          );
-          this.setState({
-            deliverMode: true
-          });
         } else {
           if (this.props.displayToast) {
             this.props.displayToast(PRODUCT_NOT_SERVICEABLE_MESSAGE);

@@ -14,7 +14,7 @@ export default class AccountNavigationComponent extends Component {
         <SelectBoxMobile
           label="Select"
           height={40}
-          options={this.props.data.nodeList.map((val, i) => {
+          options={this.props.feedComponentData.nodeList.map((val, i) => {
             return {
               value: val.url,
               label: val.linkName
