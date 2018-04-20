@@ -50,8 +50,6 @@ export const typeComponentMapping = {
     <ProductCapsulesContainer {...props} />
   ),
   "Landing Page Header Component": props => {
-    console.log("LANDING PAGE HEADER COMPONENT");
-    console.log(props);
     return <BrandCardHeader {...props} />;
   },
   "Hero Banner Component": props => <HeroBanner {...props} />, // no hard coded data

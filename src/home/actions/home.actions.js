@@ -317,6 +317,8 @@ export function homeFeedBackUp() {
 
 // this is not simple home feed .it is a general feed like
 // brand feed and category feed  . we need to rename this function name like feed
+// this is also now used for static pages, so the name brandIdOrCategoryId makes less sense
+// however there isn't a good name to replace it.
 export function homeFeed(brandIdOrCategoryId: null) {
   return async (dispatch, getState, { api }) => {
     if (brandIdOrCategoryId) {
@@ -332,8 +334,6 @@ export function homeFeed(brandIdOrCategoryId: null) {
         );
         feedTypeRequest = BLP_OR_CLP_FEED_TYPE;
         resultJson = await result.json();
-        console.log("RESULT JSON");
-        console.log(resultJson);
         if (resultJson.errors) {
           dispatch(homeFeedSuccess([], feedTypeRequest));
         } else {
