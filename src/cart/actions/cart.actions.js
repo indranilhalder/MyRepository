@@ -1283,7 +1283,7 @@ export function mergeCartId(cartGuId) {
         throw new Error(resultJsonStatus.message);
       }
 
-      return dispatch(mergeCartIdFailure("test"));
+      return dispatch(mergeCartIdFailure(resultJson));
     } catch (e) {
       return dispatch(mergeCartIdFailure(e.message));
     }

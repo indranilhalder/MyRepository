@@ -469,8 +469,6 @@ const cart = (
       });
 
     case cartActions.MERGE_CART_ID_SUCCESS:
-      console.log("MERGE CART ID");
-      console.log(JSON.stringify(action.cartDetails));
       Cookies.createCookie(
         CART_DETAILS_FOR_LOGGED_IN_USER,
         JSON.stringify(action.cartDetails)
