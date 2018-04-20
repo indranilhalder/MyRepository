@@ -133,8 +133,6 @@ class HeaderWrapper extends React.Component {
           hasBackButton={isGoBack}
         />
       );
-    } else if (pathAppView) {
-      headerToRender = {};
     }
     return (
       shouldRenderHeader && (
