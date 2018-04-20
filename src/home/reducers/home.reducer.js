@@ -6,8 +6,6 @@ import map from "lodash.map";
 import findIndex from "lodash.findindex";
 import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
 import { transformFetchingItemsOrder } from "./utils";
-import { homeFeed } from "../actions/home.actions";
-import { SUCCESS } from "../../lib/constants";
 const home = (
   state = {
     homeFeed: [], //array of objects

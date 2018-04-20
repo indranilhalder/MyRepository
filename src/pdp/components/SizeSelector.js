@@ -39,7 +39,7 @@ export default class SizeSelector extends React.Component {
       return (
         <div className={styles.base}>
           <div className={styles.header}>
-            {this.props.headerText}
+            Select {this.props.headerText}
             <div className={styles.button}>
               <UnderLinedButton
                 disabled={!this.props.hasSizeGuide}
@@ -89,5 +89,5 @@ SizeSelector.propTypes = {
   textSize: PropTypes.oneOfType([PropTypes.string, PropTypes.string])
 };
 SizeSelector.defaultProps = {
-  headerText: "Select Size"
+  headerText: "Size"
 };

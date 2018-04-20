@@ -199,14 +199,16 @@ export default class PdpApparel extends React.Component {
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
-      .map(galleryImageList => {
-        return galleryImageList.galleryImages.filter(galleryImages => {
-          return galleryImages.key === "product";
-        });
-      })
-      .map(image => {
-        return image[0].value;
-      });
+      ? productData.galleryImagesList
+          .map(galleryImageList => {
+            return galleryImageList.galleryImages.filter(galleryImages => {
+              return galleryImages.key === "product";
+            });
+          })
+          .map(image => {
+            return image[0].value;
+          })
+      : [];
 
     const validSellersCount = productData.otherSellers
       ? productData.otherSellers.filter(val => {
