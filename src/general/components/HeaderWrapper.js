@@ -69,8 +69,8 @@ class HeaderWrapper extends React.Component {
   };
 
   render() {
-    const hasAppView = queryString.parse(this.props.history.location.search);
-    const query = hasAppView.appview;
+    const AppViewPath = queryString.parse(this.props.history.location.search);
+    const hasAppView = AppViewPath.appview;
     const url = this.props.location.pathname;
 
     let shouldRenderSearch = false;
@@ -106,7 +106,7 @@ class HeaderWrapper extends React.Component {
     if (url === LOGIN_PATH || url === SIGN_UP_PATH) {
       shouldRenderHeader = false;
     }
-    if (query === "true") {
+    if (hasAppView === "true") {
       shouldRenderHeader = false;
     }
     let headerToRender = (
