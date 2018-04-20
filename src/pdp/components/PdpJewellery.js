@@ -251,7 +251,7 @@ export default class PdpJewellery extends React.Component {
       if (productData.winningSellerPrice) {
         price = productData.winningSellerPrice.formattedValueNoDecimal;
       }
-      console.log(productData.variantOptions);
+
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
