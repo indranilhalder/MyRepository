@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import SecondaryLoader from "../../general/components/SecondaryLoader.js";
 import Feed from "../../home/components/Feed";
+import styles from "./StaticPage.css";
 
 export default class StaticPage extends Component {
   componentDidMount() {
@@ -21,7 +22,11 @@ export default class StaticPage extends Component {
     if (this.props.loading || !this.props.data) {
       return <SecondaryLoader />;
     } else {
-      return <Feed homeFeedData={this.props.data} />;
+      return (
+        <div className={styles.base}>
+          <Feed homeFeedData={this.props.data} />
+        </div>
+      );
     }
   }
 }
