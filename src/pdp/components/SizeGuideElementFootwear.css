@@ -12,17 +12,17 @@
   vertical-align: top;
   padding: 10px 0px 0px 10px;
 }
-.uk {
+.grey {
   composes: display;
   background-color: #f8f8f8;
 }
-.us {
+.white {
   composes: display;
   background-color: #ffffff;
 }
 .header {
   width: 100%;
-  height: auto;
+  height: 50px;
   display: inline-block;
   margin: auto;
   text-align: center;
@@ -30,7 +30,6 @@
   font-size: 14px;
 }
 .dimensionValue {
-  padding-top: 45px;
   width: 100%;
   height: auto;
   margin: auto;
@@ -38,15 +37,7 @@
   font-family: regular;
   font-size: 14px;
 }
-.dimensionValues {
-  padding-top: 14px;
-  width: 100%;
-  height: auto;
-  margin: auto;
-  text-align: center;
-  font-family: regular;
-  font-size: 14px;
-}
+
 .dimensionValueList {
   width: 100%;
   height: auto;
@@ -54,5 +45,5 @@
   text-align: center;
   font-family: regular;
   font-size: 14px;
-  padding-bottom: 20px;
+  padding-top: 20px;
 }
