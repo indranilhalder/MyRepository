@@ -66,7 +66,6 @@ export default class Plp extends React.Component {
   }
   componentDidUpdate(prevProps) {
     if (this.props.productListings !== null) {
-      console.log(this.props.productListings.seo);
       if (this.props.isFilterOpen) {
         this.props.setHeaderText("Refine by");
       } else {
