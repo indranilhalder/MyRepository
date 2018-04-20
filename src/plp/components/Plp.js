@@ -66,20 +66,26 @@ export default class Plp extends React.Component {
   }
   componentDidUpdate(prevProps) {
     if (this.props.productListings !== null) {
-      const slug = this.props.match.params.slug;
-      let splitSlug = "Tata Cliq";
-      if (slug) {
-        splitSlug = this.props.match.params.slug.replace(/-/g, " ");
-        splitSlug = splitSlug.replace(/\b\w/g, l => l.toUpperCase());
-      }
-      if (this.props.showFilter) {
+      if (this.props.isFilterOpen) {
         this.props.setHeaderText("Refine by");
       } else {
-        this.props.setHeaderText(
-          `${splitSlug[splitSlug.length - 1]} (${
-            this.props.productListings.pagination.totalResults
-          })`
-        );
+        if (
+          this.props.productListings.seo &&
+          this.props.productListings.seo.breadcrumbs[0] &&
+          this.props.productListings.seo.breadcrumbs[0].name
+        )
+          this.props.setHeaderText(
+            `${this.props.productListings.seo.breadcrumbs[0].name} (${
+              this.props.productListings.pagination.totalResults
+            })`
+          );
+        else {
+          this.props.setHeaderText(
+            `Search results (${
+              this.props.productListings.pagination.totalResults
+            })`
+          );
+        }
       }
     }
   }
