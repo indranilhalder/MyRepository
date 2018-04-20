@@ -20,14 +20,6 @@
   composes: display;
   background-color: #ffffff;
 }
-.euro {
-  composes: display;
-  background-color: #f8f8f8;
-}
-.length {
-  composes: display;
-  background-color: #ffffff;
-}
 .header {
   width: 100%;
   height: auto;

@@ -28,7 +28,7 @@ export default class SizeGuideElement extends React.Component {
             })}
           </div>
         </div>
-        <div className={styles.euro}>
+        <div className={styles.uk}>
           <div className={styles.header}>EURO</div>
           <div className={styles.dimensionValue}>
             {data.map((datum, i) => {
@@ -40,7 +40,7 @@ export default class SizeGuideElement extends React.Component {
             })}
           </div>
         </div>
-        <div className={styles.length}>
+        <div className={styles.us}>
           <div className={styles.header}>FOOT LENGTH (CM)</div>
           <div className={styles.dimensionValues}>
             {data.map((datum, i) => {
