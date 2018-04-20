@@ -7,7 +7,7 @@ export default class CMSParagraphComponent extends React.Component {
       <div
         className={styles.contentHolder}
         dangerouslySetInnerHTML={{
-          __html: this.props.data.content
+          __html: this.props.feedComponentData.content
         }}
       />
     );

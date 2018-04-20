@@ -13,7 +13,9 @@ export default class CMSTextComponent extends Component {
         >
           <div
             className={styles.answer}
-            dangerouslySetInnerHTML={{ __html: this.props.data.answer }}
+            dangerouslySetInnerHTML={{
+              __html: this.props.data.answer
+            }}
           />
         </Accordion>
       </div>
