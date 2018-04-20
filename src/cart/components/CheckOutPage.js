@@ -508,12 +508,6 @@ class CheckOutPage extends React.Component {
             ) / 100
         });
       }
-    } else if (this.state.isGiftCard) {
-      this.setState({
-        isRemainingAmount: true,
-        payableAmount: Math.round(this.props.location.state.amount * 100) / 100,
-        bagAmount: Math.round(this.props.location.state.amount * 100) / 100
-      });
     } else {
       if (nextProps.cart.cartDetailsCNC && this.state.isRemainingAmount) {
         let cliqCashAmount = 0;
@@ -600,9 +594,15 @@ class CheckOutPage extends React.Component {
     } else if (
       this.props.location &&
       this.props.location.state &&
-      this.props.location.state.isFromGiftCard
+      this.props.location.state.isFromGiftCard &&
+      this.props.location.state.amount
     ) {
-      this.setState({ isGiftCard: true });
+      this.setState({
+        isGiftCard: true,
+        isRemainingAmount: true,
+        payableAmount: Math.round(this.props.location.state.amount * 100) / 100,
+        bagAmount: Math.round(this.props.location.state.amount * 100) / 100
+      });
     } else {
       if (this.props.getCartDetailsCNC) {
         let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -717,7 +717,9 @@ class CheckOutPage extends React.Component {
       }
     );
 
-    this.updateLocalStoragePinCode(addressSelected.postalCode);
+    this.updateLocalStoragePinCode(
+      addressSelected && addressSelected.postalCode
+    );
     // here we are checking the if user selected any address then setting our state
     // and in else condition if user deselect then this function will again call and
     //  then we are resetting the previous selected address
