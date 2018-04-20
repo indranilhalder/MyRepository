@@ -19,6 +19,10 @@ import {
   MAIN_ROUTER,
   SOCIAL_LOG_IN
 } from "../../lib/constants";
+
+export const EMAIL_REGULAR_EXPRESSION = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+export const MOBILE_PATTERN = /^[7,8,9]{1}[0-9]{9}$/;
 const MINIMUM_PASSWORD_LENGTH = "8";
 class Login extends Component {
   constructor(props) {
@@ -44,9 +48,6 @@ class Login extends Component {
     this.props.history.push(SIGN_UP_PATH);
   }
   onSubmit = () => {
-    const EMAIL_REGULAR_EXPRESSION = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    const MOBILE_PATTERN = /^[7,8,9]{1}[0-9]{9}$/;
     if (this.props.onSubmit) {
       let userDetails = {};
       userDetails.username = this.state.emailValue;
