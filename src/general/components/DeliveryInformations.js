@@ -52,9 +52,7 @@ export default class DeliveryInformations extends React.Component {
       <div className={styles.base}>
         <div
           className={
-            this.props.available || this.props.type === COLLECT
-              ? styles.dataHolder
-              : styles.notAvailable
+            this.props.available ? styles.dataHolder : styles.notAvailable
           }
         >
           {this.props.onSelect &&

@@ -208,7 +208,7 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
       window.digitalData.cpj.product &&
       window.digitalData.cpj.product.badge
     ) {
-      const badge = window.digitalData.cpj.badge;
+      const badge = window.digitalData.cpj.product.badge;
       Object.assign(digitalDataForPDP.cpj.product, { badge });
     }
     window.digitalData = digitalDataForPDP;
@@ -396,13 +396,11 @@ function getDigitalDataForPdp(type, pdpResponse) {
   ) {
     Object.assign(data.cpj, {
       pdp: {
-        findingMethod:
-          window.digitalData &&
-          window.digitalData.page &&
-          window.digitalData.page.pageInfo.pageName
+        findingMethod: window.digitalData.page.pageInfo.pageName
       }
     });
   }
+
   return data;
 }
 
