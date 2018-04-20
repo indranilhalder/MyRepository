@@ -1,0 +1,66 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 10px 0;
+}
+.display {
+  width: 25%;
+  height: auto;
+  display: inline-block;
+  margin: auto;
+  text-align: center;
+  vertical-align: top;
+  padding-left: 10px;
+}
+.uk {
+  composes: display;
+  background-color: #f8f8f8;
+}
+.us {
+  composes: display;
+  background-color: #ffffff;
+}
+.euro {
+  composes: display;
+  background-color: #f8f8f8;
+}
+.length {
+  composes: display;
+  background-color: #ffffff;
+}
+.header {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin: auto;
+  text-align: center;
+  font-family: semibold;
+  font-size: 14px;
+}
+.dimensionValue {
+  padding-top: 45px;
+  width: 100%;
+  height: auto;
+  margin: auto;
+  text-align: center;
+  font-family: regular;
+  font-size: 14px;
+}
+.dimensionValues {
+  padding-top: 14px;
+  width: 100%;
+  height: auto;
+  margin: auto;
+  text-align: center;
+  font-family: regular;
+  font-size: 14px;
+}
+.dimensionValueList {
+  width: 100%;
+  height: auto;
+  margin: auto;
+  text-align: center;
+  font-family: regular;
+  font-size: 14px;
+  padding-bottom: 20px;
+}
