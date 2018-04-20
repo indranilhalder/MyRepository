@@ -40,7 +40,8 @@ import {
   DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 
-const DELIVERY_TEXT = "Delivery Options For";
+const NO_SIZE = "NO SIZE";
+const FREE_SIZE = "Free Size";
 const PRODUCT_QUANTITY = "1";
 export default class PdpJewellery extends React.Component {
   constructor(props) {
@@ -105,7 +106,14 @@ export default class PdpJewellery extends React.Component {
       ) {
         this.props.displayToast("Product is out of stock");
       } else {
-        if (this.checkIfSizeSelected()) {
+        console.log(this.checkIfSizeSelected());
+        console.log(this.checkIfFreeSize());
+        console.log(this.checkIfNoSize());
+
+        if (
+          this.checkIfSizeSelected() ||
+          (this.checkIfFreeSize() || this.checkIfNoSize())
+        ) {
           if (userDetails) {
             if (
               cartDetailsLoggedInUser !== undefined &&
@@ -178,6 +186,33 @@ export default class PdpJewellery extends React.Component {
       return false;
     }
   };
+  checkIfNoSize = () => {
+    if (
+      this.props.productDetails.variantOptions &&
+      this.props.productDetails.variantOptions[0].sizelink &&
+      (this.props.productDetails.variantOptions[0].sizelink.size === NO_SIZE ||
+        parseInt(
+          this.props.productDetails.variantOptions[0].sizelink.size,
+          10
+        ) === 0)
+    ) {
+      console.log(this.props.productDetails.variantOptions[0].sizelink.size);
+      return true;
+    } else {
+      return false;
+    }
+  };
+  checkIfFreeSize = () => {
+    if (
+      this.props.productDetails.variantOptions &&
+      this.props.productDetails.variantOptions[0].sizelink &&
+      this.props.productDetails.variantOptions[0].sizelink.size === FREE_SIZE
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -220,6 +255,7 @@ export default class PdpJewellery extends React.Component {
       if (productData.winningSellerPrice) {
         price = productData.winningSellerPrice.formattedValueNoDecimal;
       }
+      console.log(productData.variantOptions);
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
@@ -288,19 +324,20 @@ export default class PdpJewellery extends React.Component {
             secondaryPromotions={productData.productOfferMsg}
           />
 
-          {productData.variantOptions && (
-            <React.Fragment>
-              <SizeSelector
-                history={this.props.history}
-                headerText={productData.isSizeOrLength}
-                sizeSelected={this.checkIfSizeSelected()}
-                productId={productData.productListingId}
-                hasSizeGuide={productData.showSizeGuide}
-                showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions}
-              />
-            </React.Fragment>
-          )}
+          {productData.variantOptions &&
+            !this.checkIfNoSize() && (
+              <React.Fragment>
+                <SizeSelector
+                  history={this.props.history}
+                  headerText={productData.isSizeOrLength}
+                  sizeSelected={this.checkIfSizeSelected()}
+                  productId={productData.productListingId}
+                  hasSizeGuide={productData.showSizeGuide}
+                  showSizeGuide={this.props.showSizeGuide}
+                  data={productData.variantOptions}
+                />
+              </React.Fragment>
+            )}
           {productData.certificationMapFrJwlry && (
             <JewelleryCertification
               certifications={productData.certificationMapFrJwlry}
