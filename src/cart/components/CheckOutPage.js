@@ -728,7 +728,9 @@ class CheckOutPage extends React.Component {
       }
     );
 
-    this.updateLocalStoragePinCode(addressSelected.postalCode);
+    this.updateLocalStoragePinCode(
+      addressSelected && addressSelected.postalCode
+    );
     // here we are checking the if user selected any address then setting our state
     // and in else condition if user deselect then this function will again call and
     //  then we are resetting the previous selected address
