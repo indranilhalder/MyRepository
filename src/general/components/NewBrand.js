@@ -2,17 +2,12 @@ import React from "react";
 import styles from "./NewBrand.css";
 import Image from "../../xelpmoc-core/Image";
 import PropTypes from "prop-types";
+import { FollowUnFollowButtonContainer } from "../../pdp/containers/FollowUnFollowButtonContainer";
+import Logo from "./Logo";
+import { HOME_FEED_FOLLOW_AND_UN_FOLLOW } from "../../lib/constants";
 import Follow from "./Follow";
 
 export default class NewBrand extends React.Component {
-  handleClick() {
-    if (this.props.follow) {
-      this.onFollowClick();
-    } else {
-      this.onUnFollowClick();
-    }
-  }
-
   handleBrandClick = () => {
     this.props.onClick(this.props.webUrl);
   };
@@ -20,8 +15,8 @@ export default class NewBrand extends React.Component {
     let productCount = `${this.props.label && this.props.label.split(" ")[0]}`;
     let totalNumberOfProduct = parseInt(productCount);
     return (
-      <div className={styles.base} onClick={this.handleBrandClick}>
-        <div className={styles.imageHolder}>
+      <div className={styles.base}>
+        <div className={styles.imageHolder} onClick={this.handleBrandClick}>
           <Image image={this.props.image} color="transparent" />
           <div className={styles.brandOverlay}>
             <div className={styles.brandTextHolder}>
@@ -30,17 +25,19 @@ export default class NewBrand extends React.Component {
                   <div className={styles.brandText}>{this.props.label}</div>
                 )}
               </div>
-              <div className={styles.brandButton}>
-                <Follow
-                  onClick={follow => this.handleClick(follow)}
-                  follow={this.props.follow}
-                />
-              </div>
             </div>
             <div className={styles.brandLogo}>
               <img className={styles.image} src={this.props.logo} alt="" />
             </div>
           </div>
+        </div>
+        <div className={styles.brandButton}>
+          <FollowUnFollowButtonContainer
+            brandId={this.props.brandId}
+            isFollowing={this.props.isFollowing}
+            pageType={HOME_FEED_FOLLOW_AND_UN_FOLLOW}
+            positionInFeed={this.props.positionInFeed}
+          />
         </div>
       </div>
     );
