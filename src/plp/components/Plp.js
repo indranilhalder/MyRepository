@@ -71,6 +71,7 @@ export default class Plp extends React.Component {
       } else {
         if (
           this.props.productListings.seo &&
+          this.props.productListings.seo.breadcrumbs &&
           this.props.productListings.seo.breadcrumbs[0] &&
           this.props.productListings.seo.breadcrumbs[0].name
         )
