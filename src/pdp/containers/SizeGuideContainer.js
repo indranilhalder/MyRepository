@@ -7,7 +7,8 @@ const mapStateToProps = state => {
   return {
     sizeData: state.productDescription.sizeGuide.data,
     loading: state.productDescription.sizeGuide.loading,
-    productCode: state.productDescription.productDetails.productListingId
+    productCode: state.productDescription.productDetails.productListingId,
+    category: state.productDescription.productDetails.rootCategory
   };
 };
 
