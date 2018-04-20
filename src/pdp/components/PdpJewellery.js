@@ -106,10 +106,6 @@ export default class PdpJewellery extends React.Component {
       ) {
         this.props.displayToast("Product is out of stock");
       } else {
-        console.log(this.checkIfSizeSelected());
-        console.log(this.checkIfFreeSize());
-        console.log(this.checkIfNoSize());
-
         if (
           this.checkIfSizeSelected() ||
           (this.checkIfFreeSize() || this.checkIfNoSize())
