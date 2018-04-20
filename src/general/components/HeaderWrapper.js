@@ -69,6 +69,9 @@ class HeaderWrapper extends React.Component {
   };
 
   render() {
+    const pathAppView = queryString.parse(this.props.history.location.search);
+    const query = pathAppView.appview;
+
     const url = this.props.location.pathname;
 
     let shouldRenderSearch = false;
@@ -104,7 +107,9 @@ class HeaderWrapper extends React.Component {
     if (url === LOGIN_PATH || url === SIGN_UP_PATH) {
       shouldRenderHeader = false;
     }
-
+    if (query === "true") {
+      shouldRenderHeader = false;
+    }
     let headerToRender = (
       <InformationHeader
         goBack={this.onBackClick}
@@ -128,8 +133,9 @@ class HeaderWrapper extends React.Component {
           hasBackButton={isGoBack}
         />
       );
+    } else if (pathAppView) {
+      headerToRender = {};
     }
-
     return (
       shouldRenderHeader && (
         <React.Fragment>
