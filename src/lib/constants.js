@@ -165,6 +165,11 @@ export const ON_EXCLUSIVE = "onExclusive";
 export const IS_OFFER_EXISTING = "isOfferExisting";
 export const IS_NEW = "isNew";
 export const DISCOUNT_PERCENT = "discountPercent";
+
+// page type for following and un following container
+export const HOME_FEED_FOLLOW_AND_UN_FOLLOW = "homeFeed";
+export const PDP_FOLLOW_AND_UN_FOLLOW = "pdpFollow";
+export const MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW = "myAccountFollow";
 export const PAYTM = "PAYTM";
 export const CANCEL = "/cancel";
 export const CANCEL_PREFIX = "/cancel/(.*)";

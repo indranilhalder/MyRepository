@@ -10,8 +10,9 @@ import {
   RECOMMENDED_PRODUCTS_WIDGET_KEY,
   SIMILAR_PRODUCTS_WIDGET_KEY
 } from "../actions/pdp.actions.js";
-import FollowUnFollowButtonContainer from "../containers/FollowUnFollowButtonContainer";
+import { FollowUnFollowButtonContainer } from "../containers/FollowUnFollowButtonContainer";
 import styles from "./PDPRecommendedSections.css";
+import { PDP_FOLLOW_AND_UN_FOLLOW } from "../../lib/constants.js";
 
 class PDPRecommendedSections extends React.Component {
   goToProductDescription = url => {
@@ -26,7 +27,7 @@ class PDPRecommendedSections extends React.Component {
     let brandId;
 
     if (this.props.aboutTheBrand) {
-      brandId = this.props.aboutTheBrand.brandId;
+      brandId = this.props.aboutTheBrand.id;
     }
 
     return (
@@ -42,7 +43,11 @@ class PDPRecommendedSections extends React.Component {
               )}
               {brandId && (
                 <div className={styles.followButton}>
-                  <FollowUnFollowButtonContainer brandId={brandId} />
+                  <FollowUnFollowButtonContainer
+                    brandId={brandId}
+                    isFollowing={this.props.aboutTheBrand.isFollowing}
+                    pageType={PDP_FOLLOW_AND_UN_FOLLOW}
+                  />
                 </div>
               )}
             </div>

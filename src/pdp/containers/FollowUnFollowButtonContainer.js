@@ -1,27 +1,42 @@
 import { connect } from "react-redux";
 import Button from "../../general/components/Button";
-import { followUnFollowBrand } from "../actions/pdp.actions";
+import { followAndUnFollowBrand } from "../../account/actions/account.actions";
 import { FOLLOW, FOLLOWING } from "../../lib/constants";
+
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onClick: () => {
-      dispatch(followUnFollowBrand(ownProps.brandId));
+      dispatch(
+        followAndUnFollowBrand(
+          ownProps.brandId,
+          ownProps.isFollowing,
+          ownProps.pageType,
+          ownProps.positionInFeed // it will use if pageType comes homeFeed
+        )
+      );
     }
   };
 };
+
 const mapStateToProps = (state, ownProps) => {
   return {
     label:
-      state.productDescription.aboutTheBrand &&
-      state.productDescription.aboutTheBrand.isFollowing
+      ownProps.isFollowing === "true" || ownProps.isFollowing === true
         ? FOLLOWING
         : FOLLOW,
     type: "tertiary"
   };
 };
-const FollowUnFollowButtonContainer = connect(
+
+// common Props for following and un follow button container .
+// 1. pageType. ["HOME_FEED","PDP_PAGE","MY_ACCOUNT"];
+// 2. isFollowing. [true,false];
+// 3. brandId.
+
+// in home feed page extra props.
+// 1. positionInFeed.
+
+export const FollowUnFollowButtonContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(Button);
-
-export default FollowUnFollowButtonContainer;
