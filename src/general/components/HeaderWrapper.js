@@ -69,8 +69,8 @@ class HeaderWrapper extends React.Component {
   };
 
   render() {
-    const AppViewPath = queryString.parse(this.props.history.location.search);
-    const hasAppView = AppViewPath.appview;
+    const searchQuery = queryString.parse(this.props.history.location.search);
+    const hasAppView = searchQuery.appview;
     const url = this.props.location.pathname;
 
     let shouldRenderSearch = false;
