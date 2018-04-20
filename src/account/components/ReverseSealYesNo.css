@@ -1,0 +1,31 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  background: #fff;
+  border-radius: 4px;
+}
+.headerText {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 14px;
+  margin-bottom: 10px;
+  font-family: semibold;
+}
+.moreInfoButtonHolder {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  display: inline-block;
+  text-align: left;
+}
+.button {
+  width: auto;
+  height: 22px;
+  display: inline-block;
+}
+.yesNoQuestionHolder {
+  width: 100%;
+  height: auto;
+}
