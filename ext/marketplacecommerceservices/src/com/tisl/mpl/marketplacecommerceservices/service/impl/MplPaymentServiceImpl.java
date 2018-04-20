@@ -110,6 +110,7 @@ import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.QCWalletPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -2187,17 +2188,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN); commented for SDI-2154/SDI-2155/SDI-2157
 
 			if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && StringUtils.isNotEmpty(bankName))
-
 			{
-
-				LOG.debug(">> Apply promotion >> Inside EMI Bank Name : " + bankName);
-				final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(cartModel.getTotalPriceWithConv(), bankName);
-
-				if (CollectionUtils.isEmpty(emiBankList))
+				boolean isNocostEMIPresent = getIsNocostEMIPresent(cartModel);
+				if(!isNocostEMIPresent)
 				{
-					calculatePromotion(cartModel, null, cartData, null);
-					promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration().getString(
-							MarketplacecommerceservicesConstants.PAYMENT_EMI_PROMOERROR));
+					LOG.debug(">> Apply promotion >> Inside EMI Bank Name : " + bankName);
+					final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(cartModel.getTotalPriceWithConv(), bankName);
+
+					if (CollectionUtils.isEmpty(emiBankList))
+					{
+						calculatePromotion(cartModel, null, cartData, null);
+						promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration().getString(
+								MarketplacecommerceservicesConstants.PAYMENT_EMI_PROMOERROR));
+					}
 				}
 			}
 
@@ -2262,15 +2265,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && StringUtils.isNotEmpty(bankName))
 			{
-				LOG.debug(">> Apply promotion >> Inside EMI Bank Name : " + bankName);
-				final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(orderModel.getTotalPriceWithConv(), bankName);
-
-				if (CollectionUtils.isEmpty(emiBankList))
+				boolean isNocostEMIPresent = getIsNocostEMIPresent(orderModel);
+				if(!isNocostEMIPresent)
 				{
-					calculatePromotion(null, orderModel, null, orderData);
-					promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration().getString(
-							MarketplacecommerceservicesConstants.PAYMENT_EMI_PROMOERROR));
+					LOG.debug(">> Apply promotion >> Inside EMI Bank Name : " + bankName);
+					final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(orderModel.getTotalPriceWithConv(), bankName);
+					if (CollectionUtils.isEmpty(emiBankList))
+					{
+						calculatePromotion(null, orderModel, null, orderData);
+						promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration().getString(
+								MarketplacecommerceservicesConstants.PAYMENT_EMI_PROMOERROR));
+					}
 				}
+				
 			}
 
 			//Checking if the cart has coupon already applied
@@ -2336,6 +2343,33 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		LOG.debug("Exiting service applyPromotions()======" + (endTime - startTime));
 		return promoPriceData;
 	}
+
+	/**
+	 * Check for No Cost EMI
+	 * 
+	 * @param oModel
+	 * @return flag
+	 */
+	private boolean getIsNocostEMIPresent(AbstractOrderModel oModel)
+	{
+		boolean flag = false;
+		List<DiscountModel> discountList = new ArrayList<>(oModel.getDiscounts());
+		
+		if(CollectionUtils.isNotEmpty(discountList))
+		{
+			for(DiscountModel discount : discountList)
+			{
+				if(discount instanceof MplNoCostEMIVoucherModel)
+				{
+					flag = true;
+					break;
+				}
+			}
+		}
+		
+		return flag;
+	}
+
 
 	/**
 	 * @Description : To get details of applied promotion
@@ -2435,6 +2469,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				parameter.setEnableHooks(true);
 				parameter.setCart(cartModel);
 				getCalculationStrategy().recalculateCart(parameter);
+				resetNetAmtAftrAllDisc(cartModel);
 
 				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
 				{
@@ -2489,6 +2524,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				parameter.setEnableHooks(true);
 				parameter.setOrder(orderModel);
 				getCalculationStrategy().recalculateCart(parameter);
+				resetNetAmtAftrAllDisc(orderModel);
 
 				final Double subTotal = orderModel.getSubtotal();
 				if (StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
@@ -2541,6 +2577,45 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		final long endTime = System.currentTimeMillis();
 		LOG.debug("Exiting calculatePromotion()========" + (endTime - startTime));
 	}
+
+	/**
+	 * Reset Net Amount After All Discount
+	 * 
+	 * @param abstractOrderModel
+	 */
+	private void resetNetAmtAftrAllDisc(final AbstractOrderModel abstractOrderModel)
+	{// Code Added for TISPT-148
+		final List<AbstractOrderEntryModel> cartEntryList = new ArrayList<AbstractOrderEntryModel>();
+		for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
+		{
+			if (StringUtils.isNotEmpty(entry.getEmiCouponCode()))
+			{
+				double currNetAmtAftrAllDisc = 0.00D;
+				double emiCouponValue = entry.getEmiCouponValue().doubleValue();
+
+				if (emiCouponValue>0.0D)
+				{
+					double entryTotalPrice = entry.getTotalPrice().doubleValue();
+					final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc()
+							.doubleValue() : entryTotalPrice;
+					currNetAmtAftrAllDisc = netAmtAftrAllDisc - emiCouponValue;
+					
+					entry.setNetAmountAfterAllDisc(Double.valueOf(currNetAmtAftrAllDisc));
+					cartEntryList.add(entry);
+				}
+			}
+		}
+
+		// Code Added for TISPT-148
+		if (CollectionUtils.isNotEmpty(cartEntryList))
+		{
+			getModelService().saveAll(cartEntryList);
+		}
+		
+		getModelService().refresh(abstractOrderModel);
+		
+	}
+
 
 	/**
 	 * @param cartModel

@@ -2286,7 +2286,7 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.error("Trying to reapply Marketplable Coupon ");
 					mplCouponFacade.applyCartVoucher(bankTuple.getSecond(), cartModel, null);
-
+					getModelService().refresh(cartModel);
 					LOG.error("Bank Coupon reapplied");
 				}
 			}
@@ -2505,6 +2505,8 @@ public class CartsController extends BaseCommerceController
 					}
 				}
 				//End of AbstractOrderEntryModel for loop,Product Details
+
+				removeCouponDetails(cartModel);
 				cartDataDetails.setProducts(gwlpList);
 				gwlpFreeItemList = mplCartWebService.freeItems(abstractOrderEntryList);
 				if (null != gwlpFreeItemList)

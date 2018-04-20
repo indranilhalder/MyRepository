@@ -591,7 +591,7 @@ public class CatalogsController extends BaseController
 		try
 		{
 			result = mplCustomCategoryService.getBannerDataForCategory(categoryId);
-			result.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
+			//result.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 		}
 
 		catch (final EtailNonBusinessExceptions e)
