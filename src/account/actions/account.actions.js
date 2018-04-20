@@ -516,11 +516,12 @@ export function returnPInCodeSuccess(pinCodeDetails) {
   };
 }
 
-export function returnPinCodeFailure(error) {
+export function returnPinCodeFailure(error,pinCodeDetails) {
   return {
     type: RETURN_PIN_CODE_FAILURE,
     error,
-    status: FAILURE
+    status: FAILURE,
+    pinCodeDetails
   };
 }
 
@@ -529,7 +530,7 @@ export function returnPinCode(productDetails) {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     dispatch(returnPInCodeRequest());
-
+    let resultJson;
     try {
       const result = await api.post(
         `${USER_PATH}/${
@@ -540,7 +541,7 @@ export function returnPinCode(productDetails) {
           productDetails.pinCode
         }&transactionId=${productDetails.transactionId}`
       );
-      const resultJson = await result.json();
+      resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -548,7 +549,7 @@ export function returnPinCode(productDetails) {
 
       dispatch(returnPInCodeSuccess(resultJson));
     } catch (e) {
-      dispatch(returnPinCodeFailure(e.message));
+      dispatch(returnPinCodeFailure(e.message, resultJson));
     }
   };
 }
