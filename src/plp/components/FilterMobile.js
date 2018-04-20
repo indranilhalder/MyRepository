@@ -176,6 +176,7 @@ export default class FilterMobile extends React.Component {
             <div className={styles.slider}>
               {this.props.isCategorySelected &&
                 facetdatacategory &&
+                facetdatacategory.filters &&
                 facetdatacategory.filters.map((val, i) => {
                   return (
                     <FilterCategoryL1
