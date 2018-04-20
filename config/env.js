@@ -84,7 +84,7 @@ if (
 
 if (process.env.REACT_APP_STAGE === "devxelp") {
   process.env.REACT_APP_GOOGLE_CLIENT_ID =
-    "970557259016-70rgadfp6vrjm445jbadbel2rg2p90gn.apps.googleusercontent.com";
+    "367761167032-apbr4v0nndom1cafs9inrrnkk7iag5be.apps.googleusercontent.com";
 } else if (process.env.REACT_APP_STAGE === "uat2") {
   process.env.REACT_APP_GOOGLE_CLIENT_ID =
     "970557259016-cogplqj21kjv34vld1obo0336cov2a38.apps.googleusercontent.com";

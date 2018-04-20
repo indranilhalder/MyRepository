@@ -13,8 +13,14 @@ import {
   customerAccessToken
 } from "../../auth/actions/user.actions";
 import { redeemCliqVoucher } from "../../account/actions/account.actions";
-import { SUCCESS, FAILURE } from "../../lib/constants";
+import {
+  SUCCESS,
+  FAILURE,
+  CART_DETAILS_FOR_ANONYMOUS,
+  CART_DETAILS_FOR_LOGGED_IN_USER
+} from "../../lib/constants";
 import { updateProfile } from "../../account/actions/account.actions.js";
+import * as Cookies from "../../lib/Cookie";
 
 import {
   applyBankOffer,
@@ -84,7 +90,12 @@ const mapDispatchToProps = dispatch => {
             if (mergeCartIdResponse.status === SUCCESS) {
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
-              dispatch(singleAuthCallHasFailed(mergeCartIdResponse.error));
+              Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+              Cookies.createCookie(
+                CART_DETAILS_FOR_LOGGED_IN_USER,
+                JSON.stringify(createdCartVal.cartDetails)
+              );
+              dispatch(setIfAllAuthCallsHaveSucceeded());
             }
           } else if (createdCartVal.status === FAILURE) {
             dispatch(singleAuthCallHasFailed(otpResponse.error));
