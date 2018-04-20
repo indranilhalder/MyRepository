@@ -10,7 +10,7 @@ import {
   generateCartIdForLoggedInUser,
   getCartId
 } from "../../cart/actions/cart.actions";
-import * as Cookie from "../../lib/Cookie";
+import * as Cookies from "../../lib/Cookie";
 
 import { withRouter } from "react-router-dom";
 import {
@@ -23,6 +23,7 @@ import Login from "../components/Login.js";
 import {
   SUCCESS,
   CART_DETAILS_FOR_ANONYMOUS,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
   ERROR
 } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
@@ -78,9 +79,12 @@ const mapDispatchToProps = dispatch => {
             if (mergeCartIdWithOldOneResponse.status === SUCCESS) {
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else if (mergeCartIdWithOldOneResponse.status === ERROR) {
-              dispatch(
-                singleAuthCallHasFailed(mergeCartIdWithOldOneResponse.error)
+              Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+              Cookies.createCookie(
+                CART_DETAILS_FOR_LOGGED_IN_USER,
+                JSON.stringify(cartVal.cartDetails)
               );
+              dispatch(setIfAllAuthCallsHaveSucceeded());
             }
             //end of  merge old cart id with anonymous cart id
           } else {
@@ -97,7 +101,12 @@ const mapDispatchToProps = dispatch => {
               if (mergeCartIdResponse.status === SUCCESS) {
                 dispatch(setIfAllAuthCallsHaveSucceeded());
               } else if (mergeCartIdResponse.status === ERROR) {
-                dispatch(singleAuthCallHasFailed(mergeCartIdResponse.error));
+                Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+                Cookies.createCookie(
+                  CART_DETAILS_FOR_LOGGED_IN_USER,
+                  JSON.stringify(newCartIdObj.cartDetails)
+                );
+                dispatch(setIfAllAuthCallsHaveSucceeded());
               }
               // end of merging cart id with new cart id
             } else if (newCartIdObj.status === ERROR) {

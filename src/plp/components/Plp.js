@@ -12,12 +12,7 @@ export default class Plp extends React.Component {
   toggleFilter = () => {
     if (this.props.isFilterOpen) {
       this.props.hideFilter();
-      this.props.setUrlToReturnToAfterClearToNull();
     } else {
-      const pathName = this.props.location.pathname;
-      const search = this.props.location.search;
-      const url = `${pathName}${search}`;
-      this.props.setUrlToReturnToAfterClear(url);
       this.props.showFilter();
     }
   };
@@ -30,19 +25,6 @@ export default class Plp extends React.Component {
       isFilter: false
     });
     this.props.hideFilter();
-    this.props.setUrlToReturnToAfterClearToNull();
-  };
-
-  onClear = () => {
-    if (this.props.clearUrl) {
-      this.props.history.push(this.props.clearUrl, {
-        isFilter: true
-      });
-    } else {
-      this.props.displayToast(
-        "There is nothing to clear, you hit this url directly, try going back"
-      );
-    }
   };
 
   handleScroll = () => {
@@ -144,7 +126,6 @@ export default class Plp extends React.Component {
             backPage={this.backPage}
             isFilterOpen={this.props.isFilterOpen}
             onApply={this.onApply}
-            onClear={this.onClear}
             onL3CategorySelect={this.onL3CategorySelect}
           />
           <div className={styles.footer}>

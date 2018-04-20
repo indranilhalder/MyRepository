@@ -3,12 +3,7 @@ import { withRouter } from "react-router-dom";
 import Plp from "../components/Plp";
 import { showModal, SORT } from "../../general/modal.actions.js";
 import { setHeaderText } from "../../general/header.actions";
-import {
-  showFilter,
-  hideFilter,
-  setUrlToReturnToAfterClear,
-  setUrlToReturnToAfterClearToNull
-} from "../../plp/actions/plp.actions.js";
+import { showFilter, hideFilter } from "../../plp/actions/plp.actions.js";
 import { displayToast } from "../../general/toast.actions";
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -31,12 +26,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     hideFilter: () => {
       dispatch(hideFilter());
-    },
-    setUrlToReturnToAfterClear: url => {
-      dispatch(setUrlToReturnToAfterClear(url));
-    },
-    setUrlToReturnToAfterClearToNull: () => {
-      dispatch(setUrlToReturnToAfterClearToNull());
     }
   };
 };
@@ -53,8 +42,7 @@ const mapStateToProps = (state, ownProps) => {
     productListings: state.productListings.productListings,
     pageNumber: state.productListings.pageNumber,
     loading: state.productListings.loading,
-    searchresult: state.productListings.searchresult,
-    clearUrl: state.productListings.urlToReturnToAfterClear
+    searchresult: state.productListings.searchresult
   };
 };
 
