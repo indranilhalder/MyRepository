@@ -690,7 +690,6 @@ export function releaseCouponForAnonymous(oldCouponCode, newCouponCode) {
 }
 
 export function releaseUserCoupon(oldCouponCode, newCouponCode) {
-  console.log(oldCouponCode, newCouponCode);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
