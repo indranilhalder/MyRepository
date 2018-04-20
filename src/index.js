@@ -19,7 +19,6 @@ import productDescription from "./pdp/reducers/pdp.reducer";
 import categoryDefault from "./clp/reducers/clp.reducer";
 import brandDefault from "./blp/reducers/blp.reducer";
 import profile from "./account/reducers/account.reducer";
-import staticPage from "./staticpage/reducer/staticPage.reducer";
 import header from "../src/general/header.reducers.js";
 import icid from "../src/general/icid.reducer.js";
 import wishlistItems from "./wishlist/reducers/wishlist.reducer";
@@ -44,8 +43,7 @@ const rootReducer = combineReducers({
   profile,
   wishlistItems,
   header,
-  icid,
-  staticPage
+  icid
 });
 
 let store = createStore(
