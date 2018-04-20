@@ -9,7 +9,11 @@ import GridSelect from "../../general/components/GridSelect";
 import StaticDarkHeader from "../../general/components/StaticDarkHeader";
 import styles from "./ProductCouponDetails.css";
 import * as Cookie from "../../lib/Cookie.js";
-import { COUPON_COOKIE } from "../../lib/constants.js";
+import { COUPON_COOKIE, SUCCESS, ERROR } from "../../lib/constants.js";
+import {
+  APPLY_USER_COUPON_FAILURE,
+  RELEASE_USER_COUPON_FAILURE
+} from "../../cart/actions/cart.actions";
 const REMOVE = "Remove";
 const APPLY = "Apply";
 const USER_COUPON_NOTE =
@@ -19,42 +23,82 @@ class ProductCouponDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      previousCouponVal: Cookie.getCookie(COUPON_COOKIE),
-      couponVal: Cookie.getCookie(COUPON_COOKIE)
+      previousSelectedCouponCode: Cookie.getCookie(COUPON_COOKIE)
+        ? Cookie.getCookie(COUPON_COOKIE)
+        : "",
+      selectedCouponCode: Cookie.getCookie(COUPON_COOKIE)
+        ? Cookie.getCookie(COUPON_COOKIE)
+        : ""
     };
   }
 
-  applyUserCoupon() {
-    if (this.state.couponVal) {
-      if (this.state.couponVal !== this.state.previousCouponVal) {
-        if (this.state.previousCouponVal) {
-          this.setState({
-            previousCouponVal: this.state.couponVal
-          });
-          this.props.selecteBankOffer(this.state.couponVal);
-          this.props.releasePreviousAndApplyNewBankOffer(
-            this.state.previousCouponVal,
-            this.state.couponVal
+  async applyUserCoupon() {
+    if (this.state.selectedCouponCode) {
+      if (
+        this.state.selectedCouponCode !== this.state.previousSelectedCouponCode
+      ) {
+        if (this.state.previousSelectedCouponCode) {
+          const applyNewBankOfferStatus = await this.props.releaseUserCoupon(
+            this.state.previousSelectedCouponCode,
+            this.state.selectedCouponCode
           );
+          if (applyNewBankOfferStatus.status === SUCCESS) {
+            localStorage.setItem(COUPON_COOKIE, this.state.selectedCouponCode);
+            this.props.closeModal();
+          } else {
+            if (
+              applyNewBankOfferStatus.status === ERROR &&
+              applyNewBankOfferStatus.type === RELEASE_USER_COUPON_FAILURE
+            ) {
+              this.setState({
+                selectedCouponCode: this.state.previousSelectedCouponCode
+              });
+            } else if (
+              applyNewBankOfferStatus.status === ERROR &&
+              applyNewBankOfferStatus.type === APPLY_USER_COUPON_FAILURE
+            ) {
+              localStorage.removeItem(COUPON_COOKIE);
+              this.setState({
+                previousSelectedCouponCode: "",
+                selectedCouponCode: ""
+              });
+            }
+          }
         } else {
-          this.props.selecteBankOffer(this.state.couponVal);
-          this.props.applyBankOffer(this.state.couponVal);
-          this.setState({
-            previousCouponVal: this.state.couponVal
-          });
+          const applyNewCouponCode = await this.props.applyUserCoupon(
+            this.state.selectedCouponCode
+          );
+          if (applyNewCouponCode.status === SUCCESS) {
+            localStorage.setItem(COUPON_COOKIE, this.state.selectedCouponCode);
+            this.props.closeModal();
+          } else {
+            this.setState({
+              previousSelectedCouponCode: "",
+              selectedCouponCode: ""
+            });
+          }
         }
       } else {
-        this.props.selecteBankOffer("");
-        this.setState({
-          previousCouponVal: "",
-          couponVal: ""
-        });
-        this.props.releaseBankOffer(this.state.couponVal);
+        const releaseBankOfferReq = await this.props.releaseUserCoupon(
+          this.state.selectedCouponCode
+        );
+        if (releaseBankOfferReq.status === SUCCESS) {
+          localStorage.removeItem(COUPON_COOKIE);
+          this.setState({
+            previousSelectedCouponCode: "",
+            selectedCouponCode: ""
+          });
+        }
       }
     }
   }
+
   onSelectCouponCode = val => {
-    this.setState({ couponVal: val[0] });
+    if (val[0]) {
+      this.setState({ selectedCouponCode: val[0] });
+    } else {
+      this.setState({ selectedCouponCode: "" });
+    }
   };
   render() {
     return (
@@ -66,13 +110,16 @@ class ProductCouponDetails extends Component {
           <div className={styles.searchHolder}>
             <SearchCupon
               label={
-                this.state.previousCouponVal &&
-                this.state.previousCouponVal === this.state.couponVal
+                this.state.previousSelectedCouponCode &&
+                this.state.previousSelectedCouponCode ===
+                  this.state.selectedCouponCode
                   ? REMOVE
                   : APPLY
               }
-              couponCode={this.state.couponVal}
-              getValue={couponVal => this.setState({ couponVal })}
+              couponCode={this.state.selectedCouponCode}
+              getValue={selectedCouponCode =>
+                this.setState({ selectedCouponCode })
+              }
               applyUserCoupon={() => this.applyUserCoupon()}
             />
           </div>
@@ -89,7 +136,7 @@ class ProductCouponDetails extends Component {
             offset={0}
             limit={1}
             onSelect={val => this.onSelectCouponCode(val)}
-            selected={[this.state.couponVal]}
+            selected={[this.state.selectedCouponCode]}
           >
             {this.props.opencouponsList &&
               this.props.opencouponsList.map((value, i) => {

@@ -4,6 +4,11 @@ import BankCoupons from "./BankCoupons.js";
 import SlideModal from "../../general/components/SlideModal";
 import styles from "./BankOffersDetails.css";
 import GridSelect from "../../general/components/GridSelect";
+import { SUCCESS, ERROR } from "../../lib/constants";
+import {
+  RELEASE_BANK_OFFER_FAILURE,
+  APPLY_BANK_OFFER_FAILURE
+} from "../actions/cart.actions";
 const COUPON_HEADER = "Bank promotions";
 const REMOVE = "Remove";
 const APPLY = "Apply";
@@ -16,7 +21,7 @@ class BankOffersDetails extends Component {
     };
   }
 
-  applyUserCoupon() {
+  async applyUserCoupon() {
     if (this.state.selectedBankOfferCode) {
       if (
         this.state.selectedBankOfferCode !==
@@ -27,30 +32,67 @@ class BankOffersDetails extends Component {
             previousSelectedCouponCode: this.state.selectedBankOfferCode
           });
           this.props.selecteBankOffer(this.state.selectedBankOfferCode);
-          this.props.releasePreviousAndApplyNewBankOffer(
+          const applyNewBankOfferStatus = await this.props.releaseBankOffer(
             this.state.previousSelectedCouponCode,
             this.state.selectedBankOfferCode
           );
+          if (applyNewBankOfferStatus.status === SUCCESS) {
+            this.props.selecteBankOffer(this.state.selectedBankOfferCode);
+            this.props.closeModal();
+          } else {
+            if (
+              applyNewBankOfferStatus.status === ERROR &&
+              applyNewBankOfferStatus.type === RELEASE_BANK_OFFER_FAILURE
+            ) {
+              this.setState({
+                selectedBankOfferCode: this.state.previousSelectedCouponCode
+              });
+            } else if (
+              applyNewBankOfferStatus.status === ERROR &&
+              applyNewBankOfferStatus.type === APPLY_BANK_OFFER_FAILURE
+            ) {
+              this.props.selecteBankOffer("");
+              this.setState({
+                previousSelectedCouponCode: "",
+                selectedBankOfferCode: ""
+              });
+            }
+          }
         } else {
-          this.props.selecteBankOffer(this.state.selectedBankOfferCode);
-          this.props.applyBankOffer(this.state.selectedBankOfferCode);
-          this.setState({
-            previousSelectedCouponCode: this.state.selectedBankOfferCode
-          });
+          const applyNewCouponCode = await this.props.applyBankOffer(
+            this.state.selectedBankOfferCode
+          );
+          if (applyNewCouponCode.status === SUCCESS) {
+            this.props.selecteBankOffer(this.state.selectedBankOfferCode);
+            this.props.closeModal();
+          } else {
+            this.setState({
+              previousSelectedCouponCode: "",
+              selectedBankOfferCode: ""
+            });
+          }
         }
       } else {
-        this.props.selecteBankOffer("");
-        this.setState({
-          previousSelectedCouponCode: "",
-          selectedBankOfferCode: ""
-        });
-        this.props.releaseBankOffer(this.state.selectedBankOfferCode);
+        const releaseBankOfferReq = await this.props.releaseBankOffer(
+          this.state.selectedBankOfferCode
+        );
+        if (releaseBankOfferReq.status === SUCCESS) {
+          this.props.selecteBankOffer("");
+          this.setState({
+            previousSelectedCouponCode: "",
+            selectedBankOfferCode: ""
+          });
+        }
       }
     }
   }
 
   onSelectCouponCode = val => {
-    this.setState({ selectedBankOfferCode: val[0] });
+    if (val[0]) {
+      this.setState({ selectedBankOfferCode: val[0] });
+    } else {
+      this.setState({ selectedBankOfferCode: "" });
+    }
   };
   render() {
     return (

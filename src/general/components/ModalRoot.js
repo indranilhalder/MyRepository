@@ -190,10 +190,10 @@ export default class ModalRoot extends React.Component {
     this.props.hideModal();
   }
   applyBankOffer = couponCode => {
-    this.props.applyBankOffer(couponCode);
+    return this.props.applyBankOffer(couponCode);
   };
-  releaseBankOffer = couponCode => {
-    this.props.releaseBankOffer(couponCode);
+  releaseBankOffer = (previousCouponCode, newCouponCode) => {
+    return this.props.releaseBankOffer(previousCouponCode, newCouponCode);
   };
   releasePreviousAndApplyNewBankOffer = (
     previousCouponCode,
@@ -207,23 +207,20 @@ export default class ModalRoot extends React.Component {
   applyUserCoupon = couponCode => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     if (userDetails) {
-      this.props.applyUserCouponForLoggedInUsers(couponCode);
+      return this.props.applyUserCouponForLoggedInUsers(couponCode);
     } else {
-      this.props.applyUserCouponForAnonymous(couponCode);
+      return this.props.applyUserCouponForAnonymous(couponCode);
     }
-
-    this.props.hideModal();
   };
   releaseUserCoupon = (oldCouponCode, newCouponCode) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     if (userDetails) {
-      this.props.releaseUserCoupon(oldCouponCode, newCouponCode);
+      return this.props.releaseUserCoupon(oldCouponCode, newCouponCode);
     } else {
-      this.props.releaseCouponForAnonymous(oldCouponCode, newCouponCode);
+      return this.props.releaseCouponForAnonymous(oldCouponCode, newCouponCode);
     }
-
-    this.props.hideModal();
   };
+
   getUserAddress = () => {
     this.props.getUserAddress();
   };
@@ -369,12 +366,8 @@ export default class ModalRoot extends React.Component {
         <ProductCouponDetails
           closeModal={() => this.handleClose()}
           applyUserCoupon={couponCode => this.applyUserCoupon(couponCode)}
-          releaseUserCoupon={couponCode => this.releaseUserCoupon(couponCode)}
-          releasePreviousAndApplyNewUserOffer={(oldCouponCode, newCouponCode) =>
-            this.releasePreviousAndApplyNewUserOffer(
-              oldCouponCode,
-              newCouponCode
-            )
+          releaseUserCoupon={(couponCode, newCouponCode) =>
+            this.releaseUserCoupon(couponCode, newCouponCode)
           }
           {...this.props.ownProps}
         />
@@ -382,17 +375,10 @@ export default class ModalRoot extends React.Component {
       BankOffers: (
         <BankOffersDetails
           closeModal={() => this.handleClose()}
-          releasePreviousAndApplyNewBankOffer={(
-            previousCouponCode,
-            newSelectedCouponCode
-          ) =>
-            this.releasePreviousAndApplyNewBankOffer(
-              previousCouponCode,
-              newSelectedCouponCode
-            )
-          }
           applyBankOffer={couponCode => this.applyBankOffer(couponCode)}
-          releaseBankOffer={couponCode => this.releaseBankOffer(couponCode)}
+          releaseBankOffer={(couponCode, newCouponCode) =>
+            this.releaseBankOffer(couponCode, newCouponCode)
+          }
           {...this.props.ownProps}
         />
       ),

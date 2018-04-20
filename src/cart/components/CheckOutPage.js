@@ -94,7 +94,7 @@ class CheckOutPage extends React.Component {
       addressDetails: null,
       isNoCostEmiApplied: false,
       isNoCostEmiProceeded: false,
-      selectedBankOfferCode: null
+      selectedBankOfferCode: ""
     };
   }
   onClickImage(productCode) {
@@ -332,32 +332,46 @@ class CheckOutPage extends React.Component {
   };
 
   renderBankOffers = () => {
+    let offerMinCartValue, offerTitle, offerCode;
+    if (
+      this.props.cart.paymentModes &&
+      this.props.cart.paymentModes.paymentOffers &&
+      this.props.cart.paymentModes.paymentOffers.coupons
+    ) {
+      const selectedCoupon = this.props.cart.paymentModes.paymentOffers.coupons.find(
+        coupon => {
+          return coupon.offerCode === this.state.selectedBankOfferCode;
+        }
+      );
+      if (selectedCoupon) {
+        offerMinCartValue = selectedCoupon.offerMinCartValue;
+        offerTitle = selectedCoupon.offerTitle;
+        offerCode = selectedCoupon.offerCode;
+      } else {
+        offerMinCartValue = this.props.cart.paymentModes.paymentOffers
+          .coupons[0].offerMinCartValue;
+        offerTitle = this.props.cart.paymentModes.paymentOffers.coupons[0]
+          .offerTitle;
+        offerCode = this.props.cart.paymentModes.paymentOffers.coupons[0]
+          .offerCode;
+      }
+    }
+
     return (
       <GridSelect
         elementWidthMobile={100}
         offset={0}
         limit={1}
         onSelect={val => this.applyBankCoupons(val)}
+        selected={[this.state.selectedBankOfferCode]}
       >
-        {this.props.cart.paymentModes &&
-          this.props.cart.paymentModes.paymentOffers &&
-          this.props.cart.paymentModes.paymentOffers.coupons &&
-          this.props.cart.paymentModes.paymentOffers.coupons[0] && (
-            <BankOffer
-              bankName={
-                this.props.cart.paymentModes.paymentOffers.coupons[0].offerTitle
-              }
-              offerText={
-                this.props.cart.paymentModes.paymentOffers.coupons[0]
-                  .offerMinCartValue
-              }
-              label={SEE_ALL_BANK_OFFERS}
-              applyBankOffers={() => this.openBankOffers()}
-              value={
-                this.props.cart.paymentModes.paymentOffers.coupons[0].offerCode
-              }
-            />
-          )}
+        <BankOffer
+          bankName={offerTitle}
+          offerText={offerMinCartValue}
+          label={SEE_ALL_BANK_OFFERS}
+          applyBankOffers={() => this.openBankOffers()}
+          value={offerCode}
+        />
       </GridSelect>
     );
   };
@@ -882,11 +896,18 @@ class CheckOutPage extends React.Component {
       this.props.binValidation(PAYTM, "");
     }
   };
-  applyBankCoupons = val => {
+  applyBankCoupons = async val => {
     if (val.length > 0) {
-      this.props.applyBankOffer(val);
+      const applyCouponReq = await this.props.applyBankOffer(val[0]);
+
+      if (applyCouponReq.status === SUCCESS) {
+        this.setState({ selectedBankOfferCode: val[0] });
+      }
     } else {
-      this.props.releaseBankOffer(val);
+      const releaseCouponReq = await this.props.releaseBankOffer(val[0]);
+      if (releaseCouponReq.status === SUCCESS) {
+        this.setState({ selectedBankOfferCode: "" });
+      }
     }
   };
   openBankOffers = () => {

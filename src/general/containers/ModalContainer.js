@@ -108,34 +108,23 @@ const mapDispatchToProps = dispatch => {
     resendOTP: userObj => {
       dispatch(signUpUser(userObj));
     },
-    applyBankOffer: couponCode => {
-      dispatch(applyBankOffer(couponCode));
+    applyBankOffer: async couponCode => {
+      return await dispatch(applyBankOffer(couponCode));
     },
-    releaseBankOffer: couponCode => {
-      dispatch(releaseBankOffer(couponCode));
-    },
-    releasePreviousAndApplyNewBankOffer: async (
-      previousCouponCode,
-      newSelectedCouponCode
-    ) => {
-      const releaseCouponReq = await dispatch(
-        releaseBankOffer(previousCouponCode)
-      );
-      if (releaseCouponReq.status === SUCCESS) {
-        dispatch(applyBankOffer(newSelectedCouponCode));
-      }
+    releaseBankOffer: (previousCouponCode, newCouponCode) => {
+      return dispatch(releaseBankOffer(previousCouponCode, newCouponCode));
     },
     applyUserCouponForAnonymous: couponCode => {
-      dispatch(applyUserCouponForAnonymous(couponCode));
+      return dispatch(applyUserCouponForAnonymous(couponCode));
     },
     releaseCouponForAnonymous: (oldCouponCode, newCouponCode) => {
-      dispatch(releaseCouponForAnonymous(oldCouponCode, newCouponCode));
+      return dispatch(releaseCouponForAnonymous(oldCouponCode, newCouponCode));
     },
     applyUserCouponForLoggedInUsers: couponCode => {
-      dispatch(applyUserCouponForLoggedInUsers(couponCode));
+      return dispatch(applyUserCouponForLoggedInUsers(couponCode));
     },
     releaseUserCoupon: (oldCouponCode, newCouponCode) => {
-      dispatch(releaseUserCoupon(oldCouponCode, newCouponCode));
+      return dispatch(releaseUserCoupon(oldCouponCode, newCouponCode));
     },
     getUserAddress: () => {
       dispatch(getUserAddress());
