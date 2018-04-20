@@ -28,6 +28,8 @@ export default class FollowBase extends React.Component {
                     follow={datum.isFollowing}
                     key={datum.id}
                     webUrl={datum.webURL}
+                    brandId={datum.id}
+                    isFollowing={datum.isFollowing}
                     onClick={this.handleClick}
                     {...rest}
                   />

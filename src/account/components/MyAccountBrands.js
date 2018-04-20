@@ -57,12 +57,7 @@ export default class MyAccountBrands extends React.Component {
     }
     let followedBrands = [];
     if (this.props.followedBrands) {
-      followedBrands = this.props.followedBrands.filter(brand => {
-        // here api sending isFollowing is string type
-        if (brand.isFollowing !== TRUE) {
-          return brand;
-        }
-      });
+      followedBrands = this.props.followedBrands;
     }
 
     return (
