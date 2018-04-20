@@ -180,6 +180,7 @@ export default class PdpJewellery extends React.Component {
   };
   render() {
     const productData = this.props.productDetails;
+    console.log(productData);
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -290,6 +291,7 @@ export default class PdpJewellery extends React.Component {
             <React.Fragment>
               <SizeSelector
                 history={this.props.history}
+                headerText={productData.isSizeOrLength}
                 sizeSelected={this.checkIfSizeSelected()}
                 productId={productData.productListingId}
                 hasSizeGuide={productData.showSizeGuide}
