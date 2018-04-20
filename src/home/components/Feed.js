@@ -27,8 +27,13 @@ import styles from "./Feed.css";
 import TopCategories from "../../blp/components/TopCategories";
 import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
 import ProductCapsulesContainer from "../containers/ProductCapsulesContainer";
+import CMSParagraphComponent from "../../staticpage/components/CMSParagraphComponent";
+import SimpleBannerComponent from "../../staticpage/components/SimpleBannerComponent.js";
+import CMSTextComponent from "../../staticpage/components/CMSTextComponent.js";
+import AccountNavigationComponent from "../../staticpage/components/AccountNavigationComponent.js";
 import * as Cookie from "../../lib/Cookie";
 import List from "@researchgate/react-intersection-list";
+import map from "lodash.map";
 import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN
@@ -40,11 +45,15 @@ const typeKeyMapping = {
   "Hero Banner Component": "heroBannerComponent"
 };
 
-const typeComponentMapping = {
+export const typeComponentMapping = {
   "Product Capsules Component": props => (
     <ProductCapsulesContainer {...props} />
   ),
-  "Landing Page Header Component": props => <BrandCardHeader {...props} />,
+  "Landing Page Header Component": props => {
+    console.log("LANDING PAGE HEADER COMPONENT");
+    console.log(props);
+    return <BrandCardHeader {...props} />;
+  },
   "Hero Banner Component": props => <HeroBanner {...props} />, // no hard coded data
   "Theme Offers Component": props => <ThemeOffer {...props} />, // no hard coded data
   "Auto Product Recommendation Component": props => (
@@ -77,7 +86,36 @@ const typeComponentMapping = {
     <CuratedProductsComponent {...props} />
   ),
   "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
-  "Landing Page Hierarchy": props => <AllBrandTypes {...props} />
+  "Landing Page Hierarchy": props => <AllBrandTypes {...props} />,
+  "CMS Paragraph Component": props => <CMSParagraphComponent {...props} />,
+  "Simple Banner Component": props => {
+    return (
+      <div className={styles.simpleBannerHolder}>
+        {" "}
+        <SimpleBannerComponent {...props} />{" "}
+      </div>
+    );
+  },
+  "CMS Text Component": props => {
+    let parsedContent;
+
+    try {
+      parsedContent = JSON.parse(props.feedComponentData.content);
+    } catch (e) {
+      if (props.displayToast) {
+        props.displayToast("JSON Parse error, check static page content");
+      }
+    }
+    return (
+      parsedContent &&
+      map(parsedContent, content => {
+        return <CMSTextComponent data={content} />;
+      })
+    );
+  },
+  "Account Navigation Component": props => (
+    <AccountNavigationComponent {...props} />
+  )
 };
 
 class Feed extends Component {

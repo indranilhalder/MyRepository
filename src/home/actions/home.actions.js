@@ -332,6 +332,8 @@ export function homeFeed(brandIdOrCategoryId: null) {
         );
         feedTypeRequest = BLP_OR_CLP_FEED_TYPE;
         resultJson = await result.json();
+        console.log("RESULT JSON");
+        console.log(resultJson);
         if (resultJson.errors) {
           dispatch(homeFeedSuccess([], feedTypeRequest));
         } else {
