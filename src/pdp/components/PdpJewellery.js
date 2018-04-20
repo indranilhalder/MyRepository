@@ -108,7 +108,8 @@ export default class PdpJewellery extends React.Component {
       } else {
         if (
           this.checkIfSizeSelected() ||
-          (this.checkIfFreeSize() || this.checkIfNoSize())
+          this.checkIfFreeSize() ||
+          this.checkIfNoSize()
         ) {
           if (userDetails) {
             if (
