@@ -192,7 +192,6 @@ export default class PdpJewellery extends React.Component {
           10
         ) === 0)
     ) {
-      console.log(this.props.productDetails.variantOptions[0].sizelink.size);
       return true;
     } else {
       return false;
