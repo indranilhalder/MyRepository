@@ -318,15 +318,8 @@ class CartPage extends React.Component {
       let couponDiscount = 0;
       let totalDiscount = 0;
       if (cartDetails.products) {
-        if (
-          cartDetails.products &&
-          cartDetails.products[0].elligibleDeliveryMode
-        ) {
-          deliveryCharge =
-            Math.round(
-              cartDetails.products[0].elligibleDeliveryMode[0].charge.value *
-                100
-            ) / 100;
+        if (cartDetails.deliveryCharge) {
+          deliveryCharge = cartDetails.deliveryCharge;
         }
         if (cartDetails.cartAmount.totalDiscountAmount) {
           totalDiscount =
