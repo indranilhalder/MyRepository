@@ -508,12 +508,6 @@ class CheckOutPage extends React.Component {
             ) / 100
         });
       }
-    } else if (this.state.isGiftCard) {
-      this.setState({
-        isRemainingAmount: true,
-        payableAmount: Math.round(this.props.location.state.amount * 100) / 100,
-        bagAmount: Math.round(this.props.location.state.amount * 100) / 100
-      });
     } else {
       if (nextProps.cart.cartDetailsCNC && this.state.isRemainingAmount) {
         let cliqCashAmount = 0;
@@ -603,6 +597,23 @@ class CheckOutPage extends React.Component {
       this.props.location.state.isFromGiftCard
     ) {
       this.setState({ isGiftCard: true });
+
+      this.setState({
+        isGiftCard: true,
+        isRemainingAmount: true,
+        payableAmount:
+          Math.round(
+            this.props.location &&
+              this.props.location.state &&
+              this.props.location.state.amount * 100
+          ) / 100,
+        bagAmount:
+          Math.round(
+            this.props.location &&
+              this.props.location.state &&
+              this.props.location.state.amount * 100
+          ) / 100
+      });
     } else {
       if (this.props.getCartDetailsCNC) {
         let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
