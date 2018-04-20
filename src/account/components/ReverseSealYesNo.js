@@ -46,7 +46,7 @@ export default class ReverseSealYesNo extends React.Component {
                     <YesNoQuestion
                       text={val.text}
                       confirmation={val.confirmation}
-                      value={i}
+                      value={val.confirmation}
                     />
                   );
                 })}
