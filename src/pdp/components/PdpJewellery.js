@@ -181,14 +181,16 @@ export default class PdpJewellery extends React.Component {
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
-      .map(galleryImageList => {
-        return galleryImageList.galleryImages.filter(galleryImages => {
-          return galleryImages.key === "product";
-        });
-      })
-      .map(image => {
-        return image[0].value;
-      });
+      ? productData.galleryImagesList
+          .map(galleryImageList => {
+            return galleryImageList.galleryImages.filter(galleryImages => {
+              return galleryImages.key === "product";
+            });
+          })
+          .map(image => {
+            return image[0].value;
+          })
+      : [];
     let otherSellersText;
     let hasOtherSellers = false;
     if (productData.otherSellers && productData.otherSellers.length > 0) {
