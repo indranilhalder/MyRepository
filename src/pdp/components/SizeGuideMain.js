@@ -22,7 +22,6 @@ export default class SizeGuideMain extends React.Component {
             </div>
           </div>
           {this.props.category !== "Footwear" &&
-            this.props.category !== "Watches" &&
             this.props.sizeData.sizeGuideList && (
               <div className={styles.sizeList}>
                 {this.props.sizeData.sizeGuideList.map((list, i) => {
