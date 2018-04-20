@@ -3,7 +3,13 @@ import styles from "./ReverseSealYesNo.css";
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import GridSelect from "../../general/components/GridSelect";
 import YesNoQuestion from "./YesNoQuestion";
+import PropTypes from "prop-types";
 export default class ReverseSealYesNo extends React.Component {
+  moreInfo() {
+    if (this.props.moreInfo) {
+      this.props.moreInfo();
+    }
+  }
   render() {
     const options = [
       {
@@ -34,12 +40,7 @@ export default class ReverseSealYesNo extends React.Component {
         <div className={styles.yesNoQuestionHolder}>
           {options &&
             options.length > 0 && (
-              <GridSelect
-                limit={1}
-                offset={0}
-                elementWidthMobile={100}
-                selected={[]}
-              >
+              <GridSelect limit={1} offset={0} elementWidthMobile={100}>
                 {options.map((val, i) => {
                   return (
                     <YesNoQuestion
@@ -56,3 +57,6 @@ export default class ReverseSealYesNo extends React.Component {
     );
   }
 }
+ReverseSealYesNo.propTypes = {
+  moreInfo: PropTypes.func
+};
