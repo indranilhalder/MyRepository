@@ -162,7 +162,6 @@ export default class PdpElectronics extends React.Component {
             return image[0].value;
           })
       : [];
-
     let otherSellersText;
 
     if (

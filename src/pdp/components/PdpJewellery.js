@@ -191,7 +191,6 @@ export default class PdpJewellery extends React.Component {
             return image[0].value;
           })
       : [];
-
     let otherSellersText;
     let hasOtherSellers = false;
     if (productData.otherSellers && productData.otherSellers.length > 0) {
@@ -293,6 +292,7 @@ export default class PdpJewellery extends React.Component {
             <React.Fragment>
               <SizeSelector
                 history={this.props.history}
+                headerText={productData.isSizeOrLength}
                 sizeSelected={this.checkIfSizeSelected()}
                 productId={productData.productListingId}
                 hasSizeGuide={productData.showSizeGuide}
