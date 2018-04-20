@@ -709,9 +709,7 @@ export function setDataLayerForPlpDirectCalls(response) {
   } else if (response.newProduct) {
     badge = "new";
   }
-  console.log(response);
   if (badge) {
-    console.log(badge);
     if (data.cpj && data.cpj.product) {
       Object.assign(data.cpj.product, { badge });
     } else if (data.cpj) {
