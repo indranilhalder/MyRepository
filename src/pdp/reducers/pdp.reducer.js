@@ -1,4 +1,5 @@
 import * as pdpActions from "../actions/pdp.actions";
+import { FOLLOW_AND_UN_FOLLOW_BRANDS_IN_PDP_SUCCESS } from "../../account/actions/account.actions";
 import { YES, NO } from "../../lib/constants";
 import { transferPincodeToPdpPincode } from "./utils";
 import { CLEAR_ERROR } from "../../general/error.actions.js";
@@ -427,12 +428,12 @@ const productDescription = (
         status: action.status
       });
 
-    case pdpActions.FOLLOW_UN_FOLLOW_BRAND_SUCCESS:
+    case FOLLOW_AND_UN_FOLLOW_BRANDS_IN_PDP_SUCCESS:
       currentBrandDetails = cloneDeep(state.aboutTheBrand);
-      currentBrandDetails.isFollowing = action.brandDetails.isFollowing;
+      currentBrandDetails.isFollowing = action.followStatus;
       return Object.assign({}, state, {
         status: action.status,
-        msdItems: currentBrandDetails
+        aboutTheBrand: currentBrandDetails
       });
     case pdpActions.FOLLOW_UN_FOLLOW_BRAND_FAILURE:
       return Object.assign({}, state, {

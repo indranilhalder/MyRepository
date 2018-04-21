@@ -66,7 +66,7 @@ export default class AddDeliveryAddress extends React.Component {
     }
     if (nextProps.getPinCodeDetails) {
       const landmarkList = [
-        ...nextProps.getPinCodeDetails.landMarks,
+        nextProps.getPinCodeDetails && nextProps.getPinCodeDetails.landMarks,
         { landmark: OTHER_LANDMARK }
       ];
       this.setState({
@@ -223,8 +223,8 @@ export default class AddDeliveryAddress extends React.Component {
               this.state.landmarkList.length > 0 &&
               this.state.landmarkList.map((val, i) => {
                 return {
-                  value: val.landmark,
-                  label: val.landmark
+                  value: val && val.landmark,
+                  label: val && val.landmark
                 };
               })
             }

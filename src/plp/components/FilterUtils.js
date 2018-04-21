@@ -44,7 +44,7 @@ export function createUrlFromQueryAndCategory(query, pathName, val) {
     if (query.indexOf(":") === -1) {
       // this deals with q=text, with nothing else.
       // in this case I need to add a relevance.
-      url = `/search/?q=:${query}:category:${val}`;
+      url = `/search/?q=${query}:category:${val}`;
     } else {
       // We have q = text, as well as a sort, category or brand.
       const hasCategory = CATEGORY_URL_REGEX.test(query);
@@ -52,7 +52,6 @@ export function createUrlFromQueryAndCategory(query, pathName, val) {
       if (hasCategory && !hasBrand) {
         // we have an existing category
         // we want to replace this category
-        // but be careful, if you click on a L2 and deselect it, what happens?
         const test = query.replace(CATEGORY_URL_REGEX, `$1${val}`);
         url = `/search/?q=${test}`;
       } else if (hasBrand && !hasCategory) {
@@ -79,7 +78,7 @@ export function createUrlFromQueryAndCategory(query, pathName, val) {
         if (query.startsWith(":")) {
           url = `/search/?q=${query}:category:${val}`;
         } else {
-          url = `/search/?q=:${query}:category:${val}`;
+          url = `/search/?q=${query}:category:${val}`;
         }
 
         // I need to check if there is a sort or not.

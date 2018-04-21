@@ -5,7 +5,8 @@ import {
   GLOBAL_ACCESS_TOKEN,
   SUCCESS_UPPERCASE,
   SUCCESS_CAMEL_CASE,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  FAILURE_UPPERCASE
 } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";

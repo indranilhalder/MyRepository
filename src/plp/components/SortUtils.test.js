@@ -29,19 +29,19 @@ it("should work with brand landing page", () => {
   );
 });
 
-it("should work with search/?q=:<text>", () => {
-  let endUrl = applySortToUrl(":shirt", "search/?q=shirt", ARRAY_OF_SORTS[3]);
-  expect(endUrl).toEqual(`/search/?q=:shirt:${ARRAY_OF_SORTS[3]}`);
+it("should work with search/?q=<text>", () => {
+  let endUrl = applySortToUrl("shirt", "search/?q=shirt", ARRAY_OF_SORTS[3]);
+  expect(endUrl).toEqual(`/search/?q=shirt:${ARRAY_OF_SORTS[3]}`);
 });
 
 it("should work with search/?q=<text>:sort", () => {
   let endUrl = applySortToUrl(
-    ":shirt:relevance",
-    "search/?q=:shirt:relevance",
+    "shirt:relevance",
+    "search/?q=shirt:relevance",
     ARRAY_OF_SORTS[3]
   );
 
-  expect(endUrl).toEqual(`/search/?q=:shirt:${ARRAY_OF_SORTS[3]}`);
+  expect(endUrl).toEqual(`/search/?q=shirt:${ARRAY_OF_SORTS[3]}`);
 });
 
 it("should work with search/?q=:sort", () => {
@@ -65,15 +65,15 @@ it("should work with /search/?q=:sort:category:<SOME CATEGORY>", () => {
   );
 });
 
-it("should work with /search/?q=:text:sort:category:<SOME_CATEGORY>", () => {
+it("should work with /search/?q=text:sort:category:<SOME_CATEGORY>", () => {
   let endUrl = applySortToUrl(
-    `:shirt:${ARRAY_OF_SORTS[0]}:category:${DUMMY_CATEGORY_VALUE}`,
-    `/search/?q=:shirt:${ARRAY_OF_SORTS[0]}:category:${DUMMY_CATEGORY_VALUE}`,
+    `shirt:${ARRAY_OF_SORTS[0]}:category:${DUMMY_CATEGORY_VALUE}`,
+    `/search/?q=shirt:${ARRAY_OF_SORTS[0]}:category:${DUMMY_CATEGORY_VALUE}`,
     ARRAY_OF_SORTS[3]
   );
 
   expect(endUrl).toEqual(
-    `/search/?q=:shirt:${ARRAY_OF_SORTS[3]}:category:${DUMMY_CATEGORY_VALUE}`
+    `/search/?q=shirt:${ARRAY_OF_SORTS[3]}:category:${DUMMY_CATEGORY_VALUE}`
   );
 });
 
@@ -101,39 +101,39 @@ it("should work with /search/?q=:brand:<SOME BRAND>", () => {
   );
 });
 
-it("should work with /search/?q=:text:brand:<SOME BRAND>", () => {
+it("should work with /search/?q=text:brand:<SOME BRAND>", () => {
   let endUrl = applySortToUrl(
-    `:text:brand:${DUMMY_BRAND_VALUE}`,
-    `/search/?q=:text:brand:${DUMMY_BRAND_VALUE}`,
+    `text:brand:${DUMMY_BRAND_VALUE}`,
+    `/search/?q=text:brand:${DUMMY_BRAND_VALUE}`,
     ARRAY_OF_SORTS[3]
   );
 
   expect(endUrl).toEqual(
-    `/search/?q=:text:${ARRAY_OF_SORTS[3]}:brand:${DUMMY_BRAND_VALUE}`
+    `/search/?q=text:${ARRAY_OF_SORTS[3]}:brand:${DUMMY_BRAND_VALUE}`
   );
 });
 
-it("should work with /search/?q=:text:category:<SOME_CATEGORY", () => {
+it("should work with /search/?q=text:category:<SOME_CATEGORY", () => {
   let endUrl = applySortToUrl(
-    `:text:category:${DUMMY_CATEGORY_VALUE}`,
-    `/search/?q=:text:category:${DUMMY_CATEGORY_VALUE}`,
+    `text:category:${DUMMY_CATEGORY_VALUE}`,
+    `/search/?q=text:category:${DUMMY_CATEGORY_VALUE}`,
     ARRAY_OF_SORTS[5]
   );
 
   expect(endUrl).toEqual(
-    `/search/?q=:text:${ARRAY_OF_SORTS[5]}:category:${DUMMY_CATEGORY_VALUE}`
+    `/search/?q=text:${ARRAY_OF_SORTS[5]}:category:${DUMMY_CATEGORY_VALUE}`
   );
 });
 
-it("should work with /search/?q=:text:category:<SOME_CATEGORY:brand:<SOME_BRAND>", () => {
+it("should work with /search/?q=text:category:<SOME_CATEGORY:brand:<SOME_BRAND>", () => {
   let endUrl = applySortToUrl(
-    `:text:category:${DUMMY_CATEGORY_VALUE}:brand:${DUMMY_BRAND_VALUE}`,
-    `/search/?q=:text:category:${DUMMY_CATEGORY_VALUE}:brand:${DUMMY_BRAND_VALUE}`,
+    `text:category:${DUMMY_CATEGORY_VALUE}:brand:${DUMMY_BRAND_VALUE}`,
+    `/search/?q=text:category:${DUMMY_CATEGORY_VALUE}:brand:${DUMMY_BRAND_VALUE}`,
     ARRAY_OF_SORTS[2]
   );
 
   expect(endUrl).toEqual(
-    `/search/?q=:text:${
+    `/search/?q=text:${
       ARRAY_OF_SORTS[2]
     }:category:${DUMMY_CATEGORY_VALUE}:brand:${DUMMY_BRAND_VALUE}`
   );

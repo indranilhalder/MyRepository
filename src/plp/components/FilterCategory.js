@@ -32,7 +32,7 @@ export default class FilterCategory extends Component {
                       key={i}
                       value={data.categoryCode}
                       onClick={this.props.onL3Click}
-                      subListCount={data.subListCount}
+                      subListCount={data.quantity}
                     />
                   );
                 })}

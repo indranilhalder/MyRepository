@@ -7,15 +7,17 @@ export default class SimpleBannerComponent extends React.Component {
     this.props.history.push(urlLink);
   }
   render() {
-    return this.props.data ? (
+    return this.props.feedComponentData ? (
       <div
         className={styles.base}
         onClick={() => this.handleClick(this.props.urlLink)}
       >
         <div className={styles.imageHolder}>
-          <Image image={this.props.data.media} fit="cover" />
-          {this.props.data.title && (
-            <div className={styles.displayTitle}>{this.props.data.title}</div>
+          <Image image={this.props.feedComponentData.media} fit="cover" />
+          {this.props.feedComponentData.title && (
+            <div className={styles.displayTitle}>
+              {this.props.feedComponentData.title}
+            </div>
           )}
         </div>
       </div>
