@@ -63,6 +63,9 @@ const PRODUCT_NOT_SERVICEABLE_MESSAGE =
   "Product is not Serviceable,Please try with another pin code";
 const SELECT_DELIVERY_MODE_MESSAGE =
   "Please Select the delivery mode for all the products";
+const ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME =
+  "Please enter Pickup person name,character should be greater than 4 ";
+const ERROR_MESSAGE_FOR_MOBILE_NUMBER = "Please enter valid mobile number";
 class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
@@ -188,6 +191,11 @@ class CheckOutPage extends React.Component {
     );
   }
   addPickupPersonCNC(mobile, name) {
+    if (name.length < 4) {
+      return this.props.displayToast(ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME);
+    } else if (mobile.length !== 10) {
+      return this.props.displayToast(ERROR_MESSAGE_FOR_MOBILE_NUMBER);
+    }
     this.setState({ showCliqAndPiq: false });
     this.props.addPickupPersonCNC(mobile, name);
   }

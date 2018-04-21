@@ -291,6 +291,12 @@ export default class ReturnAddressList extends React.Component {
     this.props.history.goBack();
   };
   render() {
+    if (this.props.loading) {
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
+    }
+
     if (this.props.returnRequest && this.props.returnProducts) {
       const { pathname } = this.props.location;
       return (
