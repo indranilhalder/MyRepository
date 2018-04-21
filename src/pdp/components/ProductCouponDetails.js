@@ -69,7 +69,7 @@ class ProductCouponDetails extends Component {
           const applyNewCouponCode = await this.props.applyUserCoupon(
             this.state.selectedCouponCode
           );
-          console.log(applyNewCouponCode);
+
           if (applyNewCouponCode.status === SUCCESS) {
             localStorage.setItem(COUPON_COOKIE, this.state.selectedCouponCode);
             this.props.closeModal();
@@ -117,7 +117,7 @@ class ProductCouponDetails extends Component {
       this.props.closedcouponsList &&
       this.props.closedcouponsList.length > 0
     ) {
-      coupons = this.props.opencouponsList.concat(this.props.closedcouponsList);
+      coupons = this.props.closedcouponsList.concat(this.props.opencouponsList);
     } else {
       if (this.props.opencouponsList) {
         coupons = this.props.opencouponsList;
