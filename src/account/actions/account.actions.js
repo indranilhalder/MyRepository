@@ -492,12 +492,13 @@ export function newReturnInitial(returnDetails, product) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+
+      dispatch(newReturnInitiateSuccess(resultJson));
       setDataLayerForMyAccountDirectCalls(
         ADOBE_MY_ACCOUNT_ORDER_RETURN,
         product,
         returnDetails
       );
-      dispatch(newReturnInitiateSuccess(resultJson));
     } catch (e) {
       dispatch(newReturnInitiateFailure(e.message));
     }
@@ -519,7 +520,7 @@ export function returnPInCodeSuccess(pinCodeDetails) {
   };
 }
 
-export function returnPinCodeFailure(error,pinCodeDetails) {
+export function returnPinCodeFailure(error, pinCodeDetails) {
   return {
     type: RETURN_PIN_CODE_FAILURE,
     error,

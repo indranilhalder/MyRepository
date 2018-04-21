@@ -276,6 +276,12 @@ class CheckOutPage extends React.Component {
     );
   };
 
+  getUserDetails = () => {
+    if (this.props.getUserDetails) {
+      this.props.getUserDetails();
+    }
+  };
+
   renderCliqAndPiq() {
     let currentSelectedProduct = this.props.cart.cartDetailsCNC.products.find(
       product => {
@@ -332,6 +338,8 @@ class CheckOutPage extends React.Component {
         }
         changePincode={pincode => this.changePincodeOnCliqAndPiq(pincode)}
         goBack={() => this.removeCliqAndPiq()}
+        getUserDetails={() => this.getUserDetails()}
+        userDetails={this.props.userDetails}
       />
     );
   }

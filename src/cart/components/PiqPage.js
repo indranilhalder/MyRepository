@@ -33,6 +33,11 @@ export default class PiqPage extends React.Component {
     };
   }
 
+  componentDidMount = () => {
+    if (this.props.getUserDetails) {
+      this.props.getUserDetails();
+    }
+  };
   handleSwipe(val) {
     const lat = this.props.availableStores[val % this.props.numberOfStores]
       .geoPoint.latitude;
@@ -170,6 +175,7 @@ export default class PiqPage extends React.Component {
                 <PickUpDetails
                   getValue={val => this.getValue(val)}
                   onSubmit={() => this.handleSubmit()}
+                  userDetails={this.props.userDetails}
                 />
               </div>
             </div>
