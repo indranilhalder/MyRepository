@@ -379,7 +379,7 @@ export default class PdpApparel extends React.Component {
             </div>
           )}
           <div className={styles.details}>
-            <Accordion text="Product description" headerFontSize={16}>
+            <Accordion text="Overview" headerFontSize={16}>
               {productData.classificationList &&
                 productData.classificationList.map(value => {
                   return (
