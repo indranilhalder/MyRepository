@@ -69,6 +69,7 @@ class ProductCouponDetails extends Component {
           const applyNewCouponCode = await this.props.applyUserCoupon(
             this.state.selectedCouponCode
           );
+          console.log(applyNewCouponCode);
           if (applyNewCouponCode.status === SUCCESS) {
             localStorage.setItem(COUPON_COOKIE, this.state.selectedCouponCode);
             this.props.closeModal();
@@ -109,8 +110,19 @@ class ProductCouponDetails extends Component {
   };
   render() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let coupons = [];
     let showLogOutUserCoupon = userDetails ? true : false;
-    console.log(showLogOutUserCoupon);
+    if (
+      userDetails &&
+      this.props.closedcouponsList &&
+      this.props.closedcouponsList.length > 0
+    ) {
+      coupons = this.props.opencouponsList.concat(this.props.closedcouponsList);
+    } else {
+      if (this.props.opencouponsList) {
+        coupons = this.props.opencouponsList;
+      }
+    }
     return (
       <SlideModal {...this.props}>
         <div className={styles.base}>
@@ -153,8 +165,8 @@ class ProductCouponDetails extends Component {
             onSelect={val => this.onSelectCouponCode(val)}
             selected={[this.state.selectedCouponCode]}
           >
-            {this.props.opencouponsList &&
-              this.props.opencouponsList.map((value, i) => {
+            {coupons &&
+              coupons.map((value, i) => {
                 return (
                   <CuponDetails
                     promotionTitle={value.couponName}
