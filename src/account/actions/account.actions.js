@@ -198,7 +198,7 @@ export const PLATFORM_NUMBER = 2;
 export const USER_PATH = "v2/mpl/users";
 export const PRODUCT_PATH = "v2/mpl/products";
 
-export const PIN_PATH = "v2/mpl/";
+export const PIN_PATH = "v2/mpl";
 export const PATH = "v2/mpl";
 
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
@@ -519,7 +519,7 @@ export function returnPInCodeSuccess(pinCodeDetails) {
   };
 }
 
-export function returnPinCodeFailure(error,pinCodeDetails) {
+export function returnPinCodeFailure(error, pinCodeDetails) {
   return {
     type: RETURN_PIN_CODE_FAILURE,
     error,
