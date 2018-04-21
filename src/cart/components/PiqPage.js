@@ -29,10 +29,20 @@ export default class PiqPage extends React.Component {
       openingTime: "",
       closingTime: "",
       headingText: "",
-      displayName: ""
+      displayName: "",
+      name: "",
+      mobile: ""
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userDetails) {
+      this.setState({
+        name: nextProps.userDetails && nextProps.userDetails.firstName,
+        mobile: nextProps.userDetails && nextProps.userDetails.mobileNumber
+      });
+    }
+  }
   componentDidMount = () => {
     if (this.props.getUserDetails) {
       this.props.getUserDetails();
@@ -175,7 +185,8 @@ export default class PiqPage extends React.Component {
                 <PickUpDetails
                   getValue={val => this.getValue(val)}
                   onSubmit={() => this.handleSubmit()}
-                  userDetails={this.props.userDetails}
+                  name={this.state.name}
+                  mobile={this.state.mobile}
                 />
               </div>
             </div>

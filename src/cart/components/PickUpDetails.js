@@ -5,13 +5,6 @@ import styles from "./PickUpDetails.css";
 import Button from "../../general/components/Button";
 
 export default class PickUpDetails extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: this.props.userDetails && this.props.userDetails.firstName,
-      mobile: this.props.userDetails && this.props.userDetails.mobileNumber
-    };
-  }
   getValue(val) {
     if (this.props.getValue) {
       this.props.getValue(val);
@@ -37,7 +30,7 @@ export default class PickUpDetails extends React.Component {
             onChange={name => this.getValue({ name })}
             textStyle={{ fontSize: 14 }}
             height={33}
-            value={this.state.name ? this.state.name : ""}
+            value={this.props.name ? this.props.name : ""}
           />
         </div>
         <div className={styles.inputHolder}>
@@ -48,7 +41,7 @@ export default class PickUpDetails extends React.Component {
             onChange={mobile => this.getValue({ mobile })}
             textStyle={{ fontSize: 14 }}
             height={33}
-            value={this.state.mobile ? this.state.mobile : ""}
+            value={this.props.mobile ? this.props.mobile : ""}
           />
         </div>
         <div

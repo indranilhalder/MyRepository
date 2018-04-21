@@ -74,7 +74,7 @@ export default class AddDeliveryAddress extends React.Component {
           nextProps.getPinCodeDetails &&
           nextProps.getPinCodeDetails.state &&
           nextProps.getPinCodeDetails.state.name,
-        city:
+        town:
           nextProps.getPinCodeDetails && nextProps.getPinCodeDetails.cityName,
         landmarkList
       });
@@ -106,7 +106,7 @@ export default class AddDeliveryAddress extends React.Component {
       firstName: "",
       line2: "",
       town: "",
-      city: "",
+      town: "",
       state: "",
       phone: "",
       line1: " ",
@@ -257,8 +257,8 @@ export default class AddDeliveryAddress extends React.Component {
           <Input2
             boxy={true}
             placeholder="City/district*"
-            value={this.props.city ? this.props.city : this.state.city}
-            onChange={city => this.onChange({ city })}
+            value={this.props.town ? this.props.city : this.state.town}
+            onChange={town => this.onChange({ town })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
