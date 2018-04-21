@@ -57,7 +57,9 @@ export default class MyAccountBrands extends React.Component {
     }
     let followedBrands = [];
     if (this.props.followedBrands) {
-      followedBrands = this.props.followedBrands;
+      followedBrands = this.props.followedBrands.filter(
+        brand => brand.isFollowing === "true"
+      );
     }
 
     return (
