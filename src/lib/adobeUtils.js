@@ -75,6 +75,19 @@ const MY_ACCOUNT_CLIQ_CASH = "myaccount_cliq_cash";
 const MY_ACCOUNT_SETTING = "myaccount_update_setting";
 // end of type of hierarchy for my Account
 
+// const or adobe call for internal search call
+const ADOBE_INTERNAL_SEARCH_SUCCESS = "";
+const ADOBE_INTERNAL_SEARCH_NULL = "";
+// end of const or adobe call for internal search call
+
+// internal search Adobe call const
+export const ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT =
+  "ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT";
+export const ADOBE_INTERNAL_SEARCH_CALL_ON_GET_NULL =
+  "ADOBE_INTERNAL_SEARCH_CALL_ON_GET_NULL";
+
+// end of internal search Adobe call const
+
 export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
 export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
@@ -196,6 +209,9 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   }
   if (type === ADOBE_PLP_TYPE) {
     window.digitalData = getDigitalDataForPlp(type, response);
+  }
+  if (type === ADOBE_INTERNAL_SEARCH_SUCCESS) {
+    window.digitalData = getDigitalDataForSearchPageSuccess();
   }
   if (type === ADOBE_PDP_TYPE) {
     const digitalDataForPDP = getDigitalDataForPdp(type, response);
@@ -694,7 +710,18 @@ function getDigitalDataForPlp(type, response) {
   }
   return data;
 }
-
+export function getDigitalDataForSearchPageSuccess(response) {
+  const data = {
+    page: {
+      pageInfo: { pageName: "search results page" },
+      category: { primaryCategory: "productsearch" },
+      display: { hierarchy: ["home", response.searchString] }
+    },
+    internal: {
+      search: { category: "all", results: "", term: response.searchString }
+    }
+  };
+}
 export function setDataLayerForPlpDirectCalls(response) {
   const data = window.digitalData;
   let badge;
