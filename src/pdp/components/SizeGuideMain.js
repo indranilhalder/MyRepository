@@ -11,7 +11,6 @@ export default class SizeGuideMain extends React.Component {
     this.props.getSizeGuide(this.props.productCode);
   }
   render() {
-    console.log(this.props);
     if (this.props.loading) {
       return <Loader />;
     }
