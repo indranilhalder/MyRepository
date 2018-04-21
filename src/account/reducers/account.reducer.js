@@ -683,10 +683,13 @@ const account = (
       });
 
     case accountActions.RETURN_PIN_CODE_FAILURE:
+      let updatedReturnProductDetails = cloneDeep(state.returnProductDetails);
+      updatedReturnProductDetails.returnModes =
+        action.pinCodeDetails && action.pinCodeDetails.returnModes;
       return Object.assign({}, state, {
         returnPinCodeStatus: action.status,
         returnPinCodeError: action.error,
-
+        returnProductDetails: updatedReturnProductDetails,
         loading: false
       });
 

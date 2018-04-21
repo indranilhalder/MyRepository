@@ -86,7 +86,8 @@ const mapStateToProps = state => {
     bankAndTenureError: state.cart.bankAndTenureError,
     emiTermsAndConditionError: state.cart.emiTermsAndConditionError,
     noCostEmiError: state.cart.noCostEmiError,
-    emiItemBreakUpError: state.cart.emiItemBreakUpError
+    emiItemBreakUpError: state.cart.emiItemBreakUpError,
+    emiBankError: state.cart.emiBankError
   };
 };
 
