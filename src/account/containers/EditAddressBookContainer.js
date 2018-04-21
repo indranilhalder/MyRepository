@@ -1,6 +1,10 @@
 import { connect } from "react-redux";
 import { getUserAddress } from "../../cart/actions/cart.actions";
-import { editAddress, getPinCode } from "../actions/account.actions";
+import {
+  editAddress,
+  getPinCode,
+  getPinCodeSuccess
+} from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import EditAddressPopUp from "../components/EditAddressPopUp.js";
 import { setHeaderText } from "../../general/header.actions";
@@ -14,6 +18,9 @@ const mapDispatchToProps = dispatch => {
     },
     setHeaderText: text => {
       dispatch(setHeaderText(text));
+    },
+    resetAutoPopulateDataForPinCode: () => {
+      dispatch(getPinCodeSuccess(null));
     }
   };
 };
