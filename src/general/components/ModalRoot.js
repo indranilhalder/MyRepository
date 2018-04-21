@@ -8,6 +8,7 @@ import * as Cookie from "../../lib/Cookie.js";
 import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
 import ItemLevelPopup from "../../cart/components/ItemLevelPopup.js";
 import TermsAndConditionsModal from "../../cart/components/TermsAndConditionsModal.js";
+import { LOGIN_PATH } from "../../lib/constants";
 const modalRoot = document.getElementById("modal-root");
 const GenerateOtp = "GenerateOtpForEgv";
 const RestorePasswords = "RestorePassword";
@@ -206,6 +207,7 @@ export default class ModalRoot extends React.Component {
   };
   applyUserCoupon = couponCode => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    this.props.hideModal();
     if (userDetails) {
       return this.props.applyUserCouponForLoggedInUsers(couponCode);
     } else {
@@ -214,6 +216,7 @@ export default class ModalRoot extends React.Component {
   };
   releaseUserCoupon = (oldCouponCode, newCouponCode) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    this.props.hideModal();
     if (userDetails) {
       return this.props.releaseUserCoupon(oldCouponCode, newCouponCode);
     } else {
@@ -299,6 +302,12 @@ export default class ModalRoot extends React.Component {
   onClickWrongNumber() {
     this.props.showModal(RestorePasswords);
   }
+
+  navigateToLogin = url => {
+    this.props.setUrlToRedirectToAfterAuth(url);
+    this.handleClose();
+    this.props.history.push(LOGIN_PATH);
+  };
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -370,6 +379,9 @@ export default class ModalRoot extends React.Component {
             this.releaseUserCoupon(couponCode, newCouponCode)
           }
           {...this.props.ownProps}
+          navigateToLogin={url =>
+            this.navigateToLogin(url, { ...this.props.ownProps })
+          }
         />
       ),
       BankOffers: (

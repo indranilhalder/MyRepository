@@ -15,7 +15,7 @@ import {
 import { redeemCliqVoucher } from "../../account/actions/account.actions";
 import { SUCCESS, FAILURE } from "../../lib/constants";
 import { updateProfile } from "../../account/actions/account.actions.js";
-
+import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 import {
   applyBankOffer,
   releaseBankOffer,
@@ -147,6 +147,9 @@ const mapDispatchToProps = dispatch => {
     },
     redeemCliqVoucher: (cliqCashDetails, fromCheckOut) => {
       dispatch(redeemCliqVoucher(cliqCashDetails, fromCheckOut));
+    },
+    setUrlToRedirectToAfterAuth: url => {
+      dispatch(setUrlToRedirectToAfterAuth(url));
     }
   };
 };

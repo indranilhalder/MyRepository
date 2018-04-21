@@ -14,6 +14,7 @@ import {
   APPLY_USER_COUPON_FAILURE,
   RELEASE_USER_COUPON_FAILURE
 } from "../../cart/actions/cart.actions";
+import { LOGGED_IN_USER_DETAILS } from "../../lib/constants";
 const REMOVE = "Remove";
 const APPLY = "Apply";
 const USER_COUPON_NOTE =
@@ -100,7 +101,16 @@ class ProductCouponDetails extends Component {
       this.setState({ selectedCouponCode: "" });
     }
   };
+
+  navigateToLogin = () => {
+    if (this.props.navigateToLogin) {
+      this.props.navigateToLogin(this.props.history.location.pathname);
+    }
+  };
   render() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let showLogOutUserCoupon = userDetails ? true : false;
+    console.log(showLogOutUserCoupon);
     return (
       <SlideModal {...this.props}>
         <div className={styles.base}>
@@ -126,11 +136,16 @@ class ProductCouponDetails extends Component {
           <div className={styles.disclaimer}>
             <span>Note:</span> {USER_COUPON_NOTE}
           </div>
-          <div className={styles.link}>
-            <div className={styles.linkArrow}>
-              <Icon image={arrowIcon} size={10} />
-            </div>Login to view personal coupons
-          </div>
+          {!showLogOutUserCoupon && (
+            <div className={styles.link}>
+              <div
+                className={styles.linkArrow}
+                onClick={val => this.navigateToLogin()}
+              >
+                <Icon image={arrowIcon} size={10} />
+              </div>Login to view personal coupons
+            </div>
+          )}
           <GridSelect
             elementWidthMobile={100}
             offset={0}
