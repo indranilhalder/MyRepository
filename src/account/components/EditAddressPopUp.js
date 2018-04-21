@@ -74,7 +74,6 @@ export default class EditAddressPopUp extends React.Component {
     this.props.history.goBack();
   };
   render() {
-    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.holder}>
