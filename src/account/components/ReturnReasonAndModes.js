@@ -15,7 +15,8 @@ import {
   SCHEDULED_PICKUP,
   RETURN_CLIQ_PIQ_ADDRESS,
   RETURNS_STORE_BANK_FORM,
-  SELF_COURIER
+  SELF_COURIER,
+  RETURNS_SELF_COURIER
 } from "../../lib/constants";
 import {
   setDataLayerForMyAccountDirectCalls,
@@ -42,25 +43,34 @@ export default class ReturnReasonAndModes extends React.Component {
     }
   }
   renderToModes(data) {
-    this.props.onChange({ data });
-    if (this.props.isCOD) {
-      this.props.history.push({
-        pathname: `${RETURNS_PREFIX}/${
-          this.orderCode
-        }${RETURNS_STORE_BANK_FORM}`,
-        state: {
-          authorizedRequest: true
-        }
-      });
+    if (!data.reason) {
+      this.props.displayToast("Please select reason ");
+      return false;
+    }
+    if (!data.comment) {
+      this.props.displayToast("Please enter comment ");
+      return false;
     } else {
-      this.props.history.push({
-        pathname: `${RETURNS_PREFIX}/${
-          this.orderCode
-        }${RETURN_LANDING}${RETURNS_MODES}`,
-        state: {
-          authorizedRequest: true
-        }
-      });
+      this.props.onChange({ data });
+      if (this.props.isCOD) {
+        this.props.history.push({
+          pathname: `${RETURNS_PREFIX}/${
+            this.orderCode
+          }${RETURNS_STORE_BANK_FORM}`,
+          state: {
+            authorizedRequest: true
+          }
+        });
+      } else {
+        this.props.history.push({
+          pathname: `${RETURNS_PREFIX}/${
+            this.orderCode
+          }${RETURN_LANDING}${RETURNS_MODES}`,
+          state: {
+            authorizedRequest: true
+          }
+        });
+      }
     }
   }
   onSelectMode(mode) {
@@ -86,7 +96,7 @@ export default class ReturnReasonAndModes extends React.Component {
       this.props.history.push({
         pathname: `${RETURNS_PREFIX}/${
           this.orderCode
-        }${RETURN_CLIQ_PIQ}${RETURN_CLIQ_PIQ_ADDRESS}`,
+        }${RETURN_CLIQ_PIQ}${RETURNS_SELF_COURIER}`,
         state: {
           authorizedRequest: true
         }
@@ -94,10 +104,6 @@ export default class ReturnReasonAndModes extends React.Component {
     }
   }
   render() {
-    if (!this.props.returnRequest || !this.props.returnProductDetails) {
-      return this.renderLoader();
-    }
-
     const { pathname } = this.props.location;
 
     const renderReasonForm = (

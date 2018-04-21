@@ -1,13 +1,14 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { setHeaderText } from "../../general/header.actions";
-import { getStaticPage } from "../actions/staticPage.actions";
 import { displayToast } from "../../general/toast.actions";
+import { homeFeed } from "../../home/actions/home.actions";
+
 import StaticPage from "../components/StaticPage";
 const mapDispatchToProps = dispatch => {
   return {
     getStaticPage: pageId => {
-      dispatch(getStaticPage(pageId));
+      dispatch(homeFeed(pageId));
     },
     setHeaderText: text => {
       dispatch(setHeaderText(text));
@@ -20,8 +21,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    data: state.staticPage.data,
-    loading: state.staticPage.loading
+    data: state.home.homeFeed,
+    loading: state.home.loading
   };
 };
 

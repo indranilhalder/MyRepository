@@ -10,9 +10,9 @@ const productListings = (
     pageNumber: 0,
     paginatedLoading: false,
     isFilterOpen: false,
-    urlToReturnToAfterClear: null,
     filterTabIndex: 0,
-    isCategorySelected: true
+    isCategorySelected: true,
+    seletedFacetKey: null
   },
   action
 ) => {
@@ -20,22 +20,18 @@ const productListings = (
   let toUpdate;
   switch (action.type) {
     case plpActions.SET_FILTER_SELECTED_DATA:
+      const selectedFacetKey =
+        state.productListings.facetdata[action.filterTabIndex].key;
       return Object.assign({}, state, {
         filterTabIndex: action.filterTabIndex,
-        isCategorySelected: action.isCategorySelected
+        isCategorySelected: action.isCategorySelected,
+        selectedFacetKey
       });
     case plpActions.RESET_FILTER_SELECTED_DATA:
       return Object.assign({}, state, {
         filterTabIndex: 0,
-        isCategorySelected: true
-      });
-    case plpActions.SET_URL_TO_RETURN_TO_AFTER_CLEAR:
-      return Object.assign({}, state, {
-        urlToReturnToAfterClear: action.urlToReturnToAfterClear
-      });
-    case plpActions.SET_URL_TO_RETURN_TO_AFTER_CLEAR_TO_NULL:
-      return Object.assign({}, state, {
-        urlToReturnToAfterClear: null
+        isCategorySelected: true,
+        selectedFacetKey: null
       });
     case plpActions.SHOW_FILTER:
       return Object.assign({}, state, {
@@ -46,10 +42,15 @@ const productListings = (
         isFilterOpen: false
       });
     case plpActions.UPDATE_FACETS:
-      const productListings = cloneDeep(state.productListings);
-      productListings.facetdata = action.productListings.facetdata;
-      productListings.facetdatacategory =
-        action.productListings.facetdatacategory;
+      let productListings = cloneDeep(state.productListings);
+      if (!productListings) {
+        productListings = action.productListings;
+      } else {
+        productListings.facetdata = action.productListings.facetdata;
+        productListings.facetdatacategory =
+          action.productListings.facetdatacategory;
+      }
+
       return Object.assign({}, state, {
         productListings,
         loading: false

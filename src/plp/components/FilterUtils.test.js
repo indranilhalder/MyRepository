@@ -70,7 +70,7 @@ it("should work with search/?q=<text>", () => {
     DUMMY_CATEGORY_VALUE.toUpperCase()
   );
   expect(endUrl).toEqual(
-    `/search/?q=:shirt:relevance:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}`
+    `/search/?q=shirt:relevance:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}`
   );
 
   pathName = "/search/?q=shirt";
@@ -81,7 +81,7 @@ it("should work with search/?q=<text>", () => {
     DUMMY_L2_CATEGORY_VALUE.toUpperCase()
   );
   expect(endUrl).toEqual(
-    `/search/?q=:shirt:relevance:category:${DUMMY_L2_CATEGORY_VALUE.toUpperCase()}`
+    `/search/?q=shirt:relevance:category:${DUMMY_L2_CATEGORY_VALUE.toUpperCase()}`
   );
 });
 
@@ -95,7 +95,7 @@ test("should work with search/?q=<text>:sort", () => {
   );
 
   expect(endUrl).toEqual(
-    `/search/?q=:shirt:relevance:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}`
+    `/search/?q=shirt:relevance:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}`
   );
 
   pathName = `/search/?q=shirt:${ARRAY_OF_SORTS[3]}`;
@@ -108,7 +108,7 @@ test("should work with search/?q=<text>:sort", () => {
   );
 
   expect(endUrl).toEqual(
-    `/search/?q=:shirt:${
+    `/search/?q=shirt:${
       ARRAY_OF_SORTS[3]
     }:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}`
   );
@@ -120,7 +120,7 @@ test("should work with search/?q=<text>:sort", () => {
   );
 
   expect(endUrl).toEqual(
-    `/search/?q=:shirt:${
+    `/search/?q=shirt:${
       ARRAY_OF_SORTS[3]
     }:category:${DUMMY_L2_CATEGORY_VALUE.toUpperCase()}`
   );
@@ -210,8 +210,8 @@ test("/search/?q=:sort:category:<SOME CATEGORY>", () => {
   );
 });
 
-test("/search/?q=:text:sort:category:<SOME_CATEGORY>", () => {
-  let searchValue = `:shirt:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE}`;
+test("/search/?q=text:sort:category:<SOME_CATEGORY>", () => {
+  let searchValue = `shirt:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE}`;
   let pathName = `/search/?q=${searchValue}`;
   let endUrl = createUrlFromQueryAndCategory(
     searchValue,
@@ -219,10 +219,10 @@ test("/search/?q=:text:sort:category:<SOME_CATEGORY>", () => {
     DUMMY_CATEGORY_VALUE.toUpperCase()
   );
   expect(endUrl).toEqual(
-    `/search/?q=:shirt:relevance:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}`
+    `/search/?q=shirt:relevance:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}`
   );
 
-  searchValue = `:shirt:${
+  searchValue = `shirt:${
     ARRAY_OF_SORTS[3]
   }:category:${ANOTHER_DUMMY_CATEGORY_VALUE}`;
   pathName = `/search/?q=${searchValue}`;
@@ -232,7 +232,7 @@ test("/search/?q=:text:sort:category:<SOME_CATEGORY>", () => {
     DUMMY_CATEGORY_VALUE.toUpperCase()
   );
   expect(endUrl).toEqual(
-    `/search/?q=:shirt:${
+    `/search/?q=shirt:${
       ARRAY_OF_SORTS[3]
     }:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}`
   );
@@ -266,8 +266,8 @@ test("/search/?q=:brand:<SOME BRAND>", () => {
   );
 });
 
-test("/search/?q=:text:brand:<SOME BRAND>", () => {
-  let searchValue = `:shirt:brand:${DUMMY_BRAND_VALUE}`;
+test("/search/?q=text:brand:<SOME BRAND>", () => {
+  let searchValue = `shirt:brand:${DUMMY_BRAND_VALUE}`;
   let pathName = `/search/?q=${searchValue}`;
   let endUrl = createUrlFromQueryAndCategory(
     searchValue,
@@ -275,12 +275,12 @@ test("/search/?q=:text:brand:<SOME BRAND>", () => {
     DUMMY_CATEGORY_VALUE.toUpperCase()
   );
   expect(endUrl).toEqual(
-    `/search/?q=:shirt:relevance:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}:brand:${DUMMY_BRAND_VALUE}`
+    `/search/?q=shirt:relevance:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}:brand:${DUMMY_BRAND_VALUE}`
   );
 });
 
-test("/search/?q=:text:category:<SOME_CATEGORY", () => {
-  let searchValue = `:shirt:category:${DUMMY_CATEGORY_VALUE}`;
+test("/search/?q=text:category:<SOME_CATEGORY", () => {
+  let searchValue = `shirt:category:${DUMMY_CATEGORY_VALUE}`;
   let pathName = `/search/?q=${searchValue}`;
   let endUrl = createUrlFromQueryAndCategory(
     searchValue,
@@ -288,12 +288,12 @@ test("/search/?q=:text:category:<SOME_CATEGORY", () => {
     ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()
   );
   expect(endUrl).toEqual(
-    `/search/?q=:shirt:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}`
+    `/search/?q=shirt:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}`
   );
 });
 
-test("/search/?q=:text:category:<SOME_CATEGORY>:brand:<SOME_BRAND>", () => {
-  let searchValue = `:shirt:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}:brand:${DUMMY_BRAND_VALUE.toUpperCase()}`;
+test("/search/?q=text:category:<SOME_CATEGORY>:brand:<SOME_BRAND>", () => {
+  let searchValue = `shirt:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}:brand:${DUMMY_BRAND_VALUE.toUpperCase()}`;
   let pathName = `/search/?q=${searchValue}`;
   let endUrl = createUrlFromQueryAndCategory(
     searchValue,
@@ -301,7 +301,7 @@ test("/search/?q=:text:category:<SOME_CATEGORY>:brand:<SOME_BRAND>", () => {
     ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()
   );
   expect(endUrl).toEqual(
-    `/search/?q=:shirt:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}:brand:${DUMMY_BRAND_VALUE.toUpperCase()}`
+    `/search/?q=shirt:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}:brand:${DUMMY_BRAND_VALUE.toUpperCase()}`
   );
 });
 

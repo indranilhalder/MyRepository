@@ -1,11 +1,11 @@
 // Probably rename this Feed, but no time right now.
 import * as homeActions from "../actions/home.actions";
+import { FOLLOW_AND_UN_FOLLOW_BRANDS_IN_HOME_FEED_SUCCESS } from "../../account/actions/account.actions";
 import cloneDeep from "lodash.clonedeep";
 import map from "lodash.map";
+import findIndex from "lodash.findindex";
 import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
 import { transformFetchingItemsOrder } from "./utils";
-import { homeFeed } from "../actions/home.actions";
-import { SUCCESS } from "../../lib/constants";
 const home = (
   state = {
     homeFeed: [], //array of objects
@@ -208,7 +208,20 @@ const home = (
         homeFeed: homeFeedData,
         status: action.status
       });
+    case FOLLOW_AND_UN_FOLLOW_BRANDS_IN_HOME_FEED_SUCCESS:
+      homeFeedData = cloneDeep(state.homeFeed);
+      clonedComponent = homeFeedData[action.positionInFeed];
+      const indexOfBrandToBeUpdated = findIndex(clonedComponent.data, item => {
+        return item.id === action.brandId;
+      });
+      clonedComponent.data[indexOfBrandToBeUpdated].isFollowing =
+        action.followStatus;
+      homeFeedData[action.positionInFeed] = clonedComponent;
 
+      return Object.assign({}, state, {
+        homeFeed: homeFeedData,
+        status: action.status
+      });
     case homeActions.COMPONENT_DATA_SUCCESS:
       if (!state.homeFeed[action.positionInFeed].useBackUpData) {
         homeFeedData = state.homeFeed;

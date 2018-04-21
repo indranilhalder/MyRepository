@@ -13,6 +13,7 @@ import {
   HOME_ROUTER,
   MAIN_ROUTER
 } from "../../lib/constants";
+import { EMAIL_REGULAR_EXPRESSION, MOBILE_PATTERN } from "./Login";
 
 class SignUp extends Component {
   constructor(props) {
@@ -35,8 +36,6 @@ class SignUp extends Component {
     }
   }
   onSubmit() {
-    const EMAIL_REGULAR_EXPRESSION = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    const MOBILE_PATTERN = /^[7,8,9]{1}[0-9]{9}$/;
     if (!this.state.phoneNumberValue) {
       this.props.displayToast("Please fill mobile number ");
       return false;

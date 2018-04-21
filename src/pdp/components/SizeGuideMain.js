@@ -4,7 +4,7 @@ import styles from "./SizeGuideMain.css";
 import Image from "../../xelpmoc-core/Image";
 import Accordion from "../../general/components/Accordion.js";
 import Loader from "../../general/components/Loader";
-
+import SizeGuideElementFootwear from "./SizeGuideElementFootwear";
 export default class SizeGuideMain extends React.Component {
   componentDidMount() {
     this.props.getSizeGuide(this.props.productCode);
@@ -21,22 +21,41 @@ export default class SizeGuideMain extends React.Component {
               <Image fit="contain" image={this.props.sizeData.imageURL} />
             </div>
           </div>
-          {this.props.sizeData.sizeGuideList && (
-            <div className={styles.sizeList}>
-              {this.props.sizeData.sizeGuideList.map((list, i) => {
-                return (
-                  <Accordion
-                    text={list.dimensionSize}
-                    key={i}
-                    offset={20}
-                    activeBackground="#f8f8f8"
-                  >
-                    <SizeGuideElement data={list.dimensionList} />
-                  </Accordion>
-                );
-              })}
-            </div>
-          )}
+          {this.props.category !== "Footwear" &&
+            this.props.sizeData.sizeGuideList && (
+              <div className={styles.sizeList}>
+                {this.props.sizeData.sizeGuideList.map((list, i) => {
+                  return (
+                    <Accordion
+                      text={list.dimensionSize}
+                      key={i}
+                      offset={20}
+                      activeBackground="#f8f8f8"
+                    >
+                      {this.props.category !== "Footwear" && (
+                        <SizeGuideElement
+                          data={list.dimensionList}
+                          category={this.props.category}
+                        />
+                      )}
+                    </Accordion>
+                  );
+                })}
+              </div>
+            )}
+          {this.props.category === "Footwear" &&
+            this.props.sizeData.sizeGuideList && (
+              <div className={styles.sizeList}>
+                {this.props.sizeData.sizeGuideList.map((list, i) => {
+                  return (
+                    <SizeGuideElementFootwear
+                      data={list.dimensionList}
+                      key={i}
+                    />
+                  );
+                })}
+              </div>
+            )}
         </div>
       );
     } else {

@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./SizeSelector.css";
 import SizeSelect from "./SizeSelect";
-import Carousel from "../../general/components/Carousel";
+import DumbCarousel from "../../general/components/DumbCarousel";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import PropTypes from "prop-types";
 const SIZE_GUIDE = "Size guide";
@@ -39,7 +39,7 @@ export default class SizeSelector extends React.Component {
       return (
         <div className={styles.base}>
           <div className={styles.header}>
-            {this.props.headerText}
+            Select {this.props.headerText}
             <div className={styles.button}>
               <UnderLinedButton
                 disabled={!this.props.hasSizeGuide}
@@ -50,7 +50,7 @@ export default class SizeSelector extends React.Component {
               />
             </div>
           </div>
-          <Carousel elementWidthMobile="auto" limit={1}>
+          <DumbCarousel elementWidth="auto">
             {sizes.map((datum, i) => {
               return (
                 <SizeSelect
@@ -68,7 +68,7 @@ export default class SizeSelector extends React.Component {
                 />
               );
             })}
-          </Carousel>
+          </DumbCarousel>
         </div>
       );
     } else {
@@ -89,5 +89,5 @@ SizeSelector.propTypes = {
   textSize: PropTypes.oneOfType([PropTypes.string, PropTypes.string])
 };
 SizeSelector.defaultProps = {
-  headerText: "Select Size"
+  headerText: "Size"
 };

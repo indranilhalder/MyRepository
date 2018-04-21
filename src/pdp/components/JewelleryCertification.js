@@ -2,8 +2,7 @@ import React from "react";
 import Logo from "../../general/components/Logo";
 import styles from "./JewelleryCertification.css";
 import PropTypes from "prop-types";
-import bis from "./img/bsi.png";
-import caratLane from "./img/caratLane.png";
+import caratLane from "./img/cartlane.png";
 import egl from "./img/egl.png";
 import gia from "./img/gia.png";
 import gsi from "./img/gsi.png";
@@ -12,16 +11,21 @@ import orra from "./img/orra.png";
 import platinum from "./img/platinum.png";
 import sgl from "./img/sgl.png";
 import tanishq from "./img/tanishq.png";
-import ibja from "./img/ibja.jpg";
+import ibja from "./img/ibja.png";
 import igl from "./img/igl.png";
-import agl from "./img/agl.jpg";
+import agl from "./img/agl.png";
 import ags from "./img/ags.png";
 import agta from "./img/agta.png";
-import dgla from "./img/dgla.jpg";
-import gii from "./img/gii.jpg";
-import gubelin from "./img/gubelin.jpg";
-import hrd from "./img/hrd.jpg";
+import dgla from "./img/dgla.png";
+import gii from "./img/gii.png";
+import gubelin from "./img/gubelin.png";
+import hrd from "./img/hrd.png";
 import pgi from "./img/pgi.png";
+import bis from "./img/bis.png";
+import idl from "./img/idl.png";
+import jagdamba from "./img/jagdamba.png";
+import nibr from "./img/nibr.png";
+
 export default class JewelleryCertification extends React.Component {
   getCertificationImage = val => {
     let image = "";
@@ -62,11 +66,17 @@ export default class JewelleryCertification extends React.Component {
       case "IBJA":
         image = ibja;
         break;
+      case "IDL":
+        image = idl;
+        break;
       case "IGI":
         image = igi;
         break;
       case "IGL":
         image = igl;
+        break;
+      case "NIBR":
+        image = nibr;
         break;
       case "ORRA":
         image = orra;
@@ -79,6 +89,9 @@ export default class JewelleryCertification extends React.Component {
         break;
       case "Tanishq":
         image = tanishq;
+        break;
+      case "Sri Jagdamba Pearls":
+        image = jagdamba;
         break;
       case "CaratLane":
         image = caratLane;
@@ -128,7 +141,10 @@ JewelleryCertification.propTypes = {
       "PGI",
       "SGL",
       "CaratLane",
-      "Tanishq"
+      "Tanishq",
+      "Sri Jagdamba Pearls",
+      "NIBR",
+      "IDL"
     ])
   )
 };

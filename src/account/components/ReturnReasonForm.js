@@ -20,7 +20,11 @@ export default class ReturnReasonForm extends React.Component {
     if (this.props.onContinue) {
       let reasonAndCommentObj = Object.assign(
         {},
-        { subReasonCode: this.state.subReasonCode, comment: this.state.comment }
+        {
+          subReasonCode: this.state.subReasonCode,
+          comment: this.state.comment,
+          reason: this.state.reason
+        }
       );
       this.props.onContinue(reasonAndCommentObj);
     }

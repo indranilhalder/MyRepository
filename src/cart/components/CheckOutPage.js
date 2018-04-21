@@ -18,7 +18,7 @@ import find from "lodash.find";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
-
+import size from "lodash.size";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -61,6 +61,11 @@ const PROCEED = "Proceed";
 const COUPON_AVAILABILITY_ERROR_MESSAGE = "Your applied coupon has expired";
 const PRODUCT_NOT_SERVICEABLE_MESSAGE =
   "Product is not Serviceable,Please try with another pin code";
+const SELECT_DELIVERY_MODE_MESSAGE =
+  "Please Select the delivery mode for all the products";
+const ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME =
+  "Please enter Pickup person name,character should be greater than 4 ";
+const ERROR_MESSAGE_FOR_MOBILE_NUMBER = "Please enter valid mobile number";
 class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
@@ -186,6 +191,11 @@ class CheckOutPage extends React.Component {
     );
   }
   addPickupPersonCNC(mobile, name) {
+    if (name.length < 4) {
+      return this.props.displayToast(ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME);
+    } else if (mobile.length !== 10) {
+      return this.props.displayToast(ERROR_MESSAGE_FOR_MOBILE_NUMBER);
+    }
     this.setState({ showCliqAndPiq: false });
     this.props.addPickupPersonCNC(mobile, name);
   }
@@ -520,12 +530,6 @@ class CheckOutPage extends React.Component {
             ) / 100
         });
       }
-    } else if (this.state.isGiftCard) {
-      this.setState({
-        isRemainingAmount: true,
-        payableAmount: Math.round(this.props.location.state.amount * 100) / 100,
-        bagAmount: Math.round(this.props.location.state.amount * 100) / 100
-      });
     } else {
       if (nextProps.cart.cartDetailsCNC && this.state.isRemainingAmount) {
         let cliqCashAmount = 0;
@@ -622,9 +626,15 @@ class CheckOutPage extends React.Component {
     } else if (
       this.props.location &&
       this.props.location.state &&
-      this.props.location.state.isFromGiftCard
+      this.props.location.state.isFromGiftCard &&
+      this.props.location.state.amount
     ) {
-      this.setState({ isGiftCard: true });
+      this.setState({
+        isGiftCard: true,
+        isRemainingAmount: true,
+        payableAmount: Math.round(this.props.location.state.amount * 100) / 100,
+        bagAmount: Math.round(this.props.location.state.amount * 100) / 100
+      });
     } else {
       if (this.props.getCartDetailsCNC) {
         let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -739,7 +749,9 @@ class CheckOutPage extends React.Component {
       }
     );
 
-    this.updateLocalStoragePinCode(addressSelected.postalCode);
+    this.updateLocalStoragePinCode(
+      addressSelected && addressSelected.postalCode
+    );
     // here we are checking the if user selected any address then setting our state
     // and in else condition if user deselect then this function will again call and
     //  then we are resetting the previous selected address
@@ -827,17 +839,23 @@ class CheckOutPage extends React.Component {
           this.props.selectDeliveryMode &&
           !this.checkAvailabilityOfService()
         ) {
+          let sizeNew = size(this.state.ussIdAndDeliveryModesObj);
+          if (sizeNew === this.props.cart.cartDetailsCNC.products.length) {
+            this.props.selectDeliveryMode(
+              this.state.ussIdAndDeliveryModesObj,
+              localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+            );
+            this.setState({
+              deliverMode: true
+            });
+          } else {
+            this.props.displayToast(SELECT_DELIVERY_MODE_MESSAGE);
+          }
+
           setDataLayerForCheckoutDirectCalls(
             ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE,
             this.state.ussIdAndDeliveryModesObj
           );
-          this.props.selectDeliveryMode(
-            this.state.ussIdAndDeliveryModesObj,
-            localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
-          );
-          this.setState({
-            deliverMode: true
-          });
         } else {
           if (this.props.displayToast) {
             this.props.displayToast(PRODUCT_NOT_SERVICEABLE_MESSAGE);

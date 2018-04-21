@@ -48,10 +48,22 @@ export default class OrderDetailsCard extends React.Component {
             <div className={styles.addressHolder}>
               <div className={styles.deliveredTo}>Delivery Address: </div>
               <div className={styles.address}>
-                {`${this.props.orderDetails.shippingAddress.addressLine1} ${
+                {`${
+                  this.props.orderDetails.shippingAddress.addressLine1
+                    ? this.props.orderDetails.shippingAddress.addressLine1
+                    : ""
+                } ${
                   this.props.orderDetails.shippingAddress.addressLine2
-                } ${this.props.orderDetails.shippingAddress.state} ${
+                    ? this.props.orderDetails.shippingAddress.addressLine2
+                    : ""
+                } ${
+                  this.props.orderDetails.shippingAddress.state
+                    ? this.props.orderDetails.shippingAddress.state
+                    : ""
+                } ${
                   this.props.orderDetails.shippingAddress.postalcode
+                    ? this.props.orderDetails.shippingAddress.postalcode
+                    : ""
                 }`}
               </div>
             </div>

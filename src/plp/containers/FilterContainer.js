@@ -5,13 +5,11 @@ import {
   setFilterSelectedData,
   resetFilterSelectedData
 } from "../actions/plp.actions.js";
+import findIndex from "lodash.findindex";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onApply: () => {
       ownProps.onApply();
-    },
-    onClear: function() {
-      ownProps.onClear();
     },
     setFilterSelectedData: (isCategorySelected, filterTabIndex) => {
       dispatch(setFilterSelectedData(isCategorySelected, filterTabIndex));
@@ -32,11 +30,30 @@ const mapStateToProps = (state, ownProps) => {
   } else {
     isCategorySelected = state.productListings.isCategorySelected;
   }
+  const selectedFacetKey = state.productListings.selectedFacetKey;
+  // cases
+
+  // The key is there and it's position has changed
+  // Key is there and it's position has not changed
+  // key is no longer there.
+
+  const facetData = state.productListings.productListings.facetdata;
+  let filterSelectedIndex = state.productListings.filterTabIndex;
+  if (facetData) {
+    let indexOfKey = findIndex(facetData, datum => {
+      return datum.key === selectedFacetKey;
+    });
+    if (indexOfKey === -1) {
+      indexOfKey = 0;
+    }
+    filterSelectedIndex = indexOfKey;
+  }
+
   return {
     ...ownProps,
     facetData: state.productListings.productListings.facetdata,
     facetdatacategory: state.productListings.productListings.facetdatacategory,
-    filterSelectedIndex: state.productListings.filterTabIndex,
+    filterSelectedIndex,
     isCategorySelected
   };
 };
