@@ -36,6 +36,7 @@ export default class SizeQuantitySelect extends React.Component {
     const selectedVariant = this.props.data.filter(val => {
       return val.colorlink.selected;
     })[0];
+    console.log(selectedVariant);
     const selectedColour = selectedVariant.colorlink.color;
     const selectedUrl = selectedVariant.sizelink.url;
     const selectedSize = selectedVariant.sizelink.size;
@@ -59,6 +60,7 @@ export default class SizeQuantitySelect extends React.Component {
     } else {
       fetchedQuantityList = ["1"];
     }
+    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.header}>

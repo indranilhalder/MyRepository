@@ -10,7 +10,8 @@ export default class MobileDatePicker extends React.Component {
     };
   }
   handleChange(event) {
-    this.setState({ value: event.target.value }, () => {
+    const formattedDate = moment(event.target.value).format("DD/MM/YYYY");
+    this.setState({ value: formattedDate }, () => {
       if (this.props.onChange) {
         this.props.onChange(this.state.value);
       }
