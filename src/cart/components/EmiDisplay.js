@@ -14,7 +14,7 @@ export default class EmiDisplay extends React.Component {
     let emiRate =
       this.props.emiRate === "No Cost"
         ? this.props.emiRate
-        : `${this.props.emiRate}% p.a{" "}`;
+        : `${this.props.emiRate}% p.a`;
     return (
       <div className={styles.base}>
         <div className={styles.header}>
