@@ -147,7 +147,7 @@ export default class EditAccountDetails extends React.Component {
 
             <div className={styles.container}>
               <SelectBoxMobile
-                label={this.state.gender}
+                label={this.state.gender ? this.state.gender : "Gender"}
                 value={this.state.gender}
                 options={[
                   { label: "Gender", value: "gender" },

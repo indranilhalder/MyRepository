@@ -104,7 +104,11 @@ export default class PaymentCardWrapper extends React.Component {
               {" "}
               <CliqCashToggle
                 cashText="Use My CLiQ Cash Balance"
-                price={this.props.cliqCashAmount}
+                price={
+                  isNaN(this.props.cliqCashAmount)
+                    ? 0
+                    : this.props.cliqCashAmount
+                }
                 value={this.props.cliqCashAmount}
                 active={cliqCashToggleState}
                 onToggle={val => this.handleClick(val)}
