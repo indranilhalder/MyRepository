@@ -1078,7 +1078,7 @@ export function getDigitalDataForMyAccount(pageTitle) {
   };
   return data;
 }
-function getDigitalDataForBLP(response) {
+export function getDigitalDataForBLP(response) {
   const data = {};
   let pageTitle = "";
   if (response.pageName) {
@@ -1090,10 +1090,11 @@ function getDigitalDataForBLP(response) {
   }
   if (response.items && response.items.length > 0) {
     const titleObj = response.items.find(data => {
-      return data.type === "Landing Page Title Component";
+      return data.componentName === "landingPageTitleComponent";
     });
-    if (titleObj && titleObj.title) {
-      pageTitle = titleObj.title;
+
+    if (titleObj && titleObj.landingPageTitleComponent) {
+      pageTitle = titleObj.landingPageTitleComponent.title;
     }
     Object.assign(data, {
       cpj: { brand: { name: pageTitle } }
@@ -1117,7 +1118,7 @@ function getDigitalDataForBLP(response) {
 
   return data;
 }
-function getDigitalDataForCLP(response) {
+export function getDigitalDataForCLP(response) {
   const data = {
     page: { category: { primaryCategory: "category" } }
   };
