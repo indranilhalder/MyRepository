@@ -76,8 +76,8 @@ const MY_ACCOUNT_SETTING = "myaccount_update_setting";
 // end of type of hierarchy for my Account
 
 // const or adobe call for internal search call
-const ADOBE_INTERNAL_SEARCH_SUCCESS = "";
-const ADOBE_INTERNAL_SEARCH_NULL = "";
+const ADOBE_INTERNAL_SEARCH_SUCCESS = "internal_search";
+const ADOBE_INTERNAL_SEARCH_NULL = "null_search";
 // end of const or adobe call for internal search call
 
 // internal search Adobe call const
@@ -210,9 +210,15 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   if (type === ADOBE_PLP_TYPE) {
     window.digitalData = getDigitalDataForPlp(type, response);
   }
-  if (type === ADOBE_INTERNAL_SEARCH_SUCCESS) {
-    window.digitalData = getDigitalDataForSearchPageSuccess();
+  if (type === ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT) {
+    window.digitalData = getDigitalDataForSearchPageSuccess(response);
+    window._satellite.track(ADOBE_INTERNAL_SEARCH_SUCCESS);
   }
+  if (type === ADOBE_INTERNAL_SEARCH_CALL_ON_GET_NULL) {
+    window.digitalData = getDigitalDataForSearchPageForNullResult(response);
+    window._satellite.track(ADOBE_INTERNAL_SEARCH_NULL);
+  }
+
   if (type === ADOBE_PDP_TYPE) {
     const digitalDataForPDP = getDigitalDataForPdp(type, response);
     //  this is neccasary for when user comes from plp page to pdp
@@ -715,12 +721,45 @@ export function getDigitalDataForSearchPageSuccess(response) {
     page: {
       pageInfo: { pageName: "search results page" },
       category: { primaryCategory: "productsearch" },
-      display: { hierarchy: ["home", response.searchString] }
+      display: {
+        hierarchy: [
+          "home",
+          response.currentQuery ? response.currentQuery.searchQuery : null
+        ]
+      }
     },
     internal: {
-      search: { category: "all", results: "", term: response.searchString }
+      search: {
+        category: "all",
+        results: response.searchresult ? response.searchresult.length : 0,
+        term: response.currentQuery ? response.currentQuery.searchQuery : null
+      }
     }
   };
+  if (response && response.searchresult && response.searchresult.length > 0) {
+    const productCodes = response.searchresult.splice(0, 9).map(product => {
+      return product.productId.toLowerCase();
+    });
+    const impression = productCodes.join("|");
+    Object.assign(data.page, {
+      products: {
+        impression
+      }
+    });
+  }
+  return data;
+}
+
+export function getDigitalDataForSearchPageForNullResult(response) {
+  console.log(response);
+  const data = {
+    internal: {
+      search: {
+        term: response.currentQuery ? response.currentQuery.searchQuery : null
+      }
+    }
+  };
+  return data;
 }
 export function setDataLayerForPlpDirectCalls(response) {
   const data = window.digitalData;
