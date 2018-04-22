@@ -405,6 +405,9 @@ class CheckOutPage extends React.Component {
           getAddressDetails={val => this.setState({ addressDetails: val })}
           getPinCode={val => this.getPinCodeDetails(val)}
           getPinCodeDetails={this.props.getPinCodeDetails}
+          resetAutoPopulateDataForPinCode={() =>
+            this.props.resetAutoPopulateDataForPinCode()
+          }
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
