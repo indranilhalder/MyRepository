@@ -60,6 +60,11 @@ const ADOBE_LOGIN_SUCCESS = "login_successful";
 const ADOBE_LOGIN_FAILURE = "login_failed";
 // end of direct call for login tracking
 
+// cosnt for BLP and CLP
+const ADOBE_BLP_DIRECT_CALL = "cpj_brand_pages";
+const ADOBE_CLP_DIRECT_CALL = "cpj_category_pages";
+// end of cosnt for BLP and CLP
+
 // type of hierarchy for MY_ACCOUNT
 const MY_ACCOUNT_OVERVIEW = "myaccount_overview";
 const MY_ACCOUNT_SAVED_LIST = "myaccount_default_wishlist";
@@ -269,9 +274,11 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   }
   if (type === ADOBE_BLP_PAGE_LOAD) {
     window.digitalData = getDigitalDataForBLP(response);
+    window._satellite.track(ADOBE_BLP_DIRECT_CALL);
   }
   if (type === ADOBE_CLP_PAGE_LOAD) {
-    window.digitalData = getDigitalDataForCLP();
+    window.digitalData = getDigitalDataForCLP(response);
+    window._satellite.track(ADOBE_CLP_DIRECT_CALL);
   }
   if (icid) {
     window.digitalData.internal = {
@@ -1072,7 +1079,6 @@ export function getDigitalDataForMyAccount(pageTitle) {
   return data;
 }
 function getDigitalDataForBLP(response) {
-  console.log(response);
   const data = {};
   let pageTitle = "";
   if (response.pageName) {
@@ -1111,4 +1117,36 @@ function getDigitalDataForBLP(response) {
 
   return data;
 }
-function getDigitalDataForCLP() {}
+function getDigitalDataForCLP(response) {
+  const data = {
+    page: { category: { primaryCategory: "category" } }
+  };
+  const subCategories = getSubCategories(response);
+  if (subCategories) {
+    Object.assign(data.page.category, { ...subCategories });
+    Object.assign(data.page, {
+      pageInfo: {
+        pageName: `product grid: ${
+          subCategories.subCategory1 ? subCategories.subCategory1 : null
+        } : ${
+          subCategories.subCategory2 ? subCategories.subCategory2 : null
+        } : ${subCategories.subCategory3 ? subCategories.subCategory3 : null}`
+      }
+    });
+  } else {
+    Object.assign(data.page, {
+      pageInfo: {
+        pageName: `product grid: ${null}: ${null}: ${null}`
+      }
+    });
+  }
+  const hierarchy = getHierarchyArray(response);
+  if (hierarchy) {
+    Object.assign(data.page, {
+      display: {
+        hierarchy
+      }
+    });
+  }
+  return data;
+}

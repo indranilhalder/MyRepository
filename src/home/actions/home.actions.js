@@ -327,8 +327,6 @@ export function homeFeedBackUp() {
 // this is also now used for static pages, so the name brandIdOrCategoryId makes less sense
 // however there isn't a good name to replace it.
 export function homeFeed(brandIdOrCategoryId: null) {
-  console.log("Comes in home feed");
-  console.log(brandIdOrCategoryId);
   return async (dispatch, getState, { api }) => {
     if (brandIdOrCategoryId) {
       dispatch(homeFeedRequest(BLP_OR_CLP_FEED_TYPE));
@@ -348,9 +346,19 @@ export function homeFeed(brandIdOrCategoryId: null) {
         } else {
           dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
           if (CATEGORY_REGEX.test(brandIdOrCategoryId)) {
-            setDataLayer(ADOBE_CLP_PAGE_LOAD);
+            setDataLayer(
+              ADOBE_CLP_PAGE_LOAD,
+              resultJson,
+              getState().icid.value,
+              getState().icid.icidType
+            );
           } else if (BRAND_REGEX.test(brandIdOrCategoryId))
-            setDataLayer(ADOBE_BLP_PAGE_LOAD, resultJson);
+            setDataLayer(
+              ADOBE_BLP_PAGE_LOAD,
+              resultJson,
+              getState().icid.value,
+              getState().icid.icidType
+            );
         }
       } else {
         let mbox = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
