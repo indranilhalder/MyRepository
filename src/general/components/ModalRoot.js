@@ -8,6 +8,7 @@ import * as Cookie from "../../lib/Cookie.js";
 import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
 import ItemLevelPopup from "../../cart/components/ItemLevelPopup.js";
 import TermsAndConditionsModal from "../../cart/components/TermsAndConditionsModal.js";
+import { LOGIN_PATH } from "../../lib/constants";
 const modalRoot = document.getElementById("modal-root");
 const GenerateOtp = "GenerateOtpForEgv";
 const RestorePasswords = "RestorePassword";
@@ -190,31 +191,39 @@ export default class ModalRoot extends React.Component {
     this.props.hideModal();
   }
   applyBankOffer = couponCode => {
-    this.props.applyBankOffer(couponCode);
+    return this.props.applyBankOffer(couponCode);
   };
-  releaseBankOffer = couponCode => {
-    this.props.releaseBankOffer(couponCode);
+  releaseBankOffer = (previousCouponCode, newCouponCode) => {
+    return this.props.releaseBankOffer(previousCouponCode, newCouponCode);
+  };
+  releasePreviousAndApplyNewBankOffer = (
+    previousCouponCode,
+    newSelectedCouponCode
+  ) => {
+    this.props.releasePreviousAndApplyNewBankOffer(
+      previousCouponCode,
+      newSelectedCouponCode
+    );
   };
   applyUserCoupon = couponCode => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    if (userDetails) {
-      this.props.applyUserCouponForLoggedInUsers(couponCode);
-    } else {
-      this.props.applyUserCouponForAnonymous(couponCode);
-    }
-
     this.props.hideModal();
+    if (userDetails) {
+      return this.props.applyUserCouponForLoggedInUsers(couponCode);
+    } else {
+      return this.props.applyUserCouponForAnonymous(couponCode);
+    }
   };
   releaseUserCoupon = (oldCouponCode, newCouponCode) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    if (userDetails) {
-      this.props.releaseUserCoupon(oldCouponCode, newCouponCode);
-    } else {
-      this.props.releaseCouponForAnonymous(oldCouponCode, newCouponCode);
-    }
-
     this.props.hideModal();
+    if (userDetails) {
+      return this.props.releaseUserCoupon(oldCouponCode, newCouponCode);
+    } else {
+      return this.props.releaseCouponForAnonymous(oldCouponCode, newCouponCode);
+    }
   };
+
   getUserAddress = () => {
     this.props.getUserAddress();
   };
@@ -293,6 +302,12 @@ export default class ModalRoot extends React.Component {
   onClickWrongNumber() {
     this.props.showModal(RestorePasswords);
   }
+
+  navigateToLogin = url => {
+    this.props.setUrlToRedirectToAfterAuth(url);
+    this.handleClose();
+    this.props.history.push(LOGIN_PATH);
+  };
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -360,17 +375,22 @@ export default class ModalRoot extends React.Component {
         <ProductCouponDetails
           closeModal={() => this.handleClose()}
           applyUserCoupon={couponCode => this.applyUserCoupon(couponCode)}
-          releaseUserCoupon={(oldCouponCode, newCouponCode) =>
-            this.releaseUserCoupon(oldCouponCode, newCouponCode)
+          releaseUserCoupon={(couponCode, newCouponCode) =>
+            this.releaseUserCoupon(couponCode, newCouponCode)
           }
           {...this.props.ownProps}
+          navigateToLogin={url =>
+            this.navigateToLogin(url, { ...this.props.ownProps })
+          }
         />
       ),
       BankOffers: (
         <BankOffersDetails
           closeModal={() => this.handleClose()}
           applyBankOffer={couponCode => this.applyBankOffer(couponCode)}
-          releaseBankOffer={couponCode => this.releaseBankOffer(couponCode)}
+          releaseBankOffer={(couponCode, newCouponCode) =>
+            this.releaseBankOffer(couponCode, newCouponCode)
+          }
           {...this.props.ownProps}
         />
       ),

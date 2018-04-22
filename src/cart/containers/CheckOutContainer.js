@@ -141,10 +141,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(showModal(BANK_OFFERS, data));
     },
     applyBankOffer: couponCode => {
-      dispatch(applyBankOffer(couponCode));
+      return dispatch(applyBankOffer(couponCode));
     },
     releaseBankOffer: couponCode => {
-      dispatch(releaseBankOffer(couponCode));
+      return dispatch(releaseBankOffer(couponCode));
     },
     getNetBankDetails: () => {
       dispatch(getNetBankDetails());
