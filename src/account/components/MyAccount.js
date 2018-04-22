@@ -84,7 +84,10 @@ export default class MyAccount extends React.Component {
             heading={
               userDetails &&
               userDetails.firstName &&
-              `${userDetails.firstName} ${userDetails.lastName}`
+              `${userDetails.firstName} `
+            }
+            lastName={
+              userDetails && userDetails.lastName && `${userDetails.lastName}`
             }
           />
           <div className={styles.logoutButton}>
