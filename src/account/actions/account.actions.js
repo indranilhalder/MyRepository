@@ -1674,7 +1674,7 @@ export function followAndUnFollowBrand(
             )
           );
         } else if (pageType === PDP_FOLLOW_AND_UN_FOLLOW) {
-          const brandObj = getState().pdp.aboutTheBrand;
+          const brandObj = getState().productDescription.aboutTheBrand;
           const brandName = brandObj.brandName;
           setDataLayerForFollowAndUnFollowBrand(
             ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS,
