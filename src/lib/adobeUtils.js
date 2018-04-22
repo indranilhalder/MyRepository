@@ -178,6 +178,13 @@ export const ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL =
   "ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL";
 export const ADOBE_MY_ACCOUNT_ORDER_RETURN = "ADOBE_MY_ACCOUNT_ORDER_RETURN";
 // end of const for my account adobe call
+
+// cosnt for BLP and CLP adobe calls
+
+export const ADOBE_BLP_PAGE_LOAD = "ADOBE_BLP_PAGE_LOAD";
+export const ADOBE_CLP_PAGE_LOAD = "ADOBE_CLP_PAGE_LOAD";
+
+// end of  cosnt for BLP and CLP adobe calls
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
 const MOBILE = "mobile";
@@ -259,6 +266,12 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   }
   if (type === ADOBE_MY_ACCOUNT_ORDER_DETAILS) {
     window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ORDER_DETAIL);
+  }
+  if (type === ADOBE_BLP_PAGE_LOAD) {
+    window.digitalData = getDigitalDataForBLP(response);
+  }
+  if (type === ADOBE_CLP_PAGE_LOAD) {
+    window.digitalData = getDigitalDataForCLP();
   }
   if (icid) {
     window.digitalData.internal = {
@@ -1058,3 +1071,44 @@ export function getDigitalDataForMyAccount(pageTitle) {
   };
   return data;
 }
+function getDigitalDataForBLP(response) {
+  console.log(response);
+  const data = {};
+  let pageTitle = "";
+  if (response.pageName) {
+    Object.assign(data, {
+      page: {
+        pageName: response.pageName
+      }
+    });
+  }
+  if (response.items && response.items.length > 0) {
+    const titleObj = response.items.find(data => {
+      return data.type === "Landing Page Title Component";
+    });
+    if (titleObj && titleObj.title) {
+      pageTitle = titleObj.title;
+    }
+    Object.assign(data, {
+      cpj: { brand: { name: pageTitle } }
+    });
+    if (data.page) {
+      Object.assign(data.page, {
+        display: {
+          hierarchy: ["home", pageTitle]
+        }
+      });
+    } else {
+      Object.assign(data, {
+        page: {
+          display: {
+            hierarchy: ["home", pageTitle]
+          }
+        }
+      });
+    }
+  }
+
+  return data;
+}
+function getDigitalDataForCLP() {}
