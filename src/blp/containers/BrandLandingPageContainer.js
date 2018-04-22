@@ -1,5 +1,4 @@
 import Feed from "../../home/components/Feed";
-import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = dispatch => {
@@ -16,7 +15,7 @@ const mapStateToProps = state => {
     isOnBrandLandingPage: true
   };
 };
-const BrandLandingPageContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(Feed)
+const BrandLandingPageContainer = connect(mapStateToProps, mapDispatchToProps)(
+  Feed
 );
 export default BrandLandingPageContainer;
