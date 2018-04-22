@@ -751,7 +751,6 @@ export function getDigitalDataForSearchPageSuccess(response) {
 }
 
 export function getDigitalDataForSearchPageForNullResult(response) {
-  console.log(response);
   const data = {
     internal: {
       search: {
