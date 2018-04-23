@@ -140,7 +140,10 @@ export default class AddDeliveryAddress extends React.Component {
       this.props.displayToast(EMAIL_TEXT);
       return false;
     }
-    if (!EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)) {
+    if (
+      this.state.emailId &&
+      !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
+    ) {
       this.props.displayToast(EMAIL_VALID_TEXT);
       return false;
     }
