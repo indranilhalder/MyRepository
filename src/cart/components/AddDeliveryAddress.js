@@ -12,6 +12,10 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
 import { SUCCESS } from "../../lib/constants.js";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import {
+  EMAIL_REGULAR_EXPRESSION,
+  MOBILE_PATTERN
+} from "../../auth/components/Login";
 const SAVE_TEXT = "Save Address";
 const PINCODE_TEXT = "Please enter pincode";
 const NAME_TEXT = "Please enter name";
@@ -19,6 +23,9 @@ const ADDRESS_TEXT = "Please enter address";
 const EMAIL_TEXT = "Please enter email id";
 const LANDMARK_TEXT = "Please select landmark";
 const MOBILE_TEXT = "Please enter mobile number";
+const PINCODE_VALID_TEXT = "Please enter valid pincode";
+const EMAIL_VALID_TEXT = "Please enter valid emailId";
+const PHONE_VALID_TEXT = "Please fill valid mobile number";
 const ISO_CODE = "IN";
 const OTHER_LANDMARK = "other";
 export default class AddDeliveryAddress extends React.Component {
@@ -53,6 +60,11 @@ export default class AddDeliveryAddress extends React.Component {
       this.props.getPinCode(val);
     }
   };
+  handlePhoneInput(val) {
+    if (val.length <= 10) {
+      this.setState({ phone: val });
+    }
+  }
   onChange(val) {
     this.setState(val);
     if (this.props.getAddressDetails) {
@@ -108,6 +120,10 @@ export default class AddDeliveryAddress extends React.Component {
       this.props.displayToast(PINCODE_TEXT);
       return false;
     }
+    if (this.state.postalCode && this.state.postalCode.length < 6) {
+      this.props.displayToast(PINCODE_VALID_TEXT);
+      return false;
+    }
     if (!this.state.firstName) {
       this.props.displayToast(NAME_TEXT);
       return false;
@@ -124,8 +140,12 @@ export default class AddDeliveryAddress extends React.Component {
       this.props.displayToast(EMAIL_TEXT);
       return false;
     }
-    if (!this.state.phone) {
-      this.props.displayToast(MOBILE_TEXT);
+    if (!EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)) {
+      this.props.displayToast(EMAIL_VALID_TEXT);
+      return false;
+    }
+    if (this.state.phone && !MOBILE_PATTERN.test(this.state.phone)) {
+      this.props.displayToast(PHONE_VALID_TEXT);
       return false;
     } else {
       this.props.addUserAddress(this.state);
@@ -307,7 +327,7 @@ export default class AddDeliveryAddress extends React.Component {
             placeholder="Phone number*"
             value={this.props.phone ? this.props.phone : this.state.phone}
             boxy={true}
-            onChange={phone => this.onChange({ phone })}
+            onChange={phone => this.handlePhoneInput(phone)}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
