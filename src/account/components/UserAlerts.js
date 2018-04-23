@@ -5,6 +5,7 @@ import ShippingCommenced from "../../blp/components/ShippingCommenced";
 export default class UserAlerts extends React.Component {
   render() {
     const { userAlerts } = this.props;
+    console.log(this.props);
     return (
       <div className={styles.base}>
         {userAlerts &&

@@ -1,9 +1,7 @@
 .base {
   width: 100%;
   height: auto;
-  background: #fff;
   border-radius: 4px;
-  padding: 15px;
 }
 .couponInnerBox {
   width: 100%;
