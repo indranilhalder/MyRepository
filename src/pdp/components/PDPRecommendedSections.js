@@ -4,6 +4,7 @@ import ProductModule from "../../general/components/ProductModule.js";
 import { transformData } from "../../home/components/utils.js";
 import Logo from "../../general/components/Logo.js";
 import Button from "../../general/components/Button.js";
+import DumbCarousel from "../../general/components/DumbCarousel.js";
 import { withRouter } from "react-router-dom";
 import {
   ABOUT_THE_BRAND_WIDGET_KEY,
@@ -29,7 +30,7 @@ class PDPRecommendedSections extends React.Component {
     if (this.props.aboutTheBrand) {
       brandId = this.props.aboutTheBrand.id;
     }
-
+    console.log(this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY]);
     return (
       this.props.aboutTheBrand && (
         <React.Fragment>
@@ -80,12 +81,13 @@ class PDPRecommendedSections extends React.Component {
   renderCarousel(items) {
     return (
       <div className={styles.brandProductCarousel}>
-        <Carousel>
+        <DumbCarousel elementWidth={45}>
           {items.map((val, i) => {
             const transformedDatum = transformData(val);
             const productImage = transformedDatum.image;
             return (
               <ProductModule
+                key={i}
                 {...transformedDatum}
                 {...this.props}
                 productImage={productImage}
@@ -94,7 +96,7 @@ class PDPRecommendedSections extends React.Component {
               />
             );
           })}
-        </Carousel>
+        </DumbCarousel>
       </div>
     );
   }
@@ -117,7 +119,7 @@ class PDPRecommendedSections extends React.Component {
         {this.renderAboutTheBrand()}
         {this.renderProductModuleSection(
           "Recommended Products",
-          RECOMMENDED_PRODUCTS_WIDGET_KEY
+          "recommendedProducts"
         )}
         {this.renderProductModuleSection(
           "Similar Products",
