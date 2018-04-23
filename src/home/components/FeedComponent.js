@@ -60,6 +60,7 @@ class FeedComponent extends React.Component {
                   onDownload={datum.onDownload}
                   webURL={datum.webURL}
                   productCode={datum.productListingId}
+                  showWishListButton={false}
                   ussId={datum.winningUssID}
                   onClick={this.onClick}
                   {...rest}
