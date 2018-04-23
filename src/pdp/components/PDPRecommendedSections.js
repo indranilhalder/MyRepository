@@ -23,8 +23,7 @@ class PDPRecommendedSections extends React.Component {
     if (this.props.aboutTheBrand.webURL) {
       const url = this.props.aboutTheBrand.webURL.replace(TATA_CLIQ_ROOT, "$1");
       this.props.history.push(url);
-    }
-    if (this.props.aboutTheBrand && this.props.aboutTheBrand.brandId) {
+    } else if (this.props.aboutTheBrand && this.props.aboutTheBrand.brandId) {
       this.props.history.push(`c-${this.props.aboutTheBrand.brandId}`);
     }
   }
