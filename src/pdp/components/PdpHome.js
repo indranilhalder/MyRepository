@@ -442,6 +442,7 @@ export default class PdpApparel extends React.Component {
           </div>
           {productData.APlusContent && (
             <AllDescription
+              templateName={productData.APlusContent.temlateName}
               productContent={productData.APlusContent.productContent}
             />
           )}
