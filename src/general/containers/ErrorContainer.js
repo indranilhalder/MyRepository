@@ -157,6 +157,7 @@ class ErrorDisplay extends React.Component {
       } else {
         this.props.getGlobalAccessToken();
       }
+      window.location.reload(true);
     }
 
     this.props.displayToast(message);
