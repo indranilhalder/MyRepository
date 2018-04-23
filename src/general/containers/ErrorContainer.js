@@ -151,16 +151,15 @@ class ErrorDisplay extends React.Component {
       let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
       customerCookie =
         customerCookie && JSON.parse(customerCookie).access_token;
-
       if (message.indexOf(customerCookie) >= 0) {
         this.props.refreshToken();
       } else {
         this.props.getGlobalAccessToken();
       }
+    } else {
+      this.props.displayToast(message);
+      delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
     }
-
-    this.props.displayToast(message);
-    delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
   }
 
   render() {
