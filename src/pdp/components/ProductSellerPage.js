@@ -47,7 +47,7 @@ class ProductSellerPage extends Component {
 
   addToCart = () => {
     let productDetails = {};
-    productDetails.code = this.props.productListingId;
+    productDetails.code = this.props.productDetails.productListingId;
     productDetails.ussId = productDetails.quantity = PRODUCT_QUANTITY;
     productDetails.ussId = this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
