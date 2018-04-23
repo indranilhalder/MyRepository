@@ -545,7 +545,7 @@ export function getComponentData(
           type === DISCOVER_MORE ||
           type === AUTO_PRODUCT_RECOMMENDATION_COMPONENT
         ) {
-          postData.append(
+          postData.set(
             "num_results",
             JSON.stringify([DISCOVER_MORE_NUM_RESULTS])
           );

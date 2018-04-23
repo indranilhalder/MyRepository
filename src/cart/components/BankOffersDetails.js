@@ -1,33 +1,97 @@
 import React, { Component } from "react";
+import SearchCupon from "../../pdp/components/SearchCupon.js";
 import BankCoupons from "./BankCoupons.js";
 import SlideModal from "../../general/components/SlideModal";
 import styles from "./BankOffersDetails.css";
 import GridSelect from "../../general/components/GridSelect";
+import { SUCCESS, ERROR } from "../../lib/constants";
+import {
+  RELEASE_BANK_OFFER_FAILURE,
+  APPLY_BANK_OFFER_FAILURE
+} from "../actions/cart.actions";
 const COUPON_HEADER = "Bank promotions";
-
+const REMOVE = "Remove";
+const APPLY = "Apply";
 class BankOffersDetails extends Component {
-  applyBankCoupons = val => {
-    if (this.props.applyBankOffer) {
-      this.props.applyBankOffer(val);
-    }
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      previousSelectedCouponCode: props.selectedBankOfferCode,
+      selectedBankOfferCode: props.selectedBankOfferCode
+    };
+  }
 
-  releaseBankOffer = val => {
-    if (this.props.releaseBankOffer) {
-      this.props.releaseBankOffer(val);
+  async applyUserCoupon() {
+    if (this.state.selectedBankOfferCode) {
+      if (
+        this.state.selectedBankOfferCode !==
+        this.state.previousSelectedCouponCode
+      ) {
+        if (this.state.previousSelectedCouponCode) {
+          this.setState({
+            previousSelectedCouponCode: this.state.selectedBankOfferCode
+          });
+          this.props.selecteBankOffer(this.state.selectedBankOfferCode);
+          const applyNewBankOfferStatus = await this.props.releaseBankOffer(
+            this.state.previousSelectedCouponCode,
+            this.state.selectedBankOfferCode
+          );
+          if (applyNewBankOfferStatus.status === SUCCESS) {
+            this.props.selecteBankOffer(this.state.selectedBankOfferCode);
+            this.props.closeModal();
+          } else {
+            if (
+              applyNewBankOfferStatus.status === ERROR &&
+              applyNewBankOfferStatus.type === RELEASE_BANK_OFFER_FAILURE
+            ) {
+              this.setState({
+                selectedBankOfferCode: this.state.previousSelectedCouponCode
+              });
+            } else if (
+              applyNewBankOfferStatus.status === ERROR &&
+              applyNewBankOfferStatus.type === APPLY_BANK_OFFER_FAILURE
+            ) {
+              this.props.selecteBankOffer("");
+              this.setState({
+                previousSelectedCouponCode: "",
+                selectedBankOfferCode: ""
+              });
+            }
+          }
+        } else {
+          const applyNewCouponCode = await this.props.applyBankOffer(
+            this.state.selectedBankOfferCode
+          );
+          if (applyNewCouponCode.status === SUCCESS) {
+            this.props.selecteBankOffer(this.state.selectedBankOfferCode);
+            this.props.closeModal();
+          } else {
+            this.setState({
+              previousSelectedCouponCode: "",
+              selectedBankOfferCode: ""
+            });
+          }
+        }
+      } else {
+        const releaseBankOfferReq = await this.props.releaseBankOffer(
+          this.state.selectedBankOfferCode
+        );
+        if (releaseBankOfferReq.status === SUCCESS) {
+          this.props.selecteBankOffer("");
+          this.setState({
+            previousSelectedCouponCode: "",
+            selectedBankOfferCode: ""
+          });
+        }
+      }
     }
-  };
+  }
+
   onSelectCouponCode = val => {
     if (val[0]) {
-      if (this.props.applyBankOffer) {
-        this.props.applyBankOffer(val);
-        this.props.selecteBankOffer(val[0]);
-      }
+      this.setState({ selectedBankOfferCode: val[0] });
     } else {
-      if (this.props.releaseBankOffer) {
-        this.props.selecteBankOffer(null);
-        this.props.releaseBankOffer(val);
-      }
+      this.setState({ selectedBankOfferCode: "" });
     }
   };
   render() {
@@ -35,12 +99,28 @@ class BankOffersDetails extends Component {
       <div className={styles.base}>
         <SlideModal {...this.props}>
           <div className={styles.couponHeader}>{COUPON_HEADER}</div>
+          <div className={styles.searchHolder}>
+            <SearchCupon
+              label={
+                this.state.previousSelectedCouponCode &&
+                this.state.previousSelectedCouponCode ===
+                  this.state.selectedBankOfferCode
+                  ? REMOVE
+                  : APPLY
+              }
+              couponCode={this.state.selectedBankOfferCode}
+              getValue={selectedBankOfferCode =>
+                this.setState({ selectedBankOfferCode })
+              }
+              applyUserCoupon={() => this.applyUserCoupon()}
+            />
+          </div>
           <GridSelect
             elementWidthMobile={100}
             offset={0}
             limit={1}
             onSelect={val => this.onSelectCouponCode(val)}
-            selected={[this.props.selectedBankOfferCode]}
+            selected={[this.state.selectedBankOfferCode]}
           >
             {this.props.coupons &&
               this.props.coupons.coupons.map((value, i) => {

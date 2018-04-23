@@ -20,7 +20,14 @@ export default class AccountSetting extends React.Component {
                 {this.props.firstName}
               </div>
             </div>
-            <div className={styles.headingText}>{this.props.heading}</div>
+            <div className={styles.headingText}>
+              {this.props.heading &&
+                this.props.heading !== "undefined" &&
+                this.props.heading}
+              {this.props.lastName &&
+                this.props.lastName !== "undefined" &&
+                this.props.lastName}
+            </div>
           </div>
           {this.props.label && (
             <div className={styles.buttonHolder}>

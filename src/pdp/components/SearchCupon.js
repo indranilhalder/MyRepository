@@ -22,11 +22,12 @@ export default class SearchCupon extends React.Component {
       this.props.applyUserCoupon(this.props.couponCode);
     }
   }
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.couponCode !== this.props.couponCode) {
-      this.setState({ couponCode: this.props.couponCode });
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.couponCode !== this.state.couponCode) {
+      this.setState({ couponCode: nextProps.couponCode });
     }
   }
+
   render() {
     return (
       <div className={styles.base}>
@@ -36,7 +37,7 @@ export default class SearchCupon extends React.Component {
               size="14px"
               fontFamily="regular"
               color="#000"
-              label="Apply"
+              label={this.props.label}
               onClick={() => this.onApply()}
             />
           </div>
@@ -56,6 +57,10 @@ export default class SearchCupon extends React.Component {
   }
 }
 SearchCupon.propTypes = {
+  label: PropTypes.string,
   getValue: PropTypes.func,
   onApply: PropTypes.func
+};
+SearchCupon.defaultProps = {
+  label: "Apply"
 };

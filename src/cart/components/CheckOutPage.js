@@ -63,6 +63,9 @@ const PRODUCT_NOT_SERVICEABLE_MESSAGE =
   "Product is not Serviceable,Please try with another pin code";
 const SELECT_DELIVERY_MODE_MESSAGE =
   "Please Select the delivery mode for all the products";
+const ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME =
+  "Please enter Pickup person name,character should be greater than 4 ";
+const ERROR_MESSAGE_FOR_MOBILE_NUMBER = "Please enter valid mobile number";
 class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
@@ -96,7 +99,7 @@ class CheckOutPage extends React.Component {
       addressDetails: null,
       isNoCostEmiApplied: false,
       isNoCostEmiProceeded: false,
-      selectedBankOfferCode: null
+      selectedBankOfferCode: ""
     };
   }
   onClickImage(productCode) {
@@ -188,6 +191,11 @@ class CheckOutPage extends React.Component {
     );
   }
   addPickupPersonCNC(mobile, name) {
+    if (name.length < 4) {
+      return this.props.displayToast(ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME);
+    } else if (mobile.length !== 10) {
+      return this.props.displayToast(ERROR_MESSAGE_FOR_MOBILE_NUMBER);
+    }
     this.setState({ showCliqAndPiq: false });
     this.props.addPickupPersonCNC(mobile, name);
   }
@@ -334,32 +342,46 @@ class CheckOutPage extends React.Component {
   };
 
   renderBankOffers = () => {
+    let offerMinCartValue, offerTitle, offerCode;
+    if (
+      this.props.cart.paymentModes &&
+      this.props.cart.paymentModes.paymentOffers &&
+      this.props.cart.paymentModes.paymentOffers.coupons
+    ) {
+      const selectedCoupon = this.props.cart.paymentModes.paymentOffers.coupons.find(
+        coupon => {
+          return coupon.offerCode === this.state.selectedBankOfferCode;
+        }
+      );
+      if (selectedCoupon) {
+        offerMinCartValue = selectedCoupon.offerMinCartValue;
+        offerTitle = selectedCoupon.offerTitle;
+        offerCode = selectedCoupon.offerCode;
+      } else {
+        offerMinCartValue = this.props.cart.paymentModes.paymentOffers
+          .coupons[0].offerMinCartValue;
+        offerTitle = this.props.cart.paymentModes.paymentOffers.coupons[0]
+          .offerTitle;
+        offerCode = this.props.cart.paymentModes.paymentOffers.coupons[0]
+          .offerCode;
+      }
+    }
+
     return (
       <GridSelect
         elementWidthMobile={100}
         offset={0}
         limit={1}
         onSelect={val => this.applyBankCoupons(val)}
+        selected={[this.state.selectedBankOfferCode]}
       >
-        {this.props.cart.paymentModes &&
-          this.props.cart.paymentModes.paymentOffers &&
-          this.props.cart.paymentModes.paymentOffers.coupons &&
-          this.props.cart.paymentModes.paymentOffers.coupons[0] && (
-            <BankOffer
-              bankName={
-                this.props.cart.paymentModes.paymentOffers.coupons[0].offerTitle
-              }
-              offerText={
-                this.props.cart.paymentModes.paymentOffers.coupons[0]
-                  .offerMinCartValue
-              }
-              label={SEE_ALL_BANK_OFFERS}
-              applyBankOffers={() => this.openBankOffers()}
-              value={
-                this.props.cart.paymentModes.paymentOffers.coupons[0].offerCode
-              }
-            />
-          )}
+        <BankOffer
+          bankName={offerTitle}
+          offerText={offerMinCartValue}
+          label={SEE_ALL_BANK_OFFERS}
+          applyBankOffers={() => this.openBankOffers()}
+          value={offerCode}
+        />
       </GridSelect>
     );
   };
@@ -383,6 +405,9 @@ class CheckOutPage extends React.Component {
           getAddressDetails={val => this.setState({ addressDetails: val })}
           getPinCode={val => this.getPinCodeDetails(val)}
           getPinCodeDetails={this.props.getPinCodeDetails}
+          resetAutoPopulateDataForPinCode={() =>
+            this.props.resetAutoPopulateDataForPinCode()
+          }
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -508,12 +533,6 @@ class CheckOutPage extends React.Component {
             ) / 100
         });
       }
-    } else if (this.state.isGiftCard) {
-      this.setState({
-        isRemainingAmount: true,
-        payableAmount: Math.round(this.props.location.state.amount * 100) / 100,
-        bagAmount: Math.round(this.props.location.state.amount * 100) / 100
-      });
     } else {
       if (nextProps.cart.cartDetailsCNC && this.state.isRemainingAmount) {
         let cliqCashAmount = 0;
@@ -575,6 +594,16 @@ class CheckOutPage extends React.Component {
     return true;
   }
 
+  componentWillUnmount() {
+    // if user go back from checkout page then
+    // we have relsease coupon if user applied any coupon
+    if (
+      this.props.history.action === "POP" &&
+      this.state.selectedBankOfferCode
+    ) {
+      this.props.releaseBankOffer(this.state.selectedBankOfferCode);
+    }
+  }
   componentDidMount() {
     setDataLayerForCheckoutDirectCalls(
       ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE
@@ -600,9 +629,15 @@ class CheckOutPage extends React.Component {
     } else if (
       this.props.location &&
       this.props.location.state &&
-      this.props.location.state.isFromGiftCard
+      this.props.location.state.isFromGiftCard &&
+      this.props.location.state.amount
     ) {
-      this.setState({ isGiftCard: true });
+      this.setState({
+        isGiftCard: true,
+        isRemainingAmount: true,
+        payableAmount: Math.round(this.props.location.state.amount * 100) / 100,
+        bagAmount: Math.round(this.props.location.state.amount * 100) / 100
+      });
     } else {
       if (this.props.getCartDetailsCNC) {
         let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -717,7 +752,9 @@ class CheckOutPage extends React.Component {
       }
     );
 
-    this.updateLocalStoragePinCode(addressSelected.postalCode);
+    this.updateLocalStoragePinCode(
+      addressSelected && addressSelected.postalCode
+    );
     // here we are checking the if user selected any address then setting our state
     // and in else condition if user deselect then this function will again call and
     //  then we are resetting the previous selected address
@@ -890,11 +927,18 @@ class CheckOutPage extends React.Component {
       this.props.binValidation(PAYTM, "");
     }
   };
-  applyBankCoupons = val => {
+  applyBankCoupons = async val => {
     if (val.length > 0) {
-      this.props.applyBankOffer(val);
+      const applyCouponReq = await this.props.applyBankOffer(val[0]);
+
+      if (applyCouponReq.status === SUCCESS) {
+        this.setState({ selectedBankOfferCode: val[0] });
+      }
     } else {
-      this.props.releaseBankOffer(val);
+      const releaseCouponReq = await this.props.releaseBankOffer(val[0]);
+      if (releaseCouponReq.status === SUCCESS) {
+        this.setState({ selectedBankOfferCode: "" });
+      }
     }
   };
   openBankOffers = () => {

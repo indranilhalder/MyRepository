@@ -6,7 +6,10 @@
   width: 100%;
   height: auto;
   position: relative;
-  padding-right: 30px;
+  padding-right: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .subCategoryList {
   font-size: 14px;

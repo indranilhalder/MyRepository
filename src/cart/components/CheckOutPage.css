@@ -54,6 +54,7 @@
   min-height: 100vh;
   background: #ececec;
   padding: 15px;
+  margin-bottom: 60px;
 }
 
 .cartLoader {

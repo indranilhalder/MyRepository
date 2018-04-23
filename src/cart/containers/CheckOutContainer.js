@@ -55,7 +55,10 @@ import {
   BANK_OFFERS,
   GIFT_CARD_MODAL
 } from "../../general/modal.actions";
-import { getPinCode } from "../../account/actions/account.actions.js";
+import {
+  getPinCode,
+  getPinCodeSuccess
+} from "../../account/actions/account.actions.js";
 import { displayToast } from "../../general/toast.actions";
 import { SUCCESS } from "../../lib/constants";
 import { setHeaderText } from "../../general/header.actions.js";
@@ -141,10 +144,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(showModal(BANK_OFFERS, data));
     },
     applyBankOffer: couponCode => {
-      dispatch(applyBankOffer(couponCode));
+      return dispatch(applyBankOffer(couponCode));
     },
     releaseBankOffer: couponCode => {
-      dispatch(releaseBankOffer(couponCode));
+      return dispatch(releaseBankOffer(couponCode));
     },
     getNetBankDetails: () => {
       dispatch(getNetBankDetails());
@@ -256,6 +259,9 @@ const mapDispatchToProps = dispatch => {
     },
     getPinCode: pinCode => {
       dispatch(getPinCode(pinCode));
+    },
+    resetAutoPopulateDataForPinCode: () => {
+      dispatch(getPinCodeSuccess(null));
     }
   };
 };

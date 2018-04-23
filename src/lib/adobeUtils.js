@@ -80,6 +80,24 @@ const MY_ACCOUNT_CLIQ_CASH = "myaccount_cliq_cash";
 const MY_ACCOUNT_SETTING = "myaccount_update_setting";
 // end of type of hierarchy for my Account
 
+// const for follow and un follow brands adobe calls
+const ADOBE_FOLLOW_BRAND = "cpj_brand_follow";
+const ADOBE_UN_FOLLOW_BRAND = "cpj_brand_unfollow";
+const ADOBE_ON_CLICK_WIDGETS = "cpj_widget_followed";
+// end of const for follow and un follow brands adobe calls
+// const or adobe call for internal search call
+const ADOBE_INTERNAL_SEARCH_SUCCESS = "internal_search";
+const ADOBE_INTERNAL_SEARCH_NULL = "null_search";
+// end of const or adobe call for internal search call
+
+// internal search Adobe call const
+export const ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT =
+  "ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT";
+export const ADOBE_INTERNAL_SEARCH_CALL_ON_GET_NULL =
+  "ADOBE_INTERNAL_SEARCH_CALL_ON_GET_NULL";
+
+// end of internal search Adobe call const
+
 export const ADOBE_ORDER_CONFIRMATION = "orderConfirmation";
 export const ADOBE_HOME_TYPE = "home";
 export const ADOBE_PDP_TYPE = "pdp";
@@ -190,6 +208,13 @@ export const ADOBE_BLP_PAGE_LOAD = "ADOBE_BLP_PAGE_LOAD";
 export const ADOBE_CLP_PAGE_LOAD = "ADOBE_CLP_PAGE_LOAD";
 
 // end of  cosnt for BLP and CLP adobe calls
+// const for follow and un follow
+export const ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS =
+  "ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS";
+export const ADOBE_ON_UN_FOLLOW_BRANDS = "ADOBE_ON_UN_FOLLOW_BRANDS";
+export const ADOBE_ON_CLICK_FOLLOWED_WIDGET = "ADOBE_ON_CLICK_FOLLOWED_WIDGET";
+// end const for follow and un follow
+
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
 const MOBILE = "mobile";
@@ -209,6 +234,15 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   if (type === ADOBE_PLP_TYPE) {
     window.digitalData = getDigitalDataForPlp(type, response);
   }
+  if (type === ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT) {
+    window.digitalData = getDigitalDataForSearchPageSuccess(response);
+    window._satellite.track(ADOBE_INTERNAL_SEARCH_SUCCESS);
+  }
+  if (type === ADOBE_INTERNAL_SEARCH_CALL_ON_GET_NULL) {
+    window.digitalData = getDigitalDataForSearchPageForNullResult(response);
+    window._satellite.track(ADOBE_INTERNAL_SEARCH_NULL);
+  }
+
   if (type === ADOBE_PDP_TYPE) {
     const digitalDataForPDP = getDigitalDataForPdp(type, response);
     //  this is neccasary for when user comes from plp page to pdp
@@ -220,7 +254,7 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
       window.digitalData.cpj.product &&
       window.digitalData.cpj.product.badge
     ) {
-      const badge = window.digitalData.cpj.badge;
+      const badge = window.digitalData.cpj.product.badge;
       Object.assign(digitalDataForPDP.cpj.product, { badge });
     }
     window.digitalData = digitalDataForPDP;
@@ -416,13 +450,11 @@ function getDigitalDataForPdp(type, pdpResponse) {
   ) {
     Object.assign(data.cpj, {
       pdp: {
-        findingMethod:
-          window.digitalData &&
-          window.digitalData.page &&
-          window.digitalData.page.pageInfo.pageName
+        findingMethod: window.digitalData.page.pageInfo.pageName
       }
     });
   }
+
   return data;
 }
 
@@ -716,7 +748,50 @@ function getDigitalDataForPlp(type, response) {
   }
   return data;
 }
+export function getDigitalDataForSearchPageSuccess(response) {
+  const data = {
+    page: {
+      pageInfo: { pageName: "search results page" },
+      category: { primaryCategory: "productsearch" },
+      display: {
+        hierarchy: [
+          "home",
+          response.currentQuery ? response.currentQuery.searchQuery : null
+        ]
+      }
+    },
+    internal: {
+      search: {
+        category: "all",
+        results: response.searchresult ? response.searchresult.length : 0,
+        term: response.currentQuery ? response.currentQuery.searchQuery : null
+      }
+    }
+  };
+  if (response && response.searchresult && response.searchresult.length > 0) {
+    const productCodes = response.searchresult.splice(0, 9).map(product => {
+      return product.productId.toLowerCase();
+    });
+    const impression = productCodes.join("|");
+    Object.assign(data.page, {
+      products: {
+        impression
+      }
+    });
+  }
+  return data;
+}
 
+export function getDigitalDataForSearchPageForNullResult(response) {
+  const data = {
+    internal: {
+      search: {
+        term: response.currentQuery ? response.currentQuery.searchQuery : null
+      }
+    }
+  };
+  return data;
+}
 export function setDataLayerForPlpDirectCalls(response) {
   const data = window.digitalData;
   let badge;
@@ -815,6 +890,7 @@ export function setDataLayerForLogin(type) {
     if (
       window.digitalData &&
       window.digitalData.page &&
+      window.digitalData.page.pageInfo &&
       window.digitalData.page.pageInfo.pageName
     ) {
       if (data.account) {
@@ -1150,4 +1226,17 @@ export function getDigitalDataForCLP(response) {
     });
   }
   return data;
+}
+export function setDataLayerForFollowAndUnFollowBrand(type, response) {
+  let data = {};
+  if (type === ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS) {
+    Object.assign(data, {
+      digitalData: { cpj: { brand: { name: response.brandName } } }
+    });
+    if (response.followStatus) {
+      window._satellite.track(ADOBE_FOLLOW_BRAND);
+    } else {
+      window._satellite.track(ADOBE_UN_FOLLOW_BRAND);
+    }
+  }
 }
