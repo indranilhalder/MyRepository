@@ -1,10 +1,9 @@
 import React from "react";
-import Carousel from "../../general/components/Carousel.js";
+import DumbCarousel from "../../general/components/DumbCarousel.js";
 import ProductModule from "../../general/components/ProductModule.js";
 import { transformData } from "../../home/components/utils.js";
 import Logo from "../../general/components/Logo.js";
 import Button from "../../general/components/Button.js";
-import DumbCarousel from "../../general/components/DumbCarousel.js";
 import { withRouter } from "react-router-dom";
 import {
   ABOUT_THE_BRAND_WIDGET_KEY,
@@ -30,7 +29,6 @@ class PDPRecommendedSections extends React.Component {
     if (this.props.aboutTheBrand) {
       brandId = this.props.aboutTheBrand.id;
     }
-    console.log(this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY]);
     return (
       this.props.aboutTheBrand && (
         <React.Fragment>
