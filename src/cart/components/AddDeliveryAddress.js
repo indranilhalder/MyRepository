@@ -99,9 +99,32 @@ export default class AddDeliveryAddress extends React.Component {
     }
   };
   addNewAddress = () => {
-    //add new Address
-
-    this.props.addUserAddress(this.state);
+    if (!this.state.postalCode) {
+      this.props.displayToast("Please enter pincode");
+      return false;
+    }
+    if (!this.state.firstName) {
+      this.props.displayToast("Please enter name");
+      return false;
+    }
+    if (!this.state.line1) {
+      this.props.displayToast("Please enter address");
+      return false;
+    }
+    if (!this.state.landmark) {
+      this.props.displayToast("Please select landmark");
+      return false;
+    }
+    if (!this.state.emailId) {
+      this.props.displayToast("Please enter email id");
+      return false;
+    }
+    if (!this.state.phone) {
+      this.props.displayToast("Please enter mobile number");
+      return false;
+    } else {
+      this.props.addUserAddress(this.state);
+    }
   };
 
   clearAllValue = () => {
@@ -137,9 +160,6 @@ export default class AddDeliveryAddress extends React.Component {
       },
       {
         label: "Office"
-      },
-      {
-        label: "Others"
       }
     ];
     const salutaion = [
@@ -249,7 +269,7 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <Input2
             boxy={true}
-            placeholder="Email"
+            placeholder="Email*"
             value={this.props.emailId ? this.props.emailId : this.state.emailId}
             onChange={emailId => this.onChange({ emailId })}
             textStyle={{ fontSize: 14 }}
