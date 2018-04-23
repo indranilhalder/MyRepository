@@ -53,7 +53,7 @@ class ProductListingsPage extends Component {
     if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
       page = this.props.match.params[1];
       const searchText = this.getSearchTextFromUrl();
-      this.props.getProductListings(searchText, SUFFIX, page);
+      this.props.getProductListings(searchText, SUFFIX, page - 1);
       return;
     }
 

@@ -61,7 +61,9 @@ export default class FilterMobile extends React.Component {
         }
       }
     }
-    this.props.onClear();
+    if (this.props.onClear) {
+      this.props.onClear();
+    }
   };
 
   selectTab(val) {
