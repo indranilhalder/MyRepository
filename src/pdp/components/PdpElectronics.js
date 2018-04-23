@@ -159,7 +159,7 @@ export default class PdpElectronics extends React.Component {
             });
           })
           .map(image => {
-            return image[0].value;
+            return image[0] && image[0].value;
           })
       : [];
     let otherSellersText;
