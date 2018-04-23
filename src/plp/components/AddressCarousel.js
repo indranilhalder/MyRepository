@@ -2,21 +2,19 @@ import React from "react";
 import styles from "./AddressCarousel.css";
 import PropTypes from "prop-types";
 import Address from "./Address.js";
-import CarouselWithSelect from "../../general/components/CarouselWithSelect";
+import DumbCarousel from "../../general/components/DumbCarousel";
 
 export default class AddressCarousel extends React.Component {
   render() {
     let data = this.props.data;
     return (
       <div className={styles.base}>
-        <CarouselWithSelect
+        <DumbCarousel
           limit={1}
           headerComponent={
             <div className={styles.header}>{this.props.text}</div>
           }
-          elementWidthDesktop={20}
-          elementWidthMobile={48}
-          onSelect={pincode => this.props.selectAddress(pincode[0])}
+          elementWidth={48}
         >
           {data &&
             data.length > 0 &&
@@ -25,14 +23,19 @@ export default class AddressCarousel extends React.Component {
                 <Address
                   key={i}
                   heading={datum.addressType}
-                  address={`${datum.line1} ${datum.town} ${datum.city}, ${
-                    datum.state
-                  } ${datum.postalCode}`}
+                  address={`${datum.line1 ? datum.line1 : ""} ${
+                    datum.town ? datum.town : ""
+                  } ${datum.city ? datum.city : ""}, ${
+                    datum.state ? datum.state : ""
+                  } ${datum.postalCode ? datum.postalCode : ""}`}
                   value={datum.postalCode}
+                  selectItem={pincode =>
+                    this.props.selectAddress(datum.postalCode)
+                  }
                 />
               );
             })}
-        </CarouselWithSelect>
+        </DumbCarousel>
       </div>
     );
   }

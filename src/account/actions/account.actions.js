@@ -495,12 +495,13 @@ export function newReturnInitial(returnDetails, product) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+
+      dispatch(newReturnInitiateSuccess(resultJson));
       setDataLayerForMyAccountDirectCalls(
         ADOBE_MY_ACCOUNT_ORDER_RETURN,
         product,
         returnDetails
       );
-      dispatch(newReturnInitiateSuccess(resultJson));
     } catch (e) {
       dispatch(newReturnInitiateFailure(e.message));
     }
