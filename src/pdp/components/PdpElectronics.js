@@ -167,7 +167,7 @@ export default class PdpElectronics extends React.Component {
     if (
       productData.otherSellers &&
       productData.otherSellers.filter(val => {
-        return val.availableStock !== "0";
+        return val.availableStock !== "0" && val.availableStock !== "-1";
       }).length > 0
     ) {
       const validSellersCount = productData.otherSellers.filter(val => {
@@ -331,7 +331,9 @@ please try another pincode"
                 noLink={
                   productData.otherSellers &&
                   !productData.otherSellers.filter(val => {
-                    return val.availableStock !== "0";
+                    return (
+                      val.availableStock !== "0" && val.availableStock !== "-1"
+                    );
                   }).length > 0
                 }
               >

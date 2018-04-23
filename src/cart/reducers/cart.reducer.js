@@ -727,7 +727,7 @@ const cart = (
     case cartActions.BIN_VALIDATION_REQUEST:
       return Object.assign({}, state, {
         binValidationStatus: action.status,
-        loading: true
+        loading: false
       });
 
     case cartActions.BIN_VALIDATION_SUCCESS: {

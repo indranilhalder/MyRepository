@@ -57,6 +57,7 @@ import {
 } from "../../general/modal.actions";
 import {
   getPinCode,
+  getUserDetails,
   getPinCodeSuccess
 } from "../../account/actions/account.actions.js";
 import { displayToast } from "../../general/toast.actions";
@@ -260,6 +261,10 @@ const mapDispatchToProps = dispatch => {
     getPinCode: pinCode => {
       dispatch(getPinCode(pinCode));
     },
+
+    getUserDetails: () => {
+      dispatch(getUserDetails());
+    },
     resetAutoPopulateDataForPinCode: () => {
       dispatch(getPinCodeSuccess(null));
     }
@@ -268,7 +273,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     cart: state.cart,
-    getPinCodeDetails: state.profile.getPinCodeDetails
+    getPinCodeDetails: state.profile.getPinCodeDetails,
+    userDetails: state.profile.userDetails
   };
 };
 
