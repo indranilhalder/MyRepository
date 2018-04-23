@@ -57,16 +57,6 @@ export function applySortToUrl(query, url, sortValue) {
       const slug = splitUrl[splitUrl.length - 1];
       newQuery = `:${sortValue}:collectionIds:${slug}`;
     }
-
-    // it might be a SKU page
-    // in this case we need to
-
-    // custom/test-page ...what should this become?
-    // I know that I'll need collection Ids
-    // so I could make it /search/?q=:sort:collectionIds:skuId
-    // then everything else should take care of itself??
-
-    // the problem is now getting the slug?
   } else {
     const existingSort = getSortFromQuery(query);
 
