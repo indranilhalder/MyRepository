@@ -13,7 +13,12 @@ import Button from "../../general/components/Button";
 import { SUCCESS } from "../../lib/constants.js";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 const SAVE_TEXT = "Save Address";
-
+const PINCODE_TEXT = "Please enter pincode";
+const NAME_TEXT = "Please enter name";
+const ADDRESS_TEXT = "Please enter address";
+const EMAIL_TEXT = "Please enter email id";
+const LANDMARK_TEXT = "Please select landmark";
+const MOBILE_TEXT = "Please enter mobile number";
 const ISO_CODE = "IN";
 const OTHER_LANDMARK = "other";
 export default class AddDeliveryAddress extends React.Component {
@@ -100,27 +105,27 @@ export default class AddDeliveryAddress extends React.Component {
   };
   addNewAddress = () => {
     if (!this.state.postalCode) {
-      this.props.displayToast("Please enter pincode");
+      this.props.displayToast(PINCODE_TEXT);
       return false;
     }
     if (!this.state.firstName) {
-      this.props.displayToast("Please enter name");
+      this.props.displayToast(NAME_TEXT);
       return false;
     }
     if (!this.state.line1) {
-      this.props.displayToast("Please enter address");
+      this.props.displayToast(ADDRESS_TEXT);
       return false;
     }
     if (!this.state.landmark) {
-      this.props.displayToast("Please select landmark");
+      this.props.displayToast(LANDMARK_TEXT);
       return false;
     }
     if (!this.state.emailId) {
-      this.props.displayToast("Please enter email id");
+      this.props.displayToast(EMAIL_TEXT);
       return false;
     }
     if (!this.state.phone) {
-      this.props.displayToast("Please enter mobile number");
+      this.props.displayToast(MOBILE_TEXT);
       return false;
     } else {
       this.props.addUserAddress(this.state);
