@@ -100,10 +100,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(clearError());
     },
     getGlobalAccessToken: () => {
-      dispatch(getGlobalAccessToken());
+      dispatch(getGlobalAccessToken()).then(() => window.location.reload(true));
     },
     refreshToken: () => {
-      dispatch(refreshToken());
+      dispatch(refreshToken()).then(() => window.location.reload(true));
     }
   };
 };
@@ -157,7 +157,6 @@ class ErrorDisplay extends React.Component {
       } else {
         this.props.getGlobalAccessToken();
       }
-      window.location.reload(true);
     }
 
     this.props.displayToast(message);
