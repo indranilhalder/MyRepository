@@ -138,3 +138,11 @@ it("should work with /search/?q=text:category:<SOME_CATEGORY:brand:<SOME_BRAND>"
     }:category:${DUMMY_CATEGORY_VALUE}:brand:${DUMMY_BRAND_VALUE}`
   );
 });
+
+it("should work with custom sku pages, or pages that look like /custom/:slug", () => {
+  let endUrl = applySortToUrl("", `/custom/test-page`, ARRAY_OF_SORTS[2]);
+
+  expect(endUrl).toEqual(
+    `/search/?q=:${ARRAY_OF_SORTS[2]}:collectionIds:test-page`
+  );
+});

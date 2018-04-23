@@ -23,7 +23,6 @@ import {
   LOGIN_PATH,
   SIGN_UP_PATH,
   PRODUCT_DELIVERY_ADDRESSES,
-  PRODUCT_FILTER_ROUTER,
   PRODUCT_CART_ROUTER,
   GLOBAL_ACCESS_TOKEN,
   CUSTOMER_ACCESS_TOKEN,
@@ -44,7 +43,6 @@ import {
   CATEGORY_PAGE,
   BRAND_PAGE_WITH_SLUG,
   CATEGORY_PAGE_WITH_SLUG,
-  ORDER_PREFIX,
   RETURNS,
   SHORT_URL_ORDER_DETAIL,
   CATEGORY_PAGE_WITH_QUERY_PARAMS,
@@ -59,9 +57,9 @@ import {
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG,
   REQUESTING,
-  MY_ACCOUNT_PAGE,
   MY_ACCOUNT,
-  STATIC_PAGE
+  STATIC_PAGE,
+  SKU_PAGE_FILTER
 } from "../src/lib/constants";
 import Loadable from "react-loadable";
 
@@ -443,6 +441,11 @@ class App extends Component {
               component={CategoriesPageContainer}
             />
             {/* This *has* to be at the bottom */}
+            <Route
+              exact
+              path={SKU_PAGE_FILTER}
+              component={ProductListingsContainer}
+            />
             <Route exact path={SKU_PAGE} component={ProductListingsContainer} />
             <Route exact path={STATIC_PAGE} component={StaticPageContainer} />
           </Switch>
