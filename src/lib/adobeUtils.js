@@ -794,10 +794,9 @@ export function getDigitalDataForSearchPageSuccess(response) {
       pageInfo: { pageName: "search results page" },
       category: { primaryCategory: "productsearch" },
       display: {
-        hierarchy: [
-          "home",
+        hierarchy: `home |${
           response.currentQuery ? response.currentQuery.searchQuery : null
-        ]
+        }`
       }
     },
     internal: {

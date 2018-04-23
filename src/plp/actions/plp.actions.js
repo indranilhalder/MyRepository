@@ -125,16 +125,25 @@ export function getProductListings(
       const result = await api.get(queryString);
       const resultJson = await result.json();
       if (resultJson.error) {
-        setDataLayer(
-          ADOBE_INTERNAL_SEARCH_CALL_ON_GET_NULL,
-          resultJson,
-          getState().icid.value,
-          getState().icid.icidType
-        );
+        if (
+          resultJson &&
+          resultJson.currentQuery &&
+          resultJson.currentQuery.searchQuery
+        ) {
+          setDataLayer(
+            ADOBE_INTERNAL_SEARCH_CALL_ON_GET_NULL,
+            resultJson,
+            getState().icid.value,
+            getState().icid.icidType
+          );
+        }
         throw new Error(`${resultJson.error}`);
       }
-
-      if (searchState.string) {
+      if (
+        resultJson &&
+        resultJson.currentQuery &&
+        resultJson.currentQuery.searchQuery
+      ) {
         setDataLayer(
           ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT,
           resultJson,
