@@ -6,8 +6,9 @@
 .cardHolder {
   width: 100%;
   height: auto;
+  background: #fff;
   margin-bottom: 25px;
   display: inline-block;
-  background: #fff;
   padding: 15px;
+  border-radius: 4px;
 }
