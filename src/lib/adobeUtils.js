@@ -75,6 +75,11 @@ const MY_ACCOUNT_CLIQ_CASH = "myaccount_cliq_cash";
 const MY_ACCOUNT_SETTING = "myaccount_update_setting";
 // end of type of hierarchy for my Account
 
+// const for follow and un follow brands adobe calls
+const ADOBE_FOLLOW_BRAND = "cpj_brand_follow";
+const ADOBE_UN_FOLLOW_BRAND = "cpj_brand_unfollow";
+const ADOBE_ON_CLICK_WIDGETS = "cpj_widget_followed";
+// end of const for follow and un follow brands adobe calls
 // const or adobe call for internal search call
 const ADOBE_INTERNAL_SEARCH_SUCCESS = "internal_search";
 const ADOBE_INTERNAL_SEARCH_NULL = "null_search";
@@ -191,6 +196,14 @@ export const ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL =
   "ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL";
 export const ADOBE_MY_ACCOUNT_ORDER_RETURN = "ADOBE_MY_ACCOUNT_ORDER_RETURN";
 // end of const for my account adobe call
+
+// const for follow and un follow
+export const ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS =
+  "ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS";
+export const ADOBE_ON_UN_FOLLOW_BRANDS = "ADOBE_ON_UN_FOLLOW_BRANDS";
+export const ADOBE_ON_CLICK_FOLLOWED_WIDGET = "ADOBE_ON_CLICK_FOLLOWED_WIDGET";
+// end const for follow and un follow
+
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
 const MOBILE = "mobile";
@@ -1120,4 +1133,17 @@ export function getDigitalDataForMyAccount(pageTitle) {
     }
   };
   return data;
+}
+export function setDataLayerForFollowAndUnFollowBrand(type, response) {
+  let data = {};
+  if (type === ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS) {
+    Object.assign(data, {
+      digitalData: { cpj: { brand: { name: response.brandName } } }
+    });
+    if (response.followStatus) {
+      window._satellite.track(ADOBE_FOLLOW_BRAND);
+    } else {
+      window._satellite.track(ADOBE_UN_FOLLOW_BRAND);
+    }
+  }
 }

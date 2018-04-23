@@ -10,6 +10,7 @@ import {
   MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
+import findIndex from "lodash.findindex";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -42,7 +43,9 @@ import {
   ADOBE_MY_ACCOUNT_GIFT_CARD,
   ADOBE_MY_ACCOUNT_CLIQ_CASH,
   AODBE_MY_ACCOUNT_SETTINGS,
-  ADOBE_MY_ACCOUNT_ORDER_DETAILS
+  ADOBE_MY_ACCOUNT_ORDER_DETAILS,
+  setDataLayerForFollowAndUnFollowBrand,
+  ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS
 } from "../../lib/adobeUtils";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 
@@ -1654,6 +1657,15 @@ export function followAndUnFollowBrand(
 
         // dispatch success for following brand on the basis of page type
         if (pageType === HOME_FEED_FOLLOW_AND_UN_FOLLOW) {
+          const clonedComponent = getState().home.homeFeed[positionInFeed];
+          const indexOfBrand = findIndex(clonedComponent.data, item => {
+            return item.id === brandId;
+          });
+          let brandName = clonedComponent.data[indexOfBrand].brandName;
+          setDataLayerForFollowAndUnFollowBrand(
+            ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS,
+            { followStatus: updatedFollowedStatus, brandName }
+          );
           return dispatch(
             followAndUnFollowBrandSuccessForHomeFeed(
               brandId,
@@ -1662,10 +1674,25 @@ export function followAndUnFollowBrand(
             )
           );
         } else if (pageType === PDP_FOLLOW_AND_UN_FOLLOW) {
+          const brandObj = getState().productDescription.aboutTheBrand;
+          const brandName = brandObj.brandName;
+          setDataLayerForFollowAndUnFollowBrand(
+            ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS,
+            { followStatus: updatedFollowedStatus, brandName }
+          );
+
           return dispatch(
             followAndUnFollowBrandSuccessForPdp(brandId, updatedFollowedStatus)
           );
         } else if (pageType === MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW) {
+          const currentBrands = getState().profile.followedBrands;
+          const brandObj = currentBrands.find(item => item.id === brandId);
+          let brandName = brandObj.brandName;
+          setDataLayerForFollowAndUnFollowBrand(
+            ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS,
+            { followStatus: updatedFollowedStatus, brandName }
+          );
+
           return dispatch(
             followAndUnFollowBrandSuccessForMyAccount(
               brandId,
