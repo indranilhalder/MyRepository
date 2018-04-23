@@ -70,6 +70,7 @@ export default class ReturnFlow extends React.Component {
       }
     });
   }
+
   navigateToOrderDetail() {
     this.props.history.push(`${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}`);
   }
