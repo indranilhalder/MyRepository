@@ -60,6 +60,11 @@ const ADOBE_LOGIN_SUCCESS = "login_successful";
 const ADOBE_LOGIN_FAILURE = "login_failed";
 // end of direct call for login tracking
 
+// cosnt for BLP and CLP
+const ADOBE_BLP_DIRECT_CALL = "cpj_brand_pages";
+const ADOBE_CLP_DIRECT_CALL = "cpj_category_pages";
+// end of cosnt for BLP and CLP
+
 // type of hierarchy for MY_ACCOUNT
 const MY_ACCOUNT_OVERVIEW = "myaccount_overview";
 const MY_ACCOUNT_SAVED_LIST = "myaccount_default_wishlist";
@@ -197,6 +202,12 @@ export const ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL =
 export const ADOBE_MY_ACCOUNT_ORDER_RETURN = "ADOBE_MY_ACCOUNT_ORDER_RETURN";
 // end of const for my account adobe call
 
+// cosnt for BLP and CLP adobe calls
+
+export const ADOBE_BLP_PAGE_LOAD = "ADOBE_BLP_PAGE_LOAD";
+export const ADOBE_CLP_PAGE_LOAD = "ADOBE_CLP_PAGE_LOAD";
+
+// end of  cosnt for BLP and CLP adobe calls
 // const for follow and un follow
 export const ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS =
   "ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS";
@@ -294,6 +305,14 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   }
   if (type === ADOBE_MY_ACCOUNT_ORDER_DETAILS) {
     window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ORDER_DETAIL);
+  }
+  if (type === ADOBE_BLP_PAGE_LOAD) {
+    window.digitalData = getDigitalDataForBLP(response);
+    window._satellite.track(ADOBE_BLP_DIRECT_CALL);
+  }
+  if (type === ADOBE_CLP_PAGE_LOAD) {
+    window.digitalData = getDigitalDataForCLP(response);
+    window._satellite.track(ADOBE_CLP_DIRECT_CALL);
   }
   if (icid) {
     window.digitalData.internal = {
@@ -924,6 +943,7 @@ export function setDataLayerForLogin(type) {
     if (
       window.digitalData &&
       window.digitalData.page &&
+      window.digitalData.page.pageInfo &&
       window.digitalData.page.pageInfo.pageName
     ) {
       if (data.account) {
@@ -1185,6 +1205,79 @@ export function getDigitalDataForMyAccount(pageTitle) {
       display: { hierarchy: ["home", "my_tata_cliq", pageTitle] }
     }
   };
+  return data;
+}
+export function getDigitalDataForBLP(response) {
+  const data = {};
+  let pageTitle = "";
+  if (response.pageName) {
+    Object.assign(data, {
+      page: {
+        pageName: response.pageName
+      }
+    });
+  }
+  if (response.items && response.items.length > 0) {
+    const titleObj = response.items.find(data => {
+      return data.componentName === "landingPageTitleComponent";
+    });
+
+    if (titleObj && titleObj.landingPageTitleComponent) {
+      pageTitle = titleObj.landingPageTitleComponent.title;
+    }
+    Object.assign(data, {
+      cpj: { brand: { name: pageTitle } }
+    });
+    if (data.page) {
+      Object.assign(data.page, {
+        display: {
+          hierarchy: ["home", pageTitle]
+        }
+      });
+    } else {
+      Object.assign(data, {
+        page: {
+          display: {
+            hierarchy: ["home", pageTitle]
+          }
+        }
+      });
+    }
+  }
+
+  return data;
+}
+export function getDigitalDataForCLP(response) {
+  const data = {
+    page: { category: { primaryCategory: "category" } }
+  };
+  const subCategories = getSubCategories(response);
+  if (subCategories) {
+    Object.assign(data.page.category, { ...subCategories });
+    Object.assign(data.page, {
+      pageInfo: {
+        pageName: `product grid: ${
+          subCategories.subCategory1 ? subCategories.subCategory1 : null
+        } : ${
+          subCategories.subCategory2 ? subCategories.subCategory2 : null
+        } : ${subCategories.subCategory3 ? subCategories.subCategory3 : null}`
+      }
+    });
+  } else {
+    Object.assign(data.page, {
+      pageInfo: {
+        pageName: `product grid: ${null}: ${null}: ${null}`
+      }
+    });
+  }
+  const hierarchy = getHierarchyArray(response);
+  if (hierarchy) {
+    Object.assign(data.page, {
+      display: {
+        hierarchy
+      }
+    });
+  }
   return data;
 }
 export function setDataLayerForFollowAndUnFollowBrand(type, response) {
