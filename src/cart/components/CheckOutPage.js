@@ -395,7 +395,11 @@ class CheckOutPage extends React.Component {
   };
 
   renderInitialAddAddressForm() {
-    if (!this.state.isFirstAddress) {
+    if (
+      !this.state.isFirstAddress &&
+      this.props.cart.userAddress &&
+      !this.props.cart.userAddress.addresses
+    ) {
       this.setState({ isFirstAddress: true });
     }
 
