@@ -46,12 +46,27 @@ export function applySortToUrl(query, url, sortValue) {
       match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
       match = match.replace(BRAND_CATEGORY_PREFIX, "");
       newQuery = `:${sortValue}:category:${match.toUpperCase()}`;
-    }
-    if (BRAND_REGEX.test(url)) {
+    } else if (BRAND_REGEX.test(url)) {
       match = BRAND_CAPTURE_REGEX.exec(url)[0];
       match = match.replace(BRAND_CATEGORY_PREFIX, "");
       newQuery = `:${sortValue}:category:${match.toUpperCase()}`;
+    } else {
+      // this is the SKU case
+      // I need the slug to construct the collection id.
+      const splitUrl = url.split("/");
+      const slug = splitUrl[splitUrl.length - 1];
+      newQuery = `:${sortValue}:collectionIds:${slug}`;
     }
+
+    // it might be a SKU page
+    // in this case we need to
+
+    // custom/test-page ...what should this become?
+    // I know that I'll need collection Ids
+    // so I could make it /search/?q=:sort:collectionIds:skuId
+    // then everything else should take care of itself??
+
+    // the problem is now getting the slug?
   } else {
     const existingSort = getSortFromQuery(query);
 
