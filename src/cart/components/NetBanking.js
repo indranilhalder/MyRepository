@@ -1,6 +1,6 @@
 import React from "react";
 import Icon from "../../xelpmoc-core/Icon";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import GridSelect from "../../general/components/GridSelect";
 import BankSelect from "./BankSelect";
 import styles from "./NetBanking.css";
@@ -26,13 +26,16 @@ export default class NetBanking extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      bankName: ""
+      bankName: "",
+      bank: ""
     };
   }
   handleSelect(val) {
-    this.setState({ bankName: val });
+    const code = val.value;
+    const label = val.label;
+    this.setState({ bankName: code, bank: label });
     if (this.props.binValidationForNetBank) {
-      this.props.binValidationForNetBank(val);
+      this.props.binValidationForNetBank(code);
     }
   }
 
@@ -80,9 +83,9 @@ export default class NetBanking extends React.Component {
           </GridSelect>
         )}
         <div className={styles.bankDropDown}>
-          <SelectBoxMobile
+          <SelectBoxMobile2
             height={33}
-            label="Other Bank"
+            label={this.state.bank ? this.state.bank : "Other Bank"}
             options={
               this.props.bankList &&
               this.props.bankList
