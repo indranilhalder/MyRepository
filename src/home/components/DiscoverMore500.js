@@ -26,13 +26,15 @@ class DiscoverMore500 extends React.Component {
             feedComponentData.data &&
             feedComponentData.data.map((datum, i) => {
               return (
-                <CategoryWithName
-                  image={datum.imageURL}
-                  label={datum.title}
-                  key={i}
-                  value={datum.webURL}
-                  onClick={this.handleClick}
-                />
+                i < 5 && (
+                  <CategoryWithName
+                    image={datum.imageURL}
+                    label={datum.title}
+                    key={i}
+                    value={datum.webURL}
+                    onClick={this.handleClick}
+                  />
+                )
               );
             })}
         </Grid>
