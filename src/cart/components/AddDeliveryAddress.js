@@ -60,7 +60,9 @@ export default class AddDeliveryAddress extends React.Component {
     }));
   }
   componentWillUnmount() {
-    this.props.resetAutoPopulateDataForPinCode();
+    if (this.props.resetAutoPopulateDataForPinCode) {
+      this.props.resetAutoPopulateDataForPinCode();
+    }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.addUserAddressStatus === SUCCESS) {
