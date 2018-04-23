@@ -126,6 +126,7 @@ export default class Plp extends React.Component {
             backPage={this.backPage}
             isFilterOpen={this.props.isFilterOpen}
             onApply={this.onApply}
+            onClear={this.props.hideFilter}
             onL3CategorySelect={this.onL3CategorySelect}
           />
           <div className={styles.footer}>

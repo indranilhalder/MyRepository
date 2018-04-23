@@ -72,15 +72,18 @@ class ProductListingsPage extends Component {
       const searchText = this.getSearchTextFromUrl();
       const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
       if (pageMatch) {
-        page = pageMatch[1] ? pageMatch[1] : 0;
+        page = pageMatch[1] ? pageMatch[1] : 1;
+        page = page - 1;
       }
       this.props.getProductListings(searchText, suffix, page, true);
     } else {
       const searchText = this.getSearchTextFromUrl();
       const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
       if (pageMatch) {
-        page = pageMatch[1] ? pageMatch[1] : 0;
+        page = pageMatch[1] ? pageMatch[1] : 1;
+        page = page - 1;
       }
+
       this.props.getProductListings(searchText, SUFFIX, page);
     }
   }
@@ -96,6 +99,8 @@ class ProductListingsPage extends Component {
     }
     if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
       page = this.props.match.params[1];
+      page = page - 1;
+
       const searchText = this.getSearchTextFromUrl();
       this.props.getProductListings(searchText, SUFFIX, page);
       return;
@@ -115,7 +120,8 @@ class ProductListingsPage extends Component {
       const searchText = this.getSearchTextFromUrl();
       const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
       if (pageMatch) {
-        page = pageMatch[1] ? pageMatch[1] : 0;
+        page = pageMatch[1] ? pageMatch[1] : 1;
+        page = page - 1;
       }
       this.props.getProductListings(searchText, suffix, page, true);
     } else if (
@@ -125,7 +131,8 @@ class ProductListingsPage extends Component {
       const searchText = this.getSearchTextFromUrl();
       const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
       if (pageMatch) {
-        page = pageMatch[1] ? pageMatch[1] : 0;
+        page = pageMatch[1] ? pageMatch[1] : 1;
+        page = page - 1;
       }
       this.props.getProductListings(searchText, SUFFIX, page);
     }
