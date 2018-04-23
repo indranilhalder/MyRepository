@@ -182,7 +182,9 @@ class CartPage extends React.Component {
   };
 
   goToCouponPage = () => {
-    this.props.showCouponModal(this.props.cart.coupons);
+    let couponDetails = Object.assign(this.props.cart.coupons, this.props);
+
+    this.props.showCouponModal(couponDetails);
   };
 
   renderToCheckOutPage() {

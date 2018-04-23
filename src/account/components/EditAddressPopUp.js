@@ -25,24 +25,24 @@ export default class EditAddressPopUp extends React.Component {
       town: addressDetails.town,
       addressId: addressDetails.id,
       defaultFlag: addressDetails.defaultAddress,
-      state: "",
-      cityName: ""
+      state: addressDetails.state
     };
   }
   componentDidMount() {
     this.props.setHeaderText(EDIT_YOUR_ADDRESS);
-    this.props.getPinCode(this.state.postalCode);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.getPinCodeDetails) {
       this.setState({
         state: nextProps.getPinCodeDetails.state.name,
-        cityName: nextProps.getPinCodeDetails.cityName
+        town: nextProps.getPinCodeDetails.cityName
       });
     }
   }
-
+  componentWillUnmount() {
+    this.props.resetAutoPopulateDataForPinCode();
+  }
   componentDidUpdate(prevProps, prevState) {
     this.props.setHeaderText(EDIT_YOUR_ADDRESS);
     if (
@@ -55,7 +55,14 @@ export default class EditAddressPopUp extends React.Component {
   onChange(val) {
     this.setState(val);
   }
-
+  onChangePinCode(postalCode) {
+    if (postalCode.length <= 6) {
+      this.setState({ postalCode });
+    }
+    if (postalCode.length === 6) {
+      this.props.getPinCode(postalCode);
+    }
+  }
   editAddress(val) {
     if (this.props.editAddress) {
       let addressDetails = this.state;
@@ -74,6 +81,7 @@ export default class EditAddressPopUp extends React.Component {
             <div className={styles.container}>
               <Input2
                 value={this.state.firstName}
+                placeholder="Name*"
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
                 height={33}
@@ -82,7 +90,9 @@ export default class EditAddressPopUp extends React.Component {
             </div>
             <div className={styles.container}>
               <Input2
+                type="number"
                 value={this.state.phone}
+                placeholder="Phone number*"
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
                 height={33}
@@ -92,6 +102,7 @@ export default class EditAddressPopUp extends React.Component {
             <div className={styles.container}>
               <Input2
                 value={this.state.emailId}
+                placeholder="Email"
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
                 height={33}
@@ -119,34 +130,31 @@ export default class EditAddressPopUp extends React.Component {
             <div className={styles.container}>
               <Input2
                 value={this.state.postalCode}
+                placeholder="Enter a pincode/zipcode*"
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
                 height={33}
-                onChange={postalCode => this.onChange({ postalCode })}
+                onChange={postalCode => this.onChangePinCode(postalCode)}
               />
             </div>
-            {this.props.getPinCodeDetails && (
-              <div className={styles.container}>
-                <Input2
-                  value={this.state.cityName}
-                  boxy={true}
-                  textStyle={{ fontSize: 14 }}
-                  height={33}
-                  onChange={cityName => this.onChange({ cityName })}
-                />
-              </div>
-            )}
-            {this.props.getPinCodeDetails && (
-              <div className={styles.container}>
-                <Input2
-                  value={this.state.state}
-                  boxy={true}
-                  textStyle={{ fontSize: 14 }}
-                  height={33}
-                  onChange={state => this.onChange({ state })}
-                />
-              </div>
-            )}
+            <div className={styles.container}>
+              <Input2
+                value={this.state.town}
+                boxy={true}
+                textStyle={{ fontSize: 14 }}
+                height={33}
+                onChange={town => this.onChange({ town })}
+              />
+            </div>
+            <div className={styles.container}>
+              <Input2
+                value={this.state.state}
+                boxy={true}
+                textStyle={{ fontSize: 14 }}
+                height={33}
+                onChange={state => this.onChange({ state })}
+              />
+            </div>
           </div>
           <div className={styles.buttonHolder}>
             <OrderReturn

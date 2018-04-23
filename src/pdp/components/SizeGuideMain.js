@@ -5,6 +5,7 @@ import Image from "../../xelpmoc-core/Image";
 import Accordion from "../../general/components/Accordion.js";
 import Loader from "../../general/components/Loader";
 import SizeGuideElementFootwear from "./SizeGuideElementFootwear";
+import SizeGuideElementBelt from "./SizeGuideElementBelt";
 export default class SizeGuideMain extends React.Component {
   componentDidMount() {
     this.props.getSizeGuide(this.props.productCode);
@@ -22,6 +23,7 @@ export default class SizeGuideMain extends React.Component {
             </div>
           </div>
           {this.props.category !== "Footwear" &&
+            this.props.category !== "Accessories" &&
             this.props.sizeData.sizeGuideList && (
               <div className={styles.sizeList}>
                 {this.props.sizeData.sizeGuideList.map((list, i) => {
@@ -52,6 +54,16 @@ export default class SizeGuideMain extends React.Component {
                       data={list.dimensionList}
                       key={i}
                     />
+                  );
+                })}
+              </div>
+            )}
+          {this.props.category === "Accessories" &&
+            this.props.sizeData.sizeGuideList && (
+              <div className={styles.sizeList}>
+                {this.props.sizeData.sizeGuideList.map((list, i) => {
+                  return (
+                    <SizeGuideElementBelt data={list.dimensionList} key={i} />
                   );
                 })}
               </div>

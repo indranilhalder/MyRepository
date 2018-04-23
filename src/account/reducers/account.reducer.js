@@ -160,7 +160,8 @@ const account = (
         cancelProductDetailsError: null,
         cancelProductError: null,
         verifyWalletError: null,
-        wishlistError: null
+        wishlistError: null,
+        updateProfileError: null
       });
     case accountActions.GET_RETURN_REQUEST:
     case accountActions.RETURN_PRODUCT_DETAILS_REQUEST:

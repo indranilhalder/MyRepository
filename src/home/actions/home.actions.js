@@ -11,7 +11,12 @@ import {
 import each from "lodash.foreach";
 import delay from "lodash.delay";
 import { MSD_WIDGET_PLATFORM } from "../../lib/config.js";
-import { setDataLayer, ADOBE_HOME_TYPE } from "../../lib/adobeUtils.js";
+import {
+  setDataLayer,
+  ADOBE_HOME_TYPE,
+  ADOBE_BLP_PAGE_LOAD,
+  ADOBE_CLP_PAGE_LOAD
+} from "../../lib/adobeUtils.js";
 import * as Cookie from "../../lib/Cookie";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 
@@ -73,6 +78,8 @@ const AUTO_PRODUCT_RECOMMENDATION_COMPONENT =
 const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1"; // for local/devxelp/uat2tmpprod
 const ADOBE_TARGET_PRODUCTION_HOME_FEED_MBOX_NAME = "PROD_Mobile_Homepage_Mbox";
 const ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME = "UAT_Mobile_Homepage_Mbox";
+export const CATEGORY_REGEX = /msh*/;
+export const BRAND_REGEX = /mbh*/;
 
 export function getProductCapsulesRequest() {
   return {
@@ -338,6 +345,20 @@ export function homeFeed(brandIdOrCategoryId: null) {
           dispatch(homeFeedSuccess([], feedTypeRequest));
         } else {
           dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
+          if (CATEGORY_REGEX.test(brandIdOrCategoryId)) {
+            setDataLayer(
+              ADOBE_CLP_PAGE_LOAD,
+              resultJson,
+              getState().icid.value,
+              getState().icid.icidType
+            );
+          } else if (BRAND_REGEX.test(brandIdOrCategoryId))
+            setDataLayer(
+              ADOBE_BLP_PAGE_LOAD,
+              resultJson,
+              getState().icid.value,
+              getState().icid.icidType
+            );
         }
       } else {
         let mbox = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
