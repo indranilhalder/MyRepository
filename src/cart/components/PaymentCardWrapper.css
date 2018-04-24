@@ -4,3 +4,9 @@
   background: #fff;
   border-radius: 4px;
 }
+.card {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  padding: 15px 20px;
+}

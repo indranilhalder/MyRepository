@@ -85,6 +85,7 @@ export const typeComponentMapping = {
   ),
   "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
   "Landing Page Hierarchy": props => <AllBrandTypes {...props} />,
+  "Landing Page Hierarchy Component": props => <AllBrandTypes {...props} />,
   "CMS Paragraph Component": props => <CMSParagraphComponent {...props} />,
   "Simple Banner Component": props => {
     return (
@@ -125,7 +126,7 @@ class Feed extends Component {
           return data.type === "Landing Page Title Component";
         });
 
-      if (titleObj) {
+      if (titleObj && this.props.setHeaderText) {
         this.props.setHeaderText(titleObj.title);
       }
     }
@@ -138,7 +139,7 @@ class Feed extends Component {
           return data.type === "Landing Page Title Component";
         });
 
-      if (titleObj) {
+      if (titleObj && this.props.setHeaderText) {
         this.props.setHeaderText(titleObj.title);
       }
     }

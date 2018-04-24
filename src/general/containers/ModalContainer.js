@@ -45,6 +45,7 @@ import {
   singleAuthCallHasFailed,
   setIfAllAuthCallsHaveSucceeded
 } from "../../auth/actions/auth.actions.js";
+import { displayToast } from "../../general/toast.actions";
 const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
@@ -59,6 +60,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    displayToast: toastMessage => {
+      dispatch(displayToast(toastMessage));
+    },
     showModal: (type, ownProps = null) => {
       dispatch(modalActions.showModal(type, ownProps));
     },
