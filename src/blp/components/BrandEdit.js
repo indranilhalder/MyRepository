@@ -11,9 +11,12 @@ export default class BrandEdit extends React.Component {
       label: this.props.btnText
     };
   }
-  onClickButton(brandId, followStatus) {
-    if (this.props.onClick) {
+  onClickButton(brandId, followStatus, webURL) {
+    if (this.state.label === "Done") {
       this.props.onClick(brandId, followStatus);
+    }
+    if (this.state.label === "Edit") {
+      this.props.onFollow(webURL);
     }
   }
   onShowDelete() {
@@ -41,7 +44,9 @@ export default class BrandEdit extends React.Component {
                 logo={val.imageURL}
                 onDelete={this.state.onDelete}
                 key={i}
-                onClick={() => this.onClickButton(val.id, val.isFollowing)}
+                onClick={() =>
+                  this.onClickButton(val.id, val.isFollowing, val.webURL)
+                }
               />
             );
           })}

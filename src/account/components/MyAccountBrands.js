@@ -14,7 +14,7 @@ import {
   DEFAULT_BRANDS_LANDING_PAGE,
   BRANDS
 } from "../../lib/constants";
-
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import * as Cookie from "../../lib/Cookie";
 
 export default class MyAccountBrands extends React.Component {
@@ -41,6 +41,10 @@ export default class MyAccountBrands extends React.Component {
       this.props.followAndUnFollowBrand(brandId, followStatus);
     }
   }
+  onFollow(webURL) {
+    const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
+    this.props.history.push(urlSuffix);
+  }
   renderLoader() {
     return <Loader />;
   }
@@ -64,10 +68,6 @@ export default class MyAccountBrands extends React.Component {
 
     return (
       <div className={styles.base}>
-        {/* we need to show this when we ll state getting profile image */}
-        {/* <div className={styles.imageHolder}>
-          <ProfilePicture firstName={JSON.parse(userDetails).firstName} lastName="Yadav" edit={false} />
-        </div> */}
         <MoreBrands
           width={170}
           type="primary"
@@ -81,6 +81,7 @@ export default class MyAccountBrands extends React.Component {
               onClick={(brandId, followStatus) =>
                 this.followAndUnFollow(brandId, followStatus)
               }
+              onFollow={webURL => this.onFollow(webURL)}
             />
           </div>
         )}
