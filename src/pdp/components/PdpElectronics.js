@@ -345,7 +345,7 @@ please try another pincode"
             <div className={styles.details}>
               {productData.details && (
                 <Accordion
-                  text="Product Details"
+                  text="Product Description"
                   headerFontSize={16}
                   isOpen={true}
                 >
