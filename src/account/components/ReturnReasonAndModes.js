@@ -33,6 +33,7 @@ export default class ReturnReasonAndModes extends React.Component {
   renderLoader() {
     return <Loader />;
   }
+
   onCancel() {
     setDataLayerForMyAccountDirectCalls(ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL);
     this.props.history.goBack();

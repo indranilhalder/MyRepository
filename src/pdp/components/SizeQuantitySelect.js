@@ -50,7 +50,11 @@ export default class SizeQuantitySelect extends React.Component {
     if (!this.props.checkIfSizeSelected())
       sizes.unshift({ size: "Size", value: "size" });
     let fetchedQuantityList = [];
-    if (!this.props.checkIfQuantitySelected())
+    if (
+      !this.props.checkIfQuantitySelected() ||
+      !this.props.productQuantity.label ||
+      this.props.productQuantity.label === undefined
+    )
       fetchedQuantityList = [{ value: "quantity", label: "Quantity" }];
     if (this.props.maxQuantity) {
       for (let i = 1; i <= parseInt(this.props.maxQuantity, 10); i++) {
@@ -108,7 +112,9 @@ export default class SizeQuantitySelect extends React.Component {
                     : "quantity"
                 }
                 label={
-                  this.props.checkIfQuantitySelected()
+                  this.props.checkIfQuantitySelected() &&
+                  this.props.productQuantity.label &&
+                  this.props.productQuantity.label !== undefined
                     ? this.props.productQuantity.label
                     : "Quantity"
                 }

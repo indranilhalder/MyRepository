@@ -443,8 +443,6 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    // adding default address is selected
-
     if (
       nextProps.cart.getUserAddressStatus === SUCCESS &&
       !this.state.addressId &&
@@ -600,18 +598,6 @@ class CheckOutPage extends React.Component {
     if (nextProps.cart.binValidationCODStatus === SUCCESS) {
       this.setState({ binValidationCOD: true });
     }
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (
-      nextProps.cart.binValidationStatus === SUCCESS &&
-      nextProps.cart.justPayPaymentDetailsStatus === null
-    ) {
-      if (this.state.paymentModeSelected === PAYMENT_MODE) {
-        return false;
-      }
-    }
-    return true;
   }
 
   componentWillUnmount() {

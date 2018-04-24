@@ -730,13 +730,12 @@ const cart = (
         loading: false
       });
 
-    case cartActions.BIN_VALIDATION_SUCCESS: {
+    case cartActions.BIN_VALIDATION_SUCCESS:
       return Object.assign({}, state, {
         binValidationStatus: action.status,
         binValidationDetails: action.binValidation,
         loading: false
       });
-    }
 
     case cartActions.BIN_VALIDATION_FAILURE:
       return Object.assign({}, state, {

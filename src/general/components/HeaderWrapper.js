@@ -20,7 +20,8 @@ import {
   MY_ACCOUNT_PAGE,
   JUS_PAY_CHARGED,
   JUS_PAY_PENDING,
-  JUS_PAY_AUTHENTICATION_FAILED
+  JUS_PAY_AUTHENTICATION_FAILED,
+  CHECKOUT_ROUTER
 } from "../../../src/lib/constants";
 import { SIGN_UP } from "../../auth/actions/user.actions";
 
@@ -67,7 +68,6 @@ class HeaderWrapper extends React.Component {
     const searchQuery = queryString.parse(this.props.history.location.search);
     const hasAppView = searchQuery.appview;
     const url = this.props.location.pathname;
-
     let shouldRenderSearch = false;
 
     let productCode = null;
@@ -77,6 +77,7 @@ class HeaderWrapper extends React.Component {
     }
 
     let isGoBack = true;
+    let isCross = false;
     let shouldRenderHeader = true;
 
     if (this.props.location.pathname.includes("/")) {
@@ -100,6 +101,10 @@ class HeaderWrapper extends React.Component {
 
     if (url === LOGIN_PATH || url === SIGN_UP_PATH) {
       shouldRenderHeader = false;
+    }
+    if (url === CHECKOUT_ROUTER) {
+      isGoBack = false;
+      isCross = true;
     }
     if (hasAppView === "true") {
       shouldRenderHeader = false;
@@ -125,6 +130,7 @@ class HeaderWrapper extends React.Component {
           text={this.props.headerText}
           canGoBack={this.onBackClick}
           hasBackButton={isGoBack}
+          hasCrossButton={isCross}
         />
       );
     }
