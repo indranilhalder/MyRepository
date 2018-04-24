@@ -28,9 +28,7 @@ class ProductListingsPage extends Component {
     }
 
     if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
-      // I might have a q or no q.
       if (!searchText) {
-        // if there are query params
         searchText = `:relevance:category:${this.props.match.params[0].toUpperCase()}`;
       }
     }
