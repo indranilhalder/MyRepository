@@ -9,11 +9,11 @@ export default class BrandEdit extends React.Component {
     this.state = {
       onDelete: false,
       label: this.props.btnText,
-      flag: 0
+      brandEdit: false
     };
   }
   onClickButton(brandId, followStatus, webURL) {
-    if (this.state.flag === "1") {
+    if (this.state.brandEdit === true) {
       this.props.onClick(brandId, followStatus);
     } else {
       this.props.onRedirectToBrandPage(webURL);
@@ -22,9 +22,9 @@ export default class BrandEdit extends React.Component {
   onShowDelete() {
     this.setState({ onDelete: !this.state.onDelete });
     if (this.state.label === "Edit") {
-      this.setState({ label: "Done", flag: "1" });
+      this.setState({ label: "Done", brandEdit: true });
     } else {
-      this.setState({ label: "Edit", flag: "0" });
+      this.setState({ label: "Edit", brandEdit: false });
     }
   }
   render() {
