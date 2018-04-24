@@ -26,17 +26,20 @@ export default class ReverseSealYesNo extends React.Component {
         <div className={styles.headerText}>
           Do You have the reverse seal with you?
         </div>
-        <div className={styles.moreInfoButtonHolder}>
-          <div className={styles.button}>
-            <UnderLinedButton
-              size="14px"
-              fontFamily="regular"
-              color="#000"
-              label="More Info"
-              onClick={() => this.moreInfo()}
-            />
+        {this.props.isMoreInfo && (
+          <div className={styles.moreInfoButtonHolder}>
+            <div className={styles.button}>
+              <UnderLinedButton
+                size="14px"
+                fontFamily="regular"
+                color="#000"
+                label="More Info"
+                onClick={() => this.moreInfo()}
+              />
+            </div>
           </div>
-        </div>
+        )}
+
         <div className={styles.yesNoQuestionHolder}>
           {options &&
             options.length > 0 && (
@@ -58,5 +61,9 @@ export default class ReverseSealYesNo extends React.Component {
   }
 }
 ReverseSealYesNo.propTypes = {
-  moreInfo: PropTypes.func
+  moreInfo: PropTypes.func,
+  isMoreInfo: PropTypes.bool
+};
+ReverseSealYesNo.defaultProps = {
+  isMoreInfo: false
 };
