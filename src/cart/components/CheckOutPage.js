@@ -435,11 +435,6 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    // adding default address is selected
-    if (nextProps.cart.softReserveError) {
-      this.props.history.goBack();
-    }
     if (
       nextProps.cart.getUserAddressStatus === SUCCESS &&
       !this.state.addressId &&
@@ -1071,7 +1066,6 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
-    console.log(this.state.confirmAddress);
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
