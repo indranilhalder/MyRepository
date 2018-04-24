@@ -31,11 +31,11 @@ export default class NetBanking extends React.Component {
     };
   }
   handleSelect(val) {
-    const code = val.value;
-    const label = val.label;
-    this.setState({ bankName: code, bank: label });
+    const bank_Code = val.value;
+    const bank_label = val.label;
+    this.setState({ bankName: bank_Code, bank: bank_label });
     if (this.props.binValidationForNetBank) {
-      this.props.binValidationForNetBank(code);
+      this.props.binValidationForNetBank(bank_Code);
     }
   }
 
@@ -86,7 +86,7 @@ export default class NetBanking extends React.Component {
           <SelectBoxMobile2
             height={33}
             label={this.state.bank ? this.state.bank : "Other Bank"}
-            value={this.state.bank ? this.state.bank : "Other Bank"}
+            value={this.state.bankName ? this.state.bankName : ""}
             options={
               this.props.bankList &&
               this.props.bankList
