@@ -190,14 +190,22 @@ class CheckOutPage extends React.Component {
       selectedSlaveId
     );
   }
-  addPickupPersonCNC(mobile, name) {
+  async addPickupPersonCNC(mobile, name, productObj) {
     if (name.length < 4) {
       return this.props.displayToast(ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME);
     } else if (mobile.length !== 10) {
       return this.props.displayToast(ERROR_MESSAGE_FOR_MOBILE_NUMBER);
     }
     this.setState({ showCliqAndPiq: false });
-    this.props.addPickupPersonCNC(mobile, name);
+    const addPickUpPerson = await this.props.addPickupPersonCNC(mobile, name);
+    if (addPickUpPerson.status === SUCCESS) {
+      const updatedDeliveryModeUssid = this.state.ussIdAndDeliveryModesObj;
+
+      updatedDeliveryModeUssid[
+        this.state.selectedProductsUssIdForCliqAndPiq
+      ] = COLLECT;
+      this.setState({ ussIdAndDeliveryModesObj: updatedDeliveryModeUssid });
+    }
   }
   removeCliqAndPiq() {
     this.setState({ showCliqAndPiq: false });
@@ -334,7 +342,7 @@ class CheckOutPage extends React.Component {
         hidePickupPersonDetail={() => this.togglePickupPersonForm()}
         addStoreCNC={slavesId => this.addStoreCNC(slavesId)}
         addPickupPersonCNC={(mobile, name) =>
-          this.addPickupPersonCNC(mobile, name)
+          this.addPickupPersonCNC(mobile, name, currentSelectedProduct)
         }
         changePincode={pincode => this.changePincodeOnCliqAndPiq(pincode)}
         goBack={() => this.removeCliqAndPiq()}

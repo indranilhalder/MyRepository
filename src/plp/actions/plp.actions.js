@@ -102,6 +102,7 @@ export function getProductListingsFailure(error, isPaginated) {
     isPaginated
   };
 }
+
 export function getProductListings(
   suffix: null,
   paginated: false,
