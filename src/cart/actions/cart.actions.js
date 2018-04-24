@@ -1974,14 +1974,14 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       } else if (
         product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
       ) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
       }
       item.push(productDetails);
       productItems.item = item;
@@ -2034,14 +2034,14 @@ export function softReservationPaymentForNetBanking(
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       } else if (
         product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
       ) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
       }
       item.push(productDetails);
       productItems.item = item;
@@ -2100,14 +2100,14 @@ export function softReservationPaymentForSavedCard(
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       } else if (
         product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
       ) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
       }
       item.push(productDetails);
       productItems.item = item;
@@ -2155,14 +2155,14 @@ export function softReservationForCliqCash(pinCode) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       } else if (
         product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
       ) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
       }
       item.push(productDetails);
       productItems.item = item;
@@ -3263,7 +3263,7 @@ export function softReservationForCODPayment(pinCode) {
       productDetails.deliveryMode =
         product.pinCodeResponse.validDeliveryModes[0].type;
       productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       productDetails.fulfillmentType = product.fullfillmentType;
       item.push(productDetails);
       productItems.item = item;
