@@ -90,7 +90,6 @@ export default class PdpApparel extends React.Component {
   };
 
   addToCart = () => {
-    console.log(this.state);
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
     productDetails.quantity = this.state.productQuantityOption.value;
@@ -201,7 +200,6 @@ export default class PdpApparel extends React.Component {
   };
 
   render() {
-    console.log(this.state);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList

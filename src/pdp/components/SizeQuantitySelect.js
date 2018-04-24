@@ -33,7 +33,6 @@ export default class SizeQuantitySelect extends React.Component {
     }
   }
   render() {
-    console.log(this.props.productQuantity.label);
     const selectedVariant = this.props.data.filter(val => {
       return val.colorlink.selected;
     })[0];
