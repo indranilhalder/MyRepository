@@ -1,8 +1,9 @@
 import "isomorphic-fetch";
+import cloneDeep from "lodash.clonedeep";
 import * as Cookie from "./Cookie";
 import { LOGGED_IN_USER_DETAILS } from "./constants.js";
 import * as ErrorHandling from "../general/ErrorHandling.js";
-import { CUSTOMER_ACCESS_TOKEN } from "../lib/constants";
+import { CUSTOMER_ACCESS_TOKEN, GLOBAL_ACCESS_TOKEN } from "../lib/constants";
 let API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 export let TATA_CLIQ_ROOT = /https?:[\/]{2}\S*?(\/\S*)/;
 export const TOKEN_PATH = "oauth/token";
@@ -61,7 +62,7 @@ export async function postAdobeTargetUrl(
 
 export async function post(path, postData, doNotUserApiSuffix: true) {
   const url = `${API_URL_ROOT}/${path}`;
-  return await fetch(url, {
+  const result = await fetch(url, {
     method: "POST",
     body: JSON.stringify(postData),
     headers: {
@@ -69,14 +70,29 @@ export async function post(path, postData, doNotUserApiSuffix: true) {
       "Content-Type": "application/json"
     }
   });
+  const verifyAccessTokenResult = await getCustomerAccessToken(
+    result,
+    path,
+    post,
+    postData
+  );
+
+  return verifyAccessTokenResult;
 }
 
 export async function getWithoutApiUrlRoot(url) {
-  return await fetch(url, {
+  const result = await fetch(url, {
     headers: {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
+  const verifyAccessTokenResult = await getCustomerAccessToken(
+    result,
+    url,
+    getWithoutApiUrlRoot
+  );
+
+  return verifyAccessTokenResult;
 }
 
 export async function get(url) {
@@ -85,33 +101,50 @@ export async function get(url) {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
-  let resultJson = await result.json();
-  const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-  if (resultJsonStatus.status) {
-    getCustomerAccessToken(resultJsonStatus.message, url, get);
-  }
 
-  return result;
+  const verifyAccessTokenResult = await getCustomerAccessToken(
+    result,
+    url,
+    get
+  );
+
+  return verifyAccessTokenResult;
 }
 
 export async function patch(url, payload) {
-  return await fetch(`${API_URL_ROOT}/${url}`, {
+  const result = await fetch(`${API_URL_ROOT}/${url}`, {
     method: "PATCH",
     body: JSON.stringify(payload),
     headers: {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
+  const verifyAccessTokenResult = await getCustomerAccessToken(
+    result,
+    url,
+    patch,
+    payload
+  );
+
+  return verifyAccessTokenResult;
 }
 
 export async function put(url, payload) {
-  return await fetch(`${API_URL_ROOT}/${url}`, {
+  const result = await fetch(`${API_URL_ROOT}/${url}`, {
     method: "PUT",
     body: JSON.stringify(payload),
     headers: {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
+  const verifyAccessTokenResult = await getCustomerAccessToken(
+    result,
+    url,
+    put,
+    payload
+  );
+
+  return verifyAccessTokenResult;
 }
 
 export async function postMock(url, payload) {
@@ -165,17 +198,32 @@ export async function getMsd(url) {
 
 export async function postJusPay(path, postData) {
   let url = `${JUS_PAY_API_URL_ROOT}/${path}`;
-  return await fetch(url, {
+  const result = await fetch(url, {
     method: "POST",
     body: postData
   });
+  const verifyAccessTokenResult = await getCustomerAccessToken(
+    result,
+    path,
+    postJusPay
+  );
+
+  return verifyAccessTokenResult;
 }
 
 export async function postFormData(url, payload) {
-  return await fetch(`${API_URL_ROOT}/${url}`, {
+  const result = await fetch(`${API_URL_ROOT}/${url}`, {
     method: "POST",
     body: payload
   });
+  const verifyAccessTokenResult = await getCustomerAccessToken(
+    result,
+    url,
+    postFormData,
+    payload
+  );
+
+  return verifyAccessTokenResult;
 }
 
 // this function is using in follow and un follow brands
@@ -191,38 +239,88 @@ export async function postMsdRowData(url, payload) {
   });
 }
 
-export async function getCustomerAccessToken(message, url, requestType, body) {
-  console.log(message);
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  console.log(customerCookie);
-  if (
-    message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
-    message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0
-  ) {
-    customerCookie = customerCookie && JSON.parse(customerCookie).access_token;
-    if (message.indexOf(customerCookie) >= 0) {
-      const refreshTokenApi = await post(
-        `${TOKEN_PATH}?refresh_token=${
-          JSON.parse(customerCookie).refresh_token
-        }&client_id=${CLIENT_ID}&client_secret=secret&grant_type=refresh_token`
-      );
-      const resultJson = await refreshTokenApi.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-      if (!resultJsonStatus.status) {
-        Cookie.createCookie(
-          CUSTOMER_ACCESS_TOKEN,
-          JSON.stringify(resultJson),
-          resultJson.expires_in
+export async function getCustomerAccessToken(
+  resultApiResponse,
+  url,
+  requestType,
+  body
+) {
+  const result = resultApiResponse.clone();
+  try {
+    const resultJson = await result.json();
+
+    const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+
+    if (
+      resultJsonStatus.status &&
+      (resultJsonStatus.message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
+        resultJsonStatus.message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0)
+    ) {
+      let customerToken =
+        customerCookie && JSON.parse(customerCookie).access_token;
+      if (resultJsonStatus.message.indexOf(customerToken) >= 0) {
+        const refreshToken = await post(
+          `${TOKEN_PATH}?refresh_token=${
+            JSON.parse(customerCookie).refresh_token
+          }&client_id=${CLIENT_ID}&client_secret=secret&grant_type=refresh_token`
         );
-        if (resultJson.access_token) {
-          let newUrl = url.replace(
-            JSON.parse(customerCookie).access_token,
-            resultJson.access_token
+
+        const newAccessTokenResultJson = await refreshToken.json();
+        const newAccessTokenResultJsonStatus = ErrorHandling.getFailureResponse(
+          newAccessTokenResultJson
+        );
+
+        if (
+          !newAccessTokenResultJsonStatus.status &&
+          newAccessTokenResultJson.access_token
+        ) {
+          Cookie.createCookie(
+            CUSTOMER_ACCESS_TOKEN,
+            JSON.stringify(newAccessTokenResultJson),
+            newAccessTokenResultJson.expires_in
           );
-          return await requestType(newUrl, body);
+          if (newAccessTokenResultJson.access_token) {
+            let newUrl = url.replace(
+              JSON.parse(customerCookie).access_token,
+              newAccessTokenResultJson.access_token
+            );
+            return await requestType(newUrl, body);
+          }
+        }
+      } else {
+        const globalAccessToken = await post(
+          `${TOKEN_PATH}?grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=secret&isPwa=true`
+        );
+        const newAccessTokenResultJson = await globalAccessToken.json();
+        const newAccessTokenResultJsonStatus = ErrorHandling.getFailureResponse(
+          newAccessTokenResultJson
+        );
+
+        if (
+          !newAccessTokenResultJsonStatus.status &&
+          newAccessTokenResultJson.access_token
+        ) {
+          Cookie.createCookie(
+            GLOBAL_ACCESS_TOKEN,
+            JSON.stringify(newAccessTokenResultJson),
+            newAccessTokenResultJson.expires_in
+          );
+
+          if (newAccessTokenResultJson.access_token) {
+            let newUrl = url.replace(
+              JSON.parse(globalCookie).access_token,
+              newAccessTokenResultJson.access_token
+            );
+            return await requestType(newUrl, body);
+          }
         }
       }
     } else {
+      return resultApiResponse;
     }
+  } catch (e) {
+    return resultApiResponse;
   }
 }
