@@ -86,6 +86,7 @@ export default class NetBanking extends React.Component {
           <SelectBoxMobile2
             height={33}
             label={this.state.bank ? this.state.bank : "Other Bank"}
+            value={this.state.bank ? this.state.bank : "Other Bank"}
             options={
               this.props.bankList &&
               this.props.bankList
