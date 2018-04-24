@@ -1,7 +1,7 @@
 import React from "react";
 import Icon from "../../xelpmoc-core/Icon";
 import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
-import GridSelect from "../../general/components/GridSelect";
+import Grid from "../../general/components/Grid";
 import BankSelect from "./BankSelect";
 import styles from "./NetBanking.css";
 import Button from "../../general/components/Button";
@@ -30,6 +30,12 @@ export default class NetBanking extends React.Component {
       bankCode: ""
     };
   }
+  handleSelectForIcon(val) {
+    this.setState({ bankCode: val });
+    if (this.props.binValidationForNetBank) {
+      this.props.binValidationForNetBank(val);
+    }
+  }
   handleSelect(val) {
     const bankCode = val.value;
     const bankName = val.label;
@@ -50,37 +56,47 @@ export default class NetBanking extends React.Component {
     return (
       <div>
         {this.props.bankList && (
-          <GridSelect
-            limit={1}
-            offset={30}
-            elementWidthMobile={25}
-            onSelect={val => this.handleSelect(val)}
-            selected={this.props.selected}
-          >
+          <Grid limit={1} offset={30} elementWidthMobile={25}>
             {this.props.bankList.find(bank => {
               return (
                 bank.bankCode === axisBankCode ||
                 bank.bankCode === axisBankCodeDummy
               );
             }) ? (
-              <Icon image={axisBankIcon} size={60} value={axisBankCode} />
+              <BankSelect
+                selectItem={() => this.handleSelectForIcon(axisBankCode)}
+                image={axisBankIcon}
+                selected={this.state.bankCode === axisBankCode}
+              />
             ) : null}
             {this.props.bankList.find(bank => {
               return bank.bankCode === hdfcBankCode;
             }) ? (
-              <Icon image={hdfcBankIcon} size={60} value={hdfcBankCode} />
+              <BankSelect
+                selectItem={() => this.handleSelectForIcon(hdfcBankCode)}
+                image={hdfcBankIcon}
+                selected={this.state.bankCode === hdfcBankCode}
+              />
             ) : null}
             {this.props.bankList.find(bank => {
               return bank.bankCode === iciciBankCode;
             }) ? (
-              <Icon image={iciciBankIcon} size={60} value={iciciBankCode} />
+              <BankSelect
+                selectItem={() => this.handleSelectForIcon(iciciBankCode)}
+                image={iciciBankIcon}
+                selected={this.state.bankCode === iciciBankCode}
+              />
             ) : null}
             {this.props.bankList.find(bank => {
               return bank.bankCode === sbiBankCode;
             }) ? (
-              <Icon image={sbiBankIcon} size={60} value={sbiBankCode} />
+              <BankSelect
+                selectItem={() => this.handleSelectForIcon(sbiBankCode)}
+                image={sbiBankIcon}
+                selected={this.state.bankCode === sbiBankCode}
+              />
             ) : null}
-          </GridSelect>
+          </Grid>
         )}
         <div className={styles.bankDropDown}>
           <SelectBoxMobile2
