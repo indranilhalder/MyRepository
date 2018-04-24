@@ -125,7 +125,7 @@ class Feed extends Component {
           return data.type === "Landing Page Title Component";
         });
 
-      if (titleObj) {
+      if (titleObj && this.props.setHeaderText) {
         this.props.setHeaderText(titleObj.title);
       }
     }
@@ -138,7 +138,7 @@ class Feed extends Component {
           return data.type === "Landing Page Title Component";
         });
 
-      if (titleObj) {
+      if (titleObj && this.props.setHeaderText) {
         this.props.setHeaderText(titleObj.title);
       }
     }
@@ -197,6 +197,7 @@ class Feed extends Component {
   };
 
   render() {
+    console.log(this.props);
     if (this.props.loading) {
       return <HomeSkeleton />;
     }
