@@ -85,6 +85,7 @@ export const typeComponentMapping = {
   ),
   "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
   "Landing Page Hierarchy": props => <AllBrandTypes {...props} />,
+  "Landing Page Hierarchy Component": props => <AllBrandTypes {...props} />,
   "CMS Paragraph Component": props => <CMSParagraphComponent {...props} />,
   "Simple Banner Component": props => {
     return (
@@ -197,6 +198,7 @@ class Feed extends Component {
   };
 
   render() {
+    console.log(this.props);
     if (this.props.loading) {
       return <HomeSkeleton />;
     }
