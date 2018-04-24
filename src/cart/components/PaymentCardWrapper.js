@@ -10,7 +10,7 @@ import CheckoutSavedCard from "./CheckoutSavedCard.js";
 import CheckoutCOD from "./CheckoutCOD.js";
 import { PAYTM } from "../../lib/constants";
 import PaytmOption from "./PaytmOption.js";
-
+import CheckOutHeader from "./CheckOutHeader";
 let cliqCashToggleState = false;
 
 // prettier-ignore
@@ -98,6 +98,12 @@ export default class PaymentCardWrapper extends React.Component {
     if (this.props.cart.paymentModes) {
       return (
         <div className={styles.base}>
+          <div className={styles.card}>
+            <CheckOutHeader
+              confirmTitle="Choose payment Method"
+              indexNumber="3"
+            />
+          </div>
           {this.props.isRemainingBalance && this.renderSavedCards()}
           {!this.props.isFromGiftCard && (
             <div>
