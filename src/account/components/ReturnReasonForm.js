@@ -5,7 +5,7 @@ import TextArea from "../../general/components/TextArea";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
 import styles from "./ReturnReasonForm.css";
-
+import ReverseSealYesNo from "./ReverseSealYesNo.js";
 export default class ReturnReasonForm extends React.Component {
   constructor(props) {
     super(props);
@@ -69,6 +69,7 @@ export default class ReturnReasonForm extends React.Component {
   }
   render() {
     const data = this.props.returnProductDetails;
+    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.header}>
@@ -128,6 +129,13 @@ export default class ReturnReasonForm extends React.Component {
             <TextArea onChange={val => this.handleChange(val)} />
           </div>
         </div>
+        {data &&
+          !data.showReverseSealFrJwlry === "no" && (
+            <div className={styles.reverseSealHolder}>
+              <ReverseSealYesNo />
+            </div>
+          )}
+
         <div className={styles.buttonHolder}>
           <div className={styles.button}>
             <Button
