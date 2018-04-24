@@ -34,7 +34,7 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  background: url(./img/minus.svg)no-repeat;
+  background: url(./img/minus.svg) no-repeat;
   background-size: auto 55%;
   background-position: center;
   transition: 300ms;
@@ -49,7 +49,7 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  background: url(./img/minus.svg)no-repeat;
+  background: url(./img/minus.svg) no-repeat;
   background-size: auto 55%;
   background-position: center;
   transition: 300ms;
@@ -68,12 +68,12 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  background: url(./img/minus.svg)no-repeat;
-  background-size: auto 70%;
+  background: url(./img/minus.svg) no-repeat;
+  background-size: auto 55%;
   background-position: center;
   transition: 300ms;
   left: 1px;
-  top: 5px;
+  top: 2px;
   right: 0;
   bottom: 0;
   margin: auto;

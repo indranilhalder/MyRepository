@@ -6,7 +6,8 @@ import { withRouter } from "react-router";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 import styles from "./DiscoverMore500.css";
-import FeedComponent from "./FeedComponent";
+const NUM_RESULTS_TO_SHOW = 6;
+
 class DiscoverMore500 extends React.Component {
   handleClick = webUrl => {
     const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "$1");
@@ -26,13 +27,15 @@ class DiscoverMore500 extends React.Component {
             feedComponentData.data &&
             feedComponentData.data.map((datum, i) => {
               return (
-                <CategoryWithName
-                  image={datum.imageURL}
-                  label={datum.title}
-                  key={i}
-                  value={datum.webURL}
-                  onClick={this.handleClick}
-                />
+                i < NUM_RESULTS_TO_SHOW && (
+                  <CategoryWithName
+                    image={datum.imageURL}
+                    label={datum.title}
+                    key={i}
+                    value={datum.webURL}
+                    onClick={this.handleClick}
+                  />
+                )
               );
             })}
         </Grid>
