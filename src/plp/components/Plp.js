@@ -64,6 +64,7 @@ export default class Plp extends React.Component {
     this.throttledScroll = this.handleScroll();
     window.addEventListener("scroll", this.throttledScroll);
   }
+
   componentDidUpdate(prevProps) {
     if (this.props.productListings !== null) {
       if (this.props.isFilterOpen) {
@@ -81,11 +82,23 @@ export default class Plp extends React.Component {
             })`
           );
         else {
-          this.props.setHeaderText(
-            `Search results (${
-              this.props.productListings.pagination.totalResults
-            })`
-          );
+          const slug = this.props.match.params.slug;
+          let splitSlug = "Tata Cliq";
+          if (slug) {
+            splitSlug = this.props.match.params.slug.replace(/-/g, " ");
+            splitSlug = splitSlug.replace(/\b\w/g, l => l.toUpperCase());
+            this.props.setHeaderText(
+              `${splitSlug} (${
+                this.props.productListings.pagination.totalResults
+              })`
+            );
+          } else {
+            this.props.setHeaderText(
+              `Search results (${
+                this.props.productListings.pagination.totalResults
+              })`
+            );
+          }
         }
       }
     }
@@ -112,6 +125,7 @@ export default class Plp extends React.Component {
   };
 
   render() {
+    console.log(this.props);
     return (
       this.props.productListings && (
         <div className={styles.base}>
