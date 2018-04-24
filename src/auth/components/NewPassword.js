@@ -78,8 +78,6 @@ export default class NewPassword extends React.Component {
             onChange={val => this.setState({ confirmedPassword: val })}
           />
         </div>
-        {/* <Error message="Passwords must match" show={this.state.error} /> */}
-
         <div className={styles.button}>
           <div className={ownStyles.submit}>
             <Button
