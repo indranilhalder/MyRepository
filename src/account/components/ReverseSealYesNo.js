@@ -4,6 +4,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import GridSelect from "../../general/components/GridSelect";
 import YesNoQuestion from "./YesNoQuestion";
 import PropTypes from "prop-types";
+const LABEL = "More Info";
 export default class ReverseSealYesNo extends React.Component {
   constructor(props) {
     super(props);
@@ -44,7 +45,7 @@ export default class ReverseSealYesNo extends React.Component {
                 size="14px"
                 fontFamily="regular"
                 color="#000"
-                label="More Info"
+                label={LABEL}
                 onClick={() => this.moreInfo()}
               />
             </div>

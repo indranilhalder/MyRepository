@@ -29,16 +29,11 @@ export default class ReturnReasonAndModes extends React.Component {
   constructor(props) {
     super();
     this.orderCode = props.location.pathname.split("/")[2];
-    this.state = {
-      reverseSeal: ""
-    };
   }
   renderLoader() {
     return <Loader />;
   }
-  selectReverseSeal(val) {
-    this.setState({ reverseSeal: val });
-  }
+
   onCancel() {
     setDataLayerForMyAccountDirectCalls(ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL);
     this.props.history.goBack();
@@ -119,7 +114,6 @@ export default class ReturnReasonAndModes extends React.Component {
         onChangePrimary={reason => this.onChange({ reason })}
         onContinue={data => this.renderToModes(data)}
         onCancel={() => this.onCancel()}
-        //selectReverseSeal={val => this.selectReverseSeal(val)}
       />
     );
     const renderReturnMode = (
