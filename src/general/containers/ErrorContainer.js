@@ -5,14 +5,6 @@ import React from "react";
 import delay from "lodash.delay";
 import keys from "lodash.keys";
 import each from "lodash.foreach";
-import {
-  getGlobalAccessToken,
-  refreshToken
-} from "../../auth/actions/user.actions.js";
-import { CUSTOMER_ACCESS_TOKEN } from "../../lib/constants.js";
-import * as Cookie from "../../lib/Cookie.js";
-const ACCESS_TOKEN_EXPIRED_MESSAGE = "Access token expired";
-const ACCESS_TOKEN_INVALID_MESSAGE = "Invalid access token";
 
 const CLEAR_ERROR_DELAY = TOAST_DELAY + 1000;
 
@@ -98,12 +90,6 @@ const mapDispatchToProps = dispatch => {
     },
     clearError: () => {
       dispatch(clearError());
-    },
-    getGlobalAccessToken: () => {
-      dispatch(getGlobalAccessToken()).then(() => window.location.reload(true));
-    },
-    refreshToken: () => {
-      dispatch(refreshToken()).then(() => window.location.reload(true));
     }
   };
 };
