@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Icon from "../../xelpmoc-core/Icon";
-import downloadIcon from "./img/download.svg";
+import downloadIcon from "../../general/components/img/download.png";
 import * as Cookie from "../../lib/Cookie";
 import FooterButton from "../../general/components/FooterButton.js";
-import saveIcon from "../../general/components/img/download.svg";
+import saveIcon from "../../general/components/img/download.png";
 import styles from "./AddToWishListButton.css";
-import downloadIconWhite from "../../general/components/img/downloadWhite.svg";
+import downloadIconWhite from "../../general/components/img/downloadWhite.png";
 import {
   LOGIN_PATH,
   LOGGED_IN_USER_DETAILS,
@@ -63,6 +63,7 @@ export default class AddToWishListButton extends React.Component {
         </div>
       );
     }
+
     return (
       <div onClick={e => this.onClick(e)}>
         <Icon

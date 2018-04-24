@@ -29,7 +29,6 @@ export default class ProductDescription extends Component {
       headerText = styles.headerWhite;
       contentClass = styles.contentWhite;
     }
-
     return (
       <div className={styles.base}>
         <div className={headerClass}>
