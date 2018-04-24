@@ -90,6 +90,7 @@ export default class PdpApparel extends React.Component {
   };
 
   addToCart = () => {
+    console.log(this.state);
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
     productDetails.quantity = this.state.productQuantityOption.value;
@@ -113,7 +114,10 @@ export default class PdpApparel extends React.Component {
         if (!this.checkIfSizeSelected()) {
           this.props.displayToast("Please select a size to continue");
           this.setState({ sizeError: true });
-        } else if (!this.checkIfQuantitySelected()) {
+        } else if (
+          !this.checkIfQuantitySelected() ||
+          this.state.productQuantityOption === "Quantity"
+        ) {
           this.props.displayToast("Please select a quantity to continue");
           this.setState({ quantityError: true });
         } else {
@@ -190,13 +194,14 @@ export default class PdpApparel extends React.Component {
       this.props.location.state &&
       this.props.location.state.isQuantitySelected
     ) {
-      return true;
+      return this.props.location.state.isQuantitySelected;
     } else {
       return false;
     }
   };
 
   render() {
+    console.log(this.state);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
