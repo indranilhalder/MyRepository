@@ -49,7 +49,6 @@ export default class ReturnReasonAndModes extends React.Component {
     }
   }
   renderToModes(data) {
-    console.log(this.state);
     if (!data.reason) {
       this.props.displayToast("Please select reason ");
       return false;

@@ -223,13 +223,18 @@ export default class ReturnAddressList extends React.Component {
 
   newReturnInitiate = () => {
     let isCodOrder = NO;
-    let reverseSealAvailable = YES;
+    let reverseSealAvailable = "N";
     if (this.props.orderDetails.paymentMethod === "COD") {
       isCodOrder = YES;
     }
-    if (this.props.orderDetails.resendAvailable) {
+    if (
+      this.props.data &&
+      this.props.data.reverseSeal &&
+      this.props.data.reverseSeal[0] === "Yes"
+    ) {
       reverseSealAvailable = "Y";
     }
+
     let returnCliqAndPiqObject = {};
     returnCliqAndPiqObject.returnReasonCode = "01";
     returnCliqAndPiqObject.refundType = "R";
@@ -291,7 +296,6 @@ export default class ReturnAddressList extends React.Component {
     this.props.history.goBack();
   };
   render() {
-    console.log(this.props.data);
     if (this.props.loading) {
       this.props.showSecondaryLoader();
     } else {

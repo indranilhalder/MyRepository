@@ -14,7 +14,7 @@ export default class ReturnReasonForm extends React.Component {
       displaySecondary: false,
       secondaryReasons: null,
       comment: null,
-      isReverse: null
+      reverseSeal: null
     };
   }
   handleContinue() {
@@ -25,7 +25,7 @@ export default class ReturnReasonForm extends React.Component {
           subReasonCode: this.state.subReasonCode,
           comment: this.state.comment,
           reason: this.state.reason,
-          isReverse: this.state.isReverse
+          reverseSeal: this.state.reverseSeal
         }
       );
       this.props.onContinue(reasonAndCommentObj);
@@ -60,10 +60,7 @@ export default class ReturnReasonForm extends React.Component {
     this.setState({ comment: val });
   }
   selectReverseSeal(val) {
-    this.setState({ isReverse: val });
-    // if (this.props.selectReverseSeal) {
-    //   this.props.selectReverseSeal(val);
-    //}
+    this.setState({ reverseSeal: val });
   }
   onChangeSecondary(val) {
     const code = val.value;
@@ -137,17 +134,13 @@ export default class ReturnReasonForm extends React.Component {
             <TextArea onChange={val => this.handleChange(val)} />
           </div>
         </div>
-        {/* {data &&
+        {data &&
           data.showReverseSealFrJwlry === "yes" && (
             <div className={styles.reverseSealHolder}>
               <ReverseSealYesNo />
             </div>
-          )} */}
-        <div className={styles.reverseSealHolder}>
-          <ReverseSealYesNo
-            selectReverseSeal={val => this.selectReverseSeal(val)}
-          />
-        </div>
+          )}
+
         <div className={styles.buttonHolder}>
           <div className={styles.button}>
             <Button
