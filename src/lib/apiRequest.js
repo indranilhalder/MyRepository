@@ -70,21 +70,31 @@ export async function post(path, postData, doNotUserApiSuffix: true) {
       "Content-Type": "application/json"
     }
   });
+
   const resultClone = result.clone();
   const resultJson = await resultClone.json();
   const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
   if (
     resultJsonStatus.status &&
+    resultJsonStatus.message &&
     (resultJsonStatus.message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
       resultJsonStatus.message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0)
   ) {
-    const verifyAccessTokenResult = await getAccessToken(
-      resultJsonStatus.message,
-      path,
-      post,
-      postData
-    );
-    return verifyAccessTokenResult;
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let customerToken =
+      customerCookie && JSON.parse(customerCookie).access_token;
+    if (resultJsonStatus.message.indexOf(customerToken) >= 0) {
+      const refreshTokenResult = await refreshToken(path, post, postData);
+      return refreshTokenResult;
+    } else {
+      const globalAccessTokenResult = await globalAccessToken(
+        path,
+        post,
+        postData
+      );
+      return globalAccessTokenResult;
+    }
   } else {
     return result.clone();
   }
@@ -96,6 +106,7 @@ export async function getWithoutApiUrlRoot(url) {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
+
   const resultClone = result.clone();
   const resultJson = await resultClone.json();
   const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -104,12 +115,19 @@ export async function getWithoutApiUrlRoot(url) {
     (resultJsonStatus.message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
       resultJsonStatus.message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0)
   ) {
-    const verifyAccessTokenResult = await getAccessToken(
-      resultJsonStatus.message,
-      url,
-      getWithoutApiUrlRoot
-    );
-    return verifyAccessTokenResult;
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let customerToken =
+      customerCookie && JSON.parse(customerCookie).access_token;
+    if (resultJsonStatus.message.indexOf(customerToken) >= 0) {
+      const refreshTokenResult = await refreshToken(url, getWithoutApiUrlRoot);
+      return refreshTokenResult;
+    } else {
+      const globalAccessTokenResult = await globalAccessToken(
+        url,
+        getWithoutApiUrlRoot
+      );
+      return globalAccessTokenResult;
+    }
   } else {
     return result.clone();
   }
@@ -129,12 +147,16 @@ export async function get(url) {
     (resultJsonStatus.message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
       resultJsonStatus.message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0)
   ) {
-    const verifyAccessTokenResult = await getAccessToken(
-      resultJsonStatus.message,
-      url,
-      get
-    );
-    return verifyAccessTokenResult;
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let customerToken =
+      customerCookie && JSON.parse(customerCookie).access_token;
+    if (resultJsonStatus.message.indexOf(customerToken) >= 0) {
+      const refreshTokenResult = await refreshToken(url, get);
+      return refreshTokenResult;
+    } else {
+      const globalAccessTokenResult = await globalAccessToken(url, get);
+      return globalAccessTokenResult;
+    }
   } else {
     return result.clone();
   }
@@ -148,22 +170,31 @@ export async function patch(url, payload) {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
+
   const resultClone = result.clone();
   const resultJson = await resultClone.json();
   const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
   if (
     resultJsonStatus.status &&
+    resultJsonStatus.message &&
     (resultJsonStatus.message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
       resultJsonStatus.message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0)
   ) {
-    const verifyAccessTokenResult = await getAccessToken(
-      resultJsonStatus.message,
-      result,
-      url,
-      patch,
-      payload
-    );
-    return verifyAccessTokenResult;
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let customerToken =
+      customerCookie && JSON.parse(customerCookie).access_token;
+    if (resultJsonStatus.message.indexOf(customerToken) >= 0) {
+      const refreshTokenResult = await refreshToken(url, patch, payload);
+      return refreshTokenResult;
+    } else {
+      const globalAccessTokenResult = await globalAccessToken(
+        url,
+        patch,
+        payload
+      );
+      return globalAccessTokenResult;
+    }
   } else {
     return result.clone();
   }
@@ -180,18 +211,27 @@ export async function put(url, payload) {
   const resultClone = result.clone();
   const resultJson = await resultClone.json();
   const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
   if (
     resultJsonStatus.status &&
+    resultJsonStatus.message &&
     (resultJsonStatus.message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
       resultJsonStatus.message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0)
   ) {
-    const verifyAccessTokenResult = await getAccessToken(
-      resultJsonStatus.message,
-      url,
-      put,
-      payload
-    );
-    return verifyAccessTokenResult;
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let customerToken =
+      customerCookie && JSON.parse(customerCookie).access_token;
+    if (resultJsonStatus.message.indexOf(customerToken) >= 0) {
+      const refreshTokenResult = await refreshToken(url, put, payload);
+      return refreshTokenResult;
+    } else {
+      const globalAccessTokenResult = await globalAccessToken(
+        url,
+        put,
+        payload
+      );
+      return globalAccessTokenResult;
+    }
   } else {
     return result.clone();
   }
@@ -252,20 +292,27 @@ export async function postJusPay(path, postData) {
     method: "POST",
     body: postData
   });
+
   const resultClone = result.clone();
   const resultJson = await resultClone.json();
   const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
   if (
     resultJsonStatus.status &&
+    resultJsonStatus.message &&
     (resultJsonStatus.message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
       resultJsonStatus.message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0)
   ) {
-    const verifyAccessTokenResult = await getAccessToken(
-      resultJsonStatus.message,
-      path,
-      postJusPay
-    );
-    return verifyAccessTokenResult;
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let customerToken =
+      customerCookie && JSON.parse(customerCookie).access_token;
+    if (resultJsonStatus.message.indexOf(customerToken) >= 0) {
+      const refreshTokenResult = await refreshToken(path, postJusPay);
+      return refreshTokenResult;
+    } else {
+      const globalAccessTokenResult = await globalAccessToken(path, postJusPay);
+      return globalAccessTokenResult;
+    }
   } else {
     return result.clone();
   }
@@ -276,21 +323,31 @@ export async function postFormData(url, payload) {
     method: "POST",
     body: payload
   });
+
   const resultClone = result.clone();
   const resultJson = await resultClone.json();
   const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
   if (
     resultJsonStatus.status &&
+    resultJsonStatus.message &&
     (resultJsonStatus.message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
       resultJsonStatus.message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0)
   ) {
-    const verifyAccessTokenResult = await getAccessToken(
-      resultJsonStatus.message,
-      url,
-      postFormData,
-      payload
-    );
-    return verifyAccessTokenResult;
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let customerToken =
+      customerCookie && JSON.parse(customerCookie).access_token;
+    if (resultJsonStatus.message.indexOf(customerToken) >= 0) {
+      const refreshTokenResult = await refreshToken(url, postFormData, payload);
+      return refreshTokenResult;
+    } else {
+      const globalAccessTokenResult = await globalAccessToken(
+        url,
+        postFormData,
+        payload
+      );
+      return globalAccessTokenResult;
+    }
   } else {
     return result.clone();
   }
@@ -309,66 +366,80 @@ export async function postMsdRowData(url, payload) {
   });
 }
 
-export async function getAccessToken(errorMessage, url, requestType, body) {
+export async function refreshToken(url, requestType, body) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  const refreshTokenApiCall = await post(
+    `${TOKEN_PATH}?refresh_token=${
+      JSON.parse(customerCookie).refresh_token
+    }&client_id=${CLIENT_ID}&client_secret=secret&grant_type=refresh_token`
+  );
+  const refreshTokenResultJson = await refreshTokenApiCall.json();
+  return refreshTokenReDoCall(refreshTokenResultJson, url, requestType, body);
+}
 
-  let customerToken = customerCookie && JSON.parse(customerCookie).access_token;
-  if (errorMessage.indexOf(customerToken) >= 0) {
-    const refreshToken = await post(
-      `${TOKEN_PATH}?refresh_token=${
-        JSON.parse(customerCookie).refresh_token
-      }&client_id=${CLIENT_ID}&client_secret=secret&grant_type=refresh_token`
+export async function refreshTokenReDoCall(
+  refreshTokenResultJson,
+  url,
+  requestType,
+  body
+) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const resultJsonStatus = ErrorHandling.getFailureResponse(
+    refreshTokenResultJson
+  );
+
+  if (!resultJsonStatus.status && refreshTokenResultJson.access_token) {
+    Cookie.createCookie(
+      CUSTOMER_ACCESS_TOKEN,
+      JSON.stringify(refreshTokenResultJson),
+      refreshTokenResultJson.expires_in
     );
-
-    const newAccessTokenResultJson = await refreshToken.json();
-    const newAccessTokenResultJsonStatus = ErrorHandling.getFailureResponse(
-      newAccessTokenResultJson
-    );
-
-    if (
-      !newAccessTokenResultJsonStatus.status &&
-      newAccessTokenResultJson.access_token
-    ) {
-      Cookie.createCookie(
-        CUSTOMER_ACCESS_TOKEN,
-        JSON.stringify(newAccessTokenResultJson),
-        newAccessTokenResultJson.expires_in
+    if (refreshTokenResultJson.access_token) {
+      let newUrl = url.replace(
+        JSON.parse(customerCookie).access_token,
+        refreshTokenResultJson.access_token
       );
-      if (newAccessTokenResultJson.access_token) {
-        let newUrl = url.replace(
-          JSON.parse(customerCookie).access_token,
-          newAccessTokenResultJson.access_token
-        );
-        return await requestType(newUrl, body);
-      }
+
+      return await requestType(newUrl, body);
     }
-  } else {
-    const globalAccessToken = await post(
-      `${TOKEN_PATH}?grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=secret&isPwa=true`
-    );
-    const newAccessTokenResultJson = await globalAccessToken.json();
-    const newAccessTokenResultJsonStatus = ErrorHandling.getFailureResponse(
-      newAccessTokenResultJson
-    );
+  }
+}
 
-    if (
-      !newAccessTokenResultJsonStatus.status &&
-      newAccessTokenResultJson.access_token
-    ) {
-      Cookie.createCookie(
-        GLOBAL_ACCESS_TOKEN,
-        JSON.stringify(newAccessTokenResultJson),
-        newAccessTokenResultJson.expires_in
+export async function globalAccessToken(url, requestType, body) {
+  const globalAccessTokenApiCall = await post(
+    `${TOKEN_PATH}?grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=secret&isPwa=true`
+  );
+  const globalAccessTokenResultJson = await globalAccessTokenApiCall.json();
+  return globalAccessTokenReDoCall(
+    globalAccessTokenResultJson,
+    url,
+    requestType,
+    body
+  );
+}
+
+export async function globalAccessTokenReDoCall(
+  globalAccessTokenResultJson,
+  url,
+  requestType,
+  body
+) {
+  const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  const resultJsonStatus = ErrorHandling.getFailureResponse(
+    globalAccessTokenResultJson
+  );
+  if (!resultJsonStatus.status && globalAccessTokenResultJson.access_token) {
+    Cookie.createCookie(
+      GLOBAL_ACCESS_TOKEN,
+      JSON.stringify(globalAccessTokenResultJson),
+      globalAccessTokenResultJson.expires_in
+    );
+    if (globalAccessTokenResultJson.access_token) {
+      let newUrl = url.replace(
+        JSON.parse(globalCookie).access_token,
+        globalAccessTokenResultJson.access_token
       );
-
-      if (newAccessTokenResultJson.access_token) {
-        let newUrl = url.replace(
-          JSON.parse(globalCookie).access_token,
-          newAccessTokenResultJson.access_token
-        );
-        return await requestType(newUrl, body);
-      }
+      return await requestType(newUrl, body);
     }
   }
 }
