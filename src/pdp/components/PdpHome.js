@@ -113,7 +113,10 @@ export default class PdpApparel extends React.Component {
         if (!this.checkIfSizeSelected()) {
           this.props.displayToast("Please select a size to continue");
           this.setState({ sizeError: true });
-        } else if (!this.checkIfQuantitySelected()) {
+        } else if (
+          !this.checkIfQuantitySelected() ||
+          this.state.productQuantityOption === "Quantity"
+        ) {
           this.props.displayToast("Please select a quantity to continue");
           this.setState({ quantityError: true });
         } else {
@@ -442,6 +445,7 @@ export default class PdpApparel extends React.Component {
           </div>
           {productData.APlusContent && (
             <AllDescription
+              templateName={productData.APlusContent.temlateName}
               productContent={productData.APlusContent.productContent}
             />
           )}

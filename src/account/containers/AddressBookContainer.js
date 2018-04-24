@@ -12,7 +12,7 @@ import {
 const mapDispatchToProps = dispatch => {
   return {
     getUserAddress: () => {
-      dispatch(getUserAddress());
+      dispatch(getUserAddress(true));
     },
     removeAddress: addressId => {
       dispatch(removeAddress(addressId));

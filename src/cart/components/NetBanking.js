@@ -1,6 +1,6 @@
 import React from "react";
 import Icon from "../../xelpmoc-core/Icon";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import GridSelect from "../../general/components/GridSelect";
 import BankSelect from "./BankSelect";
 import styles from "./NetBanking.css";
@@ -11,10 +11,11 @@ import hdfcBankIcon from "./img/pwa_NB_HDFC.svg";
 import iciciBankIcon from "./img/pwa_NB_ICICI.svg";
 import sbiBankIcon from "./img/pwa_NB_SBI.svg";
 
-const axisBankCode = "NB_DUMMY";
+const axisBankCode = "NB_AXIS";
 const hdfcBankCode = "NB_HDFC";
 const iciciBankCode = "NB_ICICI";
 const sbiBankCode = "NB_SBI";
+const axisBankCodeDummy = "NB_DUMMY";
 const SHOW_DEFAULT_BANK_LIST = [
   axisBankCode,
   hdfcBankCode,
@@ -25,21 +26,24 @@ export default class NetBanking extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      bankName: ""
+      bankName: "",
+      bankCode: ""
     };
   }
   handleSelect(val) {
-    this.setState({ bankName: val });
+    const bankCode = val.value;
+    const bankName = val.label;
+    this.setState({ bankCode: bankCode, bankName: bankName });
     if (this.props.binValidationForNetBank) {
-      this.props.binValidationForNetBank(val);
+      this.props.binValidationForNetBank(bankCode);
     }
   }
 
   payBill = () => {
     if (this.props.isFromGiftCard) {
-      this.props.createJusPayOrderForGiftCardNetBanking(this.state.bankName);
+      this.props.createJusPayOrderForGiftCardNetBanking(this.state.bankCode);
     } else {
-      this.props.softReservationPaymentForNetBanking(this.state.bankName);
+      this.props.softReservationPaymentForNetBanking(this.state.bankCode);
     }
   };
   render() {
@@ -54,7 +58,10 @@ export default class NetBanking extends React.Component {
             selected={this.props.selected}
           >
             {this.props.bankList.find(bank => {
-              return bank.bankCode === axisBankCode;
+              return (
+                bank.bankCode === axisBankCode ||
+                bank.bankCode === axisBankCodeDummy
+              );
             }) ? (
               <Icon image={axisBankIcon} size={60} value={axisBankCode} />
             ) : null}
@@ -76,9 +83,10 @@ export default class NetBanking extends React.Component {
           </GridSelect>
         )}
         <div className={styles.bankDropDown}>
-          <SelectBoxMobile
+          <SelectBoxMobile2
             height={33}
-            label="Other Bank"
+            label={this.state.bankName ? this.state.bankName : "Other Bank"}
+            value={this.state.bankCode ? this.state.bankCode : ""}
             options={
               this.props.bankList &&
               this.props.bankList
