@@ -70,7 +70,7 @@ export async function post(path, postData, doNotUserApiSuffix: true) {
       "Content-Type": "application/json"
     }
   });
-  const verifyAccessTokenResult = await getCustomerAccessToken(
+  const verifyAccessTokenResult = await getAccessToken(
     result,
     path,
     post,
@@ -86,7 +86,7 @@ export async function getWithoutApiUrlRoot(url) {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
-  const verifyAccessTokenResult = await getCustomerAccessToken(
+  const verifyAccessTokenResult = await getAccessToken(
     result,
     url,
     getWithoutApiUrlRoot
@@ -102,11 +102,7 @@ export async function get(url) {
     }
   });
 
-  const verifyAccessTokenResult = await getCustomerAccessToken(
-    result,
-    url,
-    get
-  );
+  const verifyAccessTokenResult = await getAccessToken(result, url, get);
 
   return verifyAccessTokenResult;
 }
@@ -119,7 +115,7 @@ export async function patch(url, payload) {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
-  const verifyAccessTokenResult = await getCustomerAccessToken(
+  const verifyAccessTokenResult = await getAccessToken(
     result,
     url,
     patch,
@@ -137,7 +133,7 @@ export async function put(url, payload) {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
-  const verifyAccessTokenResult = await getCustomerAccessToken(
+  const verifyAccessTokenResult = await getAccessToken(
     result,
     url,
     put,
@@ -202,7 +198,7 @@ export async function postJusPay(path, postData) {
     method: "POST",
     body: postData
   });
-  const verifyAccessTokenResult = await getCustomerAccessToken(
+  const verifyAccessTokenResult = await getAccessToken(
     result,
     path,
     postJusPay
@@ -216,7 +212,7 @@ export async function postFormData(url, payload) {
     method: "POST",
     body: payload
   });
-  const verifyAccessTokenResult = await getCustomerAccessToken(
+  const verifyAccessTokenResult = await getAccessToken(
     result,
     url,
     postFormData,
@@ -239,7 +235,7 @@ export async function postMsdRowData(url, payload) {
   });
 }
 
-export async function getCustomerAccessToken(
+export async function getAccessToken(
   resultApiResponse,
   url,
   requestType,
