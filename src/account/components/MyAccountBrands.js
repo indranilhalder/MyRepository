@@ -41,7 +41,7 @@ export default class MyAccountBrands extends React.Component {
       this.props.followAndUnFollowBrand(brandId, followStatus);
     }
   }
-  onFollow(webURL) {
+  onRedirectToBrandPage(webURL) {
     const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   }
@@ -81,7 +81,9 @@ export default class MyAccountBrands extends React.Component {
               onClick={(brandId, followStatus) =>
                 this.followAndUnFollow(brandId, followStatus)
               }
-              onFollow={webURL => this.onFollow(webURL)}
+              onRedirectToBrandPage={webURL =>
+                this.onRedirectToBrandPage(webURL)
+              }
             />
           </div>
         )}

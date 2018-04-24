@@ -8,23 +8,23 @@ export default class BrandEdit extends React.Component {
     super(props);
     this.state = {
       onDelete: false,
-      label: this.props.btnText
+      label: this.props.btnText,
+      flag: 0
     };
   }
   onClickButton(brandId, followStatus, webURL) {
-    if (this.state.label === "Done") {
+    if (this.state.flag === "1") {
       this.props.onClick(brandId, followStatus);
-    }
-    if (this.state.label === "Edit") {
-      this.props.onFollow(webURL);
+    } else {
+      this.props.onRedirectToBrandPage(webURL);
     }
   }
   onShowDelete() {
     this.setState({ onDelete: !this.state.onDelete });
     if (this.state.label === "Edit") {
-      this.setState({ label: "Done" });
+      this.setState({ label: "Done", flag: "1" });
     } else {
-      this.setState({ label: "Edit" });
+      this.setState({ label: "Edit", flag: "0" });
     }
   }
   render() {
