@@ -460,7 +460,7 @@ function getDigitalDataForPdp(type, pdpResponse) {
   if (pdpResponse && pdpResponse.seo && pdpResponse.seo.breadcrumbs) {
     let categoryName =
       pdpResponse.seo.breadcrumbs[pdpResponse.seo.breadcrumbs.length - 1].name;
-    categoryName = categoryName.replace(/ /g, "_");
+    categoryName = categoryName.replace(/ /g, "_").toLowerCase();
     Object.assign(data.cpj.product, {
       category: categoryName
     });
@@ -526,6 +526,18 @@ function getDigitalDataForCart(type, cartResponse) {
       cpj: { product: { id: JSON.stringify(productIds) } }
     });
   }
+  const productCategoryHierarchy = getProductCategoryHierarchy(cartResponse);
+  if (productCategoryHierarchy) {
+    if (data.cpj && data.cpj.product) {
+      Object.assign(data.cpj.product, {
+        category: productCategoryHierarchy
+      });
+    } else {
+      Object.assign(data, {
+        cpj: { product: { category: productCategoryHierarchy } }
+      });
+    }
+  }
   const categoryHierarchy = getCategoryHierarchy(cartResponse);
   if (categoryHierarchy) {
     Object.assign(data.page.category, categoryHierarchy);
@@ -589,6 +601,29 @@ function getProductIdArray(response) {
     return null;
   }
 }
+function getProductCategoryHierarchy(response) {
+  let category = [];
+  if (response && response.products && response.products.length > 0) {
+    response.products.forEach(product => {
+      if (
+        product &&
+        product.categoryHierarchy &&
+        product.categoryHierarchy[0]
+      ) {
+        category.push(
+          product.categoryHierarchy[0].category_name
+            ? product.categoryHierarchy[0].category_name
+                .replace(/\s+/g, "_")
+                .toLowerCase()
+            : null
+        );
+      }
+    });
+    return category.join(",");
+  } else {
+    return null;
+  }
+}
 function getCategoryHierarchy(response) {
   let subCategory1 = [],
     subCategory2 = [],
@@ -600,27 +635,45 @@ function getCategoryHierarchy(response) {
         product.categoryHierarchy &&
         product.categoryHierarchy[0]
       ) {
-        subCategory1.push(product.categoryHierarchy[0].category_name);
+        subCategory1.push(
+          product.categoryHierarchy[0].category_name
+            ? product.categoryHierarchy[0].category_name
+                .replace(/\s+/g, "_")
+                .toLowerCase()
+            : null
+        );
       }
       if (
         product &&
         product.categoryHierarchy &&
         product.categoryHierarchy[1]
       ) {
-        subCategory2.push(product.categoryHierarchy[1].category_name);
+        subCategory2.push(
+          product.categoryHierarchy[1].category_name
+            ? product.categoryHierarchy[1].category_name
+                .replace(/\s+/, "_")
+                .toLowerCase()
+            : null
+        );
       }
       if (
         product &&
         product.categoryHierarchy &&
         product.categoryHierarchy[2]
       ) {
-        subCategory3.push(product.categoryHierarchy[2].category_name);
+        subCategory3.push(
+          product.categoryHierarchy[2].category_name
+            ? product.categoryHierarchy[2].category_name
+                .replace(/\s+/, "_")
+                .toLowerCase()
+            : null
+        );
       }
     });
     return {
-      subCategory1: JSON.stringify(subCategory1),
-      subCategory2: JSON.stringify(subCategory2),
-      subCategory3: JSON.stringify(subCategory3)
+      subCategory1: subCategory1.join(","),
+      subCategory2: subCategory2.join(","),
+      subCategory3: subCategory3.join(",")
     };
   } else {
     return null;
@@ -632,7 +685,7 @@ function getDisplayHierarchy(response) {
       return val.name.toLowerCase().replace(/\s+/g, "_");
     });
     const hierarchyArray = ["home", ...seoBreadCrumbs];
-    return hierarchyArray.join("|");
+    return hierarchyArray.join(",");
   } else {
     return "home";
   }
@@ -1217,14 +1270,14 @@ export function getDigitalDataForBLP(response) {
     if (data.page) {
       Object.assign(data.page, {
         display: {
-          hierarchy: ["home", pageTitle]
+          hierarchy: pageTitle ? `home,${pageTitle}` : "home"
         }
       });
     } else {
       Object.assign(data, {
         page: {
           display: {
-            hierarchy: ["home", pageTitle]
+            hierarchy: pageTitle ? `home,${pageTitle}` : "home"
           }
         }
       });
