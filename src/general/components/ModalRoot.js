@@ -319,6 +319,7 @@ export default class ModalRoot extends React.Component {
       NewPassword: (
         <NewPassword
           {...this.props.ownProps}
+          displayToast={message => this.props.displayToast(message)}
           handleCancel={() => this.handleClose()}
           onContinue={userDetails => this.resetPassword(userDetails)}
         />
