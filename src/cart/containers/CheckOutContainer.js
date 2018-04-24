@@ -132,7 +132,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(addStoreCNC(ussId, slaveId));
     },
     addPickupPersonCNC: (personMobile, personName) => {
-      dispatch(addPickupPersonCNC(personMobile, personName));
+      return dispatch(addPickupPersonCNC(personMobile, personName));
     },
     softReservation: (pinCode, payload) => {
       dispatch(softReservation(pinCode, payload));
