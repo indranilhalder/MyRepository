@@ -12,7 +12,7 @@ const productListings = (
     isFilterOpen: false,
     filterTabIndex: 0,
     isCategorySelected: true,
-    seletedFacetKey: null
+    selectedFacetKey: null
   },
   action
 ) => {
@@ -101,7 +101,13 @@ const productListings = (
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
-        loading: false
+        isFilterOpen: false,
+        productListings: null,
+        loading: false,
+        selectedFacetKey: null,
+        pageNumber: 0,
+        filterTabIndex: 0,
+        paginatedLoading: false
       });
     case plpActions.SET_PAGE:
       return Object.assign({}, state, {

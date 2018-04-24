@@ -102,6 +102,8 @@ export function getProductListingsFailure(error, isPaginated) {
     isPaginated
   };
 }
+
+let times = 0;
 export function getProductListings(
   suffix: null,
   paginated: false,
@@ -167,6 +169,11 @@ export function getProductListings(
         dispatch(updateFacets(resultJson));
         dispatch(hideSecondaryLoader());
       } else {
+        if (times === 1) {
+          dispatch(getProductListingsFailure("fake", paginated));
+          return;
+        }
+        times = times + 1;
         dispatch(getProductListingsSuccess(resultJson, paginated));
         dispatch(hideSecondaryLoader());
       }
