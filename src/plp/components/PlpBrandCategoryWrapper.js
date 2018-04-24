@@ -71,7 +71,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     let match;
     let searchText;
     const parsedQueryString = queryString.parse(this.props.location.search);
-    if (parsedQueryString.q) {
+    if (parsedQueryString && parsedQueryString.q) {
       searchText = parsedQueryString.q;
       return searchText;
     }
