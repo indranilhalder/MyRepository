@@ -159,7 +159,7 @@ export default class PdpElectronics extends React.Component {
             });
           })
           .map(image => {
-            return image[0].value;
+            return image[0] && image[0].value;
           })
       : [];
     let otherSellersText;
@@ -467,6 +467,7 @@ please try another pincode"
           )}
           {productData.APlusContent && (
             <AllDescription
+              templateName={productData.APlusContent.temlateName}
               productContent={productData.APlusContent.productContent}
             />
           )}

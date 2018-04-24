@@ -435,24 +435,12 @@ function getDigitalDataForPdp(type, pdpResponse) {
   if (subCategories) {
     Object.assign(data.page.category, { ...subCategories });
   }
-  if (pdpResponse && pdpResponse.seo && pdpResponse.seo.breadcrumbs) {
-    const seoBreadCrumbs = pdpResponse.seo.breadcrumbs
-      .map(val => {
-        return val.name.toLowerCase().replace(/\s+/g, "_");
-      })
-      .reverse();
-    Object.assign(data.page, {
-      display: {
-        hierarchy: ["home", ...seoBreadCrumbs]
-      }
-    });
-  } else {
-    Object.assign(data, {
-      display: {
-        hierarchy: ["home"]
-      }
-    });
-  }
+  const displayHierarchy = getDisplayHierarchy(pdpResponse);
+  Object.assign(data.page, {
+    display: {
+      hierarchy: displayHierarchy
+    }
+  });
   if (pdpResponse.mrpPrice && pdpResponse.mrpPrice.doubleValue) {
     Object.assign(data.cpj.product, {
       price: pdpResponse.mrpPrice.doubleValue
@@ -638,16 +626,15 @@ function getCategoryHierarchy(response) {
     return null;
   }
 }
-function getHierarchyArray(response) {
-  if (response.seo && response.seo.breadcrumbs) {
-    const hierarchyArray = response.seo.breadcrumbs
-      .reverse()
-      .map(breadcrumb => {
-        return breadcrumb.name.replace(/ /g, "_");
-      });
-    return ["home", ...hierarchyArray];
+function getDisplayHierarchy(response) {
+  if (response && response.seo && response.seo.breadcrumbs) {
+    const seoBreadCrumbs = response.seo.breadcrumbs.map(val => {
+      return val.name.toLowerCase().replace(/\s+/g, "_");
+    });
+    const hierarchyArray = ["home", ...seoBreadCrumbs];
+    return hierarchyArray.join("|");
   } else {
-    return null;
+    return "home";
   }
 }
 function getSubCategories(response) {
@@ -787,7 +774,7 @@ function getDigitalDataForPlp(type, response) {
       }
     });
   }
-  const hierarchy = getHierarchyArray(response);
+  const hierarchy = getDisplayHierarchy(response);
   if (hierarchy) {
     Object.assign(data.page, {
       display: {
@@ -807,10 +794,9 @@ export function getDigitalDataForSearchPageSuccess(response) {
       pageInfo: { pageName: "search results page" },
       category: { primaryCategory: "productsearch" },
       display: {
-        hierarchy: [
-          "home",
+        hierarchy: `home |${
           response.currentQuery ? response.currentQuery.searchQuery : null
-        ]
+        }`
       }
     },
     internal: {
@@ -1270,7 +1256,7 @@ export function getDigitalDataForCLP(response) {
       }
     });
   }
-  const hierarchy = getHierarchyArray(response);
+  const hierarchy = getDisplayHierarchy(response);
   if (hierarchy) {
     Object.assign(data.page, {
       display: {

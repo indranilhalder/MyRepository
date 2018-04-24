@@ -13,13 +13,17 @@ import {
 import { FollowUnFollowButtonContainer } from "../containers/FollowUnFollowButtonContainer";
 import styles from "./PDPRecommendedSections.css";
 import { PDP_FOLLOW_AND_UN_FOLLOW } from "../../lib/constants.js";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 class PDPRecommendedSections extends React.Component {
   goToProductDescription = url => {
     this.props.history.push(url);
   };
   visitBrand() {
-    if (this.props.aboutTheBrand && this.props.aboutTheBrand.brandId) {
+    if (this.props.aboutTheBrand.webURL) {
+      const url = this.props.aboutTheBrand.webURL.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(url);
+    } else if (this.props.aboutTheBrand && this.props.aboutTheBrand.brandId) {
       this.props.history.push(`c-${this.props.aboutTheBrand.brandId}`);
     }
   }
@@ -29,6 +33,7 @@ class PDPRecommendedSections extends React.Component {
     if (this.props.aboutTheBrand) {
       brandId = this.props.aboutTheBrand.id;
     }
+
     return (
       this.props.aboutTheBrand && (
         <React.Fragment>

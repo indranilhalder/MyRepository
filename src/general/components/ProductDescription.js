@@ -35,7 +35,8 @@ export default class ProductDescription extends Component {
         <div className={headerClass}>
           <div className={headerText}>{this.props.title}</div>
 
-          {this.props.productListingId &&
+          {this.props.showWishListButton &&
+            this.props.productListingId &&
             this.props.winningUssID && (
               <div className={styles.button}>
                 <AddToWishListButtonContainer
@@ -83,5 +84,6 @@ ProductDescription.defaultProps = {
   description: "",
   price: "",
   isWhite: false,
-  textColor: "#212121"
+  textColor: "#212121",
+  showWishListButton: true
 };

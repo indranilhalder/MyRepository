@@ -5,13 +5,12 @@ import HollowHeader from "./HollowHeader.js";
 import { withRouter } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import styles from "./HeaderWrapper.css";
-import queryString, { parse } from "query-string";
+import queryString from "query-string";
 import {
   HOME_ROUTER,
   PRODUCT_CART_ROUTER,
   DEFAULT_BRANDS_LANDING_PAGE,
   CATEGORIES_LANDING_PAGE,
-  PRODUCT_CART_DELIVERY_MODES,
   LOGIN_PATH,
   SIGN_UP_PATH,
   PRODUCT_LISTINGS,
@@ -21,11 +20,7 @@ import {
   MY_ACCOUNT_PAGE,
   JUS_PAY_CHARGED,
   JUS_PAY_PENDING,
-  JUS_PAY_AUTHENTICATION_FAILED,
-  CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
-  BRAND_PRODUCT_LISTINGS_WITH_PAGE,
-  BRAND_AND_CATEGORY_PAGE,
-  SEARCH_RESULTS_PAGE
+  JUS_PAY_AUTHENTICATION_FAILED
 } from "../../../src/lib/constants";
 import { SIGN_UP } from "../../auth/actions/user.actions";
 
