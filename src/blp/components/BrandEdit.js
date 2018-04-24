@@ -8,20 +8,23 @@ export default class BrandEdit extends React.Component {
     super(props);
     this.state = {
       onDelete: false,
-      label: this.props.btnText
+      label: this.props.btnText,
+      brandEdit: false
     };
   }
-  onClickButton(brandId, followStatus) {
-    if (this.props.onClick) {
+  onClickButton(brandId, followStatus, webURL) {
+    if (this.state.brandEdit === true) {
       this.props.onClick(brandId, followStatus);
+    } else {
+      this.props.onRedirectToBrandPage(webURL);
     }
   }
   onShowDelete() {
     this.setState({ onDelete: !this.state.onDelete });
     if (this.state.label === "Edit") {
-      this.setState({ label: "Done" });
+      this.setState({ label: "Done", brandEdit: true });
     } else {
-      this.setState({ label: "Edit" });
+      this.setState({ label: "Edit", brandEdit: false });
     }
   }
   render() {
@@ -41,7 +44,9 @@ export default class BrandEdit extends React.Component {
                 logo={val.imageURL}
                 onDelete={this.state.onDelete}
                 key={i}
-                onClick={() => this.onClickButton(val.id, val.isFollowing)}
+                onClick={() =>
+                  this.onClickButton(val.id, val.isFollowing, val.webURL)
+                }
               />
             );
           })}
