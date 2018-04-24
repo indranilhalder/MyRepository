@@ -5,7 +5,7 @@ import Button from "../../xelpmoc-core/Button";
 import PasswordInput from "../../auth/components/PasswordInput";
 import { default as styles } from "./AuthPopUp.css";
 import { default as ownStyles } from "./RestorePassword.css";
-const MINIMUM_PASSWORD_LENGTH = "8";
+const MINIMUM_PASSWORD_LENGTH = 8;
 const NEW_PASSWORD_TEXT = "Please enter password";
 const PASSWORD_LENGTH_TEXT = "Password length should be minimum 8 character";
 const CONFIRM_PASSWORD_TEXT = "Please confirm your passowrd";
@@ -46,13 +46,11 @@ export default class NewPassword extends React.Component {
     } else {
       this.setState({ error: false });
       if (this.props.onContinue) {
-        if (newPassword === confirmedPassword) {
-          this.props.onContinue({
-            newPassword: this.state.newPassword,
-            username: this.props.userName,
-            otp: this.props.otpDetails
-          });
-        }
+        this.props.onContinue({
+          newPassword: this.state.newPassword,
+          username: this.props.userName,
+          otp: this.props.otpDetails
+        });
       }
     }
   }
