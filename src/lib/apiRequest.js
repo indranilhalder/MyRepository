@@ -1,8 +1,11 @@
 import "isomorphic-fetch";
 import * as Cookie from "./Cookie";
 import { LOGGED_IN_USER_DETAILS } from "./constants.js";
+import * as ErrorHandling from "../general/ErrorHandling.js";
+import { CUSTOMER_ACCESS_TOKEN } from "../lib/constants";
 let API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 export let TATA_CLIQ_ROOT = /https?:[\/]{2}\S*?(\/\S*)/;
+export const TOKEN_PATH = "oauth/token";
 
 if (
   process.env.REACT_APP_STAGE === "devxelp" ||
@@ -29,7 +32,9 @@ export const HOME_FEED_API_ROOT =
 export const JUS_PAY_API_URL_ROOT = process.env.REACT_APP_JUS_PAY_API_URL_ROOT;
 
 const API_URL_ROOT_SUFFIX = "?isPwa=true";
-
+const ACCESS_TOKEN_EXPIRED_MESSAGE = "Access token expired";
+const ACCESS_TOKEN_INVALID_MESSAGE = "Invalid access token";
+const CLIENT_ID = "gauravj@dewsolutions.in";
 export const API_MSD_URL_ROOT = "https://ap-southeast-1-api.madstreetden.com";
 
 export async function postAdobeTargetUrl(
@@ -75,11 +80,18 @@ export async function getWithoutApiUrlRoot(url) {
 }
 
 export async function get(url) {
-  return await fetch(`${API_URL_ROOT}/${url}`, {
+  const result = await fetch(`${API_URL_ROOT}/${url}`, {
     headers: {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
+  let resultJson = await result.json();
+  const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+  if (resultJsonStatus.status) {
+    getCustomerAccessToken(resultJsonStatus.message, url, get);
+  }
+
+  return result;
 }
 
 export async function patch(url, payload) {
@@ -177,4 +189,40 @@ export async function postMsdRowData(url, payload) {
       "Content-Type": "application/json"
     }
   });
+}
+
+export async function getCustomerAccessToken(message, url, requestType, body) {
+  console.log(message);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  console.log(customerCookie);
+  if (
+    message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
+    message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0
+  ) {
+    customerCookie = customerCookie && JSON.parse(customerCookie).access_token;
+    if (message.indexOf(customerCookie) >= 0) {
+      const refreshTokenApi = await post(
+        `${TOKEN_PATH}?refresh_token=${
+          JSON.parse(customerCookie).refresh_token
+        }&client_id=${CLIENT_ID}&client_secret=secret&grant_type=refresh_token`
+      );
+      const resultJson = await refreshTokenApi.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (!resultJsonStatus.status) {
+        Cookie.createCookie(
+          CUSTOMER_ACCESS_TOKEN,
+          JSON.stringify(resultJson),
+          resultJson.expires_in
+        );
+        if (resultJson.access_token) {
+          let newUrl = url.replace(
+            JSON.parse(customerCookie).access_token,
+            resultJson.access_token
+          );
+          return await requestType(newUrl, body);
+        }
+      }
+    } else {
+    }
+  }
 }
