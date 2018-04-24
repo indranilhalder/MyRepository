@@ -193,7 +193,7 @@ export default class PdpApparel extends React.Component {
       this.props.location.state &&
       this.props.location.state.isQuantitySelected
     ) {
-      return this.props.location.state.isQuantitySelected;
+      return true;
     } else {
       return false;
     }
