@@ -26,6 +26,7 @@ const MOBILE_TEXT = "Please enter mobile number";
 const PINCODE_VALID_TEXT = "Please enter valid pincode";
 const EMAIL_VALID_TEXT = "Please enter valid emailId";
 const PHONE_VALID_TEXT = "Please fill valid mobile number";
+const PHONE_TEXT = "Please enter mobile number";
 const ISO_CODE = "IN";
 const OTHER_LANDMARK = "other";
 export default class AddDeliveryAddress extends React.Component {
@@ -145,6 +146,10 @@ export default class AddDeliveryAddress extends React.Component {
       !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
     ) {
       this.props.displayToast(EMAIL_VALID_TEXT);
+      return false;
+    }
+    if (!this.state.phone) {
+      this.props.displayToast(PHONE_TEXT);
       return false;
     }
     if (this.state.phone && !MOBILE_PATTERN.test(this.state.phone)) {
