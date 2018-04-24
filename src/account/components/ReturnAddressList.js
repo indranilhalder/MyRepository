@@ -291,6 +291,7 @@ export default class ReturnAddressList extends React.Component {
     this.props.history.goBack();
   };
   render() {
+    console.log(this.props.data);
     if (this.props.loading) {
       this.props.showSecondaryLoader();
     } else {

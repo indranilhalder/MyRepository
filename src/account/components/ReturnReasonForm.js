@@ -13,7 +13,8 @@ export default class ReturnReasonForm extends React.Component {
     this.state = {
       displaySecondary: false,
       secondaryReasons: null,
-      comment: null
+      comment: null,
+      isReverse: null
     };
   }
   handleContinue() {
@@ -23,7 +24,8 @@ export default class ReturnReasonForm extends React.Component {
         {
           subReasonCode: this.state.subReasonCode,
           comment: this.state.comment,
-          reason: this.state.reason
+          reason: this.state.reason,
+          isReverse: this.state.isReverse
         }
       );
       this.props.onContinue(reasonAndCommentObj);
@@ -57,6 +59,12 @@ export default class ReturnReasonForm extends React.Component {
   handleChange(val) {
     this.setState({ comment: val });
   }
+  selectReverseSeal(val) {
+    this.setState({ isReverse: val });
+    // if (this.props.selectReverseSeal) {
+    //   this.props.selectReverseSeal(val);
+    //}
+  }
   onChangeSecondary(val) {
     const code = val.value;
     const label = val.label;
@@ -69,7 +77,7 @@ export default class ReturnReasonForm extends React.Component {
   }
   render() {
     const data = this.props.returnProductDetails;
-    console.log(this.props);
+
     return (
       <div className={styles.base}>
         <div className={styles.header}>
@@ -129,13 +137,17 @@ export default class ReturnReasonForm extends React.Component {
             <TextArea onChange={val => this.handleChange(val)} />
           </div>
         </div>
-        {data &&
-          !data.showReverseSealFrJwlry === "no" && (
+        {/* {data &&
+          data.showReverseSealFrJwlry === "yes" && (
             <div className={styles.reverseSealHolder}>
               <ReverseSealYesNo />
             </div>
-          )}
-
+          )} */}
+        <div className={styles.reverseSealHolder}>
+          <ReverseSealYesNo
+            selectReverseSeal={val => this.selectReverseSeal(val)}
+          />
+        </div>
         <div className={styles.buttonHolder}>
           <div className={styles.button}>
             <Button

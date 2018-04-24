@@ -5,9 +5,20 @@ import GridSelect from "../../general/components/GridSelect";
 import YesNoQuestion from "./YesNoQuestion";
 import PropTypes from "prop-types";
 export default class ReverseSealYesNo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      confirmation: null
+    };
+  }
   moreInfo() {
     if (this.props.moreInfo) {
       this.props.moreInfo();
+    }
+  }
+  onSelectReverseSeal(val) {
+    if (this.props.selectReverseSeal) {
+      this.props.selectReverseSeal(val);
     }
   }
   render() {
@@ -43,7 +54,12 @@ export default class ReverseSealYesNo extends React.Component {
         <div className={styles.yesNoQuestionHolder}>
           {options &&
             options.length > 0 && (
-              <GridSelect limit={1} offset={0} elementWidthMobile={100}>
+              <GridSelect
+                limit={1}
+                offset={0}
+                elementWidthMobile={100}
+                onSelect={val => this.onSelectReverseSeal(val)}
+              >
                 {options.map((val, i) => {
                   return (
                     <YesNoQuestion
