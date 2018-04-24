@@ -746,7 +746,7 @@ export function userAddressFailure(error) {
   };
 }
 
-export function getUserAddress() {
+export function getUserAddress(setDataLayerForMyAccount: false) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
@@ -765,7 +765,9 @@ export function getUserAddress() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayer(ADOBE_MY_ACCOUNT_ADDRESS_BOOK);
+      if (setDataLayerForMyAccount) {
+        setDataLayer(ADOBE_MY_ACCOUNT_ADDRESS_BOOK);
+      }
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
       dispatch(userAddressFailure(e.message));

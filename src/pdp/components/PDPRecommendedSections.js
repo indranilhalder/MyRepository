@@ -1,5 +1,5 @@
 import React from "react";
-import Carousel from "../../general/components/Carousel.js";
+import DumbCarousel from "../../general/components/DumbCarousel.js";
 import ProductModule from "../../general/components/ProductModule.js";
 import { transformData } from "../../home/components/utils.js";
 import Logo from "../../general/components/Logo.js";
@@ -13,13 +13,17 @@ import {
 import { FollowUnFollowButtonContainer } from "../containers/FollowUnFollowButtonContainer";
 import styles from "./PDPRecommendedSections.css";
 import { PDP_FOLLOW_AND_UN_FOLLOW } from "../../lib/constants.js";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 class PDPRecommendedSections extends React.Component {
   goToProductDescription = url => {
     this.props.history.push(url);
   };
   visitBrand() {
-    if (this.props.aboutTheBrand && this.props.aboutTheBrand.brandId) {
+    if (this.props.aboutTheBrand.webURL) {
+      const url = this.props.aboutTheBrand.webURL.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(url);
+    } else if (this.props.aboutTheBrand && this.props.aboutTheBrand.brandId) {
       this.props.history.push(`c-${this.props.aboutTheBrand.brandId}`);
     }
   }
@@ -80,12 +84,13 @@ class PDPRecommendedSections extends React.Component {
   renderCarousel(items) {
     return (
       <div className={styles.brandProductCarousel}>
-        <Carousel>
+        <DumbCarousel elementWidth={45}>
           {items.map((val, i) => {
             const transformedDatum = transformData(val);
             const productImage = transformedDatum.image;
             return (
               <ProductModule
+                key={i}
                 {...transformedDatum}
                 {...this.props}
                 productImage={productImage}
@@ -94,7 +99,7 @@ class PDPRecommendedSections extends React.Component {
               />
             );
           })}
-        </Carousel>
+        </DumbCarousel>
       </div>
     );
   }
@@ -117,7 +122,7 @@ class PDPRecommendedSections extends React.Component {
         {this.renderAboutTheBrand()}
         {this.renderProductModuleSection(
           "Recommended Products",
-          RECOMMENDED_PRODUCTS_WIDGET_KEY
+          "recommendedProducts"
         )}
         {this.renderProductModuleSection(
           "Similar Products",
