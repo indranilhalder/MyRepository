@@ -93,30 +93,10 @@ export async function get(url) {
   const resultClone = result.clone();
   const resultJson = await result.json();
   const errorStatus = ErrorHandling.getFailureResponse(resultJson);
-  if (!errorStatus.status) {
-    // there was no error
+  if (!errorStatus.status || !isInvalidAccessTokenError(errorStatus.message)) {
     return resultClone;
   }
-
-  if (!isInvalidAccessTokenError(errorStatus.message)) {
-    return resultClone;
-  }
-  if (isCustomerAccessTokenFailure(errorStatus.message)) {
-    const customerAccessTokenResponse = await refreshCustomerAccessToken();
-    if (!customerAccessTokenResponse) {
-      throw new Error("Customer Access Token refresh failure");
-    }
-    // redo the call
-    return await coreGet(url);
-  }
-
-  if (isGlobalAccessTokenFailure(errorStatus.message)) {
-    const globalAccessTokenResponse = await refreshGlobalAccessToken();
-    if (!globalAccessTokenResponse) {
-      throw new Error("Global Access Token refresh failure");
-    }
-    return await coreGet(url);
-  }
+  return await handleRedoFunctionCall(errorStatus.message, url);
 }
 
 async function corePostFormData(url, payload) {
@@ -131,16 +111,19 @@ export async function postFormData(url, payload) {
   const resultClone = result.clone();
   const resultJson = await result.json();
   const errorStatus = ErrorHandling.getFailureResponse(resultJson);
-  let newUrl = url;
   if (!errorStatus.status || !isInvalidAccessTokenError(errorStatus.message)) {
-    // there was no error
     return resultClone;
   }
-  newUrl = await handleInvalidCustomerAccessToken(errorStatus.message, url);
+  return await handleRedoFunctionCall(errorStatus.message, url);
+}
+
+async function handleRedoFunctionCall(message, url) {
+  let newUrl = url;
+  newUrl = await handleInvalidCustomerAccessToken(message, url);
   if (newUrl) {
     return corePostFormData(newUrl);
   }
-  newUrl = await handleInvalidGlobalAccessToken(errorStatus.message, url);
+  newUrl = await handleInvalidGlobalAccessToken(message, url);
   if (newUrl) {
     return corePostFormData(newUrl);
   }
@@ -486,85 +469,6 @@ export async function patch(url, payload) {
   }
 
   return result.clone();
-}
-
-export async function put(url, payload) {
-  const requestFunction = async url => {
-    const result = await fetch(`${API_URL_ROOT}/${url}`, {
-      method: "PUT",
-      body: JSON.stringify(payload),
-      headers: {
-        Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
-      }
-    });
-    return result;
-  };
-  const result = await requestFunction(url);
-  let isHavingAccessTokenError = await isResultHavingAccessTokenError(result);
-  if (isHavingAccessTokenError !== SUCCESS) {
-    if (isHavingAccessTokenError === CUSTOMER_ACCESS_TOKEN_INVALID) {
-      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
-      const refreshTokenResultStatus = await refreshToken();
-
-      if (refreshTokenResultStatus.status === SUCCESS) {
-        let newUrl = url.replace(
-          JSON.parse(customerCookie).access_token,
-          refreshTokenResultStatus.accessToken
-        );
-
-        return requestFunction(newUrl);
-      }
-    } else if (isHavingAccessTokenError === GLOBAL_ACCESS_TOKEN_INVALID) {
-      const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-      let globalTokenResultStatus = await globalAccessToken();
-      if (globalTokenResultStatus.status === SUCCESS) {
-        let newUrl = url.replace(
-          JSON.parse(globalCookie).access_token,
-          globalTokenResultStatus.accessToken
-        );
-        return requestFunction(newUrl);
-      }
-    } else {
-      return result.clone();
-    }
-  }
-
-  return result.clone();
-}
-
-export async function postMock(url, payload) {
-  return await fetch(`${API_URL_ROOT_MOCK}/${url}`, {
-    method: "POST",
-    body: JSON.stringify(payload),
-    headers: {
-      access_token: localStorage.getItem("authorizationKey")
-    }
-  });
-}
-
-export async function getMock(url) {
-  return await fetch(`${API_URL_ROOT_MOCK}/${url}`, {});
-}
-
-export async function patchMock(url, payload) {
-  return await fetch(`${API_URL_ROOT_MOCK}/${url}`, {
-    method: "PATCH",
-    body: JSON.stringify(payload),
-    headers: {
-      access_token: localStorage.getItem("authorizationKey")
-    }
-  });
-}
-
-export async function putMock(url, payload) {
-  return await fetch(`${API_URL_ROOT_MOCK}/${url}`, {
-    method: "PUT",
-    body: JSON.stringify(payload),
-    headers: {
-      access_token: localStorage.getItem("authorizationKey")
-    }
-  });
 }
 
 export async function postMsd(url, payload) {
