@@ -1016,18 +1016,36 @@ export function setDataLayerForLogin(type) {
     window._satellite.track(ADOBE_LOGIN_FAILURE);
   }
 }
-export function setDataLayerForOrderConfirmationDirectCalls(
-  type,
-  failureReason
-) {
+export function setDataLayerForOrderConfirmationDirectCalls(type, response) {
   if (type === ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS) {
+    let previousData = {};
+    if (window.digitalData) {
+      previousData = window.digitalData;
+    }
+
+    if (previousData.cpj) {
+      Object.assign(previousData.cpj, {
+        order: {
+          id: response
+        }
+      });
+    } else {
+      Object.assign(previousData, {
+        cpj: {
+          order: {
+            id: response
+          }
+        }
+      });
+    }
+    window.digitalData = previousData;
     window._satellite.track(ADOBE_ORDER_CONFIRMATION_SUCCESS);
   }
   if (type === ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_FAILURE) {
     const data = {
       cpj: {
         order: {
-          failureReason
+          response
         }
       }
     };
