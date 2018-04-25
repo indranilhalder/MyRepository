@@ -134,6 +134,13 @@ const KycDetailPopUpWithBottomSlideModal = Loadable({
   }
 });
 
+const InvalidCouponPopup = Loadable({
+  loader: () => import("../../cart/components/DifferentAccountPopup"),
+  loading() {
+    return <Loader />;
+  }
+});
+
 export default class ModalRoot extends React.Component {
   constructor(props) {
     super(props);
@@ -477,7 +484,8 @@ export default class ModalRoot extends React.Component {
           emiTermsAndConditions={this.props.ownProps}
           closeModal={() => this.handleClose()}
         />
-      )
+      ),
+      INVALID_COUPON_POPUP: <InvalidCouponPopup />
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];

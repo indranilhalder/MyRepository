@@ -11,7 +11,8 @@ import * as ErrorHandling from "../../general/ErrorHandling.js";
 import {
   showModal,
   EMI_ITEM_LEVEL_BREAKAGE,
-  EMI_BANK_TERMS_AND_CONDITIONS
+  EMI_BANK_TERMS_AND_CONDITIONS,
+  INVALID_COUPON_POPUP
 } from "../../general/modal.actions";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -1560,7 +1561,7 @@ export function softReservation(pinCode, payload) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(getOrderSummary());
+      dispatch(getOrderSummary(pinCode));
       dispatch(softReservationSuccess(resultJson.reservationItem));
     } catch (e) {
       dispatch(softReservationFailure(e.message));
@@ -2361,7 +2362,8 @@ export function createJusPayOrder(
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        dispatch(showModal(INVALID_COUPON_POPUP));
+        // throw new Error(resultJsonStatus.message);
       }
       dispatch(
         jusPayPaymentMethodType(
