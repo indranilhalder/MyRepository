@@ -78,8 +78,6 @@ export default class ProductCapsules extends React.Component {
             data.wishlistData[0] &&
             data.wishlistData[0].items &&
             data.wishlistData[0].items.map((datum, i) => {
-              console.log("WISHLIST DATUM RENDER");
-              console.log(datum);
               return (
                 <ProductCapsuleCircle
                   image={datum.imageURL}
