@@ -7,14 +7,12 @@ export default class StaticPage extends Component {
   componentDidMount() {
     const slug = this.props.match.params.slug;
     this.props.getStaticPage(slug);
-    this.props.setHeaderText(slug.charAt(0).toUpperCase() + slug.slice(1));
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.slug !== prevProps.match.params.slug) {
       const slug = this.props.match.params.slug;
       this.props.getStaticPage(slug);
-      this.props.setHeaderText(slug.charAt(0).toUpperCase() + slug.slice(1));
     }
   }
 

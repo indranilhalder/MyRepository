@@ -323,34 +323,20 @@ export default class PdpApparel extends React.Component {
               </PdpLink>
             </div>
           )}
-          {productData.details && (
-            <div className={styles.details}>
-              <ProductDetails data={productData.details} />
-            </div>
-          )}
-          <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
-          </div>
-          {productData.classifications && (
-            <div className={styles.details}>
-              <ProductFeatures features={productData.classifications} />
-            </div>
-          )}
-          {productData.APlusContent && (
-            <AllDescription
-              productContent={productData.APlusContent.productContent}
-            />
-          )}
           <div className={styles.details}>
-            {productData.styleNote && (
-              <ProductFeature
-                heading="Style Note"
-                content={productData.styleNote}
-              />
+            {productData.details && (
+              <Accordion
+                text="Product Description"
+                headerFontSize={16}
+                isOpen={true}
+              >
+                <div className={styles.accordionContent}>
+                  {productData.productDescription}
+                </div>
+              </Accordion>
+            )}
+            {productData.details && (
+              <ProductDetails data={productData.details} />
             )}
             {productData.knowMore && (
               <Accordion text="Know More" headerFontSize={16}>
@@ -369,6 +355,19 @@ export default class PdpApparel extends React.Component {
               />
             )}
           </div>
+          <div className={styles.separator}>
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
+          </div>
+          {productData.APlusContent && (
+            <AllDescription
+              productContent={productData.APlusContent.productContent}
+            />
+          )}
+          <div className={styles.details} />
           <div className={styles.blankSeparator} />
           <PDPRecommendedSectionsContainer />
         </PdpFrame>

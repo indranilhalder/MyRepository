@@ -17,6 +17,7 @@ import {
   ADOBE_BLP_PAGE_LOAD,
   ADOBE_CLP_PAGE_LOAD
 } from "../../lib/adobeUtils.js";
+import { setHeaderText } from "../../general/header.actions.js";
 import * as Cookie from "../../lib/Cookie";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 
@@ -344,6 +345,9 @@ export function homeFeed(brandIdOrCategoryId: null) {
         if (resultJson.errors) {
           dispatch(homeFeedSuccess([], feedTypeRequest));
         } else {
+          if (resultJson.pageName) {
+            dispatch(setHeaderText(resultJson.pageName));
+          }
           dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
           if (CATEGORY_REGEX.test(brandIdOrCategoryId)) {
             setDataLayer(

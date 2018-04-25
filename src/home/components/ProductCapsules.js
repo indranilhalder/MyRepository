@@ -44,11 +44,14 @@ export default class ProductCapsules extends React.Component {
     }
 
     const productCapsulesData = this.props.feedComponentData;
+
     const data = this.props.feedComponentData.data;
+
     if (!data) {
       return null;
     }
     let subHeader;
+
     if (
       data &&
       data.wishlistData &&
@@ -70,23 +73,21 @@ export default class ProductCapsules extends React.Component {
           elementWidthMobile={30}
           withFooter={false}
         >
-          {this.props.feedComponentData.data &&
-            this.props.feedComponentData.data.wishlistData &&
-            this.props.feedComponentData.data.wishlistData[0] &&
-            this.props.feedComponentData.data.wishlistData[0].items &&
-            this.props.feedComponentData.data.wishlistData[0].items.map(
-              (datum, i) => {
-                return (
-                  <ProductCapsuleCircle
-                    image={datum.imageURL}
-                    label={datum.label}
-                    key={i}
-                    url={datum.webURL}
-                    onClick={this.handleProductClick}
-                  />
-                );
-              }
-            )}
+          {data &&
+            data.wishlistData &&
+            data.wishlistData[0] &&
+            data.wishlistData[0].items &&
+            data.wishlistData[0].items.map((datum, i) => {
+              return (
+                <ProductCapsuleCircle
+                  image={datum.imageURL}
+                  label={datum.label}
+                  key={i}
+                  url={datum.webURL}
+                  onClick={this.handleProductClick}
+                />
+              );
+            })}
         </Carousel>
       </div>
     );

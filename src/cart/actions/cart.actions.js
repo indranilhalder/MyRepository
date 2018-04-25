@@ -493,7 +493,7 @@ export function getCartDetailsCNC(
             productDetails.deliveryMode =
               product.pinCodeResponse.validDeliveryModes[0].type;
             productDetails.serviceableSlaves =
-              product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+              product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
           } else if (
             product.pinCodeResponse.validDeliveryModes[0]
               .CNCServiceableSlavesData
@@ -501,7 +501,7 @@ export function getCartDetailsCNC(
             productDetails.deliveryMode =
               product.pinCodeResponse.validDeliveryModes[0].type;
             productDetails.serviceableSlaves =
-              product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+              product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
           }
           item.push(productDetails);
           productItems.item = item;
@@ -1495,7 +1495,7 @@ export function addPickupPersonCNC(personMobile, personName) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(addPickUpPersonSuccess(resultJson));
+
       dispatch(
         getCartDetailsCNC(
           JSON.parse(userDetails).userName,
@@ -1505,8 +1505,9 @@ export function addPickupPersonCNC(personMobile, personName) {
           false
         )
       );
+      return dispatch(addPickUpPersonSuccess(resultJson));
     } catch (e) {
-      dispatch(addPickUpPersonFailure(e.message));
+      return dispatch(addPickUpPersonFailure(e.message));
     }
   };
 }
@@ -1974,14 +1975,14 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       } else if (
         product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
       ) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
       }
       item.push(productDetails);
       productItems.item = item;
@@ -2034,14 +2035,14 @@ export function softReservationPaymentForNetBanking(
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       } else if (
         product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
       ) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
       }
       item.push(productDetails);
       productItems.item = item;
@@ -2100,14 +2101,14 @@ export function softReservationPaymentForSavedCard(
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       } else if (
         product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
       ) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
       }
       item.push(productDetails);
       productItems.item = item;
@@ -2155,14 +2156,14 @@ export function softReservationForCliqCash(pinCode) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       } else if (
         product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
       ) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
       }
       item.push(productDetails);
       productItems.item = item;
@@ -2939,9 +2940,7 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
         );
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayerForOrderConfirmationDirectCalls(
-        ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS
-      );
+
       dispatch(updateTransactionDetailsSuccess(resultJson));
       dispatch(orderConfirmation(resultJson.orderId));
     } catch (e) {
@@ -2999,6 +2998,12 @@ export function orderConfirmation(orderId) {
         getState().icid.value,
         getState().icid.icidType
       );
+
+      setDataLayerForOrderConfirmationDirectCalls(
+        ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS,
+        resultJson.orderRefNo
+      );
+
       dispatch(orderConfirmationSuccess(resultJson));
     } catch (e) {
       dispatch(orderConfirmationFailure(e.message));
@@ -3263,7 +3268,7 @@ export function softReservationForCODPayment(pinCode) {
       productDetails.deliveryMode =
         product.pinCodeResponse.validDeliveryModes[0].type;
       productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       productDetails.fulfillmentType = product.fullfillmentType;
       item.push(productDetails);
       productItems.item = item;
