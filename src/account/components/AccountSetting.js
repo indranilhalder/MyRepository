@@ -10,23 +10,20 @@ export default class AccountSetting extends React.Component {
     }
   };
   render() {
-    const heading = this.props.heading;
-    const name = heading.trim();
     return (
       <div className={styles.base}>
         <div className={styles.accountHolder}>
           <div className={styles.profileImageHolder}>
             <div className={styles.accountImage}>
               {this.props.image && <ProfileImage image={this.props.image} />}
-              {name &&
-                name !== "undefined" && (
-                  <div className={styles.accountImageText}>
-                    {this.props.firstName}
-                  </div>
-                )}
+              <div className={styles.accountImageText}>
+                {this.props.firstName}
+              </div>
             </div>
             <div className={styles.headingText}>
-              {name && name !== "undefined" && this.props.heading}
+              {this.props.heading &&
+                this.props.heading !== "undefined" &&
+                this.props.heading}
               {this.props.lastName &&
                 this.props.lastName !== "undefined" &&
                 this.props.lastName}

@@ -31,6 +31,7 @@ export default class BrandImage extends React.Component {
     );
   }
 }
+
 BrandImage.propTypes = {
   image: PropTypes.string,
   selected: PropTypes.bool,
