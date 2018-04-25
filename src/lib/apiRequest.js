@@ -1,15 +1,9 @@
 import "isomorphic-fetch";
 import cloneDeep from "lodash.clonedeep";
 import * as Cookie from "./Cookie";
-import { LOGGED_IN_USER_DETAILS, SUCCESS, FAILURE } from "./constants.js";
+import { SUCCESS, FAILURE } from "./constants.js";
 import * as ErrorHandling from "../general/ErrorHandling.js";
 import { CUSTOMER_ACCESS_TOKEN, GLOBAL_ACCESS_TOKEN } from "../lib/constants";
-import {
-  customerAccessToken,
-  refreshTokenRequest,
-  globalAccessTokenRequest,
-  customerAccessTokenRequest
-} from "../auth/actions/user.actions";
 let API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 export let TATA_CLIQ_ROOT = /https?:[\/]{2}\S*?(\/\S*)/;
 export const TOKEN_PATH = "oauth/token";
@@ -38,7 +32,6 @@ export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
 export const JUS_PAY_API_URL_ROOT = process.env.REACT_APP_JUS_PAY_API_URL_ROOT;
 
-const API_URL_ROOT_SUFFIX = "?isPwa=true";
 const ACCESS_TOKEN_EXPIRED_MESSAGE = "Access token expired";
 const ACCESS_TOKEN_INVALID_MESSAGE = "Invalid access token";
 const CLIENT_ID = "gauravj@dewsolutions.in";
@@ -150,12 +143,7 @@ async function handleInvalidGlobalAccessToken(message, oldUrl) {
       throw new Error("Global Access Token refresh failure");
     }
 
-    console.log("OLD URL");
-    console.log(oldUrl);
-
     newUrl = replaceOldGlobalTokenCookie(oldUrl, globalAccessTokenResponse);
-    console.log("NEW URL");
-    console.log(newUrl);
   }
   return newUrl;
 }
@@ -278,46 +266,11 @@ function isInvalidAccessTokenError(message) {
 }
 
 export async function getWithoutApiUrlRoot(url) {
-  const requestFunction = async url => {
-    const result = await fetch(url, {
-      headers: {
-        Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
-      }
-    });
-    return result;
-  };
-  const result = await requestFunction(url);
-  let isHavingAccessTokenError = await isResultHavingAccessTokenError(result);
-  if (isHavingAccessTokenError !== SUCCESS) {
-    if (isHavingAccessTokenError === CUSTOMER_ACCESS_TOKEN_INVALID) {
-      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
-      const refreshTokenResultStatus = await refreshToken();
-
-      if (refreshTokenResultStatus.status === SUCCESS) {
-        let newUrl = url.replace(
-          JSON.parse(customerCookie).access_token,
-          refreshTokenResultStatus.accessToken
-        );
-
-        return requestFunction(newUrl);
-      }
-    } else if (isHavingAccessTokenError === GLOBAL_ACCESS_TOKEN_INVALID) {
-      const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-      let globalTokenResultStatus = await globalAccessToken();
-      if (globalTokenResultStatus.status === SUCCESS) {
-        let newUrl = url.replace(
-          JSON.parse(globalCookie).access_token,
-          globalTokenResultStatus.accessToken
-        );
-        return requestFunction(newUrl);
-      }
-    } else {
-      return result.clone();
+  return await fetch(url, {
+    headers: {
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
-  }
-
-  return result.clone();
+  });
 }
 
 export async function postMsd(url, payload) {
@@ -327,56 +280,11 @@ export async function postMsd(url, payload) {
   });
 }
 
-export async function getMsd(url) {
-  return await fetch(`${API_URL_ROOT_DUMMY}/${url}`, {
-    headers: {
-      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
-    }
-  });
-}
-
 export async function postJusPay(path, postData) {
-  const requestFunction = async path => {
-    let url = `${JUS_PAY_API_URL_ROOT}/${path}`;
-    const result = await fetch(url, {
-      method: "POST",
-      body: postData
-    });
-    return result;
-  };
-
-  const result = await requestFunction(path);
-  let isHavingAccessTokenError = await isResultHavingAccessTokenError(result);
-  if (isHavingAccessTokenError !== SUCCESS) {
-    if (isHavingAccessTokenError === CUSTOMER_ACCESS_TOKEN_INVALID) {
-      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
-      const refreshTokenResultStatus = await refreshToken();
-
-      if (refreshTokenResultStatus.status === SUCCESS) {
-        let newUrl = path.replace(
-          JSON.parse(customerCookie).access_token,
-          refreshTokenResultStatus.accessToken
-        );
-
-        return requestFunction(newUrl);
-      }
-    } else if (isHavingAccessTokenError === GLOBAL_ACCESS_TOKEN_INVALID) {
-      const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-      let globalTokenResultStatus = await globalAccessToken();
-      if (globalTokenResultStatus.status === SUCCESS) {
-        let newUrl = path.replace(
-          JSON.parse(globalCookie).access_token,
-          globalTokenResultStatus.accessToken
-        );
-        return requestFunction(newUrl);
-      }
-    } else {
-      return result.clone();
-    }
-  }
-
-  return result.clone();
+  return await fetch(path, {
+    method: "POST",
+    body: postData
+  });
 }
 
 // this function is using in follow and un follow brands
