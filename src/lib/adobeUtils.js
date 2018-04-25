@@ -1018,7 +1018,7 @@ export function setDataLayerForLogin(type) {
 }
 export function setDataLayerForOrderConfirmationDirectCalls(
   type,
-  OrderConfirmationResponse
+  orderConfirmationResponse
 ) {
   if (type === ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS) {
     let previousData = {};
@@ -1029,14 +1029,14 @@ export function setDataLayerForOrderConfirmationDirectCalls(
     if (previousData.cpj) {
       Object.assign(previousData.cpj, {
         order: {
-          id: OrderConfirmationResponse
+          id: orderConfirmationResponse
         }
       });
     } else {
       Object.assign(previousData, {
         cpj: {
           order: {
-            id: OrderConfirmationResponse
+            id: orderConfirmationResponse
           }
         }
       });
@@ -1048,7 +1048,7 @@ export function setDataLayerForOrderConfirmationDirectCalls(
     const data = {
       cpj: {
         order: {
-          failureReason: OrderConfirmationResponse
+          failureReason: orderConfirmationResponse
         }
       }
     };
