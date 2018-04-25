@@ -4,6 +4,12 @@ import * as Cookie from "./Cookie";
 import { LOGGED_IN_USER_DETAILS, SUCCESS, FAILURE } from "./constants.js";
 import * as ErrorHandling from "../general/ErrorHandling.js";
 import { CUSTOMER_ACCESS_TOKEN, GLOBAL_ACCESS_TOKEN } from "../lib/constants";
+import {
+  customerAccessToken,
+  refreshTokenRequest,
+  globalAccessTokenRequest,
+  customerAccessTokenRequest
+} from "../auth/actions/user.actions";
 let API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 export let TATA_CLIQ_ROOT = /https?:[\/]{2}\S*?(\/\S*)/;
 export const TOKEN_PATH = "oauth/token";
@@ -62,54 +68,292 @@ export async function postAdobeTargetUrl(
   return result;
 }
 
-export async function post(path, postData, doNotUserApiSuffix: true) {
-  const requestFunction = async path => {
-    const url = `${API_URL_ROOT}/${path}`;
-    const result = await fetch(url, {
-      method: "POST",
-      body: JSON.stringify(postData),
-      headers: {
-        Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#"),
-        "Content-Type": "application/json"
-      }
-    });
-    return result;
-  };
-
-  const result = await requestFunction(path);
-  let isHavingAccessTokenError = await isResultHavingAccessTokenError(result);
-  if (isHavingAccessTokenError !== SUCCESS) {
-    if (isHavingAccessTokenError === CUSTOMER_ACCESS_TOKEN_INVALID) {
-      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
-      const refreshTokenResultStatus = await refreshToken();
-
-      if (refreshTokenResultStatus.status === SUCCESS) {
-        let newUrl = path.replace(
-          JSON.parse(customerCookie).access_token,
-          refreshTokenResultStatus.accessToken
-        );
-
-        return requestFunction(newUrl);
-      }
-    } else if (isHavingAccessTokenError === GLOBAL_ACCESS_TOKEN_INVALID) {
-      const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-      let globalTokenResultStatus = await globalAccessToken();
-
-      if (globalTokenResultStatus.status === SUCCESS) {
-        let newUrl = path.replace(
-          JSON.parse(globalCookie).access_token,
-          globalTokenResultStatus.accessToken
-        );
-        return requestFunction(newUrl);
-      }
-    } else {
-      return result.clone();
+async function corePost(path, postData, doNotUseApiSuffix) {
+  const url = `${API_URL_ROOT}/${path}`;
+  return await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(postData),
+    headers: {
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#"),
+      "Content-Type": "application/json"
     }
+  });
+}
+
+export async function coreGet(url) {
+  return await fetch(`${API_URL_ROOT}/${url}`, {
+    headers: {
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
+    }
+  });
+}
+
+export async function get(url) {
+  const result = await coreGet(url);
+  const resultClone = result.clone();
+  const resultJson = await result.json();
+  const errorStatus = ErrorHandling.getFailureResponse(resultJson);
+  if (!errorStatus.status) {
+    // there was no error
+    return resultClone;
   }
 
-  return result.clone();
+  if (!isInvalidAccessTokenError(errorStatus.message)) {
+    return resultClone;
+  }
+  if (isCustomerAccessTokenFailure(errorStatus.message)) {
+    const customerAccessTokenResponse = await refreshCustomerAccessToken();
+    if (!customerAccessTokenResponse) {
+      throw new Error("Customer Access Token refresh failure");
+    }
+    // redo the call
+    return await coreGet(url);
+  }
+
+  if (isGlobalAccessTokenFailure(errorStatus.message)) {
+    const globalAccessTokenResponse = await refreshGlobalAccessToken();
+    if (!globalAccessTokenResponse) {
+      throw new Error("Global Access Token refresh failure");
+    }
+    return await coreGet(url);
+  }
 }
+
+async function corePostFormData(url, payload) {
+  return await fetch(`${API_URL_ROOT}/${url}`, {
+    method: "POST",
+    body: payload
+  });
+}
+
+export async function postFormData(url, payload) {
+  const result = await corePostFormData(url, payload);
+  const resultClone = result.clone();
+  const resultJson = await result.json();
+  const errorStatus = ErrorHandling.getFailureResponse(resultJson);
+  let newUrl = url;
+  if (!errorStatus.status || !isInvalidAccessTokenError(errorStatus.message)) {
+    // there was no error
+    return resultClone;
+  }
+  newUrl = await handleInvalidCustomerAccessToken(errorStatus.message, url);
+  if (newUrl) {
+    return corePostFormData(newUrl);
+  }
+  newUrl = await handleInvalidGlobalAccessToken(errorStatus.message, url);
+  if (newUrl) {
+    return corePostFormData(newUrl);
+  }
+  return await corePostFormData(newUrl);
+}
+
+async function handleInvalidCustomerAccessToken(message, oldUrl) {
+  let newUrl = null;
+  if (isCustomerAccessTokenFailure(message)) {
+    const customerAccessTokenResponse = await refreshCustomerAccessToken();
+    if (!customerAccessTokenResponse) {
+      throw new Error("Customer Access Token refresh failure");
+    }
+    newUrl = replaceOldCustomerCookie(oldUrl, customerAccessTokenResponse);
+  }
+  return newUrl;
+}
+
+async function handleInvalidGlobalAccessToken(message, oldUrl) {
+  let newUrl = oldUrl;
+  if (isGlobalAccessTokenFailure(message)) {
+    const globalAccessTokenResponse = await refreshGlobalAccessToken();
+    if (!globalAccessTokenResponse) {
+      throw new Error("Global Access Token refresh failure");
+    }
+
+    console.log("OLD URL");
+    console.log(oldUrl);
+
+    newUrl = replaceOldGlobalTokenCookie(oldUrl, globalAccessTokenResponse);
+    console.log("NEW URL");
+    console.log(newUrl);
+  }
+  return newUrl;
+}
+
+function replaceOldGlobalTokenCookie(url, newGlobalTokenCookie) {
+  let oldGlobalCookie = JSON.parse(Cookie.getCookie(GLOBAL_ACCESS_TOKEN));
+  Cookie.deleteCookie(GLOBAL_ACCESS_TOKEN);
+  Cookie.createCookie(
+    GLOBAL_ACCESS_TOKEN,
+    JSON.stringify(newGlobalTokenCookie)
+  );
+
+  return url.replace(
+    oldGlobalCookie.access_token,
+    newGlobalTokenCookie.access_token
+  );
+}
+
+function replaceOldCustomerCookie(url, newCustomerCookie) {
+  let oldCustomerCookie = JSON.parse(Cookie.getCookie(CUSTOMER_ACCESS_TOKEN));
+  Cookie.deleteCookie(CUSTOMER_ACCESS_TOKEN);
+  Cookie.createCookie(CUSTOMER_ACCESS_TOKEN, JSON.stringify(newCustomerCookie));
+  return url.replace(
+    oldCustomerCookie.access_token,
+    newCustomerCookie.access_token
+  );
+}
+
+export async function post(path, postData, doNotUseApiSuffix: true) {
+  const result = await corePost(path, postData, doNotUseApiSuffix);
+  const resultClone = result.clone();
+  const resultJson = await result.json();
+  const errorStatus = ErrorHandling.getFailureResponse(resultJson);
+  if (!errorStatus.status) {
+    // there was no error
+    return resultClone;
+  }
+
+  if (!isInvalidAccessTokenError(errorStatus.message)) {
+    return resultClone;
+  }
+
+  if (isCustomerAccessTokenFailure(errorStatus.message)) {
+    const customerAccessTokenResponse = await refreshCustomerAccessToken();
+    if (!customerAccessTokenResponse) {
+      throw new Error("Customer Access Token refresh failure");
+    }
+    // redo the call
+    return await corePost(path, postData, doNotUseApiSuffix);
+  }
+
+  if (isGlobalAccessTokenFailure(errorStatus.message)) {
+    const globalAccessTokenResponse = await refreshGlobalAccessToken();
+    if (!globalAccessTokenResponse) {
+      throw new Error("Global Access Token refresh failure");
+    }
+    return await corePost(path, postData, doNotUseApiSuffix);
+  }
+}
+
+async function refreshCustomerAccessToken() {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const refreshTokenResponse = await post(
+    `${TOKEN_PATH}?refresh_token=${
+      JSON.parse(customerCookie).refresh_token
+    }&client_id=${CLIENT_ID}&client_secret=secret&grant_type=refresh_token`
+  );
+  const refreshTokenResultJson = await refreshTokenResponse.json();
+  const errorStatusObject = ErrorHandling.getFailureResponse(
+    refreshTokenResultJson
+  );
+  if (errorStatusObject.status) {
+    // the refresh token has failed
+    // what do I do in this case?
+    // I return null, so that I can throw an error which will be caught.
+    return null;
+  }
+
+  return refreshTokenResultJson;
+}
+
+async function refreshGlobalAccessToken() {
+  const result = await post(
+    `${TOKEN_PATH}?grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=secret&isPwa=true`
+  );
+  const resultJson = await result.json();
+  const errorStatusObj = ErrorHandling.getFailureResponse(resultJson);
+  if (errorStatusObj.status) {
+    return null;
+  }
+
+  return resultJson;
+}
+
+function isCustomerAccessTokenFailure(message) {
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const customerAccessToken =
+    customerCookie && JSON.parse(customerCookie).access_token;
+  if (message.indexOf(customerAccessToken) >= 0) {
+    return true;
+  }
+  return false;
+}
+
+function isGlobalAccessTokenFailure(message) {
+  const globalAccessTokenCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  const globalAccessToken =
+    globalAccessTokenCookie && JSON.parse(globalAccessTokenCookie).access_token;
+  if (message.indexOf(globalAccessToken) >= 0) {
+    return true;
+  }
+  return false;
+}
+
+function isInvalidAccessTokenError(message) {
+  return (
+    message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
+    message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0
+  );
+}
+
+// export async function post(path, postData, doNotUseApiSuffix: true) {
+//   const requestFunction = async (path, postData, doNotUseApiSuffix) => {
+//     const url = `${API_URL_ROOT}/${path}`;
+//     const result = await fetch(url, {
+//       method: "POST",
+//       body: JSON.stringify(postData),
+//       headers: {
+//         Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#"),
+//         "Content-Type": "application/json"
+//       }
+//     });
+//     return result;
+//   };
+
+//   const result = await requestFunction(path, postData, doNotUseApiSuffix);
+//   // What do I want to do?
+
+//   // I want to first kick off a request --> put this in a function.
+//   // If that request fails because of an invalid access token --> I need to check to see why the request failed.
+//   // I want to find out whether the global acess token or the customer acces token failed
+//   // If the customer access token failed, then I want to get a new customer access token and re-do the call.
+//   // If the global access token failed, then I want to get a new global access token and re-do the call.
+
+//   // How can I do this?
+
+//   //
+
+//   let isHavingAccessTokenError = await isResultHavingAccessTokenError(result);
+//   if (isHavingAccessTokenError !== SUCCESS) {
+//     if (isHavingAccessTokenError === CUSTOMER_ACCESS_TOKEN_INVALID) {
+//       let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+//       const refreshTokenResultStatus = await refreshToken();
+
+//       if (refreshTokenResultStatus.status === SUCCESS) {
+//         let newUrl = path.replace(
+//           JSON.parse(customerCookie).access_token,
+//           refreshTokenResultStatus.accessToken
+//         );
+
+//         return requestFunction(newUrl);
+//       }
+//     } else if (isHavingAccessTokenError === GLOBAL_ACCESS_TOKEN_INVALID) {
+//       const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+//       let globalTokenResultStatus = await globalAccessToken();
+
+//       if (globalTokenResultStatus.status === SUCCESS) {
+//         let newUrl = path.replace(
+//           JSON.parse(globalCookie).access_token,
+//           globalTokenResultStatus.accessToken
+//         );
+//         return requestFunction(newUrl);
+//       }
+//     } else {
+//       return result.clone();
+//     }
+//   }
+
+//   return result.clone();
+// }
 
 export async function getWithoutApiUrlRoot(url) {
   const requestFunction = async url => {
@@ -154,49 +398,49 @@ export async function getWithoutApiUrlRoot(url) {
   return result.clone();
 }
 
-export async function get(url) {
-  const requestFunction = async url => {
-    const result = await fetch(`${API_URL_ROOT}/${url}`, {
-      headers: {
-        Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
-      }
-    });
-    return result;
-  };
-  const result = await requestFunction(url);
-  let isHavingAccessTokenError = await isResultHavingAccessTokenError(result);
-  if (isHavingAccessTokenError !== SUCCESS) {
-    if (isHavingAccessTokenError === CUSTOMER_ACCESS_TOKEN_INVALID) {
-      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+// export async function get(url) {
+//   const requestFunction = async url => {
+//     const result = await fetch(`${API_URL_ROOT}/${url}`, {
+//       headers: {
+//         Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
+//       }
+//     });
+//     return result;
+//   };
+//   const result = await requestFunction(url);
+//   let isHavingAccessTokenError = await isResultHavingAccessTokenError(result);
+//   if (isHavingAccessTokenError !== SUCCESS) {
+//     if (isHavingAccessTokenError === CUSTOMER_ACCESS_TOKEN_INVALID) {
+//       let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
-      const refreshTokenResultStatus = await refreshToken();
+//       const refreshTokenResultStatus = await refreshToken();
 
-      if (refreshTokenResultStatus.status === SUCCESS) {
-        let newUrl = url.replace(
-          JSON.parse(customerCookie).access_token,
-          refreshTokenResultStatus.accessToken
-        );
+//       if (refreshTokenResultStatus.status === SUCCESS) {
+//         let newUrl = url.replace(
+//           JSON.parse(customerCookie).access_token,
+//           refreshTokenResultStatus.accessToken
+//         );
 
-        return requestFunction(newUrl);
-      }
-    } else if (isHavingAccessTokenError === GLOBAL_ACCESS_TOKEN_INVALID) {
-      const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-      let globalTokenResultStatus = await globalAccessToken();
+//         return requestFunction(newUrl);
+//       }
+//     } else if (isHavingAccessTokenError === GLOBAL_ACCESS_TOKEN_INVALID) {
+//       const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+//       let globalTokenResultStatus = await globalAccessToken();
 
-      if (globalTokenResultStatus.status === SUCCESS) {
-        let newUrl = url.replace(
-          JSON.parse(globalCookie).access_token,
-          globalTokenResultStatus.accessToken
-        );
-        return requestFunction(newUrl);
-      }
-    } else {
-      return result.clone();
-    }
-  }
+//       if (globalTokenResultStatus.status === SUCCESS) {
+//         let newUrl = url.replace(
+//           JSON.parse(globalCookie).access_token,
+//           globalTokenResultStatus.accessToken
+//         );
+//         return requestFunction(newUrl);
+//       }
+//     } else {
+//       return result.clone();
+//     }
+//   }
 
-  return result.clone();
-}
+//   return result.clone();
+// }
 
 export async function patch(url, payload) {
   const requestFunction = async url => {
@@ -369,49 +613,6 @@ export async function postJusPay(path, postData) {
       let globalTokenResultStatus = await globalAccessToken();
       if (globalTokenResultStatus.status === SUCCESS) {
         let newUrl = path.replace(
-          JSON.parse(globalCookie).access_token,
-          globalTokenResultStatus.accessToken
-        );
-        return requestFunction(newUrl);
-      }
-    } else {
-      return result.clone();
-    }
-  }
-
-  return result.clone();
-}
-
-export async function postFormData(url, payload) {
-  const requestFunction = async url => {
-    const result = await fetch(`${API_URL_ROOT}/${url}`, {
-      method: "POST",
-      body: payload
-    });
-    return result;
-  };
-
-  const result = await requestFunction(url);
-  let isHavingAccessTokenError = await isResultHavingAccessTokenError(result);
-  if (isHavingAccessTokenError !== SUCCESS) {
-    if (isHavingAccessTokenError === CUSTOMER_ACCESS_TOKEN_INVALID) {
-      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
-      const refreshTokenResultStatus = await refreshToken();
-
-      if (refreshTokenResultStatus.status === SUCCESS) {
-        let newUrl = url.replace(
-          JSON.parse(customerCookie).access_token,
-          refreshTokenResultStatus.accessToken
-        );
-
-        return requestFunction(newUrl);
-      }
-    } else if (isHavingAccessTokenError === GLOBAL_ACCESS_TOKEN_INVALID) {
-      const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-      let globalTokenResultStatus = await globalAccessToken();
-      if (globalTokenResultStatus.status === SUCCESS) {
-        let newUrl = url.replace(
           JSON.parse(globalCookie).access_token,
           globalTokenResultStatus.accessToken
         );

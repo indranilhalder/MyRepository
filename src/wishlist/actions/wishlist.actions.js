@@ -78,7 +78,12 @@ export function getWishListItems(productDetails) {
           JSON.parse(customerCookie).access_token
         }&isPwa=true`
       );
+      console.log("RESULT");
+      console.log(result);
       const resultJson = await result.json();
+      console.log("RESULT JSON");
+      console.log(resultJson);
+
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
