@@ -144,21 +144,23 @@ class ErrorDisplay extends React.Component {
   }
 
   displayError(message) {
-    if (
-      message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
-      message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0
-    ) {
-      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-      customerCookie =
-        customerCookie && JSON.parse(customerCookie).access_token;
-      if (message.indexOf(customerCookie) >= 0) {
-        this.props.refreshToken();
+    if (message) {
+      if (
+        message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
+        message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0
+      ) {
+        let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+        customerCookie =
+          customerCookie && JSON.parse(customerCookie).access_token;
+        if (message.indexOf(customerCookie) >= 0) {
+          this.props.refreshToken();
+        } else {
+          this.props.getGlobalAccessToken();
+        }
       } else {
-        this.props.getGlobalAccessToken();
+        this.props.displayToast(message);
+        delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
       }
-    } else {
-      this.props.displayToast(message);
-      delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
     }
   }
 
