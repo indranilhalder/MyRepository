@@ -1,22 +1,21 @@
 import React from "react";
-import styles from "./ProductDetails.css";
+import styles from "./ProductFeatures.css";
 import PropTypes from "prop-types";
 import Accordion from "../../general/components/Accordion.js";
 export default class ProductDetails extends React.Component {
   render() {
     const data = this.props.data;
     return (
-      <div className={styles.base}>
-        {data.map((datum, i) => {
+      <Accordion text="Product Details" headerFontSize={16}>
+        {data.map(val => {
           return (
-            <Accordion data={data} key={i} text={datum.key}>
-              <div className={styles.productDetails}>
-                <div className={styles.content}>{datum.value}</div>
-              </div>
-            </Accordion>
+            <div className={styles.content}>
+              <div className={styles.header}>{val.key}</div>
+              <div className={styles.description}>{val.value}</div>
+            </div>
           );
         })}
-      </div>
+      </Accordion>
     );
   }
 }

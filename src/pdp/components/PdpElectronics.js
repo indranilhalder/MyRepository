@@ -360,54 +360,6 @@ please try another pincode"
                   </div>
                 </Accordion>
               )}
-            </div>
-          )}
-          {productData.rootCategory === "Watches" && (
-            <div className={styles.details}>
-              {productData.classifications && (
-                <Accordion
-                  text="Product Details"
-                  headerFontSize={16}
-                  isOpen={true}
-                >
-                  {productData.classifications.map(val => {
-                    if (val.specifications) {
-                      return val.specifications.map(value => {
-                        return (
-                          <div style={{ paddingBottom: 10 }}>
-                            <div className={styles.sideHeader}>{value.key}</div>
-                            <div className={styles.sideContent}>
-                              {value.value}
-                            </div>
-                          </div>
-                        );
-                      });
-                    } else {
-                      return null;
-                    }
-                  })}
-                </Accordion>
-              )}
-            </div>
-          )}
-          <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
-          </div>
-          {productData.rootCategory !== "Watches" && (
-            <div className={styles.details}>
-              {productData.classifications && (
-                <ProductFeatures features={productData.classifications} />
-              )}
-              {productData.styleNote && (
-                <ProductFeature
-                  heading="Style Note"
-                  content={productData.styleNote}
-                />
-              )}
               {productData.knowMore && (
                 <Accordion text="Know More" headerFontSize={16}>
                   {productData.knowMore &&
@@ -428,41 +380,85 @@ please try another pincode"
           )}
           {productData.rootCategory === "Watches" && (
             <div className={styles.details}>
-              {productData.classifications && (
-                <React.Fragment>
-                  {productData.styleNote && (
-                    <ProductFeature
-                      heading="Style Note"
-                      content={productData.styleNote}
-                    />
-                  )}
-                  {productData.warranty &&
-                    productData.warranty.length > 0 && (
-                      <ProductFeature
-                        heading="Warranty"
-                        content={productData.warranty[0]}
-                      />
-                    )}
-                  {productData.knowMore && (
-                    <Accordion text="Know More" headerFontSize={16}>
-                      {productData.knowMore &&
-                        productData.knowMore.map(val => {
-                          return (
-                            <div className={styles.list}>
-                              {val.knowMoreItem}
-                            </div>
-                          );
-                        })}
-                    </Accordion>
-                  )}
-                  {productData.brandInfo && (
-                    <ProductFeature
-                      heading="Brand Info"
-                      content={productData.brandInfo}
-                    />
-                  )}
-                </React.Fragment>
+              {productData.productDescription && (
+                <Accordion
+                  text="Product Description"
+                  headerFontSize={16}
+                  isOpen={true}
+                >
+                  <div className={styles.accordionContent}>
+                    {productData.productDescription}
+                  </div>
+                </Accordion>
               )}
+              {productData.classifications && (
+                <Accordion
+                  text="Features & Functions"
+                  headerFontSize={16}
+                  isOpen={false}
+                >
+                  {productData.classifications.map(val => {
+                    if (val.specifications) {
+                      return val.specifications.map(value => {
+                        return (
+                          <div style={{ paddingBottom: 10 }}>
+                            <div className={styles.sideHeader}>{value.key}</div>
+                            <div className={styles.sideContent}>
+                              {value.value}
+                            </div>
+                          </div>
+                        );
+                      });
+                    } else {
+                      return null;
+                    }
+                  })}
+                </Accordion>
+              )}
+              {productData.knowMore && (
+                <Accordion text="Know More" headerFontSize={16}>
+                  {productData.knowMore &&
+                    productData.knowMore.map(val => {
+                      return (
+                        <div className={styles.list}>{val.knowMoreItem}</div>
+                      );
+                    })}
+                </Accordion>
+              )}
+              {productData.brandInfo && (
+                <ProductFeature
+                  heading="Brand Info"
+                  content={productData.brandInfo}
+                />
+              )}
+            </div>
+          )}
+          <div className={styles.separator}>
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
+          </div>
+          {productData.rootCategory !== "Watches" && (
+            <div className={styles.details}>
+              {productData.classifications && (
+                <ProductFeatures features={productData.classifications} />
+              )}
+            </div>
+          )}
+          {productData.rootCategory === "Watches" && (
+            <div className={styles.details}>
+              {productData.details && (
+                <ProductDetails data={productData.details} />
+              )}
+              {productData.warranty &&
+                productData.warranty.length > 0 && (
+                  <ProductFeature
+                    heading="Warranty"
+                    content={productData.warranty[0]}
+                  />
+                )}
             </div>
           )}
           {productData.APlusContent && (
