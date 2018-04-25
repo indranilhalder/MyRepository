@@ -2940,9 +2940,7 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
         );
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayerForOrderConfirmationDirectCalls(
-        ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS
-      );
+
       dispatch(updateTransactionDetailsSuccess(resultJson));
       dispatch(orderConfirmation(resultJson.orderId));
     } catch (e) {
@@ -3000,6 +2998,12 @@ export function orderConfirmation(orderId) {
         getState().icid.value,
         getState().icid.icidType
       );
+
+      setDataLayerForOrderConfirmationDirectCalls(
+        ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS,
+        resultJson.orderRefNo
+      );
+
       dispatch(orderConfirmationSuccess(resultJson));
     } catch (e) {
       dispatch(orderConfirmationFailure(e.message));
