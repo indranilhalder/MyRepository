@@ -36,10 +36,10 @@ class Login extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.authCallsIsSucceed) {
       if (this.props.redirectToAfterAuthUrl) {
-        this.props.history.push(this.props.redirectToAfterAuthUrl);
+        this.props.history.replace(this.props.redirectToAfterAuthUrl);
         this.props.clearUrlToRedirectToAfterAuth();
       } else {
-        this.props.history.push(HOME_ROUTER);
+        this.props.history.replace(HOME_ROUTER);
       }
     }
   }
