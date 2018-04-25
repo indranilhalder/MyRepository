@@ -5,7 +5,7 @@ import TextArea from "../../general/components/TextArea";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
 import styles from "./ReturnReasonForm.css";
-
+import ReverseSealYesNo from "./ReverseSealYesNo.js";
 export default class ReturnReasonForm extends React.Component {
   constructor(props) {
     super(props);
@@ -13,7 +13,8 @@ export default class ReturnReasonForm extends React.Component {
     this.state = {
       displaySecondary: false,
       secondaryReasons: null,
-      comment: null
+      comment: null,
+      reverseSeal: null
     };
   }
   handleContinue() {
@@ -23,7 +24,8 @@ export default class ReturnReasonForm extends React.Component {
         {
           subReasonCode: this.state.subReasonCode,
           comment: this.state.comment,
-          reason: this.state.reason
+          reason: this.state.reason,
+          reverseSeal: this.state.reverseSeal
         }
       );
       this.props.onContinue(reasonAndCommentObj);
@@ -57,6 +59,9 @@ export default class ReturnReasonForm extends React.Component {
   handleChange(val) {
     this.setState({ comment: val });
   }
+  selectReverseSeal(val) {
+    this.setState({ reverseSeal: val });
+  }
   onChangeSecondary(val) {
     const code = val.value;
     const label = val.label;
@@ -69,6 +74,7 @@ export default class ReturnReasonForm extends React.Component {
   }
   render() {
     const data = this.props.returnProductDetails;
+
     return (
       <div className={styles.base}>
         <div className={styles.header}>
@@ -128,6 +134,13 @@ export default class ReturnReasonForm extends React.Component {
             <TextArea onChange={val => this.handleChange(val)} />
           </div>
         </div>
+        {data &&
+          data.showReverseSealFrJwlry === "yes" && (
+            <div className={styles.reverseSealHolder}>
+              <ReverseSealYesNo />
+            </div>
+          )}
+
         <div className={styles.buttonHolder}>
           <div className={styles.button}>
             <Button

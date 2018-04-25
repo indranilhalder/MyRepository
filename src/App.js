@@ -14,6 +14,8 @@ import MobileFooter from "./general/components/MobileFooter.js";
 import * as Cookie from "./lib/Cookie";
 import SecondaryLoader from "./general/components/SecondaryLoader";
 import HeaderContainer from "./general/containers/HeaderContainer.js";
+import StaticPageContainer from "./staticpage/containers/StaticPageContainer.js";
+import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
 
 import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
 import {
@@ -70,13 +72,6 @@ const Loader = () => {
     </div>
   );
 };
-
-const StaticPageContainer = Loadable({
-  loader: () => import("./staticpage/containers/StaticPageContainer.js"),
-  loading() {
-    return <Loader />;
-  }
-});
 
 const MyAccountWrapper = Loadable({
   loader: () => import("./account/components/MyAccountWrapper"),
@@ -136,13 +131,6 @@ const DisplayOrderSummaryContainer = Loadable({
 
 const CheckoutAddressContainer = Loadable({
   loader: () => import("./cart/containers/CheckoutAddressContainer"),
-  loading() {
-    return <Loader />;
-  }
-});
-
-const PlpBrandCategoryWrapperContainer = Loadable({
-  loader: () => import("./plp/containers/PlpBrandCategoryWrapperContainer"),
   loading() {
     return <Loader />;
   }
