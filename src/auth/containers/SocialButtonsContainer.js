@@ -271,7 +271,7 @@ const mapDispatchToProps = dispatch => {
                 Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
                 Cookies.createCookie(
                   CART_DETAILS_FOR_LOGGED_IN_USER,
-                  JSON.stringify(cartVal.cartDetails)
+                  JSON.stringify(createdCartVal.cartDetails)
                 );
                 dispatch(setIfAllAuthCallsHaveSucceeded());
               }
