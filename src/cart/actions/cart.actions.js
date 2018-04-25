@@ -2006,7 +2006,6 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      debugger;
       setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPaymentSuccess(resultJson));
       dispatch(jusPayTokenize(cardDetails, address, productItems, paymentMode));
