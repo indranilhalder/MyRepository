@@ -1016,7 +1016,10 @@ export function setDataLayerForLogin(type) {
     window._satellite.track(ADOBE_LOGIN_FAILURE);
   }
 }
-export function setDataLayerForOrderConfirmationDirectCalls(type, response) {
+export function setDataLayerForOrderConfirmationDirectCalls(
+  type,
+  OrderConfirmationResponse
+) {
   if (type === ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS) {
     let previousData = {};
     if (window.digitalData) {
@@ -1026,14 +1029,14 @@ export function setDataLayerForOrderConfirmationDirectCalls(type, response) {
     if (previousData.cpj) {
       Object.assign(previousData.cpj, {
         order: {
-          id: response
+          id: OrderConfirmationResponse
         }
       });
     } else {
       Object.assign(previousData, {
         cpj: {
           order: {
-            id: response
+            id: OrderConfirmationResponse
           }
         }
       });
@@ -1045,7 +1048,7 @@ export function setDataLayerForOrderConfirmationDirectCalls(type, response) {
     const data = {
       cpj: {
         order: {
-          response
+          failureReason: OrderConfirmationResponse
         }
       }
     };
