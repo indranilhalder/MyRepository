@@ -28,11 +28,13 @@ export default class CuponDetails extends React.Component {
           )}
           <div
             className={styles.promotionDetailsText}
-            dangerouslySetInnerHTML={{
-              __html: this.props.promotionDetail
-                .replace("<p>", "")
-                .replace("</p>", "")
-            }}
+            dangerouslySetInnerHTML={
+              this.props.promotionDetail && {
+                __html: this.props.promotionDetail
+                  .replace("<p>", "")
+                  .replace("</p>", "")
+              }
+            }
           />
 
           <div className={styles.dataHolder}>
