@@ -472,22 +472,6 @@ export async function refreshToken() {
   };
 }
 
-export async function refreshTokenReDoCall(
-  refreshTokenResultJson,
-  url,
-  requestType,
-  body
-) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
-  let newUrl = url.replace(
-    JSON.parse(customerCookie).access_token,
-    refreshTokenResultJson.access_token
-  );
-
-  return await requestType(newUrl, body);
-}
-
 export async function globalAccessToken(url, requestType, body) {
   const globalAccessTokenApiCall = await post(
     `${TOKEN_PATH}?grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=secret&isPwa=true`
@@ -520,21 +504,6 @@ export async function globalAccessToken(url, requestType, body) {
     status: FAILURE,
     accessToken: null
   };
-}
-
-export async function globalAccessTokenReDoCall(
-  globalAccessTokenResultJson,
-  url,
-  requestType,
-  body
-) {
-  const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-
-  let newUrl = url.replace(
-    JSON.parse(globalCookie).access_token,
-    globalAccessTokenResultJson.access_token
-  );
-  return await requestType(newUrl, body);
 }
 
 export async function isResultHavingAccessTokenError(result) {
