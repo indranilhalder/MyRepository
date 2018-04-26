@@ -320,18 +320,11 @@ export default class ModalRoot extends React.Component {
     this.handleClose();
     this.props.history.push(LOGIN_PATH);
   };
+
   continueWithoutBankCoupon = async () => {
     const bankCouponCode = localStorage.getItem(BANK_COUPON_COOKIE);
-    const releaseCouponCode = await this.props.releaseBankOffer(bankCouponCode);
-    if (releaseCouponCode.status === SUCCESS) {
-      localStorage.removeItem(BANK_COUPON_COOKIE);
-      this.props.ownProps.redoCreateJusPayApi();
-      this.props.hideModal();
-    }
-  };
-  continueWithoutUserCoupon = async () => {
-    const bankCouponCode = localStorage.getItem(BANK_COUPON_COOKIE);
     const userCouponCode = localStorage.getItem(COUPON_COOKIE);
+
     if (this.props.ownProps && this.props.ownProps.couponCode) {
       if (this.props.ownProps.couponCode === bankCouponCode) {
         const releaseCouponCode = await this.props.releaseBankOffer(
@@ -343,7 +336,7 @@ export default class ModalRoot extends React.Component {
           this.props.hideModal();
         }
       } else if (this.props.ownProps.couponCode === userCouponCode) {
-        const releaseCouponCode = await this.props.releaseCouponCode(
+        const releaseCouponCode = await this.props.releaseUserCoupon(
           userCouponCode
         );
         if (releaseCouponCode.status === SUCCESS) {
@@ -355,7 +348,7 @@ export default class ModalRoot extends React.Component {
     } else {
       Promise.all([
         bankCouponCode && this.props.releaseBankOffer(bankCouponCode),
-        userCouponCode && this.props.releaseCouponCode(userCouponCode)
+        userCouponCode && this.props.releaseUserCoupon(userCouponCode)
       ]).then(() => {
         localStorage.removeItem(BANK_COUPON_COOKIE);
         localStorage.removeItem(COUPON_COOKIE);
