@@ -47,7 +47,10 @@ export default class DeliveryInformations extends React.Component {
     if (!this.props.available) {
       typeName = `${typeName}`;
     }
-
+    let showRadioButton =
+      this.props.type === COLLECT
+        ? this.props.type === COLLECT && this.props.cliqPiqSelected
+        : true;
     return (
       <div className={styles.base}>
         <div
@@ -55,8 +58,8 @@ export default class DeliveryInformations extends React.Component {
             this.props.available ? styles.dataHolder : styles.notAvailable
           }
         >
-          {this.props.onSelect &&
-            this.props.type !== COLLECT && (
+          {showRadioButton &&
+            this.props.onSelect && (
               <div
                 className={styles.checkboxHolder}
                 onClick={() => {

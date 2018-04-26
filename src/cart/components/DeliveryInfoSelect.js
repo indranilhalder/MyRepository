@@ -38,6 +38,7 @@ export default class DeliveryInfoSelect extends React.Component {
               showCliqAndPiqButton={true}
               available={true}
               isClickable={this.props.isClickable}
+              cliqPiqSelected={this.props.cliqPiqSelected}
             />
           );
         })}

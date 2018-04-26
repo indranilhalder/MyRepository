@@ -320,6 +320,13 @@ export const EMI_ITEM_BREAK_UP_DETAILS_SUCCESS =
 export const EMI_ITEM_BREAK_UP_DETAILS_FAILURE =
   "EMI_ITEM_BREAK_UP_DETAILS_FAILURE";
 
+export const PAYMENT_FAILURE_ORDER_DETAILS_REQUEST =
+  "PAYMENT_FAILURE_ORDER_DETAILS_REQUEST";
+export const PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS =
+  "PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS";
+export const PAYMENT_FAILURE_ORDER_DETAILS_FAILURE =
+  "PAYMENT_FAILURE_ORDER_DETAILS_FAILURE";
+
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
@@ -3870,6 +3877,7 @@ export function removeNoCostEmi(couponCode) {
         }&cartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
+
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
@@ -3933,3 +3941,57 @@ export function getItemBreakUpDetails(couponCode) {
     }
   };
 }
+
+export function getPaymentFailureOrderDetailsRequest() {
+  return {
+    type: PAYMENT_FAILURE_ORDER_DETAILS_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function getPaymentFailureOrderDetailsSuccess(paymentFailureOrderDetails) {
+  return {
+    type: PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS,
+    status: SUCCESS,
+    paymentFailureOrderDetails
+  };
+}
+
+export function getPaymentFailureOrderDetailsFailure(error) {
+  return {
+    type: PAYMENT_FAILURE_ORDER_DETAILS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getPaymentFailureOrderDetails() {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    const cartGuId = JSON.parse(cartDetails).guid;
+    dispatch(getPaymentFailureOrderDetailsRequest());
+    try {
+
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/payments/failedorderdetails?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartGuId}`
+      );
+      const resultJson = await result.json();
+      console.log(resultJson);
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(getPaymentFailureOrderDetailsSuccess(resultJson));
+    } catch (e) {
+      dispatch(getPaymentFailureOrderDetailsFailure(e.message));
+    }
+  };
+}
+
