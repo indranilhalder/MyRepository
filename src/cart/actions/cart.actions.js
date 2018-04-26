@@ -2363,7 +2363,6 @@ export function createJusPayOrder(
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-      console.log(resultJsonStatus);
       if (resultJsonStatus.status) {
         if (
           resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
@@ -2545,7 +2544,6 @@ export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
 }
 
 export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
-  console.log(cardDetails, cartItem);
   let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
