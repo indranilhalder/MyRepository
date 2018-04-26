@@ -99,15 +99,23 @@ export default class EditAccountDetails extends React.Component {
         <div className={styles.base}>
           <div className={styles.profileImage}>
             <ProfilePicture
-              firstName={this.state.firstName}
-              lastName={this.state.lastName}
+              firstName={
+                this.state.firstName !== "undefined" ? this.state.firstName : ""
+              }
+              lastName={
+                this.state.lastName !== "undefined" ? this.state.lastName : ""
+              }
             />
           </div>
           <div className={styles.holder}>
             <div className={styles.container}>
               <Input2
                 placeholder="First Name"
-                value={this.state.firstName}
+                value={
+                  this.state.firstName !== "undefined"
+                    ? this.state.firstName
+                    : ""
+                }
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
                 height={33}
@@ -117,7 +125,9 @@ export default class EditAccountDetails extends React.Component {
             <div className={styles.container}>
               <Input2
                 placeholder="Last Name"
-                value={this.state.lastName}
+                value={
+                  this.state.lastName !== "undefined" ? this.state.lastName : ""
+                }
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
                 height={33}
