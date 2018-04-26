@@ -64,6 +64,7 @@ export default class CartItem extends React.Component {
             productName={this.props.productName}
             productDetails={this.props.productDetails}
             price={this.props.price}
+            isOutOfStock={this.props.isOutOfStock}
             isServiceAvailable={this.props.productIsServiceable}
             onClickImage={() => this.onClick()}
           />
