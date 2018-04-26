@@ -404,7 +404,7 @@ class CartPage extends React.Component {
                           ? parseInt(product.maxQuantityAllowed, 10)
                           : product.availableStockCount
                       }
-                      isOutOfStock={true}
+                      isOutOfStock={product.isOutOfStock}
                       qtySelectedByUser={product.qtySelectedByUser}
                       isClickable={false}
                     />
