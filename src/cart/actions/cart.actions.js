@@ -3982,9 +3982,7 @@ export function getPaymentFailureOrderDetails() {
         }&cartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
