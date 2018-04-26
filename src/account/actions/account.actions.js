@@ -47,8 +47,12 @@ import {
   setDataLayerForFollowAndUnFollowBrand,
   ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS
 } from "../../lib/adobeUtils";
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
-
+export const UPDATE_FACETS = "UPDATE_FACETS";
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
 export const GET_USER_DETAILS_FAILURE = "GET_USER_DETAILS_FAILURE";
@@ -1012,7 +1016,6 @@ export function removeSavedCardDetails(userId, customerAccessToken) {
     }
   };
 }
-
 export function getAllOrdersRequest() {
   return {
     type: GET_ALL_ORDERS_REQUEST,
@@ -1035,11 +1038,12 @@ export function getAllOrdersFailure(error) {
     error
   };
 }
-export function getAllOrdersDetails() {
+export function getAllOrdersDetails(suffix: null, paginated: false) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getAllOrdersRequest());
+    dispatch(showSecondaryLoader());
     try {
       const result = await api.get(
         `${USER_PATH}/${
@@ -1055,9 +1059,18 @@ export function getAllOrdersDetails() {
         throw new Error(resultJsonStatus.message);
       }
       setDataLayer(ADOBE_MY_ACCOUNT_ORDER_HISTORY);
-      dispatch(getAllOrdersSuccess(resultJson));
+      if (paginated) {
+        if (resultJson) {
+          dispatch(getAllOrdersSuccess(resultJson, true));
+          dispatch(hideSecondaryLoader());
+        }
+      } else {
+        dispatch(getAllOrdersSuccess(resultJson, paginated));
+        dispatch(hideSecondaryLoader());
+      }
     } catch (e) {
-      dispatch(getAllOrdersFailure(e.message));
+      dispatch(hideSecondaryLoader());
+      dispatch(getAllOrdersFailure(e.message, paginated));
     }
   };
 }
