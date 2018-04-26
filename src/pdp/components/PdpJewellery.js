@@ -47,7 +47,6 @@ export default class PdpJewellery extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showPriceBreakUp: false,
       showProductDetails: false
     };
   }
@@ -151,9 +150,7 @@ export default class PdpJewellery extends React.Component {
       this.props.showPincodeModal(this.props.match.params[1]);
     }
   }
-  showPriceBreakUp() {
-    this.setState({ showPriceBreakUp: true });
-  }
+
   showProductDetails = () => {
     this.setState({ showProductDetails: true });
   };
@@ -171,9 +168,17 @@ export default class PdpJewellery extends React.Component {
         sizeSelected: this.checkIfSizeSelected(),
         productId: this.props.productDetails.productListingId,
         showSizeGuide: this.props.showSizeGuide,
+        headerText: this.props.productDetails.isSizeOrLength,
         hasSizeGuide: this.props.productDetails.showSizeGuide,
         data: this.props.productDetails.variantOptions
       });
+    }
+  };
+  showPriceBreakup = () => {
+    if (this.props.showPriceBreakup) {
+      this.props.showPriceBreakup(
+        this.props.productDetails.priceBreakUpDetailsMap
+      );
     }
   };
   checkIfSizeSelected = () => {
@@ -211,7 +216,6 @@ export default class PdpJewellery extends React.Component {
   };
   render() {
     const productData = this.props.productDetails;
-    console.log(productData);
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
           .map(galleryImageList => {
@@ -292,11 +296,9 @@ export default class PdpJewellery extends React.Component {
               averageRating={productData.averageRating}
               discount={productData.discount}
               brandUrl={productData.brandURL}
-              hasPriceBreakUp={productData.priceBreakUpDetailsMap}
+              hasPriceBreakUp={productData.showPriceBrkUpPDP === "Yes"}
               history={this.props.history}
-              showPriceBreakUp={() => {
-                this.showPriceBreakUp();
-              }}
+              showPriceBreakUp={this.showPriceBreakup}
             />
           </div>
           {productData.details &&
@@ -383,7 +385,7 @@ please try another pincode"
               </PdpLink>
             </div>
           )}
-          <div className={styles.details} id="priceBreakup">
+          <div className={styles.details}>
             {productData.details && (
               <Accordion
                 text="Product Description"
@@ -400,13 +402,19 @@ please try another pincode"
                 data={productData.fineJewelleryClassificationList}
               />
             )}
+            {productData.priceBreakUpDetailsMap &&
+              productData.showPriceBrkUpPDP === "Yes" && (
+                <PriceBreakUp data={productData.priceBreakUpDetailsMap} />
+              )}
             {productData.returnAndRefund && (
               <Accordion text="Return & Refunds" headerFontSize={16}>
                 {productData.returnAndRefund.map(val => {
                   return (
                     <div
                       className={styles.list}
-                      dangerouslySetInnerHTML={{ __html: val.refundReturnItem }}
+                      dangerouslySetInnerHTML={{
+                        __html: val.refundReturnItem
+                      }}
                     />
                   );
                 })}
