@@ -445,7 +445,6 @@ class CheckOutPage extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.cart.getUserAddressStatus === SUCCESS &&
-      !this.state.addressId &&
       nextProps.cart &&
       nextProps.cart.userAddress &&
       nextProps.cart.userAddress.addresses

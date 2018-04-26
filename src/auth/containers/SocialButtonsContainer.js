@@ -226,7 +226,6 @@ const mapDispatchToProps = dispatch => {
         );
         if (loginUserResponse.status === SUCCESS) {
           const cartVal = await dispatch(getCartId());
-
           if (
             cartVal.status === SUCCESS &&
             cartVal.cartDetails &&
@@ -265,6 +264,15 @@ const mapDispatchToProps = dispatch => {
                 mergeCartId(createdCartVal.cartDetails.guid)
               );
               if (mergeCartResponse.status === SUCCESS) {
+                dispatch(setIfAllAuthCallsHaveSucceeded());
+              } else {
+                // ignore the anonymous cart
+                // use the generated cart
+                Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+                Cookies.createCookie(
+                  CART_DETAILS_FOR_LOGGED_IN_USER,
+                  JSON.stringify(createdCartVal.cartDetails)
+                );
                 dispatch(setIfAllAuthCallsHaveSucceeded());
               }
             }

@@ -34,41 +34,47 @@ class FeedComponent extends React.Component {
         <MediaQuery query="(max-device-width: 1024px)">
           {banner && <div className={styles.banner}>{banner}</div>}
         </MediaQuery>
-        <Carousel
-          {...carouselOptions}
-          banner={banner}
-          bannerWidth="42%"
-          elementWidthDesktop={33.333}
+        <div
+          className={
+            backgroundColor ? styles.productHolder : styles.bannerProductHolder
+          }
         >
-          {data &&
-            data.map((datum, i) => {
-              return (
-                <ProductModule
-                  key={i}
-                  isWhite={
-                    carouselOptions
-                      ? carouselOptions.isWhite
+          <Carousel
+            {...carouselOptions}
+            banner={banner}
+            bannerWidth="42%"
+            elementWidthDesktop={33.333}
+          >
+            {data &&
+              data.map((datum, i) => {
+                return (
+                  <ProductModule
+                    key={i}
+                    isWhite={
+                      carouselOptions
                         ? carouselOptions.isWhite
+                          ? carouselOptions.isWhite
+                          : false
                         : false
-                      : false
-                  }
-                  productImage={datum.image}
-                  title={datum.title}
-                  price={datum.price}
-                  discountPrice={datum.discountPrice}
-                  description={datum.description}
-                  onDownload={datum.onDownload}
-                  webURL={datum.webURL}
-                  productCode={datum.productListingId}
-                  showWishListButton={false}
-                  ussId={datum.winningUssID}
-                  onClick={this.onClick}
-                  {...rest}
-                  {...datum}
-                />
-              );
-            })}
-        </Carousel>
+                    }
+                    productImage={datum.image}
+                    title={datum.title}
+                    price={datum.price}
+                    discountPrice={datum.discountPrice}
+                    description={datum.description}
+                    onDownload={datum.onDownload}
+                    webURL={datum.webURL}
+                    productCode={datum.productListingId}
+                    showWishListButton={false}
+                    ussId={datum.winningUssID}
+                    onClick={this.onClick}
+                    {...rest}
+                    {...datum}
+                  />
+                );
+              })}
+          </Carousel>
+        </div>
       </div>
     );
   }

@@ -382,6 +382,17 @@ export default class PdpApparel extends React.Component {
             </div>
           )}
           <div className={styles.details}>
+            {productData.productDescription && (
+              <Accordion
+                text="Product Description"
+                headerFontSize={16}
+                isOpen={true}
+              >
+                <div className={styles.accordionContent}>
+                  {productData.productDescription}
+                </div>
+              </Accordion>
+            )}
             <Accordion text="Overview" headerFontSize={16}>
               {productData.classificationList &&
                 productData.classificationList.map(value => {
@@ -413,12 +424,6 @@ export default class PdpApparel extends React.Component {
                   );
                 })}
             </Accordion>
-            {productData.styleNote && (
-              <ProductFeature
-                heading="Style Note"
-                content={productData.styleNote}
-              />
-            )}
             {productData.knowMore && (
               <Accordion text="Know More" headerFontSize={16}>
                 {productData.knowMore &&
