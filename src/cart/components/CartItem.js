@@ -54,7 +54,7 @@ export default class CartItem extends React.Component {
   render() {
     const fetchedQuantityList = [];
     for (let i = 1; i <= this.props.maxQuantityAllowed; i++) {
-      fetchedQuantityList.push({ value: i.toString() });
+      fetchedQuantityList.push({ value: i.toString(), label: i.toString() });
     }
     return (
       <div className={styles.base}>

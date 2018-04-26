@@ -164,6 +164,7 @@ export default class AddDeliveryAddress extends React.Component {
     this.setState({
       postalCode: "",
       firstName: "",
+      lastName: "",
       line2: "",
       town: "",
       state: "",
@@ -252,7 +253,7 @@ export default class AddDeliveryAddress extends React.Component {
           <div className={styles.name}>
             <Input2
               option={this.state.options}
-              placeholder="Name*"
+              placeholder="First Name*"
               value={
                 this.props.firstName
                   ? this.props.firstName
@@ -263,6 +264,18 @@ export default class AddDeliveryAddress extends React.Component {
               height={33}
             />
           </div>
+        </div>
+        <div className={styles.content}>
+          <Input2
+            boxy={true}
+            placeholder="Last Name*"
+            value={
+              this.props.lastName ? this.props.lastName : this.state.lastName
+            }
+            onChange={lastName => this.onChange({ lastName })}
+            textStyle={{ fontSize: 14 }}
+            height={33}
+          />
         </div>
         <div className={styles.content}>
           <TextArea
