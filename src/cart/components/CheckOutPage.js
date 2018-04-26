@@ -286,7 +286,7 @@ class CheckOutPage extends React.Component {
                   onPiq={() => this.getAllStores(val.USSID)}
                   onClickImage={() => this.onClickImage(val.productcode)}
                   isClickable={true}
-                  cliqPiqSelected={this.state.cliqPiqSelected}
+
                 />
               </div>
             );
