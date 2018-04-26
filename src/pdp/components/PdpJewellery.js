@@ -170,8 +170,7 @@ export default class PdpJewellery extends React.Component {
         showSizeGuide: this.props.showSizeGuide,
         headerText: this.props.productDetails.isSizeOrLength,
         hasSizeGuide: this.props.productDetails.showSizeGuide,
-        data: this.props.productDetails.variantOptions,
-        headerText: this.props.productDetails.isSizeOrLength
+        data: this.props.productDetails.variantOptions
       });
     }
   };
