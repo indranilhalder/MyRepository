@@ -881,8 +881,7 @@ class CheckOutPage extends React.Component {
           this.props.softReservationPaymentForSavedCard(
             this.state.savedCardDetails,
             this.state.addressId,
-            this.state.paymentModeSelected,
-            this.state.selectedBankOfferCode
+            this.state.paymentModeSelected
           );
         }
       }

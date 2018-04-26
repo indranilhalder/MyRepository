@@ -2477,7 +2477,7 @@ export function createJusPayOrderForNetBanking(
         ) {
           const redoCreateJusPayApi = () =>
             dispatch(
-              createJusPayOrderForSavedCards(
+              createJusPayOrderForNetBanking(
                 paymentMethodType,
                 bankName,
                 pinCode,
