@@ -51,7 +51,7 @@ export default class EditAccountDetails extends React.Component {
           nextProps.userDetails.dateOfBirth.split("IST").join()
         );
 
-        formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
+        formattedDate = moment(dateOfBirth).format("DD/MM/YYYY");
       }
 
       this.setState({
@@ -73,6 +73,7 @@ export default class EditAccountDetails extends React.Component {
   }
   onChangeDateOfBirth = val => {
     let formattedDate = moment(val).format("DD/MM/YYYY");
+
     this.setState({ dateOfBirth: formattedDate });
   };
   updateProfile = () => {
