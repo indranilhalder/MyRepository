@@ -63,7 +63,11 @@ export default class SelectBoxMobile extends React.Component {
       arrow = WhiteArrow;
     }
     let themeClass = styles.base;
-
+    if (this.props.disabled) {
+      themeClass = styles.disabled;
+    } else {
+      themeClass = styles.base;
+    }
     if (this.props.theme === BLACK_BOX) {
       if (this.props.disabled) {
         themeClass = styles.disabledBlack;
@@ -78,7 +82,7 @@ export default class SelectBoxMobile extends React.Component {
         themeClass = styles.hollowBox;
       }
     }
-    if (this.props.arrowColour === GREY_BOX) {
+    if (this.props.theme === GREY_BOX) {
       if (this.props.disabled) {
         themeClass = styles.disabled;
       } else {
