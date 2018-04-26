@@ -27,6 +27,9 @@ export const UPDATE_REFUND_DETAILS_POPUP = "UpdateRefundDetailsPopup";
 export const NEW_PASSWORD = "NewPassword";
 export const GENERATE_OTP_FOR_EGV = "GenerateOtpForEgv";
 export const VERIFY_OTP = "verifyOtp";
+export const INVALID_BANK_COUPON_POPUP = "INVALID_BANK_COUPON_POPUP";
+export const INVALID_USER_COUPON_POPUP = "INVALID_USER_COUPON_POPUP";
+
 export function showModal(type, ownProps) {
   return {
     type: SHOW_MODAL,

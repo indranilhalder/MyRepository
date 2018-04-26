@@ -9,9 +9,9 @@ export default class DifferentAccountPopup extends React.Component {
       this.props.changePaymentMethod();
     }
   }
-  continueWithCoupon() {
-    if (this.props.continueWithCoupon) {
-      this.props.continueWithCoupon();
+  continueWithoutCoupon() {
+    if (this.props.continueWithoutCoupon) {
+      this.props.continueWithoutCoupon();
     }
   }
   render() {
@@ -54,7 +54,7 @@ export default class DifferentAccountPopup extends React.Component {
               height={36}
               label="Continue without coupon"
               width={211}
-              onClick={() => this.continueWithCoupon()}
+              onClick={() => this.continueWithoutCoupon()}
             />
           </div>
         </div>
@@ -65,6 +65,6 @@ export default class DifferentAccountPopup extends React.Component {
 DifferentAccountPopup.propTypes = {
   cardLogo: PropTypes.string,
   changePaymentMethod: PropTypes.func,
-  continueWithCoupon: PropTypes.func,
+  continueWithoutCoupon: PropTypes.func,
   couponCode: PropTypes.string
 };
