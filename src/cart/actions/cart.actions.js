@@ -26,6 +26,7 @@ import {
   JUS_PAY_CHARGED,
   FAILURE_LOWERCASE
 } from "../../lib/constants";
+import queryString, { parse } from "query-string";
 
 import {
   setDataLayer,
@@ -3969,11 +3970,12 @@ export function getPaymentFailureOrderDetails() {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-    const cartGuId = JSON.parse(cartDetails).guid;
-    dispatch(getPaymentFailureOrderDetailsRequest());
-    try {
 
+    let url=queryString.parse(window.location.search);
+    const cartGuId = url && url.value;
+
+    dispatch(getPaymentFailureOrderDetailsRequest());
+     try {
       const result = await api.get(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName

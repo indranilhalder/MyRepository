@@ -627,7 +627,9 @@ class CheckOutPage extends React.Component {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
-
+    if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+      this.props.getPaymentFailureOrderDetails();
+    }
     if (value === PAYMENT_CHARGED) {
       this.setState({ orderId: orderId });
 
