@@ -4,6 +4,7 @@
   flex-shrink: 0;
   overflow: hidden;
   cursor: pointer;
+  user-select: none;
 }
 .layer {
   width: 100%;
