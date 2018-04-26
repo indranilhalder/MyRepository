@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import ModalPanel from "./ModalPanel";
 import Loadable from "react-loadable";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
-
+import PriceBreakupModal from "../../pdp/components/PriceBreakupModal";
 import * as Cookie from "../../lib/Cookie.js";
 import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
 import ItemLevelPopup from "../../cart/components/ItemLevelPopup.js";
@@ -477,9 +477,14 @@ export default class ModalRoot extends React.Component {
           emiTermsAndConditions={this.props.ownProps}
           closeModal={() => this.handleClose()}
         />
+      ),
+      PriceBreakup: (
+        <PriceBreakupModal
+          data={this.props.ownProps}
+          closeModal={() => this.handleClose()}
+        />
       )
     };
-
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
     //let SelectedModal = MODAL_COMPONENTS["NewPassword"];
     const Modal = this.props.modalStatus ? (

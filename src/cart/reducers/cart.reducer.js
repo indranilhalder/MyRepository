@@ -624,8 +624,11 @@ const cart = (
         loading: true
       });
     case cartActions.APPLY_BANK_OFFER_SUCCESS:
+      const currentCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      currentCartDetailCNC.cartAmount = action.bankOffer.cartAmount;
       return Object.assign({}, state, {
         bankOfferStatus: action.status,
+        cartDetailsCNC: currentCartDetailCNC,
         bankOffer: action.bankOffer,
         loading: false
       });

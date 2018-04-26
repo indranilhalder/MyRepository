@@ -1,15 +1,9 @@
 import React from "react";
 import styles from "./JewelleryDetailsAndLink.css";
-import { HashLink as Link } from "react-router-hash-link";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 export default class JewelleryDetailsAndLink extends React.Component {
-  handleClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
-    }
-  }
   readMore() {
     if (this.props.readMore) {
       this.props.readMore();
@@ -68,16 +62,14 @@ export default class JewelleryDetailsAndLink extends React.Component {
                 </div>
               )}
             {this.props.hasPriceBreakUp && (
-              <div className={styles.button} onClick={() => this.handleClick()}>
-                <Link to="#priceBreakup">
-                  <UnderLinedButton
-                    label={this.props.label}
-                    color="#ff1744"
-                    onClick={() => {
-                      this.handlePriceBreakup();
-                    }}
-                  />
-                </Link>
+              <div className={styles.button}>
+                <UnderLinedButton
+                  label={this.props.label}
+                  color="#ff1744"
+                  onClick={() => {
+                    this.handlePriceBreakup();
+                  }}
+                />
               </div>
             )}
           </div>
