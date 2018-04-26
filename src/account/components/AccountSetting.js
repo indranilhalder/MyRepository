@@ -10,8 +10,12 @@ export default class AccountSetting extends React.Component {
     }
   };
   render() {
-    const heading = this.props.heading;
-    const name = heading.trim();
+    let heading, name;
+    if (this.props.heading) {
+      heading = this.props.heading;
+      name = heading.trim();
+    }
+
     return (
       <div className={styles.base}>
         <div className={styles.accountHolder}>
