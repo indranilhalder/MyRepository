@@ -172,7 +172,11 @@ const cart = (
 
     emiItemBreakUpStatus: null,
     emiItemBreakUpDetails: null,
-    emiItemBreakUpError: null
+    emiItemBreakUpError: null,
+
+    paymentFailureOrderDetailsStatus: null,
+    paymentFailureOrderDetailsError: null,
+    paymentFailureOrderDetails: null
   },
   action
 ) => {
@@ -1244,6 +1248,25 @@ const cart = (
         loading: false
       });
 
+    case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        paymentFailureOrderDetailsStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        paymentFailureOrderDetailsStatus: action.status,
+        paymentFailureOrderDetails: action.noCostEmiResult,
+        loading: false
+      });
+
+    case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        paymentFailureOrderDetailsStatus: action.status,
+        paymentFailureOrderDetailsError: action.error,
+        loading: false
+      });
     default:
       return state;
   }
