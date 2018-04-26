@@ -85,6 +85,7 @@ export default class SelectBoxMobile extends React.Component {
         themeClass = styles.base;
       }
     }
+    console.log(this.props);
     return (
       <div
         className={themeClass}
