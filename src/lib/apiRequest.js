@@ -20,7 +20,6 @@ if (
   API_URL_ROOT = "https://stg.tatacliq.com/marketplacewebservices";
 }
 
-API_URL_ROOT = "https://p2tmppprd.tataunistore.com/marketplacewebservices";
 export const API_URL_ROOT_DUMMY =
   "https://www.tatacliq.com/marketplacewebservices";
 // export const API_URL_ROOT = API_URL_ROOT_DUMMY;
