@@ -11,6 +11,7 @@ export const ADDRESS = "Address";
 export const EMI_MODAL = "EmiModal";
 export const OFFER_MODAL = "OfferModal";
 export const SIZE_SELECTOR = "SizeSelector";
+export const PRICE_BREAKUP = "PriceBreakup";
 export const BANK_OFFERS = "BankOffers";
 export const OTP_LOGIN_MODAL = "OtpLoginModal";
 export const UPDATE_PROFILE_OTP_VERIFICATION = "UpdateProfileOtpVerification";
