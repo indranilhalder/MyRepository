@@ -87,14 +87,22 @@ export async function get(url) {
   const resultClone = result.clone();
   const resultJson = await result.json();
   const errorStatus = ErrorHandling.getFailureResponse(resultJson);
-  if (!errorStatus.status || !isInvalidAccessTokenError(errorStatus.message)) {
-    return resultClone;
+
+  try {
+    if (
+      !errorStatus.status ||
+      !isInvalidAccessTokenError(errorStatus.message)
+    ) {
+      return resultClone;
+    }
+    const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
+      errorStatus.message,
+      url
+    );
+    return await coreGet(newUrl);
+  } catch (e) {
+    throw e;
   }
-  const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
-    errorStatus.message,
-    url
-  );
-  return await coreGet(newUrl);
 }
 
 async function corePostFormData(url, payload) {
@@ -109,16 +117,24 @@ export async function postFormData(url, payload) {
   const resultClone = result.clone();
   const resultJson = await result.json();
   const errorStatus = ErrorHandling.getFailureResponse(resultJson);
-  if (!errorStatus.status || !isInvalidAccessTokenError(errorStatus.message)) {
-    return resultClone;
+
+  try {
+    if (
+      !errorStatus.status ||
+      !isInvalidAccessTokenError(errorStatus.message)
+    ) {
+      return resultClone;
+    }
+
+    const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
+      errorStatus.message,
+      url
+    );
+
+    return await corePostFormData(newUrl, payload);
+  } catch (e) {
+    throw e;
   }
-
-  const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
-    errorStatus.message,
-    url
-  );
-
-  return await corePostFormData(newUrl, payload);
 }
 
 export async function post(path, postData, doNotUseApiSuffix: true) {
@@ -127,10 +143,6 @@ export async function post(path, postData, doNotUseApiSuffix: true) {
   const resultJson = await result.json();
   const errorStatus = ErrorHandling.getFailureResponse(resultJson);
   try {
-    if (!errorStatus.status) {
-      // there was no error
-      return resultClone;
-    }
     if (
       !errorStatus.status ||
       !isInvalidAccessTokenError(errorStatus.message)
