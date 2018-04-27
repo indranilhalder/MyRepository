@@ -9,7 +9,7 @@ import ColourButton from "../../general/components/ColourButton";
 import SizeSelector from "./SizeSelector";
 import PriceBreakUp from "./PriceBreakUp";
 import OfferCard from "./OfferCard";
-import ProductFeature from "./ProductFeature";
+import OtherSellersLink from "./OtherSellersLink";
 import PdpLink from "./PdpLink";
 import PdpDeliveryModes from "./PdpDeliveryModes";
 import JewelleryClassification from "./JewelleryClassification";
@@ -377,14 +377,12 @@ please try another pincode"
               deliveryModesATP={productData.deliveryModesATP}
             />
           )}
-
-          {productData.winningSellerName && (
-            <div className={styles.separator}>
-              <PdpLink onClick={this.goToSellerPage} noLink={!hasOtherSellers}>
-                <div className={styles.sellers}>{otherSellersText}</div>
-              </PdpLink>
-            </div>
-          )}
+          <div className={styles.separator}>
+            <OtherSellersLink
+              otherSellers={productData.otherSellers}
+              winningSeller={productData.winningSellerName}
+            />
+          </div>
           <div className={styles.details}>
             {productData.details && (
               <Accordion

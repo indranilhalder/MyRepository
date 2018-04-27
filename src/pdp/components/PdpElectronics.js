@@ -11,6 +11,7 @@ import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
 import ProductFeature from "./ProductFeature";
 import RatingAndTextLink from "./RatingAndTextLink";
+import OtherSellersLink from "./OtherSellersLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
@@ -323,24 +324,12 @@ please try another pincode"
               deliveryModesATP={productData.deliveryModesATP}
             />
           )}
-
-          {productData.otherSellers && (
-            <div className={styles.separator}>
-              <PdpLink
-                onClick={this.goToSellerPage}
-                noLink={
-                  productData.otherSellers &&
-                  !productData.otherSellers.filter(val => {
-                    return (
-                      val.availableStock !== "0" && val.availableStock !== "-1"
-                    );
-                  }).length > 0
-                }
-              >
-                <div className={styles.sellers}>{otherSellersText}</div>
-              </PdpLink>
-            </div>
-          )}
+          <div className={styles.separator}>
+            <OtherSellersLink
+              otherSellers={productData.otherSellers}
+              winningSeller={productData.winningSellerName}
+            />
+          </div>
           {productData.rootCategory !== "Watches" && (
             <div className={styles.details}>
               {productData.details && (
