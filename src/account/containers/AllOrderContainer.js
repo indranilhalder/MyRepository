@@ -3,7 +3,6 @@ import { getAllOrdersDetails } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import AllOrderDetails from "../components/AllOrderDetails";
 import { setHeaderText } from "../../general/header.actions";
-import { setPage } from "../../plp/actions/plp.actions.js";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getAllOrdersDetails: () => {
@@ -12,8 +11,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     setHeaderText: text => {
       dispatch(setHeaderText(text));
     },
-    paginate: (page, suffix) => {
-      dispatch(getAllOrdersDetails(suffix, true, false));
+    paginate: suffix => {
+      dispatch(getAllOrdersDetails(suffix, true)); //paginated is true
     }
   };
 };

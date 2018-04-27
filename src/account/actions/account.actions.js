@@ -1065,10 +1065,8 @@ export function getAllOrdersDetails(suffix: null, paginated: false) {
       }
       setDataLayer(ADOBE_MY_ACCOUNT_ORDER_HISTORY);
       if (paginated) {
-        if (resultJson) {
-          dispatch(getAllOrdersSuccess(resultJson, true));
-          dispatch(hideSecondaryLoader());
-        }
+        dispatch(getAllOrdersSuccess(resultJson, paginated));
+        dispatch(hideSecondaryLoader());
       } else {
         dispatch(getAllOrdersSuccess(resultJson, paginated));
         dispatch(hideSecondaryLoader());
