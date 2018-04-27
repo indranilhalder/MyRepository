@@ -44,7 +44,8 @@ import {
   getEmiTermsAndConditionsForBank,
   applyNoCostEmi,
   removeNoCostEmi,
-  getItemBreakUpDetails
+  getItemBreakUpDetails,
+  getPaymentFailureOrderDetails
 } from "../actions/cart.actions";
 import {
   showSecondaryLoader,
@@ -267,6 +268,9 @@ const mapDispatchToProps = dispatch => {
     },
     resetAutoPopulateDataForPinCode: () => {
       dispatch(getPinCodeSuccess(null));
+    },
+    getPaymentFailureOrderDetails: () => {
+      dispatch(getPaymentFailureOrderDetails());
     }
   };
 };

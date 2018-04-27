@@ -3,9 +3,14 @@ import ReactDOM from "react-dom";
 import ModalPanel from "./ModalPanel";
 import Loadable from "react-loadable";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
-
+import PriceBreakupModal from "../../pdp/components/PriceBreakupModal";
 import * as Cookie from "../../lib/Cookie.js";
-import { LOGGED_IN_USER_DETAILS } from "../../lib/constants.js";
+import {
+  LOGGED_IN_USER_DETAILS,
+  SUCCESS,
+  BANK_COUPON_COOKIE,
+  COUPON_COOKIE
+} from "../../lib/constants.js";
 import ItemLevelPopup from "../../cart/components/ItemLevelPopup.js";
 import TermsAndConditionsModal from "../../cart/components/TermsAndConditionsModal.js";
 import { LOGIN_PATH } from "../../lib/constants";
@@ -129,6 +134,13 @@ const KycApplicationFormWithBottomSlideModal = Loadable({
 const KycDetailPopUpWithBottomSlideModal = Loadable({
   loader: () =>
     import("../../account/components/KycDetailPopUpWithBottomSlideModal"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const InvalidBankCouponPopup = Loadable({
+  loader: () => import("../../cart/components/DifferentAccountPopup"),
   loading() {
     return <Loader />;
   }
@@ -308,7 +320,45 @@ export default class ModalRoot extends React.Component {
     this.handleClose();
     this.props.history.push(LOGIN_PATH);
   };
+
+  continueWithoutBankCoupon = async () => {
+    const bankCouponCode = localStorage.getItem(BANK_COUPON_COOKIE);
+    const userCouponCode = localStorage.getItem(COUPON_COOKIE);
+
+    if (this.props.ownProps && this.props.ownProps.couponCode) {
+      if (this.props.ownProps.couponCode === bankCouponCode) {
+        const releaseCouponCode = await this.props.releaseBankOffer(
+          bankCouponCode
+        );
+        if (releaseCouponCode.status === SUCCESS) {
+          localStorage.removeItem(BANK_COUPON_COOKIE);
+          this.props.ownProps.redoCreateJusPayApi();
+          this.props.hideModal();
+        }
+      } else if (this.props.ownProps.couponCode === userCouponCode) {
+        const releaseCouponCode = await this.props.releaseUserCoupon(
+          userCouponCode
+        );
+        if (releaseCouponCode.status === SUCCESS) {
+          localStorage.removeItem(COUPON_COOKIE);
+          this.props.ownProps.redoCreateJusPayApi();
+          this.props.hideModal();
+        }
+      }
+    } else {
+      Promise.all([
+        bankCouponCode && this.props.releaseBankOffer(bankCouponCode),
+        userCouponCode && this.props.releaseUserCoupon(userCouponCode)
+      ]).then(() => {
+        localStorage.removeItem(BANK_COUPON_COOKIE);
+        localStorage.removeItem(COUPON_COOKIE);
+        this.props.ownProps.redoCreateJusPayApi();
+        this.props.hideModal();
+      });
+    }
+  };
   render() {
+    const couponCode = localStorage.getItem(BANK_COUPON_COOKIE);
     const MODAL_COMPONENTS = {
       RestorePassword: (
         <RestorePassword
@@ -477,9 +527,21 @@ export default class ModalRoot extends React.Component {
           emiTermsAndConditions={this.props.ownProps}
           closeModal={() => this.handleClose()}
         />
+      ),
+      INVALID_BANK_COUPON_POPUP: (
+        <InvalidBankCouponPopup
+          couponCode={couponCode}
+          changePaymentMethod={() => this.handleClose()}
+          continueWithoutCoupon={() => this.continueWithoutBankCoupon()}
+        />
+      ),
+      PriceBreakup: (
+        <PriceBreakupModal
+          data={this.props.ownProps}
+          closeModal={() => this.handleClose()}
+        />
       )
     };
-
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
     //let SelectedModal = MODAL_COMPONENTS["NewPassword"];
     const Modal = this.props.modalStatus ? (

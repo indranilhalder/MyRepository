@@ -47,10 +47,6 @@ export default class ReturnReasonAndModes extends React.Component {
     if (!data.reason) {
       this.props.displayToast("Please select reason ");
       return false;
-    }
-    if (!data.comment) {
-      this.props.displayToast("Please enter comment ");
-      return false;
     } else {
       this.props.onChange({ data });
       if (this.props.isCOD) {
