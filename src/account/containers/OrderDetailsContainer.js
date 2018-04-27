@@ -8,6 +8,10 @@ import {
   UPDATE_REFUND_DETAILS_POPUP,
   showModal
 } from "../../general/modal.actions";
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
 const mapDispatchToProps = dispatch => {
   return {
     fetchOrderDetails: orderId => {
@@ -24,6 +28,12 @@ const mapDispatchToProps = dispatch => {
     },
     showModal: orderDetails => {
       dispatch(showModal(UPDATE_REFUND_DETAILS_POPUP, orderDetails));
+    },
+    showSecondaryLoader: () => {
+      dispatch(showSecondaryLoader());
+    },
+    hideSecondaryLoader: () => {
+      dispatch(hideSecondaryLoader());
     }
   };
 };

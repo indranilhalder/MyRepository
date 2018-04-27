@@ -138,6 +138,11 @@ export default class OrderDetails extends React.Component {
     }
   }
   render() {
+    if (!this.props.orderDetails) {
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
+    }
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
