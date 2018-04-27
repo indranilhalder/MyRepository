@@ -33,7 +33,10 @@ class ProductSellerPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      priceValue: null
+      priceValue: null,
+      winningUssID: this.props.productDetails
+        ? this.props.productDetails.winningUssID
+        : null
     };
   }
   priceValue;
@@ -48,8 +51,10 @@ class ProductSellerPage extends Component {
   addToCart = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
-    productDetails.ussId = productDetails.quantity = PRODUCT_QUANTITY;
-    productDetails.ussId = this.props.productDetails.winningUssID;
+    productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.ussId = this.state.winningUssID
+      ? this.state.winningUssID
+      : this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -77,8 +82,9 @@ class ProductSellerPage extends Component {
   addToWishList = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
-    productDetails.ussId = this.props.productDetails.winningUssID;
-
+    productDetails.ussId = this.state.winningUssID
+      ? this.state.winningUssID
+      : this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -107,6 +113,11 @@ class ProductSellerPage extends Component {
   }
   onSortByPrice(val) {
     this.setState({ priceValue: val });
+  }
+  selectSeller(val) {
+    if (val) {
+      this.setState({ winningUssID: val.USSID });
+    }
   }
   sortedJobs(product) {
     switch (this.state.priceValue) {
@@ -153,6 +164,7 @@ class ProductSellerPage extends Component {
         .map(image => {
           return image[0].value;
         });
+
     return (
       mobileGalleryImages && (
         <PdpFrame
@@ -198,13 +210,15 @@ class ProductSellerPage extends Component {
             </div>
             <div>
               {product && (
-                <SellerWithMultiSelect limit={1}>
+                <SellerWithMultiSelect
+                  limit={1}
+                  onSelect={val => {
+                    this.selectSeller(val);
+                  }}
+                >
                   {product
                     .filter(val => {
-                      return (
-                        val.availableStock !== "0" &&
-                        val.availableStock !== "-1"
-                      );
+                      return parseInt(val.availableStock, 10) > 0;
                     })
                     .map((value, index) => {
                       return (
@@ -230,6 +244,37 @@ class ProductSellerPage extends Component {
                 </SellerWithMultiSelect>
               )}
             </div>
+
+            {product && (
+              <div>
+                {product
+                  .filter(val => {
+                    return parseInt(val.availableStock, 10) < 0;
+                  })
+                  .map((value, index) => {
+                    return (
+                      <SellerCard
+                        heading={value.sellerName}
+                        priceTitle={PRICE_TEXT}
+                        disabled={true}
+                        discountPrice={
+                          value.specialPriceSeller.formattedValueNoDecimal
+                        }
+                        price={value.mrpSeller.formattedValueNoDecimal}
+                        offerText={OFFER_AVAILABLE}
+                        deliveryText={DELIVERY_INFORMATION_TEXT}
+                        hasCod={value.isCOD === "Y"}
+                        hasEmi={value.isEMIEligible === "Y"}
+                        eligibleDeliveryModes={value.eligibleDeliveryModes}
+                        cashText={CASH_TEXT}
+                        policyText={DELIVERY_RATES}
+                        key={index}
+                        value={value}
+                      />
+                    );
+                  })}
+              </div>
+            )}
           </div>
         </PdpFrame>
       )

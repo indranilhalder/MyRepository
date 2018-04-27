@@ -6,6 +6,11 @@
   padding: 10px;
   overflow: hidden;
 }
+.faded {
+  composes: base;
+  opacity: 0.5;
+  pointer-events: none;
+}
 .textBox {
   width: 100%;
   height: auto;

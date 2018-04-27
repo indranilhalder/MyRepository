@@ -302,6 +302,7 @@ please try another pincode"
           )}
           <div className={styles.separator}>
             <OtherSellersLink
+              onClick={this.goToSellerPage}
               otherSellers={productData.otherSellers}
               winningSeller={productData.winningSellerName}
             />

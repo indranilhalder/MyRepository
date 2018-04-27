@@ -24,10 +24,18 @@ export default class OtherSellersLink extends React.Component {
       </div>
     );
   };
+  handleClick = () => {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  };
   render() {
     if (this.props.winningSeller) {
       return (
-        <PdpLink noLink={this.getValidSellerCount() === 0}>
+        <PdpLink
+          noLink={this.getValidSellerCount() === 0}
+          onClick={this.handleClick}
+        >
           {this.renderLink()}
         </PdpLink>
       );

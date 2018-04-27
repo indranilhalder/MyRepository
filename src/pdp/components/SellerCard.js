@@ -4,7 +4,7 @@ import CheckBox from "../../general/components/CheckBox";
 import PropTypes from "prop-types";
 export default class SellerCard extends React.Component {
   handleClick(val) {
-    if (this.props.selectItem) {
+    if (this.props.selectItem && !this.props.disabled) {
       this.props.selectItem(val);
     }
   }
@@ -18,13 +18,18 @@ export default class SellerCard extends React.Component {
     }
 
     return (
-      <div className={styles.base} onClick={() => this.handleClick(this.props)}>
+      <div
+        className={this.props.disabled ? styles.faded : styles.base}
+        onClick={() => this.handleClick(this.props)}
+      >
         <div className={styles.textBox}>
           <div className={styles.heading}>
             {this.props.heading}
-            <span className={styles.checkCircle}>
-              <CheckBox selected={this.props.selected} />
-            </span>
+            {!this.props.disabled && (
+              <span className={styles.checkCircle}>
+                <CheckBox selected={this.props.selected} />
+              </span>
+            )}
           </div>
           <div className={styles.priceTitle}>{this.props.priceTitle}:</div>
           {this.props.discountPrice &&
@@ -62,6 +67,7 @@ export default class SellerCard extends React.Component {
 SellerCard.propTypes = {
   heading: PropTypes.string,
   priceTitle: PropTypes.string,
+  disabled: PropTypes.bool,
   discountPrice: PropTypes.string,
   deliveryText: PropTypes.string,
   price: PropTypes.string,
