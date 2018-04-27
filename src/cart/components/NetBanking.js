@@ -56,7 +56,7 @@ export default class NetBanking extends React.Component {
     return (
       <div>
         {this.props.bankList && (
-          <Grid limit={1} offset={30} elementWidthMobile={25}>
+          <Grid limit={1} offset={30} elementWidthMobile={33.33}>
             {this.props.bankList.find(bank => {
               return (
                 bank.bankCode === axisBankCode ||
