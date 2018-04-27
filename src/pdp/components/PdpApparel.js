@@ -184,18 +184,6 @@ export default class PdpApparel extends React.Component {
           })
       : [];
 
-    let validSellersCount = 0;
-    if (
-      productData.otherSellers &&
-      productData.otherSellers.filter(val => {
-        return val.availableStock !== "0" && val.availableStock !== "-1";
-      }).length > 0
-    ) {
-      validSellersCount = productData.otherSellers.filter(val => {
-        return val.availableStock !== "0" && val.availableStock !== "-1";
-      }).length;
-    }
-
     if (productData) {
       let price = "";
       let discountPrice = "";
