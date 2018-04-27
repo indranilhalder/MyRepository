@@ -1,12 +1,9 @@
 import React from "react";
 import BrandLandingPageContainer from "../../blp/containers/BrandLandingPageContainer";
-import { Redirect } from "react-router";
 import Loader from "../../general/components/Loader";
 import ProductListingsContainer from "../containers/ProductListingsContainer";
-import {
-  BLP_OR_CLP_FEED_TYPE,
-  STATIC_CATEGORY_PAGES
-} from "../../lib/constants";
+import { BLP_OR_CLP_FEED_TYPE } from "../../lib/constants";
+import queryString from "query-string";
 
 export const CATEGORY_REGEX = /c-msh*/;
 export const BRAND_REGEX = /c-mbh*/;
@@ -73,6 +70,11 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     const url = this.props.location.pathname;
     let match;
     let searchText;
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    if (parsedQueryString && parsedQueryString.q) {
+      searchText = parsedQueryString.q;
+      return searchText;
+    }
     if (CATEGORY_REGEX.test(url)) {
       match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
       match = match.replace(BRAND_CATEGORY_PREFIX, "");
