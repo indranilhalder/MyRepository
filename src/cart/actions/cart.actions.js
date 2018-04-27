@@ -849,9 +849,9 @@ export function addUserAddress(userAddress, fromAccount) {
       setDataLayerForCheckoutDirectCalls(
         ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE
       );
-      dispatch(addUserAddressSuccess());
+      return dispatch(addUserAddressSuccess());
     } catch (e) {
-      dispatch(addUserAddressFailure(e.message));
+      return dispatch(addUserAddressFailure(e.message));
     }
   };
 }
@@ -4028,7 +4028,9 @@ export function getPaymentFailureOrderDetailsRequest() {
   };
 }
 
-export function getPaymentFailureOrderDetailsSuccess(paymentFailureOrderDetails) {
+export function getPaymentFailureOrderDetailsSuccess(
+  paymentFailureOrderDetails
+) {
   return {
     type: PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS,
     status: SUCCESS,
@@ -4049,11 +4051,11 @@ export function getPaymentFailureOrderDetails() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
-    let url=queryString.parse(window.location.search);
+    let url = queryString.parse(window.location.search);
     const cartGuId = url && url.value;
 
     dispatch(getPaymentFailureOrderDetailsRequest());
-     try {
+    try {
       const result = await api.get(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
@@ -4072,4 +4074,3 @@ export function getPaymentFailureOrderDetails() {
     }
   };
 }
-

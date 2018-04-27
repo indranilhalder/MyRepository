@@ -3,11 +3,17 @@ import { connect } from "react-redux";
 import { newReturnInitial, returnPinCode } from "../actions/account.actions";
 import ReturnAddressList from "../components/ReturnAddressList.js";
 import { addUserAddress } from "../../cart/actions/cart.actions.js";
+import { SUCCESS } from "../../lib/constants";
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    addUserAddress: (addressDetails, fromAccount) => {
-      dispatch(addUserAddress(addressDetails, fromAccount));
+    addUserAddress: async (addressDetails, fromAccount) => {
+      const addAddressResponse = await dispatch(
+        addUserAddress(addressDetails, fromAccount)
+      );
+      if (addAddressResponse.status === SUCCESS) {
+        ownProps.history.goBack();
+      }
     },
     newReturnInitial: (returnDetails, product) => {
       dispatch(newReturnInitial(returnDetails, product));

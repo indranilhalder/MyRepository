@@ -475,7 +475,7 @@ export function newReturnInitiateFailure(error) {
   };
 }
 
-export function newReturnInitial(returnDetails, product) {
+export function newReturnInitial(returnDetails, product: null) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -492,18 +492,20 @@ export function newReturnInitial(returnDetails, product) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      console.log(resultJsonStatus);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
-      dispatch(newReturnInitiateSuccess(resultJson));
-      setDataLayerForMyAccountDirectCalls(
-        ADOBE_MY_ACCOUNT_ORDER_RETURN,
-        product,
-        returnDetails
-      );
+      if (product) {
+        setDataLayerForMyAccountDirectCalls(
+          ADOBE_MY_ACCOUNT_ORDER_RETURN,
+          product,
+          returnDetails
+        );
+      }
+      return dispatch(newReturnInitiateSuccess(resultJson));
     } catch (e) {
-      dispatch(newReturnInitiateFailure(e.message));
+      return dispatch(newReturnInitiateFailure(e.message));
     }
   };
 }
