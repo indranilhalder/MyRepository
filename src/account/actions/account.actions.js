@@ -475,7 +475,7 @@ export function newReturnInitiateFailure(error) {
   };
 }
 
-export function newReturnInitial(returnDetails, product: null) {
+export function newReturnInitial(returnDetails, product = null) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
