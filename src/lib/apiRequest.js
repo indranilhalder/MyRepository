@@ -89,7 +89,11 @@ export async function get(url) {
   if (!errorStatus.status || !isInvalidAccessTokenError(errorStatus.message)) {
     return resultClone;
   }
-  return await handleRedoFunctionCall(errorStatus.message, url);
+  const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
+    errorStatus.message,
+    url
+  );
+  return await coreGet(newUrl);
 }
 
 async function corePostFormData(url, payload) {
@@ -107,20 +111,48 @@ export async function postFormData(url, payload) {
   if (!errorStatus.status || !isInvalidAccessTokenError(errorStatus.message)) {
     return resultClone;
   }
-  return await handleRedoFunctionCall(errorStatus.message, url);
+  const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
+    errorStatus.message,
+    url
+  );
+
+  return await corePostFormData(newUrl, payload);
 }
 
-async function handleRedoFunctionCall(message, url) {
+export async function post(path, postData, doNotUseApiSuffix: true) {
+  const result = await corePost(path, postData, doNotUseApiSuffix);
+  const resultClone = result.clone();
+  const resultJson = await result.json();
+  const errorStatus = ErrorHandling.getFailureResponse(resultJson);
+  if (!errorStatus.status) {
+    // there was no error
+    return resultClone;
+  }
+  if (!errorStatus.status || !isInvalidAccessTokenError(errorStatus.message)) {
+    return resultClone;
+  }
+  const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
+    errorStatus.message,
+    path
+  );
+
+  return await corePost(newUrl, postData);
+}
+
+async function handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
+  message,
+  url
+) {
   let newUrl = url;
   newUrl = await handleInvalidCustomerAccessToken(message, url);
   if (newUrl) {
-    return corePostFormData(newUrl);
+    return newUrl;
   }
   newUrl = await handleInvalidGlobalAccessToken(message, url);
   if (newUrl) {
-    return corePostFormData(newUrl);
+    return newUrl;
   }
-  return await corePostFormData(newUrl);
+  return newUrl;
 }
 
 async function handleInvalidCustomerAccessToken(message, oldUrl) {
@@ -170,38 +202,6 @@ function replaceOldCustomerCookie(url, newCustomerCookie) {
     oldCustomerCookie.access_token,
     newCustomerCookie.access_token
   );
-}
-
-export async function post(path, postData, doNotUseApiSuffix: true) {
-  const result = await corePost(path, postData, doNotUseApiSuffix);
-  const resultClone = result.clone();
-  const resultJson = await result.json();
-  const errorStatus = ErrorHandling.getFailureResponse(resultJson);
-  if (!errorStatus.status) {
-    // there was no error
-    return resultClone;
-  }
-
-  if (!isInvalidAccessTokenError(errorStatus.message)) {
-    return resultClone;
-  }
-
-  if (isCustomerAccessTokenFailure(errorStatus.message)) {
-    const customerAccessTokenResponse = await refreshCustomerAccessToken();
-    if (!customerAccessTokenResponse) {
-      throw new Error("Customer Access Token refresh failure");
-    }
-    // redo the call
-    return await corePost(path, postData, doNotUseApiSuffix);
-  }
-
-  if (isGlobalAccessTokenFailure(errorStatus.message)) {
-    const globalAccessTokenResponse = await refreshGlobalAccessToken();
-    if (!globalAccessTokenResponse) {
-      throw new Error("Global Access Token refresh failure");
-    }
-    return await corePost(path, postData, doNotUseApiSuffix);
-  }
 }
 
 async function refreshCustomerAccessToken() {
