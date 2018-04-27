@@ -94,9 +94,7 @@ export default class ReturnReasonAndModes extends React.Component {
       });
     } else if (mode === SELF_COURIER) {
       this.props.history.push({
-        pathname: `${RETURNS_PREFIX}/${
-          this.orderCode
-        }${RETURN_CLIQ_PIQ}${RETURNS_SELF_COURIER}`,
+        pathname: `${RETURNS_PREFIX}/${this.orderCode}${RETURNS_SELF_COURIER}`,
         state: {
           authorizedRequest: true
         }
