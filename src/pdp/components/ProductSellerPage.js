@@ -5,8 +5,8 @@ import SellerWithMultiSelect from "./SellerWithMultiSelect";
 import SellerCard from "./SellerCard";
 import PdpFrame from "./PdpFrame";
 import * as Cookie from "../../lib/Cookie";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
-import { reverse, sortBy } from "lodash";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
+
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -33,10 +33,10 @@ class ProductSellerPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      priceValue: null,
       winningUssID: this.props.productDetails
         ? this.props.productDetails.winningUssID
-        : null
+        : null,
+      sortOption: PRICE_LOW_TO_HIGH
     };
   }
   priceValue;
@@ -112,46 +112,37 @@ class ProductSellerPage extends Component {
     }
   }
   onSortByPrice(val) {
-    this.setState({ priceValue: val });
+    console.log(val);
+    this.setState({ sortOption: val.value });
   }
   selectSeller(val) {
-    if (val) {
-      this.setState({ winningUssID: val.USSID });
+    if (val && val[0]) {
+      this.setState({ winningUssID: val[0].USSID });
     }
   }
-  sortedJobs(product) {
-    switch (this.state.priceValue) {
-      case PRICE_LOW_TO_HIGH:
-        return reverse(product);
-      case PRICE_HIGH_TO_LOW:
-        return reverse(product);
-      default:
-        return product;
-    }
-  }
+
   render() {
-    let product = this.sortedJobs(
-      this.props.productDetails &&
-        this.props.productDetails.otherSellers &&
-        this.props.productDetails.otherSellers
-    );
+    console.log(this.state);
+    const sellers = this.props.productDetails
+      ? this.props.productDetails.otherSellers
+      : [];
     let availableSeller = {};
+    const availableSellers = sellers.filter(val => {
+      return parseInt(val.availableStock, 10) > 0;
+    });
+    const unAvailableSellers = sellers.filter(val => {
+      return parseInt(val.availableStock, 10) <= 0;
+    });
+    // console.log(availableSellers !== undefined ? availableSellers[0] : 0);
     let price;
-    if (product) {
-      availableSeller = product.filter(seller => {
-        if (seller.availableStock !== "0" && seller.availableStock !== "-1") {
-          return seller;
-        }
-      });
-      if (availableSeller) {
-        price = availableSeller[0].specialPriceSeller.doubleValue;
-        availableSeller.forEach(seller => {
-          if (price > seller.specialPriceSeller.doubleValue) {
-            price = seller.specialPriceSeller.doubleValue;
-          }
-          return price;
-        });
-      }
+    if (availableSellers && availableSellers[0]) {
+      price = availableSellers[0].specialPriceSeller.doubleValue;
+    }
+    let sortedAvailableSellers = availableSellers;
+    let sortedUnAvailableSellers = unAvailableSellers;
+    if (this.state.sortOption === PRICE_HIGH_TO_LOW) {
+      sortedAvailableSellers = availableSellers.reverse();
+      sortedUnAvailableSellers = unAvailableSellers.reverse();
     }
     const mobileGalleryImages =
       this.props.productDetails &&
@@ -194,10 +185,10 @@ class ProductSellerPage extends Component {
                 {price}
               </div>
               <div className={styles.price}>
-                <SelectBoxMobile
+                <SelectBoxMobile2
                   label={PRICE_LOW_TO_HIGH}
                   height={30}
-                  onChange={priceValue => this.onSortByPrice(priceValue)}
+                  onChange={val => this.onSortByPrice(val)}
                   theme={"hollowBox"}
                   arrowColour={"black"}
                   value={this.state.priceValue}
@@ -209,54 +200,18 @@ class ProductSellerPage extends Component {
               </div>
             </div>
             <div>
-              {product && (
+              {sortedAvailableSellers && (
                 <SellerWithMultiSelect
                   limit={1}
                   onSelect={val => {
                     this.selectSeller(val);
                   }}
                 >
-                  {product
-                    .filter(val => {
-                      return parseInt(val.availableStock, 10) > 0;
-                    })
-                    .map((value, index) => {
-                      return (
-                        <SellerCard
-                          heading={value.sellerName}
-                          priceTitle={PRICE_TEXT}
-                          discountPrice={
-                            value.specialPriceSeller.formattedValueNoDecimal
-                          }
-                          price={value.mrpSeller.formattedValueNoDecimal}
-                          offerText={OFFER_AVAILABLE}
-                          deliveryText={DELIVERY_INFORMATION_TEXT}
-                          hasCod={value.isCOD === "Y"}
-                          hasEmi={value.isEMIEligible === "Y"}
-                          eligibleDeliveryModes={value.eligibleDeliveryModes}
-                          cashText={CASH_TEXT}
-                          policyText={DELIVERY_RATES}
-                          key={index}
-                          value={value}
-                        />
-                      );
-                    })}
-                </SellerWithMultiSelect>
-              )}
-            </div>
-
-            {product && (
-              <div>
-                {product
-                  .filter(val => {
-                    return parseInt(val.availableStock, 10) < 0;
-                  })
-                  .map((value, index) => {
+                  {sortedAvailableSellers.map((value, index) => {
                     return (
                       <SellerCard
                         heading={value.sellerName}
                         priceTitle={PRICE_TEXT}
-                        disabled={true}
                         discountPrice={
                           value.specialPriceSeller.formattedValueNoDecimal
                         }
@@ -273,6 +228,34 @@ class ProductSellerPage extends Component {
                       />
                     );
                   })}
+                </SellerWithMultiSelect>
+              )}
+            </div>
+
+            {sortedUnAvailableSellers && (
+              <div>
+                {sortedUnAvailableSellers.map((value, index) => {
+                  return (
+                    <SellerCard
+                      heading={value.sellerName}
+                      priceTitle={PRICE_TEXT}
+                      disabled={true}
+                      discountPrice={
+                        value.specialPriceSeller.formattedValueNoDecimal
+                      }
+                      price={value.mrpSeller.formattedValueNoDecimal}
+                      offerText={OFFER_AVAILABLE}
+                      deliveryText={DELIVERY_INFORMATION_TEXT}
+                      hasCod={value.isCOD === "Y"}
+                      hasEmi={value.isEMIEligible === "Y"}
+                      eligibleDeliveryModes={value.eligibleDeliveryModes}
+                      cashText={CASH_TEXT}
+                      policyText={DELIVERY_RATES}
+                      key={index}
+                      value={value}
+                    />
+                  );
+                })}
               </div>
             )}
           </div>
