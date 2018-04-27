@@ -1723,57 +1723,6 @@ export function followAndUnFollowBrand(
     }
   };
 }
-export function getWishlistRequest() {
-  return {
-    type: GET_WISHLIST_REQUEST,
-    status: REQUESTING
-  };
-}
-export function getWishlistSuccess(wishlist) {
-  return {
-    type: GET_WISHLIST_SUCCESS,
-    status: SUCCESS,
-    wishlist
-  };
-}
-
-export function getWishlistFailure(error) {
-  return {
-    type: GET_WISHLIST_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-export function getWishList() {
-  return async (dispatch, getState, { api }) => {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    dispatch(getWishlistRequest());
-    try {
-      const result = await api.postFormData(
-        `${USER_PATH}/${
-          JSON.parse(userDetails).userName
-        }/getAllWishlist?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=${PLATFORM_NUMBER}`
-      );
-      const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
-      }
-
-      return dispatch(
-        getWishlistSuccess(resultJson.wishList && resultJson.wishList[0])
-      ); //we sre getting response wishlit[0]
-    } catch (e) {
-      return dispatch(getWishlistFailure(e.message));
-    }
-  };
-}
-
 export function changePasswordRequest() {
   return {
     type: CHANGE_PASSWORD_REQUEST,

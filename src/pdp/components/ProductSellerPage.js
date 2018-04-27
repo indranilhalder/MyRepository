@@ -74,30 +74,6 @@ class ProductSellerPage extends Component {
     }
   };
 
-  addToWishList = () => {
-    let productDetails = {};
-    productDetails.code = this.props.productDetails.productListingId;
-    productDetails.ussId = this.props.productDetails.winningUssID;
-
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
-    if (userDetails) {
-      this.props.addProductToWishList(
-        JSON.parse(userDetails).userName,
-        JSON.parse(customerCookie).access_token,
-        productDetails
-      );
-    } else {
-      this.props.addProductToWishList(
-        ANONYMOUS_USER,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
-    }
-  };
-
   componentDidMount() {
     if (this.props.match.path === PRODUCT_OTHER_SELLER_ROUTER) {
       this.props.getProductDescription(this.props.match.params[0]);
@@ -157,7 +133,6 @@ class ProductSellerPage extends Component {
       mobileGalleryImages && (
         <PdpFrame
           addProductToBag={() => this.addToCart()}
-          addProductToWishList={() => this.addToWishList()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
         >
           <div className={styles.base}>

@@ -247,13 +247,6 @@ export const ORDER_EXPERIENCE_CAPTURE_FAILURE =
 
 export const CLEAR_ORDER_EXPERIENCE_CAPTURE = "CLEAR_ORDER_EXPERIENCE_CAPTURE";
 
-export const ADD_PRODUCT_TO_WISH_LIST_REQUEST =
-  "ADD_PRODUCT_TO_WISH_LIST_REQUEST";
-export const ADD_PRODUCT_TO_WISH_LIST_SUCCESS =
-  "ADD_PRODUCT_TO_WISH_LIST_SUCCESS";
-export const ADD_PRODUCT_TO_WISH_LIST_FAILURE =
-  "ADD_PRODUCT_TO_WISH_LIST_FAILURE";
-
 export const REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST =
   "REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST";
 export const REMOVE_ITEM_FROM_CART_LOGGED_IN_SUCCESS =
@@ -332,7 +325,6 @@ export const PAYMENT_FAILURE_ORDER_DETAILS_FAILURE =
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
-const MY_WISH_LIST = "MyWishList";
 const ERROR_CODE_FOR_BANK_OFFER_INVALID_1 = "B9078";
 const ERROR_CODE_FOR_BANK_OFFER_INVALID_2 = "B6009";
 const INVALID_COUPON_ERROR_MESSAGE = "invalid coupon";
@@ -3387,60 +3379,6 @@ export function softReservationForCODPayment(pinCode) {
     }
   };
 }
-
-// Actions for Add Product to Wish List
-export function addProductToWishListRequest() {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_REQUEST,
-    status: REQUESTING
-  };
-}
-export function addProductToWishListSuccess() {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_SUCCESS,
-    status: SUCCESS
-  };
-}
-
-export function addProductToWishListFailure(error) {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-// Action Creator for Add Product To Wish List
-export function addProductToWishList(productDetails) {
-  return async (dispatch, getState, { api }) => {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-    const cartId = JSON.parse(cartDetails).guid;
-    dispatch(addProductToWishListRequest());
-    try {
-      const result = await api.post(
-        `${USER_CART_PATH}/${
-          JSON.parse(userDetails).userName
-        }/addProductInWishlist?platformNumber=2&access_token=${
-          JSON.parse(customerCookie).access_token
-        }&isPwa=true&ussid=${productDetails.USSID}&productCode=${
-          productDetails.productcode
-        }&wishlistName=${MY_WISH_LIST}`
-      );
-      const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
-      }
-      dispatch(addProductToWishListSuccess());
-    } catch (e) {
-      dispatch(addProductToWishListFailure(e.message));
-    }
-  };
-}
-
 // Action for remove Item from Cart Logged In
 export function removeItemFromCartLoggedInRequest() {
   return {

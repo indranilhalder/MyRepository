@@ -11,7 +11,10 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
-
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions.js";
 import {
   setDataLayerForPdpDirectCalls,
   ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART,
@@ -65,7 +68,7 @@ export function getWishListItemsFailure(error) {
   };
 }
 
-export function getWishListItems(productDetails) {
+export function getWishListItems() {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -186,9 +189,10 @@ export function removeProductFromWishList(productDetails) {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     const productToBeRemove = new FormData();
-    productToBeRemove.append("ussid", productDetails.USSID);
+    productToBeRemove.append("USSID", productDetails.USSID);
     productToBeRemove.append("wishlistName", MY_WISH_LIST);
     dispatch(removeProductFromWishListRequest());
+    dispatch(showSecondaryLoader());
     try {
       const result = await api.postFormData(
         `${PRODUCT_DETAILS_PATH}/${
@@ -204,8 +208,11 @@ export function removeProductFromWishList(productDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      dispatch(hideSecondaryLoader());
       return dispatch(removeProductFromWishListSuccess(productDetails));
     } catch (e) {
+      dispatch(hideSecondaryLoader());
+
       return dispatch(removeProductFromWishListFailure(e.message));
     }
   };

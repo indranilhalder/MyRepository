@@ -4,6 +4,7 @@ import styles from "./SaveListDetails.css";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
 import moment from "moment";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 import Button from "../../general/components/Button";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -16,7 +17,6 @@ import {
   SAVED_LIST
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-import SecondaryLoader from "../../general/components/SecondaryLoader";
 
 import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "MMMM DD YYYY";
@@ -80,27 +80,26 @@ export default class SaveListDetails extends React.Component {
     this.props.history.push(HOME_ROUTER);
   }
   render() {
-    console.log("SAVE LIST DETAILS RENDERED");
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
       return this.navigateToLogin();
     }
 
-    const wishList = this.props.wishList;
-
-    if (!wishList && this.props.loading) {
+    if (this.props.loading) {
       return (
         <div className={styles.loadingIndicator}>
           <SecondaryLoader />
         </div>
       );
     }
+
+    const wishList = this.props.wishList;
+
     return (
       <div className={styles.base}>
         {wishList &&
-          wishList.products &&
-          wishList.products.map((product, i) => {
+          wishList.map((product, i) => {
             return (
               <div className={styles.listCardHolder} key={i}>
                 <SaveListCard
@@ -120,7 +119,7 @@ export default class SaveListDetails extends React.Component {
               </div>
             );
           })}
-        {(!wishList || !wishList.products) && (
+        {(!wishList || wishList.length === 0) && (
           <div className={styles.noSaveListBlock}>
             <div className={styles.noSaveListText}>{NO_SAVELIST_TEXT}</div>
             <div className={styles.buttonHolder}>

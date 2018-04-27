@@ -64,7 +64,6 @@ const mapStateToProps = state => {
     softReserveCODPaymentError: state.cart.softReserveCODPaymentError,
     orderExperienceError: state.cart.orderExperienceError,
     binValidationError: state.cart.binValidationError,
-    addToWishlistError: state.cart.addToWishlistError,
     removeCartItemError: state.cart.removeCartItemError,
     removeCartItemLoggedOutError: state.cart.removeCartItemLoggedOutError,
     softReservationForPaymentError: state.cart.softReservationForPaymentError,
