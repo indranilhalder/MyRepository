@@ -55,15 +55,19 @@ export async function postAdobeTargetUrl(
 }
 
 export async function post(path, postData, doNotUserApiSuffix: true) {
-  const url = `${API_URL_ROOT}/${path}`;
-  return await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(postData),
-    headers: {
-      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#"),
-      "Content-Type": "application/json"
-    }
-  });
+  try {
+    const url = `${API_URL_ROOT}/${path}`;
+    return await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(postData),
+      headers: {
+        Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#"),
+        "Content-Type": "application/json"
+      }
+    });
+  } catch (e) {
+    console.log(e.message);
+  }
 }
 
 export async function getWithoutApiUrlRoot(url) {

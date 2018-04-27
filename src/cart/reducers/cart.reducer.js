@@ -1257,7 +1257,7 @@ const cart = (
     case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS:
       return Object.assign({}, state, {
         paymentFailureOrderDetailsStatus: action.status,
-        paymentFailureOrderDetails: action.noCostEmiResult,
+        paymentFailureOrderDetails: action.paymentFailureOrderDetails,
         loading: false
       });
 

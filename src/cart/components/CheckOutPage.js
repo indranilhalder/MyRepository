@@ -19,6 +19,7 @@ import OrderConfirmation from "./OrderConfirmation";
 import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
 import size from "lodash.size";
+import TransactionFailed from "./TransactionFailed.js";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -100,7 +101,10 @@ class CheckOutPage extends React.Component {
       isNoCostEmiApplied: false,
       isNoCostEmiProceeded: false,
       selectedBankOfferCode: "",
-      cliqPiqSelected: false
+      isPaymentFailed: false,
+      deliveryCharge: 0,
+      couponDiscount: 0,
+      totalDiscount: 0
     };
   }
   onClickImage(productCode) {
@@ -109,6 +113,7 @@ class CheckOutPage extends React.Component {
     }
   }
   updateLocalStoragePinCode(pincode) {
+    console.log(pincode);
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
   }
@@ -286,7 +291,6 @@ class CheckOutPage extends React.Component {
                   onPiq={() => this.getAllStores(val.USSID)}
                   onClickImage={() => this.onClickImage(val.productcode)}
                   isClickable={true}
-
                 />
               </div>
             );
@@ -454,6 +458,7 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps.cart);
     if (
       nextProps.cart.getUserAddressStatus === SUCCESS &&
       nextProps.cart &&
@@ -478,7 +483,7 @@ class CheckOutPage extends React.Component {
       if (defaultAddress) {
         defaultAddressId = defaultAddress.id;
       }
-      this.updateLocalStoragePinCode(defaultAddress.postalCode);
+      // this.updateLocalStoragePinCode(defaultAddress.postalCode);
 
       this.setState({
         addressId: defaultAddressId,
@@ -537,6 +542,48 @@ class CheckOutPage extends React.Component {
       this.setState({ ussIdAndDeliveryModesObj: defaultSelectedDeliveryModes });
     }
 
+    //for paymentFailure
+    if (
+      nextProps.cart.paymentFailureOrderDetails &&
+      nextProps.cart.paymentFailureOrderDetails.cartAmount
+    ) {
+      this.setState({
+        payableAmount:
+          Math.round(
+            nextProps.cart.paymentFailureOrderDetails.cartAmount.paybleAmount
+              .value * 100
+          ) / 100,
+        cliqCashAmount:
+          Math.round(
+            nextProps.cart.paymentFailureOrderDetails.cliqCashBalance.value *
+              100
+          ) / 100,
+        bagAmount:
+          Math.round(
+            nextProps.cart.paymentFailureOrderDetails.cartAmount.bagTotal
+              .value * 100
+          ) / 100,
+        deliveryCharge:
+          Math.round(
+            nextProps.cart.paymentFailureOrderDetails.deliveryCharges.value *
+              100
+          ) / 100,
+        couponDiscount: nextProps.cart.paymentFailureOrderDetails.couponDiscount
+          ? Math.round(
+              nextProps.cart.paymentFailureOrderDetails.couponDiscount.value *
+                100
+            ) / 100
+          : 0,
+        totalDiscount:
+          Math.round(
+            nextProps.cart.paymentFailureOrderDetails.cartAmount
+              .totalDiscountAmount.value * 100
+          ) / 100,
+        isRemainingAmount:
+          nextProps.cart.paymentFailureOrderDetails.isRemainingAmount
+      });
+    }
+
     // end if adding selected default delivery modes for every product
     if (nextProps.cart.cliqCashPaymentDetails) {
       if (
@@ -562,7 +609,11 @@ class CheckOutPage extends React.Component {
         });
       }
     } else {
-      if (nextProps.cart.cartDetailsCNC && this.state.isRemainingAmount) {
+      if (
+        nextProps.cart.cartDetailsCNC &&
+        this.state.isRemainingAmount &&
+        !this.state.isPaymentFailed
+      ) {
         let cliqCashAmount = 0;
         if (
           nextProps.cart.paymentModes &&
@@ -577,15 +628,26 @@ class CheckOutPage extends React.Component {
         this.setState({
           payableAmount:
             Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount &&
-                nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value *
-                  100
+              nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value * 100
             ) / 100,
           cliqCashAmount: cliqCashAmount,
           bagAmount:
             Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount &&
-                nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
+              nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
+            ) / 100,
+          deliveryCharge:
+            nextProps.cart.cartDetailsCNC &&
+            nextProps.cart.cartDetailsCNC.deliveryCharge,
+          totalDiscount:
+            Math.round(
+              nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
+                .value * 100
+            ) / 100,
+          couponDiscount:
+            Math.round(
+              nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
+                nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
+                  .value * 100
             ) / 100
         });
       }
@@ -627,12 +689,12 @@ class CheckOutPage extends React.Component {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
+    this.setState({ orderId: orderId });
     if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+      this.setState({ isPaymentFailed: true });
       this.props.getPaymentFailureOrderDetails();
     }
     if (value === PAYMENT_CHARGED) {
-      this.setState({ orderId: orderId });
-
       if (this.props.updateTransactionDetails) {
         let cartId;
         cartId = localStorage.getItem(OLD_CART_GU_ID);
@@ -833,7 +895,15 @@ class CheckOutPage extends React.Component {
     return productServiceAvailability;
   };
   handleSubmit = () => {
-    if (this.availabilityOfUserCoupon()) {
+    if (this.state.isPaymentFailed) {
+      this.props.softReservationPaymentForSavedCard(
+        this.state.savedCardDetails,
+        this.state.addressId,
+        this.state.paymentModeSelected,
+        true
+      );
+    }
+    if (!this.state.isPaymentFailed && this.availabilityOfUserCoupon()) {
       if (this.state.isFirstAddress) {
         this.addAddress(this.state.addressDetails);
       }
@@ -1088,6 +1158,7 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
+    console.log(this.state);
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
@@ -1104,41 +1175,6 @@ class CheckOutPage extends React.Component {
     }
     if (this.props.cart.transactionStatus === REQUESTING) {
       return false;
-    }
-
-    const cartData = this.props.cart;
-    let deliveryCharge = 0;
-    let couponDiscount = 0;
-    let totalDiscount = 0;
-    if (
-      this.props.cart &&
-      this.props.cart.cartDetailsCNC &&
-      this.props.cart.cartDetailsCNC.products
-    ) {
-      if (this.props.cart.cartDetailsCNC.deliveryCharge) {
-        deliveryCharge = this.props.cart.cartDetailsCNC.deliveryCharge;
-      }
-      if (
-        this.props.cart.cartDetailsCNC.cartAmount &&
-        this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
-      ) {
-        totalDiscount =
-          Math.round(
-            this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
-              .value * 100
-          ) / 100;
-      }
-
-      if (
-        this.props.cart.cartDetailsCNC.cartAmount &&
-        this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
-      ) {
-        couponDiscount =
-          Math.round(
-            this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
-              .value * 100
-          ) / 100;
-      }
     }
     if (
       this.state.addNewAddress &&
@@ -1169,13 +1205,16 @@ class CheckOutPage extends React.Component {
     ) {
       return (
         <div className={styles.base}>
-          {!this.state.confirmAddress &&
+          {!this.state.isPaymentFailed &&
+            !this.state.confirmAddress &&
             !this.state.isGiftCard &&
-            (cartData.userAddress && cartData.userAddress.addresses
+            (this.props.cart.userAddress &&
+            this.props.cart.userAddress.addresses
               ? this.renderCheckoutAddress()
               : this.renderInitialAddAddressForm())}
 
-          {this.state.confirmAddress &&
+          {!this.state.isPaymentFailed &&
+            this.state.confirmAddress &&
             !this.state.isGiftCard &&
             !this.state.showCliqAndPiq && (
               <div className={styles.deliveryAddress}>
@@ -1187,7 +1226,8 @@ class CheckOutPage extends React.Component {
               </div>
             )}
 
-          {this.props.cart.cartDetailsCNC &&
+          {!this.state.isPaymentFailed &&
+            this.props.cart.cartDetailsCNC &&
             this.state.confirmAddress &&
             !this.state.deliverMode &&
             !this.state.isGiftCard &&
@@ -1195,7 +1235,8 @@ class CheckOutPage extends React.Component {
               ? this.renderCliqAndPiq()
               : this.renderDeliverModes())}
 
-          {this.state.deliverMode &&
+          {!this.state.isPaymentFailed &&
+            this.state.deliverMode &&
             !this.state.isGiftCard && (
               <div className={styles.deliveryAddress}>
                 <DeliveryModeSet
@@ -1206,16 +1247,24 @@ class CheckOutPage extends React.Component {
               </div>
             )}
 
-          {!this.state.appliedCoupons &&
+          {!this.state.isPaymentFailed &&
+            !this.state.appliedCoupons &&
             (this.state.confirmAddress && this.state.deliverMode) &&
             this.props.cart.paymentModes &&
             !this.state.isGiftCard &&
             this.renderBankOffers()}
 
+          {this.state.isPaymentFailed && (
+            <div className={styles.paymentFailedCardHolder}>
+              <TransactionFailed />
+            </div>
+          )}
+
           {((!this.state.paymentMethod &&
             (this.state.confirmAddress && this.state.deliverMode)) ||
+            this.state.isPaymentFailed ||
             this.state.isGiftCard) && (
-            <div className={styles.paymentCardHolder}>
+            <div className={styles.paymentCardHolderπp}>
               <PaymentCardWrapper
                 isRemainingBalance={this.state.isRemainingAmount}
                 isFromGiftCard={this.state.isGiftCard}
@@ -1289,9 +1338,9 @@ class CheckOutPage extends React.Component {
               amount={this.state.payableAmount}
               bagTotal={this.state.bagAmount}
               payable={this.state.payableAmount}
-              coupons={`Rs. ${couponDiscount}`}
-              discount={`Rs. ${totalDiscount}`}
-              delivery={`Rs. ${deliveryCharge}`}
+              coupons={`Rs. ${this.state.couponDiscount}`}
+              discount={`Rs. ${this.state.totalDiscount}`}
+              delivery={`Rs. ${this.state.deliveryCharge}`}
               onCheckout={this.handleSubmit}
             />
           )}

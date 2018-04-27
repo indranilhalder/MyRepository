@@ -208,9 +208,19 @@ const mapDispatchToProps = dispatch => {
         )
       );
     },
-    softReservationPaymentForSavedCard: (cardDetails, address, paymentMode) => {
+    softReservationPaymentForSavedCard: (
+      cardDetails,
+      address,
+      paymentMode,
+      isPaymentFailed
+    ) => {
       dispatch(
-        softReservationPaymentForSavedCard(cardDetails, address, paymentMode)
+        softReservationPaymentForSavedCard(
+          cardDetails,
+          address,
+          paymentMode,
+          isPaymentFailed
+        )
       );
     },
     softReservationForCliqCash: pinCode => {

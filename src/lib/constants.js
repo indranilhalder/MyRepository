@@ -26,7 +26,8 @@ export const MAIN_ROUTER = "/";
 export const CUSTOMER_ACCESS_TOKEN = "customerAccessToken";
 export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
 export const DEFAULT_PIN_CODE_LOCAL_STORAGE = "defaultPinCode";
-
+export const SOFT_RESERVATION_ITEM = "softReservationItem";
+export const ADDRESS_DETAILS_FOR_PAYMENT = "addressDetailsForPayment";
 export const SKU_PAGE = "/custom/:slug";
 
 export const REFRESH_TOKEN = "refresh_token";
