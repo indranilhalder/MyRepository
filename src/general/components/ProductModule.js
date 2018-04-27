@@ -103,5 +103,6 @@ ProductModule.propTypes = {
   onOffer: PropTypes.bool
 };
 ProductModule.defaultProps = {
-  view: "grid"
+  view: "grid",
+  showWishListButton: true
 };
