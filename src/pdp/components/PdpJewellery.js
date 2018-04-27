@@ -213,7 +213,6 @@ export default class PdpJewellery extends React.Component {
   };
   render() {
     const productData = this.props.productDetails;
-    console.log(productData);
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
           .map(galleryImageList => {
