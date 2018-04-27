@@ -172,6 +172,11 @@ export default class OrderDetails extends React.Component {
                     SubTotal={orderDetails.subTotal}
                     DeliveryCharges={orderDetails.deliveryCharge}
                     Discount={orderDetails.totalDiscount}
+                    coupon={
+                      orderDetails.orderAmount &&
+                      orderDetails.orderAmount.couponDiscountAmount &&
+                      orderDetails.orderAmount.couponDiscountAmount.doubleValue
+                    }
                     ConvenienceCharges={orderDetails.convenienceCharge}
                     Total={orderDetails.totalOrderAmount}
                   />
