@@ -4,7 +4,7 @@ import BagPageItem from "./BagPageItem.js";
 
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import BagPageFooter from "../../general/components/BagPageFooter";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import DeliveryInfoSelect from "./DeliveryInfoSelect";
 import PropTypes from "prop-types";
 
@@ -52,9 +52,13 @@ export default class CartItem extends React.Component {
     }
   }
   render() {
-    const fetchedQuantityList = [];
-    for (let i = 1; i <= this.props.maxQuantityAllowed; i++) {
-      fetchedQuantityList.push({ value: i.toString() });
+    let fetchedQuantityList = [];
+    if (this.props.isOutOfStock) {
+      fetchedQuantityList = [{}];
+    } else {
+      for (let i = 1; i <= this.props.maxQuantityAllowed; i++) {
+        fetchedQuantityList.push({ value: i.toString(), label: i.toString() });
+      }
     }
     return (
       <div className={styles.base}>
@@ -64,6 +68,7 @@ export default class CartItem extends React.Component {
             productName={this.props.productName}
             productDetails={this.props.productDetails}
             price={this.props.price}
+            isOutOfStock={this.props.isOutOfStock}
             isServiceAvailable={this.props.productIsServiceable}
             onClickImage={() => this.onClick()}
           />
@@ -110,11 +115,13 @@ export default class CartItem extends React.Component {
               <div className={styles.dropdownLabel}>
                 {this.props.dropdownLabel}
               </div>
-              <SelectBoxMobile
+              <SelectBoxMobile2
+                disabled={this.props.isOutOfStock}
                 borderNone={true}
                 options={fetchedQuantityList}
                 onChange={val => this.handleQuantityChange(val)}
                 value={this.props.qtySelectedByUser}
+                label={this.props.qtySelectedByUser}
               />
             </div>
           </div>

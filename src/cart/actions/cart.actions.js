@@ -11,7 +11,8 @@ import * as ErrorHandling from "../../general/ErrorHandling.js";
 import {
   showModal,
   EMI_ITEM_LEVEL_BREAKAGE,
-  EMI_BANK_TERMS_AND_CONDITIONS
+  EMI_BANK_TERMS_AND_CONDITIONS,
+  INVALID_BANK_COUPON_POPUP
 } from "../../general/modal.actions";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -26,6 +27,7 @@ import {
   JUS_PAY_CHARGED,
   FAILURE_LOWERCASE
 } from "../../lib/constants";
+import queryString, { parse } from "query-string";
 
 import {
   setDataLayer,
@@ -320,10 +322,20 @@ export const EMI_ITEM_BREAK_UP_DETAILS_SUCCESS =
 export const EMI_ITEM_BREAK_UP_DETAILS_FAILURE =
   "EMI_ITEM_BREAK_UP_DETAILS_FAILURE";
 
+export const PAYMENT_FAILURE_ORDER_DETAILS_REQUEST =
+  "PAYMENT_FAILURE_ORDER_DETAILS_REQUEST";
+export const PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS =
+  "PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS";
+export const PAYMENT_FAILURE_ORDER_DETAILS_FAILURE =
+  "PAYMENT_FAILURE_ORDER_DETAILS_FAILURE";
+
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
 const MY_WISH_LIST = "MyWishList";
+const ERROR_CODE_FOR_BANK_OFFER_INVALID_1 = "B9078";
+const ERROR_CODE_FOR_BANK_OFFER_INVALID_2 = "B6009";
+const INVALID_COUPON_ERROR_MESSAGE = "invalid coupon";
 export const ANONYMOUS_USER = "anonymous";
 
 export function displayCouponRequest() {
@@ -837,9 +849,9 @@ export function addUserAddress(userAddress, fromAccount) {
       setDataLayerForCheckoutDirectCalls(
         ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE
       );
-      dispatch(addUserAddressSuccess());
+      return dispatch(addUserAddressSuccess());
     } catch (e) {
-      dispatch(addUserAddressFailure(e.message));
+      return dispatch(addUserAddressFailure(e.message));
     }
   };
 }
@@ -1560,7 +1572,7 @@ export function softReservation(pinCode, payload) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(getOrderSummary());
+      dispatch(getOrderSummary(pinCode));
       dispatch(softReservationSuccess(resultJson.reservationItem));
     } catch (e) {
       dispatch(softReservationFailure(e.message));
@@ -2360,7 +2372,30 @@ export function createJusPayOrder(
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          const redoCreateJusPayApi = () =>
+            dispatch(
+              createJusPayOrder(
+                token,
+                cartItem,
+                address,
+                cardDetails,
+                paymentMode
+              )
+            );
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              redoCreateJusPayApi,
+              couponCode: resultJson.couponCode
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
       dispatch(
         jusPayPaymentMethodType(
@@ -2444,7 +2479,29 @@ export function createJusPayOrderForNetBanking(
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          const redoCreateJusPayApi = () =>
+            dispatch(
+              createJusPayOrderForNetBanking(
+                paymentMethodType,
+                bankName,
+                pinCode,
+                cartItem
+              )
+            );
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              redoCreateJusPayApi,
+              couponCode: resultJson.couponCode
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
       dispatch(
         jusPayPaymentMethodTypeForNetBanking(
@@ -2520,9 +2577,23 @@ export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          const redoCreateJusPayApi = () =>
+            dispatch(createJusPayOrderForSavedCards(cardDetails, cartItem));
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              redoCreateJusPayApi,
+              couponCode: resultJson.couponCode
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
       dispatch(
         jusPayPaymentMethodTypeForSavedCards(
@@ -2599,7 +2670,22 @@ export function createJusPayOrderForCliqCash(pinCode, cartItem) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          const redoCreateJusPayApi = () =>
+            dispatch(createJusPayOrderForCliqCash(pinCode, cartItem));
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              redoCreateJusPayApi,
+              couponCode: resultJson.couponCode
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
       dispatch(createJusPayOrderSuccessForCliqCash(resultJson));
       dispatch(generateCartIdForLoggedInUser());
@@ -3870,6 +3956,7 @@ export function removeNoCostEmi(couponCode) {
         }&cartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
+
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
@@ -3930,6 +4017,60 @@ export function getItemBreakUpDetails(couponCode) {
       dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE, resultJson));
     } catch (e) {
       dispatch(getItemBreakUpDetailsFailure(e.message));
+    }
+  };
+}
+
+export function getPaymentFailureOrderDetailsRequest() {
+  return {
+    type: PAYMENT_FAILURE_ORDER_DETAILS_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function getPaymentFailureOrderDetailsSuccess(
+  paymentFailureOrderDetails
+) {
+  return {
+    type: PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS,
+    status: SUCCESS,
+    paymentFailureOrderDetails
+  };
+}
+
+export function getPaymentFailureOrderDetailsFailure(error) {
+  return {
+    type: PAYMENT_FAILURE_ORDER_DETAILS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getPaymentFailureOrderDetails() {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+    let url = queryString.parse(window.location.search);
+    const cartGuId = url && url.value;
+
+    dispatch(getPaymentFailureOrderDetailsRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/payments/failedorderdetails?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartGuId}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(getPaymentFailureOrderDetailsSuccess(resultJson));
+    } catch (e) {
+      dispatch(getPaymentFailureOrderDetailsFailure(e.message));
     }
   };
 }

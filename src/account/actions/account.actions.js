@@ -47,8 +47,11 @@ import {
   setDataLayerForFollowAndUnFollowBrand,
   ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS
 } from "../../lib/adobeUtils";
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
-
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
 export const GET_USER_DETAILS_FAILURE = "GET_USER_DETAILS_FAILURE";
@@ -475,7 +478,7 @@ export function newReturnInitiateFailure(error) {
   };
 }
 
-export function newReturnInitial(returnDetails, product) {
+export function newReturnInitial(returnDetails, product = null) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -495,15 +498,16 @@ export function newReturnInitial(returnDetails, product) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
-      dispatch(newReturnInitiateSuccess(resultJson));
-      setDataLayerForMyAccountDirectCalls(
-        ADOBE_MY_ACCOUNT_ORDER_RETURN,
-        product,
-        returnDetails
-      );
+      if (product) {
+        setDataLayerForMyAccountDirectCalls(
+          ADOBE_MY_ACCOUNT_ORDER_RETURN,
+          product,
+          returnDetails
+        );
+      }
+      return dispatch(newReturnInitiateSuccess(resultJson));
     } catch (e) {
-      dispatch(newReturnInitiateFailure(e.message));
+      return dispatch(newReturnInitiateFailure(e.message));
     }
   };
 }
@@ -753,11 +757,9 @@ export function getOtpToActivateWallet(customerDetails, isFromCliqCash) {
       const resultJson = await result.json();
 
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(hideModal());
       if (isFromCliqCash) {
         dispatch(showModal(VERIFY_OTP_FOR_CLIQ_CASH));
       } else {
@@ -765,7 +767,7 @@ export function getOtpToActivateWallet(customerDetails, isFromCliqCash) {
       }
       return dispatch(getOtpToActivateWalletSuccess(resultJson));
     } catch (e) {
-      dispatch(getOtpToActivateWalletFailure(e.message));
+      return dispatch(getOtpToActivateWalletFailure(e.message));
     }
   };
 }
@@ -810,7 +812,6 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -823,7 +824,7 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
 
       return dispatch(verifyWalletSuccess(resultJson));
     } catch (e) {
-      dispatch(verifyWalletFailure(e.message));
+      return dispatch(verifyWalletFailure(e.message));
     }
   };
 }
@@ -1012,39 +1013,45 @@ export function removeSavedCardDetails(userId, customerAccessToken) {
     }
   };
 }
-
-export function getAllOrdersRequest() {
+export function getAllOrdersRequest(paginated: false) {
   return {
     type: GET_ALL_ORDERS_REQUEST,
     status: REQUESTING
   };
 }
-export function getAllOrdersSuccess(orderDetails) {
+export function getAllOrdersSuccess(orderDetails, isPaginated: false) {
   return {
     type: GET_ALL_ORDERS_SUCCESS,
     status: SUCCESS,
-    orderDetails
+    orderDetails,
+    isPaginated
   };
 }
 
-export function getAllOrdersFailure(error) {
+export function getAllOrdersFailure(error, isPaginated) {
   return {
     type: GET_ALL_ORDERS_FAILURE,
 
     status: ERROR,
-    error
+    error,
+    isPaginated
   };
 }
-export function getAllOrdersDetails() {
+export function getAllOrdersDetails(suffix: null, paginated: false) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
-    dispatch(getAllOrdersRequest());
+    dispatch(getAllOrdersRequest(paginated));
+    dispatch(showSecondaryLoader());
+    let currentPage = 0;
+    if (getState().profile.orderDetails) {
+      currentPage = getState().profile.orderDetails.currentPage + 1;
+    }
     try {
       const result = await api.get(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
-        }/orderhistorylist?currentPage=${CURRENT_PAGE}&access_token=${
+        }/orderhistorylist?currentPage=${currentPage}&access_token=${
           JSON.parse(customerCookie).access_token
         }&pageSize=${PAGE_SIZE}&isPwa=true&platformNumber=2`
       );
@@ -1055,9 +1062,16 @@ export function getAllOrdersDetails() {
         throw new Error(resultJsonStatus.message);
       }
       setDataLayer(ADOBE_MY_ACCOUNT_ORDER_HISTORY);
-      dispatch(getAllOrdersSuccess(resultJson));
+      if (paginated) {
+        dispatch(getAllOrdersSuccess(resultJson, paginated));
+        dispatch(hideSecondaryLoader());
+      } else {
+        dispatch(getAllOrdersSuccess(resultJson, paginated));
+        dispatch(hideSecondaryLoader());
+      }
     } catch (e) {
-      dispatch(getAllOrdersFailure(e.message));
+      dispatch(hideSecondaryLoader());
+      dispatch(getAllOrdersFailure(e.message, paginated));
     }
   };
 }
@@ -1360,7 +1374,7 @@ export function fetchOrderDetails(orderId) {
           JSON.parse(userDetails).userName
         }/getSelectedOrder/${orderId}?access_token=${
           JSON.parse(customerCookie).access_token
-        }`
+        }&isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);

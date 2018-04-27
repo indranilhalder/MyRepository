@@ -14,7 +14,9 @@ export default class MyCoupons extends React.Component {
           <div className={styles.headingText}>{this.props.heading}</div>
         </div>
         <div className={styles.couponNumber}>{this.props.couponNumber}</div>
-        <div className={styles.lebelText}>{this.props.label}</div>
+        <div className={styles.lebelText}>
+          (Long press here to copy the coupon code)
+        </div>
         <div className={styles.couponFooter}>
           <div className={styles.couponFooterHolder}>
             <div className={styles.couponInformation}>

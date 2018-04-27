@@ -61,7 +61,8 @@ import {
   REQUESTING,
   MY_ACCOUNT,
   STATIC_PAGE,
-  SKU_PAGE_FILTER
+  SKU_PAGE_FILTER,
+  PRODUCT_LISTINGS_WITHOUT_SLASH
 } from "../src/lib/constants";
 import Loadable from "react-loadable";
 
@@ -388,6 +389,11 @@ class App extends Component {
             <Route
               exact
               path={PRODUCT_LISTINGS}
+              component={ProductListingsContainer}
+            />
+            <Route
+              exact
+              path={PRODUCT_LISTINGS_WITHOUT_SLASH}
               component={ProductListingsContainer}
             />
             <Route exact path={HOME_ROUTER} component={HomeContainer} />

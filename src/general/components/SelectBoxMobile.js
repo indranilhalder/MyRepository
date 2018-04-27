@@ -14,17 +14,20 @@ const GREY_BOX = "greyBox";
 export default class SelectBoxMobile extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      value: this.props.value
-        ? this.props.value
-        : this.props.options
-          ? this.props.options[0].value
-          : "",
-      label: this.props.label
-        ? this.props.label
-        : this.props.options
-          ? this.props.options[0].label
-          : ""
+      value:
+        this.props && this.props.value
+          ? this.props.value
+          : this.props.options
+            ? this.props.options[0].value
+            : "",
+      label:
+        this.props && this.props.value
+          ? this.props.value
+          : this.props.options
+            ? this.props.options[0].label
+            : ""
     };
   }
 

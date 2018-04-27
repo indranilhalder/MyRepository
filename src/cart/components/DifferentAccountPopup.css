@@ -2,7 +2,9 @@
   width: 100%;
   height: auto;
   background: #fff;
-  padding: 15px 20px;
+  padding: 30px 20px;
+  position: absolute;
+  bottom: 0;
 }
 .paymentMethodDescription {
   width: 100%;

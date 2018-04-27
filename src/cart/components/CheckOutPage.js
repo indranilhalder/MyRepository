@@ -99,7 +99,8 @@ class CheckOutPage extends React.Component {
       addressDetails: null,
       isNoCostEmiApplied: false,
       isNoCostEmiProceeded: false,
-      selectedBankOfferCode: ""
+      selectedBankOfferCode: "",
+      cliqPiqSelected: false
     };
   }
   onClickImage(productCode) {
@@ -164,6 +165,11 @@ class CheckOutPage extends React.Component {
     });
   }
 
+  getPaymentFailureOrderDetails = () => {
+    if (this.props.getPaymentFailureOrderDetails) {
+      this.props.getPaymentFailureOrderDetails();
+    }
+  };
   getAllStores = selectedProductsUssIdForCliqAndPiq => {
     const defalutPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.setState({ showCliqAndPiq: true, selectedProductsUssIdForCliqAndPiq });
@@ -204,7 +210,11 @@ class CheckOutPage extends React.Component {
       updatedDeliveryModeUssid[
         this.state.selectedProductsUssIdForCliqAndPiq
       ] = COLLECT;
-      this.setState({ ussIdAndDeliveryModesObj: updatedDeliveryModeUssid });
+
+      this.setState({
+        ussIdAndDeliveryModesObj: updatedDeliveryModeUssid,
+        cliqPiqSelected: true
+      });
     }
   }
   removeCliqAndPiq() {
@@ -276,6 +286,7 @@ class CheckOutPage extends React.Component {
                   onPiq={() => this.getAllStores(val.USSID)}
                   onClickImage={() => this.onClickImage(val.productcode)}
                   isClickable={true}
+
                 />
               </div>
             );
@@ -616,7 +627,9 @@ class CheckOutPage extends React.Component {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
-
+    if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+      this.props.getPaymentFailureOrderDetails();
+    }
     if (value === PAYMENT_CHARGED) {
       this.setState({ orderId: orderId });
 
@@ -791,6 +804,8 @@ class CheckOutPage extends React.Component {
     if (!this.state.isGiftCard) {
       let couponCookie = Cookie.getCookie(COUPON_COOKIE);
       let cartDetailsCouponDiscount =
+        this.props.cart &&
+        this.props.cart.cartDetailsCNC &&
         this.props.cart.cartDetailsCNC.cartAmount &&
         (this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount ||
           this.props.cart.cartDetailsCNC.cartAmount.appliedCouponDiscount);

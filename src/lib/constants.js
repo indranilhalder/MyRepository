@@ -42,7 +42,8 @@ export const CATEGORY_PAGE = "/c-(msh[0-9A-Za-z]+)";
 export const CATEGORY_PAGE_WITH_SLUG = `/:slug/c-(msh[0-9a-zA-Z]+)`;
 export const CATEGORY_PAGE_WITH_QUERY_PARAMS = `${CATEGORY_PAGE}?&.*`;
 export const CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS = `${CATEGORY_PAGE_WITH_SLUG}?&.*`;
-export const PRODUCT_LISTINGS = "/search/";
+export const PRODUCT_LISTINGS = "/search/(.*)";
+export const PRODUCT_LISTINGS_WITHOUT_SLASH = "/search/";
 export const SKU_PAGE_FILTER = "/CustomSkuCollection/:slug/page-([0-9]+)";
 export const CATEGORY_PRODUCT_LISTINGS_WITH_PAGE =
   "/:slug/c-(msh[0-9a-zA-Z]+)/page-([0-9]+)?";
@@ -133,6 +134,7 @@ export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
 export const COUPON_COOKIE = "couponCode";
+export const BANK_COUPON_COOKIE = "bankCoupon";
 
 export const SAVE_LIST_PAGE = "/default/wishList";
 export const PAYMENT_MODE_TYPE = "paymentMode";
@@ -191,6 +193,7 @@ export const CATEGORIES = "Categories";
 export const CHECKOUT = "Checkout";
 export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
+export const ERROR_MESSAGE_FOR_VERIFY_OTP = "Please Enter an Valid OTP";
 
 // COPY
 //STATIC PAGE

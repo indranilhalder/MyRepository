@@ -11,6 +11,7 @@
   transition: 300ms;
   position: relative;
   padding: 0 15px;
+  user-select: none;
 }
 .base:after {
   content: "";

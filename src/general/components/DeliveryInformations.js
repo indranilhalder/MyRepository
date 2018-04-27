@@ -47,7 +47,6 @@ export default class DeliveryInformations extends React.Component {
     if (!this.props.available) {
       typeName = `${typeName}`;
     }
-
     return (
       <div className={styles.base}>
         <div
@@ -55,8 +54,8 @@ export default class DeliveryInformations extends React.Component {
             this.props.available ? styles.dataHolder : styles.notAvailable
           }
         >
-          {this.props.onSelect &&
-            this.props.type !== COLLECT && (
+          {this.props.selected &&
+            this.props.onSelect && (
               <div
                 className={styles.checkboxHolder}
                 onClick={() => {
@@ -89,20 +88,19 @@ export default class DeliveryInformations extends React.Component {
               </div>
             )}
 
-            {this.props.type === COLLECT &&
-              this.props.showCliqAndPiqButton && (
-                <div className={styles.underLineButtonHolder}>
-                  <span className={styles.buttonHolderPiq}>
-                    <UnderLinedButton
-                      size="14px"
-                      fontFamily="regular"
-                      color="#ff1744"
-                      label="Check for pick up options"
-                      onClick={() => this.onPiq()}
-                    />
-                  </span>
-                </div>
-              )}
+            {this.props.type === COLLECT && (
+              <div className={styles.underLineButtonHolder}>
+                <span className={styles.buttonHolderPiq}>
+                  <UnderLinedButton
+                    size="14px"
+                    fontFamily="regular"
+                    color="#ff1744"
+                    label="Check for pick up options"
+                    onClick={() => this.onPiq()}
+                  />
+                </span>
+              </div>
+            )}
           </IconWithHeader>
         </div>
       </div>

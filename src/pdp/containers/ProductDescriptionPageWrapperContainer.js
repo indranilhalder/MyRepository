@@ -20,6 +20,7 @@ import {
   EMI_MODAL,
   OFFER_MODAL,
   ADDRESS,
+  PRICE_BREAKUP,
   SIZE_SELECTOR,
   SIZE_GUIDE
 } from "../../general/modal.actions.js";
@@ -36,6 +37,9 @@ const mapDispatchToProps = dispatch => {
     },
     showSizeSelector: data => {
       dispatch(showModal(SIZE_SELECTOR, data));
+    },
+    showPriceBreakup: data => {
+      dispatch(showModal(PRICE_BREAKUP, data));
     },
     showOfferDetails: data => {
       dispatch(showModal(OFFER_MODAL, data));
