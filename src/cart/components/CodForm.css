@@ -8,17 +8,14 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  margin: auto;
-  position: right;
   font-size: 14px;
-  padding: 5px;
   color: #8d8d8d;
 }
 .captcha {
-  width: 50px;
+  width: 100%;
   height: auto;
   position: relative;
-  margin: 15px;
+  margin: 15px 0px;
 }
 .cardFooterText {
   width: 48%;
