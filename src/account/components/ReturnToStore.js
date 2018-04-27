@@ -60,9 +60,6 @@ export default class ReturnToStore extends React.Component {
         orderCode: this.orderCode,
         transactionId: product.transactionId,
         ussid: product.USSID,
-        subReasonCode: this.props.data.subReasonCode,
-        returnReasonCode: "01",
-        comment: this.props.data.comment,
         transactionType: "01",
         refundType: "R",
         isCODorder: this.props.isCOD ? YES : NO,
@@ -77,6 +74,13 @@ export default class ReturnToStore extends React.Component {
         accountHolderName: this.props.bankDetail.userName,
         bankName: this.props.bankDetail.bankName,
         IFSCCode: this.props.bankDetail.code
+      });
+    }
+    if (this.props.data) {
+      Object.assign(productObj, {
+        subReasonCode: this.props.data.subReasonCode,
+        returnReasonCode: this.props.data.subReasonCode,
+        comment: this.props.data.comment
       });
     }
     // here we are product object has all data we we need to send in api for return product

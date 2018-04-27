@@ -10,6 +10,8 @@ import {
   RETURN_LANDING,
   RETURNS_REASON
 } from "../../lib/constants";
+const NEFT = "NEFT";
+const SELF_SHIPMENT = "selfShipment";
 export default class SelfCourier extends React.Component {
   onCancel() {
     if (this.props.onCancel) {
@@ -17,15 +19,18 @@ export default class SelfCourier extends React.Component {
     }
   }
   onContinue() {
+    console.log(this.props);
     if (this.props.newReturnInitial) {
       const orderDetails = this.props.returnProductDetails.orderProductWsDTO[0];
       const returnRequest = this.props.returnRequest.codSelfShipData;
       const initiateReturn = {};
       initiateReturn.transactionId = orderDetails.transactionId;
+      initiateReturn.transactionType = "1";
       initiateReturn.ussid = orderDetails.USSID;
+      initiateReturn.refundMode = NEFT;
+      initiateReturn.refundType = "S";
       initiateReturn.orderCode = orderDetails.sellerorderno;
-      initiateReturn.returnReasonCode = orderDetails.transactionId;
-      initiateReturn.returnMethod = SELF_COURIER;
+      initiateReturn.returnMethod = SELF_SHIPMENT;
       initiateReturn.paymentMethod = returnRequest && returnRequest.paymentMode;
       initiateReturn.isCODorder = "N";
       if (this.props.bankDetail.accountNumber) {
@@ -38,7 +43,11 @@ export default class SelfCourier extends React.Component {
         initiateReturn.title = returnRequest && returnRequest.title;
         initiateReturn.accountHolderName = returnRequest && returnRequest.name;
       }
-
+      if (this.props.data) {
+        initiateReturn.returnReasonCode = this.props.data.returnReasonCode;
+        initiateReturn.subReasonCode = this.props.data.subReasonCode;
+        initiateReturn.comment = this.props.data.comment;
+      }
       this.props.newReturnInitial(initiateReturn);
     }
   }
