@@ -19,7 +19,6 @@ const productDescription = (
       sizeGuideList: []
     },
     emiResult: null,
-    wishList: null,
     reviews: {},
     reviewsStatus: null,
     loadingForAddProduct: false,
@@ -201,26 +200,6 @@ const productDescription = (
       });
 
     case pdpActions.PRODUCT_PDP_EMI_FAILURE:
-      return Object.assign({}, state, {
-        status: action.status,
-        error: action.error,
-        loading: false
-      });
-
-    case pdpActions.PRODUCT_WISH_LIST_REQUEST:
-      return Object.assign({}, state, {
-        status: action.status,
-        loading: true
-      });
-
-    case pdpActions.PRODUCT_WISH_LIST_SUCCESS:
-      return Object.assign({}, state, {
-        status: action.status,
-        wishList: action.wishList,
-        loading: false
-      });
-
-    case pdpActions.PRODUCT_WISH_LIST_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
