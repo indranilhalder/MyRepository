@@ -811,9 +811,6 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-      console.log(resultJson);
-      console.log(resultJsonStatus);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
