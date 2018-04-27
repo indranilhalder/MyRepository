@@ -4,6 +4,7 @@ import * as Cookie from "./Cookie";
 import { SUCCESS, FAILURE } from "./constants.js";
 import * as ErrorHandling from "../general/ErrorHandling.js";
 import { CUSTOMER_ACCESS_TOKEN, GLOBAL_ACCESS_TOKEN } from "../lib/constants";
+import { customerAccessToken } from "../auth/actions/user.actions";
 let API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 export let TATA_CLIQ_ROOT = /https?:[\/]{2}\S*?(\/\S*)/;
 export const TOKEN_PATH = "oauth/token";
@@ -111,6 +112,7 @@ export async function postFormData(url, payload) {
   if (!errorStatus.status || !isInvalidAccessTokenError(errorStatus.message)) {
     return resultClone;
   }
+
   const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
     errorStatus.message,
     url
@@ -124,19 +126,26 @@ export async function post(path, postData, doNotUseApiSuffix: true) {
   const resultClone = result.clone();
   const resultJson = await result.json();
   const errorStatus = ErrorHandling.getFailureResponse(resultJson);
-  if (!errorStatus.status) {
-    // there was no error
-    return resultClone;
-  }
-  if (!errorStatus.status || !isInvalidAccessTokenError(errorStatus.message)) {
-    return resultClone;
-  }
-  const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
-    errorStatus.message,
-    path
-  );
+  try {
+    if (!errorStatus.status) {
+      // there was no error
+      return resultClone;
+    }
+    if (
+      !errorStatus.status ||
+      !isInvalidAccessTokenError(errorStatus.message)
+    ) {
+      return resultClone;
+    }
+    const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
+      errorStatus.message,
+      path
+    );
 
-  return await corePost(newUrl, postData);
+    return await corePost(newUrl, postData);
+  } catch (e) {
+    throw e;
+  }
 }
 
 async function handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
@@ -144,15 +153,19 @@ async function handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
   url
 ) {
   let newUrl = url;
-  newUrl = await handleInvalidCustomerAccessToken(message, url);
-  if (newUrl) {
+  try {
+    newUrl = await handleInvalidCustomerAccessToken(message, url);
+    if (newUrl) {
+      return newUrl;
+    }
+    newUrl = await handleInvalidGlobalAccessToken(message, url);
+    if (newUrl) {
+      return newUrl;
+    }
     return newUrl;
+  } catch (e) {
+    throw e;
   }
-  newUrl = await handleInvalidGlobalAccessToken(message, url);
-  if (newUrl) {
-    return newUrl;
-  }
-  return newUrl;
 }
 
 async function handleInvalidCustomerAccessToken(message, oldUrl) {
@@ -206,6 +219,9 @@ function replaceOldCustomerCookie(url, newCustomerCookie) {
 
 async function refreshCustomerAccessToken() {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  if (!JSON.parse(customerCookie).refresh_token) {
+    throw new Error("No refresh token for expired customer access token");
+  }
   const refreshTokenResponse = await post(
     `${TOKEN_PATH}?refresh_token=${
       JSON.parse(customerCookie).refresh_token
