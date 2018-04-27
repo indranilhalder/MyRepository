@@ -485,7 +485,7 @@ export function getCartDetailsCNC(
     dispatch(cartDetailsCNCRequest());
     try {
       const result = await api.get(
-        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetailsCNC?access_token=${accessToken}&isPwa=true&&platformNumber=2&pincode=${pinCode}`
+        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetailsCNC?access_token=${accessToken}&isPwa=true&platformNumber=2&pincode=${pinCode}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {

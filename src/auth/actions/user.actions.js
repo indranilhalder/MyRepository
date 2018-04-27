@@ -518,6 +518,7 @@ export function customerAccessToken(userDetails) {
     // id request success
     dispatch(authCallsAreInProgress());
     try {
+      console.log("GET CUSTOMER ACCESS TOKEN");
       const result = await api.post(
         `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${
           userDetails.username

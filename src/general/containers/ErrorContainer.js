@@ -5,14 +5,6 @@ import React from "react";
 import delay from "lodash.delay";
 import keys from "lodash.keys";
 import each from "lodash.foreach";
-import {
-  getGlobalAccessToken,
-  refreshToken
-} from "../../auth/actions/user.actions.js";
-import { CUSTOMER_ACCESS_TOKEN } from "../../lib/constants.js";
-import * as Cookie from "../../lib/Cookie.js";
-const ACCESS_TOKEN_EXPIRED_MESSAGE = "Access token expired";
-const ACCESS_TOKEN_INVALID_MESSAGE = "Invalid access token";
 
 const CLEAR_ERROR_DELAY = TOAST_DELAY + 1000;
 
@@ -98,12 +90,6 @@ const mapDispatchToProps = dispatch => {
     },
     clearError: () => {
       dispatch(clearError());
-    },
-    getGlobalAccessToken: () => {
-      dispatch(getGlobalAccessToken());
-    },
-    refreshToken: () => {
-      dispatch(refreshToken());
     }
   };
 };
@@ -144,22 +130,8 @@ class ErrorDisplay extends React.Component {
   }
 
   displayError(message) {
-    if (message) {
-      if (
-        message.indexOf(ACCESS_TOKEN_EXPIRED_MESSAGE) >= 0 ||
-        message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0
-      ) {
-        let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-        customerCookie =
-          customerCookie && JSON.parse(customerCookie).access_token;
-        if (message.indexOf(customerCookie) >= 0) {
-          this.props.refreshToken();
-        } else {
-          this.props.displayToast(message);
-          delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
-        }
-      }
-    }
+    this.props.displayToast(message);
+    delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
   }
 
   render() {

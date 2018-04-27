@@ -521,46 +521,6 @@ export function getPdpEmi(token, cartValue) {
   };
 }
 
-export function getProductWishListRequest() {
-  return {
-    type: PRODUCT_WISH_LIST_REQUEST,
-    status: REQUESTING
-  };
-}
-export function getProductWishListSuccess(wishList) {
-  return {
-    type: PRODUCT_WISH_LIST_SUCCESS,
-    status: SUCCESS,
-    wishList
-  };
-}
-
-export function getProductWishListFailure(error) {
-  return {
-    type: PRODUCT_WISH_LIST_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-export function getProductWishList() {
-  return async (dispatch, getState, { api }) => {
-    dispatch(getProductWishListRequest());
-    try {
-      const result = await api.postMock(PRODUCT_WISH_LIST_PATH);
-      const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
-      }
-
-      dispatch(getProductWishListSuccess(resultJson));
-    } catch (e) {
-      dispatch(getProductWishListFailure(e.message));
-    }
-  };
-}
-
 export function ProductSpecificationRequest() {
   return {
     type: PRODUCT_SPECIFICATION_REQUEST,
@@ -586,7 +546,7 @@ export function getProductSpecification(productId) {
   return async (dispatch, getState, { api }) => {
     dispatch(ProductSpecificationRequest());
     try {
-      const result = await api.getMock(
+      const result = await api.get(
         `${PRODUCT_SPECIFICATION_PATH}/${productId}`
       );
       const resultJson = await result.json();
