@@ -34,7 +34,6 @@ export default class ProductDescription extends Component {
       <div className={styles.base}>
         <div className={headerClass}>
           <div className={headerText}>{this.props.title}</div>
-
           {this.props.showWishListButton &&
             this.props.productListingId &&
             this.props.winningUssID && (
@@ -54,13 +53,11 @@ export default class ProductDescription extends Component {
 
           {this.props.discountPrice &&
             this.props.discountPrice !== this.props.price && (
-              <div className={styles.discount}>
-                {`Rs. ${this.props.discountPrice}`}
-              </div>
+              <div className={styles.discount}>{this.props.discountPrice}</div>
             )}
 
           {this.props.price && (
-            <div className={priceClass}>{`Rs. ${this.props.price}`}</div>
+            <div className={priceClass}>{this.props.price}</div>
           )}
         </div>
       </div>

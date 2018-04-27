@@ -11,7 +11,8 @@ import * as ErrorHandling from "../../general/ErrorHandling.js";
 import {
   showModal,
   EMI_ITEM_LEVEL_BREAKAGE,
-  EMI_BANK_TERMS_AND_CONDITIONS
+  EMI_BANK_TERMS_AND_CONDITIONS,
+  INVALID_BANK_COUPON_POPUP
 } from "../../general/modal.actions";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -26,6 +27,7 @@ import {
   JUS_PAY_CHARGED,
   FAILURE_LOWERCASE
 } from "../../lib/constants";
+import queryString, { parse } from "query-string";
 
 import {
   setDataLayer,
@@ -245,13 +247,6 @@ export const ORDER_EXPERIENCE_CAPTURE_FAILURE =
 
 export const CLEAR_ORDER_EXPERIENCE_CAPTURE = "CLEAR_ORDER_EXPERIENCE_CAPTURE";
 
-export const ADD_PRODUCT_TO_WISH_LIST_REQUEST =
-  "ADD_PRODUCT_TO_WISH_LIST_REQUEST";
-export const ADD_PRODUCT_TO_WISH_LIST_SUCCESS =
-  "ADD_PRODUCT_TO_WISH_LIST_SUCCESS";
-export const ADD_PRODUCT_TO_WISH_LIST_FAILURE =
-  "ADD_PRODUCT_TO_WISH_LIST_FAILURE";
-
 export const REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST =
   "REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST";
 export const REMOVE_ITEM_FROM_CART_LOGGED_IN_SUCCESS =
@@ -320,10 +315,19 @@ export const EMI_ITEM_BREAK_UP_DETAILS_SUCCESS =
 export const EMI_ITEM_BREAK_UP_DETAILS_FAILURE =
   "EMI_ITEM_BREAK_UP_DETAILS_FAILURE";
 
+export const PAYMENT_FAILURE_ORDER_DETAILS_REQUEST =
+  "PAYMENT_FAILURE_ORDER_DETAILS_REQUEST";
+export const PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS =
+  "PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS";
+export const PAYMENT_FAILURE_ORDER_DETAILS_FAILURE =
+  "PAYMENT_FAILURE_ORDER_DETAILS_FAILURE";
+
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
-const MY_WISH_LIST = "MyWishList";
+const ERROR_CODE_FOR_BANK_OFFER_INVALID_1 = "B9078";
+const ERROR_CODE_FOR_BANK_OFFER_INVALID_2 = "B6009";
+const INVALID_COUPON_ERROR_MESSAGE = "invalid coupon";
 export const ANONYMOUS_USER = "anonymous";
 
 export function displayCouponRequest() {
@@ -473,7 +477,7 @@ export function getCartDetailsCNC(
     dispatch(cartDetailsCNCRequest());
     try {
       const result = await api.get(
-        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetailsCNC?access_token=${accessToken}&isPwa=true&&platformNumber=2&pincode=${pinCode}`
+        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetailsCNC?access_token=${accessToken}&isPwa=true&platformNumber=2&pincode=${pinCode}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
@@ -837,9 +841,9 @@ export function addUserAddress(userAddress, fromAccount) {
       setDataLayerForCheckoutDirectCalls(
         ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE
       );
-      dispatch(addUserAddressSuccess());
+      return dispatch(addUserAddressSuccess());
     } catch (e) {
-      dispatch(addUserAddressFailure(e.message));
+      return dispatch(addUserAddressFailure(e.message));
     }
   };
 }
@@ -1560,7 +1564,7 @@ export function softReservation(pinCode, payload) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(getOrderSummary());
+      dispatch(getOrderSummary(pinCode));
       dispatch(softReservationSuccess(resultJson.reservationItem));
     } catch (e) {
       dispatch(softReservationFailure(e.message));
@@ -2006,7 +2010,6 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      debugger;
       setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPaymentSuccess(resultJson));
       dispatch(jusPayTokenize(cardDetails, address, productItems, paymentMode));
@@ -2361,7 +2364,30 @@ export function createJusPayOrder(
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          const redoCreateJusPayApi = () =>
+            dispatch(
+              createJusPayOrder(
+                token,
+                cartItem,
+                address,
+                cardDetails,
+                paymentMode
+              )
+            );
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              redoCreateJusPayApi,
+              couponCode: resultJson.couponCode
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
       dispatch(
         jusPayPaymentMethodType(
@@ -2445,7 +2471,29 @@ export function createJusPayOrderForNetBanking(
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          const redoCreateJusPayApi = () =>
+            dispatch(
+              createJusPayOrderForNetBanking(
+                paymentMethodType,
+                bankName,
+                pinCode,
+                cartItem
+              )
+            );
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              redoCreateJusPayApi,
+              couponCode: resultJson.couponCode
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
       dispatch(
         jusPayPaymentMethodTypeForNetBanking(
@@ -2521,9 +2569,23 @@ export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          const redoCreateJusPayApi = () =>
+            dispatch(createJusPayOrderForSavedCards(cardDetails, cartItem));
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              redoCreateJusPayApi,
+              couponCode: resultJson.couponCode
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
       dispatch(
         jusPayPaymentMethodTypeForSavedCards(
@@ -2600,7 +2662,22 @@ export function createJusPayOrderForCliqCash(pinCode, cartItem) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          const redoCreateJusPayApi = () =>
+            dispatch(createJusPayOrderForCliqCash(pinCode, cartItem));
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              redoCreateJusPayApi,
+              couponCode: resultJson.couponCode
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
       dispatch(createJusPayOrderSuccessForCliqCash(resultJson));
       dispatch(generateCartIdForLoggedInUser());
@@ -2941,9 +3018,7 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
         );
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayerForOrderConfirmationDirectCalls(
-        ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS
-      );
+
       dispatch(updateTransactionDetailsSuccess(resultJson));
       dispatch(orderConfirmation(resultJson.orderId));
     } catch (e) {
@@ -3001,6 +3076,12 @@ export function orderConfirmation(orderId) {
         getState().icid.value,
         getState().icid.icidType
       );
+
+      setDataLayerForOrderConfirmationDirectCalls(
+        ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS,
+        resultJson.orderRefNo
+      );
+
       dispatch(orderConfirmationSuccess(resultJson));
     } catch (e) {
       dispatch(orderConfirmationFailure(e.message));
@@ -3298,60 +3379,6 @@ export function softReservationForCODPayment(pinCode) {
     }
   };
 }
-
-// Actions for Add Product to Wish List
-export function addProductToWishListRequest() {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_REQUEST,
-    status: REQUESTING
-  };
-}
-export function addProductToWishListSuccess() {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_SUCCESS,
-    status: SUCCESS
-  };
-}
-
-export function addProductToWishListFailure(error) {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-// Action Creator for Add Product To Wish List
-export function addProductToWishList(productDetails) {
-  return async (dispatch, getState, { api }) => {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-    const cartId = JSON.parse(cartDetails).guid;
-    dispatch(addProductToWishListRequest());
-    try {
-      const result = await api.post(
-        `${USER_CART_PATH}/${
-          JSON.parse(userDetails).userName
-        }/addProductInWishlist?platformNumber=2&access_token=${
-          JSON.parse(customerCookie).access_token
-        }&isPwa=true&ussid=${productDetails.USSID}&productCode=${
-          productDetails.productcode
-        }&wishlistName=${MY_WISH_LIST}`
-      );
-      const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
-      }
-      dispatch(addProductToWishListSuccess());
-    } catch (e) {
-      dispatch(addProductToWishListFailure(e.message));
-    }
-  };
-}
-
 // Action for remove Item from Cart Logged In
 export function removeItemFromCartLoggedInRequest() {
   return {
@@ -3867,6 +3894,7 @@ export function removeNoCostEmi(couponCode) {
         }&cartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
+
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
@@ -3927,6 +3955,60 @@ export function getItemBreakUpDetails(couponCode) {
       dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE, resultJson));
     } catch (e) {
       dispatch(getItemBreakUpDetailsFailure(e.message));
+    }
+  };
+}
+
+export function getPaymentFailureOrderDetailsRequest() {
+  return {
+    type: PAYMENT_FAILURE_ORDER_DETAILS_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function getPaymentFailureOrderDetailsSuccess(
+  paymentFailureOrderDetails
+) {
+  return {
+    type: PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS,
+    status: SUCCESS,
+    paymentFailureOrderDetails
+  };
+}
+
+export function getPaymentFailureOrderDetailsFailure(error) {
+  return {
+    type: PAYMENT_FAILURE_ORDER_DETAILS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getPaymentFailureOrderDetails() {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+    let url = queryString.parse(window.location.search);
+    const cartGuId = url && url.value;
+
+    dispatch(getPaymentFailureOrderDetailsRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/payments/failedorderdetails?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartGuId}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(getPaymentFailureOrderDetailsSuccess(resultJson));
+    } catch (e) {
+      dispatch(getPaymentFailureOrderDetailsFailure(e.message));
     }
   };
 }

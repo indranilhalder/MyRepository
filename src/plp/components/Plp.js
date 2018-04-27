@@ -73,13 +73,19 @@ export default class Plp extends React.Component {
         if (
           this.props.productListings.seo &&
           this.props.productListings.seo.breadcrumbs &&
-          this.props.productListings.seo.breadcrumbs[0] &&
-          this.props.productListings.seo.breadcrumbs[0].name
+          this.props.productListings.seo.breadcrumbs[
+            this.props.productListings.seo.breadcrumbs.length - 1
+          ] &&
+          this.props.productListings.seo.breadcrumbs[
+            this.props.productListings.seo.breadcrumbs.length - 1
+          ].name
         )
           this.props.setHeaderText(
-            `${this.props.productListings.seo.breadcrumbs[0].name} (${
-              this.props.productListings.pagination.totalResults
-            })`
+            `${
+              this.props.productListings.seo.breadcrumbs[
+                this.props.productListings.seo.breadcrumbs.length - 1
+              ].name
+            } (${this.props.productListings.pagination.totalResults})`
           );
         else {
           const slug = this.props.match.params.slug;

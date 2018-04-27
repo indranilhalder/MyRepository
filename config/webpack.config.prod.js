@@ -333,8 +333,7 @@ module.exports = {
       asset: "[path].gz[query]",
       algorithm: "gzip",
       test: /\.js$|\.css$|\.html$/,
-      threshold: 0,
-      minRatio: 0.8
+      threshold: 0
     })
   ],
   // Some libraries import Node modules but don't use them in the browser.

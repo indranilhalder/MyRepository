@@ -48,9 +48,8 @@ export default class ReturnReasonAndModes extends React.Component {
       this.props.displayToast("Please select reason ");
       return false;
     }
-    if (!data.comment) {
-      this.props.displayToast("Please enter comment ");
-      return false;
+    if (!data.reverseSeal) {
+      this.props.displayToast("Please Select Reverse Seal ");
     } else {
       this.props.onChange({ data });
       if (this.props.isCOD) {
@@ -95,9 +94,7 @@ export default class ReturnReasonAndModes extends React.Component {
       });
     } else if (mode === SELF_COURIER) {
       this.props.history.push({
-        pathname: `${RETURNS_PREFIX}/${
-          this.orderCode
-        }${RETURN_CLIQ_PIQ}${RETURNS_SELF_COURIER}`,
+        pathname: `${RETURNS_PREFIX}/${this.orderCode}${RETURNS_SELF_COURIER}`,
         state: {
           authorizedRequest: true
         }

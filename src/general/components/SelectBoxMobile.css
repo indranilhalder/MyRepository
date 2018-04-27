@@ -44,3 +44,18 @@
   composes: base;
   border: 1px solid #212121;
 }
+.disabled {
+  composes: base;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.disabledBlack {
+  composes: blackBox;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.disabledHollow {
+  composes: hollowBox;
+  opacity: 0.5;
+  pointer-events: none;
+}

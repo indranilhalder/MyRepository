@@ -114,9 +114,6 @@ const cart = (
     binValidationError: null,
     binValidationDetails: null,
 
-    addToWishlistStatus: null,
-    addToWishlistError: null,
-
     removeCartItemStatus: null,
     removeCartItemError: null,
 
@@ -172,7 +169,11 @@ const cart = (
 
     emiItemBreakUpStatus: null,
     emiItemBreakUpDetails: null,
-    emiItemBreakUpError: null
+    emiItemBreakUpError: null,
+
+    paymentFailureOrderDetailsStatus: null,
+    paymentFailureOrderDetailsError: null,
+    paymentFailureOrderDetails: null
   },
   action
 ) => {
@@ -209,7 +210,6 @@ const cart = (
         justPayPaymentDetailsError: null,
         orderExperienceError: null,
         binValidationError: null,
-        addToWishlistError: null,
         removeCartItemError: null,
         removeCartItemLoggedOutError: null,
         getUserAddressError: null,
@@ -620,8 +620,11 @@ const cart = (
         loading: true
       });
     case cartActions.APPLY_BANK_OFFER_SUCCESS:
+      const currentCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      currentCartDetailCNC.cartAmount = action.bankOffer.cartAmount;
       return Object.assign({}, state, {
         bankOfferStatus: action.status,
+        cartDetailsCNC: currentCartDetailCNC,
         bankOffer: action.bankOffer,
         loading: false
       });
@@ -929,25 +932,6 @@ const cart = (
         loading: false
       });
 
-    case cartActions.ADD_PRODUCT_TO_WISH_LIST_REQUEST:
-      return Object.assign({}, state, {
-        addToWishlistStatus: action.status,
-        loading: true
-      });
-
-    case cartActions.ADD_PRODUCT_TO_WISH_LIST_SUCCESS:
-      return Object.assign({}, state, {
-        addToWishlistStatus: action.status,
-        loading: false
-      });
-
-    case cartActions.ADD_PRODUCT_TO_WISH_LIST_FAILURE:
-      return Object.assign({}, state, {
-        addToWishlistStatus: action.status,
-        addToWishlistError: action.error,
-        loading: false
-      });
-
     case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST:
       return Object.assign({}, state, {
         removeCartItemStatus: action.status,
@@ -1241,6 +1225,25 @@ const cart = (
         loading: false
       });
 
+    case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        paymentFailureOrderDetailsStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        paymentFailureOrderDetailsStatus: action.status,
+        paymentFailureOrderDetails: action.noCostEmiResult,
+        loading: false
+      });
+
+    case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        paymentFailureOrderDetailsStatus: action.status,
+        paymentFailureOrderDetailsError: action.error,
+        loading: false
+      });
     default:
       return state;
   }

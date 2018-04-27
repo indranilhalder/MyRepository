@@ -29,17 +29,19 @@ export default class SelectBoxMobile extends React.Component {
   }
 
   handleChange(event) {
-    const selectedValue = event.target.value;
-    const index = event.nativeEvent.target.selectedIndex;
-    const selectedLabel = event.nativeEvent.target[index].label;
-    const details = {};
-    this.setState({ value: selectedValue, label: selectedLabel }, () => {
-      if (this.props.onChange) {
-        details.label = selectedLabel;
-        details.value = selectedValue;
-        this.props.onChange(details);
-      }
-    });
+    if (!this.props.disabled) {
+      const selectedValue = event.target.value;
+      const index = event.nativeEvent.target.selectedIndex;
+      const selectedLabel = event.nativeEvent.target[index].label;
+      const details = {};
+      this.setState({ value: selectedValue, label: selectedLabel }, () => {
+        if (this.props.onChange) {
+          details.label = selectedLabel;
+          details.value = selectedValue;
+          this.props.onChange(details);
+        }
+      });
+    }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.value !== this.state.value) {
@@ -61,14 +63,31 @@ export default class SelectBoxMobile extends React.Component {
       arrow = WhiteArrow;
     }
     let themeClass = styles.base;
+    if (this.props.disabled) {
+      themeClass = styles.disabled;
+    } else {
+      themeClass = styles.base;
+    }
     if (this.props.theme === BLACK_BOX) {
-      themeClass = styles.blackBox;
+      if (this.props.disabled) {
+        themeClass = styles.disabledBlack;
+      } else {
+        themeClass = styles.blackBox;
+      }
     }
     if (this.props.theme === HOLLOW_BOX) {
-      themeClass = styles.hollowBox;
+      if (this.props.disabled) {
+        themeClass = styles.disabledHollow;
+      } else {
+        themeClass = styles.hollowBox;
+      }
     }
-    if (this.props.arrowColour === GREY_BOX) {
-      themeClass = styles.base;
+    if (this.props.theme === GREY_BOX) {
+      if (this.props.disabled) {
+        themeClass = styles.disabled;
+      } else {
+        themeClass = styles.base;
+      }
     }
     return (
       <div
@@ -104,9 +123,11 @@ SelectBoxMobile.propTypes = {
     PropTypes.shape({ value: PropTypes.string, label: PropTypes.string })
   ),
   arrowColour: PropTypes.oneOf([BLACK, GREY, WHITE]),
-  theme: PropTypes.oneOf([HOLLOW_BOX, BLACK_BOX, GREY_BOX])
+  theme: PropTypes.oneOf([HOLLOW_BOX, BLACK_BOX, GREY_BOX]),
+  disabled: PropTypes.bool
 };
 SelectBoxMobile.defaultProps = {
   height: 35,
-  arrowColour: GREY
+  arrowColour: GREY,
+  disabled: false
 };

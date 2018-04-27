@@ -28,6 +28,8 @@ import * as ErrorHandling from "../../general/ErrorHandling.js";
 
 import { API_MSD_URL_ROOT } from "../../lib/apiRequest.js";
 import { displayToast } from "../../general/toast.actions.js";
+export const SUBMIT_REVIEW_TEXT =
+  "Thanks for submitting the review. Your review will start appearing shortly";
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
 export const PRODUCT_DESCRIPTION_SUCCESS = "PRODUCT_DESCRIPTION_SUCCESS";
 export const PRODUCT_DESCRIPTION_FAILURE = "PRODUCT_DESCRIPTION_FAILURE";
@@ -35,20 +37,6 @@ export const PRODUCT_DESCRIPTION_FAILURE = "PRODUCT_DESCRIPTION_FAILURE";
 export const CHECK_PRODUCT_PIN_CODE_REQUEST = "CHECK_PRODUCT_PIN_CODE_REQUEST";
 export const CHECK_PRODUCT_PIN_CODE_SUCCESS = "CHECK_PRODUCT_PIN_CODE_SUCCESS";
 export const CHECK_PRODUCT_PIN_CODE_FAILURE = "CHECK_PRODUCT_PIN_CODE_FAILURE";
-
-export const ADD_PRODUCT_TO_WISH_LIST_REQUEST =
-  "ADD_PRODUCT_TO_WISH_LIST_REQUEST";
-export const ADD_PRODUCT_TO_WISH_LIST_SUCCESS =
-  "ADD_PRODUCT_TO_WISH_LIST_SUCCESS";
-export const ADD_PRODUCT_TO_WISH_LIST_FAILURE =
-  "ADD_PRODUCT_TO_WISH_LIST_FAILURE";
-
-export const REMOVE_PRODUCT_FROM_WISH_LIST_REQUEST =
-  "REMOVE_PRODUCT_FROM_WISH_LIST_REQUEST";
-export const REMOVE_PRODUCT_FROM_WISH_LIST_SUCCESS =
-  "REMOVE_PRODUCT_FROM_WISH_LIST_SUCCESS";
-export const REMOVE_PRODUCT_FROM_WISH_LIST_FAILURE =
-  "REMOVE_PRODUCT_FROM_WISH_LIST_FAILURE";
 
 export const ADD_PRODUCT_TO_CART_REQUEST = "ADD_PRODUCT_TO_CART_REQUEST";
 export const ADD_PRODUCT_TO_CART_SUCCESS = "ADD_PRODUCT_TO_CART_SUCCESS";
@@ -68,11 +56,6 @@ export const GET_EMI_TERMS_AND_CONDITIONS_FAILURE =
   "GET_EMI_TERMS_AND_CONDITIONS_FAILURE";
 export const GET_EMI_TERMS_AND_CONDITIONS_REQUEST =
   "GET_EMI_TERMS_AND_CONDITIONS_REQUEST";
-
-export const PRODUCT_WISH_LIST_REQUEST = "PRODUCT_WISH_LIST_REQUEST";
-export const PRODUCT_WISH_LIST_SUCCESS = "PRODUCT_WISH_LIST_SUCCESS";
-export const PRODUCT_WISH_LIST_FAILURE = "PRODUCT_WISH_LIST_FAILURE";
-export const PRODUCT_WISH_LIST_PATH = "wishList";
 
 export const PRODUCT_SPECIFICATION_REQUEST = "PRODUCT_SPECIFICATION_REQUEST";
 export const PRODUCT_SPECIFICATION_SUCCESS = "PRODUCT_SPECIFICATION_SUCCESS";
@@ -243,101 +226,6 @@ export function getProductPinCode(pinCode, productCode) {
       );
     } catch (e) {
       dispatch(getProductPinCodeFailure(e.message));
-    }
-  };
-}
-
-export function addProductToWishListRequest() {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_REQUEST,
-    status: REQUESTING
-  };
-}
-export function addProductToWishListSuccess() {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_SUCCESS,
-    status: SUCCESS
-  };
-}
-
-export function addProductToWishListFailure(error) {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-export function addProductToWishList(userId, accessToken, productDetails) {
-  return async (dispatch, getState, { api }) => {
-    dispatch(addProductToWishListRequest());
-    try {
-      const result = await api.post(
-        `${PRODUCT_DETAILS_PATH}/${userId}/addProductInWishlist?platformNumber=2&access_token=${accessToken}&isPwa=true&ussid=${
-          productDetails.ussId
-        }&productCode=${productDetails.code}&wishlistName=${MY_WISH_LIST}`
-      );
-      const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
-      }
-
-      dispatch(addProductToWishListSuccess());
-    } catch (e) {
-      dispatch(addProductToWishListFailure(e.message));
-    }
-  };
-}
-
-export function removeProductFromWishListRequest() {
-  return {
-    type: REMOVE_PRODUCT_FROM_WISH_LIST_REQUEST,
-    status: REQUESTING
-  };
-}
-export function removeProductFromWishListSuccess() {
-  return {
-    type: REMOVE_PRODUCT_FROM_WISH_LIST_SUCCESS,
-    status: SUCCESS
-  };
-}
-
-export function removeProductFromWishListFailure(error) {
-  return {
-    type: REMOVE_PRODUCT_FROM_WISH_LIST_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-export function removeProductFromWishList(productDetails) {
-  return async (dispatch, getState, { api }) => {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    const removeProductFromWishListObject = new FormData();
-    removeProductFromWishListObject.append("USSID", productDetails.USSID);
-    removeProductFromWishListObject.append("wishlistName", MY_WISH_LIST);
-    dispatch(removeProductFromWishListRequest());
-    try {
-      const result = await api.postFormData(
-        `${PRODUCT_DETAILS_PATH}/${
-          JSON.parse(userDetails).userName
-        }/removeProductFromWishlist?&access_token=${
-          JSON.parse(customerCookie).access_token
-        }`,
-        removeProductFromWishListObject
-      );
-      const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
-      }
-      return dispatch(removeProductFromWishListSuccess());
-    } catch (e) {
-      return dispatch(removeProductFromWishListFailure(e.message));
     }
   };
 }
@@ -519,46 +407,6 @@ export function getPdpEmi(token, cartValue) {
   };
 }
 
-export function getProductWishListRequest() {
-  return {
-    type: PRODUCT_WISH_LIST_REQUEST,
-    status: REQUESTING
-  };
-}
-export function getProductWishListSuccess(wishList) {
-  return {
-    type: PRODUCT_WISH_LIST_SUCCESS,
-    status: SUCCESS,
-    wishList
-  };
-}
-
-export function getProductWishListFailure(error) {
-  return {
-    type: PRODUCT_WISH_LIST_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-export function getProductWishList() {
-  return async (dispatch, getState, { api }) => {
-    dispatch(getProductWishListRequest());
-    try {
-      const result = await api.postMock(PRODUCT_WISH_LIST_PATH);
-      const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
-      }
-
-      dispatch(getProductWishListSuccess(resultJson));
-    } catch (e) {
-      dispatch(getProductWishListFailure(e.message));
-    }
-  };
-}
-
 export function ProductSpecificationRequest() {
   return {
     type: PRODUCT_SPECIFICATION_REQUEST,
@@ -584,7 +432,7 @@ export function getProductSpecification(productId) {
   return async (dispatch, getState, { api }) => {
     dispatch(ProductSpecificationRequest());
     try {
-      const result = await api.getMock(
+      const result = await api.get(
         `${PRODUCT_SPECIFICATION_PATH}/${productId}`
       );
       const resultJson = await result.json();
@@ -643,7 +491,7 @@ export function addProductReview(productCode, productReview) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      dispatch(displayToast(SUBMIT_REVIEW_TEXT));
       dispatch(addProductReviewSuccess(productReview));
     } catch (e) {
       dispatch(addProductReviewFailure(e.message));

@@ -162,7 +162,6 @@ export default class OtpVerification extends React.Component {
                   textStyle={{ color: "#fff", fontSize: 14 }}
                   onClick={() => this.onSubmitOtp()}
                 />
-                <div className={ownStyles.time}>30 sec</div>
               </div>
             </div>
           </React.Fragment>

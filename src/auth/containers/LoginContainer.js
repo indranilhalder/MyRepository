@@ -95,7 +95,7 @@ const mapDispatchToProps = dispatch => {
 
             if (newCartIdObj.status === SUCCESS) {
               const mergeCartIdResponse = await dispatch(
-                mergeCartId(cartVal.cartDetails.guid)
+                mergeCartId(newCartIdObj.cartDetails.guid)
               );
               // merging cart id with new cart id
               if (mergeCartIdResponse.status === SUCCESS) {

@@ -47,6 +47,6 @@ OrderPaymentMethod.propTypes = {
 };
 OrderPaymentMethod.defaultProps = {
   underlineButtonLabel: "Request Invoice",
-  underlineButtonColour: "#979797",
+  underlineButtonColour: "#181818",
   isInvoiceAvailable: false
 };

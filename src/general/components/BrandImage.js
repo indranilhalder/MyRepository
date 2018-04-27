@@ -14,15 +14,24 @@ export default class BrandImage extends React.Component {
       iconClass = styles.checkIconActive;
     }
     return (
-      <div className={styles.base} onClick={() => this.handleClick()}>
-        <div className={iconClass} />
-        <div className={styles.imageHolder}>
-          <Image image={this.props.image} color="transparent" fit="contain" />
-        </div>
+      <div>
+        {this.props.isFollowing === "true" && (
+          <div className={styles.base} onClick={() => this.handleClick()}>
+            <div className={iconClass} />
+            <div className={styles.imageHolder}>
+              <Image
+                image={this.props.image}
+                color="transparent"
+                fit="contain"
+              />
+            </div>
+          </div>
+        )}
       </div>
     );
   }
 }
+
 BrandImage.propTypes = {
   image: PropTypes.string,
   selected: PropTypes.bool,

@@ -17,7 +17,8 @@ import {
   SUCCESS,
   FAILURE,
   CART_DETAILS_FOR_ANONYMOUS,
-  CART_DETAILS_FOR_LOGGED_IN_USER
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  ERROR_MESSAGE_FOR_VERIFY_OTP
 } from "../../lib/constants";
 import { updateProfile } from "../../account/actions/account.actions.js";
 import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
@@ -154,8 +155,13 @@ const mapDispatchToProps = dispatch => {
       dispatch(getOtpToActivateWallet(customerDetails, isFromCliqCash));
     },
 
-    verifyWallet: (customerDetailsWithOtp, isFromCliqCash) => {
-      dispatch(verifyWallet(customerDetailsWithOtp, isFromCliqCash));
+    verifyWallet: async (customerDetailsWithOtp, isFromCliqCash) => {
+      const createdCartVal = await dispatch(
+        verifyWallet(customerDetailsWithOtp, isFromCliqCash)
+      );
+      if (createdCartVal.error !== ERROR_MESSAGE_FOR_VERIFY_OTP) {
+        dispatch(modalActions.hideModal());
+      }
     },
 
     submitSelfCourierReturnInfo: returnDetails => {

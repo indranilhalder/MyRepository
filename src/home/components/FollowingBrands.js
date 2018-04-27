@@ -49,6 +49,7 @@ export default class FollowingBrands extends React.Component {
                       image={datum.imageURL}
                       value={datum.webURL}
                       fit={datum.type}
+                      isFollowing={datum.isFollowing}
                       onClick={this.handleBrandImageClick}
                     />
                   );

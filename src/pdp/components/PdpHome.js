@@ -149,29 +149,6 @@ export default class PdpApparel extends React.Component {
     this.props.history.push(url);
   };
 
-  addToWishList = () => {
-    let productDetails = {};
-    productDetails.code = this.props.productDetails.productListingId;
-    productDetails.ussId = this.props.productDetails.winningUssID;
-
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
-    if (userDetails) {
-      this.props.addProductToWishList(
-        JSON.parse(userDetails).userName,
-        JSON.parse(customerCookie).access_token,
-        productDetails
-      );
-    } else {
-      this.props.addProductToWishList(
-        ANONYMOUS_USER,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
-    }
-  };
   showPincodeModal() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
       this.props.showPincodeModal(this.props.match.params[0]);
@@ -382,6 +359,17 @@ export default class PdpApparel extends React.Component {
             </div>
           )}
           <div className={styles.details}>
+            {productData.productDescription && (
+              <Accordion
+                text="Product Description"
+                headerFontSize={16}
+                isOpen={true}
+              >
+                <div className={styles.accordionContent}>
+                  {productData.productDescription}
+                </div>
+              </Accordion>
+            )}
             <Accordion text="Overview" headerFontSize={16}>
               {productData.classificationList &&
                 productData.classificationList.map(value => {
@@ -413,12 +401,6 @@ export default class PdpApparel extends React.Component {
                   );
                 })}
             </Accordion>
-            {productData.styleNote && (
-              <ProductFeature
-                heading="Style Note"
-                content={productData.styleNote}
-              />
-            )}
             {productData.knowMore && (
               <Accordion text="Know More" headerFontSize={16}>
                 {productData.knowMore &&
