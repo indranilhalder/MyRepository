@@ -233,8 +233,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             {this.state.selectedBankIndex !== null && (
               <div className={styles.emiDetailsPlan}>
                 <div className={styles.labelHeader}>
-                  `* No cost EMI available only on ${this.props.productCount}{" "}
-                  product`
+                  * No cost EMI available only on 1 product
                 </div>
                 <div className={styles.monthsLabel}>Tenure (Months)</div>
                 <div className={styles.monthsHolder}>
