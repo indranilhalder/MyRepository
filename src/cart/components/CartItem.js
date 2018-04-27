@@ -46,7 +46,7 @@ export default class CartItem extends React.Component {
   }
 
   handleQuantityChange(changedValue) {
-    const updatedQuantity = parseInt(changedValue, 10);
+    const updatedQuantity = parseInt(changedValue.value, 10);
     if (this.props.onQuantityChange) {
       this.props.onQuantityChange(this.props.entryNumber, updatedQuantity);
     }
