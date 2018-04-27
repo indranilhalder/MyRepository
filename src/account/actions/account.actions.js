@@ -757,11 +757,9 @@ export function getOtpToActivateWallet(customerDetails, isFromCliqCash) {
       const resultJson = await result.json();
 
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(hideModal());
       if (isFromCliqCash) {
         dispatch(showModal(VERIFY_OTP_FOR_CLIQ_CASH));
       } else {
@@ -769,7 +767,7 @@ export function getOtpToActivateWallet(customerDetails, isFromCliqCash) {
       }
       return dispatch(getOtpToActivateWalletSuccess(resultJson));
     } catch (e) {
-      dispatch(getOtpToActivateWalletFailure(e.message));
+      return dispatch(getOtpToActivateWalletFailure(e.message));
     }
   };
 }
@@ -814,7 +812,6 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -827,7 +824,7 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
 
       return dispatch(verifyWalletSuccess(resultJson));
     } catch (e) {
-      dispatch(verifyWalletFailure(e.message));
+      return dispatch(verifyWalletFailure(e.message));
     }
   };
 }
