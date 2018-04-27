@@ -25,7 +25,6 @@ export default class OtherSellersLink extends React.Component {
     );
   };
   render() {
-    console.log(this.props);
     if (this.props.winningSeller) {
       return (
         <PdpLink noLink={this.getValidSellerCount() === 0}>

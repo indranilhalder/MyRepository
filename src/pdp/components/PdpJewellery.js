@@ -4,13 +4,10 @@ import PdpFrame from "./PdpFrame";
 import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
-import ColourSelector from "./ColourSelector";
-import ColourButton from "../../general/components/ColourButton";
 import SizeSelector from "./SizeSelector";
 import PriceBreakUp from "./PriceBreakUp";
 import OfferCard from "./OfferCard";
 import OtherSellersLink from "./OtherSellersLink";
-import PdpLink from "./PdpLink";
 import PdpDeliveryModes from "./PdpDeliveryModes";
 import JewelleryClassification from "./JewelleryClassification";
 import RatingAndTextLink from "./RatingAndTextLink";
@@ -227,25 +224,6 @@ export default class PdpJewellery extends React.Component {
             return image[0].value;
           })
       : [];
-    let otherSellersText;
-    let hasOtherSellers = false;
-    if (productData.otherSellers && productData.otherSellers.length > 0) {
-      hasOtherSellers = true;
-      otherSellersText = (
-        <span>
-          Sold by{" "}
-          <span className={styles.winningSellerText}>
-            {" "}
-            {productData.winningSellerName}
-          </span>{" "}
-          and {productData.otherSellers.length} other sellers;
-        </span>
-      );
-    } else {
-      hasOtherSellers = false;
-      otherSellersText = `Sold by ${productData.winningSellerName}`;
-    }
-
     if (productData) {
       let price = "";
       let discountPrice = "";
