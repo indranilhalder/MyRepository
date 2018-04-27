@@ -40,6 +40,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     orderDetails: state.profile.fetchOrderDetails,
+    loadingForFetchOrderDetails: state.profile.loadingForFetchOrderDetails,
     sendInvoiceSatus: state.profile.sendInvoiceStatus
   };
 };
