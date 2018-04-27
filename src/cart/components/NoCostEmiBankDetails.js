@@ -20,7 +20,7 @@ export default class NoCostEmiBankDetails extends React.Component {
     };
   }
   selectOtherBank(val) {
-    this.setState({ selectedBankIndex: null });
+    this.setState({ selectedBankIndex: null, bankName: val });
     if (this.props.selectOtherBank) {
       this.props.selectOtherBank(val);
     }
@@ -42,7 +42,8 @@ export default class NoCostEmiBankDetails extends React.Component {
         selectedBankIndex: index,
         selectedMonth: null,
         selectedBankName: this.props.bankList[index].bankName,
-        selectedBankCode: this.props.bankList[index].code
+        selectedBankCode: this.props.bankList[index].code,
+        bankName: null
       });
     }
   }
@@ -206,7 +207,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             <div className={styles.selectHolder}>
               <SelectBoxMobile
                 height={33}
-                label="Other Bank"
+                label={this.state.bankName ? this.state.bankName : "Other Bank"}
                 options={
                   this.props.bankList &&
                   this.props.bankList.map((val, i) => {
@@ -233,8 +234,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             {this.state.selectedBankIndex !== null && (
               <div className={styles.emiDetailsPlan}>
                 <div className={styles.labelHeader}>
-                  `* No cost EMI available only on ${this.props.productCount}{" "}
-                  product`
+                  * No cost EMI available only on 1 product
                 </div>
                 <div className={styles.monthsLabel}>Tenure (Months)</div>
                 <div className={styles.monthsHolder}>
