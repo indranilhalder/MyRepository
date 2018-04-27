@@ -13,7 +13,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(setHeaderText(text));
     },
     paginate: (page, suffix) => {
-      dispatch(setPage(page));
       dispatch(getAllOrdersDetails(suffix, true, false));
     }
   };

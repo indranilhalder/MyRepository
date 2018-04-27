@@ -1016,39 +1016,45 @@ export function removeSavedCardDetails(userId, customerAccessToken) {
     }
   };
 }
-export function getAllOrdersRequest() {
+export function getAllOrdersRequest(paginated: false) {
   return {
     type: GET_ALL_ORDERS_REQUEST,
     status: REQUESTING
   };
 }
-export function getAllOrdersSuccess(orderDetails) {
+export function getAllOrdersSuccess(orderDetails, isPaginated: false) {
   return {
     type: GET_ALL_ORDERS_SUCCESS,
     status: SUCCESS,
-    orderDetails
+    orderDetails,
+    isPaginated
   };
 }
 
-export function getAllOrdersFailure(error) {
+export function getAllOrdersFailure(error, isPaginated) {
   return {
     type: GET_ALL_ORDERS_FAILURE,
 
     status: ERROR,
-    error
+    error,
+    isPaginated
   };
 }
 export function getAllOrdersDetails(suffix: null, paginated: false) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
-    dispatch(getAllOrdersRequest());
+    dispatch(getAllOrdersRequest(paginated));
     dispatch(showSecondaryLoader());
+    let currentPage = 0;
+    if (getState().profile.orderDetails) {
+      currentPage = getState().profile.orderDetails.currentPage + 1;
+    }
     try {
       const result = await api.get(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
-        }/orderhistorylist?currentPage=${CURRENT_PAGE}&access_token=${
+        }/orderhistorylist?currentPage=${currentPage}&access_token=${
           JSON.parse(customerCookie).access_token
         }&pageSize=${PAGE_SIZE}&isPwa=true&platformNumber=2`
       );

@@ -59,7 +59,11 @@ export default class AllOrderDetails extends React.Component {
   }
   handleScroll = () => {
     return throttle(() => {
-      if (this.props.profile.orderDetails) {
+      if (
+        this.props.profile.orderDetails &&
+        this.props.profile.orderDetails.currentPage * 3 <
+          this.props.profile.orderDetails.totalNoOfOrders
+      ) {
         const windowHeight =
           "innerHeight" in window
             ? window.innerHeight
@@ -105,7 +109,6 @@ export default class AllOrderDetails extends React.Component {
     return <Redirect to={LOGIN_PATH} />;
   }
   render() {
-    console.log(this.props);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
