@@ -1750,6 +1750,7 @@ export function getWishList() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     dispatch(getWishlistRequest());
+    dispatch(showSecondaryLoader());
     try {
       const result = await api.postFormData(
         `${USER_PATH}/${
@@ -1764,11 +1765,13 @@ export function getWishList() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      dispatch(hideSecondaryLoader());
       return dispatch(
         getWishlistSuccess(resultJson.wishList && resultJson.wishList[0])
       ); //we sre getting response wishlit[0]
     } catch (e) {
+      dispatch(hideSecondaryLoader());
+
       return dispatch(getWishlistFailure(e.message));
     }
   };

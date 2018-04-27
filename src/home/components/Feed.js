@@ -46,75 +46,75 @@ const typeKeyMapping = {
 };
 
 export const typeComponentMapping = {
-  "Product Capsules Component": props => (
-    <ProductCapsulesContainer {...props} />
-  ),
-  "Landing Page Header Component": props => {
-    return <BrandCardHeader {...props} />;
-  },
+  // "Product Capsules Component": props => (
+  //   <ProductCapsulesContainer {...props} />
+  // ),
+  // "Landing Page Header Component": props => {
+  //   return <BrandCardHeader {...props} />;
+  // },
   "Hero Banner Component": props => <HeroBanner {...props} />, // no hard coded data
-  "Theme Offers Component": props => <ThemeOffer {...props} />, // no hard coded data
-  "Auto Product Recommendation Component": props => (
-    <RecommendationWidget {...props} />
-  ),
-  "Content Component": props => <ContentWidgetWrapper {...props} />,
-  "Banner Product Carousel Component": props => (
-    <BannerProductCarousel {...props} />
-  ),
-  "Video Product Carousel Component": props => (
-    <VideoProductCarousel {...props} />
-  ),
-  "Automated Banner Product Carousel Component": props => (
-    <AutomatedBrandProductCarousel {...props} />
-  ),
-  "Auto Following Brands Component": props => <FollowingBrands {...props} />,
-  "Flash Sales Component": props => <FlashSale {...props} />, // wired up
-  "Offers Component": props => <OfferWidget {...props} />, // wired up
-  "Multipurpose Banner Component": props => <ConnectWidget {...props} />, // modal not working - need to figure out what to show here.
-  "Multi Click Component": props => <ThemeProductWidget {...props} />,
-  "Auto Fresh From Brands Component": props => <FollowBase {...props} />, // wired up with clickable url
-  "Banner Separator Component": props => <BannerSeparator {...props} />,
-  "Auto Discover More Component": props => <DiscoverMore {...props} />,
-  "Top Categories Component": props => <TopCategories {...props} />,
-  "Recently viewed product": props => <RecommendationWidget {...props} />,
-  "Single Banner Component": props => <MonoBanner {...props} />,
-  "Curated Listing Strip Component": props => <LatestCollections {...props} />,
-  "Two by Two Banner Component": props => <CuratedFeature {...props} />,
-  "Curated Products Component": props => (
-    <CuratedProductsComponent {...props} />
-  ),
-  "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
-  "Landing Page Hierarchy": props => <AllBrandTypes {...props} />,
-  "Landing Page Hierarchy Component": props => <AllBrandTypes {...props} />,
-  "CMS Paragraph Component": props => <CMSParagraphComponent {...props} />,
-  "Simple Banner Component": props => {
-    return (
-      <div className={styles.simpleBannerHolder}>
-        {" "}
-        <SimpleBannerComponent {...props} />{" "}
-      </div>
-    );
-  },
-  "CMS Text Component": props => {
-    let parsedContent;
+  // "Theme Offers Component": props => <ThemeOffer {...props} />, // no hard coded data
+  // "Auto Product Recommendation Component": props => (
+  //   <RecommendationWidget {...props} />
+  // ),
+  "Content Component": props => <ContentWidgetWrapper {...props} />
+  // "Banner Product Carousel Component": props => (
+  //   <BannerProductCarousel {...props} />
+  // ),
+  // "Video Product Carousel Component": props => (
+  //   <VideoProductCarousel {...props} />
+  // ),
+  // "Automated Banner Product Carousel Component": props => (
+  //   <AutomatedBrandProductCarousel {...props} />
+  // ),
+  // "Auto Following Brands Component": props => <FollowingBrands {...props} />,
+  // "Flash Sales Component": props => <FlashSale {...props} />, // wired up
+  // "Offers Component": props => <OfferWidget {...props} />, // wired up
+  // "Multipurpose Banner Component": props => <ConnectWidget {...props} />, // modal not working - need to figure out what to show here.
+  // "Multi Click Component": props => <ThemeProductWidget {...props} />,
+  // "Auto Fresh From Brands Component": props => <FollowBase {...props} />, // wired up with clickable url
+  // "Banner Separator Component": props => <BannerSeparator {...props} />,
+  // "Auto Discover More Component": props => <DiscoverMore {...props} />,
+  // "Top Categories Component": props => <TopCategories {...props} />,
+  // "Recently viewed product": props => <RecommendationWidget {...props} />,
+  // "Single Banner Component": props => <MonoBanner {...props} />,
+  // "Curated Listing Strip Component": props => <LatestCollections {...props} />,
+  // "Two by Two Banner Component": props => <CuratedFeature {...props} />,
+  // "Curated Products Component": props => (
+  //   <CuratedProductsComponent {...props} />
+  // ),
+  // "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
+  // "Landing Page Hierarchy": props => <AllBrandTypes {...props} />,
+  // "Landing Page Hierarchy Component": props => <AllBrandTypes {...props} />,
+  // "CMS Paragraph Component": props => <CMSParagraphComponent {...props} />,
+  // "Simple Banner Component": props => {
+  //   return (
+  //     <div className={styles.simpleBannerHolder}>
+  //       {" "}
+  //       <SimpleBannerComponent {...props} />{" "}
+  //     </div>
+  //   );
+  // },
+  // "CMS Text Component": props => {
+  //   let parsedContent;
 
-    try {
-      parsedContent = JSON.parse(props.feedComponentData.content);
-    } catch (e) {
-      if (props.displayToast) {
-        props.displayToast("JSON Parse error, check static page content");
-      }
-    }
-    return (
-      parsedContent &&
-      map(parsedContent, content => {
-        return <CMSTextComponent data={content} />;
-      })
-    );
-  },
-  "Account Navigation Component": props => (
-    <AccountNavigationComponent {...props} />
-  )
+  //   try {
+  //     parsedContent = JSON.parse(props.feedComponentData.content);
+  //   } catch (e) {
+  //     if (props.displayToast) {
+  //       props.displayToast("JSON Parse error, check static page content");
+  //     }
+  //   }
+  //   return (
+  //     parsedContent &&
+  //     map(parsedContent, content => {
+  //       return <CMSTextComponent data={content} />;
+  //     })
+  //   );
+  // },
+  // "Account Navigation Component": props => (
+  //   <AccountNavigationComponent {...props} />
+  // )
 };
 
 class Feed extends Component {

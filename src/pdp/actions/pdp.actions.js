@@ -45,13 +45,6 @@ export const ADD_PRODUCT_TO_WISH_LIST_SUCCESS =
 export const ADD_PRODUCT_TO_WISH_LIST_FAILURE =
   "ADD_PRODUCT_TO_WISH_LIST_FAILURE";
 
-export const REMOVE_PRODUCT_FROM_WISH_LIST_REQUEST =
-  "REMOVE_PRODUCT_FROM_WISH_LIST_REQUEST";
-export const REMOVE_PRODUCT_FROM_WISH_LIST_SUCCESS =
-  "REMOVE_PRODUCT_FROM_WISH_LIST_SUCCESS";
-export const REMOVE_PRODUCT_FROM_WISH_LIST_FAILURE =
-  "REMOVE_PRODUCT_FROM_WISH_LIST_FAILURE";
-
 export const ADD_PRODUCT_TO_CART_REQUEST = "ADD_PRODUCT_TO_CART_REQUEST";
 export const ADD_PRODUCT_TO_CART_SUCCESS = "ADD_PRODUCT_TO_CART_SUCCESS";
 export const ADD_PRODUCT_TO_CART_FAILURE = "ADD_PRODUCT_TO_CART_FAILURE";
@@ -289,57 +282,6 @@ export function addProductToWishList(userId, accessToken, productDetails) {
       dispatch(addProductToWishListSuccess());
     } catch (e) {
       dispatch(addProductToWishListFailure(e.message));
-    }
-  };
-}
-
-export function removeProductFromWishListRequest() {
-  return {
-    type: REMOVE_PRODUCT_FROM_WISH_LIST_REQUEST,
-    status: REQUESTING
-  };
-}
-export function removeProductFromWishListSuccess() {
-  return {
-    type: REMOVE_PRODUCT_FROM_WISH_LIST_SUCCESS,
-    status: SUCCESS
-  };
-}
-
-export function removeProductFromWishListFailure(error) {
-  return {
-    type: REMOVE_PRODUCT_FROM_WISH_LIST_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-export function removeProductFromWishList(productDetails) {
-  return async (dispatch, getState, { api }) => {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    const removeProductFromWishListObject = new FormData();
-    removeProductFromWishListObject.append("USSID", productDetails.USSID);
-    removeProductFromWishListObject.append("wishlistName", MY_WISH_LIST);
-    dispatch(removeProductFromWishListRequest());
-    try {
-      const result = await api.postFormData(
-        `${PRODUCT_DETAILS_PATH}/${
-          JSON.parse(userDetails).userName
-        }/removeProductFromWishlist?&access_token=${
-          JSON.parse(customerCookie).access_token
-        }`,
-        removeProductFromWishListObject
-      );
-      const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
-      }
-      return dispatch(removeProductFromWishListSuccess());
-    } catch (e) {
-      return dispatch(removeProductFromWishListFailure(e.message));
     }
   };
 }

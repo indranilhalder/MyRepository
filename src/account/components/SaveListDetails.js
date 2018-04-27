@@ -16,7 +16,6 @@ import {
   SAVED_LIST
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-import SecondaryLoader from "../../general/components/SecondaryLoader";
 
 import { HOME_ROUTER } from "../../lib/constants";
 const dateFormat = "MMMM DD YYYY";
@@ -71,6 +70,8 @@ export default class SaveListDetails extends React.Component {
   }
   removeItem(ussid) {
     const productDetails = {};
+    console.log("REMOVE ITEM");
+    console.log(ussid);
     productDetails.USSID = ussid;
     if (this.props.removeProductFromWishList) {
       this.props.removeProductFromWishList(productDetails);
@@ -80,7 +81,6 @@ export default class SaveListDetails extends React.Component {
     this.props.history.push(HOME_ROUTER);
   }
   render() {
-    console.log("SAVE LIST DETAILS RENDERED");
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
@@ -89,18 +89,10 @@ export default class SaveListDetails extends React.Component {
 
     const wishList = this.props.wishList;
 
-    if (!wishList && this.props.loading) {
-      return (
-        <div className={styles.loadingIndicator}>
-          <SecondaryLoader />
-        </div>
-      );
-    }
     return (
       <div className={styles.base}>
         {wishList &&
-          wishList.products &&
-          wishList.products.map((product, i) => {
+          wishList.map((product, i) => {
             return (
               <div className={styles.listCardHolder} key={i}>
                 <SaveListCard
@@ -120,7 +112,7 @@ export default class SaveListDetails extends React.Component {
               </div>
             );
           })}
-        {(!wishList || !wishList.products) && (
+        {!wishList && (
           <div className={styles.noSaveListBlock}>
             <div className={styles.noSaveListText}>{NO_SAVELIST_TEXT}</div>
             <div className={styles.buttonHolder}>
