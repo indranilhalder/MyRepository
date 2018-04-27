@@ -210,7 +210,6 @@ const cart = (
         justPayPaymentDetailsError: null,
         orderExperienceError: null,
         binValidationError: null,
-        addToWishlistError: null,
         removeCartItemError: null,
         removeCartItemLoggedOutError: null,
         getUserAddressError: null,
