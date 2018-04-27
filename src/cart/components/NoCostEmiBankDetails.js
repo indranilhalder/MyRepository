@@ -20,7 +20,7 @@ export default class NoCostEmiBankDetails extends React.Component {
     };
   }
   selectOtherBank(val) {
-    this.setState({ selectedBankIndex: null });
+    this.setState({ selectedBankIndex: null, bankName: val });
     if (this.props.selectOtherBank) {
       this.props.selectOtherBank(val);
     }
@@ -206,7 +206,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             <div className={styles.selectHolder}>
               <SelectBoxMobile
                 height={33}
-                label="Other Bank"
+                label={this.state.bankName ? this.state.bankName : "Other Bank"}
                 options={
                   this.props.bankList &&
                   this.props.bankList.map((val, i) => {
