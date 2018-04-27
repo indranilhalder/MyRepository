@@ -118,15 +118,17 @@ export default class EditAddressPopUp extends React.Component {
                 onChange={line1 => this.onChange({ line1 })}
               />
             </div>
-            <div className={styles.container}>
-              <Input2
-                value={this.state.line2}
-                boxy={true}
-                textStyle={{ fontSize: 14 }}
-                height={33}
-                onChange={line2 => this.onChange({ line2 })}
-              />
-            </div>
+            {this.state.line2 && (
+              <div className={styles.container}>
+                <Input2
+                  value={this.state.line2}
+                  boxy={true}
+                  textStyle={{ fontSize: 14 }}
+                  height={33}
+                  onChange={line2 => this.onChange({ line2 })}
+                />
+              </div>
+            )}
             <div className={styles.container}>
               <Input2
                 value={this.state.postalCode}
