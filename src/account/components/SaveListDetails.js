@@ -4,6 +4,7 @@ import styles from "./SaveListDetails.css";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
 import moment from "moment";
+import SecondaryLoader from "../../general/components/SecondaryLoader";
 import Button from "../../general/components/Button";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -70,8 +71,6 @@ export default class SaveListDetails extends React.Component {
   }
   removeItem(ussid) {
     const productDetails = {};
-    console.log("REMOVE ITEM");
-    console.log(ussid);
     productDetails.USSID = ussid;
     if (this.props.removeProductFromWishList) {
       this.props.removeProductFromWishList(productDetails);
@@ -85,6 +84,14 @@ export default class SaveListDetails extends React.Component {
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
       return this.navigateToLogin();
+    }
+
+    if (this.props.loading) {
+      return (
+        <div className={styles.loadingIndicator}>
+          <SecondaryLoader />
+        </div>
+      );
     }
 
     const wishList = this.props.wishList;
@@ -112,7 +119,7 @@ export default class SaveListDetails extends React.Component {
               </div>
             );
           })}
-        {!wishList && (
+        {(!wishList || wishList.length === 0) && (
           <div className={styles.noSaveListBlock}>
             <div className={styles.noSaveListText}>{NO_SAVELIST_TEXT}</div>
             <div className={styles.buttonHolder}>

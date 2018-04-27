@@ -1,5 +1,4 @@
 import { connect } from "react-redux";
-import { getWishList } from "../actions/account.actions";
 import {
   getWishListItems,
   removeProductFromWishList
@@ -26,9 +25,6 @@ const mapDispatchToProps = dispatch => {
       dispatch(removeProductFromWishList(productDetails)).then(response => {
         if (response.status === SUCCESS) {
           dispatch(displayToast(REMOVED_SAVELIST));
-          return dispatch(getWishList());
-        } else {
-          return response;
         }
       });
     }
@@ -36,7 +32,8 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   return {
-    wishList: state.wishlistItems.wishlistItems
+    wishList: state.wishlistItems.wishlistItems,
+    loading: state.wishlistItems.loading
   };
 };
 

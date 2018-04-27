@@ -38,13 +38,6 @@ export const CHECK_PRODUCT_PIN_CODE_REQUEST = "CHECK_PRODUCT_PIN_CODE_REQUEST";
 export const CHECK_PRODUCT_PIN_CODE_SUCCESS = "CHECK_PRODUCT_PIN_CODE_SUCCESS";
 export const CHECK_PRODUCT_PIN_CODE_FAILURE = "CHECK_PRODUCT_PIN_CODE_FAILURE";
 
-export const ADD_PRODUCT_TO_WISH_LIST_REQUEST =
-  "ADD_PRODUCT_TO_WISH_LIST_REQUEST";
-export const ADD_PRODUCT_TO_WISH_LIST_SUCCESS =
-  "ADD_PRODUCT_TO_WISH_LIST_SUCCESS";
-export const ADD_PRODUCT_TO_WISH_LIST_FAILURE =
-  "ADD_PRODUCT_TO_WISH_LIST_FAILURE";
-
 export const ADD_PRODUCT_TO_CART_REQUEST = "ADD_PRODUCT_TO_CART_REQUEST";
 export const ADD_PRODUCT_TO_CART_SUCCESS = "ADD_PRODUCT_TO_CART_SUCCESS";
 export const ADD_PRODUCT_TO_CART_FAILURE = "ADD_PRODUCT_TO_CART_FAILURE";
@@ -238,50 +231,6 @@ export function getProductPinCode(pinCode, productCode) {
       );
     } catch (e) {
       dispatch(getProductPinCodeFailure(e.message));
-    }
-  };
-}
-
-export function addProductToWishListRequest() {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_REQUEST,
-    status: REQUESTING
-  };
-}
-export function addProductToWishListSuccess() {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_SUCCESS,
-    status: SUCCESS
-  };
-}
-
-export function addProductToWishListFailure(error) {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-export function addProductToWishList(userId, accessToken, productDetails) {
-  return async (dispatch, getState, { api }) => {
-    dispatch(addProductToWishListRequest());
-    try {
-      const result = await api.post(
-        `${PRODUCT_DETAILS_PATH}/${userId}/addProductInWishlist?platformNumber=2&access_token=${accessToken}&isPwa=true&ussid=${
-          productDetails.ussId
-        }&productCode=${productDetails.code}&wishlistName=${MY_WISH_LIST}`
-      );
-      const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
-      }
-
-      dispatch(addProductToWishListSuccess());
-    } catch (e) {
-      dispatch(addProductToWishListFailure(e.message));
     }
   };
 }

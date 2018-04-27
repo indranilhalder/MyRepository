@@ -138,25 +138,6 @@ const productDescription = (
         loading: false
       });
 
-    case pdpActions.ADD_PRODUCT_TO_WISH_LIST_REQUEST:
-      return Object.assign({}, state, {
-        status: action.status,
-        loading: true
-      });
-
-    case pdpActions.ADD_PRODUCT_TO_WISH_LIST_SUCCESS:
-      return Object.assign({}, state, {
-        status: action.status,
-        loading: false
-      });
-
-    case pdpActions.ADD_PRODUCT_TO_WISH_LIST_FAILURE:
-      return Object.assign({}, state, {
-        status: action.status,
-        error: action.error,
-        loading: false
-      });
-
     case pdpActions.ADD_PRODUCT_TO_CART_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
