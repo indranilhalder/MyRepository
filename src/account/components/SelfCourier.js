@@ -19,7 +19,6 @@ export default class SelfCourier extends React.Component {
     }
   }
   onContinue() {
-    console.log(this.props);
     if (this.props.newReturnInitial) {
       const orderDetails = this.props.returnProductDetails.orderProductWsDTO[0];
       const returnRequest = this.props.returnRequest.codSelfShipData;

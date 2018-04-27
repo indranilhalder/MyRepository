@@ -492,7 +492,6 @@ export function newReturnInitial(returnDetails, product: null) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-      console.log(resultJsonStatus);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
