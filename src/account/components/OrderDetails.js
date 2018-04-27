@@ -174,11 +174,28 @@ export default class OrderDetails extends React.Component {
 
                 <div className={styles.payment}>
                   <OrderViewPaymentDetails
-                    SubTotal={orderDetails.subTotal}
+                    SubTotal={
+                      orderDetails.orderAmount &&
+                      orderDetails.orderAmount.bagTotal &&
+                      orderDetails.orderAmount.bagTotal.doubleValue
+                    }
                     DeliveryCharges={orderDetails.deliveryCharge}
-                    Discount={orderDetails.totalDiscount}
+                    Discount={
+                      orderDetails.orderAmount &&
+                      orderDetails.orderAmount.totalDiscountAmount &&
+                      orderDetails.orderAmount.totalDiscountAmount.doubleValue
+                    }
+                    coupon={
+                      orderDetails.orderAmount &&
+                      orderDetails.orderAmount.couponDiscountAmount &&
+                      orderDetails.orderAmount.couponDiscountAmount.doubleValue
+                    }
                     ConvenienceCharges={orderDetails.convenienceCharge}
-                    Total={orderDetails.totalOrderAmount}
+                    Total={
+                      orderDetails.orderAmount &&
+                      orderDetails.orderAmount.paybleAmount &&
+                      orderDetails.orderAmount.paybleAmount.doubleValue
+                    }
                   />
                 </div>
 

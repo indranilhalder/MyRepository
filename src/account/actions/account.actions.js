@@ -1373,7 +1373,7 @@ export function fetchOrderDetails(orderId) {
           JSON.parse(userDetails).userName
         }/getSelectedOrder/${orderId}?access_token=${
           JSON.parse(customerCookie).access_token
-        }`
+        }&isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
