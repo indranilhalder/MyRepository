@@ -42,7 +42,8 @@ export default class NoCostEmiBankDetails extends React.Component {
         selectedBankIndex: index,
         selectedMonth: null,
         selectedBankName: this.props.bankList[index].bankName,
-        selectedBankCode: this.props.bankList[index].code
+        selectedBankCode: this.props.bankList[index].code,
+        bankName: null
       });
     }
   }
