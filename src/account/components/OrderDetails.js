@@ -138,7 +138,7 @@ export default class OrderDetails extends React.Component {
     }
   }
   render() {
-    if (!this.props.orderDetails && this.props.loadingForFetchOrderDetails) {
+    if (this.props.loadingForFetchOrderDetails) {
       this.props.showSecondaryLoader();
     } else {
       this.props.hideSecondaryLoader();

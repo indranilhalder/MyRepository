@@ -38,7 +38,7 @@ export default class UserSavedCard extends React.Component {
   };
 
   render() {
-    if (this.props.loading && !this.props.profile.savedCards) {
+    if (this.props.loading) {
       this.props.showSecondaryLoader();
     } else {
       this.props.hideSecondaryLoader();
