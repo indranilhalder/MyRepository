@@ -361,9 +361,22 @@ const account = (
       });
 
     case accountActions.GET_ALL_ORDERS_SUCCESS:
+      let currentOrderDetailObj = cloneDeep(state.orderDetails);
+      if (action.isPaginated) {
+        currentOrderDetailObj.orderData = currentOrderDetailObj.orderData.concat(
+          action.orderDetails.orderData
+        );
+        currentOrderDetailObj.currentPage =
+          currentOrderDetailObj.currentPage + 1;
+      } else {
+        currentOrderDetailObj = action.orderDetails;
+        Object.assign(currentOrderDetailObj, {
+          currentPage: 0
+        });
+      }
       return Object.assign({}, state, {
         orderDetailsStatus: action.status,
-        orderDetails: action.orderDetails,
+        orderDetails: currentOrderDetailObj,
         loading: false
       });
 
