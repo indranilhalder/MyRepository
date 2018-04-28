@@ -3,7 +3,7 @@ import styles from "./NoCostEmiBankDetails.css";
 import CheckBox from "../../general/components/CheckBox.js";
 import BankSelect from "./BankSelect";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
 export default class NoCostEmiBankDetails extends React.Component {
@@ -20,9 +20,9 @@ export default class NoCostEmiBankDetails extends React.Component {
     };
   }
   selectOtherBank(val) {
-    this.setState({ selectedBankIndex: null, bankName: val });
+    this.setState({ selectedBankIndex: null, bankName: val.value });
     if (this.props.selectOtherBank) {
-      this.props.selectOtherBank(val);
+      this.props.selectOtherBank(val.value);
     }
   }
   itemBreakup() {
@@ -205,9 +205,9 @@ export default class NoCostEmiBankDetails extends React.Component {
                   })}
             </div>
             <div className={styles.selectHolder}>
-              <SelectBoxMobile
+              <SelectBoxMobile2
                 height={33}
-                label={this.state.bankName ? this.state.bankName : "Other Bank"}
+                placeholder={"Other Bank"}
                 options={
                   this.props.bankList &&
                   this.props.bankList.map((val, i) => {
