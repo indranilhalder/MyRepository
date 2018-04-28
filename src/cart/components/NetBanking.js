@@ -26,7 +26,7 @@ export default class NetBanking extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      bankName: "Other Bank",
+      bankName: "",
       bankCode: ""
     };
   }
@@ -53,13 +53,6 @@ export default class NetBanking extends React.Component {
     }
   };
   render() {
-    if (this.props.bankList) {
-      if (this.state.bankName === "Other Bank") {
-        this.props.bankList.unshift({
-          bankName: "Other Bank"
-        });
-      }
-    }
     return (
       <div>
         {this.props.bankList && (
@@ -108,17 +101,14 @@ export default class NetBanking extends React.Component {
         <div className={styles.bankDropDown}>
           <SelectBoxMobile2
             height={33}
-            label={this.state.bankName}
+            label={this.state.bankName ? this.state.bankName : "Other Bank"}
             value={this.state.bankCode ? this.state.bankCode : ""}
             options={
               this.props.bankList &&
               this.props.bankList
                 .filter(bank => !SHOW_DEFAULT_BANK_LIST.includes(bank.bankCode))
                 .map((val, i) => {
-                  return {
-                    value: val.bankCode,
-                    label: val.bankName ? val.bankName : this.state.bankName
-                  };
+                  return { value: val.bankCode, label: val.bankName };
                 })
             }
             onChange={val => this.handleSelect(val)}

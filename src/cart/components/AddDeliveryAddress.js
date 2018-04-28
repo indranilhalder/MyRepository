@@ -207,7 +207,6 @@ export default class AddDeliveryAddress extends React.Component {
         label: "Miss."
       }
     ];
-
     if (this.state.landmarkList.length > 0 && this.state.landmarkList) {
       if (this.state.selectedLandmarkLabel === "Landmark") {
         this.state.landmarkList.unshift({
