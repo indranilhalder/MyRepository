@@ -43,14 +43,6 @@ export default class CancelReasonForm extends React.Component {
   }
   render() {
     const data = this.props.cancelProductDetails;
-    const labelOption = data.returnReasonDetailsWsDTO;
-    if (labelOption) {
-      if (this.state.reason === "Select a reason") {
-        labelOption.unshift({
-          reason: "Select a reason"
-        });
-      }
-    }
     return (
       <ReturnsFrame
         headerText="Select reason for your cancel"
@@ -85,13 +77,11 @@ export default class CancelReasonForm extends React.Component {
           </OrderCard>
           <div className={styles.select}>
             <SelectBoxMobile2
-              label={this.state.reason}
+              placeholder={"Select a reason"}
               options={data.returnReasonDetailsWsDTO.map((val, i) => {
                 return {
                   value: val.code,
                   label: val.reasonDescription
-                    ? val.reasonDescription
-                    : this.state.reason
                 };
               })}
               onChange={val => this.onChangePrimary(val)}
