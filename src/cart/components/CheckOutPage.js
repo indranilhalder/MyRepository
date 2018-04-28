@@ -895,14 +895,6 @@ class CheckOutPage extends React.Component {
     return productServiceAvailability;
   };
   handleSubmit = () => {
-    if (this.state.isPaymentFailed) {
-      this.props.softReservationPaymentForSavedCard(
-        this.state.savedCardDetails,
-        this.state.addressId,
-        this.state.paymentModeSelected,
-        true
-      );
-    }
     if (!this.state.isPaymentFailed && this.availabilityOfUserCoupon()) {
       if (this.state.isFirstAddress) {
         this.addAddress(this.state.addressDetails);

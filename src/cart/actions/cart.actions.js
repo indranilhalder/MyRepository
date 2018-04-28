@@ -255,7 +255,6 @@ export const ADD_PRODUCT_TO_WISH_LIST_SUCCESS =
   "ADD_PRODUCT_TO_WISH_LIST_SUCCESS";
 export const ADD_PRODUCT_TO_WISH_LIST_FAILURE =
   "ADD_PRODUCT_TO_WISH_LIST_FAILURE";
-
 export const REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST =
   "REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST";
 export const REMOVE_ITEM_FROM_CART_LOGGED_IN_SUCCESS =
@@ -487,20 +486,17 @@ export function getCartDetailsCNC(
     dispatch(cartDetailsCNCRequest());
     try {
       const result = await api.get(
-        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetailsCNC?access_token=${accessToken}&isPwa=true&&platformNumber=2&pincode=${pinCode}`
+        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetailsCNC?access_token=${accessToken}&isPwa=true&platformNumber=2&pincode=${pinCode}`
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      console.log(isSoftReservation);
+
       if (isSoftReservation) {
         let productItems = {};
         let item = [];
-        console.log(resultJson.products);
         each(resultJson.products, product => {
-
           let productDetails = {};
           productDetails.ussId = product.USSID;
           productDetails.quantity = product.qtySelectedByUser;
@@ -854,9 +850,9 @@ export function addUserAddress(userAddress, fromAccount) {
       setDataLayerForCheckoutDirectCalls(
         ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE
       );
-      dispatch(addUserAddressSuccess());
+      return dispatch(addUserAddressSuccess());
     } catch (e) {
-      dispatch(addUserAddressFailure(e.message));
+      return dispatch(addUserAddressFailure(e.message));
     }
   };
 }
@@ -1555,7 +1551,6 @@ export function softReservationFailure(error) {
 
 // Action Creator for Soft Reservation
 export function softReservation(pinCode, payload) {
-  console.log(payload);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -1572,7 +1567,7 @@ export function softReservation(pinCode, payload) {
         payload
       );
       const resultJson = await result.json();
-      console.log(resultJson);
+
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
@@ -1978,18 +1973,12 @@ export function softReservationForPaymentFailure(error) {
 }
 
 // Action Creator to soft reservation For Payment
-export function softReservationForPayment(cardDetails, address, paymentMode,isPaymentFailed) {
+export function softReservationForPayment(cardDetails, address, paymentMode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     let productItems = {};
     let item = [];
-    if(isPaymentFailed)
-    {
-      productItems= Cookie.getCookie(SOFT_RESERVATION_ITEM);
-      address=Cookie.getCookie(ADDRESS_DETAILS_FOR_PAYMENT);
-    }
-    else{
     each(getState().cart.cartDetailsCNC.products, product => {
       let productDetails = {};
       productDetails.ussId = product.USSID;
@@ -2011,9 +2000,6 @@ export function softReservationForPayment(cardDetails, address, paymentMode,isPa
       item.push(productDetails);
       productItems.item = item;
     });
-    Cookie.createCookie(SOFT_RESERVATION_ITEM, productItems);
-    Cookie.createCookie(ADDRESS_DETAILS_FOR_PAYMENT, address);
-  }
 
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     let cartId = JSON.parse(cartDetails).guid;
@@ -2029,11 +2015,10 @@ export function softReservationForPayment(cardDetails, address, paymentMode,isPa
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-      console.log(resultJson);
+
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
       setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPaymentSuccess(resultJson));
       dispatch(jusPayTokenize(cardDetails, address, productItems, paymentMode));
@@ -2095,8 +2080,7 @@ export function softReservationPaymentForNetBanking(
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      Cookie.createCookie(SOFT_RESERVATION_ITEM, productItems);
-      // Cookie.createCookie(ADDRESS_DETAILS_FOR_PAYMENT, address);
+
       dispatch(
         createJusPayOrderForNetBanking(
           paymentMethodType,
@@ -2114,28 +2098,13 @@ export function softReservationPaymentForNetBanking(
 export function softReservationPaymentForSavedCard(
   cardDetails,
   address,
-  paymentMode,
-  isPaymentFailed
+  paymentMode
 ) {
-  debugger;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  console.log(isPaymentFailed)
   return async (dispatch, getState, { api }) => {
     let productItems = {};
     let item = [];
-    debugger;
-    if(isPaymentFailed)
-    {
-
-      let softReservationItem= Cookie.getCookie(SOFT_RESERVATION_ITEM);
-      productItems=JSON.parse(softReservationItem);
-      address=Cookie.getCookie(ADDRESS_DETAILS_FOR_PAYMENT);
-      console.log(productItems);
-      debugger;
-    }
-    else{
-      debugger;
     each(getState().cart.cartDetailsCNC.products, product => {
       let productDetails = {};
       productDetails.ussId = product.USSID;
@@ -2157,19 +2126,11 @@ export function softReservationPaymentForSavedCard(
       item.push(productDetails);
       productItems.item = item;
     });
-    Cookie.createCookie(SOFT_RESERVATION_ITEM, JSON.stringify(productItems));
-    Cookie.createCookie(ADDRESS_DETAILS_FOR_PAYMENT, address);
-  }
-  debugger;
-console.log(productItems)
 
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-debugger;
     let cartId = JSON.parse(cartDetails).guid;
-    debugger;
-     dispatch(softReservationForPaymentRequest());
+    dispatch(softReservationForPaymentRequest());
     try {
-      debugger;
       const result = await api.post(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
@@ -2178,21 +2139,15 @@ debugger;
         }&type=payment&cartGuid=${cartId}&pincode=${localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)}`,
         productItems
       );
-      debugger;
       const resultJson = await result.json();
-      console.log(resultJson);
-      debugger;
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-debugger;
+
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-debugger;
       setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(createJusPayOrderForSavedCards(cardDetails, productItems));
     } catch (e) {
-      console.log(e.message)
-      debugger;
       dispatch(softReservationForPaymentFailure(e.message));
     }
   };
@@ -2245,8 +2200,6 @@ export function softReservationForCliqCash(pinCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      Cookie.createCookie(SOFT_RESERVATION_ITEM, productItems);
-      // Cookie.createCookie(ADDRESS_DETAILS_FOR_PAYMENT, address);
       setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPaymentSuccess(resultJson));
       dispatch(createJusPayOrderForCliqCash(pinCode, productItems));
@@ -3435,7 +3388,6 @@ export function softReservationForCODPayment(pinCode) {
     }
   };
 }
-
 // Actions for Add Product to Wish List
 export function addProductToWishListRequest() {
   return {
@@ -3488,7 +3440,6 @@ export function addProductToWishList(productDetails) {
     }
   };
 }
-
 // Action for remove Item from Cart Logged In
 export function removeItemFromCartLoggedInRequest() {
   return {
@@ -4076,7 +4027,9 @@ export function getPaymentFailureOrderDetailsRequest() {
   };
 }
 
-export function getPaymentFailureOrderDetailsSuccess(paymentFailureOrderDetails) {
+export function getPaymentFailureOrderDetailsSuccess(
+  paymentFailureOrderDetails
+) {
   return {
     type: PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS,
     status: SUCCESS,
@@ -4097,11 +4050,11 @@ export function getPaymentFailureOrderDetails() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
-    let url=queryString.parse(window.location.search);
+    let url = queryString.parse(window.location.search);
     const cartGuId = url && url.value;
 
     dispatch(getPaymentFailureOrderDetailsRequest());
-     try {
+    try {
       const result = await api.get(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
@@ -4120,4 +4073,3 @@ export function getPaymentFailureOrderDetails() {
     }
   };
 }
-
