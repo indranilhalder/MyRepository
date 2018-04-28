@@ -207,6 +207,14 @@ export default class AddDeliveryAddress extends React.Component {
         label: "Miss."
       }
     ];
+
+    if (this.state.landmarkList.length > 0 && this.state.landmarkList) {
+      if (this.state.selectedLandmarkLabel === "Landmark") {
+        this.state.landmarkList.unshift({
+          selectedLandmarkLabel: "Landmark"
+        });
+      }
+    }
     return (
       <div className={styles.base}>
         <div className={styles.addressInnerBox}>
@@ -288,12 +296,16 @@ export default class AddDeliveryAddress extends React.Component {
           <SelectBoxMobile
             height={33}
             label={this.state.selectedLandmarkLabel}
+            value={this.state.selectedLandmarkLabel}
             options={
               this.state.landmarkList.length > 0 &&
               this.state.landmarkList.map((val, i) => {
                 return {
                   value: val && val.landmark,
-                  label: val && val.landmark
+                  label:
+                    val && val.landmark
+                      ? val.landmark
+                      : this.state.selectedLandmarkLabel
                 };
               })
             }
