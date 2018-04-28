@@ -208,7 +208,6 @@ export default class AddDeliveryAddress extends React.Component {
         label: "Miss."
       }
     ];
-    console.log(this.state);
     return (
       <div className={styles.base}>
         <div className={styles.addressInnerBox}>
