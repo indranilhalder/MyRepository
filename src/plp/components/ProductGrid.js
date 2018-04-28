@@ -46,12 +46,13 @@ export default class ProductGrid extends React.Component {
 
   renderComponent = data => {
     // if (data.type === PRODUCT) {
+    console.log(data);
     return (
       <ProductModule
         productImage={data.imageURL}
         title={data.brandname}
-        price={data.price.mrpPrice.doubleValue}
-        discountPrice={data.price.sellingPrice.doubleValue}
+        price={data.price.mrpPrice.formattedValueNoDecimal}
+        discountPrice={data.price.sellingPrice.formattedValueNoDecimal}
         description={data.productname}
         discountPercent={data.discountPercent}
         isOfferExisting={data.isOfferExisting}
