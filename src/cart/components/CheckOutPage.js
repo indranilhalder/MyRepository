@@ -100,7 +100,8 @@ class CheckOutPage extends React.Component {
       isNoCostEmiApplied: false,
       isNoCostEmiProceeded: false,
       selectedBankOfferCode: "",
-      cliqPiqSelected: false
+      cliqPiqSelected: false,
+      noCostEmiDiscount: 0
     };
   }
   onClickImage(productCode) {
@@ -572,6 +573,20 @@ class CheckOutPage extends React.Component {
             Math.round(
               nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance * 100
             ) / 100;
+        }
+        if (
+          this.props.cart &&
+          this.props.cart.emiEligibilityDetails &&
+          this.props.cart.emiEligibilityDetails.isNoCostEMIEligible
+        ) {
+          this.setState({
+            noCostEmiDiscount:
+              Math.round(
+                nextProps.cart.cartDetailsCNC.cartAmount &&
+                  nextProps.cart.cartDetailsCNC.cartAmount
+                    .noCostEMIDiscountValue.value * 100
+              ) / 100
+          });
         }
         this.setState({
           payableAmount:
@@ -1283,6 +1298,12 @@ class CheckOutPage extends React.Component {
                   ? PROCEED
                   : CONTINUE
               }
+              noCostEmiEligibility={
+                this.props.cart &&
+                this.props.cart.emiEligibilityDetails &&
+                this.props.cart.emiEligibilityDetails.isNoCostEMIEligible
+              }
+              noCostEmiDiscount={this.state.noCostEmiDiscount}
               amount={this.state.payableAmount}
               bagTotal={this.state.bagAmount}
               payable={this.state.payableAmount}
