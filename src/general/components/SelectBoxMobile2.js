@@ -52,16 +52,15 @@ export default class SelectBoxMobile extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.value !== this.state.value) {
+    if (nextProps.value && nextProps.value !== this.state.value) {
       this.setState({ value: nextProps.value });
       this.setState({ touched: true });
     }
-    if (nextProps.label !== this.state.label) {
+    if (nextProps.label && nextProps.label !== this.state.label) {
       this.setState({ label: nextProps.label });
     }
   }
   render() {
-    console.log(this.state);
     let arrow = GreyArrow;
     if (this.props.arrowColour === BLACK) {
       arrow = BlackArrow;
