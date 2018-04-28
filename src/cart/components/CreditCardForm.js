@@ -56,11 +56,7 @@ export default class CreditCardForm extends React.Component {
       yearValue: ""
     };
   }
-  onSaveData() {
-    this.setState(prevState => ({
-      selected: !this.state.selected
-    }));
-  }
+
   getExpiryMonth(val) {
     this.setState({ cardNumberValue: val });
   }
@@ -208,15 +204,10 @@ export default class CreditCardForm extends React.Component {
               </div>
             </div>
           </div>
-          <div
-            className={styles.saveCardText}
-            onClick={() => this.onSaveData()}
-          >
-            <div className={styles.checkCircle}>
-              <CheckBox selected={this.state.selected} />
-            </div>
+          <div className={styles.saveCardText}>
             <div className={styles.saveText}>
-              Save this card for future payments
+              We will save your card for a faster checkout. To remove your
+              details, visit My Cliq.
             </div>
           </div>
         </div>
