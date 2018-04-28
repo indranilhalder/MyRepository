@@ -3,6 +3,7 @@ import styles from "./AddDeliveryAddress.css";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import Icon from "../../xelpmoc-core/Icon";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import CircleButton from "../../xelpmoc-core/CircleButton";
 import informationIcon from "../../general/components/img/GPS.svg";
 import GridSelect from "../../general/components/GridSelect";
@@ -103,16 +104,16 @@ export default class AddDeliveryAddress extends React.Component {
     }
   }
   onSelectLandmark = landmark => {
-    if (landmark === OTHER_LANDMARK) {
+    if (landmark.value === OTHER_LANDMARK) {
       this.setState({
         isOtherLandMarkSelected: true,
-        selectedLandmarkLabel: landmark
+        selectedLandmarkLabel: landmark.value
       });
     } else {
       this.setState({
         isOtherLandMarkSelected: false,
-        landmark,
-        selectedLandmarkLabel: landmark
+        landmark: landmark.value,
+        selectedLandmarkLabel: landmark.value
       });
     }
   };
@@ -207,14 +208,7 @@ export default class AddDeliveryAddress extends React.Component {
         label: "Miss."
       }
     ];
-    if (this.state.landmarkList.length > 0 && this.state.landmarkList) {
-      if (this.state.selectedLandmarkLabel === "Landmark") {
-        this.state.landmarkList.unshift({
-          value: "Landmark",
-          label: "Landmark"
-        });
-      }
-    }
+    console.log(this.state);
     return (
       <div className={styles.base}>
         <div className={styles.addressInnerBox}>
@@ -293,19 +287,15 @@ export default class AddDeliveryAddress extends React.Component {
           />
         </div>
         <div className={styles.content}>
-          <SelectBoxMobile
+          <SelectBoxMobile2
             height={33}
-            label={this.state.selectedLandmarkLabel}
-            value={this.state.selectedLandmarkLabel}
+            placeholder={"Landmark"}
             options={
               this.state.landmarkList.length > 0 &&
               this.state.landmarkList.map((val, i) => {
                 return {
                   value: val && val.landmark,
-                  label:
-                    val && val.landmark
-                      ? val.landmark
-                      : this.state.selectedLandmarkLabel
+                  label: val && val.landmark
                 };
               })
             }
