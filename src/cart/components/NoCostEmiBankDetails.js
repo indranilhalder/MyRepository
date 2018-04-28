@@ -206,7 +206,6 @@ export default class NoCostEmiBankDetails extends React.Component {
                     return !this.state.showAll ? i < 4 : true;
                   })
                   .map((val, i) => {
-                    console.log(val.logoUrl);
                     return (
                       <div className={styles.bankLogo}>
                         <BankSelect
