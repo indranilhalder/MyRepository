@@ -4,13 +4,10 @@ import PdpFrame from "./PdpFrame";
 import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
-import ColourSelector from "./ColourSelector";
-import ColourButton from "../../general/components/ColourButton";
 import SizeSelector from "./SizeSelector";
 import PriceBreakUp from "./PriceBreakUp";
 import OfferCard from "./OfferCard";
-import ProductFeature from "./ProductFeature";
-import PdpLink from "./PdpLink";
+import OtherSellersLink from "./OtherSellersLink";
 import PdpDeliveryModes from "./PdpDeliveryModes";
 import JewelleryClassification from "./JewelleryClassification";
 import RatingAndTextLink from "./RatingAndTextLink";
@@ -224,25 +221,6 @@ export default class PdpJewellery extends React.Component {
             return image[0].value;
           })
       : [];
-    let otherSellersText;
-    let hasOtherSellers = false;
-    if (productData.otherSellers && productData.otherSellers.length > 0) {
-      hasOtherSellers = true;
-      otherSellersText = (
-        <span>
-          Sold by{" "}
-          <span className={styles.winningSellerText}>
-            {" "}
-            {productData.winningSellerName}
-          </span>{" "}
-          and {productData.otherSellers.length} other sellers;
-        </span>
-      );
-    } else {
-      hasOtherSellers = false;
-      otherSellersText = `Sold by ${productData.winningSellerName}`;
-    }
-
     if (productData) {
       let price = "";
       let discountPrice = "";
@@ -374,14 +352,12 @@ please try another pincode"
               deliveryModesATP={productData.deliveryModesATP}
             />
           )}
-
-          {productData.winningSellerName && (
-            <div className={styles.separator}>
-              <PdpLink onClick={this.goToSellerPage} noLink={!hasOtherSellers}>
-                <div className={styles.sellers}>{otherSellersText}</div>
-              </PdpLink>
-            </div>
-          )}
+          <div className={styles.separator}>
+            <OtherSellersLink
+              otherSellers={productData.otherSellers}
+              winningSeller={productData.winningSellerName}
+            />
+          </div>
           <div className={styles.details}>
             {productData.details && (
               <Accordion

@@ -38,7 +38,7 @@
   color: #fff;
   font-size: 18px;
   padding: 10px 20px;
-  background: url(../components/img/flag.svg)no-repeat;
+  background: url(../components/img/flag.svg) no-repeat;
   font-family: bolder;
   background-size: contain;
   position: absolute;
@@ -81,7 +81,7 @@
 }
 
 .winningSellerText {
-  font-family: bolder;
+  font-family: semibold;
 }
 .customisation {
   width: 100%;

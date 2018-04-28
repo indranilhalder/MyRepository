@@ -1,19 +1,19 @@
 import { connect } from "react-redux";
-import { getWishList } from "../actions/account.actions";
+import {
+  getWishListItems,
+  removeProductFromWishList
+} from "../../wishlist/actions/wishlist.actions";
 import { withRouter } from "react-router-dom";
 import SaveListDetails from "../components/SaveListDetails";
 import { setHeaderText } from "../../general/header.actions";
 import { displayToast } from "../../general/toast.actions";
-import {
-  removeProductFromWishList,
-  addProductToCart
-} from "../../pdp/actions/pdp.actions";
+import { addProductToCart } from "../../pdp/actions/pdp.actions";
 import { SUCCESS } from "../../lib/constants";
 const REMOVED_SAVELIST = "Removed Successfully";
 const mapDispatchToProps = dispatch => {
   return {
     getWishList: () => {
-      dispatch(getWishList());
+      dispatch(getWishListItems());
     },
     setHeaderText: text => {
       dispatch(setHeaderText(text));
@@ -25,9 +25,6 @@ const mapDispatchToProps = dispatch => {
       dispatch(removeProductFromWishList(productDetails)).then(response => {
         if (response.status === SUCCESS) {
           dispatch(displayToast(REMOVED_SAVELIST));
-          return dispatch(getWishList());
-        } else {
-          return response;
         }
       });
     }
@@ -35,8 +32,8 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   return {
-    wishList: state.profile.wishlist,
-    loading: state.profile.loadingForWishlist
+    wishList: state.wishlistItems.wishlistItems,
+    loading: state.wishlistItems.loading
   };
 };
 

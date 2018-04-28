@@ -87,6 +87,7 @@ export default class FilterMobile extends React.Component {
     let url;
     let query = parsedQueryString.q;
     let pathName = this.props.location.pathname;
+
     if (parsedQueryString.searchCategory) {
       const searchValue = this.props.location.search;
       url = `${pathName}${searchValue}`;

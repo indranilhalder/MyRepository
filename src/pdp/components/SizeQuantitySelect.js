@@ -106,7 +106,6 @@ export default class SizeQuantitySelect extends React.Component {
             >
               <SelectBoxMobile2
                 theme="hollowBox"
-                disabled={true}
                 value={
                   this.props.checkIfQuantitySelected()
                     ? this.props.productQuantity.value

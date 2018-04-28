@@ -6,6 +6,10 @@
   padding: 10px;
   overflow: hidden;
 }
+.buffer {
+  width: 100%;
+  height: auto;
+}
 .textBox {
   width: 100%;
   height: auto;
@@ -13,6 +17,11 @@
   font-family: semibold;
   border-radius: 4px 4px 0 0;
   padding: 20px 10px 20px 15px;
+}
+.faded {
+  composes: buffer;
+  opacity: 0.4;
+  pointer-events: none;
 }
 .heading {
   width: 100%;
