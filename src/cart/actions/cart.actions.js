@@ -2346,7 +2346,9 @@ export function createJusPayOrder(
   cardDetails,
   paymentMode
 ) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  let jusPayUrl = `${
+    window.location.origin
+  }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -2420,7 +2422,9 @@ export function createJusPayOrderForGiftCard(
   paymentMode,
   guId
 ) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  let jusPayUrl = `${
+    window.location.origin
+  }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -2462,7 +2466,9 @@ export function createJusPayOrderForNetBanking(
   pinCode,
   cartItem
 ) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  let jusPayUrl = `${
+    window.location.origin
+  }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -2521,7 +2527,9 @@ export function createJusPayOrderForNetBanking(
 }
 
 export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  let jusPayUrl = `${
+    window.location.origin
+  }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
@@ -2555,21 +2563,33 @@ export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
   };
 }
 
-export function createJusPayOrderForSavedCards(cardDetails, cartItemParams) {
+export function createJusPayOrderForSavedCards(
+  cardDetails,
+  cartItemObj = null,
+  isPaymentFailed = false
+) {
   let cartItem;
 
   if (localStorage.getItem(CART_ITEM_COOKIE, cartItem)) {
     cartItem = JSON.parse(localStorage.getItem(CART_ITEM_COOKIE, cartItem));
   } else {
-    cartItem = cartItemParams;
+    cartItem = cartItemObj;
     localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
   }
 
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  let jusPayUrl = `${
+    window.location.origin
+  }/checkout/multi/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  if (isPaymentFailed) {
+    let url = queryString.parse(window.location.search);
+    cartId = url && url.value;
+  } else {
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    cartId = JSON.parse(cartDetails).guid;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
     try {
@@ -2622,7 +2642,9 @@ export function createJusPayOrderForSavedCards(cardDetails, cartItemParams) {
 }
 
 export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  let jusPayUrl = `${
+    window.location.origin
+  }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
@@ -2662,12 +2684,33 @@ export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
   };
 }
 
-export function createJusPayOrderForCliqCash(pinCode, cartItem) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+export function createJusPayOrderForCliqCash(
+  pinCode,
+  cartItemObj,
+  isPaymentFailed = false
+) {
+  let cartItem;
+
+  if (localStorage.getItem(CART_ITEM_COOKIE, cartItem)) {
+    cartItem = JSON.parse(localStorage.getItem(CART_ITEM_COOKIE, cartItem));
+  } else {
+    cartItem = cartItemObj;
+    localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
+  }
+
+  let jusPayUrl = `${
+    window.location.origin
+  }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  if (isPaymentFailed) {
+    let url = queryString.parse(window.location.search);
+    cartId = url && url.value;
+  } else {
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    cartId = JSON.parse(cartDetails).guid;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
 

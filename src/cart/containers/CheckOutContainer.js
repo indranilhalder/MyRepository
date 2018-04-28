@@ -46,7 +46,9 @@ import {
   removeNoCostEmi,
   getItemBreakUpDetails,
   getPaymentFailureOrderDetails,
-  createJusPayOrderForSavedCards
+  createJusPayOrderForSavedCards,
+  createJusPayOrderForCliqCash,
+  clearCartDetails
 } from "../actions/cart.actions";
 import {
   showSecondaryLoader,
@@ -283,8 +285,22 @@ const mapDispatchToProps = dispatch => {
     getPaymentFailureOrderDetails: () => {
       dispatch(getPaymentFailureOrderDetails());
     },
-    createJusPayOrderForSavedCards: cardDetails => {
-      dispatch(createJusPayOrderForSavedCards(cardDetails));
+    createJusPayOrderForSavedCards: (
+      cardDetails,
+      cartItem,
+      isPaymentFailed
+    ) => {
+      dispatch(
+        createJusPayOrderForSavedCards(cardDetails, cartItem, isPaymentFailed)
+      );
+    },
+    createJusPayOrderForCliqCash: (pinCode, cartItem, isPaymentFailed) => {
+      dispatch(
+        createJusPayOrderForCliqCash(pinCode, cartItem, isPaymentFailed)
+      );
+    },
+    clearCartDetails: () => {
+      dispatch(clearCartDetails());
     }
   };
 };

@@ -675,6 +675,7 @@ class CheckOutPage extends React.Component {
   componentWillUnmount() {
     // if user go back from checkout page then
     // we have relsease coupon if user applied any coupon
+
     if (
       this.props.history.action === "POP" &&
       this.state.selectedBankOfferCode
@@ -695,16 +696,10 @@ class CheckOutPage extends React.Component {
       this.props.getPaymentFailureOrderDetails();
     }
     if (value === PAYMENT_CHARGED) {
-      let cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-      const cartDetailsGuid = JSON.parse(cartDetails).guid;
-      localStorage.setItem(OLD_CART_GU_ID, cartDetailsGuid);
-
-      // here is where I need to destroy the cart details
-      // Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-      Cookies.deleteCookie(COUPON_COOKIE);
       if (this.props.updateTransactionDetails) {
-        let cartId;
-        cartId = localStorage.getItem(OLD_CART_GU_ID);
+        debugger;
+        const cartId = parsedQueryString.value;
+        debugger;
         if (cartId) {
           this.props.updateTransactionDetails(
             localStorage.getItem(PAYMENT_MODE_TYPE),
@@ -909,8 +904,24 @@ class CheckOutPage extends React.Component {
           this.props.location.state.egvCartGuid
         );
       } else {
-        this.props.createJusPayOrderForSavedCards(this.state.savedCardDetails);
+        this.props.createJusPayOrderForSavedCards(
+          this.state.savedCardDetails,
+          null,
+          true // for payment failure we need to use old cart id);
+        );
       }
+    }
+    if (!this.state.isRemainingAmount) {
+      this.props.createJusPayOrderForCliqCash(
+        localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+        true // for payment failure we need to use old cart id
+      );
+    }
+    if (this.state.binValidationCOD) {
+      this.softReservationForCODPayment();
+    }
+    if (this.state.paymentModeSelected === PAYTM) {
+      this.softReservationPaymentForWallet(PAYTM);
     }
   };
   handleSubmit = () => {
@@ -1362,11 +1373,13 @@ class CheckOutPage extends React.Component {
         </div>
       );
     } else if (this.state.orderConfirmation) {
+      console.log(this.props.cart);
       return (
         <div>
           {this.props.cart.orderConfirmationDetails && (
             <div className={styles.orderConfirmationHolder}>
               <OrderConfirmation
+                clearCartDetails={this.props.clearCartDetails}
                 orderId={this.props.cart.orderConfirmationDetails.orderRefNo}
                 captureOrderExperience={rating =>
                   this.captureOrderExperience(rating)
@@ -1388,6 +1401,7 @@ class CheckOutPage extends React.Component {
           {this.props.cart.cliqCashJusPayDetails && (
             <div className={styles.orderConfirmationHolder}>
               <OrderConfirmation
+                clearCartDetails={this.props.clearCartDetails}
                 orderId={this.props.cart.cliqCashJusPayDetails.orderId}
                 orderStatusMessage={this.props.orderConfirmationText}
                 captureOrderExperience={rating =>
