@@ -45,7 +45,8 @@ import {
   applyNoCostEmi,
   removeNoCostEmi,
   getItemBreakUpDetails,
-  getPaymentFailureOrderDetails
+  getPaymentFailureOrderDetails,
+  createJusPayOrderForSavedCards
 } from "../actions/cart.actions";
 import {
   showSecondaryLoader,
@@ -281,6 +282,9 @@ const mapDispatchToProps = dispatch => {
     },
     getPaymentFailureOrderDetails: () => {
       dispatch(getPaymentFailureOrderDetails());
+    },
+    createJusPayOrderForSavedCards: cardDetails => {
+      dispatch(createJusPayOrderForSavedCards(cardDetails));
     }
   };
 };

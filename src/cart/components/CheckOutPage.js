@@ -20,6 +20,7 @@ import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
 import size from "lodash.size";
 import TransactionFailed from "./TransactionFailed.js";
+import * as Cookies from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -113,7 +114,6 @@ class CheckOutPage extends React.Component {
     }
   }
   updateLocalStoragePinCode(pincode) {
-    console.log(pincode);
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
   }
@@ -695,6 +695,13 @@ class CheckOutPage extends React.Component {
       this.props.getPaymentFailureOrderDetails();
     }
     if (value === PAYMENT_CHARGED) {
+      let cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      const cartDetailsGuid = JSON.parse(cartDetails).guid;
+      localStorage.setItem(OLD_CART_GU_ID, cartDetailsGuid);
+
+      // here is where I need to destroy the cart details
+      // Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      Cookies.deleteCookie(COUPON_COOKIE);
       if (this.props.updateTransactionDetails) {
         let cartId;
         cartId = localStorage.getItem(OLD_CART_GU_ID);
@@ -893,6 +900,18 @@ class CheckOutPage extends React.Component {
     );
 
     return productServiceAvailability;
+  };
+  handleSubmitAfterPaymentFailure = () => {
+    if (this.state.savedCardDetails !== "") {
+      if (this.state.isGiftCard) {
+        this.props.createJusPayOrderForGiftCardFromSavedCards(
+          this.state.savedCardDetails,
+          this.props.location.state.egvCartGuid
+        );
+      } else {
+        this.props.createJusPayOrderForSavedCards(this.state.savedCardDetails);
+      }
+    }
   };
   handleSubmit = () => {
     if (!this.state.isPaymentFailed && this.availabilityOfUserCoupon()) {
@@ -1333,7 +1352,11 @@ class CheckOutPage extends React.Component {
               coupons={`Rs. ${this.state.couponDiscount}`}
               discount={`Rs. ${this.state.totalDiscount}`}
               delivery={`Rs. ${this.state.deliveryCharge}`}
-              onCheckout={this.handleSubmit}
+              onCheckout={
+                this.state.isPaymentFailed
+                  ? this.handleSubmitAfterPaymentFailure
+                  : this.handleSubmit
+              }
             />
           )}
         </div>

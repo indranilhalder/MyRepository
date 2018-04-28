@@ -180,7 +180,7 @@ const cart = (
   },
   action
 ) => {
-  let updatedCartDetailsCNC;
+  let updatedCartDetailsCNC, cartDetails;
   switch (action.type) {
     case CLEAR_ERROR:
       return Object.assign({}, state, {
@@ -403,7 +403,7 @@ const cart = (
       });
 
     case cartActions.GENERATE_CART_ID_FOR_LOGGED_IN_USER_SUCCESS:
-      let cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       if (!cartDetails) {
         Cookies.createCookie(
           CART_DETAILS_FOR_LOGGED_IN_USER,
@@ -715,7 +715,7 @@ const cart = (
       localStorage.setItem(OLD_CART_GU_ID, cartDetailsGuid);
 
       // here is where I need to destroy the cart details
-      Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      // Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       Cookies.deleteCookie(COUPON_COOKIE);
       return Object.assign({}, state, {
         jusPayStatus: action.status,
@@ -777,14 +777,13 @@ const cart = (
         orderConfirmationDetailsStatus: action.status
       });
 
-    case cartActions.ORDER_CONFIRMATION_SUCCESS: {
+    case cartActions.ORDER_CONFIRMATION_SUCCESS:
       return Object.assign({}, state, {
         orderConfirmationDetailsStatus: action.status,
         orderConfirmationDetails: action.confirmedOrderDetails,
         transactionStatus: action.status,
         jusPaymentLoader: false
       });
-    }
 
     case cartActions.ORDER_CONFIRMATION_FAILURE:
       return Object.assign({}, state, {
@@ -806,13 +805,6 @@ const cart = (
       });
 
     case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_SUCCESS: {
-      const cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-      const cartDetailsGuid = JSON.parse(cartDetails).guid;
-      localStorage.setItem(OLD_CART_GU_ID, cartDetailsGuid);
-
-      // here is where I need to destroy the cart details
-      Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-      Cookies.deleteCookie(COUPON_COOKIE);
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetails: action.justPayPaymentDetails,

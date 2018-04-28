@@ -337,6 +337,7 @@ const MY_WISH_LIST = "MyWishList";
 const ERROR_CODE_FOR_BANK_OFFER_INVALID_1 = "B9078";
 const ERROR_CODE_FOR_BANK_OFFER_INVALID_2 = "B6009";
 const INVALID_COUPON_ERROR_MESSAGE = "invalid coupon";
+const CART_ITEM_COOKIE = "cartItems";
 export const ANONYMOUS_USER = "anonymous";
 
 export function displayCouponRequest() {
@@ -1351,7 +1352,6 @@ export function checkPinCodeServiceAvailability(
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -2010,7 +2010,9 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
           JSON.parse(userDetails).userName
         }/carts/softReservationForPayment?access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartId}&pincode=${localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)}`,
+        }&cartGuid=${cartId}&pincode=${localStorage.getItem(
+          DEFAULT_PIN_CODE_LOCAL_STORAGE
+        )}`,
         productItems
       );
       const resultJson = await result.json();
@@ -2136,12 +2138,13 @@ export function softReservationPaymentForSavedCard(
           JSON.parse(userDetails).userName
         }/carts/softReservationForPayment?access_token=${
           JSON.parse(customerCookie).access_token
-        }&type=payment&cartGuid=${cartId}&pincode=${localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)}`,
+        }&type=payment&cartGuid=${cartId}&pincode=${localStorage.getItem(
+          DEFAULT_PIN_CODE_LOCAL_STORAGE
+        )}`,
         productItems
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -2552,7 +2555,16 @@ export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
   };
 }
 
-export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
+export function createJusPayOrderForSavedCards(cardDetails, cartItemParams) {
+  let cartItem;
+
+  if (localStorage.getItem(CART_ITEM_COOKIE, cartItem)) {
+    cartItem = JSON.parse(localStorage.getItem(CART_ITEM_COOKIE, cartItem));
+  } else {
+    cartItem = cartItemParams;
+    localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
+  }
+
   let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -2596,6 +2608,7 @@ export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
           throw new Error(resultJsonStatus.message);
         }
       }
+
       dispatch(
         jusPayPaymentMethodTypeForSavedCards(
           resultJson.juspayOrderId,
