@@ -123,25 +123,29 @@ export default class AllOrderDetails extends React.Component {
                 <div className={styles.order} key={i}>
                   <div className={styles.orderIdHolder}>
                     <OrderPlacedAndId
-                      placedTime={moment(orderDetails.orderDate).format(
-                        dateFormat
-                      )}
-                      orderId={orderDetails.orderId}
+                      placedTime={moment(
+                        orderDetails && orderDetails.orderDate
+                      ).format(dateFormat)}
+                      orderId={orderDetails && orderDetails.orderId}
                     />
                   </div>
                   <OrderCard
                     imageUrl={
-                      orderDetails.products && orderDetails.products[0].imageURL
+                      orderDetails &&
+                      orderDetails.products &&
+                      orderDetails.products[0].imageURL
                     }
-                    price={orderDetails.totalOrderAmount}
+                    price={orderDetails && orderDetails.totalOrderAmount}
                     discountPrice={""}
                     productName={
+                      orderDetails &&
                       orderDetails.products &&
                       orderDetails.products[0].productName
                     }
                     onClick={() =>
                       this.onClickImage(
-                        orderDetails.products &&
+                        orderDetails &&
+                          orderDetails.products &&
                           orderDetails.products[0] &&
                           orderDetails.products.length &&
                           orderDetails.products[0].productcode
@@ -150,31 +154,33 @@ export default class AllOrderDetails extends React.Component {
                   />
                   <PriceAndLink
                     onViewDetails={() =>
-                      this.onViewDetails(orderDetails.orderId)
+                      this.onViewDetails(orderDetails && orderDetails.orderId)
                     }
-                    price={orderDetails.totalOrderAmount}
+                    price={orderDetails && orderDetails.totalOrderAmount}
                   />
-                  {orderDetails.billingAddress && (
-                    <OrderDelivered
-                      deliveredAddress={`${
-                        orderDetails.billingAddress.addressLine1
-                          ? orderDetails.billingAddress.addressLine1
-                          : ""
-                      } ${
-                        orderDetails.billingAddress.town
-                          ? orderDetails.billingAddress.town
-                          : ""
-                      } ${
-                        orderDetails.billingAddress.state
-                          ? orderDetails.billingAddress.state
-                          : ""
-                      } ${
-                        orderDetails.billingAddress.postalcode
-                          ? orderDetails.billingAddress.postalcode
-                          : ""
-                      }`}
-                    />
-                  )}
+                  {orderDetails &&
+                    orderDetails.billingAddress && (
+                      <OrderDelivered
+                        deliveredAddress={`${
+                          orderDetails &&
+                          orderDetails.billingAddress.addressLine1
+                            ? orderDetails.billingAddress.addressLine1
+                            : ""
+                        } ${
+                          orderDetails && orderDetails.billingAddress.town
+                            ? orderDetails.billingAddress.town
+                            : ""
+                        } ${
+                          orderDetails && orderDetails.billingAddress.state
+                            ? orderDetails.billingAddress.state
+                            : ""
+                        } ${
+                          orderDetails && orderDetails.billingAddress.postalcode
+                            ? orderDetails.billingAddress.postalcode
+                            : ""
+                        }`}
+                      />
+                    )}
                 </div>
               );
             })
