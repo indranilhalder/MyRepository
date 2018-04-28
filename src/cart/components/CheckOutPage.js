@@ -286,7 +286,6 @@ class CheckOutPage extends React.Component {
                   onPiq={() => this.getAllStores(val.USSID)}
                   onClickImage={() => this.onClickImage(val.productcode)}
                   isClickable={true}
-
                 />
               </div>
             );
@@ -912,8 +911,6 @@ class CheckOutPage extends React.Component {
       if (this.state.paymentModeSelected === PAYTM) {
         this.softReservationPaymentForWallet(PAYTM);
       }
-    } else {
-      this.props.history.goBack();
     }
   };
 

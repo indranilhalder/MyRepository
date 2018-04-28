@@ -6,6 +6,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
+
 export default class NoCostEmiBankDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -118,7 +119,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             noCostEmiDetails.noCostEMIDiscountValue.value && (
               <div className={styles.discount}>
                 <div className={styles.amountLabel}>No Cost EMI Discount</div>
-                <div className={styles.amount}>{`Rs. ${Math.round(
+                <div className={styles.amount}>{`-Rs. ${Math.round(
                   noCostEmiDetails.noCostEMIDiscountValue.value * 100
                 ) / 100}`}</div>
               </div>
@@ -180,21 +181,36 @@ export default class NoCostEmiBankDetails extends React.Component {
   }
 
   render() {
+    let filteredBankListWithLogo =
+      this.props.bankList &&
+      this.props.bankList
+        .filter((bank, i) => {
+          return bank.logoUrl;
+        })
+        .slice(0, 4);
+
+    let filteredBankListWithOutLogo =
+      this.props.bankList &&
+      this.props.bankList.filter(
+        val => !filteredBankListWithLogo.includes(val)
+      );
+
     return (
       <div className={styles.base}>
         {!this.props.isNoCostEmiProceeded && (
           <div>
             <div className={styles.bankLogoHolder}>
-              {this.props.bankList &&
-                this.props.bankList
+              {filteredBankListWithLogo &&
+                filteredBankListWithLogo
                   .filter((val, i) => {
                     return !this.state.showAll ? i < 4 : true;
                   })
                   .map((val, i) => {
+                    console.log(val.logoUrl);
                     return (
                       <div className={styles.bankLogo}>
                         <BankSelect
-                          image={val.imageUrl}
+                          image={val.logoUrl}
                           value={val.code}
                           key={i}
                           selectItem={() => this.handleSelect(i)}
@@ -204,22 +220,24 @@ export default class NoCostEmiBankDetails extends React.Component {
                     );
                   })}
             </div>
-            <div className={styles.selectHolder}>
-              <SelectBoxMobile
-                height={33}
-                label={this.state.bankName ? this.state.bankName : "Other Bank"}
-                options={
-                  this.props.bankList &&
-                  this.props.bankList.map((val, i) => {
-                    return {
-                      value: val.bankName,
-                      label: val.bankName
-                    };
-                  })
-                }
-                onChange={val => this.selectOtherBank(val)}
-              />
-            </div>
+            {filteredBankListWithOutLogo &&
+              filteredBankListWithOutLogo.length > 0 && (
+                <div className={styles.selectHolder}>
+                  <SelectBoxMobile
+                    height={33}
+                    label={
+                      this.state.bankName ? this.state.bankName : "Other Bank"
+                    }
+                    options={filteredBankListWithOutLogo.map((val, i) => {
+                      return {
+                        value: val.bankName,
+                        label: val.bankName
+                      };
+                    })}
+                    onChange={val => this.selectOtherBank(val)}
+                  />
+                </div>
+              )}
             <div className={styles.itemLevelButtonHolder}>
               <div className={styles.itemLevelButton}>
                 <UnderLinedButton
@@ -255,7 +273,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                               selected={this.state.selectedMonth === i}
                             />
                           </div>
-                          {val.tenure}
+                          {`${val.tenure} Months`}
                         </div>
                       );
                     })}
