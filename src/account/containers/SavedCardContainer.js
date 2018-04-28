@@ -6,7 +6,10 @@ import {
   getSavedCardDetails,
   removeSavedCardDetails
 } from "../actions/account.actions";
-
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getSavedCardDetails: (userId, customerAccessToken) => {
@@ -17,6 +20,12 @@ const mapDispatchToProps = dispatch => {
     },
     removeSavedCardDetails: () => {
       dispatch(removeSavedCardDetails());
+    },
+    showSecondaryLoader: () => {
+      dispatch(showSecondaryLoader());
+    },
+    hideSecondaryLoader: () => {
+      dispatch(hideSecondaryLoader());
     }
   };
 };

@@ -112,7 +112,6 @@ class ProductSellerPage extends Component {
     }
   }
   onSortByPrice(val) {
-    console.log(val);
     this.setState({ sortOption: val.value });
   }
   selectSeller(val) {
@@ -122,7 +121,6 @@ class ProductSellerPage extends Component {
   }
 
   render() {
-    console.log(this.state);
     const sellers = this.props.productDetails
       ? this.props.productDetails.otherSellers
       : [];
@@ -133,7 +131,6 @@ class ProductSellerPage extends Component {
     const unAvailableSellers = sellers.filter(val => {
       return parseInt(val.availableStock, 10) <= 0;
     });
-    // console.log(availableSellers !== undefined ? availableSellers[0] : 0);
     let price;
     if (availableSellers && availableSellers[0]) {
       price = availableSellers[0].specialPriceSeller.doubleValue;
@@ -160,7 +157,6 @@ class ProductSellerPage extends Component {
       mobileGalleryImages && (
         <PdpFrame
           addProductToBag={() => this.addToCart()}
-          addProductToWishList={() => this.addToWishList()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
         >
           <div className={styles.base}>
@@ -186,12 +182,12 @@ class ProductSellerPage extends Component {
               </div>
               <div className={styles.price}>
                 <SelectBoxMobile2
-                  label={PRICE_LOW_TO_HIGH}
+                  label={this.state.sortOption}
                   height={30}
                   onChange={val => this.onSortByPrice(val)}
                   theme={"hollowBox"}
                   arrowColour={"black"}
-                  value={this.state.priceValue}
+                  value={this.state.sortOption}
                   options={[
                     { label: PRICE_LOW_TO_HIGH, value: PRICE_LOW_TO_HIGH },
                     { label: PRICE_HIGH_TO_LOW, value: PRICE_HIGH_TO_LOW }

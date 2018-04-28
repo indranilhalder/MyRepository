@@ -2,7 +2,6 @@ import { connect } from "react-redux";
 import ProductReviewPage from "../components/ProductReviewPage";
 import { withRouter } from "react-router-dom";
 import {
-  addProductToWishList,
   addProductToCart,
   getProductReviews,
   getProductDescription,
@@ -17,9 +16,6 @@ const mapDispatchToProps = dispatch => {
   return {
     addProductToCart: (userId, cartId, accessToken, productDetails) => {
       dispatch(addProductToCart(userId, cartId, accessToken, productDetails));
-    },
-    addProductToWishList: (userId, accessToken, productDetails) => {
-      dispatch(addProductToWishList(userId, accessToken, productDetails));
     },
     getProductReviews: (productCode, pageIndex, orderBy, sortBy) => {
       dispatch(getProductReviews(productCode, pageIndex, orderBy, sortBy));

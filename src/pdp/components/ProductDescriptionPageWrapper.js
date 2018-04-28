@@ -5,7 +5,6 @@ import PdpJewellery from "./PdpJewellery";
 import PdpHome from "./PdpHome";
 
 import styles from "./ProductDescriptionPageWrapper.css";
-import ProductDescriptionPage from "./ProductDescriptionPage";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,

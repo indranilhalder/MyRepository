@@ -3,7 +3,6 @@ import {
   getProductDescription,
   addProductToCart,
   getProductSizeGuide,
-  addProductToWishList,
   getMsdRequest,
   getPdpEmi,
   getEmiTerms,
@@ -46,9 +45,6 @@ const mapDispatchToProps = dispatch => {
     },
     getProductSizeGuide: productCode => {
       dispatch(getProductSizeGuide(productCode));
-    },
-    addProductToWishList: (userId, accessToken, productDetails) => {
-      dispatch(addProductToWishList(userId, accessToken, productDetails));
     },
     getMsdRequest: productCode => {
       dispatch(getMsdRequest(productCode));

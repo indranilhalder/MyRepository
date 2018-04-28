@@ -114,9 +114,6 @@ const cart = (
     binValidationError: null,
     binValidationDetails: null,
 
-    addToWishlistStatus: null,
-    addToWishlistError: null,
-
     removeCartItemStatus: null,
     removeCartItemError: null,
 
@@ -213,7 +210,6 @@ const cart = (
         justPayPaymentDetailsError: null,
         orderExperienceError: null,
         binValidationError: null,
-        addToWishlistError: null,
         removeCartItemError: null,
         removeCartItemLoggedOutError: null,
         getUserAddressError: null,
@@ -933,25 +929,6 @@ const cart = (
       return Object.assign({}, state, {
         softReserveCODPaymentStatus: action.status,
         softReserveCODPaymentError: action.error,
-        loading: false
-      });
-
-    case cartActions.ADD_PRODUCT_TO_WISH_LIST_REQUEST:
-      return Object.assign({}, state, {
-        addToWishlistStatus: action.status,
-        loading: true
-      });
-
-    case cartActions.ADD_PRODUCT_TO_WISH_LIST_SUCCESS:
-      return Object.assign({}, state, {
-        addToWishlistStatus: action.status,
-        loading: false
-      });
-
-    case cartActions.ADD_PRODUCT_TO_WISH_LIST_FAILURE:
-      return Object.assign({}, state, {
-        addToWishlistStatus: action.status,
-        addToWishlistError: action.error,
         loading: false
       });
 

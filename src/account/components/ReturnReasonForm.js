@@ -14,7 +14,9 @@ export default class ReturnReasonForm extends React.Component {
       displaySecondary: false,
       secondaryReasons: null,
       comment: null,
-      reverseSeal: null
+      reverseSeal: null,
+      returnReasonCode: null,
+      subReasonCode: null
     };
   }
   handleContinue() {
@@ -22,6 +24,7 @@ export default class ReturnReasonForm extends React.Component {
       let reasonAndCommentObj = Object.assign(
         {},
         {
+          returnReasonCode: this.state.returnReasonCode,
           subReasonCode: this.state.subReasonCode,
           comment: this.state.comment,
           reason: this.state.reason,
@@ -36,14 +39,12 @@ export default class ReturnReasonForm extends React.Component {
     const label = val.label;
     const data = this.props.returnProductDetails;
     this.setState({
-      parentReasonCode: code,
+      returnReasonCode: code,
       reason: label,
       secondaryReasons: data.returnReasonMap
-
         .filter(val => {
           return val.parentReasonCode === code;
         })
-
         .map(val => {
           if (val.subReasons) {
             return val.subReasons.map(value => {

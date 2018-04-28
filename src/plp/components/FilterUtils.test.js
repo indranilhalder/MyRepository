@@ -169,7 +169,7 @@ test("should work with search/?q=:sort", () => {
 });
 
 test("/search/?q=:sort:category:<SOME CATEGORY>", () => {
-  let searchValue = `:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE}`;
+  let searchValue = `:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}`;
   let pathName = `/search/?q=${searchValue}`;
   let endUrl = createUrlFromQueryAndCategory(
     searchValue,
@@ -183,7 +183,7 @@ test("/search/?q=:sort:category:<SOME CATEGORY>", () => {
 
   searchValue = `:${
     ARRAY_OF_SORTS[3]
-  }:category:${ANOTHER_DUMMY_CATEGORY_VALUE}`;
+  }:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}`;
   pathName = `/search/?q=${searchValue}`;
   endUrl = createUrlFromQueryAndCategory(
     searchValue,
@@ -316,5 +316,33 @@ test("/search/?searchCategory=all&text=shirt", () => {
 
   expect(endUrl).toEqual(
     `/search/?q=shirt:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}`
+  );
+});
+
+test("/kids-boys-clothing/c-msh2110?q=%3Arelevance%3Acategory%3AMSH2110%3AisLuxuryProduct%3Afalse%3Asize%3A2-4%20Y%3Asize%3A4-6%20Y&isFacet=true&facetValue=4-6%20Y", () => {
+  let searchValue = `:relevance:category:MSH2110:isLuxuryProduct:false:size:2-4 Y:size:4-6 Y`;
+  let pathName = `/kids-boys-clothing/c-msh2110`;
+  let endUrl = createUrlFromQueryAndCategory(
+    searchValue,
+    pathName,
+    ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()
+  );
+
+  expect(endUrl).toEqual(
+    `/search/?q=:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}:isLuxuryProduct:false:size:2-4 Y:size:4-6 Y`
+  );
+});
+
+test("/kids-boys-clothing/c-mbh2110?q=%3Arelevance%3Abrand%3AMBH2110%3AisLuxuryProduct%3Afalse%3Asize%3A2-4%20Y%3Asize%3A4-6%20Y&isFacet=true&facetValue=4-6%20Y", () => {
+  let searchValue = `:relevance:brand:MBH2110:isLuxuryProduct:false:size:2-4 Y:size:4-6 Y`;
+  let pathName = `/kids-boys-clothing/c-mbh2110`;
+  let endUrl = createUrlFromQueryAndCategory(
+    searchValue,
+    pathName,
+    ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()
+  );
+
+  expect(endUrl).toEqual(
+    `/search/?q=:relevance:category:${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}:brand:MBH2110:isLuxuryProduct:false:size:2-4 Y:size:4-6 Y`
   );
 });

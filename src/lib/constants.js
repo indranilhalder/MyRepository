@@ -193,6 +193,7 @@ export const CATEGORIES = "Categories";
 export const CHECKOUT = "Checkout";
 export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
+export const ERROR_MESSAGE_FOR_VERIFY_OTP = "Please Enter an Valid OTP";
 
 // COPY
 //STATIC PAGE
