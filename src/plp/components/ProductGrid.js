@@ -46,7 +46,6 @@ export default class ProductGrid extends React.Component {
 
   renderComponent = data => {
     // if (data.type === PRODUCT) {
-    console.log(data);
     return (
       <ProductModule
         productImage={data.imageURL}
