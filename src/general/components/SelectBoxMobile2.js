@@ -17,14 +17,19 @@ export default class SelectBoxMobile extends React.Component {
     this.state = {
       value: this.props.value
         ? this.props.value
-        : this.props.options
-          ? this.props.options[0].value
-          : "",
+        : this.props.placeholder
+          ? this.props.placeholder
+          : this.props.options
+            ? this.props.options[0].value
+            : "",
       label: this.props.label
         ? this.props.label
-        : this.props.options
-          ? this.props.options[0].label
-          : ""
+        : this.props.placeholder
+          ? this.props.placeholder
+          : this.props.options
+            ? this.props.options[0].label
+            : "",
+      touched: false
     };
   }
 
@@ -34,24 +39,29 @@ export default class SelectBoxMobile extends React.Component {
       const index = event.nativeEvent.target.selectedIndex;
       const selectedLabel = event.nativeEvent.target[index].label;
       const details = {};
-      this.setState({ value: selectedValue, label: selectedLabel }, () => {
-        if (this.props.onChange) {
-          details.label = selectedLabel;
-          details.value = selectedValue;
-          this.props.onChange(details);
+      this.setState(
+        { value: selectedValue, label: selectedLabel, touched: true },
+        () => {
+          if (this.props.onChange) {
+            details.label = selectedLabel;
+            details.value = selectedValue;
+            this.props.onChange(details);
+          }
         }
-      });
+      );
     }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.value !== this.state.value) {
       this.setState({ value: nextProps.value });
+      this.setState({ touched: true });
     }
     if (nextProps.label !== this.state.label) {
       this.setState({ label: nextProps.label });
     }
   }
   render() {
+    console.log(this.state);
     let arrow = GreyArrow;
     if (this.props.arrowColour === BLACK) {
       arrow = BlackArrow;
@@ -104,10 +114,19 @@ export default class SelectBoxMobile extends React.Component {
           value={this.state.value}
           label={this.state.label}
         >
-          {this.props.options &&
-            this.props.options.map((item, i) => {
-              return <option key={i} value={item.value} label={item.label} />;
-            })}
+          <React.Fragment>
+            {this.props.placeholder &&
+              !this.state.touched && (
+                <option
+                  value={this.props.placeholder}
+                  label={this.props.placeholder}
+                />
+              )}
+            {this.props.options &&
+              this.props.options.map((item, i) => {
+                return <option key={i} value={item.value} label={item.label} />;
+              })}
+          </React.Fragment>
         </select>
         <div className={styles.visibleBox}>{this.state.label}</div>
         <div className={styles.arrow}>
