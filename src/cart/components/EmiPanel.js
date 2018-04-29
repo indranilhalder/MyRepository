@@ -6,8 +6,16 @@ import eWalletIcon from "./img/netBanking.svg";
 import NoCostEmi from "./NoCostEmi.js";
 import CheckoutEmi from "./CheckoutEmi.js";
 import NoCostEmiBankDetails from "./NoCostEmiBankDetails.js";
+import { EMI, NO_COST_EMI, STANDARD_DELIVERY } from "../../lib/constants";
 const PAYMENT_MODE = "EMI";
 export default class EmiPanel extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentSelectedEMIType: null
+    };
+  }
+
   componentDidMount = () => {
     if (this.props.getEmiEligibility) {
       this.props.getEmiEligibility();
@@ -73,13 +81,24 @@ export default class EmiPanel extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <MenuDetails text="EMI" icon={eWalletIcon}>
+        <MenuDetails
+          text={EMI}
+          icon={eWalletIcon}
+          isOpen={this.props.currentPaymentMode === EMI}
+          onOpenMenu={currentPaymentMode =>
+            this.props.onChange({ currentPaymentMode })
+          }
+        >
           {this.props.cart &&
             this.props.cart.emiEligibilityDetails &&
             this.props.cart.emiEligibilityDetails.isNoCostEMIEligible && (
               <div className={styles.subListHolder}>
                 <NoCostEmi
-                  text="No Cost Emi"
+                  text={NO_COST_EMI}
+                  isOpen={this.state.currentSelectedEMIType === NO_COST_EMI}
+                  onChangeEMIType={currentSelectedEMIType =>
+                    this.setState({ currentSelectedEMIType })
+                  }
                   getBankAndTenureDetails={() => this.getBankAndTenureDetails()}
                 >
                   <NoCostEmiBankDetails
@@ -121,14 +140,17 @@ export default class EmiPanel extends React.Component {
             )}
           <div className={styles.subListHolder}>
             <NoCostEmi
-              text="Standard Emi"
+              isOpen={this.state.currentSelectedEMIType === STANDARD_DELIVERY}
+              text={STANDARD_DELIVERY}
+              onChangeEMIType={currentSelectedEMIType =>
+                this.setState({ currentSelectedEMIType })
+              }
               getEmiBankDetails={() => this.getEmiBankDetails()}
               emiList={
                 this.props.cart.emiBankDetails &&
                 this.props.cart.emiBankDetails.bankList
               }
             >
-              {" "}
               <CheckoutEmi {...this.props} />
             </NoCostEmi>
           </div>

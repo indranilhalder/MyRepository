@@ -203,3 +203,11 @@ export const REVIEW_SUBMIT_TOAST_TEXT =
 
 export const CDN_URL_ROOT =
   "https://assets.tatacliq.com/medias/sys_master/pwaImg/";
+
+// constants for payments method
+export const EASY_MONTHLY_INSTALLMENTS = "Easy monthly installments";
+export const NET_BANKING = "Net banking";
+export const SAVED_CARD_PAYMENT_MODE = "Saved Cards";
+export const EMI = "EMI";
+export const NO_COST_EMI = "No Cost Emi";
+export const STANDARD_DELIVERY = "Standard Emi";

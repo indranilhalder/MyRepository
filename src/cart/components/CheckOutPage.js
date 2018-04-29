@@ -100,9 +100,14 @@ class CheckOutPage extends React.Component {
       isNoCostEmiApplied: false,
       isNoCostEmiProceeded: false,
       selectedBankOfferCode: "",
-      cliqPiqSelected: false
+      cliqPiqSelected: false,
+      currentPaymentMode: null, // holding selected payments modes
+      cardDetails: {}, // for store card detail in card details
+      cvvForCurrentPaymentMode: null, // in case on saved card
+      bankCodeForNetBanking: null // in case on net banking
     };
   }
+
   onClickImage(productCode) {
     if (productCode) {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
@@ -286,7 +291,6 @@ class CheckOutPage extends React.Component {
                   onPiq={() => this.getAllStores(val.USSID)}
                   onClickImage={() => this.onClickImage(val.productcode)}
                   isClickable={true}
-
                 />
               </div>
             );
@@ -1223,6 +1227,8 @@ class CheckOutPage extends React.Component {
                 cliqCashAmount={this.state.cliqCashAmount}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
+                currentPaymentMode={this.state.currentPaymentMode}
+                onChange={val => this.setState(val)}
                 binValidation={(paymentMode, binNo) =>
                   this.binValidation(paymentMode, binNo)
                 }

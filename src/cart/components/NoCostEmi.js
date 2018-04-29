@@ -13,33 +13,38 @@ export default class NoCostEmi extends React.Component {
   }
 
   openMenu() {
-    this.setState(
-      prevState => ({
-        isOpen: !prevState.isOpen
-      }),
-      () => {
-        if (this.props.onOpenMenu) {
-          this.props.onOpenMenu(this.state.isOpen);
-        }
-        if (
-          this.state.isOpen &&
-          this.props.text === STANDARD_EMI &&
-          !this.props.emiList &&
-          this.props.getEmiBankDetails
-        ) {
-          this.props.getEmiBankDetails();
-        }
-        if (
-          this.state.isOpen &&
-          this.props.text === NO_COST_EMI &&
-          this.props.getBankAndTenureDetails
-        ) {
-          this.props.getBankAndTenureDetails();
-        }
+    const isOpen = !this.state.isOpen;
+    this.setState({
+      isOpen
+    });
+    if (this.props.onChangeEMIType) {
+      if (isOpen) {
+        this.props.onChangeEMIType(this.props.text);
+      } else {
+        this.props.onChangeEMIType(null);
       }
-    );
+    }
+    if (
+      this.state.isOpen &&
+      this.props.text === STANDARD_EMI &&
+      !this.props.emiList &&
+      this.props.getEmiBankDetails
+    ) {
+      this.props.getEmiBankDetails();
+    }
+    if (
+      this.state.isOpen &&
+      this.props.text === NO_COST_EMI &&
+      this.props.getBankAndTenureDetails
+    ) {
+      this.props.getBankAndTenureDetails();
+    }
   }
-
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isOpen !== this.state.isOpen) {
+      this.setState({ isOpen: nextProps.isOpen });
+    }
+  }
   render() {
     let rotateIcon = styles.iconHolder;
     if (this.state.isOpen) {

@@ -8,6 +8,7 @@ import {
   setDataLayerForCheckoutDirectCalls,
   ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES
 } from "../../lib/adobeUtils";
+import { EASY_MONTHLY_INSTALLMENTS, NET_BANKING } from "../../lib/constants";
 
 export default class MenuDetails extends React.Component {
   constructor(props) {
@@ -18,33 +19,35 @@ export default class MenuDetails extends React.Component {
   }
 
   openMenu() {
-    let isOpenMenu = !this.state.isOpen;
-    if (isOpenMenu) {
+    let isOpen = !this.state.isOpen;
+    if (isOpen) {
       setDataLayerForCheckoutDirectCalls(
         ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES,
         this.props.text
       );
     }
-    this.setState(
-      {
-        isOpen: isOpenMenu
-      },
-      () => {
-        if (this.props.onOpenMenu) {
-          this.props.onOpenMenu(this.state.isOpen);
-        }
+    this.setState({ isOpen });
+    if (this.props.onOpenMenu) {
+      if (isOpen) {
+        this.props.onOpenMenu(this.state.isOpen);
+      } else {
+        this.props.onOpenMenu(null);
       }
-    );
-
-    if (isOpenMenu) {
-      if (this.props.text === "Net banking" && !this.props.bankList) {
+    }
+    if (isOpen) {
+      if (this.props.text === NET_BANKING && !this.props.bankList) {
         this.props.getNetBankDetails();
       } else if (
-        this.props.text === "Easy monthly installments" &&
+        this.props.text === EASY_MONTHLY_INSTALLMENTS &&
         !this.props.emiList
       ) {
         this.props.getEmiBankDetails();
       }
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isOpen !== this.state.isOpen) {
+      this.setState({ isOpen: nextProps.isOpen });
     }
   }
 
