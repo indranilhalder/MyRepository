@@ -113,6 +113,11 @@ class CheckOutPage extends React.Component {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
     }
   }
+  onChangeCardDetail = val => {
+    const cardDetails = cloneDeep(this.state.cardDetails);
+    Object.assign(cardDetails, val);
+    this.setState({ cardDetails });
+  };
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
@@ -1092,6 +1097,7 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
+    console.log(this.state);
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
@@ -1229,6 +1235,7 @@ class CheckOutPage extends React.Component {
                 removeCliqCash={() => this.removeCliqCash()}
                 currentPaymentMode={this.state.currentPaymentMode}
                 onChange={val => this.setState(val)}
+                onChangeCardDetail={val => this.onChangeCardDetail(val)}
                 binValidation={(paymentMode, binNo) =>
                   this.binValidation(paymentMode, binNo)
                 }

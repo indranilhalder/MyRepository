@@ -58,56 +58,46 @@ export default class CreditCardForm extends React.Component {
     };
   }
 
-  getExpiryMonth(val) {
-    this.setState({ cardNumberValue: val });
-  }
   onChangeCardNumber(val) {
     this.setState({ cardNumberValue: val });
+    this.onChange({ cardNumberValue: val });
     if (val.length === 6) {
       this.props.binValidation(val);
     }
   }
-  getCardDetails(val) {
-    this.setState({ cardNumberValue: val });
-  }
-  getCardCvvValue(val) {
-    this.setState({ cardCvvValue: val });
-  }
-  onChangeCardName(val) {
-    this.setState({ cardNameValue: val });
-  }
-  monthChange(val) {
-    this.setState({ monthValue: val });
-  }
-  onYearChange(val) {
-    this.setState({ yearValue: val });
-  }
-  payBill = cardDetails => {
-    let cardValues = {};
-    cardValues.cardNumber = this.state.cardNumberValue;
-    cardValues.cardName = this.state.cardNameValue;
-    cardValues.cvvNumber = this.state.cardCvvValue;
-    cardValues.monthValue = this.state.monthValue;
-    cardValues.yearValue = this.state.yearValue;
-    cardValues.selected = this.state.selected;
-    cardValues.merchant_id = MERCHANT_ID;
-    cardValues.pincode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-    if (
-      cardValues.cardNumber &&
-      cardValues.cardName &&
-      cardValues.cvvNumber &&
-      cardValues.monthValue &&
-      cardValues.yearValue
-    ) {
-      if (this.props.isFromGiftCard) {
-        this.props.jusPayTokenizeForGiftCard(cardValues);
-      } else {
-        this.props.softReservationForPayment(cardValues);
-      }
-    } else {
-      this.props.displayToast(INSUFFICIENT_DATA_ERROR_MESSAGE);
+
+  onChange(val) {
+    this.setState(val);
+    if (this.props.onChangeCardDetail) {
+      this.props.onChangeCardDetail(val);
     }
-  };
+  }
+  // payBill = cardDetails => {
+  //   let cardValues = {};
+  //   cardValues.cardNumber = this.state.cardNumberValue;
+  //   cardValues.cardName = this.state.cardNameValue;
+  //   cardValues.cvvNumber = this.state.cardCvvValue;
+  //   cardValues.monthValue = this.state.monthValue;
+  //   cardValues.yearValue = this.state.yearValue;
+  //   cardValues.selected = this.state.selected;
+  //   cardValues.merchant_id = MERCHANT_ID;
+  //   cardValues.pincode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+  //   if (
+  //     cardValues.cardNumber &&
+  //     cardValues.cardName &&
+  //     cardValues.cvvNumber &&
+  //     cardValues.monthValue &&
+  //     cardValues.yearValue
+  //   ) {
+  //     if (this.props.isFromGiftCard) {
+  //       this.props.jusPayTokenizeForGiftCard(cardValues);
+  //     } else {
+  //       this.props.softReservationForPayment(cardValues);
+  //     }
+  //   } else {
+  //     this.props.displayToast(INSUFFICIENT_DATA_ERROR_MESSAGE);
+  //   }
+  // };
 
   render() {
     return (
@@ -138,7 +128,7 @@ export default class CreditCardForm extends React.Component {
                   ? this.props.cardNameValue
                   : this.state.cardNameValue
               }
-              onChange={val => this.onChangeCardName(val)}
+              onChange={cardNameValue => this.onChange({ cardNameValue })}
               textStyle={{ fontSize: 14 }}
               height={33}
             />
@@ -150,7 +140,7 @@ export default class CreditCardForm extends React.Component {
                 label={
                   this.state.monthValue ? this.state.monthValue : "Expiry Month"
                 }
-                onChange={changedValue => this.monthChange(changedValue)}
+                onChange={monthValue => this.onChange({ monthValue })}
                 options={this.monthOptions}
                 textStyle={{ fontSize: 14 }}
                 value={this.state.monthValue}
@@ -163,7 +153,7 @@ export default class CreditCardForm extends React.Component {
                 label={
                   this.state.yearValue ? this.state.yearValue : "Expiry year"
                 }
-                onChange={expiryYear => this.onYearChange(expiryYear)}
+                onChange={yearValue => this.onChange({ yearValue })}
                 value={this.state.yearValue}
               />
             </div>
@@ -176,7 +166,7 @@ export default class CreditCardForm extends React.Component {
                     boxy={true}
                     placeholder="CVV"
                     type="password"
-                    onChange={val => this.getCardCvvValue(val)}
+                    onChange={cardCvvValue => this.onChange({ cardCvvValue })}
                     textStyle={{ fontSize: 14 }}
                     height={33}
                     maxLength={"3"}
@@ -195,17 +185,6 @@ export default class CreditCardForm extends React.Component {
                     }
                   />
                 </div>
-              </div>
-            </div>{" "}
-            <div className={styles.cardFooterText}>
-              <div className={styles.buttonHolder}>
-                <Button
-                  type="primary"
-                  color="#fff"
-                  label="Pay now"
-                  width={120}
-                  onClick={() => this.payBill()}
-                />
               </div>
             </div>
           </div>

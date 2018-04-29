@@ -94,8 +94,10 @@ export default class EmiPanel extends React.Component {
             this.props.cart.emiEligibilityDetails.isNoCostEMIEligible && (
               <div className={styles.subListHolder}>
                 <NoCostEmi
-                  text={NO_COST_EMI}
-                  isOpen={this.state.currentSelectedEMIType === NO_COST_EMI}
+                  EMIText={NO_COST_EMI}
+                  isOpenSubEMI={
+                    this.state.currentSelectedEMIType === NO_COST_EMI
+                  }
                   onChangeEMIType={currentSelectedEMIType =>
                     this.setState({ currentSelectedEMIType })
                   }
@@ -140,8 +142,10 @@ export default class EmiPanel extends React.Component {
             )}
           <div className={styles.subListHolder}>
             <NoCostEmi
-              isOpen={this.state.currentSelectedEMIType === STANDARD_DELIVERY}
-              text={STANDARD_DELIVERY}
+              isOpenSubEMI={
+                this.state.currentSelectedEMIType === STANDARD_DELIVERY
+              }
+              EMIText={STANDARD_DELIVERY}
               onChangeEMIType={currentSelectedEMIType =>
                 this.setState({ currentSelectedEMIType })
               }

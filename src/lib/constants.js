@@ -211,3 +211,7 @@ export const SAVED_CARD_PAYMENT_MODE = "Saved Cards";
 export const EMI = "EMI";
 export const NO_COST_EMI = "No Cost Emi";
 export const STANDARD_DELIVERY = "Standard Emi";
+export const CREDIT_CARD = "Credit Card";
+export const DEBIT_CARD = "Debit Card";
+export const E_WALLET = "E - Wallet";
+export const CASH_ON_DELIVERY_PAYMENT_MODE = "Cash On Delivery";

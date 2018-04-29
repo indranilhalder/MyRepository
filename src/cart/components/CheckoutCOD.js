@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import CodForm from "./CodForm.js";
 import CodUnavailable from "./CodUnavailable";
 import MenuDetails from "../../general/components/MenuDetails.js";
+import { CASH_ON_DELIVERY_PAYMENT_MODE } from "../../lib/constants";
 const CASH_ON_DELIVERY = "COD";
 
 export default class CheckoutCOD extends React.Component {
@@ -21,7 +22,16 @@ export default class CheckoutCOD extends React.Component {
         {this.props.cart &&
         this.props.cart.codEligibilityDetails &&
         this.props.cart.codEligibilityDetails.status ? (
-          <MenuDetails text="Cash On Delivery" icon={creditCardIcon}>
+          <MenuDetails
+            text={CASH_ON_DELIVERY_PAYMENT_MODE}
+            isOpen={
+              this.props.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
+            }
+            onOpenMenu={currentPaymentMode =>
+              this.props.onChange({ currentPaymentMode })
+            }
+            icon={creditCardIcon}
+          >
             <CodForm
               cart={this.props.cart}
               binValidationForCOD={paymentMode =>

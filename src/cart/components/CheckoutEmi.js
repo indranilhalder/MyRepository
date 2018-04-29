@@ -13,18 +13,16 @@ export default class CheckoutEmi extends React.Component {
     }
   };
 
-  softReservationForPayment = cardDetails => {
-    if (this.props.softReservationForPayment) {
-      this.props.softReservationForPayment(cardDetails);
-    }
-  };
-
   getEmiBankDetails = () => {
     if (this.props.getEmiBankDetails) {
       this.props.getEmiBankDetails();
     }
   };
-
+  onChangeCardDetail = val => {
+    if (this.props.onChangeCardDetail) {
+      this.props.onChangeCardDetail(val);
+    }
+  };
   render() {
     return (
       <div>
@@ -34,10 +32,7 @@ export default class CheckoutEmi extends React.Component {
               emiList={this.props.cart.emiBankDetails.bankList}
               onChangeCvv={i => this.onChangeCvv(i)}
               binValidation={binNo => this.binValidation(binNo)}
-              softReservationForPayment={cardDetails =>
-                this.softReservationForPayment(cardDetails)
-              }
-              displayToast={this.props.displayToast}
+              onChangeCardDetail={val => this.onChangeCardDetail(val)}
             />
           )}
         {!this.props.cart.emiBankDetails && (

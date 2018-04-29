@@ -6,6 +6,7 @@ import CheckBox from "../../general/components/CheckBox.js";
 import eWalletIcon from "./img/netBanking.svg";
 import paytmIcon from "./img/paytm.png";
 import Logo from "../../general/components/Logo";
+import { E_WALLET } from "../../lib/constants";
 export default class PaytmOption extends React.Component {
   constructor(props) {
     super(props);
@@ -23,7 +24,14 @@ export default class PaytmOption extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <MenuDetails text="E - Wallet" icon={eWalletIcon}>
+        <MenuDetails
+          text={E_WALLET}
+          isOpen={this.props.currentPaymentMode === E_WALLET}
+          onOpenMenu={currentPaymentMode =>
+            this.props.onChange({ currentPaymentMode })
+          }
+          icon={eWalletIcon}
+        >
           {this.props.isPtm && (
             <div className={styles.eWalletDetailsHolder}>
               <div

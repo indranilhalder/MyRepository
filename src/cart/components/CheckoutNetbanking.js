@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import NetBanking from "./NetBanking.js";
 import ManueDetails from "../../general/components/MenuDetails.js";
 import filter from "lodash.filter";
+import { NET_BANKING } from "../../lib/constants";
 const PAYMENT_MODE = "Netbanking";
 export default class CheckoutNetBanking extends React.Component {
   binValidationForNetBank = bankName => {
@@ -44,7 +45,11 @@ export default class CheckoutNetBanking extends React.Component {
 
     return (
       <ManueDetails
-        text="Net banking"
+        text={NET_BANKING}
+        isOpen={this.props.currentPaymentMode === NET_BANKING}
+        onOpenMenu={currentPaymentMode =>
+          this.props.onChange({ currentPaymentMode })
+        }
         icon={netBankingIcon}
         getNetBankDetails={() => this.getNetBankDetails()}
         bankList={validNetBankingDetails}

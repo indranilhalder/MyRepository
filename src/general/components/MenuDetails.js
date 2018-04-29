@@ -29,7 +29,7 @@ export default class MenuDetails extends React.Component {
     this.setState({ isOpen });
     if (this.props.onOpenMenu) {
       if (isOpen) {
-        this.props.onOpenMenu(this.state.isOpen);
+        this.props.onOpenMenu(this.props.text);
       } else {
         this.props.onOpenMenu(null);
       }
