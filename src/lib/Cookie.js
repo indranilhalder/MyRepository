@@ -14,9 +14,13 @@ export function createCookie(name, value, days) {
 }
 
 export function createCookieInMinutes(name, value, minutes) {
-  var date = new Date();
-  date.setTime(date.getTime() + minutes * 60 * 1000);
-  document.cookie(name, "value", { expires: date });
+  let expires = "";
+  if (minutes) {
+    var date = new Date();
+    date.setTime(date.getTime() + minutes * 60 * 1000); // ) removed
+    expires = "; expires=" + date.toGMTString(); // + added
+  }
+  document.cookie = name + "=" + value + expires + ";path=/"; // + and " added
 }
 
 export function getCookie(cookieName) {

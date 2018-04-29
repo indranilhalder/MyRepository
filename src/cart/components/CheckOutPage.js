@@ -68,6 +68,8 @@ const SELECT_DELIVERY_MODE_MESSAGE =
 const ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME =
   "Please enter Pickup person name,character should be greater than 4 ";
 const ERROR_MESSAGE_FOR_MOBILE_NUMBER = "Please enter valid mobile number";
+const INVALID_CART_ERROR_MESSAGE =
+  "Sorry your cart is not valid any more. Please Try again";
 class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
@@ -113,6 +115,10 @@ class CheckOutPage extends React.Component {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
     }
   }
+  navigateUserToMyBagAfter15MinOfpaymentFailure() {
+    this.props.displayToast(INVALID_CART_ERROR_MESSAGE);
+    this.props.history.push(PRODUCT_CART_ROUTER);
+  }
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
@@ -136,6 +142,14 @@ class CheckOutPage extends React.Component {
     );
   }
   componentDidUpdate() {
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    const value = parsedQueryString.status;
+    if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+      const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
+      if (!oldCartId) {
+        return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
+      }
+    }
     if (
       this.props.cart.orderConfirmationDetails ||
       this.props.cart.cliqCashPaymentDetails
@@ -458,7 +472,6 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.cart);
     if (
       nextProps.cart.getUserAddressStatus === SUCCESS &&
       nextProps.cart &&
@@ -585,6 +598,7 @@ class CheckOutPage extends React.Component {
     }
 
     // end if adding selected default delivery modes for every product
+
     if (nextProps.cart.cliqCashPaymentDetails) {
       if (
         this.state.isRemainingAmount !==
@@ -597,10 +611,7 @@ class CheckOutPage extends React.Component {
             Math.round(
               nextProps.cart.cliqCashPaymentDetails.paybleAmount.value * 100
             ) / 100,
-          cliqCashAmount:
-            Math.round(
-              nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value * 100
-            ) / 100,
+          cliqCashAmount: nextProps.cart.cliqCashPaymentDetails.totalAmount,
           bagAmount:
             Math.round(
               nextProps.cart.cartDetailsCNC.cartAmount &&
@@ -675,7 +686,6 @@ class CheckOutPage extends React.Component {
   componentWillUnmount() {
     // if user go back from checkout page then
     // we have relsease coupon if user applied any coupon
-
     if (
       this.props.history.action === "POP" &&
       this.state.selectedBankOfferCode
@@ -692,6 +702,10 @@ class CheckOutPage extends React.Component {
     const orderId = parsedQueryString.order_id;
     this.setState({ orderId: orderId });
     if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+      const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
+      if (!oldCartId) {
+        return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
+      }
       this.setState({ isPaymentFailed: true });
       this.props.getPaymentFailureOrderDetails();
     }
@@ -897,6 +911,11 @@ class CheckOutPage extends React.Component {
     return productServiceAvailability;
   };
   handleSubmitAfterPaymentFailure = () => {
+    // navigate user to myBag page is old cart dose not exist
+    const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
+    if (!oldCartId) {
+      return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
+    }
     if (this.state.savedCardDetails !== "") {
       if (this.state.isGiftCard) {
         this.props.createJusPayOrderForGiftCardFromSavedCards(
@@ -1180,7 +1199,6 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
-    console.log(this.state);
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
@@ -1379,7 +1397,7 @@ class CheckOutPage extends React.Component {
           {this.props.cart.orderConfirmationDetails && (
             <div className={styles.orderConfirmationHolder}>
               <OrderConfirmation
-                clearCartDetails={this.props.clearCartDetails}
+                clearCartDetails={() => this.props.clearCartDetails()}
                 orderId={this.props.cart.orderConfirmationDetails.orderRefNo}
                 captureOrderExperience={rating =>
                   this.captureOrderExperience(rating)
