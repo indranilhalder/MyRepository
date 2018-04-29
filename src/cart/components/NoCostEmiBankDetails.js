@@ -77,21 +77,23 @@ export default class NoCostEmiBankDetails extends React.Component {
   };
 
   onSelectMonth(index, val) {
-    if (this.state.selectedMonth === index) {
-      this.setState({
-        selectedMonth: null,
-        selectedCouponCode: null,
-        selectedTenure: null
-      });
-      this.props.removeNoCostEmi(val.emicouponCode);
-    } else {
-      if (val && this.props.applyNoCostEmi) {
+    if (this.state.selectedBankName !== "Other Bank") {
+      if (this.state.selectedMonth === index) {
         this.setState({
-          selectedMonth: index,
-          selectedCouponCode: val.emicouponCode,
-          selectedTenure: val.tenure
+          selectedMonth: null,
+          selectedCouponCode: null,
+          selectedTenure: null
         });
-        this.props.applyNoCostEmi(val.emicouponCode);
+        this.props.removeNoCostEmi(val.emicouponCode);
+      } else {
+        if (val && this.props.applyNoCostEmi) {
+          this.setState({
+            selectedMonth: index,
+            selectedCouponCode: val.emicouponCode,
+            selectedTenure: val.tenure
+          });
+          this.props.applyNoCostEmi(val.emicouponCode);
+        }
       }
     }
   }
@@ -203,6 +205,11 @@ export default class NoCostEmiBankDetails extends React.Component {
       this.props.bankList.filter(
         val => !filteredBankListWithLogo.includes(val)
       );
+    filteredBankListWithOutLogo &&
+      filteredBankListWithOutLogo.unshift({
+        bankName: "Other Bank",
+        bankCode: "Other Bank"
+      });
     if (this.state.selectedFromDropDown) {
       modifiedBankList = filteredBankListWithOutLogo;
     } else {
