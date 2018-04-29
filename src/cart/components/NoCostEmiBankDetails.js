@@ -198,18 +198,21 @@ export default class NoCostEmiBankDetails extends React.Component {
         .filter((bank, i) => {
           return bank.logoUrl;
         })
-        .slice(0, 1);
+        .slice(0, 4);
 
     let filteredBankListWithOutLogo =
       this.props.bankList &&
       this.props.bankList.filter(
         val => !filteredBankListWithLogo.includes(val)
       );
-    filteredBankListWithOutLogo &&
-      filteredBankListWithOutLogo.unshift({
-        bankName: "Other Bank",
-        bankCode: "Other Bank"
-      });
+
+    if (filteredBankListWithOutLogo && filteredBankListWithOutLogo.length > 0) {
+      filteredBankListWithOutLogo &&
+        filteredBankListWithOutLogo.unshift({
+          bankName: "Other Bank",
+          bankCode: "Other Bank"
+        });
+    }
     if (this.state.selectedFromDropDown) {
       modifiedBankList = filteredBankListWithOutLogo;
     } else {
