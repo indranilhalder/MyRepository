@@ -577,14 +577,15 @@ class CheckOutPage extends React.Component {
         if (
           this.props.cart &&
           this.props.cart.emiEligibilityDetails &&
-          this.props.cart.emiEligibilityDetails.isNoCostEMIEligible
+          this.props.cart.emiEligibilityDetails.isNoCostEMIEligible &&
+          nextProps.cart.cartDetailsCNC.cartAmount &&
+          nextProps.cart.cartDetailsCNC.cartAmount.noCostEMIDiscountValue
         ) {
           this.setState({
             noCostEmiDiscount:
               Math.round(
-                nextProps.cart.cartDetailsCNC.cartAmount &&
-                  nextProps.cart.cartDetailsCNC.cartAmount
-                    .noCostEMIDiscountValue.value * 100
+                nextProps.cart.cartDetailsCNC.cartAmount.noCostEMIDiscountValue
+                  .value * 100
               ) / 100
           });
         }
