@@ -40,6 +40,7 @@ export default class CheckoutCreditCard extends React.Component {
         icon={creditCardIcon}
       >
         <CreditCardForm
+          cardDetails={this.props.cardDetails}
           onChangeCvv={i => this.onChangeCvv(i)}
           binValidation={binNo => this.binValidation(binNo)}
           onChangeCardDetail={card => this.onChangeCardDetail(card)}

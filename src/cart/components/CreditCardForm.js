@@ -47,9 +47,9 @@ export default class CreditCardForm extends React.Component {
     ];
     this.state = {
       selected: false,
-      cardNumberValue: props.cardNumberValue ? props.cardNumberValue : "",
-      cardNameValue: props.cardNameValue ? props.cardNameValue : "",
-      cardCvvValue: props.cardCvvValue ? props.cardCvvValue : "",
+      cardNumber: props.cardNumber ? props.cardNumber : "",
+      cardName: props.cardName ? props.cardName : "",
+      cvvNumber: props.cvvNumber ? props.cvvNumber : "",
       ExpiryMonth: props.ExpiryMonth ? props.ExpiryMonth : null,
       ExpiryYear: props.ExpiryYear ? props.ExpiryYear : null,
       value: props.value ? props.value : "",
@@ -59,8 +59,8 @@ export default class CreditCardForm extends React.Component {
   }
 
   onChangeCardNumber(val) {
-    this.setState({ cardNumberValue: val });
-    this.onChange({ cardNumberValue: val });
+    this.setState({ cardNumber: val });
+    this.onChange({ cardNumber: val });
     if (val.length === 6) {
       this.props.binValidation(val);
     }
@@ -72,11 +72,31 @@ export default class CreditCardForm extends React.Component {
       this.props.onChangeCardDetail(val);
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.cardDetails &&
+      (!nextProps.cardDetails.cardNumber ||
+        nextProps.cardDetails.cardNumber === "")
+    ) {
+      this.setState({
+        selected: false,
+        cardNumber: "",
+        cardName: "",
+        cvvNumber: "",
+        ExpiryMonth: null,
+        ExpiryYear: null,
+        value: "",
+        monthValue: "",
+        yearValue: ""
+      });
+    }
+  }
   // payBill = cardDetails => {
   //   let cardValues = {};
-  //   cardValues.cardNumber = this.state.cardNumberValue;
-  //   cardValues.cardName = this.state.cardNameValue;
-  //   cardValues.cvvNumber = this.state.cardCvvValue;
+  //   cardValues.cardNumber = this.state.cardNumber;
+  //   cardValues.cardName = this.state.cardName;
+  //   cardValues.cvvNumber = this.state.cvvNumber;
   //   cardValues.monthValue = this.state.monthValue;
   //   cardValues.yearValue = this.state.yearValue;
   //   cardValues.selected = this.state.selected;
@@ -107,9 +127,9 @@ export default class CreditCardForm extends React.Component {
             <Input2
               placeholder="Card Number"
               value={
-                this.props.cardNumberValue
-                  ? this.props.cardNumberValue
-                  : this.state.cardNumberValue
+                this.props.cardNumber
+                  ? this.props.cardNumber
+                  : this.state.cardNumber
               }
               boxy={true}
               onChange={val => this.onChangeCardNumber(val)}
@@ -123,12 +143,10 @@ export default class CreditCardForm extends React.Component {
             <Input2
               placeholder="Name on card*"
               boxy={true}
-              cardNameValue={
-                this.props.cardNameValue
-                  ? this.props.cardNameValue
-                  : this.state.cardNameValue
+              cardName={
+                this.props.cardName ? this.props.cardName : this.state.cardName
               }
-              onChange={cardNameValue => this.onChange({ cardNameValue })}
+              onChange={cardName => this.onChange({ cardName })}
               textStyle={{ fontSize: 14 }}
               height={33}
             />
@@ -160,20 +178,20 @@ export default class CreditCardForm extends React.Component {
           </div>
           <div className={styles.payCardHolder}>
             <div className={styles.cardFooterText}>
-              <div className={styles.cardCvvTextHolder}>
+              <div className={styles.cvvNumberTextHolder}>
                 <div className={styles.cardFooterInput}>
                   <Input2
                     boxy={true}
                     placeholder="CVV"
                     type="password"
-                    onChange={cardCvvValue => this.onChange({ cardCvvValue })}
+                    onChange={cvvNumber => this.onChange({ cvvNumber })}
                     textStyle={{ fontSize: 14 }}
                     height={33}
                     maxLength={"3"}
                     value={
-                      this.props.cardCvvValue
-                        ? this.props.cardCvvValue
-                        : this.state.cardCvvValue
+                      this.props.cvvNumber
+                        ? this.props.cvvNumber
+                        : this.state.cvvNumber
                     }
                     rightChildSize={33}
                     rightChild={

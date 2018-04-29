@@ -39,7 +39,8 @@ import {
   REQUESTING,
   THANK_YOU,
   COUPON_COOKIE,
-  JUS_PAY_AUTHENTICATION_FAILED
+  JUS_PAY_AUTHENTICATION_FAILED,
+  CREDIT_CARD
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -117,6 +118,10 @@ class CheckOutPage extends React.Component {
     const cardDetails = cloneDeep(this.state.cardDetails);
     Object.assign(cardDetails, val);
     this.setState({ cardDetails });
+  };
+  onChangePaymentMode = val => {
+    this.setState(val);
+    this.setState({ cardDetails: {} });
   };
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
@@ -909,6 +914,13 @@ class CheckOutPage extends React.Component {
           );
         }
       }
+      if (this.state.currentPaymentMode === CREDIT_CARD) {
+        if (this.state.isFromGiftCard) {
+          this.props.jusPayTokenizeForGiftCard(this.state.cardDetails);
+        } else {
+          this.props.softReservationForPayment(this.state.cardDetails);
+        }
+      }
       if (!this.state.isRemainingAmount) {
         this.props.softReservationForCliqCash(
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
@@ -1234,7 +1246,8 @@ class CheckOutPage extends React.Component {
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
                 currentPaymentMode={this.state.currentPaymentMode}
-                onChange={val => this.setState(val)}
+                cardDetails={this.state.cardDetails}
+                onChange={val => this.onChangePaymentMode(val)}
                 onChangeCardDetail={val => this.onChangeCardDetail(val)}
                 binValidation={(paymentMode, binNo) =>
                   this.binValidation(paymentMode, binNo)

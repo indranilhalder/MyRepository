@@ -30,6 +30,7 @@ export default class CheckoutEmi extends React.Component {
           this.props.cart.emiBankDetails.bankList && (
             <EmiAccordion
               emiList={this.props.cart.emiBankDetails.bankList}
+              cardDetails={this.props.cardDetails}
               onChangeCvv={i => this.onChangeCvv(i)}
               binValidation={binNo => this.binValidation(binNo)}
               onChangeCardDetail={val => this.onChangeCardDetail(val)}

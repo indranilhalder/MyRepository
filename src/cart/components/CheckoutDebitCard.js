@@ -39,6 +39,7 @@ export default class CheckoutDebitCard extends React.Component {
         icon={debitCardIcon}
       >
         <CreditCardForm
+          cardDetails={this.props.cardDetails}
           binValidation={binNo => this.binValidation(binNo)}
           isFromGiftCard={this.props.isFromGiftCard}
           onChangeCardDetail={card => this.onChangeCardDetail(card)}

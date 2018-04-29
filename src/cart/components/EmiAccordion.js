@@ -108,6 +108,7 @@ export default class EmiAccordion extends React.Component {
               changePlan={() => this.handleChangePlan()}
             />
             <CreditCardForm
+              cardDetails={this.props.cardDetails}
               onChangeCardDetail={val => this.onChangeCardDetail(val)}
               binValidation={binNo => this.binValidation(binNo)}
               displayToast={this.props.displayToast}
