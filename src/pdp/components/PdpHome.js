@@ -6,7 +6,7 @@ import ProductGalleryMobile from "./ProductGalleryMobile";
 import ColourSelector from "./ColourSelector";
 import SizeQuantitySelect from "./SizeQuantitySelect";
 import OfferCard from "./OfferCard";
-import PdpLink from "./PdpLink";
+import OtherSellersLink from "./OtherSellersLink";
 import ProductFeature from "./ProductFeature";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import PdpPaymentInfo from "./PdpPaymentInfo";
@@ -190,12 +190,6 @@ export default class PdpApparel extends React.Component {
           })
       : [];
 
-    const validSellersCount = productData.otherSellers
-      ? productData.otherSellers.filter(val => {
-          return val.availableStock !== "0" && val.availableStock !== "-1";
-        }).length
-      : 0;
-
     if (productData) {
       let price = "";
       let discountPrice = "";
@@ -330,29 +324,12 @@ export default class PdpApparel extends React.Component {
               deliveryModesATP={productData.deliveryModesATP}
             />
           )}
-
-          {productData.winningSellerName && (
-            <div className={styles.separator}>
-              <PdpLink
-                onClick={() => this.goToSellerPage(validSellersCount)}
-                noLink={validSellersCount === 0}
-              >
-                <div className={styles.sellers}>
-                  Sold by{" "}
-                  <span className={styles.winningSellerText}>
-                    {productData.winningSellerName}
-                  </span>
-                  {validSellersCount !== 0 && (
-                    <React.Fragment>
-                      {" "}
-                      and {validSellersCount} other seller(s)
-                    </React.Fragment>
-                  )}
-                </div>
-              </PdpLink>
-            </div>
-          )}
-
+          <div className={styles.separator}>
+            <OtherSellersLink
+              otherSellers={productData.otherSellers}
+              winningSeller={productData.winningSellerName}
+            />
+          </div>
           {productData.classifications && (
             <div className={styles.details}>
               <ProductFeatures features={productData.classifications} />
