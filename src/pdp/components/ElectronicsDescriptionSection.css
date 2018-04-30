@@ -9,7 +9,6 @@
 }
 .imageHolder {
   composes: base;
-  display: inline-block;
 }
 .textHolder {
   width: 60%;
@@ -21,6 +20,7 @@
   composes: imageHolder;
   width: 40%;
   vertical-align: top;
+  display: inline-block;
 }
 
 .floatingText {
