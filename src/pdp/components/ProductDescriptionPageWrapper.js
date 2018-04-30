@@ -15,7 +15,8 @@ import {
   GOOGLE_TAG_TITLE_DEFAULT,
   GOOGLE_TAG_IMAGE_DEFAULT,
   TWITTER_TAG_IMAGE_DEFAULT,
-  TWITTER_TAG_TITLE_DEFAULT
+  TWITTER_TAG_TITLE_DEFAULT,
+  FACEBOOK_TAG_IMAGE_DEFAULT
 } from "../../lib/constants";
 // prettier-ignore
 const typeComponentMapping = {
@@ -122,52 +123,35 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
   /*
 
-<meta name="description" content="Free Web tutorials">
-  <meta name="keywords" content="HTML,CSS,XML,JavaScript">
   */
 
-  /*
-<link rel=“canonical” href="https://www.tatacliq.com/utsa-by-westside-yellow-pure-cotton-kurta-set/p-mp000000002644543" hreflang="en-in">
-
-
-<meta itemprop="name" content="SEO Title">
-<meta itemprop="description" content="SEO Description">
-<meta itemprop="image" content="https://www.tatacliq.com/image.jpg">
-
-
-
-
-  */
-  renderMetaTags = () => {
+  renderOgTags = () => {
     const productDetails = this.props.productDetails;
-    console.log(productDetails);
-    const canonicalUrl = productDetails.seo.canonicalURL
-      ? productDetails.seo.canonicalURL
-      : window.location.href;
-    const alternateUrl = productDetails.seo.alternateURL
-      ? productDetails.seo.alternateURL
-      : window.location.href;
-    const googleTitle = productDetails.seo.title
-      ? productDetails.seo.title
-      : GOOGLE_TAG_TITLE_DEFAULT;
-    const googleDescription = productDetails.seo.description;
-    const googleImageUrl = productDetails.seo.imageURL
-      ? productDetails.seo.imageURL
-      : GOOGLE_TAG_IMAGE_DEFAULT;
-    const twitterTitle = productDetails.seo.title
-      ? productDetails.seo.title
-      : TWITTER_TAG_TITLE_DEFAULT;
-    const twitterImageUrl = productDetails.seo.imageURL
-      ? productDetails.seo.imageURL
-      : TWITTER_TAG_IMAGE_DEFAULT;
-    const twitterDescription = productDetails.seo.description;
+    let googleTitle = GOOGLE_TAG_TITLE_DEFAULT;
+    let googleDescription = null;
+    let googleImageUrl = GOOGLE_TAG_IMAGE_DEFAULT;
+    let twitterTitle = TWITTER_TAG_TITLE_DEFAULT;
+    let twitterImageUrl = TWITTER_TAG_IMAGE_DEFAULT;
+    let twitterDescription = null;
+    let facebookDescription = null;
+    let facebookUrl = window.location.href;
+    let facebookImageUrl = FACEBOOK_TAG_IMAGE_DEFAULT;
+    let facebookTitle = null;
+    if (productDetails.seo) {
+      googleTitle = productDetails.seo.title;
+      googleDescription = productDetails.seo.description;
+      googleImageUrl = productDetails.seo.imageURL;
+      twitterTitle = productDetails.seo.title;
+      twitterImageUrl = productDetails.seo.imageURL;
+      twitterDescription = productDetails.seo.description;
+      facebookDescription = productDetails.seo.description;
+      facebookUrl = window.location.href;
+      facebookTitle = productDetails.seo.title;
+      facebookImageUrl = productDetails.seo.imageURL;
+    }
+
     return (
-      <MetaTags>
-        <title> {productDetails.seo.title}</title>
-        <meta name="description" content={productDetails.seo.description} />
-        <meta name="keywords" content={productDetails.seo.keywords} />
-        <link rel="canonical" href={canonicalUrl} hreflang="en-in" />
-        <link rel="alternate" href={alternateUrl} hreflang="en-in" />
+      <React.Fragment>
         <meta itemprop="name" content={googleTitle} />
         {googleDescription && (
           <meta itemprop="description" content={googleDescription} />
@@ -180,6 +164,44 @@ export default class ProductDescriptionPageWrapper extends React.Component {
           <meta name="twitter:description" content={twitterDescription} />
         )}
         <meta name="twitter:image:src" content={twitterImageUrl} />
+        <meta property="og:site_name" content="Tata CliQ" />
+        <meta property="og:url" content={facebookUrl} />
+        {facebookTitle && <meta property="og:title" content={facebookTitle} />}
+
+        {facebookDescription && (
+          <meta property="og:description" content={facebookDescription} />
+        )}
+        <meta property="og:image" content={facebookImageUrl} />
+      </React.Fragment>
+    );
+  };
+  renderMetaTags = () => {
+    const productDetails = this.props.productDetails;
+    const canonicalUrl = productDetails.seo.canonicalURL
+      ? productDetails.seo.canonicalURL
+      : window.location.href;
+    const alternateUrl = productDetails.seo.alternateURL
+      ? productDetails.seo.alternateURL
+      : window.location.href;
+
+    return (
+      <MetaTags>
+        <title> {productDetails.seo.title}</title>
+        <meta name="description" content={productDetails.seo.description} />
+        <meta name="keywords" content={productDetails.seo.keywords} />
+        <link rel="canonical" href={canonicalUrl} hreflang="en-in" />
+        <link rel="alternate" href={alternateUrl} hreflang="en-in" />
+        {this.renderOgTags()}
+      </MetaTags>
+    );
+  };
+
+  renderMetaTagsWithoutSeoObject = () => {
+    return (
+      <MetaTags>
+        <link rel="canonical" href={window.location.href} hreflang="en-in" />
+        <link rel="alternate" href={window.location.href} hreflang="en-in" />
+        {this.renderOgTags()}
       </MetaTags>
     );
   };
@@ -193,7 +215,9 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     if (this.props.productDetails) {
       return (
         <div>
-          {this.renderMetaTags()}
+          {this.props.productDetails.seo
+            ? this.renderMetaTags()
+            : this.renderMetaTagsWithoutSeoObject()}
           {this.renderRootCategory(this.props.productDetails.rootCategory)}
         </div>
       );
