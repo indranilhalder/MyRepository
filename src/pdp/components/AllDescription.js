@@ -52,7 +52,6 @@ export default class AllDescription extends React.Component {
         data[val.key.slice(0, -1)].push(val);
       }
     });
-    console.log(this.props);
     return (
       <div className={styles.base}>
         {templateName !== "3" && (
