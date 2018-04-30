@@ -74,6 +74,8 @@ class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isCheckoutAddressSelected: false,
+      isDeliveryModeSelected: false,
       confirmAddress: false, //render the render delivery Modes if confirmAddress= true
       isSelectedDeliveryModes: false, // To select the delivery Modes
       deliverMode: false, // render the payment Modes if deliverMode = true
@@ -181,7 +183,8 @@ class CheckOutPage extends React.Component {
     );
     this.setState({
       ussIdAndDeliveryModesObj: currentSelectedDeliveryModes,
-      isSelectedDeliveryModes: true
+      isSelectedDeliveryModes: true,
+      isDeliveryModeSelected: true
     });
   }
 
@@ -233,7 +236,8 @@ class CheckOutPage extends React.Component {
 
       this.setState({
         ussIdAndDeliveryModesObj: updatedDeliveryModeUssid,
-        cliqPiqSelected: true
+        cliqPiqSelected: true,
+        isDeliveryModeSelected: true
       });
     }
   }
@@ -474,6 +478,7 @@ class CheckOutPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (
+      !this.state.isCheckoutAddressSelected &&
       nextProps.cart.getUserAddressStatus === SUCCESS &&
       nextProps.cart &&
       nextProps.cart.userAddress &&
@@ -498,7 +503,6 @@ class CheckOutPage extends React.Component {
         defaultAddressId = defaultAddress.id;
       }
       this.updateLocalStoragePinCode(defaultAddress.postalCode);
-
       this.setState({
         addressId: defaultAddressId,
         selectedAddress: defaultAddress
@@ -509,6 +513,7 @@ class CheckOutPage extends React.Component {
     // adding selected default delivery modes for every product
 
     if (
+      !this.state.isDeliveryModeSelected &&
       !this.state.isSelectedDeliveryModes &&
       nextProps.cart.cartDetailsCNCStatus === SUCCESS &&
       nextProps.cart &&
@@ -795,7 +800,6 @@ class CheckOutPage extends React.Component {
         return address.id === selectedAddress[0];
       }
     );
-
     this.updateLocalStoragePinCode(
       addressSelected && addressSelected.postalCode
     );
@@ -805,11 +809,17 @@ class CheckOutPage extends React.Component {
     if (selectedAddress[0]) {
       this.setState({
         confirmAddress: false,
-        selectedAddress: addressSelected
+        selectedAddress: addressSelected,
+        isCheckoutAddressSelected: true,
+        addressId: addressSelected.id,
+        isDeliveryModeSelected: false
       });
-      this.setState({ addressId: addressSelected.id });
     } else {
-      this.setState({ addressId: null, selectedAddress: null });
+      this.setState({
+        addressId: null,
+        selectedAddress: null,
+        isDeliveryModeSelected: false
+      });
     }
   }
   changeDeliveryModes = () => {
