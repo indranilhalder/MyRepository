@@ -1211,13 +1211,16 @@ export function setDataLayerForCheckoutDirectCalls(type, response) {
           });
         }
       } else {
-        Object.assign(data, {
-          cpj: {
-            payment: {
-              finalMode: response.replace(/ /g, "_").toLowerCase()
+        data = Object.assign(
+          {},
+          {
+            cpj: {
+              payment: {
+                finalMode: response.replace(/ /g, "_").toLowerCase()
+              }
             }
           }
-        });
+        );
       }
       window.digitalData = data;
     }

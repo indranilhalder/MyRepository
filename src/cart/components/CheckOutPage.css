@@ -37,6 +37,12 @@
   height: auto;
   padding: 15px 15px 15px;
 }
+.paymentFailedCardHolder {
+  width: 100%;
+  height: auto;
+  padding: 15px 15px 15px;
+}
+
 .addDeliveryAddressHolder {
   width: 100%;
   height: auto;

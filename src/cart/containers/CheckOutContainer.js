@@ -45,7 +45,12 @@ import {
   applyNoCostEmi,
   removeNoCostEmi,
   getItemBreakUpDetails,
-  getPaymentFailureOrderDetails
+  getPaymentFailureOrderDetails,
+  createJusPayOrderForSavedCards,
+  createJusPayOrderForCliqCash,
+  clearCartDetails,
+  jusPayTokenize,
+  createJusPayOrderForNetBanking
 } from "../actions/cart.actions";
 import {
   showSecondaryLoader,
@@ -208,9 +213,19 @@ const mapDispatchToProps = dispatch => {
         )
       );
     },
-    softReservationPaymentForSavedCard: (cardDetails, address, paymentMode) => {
+    softReservationPaymentForSavedCard: (
+      cardDetails,
+      address,
+      paymentMode,
+      isPaymentFailed
+    ) => {
       dispatch(
-        softReservationPaymentForSavedCard(cardDetails, address, paymentMode)
+        softReservationPaymentForSavedCard(
+          cardDetails,
+          address,
+          paymentMode,
+          isPaymentFailed
+        )
       );
     },
     softReservationForCliqCash: pinCode => {
@@ -271,6 +286,55 @@ const mapDispatchToProps = dispatch => {
     },
     getPaymentFailureOrderDetails: () => {
       dispatch(getPaymentFailureOrderDetails());
+    },
+    createJusPayOrderForSavedCards: (
+      cardDetails,
+      cartItem,
+      isPaymentFailed
+    ) => {
+      dispatch(
+        createJusPayOrderForSavedCards(cardDetails, cartItem, isPaymentFailed)
+      );
+    },
+    createJusPayOrderForCliqCash: (pinCode, cartItem, isPaymentFailed) => {
+      dispatch(
+        createJusPayOrderForCliqCash(pinCode, cartItem, isPaymentFailed)
+      );
+    },
+    clearCartDetails: () => {
+      dispatch(clearCartDetails());
+    },
+    jusPayTokenize: (
+      cardDetails,
+      address,
+      cartItem,
+      paymentMode,
+      isPaymentFailed
+    ) => {
+      dispatch(
+        jusPayTokenize(
+          cardDetails,
+          address,
+          cartItem,
+          paymentMode,
+          isPaymentFailed
+        )
+      );
+    },
+    createJusPayOrderForNetBanking: (
+      paymentMethodType,
+      bankName,
+      pinCode,
+      productItems
+    ) => {
+      dispatch(
+        createJusPayOrderForNetBanking(
+          paymentMethodType,
+          bankName,
+          pinCode,
+          productItems
+        )
+      );
     }
   };
 };
