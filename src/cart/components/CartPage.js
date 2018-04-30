@@ -375,6 +375,8 @@ class CartPage extends React.Component {
 
                 return (
                   <div className={styles.cartItem} key={i}>
+                    {this.props.isLogout && <div className={styles.overlay} />}
+
                     <CartItem
                       pinCode={defaultPinCode}
                       product={product}
@@ -476,7 +478,8 @@ CartPage.defaultProps = {
   cartOffer: "FREE shipping",
   cartTax: "included",
   delivery: "Free",
-  offers: "Apply"
+  offers: "Apply",
+  isLogout: true
 };
 
 export default CartPage;
