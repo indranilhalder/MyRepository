@@ -109,7 +109,8 @@ class CheckOutPage extends React.Component {
       cardDetails: {}, // for store card detail in card details
       cvvForCurrentPaymentMode: null, // in case on saved card
       bankCodeForNetBanking: null, // in case on net banking
-      captchaReseponseForCOD: null // in case of COD order its holding that ceptcha verification
+      captchaReseponseForCOD: null, // in case of COD order its holding that ceptcha verification
+      noCostEmiDiscount: 0
     };
   }
 
@@ -584,6 +585,21 @@ class CheckOutPage extends React.Component {
                 100
             ) / 100;
         }
+        if (
+          this.props.cart &&
+          this.props.cart.emiEligibilityDetails &&
+          this.props.cart.emiEligibilityDetails.isNoCostEMIEligible &&
+          nextProps.cart.cartDetailsCNC.cartAmount &&
+          nextProps.cart.cartDetailsCNC.cartAmount.noCostEMIDiscountValue
+        ) {
+          this.setState({
+            noCostEmiDiscount:
+              Math.round(
+                nextProps.cart.cartDetailsCNC.cartAmount.noCostEMIDiscountValue
+                  .value * 100
+              ) / 100
+          });
+        }
         this.setState({
           payableAmount:
             Math.round(
@@ -945,8 +961,6 @@ class CheckOutPage extends React.Component {
       if (this.state.paymentModeSelected === PAYTM) {
         this.softReservationPaymentForWallet(PAYTM);
       }
-    } else {
-      this.props.history.goBack();
     }
   };
 
@@ -1330,6 +1344,12 @@ class CheckOutPage extends React.Component {
                   ? PROCEED
                   : CONTINUE
               }
+              noCostEmiEligibility={
+                this.props.cart &&
+                this.props.cart.emiEligibilityDetails &&
+                this.props.cart.emiEligibilityDetails.isNoCostEMIEligible
+              }
+              noCostEmiDiscount={this.state.noCostEmiDiscount}
               amount={this.state.payableAmount}
               bagTotal={this.state.bagAmount}
               payable={this.state.payableAmount}

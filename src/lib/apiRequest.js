@@ -309,7 +309,8 @@ export async function postMsd(url, payload) {
 }
 
 export async function postJusPay(path, postData) {
-  return await fetch(`https://sandbox.juspay.in/${path}`, {
+  let url = `${JUS_PAY_API_URL_ROOT}/${path}`;
+  return await fetch(url, {
     method: "POST",
     body: postData
   });

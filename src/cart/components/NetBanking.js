@@ -96,8 +96,7 @@ export default class NetBanking extends React.Component {
         <div className={styles.bankDropDown}>
           <SelectBoxMobile2
             height={33}
-            label={this.state.bankName ? this.state.bankName : "Other Bank"}
-            value={this.state.bankCode ? this.state.bankCode : ""}
+            placeholder={"Other Bank"}
             options={
               this.props.bankList &&
               this.props.bankList

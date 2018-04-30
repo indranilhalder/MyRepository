@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import Icon from "../../xelpmoc-core/Icon";
 import CircleButton from "../../xelpmoc-core/CircleButton";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2.js";
 import informationIcon from "../../general/components/img/Info-grey.svg";
 import Button from "../../general/components/Button";
 import CheckBox from "../../general/components/CheckBox.js";
@@ -21,7 +21,7 @@ export default class CreditCardForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.expiryYearObject = [{ label: "YY", value: "YY" }];
+    this.expiryYearObject = [];
     const currentYear = new Date().getFullYear();
     for (let i = MINIMUM_YEARS_TO_SHOW; i <= MAXIMUM_YEARS_TO_SHOW; i++) {
       this.expiryYearObject.push({
@@ -31,7 +31,6 @@ export default class CreditCardForm extends React.Component {
     }
 
     this.monthOptions = [
-      { label: "MM", value: "MM" },
       { label: "1", value: 1 },
       { label: "2", value: 2 },
       { label: "3", value: 3 },
@@ -153,25 +152,25 @@ export default class CreditCardForm extends React.Component {
           </div>
           <div className={styles.dropDownHolder}>
             <div className={styles.dropDownBox}>
-              <SelectBoxMobile
+              <SelectBoxMobile2
                 theme="hollowBox"
-                label={
-                  this.state.monthValue ? this.state.monthValue : "Expiry Month"
+                placeholder="Expiry Month"
+                onChange={monthValue =>
+                  this.onChange({ monthValue: monthValue.value })
                 }
-                onChange={monthValue => this.onChange({ monthValue })}
                 options={this.monthOptions}
                 textStyle={{ fontSize: 14 }}
                 value={this.state.monthValue}
               />
             </div>
             <div className={styles.dropDownBox}>
-              <SelectBoxMobile
+              <SelectBoxMobile2
                 theme="hollowBox"
+                placeholder="Expiry year"
                 options={this.expiryYearObject}
-                label={
-                  this.state.yearValue ? this.state.yearValue : "Expiry year"
+                onChange={yearValue =>
+                  this.onChange({ yearValue: yearValue.value })
                 }
-                onChange={yearValue => this.onChange({ yearValue })}
                 value={this.state.yearValue}
               />
             </div>

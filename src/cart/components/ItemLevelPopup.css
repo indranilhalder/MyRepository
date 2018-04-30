@@ -2,6 +2,7 @@
   width: 100%;
   height: auto;
   background: #fff;
+  min-height: 100vh;
 }
 .cardOfferDisplay {
   width: 100%;
@@ -23,7 +24,7 @@
   color: #000;
   font-size: 12px;
   line-height: normal;
-  background: url(./img/icon.svg)no-repeat;
+  background: url(./img/icon.svg) no-repeat;
   background-size: auto 22px;
   background-position: right top;
 }
