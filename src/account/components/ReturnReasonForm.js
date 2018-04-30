@@ -75,7 +75,6 @@ export default class ReturnReasonForm extends React.Component {
   }
   render() {
     const data = this.props.returnProductDetails;
-
     return (
       <div className={styles.base}>
         <div className={styles.header}>
@@ -108,7 +107,7 @@ export default class ReturnReasonForm extends React.Component {
           </OrderCard>
           <div className={styles.select}>
             <SelectBoxMobile2
-              label={this.state.reason ? this.state.reason : "Select a reason"}
+              placeholder={"Select a reason"}
               options={data.returnReasonMap.map((val, i) => {
                 return {
                   value: val.parentReasonCode,
@@ -121,11 +120,7 @@ export default class ReturnReasonForm extends React.Component {
           {this.state.secondaryReasons && (
             <div className={styles.select}>
               <SelectBoxMobile2
-                label={
-                  this.state.subReason
-                    ? this.state.subReason
-                    : "Select a reason"
-                }
+                placeholder={"Select a reason"}
                 options={this.state.secondaryReasons}
                 onChange={val => this.onChangeSecondary(val)}
               />
@@ -138,7 +133,9 @@ export default class ReturnReasonForm extends React.Component {
         {data &&
           data.showReverseSealFrJwlry === "yes" && (
             <div className={styles.reverseSealHolder}>
-              <ReverseSealYesNo />
+              <ReverseSealYesNo
+                selectReverseSeal={val => this.selectReverseSeal(val)}
+              />
             </div>
           )}
 
