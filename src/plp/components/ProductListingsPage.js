@@ -6,6 +6,13 @@ import {
   BRAND_AND_CATEGORY_PAGE,
   SKU_PAGE
 } from "../../lib/constants.js";
+import {
+  CATEGORY_CAPTURE_REGEX,
+  BRAND_REGEX,
+  BRAND_CAPTURE_REGEX,
+  CATEGORY_REGEX,
+  BRAND_CATEGORY_PREFIX
+} from "./PlpBrandCategoryWrapper.js";
 
 const SEARCH_CATEGORY_TO_IGNORE = "all";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
@@ -31,6 +38,26 @@ class ProductListingsPage extends Component {
       if (!searchText) {
         searchText = `:relevance:category:${this.props.match.params[0].toUpperCase()}`;
       }
+    }
+    let match;
+    const url = this.props.location.pathname;
+
+    if (CATEGORY_REGEX.test(url)) {
+      match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
+      match = match.replace(BRAND_CATEGORY_PREFIX, "");
+
+      match = match.toUpperCase();
+
+      searchText = `:relevance:category:${match}`;
+    }
+
+    if (BRAND_REGEX.test(url)) {
+      match = BRAND_CAPTURE_REGEX.exec(url)[0];
+      match = match.replace(BRAND_CATEGORY_PREFIX, "");
+
+      match = match.toUpperCase();
+
+      searchText = `:relevance:brand:${match}`;
     }
 
     return encodeURIComponent(searchText);

@@ -11,7 +11,7 @@ import CheckboxAndText from "./CheckboxAndText";
 import TextArea from "../../general/components/TextArea.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
-import { SUCCESS } from "../../lib/constants.js";
+import { SUCCESS, ERROR } from "../../lib/constants.js";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 import {
   EMAIL_REGULAR_EXPRESSION,
@@ -19,15 +19,19 @@ import {
 } from "../../auth/components/Login";
 const SAVE_TEXT = "Save Address";
 const PINCODE_TEXT = "Please enter pincode";
-const NAME_TEXT = "Please enter name";
+const NAME_TEXT = "Please enter first name";
+const LAST_NAME_TEXT = "plese enter last name";
 const ADDRESS_TEXT = "Please enter address";
 const EMAIL_TEXT = "Please enter email id";
 const LANDMARK_TEXT = "Please select landmark";
+const LANDMARK_ENTER_TEXT = "Please enter landmark";
 const MOBILE_TEXT = "Please enter mobile number";
 const PINCODE_VALID_TEXT = "Please enter valid pincode";
 const EMAIL_VALID_TEXT = "Please enter valid emailId";
 const PHONE_VALID_TEXT = "Please fill valid mobile number";
 const PHONE_TEXT = "Please enter mobile number";
+const CITY_TEXT = "please enter city";
+const STATE_TEXT = "please enter state";
 const ISO_CODE = "IN";
 const OTHER_LANDMARK = "other";
 export default class AddDeliveryAddress extends React.Component {
@@ -84,23 +88,49 @@ export default class AddDeliveryAddress extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps) {
+    let landmarkList = [];
     if (nextProps.addUserAddressStatus === SUCCESS) {
       this.props.history.goBack();
     }
-    if (nextProps.getPinCodeDetails) {
-      const landmarkList = [
-        ...nextProps.getPinCodeDetails.landMarks,
-        { landmark: OTHER_LANDMARK }
-      ];
+    if (nextProps.getPincodeStatus === ERROR) {
+      landmarkList = [{ landmark: OTHER_LANDMARK }];
       this.setState({
-        state:
-          nextProps.getPinCodeDetails &&
-          nextProps.getPinCodeDetails.state &&
-          nextProps.getPinCodeDetails.state.name,
-        town:
-          nextProps.getPinCodeDetails && nextProps.getPinCodeDetails.cityName,
         landmarkList
       });
+    }
+    if (nextProps.getPinCodeDetails) {
+      if (nextProps.getPinCodeDetails.landMarks) {
+        landmarkList = [
+          ...nextProps.getPinCodeDetails.landMarks,
+          { landmark: OTHER_LANDMARK }
+        ];
+        this.setState({
+          state:
+            nextProps.getPinCodeDetails &&
+            nextProps.getPinCodeDetails.state &&
+            nextProps.getPinCodeDetails.state.name,
+          town:
+            nextProps.getPinCodeDetails && nextProps.getPinCodeDetails.cityName,
+          landmarkList
+        });
+      } else {
+        landmarkList = [{ landmark: OTHER_LANDMARK }];
+        let stateName =
+          nextProps.getPinCodeDetails &&
+          nextProps.getPinCodeDetails.state &&
+          nextProps.getPinCodeDetails.state.name
+            ? nextProps.getPinCodeDetails.state.name
+            : "";
+        let townName =
+          nextProps.getPinCodeDetails && nextProps.getPinCodeDetails.cityName
+            ? nextProps.getPinCodeDetails.cityName
+            : "";
+        this.setState({
+          state: stateName,
+          town: townName,
+          landmarkList
+        });
+      }
     }
   }
   onSelectLandmark = landmark => {
@@ -130,12 +160,26 @@ export default class AddDeliveryAddress extends React.Component {
       this.props.displayToast(NAME_TEXT);
       return false;
     }
+    if (!this.state.lastName) {
+      this.props.displayToast(LAST_NAME_TEXT);
+      return false;
+    }
     if (!this.state.line1) {
       this.props.displayToast(ADDRESS_TEXT);
       return false;
     }
-    if (!this.state.landmark) {
+    if (
+      !this.state.landmark &&
+      this.state.selectedLandmarkLabel === "Landmark"
+    ) {
       this.props.displayToast(LANDMARK_TEXT);
+      return false;
+    }
+    if (
+      this.state.selectedLandmarkLabel === OTHER_LANDMARK &&
+      !this.state.line2
+    ) {
+      this.props.displayToast(LANDMARK_ENTER_TEXT);
       return false;
     }
     if (!this.state.emailId) {
@@ -147,6 +191,14 @@ export default class AddDeliveryAddress extends React.Component {
       !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
     ) {
       this.props.displayToast(EMAIL_VALID_TEXT);
+      return false;
+    }
+    if (!this.state.town) {
+      this.props.displayToast(CITY_TEXT);
+      return false;
+    }
+    if (!this.state.state) {
+      this.props.displayToast(STATE_TEXT);
       return false;
     }
     if (!this.state.phone) {
@@ -177,7 +229,9 @@ export default class AddDeliveryAddress extends React.Component {
       defaultFlag: false
     });
   };
-
+  onChangeSalutation(val) {
+    this.setState({ salutaion: val.value });
+  }
   render() {
     if (this.props.loading) {
       if (this.props.showSecondaryLoader) {
@@ -239,16 +293,18 @@ export default class AddDeliveryAddress extends React.Component {
         </div>
         <div className={styles.content}>
           <div className={styles.salutation}>
-            <SelectBoxMobile
+            <SelectBoxMobile2
               height={33}
-              label={salutaion[0].label}
+              value={
+                this.state.salutaion ? this.state.salutaion : salutaion[0].label
+              }
               options={salutaion.map((val, i) => {
                 return {
                   value: val.label,
                   label: val.label
                 };
               })}
-              onChange={salutaion => this.onChange({ salutaion })}
+              onChange={salutaion => this.onChangeSalutation(salutaion)}
             />
           </div>
           <div className={styles.name}>

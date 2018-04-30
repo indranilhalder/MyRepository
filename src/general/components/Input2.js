@@ -68,6 +68,7 @@ export default class Input2 extends React.Component {
               onKeyUp={event => this.handleKeyUp(event)}
               value={this.props.value}
               maxLength={this.props.maxLength}
+              disabled={this.props.disabled}
             />
           </div>
           {this.props.leftChild && (
@@ -114,5 +115,6 @@ Input2.defaultProps = {
   textStyle: {
     fontSize: 14
   },
+  disabled: false,
   borderBottom: "1px solid #d2d2d2"
 };

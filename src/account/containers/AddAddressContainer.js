@@ -35,6 +35,7 @@ const mapStateToProps = state => {
   return {
     addUserAddressStatus: state.profile.addUserAddressStatus,
     getPinCodeDetails: state.profile.getPinCodeDetails,
+    getPincodeStatus: state.profile.getPinCodeStatus,
     addUserAddressError: state.profile.addUserAddressError,
     loading: state.profile.loading
   };

@@ -4,24 +4,38 @@ import styles from "./ElectronicsDescriptionSection.css";
 export default class ElectronicsDescriptionSection extends React.Component {
   renderSectionImage = () => {
     if (this.props.sectionData) {
-      if ("imageList" in this.props.sectionData[0].value) {
+      if (
+        this.props.sectionData[0] &&
+        "imageList" in this.props.sectionData[0].value
+      ) {
         return (
           <ElectronicsDescription value={this.props.sectionData[0].value} />
         );
-      } else if ("imageList" in this.props.sectionData[1].value) {
+      } else if (
+        this.props.sectionData[1] &&
+        "imageList" in this.props.sectionData[1].value
+      ) {
         return (
           <ElectronicsDescription value={this.props.sectionData[1].value} />
         );
+      } else {
+        return null;
       }
     }
   };
   renderSectionText = () => {
     if (this.props.sectionData) {
-      if ("textList" in this.props.sectionData[0].value) {
+      if (
+        this.props.sectionData[0] &&
+        "textList" in this.props.sectionData[0].value
+      ) {
         return (
           <ElectronicsDescription value={this.props.sectionData[0].value} />
         );
-      } else if ("textList" in this.props.sectionData[1].value) {
+      } else if (
+        this.props.sectionData[1] &&
+        "textList" in this.props.sectionData[1].value
+      ) {
         return (
           <ElectronicsDescription value={this.props.sectionData[1].value} />
         );

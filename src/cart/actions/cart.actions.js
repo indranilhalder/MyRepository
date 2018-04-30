@@ -840,7 +840,9 @@ export function addUserAddress(userAddress, fromAccount) {
           userAddress.line1
         }&state=${userAddress.state}&line2=${userAddress.line2}&line3=${
           userAddress.line3
-        }&town=${userAddress.town}&defaultFlag=${userAddress.defaultFlag}`
+        }&town=${userAddress.town}&landmark=${
+          userAddress.landmark
+        }&defaultFlag=${userAddress.defaultFlag}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);

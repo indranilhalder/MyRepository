@@ -19,7 +19,7 @@ export default class EditAddressPopUp extends React.Component {
       lastName: addressDetails.lastName,
       postalCode: addressDetails.postalCode,
       line1: addressDetails.line1,
-      emailId: addressDetails.emailId,
+      landmark: addressDetails.landmark,
       line2: addressDetails.line2,
       line3: "",
       town: addressDetails.town,
@@ -99,16 +99,20 @@ export default class EditAddressPopUp extends React.Component {
                 onChange={phone => this.onChange({ phone })}
               />
             </div>
-            <div className={styles.container}>
-              <Input2
-                value={this.state.emailId}
-                placeholder="Email"
-                boxy={true}
-                textStyle={{ fontSize: 14 }}
-                height={33}
-                onChange={emailId => this.onChange({ emailId })}
-              />
-            </div>
+            {this.state.landmark &&
+              this.state.landmark !== "undefined" && (
+                <div className={styles.container}>
+                  <Input2
+                    value={this.state.landmark}
+                    placeholder="Landmark"
+                    boxy={true}
+                    textStyle={{ fontSize: 14 }}
+                    height={33}
+                    onChange={landmark => this.onChange({ landmark })}
+                  />
+                </div>
+              )}
+
             <div className={styles.container}>
               <Input2
                 value={this.state.line1}
@@ -118,17 +122,18 @@ export default class EditAddressPopUp extends React.Component {
                 onChange={line1 => this.onChange({ line1 })}
               />
             </div>
-            {this.state.line2 && (
-              <div className={styles.container}>
-                <Input2
-                  value={this.state.line2}
-                  boxy={true}
-                  textStyle={{ fontSize: 14 }}
-                  height={33}
-                  onChange={line2 => this.onChange({ line2 })}
-                />
-              </div>
-            )}
+            {this.state.line2 &&
+              this.state.line2 !== "undefined" && (
+                <div className={styles.container}>
+                  <Input2
+                    value={this.state.line2}
+                    boxy={true}
+                    textStyle={{ fontSize: 14 }}
+                    height={33}
+                    onChange={line2 => this.onChange({ line2 })}
+                  />
+                </div>
+              )}
             <div className={styles.container}>
               <Input2
                 value={this.state.postalCode}
