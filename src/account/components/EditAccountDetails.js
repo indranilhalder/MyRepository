@@ -179,7 +179,12 @@ export default class EditAccountDetails extends React.Component {
                 textStyle={{ fontSize: 14 }}
                 height={33}
                 onChange={mobileNumber => this.onChange({ mobileNumber })}
-                disabled={this.state.mobileNumber ? true : false}
+                disabled={
+                  this.state.mobileNumber &&
+                  this.state.mobileNumber.length === 10
+                    ? true
+                    : false
+                }
               />
             </div>
 
