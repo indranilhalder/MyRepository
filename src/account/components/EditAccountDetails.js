@@ -171,6 +171,7 @@ export default class EditAccountDetails extends React.Component {
             <div className={styles.container}>
               <SelectBoxMobile2
                 placeholder={"Gender"}
+                label={this.state.gender}
                 value={this.state.gender}
                 options={[
                   { label: "Female", value: "Female" },
@@ -193,9 +194,6 @@ export default class EditAccountDetails extends React.Component {
               brandList={"Change Password"}
               onClick={() => this.renderChangePassword()}
             />
-          </div>
-          <div className={styles.sendNotification}>
-            <CheckboxAndText label="Send Me Notifications" selected={false} />
           </div>
           <AccountFooter
             cancel={() => this.cancel()}
