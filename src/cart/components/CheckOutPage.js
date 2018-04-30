@@ -78,6 +78,7 @@ const ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME =
 const ERROR_MESSAGE_FOR_MOBILE_NUMBER = "Please enter valid mobile number";
 const INVALID_CART_ERROR_MESSAGE =
   "Sorry your cart is not valid any more. Please Try again";
+export const EGV_GIFT_CART_ID = "giftCartId";
 class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
@@ -124,7 +125,8 @@ class CheckOutPage extends React.Component {
       cvvForCurrentPaymentMode: null, // in case on saved card
       bankCodeForNetBanking: null, // in case on net banking
       captchaReseponseForCOD: null, // in case of COD order its holding that ceptcha verification
-      noCostEmiDiscount: 0
+      noCostEmiDiscount: 0,
+      egvCartGuid: null
     };
   }
 
@@ -748,6 +750,16 @@ class CheckOutPage extends React.Component {
       }
       this.setState({ isPaymentFailed: true });
       this.props.getPaymentFailureOrderDetails();
+      if (localStorage.getItem(EGV_GIFT_CART_ID)) {
+        let giftCartObj = JSON.parse(localStorage.getItem(EGV_GIFT_CART_ID));
+        this.setState({
+          isGiftCard: true,
+          isRemainingAmount: true,
+          payableAmount: Math.round(giftCartObj.amount * 100) / 100,
+          bagAmount: Math.round(giftCartObj.amount * 100) / 100,
+          egvCartGuid: giftCartObj.egvCartGuid
+        });
+      }
     }
     if (value === PAYMENT_CHARGED) {
       if (this.props.updateTransactionDetails) {
@@ -794,6 +806,12 @@ class CheckOutPage extends React.Component {
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
         );
       }
+    }
+    if (this.props.location.state && this.props.location.state.egvCartGuid) {
+      localStorage.setItem(
+        EGV_GIFT_CART_ID,
+        JSON.stringify(this.props.location.state)
+      );
     }
   }
 
@@ -964,7 +982,7 @@ class CheckOutPage extends React.Component {
       if (this.state.isGiftCard) {
         this.props.createJusPayOrderForGiftCardFromSavedCards(
           this.state.savedCardDetails,
-          this.props.location.state.egvCartGuid
+          this.state.egvCartGuid
         );
       } else {
         this.props.createJusPayOrderForSavedCards(

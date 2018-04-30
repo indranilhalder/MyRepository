@@ -9,6 +9,7 @@ import {
   COUPON_COOKIE
 } from "../../lib/constants";
 import find from "lodash.find";
+import { EGV_GIFT_CART_ID } from "../components/CheckOutPage";
 const VALIDITY_OF_OLD_CART_ID = 15;
 const IST_TIME_ZONE = "IST";
 const cart = (
@@ -761,6 +762,7 @@ const cart = (
       Cookies.deleteCookie(OLD_CART_GU_ID);
       localStorage.removeItem(cartActions.CART_ITEM_COOKIE);
       localStorage.removeItem(cartActions.ADDRESS_FOR_PLACE_ORDER);
+      localStorage.removeItem(EGV_GIFT_CART_ID);
       return Object.assign({}, state, {
         jusPayDetails: action.jusPayDetails
       });
@@ -770,6 +772,7 @@ const cart = (
       Cookies.deleteCookie(OLD_CART_GU_ID);
       localStorage.removeItem(cartActions.CART_ITEM_COOKIE);
       localStorage.removeItem(cartActions.ADDRESS_FOR_PLACE_ORDER);
+      localStorage.removeItem(EGV_GIFT_CART_ID);
       return Object.assign({}, state, {
         transactionStatus: action.status,
         jusPayError: action.error,
