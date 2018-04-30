@@ -918,7 +918,11 @@ class CheckOutPage extends React.Component {
           );
         }
       }
-      if (this.state.currentPaymentMode === CREDIT_CARD) {
+      if (
+        this.state.currentPaymentMode === CREDIT_CARD ||
+        this.state.currentPaymentMode === EMI ||
+        this.state.currentPaymentMode === DEBIT_CARD
+      ) {
         if (this.state.isFromGiftCard) {
           this.props.jusPayTokenizeForGiftCard(this.state.cardDetails);
         } else {
@@ -936,20 +940,7 @@ class CheckOutPage extends React.Component {
           );
         }
       }
-      if (this.state.currentPaymentMode === DEBIT_CARD) {
-        if (this.state.isFromGiftCard) {
-          this.props.jusPayTokenizeForGiftCard(this.state.cardDetails);
-        } else {
-          this.softReservationForPayment(this.state.cardDetails);
-        }
-      }
-      if (this.state.currentPaymentMode === EMI) {
-        if (this.state.isFromGiftCard) {
-          this.props.jusPayTokenizeForGiftCard(this.state.cardDetails);
-        } else {
-          this.softReservationForPayment(this.state.cardDetails);
-        }
-      }
+
       if (!this.state.isRemainingAmount) {
         this.props.softReservationForCliqCash(
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
