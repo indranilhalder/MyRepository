@@ -33,7 +33,7 @@ export default class EditAccountDetails extends React.Component {
         this.props.lastName && this.props.lastName !== "undefined"
           ? this.props.lastName
           : "",
-      dateOfBirth: this.props.dateOfBirth ? this.props.dateOfBirth : "",
+      dateOfBirth: "",
       gender: "",
       mobileNumber: "",
       emailId: "",
@@ -60,8 +60,9 @@ export default class EditAccountDetails extends React.Component {
           nextProps.userDetails.dateOfBirth.split("IST").join()
         );
 
-        formattedDate = moment(dateOfBirth).format("DD/MM/YYYY");
+        formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
       }
+      console.log(formattedDate);
 
       this.setState({
         firstName: nextProps.userDetails.firstName,
@@ -83,11 +84,11 @@ export default class EditAccountDetails extends React.Component {
     this.setState(val);
   }
   onChangeDateOfBirth = val => {
-    let formattedDate = moment(val).format("DD/MM/YYYY");
-
+    let formattedDate = moment(val).format("MM/DD/YYYY");
     this.setState({ dateOfBirth: formattedDate });
   };
   updateProfile = () => {
+    console.log(this.state.dateOfBirth);
     if (
       this.state.emailId &&
       !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
