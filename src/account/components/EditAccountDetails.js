@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./EditAccountDetails.css";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import MobileDatePicker from "../../general/components/MobileDatePicker";
 import ShopByBrandLists from "../../blp/components/ShopByBrandLists.js";
 import CheckboxAndText from "../../cart/components/CheckboxAndText.js";
@@ -67,7 +67,9 @@ export default class EditAccountDetails extends React.Component {
       this.props.history.push(LOGIN_PATH);
     }
   }
-
+  onChangeGender(val) {
+    this.setState({ gender: val.value });
+  }
   onChange(val) {
     this.setState(val);
   }
@@ -77,7 +79,6 @@ export default class EditAccountDetails extends React.Component {
     this.setState({ dateOfBirth: formattedDate });
   };
   updateProfile = () => {
-    console.log(this.state);
     if (this.state.firstName === "undefined" || !this.state.firstName) {
       this.props.displayToast("Please enter first name");
       return false;
@@ -168,17 +169,16 @@ export default class EditAccountDetails extends React.Component {
             </div>
 
             <div className={styles.container}>
-              <SelectBoxMobile
-                label={this.state.gender ? this.state.gender : "Gender"}
+              <SelectBoxMobile2
+                placeholder={"Gender"}
                 value={this.state.gender}
                 options={[
-                  { label: "Gender", value: "gender" },
                   { label: "Female", value: "Female" },
                   { label: "Male", value: "Male" }
                 ]}
                 arrowColour="grey"
                 height={33}
-                onChange={gender => this.onChange({ gender })}
+                onChange={gender => this.onChangeGender(gender)}
               />
             </div>
             <div className={styles.container}>
