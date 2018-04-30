@@ -27,12 +27,16 @@ export default class CheckoutDebitCard extends React.Component {
       this.props.jusPayTokenizeForGiftCard(cardDetails);
     }
   };
-
+  onChangeCardDetail = card => {
+    if (this.props.onChangeCardDetail) {
+      this.props.onChangeCardDetail(card);
+    }
+  };
   render() {
     return (
       <ManueDetails
         text={DEBIT_CARD}
-        osOpen={this.props.currentPaymentMode === DEBIT_CARD}
+        isOpen={this.props.currentPaymentMode === DEBIT_CARD}
         onOpenMenu={currentPaymentMode =>
           this.props.onChange({ currentPaymentMode })
         }

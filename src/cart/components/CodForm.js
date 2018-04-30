@@ -24,13 +24,8 @@ export default class CodForm extends React.Component {
   verifyCallback(response) {
     if (response) {
       this.setState({ captcha: response });
-    }
-  }
-
-  payBill() {
-    if (this.state.captcha !== null) {
-      if (this.props.softReservationForCODPayment) {
-        this.props.softReservationForCODPayment();
+      if (this.props.verifyCaptcha) {
+        this.props.verifyCaptcha(response);
       }
     }
   }
@@ -50,17 +45,6 @@ export default class CodForm extends React.Component {
               this.verifyCallback(response);
             }}
           />
-        </div>
-        <div className={styles.cardFooterText}>
-          <div className={styles.buttonHolder}>
-            <Button
-              type="primary"
-              color="#fff"
-              label="Pay now"
-              width={120}
-              onClick={() => this.payBill()}
-            />
-          </div>
         </div>
       </div>
     );

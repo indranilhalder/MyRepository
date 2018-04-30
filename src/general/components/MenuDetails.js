@@ -8,7 +8,10 @@ import {
   setDataLayerForCheckoutDirectCalls,
   ADOBE_CALL_FOR_SELECTING_PAYMENT_MODES
 } from "../../lib/adobeUtils";
-import { EASY_MONTHLY_INSTALLMENTS, NET_BANKING } from "../../lib/constants";
+import {
+  EASY_MONTHLY_INSTALLMENTS,
+  NET_BANKING_PAYMENT_MODE
+} from "../../lib/constants";
 
 export default class MenuDetails extends React.Component {
   constructor(props) {
@@ -35,7 +38,10 @@ export default class MenuDetails extends React.Component {
       }
     }
     if (isOpen) {
-      if (this.props.text === NET_BANKING && !this.props.bankList) {
+      if (
+        this.props.text === NET_BANKING_PAYMENT_MODE &&
+        !this.props.bankList
+      ) {
         this.props.getNetBankDetails();
       } else if (
         this.props.text === EASY_MONTHLY_INSTALLMENTS &&

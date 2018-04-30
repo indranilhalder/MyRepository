@@ -40,7 +40,9 @@ import {
   THANK_YOU,
   COUPON_COOKIE,
   JUS_PAY_AUTHENTICATION_FAILED,
-  CREDIT_CARD
+  CREDIT_CARD,
+  NET_BANKING_PAYMENT_MODE,
+  DEBIT_CARD
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -105,7 +107,8 @@ class CheckOutPage extends React.Component {
       currentPaymentMode: null, // holding selected payments modes
       cardDetails: {}, // for store card detail in card details
       cvvForCurrentPaymentMode: null, // in case on saved card
-      bankCodeForNetBanking: null // in case on net banking
+      bankCodeForNetBanking: null, // in case on net banking
+      captchaReseponseForCOD: null // in case of COD order its holding that ceptcha verification
     };
   }
 
@@ -847,6 +850,7 @@ class CheckOutPage extends React.Component {
     return productServiceAvailability;
   };
   handleSubmit = () => {
+    console.log(this.state);
     if (this.availabilityOfUserCoupon()) {
       if (this.state.isFirstAddress) {
         this.addAddress(this.state.addressDetails);
@@ -918,16 +922,25 @@ class CheckOutPage extends React.Component {
         if (this.state.isFromGiftCard) {
           this.props.jusPayTokenizeForGiftCard(this.state.cardDetails);
         } else {
-          this.props.softReservationForPayment(this.state.cardDetails);
+          this.softReservationForPayment(this.state.cardDetails);
         }
       }
-      if (this.state.currentPaymentMode === NET_BANKING) {
+      if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
         if (this.state.isFromGiftCard) {
           this.props.createJusPayOrderForGiftCardNetBanking(
-            this.state.bankCode
+            this.state.bankCodeForNetBanking
           );
         } else {
-          this.props.softReservationPaymentForNetBanking(this.state.bankCode);
+          this.props.softReservationPaymentForNetBanking(
+            this.state.bankCodeForNetBanking
+          );
+        }
+      }
+      if (this.state.currentPaymentMode === DEBIT_CARD) {
+        if (this.state.isFromGiftCard) {
+          this.props.jusPayTokenizeForGiftCard(this.state.cardDetails);
+        } else {
+          this.softReservationForPayment(this.state.cardDetails);
         }
       }
       if (!this.state.isRemainingAmount) {
@@ -1118,7 +1131,6 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
-    console.log(this.state);
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
@@ -1256,7 +1268,13 @@ class CheckOutPage extends React.Component {
                 removeCliqCash={() => this.removeCliqCash()}
                 currentPaymentMode={this.state.currentPaymentMode}
                 cardDetails={this.state.cardDetails}
+                verifyCaptcha={captchaReseponseForCOD =>
+                  this.setState({ captchaReseponseForCOD })
+                }
                 onChange={val => this.onChangePaymentMode(val)}
+                onSelectBankForNetBanking={bankCodeForNetBanking =>
+                  this.setState({ bankCodeForNetBanking })
+                }
                 onChangeCardDetail={val => this.onChangeCardDetail(val)}
                 binValidation={(paymentMode, binNo) =>
                   this.binValidation(paymentMode, binNo)

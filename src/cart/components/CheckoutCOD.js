@@ -37,9 +37,7 @@ export default class CheckoutCOD extends React.Component {
               binValidationForCOD={paymentMode =>
                 this.binValidationForCOD(paymentMode)
               }
-              softReservationForCODPayment={() =>
-                this.softReservationForCODPayment()
-              }
+              verifyCaptcha={this.props.verifyCaptcha}
             />
           </MenuDetails>
         ) : (
