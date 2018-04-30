@@ -79,8 +79,10 @@ class HeaderWrapper extends React.Component {
     let isGoBack = true;
     let isCross = false;
     let shouldRenderHeader = true;
-
-    if (this.props.location.pathname.includes("/")) {
+    if (url === PRODUCT_CART_ROUTER) {
+      shouldRenderSearch = false;
+    }
+    if (this.props.match.path.includes("/") && url !== PRODUCT_CART_ROUTER) {
       isGoBack = true;
       shouldRenderSearch = true;
     }
