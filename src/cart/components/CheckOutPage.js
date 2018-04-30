@@ -1528,7 +1528,6 @@ class CheckOutPage extends React.Component {
         </div>
       );
     } else if (this.state.orderConfirmation) {
-      console.log(this.props.cart);
       return (
         <div>
           {this.props.cart.orderConfirmationDetails && (
