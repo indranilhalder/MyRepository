@@ -37,8 +37,7 @@ export default class EditAccountDetails extends React.Component {
       gender: "",
       mobileNumber: "",
       emailId: "",
-      changePassword: false,
-      disabledMobile: false
+      changePassword: false
     };
   }
   componentDidMount() {
@@ -102,7 +101,6 @@ export default class EditAccountDetails extends React.Component {
       return false;
     } else {
       if (this.props.updateProfile) {
-        this.setState({ disabledMobile: true });
         this.props.updateProfile(this.state);
       }
     }
@@ -172,10 +170,9 @@ export default class EditAccountDetails extends React.Component {
               />
             </div>
             <div className={styles.container}>
-              {this.state.disabledMobile ||
-              (userDetails &&
-                userDetails.mobileNumber &&
-                userDetails.mobileNumber.length === 10) ? (
+              {userDetails &&
+              userDetails.mobileNumber &&
+              userDetails.mobileNumber.length === 10 ? (
                 <Input2
                   placeholder="Mobile NUmber"
                   value={this.state.mobileNumber}
