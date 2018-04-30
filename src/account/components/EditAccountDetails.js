@@ -22,8 +22,14 @@ export default class EditAccountDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: this.props.firstName ? this.props.firstName : "",
-      lastName: this.props.lastName ? this.props.lastName : "",
+      firstName:
+        this.props.firstName && this.props.firstName !== "undefined"
+          ? this.props.firstName
+          : "",
+      lastName:
+        this.props.lastName && this.props.lastName !== "undefined"
+          ? this.props.lastName
+          : "",
       dateOfBirth: this.props.dateOfBirth ? this.props.dateOfBirth : "",
       gender: "",
       mobileNumber: "",
