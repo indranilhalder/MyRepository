@@ -20,10 +20,17 @@ export const ARRAY_OF_SORTS = [
 export default class Sort extends React.Component {
   onClick(val) {
     let searchText = "";
-
+    let icid2 = null;
+    let cid = null;
     if (this.props.onClick) {
       if (this.props.location.search) {
         const parsedQueryString = queryString.parse(this.props.location.search);
+        if (parsedQueryString.icid2) {
+          icid2 = parsedQueryString.icid2;
+        }
+        if (parsedQueryString.cid) {
+          cid = parsedQueryString.cid;
+        }
         if (parsedQueryString.q) {
           searchText = parsedQueryString.q;
         } else if (parsedQueryString.text) {
@@ -31,7 +38,13 @@ export default class Sort extends React.Component {
         }
       }
 
-      const url = applySortToUrl(searchText, this.props.location.pathname, val);
+      const url = applySortToUrl(
+        searchText,
+        this.props.location.pathname,
+        val,
+        icid2,
+        cid
+      );
       this.props.history.push(url, {
         isFilter: false
       });
