@@ -564,19 +564,10 @@ class CheckOutPage extends React.Component {
         this.setState({
           isRemainingAmount:
             nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
-          payableAmount:
-            Math.round(
-              nextProps.cart.cliqCashPaymentDetails.paybleAmount.value * 100
-            ) / 100,
+          payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount,
           cliqCashAmount:
-            Math.round(
-              nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value * 100
-            ) / 100,
-          bagAmount:
-            Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount &&
-                nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
-            ) / 100
+            nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value,
+          bagAmount: nextProps.cart.cliqCashPaymentDetails.totalAmount
         });
       }
     } else {
@@ -589,7 +580,8 @@ class CheckOutPage extends React.Component {
         ) {
           cliqCashAmount =
             Math.round(
-              nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance * 100
+              nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance.value *
+                100
             ) / 100;
         }
         this.setState({
