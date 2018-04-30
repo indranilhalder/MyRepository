@@ -177,7 +177,9 @@ export default class AddDeliveryAddress extends React.Component {
       defaultFlag: false
     });
   };
-
+  onChangeSalutation(val) {
+    this.setState({ salutaion: val.value });
+  }
   render() {
     if (this.props.loading) {
       if (this.props.showSecondaryLoader) {
@@ -208,6 +210,7 @@ export default class AddDeliveryAddress extends React.Component {
         label: "Miss."
       }
     ];
+    console.log(this.state);
     return (
       <div className={styles.base}>
         <div className={styles.addressInnerBox}>
@@ -239,16 +242,18 @@ export default class AddDeliveryAddress extends React.Component {
         </div>
         <div className={styles.content}>
           <div className={styles.salutation}>
-            <SelectBoxMobile
+            <SelectBoxMobile2
               height={33}
-              label={salutaion[0].label}
+              value={
+                this.state.salutaion ? this.state.salutaion : salutaion[0].label
+              }
               options={salutaion.map((val, i) => {
                 return {
                   value: val.label,
                   label: val.label
                 };
               })}
-              onChange={salutaion => this.onChange({ salutaion })}
+              onChange={salutaion => this.onChangeSalutation(salutaion)}
             />
           </div>
           <div className={styles.name}>
