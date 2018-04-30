@@ -216,3 +216,10 @@ export const CREDIT_CARD = "Credit Card";
 export const DEBIT_CARD = "Debit Card";
 export const E_WALLET = "E - Wallet";
 export const CASH_ON_DELIVERY_PAYMENT_MODE = "Cash On Delivery";
+
+// META TAGS CONSTANTS
+
+export const GOOGLE_TAG_TITLE_DEFAULT =
+  "Online Shopping Site in India - Upto 60% Off On Mobiles, Electronics & Fashion at Tata CLiQ";
+export const GOOGLE_TAG_IMAGE_DEFAULT =
+  "https://assets.tatacliq.com/medias/sys_master/images/10963640156190.jpg";

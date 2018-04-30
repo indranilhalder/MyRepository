@@ -11,7 +11,9 @@ import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   UPDATE_PDP_REDUCER_FOR_DELIVERY_OPTION,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  GOOGLE_TAG_TITLE_DEFAULT,
+  GOOGLE_TAG_IMAGE_DEFAULT
 } from "../../lib/constants";
 // prettier-ignore
 const typeComponentMapping = {
@@ -125,6 +127,10 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   /*
 <link rel=“canonical” href="https://www.tatacliq.com/utsa-by-westside-yellow-pure-cotton-kurta-set/p-mp000000002644543" hreflang="en-in">
 
+
+<meta itemprop="name" content="SEO Title">
+<meta itemprop="description" content="SEO Description">
+<meta itemprop="image" content="https://www.tatacliq.com/image.jpg">
   */
   renderMetaTags = () => {
     const productDetails = this.props.productDetails;
@@ -135,6 +141,13 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     const alternateUrl = productDetails.seo.alternateURL
       ? productDetails.seo.alternateURL
       : window.location.href;
+    const googleTitle = productDetails.seo.title
+      ? productDetails.seo.title
+      : GOOGLE_TAG_TITLE_DEFAULT;
+    const googleDescription = productDetails.seo.description;
+    const googleImageUrl = productDetails.seo.imageURL
+      ? productDetails.seo.imageURL
+      : GOOGLE_TAG_IMAGE_DEFAULT;
     return (
       <MetaTags>
         <title> {productDetails.seo.title}</title>
@@ -142,6 +155,11 @@ export default class ProductDescriptionPageWrapper extends React.Component {
         <meta name="keywords" content={productDetails.seo.keywords} />
         <link rel="canonical" href={canonicalUrl} hreflang="en-in" />
         <link rel="alternate" href={alternateUrl} hreflang="en-in" />
+        <meta itemprop="name" content={googleTitle} />
+        {googleDescription && (
+          <meta itemprop="description" content={googleDescription} />
+        )}
+        <meta itemprop="image" content={googleImageUrl} />
       </MetaTags>
     );
   };
