@@ -11,7 +11,7 @@ import CheckboxAndText from "./CheckboxAndText";
 import TextArea from "../../general/components/TextArea.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
-import { SUCCESS } from "../../lib/constants.js";
+import { SUCCESS, ERROR } from "../../lib/constants.js";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 import {
   EMAIL_REGULAR_EXPRESSION,
@@ -87,7 +87,7 @@ export default class AddDeliveryAddress extends React.Component {
     if (nextProps.addUserAddressStatus === SUCCESS) {
       this.props.history.goBack();
     }
-    if (nextProps.getPincodeStatus === "error") {
+    if (nextProps.getPincodeStatus === ERROR) {
       const landmarkList = [{ landmark: OTHER_LANDMARK }];
       this.setState({
         landmarkList
