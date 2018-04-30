@@ -39,7 +39,11 @@ import {
   REQUESTING,
   THANK_YOU,
   COUPON_COOKIE,
-  JUS_PAY_AUTHENTICATION_FAILED
+  JUS_PAY_AUTHENTICATION_FAILED,
+  CREDIT_CARD,
+  NET_BANKING_PAYMENT_MODE,
+  DEBIT_CARD,
+  EMI
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -103,14 +107,29 @@ class CheckOutPage extends React.Component {
       isNoCostEmiProceeded: false,
       selectedBankOfferCode: "",
       cliqPiqSelected: false,
+      currentPaymentMode: null, // holding selected payments modes
+      cardDetails: {}, // for store card detail in card details
+      cvvForCurrentPaymentMode: null, // in case on saved card
+      bankCodeForNetBanking: null, // in case on net banking
+      captchaReseponseForCOD: null, // in case of COD order its holding that ceptcha verification
       noCostEmiDiscount: 0
     };
   }
+
   onClickImage(productCode) {
     if (productCode) {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
     }
   }
+  onChangeCardDetail = val => {
+    const cardDetails = cloneDeep(this.state.cardDetails);
+    Object.assign(cardDetails, val);
+    this.setState({ cardDetails });
+  };
+  onChangePaymentMode = val => {
+    this.setState(val);
+    this.setState({ cardDetails: {}, bankCodeForNetBanking: null });
+  };
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
@@ -551,19 +570,10 @@ class CheckOutPage extends React.Component {
         this.setState({
           isRemainingAmount:
             nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
-          payableAmount:
-            Math.round(
-              nextProps.cart.cliqCashPaymentDetails.paybleAmount.value * 100
-            ) / 100,
+          payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount,
           cliqCashAmount:
-            Math.round(
-              nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value * 100
-            ) / 100,
-          bagAmount:
-            Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount &&
-                nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
-            ) / 100
+            nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value,
+          bagAmount: nextProps.cart.cliqCashPaymentDetails.totalAmount
         });
       }
     } else {
@@ -576,7 +586,8 @@ class CheckOutPage extends React.Component {
         ) {
           cliqCashAmount =
             Math.round(
-              nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance * 100
+              nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance.value *
+                100
             ) / 100;
         }
         if (
@@ -925,6 +936,29 @@ class CheckOutPage extends React.Component {
           );
         }
       }
+      if (
+        this.state.currentPaymentMode === CREDIT_CARD ||
+        this.state.currentPaymentMode === EMI ||
+        this.state.currentPaymentMode === DEBIT_CARD
+      ) {
+        if (this.state.isFromGiftCard) {
+          this.props.jusPayTokenizeForGiftCard(this.state.cardDetails);
+        } else {
+          this.softReservationForPayment(this.state.cardDetails);
+        }
+      }
+      if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
+        if (this.state.isFromGiftCard) {
+          this.props.createJusPayOrderForGiftCardNetBanking(
+            this.state.bankCodeForNetBanking
+          );
+        } else {
+          this.softReservationPaymentForNetBanking(
+            this.state.bankCodeForNetBanking
+          );
+        }
+      }
+
       if (!this.state.isRemainingAmount) {
         this.props.softReservationForCliqCash(
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
@@ -1246,6 +1280,17 @@ class CheckOutPage extends React.Component {
                 cliqCashAmount={this.state.cliqCashAmount}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
+                currentPaymentMode={this.state.currentPaymentMode}
+                cardDetails={this.state.cardDetails}
+                verifyCaptcha={captchaReseponseForCOD =>
+                  this.setState({ captchaReseponseForCOD })
+                }
+                onChange={val => this.onChangePaymentMode(val)}
+                bankCodeForNetBanking={this.state.bankCodeForNetBanking}
+                onSelectBankForNetBanking={bankCodeForNetBanking =>
+                  this.setState({ bankCodeForNetBanking })
+                }
+                onChangeCardDetail={val => this.onChangeCardDetail(val)}
                 binValidation={(paymentMode, binNo) =>
                   this.binValidation(paymentMode, binNo)
                 }
