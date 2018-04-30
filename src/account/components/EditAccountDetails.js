@@ -12,15 +12,16 @@ import { LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER } from "../actions/account.actions.
 import ChangePassword from "./ChangePassword.js";
 import * as Cookie from "../../lib/Cookie";
 import ProfilePicture from "../../blp/components/ProfilePicture.js";
-
+import {
+  EMAIL_REGULAR_EXPRESSION,
+  MOBILE_PATTERN
+} from "../../auth/components/Login";
 import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
   LOGIN_PATH
 } from "../../lib/constants";
 const ACCOUNT_SETTING_HEADER = "Account Settings";
-const EMAIL_REGULAR_EXPRESSION = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const MOBILE_PATTERN = /^[7,8,9]{1}[0-9]{9}$/;
 export default class EditAccountDetails extends React.Component {
   constructor(props) {
     super(props);
