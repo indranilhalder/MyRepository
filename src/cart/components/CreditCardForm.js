@@ -91,32 +91,6 @@ export default class CreditCardForm extends React.Component {
       });
     }
   }
-  // payBill = cardDetails => {
-  //   let cardValues = {};
-  //   cardValues.cardNumber = this.state.cardNumber;
-  //   cardValues.cardName = this.state.cardName;
-  //   cardValues.cvvNumber = this.state.cvvNumber;
-  //   cardValues.monthValue = this.state.monthValue;
-  //   cardValues.yearValue = this.state.yearValue;
-  //   cardValues.selected = this.state.selected;
-  //   cardValues.merchant_id = MERCHANT_ID;
-  //   cardValues.pincode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-  //   if (
-  //     cardValues.cardNumber &&
-  //     cardValues.cardName &&
-  //     cardValues.cvvNumber &&
-  //     cardValues.monthValue &&
-  //     cardValues.yearValue
-  //   ) {
-  //     if (this.props.isFromGiftCard) {
-  //       this.props.jusPayTokenizeForGiftCard(cardValues);
-  //     } else {
-  //       this.props.softReservationForPayment(cardValues);
-  //     }
-  //   } else {
-  //     this.props.displayToast(INSUFFICIENT_DATA_ERROR_MESSAGE);
-  //   }
-  // };
 
   render() {
     return (
