@@ -248,16 +248,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                 <div className={styles.selectHolder}>
                   <SelectBoxMobile2
                     height={33}
-                    label={
-                      this.state.selectedFromDropDown
-                        ? this.state.selectedBankName
-                        : "Other Bank"
-                    }
-                    value={
-                      this.state.selectedBankIndex
-                        ? this.state.selectedBankIndex
-                        : ""
-                    }
+                    placeholder={"Other Bank"}
                     options={filteredBankListWithOutLogo.map((val, i) => {
                       return {
                         value: i,
