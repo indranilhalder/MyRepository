@@ -25,9 +25,7 @@ export default class SizeSelector extends React.Component {
       return val.colorlink.selected;
     })[0].colorlink.color;
     const sizes = this.props.data
-      .filter(val => {
-        return val.sizelink.isAvailable;
-      })
+
       .filter(val => {
         return selectedColour ? val.colorlink.color === selectedColour : true;
       })
@@ -55,6 +53,7 @@ export default class SizeSelector extends React.Component {
               return (
                 <SizeSelect
                   key={i}
+                  disabled={!datum.sizelink.isAvailable}
                   selected={
                     datum.colorlink.selected &&
                     this.props.history.location.state
