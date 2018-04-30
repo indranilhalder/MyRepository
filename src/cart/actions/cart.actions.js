@@ -2353,7 +2353,7 @@ export function createJusPayOrder(
   paymentMode,
   isPaymentFailed
 ) {
-  let jusPayUrl = `${
+  const jusPayUrl = `${
     window.location.origin
   }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -2434,7 +2434,7 @@ export function createJusPayOrderForGiftCard(
   paymentMode,
   guId
 ) {
-  let jusPayUrl = `${
+  const jusPayUrl = `${
     window.location.origin
   }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -2478,7 +2478,7 @@ export function createJusPayOrderForNetBanking(
   pinCode,
   cartItem
 ) {
-  let jusPayUrl = `${
+  const jusPayUrl = `${
     window.location.origin
   }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -2539,7 +2539,7 @@ export function createJusPayOrderForNetBanking(
 }
 
 export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
-  let jusPayUrl = `${
+  const jusPayUrl = `${
     window.location.origin
   }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -2585,7 +2585,7 @@ export function createJusPayOrderForSavedCards(
     localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
   }
 
-  let jusPayUrl = `${
+  const jusPayUrl = `${
     window.location.origin
   }/checkout/multi/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -2652,7 +2652,7 @@ export function createJusPayOrderForSavedCards(
 }
 
 export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
-  let jusPayUrl = `${
+  const jusPayUrl = `${
     window.location.origin
   }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -2708,7 +2708,7 @@ export function createJusPayOrderForCliqCash(
     localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
   }
 
-  let jusPayUrl = `${
+  const jusPayUrl = `${
     window.location.origin
   }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
