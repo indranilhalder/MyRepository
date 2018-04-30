@@ -2011,9 +2011,7 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
           JSON.parse(userDetails).userName
         }/carts/softReservationForPayment?access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartId}&pincode=${localStorage.getItem(
-          DEFAULT_PIN_CODE_LOCAL_STORAGE
-        )}`,
+        }&cartGuid=${cartId}&pincode=${pinCode}`,
         productItems
       );
       const resultJson = await result.json();
@@ -2701,8 +2699,8 @@ export function createJusPayOrderForCliqCash(
 ) {
   let cartItem;
 
-  if (localStorage.getItem(CART_ITEM_COOKIE, cartItem)) {
-    cartItem = JSON.parse(localStorage.getItem(CART_ITEM_COOKIE, cartItem));
+  if (localStorage.getItem(CART_ITEM_COOKIE)) {
+    cartItem = JSON.parse(localStorage.getItem(CART_ITEM_COOKIE));
   } else {
     cartItem = cartItemObj;
     localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
