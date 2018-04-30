@@ -1340,7 +1340,7 @@ export function editAddress(addressDetails) {
     addressObject.append("defaultFlag", addressDetails.defaultFlag);
     addressObject.append("addressId", addressDetails.addressId);
     addressObject.append("emailId", "");
-
+    addressObject.append("landmark", addressDetails.landmark);
     try {
       const result = await api.postFormData(
         `${USER_PATH}/${
