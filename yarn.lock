@@ -6816,6 +6816,13 @@ react-loadable@^5.3.1:
   dependencies:
     prop-types "^15.5.0"
 
+react-meta-tags@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/react-meta-tags/-/react-meta-tags-0.4.1.tgz#bbb2bc7a5b8b7faa73569b742517f9075d692db6"
+  dependencies:
+    babel-runtime "^6.26.0"
+    prop-types "^15.6.0"
+
 react-motion@^0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/react-motion/-/react-motion-0.5.2.tgz#0dd3a69e411316567927917c6626551ba0607316"

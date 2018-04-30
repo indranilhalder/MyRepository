@@ -6,6 +6,7 @@ import PdpHome from "./PdpHome";
 
 import styles from "./ProductDescriptionPageWrapper.css";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
+import MetaTags from "react-meta-tags";
 import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
@@ -115,6 +116,21 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       </div>
     );
   }
+  /*
+
+<meta name="description" content="Free Web tutorials">
+  <meta name="keywords" content="HTML,CSS,XML,JavaScript">
+  */
+  renderMetaTags = () => {
+    const productDetails = this.props.productDetails;
+    return (
+      <MetaTags>
+        <title> {productDetails.seo.title}</title>
+        <meta name="description" content={productDetails.seo.description} />
+        <meta name="keywords" content={productDetails.seo.keywords} />
+      </MetaTags>
+    );
+  };
 
   render() {
     if (this.props.loading) {
@@ -125,6 +141,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     if (this.props.productDetails) {
       return (
         <div>
+          {this.renderMetaTags()}
           {this.renderRootCategory(this.props.productDetails.rootCategory)}
         </div>
       );
