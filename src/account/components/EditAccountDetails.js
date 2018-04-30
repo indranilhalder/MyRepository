@@ -77,8 +77,18 @@ export default class EditAccountDetails extends React.Component {
     this.setState({ dateOfBirth: formattedDate });
   };
   updateProfile = () => {
-    if (this.props.updateProfile) {
-      this.props.updateProfile(this.state);
+    console.log(this.state);
+    if (this.state.firstName === "undefined" || !this.state.firstName) {
+      this.props.displayToast("Please enter first name");
+      return false;
+    }
+    if (this.state.lastName === "undefined" || !this.state.lastName) {
+      this.props.displayToast("Please enter last name");
+      return false;
+    } else {
+      if (this.props.updateProfile) {
+        this.props.updateProfile(this.state);
+      }
     }
   };
 
@@ -153,6 +163,7 @@ export default class EditAccountDetails extends React.Component {
                 textStyle={{ fontSize: 14 }}
                 height={33}
                 onChange={mobileNumber => this.onChange({ mobileNumber })}
+                disabled={this.state.mobileNumber ? true : false}
               />
             </div>
 
