@@ -3,6 +3,7 @@ import debitCardIcon from "./img/debit-card.svg";
 import PropTypes from "prop-types";
 import CreditCardForm from "./CreditCardForm.js";
 import ManueDetails from "../../general/components/MenuDetails.js";
+import { DEBIT_CARD } from "../../lib/constants";
 const PAYMENT_MODE = "Debit Card";
 export default class CheckoutDebitCard extends React.Component {
   onChangeCvv(i) {
@@ -26,21 +27,26 @@ export default class CheckoutDebitCard extends React.Component {
       this.props.jusPayTokenizeForGiftCard(cardDetails);
     }
   };
-
+  onChangeCardDetail = card => {
+    if (this.props.onChangeCardDetail) {
+      this.props.onChangeCardDetail(card);
+    }
+  };
   render() {
     return (
-      <ManueDetails text="Debit Card" icon={debitCardIcon}>
+      <ManueDetails
+        text={DEBIT_CARD}
+        isOpen={this.props.currentPaymentMode === DEBIT_CARD}
+        onOpenMenu={currentPaymentMode =>
+          this.props.onChange({ currentPaymentMode })
+        }
+        icon={debitCardIcon}
+      >
         <CreditCardForm
-          onChangeCvv={i => this.onChangeCvv(i)}
+          cardDetails={this.props.cardDetails}
           binValidation={binNo => this.binValidation(binNo)}
-          softReservationForPayment={cardDetails =>
-            this.softReservationForPayment(cardDetails)
-          }
           isFromGiftCard={this.props.isFromGiftCard}
-          jusPayTokenizeForGiftCard={cardDetails =>
-            this.jusPayTokenizeForGiftCard(cardDetails)
-          }
-          displayToast={this.props.displayToast}
+          onChangeCardDetail={card => this.onChangeCardDetail(card)}
         />
       </ManueDetails>
     );

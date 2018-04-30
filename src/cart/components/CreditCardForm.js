@@ -46,9 +46,9 @@ export default class CreditCardForm extends React.Component {
     ];
     this.state = {
       selected: false,
-      cardNumberValue: props.cardNumberValue ? props.cardNumberValue : "",
-      cardNameValue: props.cardNameValue ? props.cardNameValue : "",
-      cardCvvValue: props.cardCvvValue ? props.cardCvvValue : "",
+      cardNumber: props.cardNumber ? props.cardNumber : "",
+      cardName: props.cardName ? props.cardName : "",
+      cvvNumber: props.cvvNumber ? props.cvvNumber : "",
       ExpiryMonth: props.ExpiryMonth ? props.ExpiryMonth : null,
       ExpiryYear: props.ExpiryYear ? props.ExpiryYear : null,
       value: props.value ? props.value : "",
@@ -57,56 +57,40 @@ export default class CreditCardForm extends React.Component {
     };
   }
 
-  getExpiryMonth(val) {
-    this.setState({ cardNumberValue: val });
-  }
   onChangeCardNumber(val) {
-    this.setState({ cardNumberValue: val });
+    this.setState({ cardNumber: val });
+    this.onChange({ cardNumber: val });
     if (val.length === 6) {
       this.props.binValidation(val);
     }
   }
-  getCardDetails(val) {
-    this.setState({ cardNumberValue: val });
-  }
-  getCardCvvValue(val) {
-    this.setState({ cardCvvValue: val });
-  }
-  onChangeCardName(val) {
-    this.setState({ cardNameValue: val });
-  }
-  monthChange(val) {
-    this.setState({ monthValue: val.value });
-  }
-  onYearChange(val) {
-    this.setState({ yearValue: val.value });
-  }
-  payBill = cardDetails => {
-    let cardValues = {};
-    cardValues.cardNumber = this.state.cardNumberValue;
-    cardValues.cardName = this.state.cardNameValue;
-    cardValues.cvvNumber = this.state.cardCvvValue;
-    cardValues.monthValue = this.state.monthValue;
-    cardValues.yearValue = this.state.yearValue;
-    cardValues.selected = this.state.selected;
-    cardValues.merchant_id = MERCHANT_ID;
-    cardValues.pincode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-    if (
-      cardValues.cardNumber &&
-      cardValues.cardName &&
-      cardValues.cvvNumber &&
-      cardValues.monthValue &&
-      cardValues.yearValue
-    ) {
-      if (this.props.isFromGiftCard) {
-        this.props.jusPayTokenizeForGiftCard(cardValues);
-      } else {
-        this.props.softReservationForPayment(cardValues);
-      }
-    } else {
-      this.props.displayToast(INSUFFICIENT_DATA_ERROR_MESSAGE);
+
+  onChange(val) {
+    this.setState(val);
+    if (this.props.onChangeCardDetail) {
+      this.props.onChangeCardDetail(val);
     }
-  };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.cardDetails &&
+      (!nextProps.cardDetails.cardNumber ||
+        nextProps.cardDetails.cardNumber === "")
+    ) {
+      this.setState({
+        selected: false,
+        cardNumber: "",
+        cardName: "",
+        cvvNumber: "",
+        ExpiryMonth: null,
+        ExpiryYear: null,
+        value: "",
+        monthValue: "",
+        yearValue: ""
+      });
+    }
+  }
 
   render() {
     return (
@@ -116,9 +100,9 @@ export default class CreditCardForm extends React.Component {
             <Input2
               placeholder="Card Number"
               value={
-                this.props.cardNumberValue
-                  ? this.props.cardNumberValue
-                  : this.state.cardNumberValue
+                this.props.cardNumber
+                  ? this.props.cardNumber
+                  : this.state.cardNumber
               }
               boxy={true}
               onChange={val => this.onChangeCardNumber(val)}
@@ -132,12 +116,10 @@ export default class CreditCardForm extends React.Component {
             <Input2
               placeholder="Name on card*"
               boxy={true}
-              cardNameValue={
-                this.props.cardNameValue
-                  ? this.props.cardNameValue
-                  : this.state.cardNameValue
+              cardName={
+                this.props.cardName ? this.props.cardName : this.state.cardName
               }
-              onChange={val => this.onChangeCardName(val)}
+              onChange={cardName => this.onChange({ cardName })}
               textStyle={{ fontSize: 14 }}
               height={33}
             />
@@ -146,8 +128,10 @@ export default class CreditCardForm extends React.Component {
             <div className={styles.dropDownBox}>
               <SelectBoxMobile2
                 theme="hollowBox"
-                placeholder={"Expiry Month"}
-                onChange={changedValue => this.monthChange(changedValue)}
+                placeholder="Expiry Month"
+                onChange={monthValue =>
+                  this.onChange({ monthValue: monthValue.value })
+                }
                 options={this.monthOptions}
                 textStyle={{ fontSize: 14 }}
                 value={this.state.monthValue}
@@ -156,29 +140,31 @@ export default class CreditCardForm extends React.Component {
             <div className={styles.dropDownBox}>
               <SelectBoxMobile2
                 theme="hollowBox"
-                placeholder={"Expiry year"}
+                placeholder="Expiry year"
                 options={this.expiryYearObject}
-                onChange={expiryYear => this.onYearChange(expiryYear)}
+                onChange={yearValue =>
+                  this.onChange({ yearValue: yearValue.value })
+                }
                 value={this.state.yearValue}
               />
             </div>
           </div>
           <div className={styles.payCardHolder}>
             <div className={styles.cardFooterText}>
-              <div className={styles.cardCvvTextHolder}>
+              <div className={styles.cvvNumberTextHolder}>
                 <div className={styles.cardFooterInput}>
                   <Input2
                     boxy={true}
                     placeholder="CVV"
                     type="password"
-                    onChange={val => this.getCardCvvValue(val)}
+                    onChange={cvvNumber => this.onChange({ cvvNumber })}
                     textStyle={{ fontSize: 14 }}
                     height={33}
                     maxLength={"3"}
                     value={
-                      this.props.cardCvvValue
-                        ? this.props.cardCvvValue
-                        : this.state.cardCvvValue
+                      this.props.cvvNumber
+                        ? this.props.cvvNumber
+                        : this.state.cvvNumber
                     }
                     rightChildSize={33}
                     rightChild={
@@ -190,17 +176,6 @@ export default class CreditCardForm extends React.Component {
                     }
                   />
                 </div>
-              </div>
-            </div>{" "}
-            <div className={styles.cardFooterText}>
-              <div className={styles.buttonHolder}>
-                <Button
-                  type="primary"
-                  color="#fff"
-                  label="Pay now"
-                  width={120}
-                  onClick={() => this.payBill()}
-                />
               </div>
             </div>
           </div>
