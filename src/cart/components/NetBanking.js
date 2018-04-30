@@ -45,13 +45,6 @@ export default class NetBanking extends React.Component {
     }
   }
 
-  payBill = () => {
-    if (this.props.isFromGiftCard) {
-      this.props.createJusPayOrderForGiftCardNetBanking(this.state.bankCode);
-    } else {
-      this.props.softReservationPaymentForNetBanking(this.state.bankCode);
-    }
-  };
   render() {
     return (
       <div>
@@ -113,17 +106,6 @@ export default class NetBanking extends React.Component {
             }
             onChange={val => this.handleSelect(val)}
           />
-        </div>
-        <div className={styles.cardFooterText}>
-          <div className={styles.buttonHolder}>
-            <Button
-              type="primary"
-              color="#fff"
-              label="Pay now"
-              width={120}
-              onClick={() => this.payBill()}
-            />
-          </div>
         </div>
       </div>
     );

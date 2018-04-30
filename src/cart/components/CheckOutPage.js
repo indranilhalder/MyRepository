@@ -921,6 +921,15 @@ class CheckOutPage extends React.Component {
           this.props.softReservationForPayment(this.state.cardDetails);
         }
       }
+      if (this.state.currentPaymentMode === NET_BANKING) {
+        if (this.state.isFromGiftCard) {
+          this.props.createJusPayOrderForGiftCardNetBanking(
+            this.state.bankCode
+          );
+        } else {
+          this.props.softReservationPaymentForNetBanking(this.state.bankCode);
+        }
+      }
       if (!this.state.isRemainingAmount) {
         this.props.softReservationForCliqCash(
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
