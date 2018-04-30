@@ -37,6 +37,11 @@ export default class EmiAccordion extends React.Component {
       selectedEmi: option.emitermsrate[0].term,
       selectedPrice: option.emitermsrate[0].monthlyInstallment
     });
+    this.onChangeCardDetail({
+      emi_bank: option.emiBank,
+      emi_tenure: option.emitermsrate[0].interestRate,
+      is_emi: IS_EMI
+    });
   }
   handleConfirmPlan() {
     this.setState({ planSelected: true });
@@ -59,6 +64,11 @@ export default class EmiAccordion extends React.Component {
     cardDetails.is_emi = IS_EMI;
     if (this.props.softReservationForPayment) {
       this.props.softReservationForPayment(cardDetails);
+    }
+  };
+  onChangeCardDetail = cardDetails => {
+    if (this.props.onChangeCardDetail) {
+      this.props.onChangeCardDetail(cardDetails);
     }
   };
   render() {
@@ -98,11 +108,9 @@ export default class EmiAccordion extends React.Component {
               changePlan={() => this.handleChangePlan()}
             />
             <CreditCardForm
-              onChangeCvv={i => this.onChangeCvv(i)}
+              cardDetails={this.props.cardDetails}
+              onChangeCardDetail={val => this.onChangeCardDetail(val)}
               binValidation={binNo => this.binValidation(binNo)}
-              softReservationForPayment={cardDetails =>
-                this.softReservationForPayment(cardDetails)
-              }
               displayToast={this.props.displayToast}
             />
           </React.Fragment>

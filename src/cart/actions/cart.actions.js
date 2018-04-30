@@ -1969,6 +1969,7 @@ export function softReservationForPaymentFailure(error) {
 export function softReservationForPayment(cardDetails, address, paymentMode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
   return async (dispatch, getState, { api }) => {
     let productItems = {};
     let item = [];
@@ -2003,7 +2004,7 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
           JSON.parse(userDetails).userName
         }/carts/softReservationForPayment?access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartId}&pincode=${cardDetails.pinCode}`,
+        }&cartGuid=${cartId}&pincode=${pinCode}`,
         productItems
       );
       const resultJson = await result.json();
@@ -2821,9 +2822,9 @@ export function jusPayPaymentMethodType(
         cardObject.append("emi_tenure", cardDetails.emi_tenure);
         cardObject.append("is_emi", cardDetails.is_emi);
       }
-
       const result = await api.postJusPay(`txns?`, cardObject);
       const resultJson = await result.json();
+
       if (
         resultJson.status === JUS_PAY_PENDING ||
         resultJson.status === SUCCESS ||
