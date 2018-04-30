@@ -32,8 +32,8 @@ const mapStateToProps = state => {
     userDetails = JSON.parse(userDetails);
     if (userDetails.firstName) {
       headerMessage = `Welcome ${userDetails.firstName}`;
-    } else if (userDetails.userName) {
-      headerMessage = `Welcome ${userDetails.userName}`;
+    } else {
+      headerMessage = `Welcome`;
     }
   }
   return {
