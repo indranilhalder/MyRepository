@@ -37,7 +37,8 @@ export default class EditAccountDetails extends React.Component {
       gender: "",
       mobileNumber: "",
       emailId: "",
-      changePassword: false
+      changePassword: false,
+      disabledMobile: false
     };
   }
   componentDidMount() {
@@ -62,8 +63,6 @@ export default class EditAccountDetails extends React.Component {
 
         formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
       }
-      console.log(formattedDate);
-
       this.setState({
         firstName: nextProps.userDetails.firstName,
         lastName: nextProps.userDetails.lastName,
@@ -88,7 +87,6 @@ export default class EditAccountDetails extends React.Component {
     this.setState({ dateOfBirth: formattedDate });
   };
   updateProfile = () => {
-    console.log(this.state.dateOfBirth);
     if (
       this.state.emailId &&
       !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
@@ -104,6 +102,7 @@ export default class EditAccountDetails extends React.Component {
       return false;
     } else {
       if (this.props.updateProfile) {
+        this.setState({ disabledMobile: true });
         this.props.updateProfile(this.state);
       }
     }
@@ -173,20 +172,30 @@ export default class EditAccountDetails extends React.Component {
               />
             </div>
             <div className={styles.container}>
-              <Input2
-                placeholder="Mobile NUmber"
-                value={this.state.mobileNumber}
-                boxy={true}
-                textStyle={{ fontSize: 14 }}
-                height={33}
-                onChange={mobileNumber => this.onChange({ mobileNumber })}
-                disabled={
-                  this.state.mobileNumber &&
-                  this.state.mobileNumber.length === 10
-                    ? true
-                    : false
-                }
-              />
+              {this.state.disabledMobile ||
+              (userDetails &&
+                userDetails.mobileNumber &&
+                userDetails.mobileNumber.length === 10) ? (
+                <Input2
+                  placeholder="Mobile NUmber"
+                  value={this.state.mobileNumber}
+                  boxy={true}
+                  textStyle={{ fontSize: 14 }}
+                  height={33}
+                  onChange={mobileNumber => this.onChange({ mobileNumber })}
+                  disabled={true}
+                />
+              ) : (
+                <Input2
+                  placeholder="Mobile NUmber"
+                  value={this.state.mobileNumber}
+                  boxy={true}
+                  textStyle={{ fontSize: 14 }}
+                  height={33}
+                  onChange={mobileNumber => this.onChange({ mobileNumber })}
+                  disabled={false}
+                />
+              )}
             </div>
 
             <div className={styles.container}>
