@@ -121,13 +121,27 @@ export default class ProductDescriptionPageWrapper extends React.Component {
 <meta name="description" content="Free Web tutorials">
   <meta name="keywords" content="HTML,CSS,XML,JavaScript">
   */
+
+  /*
+<link rel=“canonical” href="https://www.tatacliq.com/utsa-by-westside-yellow-pure-cotton-kurta-set/p-mp000000002644543" hreflang="en-in">
+
+  */
   renderMetaTags = () => {
     const productDetails = this.props.productDetails;
+    console.log(productDetails);
+    const canonicalUrl = productDetails.seo.canonicalURL
+      ? productDetails.seo.canonicalURL
+      : window.location.href;
+    const alternateUrl = productDetails.seo.alternateURL
+      ? productDetails.seo.alternateURL
+      : window.location.href;
     return (
       <MetaTags>
         <title> {productDetails.seo.title}</title>
         <meta name="description" content={productDetails.seo.description} />
         <meta name="keywords" content={productDetails.seo.keywords} />
+        <link rel="canonical" href={canonicalUrl} hreflang="en-in" />
+        <link rel="alternate" href={alternateUrl} hreflang="en-in" />
       </MetaTags>
     );
   };
