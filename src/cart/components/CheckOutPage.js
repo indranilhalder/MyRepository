@@ -100,7 +100,8 @@ class CheckOutPage extends React.Component {
       isNoCostEmiApplied: false,
       isNoCostEmiProceeded: false,
       selectedBankOfferCode: "",
-      cliqPiqSelected: false
+      cliqPiqSelected: false,
+      noCostEmiDiscount: 0
     };
   }
   onClickImage(productCode) {
@@ -286,7 +287,6 @@ class CheckOutPage extends React.Component {
                   onPiq={() => this.getAllStores(val.USSID)}
                   onClickImage={() => this.onClickImage(val.productcode)}
                   isClickable={true}
-
                 />
               </div>
             );
@@ -573,6 +573,21 @@ class CheckOutPage extends React.Component {
             Math.round(
               nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance * 100
             ) / 100;
+        }
+        if (
+          this.props.cart &&
+          this.props.cart.emiEligibilityDetails &&
+          this.props.cart.emiEligibilityDetails.isNoCostEMIEligible &&
+          nextProps.cart.cartDetailsCNC.cartAmount &&
+          nextProps.cart.cartDetailsCNC.cartAmount.noCostEMIDiscountValue
+        ) {
+          this.setState({
+            noCostEmiDiscount:
+              Math.round(
+                nextProps.cart.cartDetailsCNC.cartAmount.noCostEMIDiscountValue
+                  .value * 100
+              ) / 100
+          });
         }
         this.setState({
           payableAmount:
@@ -912,8 +927,6 @@ class CheckOutPage extends React.Component {
       if (this.state.paymentModeSelected === PAYTM) {
         this.softReservationPaymentForWallet(PAYTM);
       }
-    } else {
-      this.props.history.goBack();
     }
   };
 
@@ -1286,6 +1299,12 @@ class CheckOutPage extends React.Component {
                   ? PROCEED
                   : CONTINUE
               }
+              noCostEmiEligibility={
+                this.props.cart &&
+                this.props.cart.emiEligibilityDetails &&
+                this.props.cart.emiEligibilityDetails.isNoCostEMIEligible
+              }
+              noCostEmiDiscount={this.state.noCostEmiDiscount}
               amount={this.state.payableAmount}
               bagTotal={this.state.bagAmount}
               payable={this.state.payableAmount}
