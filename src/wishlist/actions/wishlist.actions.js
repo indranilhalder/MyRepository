@@ -243,13 +243,16 @@ export function createWishlist(productDetails) {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(createWishlistRequest());
+    const createWishlistObj = new FormData();
+    createWishlistObj.append("wishlistName", MY_WISH_LIST);
     try {
       const result = await api.postFormData(
         `${PRODUCT_DETAILS_PATH}/${
           JSON.parse(userDetails).userName
         }/CreateWishlist?channel=mobile&access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true`
+        }&isPwa=true`,
+        createWishlistObj
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);

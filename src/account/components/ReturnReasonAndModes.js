@@ -50,6 +50,7 @@ export default class ReturnReasonAndModes extends React.Component {
     }
     if (!data.reverseSeal) {
       this.props.displayToast("Please Select Reverse Seal ");
+      return false;
     } else {
       this.props.onChange({ data });
       if (this.props.isCOD) {
