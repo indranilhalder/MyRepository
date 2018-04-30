@@ -7,7 +7,23 @@ import {
   TWITTER_TAG_TITLE_DEFAULT,
   FACEBOOK_TAG_IMAGE_DEFAULT
 } from "../../lib/constants";
-export const getPdpSchemaMetaTags = productDetails => {};
+
+/*
+
+<meta itemprop="price" content="41000">
+<meta itemprop="priceCurrency" content="INR">
+<meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
+<meta itemprop="availability" content="http://schema.org/InStock"/>Available online</meta>
+
+*/
+export const getPdpSchemaMetaTags = productDetails => {
+  return (
+    <MetaTags>
+      <meta itemprop="priceCurrency" content="INR" />
+      <meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
+    </MetaTags>
+  );
+};
 
 export const renderMetaTags = productDetails => {
   const canonicalUrl = productDetails.seo.canonicalURL

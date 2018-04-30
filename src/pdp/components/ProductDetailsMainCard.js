@@ -30,15 +30,15 @@ export default class ProductDetailsMainCard extends React.Component {
       <div className={styles.base}>
         <div className={styles.productInfo}>
           <div className={styles.productDescriptionSection}>
-            <div
+            <h1
               className={styles.productName}
               onClick={() => this.handleBrandClick()}
             >
               {this.props.productName}
-            </div>
-            <div className={styles.productDescription}>
+            </h1>
+            <h2 className={styles.productDescription}>
               {this.props.productDescription}
-            </div>
+            </h2>
           </div>
           <div className={styles.productPriceSection}>
             <div className={styles.price}>{displayPrice}</div>
