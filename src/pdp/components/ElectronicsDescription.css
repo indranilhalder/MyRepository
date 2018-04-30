@@ -25,24 +25,27 @@
 }
 .descriptionHolder h2 {
   margin: 0 !important;
-  font: 16px;
-  font-family: bolder;
+  font-size: 16px;
+  font-family: semibold;
+  font-weight: normal;
 }
 .descriptionHolder h4 {
   margin: 0 !important;
-  font-family: bolder;
+  font-family: semibold;
   font: 16px;
+  font-weight: normal;
 }
 .descriptionHolder h3 {
   margin: 0;
   font-size: 16px;
+  font-weight: normal;
 }
 .subHeader {
   width: 100%;
   height: auto;
   color: #212121;
   font-size: 14px;
-  font-family: bolder;
+  font-family: semibold;
   margin-bottom: 15px;
 }
 .descriptionText {
