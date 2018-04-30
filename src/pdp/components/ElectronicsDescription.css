@@ -38,6 +38,7 @@
 .descriptionHolder h3 {
   margin: 0;
   font-size: 16px;
+  font-family: semibold;
   font-weight: normal;
 }
 .subHeader {
