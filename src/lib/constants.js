@@ -63,7 +63,7 @@ export const PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG = `/:slug${PRODUCT_DESCRIPTIO
 export const PRODUCT_OTHER_SELLER_ROUTER = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/viewSellers`;
 export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE =
   "/:slug/(p-)([a-zA-Z0-9]+)";
-export const PRODUCT_REVIEWS_PATH_SUFFIX = "/product-reviews";
+export const PRODUCT_REVIEWS_PATH_SUFFIX = "product-reviews";
 export const PRODUCT_DESCRIPTION_ROUTER = PRODUCT_DESCRIPTION_PRODUCT_CODE; //TODO remove this
 export const PRODUCT_REVIEW_ROUTER = "/productReview";
 export const LOGIN_PATH = "/login";

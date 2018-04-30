@@ -6,7 +6,7 @@ import SellerCard from "./SellerCard";
 import PdpFrame from "./PdpFrame";
 import * as Cookie from "../../lib/Cookie";
 import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
-
+import { renderMetaTags, renderMetaTagsWithoutSeoObject } from "./utils";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -152,13 +152,16 @@ class ProductSellerPage extends Component {
         .map(image => {
           return image[0].value;
         });
-
     return (
       mobileGalleryImages && (
         <PdpFrame
           addProductToBag={() => this.addToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
         >
+          {this.props.productDetails.seo
+            ? renderMetaTags(this.props.productDetails)
+            : renderMetaTagsWithoutSeoObject(this.props.productDetails)}
+
           <div className={styles.base}>
             <ProductDetailsCard
               productImage={mobileGalleryImages[0]}
