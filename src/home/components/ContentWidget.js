@@ -23,7 +23,13 @@ export default class ContentWidget extends React.Component {
   handleReadMore(webURL) {
     if (webURL) {
       const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1").trim();
-      this.props.history.push(urlSuffix);
+      const urlPath = new URL(webURL).pathname;
+      if (urlPath.indexOf("/que") > -1) {
+        window.open(urlSuffix, "_blank");
+        window.focus();
+      } else {
+        this.props.history.push(urlSuffix);
+      }
     }
   }
   forward = () => {
