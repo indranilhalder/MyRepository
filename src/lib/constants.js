@@ -223,3 +223,5 @@ export const GOOGLE_TAG_TITLE_DEFAULT =
   "Online Shopping Site in India - Upto 60% Off On Mobiles, Electronics & Fashion at Tata CLiQ";
 export const GOOGLE_TAG_IMAGE_DEFAULT =
   "https://assets.tatacliq.com/medias/sys_master/images/10963640156190.jpg";
+export const TWITTER_TAG_TITLE_DEFAULT = GOOGLE_TAG_TITLE_DEFAULT;
+export const TWITTER_TAG_IMAGE_DEFAULT = GOOGLE_TAG_IMAGE_DEFAULT;

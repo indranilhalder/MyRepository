@@ -13,7 +13,9 @@ import {
   UPDATE_PDP_REDUCER_FOR_DELIVERY_OPTION,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   GOOGLE_TAG_TITLE_DEFAULT,
-  GOOGLE_TAG_IMAGE_DEFAULT
+  GOOGLE_TAG_IMAGE_DEFAULT,
+  TWITTER_TAG_IMAGE_DEFAULT,
+  TWITTER_TAG_TITLE_DEFAULT
 } from "../../lib/constants";
 // prettier-ignore
 const typeComponentMapping = {
@@ -131,6 +133,10 @@ export default class ProductDescriptionPageWrapper extends React.Component {
 <meta itemprop="name" content="SEO Title">
 <meta itemprop="description" content="SEO Description">
 <meta itemprop="image" content="https://www.tatacliq.com/image.jpg">
+
+
+
+
   */
   renderMetaTags = () => {
     const productDetails = this.props.productDetails;
@@ -148,6 +154,13 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     const googleImageUrl = productDetails.seo.imageURL
       ? productDetails.seo.imageURL
       : GOOGLE_TAG_IMAGE_DEFAULT;
+    const twitterTitle = productDetails.seo.title
+      ? productDetails.seo.title
+      : TWITTER_TAG_TITLE_DEFAULT;
+    const twitterImageUrl = productDetails.seo.imageURL
+      ? productDetails.seo.imageURL
+      : TWITTER_TAG_IMAGE_DEFAULT;
+    const twitterDescription = productDetails.seo.description;
     return (
       <MetaTags>
         <title> {productDetails.seo.title}</title>
@@ -160,6 +173,13 @@ export default class ProductDescriptionPageWrapper extends React.Component {
           <meta itemprop="description" content={googleDescription} />
         )}
         <meta itemprop="image" content={googleImageUrl} />
+        <meta name="twitter:card" content="Website" />
+        <meta name="twitter:site" content="@tatacliq" />
+        <meta name="twitter:title" content={twitterTitle} />
+        {twitterDescription && (
+          <meta name="twitter:description" content={twitterDescription} />
+        )}
+        <meta name="twitter:image:src" content={twitterImageUrl} />
       </MetaTags>
     );
   };
