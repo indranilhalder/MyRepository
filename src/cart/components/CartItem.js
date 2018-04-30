@@ -46,7 +46,7 @@ export default class CartItem extends React.Component {
   }
 
   handleQuantityChange(changedValue) {
-    const updatedQuantity = parseInt(changedValue, 10);
+    const updatedQuantity = parseInt(changedValue.value, 10);
     if (this.props.onQuantityChange) {
       this.props.onQuantityChange(this.props.entryNumber, updatedQuantity);
     }
@@ -117,7 +117,7 @@ export default class CartItem extends React.Component {
               </div>
               <SelectBoxMobile2
                 disabled={this.props.isOutOfStock}
-                borderNone={true}
+                theme="hollowBox"
                 options={fetchedQuantityList}
                 onChange={val => this.handleQuantityChange(val)}
                 value={this.props.qtySelectedByUser}
@@ -156,5 +156,6 @@ CartItem.propTypes = {
 
 CartItem.defaultProps = {
   deliveryInfoToggle: true,
-  hasFooter: true
+  hasFooter: true,
+  dropdownLabel: "Qty :"
 };

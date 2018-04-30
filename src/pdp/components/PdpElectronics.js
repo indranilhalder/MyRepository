@@ -11,6 +11,7 @@ import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
 import ProductFeature from "./ProductFeature";
 import RatingAndTextLink from "./RatingAndTextLink";
+import OtherSellersLink from "./OtherSellersLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
 import Overlay from "./Overlay";
@@ -162,30 +163,6 @@ export default class PdpElectronics extends React.Component {
             return image[0] && image[0].value;
           })
       : [];
-    let otherSellersText;
-
-    if (
-      productData.otherSellers &&
-      productData.otherSellers.filter(val => {
-        return val.availableStock !== "0" && val.availableStock !== "-1";
-      }).length > 0
-    ) {
-      const validSellersCount = productData.otherSellers.filter(val => {
-        return val.availableStock !== "0" && val.availableStock !== "-1";
-      }).length;
-      otherSellersText = (
-        <span>
-          Sold by{" "}
-          <span className={styles.winningSellerText}>
-            {" "}
-            {productData.winningSellerName}
-          </span>{" "}
-          and {validSellersCount} other seller(s)
-        </span>
-      );
-    } else {
-      otherSellersText = `Sold by ${productData.winningSellerName}`;
-    }
 
     if (productData) {
       let price = "";
@@ -323,24 +300,13 @@ please try another pincode"
               deliveryModesATP={productData.deliveryModesATP}
             />
           )}
-
-          {productData.otherSellers && (
-            <div className={styles.separator}>
-              <PdpLink
-                onClick={this.goToSellerPage}
-                noLink={
-                  productData.otherSellers &&
-                  !productData.otherSellers.filter(val => {
-                    return (
-                      val.availableStock !== "0" && val.availableStock !== "-1"
-                    );
-                  }).length > 0
-                }
-              >
-                <div className={styles.sellers}>{otherSellersText}</div>
-              </PdpLink>
-            </div>
-          )}
+          <div className={styles.separator}>
+            <OtherSellersLink
+              onClick={this.goToSellerPage}
+              otherSellers={productData.otherSellers}
+              winningSeller={productData.winningSellerName}
+            />
+          </div>
           {productData.rootCategory !== "Watches" && (
             <div className={styles.details}>
               {productData.details && (

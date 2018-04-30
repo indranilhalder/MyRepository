@@ -12,34 +12,39 @@ export default class NoCostEmi extends React.Component {
     };
   }
 
-  openMenu() {
-    this.setState(
-      prevState => ({
-        isOpen: !prevState.isOpen
-      }),
-      () => {
-        if (this.props.onOpenMenu) {
-          this.props.onOpenMenu(this.state.isOpen);
-        }
-        if (
-          this.state.isOpen &&
-          this.props.text === STANDARD_EMI &&
-          !this.props.emiList &&
-          this.props.getEmiBankDetails
-        ) {
-          this.props.getEmiBankDetails();
-        }
-        if (
-          this.state.isOpen &&
-          this.props.text === NO_COST_EMI &&
-          this.props.getBankAndTenureDetails
-        ) {
-          this.props.getBankAndTenureDetails();
-        }
+  openMenu(e) {
+    const isOpen = !this.state.isOpen;
+    this.setState({
+      isOpen
+    });
+    if (this.props.onChangeEMIType) {
+      if (isOpen) {
+        this.props.onChangeEMIType(this.props.EMIText);
+      } else {
+        this.props.onChangeEMIType(null);
       }
-    );
+    }
+    if (
+      isOpen &&
+      this.props.EMIText === STANDARD_EMI &&
+      !this.props.emiList &&
+      this.props.getEmiBankDetails
+    ) {
+      this.props.getEmiBankDetails();
+    }
+    if (
+      isOpen &&
+      this.props.EMIText === NO_COST_EMI &&
+      this.props.getBankAndTenureDetails
+    ) {
+      this.props.getBankAndTenureDetails();
+    }
   }
-
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isOpenSubEMI !== this.state.isOpen) {
+      this.setState({ isOpen: nextProps.isOpenSubEMI });
+    }
+  }
   render() {
     let rotateIcon = styles.iconHolder;
     if (this.state.isOpen) {
@@ -49,12 +54,12 @@ export default class NoCostEmi extends React.Component {
       <div className={styles.base}>
         <div
           className={styles.holder}
-          onClick={() => {
-            this.openMenu();
+          onClick={e => {
+            this.openMenu(e);
           }}
         >
           <div className={rotateIcon} />
-          <div className={styles.textHolder}>{this.props.text}</div>
+          <div className={styles.textHolder}>{this.props.EMIText}</div>
         </div>
         <Collapse isOpened={this.state.isOpen}>{this.props.children}</Collapse>
       </div>
@@ -62,6 +67,6 @@ export default class NoCostEmi extends React.Component {
   }
 }
 NoCostEmi.propTypes = {
-  text: PropTypes.string,
+  EMIText: PropTypes.string,
   onOpenMenu: PropTypes.func
 };

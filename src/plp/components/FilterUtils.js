@@ -7,6 +7,8 @@ import {
 import { ARRAY_OF_SORTS } from "./Sort.js";
 
 export const CATEGORY_URL_REGEX = /(:category:)(.*)/;
+export const CATEGORY_URL_CAPTURE_REGEX = /(:category:)([MSH|msh][a-zA-Z0-9]+)(.*)/;
+
 export const BRAND_URL_REGEX = /:brand:(.*)/;
 export const TEXT_REGEX = /text=(.*)/;
 const SEARCH_TEXT_BEFORE_CATEGORY = /(.*):category:/;
@@ -52,7 +54,11 @@ export function createUrlFromQueryAndCategory(query, pathName, val) {
       if (hasCategory && !hasBrand) {
         // we have an existing category
         // we want to replace this category
-        const test = query.replace(CATEGORY_URL_REGEX, `$1${val}`);
+        console.log("CORRECT IF");
+        const test = query.replace(CATEGORY_URL_CAPTURE_REGEX, `$1${val}$3`);
+        console.log(RegExp.$1); // "John"
+        console.log(RegExp.$3);
+
         url = `/search/?q=${test}`;
       } else if (hasBrand && !hasCategory) {
         const index = query.indexOf(":brand");

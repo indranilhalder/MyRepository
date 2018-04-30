@@ -5,6 +5,7 @@ import SavedCard from "./SavedCard.js";
 import MenuDetails from "../../general/components/MenuDetails.js";
 import filter from "lodash.filter";
 import merge from "lodash.merge";
+import { SAVED_CARD_PAYMENT_MODE } from "../../lib/constants";
 
 export default class CheckoutSavedCard extends React.Component {
   onChangeCvv(cvv, cardNo) {
@@ -23,7 +24,14 @@ export default class CheckoutSavedCard extends React.Component {
 
   render() {
     return (
-      <MenuDetails text="Saved Cards" icon={savedCardIcon}>
+      <MenuDetails
+        text={SAVED_CARD_PAYMENT_MODE}
+        icon={savedCardIcon}
+        onOpenMenu={() =>
+          this.props.onSelectPaymentsMode(SAVED_CARD_PAYMENT_MODE)
+        }
+        isOpen={this.props.currentPaymentMode === SAVED_CARD_PAYMENT_MODE}
+      >
         {this.props.saveCardDetails &&
           this.props.saveCardDetails.map((data, i) => {
             return (

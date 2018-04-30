@@ -48,7 +48,9 @@ import {
   getPaymentFailureOrderDetails,
   createJusPayOrderForSavedCards,
   createJusPayOrderForCliqCash,
-  clearCartDetails
+  clearCartDetails,
+  jusPayTokenize,
+  createJusPayOrderForNetBanking
 } from "../actions/cart.actions";
 import {
   showSecondaryLoader,
@@ -301,6 +303,38 @@ const mapDispatchToProps = dispatch => {
     },
     clearCartDetails: () => {
       dispatch(clearCartDetails());
+    },
+    jusPayTokenize: (
+      cardDetails,
+      address,
+      cartItem,
+      paymentMode,
+      isPaymentFailed
+    ) => {
+      dispatch(
+        jusPayTokenize(
+          cardDetails,
+          address,
+          cartItem,
+          paymentMode,
+          isPaymentFailed
+        )
+      );
+    },
+    createJusPayOrderForNetBanking: (
+      paymentMethodType,
+      bankName,
+      pinCode,
+      productItems
+    ) => {
+      dispatch(
+        createJusPayOrderForNetBanking(
+          paymentMethodType,
+          bankName,
+          pinCode,
+          productItems
+        )
+      );
     }
   };
 };

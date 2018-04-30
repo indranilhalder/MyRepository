@@ -35,6 +35,7 @@ export default class NetBanking extends React.Component {
     if (this.props.binValidationForNetBank) {
       this.props.binValidationForNetBank(val);
     }
+    this.props.onSelectBankForNetBanking(val);
   }
   handleSelect(val) {
     const bankCode = val.value;
@@ -43,15 +44,9 @@ export default class NetBanking extends React.Component {
     if (this.props.binValidationForNetBank) {
       this.props.binValidationForNetBank(bankCode);
     }
+    this.props.onSelectBankForNetBanking(bankCode);
   }
 
-  payBill = () => {
-    if (this.props.isFromGiftCard) {
-      this.props.createJusPayOrderForGiftCardNetBanking(this.state.bankCode);
-    } else {
-      this.props.softReservationPaymentForNetBanking(this.state.bankCode);
-    }
-  };
   render() {
     return (
       <div>
@@ -101,8 +96,7 @@ export default class NetBanking extends React.Component {
         <div className={styles.bankDropDown}>
           <SelectBoxMobile2
             height={33}
-            label={this.state.bankName ? this.state.bankName : "Other Bank"}
-            value={this.state.bankCode ? this.state.bankCode : ""}
+            placeholder={"Other Bank"}
             options={
               this.props.bankList &&
               this.props.bankList
@@ -113,17 +107,6 @@ export default class NetBanking extends React.Component {
             }
             onChange={val => this.handleSelect(val)}
           />
-        </div>
-        <div className={styles.cardFooterText}>
-          <div className={styles.buttonHolder}>
-            <Button
-              type="primary"
-              color="#fff"
-              label="Pay now"
-              width={120}
-              onClick={() => this.payBill()}
-            />
-          </div>
         </div>
       </div>
     );

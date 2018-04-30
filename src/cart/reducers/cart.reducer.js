@@ -115,9 +115,6 @@ const cart = (
     binValidationError: null,
     binValidationDetails: null,
 
-    addToWishlistStatus: null,
-    addToWishlistError: null,
-
     removeCartItemStatus: null,
     removeCartItemError: null,
 
@@ -214,7 +211,6 @@ const cart = (
         justPayPaymentDetailsError: null,
         orderExperienceError: null,
         binValidationError: null,
-        addToWishlistError: null,
         removeCartItemError: null,
         removeCartItemLoggedOutError: null,
         getUserAddressError: null,
@@ -763,6 +759,8 @@ const cart = (
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_SUCCESS: {
       Cookies.deleteCookie(OLD_CART_GU_ID);
+      localStorage.removeItem(cartActions.CART_ITEM_COOKIE);
+      localStorage.removeItem(cartActions.ADDRESS_FOR_PLACE_ORDER);
       return Object.assign({}, state, {
         jusPayDetails: action.jusPayDetails
       });
@@ -770,6 +768,8 @@ const cart = (
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_FAILURE:
       Cookies.deleteCookie(OLD_CART_GU_ID);
+      localStorage.removeItem(cartActions.CART_ITEM_COOKIE);
+      localStorage.removeItem(cartActions.ADDRESS_FOR_PLACE_ORDER);
       return Object.assign({}, state, {
         transactionStatus: action.status,
         jusPayError: action.error,
@@ -945,25 +945,6 @@ const cart = (
       return Object.assign({}, state, {
         softReserveCODPaymentStatus: action.status,
         softReserveCODPaymentError: action.error,
-        loading: false
-      });
-
-    case cartActions.ADD_PRODUCT_TO_WISH_LIST_REQUEST:
-      return Object.assign({}, state, {
-        addToWishlistStatus: action.status,
-        loading: true
-      });
-
-    case cartActions.ADD_PRODUCT_TO_WISH_LIST_SUCCESS:
-      return Object.assign({}, state, {
-        addToWishlistStatus: action.status,
-        loading: false
-      });
-
-    case cartActions.ADD_PRODUCT_TO_WISH_LIST_FAILURE:
-      return Object.assign({}, state, {
-        addToWishlistStatus: action.status,
-        addToWishlistError: action.error,
         loading: false
       });
 

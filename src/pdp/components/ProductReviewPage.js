@@ -227,7 +227,6 @@ class ProductReviewPage extends Component {
         <PdpFrame
           {...this.props.productDetails}
           addProductToBag={() => this.addProductToBag()}
-          addProductToWishList={() => this.addProductToWishList()}
           gotoPreviousPage={() => this.goBack()}
         >
           <div className={styles.base}>

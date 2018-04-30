@@ -333,11 +333,11 @@ export const PAYMENT_FAILURE_ORDER_DETAILS_FAILURE =
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
-const MY_WISH_LIST = "MyWishList";
 const ERROR_CODE_FOR_BANK_OFFER_INVALID_1 = "B9078";
 const ERROR_CODE_FOR_BANK_OFFER_INVALID_2 = "B6009";
 const INVALID_COUPON_ERROR_MESSAGE = "invalid coupon";
-const CART_ITEM_COOKIE = "cartItems";
+export const CART_ITEM_COOKIE = "cartItems";
+export const ADDRESS_FOR_PLACE_ORDER = "orderAddress";
 export const ANONYMOUS_USER = "anonymous";
 
 export function displayCouponRequest() {
@@ -1976,6 +1976,7 @@ export function softReservationForPaymentFailure(error) {
 export function softReservationForPayment(cardDetails, address, paymentMode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
   return async (dispatch, getState, { api }) => {
     let productItems = {};
     let item = [];
@@ -2239,9 +2240,13 @@ export function jusPayTokenizeFailure(error) {
 export function jusPayTokenize(
   cardDetails,
   address,
-  productItems,
-  paymentMode
+  cartItem,
+  paymentMode,
+  isPaymentFailed
 ) {
+  if (!isPaymentFailed) {
+    localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(jusPayTokenizeRequest());
     let cardObject = new FormData();
@@ -2263,10 +2268,11 @@ export function jusPayTokenize(
       dispatch(
         createJusPayOrder(
           resultJson.token,
-          productItems,
+          cartItem,
           address,
           cardDetails,
-          paymentMode
+          paymentMode,
+          isPaymentFailed
         )
       );
     } catch (e) {
@@ -2344,17 +2350,24 @@ export function createJusPayOrder(
   cartItem,
   address,
   cardDetails,
-  paymentMode
+  paymentMode,
+  isPaymentFailed
 ) {
   let jusPayUrl = `${
     window.location.origin
   }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  if (isPaymentFailed) {
+    let url = queryString.parse(window.location.search);
+    cartId = url && url.value;
+  } else {
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    cartId = JSON.parse(cartDetails).guid;
+  }
+
   return async (dispatch, getState, { api }) => {
-    let orderDetails = getState().cart.cartDetailsCNC;
     dispatch(createJusPayOrderRequest());
     try {
       const result = await api.post(
@@ -2368,14 +2381,13 @@ export function createJusPayOrder(
           address.line1
         }&addressLine3=${address.line1}&country=${
           address.country.isocode
-        }&city=${orderDetails.addressDetailsList.addresses[0].city}&state=${
-          address.state
-        }&pincode=${
+        }&city=${address.city}&state=${address.state}&pincode=${
           address.postalCode
         }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}`,
         cartItem
       );
       const resultJson = await result.json();
+
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
         if (
@@ -2565,15 +2577,11 @@ export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
 
 export function createJusPayOrderForSavedCards(
   cardDetails,
-  cartItemObj = null,
-  isPaymentFailed = false
+  cartItemObj,
+  isPaymentFailed
 ) {
-  let cartItem;
-
-  if (localStorage.getItem(CART_ITEM_COOKIE, cartItem)) {
-    cartItem = JSON.parse(localStorage.getItem(CART_ITEM_COOKIE, cartItem));
-  } else {
-    cartItem = cartItemObj;
+  let cartItem = cartItemObj;
+  if (!isPaymentFailed) {
     localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
   }
 
@@ -2599,9 +2607,11 @@ export function createJusPayOrderForSavedCards(
         }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&addressLine3=&sameAsShipping=null&cardSaved=false&bankName=${
           cardDetails.cardIssuer
         }&
-        cardFingerPrint=${cardDetails.cardFingerprint}&platform=2&pincode=${
-          cardDetails.pinCode
-        }&city=&cartGuid=${cartId}&token=&cardRefNo=${
+        cardFingerPrint=${
+          cardDetails.cardFingerprint
+        }&platform=2&pincode=${localStorage.getItem(
+          DEFAULT_PIN_CODE_LOCAL_STORAGE
+        )}&city=&cartGuid=${cartId}&token=&cardRefNo=${
           cardDetails.cardReferenceNumber
         }&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
@@ -2884,9 +2894,9 @@ export function jusPayPaymentMethodType(
         cardObject.append("emi_tenure", cardDetails.emi_tenure);
         cardObject.append("is_emi", cardDetails.is_emi);
       }
-
       const result = await api.postJusPay(`txns?`, cardObject);
       const resultJson = await result.json();
+
       if (
         resultJson.status === JUS_PAY_PENDING ||
         resultJson.status === SUCCESS ||
@@ -3441,58 +3451,6 @@ export function softReservationForCODPayment(pinCode) {
       dispatch(softReservationForCODPaymentSuccess(resultJson));
     } catch (e) {
       dispatch(softReservationForCODPaymentFailure(e.message));
-    }
-  };
-}
-// Actions for Add Product to Wish List
-export function addProductToWishListRequest() {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_REQUEST,
-    status: REQUESTING
-  };
-}
-export function addProductToWishListSuccess() {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_SUCCESS,
-    status: SUCCESS
-  };
-}
-
-export function addProductToWishListFailure(error) {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-// Action Creator for Add Product To Wish List
-export function addProductToWishList(productDetails) {
-  return async (dispatch, getState, { api }) => {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-    const cartId = JSON.parse(cartDetails).guid;
-    dispatch(addProductToWishListRequest());
-    try {
-      const result = await api.post(
-        `${USER_CART_PATH}/${
-          JSON.parse(userDetails).userName
-        }/addProductInWishlist?platformNumber=2&access_token=${
-          JSON.parse(customerCookie).access_token
-        }&isPwa=true&ussid=${productDetails.USSID}&productCode=${
-          productDetails.productcode
-        }&wishlistName=${MY_WISH_LIST}`
-      );
-      const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
-      }
-      dispatch(addProductToWishListSuccess());
-    } catch (e) {
-      dispatch(addProductToWishListFailure(e.message));
     }
   };
 }

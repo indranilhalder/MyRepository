@@ -3,9 +3,10 @@ import styles from "./NoCostEmiBankDetails.css";
 import CheckBox from "../../general/components/CheckBox.js";
 import BankSelect from "./BankSelect";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
+
 export default class NoCostEmiBankDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -16,14 +17,21 @@ export default class NoCostEmiBankDetails extends React.Component {
       selectedBankName: null,
       selectedBankCode: null,
       selectedCouponCode: null,
-      selectedTenure: null
+      selectedTenure: null,
+      selectedFromDropDown: false
     };
   }
+
   selectOtherBank(val) {
-    this.setState({ selectedBankIndex: null });
-    if (this.props.selectOtherBank) {
-      this.props.selectOtherBank(val);
-    }
+    const selectedBankName = val.label;
+    const selectedBankIndex = val.value;
+    this.setState({
+      selectedBankIndex: selectedBankIndex,
+      selectedBankName: selectedBankName,
+      selectedBankCode: this.props.bankList[selectedBankIndex].code,
+      selectedFromDropDown: true,
+      selectedMonth: null
+    });
   }
   itemBreakup() {
     if (this.props.getItemBreakUpDetails) {
@@ -35,14 +43,17 @@ export default class NoCostEmiBankDetails extends React.Component {
       this.setState({
         selectedBankIndex: null,
         selectedBankName: null,
-        selectedBankCode: null
+        selectedBankCode: null,
+        selectedFromDropDown: false
       });
     } else {
       this.setState({
         selectedBankIndex: index,
         selectedMonth: null,
         selectedBankName: this.props.bankList[index].bankName,
-        selectedBankCode: this.props.bankList[index].code
+        selectedBankCode: this.props.bankList[index].code,
+        bankName: null,
+        selectedFromDropDown: false
       });
     }
   }
@@ -67,21 +78,23 @@ export default class NoCostEmiBankDetails extends React.Component {
   };
 
   onSelectMonth(index, val) {
-    if (this.state.selectedMonth === index) {
-      this.setState({
-        selectedMonth: null,
-        selectedCouponCode: null,
-        selectedTenure: null
-      });
-      this.props.removeNoCostEmi(val.emicouponCode);
-    } else {
-      if (val && this.props.applyNoCostEmi) {
+    if (this.state.selectedBankName !== "Other Bank") {
+      if (this.state.selectedMonth === index) {
         this.setState({
-          selectedMonth: index,
-          selectedCouponCode: val.emicouponCode,
-          selectedTenure: val.tenure
+          selectedMonth: null,
+          selectedCouponCode: null,
+          selectedTenure: null
         });
-        this.props.applyNoCostEmi(val.emicouponCode);
+        this.props.removeNoCostEmi(val.emicouponCode);
+      } else {
+        if (val && this.props.applyNoCostEmi) {
+          this.setState({
+            selectedMonth: index,
+            selectedCouponCode: val.emicouponCode,
+            selectedTenure: val.tenure
+          });
+          this.props.applyNoCostEmi(val.emicouponCode);
+        }
       }
     }
   }
@@ -117,7 +130,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             noCostEmiDetails.noCostEMIDiscountValue.value && (
               <div className={styles.discount}>
                 <div className={styles.amountLabel}>No Cost EMI Discount</div>
-                <div className={styles.amount}>{`Rs. ${Math.round(
+                <div className={styles.amount}>{`-Rs. ${Math.round(
                   noCostEmiDetails.noCostEMIDiscountValue.value * 100
                 ) / 100}`}</div>
               </div>
@@ -179,13 +192,40 @@ export default class NoCostEmiBankDetails extends React.Component {
   }
 
   render() {
+    let modifiedBankList;
+    let filteredBankListWithLogo =
+      this.props.bankList &&
+      this.props.bankList
+        .filter((bank, i) => {
+          return bank.logoUrl;
+        })
+        .slice(0, 4);
+
+    let filteredBankListWithOutLogo =
+      this.props.bankList &&
+      this.props.bankList.filter(
+        val => !filteredBankListWithLogo.includes(val)
+      );
+
+    if (filteredBankListWithOutLogo && filteredBankListWithOutLogo.length > 0) {
+      filteredBankListWithOutLogo &&
+        filteredBankListWithOutLogo.unshift({
+          bankName: "Other Bank",
+          bankCode: "Other Bank"
+        });
+    }
+    if (this.state.selectedFromDropDown) {
+      modifiedBankList = filteredBankListWithOutLogo;
+    } else {
+      modifiedBankList = filteredBankListWithLogo;
+    }
     return (
       <div className={styles.base}>
         {!this.props.isNoCostEmiProceeded && (
           <div>
             <div className={styles.bankLogoHolder}>
-              {this.props.bankList &&
-                this.props.bankList
+              {filteredBankListWithLogo &&
+                filteredBankListWithLogo
                   .filter((val, i) => {
                     return !this.state.showAll ? i < 4 : true;
                   })
@@ -193,7 +233,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                     return (
                       <div className={styles.bankLogo}>
                         <BankSelect
-                          image={val.imageUrl}
+                          image={val.logoUrl}
                           value={val.code}
                           key={i}
                           selectItem={() => this.handleSelect(i)}
@@ -203,22 +243,22 @@ export default class NoCostEmiBankDetails extends React.Component {
                     );
                   })}
             </div>
-            <div className={styles.selectHolder}>
-              <SelectBoxMobile
-                height={33}
-                label="Other Bank"
-                options={
-                  this.props.bankList &&
-                  this.props.bankList.map((val, i) => {
-                    return {
-                      value: val.bankName,
-                      label: val.bankName
-                    };
-                  })
-                }
-                onChange={val => this.selectOtherBank(val)}
-              />
-            </div>
+            {filteredBankListWithOutLogo &&
+              filteredBankListWithOutLogo.length > 0 && (
+                <div className={styles.selectHolder}>
+                  <SelectBoxMobile2
+                    height={33}
+                    placeholder={"Other Bank"}
+                    options={filteredBankListWithOutLogo.map((val, i) => {
+                      return {
+                        value: i,
+                        label: val.bankName
+                      };
+                    })}
+                    onChange={val => this.selectOtherBank(val)}
+                  />
+                </div>
+              )}
             <div className={styles.itemLevelButtonHolder}>
               <div className={styles.itemLevelButton}>
                 <UnderLinedButton
@@ -233,14 +273,16 @@ export default class NoCostEmiBankDetails extends React.Component {
             {this.state.selectedBankIndex !== null && (
               <div className={styles.emiDetailsPlan}>
                 <div className={styles.labelHeader}>
-                  `* No cost EMI available only on ${this.props.productCount}{" "}
-                  product`
+                  {`* No cost EMI available only on ${
+                    this.props.productCount
+                  } product`}
                 </div>
                 <div className={styles.monthsLabel}>Tenure (Months)</div>
                 <div className={styles.monthsHolder}>
-                  {this.props.bankList[this.state.selectedBankIndex]
-                    .noCostEMICouponList &&
-                    this.props.bankList[
+                  {modifiedBankList &&
+                    modifiedBankList[this.state.selectedBankIndex]
+                      .noCostEMICouponList &&
+                    modifiedBankList[
                       this.state.selectedBankIndex
                     ].noCostEMICouponList.map((val, i) => {
                       return (
@@ -255,7 +297,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                               selected={this.state.selectedMonth === i}
                             />
                           </div>
-                          {val.tenure}
+                          {`${val.tenure} Months`}
                         </div>
                       );
                     })}

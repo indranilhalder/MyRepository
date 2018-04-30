@@ -14,7 +14,9 @@ export default class ReturnReasonForm extends React.Component {
       displaySecondary: false,
       secondaryReasons: null,
       comment: null,
-      reverseSeal: null
+      reverseSeal: null,
+      returnReasonCode: null,
+      subReasonCode: null
     };
   }
   handleContinue() {
@@ -22,6 +24,7 @@ export default class ReturnReasonForm extends React.Component {
       let reasonAndCommentObj = Object.assign(
         {},
         {
+          returnReasonCode: this.state.returnReasonCode,
           subReasonCode: this.state.subReasonCode,
           comment: this.state.comment,
           reason: this.state.reason,
@@ -36,14 +39,12 @@ export default class ReturnReasonForm extends React.Component {
     const label = val.label;
     const data = this.props.returnProductDetails;
     this.setState({
-      parentReasonCode: code,
+      returnReasonCode: code,
       reason: label,
       secondaryReasons: data.returnReasonMap
-
         .filter(val => {
           return val.parentReasonCode === code;
         })
-
         .map(val => {
           if (val.subReasons) {
             return val.subReasons.map(value => {
@@ -74,7 +75,6 @@ export default class ReturnReasonForm extends React.Component {
   }
   render() {
     const data = this.props.returnProductDetails;
-
     return (
       <div className={styles.base}>
         <div className={styles.header}>
@@ -107,7 +107,7 @@ export default class ReturnReasonForm extends React.Component {
           </OrderCard>
           <div className={styles.select}>
             <SelectBoxMobile2
-              label={this.state.reason ? this.state.reason : "Select a reason"}
+              placeholder={"Select a reason"}
               options={data.returnReasonMap.map((val, i) => {
                 return {
                   value: val.parentReasonCode,
@@ -120,11 +120,7 @@ export default class ReturnReasonForm extends React.Component {
           {this.state.secondaryReasons && (
             <div className={styles.select}>
               <SelectBoxMobile2
-                label={
-                  this.state.subReason
-                    ? this.state.subReason
-                    : "Select a reason"
-                }
+                placeholder={"Select a reason"}
                 options={this.state.secondaryReasons}
                 onChange={val => this.onChangeSecondary(val)}
               />
@@ -137,7 +133,9 @@ export default class ReturnReasonForm extends React.Component {
         {data &&
           data.showReverseSealFrJwlry === "yes" && (
             <div className={styles.reverseSealHolder}>
-              <ReverseSealYesNo />
+              <ReverseSealYesNo
+                selectReverseSeal={val => this.selectReverseSeal(val)}
+              />
             </div>
           )}
 
