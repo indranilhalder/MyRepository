@@ -42,7 +42,8 @@ import {
   JUS_PAY_AUTHENTICATION_FAILED,
   CREDIT_CARD,
   NET_BANKING_PAYMENT_MODE,
-  DEBIT_CARD
+  DEBIT_CARD,
+  EMI
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -124,7 +125,7 @@ class CheckOutPage extends React.Component {
   };
   onChangePaymentMode = val => {
     this.setState(val);
-    this.setState({ cardDetails: {} });
+    this.setState({ cardDetails: {}, bankCodeForNetBanking: null });
   };
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
@@ -850,7 +851,6 @@ class CheckOutPage extends React.Component {
     return productServiceAvailability;
   };
   handleSubmit = () => {
-    console.log(this.state);
     if (this.availabilityOfUserCoupon()) {
       if (this.state.isFirstAddress) {
         this.addAddress(this.state.addressDetails);
@@ -931,12 +931,19 @@ class CheckOutPage extends React.Component {
             this.state.bankCodeForNetBanking
           );
         } else {
-          this.props.softReservationPaymentForNetBanking(
+          this.softReservationPaymentForNetBanking(
             this.state.bankCodeForNetBanking
           );
         }
       }
       if (this.state.currentPaymentMode === DEBIT_CARD) {
+        if (this.state.isFromGiftCard) {
+          this.props.jusPayTokenizeForGiftCard(this.state.cardDetails);
+        } else {
+          this.softReservationForPayment(this.state.cardDetails);
+        }
+      }
+      if (this.state.currentPaymentMode === EMI) {
         if (this.state.isFromGiftCard) {
           this.props.jusPayTokenizeForGiftCard(this.state.cardDetails);
         } else {
@@ -1272,6 +1279,7 @@ class CheckOutPage extends React.Component {
                   this.setState({ captchaReseponseForCOD })
                 }
                 onChange={val => this.onChangePaymentMode(val)}
+                bankCodeForNetBanking={this.state.bankCodeForNetBanking}
                 onSelectBankForNetBanking={bankCodeForNetBanking =>
                   this.setState({ bankCodeForNetBanking })
                 }

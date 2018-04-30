@@ -69,12 +69,6 @@ export default class EmiPanel extends React.Component {
     }
   };
 
-  softReservationForPayment = cardDetails => {
-    if (this.props.softReservationForPayment) {
-      this.props.softReservationForPayment(cardDetails);
-    }
-  };
-
   changeNoCostEmiPlan = () => {
     this.props.changeNoCostEmiPlan();
   };

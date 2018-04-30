@@ -2820,9 +2820,12 @@ export function jusPayPaymentMethodType(
         cardObject.append("emi_tenure", cardDetails.emi_tenure);
         cardObject.append("is_emi", cardDetails.is_emi);
       }
-
+      debugger;
       const result = await api.postJusPay(`txns?`, cardObject);
+      debugger;
+
       const resultJson = await result.json();
+      debugger;
       if (
         resultJson.status === JUS_PAY_PENDING ||
         resultJson.status === SUCCESS ||
