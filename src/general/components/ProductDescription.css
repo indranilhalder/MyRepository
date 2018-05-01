@@ -27,6 +27,10 @@
 
 .description {
   white-space: normal;
+  font-weight: inherit;
+  -webkit-margin-before: inherit;
+  -webkit-margin-after: inherit;
+  font-size: inherit;
 }
 .content {
   width: 100%;

@@ -6,14 +6,15 @@ import PdpHome from "./PdpHome";
 
 import styles from "./ProductDescriptionPageWrapper.css";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
-import MetaTags from "react-meta-tags";
 import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  UPDATE_PDP_REDUCER_FOR_DELIVERY_OPTION,
   DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
-import { renderMetaTags, renderMetaTagsWithoutSeoObject } from "./utils";
+import {
+  renderMetaTags,
+  renderMetaTagsWithoutSeoObject
+} from "../../lib/seoUtils.js";
 // prettier-ignore
 const typeComponentMapping = {
   "Electronics": props => <PdpElectronics {...props} />,

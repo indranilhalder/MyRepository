@@ -6,7 +6,7 @@ import {
   TWITTER_TAG_IMAGE_DEFAULT,
   TWITTER_TAG_TITLE_DEFAULT,
   FACEBOOK_TAG_IMAGE_DEFAULT
-} from "../../lib/constants";
+} from "./constants";
 
 /*
 

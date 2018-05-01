@@ -13,7 +13,6 @@ import {
   SUCCESS,
   LOGIN_PATH
 } from "../../lib/constants";
-import { renderMetaTags, renderMetaTagsWithoutSeoObject } from "./utils";
 
 import * as Cookie from "../../lib/Cookie";
 import {
