@@ -227,10 +227,6 @@ class ProductReviewPage extends Component {
           addProductToBag={() => this.addProductToBag()}
           gotoPreviousPage={() => this.goBack()}
         >
-          {this.props.productDetails.seo
-            ? renderMetaTags(this.props.productDetails)
-            : renderMetaTagsWithoutSeoObject(this.props.productDetails)}
-
           <div className={styles.base}>
             <div className={styles.productBackground}>
               <ProductDetailsCard

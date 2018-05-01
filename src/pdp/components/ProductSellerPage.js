@@ -158,10 +158,6 @@ class ProductSellerPage extends Component {
           addProductToBag={() => this.addToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
         >
-          {this.props.productDetails.seo
-            ? renderMetaTags(this.props.productDetails)
-            : renderMetaTagsWithoutSeoObject(this.props.productDetails)}
-
           <div className={styles.base}>
             <ProductDetailsCard
               productImage={mobileGalleryImages[0]}
