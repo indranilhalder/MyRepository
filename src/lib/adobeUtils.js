@@ -520,10 +520,25 @@ function getDigitalDataForCart(type, cartResponse) {
       }
     }
   };
-  const productIds = getProductIdArray(cartResponse);
-  if (productIds) {
+  const getProductData = getProductsDigitalData(cartResponse);
+  if (getProductData) {
+    let {
+      productIdsArray,
+      productQuantityArray,
+      productPriceArray,
+      productBrandArray
+    } = getProductData;
     Object.assign(data, {
-      cpj: { product: { id: JSON.stringify(productIds) } }
+      cpj: {
+        product: {
+          id: productIdsArray,
+          quantity: productQuantityArray,
+          price: productPriceArray
+        },
+        brand: {
+          name: productBrandArray
+        }
+      }
     });
   }
   const productCategoryHierarchy = getProductCategoryHierarchy(cartResponse);
@@ -555,12 +570,28 @@ function getDigitalDataForCheckout(type, CheckoutResponse) {
       }
     }
   };
-  const productIds = getProductIdArray(CheckoutResponse);
-  if (productIds) {
+  const getProductData = getProductsDigitalData(CheckoutResponse);
+  if (getProductData) {
+    let {
+      productIdsArray,
+      productQuantityArray,
+      productPriceArray,
+      productBrandArray
+    } = getProductData;
     Object.assign(data, {
-      cpj: { product: { id: JSON.stringify(productIds) } }
+      cpj: {
+        product: {
+          id: productIdsArray,
+          quantity: productQuantityArray,
+          price: productPriceArray
+        },
+        brand: {
+          name: productBrandArray
+        }
+      }
     });
   }
+
   const categoryHierarchy = getCategoryHierarchy(CheckoutResponse);
   if (categoryHierarchy) {
     Object.assign(data.page.category, categoryHierarchy);
@@ -581,10 +612,25 @@ function getDigitalDataForOrderConfirmation(type, response) {
     }
   };
 
-  const productIds = getProductIdArray(response);
-  if (productIds) {
+  const getProductData = getProductsDigitalData(response);
+  if (getProductData) {
+    let {
+      productIdsArray,
+      productQuantityArray,
+      productPriceArray,
+      productBrandArray
+    } = getProductData;
     Object.assign(data, {
-      cpj: { product: { id: JSON.stringify(productIds) } }
+      cpj: {
+        product: {
+          id: productIdsArray,
+          quantity: productQuantityArray,
+          price: productPriceArray
+        },
+        brand: {
+          name: productBrandArray
+        }
+      }
     });
   }
   return data;
@@ -592,11 +638,34 @@ function getDigitalDataForOrderConfirmation(type, response) {
 // this function will update data with  cpj.proudct.id with
 // reponse product's ids . this is using in many place thats why we
 // need to make separate function for product ids
-function getProductIdArray(response) {
+function getProductsDigitalData(response) {
   if (response && response.products && response.products.length > 0) {
-    return response.products.map(product => {
-      return product.productcode;
+    let productIdsArray = [],
+      productQuantityArray = [],
+      productPriceArray = [],
+      productBrandArray = [];
+    response.products.forEach(function(product) {
+      productIdsArray.push(
+        product.productcode && product.productcode.toLowerCase()
+      );
+      productQuantityArray.push(
+        product.qtySelectedByUser ? product.qtySelectedByUser : product.quantity
+      );
+      productPriceArray.push(
+        product.offerPrice ? product.offerPrice : product.pricevalue
+      );
+      productBrandArray.push(
+        product.productBrand &&
+          product.productBrand.replace(/ /g, "_").toLowerCase()
+      );
     });
+    productIdsArray = productIdsArray.join(",").toLowerCase();
+    return {
+      productIdsArray,
+      productQuantityArray,
+      productPriceArray,
+      productBrandArray
+    };
   } else {
     return null;
   }
@@ -760,7 +829,7 @@ export function setDataLayerForPdpDirectCalls(type, layerData: null) {
 export function setDataLayerForCartDirectCalls(type, response) {
   let data = cloneDeep(window.digitalData);
   if (type === ADOBE_REMOVE_ITEM) {
-    const productIds = getProductIdArray(response);
+    const productIds = getProductsDigitalData(response);
     if (productIds) {
       Object.assign(data, {
         cpj: { product: { id: JSON.stringify(productIds) } }
