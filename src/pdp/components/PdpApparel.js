@@ -121,8 +121,6 @@ export default class PdpApparel extends React.Component {
   };
 
   goToReviewPage = () => {
-    console.log("GO TO REVIEW PAGE");
-    console.log(this.props.location.pathname);
     const url = `${this.props.location.pathname}${PRODUCT_REVIEWS_PATH_SUFFIX}`;
     this.props.history.push(url);
   };
