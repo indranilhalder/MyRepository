@@ -6,7 +6,6 @@ import SellerCard from "./SellerCard";
 import PdpFrame from "./PdpFrame";
 import * as Cookie from "../../lib/Cookie";
 import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
-import { renderMetaTags, renderMetaTagsWithoutSeoObject } from "./utils";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
