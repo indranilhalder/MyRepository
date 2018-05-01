@@ -63,7 +63,7 @@ export const PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG = `/:slug${PRODUCT_DESCRIPTIO
 export const PRODUCT_OTHER_SELLER_ROUTER = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/viewSellers`;
 export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE =
   "/:slug/(p-)([a-zA-Z0-9]+)";
-export const PRODUCT_REVIEWS_PATH_SUFFIX = "/product-reviews";
+export const PRODUCT_REVIEWS_PATH_SUFFIX = "product-reviews";
 export const PRODUCT_DESCRIPTION_ROUTER = PRODUCT_DESCRIPTION_PRODUCT_CODE; //TODO remove this
 export const PRODUCT_REVIEW_ROUTER = "/productReview";
 export const LOGIN_PATH = "/login";
@@ -216,3 +216,13 @@ export const CREDIT_CARD = "Credit Card";
 export const DEBIT_CARD = "Debit Card";
 export const E_WALLET = "E - Wallet";
 export const CASH_ON_DELIVERY_PAYMENT_MODE = "Cash On Delivery";
+
+// META TAGS CONSTANTS
+
+export const GOOGLE_TAG_TITLE_DEFAULT =
+  "Online Shopping Site in India - Upto 60% Off On Mobiles, Electronics & Fashion at Tata CLiQ";
+export const GOOGLE_TAG_IMAGE_DEFAULT =
+  "https://assets.tatacliq.com/medias/sys_master/images/10963640156190.jpg";
+export const TWITTER_TAG_TITLE_DEFAULT = GOOGLE_TAG_TITLE_DEFAULT;
+export const TWITTER_TAG_IMAGE_DEFAULT = GOOGLE_TAG_IMAGE_DEFAULT;
+export const FACEBOOK_TAG_IMAGE_DEFAULT = GOOGLE_TAG_IMAGE_DEFAULT;

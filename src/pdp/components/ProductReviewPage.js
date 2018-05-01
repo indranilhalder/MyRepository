@@ -7,15 +7,14 @@ import PropTypes from "prop-types";
 import RatingHolder from "./RatingHolder";
 import PdpFrame from "./PdpFrame";
 import throttle from "lodash/throttle";
-import { Redirect } from "react-router-dom";
 import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2.js";
 import {
-  MOBILE_PDP_VIEW,
   PRODUCT_REVIEWS_PATH_SUFFIX,
   SUCCESS,
   LOGIN_PATH
 } from "../../lib/constants";
-import find from "lodash.find";
+import { renderMetaTags, renderMetaTagsWithoutSeoObject } from "./utils";
+
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -23,8 +22,7 @@ import {
   GLOBAL_ACCESS_TOKEN,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  ANONYMOUS_USER,
-  REVIEW_SUBMIT_TOAST_TEXT
+  ANONYMOUS_USER
 } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
 const PRODUCT_QUANTITY = "1";

@@ -6,12 +6,14 @@ import PdpHome from "./PdpHome";
 
 import styles from "./ProductDescriptionPageWrapper.css";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
+import MetaTags from "react-meta-tags";
 import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   UPDATE_PDP_REDUCER_FOR_DELIVERY_OPTION,
   DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
+import { renderMetaTags, renderMetaTagsWithoutSeoObject } from "./utils";
 // prettier-ignore
 const typeComponentMapping = {
   "Electronics": props => <PdpElectronics {...props} />,
@@ -115,6 +117,9 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       </div>
     );
   }
+  /*
+
+  */
 
   render() {
     if (this.props.loading) {
@@ -124,7 +129,10 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     }
     if (this.props.productDetails) {
       return (
-        <div>
+        <div itemscope itemtype="http://schema.org/Product">
+          {this.props.productDetails.seo
+            ? renderMetaTags(this.props.productDetails)
+            : renderMetaTagsWithoutSeoObject(this.props.productDetails)}
           {this.renderRootCategory(this.props.productDetails.rootCategory)}
         </div>
       );
