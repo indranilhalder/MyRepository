@@ -829,15 +829,28 @@ export function setDataLayerForPdpDirectCalls(type, layerData: null) {
 export function setDataLayerForCartDirectCalls(type, response) {
   let data = cloneDeep(window.digitalData);
   if (type === ADOBE_REMOVE_ITEM) {
-    const productIds = getProductsDigitalData(response);
-    if (productIds) {
+    const getProductData = getProductsDigitalData(response);
+    if (getProductData) {
+      let {
+        productIdsArray,
+        productQuantityArray,
+        productPriceArray,
+        productBrandArray
+      } = getProductData;
       Object.assign(data, {
-        cpj: { product: { id: JSON.stringify(productIds) } }
+        cpj: {
+          product: {
+            id: productIdsArray,
+            quantity: productQuantityArray,
+            price: productPriceArray
+          },
+          brand: {
+            name: productBrandArray
+          }
+        }
       });
     }
-
     window.digitalData = data;
-
     window._satellite.track(ADOBE_DIRECT_CALL_ON_CART_FOR_REMOVE_TRIGGER);
   }
   if (type === ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT) {
