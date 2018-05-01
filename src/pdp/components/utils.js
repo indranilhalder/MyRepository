@@ -66,7 +66,7 @@ export const renderOgTags = productDetails => {
   let facebookUrl = window.location.href;
   let facebookImageUrl = FACEBOOK_TAG_IMAGE_DEFAULT;
   let facebookTitle = null;
-  if (productDetails.seo) {
+  if (productDetails && productDetails.seo) {
     googleTitle = productDetails.seo.title;
     googleDescription = productDetails.seo.description;
     googleImageUrl = productDetails.seo.imageURL;
