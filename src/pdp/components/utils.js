@@ -26,7 +26,6 @@ export const getPdpSchemaMetaTags = productDetails => {
 };
 
 export const renderMetaTags = productDetails => {
-  console.log("RENDER META TAGS CALLED");
   const canonicalUrl = productDetails.seo.canonicalURL
     ? productDetails.seo.canonicalURL
     : window.location.href;

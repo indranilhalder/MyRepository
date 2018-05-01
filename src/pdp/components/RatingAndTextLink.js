@@ -13,18 +13,25 @@ export default class RatingAndTextLink extends React.Component {
   render() {
     return (
       <PdpLink onClick={() => this.onClick()}>
-        <div className={styles.base}>
+        <div
+          itemprop="aggregateRating"
+          itemscope
+          itemtype="http://schema.org/AggregateRating"
+          className={styles.base}
+        >
           <div className={styles.ratingsHolder}>
             <StarRating averageRating={this.props.averageRating} />
           </div>
           {this.props.numberOfReview !== 0 && (
             <div className={styles.textHolder}>
-              <span>{this.props.numberOfReview}</span>
+              <span itemprop="reviewCount">{this.props.numberOfReview}</span>
               reviews for this product
             </div>
           )}
           {this.props.numberOfReview === 0 && (
-            <div className={styles.text}>{NO_REVIEW_TEXT}</div>
+            <div itemprop="reviewCount" className={styles.text}>
+              {NO_REVIEW_TEXT}
+            </div>
           )}
         </div>
       </PdpLink>
