@@ -23,10 +23,13 @@ export default class ProductDetailsMainCard extends React.Component {
   renderSchemaTags = () => {
     return (
       <MetaTags>
-        <meta itemprop="price" content={this.props.price} />
         <meta itemprop="priceCurrency" content="INR" />
       </MetaTags>
     );
+  };
+
+  handleLinkClick = e => {
+    e.preventDefault();
   };
   render() {
     const displayPrice = this.props.discountPrice
@@ -36,8 +39,17 @@ export default class ProductDetailsMainCard extends React.Component {
     if (this.props.averageRating) {
       averageRating = Math.floor(this.props.averageRating);
     }
+
+    console.log("PRODUCT DEATILS MAIN CARD");
+    console.log(this.props.productName);
+    console.log(this.props.productDescription);
+
     return (
       <div className={styles.base}>
+        <meta
+          itemprop="itemCondition"
+          content="http://schema.org/NewCondition"
+        />
         <div className={styles.productInfo}>
           <div
             itemprop="description"
@@ -55,12 +67,22 @@ export default class ProductDetailsMainCard extends React.Component {
                 {this.props.productName}
               </h1>
             </div>
-            <h2 className={styles.productDescription}>
-              {this.props.productDescription}
-            </h2>
+            <a href={window.location.href} onClick={this.handleLinkClick}>
+              <h2 className={styles.productDescription}>
+                {this.props.productDescription}
+              </h2>
+            </a>
           </div>
-          <div className={styles.productPriceSection}>
-            <div className={styles.price}>{displayPrice}</div>
+          <div
+            itemprop="offers"
+            itemscope=""
+            itemtype="http://schema.org/Offer"
+            className={styles.productPriceSection}
+          >
+            <div className={styles.price}>
+              <span itemprop="price">{displayPrice}</span>
+              <meta itemprop="priceCurrency" content="INR" />
+            </div>
             {this.props.discountPrice &&
               this.props.discountPrice !== this.props.price && (
                 <div className={styles.priceCancelled}>

@@ -13,7 +13,10 @@ import {
   SUCCESS,
   LOGIN_PATH
 } from "../../lib/constants";
-
+import {
+  renderMetaTags,
+  renderMetaTagsWithoutSeoObject
+} from "../../lib/seoUtils";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -200,6 +203,13 @@ class ProductReviewPage extends Component {
     );
   };
 
+  renderMetaTags = () => {
+    const productDetails = this.props.productDetails;
+    return productDetails.seo
+      ? renderMetaTags(productDetails)
+      : renderMetaTagsWithoutSeoObject(productDetails);
+  };
+
   render() {
     if (this.props.loadingForAddProduct || this.props.loading) {
       this.props.showSecondaryLoader();
@@ -226,6 +236,7 @@ class ProductReviewPage extends Component {
           addProductToBag={() => this.addProductToBag()}
           gotoPreviousPage={() => this.goBack()}
         >
+          {this.renderMetaTags()}
           <div className={styles.base}>
             <div className={styles.productBackground}>
               <ProductDetailsCard
