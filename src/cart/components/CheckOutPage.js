@@ -45,13 +45,13 @@ import {
   CREDIT_CARD,
   NET_BANKING_PAYMENT_MODE,
   DEBIT_CARD,
-  EMI
+  EMI,
+  CASH_ON_DELIVERY_PAYMENT_MODE
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
   setDataLayerForCheckoutDirectCalls,
-  ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE,
   ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE,
   ADOBE_CALL_FOR_SELECT_DELIVERY_MODE,
   ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE
@@ -78,6 +78,8 @@ const ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME =
 const ERROR_MESSAGE_FOR_MOBILE_NUMBER = "Please enter valid mobile number";
 const INVALID_CART_ERROR_MESSAGE =
   "Sorry your cart is not valid any more. Please Try again";
+const PLACE_ORDER = "Place Order";
+const PAY_NOW = "Pay Now";
 export const EGV_GIFT_CART_ID = "giftCartId";
 class CheckOutPage extends React.Component {
   constructor(props) {
@@ -511,6 +513,7 @@ class CheckOutPage extends React.Component {
       }
       this.setState({ isPaymentFailed: true });
       this.props.getPaymentFailureOrderDetails();
+
       if (localStorage.getItem(EGV_GIFT_CART_ID)) {
         let giftCartObj = JSON.parse(localStorage.getItem(EGV_GIFT_CART_ID));
         this.setState({
@@ -850,10 +853,18 @@ class CheckOutPage extends React.Component {
 
   getEmiBankDetails = () => {
     if (this.props.getEmiBankDetails) {
-      this.props.getEmiBankDetails(
-        this.props.cart.cartDetailsCNC.cartAmount &&
-          this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
-      );
+      if (this.state.isPaymentFailed) {
+        this.props.getEmiBankDetails(
+          this.props.cart.paymentFailureOrderDetails &&
+            this.props.cart.paymentFailureOrderDetails.cartAmount &&
+            this.props.cart.paymentFailureOrderDetails.cartAmount.bagTotal.value
+        );
+      } else {
+        this.props.getEmiBankDetails(
+          this.props.cart.cartDetailsCNC.cartAmount &&
+            this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
+        );
+      }
     }
   };
 
@@ -861,15 +872,14 @@ class CheckOutPage extends React.Component {
     let carGuId;
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
-    if (value === JUS_PAY_AUTHENTICATION_FAILED)
-    {
-      carGuId=parsedQueryString.value;
-    }else{
+    if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+      carGuId = parsedQueryString.value;
+    } else {
       let cartDetailsLoggedInUser = Cookie.getCookie(
         CART_DETAILS_FOR_LOGGED_IN_USER
       );
       if (cartDetailsLoggedInUser) {
-      carGuId=JSON.parse(cartDetailsLoggedInUser).guid;
+        carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
       }
     }
     if (this.props.getEmiEligibility) {
@@ -924,9 +934,9 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  getCODEligibility = () => {
+  getCODEligibility = cartId => {
     if (this.props.getCODEligibility) {
-      this.props.getCODEligibility();
+      this.props.getCODEligibility(this.state.isPaymentFailed);
     }
   };
 
@@ -1411,6 +1421,26 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
+    let labelForButton;
+    if (
+      !this.state.isPaymentFailed &&
+      !this.state.confirmAddress &&
+      !this.state.isGiftCard &&
+      (this.props.cart.userAddress && this.props.cart.userAddress.addresses)
+    ) {
+      labelForButton = CONTINUE;
+    } else if (
+      (this.state.confirmAddress && !this.state.deliverMode) ||
+      this.state.isGiftCard
+    ) {
+      labelForButton = PROCEED;
+    } else if (
+      this.state.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
+    ) {
+      labelForButton = PLACE_ORDER;
+    } else {
+      labelForButton = PAY_NOW;
+    }
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
@@ -1499,13 +1529,6 @@ class CheckOutPage extends React.Component {
               </div>
             )}
 
-          {!this.state.isPaymentFailed &&
-            !this.state.appliedCoupons &&
-            (this.state.confirmAddress && this.state.deliverMode) &&
-            this.props.cart.paymentModes &&
-            !this.state.isGiftCard &&
-            this.renderBankOffers()}
-
           {this.state.isPaymentFailed && (
             <div className={styles.paymentFailedCardHolder}>
               <TransactionFailed />
@@ -1519,6 +1542,7 @@ class CheckOutPage extends React.Component {
             <div className={styles.paymentCardHolderπp}>
               <PaymentCardWrapper
                 isRemainingBalance={this.state.isRemainingAmount}
+                isPaymentFailed={this.state.isPaymentFailed}
                 isFromGiftCard={this.state.isGiftCard}
                 cart={this.props.cart}
                 cliqCashAmount={this.state.cliqCashAmount}
@@ -1591,12 +1615,7 @@ class CheckOutPage extends React.Component {
 
           {!this.state.showCliqAndPiq && (
             <Checkout
-              label={
-                (this.state.confirmAddress && !this.state.deliverMode) ||
-                this.state.isGiftCard
-                  ? PROCEED
-                  : CONTINUE
-              }
+              label={labelForButton}
               noCostEmiEligibility={
                 this.props.cart &&
                 this.props.cart.emiEligibilityDetails &&
