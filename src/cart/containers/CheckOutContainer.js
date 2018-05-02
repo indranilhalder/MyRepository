@@ -184,8 +184,8 @@ const mapDispatchToProps = dispatch => {
     updateTransactionDetails: (paymentMode, juspayOrderID, cartId) => {
       dispatch(updateTransactionDetails(paymentMode, juspayOrderID, cartId));
     },
-    getCODEligibility: cartId => {
-      dispatch(getCODEligibility(cartId));
+    getCODEligibility: isPaymentFailed => {
+      dispatch(getCODEligibility(isPaymentFailed));
     },
     binValidationForCOD: paymentMode => {
       dispatch(binValidationForCOD(paymentMode));

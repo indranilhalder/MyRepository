@@ -103,6 +103,7 @@ export default class EmiPanel extends React.Component {
                     this.setState({ currentSelectedEMIType })
                   }
                   getBankAndTenureDetails={() => this.getBankAndTenureDetails()}
+                  onChangeCardDetail={val => this.onChangeCardDetail(val)}
                 >
                   <NoCostEmiBankDetails
                     onBankSelect={val => this.onBankSelect(val)}

@@ -1975,8 +1975,12 @@ export function softReservationForPaymentFailure(error) {
 }
 
 // Action Creator to soft reservation For Payment
-export function softReservationForPayment(cardDetails, address, paymentMode,bankName) {
-
+export function softReservationForPayment(
+  cardDetails,
+  address,
+  paymentMode,
+  bankName
+) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
@@ -2025,8 +2029,7 @@ export function softReservationForPayment(cardDetails, address, paymentMode,bank
       }
       setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPaymentSuccess(resultJson));
-      if(bankName)
-      {
+      if (bankName) {
         dispatch(
           createJusPayOrder(
             "",
@@ -2038,11 +2041,12 @@ export function softReservationForPayment(cardDetails, address, paymentMode,bank
             bankName
           )
         );
+      } else {
+        dispatch(
+          jusPayTokenize(cardDetails, address, productItems, paymentMode, false)
+        );
       }
-      else{
-      dispatch(jusPayTokenize(cardDetails, address, productItems, paymentMode,false));
-    }
-   } catch (e) {
+    } catch (e) {
       dispatch(softReservationForPaymentFailure(e.message));
     }
   };
@@ -2260,9 +2264,7 @@ export function jusPayTokenize(
   cartItem,
   paymentMode,
   isPaymentFailed
-
 ) {
-
   if (!isPaymentFailed) {
     localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
   }
@@ -2292,7 +2294,6 @@ export function jusPayTokenize(
           cardDetails,
           paymentMode,
           isPaymentFailed
-
         )
       );
     } catch (e) {
@@ -2374,7 +2375,6 @@ export function createJusPayOrder(
   isPaymentFailed,
   bankName
 ) {
-
   const jusPayUrl = `${
     window.location.origin
   }/checkout/payment-method/cardPayment`;
@@ -3268,12 +3268,13 @@ export function getCODEligibilityFailure(error) {
 }
 
 //Actions creator for COD Eligibility
-export function getCODEligibility(oldCartId) {
+export function getCODEligibility(isPaymentFailed) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartId;
-  if (oldCartId) {
-    cartId = oldCartId;
+  if (isPaymentFailed) {
+    let url = queryString.parse(window.location.search);
+    cartId = url && url.value;
   } else {
     const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     cartId = JSON.parse(cartDetails).guid;

@@ -51,7 +51,6 @@ import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
   setDataLayerForCheckoutDirectCalls,
-  ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE,
   ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE,
   ADOBE_CALL_FOR_SELECT_DELIVERY_MODE,
   ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE
@@ -851,10 +850,18 @@ class CheckOutPage extends React.Component {
 
   getEmiBankDetails = () => {
     if (this.props.getEmiBankDetails) {
-      this.props.getEmiBankDetails(
-        this.props.cart.cartDetailsCNC.cartAmount &&
-          this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
-      );
+      if (this.state.isPaymentFailed) {
+        this.props.getEmiBankDetails(
+          this.props.cart.paymentFailureOrderDetails &&
+            this.props.cart.paymentFailureOrderDetails.cartAmount &&
+            this.props.cart.paymentFailureOrderDetails.cartAmount.bagTotal.value
+        );
+      } else {
+        this.props.getEmiBankDetails(
+          this.props.cart.cartDetailsCNC.cartAmount &&
+            this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
+        );
+      }
     }
   };
 
@@ -862,15 +869,14 @@ class CheckOutPage extends React.Component {
     let carGuId;
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
-    if (value === JUS_PAY_AUTHENTICATION_FAILED)
-    {
-      carGuId=parsedQueryString.value;
-    }else{
+    if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+      carGuId = parsedQueryString.value;
+    } else {
       let cartDetailsLoggedInUser = Cookie.getCookie(
         CART_DETAILS_FOR_LOGGED_IN_USER
       );
       if (cartDetailsLoggedInUser) {
-      carGuId=JSON.parse(cartDetailsLoggedInUser).guid;
+        carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
       }
     }
     if (this.props.getEmiEligibility) {
@@ -927,7 +933,7 @@ class CheckOutPage extends React.Component {
 
   getCODEligibility = cartId => {
     if (this.props.getCODEligibility) {
-      this.props.getCODEligibility(cartId);
+      this.props.getCODEligibility(this.state.isPaymentFailed);
     }
   };
 
@@ -1558,9 +1564,7 @@ class CheckOutPage extends React.Component {
                 binValidationForPaytm={val => this.binValidationForPaytm(val)}
                 displayToast={message => this.props.displayToast(message)}
                 getPaymentModes={() => this.getPaymentModes()}
-                getCODEligibility={oldCartId =>
-                  this.getCODEligibility(oldCartId)
-                }
+                getCODEligibility={() => this.getCODEligibility()}
                 getNetBankDetails={() => this.getNetBankDetails()}
                 getEmiBankDetails={() => this.getEmiBankDetails()}
                 getEmiEligibility={() => this.getEmiEligibility()}

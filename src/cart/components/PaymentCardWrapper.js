@@ -52,12 +52,7 @@ export default class PaymentCardWrapper extends React.Component {
       this.props.getCODEligibility &&
       !this.props.cart.codEligibilityDetails
     ) {
-      const oldCartId = getCookie(OLD_CART_GU_ID);
-      if (oldCartId) {
-        this.props.getCODEligibility(oldCartId);
-      } else {
-        this.props.getCODEligibility();
-      }
+      this.props.getCODEligibility();
     }
   };
   binValidationForPaytm(val) {
