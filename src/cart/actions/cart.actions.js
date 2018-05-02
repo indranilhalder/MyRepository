@@ -1975,7 +1975,8 @@ export function softReservationForPaymentFailure(error) {
 }
 
 // Action Creator to soft reservation For Payment
-export function softReservationForPayment(cardDetails, address, paymentMode) {
+export function softReservationForPayment(cardDetails, address, paymentMode,bankName) {
+
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
@@ -2024,8 +2025,24 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
       }
       setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPaymentSuccess(resultJson));
-      dispatch(jusPayTokenize(cardDetails, address, productItems, paymentMode));
-    } catch (e) {
+      if(bankName)
+      {
+        dispatch(
+          createJusPayOrder(
+            "",
+            productItems,
+            address,
+            cardDetails,
+            paymentMode,
+            false,
+            bankName
+          )
+        );
+      }
+      else{
+      dispatch(jusPayTokenize(cardDetails, address, productItems, paymentMode,false));
+    }
+   } catch (e) {
       dispatch(softReservationForPaymentFailure(e.message));
     }
   };
@@ -2243,7 +2260,9 @@ export function jusPayTokenize(
   cartItem,
   paymentMode,
   isPaymentFailed
+
 ) {
+
   if (!isPaymentFailed) {
     localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
   }
@@ -2273,6 +2292,7 @@ export function jusPayTokenize(
           cardDetails,
           paymentMode,
           isPaymentFailed
+
         )
       );
     } catch (e) {
@@ -2351,8 +2371,10 @@ export function createJusPayOrder(
   address,
   cardDetails,
   paymentMode,
-  isPaymentFailed
+  isPaymentFailed,
+  bankName
 ) {
+
   const jusPayUrl = `${
     window.location.origin
   }/checkout/payment-method/cardPayment`;
@@ -2383,7 +2405,7 @@ export function createJusPayOrder(
           address.country.isocode
         }&city=${address.city}&state=${address.state}&pincode=${
           address.postalCode
-        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}`,
+        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${bankName}`,
         cartItem
       );
       const resultJson = await result.json();
@@ -3747,11 +3769,12 @@ export function getEligibilityOfNoCostEmiFailure(error) {
   };
 }
 
-export function getEmiEligibility() {
+export function getEmiEligibility(cartGuId) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+
     const cartId = JSON.parse(cartDetails).guid;
     dispatch(getEligibilityOfNoCostEmiRequest());
     try {
@@ -3760,7 +3783,7 @@ export function getEmiEligibility() {
           JSON.parse(userDetails).userName
         }/payments/noCostEmiCheck?platformNumber=2&access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartId}`
+        }&cartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
