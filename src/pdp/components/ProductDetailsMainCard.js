@@ -68,9 +68,9 @@ export default class ProductDetailsMainCard extends React.Component {
               </h1>
             </div>
             <a href={window.location.href} onClick={this.handleLinkClick}>
-              <h2 className={styles.productDescription}>
+              <h1 className={styles.productDescription}>
                 {this.props.productDescription}
-              </h2>
+              </h1>
             </a>
           </div>
           <div
