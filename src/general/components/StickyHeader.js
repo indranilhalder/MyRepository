@@ -52,6 +52,6 @@ export default class StickyHeader extends React.Component {
 
 StickyHeader.propTypes = {
   goBack: PropTypes.func,
-  orderProduct: PropTypes.func,
-  downloadProduct: PropTypes.func
+  goToCart: PropTypes.func,
+  goToWishList: PropTypes.func
 };

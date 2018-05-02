@@ -61,7 +61,6 @@ class HeaderWrapper extends React.Component {
   };
   handleScroll = () => {
     return throttle(() => {
-      console.log(window.pageYOffset);
       if (window.pageYOffset < 30 && this.state.stickyHeader) {
         this.setState({ stickyHeader: false });
       } else if (window.pageYOffset > 30 && !this.state.stickyHeader) {
