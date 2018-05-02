@@ -99,7 +99,7 @@ export default class AddDeliveryAddress extends React.Component {
         landmarkList
       });
     }
-    if (nextProps.getPinCodeDetails) {
+    if (nextProps.getPincodeStatus === SUCCESS && nextProps.getPinCodeDetails) {
       if (nextProps.getPinCodeDetails.landMarks) {
         landmarkList = [
           ...nextProps.getPinCodeDetails.landMarks,
