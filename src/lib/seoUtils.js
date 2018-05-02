@@ -5,17 +5,11 @@ import {
   GOOGLE_TAG_IMAGE_DEFAULT,
   TWITTER_TAG_IMAGE_DEFAULT,
   TWITTER_TAG_TITLE_DEFAULT,
-  FACEBOOK_TAG_IMAGE_DEFAULT
+  FACEBOOK_TAG_IMAGE_DEFAULT,
+  TITLE_DEFAULT
 } from "./constants";
+import { URL_ROOT } from "./apiRequest";
 
-/*
-
-<meta itemprop="price" content="41000">
-<meta itemprop="priceCurrency" content="INR">
-<meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
-<meta itemprop="availability" content="http://schema.org/InStock"/>Available online</meta>
-
-*/
 export const getPdpSchemaMetaTags = productDetails => {
   return (
     <MetaTags>
@@ -26,28 +20,46 @@ export const getPdpSchemaMetaTags = productDetails => {
 };
 
 export const renderMetaTags = productDetails => {
-  const canonicalUrl = productDetails.seo.canonicalURL
+  let canonicalUrl = productDetails.seo.canonicalURL
     ? productDetails.seo.canonicalURL
     : window.location.href;
-  const alternateUrl = productDetails.seo.alternateURL
+  let alternateUrl = productDetails.seo.alternateURL
     ? productDetails.seo.alternateURL
     : window.location.href;
+  let title = productDetails.seo.title
+    ? productDetails.seo.title
+    : TITLE_DEFAULT;
+  if (title.length === 0) {
+    title = TITLE_DEFAULT;
+  }
+
+  if (canonicalUrl.length === 0) {
+    canonicalUrl = window.location.href;
+  }
+
+  if (alternateUrl.length === 0) {
+    alternateUrl = window.location.href;
+  }
 
   return (
     <MetaTags>
       <title> {productDetails.seo.title}</title>
       <meta name="description" content={productDetails.seo.description} />
       <meta name="keywords" content={productDetails.seo.keywords} />
-      <link rel="canonical" href={canonicalUrl} hreflang="en-in" />
-      <link rel="alternate" href={alternateUrl} hreflang="en-in" />
+      <link rel="canonical" href={`${canonicalUrl}`} hreflang="en-in" />
+      <link rel="alternate" href={`${alternateUrl}`} hreflang="en-in" />
       {renderOgTags(productDetails)}
     </MetaTags>
   );
 };
 
 export const renderMetaTagsWithoutSeoObject = () => {
+  let description = "some default description";
   return (
     <MetaTags>
+      <title> {TITLE_DEFAULT}</title>
+      <meta name="description" content={description} />
+
       <link rel="canonical" href={window.location.href} hreflang="en-in" />
       <link rel="alternate" href={window.location.href} hreflang="en-in" />
       {renderOgTags()}
