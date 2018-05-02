@@ -38,7 +38,7 @@ class PDPRecommendedSections extends React.Component {
       this.props.aboutTheBrand && (
         <React.Fragment>
           <div className={styles.brandSection}>
-            <div className={styles.brandHeader}>About the brand</div>
+            <h3 className={styles.brandHeader}>About the brand</h3>
             <div className={styles.brandLogoSection}>
               {this.props.aboutTheBrand.brandLogo && (
                 <div className={styles.brandLogoHolder}>
@@ -56,9 +56,9 @@ class PDPRecommendedSections extends React.Component {
               )}
             </div>
             {this.props.aboutTheBrand.description && (
-              <div className={styles.brandDescription}>
+              <h3 className={styles.brandDescription}>
                 {this.props.aboutTheBrand.description}
-              </div>
+              </h3>
             )}
 
             {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY] &&
@@ -108,7 +108,7 @@ class PDPRecommendedSections extends React.Component {
     return (
       this.props.msdItems[key] && (
         <div className={styles.brandSection}>
-          <div className={styles.brandHeader}>{title}</div>
+          <h3 className={styles.brandHeader}>{title}</h3>
           {this.props.msdItems[key] &&
             this.renderCarousel(this.props.msdItems[key])}
         </div>

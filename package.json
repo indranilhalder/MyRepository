@@ -58,6 +58,7 @@
     "react-dom": "^16.3.1",
     "react-grecaptcha": "^1.2.5",
     "react-loadable": "^5.3.1",
+    "react-meta-tags": "^0.4.1",
     "react-motion": "^0.5.2",
     "react-player": "^1.1.1",
     "react-redux": "^5.0.6",

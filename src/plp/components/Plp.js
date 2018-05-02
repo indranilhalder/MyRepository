@@ -5,6 +5,10 @@ import PlpMobileFooter from "./PlpMobileFooter";
 import styles from "./Plp.css";
 import throttle from "lodash.throttle";
 import Loader from "../../general/components/Loader";
+import {
+  renderMetaTags,
+  renderMetaTagsWithoutSeoObject
+} from "../../lib/seoUtils.js";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SCROLL_CHECK_INTERVAL = 500;
 const OFFSET_BOTTOM = 800;
@@ -134,6 +138,9 @@ export default class Plp extends React.Component {
     return (
       this.props.productListings && (
         <div className={styles.base}>
+          {this.props.productListings.seo
+            ? renderMetaTags(this.props.productListings)
+            : renderMetaTagsWithoutSeoObject(this.props.productListings)}
           <div className={styles.main}>
             <ProductGrid
               history={this.props.history}

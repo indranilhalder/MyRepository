@@ -65,7 +65,7 @@ export default class SearchHeader extends React.Component {
           </div>
           {!this.props.display && (
             <div className={styles.searchWithText}>
-              <div className={styles.textBox}>{this.props.text}</div>
+              <h1 className={styles.textBox}>{this.props.text}</h1>
             </div>
           )}
           {this.props.display && (

@@ -8,7 +8,9 @@ export default class OrderConfirmation extends React.Component {
   captureOrderExperience = rating => {
     this.props.captureOrderExperience(rating);
   };
-
+  componentWillUnmount() {
+    this.props.clearCartDetails();
+  }
   continueShopping = () => {
     this.props.continueShopping();
   };

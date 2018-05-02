@@ -29,6 +29,9 @@
   font-family: semibold;
   text-align: center;
   line-height: 32px;
+  -webkit-margin-before: inherit;
+  -webkit-margin-after: inherit;
+  font-weight: inherit;
 }
 .searchHolder {
   position: absolute;
