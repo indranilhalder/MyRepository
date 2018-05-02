@@ -96,6 +96,8 @@ export default class AddDeliveryAddress extends React.Component {
     if (nextProps.getPincodeStatus === ERROR) {
       landmarkList = [{ landmark: OTHER_LANDMARK }];
       this.setState({
+        state: "",
+        town: "",
         landmarkList
       });
     }
