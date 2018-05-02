@@ -126,7 +126,8 @@ class CheckOutPage extends React.Component {
       bankCodeForNetBanking: null, // in case on net banking
       captchaReseponseForCOD: null, // in case of COD order its holding that ceptcha verification
       noCostEmiDiscount: 0,
-      egvCartGuid: null
+      egvCartGuid: null,
+      noCostEmiBankName: null
     };
   }
 
@@ -706,21 +707,35 @@ class CheckOutPage extends React.Component {
             Math.round(
               nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
             ) / 100,
-          deliveryCharge:
-            nextProps.cart.cartDetailsCNC &&
-            nextProps.cart.cartDetailsCNC.deliveryCharge,
+
           totalDiscount:
             Math.round(
               nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
                 .value * 100
-            ) / 100,
-          couponDiscount:
-            Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
-                nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
-                  .value * 100
             ) / 100
         });
+
+        if (
+          nextProps.cart.cartDetailsCNC &&
+          nextProps.cart.cartDetailsCNC.deliveryCharge
+        ) {
+          this.setState({
+            deliveryCharge:
+              nextProps.cart.cartDetailsCNC &&
+              nextProps.cart.cartDetailsCNC.deliveryCharge
+          });
+        }
+        if (
+          nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
+          nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount.value
+        ) {
+          this.setState(
+            Math.round(
+              nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
+                .value * 100
+            ) / 100
+          );
+        }
       }
     }
 
@@ -843,9 +858,23 @@ class CheckOutPage extends React.Component {
   };
 
   getEmiEligibility = () => {
+    let carGuId;
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    const value = parsedQueryString.status;
+    if (value === JUS_PAY_AUTHENTICATION_FAILED)
+    {
+      carGuId=parsedQueryString.value;
+    }else{
+      let cartDetailsLoggedInUser = Cookie.getCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER
+      );
+      if (cartDetailsLoggedInUser) {
+      carGuId=JSON.parse(cartDetailsLoggedInUser).guid;
+      }
+    }
     if (this.props.getEmiEligibility) {
       this.setState({ isNoCostEmiApplied: false, isNoCostEmiProceeded: false });
-      this.props.getEmiEligibility();
+      this.props.getEmiEligibility(carGuId);
     }
   };
 
@@ -861,16 +890,24 @@ class CheckOutPage extends React.Component {
       this.props.getEmiTermsAndConditionsForBank(bankCode, bankName);
     }
   };
-  applyNoCostEmi = couponCode => {
+  applyNoCostEmi = (couponCode, bankName) => {
+    this.setState({ noCostEmiBankName: bankName });
     if (this.props.applyNoCostEmi) {
-      this.setState({ isNoCostEmiApplied: true, isNoCostEmiProceeded: false });
+      this.setState({
+        isNoCostEmiApplied: true,
+        isNoCostEmiProceeded: false
+      });
       this.props.applyNoCostEmi(couponCode);
     }
   };
 
   removeNoCostEmi = couponCode => {
+    this.setState({ noCostEmiBankName: null });
     if (this.props.applyNoCostEmi) {
-      this.setState({ isNoCostEmiApplied: false, isNoCostEmiProceeded: false });
+      this.setState({
+        isNoCostEmiApplied: false,
+        isNoCostEmiProceeded: false
+      });
       this.props.removeNoCostEmi(couponCode);
     }
   };
@@ -1156,8 +1193,11 @@ class CheckOutPage extends React.Component {
       }
       if (
         this.state.currentPaymentMode === CREDIT_CARD ||
-        this.state.currentPaymentMode === EMI ||
-        this.state.currentPaymentMode === DEBIT_CARD
+        (this.state.currentPaymentMode === EMI &&
+          !this.state.isNoCostEmiApplied) ||
+        this.state.currentPaymentMode === DEBIT_CARD ||
+        (this.state.currentPaymentMode === EMI &&
+          this.state.isNoCostEmiProceeded)
       ) {
         if (this.state.isGiftCard) {
           this.props.jusPayTokenizeForGiftCard(
@@ -1166,9 +1206,13 @@ class CheckOutPage extends React.Component {
             this.props.location.state.egvCartGuid
           );
         } else {
-          this.softReservationForPayment(this.state.cardDetails);
+          this.softReservationForPayment(
+            this.state.cardDetails,
+            this.state.noCostEmiBankName
+          );
         }
       }
+
       if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
         if (this.state.isGiftCard) {
           this.props.createJusPayOrderForGiftCardNetBanking(
@@ -1303,12 +1347,13 @@ class CheckOutPage extends React.Component {
     );
   };
 
-  softReservationForPayment = cardDetails => {
+  softReservationForPayment = (cardDetails, noCostEmiCouponCode) => {
     cardDetails.pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.props.softReservationForPayment(
       cardDetails,
       this.state.selectedAddress,
-      this.state.paymentModeSelected
+      this.state.paymentModeSelected,
+      noCostEmiCouponCode
     );
   };
 
@@ -1320,7 +1365,6 @@ class CheckOutPage extends React.Component {
       localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
     );
   };
-
 
   createJusPayOrderForGiftCardNetBanking = bankName => {
     if (this.props.createJusPayOrderForGiftCardNetBanking) {
@@ -1512,7 +1556,6 @@ class CheckOutPage extends React.Component {
                 binValidationForSavedCard={cardDetails =>
                   this.binValidationForSavedCard(cardDetails)
                 }
-
                 createJusPayOrderForGiftCardNetBanking={bankName =>
                   this.createJusPayOrderForGiftCardNetBanking(bankName)
                 }
@@ -1528,7 +1571,9 @@ class CheckOutPage extends React.Component {
                 getEmiTermsAndConditionsForBank={(bankCode, bankName) =>
                   this.getEmiTermsAndConditionsForBank(bankCode, bankName)
                 }
-                applyNoCostEmi={couponCode => this.applyNoCostEmi(couponCode)}
+                applyNoCostEmi={(couponCode, bankName) =>
+                  this.applyNoCostEmi(couponCode, bankName)
+                }
                 removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
                 getItemBreakUpDetails={couponCode =>
                   this.getItemBreakUpDetails(couponCode)
