@@ -72,7 +72,6 @@ export default class NoCostEmiBankDetails extends React.Component {
   };
 
   softReservationForPayment = cardDetails => {
-    console.log(cardDetails);
     if (this.props.softReservationForPayment) {
       this.props.softReservationForPayment(cardDetails);
     }
@@ -85,7 +84,6 @@ export default class NoCostEmiBankDetails extends React.Component {
   };
 
   onSelectMonth(index, val) {
-    console.log(this.state.selectedBankName);
     if (this.state.selectedBankName !== "Other Bank") {
       if (this.state.selectedMonth === index) {
         this.setState({
