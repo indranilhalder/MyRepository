@@ -769,10 +769,6 @@ const cart = (
     }
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_FAILURE:
-      Cookies.deleteCookie(OLD_CART_GU_ID);
-      localStorage.removeItem(cartActions.CART_ITEM_COOKIE);
-      localStorage.removeItem(cartActions.ADDRESS_FOR_PLACE_ORDER);
-      localStorage.removeItem(EGV_GIFT_CART_ID);
       return Object.assign({}, state, {
         transactionStatus: action.status,
         jusPayError: action.error,
