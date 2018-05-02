@@ -45,7 +45,8 @@ import {
   CREDIT_CARD,
   NET_BANKING_PAYMENT_MODE,
   DEBIT_CARD,
-  EMI
+  EMI,
+  CASH_ON_DELIVERY_PAYMENT_MODE
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -77,6 +78,8 @@ const ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME =
 const ERROR_MESSAGE_FOR_MOBILE_NUMBER = "Please enter valid mobile number";
 const INVALID_CART_ERROR_MESSAGE =
   "Sorry your cart is not valid any more. Please Try again";
+const PLACE_ORDER = "Place Order";
+const PAY_NOW = "Pay Now";
 export const EGV_GIFT_CART_ID = "giftCartId";
 class CheckOutPage extends React.Component {
   constructor(props) {
@@ -1418,6 +1421,26 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
+    let labelForButton;
+    if (
+      !this.state.isPaymentFailed &&
+      !this.state.confirmAddress &&
+      !this.state.isGiftCard &&
+      (this.props.cart.userAddress && this.props.cart.userAddress.addresses)
+    ) {
+      labelForButton = CONTINUE;
+    } else if (
+      (this.state.confirmAddress && !this.state.deliverMode) ||
+      this.state.isGiftCard
+    ) {
+      labelForButton = PROCEED;
+    } else if (
+      this.state.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
+    ) {
+      labelForButton = PLACE_ORDER;
+    } else {
+      labelForButton = PAY_NOW;
+    }
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
@@ -1592,12 +1615,7 @@ class CheckOutPage extends React.Component {
 
           {!this.state.showCliqAndPiq && (
             <Checkout
-              label={
-                (this.state.confirmAddress && !this.state.deliverMode) ||
-                this.state.isGiftCard
-                  ? PROCEED
-                  : CONTINUE
-              }
+              label={labelForButton}
               noCostEmiEligibility={
                 this.props.cart &&
                 this.props.cart.emiEligibilityDetails &&
