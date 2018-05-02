@@ -503,6 +503,24 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.cart.jusPayError && this.state.isPaymentFailed === false) {
+      const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
+      if (!oldCartId) {
+        return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
+      }
+      this.setState({ isPaymentFailed: true });
+      this.props.getPaymentFailureOrderDetails();
+      if (localStorage.getItem(EGV_GIFT_CART_ID)) {
+        let giftCartObj = JSON.parse(localStorage.getItem(EGV_GIFT_CART_ID));
+        this.setState({
+          isGiftCard: true,
+          isRemainingAmount: true,
+          payableAmount: Math.round(giftCartObj.amount * 100) / 100,
+          bagAmount: Math.round(giftCartObj.amount * 100) / 100,
+          egvCartGuid: giftCartObj.egvCartGuid
+        });
+      }
+    }
     if (
       !this.state.isCheckoutAddressSelected &&
       nextProps.cart.getUserAddressStatus === SUCCESS &&
@@ -877,13 +895,20 @@ class CheckOutPage extends React.Component {
 
   getPaymentModes = () => {
     if (
-      this.state.isGiftCard &&
-      this.props.location &&
-      this.props.location.state &&
-      this.props.location.state.egvCartGuid
+      (this.state.isGiftCard &&
+        this.props.location &&
+        this.props.location.state &&
+        this.props.location.state.egvCartGuid) ||
+      (this.state.isGiftCard && this.state.egvCartGuid)
     ) {
+      let egvGiftCartGuId;
+      if (this.state.egvCartGuid) {
+        egvGiftCartGuId = this.state.egvCartGuid;
+      } else {
+        egvGiftCartGuId = this.props.location.state.egvCartGuid;
+      }
       let guIdObject = new FormData();
-      guIdObject.append(CART_GU_ID, this.props.location.state.egvCartGuid);
+      guIdObject.append(CART_GU_ID, egvGiftCartGuId);
       this.props.getPaymentModes(guIdObject);
     } else {
       let cartDetailsLoggedInUser = Cookie.getCookie(
@@ -997,8 +1022,12 @@ class CheckOutPage extends React.Component {
       this.state.currentPaymentMode === EMI ||
       this.state.currentPaymentMode === DEBIT_CARD
     ) {
-      if (this.state.isFromGiftCard) {
-        this.jusPayTokenizeForGiftCard(this.state.cardDetails);
+      if (this.state.isGiftCard) {
+        this.props.jusPayTokenizeForGiftCard(
+          this.state.cardDetails,
+          this.state.paymentModeSelected,
+          this.state.egvCartGuid
+        );
       } else {
         this.props.jusPayTokenize(
           this.state.cardDetails,
@@ -1010,20 +1039,38 @@ class CheckOutPage extends React.Component {
       }
     }
     if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
-      this.props.createJusPayOrderForNetBanking(
-        NET_BANKING,
-        this.state.bankCodeForNetBanking,
-        localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
-        JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
-      );
+      if (this.state.isGiftCard) {
+        if (this.props.createJusPayOrderForGiftCardNetBanking) {
+          this.props.createJusPayOrderForGiftCardNetBanking(
+            this.state.bankCodeForNetBanking,
+            this.state.egvCartGuid
+          );
+        }
+      } else {
+        this.props.createJusPayOrderForNetBanking(
+          NET_BANKING,
+          this.state.bankCodeForNetBanking,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+          JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
+        );
+      }
     }
     if (this.state.paymentModeSelected === PAYTM) {
-      this.props.createJusPayOrderForNetBanking(
-        PAYTM,
-        this.state.bankCodeForNetBanking,
-        localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
-        JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
-      );
+      if (this.state.isGiftCard) {
+        if (this.props.createJusPayOrderForGiftCardNetBanking) {
+          this.props.createJusPayOrderForGiftCardNetBanking(
+            this.state.bankCodeForNetBanking,
+            this.state.egvCartGuid
+          );
+        }
+      } else {
+        this.props.createJusPayOrderForNetBanking(
+          PAYTM,
+          this.state.bankCodeForNetBanking,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+          JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
+        );
+      }
     }
     if (!this.state.isRemainingAmount) {
       this.props.createJusPayOrderForCliqCash(
@@ -1033,9 +1080,6 @@ class CheckOutPage extends React.Component {
     }
     if (this.state.binValidationCOD) {
       this.softReservationForCODPayment();
-    }
-    if (this.state.paymentModeSelected === PAYTM) {
-      this.softReservationPaymentForWallet(PAYTM);
     }
   };
   handleSubmit = () => {
@@ -1115,16 +1159,21 @@ class CheckOutPage extends React.Component {
         this.state.currentPaymentMode === EMI ||
         this.state.currentPaymentMode === DEBIT_CARD
       ) {
-        if (this.state.isFromGiftCard) {
-          this.props.jusPayTokenizeForGiftCard(this.state.cardDetails);
+        if (this.state.isGiftCard) {
+          this.props.jusPayTokenizeForGiftCard(
+            this.state.cardDetails,
+            this.state.paymentModeSelected,
+            this.props.location.state.egvCartGuid
+          );
         } else {
           this.softReservationForPayment(this.state.cardDetails);
         }
       }
       if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
-        if (this.state.isFromGiftCard) {
+        if (this.state.isGiftCard) {
           this.props.createJusPayOrderForGiftCardNetBanking(
-            this.state.bankCodeForNetBanking
+            this.state.bankCodeForNetBanking,
+            this.props.location.state.egvCartGuid
           );
         } else {
           this.softReservationPaymentForNetBanking(
@@ -1143,7 +1192,14 @@ class CheckOutPage extends React.Component {
         this.softReservationForCODPayment();
       }
       if (this.state.paymentModeSelected === PAYTM) {
-        this.softReservationPaymentForWallet(PAYTM);
+        if (this.state.isGiftCard) {
+          this.props.createJusPayOrderForGiftCardNetBanking(
+            this.state.bankCodeForNetBanking,
+            this.props.location.state.egvCartGuid
+          );
+        } else {
+          this.props.softReservationPaymentForWallet(PAYTM);
+        }
       }
     }
   };
@@ -1265,15 +1321,15 @@ class CheckOutPage extends React.Component {
     );
   };
 
-  jusPayTokenizeForGiftCard = cartDetails => {
-    if (this.props.jusPayTokenizeForGiftCard) {
-      this.props.jusPayTokenizeForGiftCard(
-        cartDetails,
-        this.state.paymentModeSelected,
-        this.props.location.state.egvCartGuid
-      );
-    }
-  };
+  // jusPayTokenizeForGiftCard = cartDetails => {
+  //   if (this.props.jusPayTokenizeForGiftCard) {
+  //     this.props.jusPayTokenizeForGiftCard(
+  //       cartDetails,
+  //       this.state.paymentModeSelected,
+  //       this.props.location.state.egvCartGuid
+  //     );
+  //   }
+  // };
   createJusPayOrderForGiftCardNetBanking = bankName => {
     if (this.props.createJusPayOrderForGiftCardNetBanking) {
       this.props.createJusPayOrderForGiftCardNetBanking(
