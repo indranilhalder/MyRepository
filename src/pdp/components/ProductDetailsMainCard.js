@@ -40,10 +40,6 @@ export default class ProductDetailsMainCard extends React.Component {
       averageRating = Math.floor(this.props.averageRating);
     }
 
-    console.log("PRODUCT DEATILS MAIN CARD");
-    console.log(this.props.productName);
-    console.log(this.props.productDescription);
-
     return (
       <div className={styles.base}>
         <meta
