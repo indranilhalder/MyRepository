@@ -35,6 +35,7 @@ export default class DeliveryInformations extends React.Component {
     }
   }
   render() {
+    console.log(this.props.selected);
     let iconImage = HomeImage;
     let typeName = HOME_TEXT;
     if (this.props.type === EXPRESS) {
@@ -54,19 +55,33 @@ export default class DeliveryInformations extends React.Component {
             this.props.available ? styles.dataHolder : styles.notAvailable
           }
         >
-          {this.props.selected &&
-            this.props.onSelect && (
-              <div
-                className={styles.checkboxHolder}
-                onClick={() => {
-                  this.handleSelect();
-                }}
-              >
-                {this.props.isClickable && (
-                  <CheckBox selected={this.props.selected} />
-                )}
-              </div>
-            )}
+          {this.props.type === COLLECT
+            ? this.props.selected &&
+              this.props.onSelect && (
+                <div
+                  className={styles.checkboxHolder}
+                  onClick={() => {
+                    this.handleSelect();
+                  }}
+                >
+                  {this.props.isClickable && (
+                    <CheckBox selected={this.props.selected} />
+                  )}
+                </div>
+              )
+            : this.props.onSelect && (
+                <div
+                  className={styles.checkboxHolder}
+                  onClick={() => {
+                    this.handleSelect();
+                  }}
+                >
+                  {this.props.isClickable && (
+                    <CheckBox selected={this.props.selected} />
+                  )}
+                </div>
+              )}
+
           {this.props.arrowClick &&
             this.props.type === COLLECT && (
               <div
