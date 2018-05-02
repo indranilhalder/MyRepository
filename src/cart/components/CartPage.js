@@ -362,7 +362,11 @@ class CartPage extends React.Component {
           </div>
 
           <div
-            className={defaultPinCode === "" ? styles.disabled : styles.content}
+            className={
+              !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+                ? styles.disabled
+                : styles.content
+            }
           >
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
@@ -375,8 +379,6 @@ class CartPage extends React.Component {
 
                 return (
                   <div className={styles.cartItem} key={i}>
-                    {this.props.isLogout && <div className={styles.overlay} />}
-
                     <CartItem
                       pinCode={defaultPinCode}
                       product={product}
@@ -478,8 +480,7 @@ CartPage.defaultProps = {
   cartOffer: "FREE shipping",
   cartTax: "included",
   delivery: "Free",
-  offers: "Apply",
-  isLogout: true
+  offers: "Apply"
 };
 
 export default CartPage;

@@ -4,15 +4,6 @@
   height: auto;
   background: #ececec;
 }
-.overlay {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 5;
-  background: rgba(255, 255, 255, 0.08);
-}
 .cartItem {
   width: 100%;
   height: auto;
@@ -30,7 +21,6 @@
   width: 100%;
   height: auto;
   padding: 15px;
-  position: relative;
 }
 .disabled {
   composes: content;
