@@ -64,6 +64,10 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.props.productDetails && this.props.productDetails !== "null") {
+      this.props.setHeaderText(this.props.productDetails.productName);
+    }
+
     if (prevProps.location.pathname !== this.props.location.pathname) {
       setTimeout(() => {
         window.scrollTo(0, 0);
