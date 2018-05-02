@@ -1321,15 +1321,7 @@ class CheckOutPage extends React.Component {
     );
   };
 
-  // jusPayTokenizeForGiftCard = cartDetails => {
-  //   if (this.props.jusPayTokenizeForGiftCard) {
-  //     this.props.jusPayTokenizeForGiftCard(
-  //       cartDetails,
-  //       this.state.paymentModeSelected,
-  //       this.props.location.state.egvCartGuid
-  //     );
-  //   }
-  // };
+
   createJusPayOrderForGiftCardNetBanking = bankName => {
     if (this.props.createJusPayOrderForGiftCardNetBanking) {
       this.props.createJusPayOrderForGiftCardNetBanking(
@@ -1520,9 +1512,7 @@ class CheckOutPage extends React.Component {
                 binValidationForSavedCard={cardDetails =>
                   this.binValidationForSavedCard(cardDetails)
                 }
-                jusPayTokenizeForGiftCard={cardDetails =>
-                  this.jusPayTokenizeForGiftCard(cardDetails)
-                }
+
                 createJusPayOrderForGiftCardNetBanking={bankName =>
                   this.createJusPayOrderForGiftCardNetBanking(bankName)
                 }
