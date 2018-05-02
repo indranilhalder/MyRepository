@@ -3,7 +3,6 @@ import {
   getProductDescription,
   addProductToCart,
   getProductSizeGuide,
-  addProductToWishList,
   getMsdRequest,
   getPdpEmi,
   getEmiTerms,
@@ -20,6 +19,7 @@ import {
   EMI_MODAL,
   OFFER_MODAL,
   ADDRESS,
+  PRICE_BREAKUP,
   SIZE_SELECTOR,
   SIZE_GUIDE
 } from "../../general/modal.actions.js";
@@ -37,14 +37,14 @@ const mapDispatchToProps = dispatch => {
     showSizeSelector: data => {
       dispatch(showModal(SIZE_SELECTOR, data));
     },
+    showPriceBreakup: data => {
+      dispatch(showModal(PRICE_BREAKUP, data));
+    },
     showOfferDetails: data => {
       dispatch(showModal(OFFER_MODAL, data));
     },
     getProductSizeGuide: productCode => {
       dispatch(getProductSizeGuide(productCode));
-    },
-    addProductToWishList: (userId, accessToken, productDetails) => {
-      dispatch(addProductToWishList(userId, accessToken, productDetails));
     },
     getMsdRequest: productCode => {
       dispatch(getMsdRequest(productCode));

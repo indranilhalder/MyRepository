@@ -186,6 +186,17 @@ export default class Checkout extends React.Component {
                   <div className={classOffers}>{this.props.coupons}</div>
                 </div>
               )}
+
+              {this.props.noCostEmiEligibility && (
+                <div className={styles.informationHolder}>
+                  <div className={styles.informationQuestionHolder}>
+                    No Cost EMI Discount
+                  </div>
+                  <div className={classOffers}>
+                    {this.props.noCostEmiDiscount}
+                  </div>
+                </div>
+              )}
               {this.props.payable && (
                 <div className={styles.informationHolder}>
                   <div className={styles.informationQuestionHolder}>

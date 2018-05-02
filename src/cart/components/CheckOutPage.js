@@ -17,6 +17,8 @@ import OrderConfirmation from "./OrderConfirmation";
 import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
 import size from "lodash.size";
+import TransactionFailed from "./TransactionFailed.js";
+import * as Cookies from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -37,7 +39,11 @@ import {
   REQUESTING,
   THANK_YOU,
   COUPON_COOKIE,
-  JUS_PAY_AUTHENTICATION_FAILED
+  JUS_PAY_AUTHENTICATION_FAILED,
+  CREDIT_CARD,
+  NET_BANKING_PAYMENT_MODE,
+  DEBIT_CARD,
+  EMI
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -48,7 +54,11 @@ import {
   ADOBE_CALL_FOR_SELECT_DELIVERY_MODE,
   ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE
 } from "../../lib/adobeUtils";
-
+import {
+  CART_ITEM_COOKIE,
+  ADDRESS_FOR_PLACE_ORDER
+} from "../actions/cart.actions";
+const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
 const NET_BANKING = "NB";
@@ -64,10 +74,15 @@ const SELECT_DELIVERY_MODE_MESSAGE =
 const ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME =
   "Please enter Pickup person name,character should be greater than 4 ";
 const ERROR_MESSAGE_FOR_MOBILE_NUMBER = "Please enter valid mobile number";
+const INVALID_CART_ERROR_MESSAGE =
+  "Sorry your cart is not valid any more. Please Try again";
+export const EGV_GIFT_CART_ID = "giftCartId";
 class CheckOutPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isCheckoutAddressSelected: false,
+      isDeliveryModeSelected: false,
       confirmAddress: false, //render the render delivery Modes if confirmAddress= true
       isSelectedDeliveryModes: false, // To select the delivery Modes
       deliverMode: false, // render the payment Modes if deliverMode = true
@@ -97,14 +112,40 @@ class CheckOutPage extends React.Component {
       addressDetails: null,
       isNoCostEmiApplied: false,
       isNoCostEmiProceeded: false,
-      selectedBankOfferCode: ""
+      selectedBankOfferCode: "",
+      isPaymentFailed: false,
+      deliveryCharge: 0,
+      couponDiscount: 0,
+      totalDiscount: 0,
+      cliqPiqSelected: false,
+      currentPaymentMode: null, // holding selected payments modes
+      cardDetails: {}, // for store card detail in card details
+      cvvForCurrentPaymentMode: null, // in case on saved card
+      bankCodeForNetBanking: null, // in case on net banking
+      captchaReseponseForCOD: null, // in case of COD order its holding that ceptcha verification
+      noCostEmiDiscount: 0,
+      egvCartGuid: null
     };
   }
+
   onClickImage(productCode) {
     if (productCode) {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
     }
   }
+  navigateUserToMyBagAfter15MinOfpaymentFailure() {
+    this.props.displayToast(INVALID_CART_ERROR_MESSAGE);
+    this.props.history.push(PRODUCT_CART_ROUTER);
+  }
+  onChangeCardDetail = val => {
+    const cardDetails = cloneDeep(this.state.cardDetails);
+    Object.assign(cardDetails, val);
+    this.setState({ cardDetails });
+  };
+  onChangePaymentMode = val => {
+    this.setState(val);
+    this.setState({ cardDetails: {}, bankCodeForNetBanking: null });
+  };
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
@@ -128,6 +169,14 @@ class CheckOutPage extends React.Component {
     );
   }
   componentDidUpdate() {
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    const value = parsedQueryString.status;
+    if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+      const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
+      if (!oldCartId) {
+        return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
+      }
+    }
     if (
       this.props.cart.orderConfirmationDetails ||
       this.props.cart.cliqCashPaymentDetails
@@ -158,10 +207,16 @@ class CheckOutPage extends React.Component {
     );
     this.setState({
       ussIdAndDeliveryModesObj: currentSelectedDeliveryModes,
-      isSelectedDeliveryModes: true
+      isSelectedDeliveryModes: true,
+      isDeliveryModeSelected: true
     });
   }
 
+  getPaymentFailureOrderDetails = () => {
+    if (this.props.getPaymentFailureOrderDetails) {
+      this.props.getPaymentFailureOrderDetails();
+    }
+  };
   getAllStores = selectedProductsUssIdForCliqAndPiq => {
     const defalutPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.setState({ showCliqAndPiq: true, selectedProductsUssIdForCliqAndPiq });
@@ -188,14 +243,27 @@ class CheckOutPage extends React.Component {
       selectedSlaveId
     );
   }
-  addPickupPersonCNC(mobile, name) {
+  async addPickupPersonCNC(mobile, name, productObj) {
     if (name.length < 4) {
       return this.props.displayToast(ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME);
     } else if (mobile.length !== 10) {
       return this.props.displayToast(ERROR_MESSAGE_FOR_MOBILE_NUMBER);
     }
     this.setState({ showCliqAndPiq: false });
-    this.props.addPickupPersonCNC(mobile, name);
+    const addPickUpPerson = await this.props.addPickupPersonCNC(mobile, name);
+    if (addPickUpPerson.status === SUCCESS) {
+      const updatedDeliveryModeUssid = this.state.ussIdAndDeliveryModesObj;
+
+      updatedDeliveryModeUssid[
+        this.state.selectedProductsUssIdForCliqAndPiq
+      ] = COLLECT;
+
+      this.setState({
+        ussIdAndDeliveryModesObj: updatedDeliveryModeUssid,
+        cliqPiqSelected: true,
+        isDeliveryModeSelected: true
+      });
+    }
   }
   removeCliqAndPiq() {
     this.setState({ showCliqAndPiq: false });
@@ -274,6 +342,12 @@ class CheckOutPage extends React.Component {
     );
   };
 
+  getUserDetails = () => {
+    if (this.props.getUserDetails) {
+      this.props.getUserDetails();
+    }
+  };
+
   renderCliqAndPiq() {
     let currentSelectedProduct = this.props.cart.cartDetailsCNC.products.find(
       product => {
@@ -326,10 +400,12 @@ class CheckOutPage extends React.Component {
         hidePickupPersonDetail={() => this.togglePickupPersonForm()}
         addStoreCNC={slavesId => this.addStoreCNC(slavesId)}
         addPickupPersonCNC={(mobile, name) =>
-          this.addPickupPersonCNC(mobile, name)
+          this.addPickupPersonCNC(mobile, name, currentSelectedProduct)
         }
         changePincode={pincode => this.changePincodeOnCliqAndPiq(pincode)}
         goBack={() => this.removeCliqAndPiq()}
+        getUserDetails={() => this.getUserDetails()}
+        userDetails={this.props.userDetails}
       />
     );
   }
@@ -340,7 +416,11 @@ class CheckOutPage extends React.Component {
   };
 
   renderInitialAddAddressForm() {
-    if (!this.state.isFirstAddress) {
+    if (
+      !this.state.isFirstAddress &&
+      this.props.cart.userAddress &&
+      !this.props.cart.userAddress.addresses
+    ) {
       this.setState({ isFirstAddress: true });
     }
 
@@ -376,11 +456,27 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    // adding default address is selected
-
+    if (nextProps.cart.jusPayError && this.state.isPaymentFailed === false) {
+      const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
+      if (!oldCartId) {
+        return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
+      }
+      this.setState({ isPaymentFailed: true });
+      this.props.getPaymentFailureOrderDetails();
+      if (localStorage.getItem(EGV_GIFT_CART_ID)) {
+        let giftCartObj = JSON.parse(localStorage.getItem(EGV_GIFT_CART_ID));
+        this.setState({
+          isGiftCard: true,
+          isRemainingAmount: true,
+          payableAmount: Math.round(giftCartObj.amount * 100) / 100,
+          bagAmount: Math.round(giftCartObj.amount * 100) / 100,
+          egvCartGuid: giftCartObj.egvCartGuid
+        });
+      }
+    }
     if (
+      !this.state.isCheckoutAddressSelected &&
       nextProps.cart.getUserAddressStatus === SUCCESS &&
-      !this.state.addressId &&
       nextProps.cart &&
       nextProps.cart.userAddress &&
       nextProps.cart.userAddress.addresses
@@ -405,7 +501,6 @@ class CheckOutPage extends React.Component {
         defaultAddressId = defaultAddress.id;
       }
       this.updateLocalStoragePinCode(defaultAddress.postalCode);
-
       this.setState({
         addressId: defaultAddressId,
         selectedAddress: defaultAddress
@@ -416,6 +511,7 @@ class CheckOutPage extends React.Component {
     // adding selected default delivery modes for every product
 
     if (
+      !this.state.isDeliveryModeSelected &&
       !this.state.isSelectedDeliveryModes &&
       nextProps.cart.cartDetailsCNCStatus === SUCCESS &&
       nextProps.cart &&
@@ -463,7 +559,50 @@ class CheckOutPage extends React.Component {
       this.setState({ ussIdAndDeliveryModesObj: defaultSelectedDeliveryModes });
     }
 
+    //for paymentFailure
+    if (
+      nextProps.cart.paymentFailureOrderDetails &&
+      nextProps.cart.paymentFailureOrderDetails.cartAmount
+    ) {
+      this.setState({
+        payableAmount:
+          Math.round(
+            nextProps.cart.paymentFailureOrderDetails.cartAmount.paybleAmount
+              .value * 100
+          ) / 100,
+        cliqCashAmount:
+          Math.round(
+            nextProps.cart.paymentFailureOrderDetails.cliqCashBalance.value *
+              100
+          ) / 100,
+        bagAmount:
+          Math.round(
+            nextProps.cart.paymentFailureOrderDetails.cartAmount.bagTotal
+              .value * 100
+          ) / 100,
+        deliveryCharge:
+          Math.round(
+            nextProps.cart.paymentFailureOrderDetails.deliveryCharges.value *
+              100
+          ) / 100,
+        couponDiscount: nextProps.cart.paymentFailureOrderDetails.couponDiscount
+          ? Math.round(
+              nextProps.cart.paymentFailureOrderDetails.couponDiscount.value *
+                100
+            ) / 100
+          : 0,
+        totalDiscount:
+          Math.round(
+            nextProps.cart.paymentFailureOrderDetails.cartAmount
+              .totalDiscountAmount.value * 100
+          ) / 100,
+        isRemainingAmount:
+          nextProps.cart.paymentFailureOrderDetails.isRemainingAmount
+      });
+    }
+
     // end if adding selected default delivery modes for every product
+
     if (nextProps.cart.cliqCashPaymentDetails) {
       if (
         this.state.isRemainingAmount !==
@@ -472,23 +611,18 @@ class CheckOutPage extends React.Component {
         this.setState({
           isRemainingAmount:
             nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
-          payableAmount:
-            Math.round(
-              nextProps.cart.cliqCashPaymentDetails.paybleAmount.value * 100
-            ) / 100,
+          payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount,
           cliqCashAmount:
-            Math.round(
-              nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value * 100
-            ) / 100,
-          bagAmount:
-            Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount &&
-                nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
-            ) / 100
+            nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value,
+          bagAmount: nextProps.cart.cliqCashPaymentDetails.totalAmount
         });
       }
     } else {
-      if (nextProps.cart.cartDetailsCNC && this.state.isRemainingAmount) {
+      if (
+        nextProps.cart.cartDetailsCNC &&
+        this.state.isRemainingAmount &&
+        !this.state.isPaymentFailed
+      ) {
         let cliqCashAmount = 0;
         if (
           nextProps.cart.paymentModes &&
@@ -497,21 +631,48 @@ class CheckOutPage extends React.Component {
         ) {
           cliqCashAmount =
             Math.round(
-              nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance * 100
+              nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance.value *
+                100
             ) / 100;
+        }
+        if (
+          this.props.cart &&
+          this.props.cart.emiEligibilityDetails &&
+          this.props.cart.emiEligibilityDetails.isNoCostEMIEligible &&
+          nextProps.cart.cartDetailsCNC.cartAmount &&
+          nextProps.cart.cartDetailsCNC.cartAmount.noCostEMIDiscountValue
+        ) {
+          this.setState({
+            noCostEmiDiscount:
+              Math.round(
+                nextProps.cart.cartDetailsCNC.cartAmount.noCostEMIDiscountValue
+                  .value * 100
+              ) / 100
+          });
         }
         this.setState({
           payableAmount:
             Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount &&
-                nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value *
-                  100
+              nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value * 100
             ) / 100,
           cliqCashAmount: cliqCashAmount,
           bagAmount:
             Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount &&
-                nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
+              nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
+            ) / 100,
+          deliveryCharge:
+            nextProps.cart.cartDetailsCNC &&
+            nextProps.cart.cartDetailsCNC.deliveryCharge,
+          totalDiscount:
+            Math.round(
+              nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
+                .value * 100
+            ) / 100,
+          couponDiscount:
+            Math.round(
+              nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
+                nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
+                  .value * 100
             ) / 100
         });
       }
@@ -536,18 +697,6 @@ class CheckOutPage extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (
-      nextProps.cart.binValidationStatus === SUCCESS &&
-      nextProps.cart.justPayPaymentDetailsStatus === null
-    ) {
-      if (this.state.paymentModeSelected === PAYMENT_MODE) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   componentWillUnmount() {
     // if user go back from checkout page then
     // we have relsease coupon if user applied any coupon
@@ -565,13 +714,29 @@ class CheckOutPage extends React.Component {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
-
+    this.setState({ orderId: orderId });
+    if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+      const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
+      if (!oldCartId) {
+        return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
+      }
+      this.setState({ isPaymentFailed: true });
+      this.props.getPaymentFailureOrderDetails();
+      if (localStorage.getItem(EGV_GIFT_CART_ID)) {
+        let giftCartObj = JSON.parse(localStorage.getItem(EGV_GIFT_CART_ID));
+        this.setState({
+          isGiftCard: true,
+          isRemainingAmount: true,
+          payableAmount: Math.round(giftCartObj.amount * 100) / 100,
+          bagAmount: Math.round(giftCartObj.amount * 100) / 100,
+          egvCartGuid: giftCartObj.egvCartGuid
+        });
+      }
+    }
     if (value === PAYMENT_CHARGED) {
-      this.setState({ orderId: orderId });
-
       if (this.props.updateTransactionDetails) {
-        let cartId;
-        cartId = localStorage.getItem(OLD_CART_GU_ID);
+        const cartId = parsedQueryString.value;
+
         if (cartId) {
           this.props.updateTransactionDetails(
             localStorage.getItem(PAYMENT_MODE_TYPE),
@@ -613,6 +778,12 @@ class CheckOutPage extends React.Component {
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
         );
       }
+    }
+    if (this.props.location.state && this.props.location.state.egvCartGuid) {
+      localStorage.setItem(
+        EGV_GIFT_CART_ID,
+        JSON.stringify(this.props.location.state)
+      );
     }
   }
 
@@ -678,13 +849,20 @@ class CheckOutPage extends React.Component {
 
   getPaymentModes = () => {
     if (
-      this.state.isGiftCard &&
-      this.props.location &&
-      this.props.location.state &&
-      this.props.location.state.egvCartGuid
+      (this.state.isGiftCard &&
+        this.props.location &&
+        this.props.location.state &&
+        this.props.location.state.egvCartGuid) ||
+      (this.state.isGiftCard && this.state.egvCartGuid)
     ) {
+      let egvGiftCartGuId;
+      if (this.state.egvCartGuid) {
+        egvGiftCartGuId = this.state.egvCartGuid;
+      } else {
+        egvGiftCartGuId = this.props.location.state.egvCartGuid;
+      }
       let guIdObject = new FormData();
-      guIdObject.append(CART_GU_ID, this.props.location.state.egvCartGuid);
+      guIdObject.append(CART_GU_ID, egvGiftCartGuId);
       this.props.getPaymentModes(guIdObject);
     } else {
       let cartDetailsLoggedInUser = Cookie.getCookie(
@@ -705,7 +883,6 @@ class CheckOutPage extends React.Component {
         return address.id === selectedAddress[0];
       }
     );
-
     this.updateLocalStoragePinCode(
       addressSelected && addressSelected.postalCode
     );
@@ -715,11 +892,17 @@ class CheckOutPage extends React.Component {
     if (selectedAddress[0]) {
       this.setState({
         confirmAddress: false,
-        selectedAddress: addressSelected
+        selectedAddress: addressSelected,
+        isCheckoutAddressSelected: true,
+        addressId: addressSelected.id,
+        isDeliveryModeSelected: false
       });
-      this.setState({ addressId: addressSelected.id });
     } else {
-      this.setState({ addressId: null, selectedAddress: null });
+      this.setState({
+        addressId: null,
+        selectedAddress: null,
+        isDeliveryModeSelected: false
+      });
     }
   }
   changeDeliveryModes = () => {
@@ -740,6 +923,8 @@ class CheckOutPage extends React.Component {
     if (!this.state.isGiftCard) {
       let couponCookie = Cookie.getCookie(COUPON_COOKIE);
       let cartDetailsCouponDiscount =
+        this.props.cart &&
+        this.props.cart.cartDetailsCNC &&
         this.props.cart.cartDetailsCNC.cartAmount &&
         (this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount ||
           this.props.cart.cartDetailsCNC.cartAmount.appliedCouponDiscount);
@@ -764,81 +949,200 @@ class CheckOutPage extends React.Component {
 
     return productServiceAvailability;
   };
-  handleSubmit = () => {
-    if (this.state.isFirstAddress) {
-      this.addAddress(this.state.addressDetails);
+  handleSubmitAfterPaymentFailure = () => {
+    // navigate user to myBag page is old cart dose not exist
+    const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
+    if (!oldCartId) {
+      return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
     }
-
-    if (this.state.isNoCostEmiApplied) {
-      this.setState({ isNoCostEmiProceeded: true });
-    }
-    if (
-      !this.state.confirmAddress &&
-      !this.state.isGiftCard &&
-      this.state.addressId &&
-      this.state.selectedAddress.postalCode
-    ) {
-      this.props.addAddressToCart(
-        this.state.addressId,
-        this.state.selectedAddress.postalCode
-      );
-      this.setState({ confirmAddress: true });
-    }
-    if (
-      !this.state.deliverMode &&
-      this.state.confirmAddress &&
-      !this.state.isGiftCard
-    ) {
-      if (this.props.selectDeliveryMode && !this.checkAvailabilityOfService()) {
-        let sizeNew = size(this.state.ussIdAndDeliveryModesObj);
-        if (sizeNew === this.props.cart.cartDetailsCNC.products.length) {
-          this.props.selectDeliveryMode(
-            this.state.ussIdAndDeliveryModesObj,
-            localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
-          );
-          this.setState({
-            deliverMode: true
-          });
-        } else {
-          this.props.displayToast(SELECT_DELIVERY_MODE_MESSAGE);
-        }
-
-        setDataLayerForCheckoutDirectCalls(
-          ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE,
-          this.state.ussIdAndDeliveryModesObj
-        );
-      } else {
-        if (this.props.displayToast) {
-          this.props.displayToast(PRODUCT_NOT_SERVICEABLE_MESSAGE);
-        }
-      }
-    }
-
     if (this.state.savedCardDetails !== "") {
       if (this.state.isGiftCard) {
         this.props.createJusPayOrderForGiftCardFromSavedCards(
           this.state.savedCardDetails,
-          this.props.location.state.egvCartGuid
+          this.state.egvCartGuid
         );
       } else {
-        this.props.softReservationPaymentForSavedCard(
+        this.props.createJusPayOrderForSavedCards(
           this.state.savedCardDetails,
-          this.state.addressId,
-          this.state.paymentModeSelected
+          JSON.parse(localStorage.getItem(CART_ITEM_COOKIE)),
+          true // for payment failure we need to use old cart id);
+        );
+      }
+    }
+    if (
+      this.state.currentPaymentMode === CREDIT_CARD ||
+      this.state.currentPaymentMode === EMI ||
+      this.state.currentPaymentMode === DEBIT_CARD
+    ) {
+      if (this.state.isGiftCard) {
+        this.props.jusPayTokenizeForGiftCard(
+          this.state.cardDetails,
+          this.state.paymentModeSelected,
+          this.state.egvCartGuid
+        );
+      } else {
+        this.props.jusPayTokenize(
+          this.state.cardDetails,
+          JSON.parse(localStorage.getItem(ADDRESS_FOR_PLACE_ORDER)),
+          JSON.parse(localStorage.getItem(CART_ITEM_COOKIE)),
+          this.state.paymentModeSelected,
+          true
+        );
+      }
+    }
+    if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
+      if (this.state.isGiftCard) {
+        if (this.props.createJusPayOrderForGiftCardNetBanking) {
+          this.props.createJusPayOrderForGiftCardNetBanking(
+            this.state.bankCodeForNetBanking,
+            this.state.egvCartGuid
+          );
+        }
+      } else {
+        this.props.createJusPayOrderForNetBanking(
+          NET_BANKING,
+          this.state.bankCodeForNetBanking,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+          JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
+        );
+      }
+    }
+    if (this.state.paymentModeSelected === PAYTM) {
+      if (this.state.isGiftCard) {
+        if (this.props.createJusPayOrderForGiftCardNetBanking) {
+          this.props.createJusPayOrderForGiftCardNetBanking(
+            this.state.bankCodeForNetBanking,
+            this.state.egvCartGuid
+          );
+        }
+      } else {
+        this.props.createJusPayOrderForNetBanking(
+          PAYTM,
+          this.state.bankCodeForNetBanking,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+          JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
         );
       }
     }
     if (!this.state.isRemainingAmount) {
-      this.props.softReservationForCliqCash(
-        localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+      this.props.createJusPayOrderForCliqCash(
+        localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+        true // for payment failure we need to use old cart id
       );
     }
-
     if (this.state.binValidationCOD) {
       this.softReservationForCODPayment();
     }
-    if (this.state.paymentModeSelected === PAYTM) {
-      this.softReservationPaymentForWallet(PAYTM);
+  };
+  handleSubmit = () => {
+    localStorage.setItem(
+      ADDRESS_FOR_PLACE_ORDER,
+      JSON.stringify(this.state.selectedAddress)
+    );
+    if (!this.state.isPaymentFailed && this.availabilityOfUserCoupon()) {
+      if (this.state.isFirstAddress) {
+        this.addAddress(this.state.addressDetails);
+      }
+
+      if (this.state.isNoCostEmiApplied) {
+        this.setState({ isNoCostEmiProceeded: true });
+      }
+      if (
+        !this.state.confirmAddress &&
+        !this.state.isGiftCard &&
+        this.state.addressId &&
+        this.state.selectedAddress.postalCode
+      ) {
+        this.props.addAddressToCart(
+          this.state.addressId,
+          this.state.selectedAddress.postalCode
+        );
+        this.setState({ confirmAddress: true });
+      }
+      if (
+        !this.state.deliverMode &&
+        this.state.confirmAddress &&
+        !this.state.isGiftCard
+      ) {
+        if (
+          this.props.selectDeliveryMode &&
+          !this.checkAvailabilityOfService()
+        ) {
+          let sizeNew = size(this.state.ussIdAndDeliveryModesObj);
+          if (sizeNew === this.props.cart.cartDetailsCNC.products.length) {
+            this.props.selectDeliveryMode(
+              this.state.ussIdAndDeliveryModesObj,
+              localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+            );
+            this.setState({
+              deliverMode: true
+            });
+          } else {
+            this.props.displayToast(SELECT_DELIVERY_MODE_MESSAGE);
+          }
+
+          setDataLayerForCheckoutDirectCalls(
+            ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE,
+            this.state.ussIdAndDeliveryModesObj
+          );
+        } else {
+          if (this.props.displayToast) {
+            this.props.displayToast(PRODUCT_NOT_SERVICEABLE_MESSAGE);
+          }
+        }
+        if (
+          this.state.currentPaymentMode === CREDIT_CARD ||
+          this.state.currentPaymentMode === EMI ||
+          this.state.currentPaymentMode === DEBIT_CARD
+        ) {
+          if (this.state.isGiftCard) {
+            this.props.jusPayTokenizeForGiftCard(
+              this.state.cardDetails,
+              this.state.paymentModeSelected,
+              this.props.location.state.egvCartGuid
+            );
+          } else {
+            this.softReservationForPayment(this.state.cardDetails);
+          }
+        }
+        if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
+          if (this.state.isGiftCard) {
+            this.props.createJusPayOrderForGiftCardNetBanking(
+              this.state.bankCodeForNetBanking,
+              this.props.location.state.egvCartGuid
+            );
+          } else {
+            this.softReservationPaymentForNetBanking(
+              this.state.bankCodeForNetBanking
+            );
+          }
+        }
+
+        if (!this.state.isRemainingAmount) {
+          this.props.softReservationForCliqCash(
+            localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+          );
+        }
+      }
+      if (!this.state.isRemainingAmount) {
+        this.props.softReservationForCliqCash(
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+        );
+      }
+
+      if (this.state.binValidationCOD) {
+        this.softReservationForCODPayment();
+      }
+      if (this.state.paymentModeSelected === PAYTM) {
+        if (this.state.isGiftCard) {
+          this.props.createJusPayOrderForGiftCardNetBanking(
+            this.state.bankCodeForNetBanking,
+            this.props.location.state.egvCartGuid
+          );
+        } else {
+          this.props.softReservationPaymentForWallet(PAYTM);
+        }
+      }
     }
   };
 
@@ -959,15 +1263,6 @@ class CheckOutPage extends React.Component {
     );
   };
 
-  jusPayTokenizeForGiftCard = cartDetails => {
-    if (this.props.jusPayTokenizeForGiftCard) {
-      this.props.jusPayTokenizeForGiftCard(
-        cartDetails,
-        this.state.paymentModeSelected,
-        this.props.location.state.egvCartGuid
-      );
-    }
-  };
   createJusPayOrderForGiftCardNetBanking = bankName => {
     if (this.props.createJusPayOrderForGiftCardNetBanking) {
       this.props.createJusPayOrderForGiftCardNetBanking(
@@ -1030,41 +1325,6 @@ class CheckOutPage extends React.Component {
     if (this.props.cart.transactionStatus === REQUESTING) {
       return false;
     }
-
-    const cartData = this.props.cart;
-    let deliveryCharge = 0;
-    let couponDiscount = 0;
-    let totalDiscount = 0;
-    if (
-      this.props.cart &&
-      this.props.cart.cartDetailsCNC &&
-      this.props.cart.cartDetailsCNC.products
-    ) {
-      if (this.props.cart.cartDetailsCNC.deliveryCharge) {
-        deliveryCharge = this.props.cart.cartDetailsCNC.deliveryCharge;
-      }
-      if (
-        this.props.cart.cartDetailsCNC.cartAmount &&
-        this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
-      ) {
-        totalDiscount =
-          Math.round(
-            this.props.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
-              .value * 100
-          ) / 100;
-      }
-
-      if (
-        this.props.cart.cartDetailsCNC.cartAmount &&
-        this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
-      ) {
-        couponDiscount =
-          Math.round(
-            this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
-              .value * 100
-          ) / 100;
-      }
-    }
     if (
       this.state.addNewAddress &&
       !this.state.orderConfirmation &&
@@ -1094,13 +1354,15 @@ class CheckOutPage extends React.Component {
     ) {
       return (
         <div className={styles.base}>
-          {!this.state.confirmAddress &&
+          {!this.state.isPaymentFailed &&
+            !this.state.confirmAddress &&
             !this.state.isGiftCard &&
-            (cartData.userAddress && cartData.userAddress.addresses
+            (this.props.cart.userAddress &&
+            this.props.cart.userAddress.addresses
               ? this.renderCheckoutAddress()
               : this.renderInitialAddAddressForm())}
-
-          {this.state.confirmAddress &&
+          {!this.state.isPaymentFailed &&
+            this.state.confirmAddress &&
             !this.state.isGiftCard &&
             !this.state.showCliqAndPiq && (
               <div className={styles.deliveryAddress}>
@@ -1111,16 +1373,16 @@ class CheckOutPage extends React.Component {
                 />
               </div>
             )}
-
-          {this.props.cart.cartDetailsCNC &&
+          {!this.state.isPaymentFailed &&
+            this.props.cart.cartDetailsCNC &&
             this.state.confirmAddress &&
             !this.state.deliverMode &&
             !this.state.isGiftCard &&
             (this.state.showCliqAndPiq
               ? this.renderCliqAndPiq()
               : this.renderDeliverModes())}
-
-          {this.state.deliverMode &&
+          {!this.state.isPaymentFailed &&
+            this.state.deliverMode &&
             !this.state.isGiftCard && (
               <div className={styles.deliveryAddress}>
                 <DeliveryModeSet
@@ -1130,17 +1392,23 @@ class CheckOutPage extends React.Component {
                 />
               </div>
             )}
-
-          {/* {!this.state.appliedCoupons &&
+          {!this.state.isPaymentFailed &&
+            !this.state.appliedCoupons &&
             (this.state.confirmAddress && this.state.deliverMode) &&
             this.props.cart.paymentModes &&
             !this.state.isGiftCard &&
-            this.renderBankOffers()} */}
-
+            this.renderBankOffers()}{" "}
+          */}
+          {this.state.isPaymentFailed && (
+            <div className={styles.paymentFailedCardHolder}>
+              <TransactionFailed />
+            </div>
+          )}
           {((!this.state.paymentMethod &&
             (this.state.confirmAddress && this.state.deliverMode)) ||
+            this.state.isPaymentFailed ||
             this.state.isGiftCard) && (
-            <div className={styles.paymentCardHolder}>
+            <div className={styles.paymentCardHolderπp}>
               <PaymentCardWrapper
                 isRemainingBalance={this.state.isRemainingAmount}
                 isFromGiftCard={this.state.isGiftCard}
@@ -1149,6 +1417,17 @@ class CheckOutPage extends React.Component {
                 cliqCashAmount={this.state.cliqCashAmount}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
+                currentPaymentMode={this.state.currentPaymentMode}
+                cardDetails={this.state.cardDetails}
+                verifyCaptcha={captchaReseponseForCOD =>
+                  this.setState({ captchaReseponseForCOD })
+                }
+                onChange={val => this.onChangePaymentMode(val)}
+                bankCodeForNetBanking={this.state.bankCodeForNetBanking}
+                onSelectBankForNetBanking={bankCodeForNetBanking =>
+                  this.setState({ bankCodeForNetBanking })
+                }
+                onChangeCardDetail={val => this.onChangeCardDetail(val)}
                 binValidation={(paymentMode, binNo) =>
                   this.binValidation(paymentMode, binNo)
                 }
@@ -1169,9 +1448,6 @@ class CheckOutPage extends React.Component {
                 }
                 binValidationForSavedCard={cardDetails =>
                   this.binValidationForSavedCard(cardDetails)
-                }
-                jusPayTokenizeForGiftCard={cardDetails =>
-                  this.jusPayTokenizeForGiftCard(cardDetails)
                 }
                 createJusPayOrderForGiftCardNetBanking={bankName =>
                   this.createJusPayOrderForGiftCardNetBanking(bankName)
@@ -1203,7 +1479,6 @@ class CheckOutPage extends React.Component {
               />
             </div>
           )}
-
           {!this.state.showCliqAndPiq && (
             <Checkout
               label={
@@ -1212,13 +1487,23 @@ class CheckOutPage extends React.Component {
                   ? PROCEED
                   : CONTINUE
               }
+              noCostEmiEligibility={
+                this.props.cart &&
+                this.props.cart.emiEligibilityDetails &&
+                this.props.cart.emiEligibilityDetails.isNoCostEMIEligible
+              }
+              noCostEmiDiscount={this.state.noCostEmiDiscount}
               amount={this.state.payableAmount}
               bagTotal={this.state.bagAmount}
               payable={this.state.payableAmount}
-              coupons={`Rs. ${couponDiscount}`}
-              discount={`Rs. ${totalDiscount}`}
-              delivery={`Rs. ${deliveryCharge}`}
-              onCheckout={this.handleSubmit}
+              coupons={`Rs. ${this.state.couponDiscount}`}
+              discount={`Rs. ${this.state.totalDiscount}`}
+              delivery={`Rs. ${this.state.deliveryCharge}`}
+              onCheckout={
+                this.state.isPaymentFailed
+                  ? this.handleSubmitAfterPaymentFailure
+                  : this.handleSubmit
+              }
             />
           )}
         </div>
@@ -1229,6 +1514,7 @@ class CheckOutPage extends React.Component {
           {this.props.cart.orderConfirmationDetails && (
             <div className={styles.orderConfirmationHolder}>
               <OrderConfirmation
+                clearCartDetails={() => this.props.clearCartDetails()}
                 orderId={this.props.cart.orderConfirmationDetails.orderRefNo}
                 captureOrderExperience={rating =>
                   this.captureOrderExperience(rating)
@@ -1250,6 +1536,7 @@ class CheckOutPage extends React.Component {
           {this.props.cart.cliqCashJusPayDetails && (
             <div className={styles.orderConfirmationHolder}>
               <OrderConfirmation
+                clearCartDetails={this.props.clearCartDetails}
                 orderId={this.props.cart.cliqCashJusPayDetails.orderId}
                 orderStatusMessage={this.props.orderConfirmationText}
                 captureOrderExperience={rating =>

@@ -5,6 +5,7 @@ export default class DumbCarousel extends React.Component {
   render() {
     return (
       <div className={styles.base}>
+        {this.props.headerComponent && this.props.headerComponent}
         <div className={styles.slider}>
           {this.props.children &&
             this.props.children.map((child, i) => {

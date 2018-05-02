@@ -3,6 +3,7 @@ import styles from "./AddDeliveryAddress.css";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import Icon from "../../xelpmoc-core/Icon";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import CircleButton from "../../xelpmoc-core/CircleButton";
 import informationIcon from "../../general/components/img/GPS.svg";
 import GridSelect from "../../general/components/GridSelect";
@@ -10,10 +11,27 @@ import CheckboxAndText from "./CheckboxAndText";
 import TextArea from "../../general/components/TextArea.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
-import { SUCCESS } from "../../lib/constants.js";
+import { SUCCESS, ERROR } from "../../lib/constants.js";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import {
+  EMAIL_REGULAR_EXPRESSION,
+  MOBILE_PATTERN
+} from "../../auth/components/Login";
 const SAVE_TEXT = "Save Address";
-
+const PINCODE_TEXT = "Please enter pincode";
+const NAME_TEXT = "Please enter first name";
+const LAST_NAME_TEXT = "plese enter last name";
+const ADDRESS_TEXT = "Please enter address";
+const EMAIL_TEXT = "Please enter email id";
+const LANDMARK_TEXT = "Please select landmark";
+const LANDMARK_ENTER_TEXT = "Please enter landmark";
+const MOBILE_TEXT = "Please enter mobile number";
+const PINCODE_VALID_TEXT = "Please enter valid pincode";
+const EMAIL_VALID_TEXT = "Please enter valid emailId";
+const PHONE_VALID_TEXT = "Please fill valid mobile number";
+const PHONE_TEXT = "Please enter mobile number";
+const CITY_TEXT = "please enter city";
+const STATE_TEXT = "please enter state";
 const ISO_CODE = "IN";
 const OTHER_LANDMARK = "other";
 export default class AddDeliveryAddress extends React.Component {
@@ -41,13 +59,19 @@ export default class AddDeliveryAddress extends React.Component {
   }
 
   getPinCodeDetails = val => {
+    let landmarkList = [];
     if (val.length <= 6) {
-      this.setState({ postalCode: val });
+      this.setState({ postalCode: val, state: "", town: "", landmarkList });
     }
     if (val.length === 6 && this.props.getPinCode) {
       this.props.getPinCode(val);
     }
   };
+  handlePhoneInput(val) {
+    if (val.length <= 10) {
+      this.setState({ phone: val });
+    }
+  }
   onChange(val) {
     this.setState(val);
     if (this.props.getAddressDetails) {
@@ -65,49 +89,138 @@ export default class AddDeliveryAddress extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps) {
+    let landmarkList = [];
     if (nextProps.addUserAddressStatus === SUCCESS) {
       this.props.history.goBack();
     }
-    if (nextProps.getPinCodeDetails) {
-      const landmarkList = [
-        ...nextProps.getPinCodeDetails.landMarks,
-        { landmark: OTHER_LANDMARK }
-      ];
+    if (nextProps.getPincodeStatus === ERROR) {
+      landmarkList = [{ landmark: OTHER_LANDMARK }];
       this.setState({
-        state:
-          nextProps.getPinCodeDetails &&
-          nextProps.getPinCodeDetails.state &&
-          nextProps.getPinCodeDetails.state.name,
-        town:
-          nextProps.getPinCodeDetails && nextProps.getPinCodeDetails.cityName,
+        state: "",
+        town: "",
         landmarkList
       });
     }
+    if (nextProps.getPincodeStatus === SUCCESS && nextProps.getPinCodeDetails) {
+      if (nextProps.getPinCodeDetails.landMarks) {
+        landmarkList = [
+          ...nextProps.getPinCodeDetails.landMarks,
+          { landmark: OTHER_LANDMARK }
+        ];
+        this.setState({
+          state:
+            nextProps.getPinCodeDetails &&
+            nextProps.getPinCodeDetails.state &&
+            nextProps.getPinCodeDetails.state.name,
+          town:
+            nextProps.getPinCodeDetails && nextProps.getPinCodeDetails.cityName,
+          landmarkList
+        });
+      } else {
+        landmarkList = [{ landmark: OTHER_LANDMARK }];
+        let stateName =
+          nextProps.getPinCodeDetails &&
+          nextProps.getPinCodeDetails.state &&
+          nextProps.getPinCodeDetails.state.name
+            ? nextProps.getPinCodeDetails.state.name
+            : "";
+        let townName =
+          nextProps.getPinCodeDetails && nextProps.getPinCodeDetails.cityName
+            ? nextProps.getPinCodeDetails.cityName
+            : "";
+        this.setState({
+          state: stateName,
+          town: townName,
+          landmarkList
+        });
+      }
+    }
   }
   onSelectLandmark = landmark => {
-    if (landmark === OTHER_LANDMARK) {
+    if (landmark.value === OTHER_LANDMARK) {
       this.setState({
         isOtherLandMarkSelected: true,
-        selectedLandmarkLabel: landmark
+        selectedLandmarkLabel: landmark.value
       });
     } else {
       this.setState({
         isOtherLandMarkSelected: false,
-        landmark,
-        selectedLandmarkLabel: landmark
+        landmark: landmark.value,
+        selectedLandmarkLabel: landmark.value
       });
     }
   };
   addNewAddress = () => {
-    //add new Address
-
-    this.props.addUserAddress(this.state);
+    if (!this.state.postalCode) {
+      this.props.displayToast(PINCODE_TEXT);
+      return false;
+    }
+    if (this.state.postalCode && this.state.postalCode.length < 6) {
+      this.props.displayToast(PINCODE_VALID_TEXT);
+      return false;
+    }
+    if (!this.state.firstName) {
+      this.props.displayToast(NAME_TEXT);
+      return false;
+    }
+    if (!this.state.lastName) {
+      this.props.displayToast(LAST_NAME_TEXT);
+      return false;
+    }
+    if (!this.state.line1) {
+      this.props.displayToast(ADDRESS_TEXT);
+      return false;
+    }
+    if (
+      !this.state.landmark &&
+      this.state.selectedLandmarkLabel === "Landmark"
+    ) {
+      this.props.displayToast(LANDMARK_TEXT);
+      return false;
+    }
+    if (
+      this.state.selectedLandmarkLabel === OTHER_LANDMARK &&
+      !this.state.line2
+    ) {
+      this.props.displayToast(LANDMARK_ENTER_TEXT);
+      return false;
+    }
+    if (!this.state.emailId) {
+      this.props.displayToast(EMAIL_TEXT);
+      return false;
+    }
+    if (
+      this.state.emailId &&
+      !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
+    ) {
+      this.props.displayToast(EMAIL_VALID_TEXT);
+      return false;
+    }
+    if (!this.state.town) {
+      this.props.displayToast(CITY_TEXT);
+      return false;
+    }
+    if (!this.state.state) {
+      this.props.displayToast(STATE_TEXT);
+      return false;
+    }
+    if (!this.state.phone) {
+      this.props.displayToast(PHONE_TEXT);
+      return false;
+    }
+    if (this.state.phone && !MOBILE_PATTERN.test(this.state.phone)) {
+      this.props.displayToast(PHONE_VALID_TEXT);
+      return false;
+    } else {
+      this.props.addUserAddress(this.state);
+    }
   };
 
   clearAllValue = () => {
     this.setState({
       postalCode: "",
       firstName: "",
+      lastName: "",
       line2: "",
       town: "",
       state: "",
@@ -119,7 +232,9 @@ export default class AddDeliveryAddress extends React.Component {
       defaultFlag: false
     });
   };
-
+  onChangeSalutation(val) {
+    this.setState({ salutaion: val.value });
+  }
   render() {
     if (this.props.loading) {
       if (this.props.showSecondaryLoader) {
@@ -137,9 +252,6 @@ export default class AddDeliveryAddress extends React.Component {
       },
       {
         label: "Office"
-      },
-      {
-        label: "Others"
       }
     ];
     const salutaion = [
@@ -184,22 +296,24 @@ export default class AddDeliveryAddress extends React.Component {
         </div>
         <div className={styles.content}>
           <div className={styles.salutation}>
-            <SelectBoxMobile
+            <SelectBoxMobile2
               height={33}
-              label={salutaion[0].label}
+              value={
+                this.state.salutaion ? this.state.salutaion : salutaion[0].label
+              }
               options={salutaion.map((val, i) => {
                 return {
                   value: val.label,
                   label: val.label
                 };
               })}
-              onChange={salutaion => this.onChange({ salutaion })}
+              onChange={salutaion => this.onChangeSalutation(salutaion)}
             />
           </div>
           <div className={styles.name}>
             <Input2
               option={this.state.options}
-              placeholder="Name*"
+              placeholder="First Name*"
               value={
                 this.props.firstName
                   ? this.props.firstName
@@ -212,6 +326,18 @@ export default class AddDeliveryAddress extends React.Component {
           </div>
         </div>
         <div className={styles.content}>
+          <Input2
+            boxy={true}
+            placeholder="Last Name*"
+            value={
+              this.props.lastName ? this.props.lastName : this.state.lastName
+            }
+            onChange={lastName => this.onChange({ lastName })}
+            textStyle={{ fontSize: 14 }}
+            height={33}
+          />
+        </div>
+        <div className={styles.content}>
           <TextArea
             placeholder="Address*"
             value={this.props.line1 ? this.props.line1 : this.state.line1}
@@ -219,9 +345,9 @@ export default class AddDeliveryAddress extends React.Component {
           />
         </div>
         <div className={styles.content}>
-          <SelectBoxMobile
+          <SelectBoxMobile2
             height={33}
-            label={this.state.selectedLandmarkLabel}
+            placeholder={"Landmark"}
             options={
               this.state.landmarkList.length > 0 &&
               this.state.landmarkList.map((val, i) => {
@@ -249,7 +375,7 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <Input2
             boxy={true}
-            placeholder="Email"
+            placeholder="Email*"
             value={this.props.emailId ? this.props.emailId : this.state.emailId}
             onChange={emailId => this.onChange({ emailId })}
             textStyle={{ fontSize: 14 }}
@@ -282,7 +408,7 @@ export default class AddDeliveryAddress extends React.Component {
             placeholder="Phone number*"
             value={this.props.phone ? this.props.phone : this.state.phone}
             boxy={true}
-            onChange={phone => this.onChange({ phone })}
+            onChange={phone => this.handlePhoneInput(phone)}
             textStyle={{ fontSize: 14 }}
             height={33}
           />

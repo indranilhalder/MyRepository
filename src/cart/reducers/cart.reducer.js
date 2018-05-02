@@ -9,6 +9,8 @@ import {
   COUPON_COOKIE
 } from "../../lib/constants";
 import find from "lodash.find";
+import { EGV_GIFT_CART_ID } from "../components/CheckOutPage";
+const VALIDITY_OF_OLD_CART_ID = 15;
 const IST_TIME_ZONE = "IST";
 const cart = (
   state = {
@@ -114,9 +116,6 @@ const cart = (
     binValidationError: null,
     binValidationDetails: null,
 
-    addToWishlistStatus: null,
-    addToWishlistError: null,
-
     removeCartItemStatus: null,
     removeCartItemError: null,
 
@@ -172,11 +171,15 @@ const cart = (
 
     emiItemBreakUpStatus: null,
     emiItemBreakUpDetails: null,
-    emiItemBreakUpError: null
+    emiItemBreakUpError: null,
+
+    paymentFailureOrderDetailsStatus: null,
+    paymentFailureOrderDetailsError: null,
+    paymentFailureOrderDetails: null
   },
   action
 ) => {
-  let updatedCartDetailsCNC;
+  let updatedCartDetailsCNC, cartDetails;
   switch (action.type) {
     case CLEAR_ERROR:
       return Object.assign({}, state, {
@@ -209,7 +212,6 @@ const cart = (
         justPayPaymentDetailsError: null,
         orderExperienceError: null,
         binValidationError: null,
-        addToWishlistError: null,
         removeCartItemError: null,
         removeCartItemLoggedOutError: null,
         getUserAddressError: null,
@@ -399,7 +401,7 @@ const cart = (
       });
 
     case cartActions.GENERATE_CART_ID_FOR_LOGGED_IN_USER_SUCCESS:
-      let cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       if (!cartDetails) {
         Cookies.createCookie(
           CART_DETAILS_FOR_LOGGED_IN_USER,
@@ -620,8 +622,11 @@ const cart = (
         loading: true
       });
     case cartActions.APPLY_BANK_OFFER_SUCCESS:
+      const currentCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      currentCartDetailCNC.cartAmount = action.bankOffer.cartAmount;
       return Object.assign({}, state, {
         bankOfferStatus: action.status,
+        cartDetailsCNC: currentCartDetailCNC,
         bankOffer: action.bankOffer,
         loading: false
       });
@@ -705,8 +710,11 @@ const cart = (
     case cartActions.CREATE_JUS_PAY_ORDER_FOR_CLIQ_CASH_SUCCESS: {
       const cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       const cartDetailsGuid = JSON.parse(cartDetails).guid;
-      localStorage.setItem(OLD_CART_GU_ID, cartDetailsGuid);
-
+      Cookies.createCookieInMinutes(
+        OLD_CART_GU_ID,
+        cartDetailsGuid,
+        VALIDITY_OF_OLD_CART_ID
+      );
       // here is where I need to destroy the cart details
       Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       Cookies.deleteCookie(COUPON_COOKIE);
@@ -727,16 +735,15 @@ const cart = (
     case cartActions.BIN_VALIDATION_REQUEST:
       return Object.assign({}, state, {
         binValidationStatus: action.status,
-        loading: true
+        loading: false
       });
 
-    case cartActions.BIN_VALIDATION_SUCCESS: {
+    case cartActions.BIN_VALIDATION_SUCCESS:
       return Object.assign({}, state, {
         binValidationStatus: action.status,
         binValidationDetails: action.binValidation,
         loading: false
       });
-    }
 
     case cartActions.BIN_VALIDATION_FAILURE:
       return Object.assign({}, state, {
@@ -752,14 +759,16 @@ const cart = (
       });
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_SUCCESS: {
-      localStorage.removeItem(OLD_CART_GU_ID);
+      Cookies.deleteCookie(OLD_CART_GU_ID);
+      localStorage.removeItem(cartActions.CART_ITEM_COOKIE);
+      localStorage.removeItem(cartActions.ADDRESS_FOR_PLACE_ORDER);
+      localStorage.removeItem(EGV_GIFT_CART_ID);
       return Object.assign({}, state, {
         jusPayDetails: action.jusPayDetails
       });
     }
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_FAILURE:
-      localStorage.removeItem(OLD_CART_GU_ID);
       return Object.assign({}, state, {
         transactionStatus: action.status,
         jusPayError: action.error,
@@ -799,10 +808,14 @@ const cart = (
         jusPaymentLoader: true
       });
 
-    case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_SUCCESS: {
-      const cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_SUCCESS:
+      cartDetails = Cookies.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
       const cartDetailsGuid = JSON.parse(cartDetails).guid;
-      localStorage.setItem(OLD_CART_GU_ID, cartDetailsGuid);
+      Cookies.createCookieInMinutes(
+        OLD_CART_GU_ID,
+        cartDetailsGuid,
+        VALIDITY_OF_OLD_CART_ID
+      );
 
       // here is where I need to destroy the cart details
       Cookies.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -812,10 +825,14 @@ const cart = (
         justPayPaymentDetails: action.justPayPaymentDetails,
         jusPaymentLoader: false
       });
-    }
 
     case cartActions.JUS_PAY_PAYMENT_METHOD_TYPE_FOR_GIFT_CARD_SUCCESS: {
-      localStorage.setItem(OLD_CART_GU_ID, action.guId);
+      Cookies.createCookieInMinutes(
+        OLD_CART_GU_ID,
+        action.guid,
+        VALIDITY_OF_OLD_CART_ID
+      );
+
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetails: action.justPayPaymentDetails,
@@ -927,25 +944,6 @@ const cart = (
       return Object.assign({}, state, {
         softReserveCODPaymentStatus: action.status,
         softReserveCODPaymentError: action.error,
-        loading: false
-      });
-
-    case cartActions.ADD_PRODUCT_TO_WISH_LIST_REQUEST:
-      return Object.assign({}, state, {
-        addToWishlistStatus: action.status,
-        loading: true
-      });
-
-    case cartActions.ADD_PRODUCT_TO_WISH_LIST_SUCCESS:
-      return Object.assign({}, state, {
-        addToWishlistStatus: action.status,
-        loading: false
-      });
-
-    case cartActions.ADD_PRODUCT_TO_WISH_LIST_FAILURE:
-      return Object.assign({}, state, {
-        addToWishlistStatus: action.status,
-        addToWishlistError: action.error,
         loading: false
       });
 
@@ -1101,13 +1099,6 @@ const cart = (
         jusPaymentLoader: false
       });
 
-    case cartActions.CLEAR_CART_DETAILS:
-      return Object.assign({}, state, {
-        cartDetails: null,
-        cartDetailsStatus: null,
-        cartDetailsError: null
-      });
-
     case cartActions.ELIGIBILITY_OF_NO_COST_EMI_REQUEST:
       return Object.assign({}, state, {
         emiEligibilityStatus: action.status,
@@ -1240,6 +1231,194 @@ const cart = (
         emiItemBreakUpStatus: action.status,
         emiItemBreakUpError: action.error,
         loading: false
+      });
+
+    case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        paymentFailureOrderDetailsStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        paymentFailureOrderDetailsStatus: action.status,
+        paymentFailureOrderDetails: action.paymentFailureOrderDetails,
+        loading: false
+      });
+
+    case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        paymentFailureOrderDetailsStatus: action.status,
+        paymentFailureOrderDetailsError: action.error,
+        loading: false
+      });
+    case cartActions.CLEAR_CART_DETAILS:
+      return Object.assign({}, state, {
+        status: null,
+        error: null,
+        loading: false,
+        type: null,
+        cartIdForLoggedInUserStatus: null,
+        cartIdForAnonymousUserStatus: null,
+        mergeCartIdStatus: null,
+
+        getUserAddressStatus: null,
+        getUserAddressError: null,
+
+        userCart: null,
+        userCartStatus: null,
+        userCartError: null,
+
+        cartDetails: null,
+        cartDetailsStatus: null,
+        cartDetailsError: null,
+
+        cartDetailsCNC: null,
+        cartDetailsCNCStatus: null,
+        cartDetailsCNCError: null,
+
+        couponStatus: null,
+        couponError: null,
+        coupons: null,
+
+        deliveryModes: null,
+        userAddress: null,
+        setAddress: null,
+
+        netBankDetailsStatus: null,
+        netBankDetailsError: null,
+        netBankDetails: null,
+
+        emiBankDetails: null,
+        emiBankStatus: null,
+
+        orderSummary: null,
+        orderSummaryStatus: null,
+        orderSummaryError: null,
+
+        storeDetails: [],
+        storeStatus: null,
+        storeError: null,
+        storeAdded: null,
+
+        softReserve: null,
+        softReserveStatus: null,
+        softReserveError: null,
+
+        paymentModes: null,
+        paymentModesStatus: null,
+        paymentModesError: null,
+
+        bankOffer: null,
+        bankOfferStatus: null,
+        bankOfferError: null,
+
+        cliqCashPaymentStatus: null,
+        cliqCashPaymentStatusError: null,
+        cliqCashPaymentDetails: null,
+
+        jusPayStatus: null,
+        jusPayError: null,
+        jusPayDetails: null,
+        cliqCashJusPayDetails: null,
+
+        transactionDetailsStatus: null,
+        transactionDetailsError: null,
+        transactionDetailsDetails: null,
+
+        orderConfirmationDetailsStatus: null,
+        orderConfirmationDetailsError: null,
+        orderConfirmationDetails: null,
+
+        justPayPaymentDetailsStatus: null,
+        justPayPaymentDetailsError: null,
+        justPayPaymentDetails: null,
+
+        codEligibilityStatus: null,
+        codEligibilityError: null,
+        codEligibilityDetails: null,
+
+        binValidationCODStatus: null,
+        binValidationCODError: null,
+        binValidationCODDetails: null,
+
+        transactionCODStatus: null,
+        transactionCODError: null,
+
+        softReserveCODPaymentStatus: null,
+        softReserveCODPayment: null,
+        softReserveCODPaymentError: null,
+        orderExperienceStatus: null,
+        orderExperience: null,
+        orderExperienceError: null,
+
+        binValidationStatus: null,
+        binValidationError: null,
+        binValidationDetails: null,
+
+        addToWishlistStatus: null,
+        addToWishlistError: null,
+
+        removeCartItemStatus: null,
+        removeCartItemError: null,
+
+        removeCartItemLoggedOutStatus: null,
+        removeCartItemLoggedOutError: null,
+
+        updateQuantityLoggedInStatus: null,
+        updateQuantityLoggedInDetails: null,
+        updateQuantityLoggedInError: null,
+
+        updateQuantityLoggedOutStatus: null,
+        updateQuantityLoggedOutDetails: null,
+        updateQuantityLoggedOutError: null,
+
+        AddUserAddressStatus: null,
+        AddUserAddressError: null,
+        addingAddress: false,
+        returnCliqPiqStatus: null,
+        returnCliqPiqDetails: null,
+        returnCliqPiqError: null,
+
+        softReservationForPaymentStatus: null,
+        softReservationForPaymentError: null,
+        softReservationForPaymentDetails: null,
+
+        jusPayTokenizeStatus: null,
+        jusPayTokenizeError: null,
+        jusPayTokenizeDetails: null,
+
+        createJusPayOrderStatus: null,
+        createJusPayOrderError: null,
+        createJusPayOrderDetails: null,
+        jusPaymentLoader: false,
+        selectDeliveryModeLoader: false,
+        transactionStatus: null,
+        loginFromMyBag: false,
+
+        emiEligibilityStatus: null,
+        emiEligibilityDetails: null,
+        emiEligibilityError: null,
+
+        bankAndTenureStatus: null,
+        bankAndTenureDetails: null,
+        bankAndTenureError: null,
+
+        emiTermsAndConditionStatus: null,
+        emiTermsAndConditionDetails: null,
+        emiTermsAndConditionError: null,
+
+        noCostEmiStatus: null,
+        noCostEmiDetails: null,
+        noCostEmiError: null,
+
+        emiItemBreakUpStatus: null,
+        emiItemBreakUpDetails: null,
+        emiItemBreakUpError: null,
+
+        paymentFailureOrderDetailsStatus: null,
+        paymentFailureOrderDetailsError: null,
+        paymentFailureOrderDetails: null
       });
 
     default:

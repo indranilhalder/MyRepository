@@ -4,12 +4,10 @@ import PdpFrame from "./PdpFrame";
 import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
-import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
 import PriceBreakUp from "./PriceBreakUp";
 import OfferCard from "./OfferCard";
-import ProductFeature from "./ProductFeature";
-import PdpLink from "./PdpLink";
+import OtherSellersLink from "./OtherSellersLink";
 import PdpDeliveryModes from "./PdpDeliveryModes";
 import JewelleryClassification from "./JewelleryClassification";
 import RatingAndTextLink from "./RatingAndTextLink";
@@ -19,7 +17,6 @@ import Overlay from "./Overlay";
 import PdpPaymentInfo from "./PdpPaymentInfo";
 import Accordion from "../../general/components/Accordion.js";
 import JewelleryCertification from "./JewelleryCertification.js";
-import { HashLink as Link } from "react-router-hash-link";
 import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
 import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
@@ -47,8 +44,7 @@ export default class PdpJewellery extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showPriceBreakUp: false,
-      showStyleNote: false
+      showProductDetails: false
     };
   }
   visitBrand() {
@@ -151,11 +147,9 @@ export default class PdpJewellery extends React.Component {
       this.props.showPincodeModal(this.props.match.params[1]);
     }
   }
-  showPriceBreakUp() {
-    this.setState({ showPriceBreakUp: true });
-  }
-  showStyleNote = () => {
-    this.setState({ showStyleNote: true });
+
+  showProductDetails = () => {
+    this.setState({ showProductDetails: true });
   };
   showEmiModal = () => {
     const cartValue = this.props.productDetails.winningSellerPrice.value;
@@ -171,9 +165,17 @@ export default class PdpJewellery extends React.Component {
         sizeSelected: this.checkIfSizeSelected(),
         productId: this.props.productDetails.productListingId,
         showSizeGuide: this.props.showSizeGuide,
+        headerText: this.props.productDetails.isSizeOrLength,
         hasSizeGuide: this.props.productDetails.showSizeGuide,
         data: this.props.productDetails.variantOptions
       });
+    }
+  };
+  showPriceBreakup = () => {
+    if (this.props.showPriceBreakup) {
+      this.props.showPriceBreakup(
+        this.props.productDetails.priceBreakUpDetailsMap
+      );
     }
   };
   checkIfSizeSelected = () => {
@@ -188,10 +190,7 @@ export default class PdpJewellery extends React.Component {
       this.props.productDetails.variantOptions &&
       this.props.productDetails.variantOptions[0].sizelink &&
       (this.props.productDetails.variantOptions[0].sizelink.size === NO_SIZE ||
-        parseInt(
-          this.props.productDetails.variantOptions[0].sizelink.size,
-          10
-        ) === 0)
+        this.props.productDetails.variantOptions[0].sizelink.size === "0")
     ) {
       return true;
     } else {
@@ -222,25 +221,6 @@ export default class PdpJewellery extends React.Component {
             return image[0].value;
           })
       : [];
-    let otherSellersText;
-    let hasOtherSellers = false;
-    if (productData.otherSellers && productData.otherSellers.length > 0) {
-      hasOtherSellers = true;
-      otherSellersText = (
-        <span>
-          Sold by{" "}
-          <span className={styles.winningSellerText}>
-            {" "}
-            {productData.winningSellerName}
-          </span>{" "}
-          and {productData.otherSellers.length} other sellers;
-        </span>
-      );
-    } else {
-      hasOtherSellers = false;
-      otherSellersText = `Sold by ${productData.winningSellerName}`;
-    }
-
     if (productData) {
       let price = "";
       let discountPrice = "";
@@ -291,11 +271,9 @@ export default class PdpJewellery extends React.Component {
               averageRating={productData.averageRating}
               discount={productData.discount}
               brandUrl={productData.brandURL}
-              hasPriceBreakUp={productData.priceBreakUpDetailsMap}
+              hasPriceBreakUp={productData.showPriceBrkUpPDP === "Yes"}
               history={this.props.history}
-              showPriceBreakUp={() => {
-                this.showPriceBreakUp();
-              }}
+              showPriceBreakUp={this.showPriceBreakup}
             />
           </div>
           {productData.details &&
@@ -304,9 +282,17 @@ export default class PdpJewellery extends React.Component {
                 <span className={styles.textOffset}>
                   {productData.details[0].value}
                 </span>
-                <span className={styles.link} onClick={this.showStyleNote}>
-                  <Link to="#styleNote"> Read More</Link>
-                </span>
+                {this.state.showProductDetails && (
+                  <div>{productData.productDescription}</div>
+                )}
+                {!this.state.showProductDetails && (
+                  <span
+                    className={styles.link}
+                    onClick={this.showProductDetails}
+                  >
+                    Read More
+                  </span>
+                )}
               </div>
             )}
           <PdpPaymentInfo
@@ -366,61 +352,47 @@ please try another pincode"
               deliveryModesATP={productData.deliveryModesATP}
             />
           )}
-
-          {productData.winningSellerName && (
-            <div className={styles.separator}>
-              <PdpLink onClick={this.goToSellerPage} noLink={!hasOtherSellers}>
-                <div className={styles.sellers}>{otherSellersText}</div>
-              </PdpLink>
-            </div>
-          )}
-          <div className={styles.details} id="priceBreakup">
-            {productData.priceBreakUpDetailsMap && (
-              <PriceBreakUp
-                data={productData.priceBreakUpDetailsMap}
-                isOpen={this.state.showPriceBreakUp}
-              />
+          <div className={styles.separator}>
+            <OtherSellersLink
+              otherSellers={productData.otherSellers}
+              winningSeller={productData.winningSellerName}
+            />
+          </div>
+          <div className={styles.details}>
+            {productData.details && (
+              <Accordion
+                text="Product Description"
+                headerFontSize={16}
+                isOpen={true}
+              >
+                <div className={styles.accordionContent}>
+                  {productData.productDescription}
+                </div>
+              </Accordion>
             )}
             {productData.fineJewelleryClassificationList && (
               <JewelleryClassification
                 data={productData.fineJewelleryClassificationList}
               />
             )}
-          </div>
-          <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
-            />
-          </div>
-          <div className={styles.details} id="styleNote">
-            {productData.styleNote && (
-              <ProductFeature
-                isOpen={this.state.showStyleNote}
-                heading="Style Note"
-                content={productData.styleNote}
-              />
-            )}
+            {productData.priceBreakUpDetailsMap &&
+              productData.showPriceBrkUpPDP === "Yes" && (
+                <PriceBreakUp data={productData.priceBreakUpDetailsMap} />
+              )}
             {productData.returnAndRefund && (
               <Accordion text="Return & Refunds" headerFontSize={16}>
                 {productData.returnAndRefund.map(val => {
                   return (
                     <div
                       className={styles.list}
-                      dangerouslySetInnerHTML={{ __html: val.refundReturnItem }}
+                      dangerouslySetInnerHTML={{
+                        __html: val.refundReturnItem
+                      }}
                     />
                   );
                 })}
               </Accordion>
             )}
-            {productData.warranty &&
-              productData.warranty.length > 0 && (
-                <ProductFeature
-                  heading="Warranty"
-                  content={productData.warranty[0]}
-                />
-              )}
             {productData.knowMore && (
               <Accordion text="Know More" headerFontSize={16}>
                 {productData.knowMore &&
@@ -432,9 +404,17 @@ please try another pincode"
               </Accordion>
             )}
           </div>
+          <div className={styles.separator}>
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
+          </div>
 
           {productData.APlusContent && (
             <AllDescription
+              templateName={productData.APlusContent.temlateName}
               productContent={productData.APlusContent.productContent}
             />
           )}

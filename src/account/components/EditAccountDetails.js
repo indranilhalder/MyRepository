@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./EditAccountDetails.css";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import MobileDatePicker from "../../general/components/MobileDatePicker";
 import ShopByBrandLists from "../../blp/components/ShopByBrandLists.js";
 import CheckboxAndText from "../../cart/components/CheckboxAndText.js";
@@ -13,6 +13,10 @@ import ChangePassword from "./ChangePassword.js";
 import * as Cookie from "../../lib/Cookie";
 import ProfilePicture from "../../blp/components/ProfilePicture.js";
 import {
+  EMAIL_REGULAR_EXPRESSION,
+  MOBILE_PATTERN
+} from "../../auth/components/Login";
+import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
   LOGIN_PATH
@@ -22,9 +26,15 @@ export default class EditAccountDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: this.props.firstName ? this.props.firstName : "",
-      lastName: this.props.lastName ? this.props.lastName : "",
-      dateOfBirth: this.props.dateOfBirth ? this.props.dateOfBirth : "",
+      firstName:
+        this.props.firstName && this.props.firstName !== "undefined"
+          ? this.props.firstName
+          : "",
+      lastName:
+        this.props.lastName && this.props.lastName !== "undefined"
+          ? this.props.lastName
+          : "",
+      dateOfBirth: "",
       gender: "",
       mobileNumber: "",
       emailId: "",
@@ -53,7 +63,6 @@ export default class EditAccountDetails extends React.Component {
 
         formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
       }
-
       this.setState({
         firstName: nextProps.userDetails.firstName,
         lastName: nextProps.userDetails.lastName,
@@ -67,17 +76,34 @@ export default class EditAccountDetails extends React.Component {
       this.props.history.push(LOGIN_PATH);
     }
   }
-
+  onChangeGender(val) {
+    this.setState({ gender: val.value });
+  }
   onChange(val) {
     this.setState(val);
   }
   onChangeDateOfBirth = val => {
-    let formattedDate = moment(val).format("DD/MM/YYYY");
+    let formattedDate = moment(val).format("MM/DD/YYYY");
     this.setState({ dateOfBirth: formattedDate });
   };
   updateProfile = () => {
-    if (this.props.updateProfile) {
-      this.props.updateProfile(this.state);
+    if (
+      this.state.emailId &&
+      !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
+    ) {
+      this.props.displayToast("Please fill valid emailId");
+      return false;
+    }
+    if (
+      this.state.mobileNumber &&
+      !MOBILE_PATTERN.test(this.state.mobileNumber)
+    ) {
+      this.props.displayToast("Please fill valid mobile number");
+      return false;
+    } else {
+      if (this.props.updateProfile) {
+        this.props.updateProfile(this.state);
+      }
     }
   };
 
@@ -99,15 +125,23 @@ export default class EditAccountDetails extends React.Component {
         <div className={styles.base}>
           <div className={styles.profileImage}>
             <ProfilePicture
-              firstName={this.state.firstName}
-              lastName={this.state.lastName}
+              firstName={
+                this.state.firstName !== "undefined" ? this.state.firstName : ""
+              }
+              lastName={
+                this.state.lastName !== "undefined" ? this.state.lastName : ""
+              }
             />
           </div>
           <div className={styles.holder}>
             <div className={styles.container}>
               <Input2
                 placeholder="First Name"
-                value={this.state.firstName}
+                value={
+                  this.state.firstName !== "undefined"
+                    ? this.state.firstName
+                    : ""
+                }
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
                 height={33}
@@ -117,7 +151,9 @@ export default class EditAccountDetails extends React.Component {
             <div className={styles.container}>
               <Input2
                 placeholder="Last Name"
-                value={this.state.lastName}
+                value={
+                  this.state.lastName !== "undefined" ? this.state.lastName : ""
+                }
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
                 height={33}
@@ -135,28 +171,43 @@ export default class EditAccountDetails extends React.Component {
               />
             </div>
             <div className={styles.container}>
-              <Input2
-                placeholder="Mobile NUmber"
-                value={this.state.mobileNumber}
-                boxy={true}
-                textStyle={{ fontSize: 14 }}
-                height={33}
-                onChange={mobileNumber => this.onChange({ mobileNumber })}
-              />
+              {userDetails &&
+              userDetails.mobileNumber &&
+              userDetails.mobileNumber.length === 10 ? (
+                <Input2
+                  placeholder="Mobile NUmber"
+                  value={this.state.mobileNumber}
+                  boxy={true}
+                  textStyle={{ fontSize: 14 }}
+                  height={33}
+                  onChange={mobileNumber => this.onChange({ mobileNumber })}
+                  disabled={true}
+                />
+              ) : (
+                <Input2
+                  placeholder="Mobile NUmber"
+                  value={this.state.mobileNumber}
+                  boxy={true}
+                  textStyle={{ fontSize: 14 }}
+                  height={33}
+                  onChange={mobileNumber => this.onChange({ mobileNumber })}
+                  disabled={false}
+                />
+              )}
             </div>
 
             <div className={styles.container}>
-              <SelectBoxMobile
-                label={this.state.gender ? this.state.gender : "Gender"}
+              <SelectBoxMobile2
+                placeholder={"Gender"}
+                label={this.state.gender}
                 value={this.state.gender}
                 options={[
-                  { label: "Gender", value: "gender" },
                   { label: "Female", value: "Female" },
                   { label: "Male", value: "Male" }
                 ]}
                 arrowColour="grey"
                 height={33}
-                onChange={gender => this.onChange({ gender })}
+                onChange={gender => this.onChangeGender(gender)}
               />
             </div>
             <div className={styles.container}>
@@ -171,9 +222,6 @@ export default class EditAccountDetails extends React.Component {
               brandList={"Change Password"}
               onClick={() => this.renderChangePassword()}
             />
-          </div>
-          <div className={styles.sendNotification}>
-            <CheckboxAndText label="Send Me Notifications" selected={false} />
           </div>
           <AccountFooter
             cancel={() => this.cancel()}

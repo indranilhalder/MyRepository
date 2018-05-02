@@ -20,8 +20,11 @@ import {
 } from "../../lib/constants";
 
 import { HOME_ROUTER } from "../../lib/constants";
-
+import throttle from "lodash.throttle";
 const dateFormat = "DD MMM YYYY";
+const SUFFIX = `&isTextSearch=false&isFilter=false`;
+const SCROLL_CHECK_INTERVAL = 500;
+const OFFSET_BOTTOM = 800;
 export default class AllOrderDetails extends React.Component {
   onClickImage(productCode) {
     if (productCode) {
@@ -38,6 +41,8 @@ export default class AllOrderDetails extends React.Component {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (userDetails && customerCookie) {
+      this.throttledScroll = this.handleScroll();
+      window.addEventListener("scroll", this.throttledScroll);
       this.props.getAllOrdersDetails();
     }
   }
@@ -46,9 +51,42 @@ export default class AllOrderDetails extends React.Component {
       this.props.setHeaderText(ORDER_HISTORY);
     }
   }
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.throttledScroll);
+  }
   renderToContinueShopping() {
     this.props.history.push(HOME_ROUTER);
   }
+  handleScroll = () => {
+    return throttle(() => {
+      if (
+        this.props.profile.orderDetails &&
+        this.props.profile.orderDetails.currentPage * 3 <
+          this.props.profile.orderDetails.totalNoOfOrders
+      ) {
+        const windowHeight =
+          "innerHeight" in window
+            ? window.innerHeight
+            : document.documentElement.offsetHeight;
+        const body = document.body;
+        const html = document.documentElement;
+        const docHeight = Math.max(
+          body.scrollHeight,
+          body.offsetHeight,
+          html.clientHeight,
+          html.scrollHeight,
+          html.offsetHeight
+        );
+        const windowBottom = windowHeight + window.pageYOffset;
+        if (windowBottom >= docHeight - OFFSET_BOTTOM) {
+          this.props.paginate(
+            this.props.profile.orderDetails.pageSize + 1,
+            SUFFIX
+          );
+        }
+      }
+    }, SCROLL_CHECK_INTERVAL);
+  };
   renderNoOrder() {
     return (
       <div className={styles.noOrder}>
@@ -85,25 +123,29 @@ export default class AllOrderDetails extends React.Component {
                 <div className={styles.order} key={i}>
                   <div className={styles.orderIdHolder}>
                     <OrderPlacedAndId
-                      placedTime={moment(orderDetails.orderDate).format(
-                        dateFormat
-                      )}
-                      orderId={orderDetails.orderId}
+                      placedTime={moment(
+                        orderDetails && orderDetails.orderDate
+                      ).format(dateFormat)}
+                      orderId={orderDetails && orderDetails.orderId}
                     />
                   </div>
                   <OrderCard
                     imageUrl={
-                      orderDetails.products && orderDetails.products[0].imageURL
+                      orderDetails &&
+                      orderDetails.products &&
+                      orderDetails.products[0].imageURL
                     }
-                    price={orderDetails.totalOrderAmount}
+                    price={orderDetails && orderDetails.totalOrderAmount}
                     discountPrice={""}
                     productName={
+                      orderDetails &&
                       orderDetails.products &&
                       orderDetails.products[0].productName
                     }
                     onClick={() =>
                       this.onClickImage(
-                        orderDetails.products &&
+                        orderDetails &&
+                          orderDetails.products &&
                           orderDetails.products[0] &&
                           orderDetails.products.length &&
                           orderDetails.products[0].productcode
@@ -112,31 +154,33 @@ export default class AllOrderDetails extends React.Component {
                   />
                   <PriceAndLink
                     onViewDetails={() =>
-                      this.onViewDetails(orderDetails.orderId)
+                      this.onViewDetails(orderDetails && orderDetails.orderId)
                     }
-                    price={orderDetails.totalOrderAmount}
+                    price={orderDetails && orderDetails.totalOrderAmount}
                   />
-                  {orderDetails.billingAddress && (
-                    <OrderDelivered
-                      deliveredAddress={`${
-                        orderDetails.billingAddress.addressLine1
-                          ? orderDetails.billingAddress.addressLine1
-                          : ""
-                      } ${
-                        orderDetails.billingAddress.town
-                          ? orderDetails.billingAddress.town
-                          : ""
-                      } ${
-                        orderDetails.billingAddress.state
-                          ? orderDetails.billingAddress.state
-                          : ""
-                      } ${
-                        orderDetails.billingAddress.postalcode
-                          ? orderDetails.billingAddress.postalcode
-                          : ""
-                      }`}
-                    />
-                  )}
+                  {orderDetails &&
+                    orderDetails.billingAddress && (
+                      <OrderDelivered
+                        deliveredAddress={`${
+                          orderDetails &&
+                          orderDetails.billingAddress.addressLine1
+                            ? orderDetails.billingAddress.addressLine1
+                            : ""
+                        } ${
+                          orderDetails && orderDetails.billingAddress.town
+                            ? orderDetails.billingAddress.town
+                            : ""
+                        } ${
+                          orderDetails && orderDetails.billingAddress.state
+                            ? orderDetails.billingAddress.state
+                            : ""
+                        } ${
+                          orderDetails && orderDetails.billingAddress.postalcode
+                            ? orderDetails.billingAddress.postalcode
+                            : ""
+                        }`}
+                      />
+                    )}
                 </div>
               );
             })

@@ -36,7 +36,7 @@ What do I want to do?
       if there is no category or brand, then we know there is text and we need to append.
 */
 
-export function applySortToUrl(query, url, sortValue) {
+export function applySortToUrl(query, url, sortValue, icid2, cid) {
   let newQuery = "";
   let newUrl = `/search/?q=`;
   let match;
@@ -46,11 +46,16 @@ export function applySortToUrl(query, url, sortValue) {
       match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
       match = match.replace(BRAND_CATEGORY_PREFIX, "");
       newQuery = `:${sortValue}:category:${match.toUpperCase()}`;
-    }
-    if (BRAND_REGEX.test(url)) {
+    } else if (BRAND_REGEX.test(url)) {
       match = BRAND_CAPTURE_REGEX.exec(url)[0];
       match = match.replace(BRAND_CATEGORY_PREFIX, "");
-      newQuery = `:${sortValue}:category:${match.toUpperCase()}`;
+      newQuery = `:${sortValue}:brand:${match.toUpperCase()}`;
+    } else {
+      // this is the SKU case
+      // I need the slug to construct the collection id.
+      const splitUrl = url.split("/");
+      const slug = splitUrl[splitUrl.length - 1];
+      newQuery = `:${sortValue}:collectionIds:${slug}`;
     }
   } else {
     const existingSort = getSortFromQuery(query);
@@ -87,5 +92,11 @@ export function applySortToUrl(query, url, sortValue) {
   }
 
   newUrl = `${newUrl}${newQuery}`;
+  if (icid2) {
+    newUrl = `${newUrl}&icid2=${icid2}`;
+  }
+  if (cid) {
+    newUrl = `${newUrl}&cid=${cid}`;
+  }
   return newUrl;
 }

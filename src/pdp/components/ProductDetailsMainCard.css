@@ -30,7 +30,8 @@
   color: #181818;
   font-size: 16px;
   line-height: 22px;
-  font-family: regular;
+  font-family: light;
+  font-weight: 0;
   display: inline-block;
 }
 .ratingHolder {

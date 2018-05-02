@@ -10,6 +10,8 @@ import {
   RETURN_LANDING,
   RETURNS_REASON
 } from "../../lib/constants";
+const NEFT = "NEFT";
+const SELF_SHIPMENT = "selfShipment";
 export default class SelfCourier extends React.Component {
   onCancel() {
     if (this.props.onCancel) {
@@ -22,21 +24,29 @@ export default class SelfCourier extends React.Component {
       const returnRequest = this.props.returnRequest.codSelfShipData;
       const initiateReturn = {};
       initiateReturn.transactionId = orderDetails.transactionId;
+      initiateReturn.transactionType = "1";
       initiateReturn.ussid = orderDetails.USSID;
+      initiateReturn.refundMode = NEFT;
+      initiateReturn.refundType = "S";
       initiateReturn.orderCode = orderDetails.sellerorderno;
-      initiateReturn.returnReasonCode = orderDetails.transactionId;
-      initiateReturn.returnMethod = SELF_COURIER;
-      initiateReturn.paymentMethod = returnRequest.paymentMode;
+      initiateReturn.returnMethod = SELF_SHIPMENT;
+      initiateReturn.paymentMethod = returnRequest && returnRequest.paymentMode;
       initiateReturn.isCODorder = "N";
       if (this.props.bankDetail.accountNumber) {
-        initiateReturn.accountNumber = returnRequest.bankAccount;
-        initiateReturn.reEnterAccountNumber = returnRequest.bankAccount;
-        initiateReturn.bankName = returnRequest.bankName;
-        initiateReturn.IFSCCode = returnRequest.bankKey;
-        initiateReturn.title = returnRequest.title;
-        initiateReturn.accountHolderName = returnRequest.name;
+        initiateReturn.accountNumber =
+          returnRequest && returnRequest.bankAccount;
+        initiateReturn.reEnterAccountNumber =
+          returnRequest && returnRequest.bankAccount;
+        initiateReturn.bankName = returnRequest && returnRequest.bankName;
+        initiateReturn.IFSCCode = returnRequest && returnRequest.bankKey;
+        initiateReturn.title = returnRequest && returnRequest.title;
+        initiateReturn.accountHolderName = returnRequest && returnRequest.name;
       }
-
+      if (this.props.data) {
+        initiateReturn.returnReasonCode = this.props.data.returnReasonCode;
+        initiateReturn.subReasonCode = this.props.data.subReasonCode;
+        initiateReturn.comment = this.props.data.comment;
+      }
       this.props.newReturnInitial(initiateReturn);
     }
   }

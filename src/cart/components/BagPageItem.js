@@ -2,7 +2,10 @@ import React from "react";
 import styles from "./BagPageItem.css";
 import ProductImage from "../../general/components/ProductImage.js";
 import PropTypes from "prop-types";
+import { DEFAULT_PIN_CODE_LOCAL_STORAGE } from "../../lib/constants";
 const NOT_SERVICEABLE = "Service Not Available";
+const OUT_OF_STOCK = "Product is out of stock";
+
 export default class BagPageItem extends React.Component {
   onClick() {
     if (this.props.onClickImage) {
@@ -13,12 +16,17 @@ export default class BagPageItem extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.productDescription}>
-          {!this.props.isServiceAvailable && (
-            <div className={styles.serviceAvailabilityText}>
-              {" "}
-              {NOT_SERVICEABLE}
-            </div>
-          )}
+          {!this.props.isServiceAvailable
+            ? localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) && (
+                <div className={styles.serviceAvailabilityText}>
+                  {NOT_SERVICEABLE}
+                </div>
+              )
+            : this.props.isOutOfStock && (
+                <div className={styles.serviceAvailabilityText}>
+                  {OUT_OF_STOCK}
+                </div>
+              )}
           {this.props.productName && (
             <div className={styles.informationText}>
               {this.props.productName}

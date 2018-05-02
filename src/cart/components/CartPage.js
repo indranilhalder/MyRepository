@@ -362,7 +362,11 @@ class CartPage extends React.Component {
           </div>
 
           <div
-            className={defaultPinCode === "" ? styles.disabled : styles.content}
+            className={
+              !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+                ? styles.disabled
+                : styles.content
+            }
           >
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
@@ -404,6 +408,7 @@ class CartPage extends React.Component {
                           ? parseInt(product.maxQuantityAllowed, 10)
                           : product.availableStockCount
                       }
+                      isOutOfStock={product.isOutOfStock}
                       qtySelectedByUser={product.qtySelectedByUser}
                       isClickable={false}
                     />

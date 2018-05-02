@@ -11,9 +11,10 @@
 .headerText {
   width: 100%;
   font-family: semibold;
-  font-size: 16px;
+  font-size: 14px;
   color: #212121;
   white-space: normal;
+  word-wrap: break-word;
 }
 .headerWhite {
   composes: headerText;
@@ -27,14 +28,19 @@
 
 .description {
   white-space: normal;
+  font-weight: inherit;
+  -webkit-margin-before: inherit;
+  -webkit-margin-after: inherit;
+  font-size: inherit;
 }
 .content {
   width: 100%;
   color: #212121;
   font-size: 14px;
   line-height: 20px;
-  font-family: regular;
+  font-family: light;
   white-space: normal;
+  word-wrap: break-word;
 }
 .contentWhite {
   composes: content;

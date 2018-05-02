@@ -12,7 +12,8 @@ export default class CancelReasonForm extends React.Component {
     this.state = {
       displaySecondary: false,
       secondaryReasons: null,
-      comment: null
+      comment: null,
+      reason: "Select a reason"
     };
   }
   onClickImage(productCode) {
@@ -28,6 +29,7 @@ export default class CancelReasonForm extends React.Component {
   onChangePrimary(val) {
     const code = val.value;
     const label = val.label;
+
     this.setState({ cancelReasonCode: code, reason: label });
   }
   handleChange(val) {
@@ -75,7 +77,7 @@ export default class CancelReasonForm extends React.Component {
           </OrderCard>
           <div className={styles.select}>
             <SelectBoxMobile2
-              label={this.state.reason ? this.state.reason : "Select a reason"}
+              placeholder={"Select a reason"}
               options={data.returnReasonDetailsWsDTO.map((val, i) => {
                 return {
                   value: val.code,

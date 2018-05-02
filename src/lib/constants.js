@@ -26,7 +26,8 @@ export const MAIN_ROUTER = "/";
 export const CUSTOMER_ACCESS_TOKEN = "customerAccessToken";
 export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
 export const DEFAULT_PIN_CODE_LOCAL_STORAGE = "defaultPinCode";
-
+export const SOFT_RESERVATION_ITEM = "softReservationItem";
+export const ADDRESS_DETAILS_FOR_PAYMENT = "addressDetailsForPayment";
 export const SKU_PAGE = "/custom/:slug";
 
 export const REFRESH_TOKEN = "refresh_token";
@@ -43,12 +44,13 @@ export const CATEGORY_PAGE_WITH_SLUG = `/:slug/c-(msh[0-9a-zA-Z]+)`;
 export const CATEGORY_PAGE_WITH_QUERY_PARAMS = `${CATEGORY_PAGE}?&.*`;
 export const CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS = `${CATEGORY_PAGE_WITH_SLUG}?&.*`;
 export const PRODUCT_LISTINGS = "/search/(.*)";
+export const PRODUCT_LISTINGS_WITHOUT_SLASH = "/search/";
+export const SKU_PAGE_FILTER = "/CustomSkuCollection/:slug/page-([0-9]+)";
 export const CATEGORY_PRODUCT_LISTINGS_WITH_PAGE =
   "/:slug/c-(msh[0-9a-zA-Z]+)/page-([0-9]+)?";
 
 export const BRAND_PRODUCT_LISTINGS_WITH_PAGE =
   "/:slug/c-(mbh[0-9a-zA-Z]+)/page-([0-9]+)?";
-export const PLP_CATEGORY_SEARCH = "/search/?searchCategory=all&text=shirt";
 
 export const SEARCH_RESULTS_PAGE = "/search/";
 export const HOME_ROUTER = "/";
@@ -61,7 +63,7 @@ export const PRODUCT_DESCRIPTION_REVIEWS_WITH_SLUG = `/:slug${PRODUCT_DESCRIPTIO
 export const PRODUCT_OTHER_SELLER_ROUTER = `${PRODUCT_DESCRIPTION_PRODUCT_CODE}/viewSellers`;
 export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE =
   "/:slug/(p-)([a-zA-Z0-9]+)";
-export const PRODUCT_REVIEWS_PATH_SUFFIX = "/product-reviews";
+export const PRODUCT_REVIEWS_PATH_SUFFIX = "product-reviews";
 export const PRODUCT_DESCRIPTION_ROUTER = PRODUCT_DESCRIPTION_PRODUCT_CODE; //TODO remove this
 export const PRODUCT_REVIEW_ROUTER = "/productReview";
 export const LOGIN_PATH = "/login";
@@ -133,6 +135,7 @@ export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
 export const COUPON_COOKIE = "couponCode";
+export const BANK_COUPON_COOKIE = "bankCoupon";
 
 export const SAVE_LIST_PAGE = "/default/wishList";
 export const PAYMENT_MODE_TYPE = "paymentMode";
@@ -191,6 +194,7 @@ export const CATEGORIES = "Categories";
 export const CHECKOUT = "Checkout";
 export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
+export const ERROR_MESSAGE_FOR_VERIFY_OTP = "Please Enter an Valid OTP";
 
 // COPY
 //STATIC PAGE
@@ -200,3 +204,25 @@ export const REVIEW_SUBMIT_TOAST_TEXT =
 
 export const CDN_URL_ROOT =
   "https://assets.tatacliq.com/medias/sys_master/pwaImg/";
+
+// constants for payments method
+export const EASY_MONTHLY_INSTALLMENTS = "Easy monthly installments";
+export const NET_BANKING_PAYMENT_MODE = "Net banking";
+export const SAVED_CARD_PAYMENT_MODE = "Saved Cards";
+export const EMI = "EMI";
+export const NO_COST_EMI = "No Cost Emi";
+export const STANDARD_DELIVERY = "Standard Emi";
+export const CREDIT_CARD = "Credit Card";
+export const DEBIT_CARD = "Debit Card";
+export const E_WALLET = "E - Wallet";
+export const CASH_ON_DELIVERY_PAYMENT_MODE = "Cash On Delivery";
+
+// META TAGS CONSTANTS
+
+export const GOOGLE_TAG_TITLE_DEFAULT =
+  "Online Shopping Site in India - Upto 60% Off On Mobiles, Electronics & Fashion at Tata CLiQ";
+export const GOOGLE_TAG_IMAGE_DEFAULT =
+  "https://assets.tatacliq.com/medias/sys_master/images/10963640156190.jpg";
+export const TWITTER_TAG_TITLE_DEFAULT = GOOGLE_TAG_TITLE_DEFAULT;
+export const TWITTER_TAG_IMAGE_DEFAULT = GOOGLE_TAG_IMAGE_DEFAULT;
+export const FACEBOOK_TAG_IMAGE_DEFAULT = GOOGLE_TAG_IMAGE_DEFAULT;

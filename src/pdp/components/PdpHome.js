@@ -6,7 +6,7 @@ import ProductGalleryMobile from "./ProductGalleryMobile";
 import ColourSelector from "./ColourSelector";
 import SizeQuantitySelect from "./SizeQuantitySelect";
 import OfferCard from "./OfferCard";
-import PdpLink from "./PdpLink";
+import OtherSellersLink from "./OtherSellersLink";
 import ProductFeature from "./ProductFeature";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import PdpPaymentInfo from "./PdpPaymentInfo";
@@ -113,7 +113,10 @@ export default class PdpApparel extends React.Component {
         if (!this.checkIfSizeSelected()) {
           this.props.displayToast("Please select a size to continue");
           this.setState({ sizeError: true });
-        } else if (!this.checkIfQuantitySelected()) {
+        } else if (
+          !this.checkIfQuantitySelected() ||
+          this.state.productQuantityOption === "Quantity"
+        ) {
           this.props.displayToast("Please select a quantity to continue");
           this.setState({ quantityError: true });
         } else {
@@ -146,29 +149,6 @@ export default class PdpApparel extends React.Component {
     this.props.history.push(url);
   };
 
-  addToWishList = () => {
-    let productDetails = {};
-    productDetails.code = this.props.productDetails.productListingId;
-    productDetails.ussId = this.props.productDetails.winningUssID;
-
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
-    if (userDetails) {
-      this.props.addProductToWishList(
-        JSON.parse(userDetails).userName,
-        JSON.parse(customerCookie).access_token,
-        productDetails
-      );
-    } else {
-      this.props.addProductToWishList(
-        ANONYMOUS_USER,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
-    }
-  };
   showPincodeModal() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
       this.props.showPincodeModal(this.props.match.params[0]);
@@ -209,12 +189,6 @@ export default class PdpApparel extends React.Component {
             return image[0].value;
           })
       : [];
-
-    const validSellersCount = productData.otherSellers
-      ? productData.otherSellers.filter(val => {
-          return val.availableStock !== "0" && val.availableStock !== "-1";
-        }).length
-      : 0;
 
     if (productData) {
       let price = "";
@@ -350,35 +324,29 @@ export default class PdpApparel extends React.Component {
               deliveryModesATP={productData.deliveryModesATP}
             />
           )}
-
-          {productData.winningSellerName && (
-            <div className={styles.separator}>
-              <PdpLink
-                onClick={() => this.goToSellerPage(validSellersCount)}
-                noLink={validSellersCount === 0}
-              >
-                <div className={styles.sellers}>
-                  Sold by{" "}
-                  <span className={styles.winningSellerText}>
-                    {productData.winningSellerName}
-                  </span>
-                  {validSellersCount !== 0 && (
-                    <React.Fragment>
-                      {" "}
-                      and {validSellersCount} other seller(s)
-                    </React.Fragment>
-                  )}
-                </div>
-              </PdpLink>
-            </div>
-          )}
-
+          <div className={styles.separator}>
+            <OtherSellersLink
+              otherSellers={productData.otherSellers}
+              winningSeller={productData.winningSellerName}
+            />
+          </div>
           {productData.classifications && (
             <div className={styles.details}>
               <ProductFeatures features={productData.classifications} />
             </div>
           )}
           <div className={styles.details}>
+            {productData.productDescription && (
+              <Accordion
+                text="Product Description"
+                headerFontSize={16}
+                isOpen={true}
+              >
+                <div className={styles.accordionContent}>
+                  {productData.productDescription}
+                </div>
+              </Accordion>
+            )}
             <Accordion text="Overview" headerFontSize={16}>
               {productData.classificationList &&
                 productData.classificationList.map(value => {
@@ -410,12 +378,6 @@ export default class PdpApparel extends React.Component {
                   );
                 })}
             </Accordion>
-            {productData.styleNote && (
-              <ProductFeature
-                heading="Style Note"
-                content={productData.styleNote}
-              />
-            )}
             {productData.knowMore && (
               <Accordion text="Know More" headerFontSize={16}>
                 {productData.knowMore &&
@@ -442,6 +404,7 @@ export default class PdpApparel extends React.Component {
           </div>
           {productData.APlusContent && (
             <AllDescription
+              templateName={productData.APlusContent.temlateName}
               productContent={productData.APlusContent.productContent}
             />
           )}

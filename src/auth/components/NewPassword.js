@@ -5,7 +5,11 @@ import Button from "../../xelpmoc-core/Button";
 import PasswordInput from "../../auth/components/PasswordInput";
 import { default as styles } from "./AuthPopUp.css";
 import { default as ownStyles } from "./RestorePassword.css";
-import Error from "../../general/components/Error.js";
+const MINIMUM_PASSWORD_LENGTH = 8;
+const NEW_PASSWORD_TEXT = "Please enter password";
+const PASSWORD_LENGTH_TEXT = "Password length should be minimum 8 character";
+const CONFIRM_PASSWORD_TEXT = "Please confirm your passowrd";
+const PASSWORD_MATCH_TEXT = "Password did not match";
 export default class NewPassword extends React.Component {
   constructor(props) {
     super(props);
@@ -24,13 +28,24 @@ export default class NewPassword extends React.Component {
   handleContinue() {
     const newPassword = this.state.newPassword;
     const confirmedPassword = this.state.confirmedPassword;
-    if (newPassword === confirmedPassword) {
-      this.setState({ error: false });
-    } else {
-      this.setState({ error: true });
+    if (!newPassword) {
+      this.props.displayToast(NEW_PASSWORD_TEXT);
+      return false;
     }
-    if (this.props.onContinue) {
-      if (newPassword === confirmedPassword) {
+    if (newPassword.length < MINIMUM_PASSWORD_LENGTH) {
+      this.props.displayToast(PASSWORD_LENGTH_TEXT);
+      return false;
+    }
+    if (!confirmedPassword) {
+      this.props.displayToast(CONFIRM_PASSWORD_TEXT);
+      return false;
+    }
+    if (newPassword !== confirmedPassword) {
+      this.props.displayToast(PASSWORD_MATCH_TEXT);
+      this.setState({ error: true });
+    } else {
+      this.setState({ error: false });
+      if (this.props.onContinue) {
         this.props.onContinue({
           newPassword: this.state.newPassword,
           username: this.props.userName,
@@ -61,8 +76,6 @@ export default class NewPassword extends React.Component {
             onChange={val => this.setState({ confirmedPassword: val })}
           />
         </div>
-        <Error message="Passwords must match" show={this.state.error} />
-
         <div className={styles.button}>
           <div className={ownStyles.submit}>
             <Button

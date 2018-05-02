@@ -13,6 +13,16 @@ export function createCookie(name, value, days) {
   document.cookie = name + "=" + value + expires + ";path=/"; // + and " added
 }
 
+export function createCookieInMinutes(name, value, minutes) {
+  let expires = "";
+  if (minutes) {
+    var date = new Date();
+    date.setTime(date.getTime() + minutes * 60 * 1000); // ) removed
+    expires = "; expires=" + date.toGMTString(); // + added
+  }
+  document.cookie = name + "=" + value + expires + ";path=/"; // + and " added
+}
+
 export function getCookie(cookieName) {
   let match = document.cookie.match(new RegExp(cookieName + `=([^;]+)`));
   if (match) return match[1];

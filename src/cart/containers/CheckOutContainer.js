@@ -44,7 +44,13 @@ import {
   getEmiTermsAndConditionsForBank,
   applyNoCostEmi,
   removeNoCostEmi,
-  getItemBreakUpDetails
+  getItemBreakUpDetails,
+  getPaymentFailureOrderDetails,
+  createJusPayOrderForSavedCards,
+  createJusPayOrderForCliqCash,
+  clearCartDetails,
+  jusPayTokenize,
+  createJusPayOrderForNetBanking
 } from "../actions/cart.actions";
 import {
   showSecondaryLoader,
@@ -57,6 +63,7 @@ import {
 } from "../../general/modal.actions";
 import {
   getPinCode,
+  getUserDetails,
   getPinCodeSuccess
 } from "../../account/actions/account.actions.js";
 import { displayToast } from "../../general/toast.actions";
@@ -131,7 +138,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(addStoreCNC(ussId, slaveId));
     },
     addPickupPersonCNC: (personMobile, personName) => {
-      dispatch(addPickupPersonCNC(personMobile, personName));
+      return dispatch(addPickupPersonCNC(personMobile, personName));
     },
     softReservation: (pinCode, payload) => {
       dispatch(softReservation(pinCode, payload));
@@ -206,9 +213,19 @@ const mapDispatchToProps = dispatch => {
         )
       );
     },
-    softReservationPaymentForSavedCard: (cardDetails, address, paymentMode) => {
+    softReservationPaymentForSavedCard: (
+      cardDetails,
+      address,
+      paymentMode,
+      isPaymentFailed
+    ) => {
       dispatch(
-        softReservationPaymentForSavedCard(cardDetails, address, paymentMode)
+        softReservationPaymentForSavedCard(
+          cardDetails,
+          address,
+          paymentMode,
+          isPaymentFailed
+        )
       );
     },
     softReservationForCliqCash: pinCode => {
@@ -260,15 +277,72 @@ const mapDispatchToProps = dispatch => {
     getPinCode: pinCode => {
       dispatch(getPinCode(pinCode));
     },
+
+    getUserDetails: () => {
+      dispatch(getUserDetails());
+    },
     resetAutoPopulateDataForPinCode: () => {
       dispatch(getPinCodeSuccess(null));
+    },
+    getPaymentFailureOrderDetails: () => {
+      dispatch(getPaymentFailureOrderDetails());
+    },
+    createJusPayOrderForSavedCards: (
+      cardDetails,
+      cartItem,
+      isPaymentFailed
+    ) => {
+      dispatch(
+        createJusPayOrderForSavedCards(cardDetails, cartItem, isPaymentFailed)
+      );
+    },
+    createJusPayOrderForCliqCash: (pinCode, cartItem, isPaymentFailed) => {
+      dispatch(
+        createJusPayOrderForCliqCash(pinCode, cartItem, isPaymentFailed)
+      );
+    },
+    clearCartDetails: () => {
+      dispatch(clearCartDetails());
+    },
+    jusPayTokenize: (
+      cardDetails,
+      address,
+      cartItem,
+      paymentMode,
+      isPaymentFailed
+    ) => {
+      dispatch(
+        jusPayTokenize(
+          cardDetails,
+          address,
+          cartItem,
+          paymentMode,
+          isPaymentFailed
+        )
+      );
+    },
+    createJusPayOrderForNetBanking: (
+      paymentMethodType,
+      bankName,
+      pinCode,
+      productItems
+    ) => {
+      dispatch(
+        createJusPayOrderForNetBanking(
+          paymentMethodType,
+          bankName,
+          pinCode,
+          productItems
+        )
+      );
     }
   };
 };
 const mapStateToProps = state => {
   return {
     cart: state.cart,
-    getPinCodeDetails: state.profile.getPinCodeDetails
+    getPinCodeDetails: state.profile.getPinCodeDetails,
+    userDetails: state.profile.userDetails
   };
 };
 

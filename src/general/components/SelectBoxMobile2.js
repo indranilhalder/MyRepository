@@ -17,35 +17,46 @@ export default class SelectBoxMobile extends React.Component {
     this.state = {
       value: this.props.value
         ? this.props.value
-        : this.props.options
-          ? this.props.options[0].value
-          : "",
+        : this.props.placeholder
+          ? this.props.placeholder
+          : this.props.options
+            ? this.props.options[0].value
+            : "",
       label: this.props.label
         ? this.props.label
-        : this.props.options
-          ? this.props.options[0].label
-          : ""
+        : this.props.placeholder
+          ? this.props.placeholder
+          : this.props.options
+            ? this.props.options[0].label
+            : "",
+      touched: false
     };
   }
 
   handleChange(event) {
-    const selectedValue = event.target.value;
-    const index = event.nativeEvent.target.selectedIndex;
-    const selectedLabel = event.nativeEvent.target[index].label;
-    const details = {};
-    this.setState({ value: selectedValue, label: selectedLabel }, () => {
-      if (this.props.onChange) {
-        details.label = selectedLabel;
-        details.value = selectedValue;
-        this.props.onChange(details);
-      }
-    });
+    if (!this.props.disabled) {
+      const selectedValue = event.target.value;
+      const index = event.nativeEvent.target.selectedIndex;
+      const selectedLabel = event.nativeEvent.target[index].label;
+      const details = {};
+      this.setState(
+        { value: selectedValue, label: selectedLabel, touched: true },
+        () => {
+          if (this.props.onChange) {
+            details.label = selectedLabel;
+            details.value = selectedValue;
+            this.props.onChange(details);
+          }
+        }
+      );
+    }
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.value !== this.state.value) {
+    if (nextProps.value && nextProps.value !== this.state.value) {
       this.setState({ value: nextProps.value });
+      this.setState({ touched: true });
     }
-    if (nextProps.label !== this.state.label) {
+    if (nextProps.label && nextProps.label !== this.state.label) {
       this.setState({ label: nextProps.label });
     }
   }
@@ -61,14 +72,31 @@ export default class SelectBoxMobile extends React.Component {
       arrow = WhiteArrow;
     }
     let themeClass = styles.base;
+    if (this.props.disabled) {
+      themeClass = styles.disabled;
+    } else {
+      themeClass = styles.base;
+    }
     if (this.props.theme === BLACK_BOX) {
-      themeClass = styles.blackBox;
+      if (this.props.disabled) {
+        themeClass = styles.disabledBlack;
+      } else {
+        themeClass = styles.blackBox;
+      }
     }
     if (this.props.theme === HOLLOW_BOX) {
-      themeClass = styles.hollowBox;
+      if (this.props.disabled) {
+        themeClass = styles.disabledHollow;
+      } else {
+        themeClass = styles.hollowBox;
+      }
     }
-    if (this.props.arrowColour === GREY_BOX) {
-      themeClass = styles.base;
+    if (this.props.theme === GREY_BOX) {
+      if (this.props.disabled) {
+        themeClass = styles.disabled;
+      } else {
+        themeClass = styles.base;
+      }
     }
     return (
       <div
@@ -85,10 +113,19 @@ export default class SelectBoxMobile extends React.Component {
           value={this.state.value}
           label={this.state.label}
         >
-          {this.props.options &&
-            this.props.options.map((item, i) => {
-              return <option key={i} value={item.value} label={item.label} />;
-            })}
+          <React.Fragment>
+            {this.props.placeholder &&
+              !this.state.touched && (
+                <option
+                  value={this.props.placeholder}
+                  label={this.props.placeholder}
+                />
+              )}
+            {this.props.options &&
+              this.props.options.map((item, i) => {
+                return <option key={i} value={item.value} label={item.label} />;
+              })}
+          </React.Fragment>
         </select>
         <div className={styles.visibleBox}>{this.state.label}</div>
         <div className={styles.arrow}>
@@ -104,9 +141,11 @@ SelectBoxMobile.propTypes = {
     PropTypes.shape({ value: PropTypes.string, label: PropTypes.string })
   ),
   arrowColour: PropTypes.oneOf([BLACK, GREY, WHITE]),
-  theme: PropTypes.oneOf([HOLLOW_BOX, BLACK_BOX, GREY_BOX])
+  theme: PropTypes.oneOf([HOLLOW_BOX, BLACK_BOX, GREY_BOX]),
+  disabled: PropTypes.bool
 };
 SelectBoxMobile.defaultProps = {
   height: 35,
-  arrowColour: GREY
+  arrowColour: GREY,
+  disabled: false
 };

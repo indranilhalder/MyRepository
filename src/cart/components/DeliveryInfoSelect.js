@@ -14,6 +14,11 @@ export default class DeliveryInfoSelect extends React.Component {
       }
     });
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selected !== this.state.selectedCode) {
+      this.setState({ selectedCode: nextProps.selected });
+    }
+  }
   onPiq = () => {
     this.props.onPiq();
   };

@@ -1,7 +1,7 @@
 import React from "react";
 import Icon from "../../xelpmoc-core/Icon";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
-import GridSelect from "../../general/components/GridSelect";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
+import Grid from "../../general/components/Grid";
 import BankSelect from "./BankSelect";
 import styles from "./NetBanking.css";
 import Button from "../../general/components/Button";
@@ -11,10 +11,11 @@ import hdfcBankIcon from "./img/pwa_NB_HDFC.svg";
 import iciciBankIcon from "./img/pwa_NB_ICICI.svg";
 import sbiBankIcon from "./img/pwa_NB_SBI.svg";
 
-const axisBankCode = "NB_DUMMY";
+const axisBankCode = "NB_AXIS";
 const hdfcBankCode = "NB_HDFC";
 const iciciBankCode = "NB_ICICI";
 const sbiBankCode = "NB_SBI";
+const axisBankCodeDummy = "NB_DUMMY";
 const SHOW_DEFAULT_BANK_LIST = [
   axisBankCode,
   hdfcBankCode,
@@ -25,60 +26,77 @@ export default class NetBanking extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      bankName: ""
+      bankName: "",
+      bankCode: ""
     };
   }
-  handleSelect(val) {
-    this.setState({ bankName: val });
+  handleSelectForIcon(val) {
+    this.setState({ bankCode: val });
     if (this.props.binValidationForNetBank) {
       this.props.binValidationForNetBank(val);
     }
+    this.props.onSelectBankForNetBanking(val);
+  }
+  handleSelect(val) {
+    const bankCode = val.value;
+    const bankName = val.label;
+    this.setState({ bankCode: bankCode, bankName: bankName });
+    if (this.props.binValidationForNetBank) {
+      this.props.binValidationForNetBank(bankCode);
+    }
+    this.props.onSelectBankForNetBanking(bankCode);
   }
 
-  payBill = () => {
-    if (this.props.isFromGiftCard) {
-      this.props.createJusPayOrderForGiftCardNetBanking(this.state.bankName);
-    } else {
-      this.props.softReservationPaymentForNetBanking(this.state.bankName);
-    }
-  };
   render() {
     return (
       <div>
         {this.props.bankList && (
-          <GridSelect
-            limit={1}
-            offset={30}
-            elementWidthMobile={25}
-            onSelect={val => this.handleSelect(val)}
-            selected={this.props.selected}
-          >
+          <Grid limit={1} offset={30} elementWidthMobile={25}>
             {this.props.bankList.find(bank => {
-              return bank.bankCode === axisBankCode;
+              return (
+                bank.bankCode === axisBankCode ||
+                bank.bankCode === axisBankCodeDummy
+              );
             }) ? (
-              <Icon image={axisBankIcon} size={60} value={axisBankCode} />
+              <BankSelect
+                selectItem={() => this.handleSelectForIcon(axisBankCode)}
+                image={axisBankIcon}
+                selected={this.state.bankCode === axisBankCode}
+              />
             ) : null}
             {this.props.bankList.find(bank => {
               return bank.bankCode === hdfcBankCode;
             }) ? (
-              <Icon image={hdfcBankIcon} size={60} value={hdfcBankCode} />
+              <BankSelect
+                selectItem={() => this.handleSelectForIcon(hdfcBankCode)}
+                image={hdfcBankIcon}
+                selected={this.state.bankCode === hdfcBankCode}
+              />
             ) : null}
             {this.props.bankList.find(bank => {
               return bank.bankCode === iciciBankCode;
             }) ? (
-              <Icon image={iciciBankIcon} size={60} value={iciciBankCode} />
+              <BankSelect
+                selectItem={() => this.handleSelectForIcon(iciciBankCode)}
+                image={iciciBankIcon}
+                selected={this.state.bankCode === iciciBankCode}
+              />
             ) : null}
             {this.props.bankList.find(bank => {
               return bank.bankCode === sbiBankCode;
             }) ? (
-              <Icon image={sbiBankIcon} size={60} value={sbiBankCode} />
+              <BankSelect
+                selectItem={() => this.handleSelectForIcon(sbiBankCode)}
+                image={sbiBankIcon}
+                selected={this.state.bankCode === sbiBankCode}
+              />
             ) : null}
-          </GridSelect>
+          </Grid>
         )}
         <div className={styles.bankDropDown}>
-          <SelectBoxMobile
+          <SelectBoxMobile2
             height={33}
-            label="Other Bank"
+            placeholder={"Other Bank"}
             options={
               this.props.bankList &&
               this.props.bankList
@@ -89,17 +107,6 @@ export default class NetBanking extends React.Component {
             }
             onChange={val => this.handleSelect(val)}
           />
-        </div>
-        <div className={styles.cardFooterText}>
-          <div className={styles.buttonHolder}>
-            <Button
-              type="primary"
-              color="#fff"
-              label="Pay now"
-              width={120}
-              onClick={() => this.payBill()}
-            />
-          </div>
         </div>
       </div>
     );

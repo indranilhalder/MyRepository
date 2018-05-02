@@ -61,6 +61,9 @@ export default class FilterMobile extends React.Component {
         }
       }
     }
+    if (this.props.onClear) {
+      this.props.onClear();
+    }
   };
 
   selectTab(val) {
@@ -84,6 +87,7 @@ export default class FilterMobile extends React.Component {
     let url;
     let query = parsedQueryString.q;
     let pathName = this.props.location.pathname;
+
     if (parsedQueryString.searchCategory) {
       const searchValue = this.props.location.search;
       url = `${pathName}${searchValue}`;
@@ -111,7 +115,7 @@ export default class FilterMobile extends React.Component {
   };
 
   onFilterClick = val => {
-    const url = val.replace("{pageNo}", 0);
+    const url = val.replace("{pageNo}", 1);
 
     this.props.history.push(url, { isFilter: true });
   };

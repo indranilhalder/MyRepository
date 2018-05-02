@@ -7,6 +7,7 @@ import {
   showSecondaryLoader,
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
+import { displayToast } from "../../general/toast.actions";
 const mapDispatchToProps = dispatch => {
   return {
     addUserAddress: addressDetails => {
@@ -23,6 +24,9 @@ const mapDispatchToProps = dispatch => {
     },
     hideSecondaryLoader: () => {
       dispatch(hideSecondaryLoader());
+    },
+    displayToast: message => {
+      dispatch(displayToast(message));
     }
   };
 };
@@ -31,6 +35,7 @@ const mapStateToProps = state => {
   return {
     addUserAddressStatus: state.profile.addUserAddressStatus,
     getPinCodeDetails: state.profile.getPinCodeDetails,
+    getPincodeStatus: state.profile.getPinCodeStatus,
     addUserAddressError: state.profile.addUserAddressError,
     loading: state.profile.loading
   };

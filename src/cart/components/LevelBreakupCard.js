@@ -18,7 +18,7 @@ export default class LevelBreakupCard extends React.Component {
         <div className={styles.productHeader}>{this.props.productName}</div>
         <div className={styles.emiOptionHolder}>
           {emiText}
-          {!this.props.emiApplication && (
+          {/* {!this.props.emiApplication && (
             <div className={styles.moveToWishListButton}>
               <UnderLinedButton
                 size="14px"
@@ -28,7 +28,7 @@ export default class LevelBreakupCard extends React.Component {
                 onClick={() => this.moveToWishlist()}
               />
             </div>
-          )}
+          )} */}
         </div>
         <div className={styles.amountPlaneForMonth}>
           <div className={styles.quantity}>
@@ -48,9 +48,11 @@ export default class LevelBreakupCard extends React.Component {
           </div>
           <div className={styles.discount}>
             <div className={styles.amountLabel}>No Cost EMI Discount</div>
-            <div className={styles.amount}>{`Rs.${Math.round(
-              this.props.discount * 100
-            ) / 100}`}</div>
+            <div className={styles.amount}>
+              {this.props.discount > 0
+                ? `-Rs.${Math.round(this.props.discount * 100) / 100}`
+                : 0}
+            </div>
           </div>
         </div>
         <div className={styles.totalAmountDisplay}>

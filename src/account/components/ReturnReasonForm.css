@@ -43,3 +43,9 @@
 .button {
   display: inline-block;
 }
+.reverseSealHolder {
+  width: 100%;
+  height: auto;
+  margin-top: 15px;
+  border-radius: 4px;
+}

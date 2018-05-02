@@ -70,6 +70,7 @@ export default class ReturnFlow extends React.Component {
       }
     });
   }
+
   navigateToOrderDetail() {
     this.props.history.push(`${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}`);
   }
@@ -107,6 +108,7 @@ export default class ReturnFlow extends React.Component {
           )}
         />
         <Route
+          exact
           path={`${RETURNS}${RETURN_TO_STORE}`}
           render={() => (
             <ReturnToStoreContainer {...this.state} {...this.props} />
@@ -123,7 +125,6 @@ export default class ReturnFlow extends React.Component {
           path={`${RETURNS}${RETURNS_SELF_COURIER}`}
           render={() => <SelfCourierContainer {...this.state} />}
         />
-
         {/* end of need to call return bia store pick up  routes */}
       </React.Fragment>
     );

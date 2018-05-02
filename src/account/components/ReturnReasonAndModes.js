@@ -33,6 +33,7 @@ export default class ReturnReasonAndModes extends React.Component {
   renderLoader() {
     return <Loader />;
   }
+
   onCancel() {
     setDataLayerForMyAccountDirectCalls(ADOBE_MY_ACCOUNT_ORDER_RETURN_CANCEL);
     this.props.history.goBack();
@@ -47,8 +48,8 @@ export default class ReturnReasonAndModes extends React.Component {
       this.props.displayToast("Please select reason ");
       return false;
     }
-    if (!data.comment) {
-      this.props.displayToast("Please enter comment ");
+    if (!data.reverseSeal) {
+      this.props.displayToast("Please Select Reverse Seal ");
       return false;
     } else {
       this.props.onChange({ data });
@@ -94,9 +95,7 @@ export default class ReturnReasonAndModes extends React.Component {
       });
     } else if (mode === SELF_COURIER) {
       this.props.history.push({
-        pathname: `${RETURNS_PREFIX}/${
-          this.orderCode
-        }${RETURN_CLIQ_PIQ}${RETURNS_SELF_COURIER}`,
+        pathname: `${RETURNS_PREFIX}/${this.orderCode}${RETURNS_SELF_COURIER}`,
         state: {
           authorizedRequest: true
         }

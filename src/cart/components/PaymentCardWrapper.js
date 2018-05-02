@@ -14,6 +14,7 @@ import PaytmOption from "./PaytmOption.js";
 import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
 
+import CheckOutHeader from "./CheckOutHeader";
 let cliqCashToggleState = false;
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const keyForCreditCard = "Credit Card";
@@ -92,6 +93,10 @@ export default class PaymentCardWrapper extends React.Component {
   renderSavedCards = () => {
     return (
       <CheckoutSavedCard
+        currentPaymentMode={this.props.currentPaymentMode}
+        onSelectPaymentsMode={currentPaymentMode =>
+          this.props.onChange({ currentPaymentMode })
+        }
         binValidationForSavedCard={cardDetails =>
           this.binValidationForSavedCard(cardDetails)
         }
@@ -184,7 +189,12 @@ export default class PaymentCardWrapper extends React.Component {
             </div>
           )}
           {this.renderBankOffers()}
-
+          <div className={styles.card}>
+            <CheckOutHeader
+              confirmTitle="Choose payment Method"
+              indexNumber="3"
+            />
+          </div>
           {this.props.isRemainingBalance && (
             <div className={styles.paymentModes}>{this.renderSavedCards()}</div>
           )}

@@ -11,7 +11,13 @@ import {
 import each from "lodash.foreach";
 import delay from "lodash.delay";
 import { MSD_WIDGET_PLATFORM } from "../../lib/config.js";
-import { setDataLayer, ADOBE_HOME_TYPE } from "../../lib/adobeUtils.js";
+import {
+  setDataLayer,
+  ADOBE_HOME_TYPE,
+  ADOBE_BLP_PAGE_LOAD,
+  ADOBE_CLP_PAGE_LOAD
+} from "../../lib/adobeUtils.js";
+import { setHeaderText } from "../../general/header.actions.js";
 import * as Cookie from "../../lib/Cookie";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 
@@ -53,7 +59,7 @@ const ADOBE_TARGET_DELAY = 1500;
 const MSD_NUM_PRODUCTS = 10;
 const MSD_NUM_RESULTS = 10;
 const MSD_NUM_BRANDS = 1;
-const DISCOVER_MORE_NUM_RESULTS = 3;
+const DISCOVER_MORE_NUM_RESULTS = 10;
 const FOLLOWED_WIDGET_WIDGET_LIST = [112]; // weirdly it's not done.
 const FRESH_FROM_BRANDS_WIDGET_LIST = [111];
 const DISCOVER_MORE_WIDGET_LIST = [110];
@@ -73,6 +79,8 @@ const AUTO_PRODUCT_RECOMMENDATION_COMPONENT =
 const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1"; // for local/devxelp/uat2tmpprod
 const ADOBE_TARGET_PRODUCTION_HOME_FEED_MBOX_NAME = "PROD_Mobile_Homepage_Mbox";
 const ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME = "UAT_Mobile_Homepage_Mbox";
+export const CATEGORY_REGEX = /msh*/;
+export const BRAND_REGEX = /mbh*/;
 
 export function getProductCapsulesRequest() {
   return {
@@ -194,7 +202,7 @@ export function multiSelectSubmit(values, questionId, positionInFeed) {
   return async (dispatch, getState, { api }) => {
     dispatch(multiSelectSubmitRequest(positionInFeed));
     try {
-      const result = await api.postMock(SINGLE_SELECT_SUBMIT_PATH, {
+      const result = await api.post(SINGLE_SELECT_SUBMIT_PATH, {
         optionId: values,
         questionId
       });
@@ -235,7 +243,7 @@ export function selectSingleSelectResponse(value, questionId, positionInFeed) {
   return async (dispatch, getState, { api }) => {
     dispatch(singleSelectRequest(positionInFeed));
     try {
-      const result = await api.postMock(SINGLE_SELECT_SUBMIT_PATH, {
+      const result = await api.post(SINGLE_SELECT_SUBMIT_PATH, {
         questionId,
         optionId: [value]
       });
@@ -337,7 +345,24 @@ export function homeFeed(brandIdOrCategoryId: null) {
         if (resultJson.errors) {
           dispatch(homeFeedSuccess([], feedTypeRequest));
         } else {
+          if (resultJson.pageName) {
+            dispatch(setHeaderText(resultJson.pageName));
+          }
           dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
+          if (CATEGORY_REGEX.test(brandIdOrCategoryId)) {
+            setDataLayer(
+              ADOBE_CLP_PAGE_LOAD,
+              resultJson,
+              getState().icid.value,
+              getState().icid.icidType
+            );
+          } else if (BRAND_REGEX.test(brandIdOrCategoryId))
+            setDataLayer(
+              ADOBE_BLP_PAGE_LOAD,
+              resultJson,
+              getState().icid.value,
+              getState().icid.icidType
+            );
         }
       } else {
         let mbox = ADOBE_TARGET_HOME_FEED_MBOX_NAME;

@@ -11,7 +11,8 @@ import * as ErrorHandling from "../../general/ErrorHandling.js";
 import {
   showModal,
   EMI_ITEM_LEVEL_BREAKAGE,
-  EMI_BANK_TERMS_AND_CONDITIONS
+  EMI_BANK_TERMS_AND_CONDITIONS,
+  INVALID_BANK_COUPON_POPUP
 } from "../../general/modal.actions";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -24,8 +25,11 @@ import {
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   JUS_PAY_PENDING,
   JUS_PAY_CHARGED,
-  FAILURE_LOWERCASE
+  FAILURE_LOWERCASE,
+  SOFT_RESERVATION_ITEM,
+  ADDRESS_DETAILS_FOR_PAYMENT
 } from "../../lib/constants";
+import queryString, { parse } from "query-string";
 
 import {
   setDataLayer,
@@ -251,7 +255,6 @@ export const ADD_PRODUCT_TO_WISH_LIST_SUCCESS =
   "ADD_PRODUCT_TO_WISH_LIST_SUCCESS";
 export const ADD_PRODUCT_TO_WISH_LIST_FAILURE =
   "ADD_PRODUCT_TO_WISH_LIST_FAILURE";
-
 export const REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST =
   "REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST";
 export const REMOVE_ITEM_FROM_CART_LOGGED_IN_SUCCESS =
@@ -320,10 +323,21 @@ export const EMI_ITEM_BREAK_UP_DETAILS_SUCCESS =
 export const EMI_ITEM_BREAK_UP_DETAILS_FAILURE =
   "EMI_ITEM_BREAK_UP_DETAILS_FAILURE";
 
+export const PAYMENT_FAILURE_ORDER_DETAILS_REQUEST =
+  "PAYMENT_FAILURE_ORDER_DETAILS_REQUEST";
+export const PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS =
+  "PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS";
+export const PAYMENT_FAILURE_ORDER_DETAILS_FAILURE =
+  "PAYMENT_FAILURE_ORDER_DETAILS_FAILURE";
+
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
 const CASH_ON_DELIVERY = "COD";
-const MY_WISH_LIST = "MyWishList";
+const ERROR_CODE_FOR_BANK_OFFER_INVALID_1 = "B9078";
+const ERROR_CODE_FOR_BANK_OFFER_INVALID_2 = "B6009";
+const INVALID_COUPON_ERROR_MESSAGE = "invalid coupon";
+export const CART_ITEM_COOKIE = "cartItems";
+export const ADDRESS_FOR_PLACE_ORDER = "orderAddress";
 export const ANONYMOUS_USER = "anonymous";
 
 export function displayCouponRequest() {
@@ -473,7 +487,7 @@ export function getCartDetailsCNC(
     dispatch(cartDetailsCNCRequest());
     try {
       const result = await api.get(
-        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetailsCNC?access_token=${accessToken}&isPwa=true&&platformNumber=2&pincode=${pinCode}`
+        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetailsCNC?access_token=${accessToken}&isPwa=true&platformNumber=2&pincode=${pinCode}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
@@ -493,7 +507,7 @@ export function getCartDetailsCNC(
             productDetails.deliveryMode =
               product.pinCodeResponse.validDeliveryModes[0].type;
             productDetails.serviceableSlaves =
-              product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+              product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
           } else if (
             product.pinCodeResponse.validDeliveryModes[0]
               .CNCServiceableSlavesData
@@ -501,7 +515,7 @@ export function getCartDetailsCNC(
             productDetails.deliveryMode =
               product.pinCodeResponse.validDeliveryModes[0].type;
             productDetails.serviceableSlaves =
-              product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+              product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
           }
           item.push(productDetails);
           productItems.item = item;
@@ -746,7 +760,7 @@ export function userAddressFailure(error) {
   };
 }
 
-export function getUserAddress() {
+export function getUserAddress(setDataLayerForMyAccount: false) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
@@ -765,7 +779,9 @@ export function getUserAddress() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayer(ADOBE_MY_ACCOUNT_ADDRESS_BOOK);
+      if (setDataLayerForMyAccount) {
+        setDataLayer(ADOBE_MY_ACCOUNT_ADDRESS_BOOK);
+      }
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
       dispatch(userAddressFailure(e.message));
@@ -824,7 +840,9 @@ export function addUserAddress(userAddress, fromAccount) {
           userAddress.line1
         }&state=${userAddress.state}&line2=${userAddress.line2}&line3=${
           userAddress.line3
-        }&town=${userAddress.town}&defaultFlag=${userAddress.defaultFlag}`
+        }&town=${userAddress.town}&landmark=${
+          userAddress.landmark
+        }&defaultFlag=${userAddress.defaultFlag}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -835,9 +853,9 @@ export function addUserAddress(userAddress, fromAccount) {
       setDataLayerForCheckoutDirectCalls(
         ADOBE_ADD_NEW_ADDRESS_ON_CHECKOUT_PAGE
       );
-      dispatch(addUserAddressSuccess());
+      return dispatch(addUserAddressSuccess());
     } catch (e) {
-      dispatch(addUserAddressFailure(e.message));
+      return dispatch(addUserAddressFailure(e.message));
     }
   };
 }
@@ -1336,7 +1354,6 @@ export function checkPinCodeServiceAvailability(
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -1493,7 +1510,7 @@ export function addPickupPersonCNC(personMobile, personName) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(addPickUpPersonSuccess(resultJson));
+
       dispatch(
         getCartDetailsCNC(
           JSON.parse(userDetails).userName,
@@ -1503,8 +1520,9 @@ export function addPickupPersonCNC(personMobile, personName) {
           false
         )
       );
+      return dispatch(addPickUpPersonSuccess(resultJson));
     } catch (e) {
-      dispatch(addPickUpPersonFailure(e.message));
+      return dispatch(addPickUpPersonFailure(e.message));
     }
   };
 }
@@ -1557,7 +1575,7 @@ export function softReservation(pinCode, payload) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(getOrderSummary());
+      dispatch(getOrderSummary(pinCode));
       dispatch(softReservationSuccess(resultJson.reservationItem));
     } catch (e) {
       dispatch(softReservationFailure(e.message));
@@ -1960,6 +1978,7 @@ export function softReservationForPaymentFailure(error) {
 export function softReservationForPayment(cardDetails, address, paymentMode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
   return async (dispatch, getState, { api }) => {
     let productItems = {};
     let item = [];
@@ -1972,14 +1991,14 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       } else if (
         product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
       ) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
       }
       item.push(productDetails);
       productItems.item = item;
@@ -1994,7 +2013,7 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
           JSON.parse(userDetails).userName
         }/carts/softReservationForPayment?access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartId}&pincode=${cardDetails.pinCode}`,
+        }&cartGuid=${cartId}&pincode=${pinCode}`,
         productItems
       );
       const resultJson = await result.json();
@@ -2032,14 +2051,14 @@ export function softReservationPaymentForNetBanking(
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       } else if (
         product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
       ) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
       }
       item.push(productDetails);
       productItems.item = item;
@@ -2098,14 +2117,14 @@ export function softReservationPaymentForSavedCard(
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       } else if (
         product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
       ) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
       }
       item.push(productDetails);
       productItems.item = item;
@@ -2120,12 +2139,13 @@ export function softReservationPaymentForSavedCard(
           JSON.parse(userDetails).userName
         }/carts/softReservationForPayment?access_token=${
           JSON.parse(customerCookie).access_token
-        }&type=payment&cartGuid=${cartId}&pincode=${cardDetails.pinCode}`,
+        }&type=payment&cartGuid=${cartId}&pincode=${localStorage.getItem(
+          DEFAULT_PIN_CODE_LOCAL_STORAGE
+        )}`,
         productItems
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -2153,14 +2173,14 @@ export function softReservationForCliqCash(pinCode) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       } else if (
         product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
       ) {
         productDetails.deliveryMode =
           product.pinCodeResponse.validDeliveryModes[0].type;
         productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves[0];
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
       }
       item.push(productDetails);
       productItems.item = item;
@@ -2220,9 +2240,13 @@ export function jusPayTokenizeFailure(error) {
 export function jusPayTokenize(
   cardDetails,
   address,
-  productItems,
-  paymentMode
+  cartItem,
+  paymentMode,
+  isPaymentFailed
 ) {
+  if (!isPaymentFailed) {
+    localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(jusPayTokenizeRequest());
     let cardObject = new FormData();
@@ -2244,10 +2268,11 @@ export function jusPayTokenize(
       dispatch(
         createJusPayOrder(
           resultJson.token,
-          productItems,
+          cartItem,
           address,
           cardDetails,
-          paymentMode
+          paymentMode,
+          isPaymentFailed
         )
       );
     } catch (e) {
@@ -2325,15 +2350,24 @@ export function createJusPayOrder(
   cartItem,
   address,
   cardDetails,
-  paymentMode
+  paymentMode,
+  isPaymentFailed
 ) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  const jusPayUrl = `${
+    window.location.origin
+  }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  if (isPaymentFailed) {
+    let url = queryString.parse(window.location.search);
+    cartId = url && url.value;
+  } else {
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    cartId = JSON.parse(cartDetails).guid;
+  }
+
   return async (dispatch, getState, { api }) => {
-    let orderDetails = getState().cart.cartDetailsCNC;
     dispatch(createJusPayOrderRequest());
     try {
       const result = await api.post(
@@ -2347,17 +2381,39 @@ export function createJusPayOrder(
           address.line1
         }&addressLine3=${address.line1}&country=${
           address.country.isocode
-        }&city=${orderDetails.addressDetailsList.addresses[0].city}&state=${
-          address.state
-        }&pincode=${
+        }&city=${address.city}&state=${address.state}&pincode=${
           address.postalCode
         }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}`,
         cartItem
       );
       const resultJson = await result.json();
+
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          const redoCreateJusPayApi = () =>
+            dispatch(
+              createJusPayOrder(
+                token,
+                cartItem,
+                address,
+                cardDetails,
+                paymentMode
+              )
+            );
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              redoCreateJusPayApi,
+              couponCode: resultJson.couponCode
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
       dispatch(
         jusPayPaymentMethodType(
@@ -2378,7 +2434,9 @@ export function createJusPayOrderForGiftCard(
   paymentMode,
   guId
 ) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  const jusPayUrl = `${
+    window.location.origin
+  }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -2420,7 +2478,9 @@ export function createJusPayOrderForNetBanking(
   pinCode,
   cartItem
 ) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  const jusPayUrl = `${
+    window.location.origin
+  }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -2441,7 +2501,29 @@ export function createJusPayOrderForNetBanking(
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          const redoCreateJusPayApi = () =>
+            dispatch(
+              createJusPayOrderForNetBanking(
+                paymentMethodType,
+                bankName,
+                pinCode,
+                cartItem
+              )
+            );
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              redoCreateJusPayApi,
+              couponCode: resultJson.couponCode
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
       dispatch(
         jusPayPaymentMethodTypeForNetBanking(
@@ -2457,7 +2539,9 @@ export function createJusPayOrderForNetBanking(
 }
 
 export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  const jusPayUrl = `${
+    window.location.origin
+  }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
@@ -2491,12 +2575,29 @@ export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
   };
 }
 
-export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+export function createJusPayOrderForSavedCards(
+  cardDetails,
+  cartItemObj,
+  isPaymentFailed
+) {
+  let cartItem = cartItemObj;
+  if (!isPaymentFailed) {
+    localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
+  }
+
+  const jusPayUrl = `${
+    window.location.origin
+  }/checkout/multi/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  if (isPaymentFailed) {
+    let url = queryString.parse(window.location.search);
+    cartId = url && url.value;
+  } else {
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    cartId = JSON.parse(cartDetails).guid;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
     try {
@@ -2506,9 +2607,11 @@ export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
         }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&addressLine3=&sameAsShipping=null&cardSaved=false&bankName=${
           cardDetails.cardIssuer
         }&
-        cardFingerPrint=${cardDetails.cardFingerprint}&platform=2&pincode=${
-          cardDetails.pinCode
-        }&city=&cartGuid=${cartId}&token=&cardRefNo=${
+        cardFingerPrint=${
+          cardDetails.cardFingerprint
+        }&platform=2&pincode=${localStorage.getItem(
+          DEFAULT_PIN_CODE_LOCAL_STORAGE
+        )}&city=&cartGuid=${cartId}&token=&cardRefNo=${
           cardDetails.cardReferenceNumber
         }&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
@@ -2517,10 +2620,25 @@ export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          const redoCreateJusPayApi = () =>
+            dispatch(createJusPayOrderForSavedCards(cardDetails, cartItem));
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              redoCreateJusPayApi,
+              couponCode: resultJson.couponCode
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
+
       dispatch(
         jusPayPaymentMethodTypeForSavedCards(
           resultJson.juspayOrderId,
@@ -2534,7 +2652,9 @@ export function createJusPayOrderForSavedCards(cardDetails, cartItem) {
 }
 
 export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+  const jusPayUrl = `${
+    window.location.origin
+  }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
@@ -2574,12 +2694,33 @@ export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
   };
 }
 
-export function createJusPayOrderForCliqCash(pinCode, cartItem) {
-  let jusPayUrl = `${window.location.href}/multi/payment-method/cardPayment`;
+export function createJusPayOrderForCliqCash(
+  pinCode,
+  cartItemObj,
+  isPaymentFailed = false
+) {
+  let cartItem;
+
+  if (localStorage.getItem(CART_ITEM_COOKIE)) {
+    cartItem = JSON.parse(localStorage.getItem(CART_ITEM_COOKIE));
+  } else {
+    cartItem = cartItemObj;
+    localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
+  }
+
+  const jusPayUrl = `${
+    window.location.origin
+  }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  if (isPaymentFailed) {
+    let url = queryString.parse(window.location.search);
+    cartId = url && url.value;
+  } else {
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    cartId = JSON.parse(cartDetails).guid;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
 
@@ -2596,7 +2737,22 @@ export function createJusPayOrderForCliqCash(pinCode, cartItem) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          const redoCreateJusPayApi = () =>
+            dispatch(createJusPayOrderForCliqCash(pinCode, cartItem));
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              redoCreateJusPayApi,
+              couponCode: resultJson.couponCode
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
       dispatch(createJusPayOrderSuccessForCliqCash(resultJson));
       dispatch(generateCartIdForLoggedInUser());
@@ -2738,9 +2894,9 @@ export function jusPayPaymentMethodType(
         cardObject.append("emi_tenure", cardDetails.emi_tenure);
         cardObject.append("is_emi", cardDetails.is_emi);
       }
-
       const result = await api.postJusPay(`txns?`, cardObject);
       const resultJson = await result.json();
+
       if (
         resultJson.status === JUS_PAY_PENDING ||
         resultJson.status === SUCCESS ||
@@ -2937,9 +3093,7 @@ export function updateTransactionDetails(paymentMode, juspayOrderID, cartId) {
         );
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayerForOrderConfirmationDirectCalls(
-        ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS
-      );
+
       dispatch(updateTransactionDetailsSuccess(resultJson));
       dispatch(orderConfirmation(resultJson.orderId));
     } catch (e) {
@@ -2997,6 +3151,12 @@ export function orderConfirmation(orderId) {
         getState().icid.value,
         getState().icid.icidType
       );
+
+      setDataLayerForOrderConfirmationDirectCalls(
+        ADOBE_DIRECT_CALLS_FOR_ORDER_CONFIRMATION_SUCCESS,
+        resultJson.orderRefNo
+      );
+
       dispatch(orderConfirmationSuccess(resultJson));
     } catch (e) {
       dispatch(orderConfirmationFailure(e.message));
@@ -3261,7 +3421,7 @@ export function softReservationForCODPayment(pinCode) {
       productDetails.deliveryMode =
         product.pinCodeResponse.validDeliveryModes[0].type;
       productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves[0];
+        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
       productDetails.fulfillmentType = product.fullfillmentType;
       item.push(productDetails);
       productItems.item = item;
@@ -3294,60 +3454,6 @@ export function softReservationForCODPayment(pinCode) {
     }
   };
 }
-
-// Actions for Add Product to Wish List
-export function addProductToWishListRequest() {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_REQUEST,
-    status: REQUESTING
-  };
-}
-export function addProductToWishListSuccess() {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_SUCCESS,
-    status: SUCCESS
-  };
-}
-
-export function addProductToWishListFailure(error) {
-  return {
-    type: ADD_PRODUCT_TO_WISH_LIST_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-// Action Creator for Add Product To Wish List
-export function addProductToWishList(productDetails) {
-  return async (dispatch, getState, { api }) => {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-    const cartId = JSON.parse(cartDetails).guid;
-    dispatch(addProductToWishListRequest());
-    try {
-      const result = await api.post(
-        `${USER_CART_PATH}/${
-          JSON.parse(userDetails).userName
-        }/addProductInWishlist?platformNumber=2&access_token=${
-          JSON.parse(customerCookie).access_token
-        }&isPwa=true&ussid=${productDetails.USSID}&productCode=${
-          productDetails.productcode
-        }&wishlistName=${MY_WISH_LIST}`
-      );
-      const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
-      }
-      dispatch(addProductToWishListSuccess());
-    } catch (e) {
-      dispatch(addProductToWishListFailure(e.message));
-    }
-  };
-}
-
 // Action for remove Item from Cart Logged In
 export function removeItemFromCartLoggedInRequest() {
   return {
@@ -3863,6 +3969,7 @@ export function removeNoCostEmi(couponCode) {
         }&cartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
+
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
@@ -3923,6 +4030,60 @@ export function getItemBreakUpDetails(couponCode) {
       dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE, resultJson));
     } catch (e) {
       dispatch(getItemBreakUpDetailsFailure(e.message));
+    }
+  };
+}
+
+export function getPaymentFailureOrderDetailsRequest() {
+  return {
+    type: PAYMENT_FAILURE_ORDER_DETAILS_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function getPaymentFailureOrderDetailsSuccess(
+  paymentFailureOrderDetails
+) {
+  return {
+    type: PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS,
+    status: SUCCESS,
+    paymentFailureOrderDetails
+  };
+}
+
+export function getPaymentFailureOrderDetailsFailure(error) {
+  return {
+    type: PAYMENT_FAILURE_ORDER_DETAILS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getPaymentFailureOrderDetails() {
+  return async (dispatch, getState, { api }) => {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+    let url = queryString.parse(window.location.search);
+    const cartGuId = url && url.value;
+
+    dispatch(getPaymentFailureOrderDetailsRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/payments/failedorderdetails?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartGuId}`
+      );
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(getPaymentFailureOrderDetailsSuccess(resultJson));
+    } catch (e) {
+      dispatch(getPaymentFailureOrderDetailsFailure(e.message));
     }
   };
 }

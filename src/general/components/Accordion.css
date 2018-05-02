@@ -21,6 +21,14 @@
   composes: textBox;
   font-family: semibold;
 }
+.text {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
 .icon {
   width: 20px;
   height: 20px;

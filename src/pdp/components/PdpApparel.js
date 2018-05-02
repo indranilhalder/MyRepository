@@ -6,7 +6,7 @@ import ProductGalleryMobile from "./ProductGalleryMobile";
 import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
 import OfferCard from "./OfferCard";
-import PdpLink from "./PdpLink";
+import OtherSellersLink from "./OtherSellersLink";
 import PdpPaymentInfo from "./PdpPaymentInfo";
 import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
@@ -184,18 +184,6 @@ export default class PdpApparel extends React.Component {
           })
       : [];
 
-    let validSellersCount = 0;
-    if (
-      productData.otherSellers &&
-      productData.otherSellers.filter(val => {
-        return val.availableStock !== "0";
-      }).length > 0
-    ) {
-      validSellersCount = productData.otherSellers.filter(val => {
-        return val.availableStock !== "0" && val.availableStock !== "-1";
-      }).length;
-    }
-
     if (productData) {
       let price = "";
       let discountPrice = "";
@@ -301,56 +289,26 @@ export default class PdpApparel extends React.Component {
               deliveryModesATP={productData.deliveryModesATP}
             />
           )}
-
-          {productData.winningSellerName && (
-            <div className={styles.separator}>
-              <PdpLink
-                onClick={() => this.goToSellerPage(validSellersCount)}
-                noLink={validSellersCount === 0}
-              >
-                <div className={styles.sellers}>
-                  Sold by{" "}
-                  <span className={styles.winningSellerText}>
-                    {productData.winningSellerName}
-                  </span>
-                  {validSellersCount !== 0 && (
-                    <React.Fragment>
-                      {" "}
-                      and {validSellersCount} other seller(s)
-                    </React.Fragment>
-                  )}
-                </div>
-              </PdpLink>
-            </div>
-          )}
-          {productData.details && (
-            <div className={styles.details}>
-              <ProductDetails data={productData.details} />
-            </div>
-          )}
           <div className={styles.separator}>
-            <RatingAndTextLink
-              onClick={this.goToReviewPage}
-              averageRating={productData.averageRating}
-              numberOfReview={productData.numberOfReviews}
+            <OtherSellersLink
+              otherSellers={productData.otherSellers}
+              winningSeller={productData.winningSellerName}
             />
           </div>
-          {productData.classifications && (
-            <div className={styles.details}>
-              <ProductFeatures features={productData.classifications} />
-            </div>
-          )}
-          {productData.APlusContent && (
-            <AllDescription
-              productContent={productData.APlusContent.productContent}
-            />
-          )}
           <div className={styles.details}>
-            {productData.styleNote && (
-              <ProductFeature
-                heading="Style Note"
-                content={productData.styleNote}
-              />
+            {productData.details && (
+              <Accordion
+                text="Product Description"
+                headerFontSize={16}
+                isOpen={true}
+              >
+                <div className={styles.accordionContent}>
+                  {productData.productDescription}
+                </div>
+              </Accordion>
+            )}
+            {productData.details && (
+              <ProductDetails data={productData.details} />
             )}
             {productData.knowMore && (
               <Accordion text="Know More" headerFontSize={16}>
@@ -369,6 +327,19 @@ export default class PdpApparel extends React.Component {
               />
             )}
           </div>
+          <div className={styles.separator}>
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
+          </div>
+          {productData.APlusContent && (
+            <AllDescription
+              productContent={productData.APlusContent.productContent}
+            />
+          )}
+          <div className={styles.details} />
           <div className={styles.blankSeparator} />
           <PDPRecommendedSectionsContainer />
         </PdpFrame>

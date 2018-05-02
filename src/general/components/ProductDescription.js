@@ -33,9 +33,9 @@ export default class ProductDescription extends Component {
     return (
       <div className={styles.base}>
         <div className={headerClass}>
-          <div className={headerText}>{this.props.title}</div>
-
-          {this.props.productListingId &&
+          <h3 className={headerText}>{this.props.title}</h3>
+          {this.props.showWishListButton &&
+            this.props.productListingId &&
             this.props.winningUssID && (
               <div className={styles.button}>
                 <AddToWishListButtonContainer
@@ -48,18 +48,16 @@ export default class ProductDescription extends Component {
         </div>
         <div className={contentClass}>
           {this.props.description && (
-            <div className={styles.description}>{this.props.description}</div>
+            <h2 className={styles.description}>{this.props.description}</h2>
           )}
 
           {this.props.discountPrice &&
             this.props.discountPrice !== this.props.price && (
-              <div className={styles.discount}>
-                {`Rs. ${this.props.discountPrice}`}
-              </div>
+              <div className={styles.discount}>{this.props.discountPrice}</div>
             )}
 
           {this.props.price && (
-            <div className={priceClass}>{`Rs. ${this.props.price}`}</div>
+            <div className={priceClass}>{this.props.price}</div>
           )}
         </div>
       </div>
@@ -83,5 +81,6 @@ ProductDescription.defaultProps = {
   description: "",
   price: "",
   isWhite: false,
-  textColor: "#212121"
+  textColor: "#212121",
+  showWishListButton: true
 };

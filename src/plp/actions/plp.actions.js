@@ -3,7 +3,12 @@ import {
   showSecondaryLoader,
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
-import { setDataLayer, ADOBE_PLP_TYPE } from "../../lib/adobeUtils";
+import {
+  setDataLayer,
+  ADOBE_PLP_TYPE,
+  ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT,
+  ADOBE_INTERNAL_SEARCH_CALL_ON_GET_NULL
+} from "../../lib/adobeUtils";
 export const PRODUCT_LISTINGS_REQUEST = "PRODUCT_LISTINGS_REQUEST";
 export const PRODUCT_LISTINGS_SUCCESS = "PRODUCT_LISTINGS_SUCCESS";
 export const PRODUCT_LISTINGS_FAILURE = "PRODUCT_LISTINGS_FAILURE";
@@ -97,6 +102,7 @@ export function getProductListingsFailure(error, isPaginated) {
     isPaginated
   };
 }
+
 export function getProductListings(
   suffix: null,
   paginated: false,
@@ -120,9 +126,39 @@ export function getProductListings(
       const result = await api.get(queryString);
       const resultJson = await result.json();
       if (resultJson.error) {
+        if (
+          resultJson &&
+          resultJson.currentQuery &&
+          resultJson.currentQuery.searchQuery
+        ) {
+          setDataLayer(
+            ADOBE_INTERNAL_SEARCH_CALL_ON_GET_NULL,
+            resultJson,
+            getState().icid.value,
+            getState().icid.icidType
+          );
+        }
         throw new Error(`${resultJson.error}`);
       }
-      setDataLayer(ADOBE_PLP_TYPE, resultJson);
+      if (
+        resultJson &&
+        resultJson.currentQuery &&
+        resultJson.currentQuery.searchQuery
+      ) {
+        setDataLayer(
+          ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT,
+          resultJson,
+          getState().icid.value,
+          getState().icid.icidType
+        );
+      } else {
+        setDataLayer(
+          ADOBE_PLP_TYPE,
+          resultJson,
+          getState().icid.value,
+          getState().icid.icidType
+        );
+      }
       if (paginated) {
         if (resultJson.searchresult) {
           dispatch(getProductListingsPaginatedSuccess(resultJson, true));

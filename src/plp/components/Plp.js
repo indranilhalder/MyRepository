@@ -5,6 +5,10 @@ import PlpMobileFooter from "./PlpMobileFooter";
 import styles from "./Plp.css";
 import throttle from "lodash.throttle";
 import Loader from "../../general/components/Loader";
+import {
+  renderMetaTags,
+  renderMetaTagsWithoutSeoObject
+} from "../../lib/seoUtils.js";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SCROLL_CHECK_INTERVAL = 500;
 const OFFSET_BOTTOM = 800;
@@ -64,6 +68,7 @@ export default class Plp extends React.Component {
     this.throttledScroll = this.handleScroll();
     window.addEventListener("scroll", this.throttledScroll);
   }
+
   componentDidUpdate(prevProps) {
     if (this.props.productListings !== null) {
       if (this.props.isFilterOpen) {
@@ -72,20 +77,38 @@ export default class Plp extends React.Component {
         if (
           this.props.productListings.seo &&
           this.props.productListings.seo.breadcrumbs &&
-          this.props.productListings.seo.breadcrumbs[0] &&
-          this.props.productListings.seo.breadcrumbs[0].name
+          this.props.productListings.seo.breadcrumbs[
+            this.props.productListings.seo.breadcrumbs.length - 1
+          ] &&
+          this.props.productListings.seo.breadcrumbs[
+            this.props.productListings.seo.breadcrumbs.length - 1
+          ].name
         )
           this.props.setHeaderText(
-            `${this.props.productListings.seo.breadcrumbs[0].name} (${
-              this.props.productListings.pagination.totalResults
-            })`
+            `${
+              this.props.productListings.seo.breadcrumbs[
+                this.props.productListings.seo.breadcrumbs.length - 1
+              ].name
+            } (${this.props.productListings.pagination.totalResults})`
           );
         else {
-          this.props.setHeaderText(
-            `Search results (${
-              this.props.productListings.pagination.totalResults
-            })`
-          );
+          const slug = this.props.match.params.slug;
+          let splitSlug = "Tata Cliq";
+          if (slug) {
+            splitSlug = this.props.match.params.slug.replace(/-/g, " ");
+            splitSlug = splitSlug.replace(/\b\w/g, l => l.toUpperCase());
+            this.props.setHeaderText(
+              `${splitSlug} (${
+                this.props.productListings.pagination.totalResults
+              })`
+            );
+          } else {
+            this.props.setHeaderText(
+              `Search results (${
+                this.props.productListings.pagination.totalResults
+              })`
+            );
+          }
         }
       }
     }
@@ -115,6 +138,9 @@ export default class Plp extends React.Component {
     return (
       this.props.productListings && (
         <div className={styles.base}>
+          {this.props.productListings.seo
+            ? renderMetaTags(this.props.productListings)
+            : renderMetaTagsWithoutSeoObject(this.props.productListings)}
           <div className={styles.main}>
             <ProductGrid
               history={this.props.history}
@@ -126,6 +152,7 @@ export default class Plp extends React.Component {
             backPage={this.backPage}
             isFilterOpen={this.props.isFilterOpen}
             onApply={this.onApply}
+            onClear={this.props.hideFilter}
             onL3CategorySelect={this.onL3CategorySelect}
           />
           <div className={styles.footer}>

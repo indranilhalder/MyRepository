@@ -5,7 +5,7 @@ import TextArea from "../../general/components/TextArea";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
 import styles from "./ReturnReasonForm.css";
-
+import ReverseSealYesNo from "./ReverseSealYesNo.js";
 export default class ReturnReasonForm extends React.Component {
   constructor(props) {
     super(props);
@@ -13,7 +13,10 @@ export default class ReturnReasonForm extends React.Component {
     this.state = {
       displaySecondary: false,
       secondaryReasons: null,
-      comment: null
+      comment: null,
+      reverseSeal: null,
+      returnReasonCode: null,
+      subReasonCode: null
     };
   }
   handleContinue() {
@@ -21,9 +24,11 @@ export default class ReturnReasonForm extends React.Component {
       let reasonAndCommentObj = Object.assign(
         {},
         {
+          returnReasonCode: this.state.returnReasonCode,
           subReasonCode: this.state.subReasonCode,
           comment: this.state.comment,
-          reason: this.state.reason
+          reason: this.state.reason,
+          reverseSeal: this.state.reverseSeal
         }
       );
       this.props.onContinue(reasonAndCommentObj);
@@ -34,14 +39,12 @@ export default class ReturnReasonForm extends React.Component {
     const label = val.label;
     const data = this.props.returnProductDetails;
     this.setState({
-      parentReasonCode: code,
+      returnReasonCode: code,
       reason: label,
       secondaryReasons: data.returnReasonMap
-
         .filter(val => {
           return val.parentReasonCode === code;
         })
-
         .map(val => {
           if (val.subReasons) {
             return val.subReasons.map(value => {
@@ -56,6 +59,9 @@ export default class ReturnReasonForm extends React.Component {
   }
   handleChange(val) {
     this.setState({ comment: val });
+  }
+  selectReverseSeal(val) {
+    this.setState({ reverseSeal: val });
   }
   onChangeSecondary(val) {
     const code = val.value;
@@ -101,7 +107,7 @@ export default class ReturnReasonForm extends React.Component {
           </OrderCard>
           <div className={styles.select}>
             <SelectBoxMobile2
-              label={this.state.reason ? this.state.reason : "Select a reason"}
+              placeholder={"Select a reason"}
               options={data.returnReasonMap.map((val, i) => {
                 return {
                   value: val.parentReasonCode,
@@ -114,11 +120,7 @@ export default class ReturnReasonForm extends React.Component {
           {this.state.secondaryReasons && (
             <div className={styles.select}>
               <SelectBoxMobile2
-                label={
-                  this.state.subReason
-                    ? this.state.subReason
-                    : "Select a reason"
-                }
+                placeholder={"Select a reason"}
                 options={this.state.secondaryReasons}
                 onChange={val => this.onChangeSecondary(val)}
               />
@@ -128,6 +130,15 @@ export default class ReturnReasonForm extends React.Component {
             <TextArea onChange={val => this.handleChange(val)} />
           </div>
         </div>
+        {data &&
+          data.showReverseSealFrJwlry === "yes" && (
+            <div className={styles.reverseSealHolder}>
+              <ReverseSealYesNo
+                selectReverseSeal={val => this.selectReverseSeal(val)}
+              />
+            </div>
+          )}
+
         <div className={styles.buttonHolder}>
           <div className={styles.button}>
             <Button

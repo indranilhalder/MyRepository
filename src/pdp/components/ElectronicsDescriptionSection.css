@@ -1,0 +1,45 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.topSection {
+  composes: base;
+  background: #fff;
+  position: relative;
+}
+.imageHolder {
+  composes: base;
+}
+.textHolder {
+  width: 60%;
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+}
+.offsetImage {
+  composes: imageHolder;
+  width: 40%;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.floatingText {
+  width: 60%;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+.floatingText p {
+  display: none;
+}
+.description {
+  composes: base;
+}
+.noHeader {
+  composes: description;
+}
+.noHeader h3 {
+  display: none;
+}

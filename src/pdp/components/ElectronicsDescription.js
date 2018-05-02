@@ -2,23 +2,13 @@ import React from "react";
 import ProductVideo from "../../general/components/ProductVideo";
 import styles from "./ElectronicsDescription.css";
 import PropTypes from "prop-types";
-import Image from "../../xelpmoc-core/Image";
 export default class ElectronicsDescription extends React.Component {
   render() {
-    if (this.props.value.textList) {
-      if (this.props.value.textList[0]) {
-        console.log(
-          this.props.value.textList[0].match(/<h3 [^>]+>([^<]+)<\/h3>/)
-        );
-      }
-    }
     return (
       <div className={styles.base}>
         {this.props.value.imageList && (
           <div className={styles.imageHolder}>
-            <div className={styles.imageCard}>
-              <Image image={this.props.value.imageList[0]} fit="cover" />
-            </div>
+            <img src={this.props.value.imageList[0]} alt="" />
           </div>
         )}
         {this.props.value.textList && (

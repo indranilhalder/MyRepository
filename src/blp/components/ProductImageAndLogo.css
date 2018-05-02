@@ -28,7 +28,7 @@
   margin-top: 10px;
 }
 .companyIcon {
-  width: auto;
-  height: 40px;
+  width: 100%;
+  height: auto;
   display: inline-block;
 }

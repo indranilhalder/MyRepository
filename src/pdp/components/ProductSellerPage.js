@@ -5,8 +5,7 @@ import SellerWithMultiSelect from "./SellerWithMultiSelect";
 import SellerCard from "./SellerCard";
 import PdpFrame from "./PdpFrame";
 import * as Cookie from "../../lib/Cookie";
-import SelectBoxMobile from "../../general/components/SelectBoxMobile";
-import { reverse, sortBy } from "lodash";
+import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -33,7 +32,10 @@ class ProductSellerPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      priceValue: null
+      winningUssID: this.props.productDetails
+        ? this.props.productDetails.winningUssID
+        : null,
+      sortOption: PRICE_LOW_TO_HIGH
     };
   }
   priceValue;
@@ -47,9 +49,11 @@ class ProductSellerPage extends Component {
 
   addToCart = () => {
     let productDetails = {};
-    productDetails.code = this.props.productListingId;
-    productDetails.ussId = productDetails.quantity = PRODUCT_QUANTITY;
-    productDetails.ussId = this.props.productDetails.winningUssID;
+    productDetails.code = this.props.productDetails.productListingId;
+    productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.ussId = this.state.winningUssID
+      ? this.state.winningUssID
+      : this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -77,8 +81,9 @@ class ProductSellerPage extends Component {
   addToWishList = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
-    productDetails.ussId = this.props.productDetails.winningUssID;
-
+    productDetails.ussId = this.state.winningUssID
+      ? this.state.winningUssID
+      : this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -106,41 +111,34 @@ class ProductSellerPage extends Component {
     }
   }
   onSortByPrice(val) {
-    this.setState({ priceValue: val });
+    this.setState({ sortOption: val.value });
   }
-  sortedJobs(product) {
-    switch (this.state.priceValue) {
-      case PRICE_LOW_TO_HIGH:
-        return reverse(product);
-      case PRICE_HIGH_TO_LOW:
-        return reverse(product);
-      default:
-        return product;
+  selectSeller(val) {
+    if (val && val[0]) {
+      this.setState({ winningUssID: val[0].USSID });
     }
   }
+
   render() {
-    let product = this.sortedJobs(
-      this.props.productDetails &&
-        this.props.productDetails.otherSellers &&
-        this.props.productDetails.otherSellers
-    );
+    const sellers = this.props.productDetails
+      ? this.props.productDetails.otherSellers
+      : [];
     let availableSeller = {};
+    const availableSellers = sellers.filter(val => {
+      return parseInt(val.availableStock, 10) > 0;
+    });
+    const unAvailableSellers = sellers.filter(val => {
+      return parseInt(val.availableStock, 10) <= 0;
+    });
     let price;
-    if (product) {
-      availableSeller = product.filter(seller => {
-        if (seller.availableStock !== "0" && seller.availableStock !== "-1") {
-          return seller;
-        }
-      });
-      if (availableSeller) {
-        price = availableSeller[0].specialPriceSeller.doubleValue;
-        availableSeller.forEach(seller => {
-          if (price > seller.specialPriceSeller.doubleValue) {
-            price = seller.specialPriceSeller.doubleValue;
-          }
-          return price;
-        });
-      }
+    if (availableSellers && availableSellers[0]) {
+      price = availableSellers[0].specialPriceSeller.doubleValue;
+    }
+    let sortedAvailableSellers = availableSellers;
+    let sortedUnAvailableSellers = unAvailableSellers;
+    if (this.state.sortOption === PRICE_HIGH_TO_LOW) {
+      sortedAvailableSellers = availableSellers.reverse();
+      sortedUnAvailableSellers = unAvailableSellers.reverse();
     }
     const mobileGalleryImages =
       this.props.productDetails &&
@@ -157,7 +155,6 @@ class ProductSellerPage extends Component {
       mobileGalleryImages && (
         <PdpFrame
           addProductToBag={() => this.addToCart()}
-          addProductToWishList={() => this.addToWishList()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
         >
           <div className={styles.base}>
@@ -182,13 +179,13 @@ class ProductSellerPage extends Component {
                 {price}
               </div>
               <div className={styles.price}>
-                <SelectBoxMobile
-                  label={PRICE_LOW_TO_HIGH}
+                <SelectBoxMobile2
+                  label={this.state.sortOption}
                   height={30}
-                  onChange={priceValue => this.onSortByPrice(priceValue)}
+                  onChange={val => this.onSortByPrice(val)}
                   theme={"hollowBox"}
                   arrowColour={"black"}
-                  value={this.state.priceValue}
+                  value={this.state.sortOption}
                   options={[
                     { label: PRICE_LOW_TO_HIGH, value: PRICE_LOW_TO_HIGH },
                     { label: PRICE_HIGH_TO_LOW, value: PRICE_HIGH_TO_LOW }
@@ -197,39 +194,64 @@ class ProductSellerPage extends Component {
               </div>
             </div>
             <div>
-              {product && (
-                <SellerWithMultiSelect limit={1}>
-                  {product
-                    .filter(val => {
-                      return (
-                        val.availableStock !== "0" &&
-                        val.availableStock !== "-1"
-                      );
-                    })
-                    .map((value, index) => {
-                      return (
-                        <SellerCard
-                          heading={value.sellerName}
-                          priceTitle={PRICE_TEXT}
-                          discountPrice={
-                            value.specialPriceSeller.formattedValueNoDecimal
-                          }
-                          price={value.mrpSeller.formattedValueNoDecimal}
-                          offerText={OFFER_AVAILABLE}
-                          deliveryText={DELIVERY_INFORMATION_TEXT}
-                          hasCod={value.isCOD === "Y"}
-                          hasEmi={value.isEMIEligible === "Y"}
-                          eligibleDeliveryModes={value.eligibleDeliveryModes}
-                          cashText={CASH_TEXT}
-                          policyText={DELIVERY_RATES}
-                          key={index}
-                          value={value}
-                        />
-                      );
-                    })}
+              {sortedAvailableSellers && (
+                <SellerWithMultiSelect
+                  limit={1}
+                  onSelect={val => {
+                    this.selectSeller(val);
+                  }}
+                >
+                  {sortedAvailableSellers.map((value, index) => {
+                    return (
+                      <SellerCard
+                        heading={value.sellerName}
+                        priceTitle={PRICE_TEXT}
+                        discountPrice={
+                          value.specialPriceSeller.formattedValueNoDecimal
+                        }
+                        price={value.mrpSeller.formattedValueNoDecimal}
+                        offerText={OFFER_AVAILABLE}
+                        deliveryText={DELIVERY_INFORMATION_TEXT}
+                        hasCod={value.isCOD === "Y"}
+                        hasEmi={value.isEMIEligible === "Y"}
+                        eligibleDeliveryModes={value.eligibleDeliveryModes}
+                        cashText={CASH_TEXT}
+                        policyText={DELIVERY_RATES}
+                        key={index}
+                        value={value}
+                      />
+                    );
+                  })}
                 </SellerWithMultiSelect>
               )}
             </div>
+
+            {sortedUnAvailableSellers && (
+              <div>
+                {sortedUnAvailableSellers.map((value, index) => {
+                  return (
+                    <SellerCard
+                      heading={value.sellerName}
+                      priceTitle={PRICE_TEXT}
+                      disabled={true}
+                      discountPrice={
+                        value.specialPriceSeller.formattedValueNoDecimal
+                      }
+                      price={value.mrpSeller.formattedValueNoDecimal}
+                      offerText={OFFER_AVAILABLE}
+                      deliveryText={DELIVERY_INFORMATION_TEXT}
+                      hasCod={value.isCOD === "Y"}
+                      hasEmi={value.isEMIEligible === "Y"}
+                      eligibleDeliveryModes={value.eligibleDeliveryModes}
+                      cashText={CASH_TEXT}
+                      policyText={DELIVERY_RATES}
+                      key={index}
+                      value={value}
+                    />
+                  );
+                })}
+              </div>
+            )}
           </div>
         </PdpFrame>
       )

@@ -10,6 +10,7 @@ import {
   MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
+import findIndex from "lodash.findindex";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -42,10 +43,15 @@ import {
   ADOBE_MY_ACCOUNT_GIFT_CARD,
   ADOBE_MY_ACCOUNT_CLIQ_CASH,
   AODBE_MY_ACCOUNT_SETTINGS,
-  ADOBE_MY_ACCOUNT_ORDER_DETAILS
+  ADOBE_MY_ACCOUNT_ORDER_DETAILS,
+  setDataLayerForFollowAndUnFollowBrand,
+  ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS
 } from "../../lib/adobeUtils";
+import {
+  showSecondaryLoader,
+  hideSecondaryLoader
+} from "../../general/secondaryLoader.actions";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
-
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
 export const GET_USER_DETAILS_FAILURE = "GET_USER_DETAILS_FAILURE";
@@ -472,7 +478,7 @@ export function newReturnInitiateFailure(error) {
   };
 }
 
-export function newReturnInitial(returnDetails, product) {
+export function newReturnInitial(returnDetails, product = null) {
   return async (dispatch, getState, { api }) => {
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -492,14 +498,16 @@ export function newReturnInitial(returnDetails, product) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayerForMyAccountDirectCalls(
-        ADOBE_MY_ACCOUNT_ORDER_RETURN,
-        product,
-        returnDetails
-      );
-      dispatch(newReturnInitiateSuccess(resultJson));
+      if (product) {
+        setDataLayerForMyAccountDirectCalls(
+          ADOBE_MY_ACCOUNT_ORDER_RETURN,
+          product,
+          returnDetails
+        );
+      }
+      return dispatch(newReturnInitiateSuccess(resultJson));
     } catch (e) {
-      dispatch(newReturnInitiateFailure(e.message));
+      return dispatch(newReturnInitiateFailure(e.message));
     }
   };
 }
@@ -749,11 +757,9 @@ export function getOtpToActivateWallet(customerDetails, isFromCliqCash) {
       const resultJson = await result.json();
 
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(hideModal());
       if (isFromCliqCash) {
         dispatch(showModal(VERIFY_OTP_FOR_CLIQ_CASH));
       } else {
@@ -761,7 +767,7 @@ export function getOtpToActivateWallet(customerDetails, isFromCliqCash) {
       }
       return dispatch(getOtpToActivateWalletSuccess(resultJson));
     } catch (e) {
-      dispatch(getOtpToActivateWalletFailure(e.message));
+      return dispatch(getOtpToActivateWalletFailure(e.message));
     }
   };
 }
@@ -806,7 +812,6 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -819,7 +824,7 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
 
       return dispatch(verifyWalletSuccess(resultJson));
     } catch (e) {
-      dispatch(verifyWalletFailure(e.message));
+      return dispatch(verifyWalletFailure(e.message));
     }
   };
 }
@@ -1008,39 +1013,45 @@ export function removeSavedCardDetails(userId, customerAccessToken) {
     }
   };
 }
-
-export function getAllOrdersRequest() {
+export function getAllOrdersRequest(paginated: false) {
   return {
     type: GET_ALL_ORDERS_REQUEST,
     status: REQUESTING
   };
 }
-export function getAllOrdersSuccess(orderDetails) {
+export function getAllOrdersSuccess(orderDetails, isPaginated: false) {
   return {
     type: GET_ALL_ORDERS_SUCCESS,
     status: SUCCESS,
-    orderDetails
+    orderDetails,
+    isPaginated
   };
 }
 
-export function getAllOrdersFailure(error) {
+export function getAllOrdersFailure(error, isPaginated) {
   return {
     type: GET_ALL_ORDERS_FAILURE,
 
     status: ERROR,
-    error
+    error,
+    isPaginated
   };
 }
-export function getAllOrdersDetails() {
+export function getAllOrdersDetails(suffix: null, paginated: false) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
-    dispatch(getAllOrdersRequest());
+    dispatch(getAllOrdersRequest(paginated));
+    dispatch(showSecondaryLoader());
+    let currentPage = 0;
+    if (getState().profile.orderDetails) {
+      currentPage = getState().profile.orderDetails.currentPage + 1;
+    }
     try {
       const result = await api.get(
         `${USER_PATH}/${
           JSON.parse(userDetails).userName
-        }/orderhistorylist?currentPage=${CURRENT_PAGE}&access_token=${
+        }/orderhistorylist?currentPage=${currentPage}&access_token=${
           JSON.parse(customerCookie).access_token
         }&pageSize=${PAGE_SIZE}&isPwa=true&platformNumber=2`
       );
@@ -1051,9 +1062,16 @@ export function getAllOrdersDetails() {
         throw new Error(resultJsonStatus.message);
       }
       setDataLayer(ADOBE_MY_ACCOUNT_ORDER_HISTORY);
-      dispatch(getAllOrdersSuccess(resultJson));
+      if (paginated) {
+        dispatch(getAllOrdersSuccess(resultJson, paginated));
+        dispatch(hideSecondaryLoader());
+      } else {
+        dispatch(getAllOrdersSuccess(resultJson, paginated));
+        dispatch(hideSecondaryLoader());
+      }
     } catch (e) {
-      dispatch(getAllOrdersFailure(e.message));
+      dispatch(hideSecondaryLoader());
+      dispatch(getAllOrdersFailure(e.message, paginated));
     }
   };
 }
@@ -1322,7 +1340,7 @@ export function editAddress(addressDetails) {
     addressObject.append("defaultFlag", addressDetails.defaultFlag);
     addressObject.append("addressId", addressDetails.addressId);
     addressObject.append("emailId", "");
-
+    addressObject.append("landmark", addressDetails.landmark);
     try {
       const result = await api.postFormData(
         `${USER_PATH}/${
@@ -1356,7 +1374,7 @@ export function fetchOrderDetails(orderId) {
           JSON.parse(userDetails).userName
         }/getSelectedOrder/${orderId}?access_token=${
           JSON.parse(customerCookie).access_token
-        }`
+        }&isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -1654,6 +1672,15 @@ export function followAndUnFollowBrand(
 
         // dispatch success for following brand on the basis of page type
         if (pageType === HOME_FEED_FOLLOW_AND_UN_FOLLOW) {
+          const clonedComponent = getState().home.homeFeed[positionInFeed];
+          const indexOfBrand = findIndex(clonedComponent.data, item => {
+            return item.id === brandId;
+          });
+          let brandName = clonedComponent.data[indexOfBrand].brandName;
+          setDataLayerForFollowAndUnFollowBrand(
+            ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS,
+            { followStatus: updatedFollowedStatus, brandName }
+          );
           return dispatch(
             followAndUnFollowBrandSuccessForHomeFeed(
               brandId,
@@ -1662,10 +1689,25 @@ export function followAndUnFollowBrand(
             )
           );
         } else if (pageType === PDP_FOLLOW_AND_UN_FOLLOW) {
+          const brandObj = getState().productDescription.aboutTheBrand;
+          const brandName = brandObj.brandName;
+          setDataLayerForFollowAndUnFollowBrand(
+            ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS,
+            { followStatus: updatedFollowedStatus, brandName }
+          );
+
           return dispatch(
             followAndUnFollowBrandSuccessForPdp(brandId, updatedFollowedStatus)
           );
         } else if (pageType === MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW) {
+          const currentBrands = getState().profile.followedBrands;
+          const brandObj = currentBrands.find(item => item.id === brandId);
+          let brandName = brandObj.brandName;
+          setDataLayerForFollowAndUnFollowBrand(
+            ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS,
+            { followStatus: updatedFollowedStatus, brandName }
+          );
+
           return dispatch(
             followAndUnFollowBrandSuccessForMyAccount(
               brandId,
@@ -1681,57 +1723,6 @@ export function followAndUnFollowBrand(
     }
   };
 }
-export function getWishlistRequest() {
-  return {
-    type: GET_WISHLIST_REQUEST,
-    status: REQUESTING
-  };
-}
-export function getWishlistSuccess(wishlist) {
-  return {
-    type: GET_WISHLIST_SUCCESS,
-    status: SUCCESS,
-    wishlist
-  };
-}
-
-export function getWishlistFailure(error) {
-  return {
-    type: GET_WISHLIST_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-export function getWishList() {
-  return async (dispatch, getState, { api }) => {
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    dispatch(getWishlistRequest());
-    try {
-      const result = await api.postFormData(
-        `${USER_PATH}/${
-          JSON.parse(userDetails).userName
-        }/getAllWishlist?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=${PLATFORM_NUMBER}`
-      );
-      const resultJson = await result.json();
-      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
-      }
-
-      return dispatch(
-        getWishlistSuccess(resultJson.wishList && resultJson.wishList[0])
-      ); //we sre getting response wishlit[0]
-    } catch (e) {
-      return dispatch(getWishlistFailure(e.message));
-    }
-  };
-}
-
 export function changePasswordRequest() {
   return {
     type: CHANGE_PASSWORD_REQUEST,

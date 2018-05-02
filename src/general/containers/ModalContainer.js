@@ -17,7 +17,8 @@ import {
   SUCCESS,
   FAILURE,
   CART_DETAILS_FOR_ANONYMOUS,
-  CART_DETAILS_FOR_LOGGED_IN_USER
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  ERROR_MESSAGE_FOR_VERIFY_OTP
 } from "../../lib/constants";
 import { updateProfile } from "../../account/actions/account.actions.js";
 import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
@@ -45,6 +46,7 @@ import {
   singleAuthCallHasFailed,
   setIfAllAuthCallsHaveSucceeded
 } from "../../auth/actions/auth.actions.js";
+import { displayToast } from "../../general/toast.actions";
 const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
@@ -59,6 +61,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    displayToast: toastMessage => {
+      dispatch(displayToast(toastMessage));
+    },
     showModal: (type, ownProps = null) => {
       dispatch(modalActions.showModal(type, ownProps));
     },
@@ -150,8 +155,13 @@ const mapDispatchToProps = dispatch => {
       dispatch(getOtpToActivateWallet(customerDetails, isFromCliqCash));
     },
 
-    verifyWallet: (customerDetailsWithOtp, isFromCliqCash) => {
-      dispatch(verifyWallet(customerDetailsWithOtp, isFromCliqCash));
+    verifyWallet: async (customerDetailsWithOtp, isFromCliqCash) => {
+      const createdCartVal = await dispatch(
+        verifyWallet(customerDetailsWithOtp, isFromCliqCash)
+      );
+      if (createdCartVal.error !== ERROR_MESSAGE_FOR_VERIFY_OTP) {
+        dispatch(modalActions.hideModal());
+      }
     },
 
     submitSelfCourierReturnInfo: returnDetails => {
