@@ -9,12 +9,13 @@ import CheckoutDebitCard from "./CheckoutDebitCard.js";
 import CheckoutNetbanking from "./CheckoutNetbanking.js";
 import CheckoutSavedCard from "./CheckoutSavedCard.js";
 import CheckoutCOD from "./CheckoutCOD.js";
-import { PAYTM } from "../../lib/constants";
+import { PAYTM, OLD_CART_GU_ID } from "../../lib/constants";
 import PaytmOption from "./PaytmOption.js";
 import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
 
 import CheckOutHeader from "./CheckOutHeader";
+import { getCookie } from "../../lib/Cookie";
 let cliqCashToggleState = false;
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const keyForCreditCard = "Credit Card";
@@ -51,7 +52,12 @@ export default class PaymentCardWrapper extends React.Component {
       this.props.getCODEligibility &&
       !this.props.cart.codEligibilityDetails
     ) {
-      this.props.getCODEligibility();
+      const oldCartId = getCookie(OLD_CART_GU_ID);
+      if (oldCartId) {
+        this.props.getCODEligibility(oldCartId);
+      } else {
+        this.props.getCODEligibility();
+      }
     }
   };
   binValidationForPaytm(val) {
@@ -188,22 +194,20 @@ export default class PaymentCardWrapper extends React.Component {
               />
             </div>
           )}
-          {this.renderBankOffers()}
-          <div className={styles.card}>
-            <CheckOutHeader
-              confirmTitle="Choose payment Method"
-              indexNumber="3"
-            />
-          </div>
+          {!this.props.isPaymentFailed && this.renderBankOffers()}
           {this.props.isRemainingBalance && (
-            <div className={styles.paymentModes}>{this.renderSavedCards()}</div>
-          )}
-          {this.props.isRemainingBalance &&
-            this.props.cart.paymentModes && (
-              <div className={styles.paymentModes}>
-                {this.renderPaymentCardsComponents()}
+            <div className={styles.paymentModes}>
+              <div className={styles.card}>
+                <CheckOutHeader
+                  confirmTitle="Choose payment Method"
+                  indexNumber="3"
+                />
               </div>
-            )}
+              {this.renderSavedCards()}
+              {this.props.cart.paymentModes &&
+                this.renderPaymentCardsComponents()}
+            </div>
+          )}
         </div>
       );
     } else {

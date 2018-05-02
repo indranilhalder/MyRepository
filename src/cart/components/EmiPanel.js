@@ -17,7 +17,10 @@ export default class EmiPanel extends React.Component {
   }
 
   componentDidMount = () => {
-    if (this.props.getEmiEligibility) {
+    if (
+      this.props.getEmiEligibility &&
+      !this.props.cart.emiEligibilityDetails
+    ) {
       this.props.getEmiEligibility();
     }
   };

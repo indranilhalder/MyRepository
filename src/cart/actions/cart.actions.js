@@ -3246,11 +3246,16 @@ export function getCODEligibilityFailure(error) {
 }
 
 //Actions creator for COD Eligibility
-export function getCODEligibility() {
+export function getCODEligibility(oldCartId) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  const cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  if (oldCartId) {
+    cartId = oldCartId;
+  } else {
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    cartId = JSON.parse(cartDetails).guid;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(getCODEligibilityRequest());
     try {
