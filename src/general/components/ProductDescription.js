@@ -48,7 +48,7 @@ export default class ProductDescription extends Component {
         </div>
         <div className={contentClass}>
           {this.props.description && (
-            <h2 className={styles.description}>{this.props.description}</h2>
+            <h3 className={styles.description}>{this.props.description}</h3>
           )}
 
           {this.props.discountPrice &&
