@@ -49,9 +49,9 @@ export default class EmiPanel extends React.Component {
       this.props.getEmiTermsAndConditionsForBank(code, bankName);
     }
   };
-  applyNoCostEmi = couponCode => {
+  applyNoCostEmi = (couponCode, bankName) => {
     if (this.props.applyNoCostEmi) {
-      this.props.applyNoCostEmi(couponCode);
+      this.props.applyNoCostEmi(couponCode, bankName);
     }
   };
 
@@ -74,6 +74,10 @@ export default class EmiPanel extends React.Component {
 
   changeNoCostEmiPlan = () => {
     this.props.changeNoCostEmiPlan();
+  };
+
+  onChangeCardDetail = val => {
+    this.props.onChangeCardDetail(val);
   };
   render() {
     return (
@@ -116,8 +120,8 @@ export default class EmiPanel extends React.Component {
                     getEmiTermsAndConditionsForBank={(code, bankName) =>
                       this.getEmiTermsAndConditionsForBank(code, bankName)
                     }
-                    applyNoCostEmi={couponCode =>
-                      this.applyNoCostEmi(couponCode)
+                    applyNoCostEmi={(couponCode, bankName) =>
+                      this.applyNoCostEmi(couponCode, bankName)
                     }
                     removeNoCostEmi={couponCode =>
                       this.removeNoCostEmi(couponCode)
@@ -133,6 +137,7 @@ export default class EmiPanel extends React.Component {
                     }
                     displayToast={this.props.displayToast}
                     changeNoCostEmiPlan={() => this.changeNoCostEmiPlan()}
+                    onChangeCardDetail={val => this.onChangeCardDetail(val)}
                   />
                 </NoCostEmi>
               </div>
@@ -151,6 +156,7 @@ export default class EmiPanel extends React.Component {
                 this.props.cart.emiBankDetails &&
                 this.props.cart.emiBankDetails.bankList
               }
+              onChangeCardDetail={val => this.onChangeCardDetail(val)}
             >
               <CheckoutEmi {...this.props} />
             </NoCostEmi>

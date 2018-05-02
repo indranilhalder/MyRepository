@@ -171,8 +171,15 @@ const mapDispatchToProps = dispatch => {
     binValidation: (paymentMode, binNo) => {
       dispatch(binValidation(paymentMode, binNo));
     },
-    softReservationForPayment: (cardDetails, address, paymentMode) => {
-      dispatch(softReservationForPayment(cardDetails, address, paymentMode));
+    softReservationForPayment: (
+      cardDetails,
+      address,
+      paymentMode,
+      bankName
+    ) => {
+      dispatch(
+        softReservationForPayment(cardDetails, address, paymentMode, bankName)
+      );
     },
     updateTransactionDetails: (paymentMode, juspayOrderID, cartId) => {
       dispatch(updateTransactionDetails(paymentMode, juspayOrderID, cartId));
@@ -256,8 +263,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(hideSecondaryLoader());
     },
 
-    getEmiEligibility: () => {
-      dispatch(getEmiEligibility());
+    getEmiEligibility: cartGuId => {
+      dispatch(getEmiEligibility(cartGuId));
     },
     getBankAndTenureDetails: () => {
       dispatch(getBankAndTenureDetails());

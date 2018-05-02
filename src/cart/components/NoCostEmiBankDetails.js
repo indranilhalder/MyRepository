@@ -77,6 +77,12 @@ export default class NoCostEmiBankDetails extends React.Component {
     }
   };
 
+  onChangeCardDetail = card => {
+    if (this.props.onChangeCardDetail) {
+      this.props.onChangeCardDetail(card);
+    }
+  };
+
   onSelectMonth(index, val) {
     if (this.state.selectedBankName !== "Other Bank") {
       if (this.state.selectedMonth === index) {
@@ -93,7 +99,10 @@ export default class NoCostEmiBankDetails extends React.Component {
             selectedCouponCode: val.emicouponCode,
             selectedTenure: val.tenure
           });
-          this.props.applyNoCostEmi(val.emicouponCode);
+          this.props.applyNoCostEmi(
+            val.emicouponCode,
+            this.state.selectedBankName
+          );
         }
       }
     }
@@ -325,8 +334,8 @@ export default class NoCostEmiBankDetails extends React.Component {
             <CreditCardForm
               onChangeCvv={i => this.onChangeCvv(i)}
               binValidation={binNo => this.binValidation(binNo)}
-              softReservationForPayment={cardDetails =>
-                this.softReservationForPayment(cardDetails)
+              onChangeCardDetail={cardDetails =>
+                this.onChangeCardDetail(cardDetails)
               }
               displayToast={this.props.displayToast}
             />

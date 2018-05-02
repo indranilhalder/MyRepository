@@ -14,6 +14,7 @@ import {
   showSecondaryLoader,
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
+import { setHeaderText } from "../../general/header.actions";
 import {
   showModal,
   EMI_MODAL,
@@ -75,6 +76,9 @@ const mapDispatchToProps = dispatch => {
     },
     showSecondaryLoader: () => {
       dispatch(showSecondaryLoader());
+    },
+    setHeaderText: text => {
+      dispatch(setHeaderText(text));
     },
     displayToast: val => {
       dispatch(displayToast(val));
