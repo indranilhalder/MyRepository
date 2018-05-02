@@ -1,5 +1,6 @@
 import React from "react";
 import filter from "lodash.filter";
+import find from "lodash.find";
 import CliqCashToggle from "./CliqCashToggle";
 import styles from "./PaymentCardWrapper.css";
 import EmiPanel from "./EmiPanel.js";
@@ -10,9 +11,26 @@ import CheckoutSavedCard from "./CheckoutSavedCard.js";
 import CheckoutCOD from "./CheckoutCOD.js";
 import { PAYTM } from "../../lib/constants";
 import PaytmOption from "./PaytmOption.js";
+import BankOffer from "./BankOffer.js";
+import GridSelect from "../../general/components/GridSelect";
 
 let cliqCashToggleState = false;
+const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
+const keyForCreditCard = "Credit Card";
+const keyForDebitCard = "Debit Card";
+const keyForNetbanking = "Netbanking";
+const keyForEMI = "EMI";
+const keyForCOD = "COD";
+const keyForPaytm = "PAYTM";
 
+const sequanceOfPaymentMode = [
+  keyForCreditCard,
+  keyForDebitCard,
+  keyForNetbanking,
+  keyForEMI,
+  keyForCOD,
+  keyForPaytm
+];
 // prettier-ignore
 const typeComponentMapping = {
   "Credit Card": props => <CheckoutCreditCard {...props} />,
@@ -50,12 +68,17 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   renderPaymentCardsComponents() {
-    let paymentModesToDisplay = filter(
-      this.props.cart.paymentModes.paymentModes,
-      modes => {
-        return modes.value === true;
-      }
-    );
+    let paymentModesToDisplay = sequanceOfPaymentMode.map(mode => {
+      return find(
+        this.props.cart.paymentModes.paymentModes,
+        availablePaymentMode => {
+          return (
+            availablePaymentMode.key === mode && availablePaymentMode.value
+          );
+        }
+      );
+    });
+
     return paymentModesToDisplay.map((feedDatum, i) => {
       return this.renderPaymentCard(feedDatum.key, i);
     });
@@ -94,14 +117,57 @@ export default class PaymentCardWrapper extends React.Component {
     }
   };
 
+  renderBankOffers = () => {
+    let offerMinCartValue, offerTitle, offerCode;
+    if (
+      this.props.cart.paymentModes &&
+      this.props.cart.paymentModes.paymentOffers &&
+      this.props.cart.paymentModes.paymentOffers.coupons
+    ) {
+      const selectedCoupon = this.props.cart.paymentModes.paymentOffers.coupons.find(
+        coupon => {
+          return coupon.offerCode === this.props.selectedBankOfferCode;
+        }
+      );
+      if (selectedCoupon) {
+        offerMinCartValue = selectedCoupon.offerMinCartValue;
+        offerTitle = selectedCoupon.offerTitle;
+        offerCode = selectedCoupon.offerCode;
+      } else {
+        offerMinCartValue = this.props.cart.paymentModes.paymentOffers
+          .coupons[0].offerMinCartValue;
+        offerTitle = this.props.cart.paymentModes.paymentOffers.coupons[0]
+          .offerTitle;
+        offerCode = this.props.cart.paymentModes.paymentOffers.coupons[0]
+          .offerCode;
+      }
+    }
+
+    return (
+      <GridSelect
+        elementWidthMobile={100}
+        offset={0}
+        limit={1}
+        onSelect={val => this.applyBankCoupons(val)}
+        selected={[this.props.selectedBankOfferCode]}
+      >
+        <BankOffer
+          bankName={offerTitle}
+          offerText={offerMinCartValue}
+          label={SEE_ALL_BANK_OFFERS}
+          applyBankOffers={() => this.openBankOffers()}
+          value={offerCode}
+        />
+      </GridSelect>
+    );
+  };
+
   render() {
     if (this.props.cart.paymentModes) {
       return (
         <div className={styles.base}>
-          {this.props.isRemainingBalance && this.renderSavedCards()}
           {!this.props.isFromGiftCard && (
             <div>
-              {" "}
               <CliqCashToggle
                 cashText="Use My CLiQ Cash Balance"
                 price={
@@ -117,9 +183,17 @@ export default class PaymentCardWrapper extends React.Component {
               />
             </div>
           )}
+          {this.renderBankOffers()}
+
+          {this.props.isRemainingBalance && (
+            <div className={styles.paymentModes}>{this.renderSavedCards()}</div>
+          )}
           {this.props.isRemainingBalance &&
-            this.props.cart.paymentModes &&
-            this.renderPaymentCardsComponents()}
+            this.props.cart.paymentModes && (
+              <div className={styles.paymentModes}>
+                {this.renderPaymentCardsComponents()}
+              </div>
+            )}
         </div>
       );
     } else {

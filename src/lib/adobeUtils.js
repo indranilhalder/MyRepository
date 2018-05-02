@@ -793,6 +793,7 @@ export function setDataLayerForLogin(type) {
     if (
       window.digitalData &&
       window.digitalData.page &&
+      window.digitalData.page.pageInfo &&
       window.digitalData.page.pageInfo.pageName
     ) {
       if (data.account) {

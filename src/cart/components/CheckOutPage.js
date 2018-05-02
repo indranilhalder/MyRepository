@@ -12,8 +12,6 @@ import styles from "./CheckOutPage.css";
 import CheckOutHeader from "./CheckOutHeader";
 import PaymentCardWrapper from "./PaymentCardWrapper.js";
 import CartItem from "./CartItem";
-import BankOffer from "./BankOffer.js";
-import GridSelect from "../../general/components/GridSelect";
 import find from "lodash.find";
 import OrderConfirmation from "./OrderConfirmation";
 import queryString, { parse } from "query-string";
@@ -50,7 +48,7 @@ import {
   ADOBE_CALL_FOR_SELECT_DELIVERY_MODE,
   ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE
 } from "../../lib/adobeUtils";
-const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
+
 const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
 const NET_BANKING = "NB";
@@ -341,51 +339,6 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  renderBankOffers = () => {
-    let offerMinCartValue, offerTitle, offerCode;
-    if (
-      this.props.cart.paymentModes &&
-      this.props.cart.paymentModes.paymentOffers &&
-      this.props.cart.paymentModes.paymentOffers.coupons
-    ) {
-      const selectedCoupon = this.props.cart.paymentModes.paymentOffers.coupons.find(
-        coupon => {
-          return coupon.offerCode === this.state.selectedBankOfferCode;
-        }
-      );
-      if (selectedCoupon) {
-        offerMinCartValue = selectedCoupon.offerMinCartValue;
-        offerTitle = selectedCoupon.offerTitle;
-        offerCode = selectedCoupon.offerCode;
-      } else {
-        offerMinCartValue = this.props.cart.paymentModes.paymentOffers
-          .coupons[0].offerMinCartValue;
-        offerTitle = this.props.cart.paymentModes.paymentOffers.coupons[0]
-          .offerTitle;
-        offerCode = this.props.cart.paymentModes.paymentOffers.coupons[0]
-          .offerCode;
-      }
-    }
-
-    return (
-      <GridSelect
-        elementWidthMobile={100}
-        offset={0}
-        limit={1}
-        onSelect={val => this.applyBankCoupons(val)}
-        selected={[this.state.selectedBankOfferCode]}
-      >
-        <BankOffer
-          bankName={offerTitle}
-          offerText={offerMinCartValue}
-          label={SEE_ALL_BANK_OFFERS}
-          applyBankOffers={() => this.openBankOffers()}
-          value={offerCode}
-        />
-      </GridSelect>
-    );
-  };
-
   renderInitialAddAddressForm() {
     if (!this.state.isFirstAddress) {
       this.setState({ isFirstAddress: true });
@@ -432,6 +385,7 @@ class CheckOutPage extends React.Component {
       nextProps.cart.userAddress &&
       nextProps.cart.userAddress.addresses
     ) {
+      // show toast in case of iexpire user coupon
       let defaultAddressId = null;
       let defaultAddress;
       if (this.state.isFirstAddress) {
@@ -792,10 +746,8 @@ class CheckOutPage extends React.Component {
 
       if (couponCookie && !cartDetailsCouponDiscount) {
         this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
-        return false;
       }
     }
-    return true;
   };
 
   checkAvailabilityOfService = () => {
@@ -813,87 +765,80 @@ class CheckOutPage extends React.Component {
     return productServiceAvailability;
   };
   handleSubmit = () => {
-    if (this.availabilityOfUserCoupon()) {
-      if (this.state.isFirstAddress) {
-        this.addAddress(this.state.addressDetails);
-      }
+    if (this.state.isFirstAddress) {
+      this.addAddress(this.state.addressDetails);
+    }
 
-      if (this.state.isNoCostEmiApplied) {
-        this.setState({ isNoCostEmiProceeded: true });
-      }
-      if (
-        !this.state.confirmAddress &&
-        !this.state.isGiftCard &&
-        this.state.addressId &&
+    if (this.state.isNoCostEmiApplied) {
+      this.setState({ isNoCostEmiProceeded: true });
+    }
+    if (
+      !this.state.confirmAddress &&
+      !this.state.isGiftCard &&
+      this.state.addressId &&
+      this.state.selectedAddress.postalCode
+    ) {
+      this.props.addAddressToCart(
+        this.state.addressId,
         this.state.selectedAddress.postalCode
-      ) {
-        this.props.addAddressToCart(
+      );
+      this.setState({ confirmAddress: true });
+    }
+    if (
+      !this.state.deliverMode &&
+      this.state.confirmAddress &&
+      !this.state.isGiftCard
+    ) {
+      if (this.props.selectDeliveryMode && !this.checkAvailabilityOfService()) {
+        let sizeNew = size(this.state.ussIdAndDeliveryModesObj);
+        if (sizeNew === this.props.cart.cartDetailsCNC.products.length) {
+          this.props.selectDeliveryMode(
+            this.state.ussIdAndDeliveryModesObj,
+            localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+          );
+          this.setState({
+            deliverMode: true
+          });
+        } else {
+          this.props.displayToast(SELECT_DELIVERY_MODE_MESSAGE);
+        }
+
+        setDataLayerForCheckoutDirectCalls(
+          ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE,
+          this.state.ussIdAndDeliveryModesObj
+        );
+      } else {
+        if (this.props.displayToast) {
+          this.props.displayToast(PRODUCT_NOT_SERVICEABLE_MESSAGE);
+        }
+      }
+    }
+
+    if (this.state.savedCardDetails !== "") {
+      if (this.state.isGiftCard) {
+        this.props.createJusPayOrderForGiftCardFromSavedCards(
+          this.state.savedCardDetails,
+          this.props.location.state.egvCartGuid
+        );
+      } else {
+        this.props.softReservationPaymentForSavedCard(
+          this.state.savedCardDetails,
           this.state.addressId,
-          this.state.selectedAddress.postalCode
-        );
-        this.setState({ confirmAddress: true });
-      }
-      if (
-        !this.state.deliverMode &&
-        this.state.confirmAddress &&
-        !this.state.isGiftCard
-      ) {
-        if (
-          this.props.selectDeliveryMode &&
-          !this.checkAvailabilityOfService()
-        ) {
-          let sizeNew = size(this.state.ussIdAndDeliveryModesObj);
-          if (sizeNew === this.props.cart.cartDetailsCNC.products.length) {
-            this.props.selectDeliveryMode(
-              this.state.ussIdAndDeliveryModesObj,
-              localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
-            );
-            this.setState({
-              deliverMode: true
-            });
-          } else {
-            this.props.displayToast(SELECT_DELIVERY_MODE_MESSAGE);
-          }
-
-          setDataLayerForCheckoutDirectCalls(
-            ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE,
-            this.state.ussIdAndDeliveryModesObj
-          );
-        } else {
-          if (this.props.displayToast) {
-            this.props.displayToast(PRODUCT_NOT_SERVICEABLE_MESSAGE);
-          }
-        }
-      }
-
-      if (this.state.savedCardDetails !== "") {
-        if (this.state.isGiftCard) {
-          this.props.createJusPayOrderForGiftCardFromSavedCards(
-            this.state.savedCardDetails,
-            this.props.location.state.egvCartGuid
-          );
-        } else {
-          this.props.softReservationPaymentForSavedCard(
-            this.state.savedCardDetails,
-            this.state.addressId,
-            this.state.paymentModeSelected
-          );
-        }
-      }
-      if (!this.state.isRemainingAmount) {
-        this.props.softReservationForCliqCash(
-          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+          this.state.paymentModeSelected
         );
       }
+    }
+    if (!this.state.isRemainingAmount) {
+      this.props.softReservationForCliqCash(
+        localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+      );
+    }
 
-      if (this.state.binValidationCOD) {
-        this.softReservationForCODPayment();
-      }
-      if (this.state.paymentModeSelected === PAYTM) {
-        this.softReservationPaymentForWallet(PAYTM);
-      }
-    } else {
-      this.props.history.goBack();
+    if (this.state.binValidationCOD) {
+      this.softReservationForCODPayment();
+    }
+    if (this.state.paymentModeSelected === PAYTM) {
+      this.softReservationPaymentForWallet(PAYTM);
     }
   };
 
@@ -1186,11 +1131,11 @@ class CheckOutPage extends React.Component {
               </div>
             )}
 
-          {!this.state.appliedCoupons &&
+          {/* {!this.state.appliedCoupons &&
             (this.state.confirmAddress && this.state.deliverMode) &&
             this.props.cart.paymentModes &&
             !this.state.isGiftCard &&
-            this.renderBankOffers()}
+            this.renderBankOffers()} */}
 
           {((!this.state.paymentMethod &&
             (this.state.confirmAddress && this.state.deliverMode)) ||
@@ -1200,6 +1145,7 @@ class CheckOutPage extends React.Component {
                 isRemainingBalance={this.state.isRemainingAmount}
                 isFromGiftCard={this.state.isGiftCard}
                 cart={this.props.cart}
+                selectedBankOfferCode={this.state.selectedBankOfferCode}
                 cliqCashAmount={this.state.cliqCashAmount}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
