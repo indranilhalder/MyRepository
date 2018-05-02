@@ -59,8 +59,9 @@ export default class AddDeliveryAddress extends React.Component {
   }
 
   getPinCodeDetails = val => {
+    let landmarkList = [];
     if (val.length <= 6) {
-      this.setState({ postalCode: val });
+      this.setState({ postalCode: val, state: "", town: "", landmarkList });
     }
     if (val.length === 6 && this.props.getPinCode) {
       this.props.getPinCode(val);
