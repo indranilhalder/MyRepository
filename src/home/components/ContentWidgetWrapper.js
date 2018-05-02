@@ -14,7 +14,11 @@ export default class ContentWidgetWrapper extends React.Component {
       this.props.feedComponentData.items.length < 1
     ) {
       return this.renderLoader();
-    } else if (this.props.feedComponentData.items.length > 1) {
+    } else if (
+      this.props.feedComponentData &&
+      this.props.feedComponentData.items &&
+      this.props.feedComponentData.items.length > 1
+    ) {
       return (
         <div className={styles.base}>
           <div className={styles.header}>
