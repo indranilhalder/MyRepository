@@ -633,6 +633,10 @@ function getDigitalDataForOrderConfirmation(type, response) {
       }
     });
   }
+  const categoryHierarchy = getCategoryHierarchy(response);
+  if (categoryHierarchy) {
+    Object.assign(data.page.category, categoryHierarchy);
+  }
   return data;
 }
 // this function will update data with  cpj.proudct.id with
