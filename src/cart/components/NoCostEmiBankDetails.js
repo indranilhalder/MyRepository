@@ -6,6 +6,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
+import { NO_COST_EMI } from "../../lib/constants";
 
 export default class NoCostEmiBankDetails extends React.Component {
   constructor(props) {
@@ -21,7 +22,23 @@ export default class NoCostEmiBankDetails extends React.Component {
       selectedFromDropDown: false
     };
   }
-
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.selectedEMIType !== NO_COST_EMI &&
+      nextProps.selectedEMIType !== null
+    ) {
+      this.setState({
+        selectedBankIndex: null,
+        selectedMonth: null,
+        showAll: false,
+        selectedBankName: null,
+        selectedBankCode: null,
+        selectedCouponCode: null,
+        selectedTenure: null,
+        selectedFromDropDown: false
+      });
+    }
+  }
   selectOtherBank(val) {
     const selectedBankName = val.label;
     const selectedBankIndex = val.value;

@@ -789,6 +789,9 @@ class CheckOutPage extends React.Component {
     ) {
       this.props.releaseBankOffer(this.state.selectedBankOfferCode);
     }
+    if (this.props.history.action === "POP") {
+      this.props.clearCartDetails();
+    }
   }
   componentDidMount() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -1096,8 +1099,6 @@ class CheckOutPage extends React.Component {
   availabilityOfUserCoupon = () => {
     if (!this.state.isGiftCard) {
       let couponCookie = Cookie.getCookie(COUPON_COOKIE);
-      console.log(this.props.cart);
-
       let cartDetailsCouponDiscount;
       if (
         this.props.cart &&
@@ -1110,12 +1111,17 @@ class CheckOutPage extends React.Component {
       } else {
         cartDetailsCouponDiscount = false;
       }
-
+      console.log(
+        couponCookie,
+        cartDetailsCouponDiscount,
+        this.props.cart.cartDetailsCNCStatus
+      );
       if (
         couponCookie &&
         !cartDetailsCouponDiscount &&
-        this.props.cart.cartDetailsCNCStatus !== REQUESTING
+        this.props.cart.cartDetailsCNCStatus === SUCCESS
       ) {
+        console.log("COmes in ");
         Cookies.deleteCookie(COUPON_COOKIE);
         this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
       }
@@ -1555,8 +1561,13 @@ class CheckOutPage extends React.Component {
       this.state.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
     ) {
       labelForButton = PLACE_ORDER;
-    }
-    if (this.state.currentPaymentMode === null) {
+    } else if (this.state.currentPaymentMode === EMI) {
+      if (this.state.isNoCostEmiProceeded) {
+        labelForButton = PAY_NOW;
+      } else {
+        labelForButton = CONTINUE;
+      }
+    } else if (this.state.currentPaymentMode === null) {
       labelForButton = PROCEED;
     } else {
       labelForButton = PAY_NOW;
