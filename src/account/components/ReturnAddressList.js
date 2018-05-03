@@ -47,7 +47,11 @@ export default class ReturnAddressList extends React.Component {
       error: false
     };
   }
-
+  getPinCodeDetails = pinCode => {
+    if (this.props.getPinCode) {
+      this.props.getPinCode(pinCode);
+    }
+  };
   componentWillReceiveProps(nextProps) {
     if (nextProps.AddUserAddressStatus === SUCCESS) {
       if (this.state.addNewAddress === true) {
@@ -167,6 +171,13 @@ export default class ReturnAddressList extends React.Component {
           addUserAddress={address => this.addAddress(address)}
           {...this.state}
           onChange={val => this.onChange(val)}
+          displayToast={message => this.props.displayToast(message)}
+          getPincodeStatus={this.props.getPincodeStatus}
+          getPinCode={val => this.getPinCodeDetails(val)}
+          getPinCodeDetails={this.props.getPinCodeDetails}
+          resetAutoPopulateDataForPinCode={() =>
+            this.props.resetAutoPopulateDataForPinCode()
+          }
         />
       </div>
     );
