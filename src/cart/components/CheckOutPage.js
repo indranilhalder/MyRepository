@@ -121,16 +121,16 @@ class CheckOutPage extends React.Component {
       isNoCostEmiProceeded: false,
       selectedBankOfferCode: "",
       isPaymentFailed: false,
-      deliveryCharge: 0,
-      couponDiscount: 0,
-      totalDiscount: 0,
+      deliveryCharge: "0.00",
+      couponDiscount: "0.00",
+      totalDiscount: "0.00",
       cliqPiqSelected: false,
       currentPaymentMode: null, // holding selected payments modes
       cardDetails: {}, // for store card detail in card details
       cvvForCurrentPaymentMode: null, // in case on saved card
       bankCodeForNetBanking: null, // in case on net banking
       captchaReseponseForCOD: null, // in case of COD order its holding that ceptcha verification
-      noCostEmiDiscount: 0,
+      noCostEmiDiscount: "0.00",
       egvCartGuid: null,
       noCostEmiBankName: null
     };
@@ -1716,9 +1716,9 @@ class CheckOutPage extends React.Component {
               amount={this.state.payableAmount}
               bagTotal={this.state.bagAmount}
               payable={this.state.payableAmount}
-              coupons={`Rs. ${this.state.couponDiscount}`}
-              discount={`Rs. ${this.state.totalDiscount}`}
-              delivery={`Rs. ${this.state.deliveryCharge}`}
+              coupons={this.state.couponDiscount}
+              discount={this.state.totalDiscount}
+              delivery={this.state.deliveryCharge}
               onCheckout={
                 this.state.isPaymentFailed
                   ? this.handleSubmitAfterPaymentFailure

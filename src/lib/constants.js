@@ -219,6 +219,7 @@ export const CREDIT_CARD = "Credit Card";
 export const DEBIT_CARD = "Debit Card";
 export const E_WALLET = "E - Wallet";
 export const CASH_ON_DELIVERY_PAYMENT_MODE = "Cash On Delivery";
+export const RUPEE_SYMBOL = "₹";
 
 // META TAGS CONSTANTS
 
