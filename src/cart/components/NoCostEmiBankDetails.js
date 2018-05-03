@@ -22,26 +22,11 @@ export default class NoCostEmiBankDetails extends React.Component {
       selectedFromDropDown: false
     };
   }
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.selectedEMIType !== NO_COST_EMI &&
-      nextProps.selectedEMIType !== null
-    ) {
-      this.setState({
-        selectedBankIndex: null,
-        selectedMonth: null,
-        showAll: false,
-        selectedBankName: null,
-        selectedBankCode: null,
-        selectedCouponCode: null,
-        selectedTenure: null,
-        selectedFromDropDown: false
-      });
-    }
-  }
+
   selectOtherBank(val) {
     const selectedBankName = val.label;
-    const selectedBankIndex = val.value;
+    const selectedBankIndex = parseInt(val.value, 10) - 1;
+
     this.setState({
       selectedBankIndex: selectedBankIndex,
       selectedBankName: selectedBankName,
@@ -103,11 +88,13 @@ export default class NoCostEmiBankDetails extends React.Component {
   onSelectMonth(index, val) {
     if (this.state.selectedBankName !== "Other Bank") {
       if (this.state.selectedMonth === index) {
+        debugger;
         this.setState({
           selectedMonth: null,
           selectedCouponCode: null,
           selectedTenure: null
         });
+
         this.props.removeNoCostEmi(val.emicouponCode);
       } else {
         if (val && this.props.applyNoCostEmi) {
@@ -299,9 +286,10 @@ export default class NoCostEmiBankDetails extends React.Component {
             {this.state.selectedBankIndex !== null && (
               <div className={styles.emiDetailsPlan}>
                 <div className={styles.labelHeader}>
-                  {`* No cost EMI available only on ${
-                    this.props.productCount
-                  } product`}
+                  {this.props.productCount > 0 &&
+                    `* No cost EMI available only on ${
+                      this.props.productCount
+                    } product`}
                 </div>
                 <div className={styles.monthsLabel}>Tenure (Months)</div>
                 <div className={styles.monthsHolder}>

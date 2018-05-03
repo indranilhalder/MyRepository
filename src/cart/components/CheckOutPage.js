@@ -156,7 +156,7 @@ class CheckOutPage extends React.Component {
   };
   onChangePaymentMode = val => {
     let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
-    if (noCostEmiCouponCode) {
+    if (this.state.currentPaymentMode !== EMI && noCostEmiCouponCode) {
       this.removeNoCostEmi(noCostEmiCouponCode);
     }
 
