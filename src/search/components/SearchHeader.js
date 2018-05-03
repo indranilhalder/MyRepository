@@ -7,6 +7,7 @@ import searchRedIcon from "./img/searchRed.svg";
 import PropTypes from "prop-types";
 import Icon from "../../xelpmoc-core/Icon";
 import Input2 from "../../general/components/Input2.js";
+import companyLogo from "../../general/components/img/group.svg";
 export default class SearchHeader extends React.Component {
   onClickBack() {
     if (this.props.onClickBack) {
@@ -36,9 +37,17 @@ export default class SearchHeader extends React.Component {
     if (this.props.display) {
       search = cancelIcon;
     }
+    let InformationHeader = styles.InformationHeader;
+    if (this.props.isGoBack && this.props.isLogo) {
+      InformationHeader = styles.logoPresentStyle;
+    }
+    let logoHolder = styles.logoHolder;
+    if (this.props.isGoBack) {
+      logoHolder = styles.iconWithLogo;
+    }
     return (
       <div className={styles.base}>
-        <div className={styles.InformationHeader}>
+        <div className={InformationHeader}>
           {this.props.isGoBack &&
             !this.props.display && (
               <div
@@ -48,6 +57,11 @@ export default class SearchHeader extends React.Component {
                 <Icon image={iconImageURL} size={16} />
               </div>
             )}
+          {this.props.isLogo && (
+            <div className={logoHolder}>
+              <Icon image={companyLogo} size={35} />
+            </div>
+          )}
           <div
             className={styles.searchHolder}
             onClick={() => this.onClickIcon()}

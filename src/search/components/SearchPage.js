@@ -87,6 +87,7 @@ export default class SearchPage extends React.Component {
             }}
             isGoBack={this.props.hasBackButton}
             text={this.props.header}
+            isLogo={this.props.isLogo}
             hasCrossButton={this.props.hasCrossButton}
             toggleSearchBar={this.toggleSearchBar}
             display={this.state.showSearchBar}
