@@ -109,6 +109,7 @@ class HeaderWrapper extends React.Component {
     if (url === PRODUCT_CART_ROUTER) {
       shouldRenderSearch = false;
     }
+
     if (this.props.match.path.includes("/") && url !== PRODUCT_CART_ROUTER) {
       isGoBack = true;
       shouldRenderSearch = true;
@@ -134,6 +135,7 @@ class HeaderWrapper extends React.Component {
     if (url === CHECKOUT_ROUTER) {
       isGoBack = false;
       isCross = true;
+      shouldRenderSearch = false;
     }
     if (hasAppView === "true") {
       shouldRenderHeader = false;
@@ -143,6 +145,7 @@ class HeaderWrapper extends React.Component {
         goBack={this.onBackClick}
         text={this.props.headerText}
         hasBackButton={isGoBack}
+        hasCrossButton={isCross}
       />
     );
     if (productCode) {
@@ -166,7 +169,6 @@ class HeaderWrapper extends React.Component {
           text={this.props.headerText}
           canGoBack={this.onBackClick}
           hasBackButton={isGoBack}
-          hasCrossButton={isCross}
         />
       );
     }
