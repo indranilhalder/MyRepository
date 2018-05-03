@@ -18,6 +18,7 @@
   line-height: 20px;
   font-family: semibold;
   padding-top: 10px;
+  word-wrap: break-word;
 }
 .price {
   composes: label;
