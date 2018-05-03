@@ -70,7 +70,7 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   renderPaymentCardsComponents() {
-    let paymentModesToDisplay = sequanceOfPaymentMode.map(mode => {
+    let paymentModesToDisplay = sequanceOfPaymentMode.filter(mode => {
       return find(
         this.props.cart.paymentModes.paymentModes,
         availablePaymentMode => {
@@ -80,9 +80,8 @@ export default class PaymentCardWrapper extends React.Component {
         }
       );
     });
-
     return paymentModesToDisplay.map((feedDatum, i) => {
-      return this.renderPaymentCard(feedDatum.key, i);
+      return this.renderPaymentCard(feedDatum, i);
     });
   }
 
