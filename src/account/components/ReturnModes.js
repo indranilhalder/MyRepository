@@ -5,7 +5,6 @@ import SelectReturnDate from "./SelectReturnDate";
 import ReturnsFrame from "./ReturnsFrame";
 import PropTypes from "prop-types";
 import styles from "./ReturnModes.css";
-import _ from "lodash";
 import {
   QUICK_DROP,
   SCHEDULED_PICKUP,
