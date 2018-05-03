@@ -12,7 +12,6 @@ import {
   GLOBAL_ACCESS_TOKEN
 } from "../../lib/constants";
 import {
-  MOBILE_PDP_VIEW,
   PRICE_TEXT,
   OFFER_AVAILABLE,
   DELIVERY_INFORMATION_TEXT,
@@ -22,9 +21,12 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   ANONYMOUS_USER,
   PRODUCT_SELLER_ROUTER_SUFFIX,
-  PRODUCT_OTHER_SELLER_ROUTER,
-  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+  PRODUCT_OTHER_SELLER_ROUTER
 } from "../../lib/constants";
+import {
+  renderMetaTags,
+  renderMetaTagsWithoutSeoObject
+} from "../../lib/seoUtils";
 const PRODUCT_QUANTITY = "1";
 const PRICE_LOW_TO_HIGH = "Price Low - High";
 const PRICE_HIGH_TO_LOW = "Price High - Low";
@@ -119,7 +121,16 @@ class ProductSellerPage extends Component {
     }
   }
 
+  renderMetaTags = () => {
+    const productDetails = this.props.productDetails;
+    return productDetails.seo
+      ? renderMetaTags(productDetails)
+      : renderMetaTagsWithoutSeoObject(productDetails);
+  };
+
   render() {
+    console.log("PRODUCT DETAILS");
+    console.log(this.props.productDetails);
     const sellers = this.props.productDetails
       ? this.props.productDetails.otherSellers
       : [];
@@ -157,6 +168,8 @@ class ProductSellerPage extends Component {
           addProductToBag={() => this.addToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
         >
+          {this.renderMetaTags()}
+
           <div className={styles.base}>
             <ProductDetailsCard
               productImage={mobileGalleryImages[0]}

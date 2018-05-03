@@ -2,10 +2,12 @@ import React from "react";
 import InformationHeader from "./InformationHeader.js";
 import SearchContainer from "../../search/SearchContainer.js";
 import HollowHeader from "./HollowHeader.js";
+import StickyHeader from "./StickyHeader.js";
 import { withRouter } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import styles from "./HeaderWrapper.css";
 import queryString from "query-string";
+import throttle from "lodash/throttle";
 import {
   HOME_ROUTER,
   PRODUCT_CART_ROUTER,
@@ -27,6 +29,12 @@ import { SIGN_UP } from "../../auth/actions/user.actions";
 
 const PRODUCT_CODE_REGEX = /p-(.*)/;
 class HeaderWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      stickyHeader: false
+    };
+  }
   onBackClick = () => {
     if (this.props.isPlpFilterOpen) {
       this.props.hideFilter();
@@ -51,6 +59,25 @@ class HeaderWrapper extends React.Component {
       this.props.history.push(PRODUCT_CART_ROUTER);
     }
   };
+  handleScroll = () => {
+    return throttle(() => {
+      if (window.pageYOffset < 30 && this.state.stickyHeader) {
+        this.setState({ stickyHeader: false });
+      } else if (window.pageYOffset > 30 && !this.state.stickyHeader) {
+        this.setState({ stickyHeader: true });
+      }
+    }, 200);
+  };
+
+  componentDidMount() {
+    window.scroll(0, 0);
+    this.throttledScroll = this.handleScroll();
+    window.addEventListener("scroll", this.throttledScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.throttledScroll);
+  }
 
   goToWishList = () => {
     if (this.props.history) {
@@ -119,7 +146,14 @@ class HeaderWrapper extends React.Component {
       />
     );
     if (productCode) {
-      headerToRender = (
+      headerToRender = this.state.stickyHeader ? (
+        <StickyHeader
+          goBack={this.onBackClick}
+          goToCart={this.goToCart}
+          goToWishList={this.goToWishList}
+          text={this.props.headerText}
+        />
+      ) : (
         <HollowHeader
           goBack={this.onBackClick}
           goToCart={this.goToCart}

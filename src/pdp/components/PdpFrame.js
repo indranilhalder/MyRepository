@@ -2,6 +2,7 @@ import React from "react";
 import PdpFooter from "./PdpFooter";
 import styles from "./PdpFrame.css";
 import PropTypes from "prop-types";
+import { MetaTags } from "react-meta-tags";
 
 export default class PdpFrame extends React.Component {
   onAddToBag() {
@@ -26,10 +27,19 @@ export default class PdpFrame extends React.Component {
       this.props.goToWishList();
     }
   };
+
+  renderAvailabilityMetaTag = () => {
+    return (
+      <MetaTags>
+        <meta itemprop="availability" content="http://schema.org/InStock" />
+      </MetaTags>
+    );
+  };
   render() {
     return (
       <div className={styles.base}>
         {this.props.children}
+        {!this.props.outOfStock && this.renderAvailabilityMetaTag()}
         <PdpFooter
           onAddToBag={() => this.onAddToBag()}
           productListingId={this.props.productListingId}

@@ -83,7 +83,7 @@
     "local": " REACT_APP_STAGE=local node scripts/build.js",
     "dev": " REACT_APP_STAGE=devxelp node scripts/build.js",
     "uat2": " REACT_APP_STAGE=uat2 node scripts/build.js",
-    "build": "REACT_APP_STAGE=devxelp node scripts/build.js",
+    "build": "REACT_APP_STAGE=p2 node scripts/build.js",
     "p2": "REACT_APP_STAGE=p2 node scripts/build.js",
     "production": "REACT_APP_STAGE=production node scripts/build.js",
     "test": "cross-env node scripts/test.js --env=jsdom",

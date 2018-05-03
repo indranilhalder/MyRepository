@@ -193,6 +193,7 @@ export default class Checkout extends React.Component {
                     No Cost EMI Discount
                   </div>
                   <div className={classOffers}>
+                    Rs.
                     {this.props.noCostEmiDiscount}
                   </div>
                 </div>
