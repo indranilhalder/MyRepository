@@ -41,22 +41,18 @@ export default class SearchLocationByPincode extends React.Component {
         )}
         <div className={styles.inputHolder}>
           <Input2
-            placeholder={`Your pincode :${this.state.pincode}`}
+            placeholder={
+              this.state.pincode
+                ? `Your pincode :${this.state.pincode}`
+                : "Enter your pincode"
+            }
             type="number"
-            value={this.state.pinCode && this.state.pinCode}
+            value={this.state.pinCode ? this.state.pinCode : ""}
             boxy={true}
             onChange={val => this.getValue(val)}
             textStyle={{ fontSize: 14 }}
             height={35}
             rightChildSize={35}
-            rightChild={
-              <CircleButton
-                size={35}
-                color={"transparent"}
-                icon={<Icon image={gpsIcon} size={20} />}
-                onClick={() => this.onUpdate()}
-              />
-            }
           />
         </div>
       </div>

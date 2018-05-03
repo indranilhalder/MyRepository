@@ -83,6 +83,8 @@ const cart = (
     jusPayError: null,
     jusPayDetails: null,
     cliqCashJusPayDetails: null,
+    createJusPayStatus: null,
+    createJusPayError: null,
 
     transactionDetailsStatus: null,
     transactionDetailsError: null,
@@ -699,13 +701,13 @@ const cart = (
 
     case cartActions.CREATE_JUS_PAY_ORDER_REQUEST:
       return Object.assign({}, state, {
-        jusPayStatus: action.status,
+        createJusPayStatus: action.status,
         jusPaymentLoader: true
       });
 
     case cartActions.CREATE_JUS_PAY_ORDER_SUCCESS: {
       return Object.assign({}, state, {
-        jusPayStatus: action.status,
+        createJusPayStatus: action.status,
         jusPayDetails: action.jusPayDetails
       });
     }
@@ -729,8 +731,8 @@ const cart = (
 
     case cartActions.CREATE_JUS_PAY_ORDER_FAILURE:
       return Object.assign({}, state, {
-        jusPayStatus: action.status,
-        jusPayError: action.error,
+        createJusPayStatus: action.status,
+        createJusPayError: action.error,
         jusPaymentLoader: false
       });
 
