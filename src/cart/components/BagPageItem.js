@@ -2,7 +2,11 @@ import React from "react";
 import styles from "./BagPageItem.css";
 import ProductImage from "../../general/components/ProductImage.js";
 import PropTypes from "prop-types";
-import { DEFAULT_PIN_CODE_LOCAL_STORAGE } from "../../lib/constants";
+import {
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  RUPEE_SYMBOL
+} from "../../lib/constants";
+
 const NOT_SERVICEABLE = "Service Not Available";
 const OUT_OF_STOCK = "Product is out of stock";
 
@@ -39,7 +43,7 @@ export default class BagPageItem extends React.Component {
           )}
           {this.props.price && (
             <div className={styles.informationText}>
-              {`Rs. ${this.props.price}`}
+              {` ${RUPEE_SYMBOL}${this.props.price}`}
             </div>
           )}
         </div>

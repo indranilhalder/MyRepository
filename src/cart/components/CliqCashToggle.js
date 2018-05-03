@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Toggle from "../../general/components/Toggle";
 import styles from "./CliqCashToggle.css";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-
+import { RUPEE_SYMBOL } from "../../lib/constants.js";
 export default class CliqCashToggle extends React.Component {
   onToggle(val) {
     if (this.props.onToggle) {
@@ -22,7 +22,7 @@ export default class CliqCashToggle extends React.Component {
       <div className={styles.base}>
         <div className={styles.cashBalanceTextHolder}>
           <div className={styles.casBalanceText}>{this.props.cashText}</div>
-          <div className={styles.cashRupyText}>{`Rs. ${
+          <div className={styles.cashRupyText}>{`${RUPEE_SYMBOL}${
             this.props.price
           } available`}</div>
         </div>

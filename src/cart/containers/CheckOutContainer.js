@@ -50,7 +50,8 @@ import {
   createJusPayOrderForCliqCash,
   clearCartDetails,
   jusPayTokenize,
-  createJusPayOrderForNetBanking
+  createJusPayOrderForNetBanking,
+  createJusPayOrder
 } from "../actions/cart.actions";
 import {
   showSecondaryLoader,
@@ -168,8 +169,8 @@ const mapDispatchToProps = dispatch => {
     removeCliqCash: pinCode => {
       dispatch(removeCliqCash(pinCode));
     },
-    binValidation: (paymentMode, binNo) => {
-      dispatch(binValidation(paymentMode, binNo));
+    binValidation: (paymentMode, binNo, cartGuId) => {
+      dispatch(binValidation(paymentMode, binNo, cartGuId));
     },
     softReservationForPayment: (
       cardDetails,
@@ -241,6 +242,26 @@ const mapDispatchToProps = dispatch => {
     jusPayTokenizeForGiftCard: (cardDetails, paymentMode, guId) => {
       dispatch(jusPayTokenizeForGiftCard(cardDetails, paymentMode, guId));
     },
+    createJusPayOrder: (
+      token,
+      cartItem,
+      address,
+      cardDetails,
+      paymentMode,
+      bankName
+    ) => {
+      dispatch(
+        createJusPayOrder(
+          token,
+          cartItem,
+          address,
+          cardDetails,
+          paymentMode,
+          true,
+          bankName
+        )
+      );
+    },
     createJusPayOrderForGiftCardNetBanking: (bankName, guId) => {
       dispatch(createJusPayOrderForGiftCardNetBanking(bankName, guId));
     },
@@ -272,14 +293,14 @@ const mapDispatchToProps = dispatch => {
     getEmiTermsAndConditionsForBank: (code, bankName) => {
       dispatch(getEmiTermsAndConditionsForBank(code, bankName));
     },
-    applyNoCostEmi: couponCode => {
-      dispatch(applyNoCostEmi(couponCode));
+    applyNoCostEmi: (couponCode, carGuId, cartId) => {
+      dispatch(applyNoCostEmi(couponCode, carGuId, cartId));
     },
-    removeNoCostEmi: couponCode => {
-      dispatch(removeNoCostEmi(couponCode));
+    removeNoCostEmi: (couponCode, carGuId, cartId) => {
+      dispatch(removeNoCostEmi(couponCode, carGuId, cartId));
     },
-    getItemBreakUpDetails: couponCode => {
-      dispatch(getItemBreakUpDetails(couponCode));
+    getItemBreakUpDetails: (couponCode, cartGuId) => {
+      dispatch(getItemBreakUpDetails(couponCode, cartGuId));
     },
     getPinCode: pinCode => {
       dispatch(getPinCode(pinCode));
@@ -349,7 +370,8 @@ const mapStateToProps = state => {
   return {
     cart: state.cart,
     getPinCodeDetails: state.profile.getPinCodeDetails,
-    userDetails: state.profile.userDetails
+    userDetails: state.profile.userDetails,
+    getPincodeStatus: state.profile.getPinCodeStatus
   };
 };
 
