@@ -1,12 +1,13 @@
 .base {
   width: 100%;
   height: auto;
-  background: #fff;
   border-radius: 4px;
+  padding: 0 15px 15px 15px;
+}
+.paymentModes {
+  background-color: #fff;
 }
 .card {
-  width: 100%;
-  height: auto;
-  background: #fff;
-  padding: 15px 20px;
+  background-color: #fff;
+  padding: 15px;
 }

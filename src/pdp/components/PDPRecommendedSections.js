@@ -38,7 +38,7 @@ class PDPRecommendedSections extends React.Component {
       this.props.aboutTheBrand && (
         <React.Fragment>
           <div className={styles.brandSection}>
-            <h3 className={styles.brandHeader}>About the brand</h3>
+            <div className={styles.brandHeader}>About the brand</div>
             <div className={styles.brandLogoSection}>
               {this.props.aboutTheBrand.brandLogo && (
                 <div className={styles.brandLogoHolder}>
@@ -56,9 +56,9 @@ class PDPRecommendedSections extends React.Component {
               )}
             </div>
             {this.props.aboutTheBrand.description && (
-              <h3 className={styles.brandDescription}>
+              <div className={styles.brandDescription}>
                 {this.props.aboutTheBrand.description}
-              </h3>
+              </div>
             )}
 
             {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY] &&
@@ -95,6 +95,7 @@ class PDPRecommendedSections extends React.Component {
                 {...this.props}
                 productImage={productImage}
                 productId={val.productListingId}
+                isShowAddToWishlistIcon={false}
                 onClick={url => this.goToProductDescription(url)}
               />
             );
