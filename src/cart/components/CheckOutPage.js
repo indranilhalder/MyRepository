@@ -491,6 +491,7 @@ class CheckOutPage extends React.Component {
           resetAutoPopulateDataForPinCode={() =>
             this.props.resetAutoPopulateDataForPinCode()
           }
+          getPincodeStatus={this.props.getPincodeStatus}
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -1476,6 +1477,7 @@ class CheckOutPage extends React.Component {
             displayToast={message => this.props.displayToast(message)}
             getPinCode={val => this.getPinCodeDetails(val)}
             getPinCodeDetails={this.props.getPinCodeDetails}
+            getPincodeStatus={this.props.getPincodeStatus}
           />
         </div>
       );

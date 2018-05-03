@@ -349,7 +349,8 @@ const mapStateToProps = state => {
   return {
     cart: state.cart,
     getPinCodeDetails: state.profile.getPinCodeDetails,
-    userDetails: state.profile.userDetails
+    userDetails: state.profile.userDetails,
+    getPincodeStatus: state.profile.getPinCodeStatus
   };
 };
 
