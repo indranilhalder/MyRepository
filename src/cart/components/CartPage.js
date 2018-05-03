@@ -183,14 +183,17 @@ class CartPage extends React.Component {
 
   goToCouponPage = () => {
     let couponDetails = Object.assign(this.props.cart.coupons, this.props);
-
     this.props.showCouponModal(couponDetails);
   };
 
   renderToCheckOutPage() {
     let pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    if (customerCookie) {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    if (customerCookie && userDetails && cartDetailsLoggedInUser) {
       if (pinCode && this.state.isServiceable === true) {
         setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT);
         this.props.history.push({
