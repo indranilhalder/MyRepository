@@ -10,6 +10,7 @@ export default class OrderConfirmation extends React.Component {
   };
   componentWillUnmount() {
     this.props.clearCartDetails();
+    this.props.orderConfirmationUpdate();
   }
   continueShopping = () => {
     this.props.continueShopping();
@@ -55,11 +56,5 @@ export default class OrderConfirmation extends React.Component {
         />
       </div>
     );
-  }
-
-  componentWillUnmount() {
-    if (this.props.orderConfirmationUpdate) {
-      this.props.orderConfirmationUpdate();
-    }
   }
 }
