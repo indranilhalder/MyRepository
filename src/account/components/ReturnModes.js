@@ -5,6 +5,7 @@ import SelectReturnDate from "./SelectReturnDate";
 import ReturnsFrame from "./ReturnsFrame";
 import PropTypes from "prop-types";
 import styles from "./ReturnModes.css";
+import _ from "lodash";
 import {
   QUICK_DROP,
   SCHEDULED_PICKUP,
@@ -34,6 +35,18 @@ export default class ReturnModes extends React.Component {
       />
     );
   }
+
+  isReturnModesEnabled = () => {
+    const data = this.props.returnProductDetails;
+    if (
+      data.returnModes.quickDrop ||
+      data.returnModes.schedulePickup ||
+      data.returnModes.selfCourier
+    ) {
+      return true;
+    }
+    return false;
+  };
   render() {
     // Preventing user to open this page direct by hitting URL
     if (
@@ -74,32 +87,42 @@ export default class ReturnModes extends React.Component {
                 )}
             </OrderCard>
           </div>
-          {data.returnModes.quickDrop && (
-            <SelectReturnDate
-              label="Return to store"
-              selected={this.props.selectedMode === QUICK_DROP}
-              selectItem={() => {
-                this.handleSelect(QUICK_DROP);
-              }}
-            />
+          {this.isReturnModesEnabled() && (
+            <div>
+              {data.returnModes.quickDrop && (
+                <SelectReturnDate
+                  label="Return to store"
+                  selected={this.props.selectedMode === QUICK_DROP}
+                  selectItem={() => {
+                    this.handleSelect(QUICK_DROP);
+                  }}
+                />
+              )}
+              {data.returnModes.schedulePickup && (
+                <SelectReturnDate
+                  label="Tata CliQ Pick Up"
+                  selectItem={() => {
+                    this.handleSelect(SCHEDULED_PICKUP);
+                  }}
+                  selected={this.props.selectedMode === SCHEDULED_PICKUP}
+                />
+              )}
+              {data.returnModes.selfCourier && (
+                <SelectReturnDate
+                  selectItem={() => {
+                    this.handleSelect(SELF_COURIER);
+                  }}
+                  label="Self Courier"
+                  selected={this.props.selectedMode === SELF_COURIER}
+                />
+              )}
+            </div>
           )}
-          {data.returnModes.schedulePickup && (
-            <SelectReturnDate
-              label="Tata CliQ Pick Up"
-              selectItem={() => {
-                this.handleSelect(SCHEDULED_PICKUP);
-              }}
-              selected={this.props.selectedMode === SCHEDULED_PICKUP}
-            />
-          )}
-          {data.returnModes.selfCourier && (
-            <SelectReturnDate
-              selectItem={() => {
-                this.handleSelect(SELF_COURIER);
-              }}
-              label="Self Courier"
-              selected={this.props.selectedMode === SELF_COURIER}
-            />
+          {!this.isReturnModesEnabled() && (
+            <div className={styles.text}>
+              sorry we are not able to process your request, contact customer
+              care 90291 08282
+            </div>
           )}
         </div>
       </ReturnsFrame>

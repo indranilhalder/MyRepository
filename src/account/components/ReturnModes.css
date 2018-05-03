@@ -1,4 +1,3 @@
-
 .content {
   width: 100%;
   height: auto;
@@ -10,4 +9,10 @@
   height: auto;
   padding: 15px;
   border-bottom: 1px solid #ececec;
+}
+
+.text {
+  width: 100%;
+  height: auto;
+  padding: 15px;
 }
