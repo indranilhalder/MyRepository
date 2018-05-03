@@ -123,6 +123,7 @@ export default class ReturnReasonAndModes extends React.Component {
           this.props.returnRequest.returnEntry.orderEntries[0]
         }
         selectMode={mode => this.onSelectMode(mode)}
+        onCancel={() => this.onCancel()}
       />
     );
     return (
