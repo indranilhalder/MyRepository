@@ -95,6 +95,7 @@ class PDPRecommendedSections extends React.Component {
                 {...this.props}
                 productImage={productImage}
                 productId={val.productListingId}
+                isIcon={false}
                 onClick={url => this.goToProductDescription(url)}
               />
             );
