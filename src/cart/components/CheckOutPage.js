@@ -151,12 +151,11 @@ class CheckOutPage extends React.Component {
     this.setState({ cardDetails });
   };
   onChangePaymentMode = val => {
-    if (val !== EMI) {
-      let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
-      if (noCostEmiCouponCode) {
-        this.removeNoCostEmi(noCostEmiCouponCode);
-      }
+    let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
+    if (noCostEmiCouponCode) {
+      this.removeNoCostEmi(noCostEmiCouponCode);
     }
+
     this.setState(val);
     this.setState({ cardDetails: {}, bankCodeForNetBanking: null });
   };
