@@ -354,7 +354,9 @@ class CheckOutPage extends React.Component {
               </div>
             );
           })}
+           <DummyTab title="Payment Method" number={3} />
       </div>
+
     );
   };
 
@@ -744,12 +746,12 @@ class CheckOutPage extends React.Component {
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount.value
         ) {
-          this.setState(
+          this.setState({couponDiscount:
             Math.round(
               nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
                 .value * 100
             ) / 100
-          );
+           } );
         }
       }
     }
