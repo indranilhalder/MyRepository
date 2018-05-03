@@ -107,7 +107,7 @@ class HeaderWrapper extends React.Component {
     let isCross = false;
     let isLogo = false;
     let shouldRenderHeader = true;
-    let showLogo = false;
+    let companyLogoInPdp = false;
     if (url === PRODUCT_CART_ROUTER) {
       shouldRenderSearch = false;
     }
@@ -149,7 +149,7 @@ class HeaderWrapper extends React.Component {
       isGoBack = false;
     }
     if (this.props.history.length <= 2) {
-      showLogo = true;
+      companyLogoInPdp = true;
     }
     if (url === LOGIN_PATH || url === SIGN_UP_PATH) {
       shouldRenderHeader = false;
@@ -177,14 +177,14 @@ class HeaderWrapper extends React.Component {
           goToCart={this.goToCart}
           goToWishList={this.goToWishList}
           text={this.props.headerText}
-          isShowCompanyLogo={showLogo}
+          isShowCompanyLogo={companyLogoInPdp}
         />
       ) : (
         <HollowHeader
           goBack={this.onBackClick}
           goToCart={this.goToCart}
           goToWishList={this.goToWishList}
-          isShowCompanyLogo={showLogo}
+          isShowCompanyLogo={companyLogoInPdp}
         />
       );
     } else if (shouldRenderSearch) {
