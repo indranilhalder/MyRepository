@@ -70,7 +70,9 @@ export default class ReturnFlow extends React.Component {
       }
     });
   }
-
+  onCancel() {
+    this.props.history.goBack();
+  }
   navigateToOrderDetail() {
     this.props.history.push(`${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}`);
   }
@@ -104,6 +106,7 @@ export default class ReturnFlow extends React.Component {
             <ReturnBankForm
               onChange={val => this.onChangeBankingDetail(val)}
               onContinue={() => this.navigateToShowInitiateReturn()}
+              onCancel={() => this.onCancel()}
             />
           )}
         />
