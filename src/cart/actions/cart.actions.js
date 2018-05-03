@@ -1885,11 +1885,10 @@ export function binValidationFailure(error) {
 }
 
 // Action Creator to bin Validation
-export function binValidation(paymentMode, binNo,cartGuId) {
+export function binValidation(paymentMode, binNo, cartGuId) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  if(!cartGuId)
-  {
+  if (!cartGuId) {
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     cartGuId = JSON.parse(cartDetails).guid;
   }
@@ -3917,7 +3916,7 @@ export function applyNoCostEmiRequest() {
   };
 }
 
-export function applyNoCostEmiSuccess(noCostEmiResult,couponCode) {
+export function applyNoCostEmiSuccess(noCostEmiResult, couponCode) {
   return {
     type: APPLY_NO_COST_EMI_SUCCESS,
     status: SUCCESS,
@@ -3934,7 +3933,7 @@ export function applyNoCostEmiFailure(error) {
   };
 }
 
-export function applyNoCostEmi(couponCode,cartGuId,cartId) {
+export function applyNoCostEmi(couponCode, cartGuId, cartId) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -3954,7 +3953,7 @@ export function applyNoCostEmi(couponCode,cartGuId,cartId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(applyNoCostEmiSuccess(resultJson,couponCode));
+      dispatch(applyNoCostEmiSuccess(resultJson, couponCode));
     } catch (e) {
       dispatch(applyNoCostEmiFailure(e.message));
     }
@@ -3968,7 +3967,7 @@ export function removeNoCostEmiRequest() {
   };
 }
 
-export function removeNoCostEmiSuccess(noCostEmiResult,couponCode) {
+export function removeNoCostEmiSuccess(noCostEmiResult, couponCode) {
   return {
     type: REMOVE_NO_COST_EMI_SUCCESS,
     status: SUCCESS,
@@ -3985,7 +3984,7 @@ export function removeNoCostEmiFailure(error) {
   };
 }
 
-export function removeNoCostEmi(couponCode,cartGuId,cartId) {
+export function removeNoCostEmi(couponCode, cartGuId, cartId) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -4006,7 +4005,7 @@ export function removeNoCostEmi(couponCode,cartGuId,cartId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(removeNoCostEmiSuccess(resultJson,couponCode));
+      dispatch(removeNoCostEmiSuccess(resultJson, couponCode));
     } catch (e) {
       dispatch(removeNoCostEmiFailure(e.message));
     }
@@ -4036,14 +4035,13 @@ export function getItemBreakUpDetailsFailure(error) {
   };
 }
 
-export function getItemBreakUpDetails(couponCode,cartGuId) {
+export function getItemBreakUpDetails(couponCode, cartGuId) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    if(!cartGuId)
-    {
+    if (!cartGuId) {
       const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-       cartGuId = JSON.parse(cartDetails).guid;
+      cartGuId = JSON.parse(cartDetails).guid;
     }
 
     dispatch(getItemBreakUpDetailsRequest());
