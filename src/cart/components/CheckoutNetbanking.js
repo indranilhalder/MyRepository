@@ -18,11 +18,6 @@ export default class CheckoutNetBanking extends React.Component {
       this.props.getNetBankDetails();
     }
   };
-  removeNoCostEmi = couponCode => {
-    if (this.props.removeNoCostEmi) {
-      this.props.removeNoCostEmi(couponCode);
-    }
-  };
   render() {
     let validNetBankingDetails;
     if (
@@ -47,7 +42,6 @@ export default class CheckoutNetBanking extends React.Component {
         icon={netBankingIcon}
         getNetBankDetails={() => this.getNetBankDetails()}
         bankList={validNetBankingDetails}
-        removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
       >
         <NetBanking
           selected={["1"]}

@@ -15,11 +15,6 @@ export default class CheckoutCOD extends React.Component {
   softReservationForCODPayment = () => {
     this.props.softReservationForCODPayment();
   };
-  removeNoCostEmi = couponCode => {
-    if (this.props.removeNoCostEmi) {
-      this.props.removeNoCostEmi(couponCode);
-    }
-  };
 
   render() {
     return (
@@ -36,7 +31,6 @@ export default class CheckoutCOD extends React.Component {
               this.props.onChange({ currentPaymentMode })
             }
             icon={creditCardIcon}
-            removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
           >
             <CodForm
               cart={this.props.cart}

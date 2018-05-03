@@ -76,11 +76,6 @@ export default class EmiPanel extends React.Component {
   onChangeCardDetail = val => {
     this.props.onChangeCardDetail(val);
   };
-  removeNoCostEmi = couponCode => {
-    if (this.props.removeNoCostEmi) {
-      this.props.removeNoCostEmi(couponCode);
-    }
-  };
   render() {
     return (
       <div className={styles.base}>
@@ -97,9 +92,6 @@ export default class EmiPanel extends React.Component {
             this.props.cart.emiEligibilityDetails.isNoCostEMIEligible && (
               <div className={styles.subListHolder}>
                 <NoCostEmi
-                  removeNoCostEmi={couponCode =>
-                    this.removeNoCostEmi(couponCode)
-                  }
                   EMIText={NO_COST_EMI}
                   isOpenSubEMI={
                     this.state.currentSelectedEMIType === NO_COST_EMI
@@ -149,7 +141,6 @@ export default class EmiPanel extends React.Component {
             )}
           <div className={styles.subListHolder}>
             <NoCostEmi
-              removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
               isOpenSubEMI={
                 this.state.currentSelectedEMIType === STANDARD_DELIVERY
               }
