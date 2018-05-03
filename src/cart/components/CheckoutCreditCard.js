@@ -29,6 +29,12 @@ export default class CheckoutCreditCard extends React.Component {
       this.props.onChangeCardDetail(card);
     }
   };
+
+  removeNoCostEmi = couponCode => {
+    if (this.props.removeNoCostEmi) {
+      this.props.removeNoCostEmi(couponCode);
+    }
+  };
   render() {
     return (
       <ManueDetails
@@ -38,6 +44,7 @@ export default class CheckoutCreditCard extends React.Component {
           this.props.onChange({ currentPaymentMode })
         }
         icon={creditCardIcon}
+        removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
       >
         <CreditCardForm
           cardDetails={this.props.cardDetails}

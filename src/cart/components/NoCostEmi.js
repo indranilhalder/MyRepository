@@ -2,8 +2,10 @@ import React from "react";
 import styles from "./NoCostEmi.css";
 import PropTypes from "prop-types";
 import { Collapse } from "react-collapse";
+import { NO_COST_EMI_COUPON } from "../../lib/constants.js";
 const STANDARD_EMI = "Standard Emi";
 const NO_COST_EMI = "No Cost Emi";
+
 export default class NoCostEmi extends React.Component {
   constructor(props) {
     super(props);
@@ -30,6 +32,10 @@ export default class NoCostEmi extends React.Component {
       !this.props.emiList &&
       this.props.getEmiBankDetails
     ) {
+      let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
+      if (noCostEmiCouponCode) {
+        this.props.removeNoCostEmi(noCostEmiCouponCode);
+      }
       this.props.getEmiBankDetails();
     }
     if (

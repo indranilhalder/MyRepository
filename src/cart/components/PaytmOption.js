@@ -21,6 +21,12 @@ export default class PaytmOption extends React.Component {
       }
     });
   }
+  removeNoCostEmi = couponCode => {
+    if (this.props.removeNoCostEmi) {
+      this.props.removeNoCostEmi(couponCode);
+    }
+  };
+
   render() {
     return (
       <div className={styles.base}>
@@ -31,6 +37,7 @@ export default class PaytmOption extends React.Component {
             this.props.onChange({ currentPaymentMode })
           }
           icon={eWalletIcon}
+          removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
         >
           {this.props.isPtm && (
             <div className={styles.eWalletDetailsHolder}>

@@ -79,6 +79,7 @@ export default class PaymentCardWrapper extends React.Component {
         saveCardDetails={
           this.props.cart.paymentModes.savedCardResponse.savedCardDetailsMap
         }
+        removeNoCostEmi={couponCode => this.props.removeNoCostEmi(couponCode)}
       />
     );
   };

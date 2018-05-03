@@ -42,6 +42,7 @@ import {
   THANK_YOU,
   COUPON_COOKIE,
   JUS_PAY_AUTHENTICATION_FAILED,
+  JUS_PAY_AUTHORIZATION_FAILED,
   CREDIT_CARD,
   NET_BANKING_PAYMENT_MODE,
   DEBIT_CARD,
@@ -176,7 +177,10 @@ class CheckOutPage extends React.Component {
   componentDidUpdate() {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
-    if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+    if (
+      value === JUS_PAY_AUTHENTICATION_FAILED ||
+      value === JUS_PAY_AUTHORIZATION_FAILED
+    ) {
       const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
       if (!oldCartId) {
         return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
@@ -778,7 +782,10 @@ class CheckOutPage extends React.Component {
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
     this.setState({ orderId: orderId });
-    if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+    if (
+      value === JUS_PAY_AUTHENTICATION_FAILED ||
+      value === JUS_PAY_AUTHORIZATION_FAILED
+    ) {
       const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
       if (!oldCartId) {
         return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
@@ -864,7 +871,10 @@ class CheckOutPage extends React.Component {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
 
-    if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+    if (
+      value === JUS_PAY_AUTHENTICATION_FAILED ||
+      value === JUS_PAY_AUTHORIZATION_FAILED
+    ) {
       carGuId = parsedQueryString.value;
 
       //get the NoCost Emi Coupon Code to release

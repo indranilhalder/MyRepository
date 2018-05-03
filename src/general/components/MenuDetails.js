@@ -10,7 +10,8 @@ import {
 } from "../../lib/adobeUtils";
 import {
   EASY_MONTHLY_INSTALLMENTS,
-  NET_BANKING_PAYMENT_MODE
+  NET_BANKING_PAYMENT_MODE,
+  NO_COST_EMI_COUPON
 } from "../../lib/constants";
 
 export default class MenuDetails extends React.Component {
@@ -42,12 +43,21 @@ export default class MenuDetails extends React.Component {
         this.props.text === NET_BANKING_PAYMENT_MODE &&
         !this.props.bankList
       ) {
+        let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
+        if (noCostEmiCouponCode) {
+          this.props.removeNoCostEmi(noCostEmiCouponCode);
+        }
         this.props.getNetBankDetails();
       } else if (
         this.props.text === EASY_MONTHLY_INSTALLMENTS &&
         !this.props.emiList
       ) {
         this.props.getEmiBankDetails();
+      } else {
+        let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
+        if (noCostEmiCouponCode) {
+          this.props.removeNoCostEmi(noCostEmiCouponCode);
+        }
       }
     }
   }

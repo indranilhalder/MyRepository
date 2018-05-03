@@ -22,6 +22,12 @@ export default class CheckoutSavedCard extends React.Component {
     }
   }
 
+  removeNoCostEmi = couponCode => {
+    if (this.props.removeNoCostEmi) {
+      this.props.removeNoCostEmi(couponCode);
+    }
+  };
+
   render() {
     return (
       <MenuDetails
@@ -31,6 +37,7 @@ export default class CheckoutSavedCard extends React.Component {
           this.props.onSelectPaymentsMode(SAVED_CARD_PAYMENT_MODE)
         }
         isOpen={this.props.currentPaymentMode === SAVED_CARD_PAYMENT_MODE}
+        removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
       >
         {this.props.saveCardDetails &&
           this.props.saveCardDetails.map((data, i) => {
