@@ -7,7 +7,6 @@ import searchRedIcon from "./img/searchRed.svg";
 import PropTypes from "prop-types";
 import Icon from "../../xelpmoc-core/Icon";
 import Input2 from "../../general/components/Input2.js";
-import crossIcon from "../../general/components/img/cancel.svg";
 export default class SearchHeader extends React.Component {
   onClickBack() {
     if (this.props.onClickBack) {
@@ -49,14 +48,6 @@ export default class SearchHeader extends React.Component {
                 <Icon image={iconImageURL} size={16} />
               </div>
             )}
-          {this.props.hasCrossButton && (
-            <div
-              className={styles.backHolder}
-              onClick={() => this.onClickBack()}
-            >
-              <Icon image={crossIcon} size={16} />
-            </div>
-          )}
           <div
             className={styles.searchHolder}
             onClick={() => this.onClickIcon()}

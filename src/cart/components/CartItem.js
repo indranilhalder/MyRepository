@@ -60,6 +60,7 @@ export default class CartItem extends React.Component {
         fetchedQuantityList.push({ value: i.toString(), label: i.toString() });
       }
     }
+
     return (
       <div className={styles.base}>
         <div className={styles.productInformation}>
@@ -88,8 +89,10 @@ export default class CartItem extends React.Component {
                 </div>
               )}
               <span>
-                {this.props.deliveryType} :{" "}
-                <span>{this.props.deliverTime}</span>
+                {this.props.deliveryType === "Home Delivery"
+                  ? "Standard Shipping"
+                  : this.props.deliveryType}{" "}
+                : <span>{this.props.deliverTime}</span>
               </span>
             </div>
           )}

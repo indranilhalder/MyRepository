@@ -4,7 +4,11 @@ import { newReturnInitial, returnPinCode } from "../actions/account.actions";
 import ReturnAddressList from "../components/ReturnAddressList.js";
 import { addUserAddress } from "../../cart/actions/cart.actions.js";
 import { SUCCESS } from "../../lib/constants";
-
+import { displayToast } from "../../general/toast.actions";
+import {
+  getPinCode,
+  getPinCodeSuccess
+} from "../../account/actions/account.actions.js";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     addUserAddress: async (addressDetails, fromAccount) => {
@@ -20,6 +24,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     returnPinCode: productDetails => {
       dispatch(returnPinCode(productDetails));
+    },
+    displayToast: message => {
+      dispatch(displayToast(message));
+    },
+    getPinCode: pinCode => {
+      dispatch(getPinCode(pinCode));
+    },
+    resetAutoPopulateDataForPinCode: () => {
+      dispatch(getPinCodeSuccess(null));
     }
   };
 };
@@ -33,6 +46,8 @@ const mapStateToProps = (state, ownProps) => {
     returnInitiateStatus: state.profile.returnInitiateStatus,
     returnInitiateError: state.profile.returnInitiateError,
     returnPinCodeError: state.profile.returnPinCodeError,
+    getPincodeStatus: state.profile.getPinCodeStatus,
+    getPinCodeDetails: state.profile.getPinCodeDetails,
     orderDetails: state.profile.fetchOrderDetails,
     ...ownProps
   };

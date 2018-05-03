@@ -47,9 +47,10 @@ import {
   NET_BANKING_PAYMENT_MODE,
   DEBIT_CARD,
   EMI,
+  CASH_ON_DELIVERY_PAYMENT_MODE,
+  LOGIN_PATH,
   NO_COST_EMI_COUPON,
-  OLD_CART_CART_ID,
-  CASH_ON_DELIVERY_PAYMENT_MODE
+  OLD_CART_CART_ID
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -121,16 +122,16 @@ class CheckOutPage extends React.Component {
       isNoCostEmiProceeded: false,
       selectedBankOfferCode: "",
       isPaymentFailed: false,
-      deliveryCharge: 0,
-      couponDiscount: 0,
-      totalDiscount: 0,
+      deliveryCharge: "0.00",
+      couponDiscount: "0.00",
+      totalDiscount: "0.00",
       cliqPiqSelected: false,
       currentPaymentMode: null, // holding selected payments modes
       cardDetails: {}, // for store card detail in card details
       cvvForCurrentPaymentMode: null, // in case on saved card
       bankCodeForNetBanking: null, // in case on net banking
       captchaReseponseForCOD: null, // in case of COD order its holding that ceptcha verification
-      noCostEmiDiscount: 0,
+      noCostEmiDiscount: "0.00",
       egvCartGuid: null,
       noCostEmiBankName: null
     };
@@ -140,6 +141,9 @@ class CheckOutPage extends React.Component {
     if (productCode) {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
     }
+  }
+  navigateToLogin() {
+    this.props.history.push(LOGIN_PATH);
   }
   navigateUserToMyBagAfter15MinOfpaymentFailure() {
     this.props.displayToast(INVALID_CART_ERROR_MESSAGE);
@@ -746,13 +750,12 @@ class CheckOutPage extends React.Component {
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount.value
         ) {
-          let couponDiscount =
-            Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
-                .value * 100
-            ) / 100;
           this.setState({
-            couponDiscount
+            couponDiscount:
+              Math.round(
+                nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
+                  .value * 100
+              ) / 100
           });
         }
       }
@@ -788,6 +791,14 @@ class CheckOutPage extends React.Component {
     }
   }
   componentDidMount() {
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    if (!customerCookie || !userDetails || !cartDetailsLoggedInUser) {
+      return this.navigateToLogin();
+    }
     setDataLayerForCheckoutDirectCalls(
       ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE
     );
@@ -1085,14 +1096,26 @@ class CheckOutPage extends React.Component {
   availabilityOfUserCoupon = () => {
     if (!this.state.isGiftCard) {
       let couponCookie = Cookie.getCookie(COUPON_COOKIE);
-      let cartDetailsCouponDiscount =
+      console.log(this.props.cart);
+
+      let cartDetailsCouponDiscount;
+      if (
         this.props.cart &&
         this.props.cart.cartDetailsCNC &&
         this.props.cart.cartDetailsCNC.cartAmount &&
         (this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount ||
-          this.props.cart.cartDetailsCNC.cartAmount.appliedCouponDiscount);
+          this.props.cart.cartDetailsCNC.cartAmount.appliedCouponDiscount)
+      ) {
+        cartDetailsCouponDiscount = true;
+      } else {
+        cartDetailsCouponDiscount = false;
+      }
 
-      if (couponCookie && !cartDetailsCouponDiscount) {
+      if (
+        couponCookie &&
+        !cartDetailsCouponDiscount &&
+        this.props.cart.cartDetailsCNCStatus !== REQUESTING
+      ) {
         Cookies.deleteCookie(COUPON_COOKIE);
         this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
       }
@@ -1308,6 +1331,7 @@ class CheckOutPage extends React.Component {
             this.state.noCostEmiBankName
           );
         }
+        this.onChangePaymentMode({ currentPaymentMode: null });
       }
 
       if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
@@ -1724,9 +1748,9 @@ class CheckOutPage extends React.Component {
               amount={this.state.payableAmount}
               bagTotal={this.state.bagAmount}
               payable={this.state.payableAmount}
-              coupons={`Rs. ${this.state.couponDiscount}`}
-              discount={`Rs. ${this.state.totalDiscount}`}
-              delivery={`Rs. ${this.state.deliveryCharge}`}
+              coupons={this.state.couponDiscount}
+              discount={this.state.totalDiscount}
+              delivery={this.state.deliveryCharge}
               onCheckout={
                 this.state.isPaymentFailed
                   ? this.handleSubmitAfterPaymentFailure

@@ -39,7 +39,9 @@ export default class ConnectWidget extends React.Component {
                 backgroundImage: `url(${
                   this.props.feedComponentData.backgroundImageURL
                 }`,
-                backgroundRepeat: "no-repeat"
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "contain",
+                backgroundPosition: "center"
               }}
             >
               <div className={styles.content}>
