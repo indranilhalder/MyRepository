@@ -781,7 +781,7 @@ class CheckOutPage extends React.Component {
     let cartDetailsLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
-    if (!customerCookie || !userDetails || cartDetailsLoggedInUser) {
+    if (!customerCookie || !userDetails || !cartDetailsLoggedInUser) {
       return this.navigateToLogin();
     }
     setDataLayerForCheckoutDirectCalls(
