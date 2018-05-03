@@ -37,7 +37,7 @@ export default class ProductDescription extends Component {
           {this.props.showWishListButton &&
             this.props.productListingId &&
             this.props.winningUssID &&
-            this.props.isIcon && (
+            this.props.isShowAddToWishlistIcon && (
               <div className={styles.button}>
                 <AddToWishListButtonContainer
                   productListingId={this.props.productListingId}
@@ -84,5 +84,5 @@ ProductDescription.defaultProps = {
   isWhite: false,
   textColor: "#212121",
   showWishListButton: true,
-  isIcon: true
+  isShowAddToWishlistIcon: true
 };
