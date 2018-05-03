@@ -229,7 +229,9 @@ export default class AddDeliveryAddress extends React.Component {
       titleValue: "",
       addressType: "",
       salutaion: "",
-      defaultFlag: false
+      defaultFlag: false,
+      landmarkList: [],
+      emailId: ""
     });
   };
   onChangeSalutation(val) {
