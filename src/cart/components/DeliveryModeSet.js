@@ -34,7 +34,11 @@ export default class DeliveryModeSet extends React.Component {
                 <div className={styles.productName}>{data.productName}</div>
                 <div className={styles.deliveryWay}>
                   {deliveryOption &&
-                    `${deliveryOption.name}${expectedDeliveryDate}`}
+                    `${
+                      deliveryOption.name === "Home Delivery"
+                        ? "Standard Shipping"
+                        : deliveryOption.name
+                    } ${expectedDeliveryDate}`}
                 </div>
               </div>
             );
