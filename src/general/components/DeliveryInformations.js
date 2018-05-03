@@ -35,7 +35,6 @@ export default class DeliveryInformations extends React.Component {
     }
   }
   render() {
-    console.log(this.props.selected);
     let iconImage = HomeImage;
     let typeName = HOME_TEXT;
     if (this.props.type === EXPRESS) {
