@@ -48,7 +48,11 @@ export default class ReturnReasonAndModes extends React.Component {
       this.props.displayToast("Please select reason ");
       return false;
     }
-    if (!data.reverseSeal) {
+    if (
+      this.props.returnProductDetails &&
+      this.props.returnProductDetails.showReverseSealFrJwlry === "yes" &&
+      !data.reverseSeal
+    ) {
       this.props.displayToast("Please Select Reverse Seal ");
       return false;
     } else {
