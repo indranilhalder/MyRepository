@@ -47,9 +47,10 @@ import {
   NET_BANKING_PAYMENT_MODE,
   DEBIT_CARD,
   EMI,
+  CASH_ON_DELIVERY_PAYMENT_MODE,
+  LOGIN_PATH,
   NO_COST_EMI_COUPON,
-  OLD_CART_CART_ID,
-  CASH_ON_DELIVERY_PAYMENT_MODE
+  OLD_CART_CART_ID
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -140,6 +141,9 @@ class CheckOutPage extends React.Component {
     if (productCode) {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
     }
+  }
+  navigateToLogin() {
+    this.props.history.push(LOGIN_PATH);
   }
   navigateUserToMyBagAfter15MinOfpaymentFailure() {
     this.props.displayToast(INVALID_CART_ERROR_MESSAGE);
@@ -784,6 +788,14 @@ class CheckOutPage extends React.Component {
     }
   }
   componentDidMount() {
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    if (!customerCookie || !userDetails || !cartDetailsLoggedInUser) {
+      return this.navigateToLogin();
+    }
     setDataLayerForCheckoutDirectCalls(
       ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE
     );
