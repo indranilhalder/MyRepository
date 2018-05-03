@@ -1111,17 +1111,12 @@ class CheckOutPage extends React.Component {
       } else {
         cartDetailsCouponDiscount = false;
       }
-      console.log(
-        couponCookie,
-        cartDetailsCouponDiscount,
-        this.props.cart.cartDetailsCNCStatus
-      );
+
       if (
         couponCookie &&
         !cartDetailsCouponDiscount &&
         this.props.cart.cartDetailsCNCStatus === SUCCESS
       ) {
-        console.log("COmes in ");
         Cookies.deleteCookie(COUPON_COOKIE);
         this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
       }
