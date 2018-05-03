@@ -1407,7 +1407,6 @@ class CheckOutPage extends React.Component {
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
-      // const cartId = localStorage.getItem(OLD_CART_CART_ID);
       this.props.binValidation(paymentMode, binNo, cartGuId);
     } else {
       localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
