@@ -14,6 +14,7 @@ export const FAILURE_LOWERCASE = "failure";
 export const JUS_PAY_PENDING = "PENDING_VBV";
 export const JUS_PAY_CHARGED = "CHARGED";
 export const JUS_PAY_AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
+export const JUS_PAY_AUTHORIZATION_FAILED = "JUS_PAY_AUTHORIZATION_FAILED";
 export const SINGLE_SELECT_HEADING_COPY = "Thanks!!!";
 export const SINGLE_SELECT_DESCRIPTION_COPY =
   "We will curate the experience based on your choices. Loading products...";
@@ -129,6 +130,8 @@ export const CASH_TEXT = "Cash on Delivery Available!";
 export const SOCIAL_LOG_IN = "logIn";
 export const SOCIAL_SIGN_UP = "signUp";
 export const OLD_CART_GU_ID = "oldCartGuId";
+export const OLD_CART_CART_ID = "oldCartCartId";
+export const NO_COST_EMI_COUPON = "noCostEmiCoupon";
 export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
 export const CART_DETAILS_FOR_LOGGED_IN_USER = "cartDetails";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
