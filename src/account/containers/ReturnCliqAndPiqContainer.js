@@ -7,7 +7,6 @@ import { SUCCESS } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
 import {
   getPinCode,
-  getUserDetails,
   getPinCodeSuccess
 } from "../../account/actions/account.actions.js";
 const mapDispatchToProps = (dispatch, ownProps) => {
