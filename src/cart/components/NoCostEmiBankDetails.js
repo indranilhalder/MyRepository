@@ -88,7 +88,6 @@ export default class NoCostEmiBankDetails extends React.Component {
   onSelectMonth(index, val) {
     if (this.state.selectedBankName !== "Other Bank") {
       if (this.state.selectedMonth === index) {
-        debugger;
         this.setState({
           selectedMonth: null,
           selectedCouponCode: null,
