@@ -354,6 +354,7 @@ class CheckOutPage extends React.Component {
               </div>
             );
           })}
+        <DummyTab title="Payment Method" number={3} />
       </div>
     );
   };
