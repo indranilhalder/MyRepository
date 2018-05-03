@@ -81,21 +81,19 @@ export function getWishListItems() {
           JSON.parse(customerCookie).access_token
         }&isPwa=true`
       );
-      console.log("RESULT");
-      console.log(result);
+
       const resultJson = await result.json();
-      console.log("RESULT JSON");
-      console.log(resultJson);
 
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      const currentWishlist = resultJson.wishList.filter(wishlist => {
+        return wishlist.name === MY_WISH_LIST;
+      });
 
-      return dispatch(
-        getWishListItemsSuccess(resultJson.wishList && resultJson.wishList[0])
-      );
+      return dispatch(getWishListItemsSuccess(currentWishlist[0]));
     } catch (e) {
       return dispatch(getWishListItemsFailure(e.message));
     }
