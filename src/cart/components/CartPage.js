@@ -316,9 +316,9 @@ class CartPage extends React.Component {
     if (this.props.cart.cartDetails && this.props.cart.cartDetails.products) {
       const cartDetails = this.props.cart.cartDetails;
       let defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-      let deliveryCharge = 0;
-      let couponDiscount = 0;
-      let totalDiscount = 0;
+      let deliveryCharge = "0.00";
+      let couponDiscount = "0.00";
+      let totalDiscount = "0.00";
       if (cartDetails.products) {
         if (cartDetails.deliveryCharge) {
           deliveryCharge = cartDetails.deliveryCharge;
@@ -436,9 +436,9 @@ class CartPage extends React.Component {
                     Math.round(cartDetails.cartAmount.bagTotal.value * 100) /
                     100
                   }
-                  coupons={`Rs. ${couponDiscount}`}
-                  discount={`Rs. ${totalDiscount}`}
-                  delivery={`Rs. ${deliveryCharge}`}
+                  coupons={couponDiscount}
+                  discount={totalDiscount}
+                  delivery={deliveryCharge}
                   payable={
                     Math.round(
                       cartDetails.cartAmount.paybleAmount.value * 100
