@@ -538,6 +538,7 @@ class CheckOutPage extends React.Component {
         });
       }
     }
+    this.availabilityOfUserCoupon();
     if (
       !this.state.isCheckoutAddressSelected &&
       nextProps.cart.getUserAddressStatus === SUCCESS &&
@@ -745,12 +746,14 @@ class CheckOutPage extends React.Component {
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount.value
         ) {
-          this.setState(
+          let couponDiscount =
             Math.round(
               nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
                 .value * 100
-            ) / 100
-          );
+            ) / 100;
+          this.setState({
+            couponDiscount
+          });
         }
       }
     }
@@ -1090,11 +1093,10 @@ class CheckOutPage extends React.Component {
           this.props.cart.cartDetailsCNC.cartAmount.appliedCouponDiscount);
 
       if (couponCookie && !cartDetailsCouponDiscount) {
+        Cookies.deleteCookie(COUPON_COOKIE);
         this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
-        return false;
       }
     }
-    return true;
   };
 
   checkAvailabilityOfService = () => {
@@ -1219,7 +1221,7 @@ class CheckOutPage extends React.Component {
       ADDRESS_FOR_PLACE_ORDER,
       JSON.stringify(this.state.selectedAddress)
     );
-    if (!this.state.isPaymentFailed && this.availabilityOfUserCoupon()) {
+    if (!this.state.isPaymentFailed) {
       if (this.state.isFirstAddress) {
         this.addAddress(this.state.addressDetails);
       }
@@ -1529,6 +1531,9 @@ class CheckOutPage extends React.Component {
       this.state.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
     ) {
       labelForButton = PLACE_ORDER;
+    }
+    if (this.state.currentPaymentMode === null) {
+      labelForButton = PROCEED;
     } else {
       labelForButton = PAY_NOW;
     }
@@ -1637,6 +1642,8 @@ class CheckOutPage extends React.Component {
                 isPaymentFailed={this.state.isPaymentFailed}
                 isFromGiftCard={this.state.isGiftCard}
                 cart={this.props.cart}
+                selectedBankOfferCode={this.state.selectedBankOfferCode}
+                openBankOffers={() => this.openBankOffers()}
                 cliqCashAmount={this.state.cliqCashAmount}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
