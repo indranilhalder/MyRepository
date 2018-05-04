@@ -91,7 +91,6 @@ export default class EditAccountDetails extends React.Component {
     this.setState(val);
   }
   onChangeDateOfBirth = val => {
-    // let formattedDate = moment(val).format("MM/DD/YYYY");
     this.setState({ dateOfBirth: val });
   };
   updateProfile = () => {
