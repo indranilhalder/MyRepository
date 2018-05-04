@@ -28,7 +28,14 @@ export default class BrandsLandingPageDefault extends React.Component {
       searchBy: null
     };
   }
+  handleClick = webURL => {
+    if (webURL) {
+      const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
+      this.props.history.push(urlSuffix);
+    }
+  };
   componentDidMount() {
+    this.props.getFollowedBrands();
     this.props.getAllBrands();
   }
   componentWillUpdate() {
@@ -55,10 +62,14 @@ export default class BrandsLandingPageDefault extends React.Component {
     if (this.props.loading || !this.props.brandsStores) {
       return this.renderLoader();
     }
+
     const brandsStores = this.props.brandsStores[
       this.props.brandsStores.componentName
     ].items;
-    const brandList = map(brandsStores, brandName => {
+    if (!brandsStores) {
+      return null;
+    }
+    const brandList = map(brandsStores && brandsStores, brandName => {
       return brandName.subType;
     });
     let currentActiveHeroBanner = [];
@@ -101,7 +112,7 @@ export default class BrandsLandingPageDefault extends React.Component {
         </div>
         {/* we need to show this once api will be work and at that
         time also need some modification in integration */}
-        {/* <div className={styles.following}>
+        <div className={styles.following}>
           <div
             className={
               this.state.showFollowing
@@ -116,11 +127,25 @@ export default class BrandsLandingPageDefault extends React.Component {
             </div>
           </div>
           {this.state.showFollowing && (
-            <Carousel>
-              <BrandImage image="https://i.pinimg.com/originals/96/29/ef/9629efc8a4be4fd1600a9bb3940fd89c.jpg" />
+            <Carousel elementWidthMobile={30}>
+              {this.props.followedBrands &&
+                this.props.followedBrands.length > 0 &&
+                this.props.followedBrands
+                  .filter(brand => {
+                    return brand.isFollowing === "true";
+                  })
+                  .map(brand => {
+                    return (
+                      <BrandImage
+                        isFollowing={brand.isFollowing}
+                        image={brand.imageURL}
+                        onClick={() => this.handleClick(brand.webURL)}
+                      />
+                    );
+                  })}
             </Carousel>
           )}
-        </div> */}
+        </div>
         <div className={styles.bannerHolder}>
           {currentActiveHeroBanner &&
             currentActiveHeroBanner.length > 1 && (
