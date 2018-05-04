@@ -69,7 +69,7 @@ export default class BrandsLandingPageDefault extends React.Component {
     if (!brandsStores) {
       return null;
     }
-    const brandList = map(brandsStores && brandsStores, brandName => {
+    const brandList = map(brandsStores, brandName => {
       return brandName.subType;
     });
     let currentActiveHeroBanner = [];
