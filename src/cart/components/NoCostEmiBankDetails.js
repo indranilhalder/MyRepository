@@ -6,6 +6,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
+import { NO_COST_EMI } from "../../lib/constants";
 
 export default class NoCostEmiBankDetails extends React.Component {
   constructor(props) {
@@ -24,7 +25,8 @@ export default class NoCostEmiBankDetails extends React.Component {
 
   selectOtherBank(val) {
     const selectedBankName = val.label;
-    const selectedBankIndex = val.value;
+    const selectedBankIndex = parseInt(val.value, 10) - 1;
+
     this.setState({
       selectedBankIndex: selectedBankIndex,
       selectedBankName: selectedBankName,
@@ -91,6 +93,7 @@ export default class NoCostEmiBankDetails extends React.Component {
           selectedCouponCode: null,
           selectedTenure: null
         });
+
         this.props.removeNoCostEmi(val.emicouponCode);
       } else {
         if (val && this.props.applyNoCostEmi) {
@@ -282,9 +285,10 @@ export default class NoCostEmiBankDetails extends React.Component {
             {this.state.selectedBankIndex !== null && (
               <div className={styles.emiDetailsPlan}>
                 <div className={styles.labelHeader}>
-                  {`* No cost EMI available only on ${
-                    this.props.productCount
-                  } product`}
+                  {this.props.productCount > 0 &&
+                    `* No cost EMI available only on ${
+                      this.props.productCount
+                    } product`}
                 </div>
                 <div className={styles.monthsLabel}>Tenure (Months)</div>
                 <div className={styles.monthsHolder}>

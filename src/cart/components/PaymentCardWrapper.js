@@ -28,10 +28,10 @@ const keyForPaytm = "PAYTM";
 const sequanceOfPaymentMode = [
   keyForCreditCard,
   keyForDebitCard,
-  keyForNetbanking,
   keyForEMI,
-  keyForCOD,
-  keyForPaytm
+  keyForNetbanking,
+  keyForPaytm,
+  keyForCOD
 ];
 // prettier-ignore
 const typeComponentMapping = {
@@ -153,14 +153,14 @@ export default class PaymentCardWrapper extends React.Component {
         elementWidthMobile={100}
         offset={0}
         limit={1}
-        onSelect={val => this.applyBankCoupons(val)}
+        onSelect={val => this.props.applyBankCoupons(val)}
         selected={[this.props.selectedBankOfferCode]}
       >
         <BankOffer
           bankName={offerTitle}
           offerText={offerMinCartValue}
           label={SEE_ALL_BANK_OFFERS}
-          applyBankOffers={() => this.openBankOffers()}
+          applyBankOffers={() => this.props.openBankOffers()}
           value={offerCode}
         />
       </GridSelect>
@@ -188,7 +188,9 @@ export default class PaymentCardWrapper extends React.Component {
               />
             </div>
           )}
-          {!this.props.isPaymentFailed && this.renderBankOffers()}
+          {!this.props.isFromGiftCard &&
+            !this.props.isPaymentFailed &&
+            this.renderBankOffers()}
           {this.props.isRemainingBalance && (
             <div className={styles.paymentModes}>
               <div className={styles.card}>

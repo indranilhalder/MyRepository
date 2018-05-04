@@ -79,6 +79,15 @@ export default class EmiPanel extends React.Component {
   onChangeCardDetail = val => {
     this.props.onChangeCardDetail(val);
   };
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.currentPaymentMode !== EMI &&
+      this.state.currentSelectedEMIType !== null
+    ) {
+      this.setState({ currentSelectedEMIType: null });
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -106,6 +115,7 @@ export default class EmiPanel extends React.Component {
                   onChangeCardDetail={val => this.onChangeCardDetail(val)}
                 >
                   <NoCostEmiBankDetails
+                    selectedEMIType={this.state.currentSelectedEMIType}
                     onBankSelect={val => this.onBankSelect(val)}
                     onSelectMonth={val => this.onSelectMonth(val)}
                     bankList={

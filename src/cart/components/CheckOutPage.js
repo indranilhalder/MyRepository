@@ -156,7 +156,7 @@ class CheckOutPage extends React.Component {
   };
   onChangePaymentMode = val => {
     let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
-    if (noCostEmiCouponCode) {
+    if (this.state.currentPaymentMode !== EMI && noCostEmiCouponCode) {
       this.removeNoCostEmi(noCostEmiCouponCode);
     }
 
@@ -358,9 +358,8 @@ class CheckOutPage extends React.Component {
               </div>
             );
           })}
-           <DummyTab title="Payment Method" number={3} />
+        <DummyTab title="Payment Method" number={3} />
       </div>
-
     );
   };
 
@@ -437,51 +436,6 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  renderBankOffers = () => {
-    let offerMinCartValue, offerTitle, offerCode;
-    if (
-      this.props.cart.paymentModes &&
-      this.props.cart.paymentModes.paymentOffers &&
-      this.props.cart.paymentModes.paymentOffers.coupons
-    ) {
-      const selectedCoupon = this.props.cart.paymentModes.paymentOffers.coupons.find(
-        coupon => {
-          return coupon.offerCode === this.state.selectedBankOfferCode;
-        }
-      );
-      if (selectedCoupon) {
-        offerMinCartValue = selectedCoupon.offerMinCartValue;
-        offerTitle = selectedCoupon.offerTitle;
-        offerCode = selectedCoupon.offerCode;
-      } else {
-        offerMinCartValue = this.props.cart.paymentModes.paymentOffers
-          .coupons[0].offerMinCartValue;
-        offerTitle = this.props.cart.paymentModes.paymentOffers.coupons[0]
-          .offerTitle;
-        offerCode = this.props.cart.paymentModes.paymentOffers.coupons[0]
-          .offerCode;
-      }
-    }
-
-    return (
-      <GridSelect
-        elementWidthMobile={100}
-        offset={0}
-        limit={1}
-        onSelect={val => this.applyBankCoupons(val)}
-        selected={[this.state.selectedBankOfferCode]}
-      >
-        <BankOffer
-          bankName={offerTitle}
-          offerText={offerMinCartValue}
-          label={SEE_ALL_BANK_OFFERS}
-          applyBankOffers={() => this.openBankOffers()}
-          value={offerCode}
-        />
-      </GridSelect>
-    );
-  };
-
   renderInitialAddAddressForm() {
     if (
       !this.state.isFirstAddress &&
@@ -543,6 +497,7 @@ class CheckOutPage extends React.Component {
         });
       }
     }
+    this.availabilityOfUserCoupon();
     if (
       !this.state.isCheckoutAddressSelected &&
       nextProps.cart.getUserAddressStatus === SUCCESS &&
@@ -750,12 +705,13 @@ class CheckOutPage extends React.Component {
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount.value
         ) {
-          this.setState({couponDiscount:
-            Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
-                .value * 100
-            ) / 100
-           } );
+          this.setState({
+            couponDiscount:
+              Math.round(
+                nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
+                  .value * 100
+              ) / 100
+          });
         }
       }
     }
@@ -787,6 +743,9 @@ class CheckOutPage extends React.Component {
       this.state.selectedBankOfferCode
     ) {
       this.props.releaseBankOffer(this.state.selectedBankOfferCode);
+    }
+    if (this.props.history.action === "POP") {
+      this.props.clearCartDetails();
     }
   }
   componentDidMount() {
@@ -1095,19 +1054,28 @@ class CheckOutPage extends React.Component {
   availabilityOfUserCoupon = () => {
     if (!this.state.isGiftCard) {
       let couponCookie = Cookie.getCookie(COUPON_COOKIE);
-      let cartDetailsCouponDiscount =
+      let cartDetailsCouponDiscount;
+      if (
         this.props.cart &&
         this.props.cart.cartDetailsCNC &&
         this.props.cart.cartDetailsCNC.cartAmount &&
         (this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount ||
-          this.props.cart.cartDetailsCNC.cartAmount.appliedCouponDiscount);
+          this.props.cart.cartDetailsCNC.cartAmount.appliedCouponDiscount)
+      ) {
+        cartDetailsCouponDiscount = true;
+      } else {
+        cartDetailsCouponDiscount = false;
+      }
 
-      if (couponCookie && !cartDetailsCouponDiscount) {
+      if (
+        couponCookie &&
+        !cartDetailsCouponDiscount &&
+        this.props.cart.cartDetailsCNCStatus === SUCCESS
+      ) {
+        Cookies.deleteCookie(COUPON_COOKIE);
         this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
-        return false;
       }
     }
-    return true;
   };
 
   checkAvailabilityOfService = () => {
@@ -1232,7 +1200,7 @@ class CheckOutPage extends React.Component {
       ADDRESS_FOR_PLACE_ORDER,
       JSON.stringify(this.state.selectedAddress)
     );
-    if (!this.state.isPaymentFailed && this.availabilityOfUserCoupon()) {
+    if (!this.state.isPaymentFailed) {
       if (this.state.isFirstAddress) {
         this.addAddress(this.state.addressDetails);
       }
@@ -1319,6 +1287,7 @@ class CheckOutPage extends React.Component {
             this.state.noCostEmiBankName
           );
         }
+        this.onChangePaymentMode({ currentPaymentMode: null });
       }
 
       if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
@@ -1542,6 +1511,14 @@ class CheckOutPage extends React.Component {
       this.state.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
     ) {
       labelForButton = PLACE_ORDER;
+    } else if (this.state.currentPaymentMode === EMI) {
+      if (this.state.isNoCostEmiProceeded) {
+        labelForButton = PAY_NOW;
+      } else {
+        labelForButton = CONTINUE;
+      }
+    } else if (this.state.currentPaymentMode === null) {
+      labelForButton = PROCEED;
     } else {
       labelForButton = PAY_NOW;
     }
@@ -1646,10 +1623,13 @@ class CheckOutPage extends React.Component {
             this.state.isGiftCard) && (
             <div className={styles.paymentCardHolderπp}>
               <PaymentCardWrapper
+                applyBankCoupons={val => this.applyBankCoupons(val)}
                 isRemainingBalance={this.state.isRemainingAmount}
                 isPaymentFailed={this.state.isPaymentFailed}
                 isFromGiftCard={this.state.isGiftCard}
                 cart={this.props.cart}
+                selectedBankOfferCode={this.state.selectedBankOfferCode}
+                openBankOffers={() => this.openBankOffers()}
                 cliqCashAmount={this.state.cliqCashAmount}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
