@@ -43,7 +43,11 @@ class Login extends Component {
       }
     }
   }
-
+  handleKeyUp = event => {
+    if (this.props.onKeyUp) {
+      this.props.onKeyUp(event);
+    }
+  };
   navigateToSignUp() {
     this.props.history.push(SIGN_UP_PATH);
   }
@@ -81,7 +85,11 @@ class Login extends Component {
       }
     }
   };
-
+  checkLogin(val) {
+    if (val === "Enter") {
+      this.onSubmit();
+    }
+  }
   onForgotPassword() {
     if (this.props.onForgotPassword) {
       this.props.onForgotPassword();
@@ -144,12 +152,16 @@ class Login extends Component {
                     ? this.props.emailValue
                     : this.state.emailValue
                 }
+                onKeyUp={event => this.handleKeyUp(event)}
                 onChange={val => this.onChangeEmail(val)}
               />
             </div>
 
             <PasswordInput
               placeholder={"Password"}
+              onKeyUp={event => {
+                this.checkLogin(event.key);
+              }}
               password={
                 this.props.passwordValue
                   ? this.props.passwordValue
