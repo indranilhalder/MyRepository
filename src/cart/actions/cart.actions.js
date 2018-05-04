@@ -2395,7 +2395,6 @@ export function createJusPayOrder(
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
     try {
-      debugger;
       const result = await api.post(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName

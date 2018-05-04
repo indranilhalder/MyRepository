@@ -108,6 +108,7 @@ class BankOffersDetails extends Component {
     }
   };
   render() {
+    console.log(this.props);
     return (
       <div className={styles.base}>
         <SlideModal {...this.props}>
@@ -142,6 +143,7 @@ class BankOffersDetails extends Component {
                     offerDescription={value.offerDescription}
                     offerCode={value.offerCode}
                     offerMinCartValue={value.offerMinCartValue}
+                    offerMaxDiscount={value.offerMaxDiscount}
                     offerTitle={value.offerTitle}
                     key={i}
                     value={value.offerCode}

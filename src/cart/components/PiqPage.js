@@ -70,7 +70,6 @@ export default class PiqPage extends React.Component {
     }
   }
   render() {
-    console.log(this.props);
     let selectedStore = {};
     if (this.props.availableStores) {
       selectedStore = this.props.availableStores.find(store => {
