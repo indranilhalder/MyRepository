@@ -43,11 +43,6 @@ class Login extends Component {
       }
     }
   }
-  handleKeyUp = event => {
-    if (this.props.onKeyUp) {
-      this.props.onKeyUp(event);
-    }
-  };
   navigateToSignUp() {
     this.props.history.push(SIGN_UP_PATH);
   }
