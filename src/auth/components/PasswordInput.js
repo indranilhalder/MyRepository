@@ -17,7 +17,11 @@ class PasswordInput extends React.Component {
   onPress = () => {
     this.setState({ isPasswordVisible: !this.state.isPasswordVisible });
   };
-
+  handleKeyUp(event) {
+    if (this.props.onKeyUp) {
+      this.props.onKeyUp(event);
+    }
+  }
   render() {
     let scalerClass = styles.scaler;
     let type = this.props.type;
@@ -30,6 +34,9 @@ class PasswordInput extends React.Component {
       <Input
         {...this.props}
         type={type}
+        onKeyUp={event => {
+          this.handleKeyUp(event);
+        }}
         value={this.props.password}
         rightChild={
           <div className={styles.passWordButton}>
