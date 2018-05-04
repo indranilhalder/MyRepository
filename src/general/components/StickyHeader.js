@@ -5,6 +5,8 @@ import orderIcon from "./img/orderhistorywhite.svg";
 import backArrow from "./img/arrowBack.svg";
 import downloadIcon from "./img/downloadWhite.svg";
 import Icon from "../../xelpmoc-core/Icon";
+import companyLogo from "./img/group.svg";
+import { HOME_ROUTER } from "../../lib/constants";
 export default class StickyHeader extends React.Component {
   backPage() {
     if (this.props.goBack) {
@@ -23,7 +25,11 @@ export default class StickyHeader extends React.Component {
       this.props.goToWishList();
     }
   };
-
+  redirectToHome() {
+    if (this.props.redirectToHome) {
+      this.props.redirectToHome();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -31,6 +37,14 @@ export default class StickyHeader extends React.Component {
         <div className={styles.backArrowHolder} onClick={() => this.backPage()}>
           <Icon image={backArrow} size={20} />
         </div>
+        {this.props.isShowCompanyLogo && (
+          <div
+            className={styles.logoHolder}
+            onClick={() => this.redirectToHome()}
+          >
+            <Icon image={companyLogo} size={35} />
+          </div>
+        )}
         <div className={styles.historyDownloadIcon}>
           <div
             className={styles.orderIconHolder}
@@ -53,5 +67,9 @@ export default class StickyHeader extends React.Component {
 StickyHeader.propTypes = {
   goBack: PropTypes.func,
   goToCart: PropTypes.func,
-  goToWishList: PropTypes.func
+  goToWishList: PropTypes.func,
+  isShowCompanyLogo: PropTypes.bool
+};
+StickyHeader.defaultProps = {
+  isShowCompanyLogo: false
 };

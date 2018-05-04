@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./PriceAndLink.css";
 import PropTypes from "prop-types";
+import { RUPEE_SYMBOL } from "../../lib/constants";
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 export default class PriceAndLink extends React.Component {
   handleClick() {
@@ -22,7 +23,9 @@ export default class PriceAndLink extends React.Component {
         </div>
         <div className={styles.priceTextHolder}>
           <div className={styles.priceHeader}>Total Price </div>
-          <div className={styles.priceAmount}>{`Rs. ${this.props.price}`}</div>
+          <div className={styles.priceAmount}>{`${RUPEE_SYMBOL} ${
+            this.props.price
+          }`}</div>
         </div>
       </div>
     );

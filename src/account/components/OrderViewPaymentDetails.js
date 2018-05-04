@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./OrderViewPaymentDetails.css";
 import PropTypes from "prop-types";
+import { RUPEE_SYMBOL } from "../../lib/constants";
 export default class OrderViewPaymentDetails extends React.Component {
   render() {
     return (
@@ -9,7 +10,7 @@ export default class OrderViewPaymentDetails extends React.Component {
           <div className={styles.labelText}>Sub total</div>
           {this.props.SubTotal && (
             <div className={styles.infoText}>
-              {`Rs. ${this.props.SubTotal}`}
+              {`${RUPEE_SYMBOL}${this.props.SubTotal}`}
             </div>
           )}
         </div>
@@ -17,7 +18,7 @@ export default class OrderViewPaymentDetails extends React.Component {
           <div className={styles.labelText}>Delivery & Shipping Charges</div>
           {this.props.DeliveryCharges && (
             <div className={styles.infoText}>
-              {`Rs. ${this.props.DeliveryCharges}`}
+              {`${RUPEE_SYMBOL} ${this.props.DeliveryCharges}`}
             </div>
           )}
         </div>
@@ -25,28 +26,30 @@ export default class OrderViewPaymentDetails extends React.Component {
           <div className={styles.labelText}>Discount</div>
           {this.props.Discount && (
             <div className={styles.infoText}>
-              {`-Rs. ${this.props.Discount}`}
+              {`-${RUPEE_SYMBOL} ${this.props.Discount}`}
             </div>
           )}
         </div>
         <div className={styles.discountDataHolder}>
           <div className={styles.labelText}>Coupon</div>
           {this.props.coupon && (
-            <div className={styles.infoText}>{`-Rs. ${this.props.coupon}`}</div>
+            <div className={styles.infoText}>{`-${RUPEE_SYMBOL} ${
+              this.props.coupon
+            }`}</div>
           )}
         </div>
         <div className={styles.chargeHolder}>
           <div className={styles.labelText}>Convenience Charges</div>
           {this.props.ConvenienceCharges && (
             <div className={styles.infoText}>
-              {`Rs. ${this.props.ConvenienceCharges}`}
+              {`${RUPEE_SYMBOL} ${this.props.ConvenienceCharges}`}
             </div>
           )}
         </div>
         <div className={styles.totalHolder}>
           <div className={styles.labelTextTotal}>Total Amount</div>
           {this.props.Total && (
-            <div className={styles.infoTextTotal}>{`Rs. ${
+            <div className={styles.infoTextTotal}>{`${RUPEE_SYMBOL} ${
               this.props.Total
             }`}</div>
           )}
