@@ -11,7 +11,6 @@ export default class ProfileImage extends React.Component {
     this.styles = this.props.styles ? this.props.styles : styles;
   }
   render() {
-    console.log(this.props.image);
     const initials = this.props.initials;
     let className = this.styles.base;
     if (this.props.size === SIZE_1) {
