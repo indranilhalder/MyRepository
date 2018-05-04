@@ -4,10 +4,12 @@ import Carousel from "../../general/components/Carousel";
 import styles from "./FollowingBrands.css";
 import PropTypes from "prop-types";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+import plusButton from "../../general/components/img/plusbutton.svg";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
-  LOGGED_IN_USER_DETAILS
+  LOGGED_IN_USER_DETAILS,
+  DEFAULT_BRANDS_LANDING_PAGE
 } from "../../lib/constants";
 export default class FollowingBrands extends React.Component {
   newFollow = () => {
@@ -33,6 +35,20 @@ export default class FollowingBrands extends React.Component {
     const followWidgetData = this.props.feedComponentData;
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+    if (followWidgetData.data && followWidgetData.data) {
+      let gotoMoreBands = followWidgetData.data;
+
+      if (gotoMoreBands) {
+        gotoMoreBands.push({
+          imageURL: plusButton,
+          isFollowing: "true",
+          fit: "1",
+          webURL: DEFAULT_BRANDS_LANDING_PAGE
+        });
+      }
+    }
+
     return (
       <div className={styles.base}>
         {userDetails &&
@@ -42,18 +58,22 @@ export default class FollowingBrands extends React.Component {
               elementWidthMobile={30}
             >
               {followWidgetData.data &&
-                followWidgetData.data.map((datum, i) => {
-                  return (
-                    <BrandImage
-                      key={i}
-                      image={datum.imageURL}
-                      value={datum.webURL}
-                      fit={datum.type}
-                      isFollowing={datum.isFollowing}
-                      onClick={this.handleBrandImageClick}
-                    />
-                  );
-                })}
+                followWidgetData.data
+                  .filter(val => {
+                    return val.isFollowing === "true";
+                  })
+                  .map((datum, i) => {
+                    return (
+                      <BrandImage
+                        key={i}
+                        image={datum.imageURL}
+                        value={datum.webURL}
+                        fit={datum.fit}
+                        isFollowing={datum.isFollowing}
+                        onClick={this.handleBrandImageClick}
+                      />
+                    );
+                  })}
             </Carousel>
           )}
       </div>
