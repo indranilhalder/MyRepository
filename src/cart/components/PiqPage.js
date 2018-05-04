@@ -70,6 +70,7 @@ export default class PiqPage extends React.Component {
     }
   }
   render() {
+    console.log(this.props);
     let selectedStore = {};
     if (this.props.availableStores) {
       selectedStore = this.props.availableStores.find(store => {
@@ -99,7 +100,6 @@ export default class PiqPage extends React.Component {
             header={`${this.props.productName} ${this.props.productColour}`}
             pincode={this.props.pincode}
             changePincode={pincode => this.props.changePincode(pincode)}
-            getLocation={() => this.props.getLocation()}
           />
         </div>
         <div className={styles.bannerMobileHolder}>
