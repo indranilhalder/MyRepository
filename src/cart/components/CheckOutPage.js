@@ -42,16 +42,20 @@ import {
   THANK_YOU,
   COUPON_COOKIE,
   JUS_PAY_AUTHENTICATION_FAILED,
+  JUS_PAY_AUTHORIZATION_FAILED,
   CREDIT_CARD,
   NET_BANKING_PAYMENT_MODE,
   DEBIT_CARD,
-  EMI
+  EMI,
+  CASH_ON_DELIVERY_PAYMENT_MODE,
+  LOGIN_PATH,
+  NO_COST_EMI_COUPON,
+  OLD_CART_CART_ID
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
   setDataLayerForCheckoutDirectCalls,
-  ADOBE_CALL_FOR_LANDING_ON_PAYMENT_MODE,
   ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE,
   ADOBE_CALL_FOR_SELECT_DELIVERY_MODE,
   ADOBE_CALL_FOR_PROCCEED_FROM_DELIVERY_MODE
@@ -78,6 +82,8 @@ const ERROR_MESSAGE_FOR_PICK_UP_PERSON_NAME =
 const ERROR_MESSAGE_FOR_MOBILE_NUMBER = "Please enter valid mobile number";
 const INVALID_CART_ERROR_MESSAGE =
   "Sorry your cart is not valid any more. Please Try again";
+const PLACE_ORDER = "Place Order";
+const PAY_NOW = "Pay Now";
 export const EGV_GIFT_CART_ID = "giftCartId";
 class CheckOutPage extends React.Component {
   constructor(props) {
@@ -116,17 +122,18 @@ class CheckOutPage extends React.Component {
       isNoCostEmiProceeded: false,
       selectedBankOfferCode: "",
       isPaymentFailed: false,
-      deliveryCharge: 0,
-      couponDiscount: 0,
-      totalDiscount: 0,
+      deliveryCharge: "0.00",
+      couponDiscount: "0.00",
+      totalDiscount: "0.00",
       cliqPiqSelected: false,
       currentPaymentMode: null, // holding selected payments modes
       cardDetails: {}, // for store card detail in card details
       cvvForCurrentPaymentMode: null, // in case on saved card
       bankCodeForNetBanking: null, // in case on net banking
       captchaReseponseForCOD: null, // in case of COD order its holding that ceptcha verification
-      noCostEmiDiscount: 0,
-      egvCartGuid: null
+      noCostEmiDiscount: "0.00",
+      egvCartGuid: null,
+      noCostEmiBankName: null
     };
   }
 
@@ -134,6 +141,9 @@ class CheckOutPage extends React.Component {
     if (productCode) {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
     }
+  }
+  navigateToLogin() {
+    this.props.history.push(LOGIN_PATH);
   }
   navigateUserToMyBagAfter15MinOfpaymentFailure() {
     this.props.displayToast(INVALID_CART_ERROR_MESSAGE);
@@ -145,6 +155,11 @@ class CheckOutPage extends React.Component {
     this.setState({ cardDetails });
   };
   onChangePaymentMode = val => {
+    let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
+    if (this.state.currentPaymentMode !== EMI && noCostEmiCouponCode) {
+      this.removeNoCostEmi(noCostEmiCouponCode);
+    }
+
     this.setState(val);
     this.setState({ cardDetails: {}, bankCodeForNetBanking: null });
   };
@@ -173,7 +188,10 @@ class CheckOutPage extends React.Component {
   componentDidUpdate() {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
-    if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+    if (
+      value === JUS_PAY_AUTHENTICATION_FAILED ||
+      value === JUS_PAY_AUTHORIZATION_FAILED
+    ) {
       const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
       if (!oldCartId) {
         return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
@@ -340,6 +358,7 @@ class CheckOutPage extends React.Component {
               </div>
             );
           })}
+        <DummyTab title="Payment Method" number={3} />
       </div>
     );
   };
@@ -417,51 +436,6 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  renderBankOffers = () => {
-    let offerMinCartValue, offerTitle, offerCode;
-    if (
-      this.props.cart.paymentModes &&
-      this.props.cart.paymentModes.paymentOffers &&
-      this.props.cart.paymentModes.paymentOffers.coupons
-    ) {
-      const selectedCoupon = this.props.cart.paymentModes.paymentOffers.coupons.find(
-        coupon => {
-          return coupon.offerCode === this.state.selectedBankOfferCode;
-        }
-      );
-      if (selectedCoupon) {
-        offerMinCartValue = selectedCoupon.offerMinCartValue;
-        offerTitle = selectedCoupon.offerTitle;
-        offerCode = selectedCoupon.offerCode;
-      } else {
-        offerMinCartValue = this.props.cart.paymentModes.paymentOffers
-          .coupons[0].offerMinCartValue;
-        offerTitle = this.props.cart.paymentModes.paymentOffers.coupons[0]
-          .offerTitle;
-        offerCode = this.props.cart.paymentModes.paymentOffers.coupons[0]
-          .offerCode;
-      }
-    }
-
-    return (
-      <GridSelect
-        elementWidthMobile={100}
-        offset={0}
-        limit={1}
-        onSelect={val => this.applyBankCoupons(val)}
-        selected={[this.state.selectedBankOfferCode]}
-      >
-        <BankOffer
-          bankName={offerTitle}
-          offerText={offerMinCartValue}
-          label={SEE_ALL_BANK_OFFERS}
-          applyBankOffers={() => this.openBankOffers()}
-          value={offerCode}
-        />
-      </GridSelect>
-    );
-  };
-
   renderInitialAddAddressForm() {
     if (
       !this.state.isFirstAddress &&
@@ -488,6 +462,7 @@ class CheckOutPage extends React.Component {
           resetAutoPopulateDataForPinCode={() =>
             this.props.resetAutoPopulateDataForPinCode()
           }
+          getPincodeStatus={this.props.getPincodeStatus}
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -503,6 +478,26 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.cart.jusPayError && this.state.isPaymentFailed === false) {
+      const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
+      if (!oldCartId) {
+        return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
+      }
+      this.setState({ isPaymentFailed: true });
+      this.props.getPaymentFailureOrderDetails();
+
+      if (localStorage.getItem(EGV_GIFT_CART_ID)) {
+        let giftCartObj = JSON.parse(localStorage.getItem(EGV_GIFT_CART_ID));
+        this.setState({
+          isGiftCard: true,
+          isRemainingAmount: true,
+          payableAmount: Math.round(giftCartObj.amount * 100) / 100,
+          bagAmount: Math.round(giftCartObj.amount * 100) / 100,
+          egvCartGuid: giftCartObj.egvCartGuid
+        });
+      }
+    }
+    this.availabilityOfUserCoupon();
     if (
       !this.state.isCheckoutAddressSelected &&
       nextProps.cart.getUserAddressStatus === SUCCESS &&
@@ -688,21 +683,36 @@ class CheckOutPage extends React.Component {
             Math.round(
               nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
             ) / 100,
-          deliveryCharge:
-            nextProps.cart.cartDetailsCNC &&
-            nextProps.cart.cartDetailsCNC.deliveryCharge,
+
           totalDiscount:
             Math.round(
               nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
                 .value * 100
-            ) / 100,
-          couponDiscount:
-            Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
-                nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
-                  .value * 100
             ) / 100
         });
+
+        if (
+          nextProps.cart.cartDetailsCNC &&
+          nextProps.cart.cartDetailsCNC.deliveryCharge
+        ) {
+          this.setState({
+            deliveryCharge:
+              nextProps.cart.cartDetailsCNC &&
+              nextProps.cart.cartDetailsCNC.deliveryCharge
+          });
+        }
+        if (
+          nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
+          nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount.value
+        ) {
+          this.setState({
+            couponDiscount:
+              Math.round(
+                nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
+                  .value * 100
+              ) / 100
+          });
+        }
       }
     }
 
@@ -734,8 +744,19 @@ class CheckOutPage extends React.Component {
     ) {
       this.props.releaseBankOffer(this.state.selectedBankOfferCode);
     }
+    if (this.props.history.action === "POP") {
+      this.props.clearCartDetails();
+    }
   }
   componentDidMount() {
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    if (!customerCookie || !userDetails || !cartDetailsLoggedInUser) {
+      return this.navigateToLogin();
+    }
     setDataLayerForCheckoutDirectCalls(
       ADOBE_LANDING_ON_ADDRESS_TAB_ON_CHECKOUT_PAGE
     );
@@ -743,7 +764,10 @@ class CheckOutPage extends React.Component {
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
     this.setState({ orderId: orderId });
-    if (value === JUS_PAY_AUTHENTICATION_FAILED) {
+    if (
+      value === JUS_PAY_AUTHENTICATION_FAILED ||
+      value === JUS_PAY_AUTHORIZATION_FAILED
+    ) {
       const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
       if (!oldCartId) {
         return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
@@ -817,17 +841,52 @@ class CheckOutPage extends React.Component {
 
   getEmiBankDetails = () => {
     if (this.props.getEmiBankDetails) {
-      this.props.getEmiBankDetails(
-        this.props.cart.cartDetailsCNC.cartAmount &&
-          this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
-      );
+      if (this.state.isPaymentFailed) {
+        this.props.getEmiBankDetails(
+          this.props.cart.paymentFailureOrderDetails &&
+            this.props.cart.paymentFailureOrderDetails.cartAmount &&
+            this.props.cart.paymentFailureOrderDetails.cartAmount.bagTotal.value
+        );
+      } else {
+        this.props.getEmiBankDetails(
+          this.props.cart.cartDetailsCNC.cartAmount &&
+            this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
+        );
+      }
     }
   };
 
   getEmiEligibility = () => {
+    let carGuId;
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    const value = parsedQueryString.status;
+
+    if (
+      value === JUS_PAY_AUTHENTICATION_FAILED ||
+      value === JUS_PAY_AUTHORIZATION_FAILED
+    ) {
+      carGuId = parsedQueryString.value;
+
+      //get the NoCost Emi Coupon Code to release
+      let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
+      let cartId = localStorage.getItem(OLD_CART_CART_ID);
+      this.props.removeNoCostEmi(noCostEmiCouponCode, carGuId, cartId);
+    } else {
+      let cartDetailsLoggedInUser = Cookie.getCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER
+      );
+      localStorage.setItem(
+        OLD_CART_CART_ID,
+        JSON.parse(cartDetailsLoggedInUser).code
+      );
+
+      if (cartDetailsLoggedInUser) {
+        carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
+      }
+    }
     if (this.props.getEmiEligibility) {
       this.setState({ isNoCostEmiApplied: false, isNoCostEmiProceeded: false });
-      this.props.getEmiEligibility();
+      this.props.getEmiEligibility(carGuId);
     }
   };
 
@@ -843,23 +902,68 @@ class CheckOutPage extends React.Component {
       this.props.getEmiTermsAndConditionsForBank(bankCode, bankName);
     }
   };
-  applyNoCostEmi = couponCode => {
-    if (this.props.applyNoCostEmi) {
-      this.setState({ isNoCostEmiApplied: true, isNoCostEmiProceeded: false });
-      this.props.applyNoCostEmi(couponCode);
+  applyNoCostEmi = (couponCode, bankName) => {
+    this.setState({
+      isNoCostEmiApplied: true,
+      isNoCostEmiProceeded: false,
+      noCostEmiBankName: bankName
+    });
+    if (this.state.isPaymentFailed) {
+      const parsedQueryString = queryString.parse(this.props.location.search);
+      const cartGuId = parsedQueryString.value;
+      const cartId = localStorage.getItem(OLD_CART_CART_ID);
+      if (this.props.applyNoCostEmi) {
+        this.props.applyNoCostEmi(couponCode, cartGuId, cartId);
+      }
+    } else {
+      let cartDetailsLoggedInUser = Cookie.getCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER
+      );
+      if (cartDetailsLoggedInUser) {
+        let carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
+        let cartId = JSON.parse(cartDetailsLoggedInUser).code;
+        if (this.props.applyNoCostEmi) {
+          this.props.applyNoCostEmi(couponCode, carGuId, cartId);
+        }
+      }
     }
   };
 
   removeNoCostEmi = couponCode => {
-    if (this.props.applyNoCostEmi) {
-      this.setState({ isNoCostEmiApplied: false, isNoCostEmiProceeded: false });
-      this.props.removeNoCostEmi(couponCode);
+    this.setState({
+      isNoCostEmiApplied: true,
+      isNoCostEmiProceeded: false,
+      noCostEmiBankName: null
+    });
+    if (this.state.isPaymentFailed) {
+      const parsedQueryString = queryString.parse(this.props.location.search);
+      const cartGuId = parsedQueryString.value;
+      const cartId = localStorage.getItem(OLD_CART_CART_ID);
+      if (this.props.applyNoCostEmi) {
+        this.props.applyNoCostEmi(couponCode, cartGuId, cartId);
+      }
+    } else {
+      let cartDetailsLoggedInUser = Cookie.getCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER
+      );
+
+      if (this.props.removeNoCostEmi) {
+        let carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
+        let cartId = JSON.parse(cartDetailsLoggedInUser).code;
+        this.props.removeNoCostEmi(couponCode, carGuId, cartId);
+      }
     }
   };
 
   getItemBreakUpDetails = couponCode => {
-    if (this.props.getItemBreakUpDetails) {
-      this.props.getItemBreakUpDetails(couponCode);
+    if (this.state.isPaymentFailed) {
+      const parsedQueryString = queryString.parse(this.props.location.search);
+      const cartGuId = parsedQueryString.value;
+      this.props.getItemBreakUpDetails(couponCode, cartGuId);
+    } else {
+      if (this.props.getItemBreakUpDetails) {
+        this.props.getItemBreakUpDetails(couponCode);
+      }
     }
   };
 
@@ -869,21 +973,28 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  getCODEligibility = () => {
+  getCODEligibility = cartId => {
     if (this.props.getCODEligibility) {
-      this.props.getCODEligibility();
+      this.props.getCODEligibility(this.state.isPaymentFailed);
     }
   };
 
   getPaymentModes = () => {
     if (
-      this.state.isGiftCard &&
-      this.props.location &&
-      this.props.location.state &&
-      this.props.location.state.egvCartGuid
+      (this.state.isGiftCard &&
+        this.props.location &&
+        this.props.location.state &&
+        this.props.location.state.egvCartGuid) ||
+      (this.state.isGiftCard && this.state.egvCartGuid)
     ) {
+      let egvGiftCartGuId;
+      if (this.state.egvCartGuid) {
+        egvGiftCartGuId = this.state.egvCartGuid;
+      } else {
+        egvGiftCartGuId = this.props.location.state.egvCartGuid;
+      }
       let guIdObject = new FormData();
-      guIdObject.append(CART_GU_ID, this.props.location.state.egvCartGuid);
+      guIdObject.append(CART_GU_ID, egvGiftCartGuId);
       this.props.getPaymentModes(guIdObject);
     } else {
       let cartDetailsLoggedInUser = Cookie.getCookie(
@@ -943,19 +1054,28 @@ class CheckOutPage extends React.Component {
   availabilityOfUserCoupon = () => {
     if (!this.state.isGiftCard) {
       let couponCookie = Cookie.getCookie(COUPON_COOKIE);
-      let cartDetailsCouponDiscount =
+      let cartDetailsCouponDiscount;
+      if (
         this.props.cart &&
         this.props.cart.cartDetailsCNC &&
         this.props.cart.cartDetailsCNC.cartAmount &&
         (this.props.cart.cartDetailsCNC.cartAmount.couponDiscountAmount ||
-          this.props.cart.cartDetailsCNC.cartAmount.appliedCouponDiscount);
+          this.props.cart.cartDetailsCNC.cartAmount.appliedCouponDiscount)
+      ) {
+        cartDetailsCouponDiscount = true;
+      } else {
+        cartDetailsCouponDiscount = false;
+      }
 
-      if (couponCookie && !cartDetailsCouponDiscount) {
+      if (
+        couponCookie &&
+        !cartDetailsCouponDiscount &&
+        this.props.cart.cartDetailsCNCStatus === SUCCESS
+      ) {
+        Cookies.deleteCookie(COUPON_COOKIE);
         this.props.displayToast(COUPON_AVAILABILITY_ERROR_MESSAGE);
-        return false;
       }
     }
-    return true;
   };
 
   checkAvailabilityOfService = () => {
@@ -973,6 +1093,9 @@ class CheckOutPage extends React.Component {
     return productServiceAvailability;
   };
   handleSubmitAfterPaymentFailure = () => {
+    if (this.state.isNoCostEmiApplied) {
+      this.setState({ isNoCostEmiProceeded: true });
+    }
     // navigate user to myBag page is old cart dose not exist
     const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
     if (!oldCartId) {
@@ -994,11 +1117,16 @@ class CheckOutPage extends React.Component {
     }
     if (
       this.state.currentPaymentMode === CREDIT_CARD ||
-      this.state.currentPaymentMode === EMI ||
+      (this.state.currentPaymentMode === EMI &&
+        !this.state.isNoCostEmiApplied) ||
       this.state.currentPaymentMode === DEBIT_CARD
     ) {
-      if (this.state.isFromGiftCard) {
-        this.jusPayTokenizeForGiftCard(this.state.cardDetails);
+      if (this.state.isGiftCard) {
+        this.props.jusPayTokenizeForGiftCard(
+          this.state.cardDetails,
+          this.state.paymentModeSelected,
+          this.state.egvCartGuid
+        );
       } else {
         this.props.jusPayTokenize(
           this.state.cardDetails,
@@ -1009,21 +1137,53 @@ class CheckOutPage extends React.Component {
         );
       }
     }
-    if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
-      this.props.createJusPayOrderForNetBanking(
-        NET_BANKING,
-        this.state.bankCodeForNetBanking,
-        localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
-        JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
+
+    if (
+      this.state.currentPaymentMode === EMI &&
+      this.state.isNoCostEmiProceeded
+    ) {
+      this.props.createJusPayOrder(
+        "",
+        JSON.parse(localStorage.getItem(CART_ITEM_COOKIE)),
+        JSON.parse(localStorage.getItem(ADDRESS_FOR_PLACE_ORDER)),
+        this.state.cardDetails,
+        this.state.paymentModeSelected,
+        this.state.noCostEmiBankName
       );
     }
+    if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
+      if (this.state.isGiftCard) {
+        if (this.props.createJusPayOrderForGiftCardNetBanking) {
+          this.props.createJusPayOrderForGiftCardNetBanking(
+            this.state.bankCodeForNetBanking,
+            this.state.egvCartGuid
+          );
+        }
+      } else {
+        this.props.createJusPayOrderForNetBanking(
+          NET_BANKING,
+          this.state.bankCodeForNetBanking,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+          JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
+        );
+      }
+    }
     if (this.state.paymentModeSelected === PAYTM) {
-      this.props.createJusPayOrderForNetBanking(
-        PAYTM,
-        this.state.bankCodeForNetBanking,
-        localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
-        JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
-      );
+      if (this.state.isGiftCard) {
+        if (this.props.createJusPayOrderForGiftCardNetBanking) {
+          this.props.createJusPayOrderForGiftCardNetBanking(
+            this.state.bankCodeForNetBanking,
+            this.state.egvCartGuid
+          );
+        }
+      } else {
+        this.props.createJusPayOrderForNetBanking(
+          PAYTM,
+          this.state.bankCodeForNetBanking,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+          JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
+        );
+      }
     }
     if (!this.state.isRemainingAmount) {
       this.props.createJusPayOrderForCliqCash(
@@ -1034,16 +1194,13 @@ class CheckOutPage extends React.Component {
     if (this.state.binValidationCOD) {
       this.softReservationForCODPayment();
     }
-    if (this.state.paymentModeSelected === PAYTM) {
-      this.softReservationPaymentForWallet(PAYTM);
-    }
   };
   handleSubmit = () => {
     localStorage.setItem(
       ADDRESS_FOR_PLACE_ORDER,
       JSON.stringify(this.state.selectedAddress)
     );
-    if (!this.state.isPaymentFailed && this.availabilityOfUserCoupon()) {
+    if (!this.state.isPaymentFailed) {
       if (this.state.isFirstAddress) {
         this.addAddress(this.state.addressDetails);
       }
@@ -1112,19 +1269,32 @@ class CheckOutPage extends React.Component {
       }
       if (
         this.state.currentPaymentMode === CREDIT_CARD ||
-        this.state.currentPaymentMode === EMI ||
-        this.state.currentPaymentMode === DEBIT_CARD
+        (this.state.currentPaymentMode === EMI &&
+          !this.state.isNoCostEmiApplied) ||
+        this.state.currentPaymentMode === DEBIT_CARD ||
+        (this.state.currentPaymentMode === EMI &&
+          this.state.isNoCostEmiProceeded)
       ) {
-        if (this.state.isFromGiftCard) {
-          this.props.jusPayTokenizeForGiftCard(this.state.cardDetails);
+        if (this.state.isGiftCard) {
+          this.props.jusPayTokenizeForGiftCard(
+            this.state.cardDetails,
+            this.state.paymentModeSelected,
+            this.props.location.state.egvCartGuid
+          );
         } else {
-          this.softReservationForPayment(this.state.cardDetails);
+          this.softReservationForPayment(
+            this.state.cardDetails,
+            this.state.noCostEmiBankName
+          );
         }
+        this.onChangePaymentMode({ currentPaymentMode: null });
       }
+
       if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
-        if (this.state.isFromGiftCard) {
+        if (this.state.isGiftCard) {
           this.props.createJusPayOrderForGiftCardNetBanking(
-            this.state.bankCodeForNetBanking
+            this.state.bankCodeForNetBanking,
+            this.props.location.state.egvCartGuid
           );
         } else {
           this.softReservationPaymentForNetBanking(
@@ -1143,7 +1313,14 @@ class CheckOutPage extends React.Component {
         this.softReservationForCODPayment();
       }
       if (this.state.paymentModeSelected === PAYTM) {
-        this.softReservationPaymentForWallet(PAYTM);
+        if (this.state.isGiftCard) {
+          this.props.createJusPayOrderForGiftCardNetBanking(
+            this.state.bankCodeForNetBanking,
+            this.props.location.state.egvCartGuid
+          );
+        } else {
+          this.props.softReservationPaymentForWallet(PAYTM);
+        }
       }
     }
   };
@@ -1211,9 +1388,15 @@ class CheckOutPage extends React.Component {
   };
 
   binValidation = (paymentMode, binNo) => {
-    localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
-    this.setState({ paymentModeSelected: paymentMode });
-    this.props.binValidation(paymentMode, binNo);
+    if (this.state.isPaymentFailed) {
+      const parsedQueryString = queryString.parse(this.props.location.search);
+      const cartGuId = parsedQueryString.value;
+      this.props.binValidation(paymentMode, binNo, cartGuId);
+    } else {
+      localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
+      this.setState({ paymentModeSelected: paymentMode });
+      this.props.binValidation(paymentMode, binNo);
+    }
   };
   softReservationPaymentForWallet = bankName => {
     this.props.softReservationPaymentForNetBanking(
@@ -1247,12 +1430,13 @@ class CheckOutPage extends React.Component {
     );
   };
 
-  softReservationForPayment = cardDetails => {
+  softReservationForPayment = (cardDetails, noCostEmiCouponCode) => {
     cardDetails.pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.props.softReservationForPayment(
       cardDetails,
       this.state.selectedAddress,
-      this.state.paymentModeSelected
+      this.state.paymentModeSelected,
+      noCostEmiCouponCode
     );
   };
 
@@ -1265,15 +1449,6 @@ class CheckOutPage extends React.Component {
     );
   };
 
-  jusPayTokenizeForGiftCard = cartDetails => {
-    if (this.props.jusPayTokenizeForGiftCard) {
-      this.props.jusPayTokenizeForGiftCard(
-        cartDetails,
-        this.state.paymentModeSelected,
-        this.props.location.state.egvCartGuid
-      );
-    }
-  };
   createJusPayOrderForGiftCardNetBanking = bankName => {
     if (this.props.createJusPayOrderForGiftCardNetBanking) {
       this.props.createJusPayOrderForGiftCardNetBanking(
@@ -1319,6 +1494,34 @@ class CheckOutPage extends React.Component {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   render() {
+    let labelForButton;
+    if (
+      !this.state.isPaymentFailed &&
+      !this.state.confirmAddress &&
+      !this.state.isGiftCard &&
+      (this.props.cart.userAddress && this.props.cart.userAddress.addresses)
+    ) {
+      labelForButton = CONTINUE;
+    } else if (
+      (this.state.confirmAddress && !this.state.deliverMode) ||
+      this.state.isGiftCard
+    ) {
+      labelForButton = PROCEED;
+    } else if (
+      this.state.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
+    ) {
+      labelForButton = PLACE_ORDER;
+    } else if (this.state.currentPaymentMode === EMI) {
+      if (this.state.isNoCostEmiProceeded) {
+        labelForButton = PAY_NOW;
+      } else {
+        labelForButton = CONTINUE;
+      }
+    } else if (this.state.currentPaymentMode === null) {
+      labelForButton = PROCEED;
+    } else {
+      labelForButton = PAY_NOW;
+    }
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
@@ -1354,6 +1557,7 @@ class CheckOutPage extends React.Component {
             displayToast={message => this.props.displayToast(message)}
             getPinCode={val => this.getPinCodeDetails(val)}
             getPinCodeDetails={this.props.getPinCodeDetails}
+            getPincodeStatus={this.props.getPincodeStatus}
           />
         </div>
       );
@@ -1407,13 +1611,6 @@ class CheckOutPage extends React.Component {
               </div>
             )}
 
-          {!this.state.isPaymentFailed &&
-            !this.state.appliedCoupons &&
-            (this.state.confirmAddress && this.state.deliverMode) &&
-            this.props.cart.paymentModes &&
-            !this.state.isGiftCard &&
-            this.renderBankOffers()}
-
           {this.state.isPaymentFailed && (
             <div className={styles.paymentFailedCardHolder}>
               <TransactionFailed />
@@ -1426,9 +1623,13 @@ class CheckOutPage extends React.Component {
             this.state.isGiftCard) && (
             <div className={styles.paymentCardHolderπp}>
               <PaymentCardWrapper
+                applyBankCoupons={val => this.applyBankCoupons(val)}
                 isRemainingBalance={this.state.isRemainingAmount}
+                isPaymentFailed={this.state.isPaymentFailed}
                 isFromGiftCard={this.state.isGiftCard}
                 cart={this.props.cart}
+                selectedBankOfferCode={this.state.selectedBankOfferCode}
+                openBankOffers={() => this.openBankOffers()}
                 cliqCashAmount={this.state.cliqCashAmount}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
@@ -1464,9 +1665,6 @@ class CheckOutPage extends React.Component {
                 binValidationForSavedCard={cardDetails =>
                   this.binValidationForSavedCard(cardDetails)
                 }
-                jusPayTokenizeForGiftCard={cardDetails =>
-                  this.jusPayTokenizeForGiftCard(cardDetails)
-                }
                 createJusPayOrderForGiftCardNetBanking={bankName =>
                   this.createJusPayOrderForGiftCardNetBanking(bankName)
                 }
@@ -1482,7 +1680,9 @@ class CheckOutPage extends React.Component {
                 getEmiTermsAndConditionsForBank={(bankCode, bankName) =>
                   this.getEmiTermsAndConditionsForBank(bankCode, bankName)
                 }
-                applyNoCostEmi={couponCode => this.applyNoCostEmi(couponCode)}
+                applyNoCostEmi={(couponCode, bankName) =>
+                  this.applyNoCostEmi(couponCode, bankName)
+                }
                 removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
                 getItemBreakUpDetails={couponCode =>
                   this.getItemBreakUpDetails(couponCode)
@@ -1500,12 +1700,7 @@ class CheckOutPage extends React.Component {
 
           {!this.state.showCliqAndPiq && (
             <Checkout
-              label={
-                (this.state.confirmAddress && !this.state.deliverMode) ||
-                this.state.isGiftCard
-                  ? PROCEED
-                  : CONTINUE
-              }
+              label={labelForButton}
               noCostEmiEligibility={
                 this.props.cart &&
                 this.props.cart.emiEligibilityDetails &&
@@ -1515,9 +1710,9 @@ class CheckOutPage extends React.Component {
               amount={this.state.payableAmount}
               bagTotal={this.state.bagAmount}
               payable={this.state.payableAmount}
-              coupons={`Rs. ${this.state.couponDiscount}`}
-              discount={`Rs. ${this.state.totalDiscount}`}
-              delivery={`Rs. ${this.state.deliveryCharge}`}
+              coupons={this.state.couponDiscount}
+              discount={this.state.totalDiscount}
+              delivery={this.state.deliveryCharge}
               onCheckout={
                 this.state.isPaymentFailed
                   ? this.handleSubmitAfterPaymentFailure

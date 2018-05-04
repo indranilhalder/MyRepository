@@ -17,7 +17,10 @@ export default class EmiPanel extends React.Component {
   }
 
   componentDidMount = () => {
-    if (this.props.getEmiEligibility) {
+    if (
+      this.props.getEmiEligibility &&
+      !this.props.cart.emiEligibilityDetails
+    ) {
       this.props.getEmiEligibility();
     }
   };
@@ -46,9 +49,9 @@ export default class EmiPanel extends React.Component {
       this.props.getEmiTermsAndConditionsForBank(code, bankName);
     }
   };
-  applyNoCostEmi = couponCode => {
+  applyNoCostEmi = (couponCode, bankName) => {
     if (this.props.applyNoCostEmi) {
-      this.props.applyNoCostEmi(couponCode);
+      this.props.applyNoCostEmi(couponCode, bankName);
     }
   };
 
@@ -72,6 +75,19 @@ export default class EmiPanel extends React.Component {
   changeNoCostEmiPlan = () => {
     this.props.changeNoCostEmiPlan();
   };
+
+  onChangeCardDetail = val => {
+    this.props.onChangeCardDetail(val);
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.currentPaymentMode !== EMI &&
+      this.state.currentSelectedEMIType !== null
+    ) {
+      this.setState({ currentSelectedEMIType: null });
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -96,8 +112,10 @@ export default class EmiPanel extends React.Component {
                     this.setState({ currentSelectedEMIType })
                   }
                   getBankAndTenureDetails={() => this.getBankAndTenureDetails()}
+                  onChangeCardDetail={val => this.onChangeCardDetail(val)}
                 >
                   <NoCostEmiBankDetails
+                    selectedEMIType={this.state.currentSelectedEMIType}
                     onBankSelect={val => this.onBankSelect(val)}
                     onSelectMonth={val => this.onSelectMonth(val)}
                     bankList={
@@ -113,8 +131,8 @@ export default class EmiPanel extends React.Component {
                     getEmiTermsAndConditionsForBank={(code, bankName) =>
                       this.getEmiTermsAndConditionsForBank(code, bankName)
                     }
-                    applyNoCostEmi={couponCode =>
-                      this.applyNoCostEmi(couponCode)
+                    applyNoCostEmi={(couponCode, bankName) =>
+                      this.applyNoCostEmi(couponCode, bankName)
                     }
                     removeNoCostEmi={couponCode =>
                       this.removeNoCostEmi(couponCode)
@@ -130,6 +148,7 @@ export default class EmiPanel extends React.Component {
                     }
                     displayToast={this.props.displayToast}
                     changeNoCostEmiPlan={() => this.changeNoCostEmiPlan()}
+                    onChangeCardDetail={val => this.onChangeCardDetail(val)}
                   />
                 </NoCostEmi>
               </div>
@@ -148,6 +167,7 @@ export default class EmiPanel extends React.Component {
                 this.props.cart.emiBankDetails &&
                 this.props.cart.emiBankDetails.bankList
               }
+              onChangeCardDetail={val => this.onChangeCardDetail(val)}
             >
               <CheckoutEmi {...this.props} />
             </NoCostEmi>

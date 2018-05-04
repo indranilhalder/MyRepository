@@ -172,7 +172,8 @@ export default class Carousel extends React.Component {
         </div>
         <MediaQuery query="(max-device-width: 1024px)">
           {this.props.seeAll &&
-            this.props.withFooter && (
+            this.props.withFooter &&
+            this.props.buttonText && (
               <div className={styles.footer}>
                 <Button
                   label={this.props.buttonText}

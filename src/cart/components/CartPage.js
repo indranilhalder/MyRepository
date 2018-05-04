@@ -183,14 +183,17 @@ class CartPage extends React.Component {
 
   goToCouponPage = () => {
     let couponDetails = Object.assign(this.props.cart.coupons, this.props);
-
     this.props.showCouponModal(couponDetails);
   };
 
   renderToCheckOutPage() {
     let pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    if (customerCookie) {
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    if (customerCookie && userDetails && cartDetailsLoggedInUser) {
       if (pinCode && this.state.isServiceable === true) {
         setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT);
         this.props.history.push({
@@ -316,9 +319,9 @@ class CartPage extends React.Component {
     if (this.props.cart.cartDetails && this.props.cart.cartDetails.products) {
       const cartDetails = this.props.cart.cartDetails;
       let defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-      let deliveryCharge = 0;
-      let couponDiscount = 0;
-      let totalDiscount = 0;
+      let deliveryCharge = "0.00";
+      let couponDiscount = "0.00";
+      let totalDiscount = "0.00";
       if (cartDetails.products) {
         if (cartDetails.deliveryCharge) {
           deliveryCharge = cartDetails.deliveryCharge;
@@ -362,7 +365,11 @@ class CartPage extends React.Component {
           </div>
 
           <div
-            className={defaultPinCode === "" ? styles.disabled : styles.content}
+            className={
+              !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+                ? styles.disabled
+                : styles.content
+            }
           >
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
@@ -432,9 +439,9 @@ class CartPage extends React.Component {
                     Math.round(cartDetails.cartAmount.bagTotal.value * 100) /
                     100
                   }
-                  coupons={`Rs. ${couponDiscount}`}
-                  discount={`Rs. ${totalDiscount}`}
-                  delivery={`Rs. ${deliveryCharge}`}
+                  coupons={couponDiscount}
+                  discount={totalDiscount}
+                  delivery={deliveryCharge}
                   payable={
                     Math.round(
                       cartDetails.cartAmount.paybleAmount.value * 100

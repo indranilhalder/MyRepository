@@ -6,7 +6,9 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
   OLD_CART_GU_ID,
-  COUPON_COOKIE
+  COUPON_COOKIE,
+  NO_COST_EMI_COUPON,
+  OLD_CART_CART_ID
 } from "../../lib/constants";
 import find from "lodash.find";
 import { EGV_GIFT_CART_ID } from "../components/CheckOutPage";
@@ -81,6 +83,8 @@ const cart = (
     jusPayError: null,
     jusPayDetails: null,
     cliqCashJusPayDetails: null,
+    createJusPayStatus: null,
+    createJusPayError: null,
 
     transactionDetailsStatus: null,
     transactionDetailsError: null,
@@ -697,13 +701,13 @@ const cart = (
 
     case cartActions.CREATE_JUS_PAY_ORDER_REQUEST:
       return Object.assign({}, state, {
-        jusPayStatus: action.status,
+        createJusPayStatus: action.status,
         jusPaymentLoader: true
       });
 
     case cartActions.CREATE_JUS_PAY_ORDER_SUCCESS: {
       return Object.assign({}, state, {
-        jusPayStatus: action.status,
+        createJusPayStatus: action.status,
         jusPayDetails: action.jusPayDetails
       });
     }
@@ -727,8 +731,8 @@ const cart = (
 
     case cartActions.CREATE_JUS_PAY_ORDER_FAILURE:
       return Object.assign({}, state, {
-        jusPayStatus: action.status,
-        jusPayError: action.error,
+        createJusPayStatus: action.status,
+        createJusPayError: action.error,
         jusPaymentLoader: false
       });
 
@@ -763,16 +767,14 @@ const cart = (
       localStorage.removeItem(cartActions.CART_ITEM_COOKIE);
       localStorage.removeItem(cartActions.ADDRESS_FOR_PLACE_ORDER);
       localStorage.removeItem(EGV_GIFT_CART_ID);
+      localStorage.removeItem(NO_COST_EMI_COUPON);
+      localStorage.removeItem(OLD_CART_CART_ID);
       return Object.assign({}, state, {
         jusPayDetails: action.jusPayDetails
       });
     }
 
     case cartActions.UPDATE_TRANSACTION_DETAILS_FAILURE:
-      Cookies.deleteCookie(OLD_CART_GU_ID);
-      localStorage.removeItem(cartActions.CART_ITEM_COOKIE);
-      localStorage.removeItem(cartActions.ADDRESS_FOR_PLACE_ORDER);
-      localStorage.removeItem(EGV_GIFT_CART_ID);
       return Object.assign({}, state, {
         transactionStatus: action.status,
         jusPayError: action.error,
@@ -1169,6 +1171,8 @@ const cart = (
       });
 
     case cartActions.APPLY_NO_COST_EMI_SUCCESS:
+      localStorage.setItem(NO_COST_EMI_COUPON, action.couponCode);
+
       carDetailsCopy = cloneDeep(state.cartDetailsCNC);
       let emiCartAmount =
         action.noCostEmiResult && action.noCostEmiResult.cartAmount
@@ -1197,6 +1201,7 @@ const cart = (
       });
 
     case cartActions.REMOVE_NO_COST_EMI_SUCCESS:
+      localStorage.removeItem(NO_COST_EMI_COUPON);
       carDetailsCopy = cloneDeep(state.cartDetailsCNC);
       emiCartAmount =
         action.noCostEmiResult && action.noCostEmiResult.cartAmount

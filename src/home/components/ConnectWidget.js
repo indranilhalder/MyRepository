@@ -39,7 +39,9 @@ export default class ConnectWidget extends React.Component {
                 backgroundImage: `url(${
                   this.props.feedComponentData.backgroundImageURL
                 }`,
-                backgroundRepeat: "no-repeat"
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                backgroundPosition: "center"
               }}
             >
               <div className={styles.content}>
@@ -51,21 +53,22 @@ export default class ConnectWidget extends React.Component {
                     />
                   </div>
                 )}
-
-                <div className={styles.connectBox}>
-                  {this.props.feedComponentData.title}
-                </div>
-                <div className={styles.label}>
-                  {this.props.feedComponentData.description}
-                </div>
-                {this.props.feedComponentData.btnText && (
-                  <div className={styles.buttonBox}>
-                    <ConnectKnowMore
-                      url={this.props.feedComponentData.webURL}
-                      btnText={this.props.feedComponentData.btnText}
-                    />
+                <div className={styles.dataHolder}>
+                  <div className={styles.connectBox}>
+                    {this.props.feedComponentData.title}
                   </div>
-                )}
+                  <div className={styles.label}>
+                    {this.props.feedComponentData.description}
+                  </div>
+                  {this.props.feedComponentData.btnText && (
+                    <div className={styles.buttonBox}>
+                      <ConnectKnowMore
+                        url={this.props.feedComponentData.webURL}
+                        btnText={this.props.feedComponentData.btnText}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

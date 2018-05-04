@@ -38,6 +38,10 @@ import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN
 } from "../../lib/constants";
+import {
+  renderMetaTags,
+  renderMetaTagsWithoutSeoObject
+} from "../../lib/seoUtils";
 
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
@@ -197,6 +201,13 @@ class Feed extends Component {
     );
   };
 
+  renderMetaTags = () => {
+    const data = this.props.homeFeedData;
+    return data.seo
+      ? renderMetaTags(data)
+      : renderMetaTagsWithoutSeoObject(data);
+  };
+
   render() {
     if (this.props.loading) {
       return <HomeSkeleton />;
@@ -218,15 +229,20 @@ class Feed extends Component {
         };
       }
     }
-    return this.props.homeFeedData ? (
-      <List
-        pageSize={1}
-        currentLength={this.props.homeFeedData.length}
-        itemsRenderer={this.renderFeed}
-      >
-        {this.renderFeedComponent}
-      </List>
-    ) : null;
+    return (
+      <React.Fragment>
+        {this.renderMetaTags()}
+        {this.props.homeFeedData ? (
+          <List
+            pageSize={1}
+            currentLength={this.props.homeFeedData.length}
+            itemsRenderer={this.renderFeed}
+          >
+            {this.renderFeedComponent}
+          </List>
+        ) : null}
+      </React.Fragment>
+    );
   }
 }
 

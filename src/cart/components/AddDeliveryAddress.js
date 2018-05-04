@@ -59,8 +59,9 @@ export default class AddDeliveryAddress extends React.Component {
   }
 
   getPinCodeDetails = val => {
+    let landmarkList = [];
     if (val.length <= 6) {
-      this.setState({ postalCode: val });
+      this.setState({ postalCode: val, state: "", town: "", landmarkList });
     }
     if (val.length === 6 && this.props.getPinCode) {
       this.props.getPinCode(val);
@@ -95,10 +96,12 @@ export default class AddDeliveryAddress extends React.Component {
     if (nextProps.getPincodeStatus === ERROR) {
       landmarkList = [{ landmark: OTHER_LANDMARK }];
       this.setState({
+        state: "",
+        town: "",
         landmarkList
       });
     }
-    if (nextProps.getPinCodeDetails) {
+    if (nextProps.getPincodeStatus === SUCCESS && nextProps.getPinCodeDetails) {
       if (nextProps.getPinCodeDetails.landMarks) {
         landmarkList = [
           ...nextProps.getPinCodeDetails.landMarks,
@@ -226,7 +229,9 @@ export default class AddDeliveryAddress extends React.Component {
       titleValue: "",
       addressType: "",
       salutaion: "",
-      defaultFlag: false
+      defaultFlag: false,
+      landmarkList: [],
+      emailId: ""
     });
   };
   onChangeSalutation(val) {

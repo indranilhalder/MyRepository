@@ -101,10 +101,6 @@ export default class GiftCard extends React.Component {
         if (!this.state.senderName) {
           this.props.displayToast("Please enter sender name");
           return false;
-        }
-        if (!this.state.message) {
-          this.props.displayToast("Please enter message");
-          return false;
         } else {
           this.props.createGiftCardDetails(giftCardDetails);
         }
@@ -200,6 +196,7 @@ export default class GiftCard extends React.Component {
                   onChange={amountText =>
                     this.setState({ amountText: amountText })
                   }
+                  type={"number"}
                   textStyle={{ fontSize: 14 }}
                   height={33}
                   leftChildSize={this.state.amountText !== "" ? 33 : 10}

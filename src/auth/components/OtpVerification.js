@@ -58,6 +58,7 @@ export default class OtpVerification extends React.Component {
     } else {
       mobileNumber = this.props.userObj;
     }
+
     return (
       <AuthPopUp>
         <MediaQuery query="(min-device-width: 1025px)">
@@ -118,7 +119,10 @@ export default class OtpVerification extends React.Component {
             </div>
             <div>
               <div className={ownStyles.content}>
-                Waiting to automatically detect an SMS sent to +91{mobileNumber}.
+                Waiting to automatically detect an SMS sent to{" "}
+                {mobileNumber.indexOf("@") !== -1
+                  ? mobileNumber
+                  : `+91${mobileNumber}`}.
                 <span
                   className={ownStyles.span}
                   onClick={() => this.onClickWrongNumber()}

@@ -1885,14 +1885,17 @@ export function binValidationFailure(error) {
 }
 
 // Action Creator to bin Validation
-export function binValidation(paymentMode, binNo) {
+export function binValidation(paymentMode, binNo, cartGuId) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  if (!cartGuId) {
+    let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    cartGuId = JSON.parse(cartDetails).guid;
+  }
+
   return async (dispatch, getState, { api }) => {
     let paymentTypeObject = new FormData();
-    paymentTypeObject.append("cartGuid", cartId);
+    paymentTypeObject.append("cartGuid", cartGuId);
     paymentTypeObject.append("binNo", binNo);
     dispatch(binValidationRequest());
     try {
@@ -1975,7 +1978,12 @@ export function softReservationForPaymentFailure(error) {
 }
 
 // Action Creator to soft reservation For Payment
-export function softReservationForPayment(cardDetails, address, paymentMode) {
+export function softReservationForPayment(
+  cardDetails,
+  address,
+  paymentMode,
+  bankName
+) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
@@ -2024,7 +2032,23 @@ export function softReservationForPayment(cardDetails, address, paymentMode) {
       }
       setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPaymentSuccess(resultJson));
-      dispatch(jusPayTokenize(cardDetails, address, productItems, paymentMode));
+      if (bankName) {
+        dispatch(
+          createJusPayOrder(
+            "",
+            productItems,
+            address,
+            cardDetails,
+            paymentMode,
+            false,
+            bankName
+          )
+        );
+      } else {
+        dispatch(
+          jusPayTokenize(cardDetails, address, productItems, paymentMode, false)
+        );
+      }
     } catch (e) {
       dispatch(softReservationForPaymentFailure(e.message));
     }
@@ -2351,7 +2375,8 @@ export function createJusPayOrder(
   address,
   cardDetails,
   paymentMode,
-  isPaymentFailed
+  isPaymentFailed,
+  bankName
 ) {
   const jusPayUrl = `${
     window.location.origin
@@ -2383,7 +2408,7 @@ export function createJusPayOrder(
           address.country.isocode
         }&city=${address.city}&state=${address.state}&pincode=${
           address.postalCode
-        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}`,
+        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${bankName}`,
         cartItem
       );
       const resultJson = await result.json();
@@ -3246,11 +3271,17 @@ export function getCODEligibilityFailure(error) {
 }
 
 //Actions creator for COD Eligibility
-export function getCODEligibility() {
+export function getCODEligibility(isPaymentFailed) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  const cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  if (isPaymentFailed) {
+    let url = queryString.parse(window.location.search);
+    cartId = url && url.value;
+  } else {
+    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+    cartId = JSON.parse(cartDetails).guid;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(getCODEligibilityRequest());
     try {
@@ -3747,11 +3778,12 @@ export function getEligibilityOfNoCostEmiFailure(error) {
   };
 }
 
-export function getEmiEligibility() {
+export function getEmiEligibility(cartGuId) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+
     const cartId = JSON.parse(cartDetails).guid;
     dispatch(getEligibilityOfNoCostEmiRequest());
     try {
@@ -3760,7 +3792,7 @@ export function getEmiEligibility() {
           JSON.parse(userDetails).userName
         }/payments/noCostEmiCheck?platformNumber=2&access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartId}`
+        }&cartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -3884,11 +3916,12 @@ export function applyNoCostEmiRequest() {
   };
 }
 
-export function applyNoCostEmiSuccess(noCostEmiResult) {
+export function applyNoCostEmiSuccess(noCostEmiResult, couponCode) {
   return {
     type: APPLY_NO_COST_EMI_SUCCESS,
     status: SUCCESS,
-    noCostEmiResult
+    noCostEmiResult,
+    couponCode
   };
 }
 
@@ -3900,13 +3933,11 @@ export function applyNoCostEmiFailure(error) {
   };
 }
 
-export function applyNoCostEmi(couponCode) {
+export function applyNoCostEmi(couponCode, cartGuId, cartId) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-    const cartId = JSON.parse(cartDetails).code;
-    const cartGuId = JSON.parse(cartDetails).guid;
+
     dispatch(applyNoCostEmiRequest());
     try {
       const result = await api.post(
@@ -3922,7 +3953,7 @@ export function applyNoCostEmi(couponCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(applyNoCostEmiSuccess(resultJson));
+      dispatch(applyNoCostEmiSuccess(resultJson, couponCode));
     } catch (e) {
       dispatch(applyNoCostEmiFailure(e.message));
     }
@@ -3936,11 +3967,12 @@ export function removeNoCostEmiRequest() {
   };
 }
 
-export function removeNoCostEmiSuccess(noCostEmiResult) {
+export function removeNoCostEmiSuccess(noCostEmiResult, couponCode) {
   return {
     type: REMOVE_NO_COST_EMI_SUCCESS,
     status: SUCCESS,
-    noCostEmiResult
+    noCostEmiResult,
+    couponCode
   };
 }
 
@@ -3952,13 +3984,11 @@ export function removeNoCostEmiFailure(error) {
   };
 }
 
-export function removeNoCostEmi(couponCode) {
+export function removeNoCostEmi(couponCode, cartGuId, cartId) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-    const cartId = JSON.parse(cartDetails).code;
-    const cartGuId = JSON.parse(cartDetails).guid;
+
     dispatch(removeNoCostEmiRequest());
     try {
       const result = await api.post(
@@ -3975,7 +4005,7 @@ export function removeNoCostEmi(couponCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(removeNoCostEmiSuccess(resultJson));
+      dispatch(removeNoCostEmiSuccess(resultJson, couponCode));
     } catch (e) {
       dispatch(removeNoCostEmiFailure(e.message));
     }
@@ -4005,12 +4035,15 @@ export function getItemBreakUpDetailsFailure(error) {
   };
 }
 
-export function getItemBreakUpDetails(couponCode) {
+export function getItemBreakUpDetails(couponCode, cartGuId) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-    const cartGuId = JSON.parse(cartDetails).guid;
+    if (!cartGuId) {
+      const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+      cartGuId = JSON.parse(cartDetails).guid;
+    }
+
     dispatch(getItemBreakUpDetailsRequest());
     try {
       const result = await api.get(

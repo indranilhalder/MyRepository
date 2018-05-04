@@ -47,7 +47,11 @@ export default class ReturnAddressList extends React.Component {
       error: false
     };
   }
-
+  getPinCodeDetails = pinCode => {
+    if (this.props.getPinCode) {
+      this.props.getPinCode(pinCode);
+    }
+  };
   componentWillReceiveProps(nextProps) {
     if (nextProps.AddUserAddressStatus === SUCCESS) {
       if (this.state.addNewAddress === true) {
@@ -126,16 +130,20 @@ export default class ReturnAddressList extends React.Component {
             <ConfirmAddress
               address={
                 this.props.returnRequest.deliveryAddressesList &&
-                this.props.returnRequest.deliveryAddressesList.map(address => {
-                  return {
-                    addressTitle: address.addressType,
-                    addressDescription: `${address.line1} ${address.town} ${
-                      address.city
-                    }, ${address.state} ${address.postalCode}`,
-                    value: address.id,
-                    selected: address.defaultAddress
-                  };
-                })
+                this.props.returnRequest.deliveryAddressesList.map(
+                  addressSelected => {
+                    return {
+                      addressTitle: addressSelected.addressType,
+                      addressDescription: `${addressSelected.line1} ${
+                        addressSelected.town
+                      } ${addressSelected.city}, ${addressSelected.state} ${
+                        addressSelected.postalCode
+                      }`,
+                      value: addressSelected.id,
+                      selected: addressSelected.defaultAddress
+                    };
+                  }
+                )
               }
               onNewAddress={() => this.addNewAddress()}
               onSelectAddress={address => this.onSelectAddress(address)}
@@ -167,6 +175,13 @@ export default class ReturnAddressList extends React.Component {
           addUserAddress={address => this.addAddress(address)}
           {...this.state}
           onChange={val => this.onChange(val)}
+          displayToast={message => this.props.displayToast(message)}
+          getPincodeStatus={this.props.getPincodeStatus}
+          getPinCode={val => this.getPinCodeDetails(val)}
+          getPinCodeDetails={this.props.getPinCodeDetails}
+          resetAutoPopulateDataForPinCode={() =>
+            this.props.resetAutoPopulateDataForPinCode()
+          }
         />
       </div>
     );

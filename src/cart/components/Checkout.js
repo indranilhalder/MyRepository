@@ -4,6 +4,7 @@ import styles from "./Checkout.css";
 import Button from "../../general/components/Button.js";
 import infoIcon from "./img/Info.svg";
 import Icon from "../../xelpmoc-core/Icon";
+import { RUPEE_SYMBOL } from "../../lib/constants.js";
 export default class Checkout extends React.Component {
   constructor(props) {
     super(props);
@@ -24,6 +25,7 @@ export default class Checkout extends React.Component {
     if (this.props.offers) {
       classOffers = styles.apply;
     }
+
     return (
       <React.Fragment>
         <div className={styles.hiddenBase}>
@@ -41,7 +43,10 @@ export default class Checkout extends React.Component {
             </div>
             <div className={styles.totalPriceHeading}>Total</div>
             <div className={styles.amountHolder}>
-              <div className={styles.amount}>Rs. {this.props.amount}</div>
+              <div className={styles.amount}>
+                {RUPEE_SYMBOL}
+                {this.props.amount}
+              </div>
               <div className={styles.infoIconHolder}>
                 <Icon image={infoIcon} size={22} />
               </div>
@@ -55,7 +60,7 @@ export default class Checkout extends React.Component {
                     Bag Total
                   </div>
                   <div className={styles.informationAnswerHolder}>
-                    Rs.
+                    {RUPEE_SYMBOL}
                     {this.props.bagTotal}
                   </div>
                 </div>
@@ -66,7 +71,7 @@ export default class Checkout extends React.Component {
                     Discount
                   </div>
                   <div className={styles.informationAnswerHolder}>
-                    Rs.
+                    {RUPEE_SYMBOL}
                     {this.props.totalDiscount}
                   </div>
                 </div>
@@ -85,6 +90,7 @@ export default class Checkout extends React.Component {
                     Delivery
                   </div>
                   <div className={styles.informationAnswerHolder}>
+                    {RUPEE_SYMBOL}
                     {this.props.delivery}
                   </div>
                 </div>
@@ -92,7 +98,10 @@ export default class Checkout extends React.Component {
               {this.props.offers && (
                 <div className={styles.informationHolder}>
                   <div className={styles.informationQuestionHolder}>Offers</div>
-                  <div className={classOffers}>{this.props.offers}</div>
+                  <div className={classOffers}>
+                    {RUPEE_SYMBOL}
+                    {this.props.offers}
+                  </div>
                 </div>
               )}
               {this.props.payable && (
@@ -101,7 +110,7 @@ export default class Checkout extends React.Component {
                     Total Payable
                   </div>
                   <div className={styles.informationAnswerHolder}>
-                    Rs.
+                    {RUPEE_SYMBOL}
                     {this.props.payable}
                   </div>
                 </div>
@@ -124,7 +133,10 @@ export default class Checkout extends React.Component {
             </div>
             <div className={styles.totalPriceHeading}>Total</div>
             <div className={styles.amountHolder}>
-              <div className={styles.amount}>Rs. {this.props.amount}</div>
+              <div className={styles.amount}>
+                {RUPEE_SYMBOL}
+                {this.props.amount}
+              </div>
               <div
                 className={styles.infoIconHolder}
                 onClick={() => {
@@ -143,7 +155,7 @@ export default class Checkout extends React.Component {
                     Bag Total
                   </div>
                   <div className={styles.informationAnswerHolder}>
-                    Rs.
+                    {RUPEE_SYMBOL}
                     {this.props.bagTotal}
                   </div>
                 </div>
@@ -154,7 +166,7 @@ export default class Checkout extends React.Component {
                     Discount
                   </div>
                   <div className={styles.informationAnswerHolder}>
-                    Rs.
+                    {RUPEE_SYMBOL}
                     {this.props.totalDiscount}
                   </div>
                 </div>
@@ -165,6 +177,7 @@ export default class Checkout extends React.Component {
                     Discount
                   </div>
                   <div className={styles.informationAnswerHolder}>
+                    {RUPEE_SYMBOL}
                     {this.props.discount}
                   </div>
                 </div>
@@ -175,6 +188,7 @@ export default class Checkout extends React.Component {
                     Delivery Charges
                   </div>
                   <div className={styles.informationAnswerHolder}>
+                    {RUPEE_SYMBOL}
                     {this.props.delivery}
                   </div>
                 </div>
@@ -183,7 +197,10 @@ export default class Checkout extends React.Component {
               {this.props.coupons && (
                 <div className={styles.informationHolder}>
                   <div className={styles.informationQuestionHolder}>Coupon</div>
-                  <div className={classOffers}>{this.props.coupons}</div>
+                  <div className={classOffers}>
+                    {RUPEE_SYMBOL}
+                    {this.props.coupons}
+                  </div>
                 </div>
               )}
 
@@ -193,6 +210,7 @@ export default class Checkout extends React.Component {
                     No Cost EMI Discount
                   </div>
                   <div className={classOffers}>
+                    {RUPEE_SYMBOL}
                     {this.props.noCostEmiDiscount}
                   </div>
                 </div>
@@ -203,7 +221,7 @@ export default class Checkout extends React.Component {
                     Total Payable
                   </div>
                   <div className={styles.informationAnswerHolder}>
-                    Rs.
+                    {RUPEE_SYMBOL}
                     {this.props.payable}
                   </div>
                 </div>
