@@ -1485,7 +1485,7 @@ export function updateProfile(accountDetails, otp) {
         accountDetails.firstName
       }&lastName=${accountDetails.lastName}&dateOfBirth=${dateOfBirth}&gender=${
         accountDetails.gender
-      }&mobilenumber=${accountDetails.mobileNumber}&emailId=${
+      }&mobilenumber=${accountDetails.mobileNumber}&emailid=${
         accountDetails.emailId
       }`;
       if (otp) {
