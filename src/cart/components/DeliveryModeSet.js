@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import DeliveryCard from "./DeliveryCard.js";
 import styles from "./DeliveryModeSet.css";
+import { COLLECT } from "../../lib/constants";
 export default class DeliveryModeSet extends React.Component {
   handleClick() {
     if (this.props.changeDeliveryModes) {
@@ -38,7 +39,14 @@ export default class DeliveryModeSet extends React.Component {
                       deliveryOption.name === "Home Delivery"
                         ? "Standard Shipping"
                         : deliveryOption.name
-                    } ${expectedDeliveryDate}`}
+                    } ${
+                      deliveryOption.code === COLLECT
+                        ? data.storeDetails &&
+                          `Pickup Store: ${data.storeDetails.displayName} ${
+                            data.storeDetails.address.city
+                          }`
+                        : expectedDeliveryDate
+                    }`}
                 </div>
               </div>
             );

@@ -19,6 +19,11 @@ export default class SearchHeader extends React.Component {
       this.props.onSearch(val);
     }
   }
+  redirectToHome() {
+    if (this.props.redirectToHome) {
+      this.props.redirectToHome();
+    }
+  }
   searchString = () => {
     if (this.props.onSearchString) {
       this.props.onSearchString(this.props.searchString);
@@ -57,11 +62,12 @@ export default class SearchHeader extends React.Component {
                 <Icon image={iconImageURL} size={16} />
               </div>
             )}
-          {this.props.isLogo && (
-            <div className={logoHolder}>
-              <Icon image={companyLogo} size={35} />
-            </div>
-          )}
+          {this.props.isLogo &&
+            !this.props.display && (
+              <div className={logoHolder} onClick={() => this.redirectToHome()}>
+                <Icon image={companyLogo} size={35} />
+              </div>
+            )}
           <div
             className={styles.searchHolder}
             onClick={() => this.onClickIcon()}
@@ -105,7 +111,8 @@ SearchHeader.propTypes = {
   text: PropTypes.string,
   onClickBack: PropTypes.func,
   onSearch: PropTypes.func,
-  canGoBack: PropTypes.bool
+  canGoBack: PropTypes.bool,
+  redirectToHome: PropTypes.func
 };
 SearchHeader.defaultProps = {
   text: "Mobile",

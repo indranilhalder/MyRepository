@@ -69,6 +69,8 @@ export default class CartItem extends React.Component {
             productName={this.props.productName}
             productDetails={this.props.productDetails}
             price={this.props.price}
+            color={this.props.color}
+            size={this.props.size}
             isOutOfStock={this.props.isOutOfStock}
             isServiceAvailable={this.props.productIsServiceable}
             onClickImage={() => this.onClick()}
@@ -92,7 +94,9 @@ export default class CartItem extends React.Component {
                 {this.props.deliveryType === "Home Delivery"
                   ? "Standard Shipping"
                   : this.props.deliveryType}{" "}
-                : <span>{this.props.deliverTime}</span>
+                {this.props.deliverTime && (
+                  <span>{`: ${this.props.deliverTime}`}</span>
+                )}
               </span>
             </div>
           )}
