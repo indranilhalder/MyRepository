@@ -30,7 +30,7 @@ export default class Input2 extends React.Component {
       }
     });
   }
-  add(evt, handleAlphabet) {
+  handleOnlyAlphabet(evt, handleAlphabet) {
     if (handleAlphabet) {
       var regex = new RegExp("^[a-zA-Z]+$");
       var charCode = evt.which ? evt.which : evt.keyCode;
@@ -87,7 +87,9 @@ export default class Input2 extends React.Component {
               value={this.props.value}
               maxLength={this.props.maxLength}
               disabled={this.props.disabled}
-              onKeyPress={event => this.add(event, this.props.onlyAlphabet)}
+              onKeyPress={event =>
+                this.handleOnlyAlphabet(event, this.props.onlyAlphabet)
+              }
             />
           </div>
           {this.props.leftChild && (
