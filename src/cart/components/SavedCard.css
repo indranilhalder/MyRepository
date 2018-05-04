@@ -1,63 +1,64 @@
-.base{
-  width:100%;
-  height:auto;
-  padding:15px;
-  display:inline-block;
-  border-bottom:1px solid #ececec;
+.base {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  display: inline-block;
+  border-bottom: 1px solid #ececec;
 }
-.cardNumber{
-  width:100%;
-  height:auto;
-  display:inline-block;
-  margin-bottom:15px;
+.cardNumber {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 15px;
 }
-.circleDesign{
-  width:9px;
-  height:9px;
+.circleDesign {
+  width: 9px;
+  height: 9px;
   background: #000000;
-  opacity:0.14;
-  display:inline-block;
-  vertical-align:middle;
-  margin-right:3px;
-  border-radius:50%
-}
-.circleTransparent{
-  composes:circleDesign;
-  background:#fff;
-  margin-right:0px;
-}
-.cardDigits{
-  width:auto;
-  height:auto;
-  font-size:14px;
-  color:#000000;
-  font-family:semibold;
-  display:inline-block;
-  vertical-align:middle;
-  padding-left:10px;
-  vertical-align:initial
-}
-.cardCvvHolder{
-  width:100%;
-  height:auto;
-  display:inline-block;
-  margin-bottom:10px;
-}
-.cardsSection{
-  width:55%;
-  height:auto;
-  display:inline-block;
-  vertical-align:middle;
-}
-.cardIconHolder{
-  width:auto;
-  height:auto;
-  display:inline-block;
-  vertical-align:middle;
-}
-.cvvInput{
-  width:45%;
-  height:33px;
-  display:inline-block;
+  opacity: 0.14;
+  display: inline-block;
   vertical-align: middle;
+  margin-right: 3px;
+  border-radius: 50%;
+}
+.circleTransparent {
+  composes: circleDesign;
+  background: #fff;
+  margin-right: 0px;
+}
+.cardDigits {
+  width: auto;
+  height: auto;
+  font-size: 14px;
+  color: #000000;
+  font-family: semibold;
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 10px;
+  vertical-align: initial;
+}
+.cardCvvHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.cardsSection {
+  width: 55%;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
+}
+.cardIconHolder {
+  width: auto;
+  height: 40px;
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+}
+.cvvInput {
+  width: 45%;
+  height: 33px;
+  display: inline-block;
+  vertical-align: top;
 }
