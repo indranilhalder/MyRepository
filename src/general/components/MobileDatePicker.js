@@ -16,7 +16,6 @@ export default class MobileDatePicker extends React.Component {
     });
   }
   render() {
-    // console.log(this.state.value,this.props.value);
     return (
       <div className={styles.base}>
         <div className={styles.hideInput}>
