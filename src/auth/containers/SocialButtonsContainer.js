@@ -65,6 +65,7 @@ const mapDispatchToProps = dispatch => {
         );
         return;
       }
+      console.log(facebookResponse);
       if (isSignUp) {
         const signUpResponse = await dispatch(
           socialMediaRegistration(
@@ -100,13 +101,26 @@ const mapDispatchToProps = dispatch => {
       );
 
       // now I need to actually login
+      let profileImage;
+      if (
+        facebookResponse &&
+        facebookResponse.profileImage &&
+        facebookResponse.profileImage.data
+      ) {
+        profileImage = facebookResponse.profileImage.data.url;
+      }
       if (customerAccessTokenActionResponse.status === SUCCESS) {
         const loginUserResponse = await dispatch(
           socialMediaLogin(
             facebookResponse.email,
             FACEBOOK_PLATFORM,
             customerAccessTokenActionResponse.customerAccessTokenDetails
-              .access_token
+              .access_token,
+            {
+              profileImage,
+              firstName: facebookResponse.firstName,
+              lastName: facebookResponse.lastName
+            }
           )
         );
 
@@ -216,12 +230,18 @@ const mapDispatchToProps = dispatch => {
       );
 
       if (customerAccessTokenActionResponse.status === SUCCESS) {
+        console.log(googlePlusResponse);
         const loginUserResponse = await dispatch(
           socialMediaLogin(
             googlePlusResponse.email,
             GOOGLE_PLUS_PLATFORM,
             customerAccessTokenActionResponse.customerAccessTokenDetails
-              .access_token
+              .access_token,
+            {
+              profileImage: googlePlusResponse.profileImage,
+              firstName: googlePlusResponse.firstName,
+              lastName: googlePlusResponse.lastName
+            }
           )
         );
         if (loginUserResponse.status === SUCCESS) {
