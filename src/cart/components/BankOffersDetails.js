@@ -108,7 +108,6 @@ class BankOffersDetails extends Component {
     }
   };
   render() {
-    console.log(this.props);
     return (
       <div className={styles.base}>
         <SlideModal {...this.props}>
