@@ -8,7 +8,7 @@ export default class OrderReturnAddressDetails extends React.Component {
       <div className={this.props.isSelect ? styles.withCheckbox : styles.base}>
         {this.props.isSelect && (
           <div className={styles.checkBoxHolder}>
-            <CheckBox selected={this.props.selected} />
+            <CheckBox selected={true} />
           </div>
         )}
         {this.props.addressType && (
