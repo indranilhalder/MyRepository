@@ -50,14 +50,15 @@
   vertical-align: middle;
 }
 .cardIconHolder {
-  width: 66px;
-  height: 43px;
+  width: auto;
+  height: 40px;
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: top;
+  overflow: hidden;
 }
 .cvvInput {
   width: 45%;
   height: 33px;
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: top;
 }
