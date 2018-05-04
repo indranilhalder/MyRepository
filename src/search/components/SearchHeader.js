@@ -7,6 +7,7 @@ import searchRedIcon from "./img/searchRed.svg";
 import PropTypes from "prop-types";
 import Icon from "../../xelpmoc-core/Icon";
 import Input2 from "../../general/components/Input2.js";
+import companyLogo from "../../general/components/img/group.svg";
 export default class SearchHeader extends React.Component {
   onClickBack() {
     if (this.props.onClickBack) {
@@ -16,6 +17,11 @@ export default class SearchHeader extends React.Component {
   onTypedSearch(val) {
     if (this.props.onSearch) {
       this.props.onSearch(val);
+    }
+  }
+  redirectToHome() {
+    if (this.props.redirectToHome) {
+      this.props.redirectToHome();
     }
   }
   searchString = () => {
@@ -36,9 +42,17 @@ export default class SearchHeader extends React.Component {
     if (this.props.display) {
       search = cancelIcon;
     }
+    let InformationHeader = styles.InformationHeader;
+    if (this.props.isGoBack && this.props.isLogo) {
+      InformationHeader = styles.logoPresentStyle;
+    }
+    let logoHolder = styles.logoHolder;
+    if (this.props.isGoBack) {
+      logoHolder = styles.iconWithLogo;
+    }
     return (
       <div className={styles.base}>
-        <div className={styles.InformationHeader}>
+        <div className={InformationHeader}>
           {this.props.isGoBack &&
             !this.props.display && (
               <div
@@ -46,6 +60,12 @@ export default class SearchHeader extends React.Component {
                 onClick={() => this.onClickBack()}
               >
                 <Icon image={iconImageURL} size={16} />
+              </div>
+            )}
+          {this.props.isLogo &&
+            !this.props.display && (
+              <div className={logoHolder} onClick={() => this.redirectToHome()}>
+                <Icon image={companyLogo} size={35} />
               </div>
             )}
           <div
@@ -91,7 +111,8 @@ SearchHeader.propTypes = {
   text: PropTypes.string,
   onClickBack: PropTypes.func,
   onSearch: PropTypes.func,
-  canGoBack: PropTypes.bool
+  canGoBack: PropTypes.bool,
+  redirectToHome: PropTypes.func
 };
 SearchHeader.defaultProps = {
   text: "Mobile",

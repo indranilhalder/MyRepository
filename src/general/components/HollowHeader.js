@@ -5,6 +5,8 @@ import orderIcon from "./img/order-history.svg";
 import backArrow from "./img/arrowBackblack.svg";
 import downloadIcon from "./img/download.svg";
 import Icon from "../../xelpmoc-core/Icon";
+import companyLogo from "./img/companylogo.svg";
+import { HOME_ROUTER } from "../../lib/constants";
 export default class HollowHeader extends React.Component {
   backPage() {
     if (this.props.goBack) {
@@ -23,13 +25,25 @@ export default class HollowHeader extends React.Component {
       this.props.goToWishList();
     }
   };
-
+  redirectToHome() {
+    if (this.props.redirectToHome) {
+      this.props.redirectToHome();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
         <div className={styles.backArrowHolder} onClick={() => this.backPage()}>
           <Icon image={backArrow} size={20} />
         </div>
+        {this.props.isShowCompanyLogo && (
+          <div
+            className={styles.logoHolder}
+            onClick={() => this.redirectToHome()}
+          >
+            <Icon image={companyLogo} size={35} />
+          </div>
+        )}
         <div className={styles.historyDownloadIcon}>
           <div
             className={styles.orderIconHolder}
@@ -52,5 +66,9 @@ export default class HollowHeader extends React.Component {
 HollowHeader.propTypes = {
   goBack: PropTypes.func,
   orderProduct: PropTypes.func,
-  downloadProduct: PropTypes.func
+  downloadProduct: PropTypes.func,
+  isShowCompanyLogo: PropTypes.bool
+};
+HollowHeader.defaultProps = {
+  isShowCompanyLogo: false
 };

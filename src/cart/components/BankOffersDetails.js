@@ -142,6 +142,7 @@ class BankOffersDetails extends Component {
                     offerDescription={value.offerDescription}
                     offerCode={value.offerCode}
                     offerMinCartValue={value.offerMinCartValue}
+                    offerMaxDiscount={value.offerMaxDiscount}
                     offerTitle={value.offerTitle}
                     key={i}
                     value={value.offerCode}
