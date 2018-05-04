@@ -1622,7 +1622,7 @@ export function getPaymentModes(guIdDetails) {
           JSON.parse(userDetails).userName
         }/payments/getPaymentModes?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=2`,
+        }&cartGuid=${cartId}&isPwa=true&platformNumber=2`,
         guIdDetails
       );
       const resultJson = await result.json();

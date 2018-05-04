@@ -19,13 +19,16 @@ export default class SearchLocationByPincode extends React.Component {
   getValue(pinCode) {
     if (pinCode.length <= 6) {
       this.setState({ pinCode });
+      if (pinCode.length === 6) {
+        this.onUpdate(pinCode);
+      }
     }
   }
 
-  onUpdate() {
-    if (this.state.pinCode && this.state.pinCode.match(/^\d{6}$/)) {
+  onUpdate(pinCode) {
+    if (pinCode && pinCode.match(/^\d{6}$/)) {
       if (this.props.changePincode) {
-        this.props.changePincode(this.state.pinCode);
+        this.props.changePincode(pinCode);
       }
       this.setState({ errorMessage: null });
     } else {

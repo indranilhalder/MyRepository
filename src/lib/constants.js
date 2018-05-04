@@ -231,3 +231,13 @@ export const TWITTER_TAG_TITLE_DEFAULT = GOOGLE_TAG_TITLE_DEFAULT;
 export const TWITTER_TAG_IMAGE_DEFAULT = GOOGLE_TAG_IMAGE_DEFAULT;
 export const FACEBOOK_TAG_IMAGE_DEFAULT = GOOGLE_TAG_IMAGE_DEFAULT;
 export const TITLE_DEFAULT = GOOGLE_TAG_TITLE_DEFAULT;
+
+// card type
+export const RUPAY_CARD = "RUPAY";
+export const VISA_CARD = "VISA";
+export const MASTER_CARD = "MASTERCARD";
+export const AMEX_CARD = "AMEX";
+export const MESTRO_CARD = "MAESTRO";
+export const DINERS_CARD = "DINERS";
+export const DISCOVER_CARD = "DISCOVER";
+export const JCB_CARD = "JCB";
