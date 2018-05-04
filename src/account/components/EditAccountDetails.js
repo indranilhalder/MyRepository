@@ -175,7 +175,7 @@ export default class EditAccountDetails extends React.Component {
               userDetails.mobileNumber &&
               userDetails.mobileNumber.length === 10 ? (
                 <Input2
-                  placeholder="Mobile NUmber"
+                  placeholder="Mobile Number"
                   value={this.state.mobileNumber}
                   boxy={true}
                   textStyle={{ fontSize: 14 }}
