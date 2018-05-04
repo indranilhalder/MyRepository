@@ -99,6 +99,16 @@ export default class ReturnToStore extends React.Component {
       />
     );
   }
+
+  quickDropStore = pincode => {
+    this.setState({ pincode });
+    if (pincode.length === 6 && this.props.getReturnRequest) {
+      this.props.quickDropStore(
+        pincode,
+        this.props.returnProductDetails.orderProductWsDTO[0].USSID
+      );
+    }
+  };
   render() {
     // Preventing user to open this page direct by hitting URL
     if (
@@ -131,7 +141,7 @@ export default class ReturnToStore extends React.Component {
         numberOfStores={noOfStories}
         pincode={this.state.pincode}
         addStoreCNC={storeId => this.selectStore(storeId)}
-        changePincode={pincode => this.setState({ pincode })}
+        changePincode={pincode => this.getReturnRequest(pincode)}
         getLocation={() => this.getLocation()}
       />
     );
