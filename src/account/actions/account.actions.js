@@ -210,6 +210,7 @@ export const PATH = "v2/mpl";
 export const MSD_ROOT_PATH = "https://ap-southeast-1-api.madstreetden.com";
 export const LOGOUT = "LOGOUT";
 export const CLEAR_GIFT_CARD_STATUS = "CLEAR_GIFT_CARD_STATUS";
+export const CLEAR_ACCOUNT_UPDATE_TYPE = "CLEAR_ACCOUNT_UPDATE_TYPE";
 const API_KEY_FOR_MSD = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
 const NUMBER_OF_RESULTS_FOR_BRANDS = [25];
 const WIDGETS_LIST_FOR_BRANDS = [112];
@@ -217,7 +218,7 @@ const CARD_TYPE = "BOTH";
 const FOLLOW = "follow";
 const UNFOLLOW = "unfollow";
 const DATE_FORMAT_TO_UPDATE_PROFILE = "DD/MM/YYYY";
-
+const MOBILE_PATTERN = /^[7,8,9]{1}[0-9]{9}$/;
 const CART_GU_ID = "cartGuid";
 // cencel product
 
@@ -1485,7 +1486,7 @@ export function updateProfile(accountDetails, otp) {
         accountDetails.firstName
       }&lastName=${accountDetails.lastName}&dateOfBirth=${dateOfBirth}&gender=${
         accountDetails.gender
-      }&mobilenumber=${accountDetails.mobileNumber}&emailId=${
+      }&mobilenumber=${accountDetails.mobileNumber}&emailid=${
         accountDetails.emailId
       }`;
       if (otp) {
@@ -1502,12 +1503,19 @@ export function updateProfile(accountDetails, otp) {
 
       if (resultJson.status === "OTP SENT TO MOBILE NUMBER: PLEASE VALIDATE") {
         dispatch(showModal(UPDATE_PROFILE_OTP_VERIFICATION, accountDetails));
+      } else if (
+        resultJson.emailId !== JSON.parse(userDetails).userName &&
+        !MOBILE_PATTERN.test(JSON.parse(userDetails).userName)
+      ) {
+        dispatch(logoutUserByMobileNumber());
       } else {
         if (otp) {
           if (
-            resultJson.status === SUCCESS ||
-            resultJson.status === SUCCESS_CAMEL_CASE ||
-            resultJson.status === SUCCESS_UPPERCASE
+            (resultJson.status === SUCCESS ||
+              resultJson.status === SUCCESS_CAMEL_CASE ||
+              resultJson.status === SUCCESS_UPPERCASE) &&
+            (resultJson.mobileNumber !== JSON.parse(userDetails).userName &&
+              MOBILE_PATTERN.test(JSON.parse(userDetails).userName))
           ) {
             dispatch(logoutUserByMobileNumber());
           }
@@ -1893,5 +1901,10 @@ export function logout() {
 export function clearGiftCardStatus() {
   return {
     type: CLEAR_GIFT_CARD_STATUS
+  };
+}
+export function clearAccountUpdateType() {
+  return {
+    type: CLEAR_ACCOUNT_UPDATE_TYPE
   };
 }

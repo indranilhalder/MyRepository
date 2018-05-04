@@ -5,7 +5,7 @@ export default class MobileDatePicker extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: ""
+      value: this.props.value
     };
   }
   handleChange(event) {
@@ -16,6 +16,7 @@ export default class MobileDatePicker extends React.Component {
     });
   }
   render() {
+    // console.log(this.state.value,this.props.value);
     return (
       <div className={styles.base}>
         <div className={styles.hideInput}>
@@ -23,7 +24,7 @@ export default class MobileDatePicker extends React.Component {
             type="date"
             className={styles.input}
             onChange={value => this.handleChange(value)}
-            value={this.state.value ? this.state.value : this.props.value}
+            value={this.state.value}
           />
         </div>
         <div className={styles.displayValue}>
