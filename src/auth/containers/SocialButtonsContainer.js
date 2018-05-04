@@ -65,7 +65,7 @@ const mapDispatchToProps = dispatch => {
         );
         return;
       }
-      console.log(facebookResponse);
+
       if (isSignUp) {
         const signUpResponse = await dispatch(
           socialMediaRegistration(
@@ -230,7 +230,6 @@ const mapDispatchToProps = dispatch => {
       );
 
       if (customerAccessTokenActionResponse.status === SUCCESS) {
-        console.log(googlePlusResponse);
         const loginUserResponse = await dispatch(
           socialMediaLogin(
             googlePlusResponse.email,

@@ -297,7 +297,6 @@ const user = (
       });
 
     case userActions.SOCIAL_MEDIA_LOGIN_SUCCESS:
-      console.log(action);
       userDetails.userName = action.user.customerInfo.emailId;
       userDetails.customerId = action.user.customerId;
       userDetails.loginType = action.loginType;
