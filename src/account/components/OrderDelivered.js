@@ -4,10 +4,11 @@ import PropTypes from "prop-types";
 export default class OrderDelivered extends React.Component {
   render() {
     let deliveredAddress, address;
-    if (this.props.heading) {
+    if (this.props.deliveredAddress) {
       address = this.props.deliveredAddress;
       deliveredAddress = address.trim();
     }
+
     return (
       <div className={styles.base}>
         {deliveredAddress && (
