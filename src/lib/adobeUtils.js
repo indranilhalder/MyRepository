@@ -220,7 +220,7 @@ const FACEBOOK = "facebook";
 const MOBILE = "mobile";
 const EMAIL = "email";
 const INTERNAL_CAMPAIGN = "internal_campaign";
-const EXTERNAM_CAMPAIGN = "external_campaign";
+const EXTERNAL_CAMPAIGN = "external_campaign";
 export function setDataLayer(type, apiResponse, icid, icidType) {
   const response = cloneDeep(apiResponse);
   const previousDigitalData = cloneDeep(window.digitalData);
@@ -314,18 +314,22 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
     window.digitalData = getDigitalDataForCLP(response);
     window._satellite.track(ADOBE_CLP_DIRECT_CALL);
   }
-  if (icid) {
+
+  if (icidType === ICID2) {
+    window.digitalData.flag = INTERNAL_CAMPAIGN;
     window.digitalData.internal = {
       campaign: {
         id: icid
       }
     };
-  }
-  if (icidType === ICID2) {
-    window.digitalData.flag = INTERNAL_CAMPAIGN;
     window._satellite.track(INTERNAL_CAMPAIGN_TRACK);
   } else if (icidType === CID) {
-    window.digitalData.flag = EXTERNAM_CAMPAIGN;
+    window.digitalData.external = {
+      campaign: {
+        id: icid
+      }
+    };
+    window.digitalData.flag = EXTERNAL_CAMPAIGN;
   }
 
   if (userDetails) {
@@ -415,7 +419,6 @@ function getDigitalDataForPdp(type, pdpResponse) {
       product: {
         id: pdpResponse.productListingId
       },
-
       brand: {
         name: pdpResponse.brandName
       }
@@ -424,16 +427,20 @@ function getDigitalDataForPdp(type, pdpResponse) {
     page: {
       category: {
         primaryCategory: "product"
-      },
-
-      pageInfo: {
-        pageName: "product details"
       }
     }
   };
   const subCategories = getSubCategories(pdpResponse);
   if (subCategories) {
     Object.assign(data.page.category, { ...subCategories });
+  }
+  const productBreadcrumbs = getProductBreadCrumbs(pdpResponse);
+  if (productBreadcrumbs) {
+    Object.assign(data.page, {
+      pageName: "product details:".concat(
+        productBreadcrumbs ? productBreadcrumbs : ""
+      )
+    });
   }
   const displayHierarchy = getDisplayHierarchy(pdpResponse);
   Object.assign(data.page, {
@@ -458,8 +465,7 @@ function getDigitalDataForPdp(type, pdpResponse) {
   }
 
   if (pdpResponse && pdpResponse.seo && pdpResponse.seo.breadcrumbs) {
-    let categoryName =
-      pdpResponse.seo.breadcrumbs[pdpResponse.seo.breadcrumbs.length - 1].name;
+    let categoryName = pdpResponse.seo.breadcrumbs[0].name;
     categoryName = categoryName.replace(/ /g, "_").toLowerCase();
     Object.assign(data.cpj.product, {
       category: categoryName
@@ -656,7 +662,13 @@ function getProductsDigitalData(response) {
         product.qtySelectedByUser ? product.qtySelectedByUser : product.quantity
       );
       productPriceArray.push(
-        product.offerPrice ? product.offerPrice : product.pricevalue
+        product.offerPrice
+          ? product.offerPrice
+          : product.pricevalue
+            ? product.pricevalue
+            : product.price
+              ? product.price
+              : null
       );
       productBrandArray.push(
         product.productBrand &&
@@ -784,6 +796,18 @@ function getSubCategories(response) {
     }
 
     return subCatagories;
+  } else {
+    return null;
+  }
+}
+function getProductBreadCrumbs(pdpResponse) {
+  if (pdpResponse && pdpResponse.seo && pdpResponse.seo.breadcrumbs) {
+    const productBreadCrumbs = pdpResponse.seo.breadcrumbs.map(crumbs => {
+      return (
+        crumbs && crumbs.name && crumbs.name.toLowerCase().replace(/ /g, "_")
+      );
+    });
+    return productBreadCrumbs.join(":");
   } else {
     return null;
   }
@@ -1351,7 +1375,7 @@ export function getDigitalDataForMyAccount(pageTitle) {
     page: {
       pageInfo: { pageName: pageTitle },
       category: { primaryCategory: pageTitle },
-      display: { hierarchy: ["home", "my_tata_cliq", pageTitle] }
+      display: { hierarchy: `"home"|"my_tata_cliq"|${pageTitle}` }
     }
   };
   return data;
