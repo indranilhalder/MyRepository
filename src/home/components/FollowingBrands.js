@@ -1,6 +1,6 @@
 import React from "react";
 import BrandImage from "../../general/components/BrandImage";
-import DumbCarousel from "../../general/components/DumbCarousel";
+import Carousel from "../../general/components/Carousel";
 import styles from "./FollowingBrands.css";
 import PropTypes from "prop-types";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
@@ -53,9 +53,9 @@ export default class FollowingBrands extends React.Component {
       <div className={styles.base}>
         {userDetails &&
           customerCookie && (
-            <DumbCarousel
+            <Carousel
               header={this.props.feedComponentData.title}
-              elementWidth={30}
+              elementWidthMobile={30}
             >
               {followWidgetData.data &&
                 followWidgetData.data
@@ -74,7 +74,7 @@ export default class FollowingBrands extends React.Component {
                       />
                     );
                   })}
-            </DumbCarousel>
+            </Carousel>
           )}
       </div>
     );
