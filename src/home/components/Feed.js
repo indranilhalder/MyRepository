@@ -61,7 +61,7 @@ export const typeComponentMapping = {
   "Auto Product Recommendation Component": props => (
     <RecommendationWidget {...props} />
   ),
-  // "Content Component": props => <ContentWidgetWrapper {...props} />,
+  "Content Component": props => <ContentWidgetWrapper {...props} />,
   "Banner Product Carousel Component": props => (
     <BannerProductCarousel {...props} />
   ),

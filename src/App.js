@@ -67,7 +67,6 @@ import {
 import Loadable from "react-loadable";
 
 const Loader = () => {
-  console.log("LOADER");
   return (
     <div className={AppStyles.loadingIndicator}>
       <SecondaryLoader />
@@ -253,7 +252,6 @@ class App extends Component {
   }
 
   renderLoader() {
-    console.log("APP JS RENDER LOADER");
     return (
       <div className={AppStyles.loadingIndicator}>
         <SecondaryLoader />
