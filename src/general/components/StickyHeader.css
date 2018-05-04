@@ -2,7 +2,7 @@
   width: 100%;
   height: auto;
   min-height: 50px;
-  padding: 15px 70px 15px 45px;
+  padding: 15px 70px 15px 90px;
   position: fixed;
   color: #fff;
   font-size: 13px;
@@ -14,8 +14,19 @@
   width: 20px;
   height: 20px;
   position: absolute;
-  top: 15px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
   left: 15px;
+}
+.logoHolder {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  left: 45px;
 }
 .historyDownloadIcon {
   width: auto;
