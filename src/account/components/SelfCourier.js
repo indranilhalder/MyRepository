@@ -43,7 +43,7 @@ export default class SelfCourier extends React.Component {
         initiateReturn.accountHolderName = returnRequest && returnRequest.name;
       }
       if (this.props.data) {
-        initiateReturn.returnReasonCode = "01";
+        initiateReturn.returnReasonCode = this.props.data.returnReasonCode;
         initiateReturn.subReasonCode = this.props.data.subReasonCode;
         initiateReturn.comment = this.props.data.comment;
       }

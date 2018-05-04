@@ -251,7 +251,7 @@ export default class ReturnAddressList extends React.Component {
     }
 
     let returnCliqAndPiqObject = {};
-    returnCliqAndPiqObject.returnReasonCode = "01";
+    returnCliqAndPiqObject.returnReasonCode = this.props.data.returnReasonCode;
     returnCliqAndPiqObject.refundType = "R";
     returnCliqAndPiqObject.isCODorder = isCodOrder;
     returnCliqAndPiqObject.orderCode = this.props.returnProducts.orderProductWsDTO[0].sellerorderno;
@@ -263,7 +263,7 @@ export default class ReturnAddressList extends React.Component {
     returnCliqAndPiqObject.comment = this.props.data.comment;
     returnCliqAndPiqObject.addressType = this.state.selectedAddress.addressType;
     returnCliqAndPiqObject.firstName = this.state.selectedAddress.firstName;
-    returnCliqAndPiqObject.lastName = this.state.selectedAddress.lastName;
+    returnCliqAndPiqObject.lastNaxme = this.state.selectedAddress.lastName;
     returnCliqAndPiqObject.addrLine1 = this.state.selectedAddress.line1;
     returnCliqAndPiqObject.addrLine2 = "";
     returnCliqAndPiqObject.addrLine3 = "";

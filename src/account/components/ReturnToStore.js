@@ -79,7 +79,7 @@ export default class ReturnToStore extends React.Component {
     if (this.props.data) {
       Object.assign(productObj, {
         subReasonCode: this.props.data.subReasonCode,
-        returnReasonCode: this.props.data.subReasonCode,
+        returnReasonCode: this.props.data.returnReasonCode,
         comment: this.props.data.comment
       });
     }
