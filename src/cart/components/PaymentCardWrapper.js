@@ -153,7 +153,7 @@ export default class PaymentCardWrapper extends React.Component {
         elementWidthMobile={100}
         offset={0}
         limit={1}
-        onSelect={val => this.applyBankCoupons(val)}
+        onSelect={val => this.props.applyBankCoupons(val)}
         selected={[this.props.selectedBankOfferCode]}
       >
         <BankOffer

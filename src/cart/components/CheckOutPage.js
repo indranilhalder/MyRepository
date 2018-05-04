@@ -436,51 +436,6 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  renderBankOffers = () => {
-    let offerMinCartValue, offerTitle, offerCode;
-    if (
-      this.props.cart.paymentModes &&
-      this.props.cart.paymentModes.paymentOffers &&
-      this.props.cart.paymentModes.paymentOffers.coupons
-    ) {
-      const selectedCoupon = this.props.cart.paymentModes.paymentOffers.coupons.find(
-        coupon => {
-          return coupon.offerCode === this.state.selectedBankOfferCode;
-        }
-      );
-      if (selectedCoupon) {
-        offerMinCartValue = selectedCoupon.offerMinCartValue;
-        offerTitle = selectedCoupon.offerTitle;
-        offerCode = selectedCoupon.offerCode;
-      } else {
-        offerMinCartValue = this.props.cart.paymentModes.paymentOffers
-          .coupons[0].offerMinCartValue;
-        offerTitle = this.props.cart.paymentModes.paymentOffers.coupons[0]
-          .offerTitle;
-        offerCode = this.props.cart.paymentModes.paymentOffers.coupons[0]
-          .offerCode;
-      }
-    }
-
-    return (
-      <GridSelect
-        elementWidthMobile={100}
-        offset={0}
-        limit={1}
-        onSelect={val => this.applyBankCoupons(val)}
-        selected={[this.state.selectedBankOfferCode]}
-      >
-        <BankOffer
-          bankName={offerTitle}
-          offerText={offerMinCartValue}
-          label={SEE_ALL_BANK_OFFERS}
-          applyBankOffers={() => this.openBankOffers()}
-          value={offerCode}
-        />
-      </GridSelect>
-    );
-  };
-
   renderInitialAddAddressForm() {
     if (
       !this.state.isFirstAddress &&
@@ -1668,6 +1623,7 @@ class CheckOutPage extends React.Component {
             this.state.isGiftCard) && (
             <div className={styles.paymentCardHolderπp}>
               <PaymentCardWrapper
+                applyBankCoupons={val => this.applyBankCoupons(val)}
                 isRemainingBalance={this.state.isRemainingAmount}
                 isPaymentFailed={this.state.isPaymentFailed}
                 isFromGiftCard={this.state.isGiftCard}
