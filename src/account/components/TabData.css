@@ -5,7 +5,7 @@
   color: #000;
   padding: 0px 15px;
   font-size: 14px;
-  font-family: semibold;
+  font-family: regular;
   opacity: 0.5;
   position: relative;
   transition: 300ms;
@@ -25,6 +25,8 @@
 .active {
   composes: base;
   color: #ff1744;
+  font-family: semibold;
+  opacity: 1;
 }
 .active::before {
   content: "";
