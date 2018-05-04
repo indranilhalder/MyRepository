@@ -9,12 +9,29 @@
   position: relative;
   padding: 10px 40px;
 }
+.logoPresentStyle {
+  composes: InformationHeader;
+  padding: 10px 40px 10px 75px;
+}
 .backHolder {
   width: auto;
   height: auto;
   position: absolute;
-  left: 17px;
+  left: 15px;
   top: 17px;
+}
+.logoHolder {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  left: 15px;
+}
+.iconWithLogo {
+  composes: logoHolder;
+  left: 40px;
 }
 .searchWithText {
   width: 100%;

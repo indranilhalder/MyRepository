@@ -66,7 +66,7 @@ class HeaderWrapper extends React.Component {
       } else if (window.pageYOffset > 30 && !this.state.stickyHeader) {
         this.setState({ stickyHeader: true });
       }
-    }, 200);
+    }, 50);
   };
 
   componentDidMount() {
@@ -105,16 +105,34 @@ class HeaderWrapper extends React.Component {
 
     let isGoBack = true;
     let isCross = false;
+    let isLogo = false;
     let shouldRenderHeader = true;
+    let companyLogoInPdp = false;
     if (url === PRODUCT_CART_ROUTER) {
       shouldRenderSearch = false;
     }
-
-    if (this.props.match.path.includes("/") && url !== PRODUCT_CART_ROUTER) {
-      isGoBack = true;
-      shouldRenderSearch = true;
+    if (
+      url === DEFAULT_BRANDS_LANDING_PAGE &&
+      url === CATEGORIES_LANDING_PAGE &&
+      url === MY_ACCOUNT_PAGE
+    ) {
+      isLogo = false;
     }
 
+    if (
+      this.props.match.path.includes("/") &&
+      url !== PRODUCT_CART_ROUTER &&
+      url !== DEFAULT_BRANDS_LANDING_PAGE &&
+      url !== CATEGORIES_LANDING_PAGE &&
+      url !== MY_ACCOUNT_PAGE
+    ) {
+      isGoBack = true;
+      shouldRenderSearch = true;
+      isLogo = true;
+    }
+    if (this.props.location.pathname.includes("/my-account/")) {
+      isLogo = false;
+    }
     if (
       url === HOME_ROUTER ||
       url === CATEGORIES_LANDING_PAGE ||
@@ -124,11 +142,15 @@ class HeaderWrapper extends React.Component {
       isGoBack = false;
       shouldRenderSearch = true;
     }
-
+    if (url === HOME_ROUTER) {
+      isLogo = true;
+    }
     if (this.props.history.length === 0) {
       isGoBack = false;
     }
-
+    if (this.props.history.length <= 2) {
+      companyLogoInPdp = true;
+    }
     if (url === LOGIN_PATH || url === SIGN_UP_PATH) {
       shouldRenderHeader = false;
     }
@@ -155,12 +177,14 @@ class HeaderWrapper extends React.Component {
           goToCart={this.goToCart}
           goToWishList={this.goToWishList}
           text={this.props.headerText}
+          isShowCompanyLogo={companyLogoInPdp}
         />
       ) : (
         <HollowHeader
           goBack={this.onBackClick}
           goToCart={this.goToCart}
           goToWishList={this.goToWishList}
+          isShowCompanyLogo={companyLogoInPdp}
         />
       );
     } else if (shouldRenderSearch) {
@@ -169,6 +193,7 @@ class HeaderWrapper extends React.Component {
           text={this.props.headerText}
           canGoBack={this.onBackClick}
           hasBackButton={isGoBack}
+          isLogo={isLogo}
         />
       );
     }
