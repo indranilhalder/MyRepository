@@ -3,6 +3,7 @@ import styles from "./SearchPage.css";
 import SearchHeader from "./SearchHeader";
 import SearchResultItem from "./SearchResultItem";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+import { HOME_ROUTER } from "../../lib/constants";
 export default class SearchPage extends React.Component {
   constructor(props) {
     super(props);
@@ -64,6 +65,9 @@ export default class SearchPage extends React.Component {
       this.props.canGoBack();
     }
   }
+  redirectToHome() {
+    this.props.history.push(HOME_ROUTER);
+  }
   handleOnSearchString(searchString) {
     this.props.history.push(
       `/search/?searchCategory=all&text=${searchString}`,
@@ -92,6 +96,7 @@ export default class SearchPage extends React.Component {
             toggleSearchBar={this.toggleSearchBar}
             display={this.state.showSearchBar}
             onSearchString={val => this.handleOnSearchString(val)}
+            redirectToHome={() => this.redirectToHome()}
             searchString={this.state.searchString}
           />
         </div>

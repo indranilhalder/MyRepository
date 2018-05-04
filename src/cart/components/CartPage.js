@@ -339,7 +339,6 @@ class CartPage extends React.Component {
             ) / 100;
         }
       }
-
       return (
         <div className={styles.base}>
           <div className={styles.content}>
