@@ -297,6 +297,7 @@ class CartPage extends React.Component {
     );
   };
   render() {
+    console.log(this.props);
     const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const cartDetailsForAnonymous = Cookie.getCookie(
       CART_DETAILS_FOR_ANONYMOUS
@@ -339,7 +340,6 @@ class CartPage extends React.Component {
             ) / 100;
         }
       }
-
       return (
         <div className={styles.base}>
           <div className={styles.content}>
