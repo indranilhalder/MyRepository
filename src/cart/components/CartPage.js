@@ -302,7 +302,10 @@ class CartPage extends React.Component {
       CART_DETAILS_FOR_ANONYMOUS
     );
 
-    if (this.props.cart.loading && this.props.cart.cartDetails === null) {
+    if (
+      this.props.cart.loadingForDisplayCoupon ||
+      this.props.cart.loadingForCartDetail
+    ) {
       return this.renderLoader();
     } else {
       if (this.props.cart.loading) {
