@@ -6,8 +6,47 @@ import ReturnsToBank from "./ReturnsToBank";
 import OrderReturnAddressDetails from "./OrderReturnAddressDetails";
 import OrderReturnDateAndTimeDetails from "./OrderReturnDateAndTimeDetails";
 import styles from "./ReturnSummary.css";
-
+import visaLogo from "../../cart/components/img/Visa.svg";
+import masterLogo from "../../cart/components/img/Master.svg";
+import amexLogo from "../../cart/components/img/amex.svg";
+import repayLogo from "../../cart/components/img/rupay.svg";
+import dinersLogo from "../../cart/components/img/diners.svg";
+import discoverLogo from "../../cart/components/img/discover.svg";
+import jcbLogo from "../../cart/components/img/jcb.svg";
+import {
+  RUPAY_CARD,
+  VISA_CARD,
+  MASTER_CARD,
+  AMEX_CARD,
+  MESTRO_CARD,
+  DINERS_CARD,
+  DISCOVER_CARD,
+  JCB_CARD
+} from "../../lib/constants";
 export default class ReturnSummary extends React.Component {
+  getCardLogo(cardType) {
+    switch (cardType) {
+      case VISA_CARD:
+        return visaLogo;
+      case MASTER_CARD:
+        return masterLogo;
+      case AMEX_CARD:
+        return amexLogo;
+      case RUPAY_CARD:
+        return repayLogo;
+      case MESTRO_CARD:
+        return masterLogo;
+      case DINERS_CARD:
+        return dinersLogo;
+      case DISCOVER_CARD:
+        return discoverLogo;
+      case JCB_CARD:
+        return jcbLogo;
+      default:
+        return false;
+    }
+  }
+
   onContinue() {
     if (this.props.onContinue) {
       this.props.onContinue();
@@ -66,7 +105,13 @@ export default class ReturnSummary extends React.Component {
             )}
           </OrderCard>
           <ReturnsToBank
-            cartNumber={this.props.orderDetails.paymentCardDigit}
+            cartNumber={
+              this.props.orderDetails &&
+              this.props.orderDetails.paymentCardDigit
+            }
+            cardLogo={this.getCardLogo(
+              this.props.orderDetails && this.props.orderDetails.paymentCard
+            )}
           />
         </div>
       </ReturnsFrame>

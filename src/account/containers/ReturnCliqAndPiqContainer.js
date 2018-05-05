@@ -7,7 +7,8 @@ import { SUCCESS } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
 import {
   getPinCode,
-  getPinCodeSuccess
+  getPinCodeSuccess,
+  getReturnRequest
 } from "../../account/actions/account.actions.js";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
@@ -16,6 +17,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         addUserAddress(addressDetails, fromAccount)
       );
       if (addAddressResponse.status === SUCCESS) {
+        dispatch(
+          getReturnRequest(
+            ownProps.returnProductDetails.orderProductWsDTO[0].sellerorderno,
+            ownProps.returnProductDetails.orderProductWsDTO[0].transactionId
+          )
+        );
         ownProps.history.goBack();
       }
     },

@@ -8,9 +8,11 @@ export default class SortTab extends React.Component {
     }
   }
   render() {
-    let data = this.props.data;
     return (
-      <div className={styles.mainHolder} onClick={() => this.handleClick()}>
+      <div
+        className={this.props.selected ? styles.active : styles.mainHolder}
+        onClick={() => this.handleClick()}
+      >
         {this.props.label}
       </div>
     );

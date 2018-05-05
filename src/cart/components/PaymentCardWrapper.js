@@ -16,6 +16,7 @@ import GridSelect from "../../general/components/GridSelect";
 
 import CheckOutHeader from "./CheckOutHeader";
 import { getCookie } from "../../lib/Cookie";
+
 let cliqCashToggleState = false;
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const keyForCreditCard = "Credit Card";
