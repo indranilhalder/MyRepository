@@ -16,6 +16,7 @@ const account = (
     error: null,
     loading: false,
     type: null,
+    loadingForClearOrderDetails: true,
     savedCards: null,
     orderDetails: null,
     orderDetailsStatus: null,
@@ -827,7 +828,8 @@ const account = (
       return Object.assign({}, state, {
         type: null,
         status: null,
-        orderDetails: null
+        orderDetails: null,
+        loadingForClearOrderDetails: false
       });
     }
 

@@ -24,6 +24,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 const mapStateToProps = (state, ownProps) => {
   return {
+    loadingForClearOrderDetails: state.profile.loadingForClearOrderDetails,
     profile: state.profile,
     ...ownProps
   };

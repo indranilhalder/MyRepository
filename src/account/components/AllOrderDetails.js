@@ -81,7 +81,8 @@ export default class AllOrderDetails extends React.Component {
         const windowBottom = windowHeight + window.pageYOffset;
         if (
           windowBottom >= docHeight - OFFSET_BOTTOM &&
-          !this.props.profile.loading
+          !this.props.profile.loading &&
+          this.props.loadingForClearOrderDetails
         ) {
           this.props.paginate(
             this.props.profile.orderDetails.pageSize + 1,
