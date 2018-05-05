@@ -147,7 +147,6 @@ class Login extends Component {
                     ? this.props.emailValue
                     : this.state.emailValue
                 }
-                onKeyUp={event => this.handleKeyUp(event)}
                 onChange={val => this.onChangeEmail(val)}
               />
             </div>
