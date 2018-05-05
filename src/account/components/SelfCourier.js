@@ -13,10 +13,10 @@ import {
 const NEFT = "NEFT";
 const SELF_SHIPMENT = "selfShipment";
 export default class SelfCourier extends React.Component {
+  cancel = () => {};
+
   onCancel() {
-    if (this.props.onCancel) {
-      this.props.onCancel();
-    }
+    this.props.history.goBack();
   }
   onContinue() {
     if (this.props.newReturnInitial) {
@@ -47,6 +47,7 @@ export default class SelfCourier extends React.Component {
         initiateReturn.subReasonCode = this.props.data.subReasonCode;
         initiateReturn.comment = this.props.data.comment;
       }
+      console.log(initiateReturn);
       this.props.newReturnInitial(initiateReturn);
     }
   }

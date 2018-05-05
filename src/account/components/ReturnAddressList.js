@@ -292,6 +292,7 @@ export default class ReturnAddressList extends React.Component {
     );
   };
   renderReturnSummary = () => {
+    console.log(this.props.orderDetails, this.props.returnRequest);
     return (
       <ReturnSummary
         onCancel={() => this.cancel()}
