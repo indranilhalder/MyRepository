@@ -56,7 +56,7 @@ export default class AddDeliveryAddress extends React.Component {
       line2: "",
       line3: "",
       town: "",
-      salutation: "",
+      salutation: SALUTATION_MR,
       defaultFlag: true,
       isOtherLandMarkSelected: false,
       selectedLandmarkLabel: "Landmark",
@@ -228,7 +228,7 @@ export default class AddDeliveryAddress extends React.Component {
       line1: " ",
       titleValue: "",
       addressType: "",
-      salutation: "",
+      salutation: SALUTATION_MR,
       defaultFlag: false,
       landmarkList: [],
       emailId: ""
@@ -258,15 +258,15 @@ export default class AddDeliveryAddress extends React.Component {
     ];
     const salutation = [
       {
-        label: SALUTATION_MR,
+        label: "Mr",
         value: SALUTATION_MR
       },
       {
-        label: SALUTATION_MS,
+        label: "Ms",
         value: SALUTATION_MS
       },
       {
-        label: SALUTATION_MSS,
+        label: "Mss",
         value: SALUTATION_MSS
       }
     ];
@@ -303,7 +303,6 @@ export default class AddDeliveryAddress extends React.Component {
           <div className={styles.salutation}>
             <SelectBoxMobile2
               height={33}
-              placeholder="Mr/Ms"
               options={salutation.map((val, i) => {
                 return {
                   value: val.label,
