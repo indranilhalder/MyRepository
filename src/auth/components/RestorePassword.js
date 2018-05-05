@@ -26,6 +26,11 @@ export default class RestorePassword extends React.Component {
       this.props.handleRestoreClick(this.state.userId);
     }
   }
+  enterPassword(val) {
+    if (val === "Enter") {
+      this.handleRestoreClick();
+    }
+  }
   render() {
     return (
       <AuthPopUp>
@@ -43,6 +48,9 @@ export default class RestorePassword extends React.Component {
             hollow={true}
             placeholder="Email or phone number"
             onChange={val => this.setState({ userId: val })}
+            onKeyUp={event => {
+              this.enterPassword(event.key);
+            }}
           />
         </div>
         <div className={styles.button}>
