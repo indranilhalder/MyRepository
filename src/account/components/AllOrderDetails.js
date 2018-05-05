@@ -52,6 +52,13 @@ export default class AllOrderDetails extends React.Component {
     }
   }
   componentWillUnmount() {
+    if (
+      this.props.profile.orderDetails &&
+      this.props.profile.orderDetails.currentPage
+    ) {
+      this.props.profile.orderDetails.currentPage = 0;
+      this.props.profile.orderDetails.orderData = [];
+    }
     window.removeEventListener("scroll", this.throttledScroll);
   }
   renderToContinueShopping() {
