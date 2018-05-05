@@ -28,7 +28,8 @@ import {
   GENERATE_OTP_FOR_EGV,
   hideModal,
   VERIFY_OTP,
-  GIFT_CARD_MODAL
+  GIFT_CARD_MODAL,
+  UPDATE_REFUND_DETAILS_POPUP
 } from "../../general/modal.actions.js";
 import moment from "moment";
 import { getPaymentModes } from "../../cart/actions/cart.actions.js";
@@ -875,7 +876,7 @@ export function submitSelfCourierReturnInfo(returnDetails) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
+      dispatch(hideModal(UPDATE_REFUND_DETAILS_POPUP));
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }

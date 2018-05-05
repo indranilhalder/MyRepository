@@ -13,10 +13,10 @@ import {
 const NEFT = "NEFT";
 const SELF_SHIPMENT = "selfShipment";
 export default class SelfCourier extends React.Component {
+  cancel = () => {};
+
   onCancel() {
-    if (this.props.onCancel) {
-      this.props.onCancel();
-    }
+    this.props.history.goBack();
   }
   onContinue() {
     if (this.props.newReturnInitial) {
@@ -43,18 +43,14 @@ export default class SelfCourier extends React.Component {
         initiateReturn.accountHolderName = returnRequest && returnRequest.name;
       }
       if (this.props.data) {
-        initiateReturn.returnReasonCode = "01";
+        initiateReturn.returnReasonCode = this.props.data.returnReasonCode;
         initiateReturn.subReasonCode = this.props.data.subReasonCode;
         initiateReturn.comment = this.props.data.comment;
       }
       this.props.newReturnInitial(initiateReturn);
     }
   }
-  downloadForm() {
-    if (this.props.downloadForm) {
-      this.props.downloadForm();
-    }
-  }
+
   navigateToReturnLanding() {
     return (
       <Redirect
@@ -88,7 +84,10 @@ export default class SelfCourier extends React.Component {
             Re-download the form again from below"
             underlineButtonLabel="Download form"
             underlineButtonColour="#ff1744"
-            downloadForm={() => this.downloadForm()}
+            selfCourierDocumentLink={
+              this.props.returnRequest &&
+              this.props.returnRequest.selfCourierDocumentLink
+            }
           />
         </div>
         <div className={styles.card}>

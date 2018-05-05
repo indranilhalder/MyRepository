@@ -111,7 +111,6 @@ export default class ReturnFlow extends React.Component {
           )}
         />
         <Route
-          exact
           path={`${RETURNS}${RETURN_TO_STORE}`}
           render={() => (
             <ReturnToStoreContainer {...this.state} {...this.props} />

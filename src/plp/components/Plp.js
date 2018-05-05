@@ -77,19 +77,11 @@ export default class Plp extends React.Component {
         if (
           this.props.productListings.seo &&
           this.props.productListings.seo.breadcrumbs &&
-          this.props.productListings.seo.breadcrumbs[
-            this.props.productListings.seo.breadcrumbs.length - 1
-          ] &&
-          this.props.productListings.seo.breadcrumbs[
-            this.props.productListings.seo.breadcrumbs.length - 1
-          ].name
+          this.props.productListings.seo.breadcrumbs[0] &&
+          this.props.productListings.seo.breadcrumbs[0].name
         )
           this.props.setHeaderText(
-            `${
-              this.props.productListings.seo.breadcrumbs[
-                this.props.productListings.seo.breadcrumbs.length - 1
-              ].name
-            } (${this.props.productListings.pagination.totalResults})`
+            `${this.props.productListings.seo.breadcrumbs[0].name}`
           );
         else {
           const slug = this.props.match.params.slug;
@@ -97,17 +89,9 @@ export default class Plp extends React.Component {
           if (slug) {
             splitSlug = this.props.match.params.slug.replace(/-/g, " ");
             splitSlug = splitSlug.replace(/\b\w/g, l => l.toUpperCase());
-            this.props.setHeaderText(
-              `${splitSlug} (${
-                this.props.productListings.pagination.totalResults
-              })`
-            );
+            this.props.setHeaderText(`${splitSlug}`);
           } else {
-            this.props.setHeaderText(
-              `Search results (${
-                this.props.productListings.pagination.totalResults
-              })`
-            );
+            this.props.setHeaderText(`Search results`);
           }
         }
       }
