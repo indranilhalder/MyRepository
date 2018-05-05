@@ -998,16 +998,6 @@ class CheckOutPage extends React.Component {
       let guIdObject = new FormData();
       guIdObject.append(CART_GU_ID, egvGiftCartGuId);
       this.props.getPaymentModes(guIdObject);
-    } else {
-      let cartDetailsLoggedInUser = Cookie.getCookie(
-        CART_DETAILS_FOR_LOGGED_IN_USER
-      );
-      if (cartDetailsLoggedInUser) {
-        let guIdObject = new FormData();
-        guIdObject.append(CART_GU_ID, JSON.parse(cartDetailsLoggedInUser).guid);
-
-        this.props.getPaymentModes(guIdObject);
-      }
     }
   };
   onSelectAddress(selectedAddress) {
@@ -1673,7 +1663,6 @@ class CheckOutPage extends React.Component {
                 addGiftCard={() => this.addGiftCard()}
                 binValidationForPaytm={val => this.binValidationForPaytm(val)}
                 displayToast={message => this.props.displayToast(message)}
-                getPaymentModes={() => this.getPaymentModes()}
                 getCODEligibility={() => this.getCODEligibility()}
                 getNetBankDetails={() => this.getNetBankDetails()}
                 getEmiBankDetails={() => this.getEmiBankDetails()}

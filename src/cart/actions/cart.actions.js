@@ -1231,6 +1231,7 @@ export function getOrderSummary(pincode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      dispatch(getPaymentModes(resultJson.cartGuid));
       dispatch(orderSumarySuccess(resultJson));
     } catch (e) {
       dispatch(orderSummaryFailure(e.message));
