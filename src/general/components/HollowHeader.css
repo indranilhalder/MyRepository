@@ -5,15 +5,15 @@
   position: relative;
 }
 .backArrowHolder {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   position: absolute;
   top: 15px;
   left: 15px;
 }
 .historyDownloadIcon {
   width: auto;
-  height: 20px;
+  height: 30px;
   position: absolute;
   right: 15px;
   top: 15px;
@@ -25,14 +25,14 @@
   top: 0;
   bottom: 0;
   margin: auto;
-  left: 45px;
+  left: 50px;
 }
 .downloadIconHolder {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   display: inline-block;
   vertical-align: top;
-  margin-left: 15px;
+  margin-left: 5px;
 }
 .orderIconHolder {
   composes: downloadIconHolder;
