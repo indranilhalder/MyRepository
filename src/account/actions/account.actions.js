@@ -198,7 +198,7 @@ export const UPDATE_PROFILE_OTP_VERIFICATION = "UpdateProfileOtpVerification";
 export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
 export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
 export const CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAILURE";
-
+export const Clear_ORDER_DATA = "Clear_ORDER_DATA";
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -1907,5 +1907,10 @@ export function clearGiftCardStatus() {
 export function clearAccountUpdateType() {
   return {
     type: CLEAR_ACCOUNT_UPDATE_TYPE
+  };
+}
+export function clearOrderDetails() {
+  return {
+    type: Clear_ORDER_DATA
   };
 }

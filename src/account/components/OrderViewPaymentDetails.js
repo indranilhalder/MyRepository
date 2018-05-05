@@ -46,11 +46,10 @@ export default class OrderViewPaymentDetails extends React.Component {
         </div>
         <div className={styles.totalHolder}>
           <div className={styles.labelTextTotal}>Total Amount</div>
-          {this.props.Total && (
-            <div className={styles.infoTextTotal}>{`${RUPEE_SYMBOL} ${
-              this.props.Total
-            }`}</div>
-          )}
+
+          <div className={styles.infoTextTotal}>{`${RUPEE_SYMBOL} ${
+            this.props.Total ? this.props.Total : 0
+          }`}</div>
         </div>
       </div>
     );
