@@ -21,7 +21,7 @@ it("should work with category landing page", () => {
     `/search/?q=:relevance:collectionIds:c-${DUMMY_CATEGORY_VALUE.toUpperCase()}`
   );
 
-  pathName = `/electronics-mobile-phones/c-${ANOTHER_DUMMY_CATEGORY_VALUE.toUpperCase()}`;
+  pathName = `/electronics-mobile-phones/c-${DUMMY_L1_CATEGORY_VALUE.toUpperCase()}`;
   searchValue = "";
   endUrl = createUrlFromQueryAndCategory(
     searchValue,
@@ -57,7 +57,7 @@ it("should work with brand landing page", () => {
   );
 
   expect(endUrl).toEqual(
-    `/search/?q=:relevance:category:${DUMMY_L1_CATEGORY_VALUE.toUpperCase()}:brand:${DUMMY_BRAND_VALUE.toUpperCase()}`
+    `/search/?q=:relevance:collectionIds:c-${DUMMY_BRAND_VALUE.toUpperCase()}`
   );
 });
 
