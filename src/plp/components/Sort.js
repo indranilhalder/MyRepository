@@ -68,6 +68,7 @@ export default class Sort extends React.Component {
               <SortTab
                 label={datum.name}
                 value={datum.code}
+                selected={datum.selected}
                 key={i}
                 onClick={() => {
                   this.onClick(datum.code);

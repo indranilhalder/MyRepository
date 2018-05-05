@@ -31,9 +31,13 @@ export default class StickyHeader extends React.Component {
     }
   }
   render() {
+    let base = styles.base;
+    if (this.props.isShowCompanyLogo) {
+      base = styles.logoWithBase;
+    }
     return (
-      <div className={styles.base}>
-        <span>{this.props.text}</span>
+      <div className={base}>
+        <div className={styles.productDisplayingText}>{this.props.text}</div>
         <div className={styles.backArrowHolder} onClick={() => this.backPage()}>
           <Icon image={backArrow} size={20} />
         </div>

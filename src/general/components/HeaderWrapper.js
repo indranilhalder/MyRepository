@@ -140,6 +140,13 @@ class HeaderWrapper extends React.Component {
       isLogo = false;
     }
     if (
+      this.props.location.pathname.includes(
+        "checkout/payment-method/cardPayment"
+      )
+    ) {
+      shouldRenderSearch = false;
+    }
+    if (
       url === HOME_ROUTER ||
       url === CATEGORIES_LANDING_PAGE ||
       url === DEFAULT_BRANDS_LANDING_PAGE ||
