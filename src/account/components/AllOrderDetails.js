@@ -32,7 +32,6 @@ export default class AllOrderDetails extends React.Component {
     }
   }
   onViewDetails(orderId) {
-    this.props.clearOrderDetails();
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   componentDidMount() {
