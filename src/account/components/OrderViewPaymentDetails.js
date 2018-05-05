@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { RUPEE_SYMBOL } from "../../lib/constants";
 export default class OrderViewPaymentDetails extends React.Component {
   render() {
-    console.log(this.props.coupon);
     return (
       <div className={styles.base}>
         <div className={styles.subTotalsHolder}>
