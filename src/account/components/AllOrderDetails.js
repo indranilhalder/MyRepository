@@ -52,7 +52,7 @@ export default class AllOrderDetails extends React.Component {
     }
   }
   componentWillUnmount() {
-    window.removeEventListener("scroll", this.throttledScroll);
+    this.props.clearOrderDetails();
   }
   renderToContinueShopping() {
     this.props.history.push(HOME_ROUTER);
@@ -80,7 +80,8 @@ export default class AllOrderDetails extends React.Component {
         const windowBottom = windowHeight + window.pageYOffset;
         if (
           windowBottom >= docHeight - OFFSET_BOTTOM &&
-          !this.props.profile.loading
+          !this.props.profile.loading &&
+          this.props.loadingForClearOrderDetails
         ) {
           this.props.paginate(
             this.props.profile.orderDetails.pageSize + 1,

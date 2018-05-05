@@ -5,8 +5,8 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import CheckOutHeader from "../../cart/components/CheckOutHeader.js";
 export default class CourierProduct extends React.Component {
   downloadForm() {
-    if (this.props.onClick) {
-      this.props.onClick();
+    if (this.props.selfCourierDocumentLink) {
+      window.open(this.props.selfCourierDocumentLink);
     }
   }
   render() {
@@ -26,16 +26,17 @@ export default class CourierProduct extends React.Component {
         {this.props.subText && (
           <div className={styles.subText}>{this.props.subText}</div>
         )}
-        {this.props.underlineButtonLabel && (
-          <div className={styles.formHolder}>
-            <div className={styles.form} onClick={() => this.downloadForm()}>
-              <UnderLinedButton
-                label={this.props.underlineButtonLabel}
-                color={this.props.underlineButtonColour}
-              />
+        {this.props.selfCourierDocumentLink &&
+          this.props.underlineButtonLabel && (
+            <div className={styles.formHolder}>
+              <div className={styles.form} onClick={() => this.downloadForm()}>
+                <UnderLinedButton
+                  label={this.props.underlineButtonLabel}
+                  color={this.props.underlineButtonColour}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
         {this.props.children}
       </div>
     );

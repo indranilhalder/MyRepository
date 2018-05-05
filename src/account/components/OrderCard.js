@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import ProductImage from "../../general/components/ProductImage.js";
 import CheckBox from "../../general/components/CheckBox.js";
 import styles from "./OrderCard.css";
+import { RUPEE_SYMBOL } from "../../lib/constants";
 export default class OrderCard extends React.Component {
   onClick() {
     if (this.props.onClick) {
@@ -32,11 +33,13 @@ export default class OrderCard extends React.Component {
             {this.props.productName}
           </div>
           <div className={styles.priceHolder}>
-            <div className={styles.price}>{`Rs ${this.props.price}`}</div>
+            <div className={styles.price}>{`${RUPEE_SYMBOL} ${
+              this.props.price
+            }`}</div>
             {this.props.discountPrice &&
               this.props.discountPrice !== this.props.price && (
                 <div className={styles.discountPrice}>
-                  {`Rs ${this.props.discountPrice}`}
+                  {`${RUPEE_SYMBOL} ${this.props.discountPrice}`}
                 </div>
               )}
           </div>
