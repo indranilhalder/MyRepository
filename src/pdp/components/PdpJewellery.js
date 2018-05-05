@@ -98,7 +98,8 @@ export default class PdpJewellery extends React.Component {
     } else {
       if (
         this.props.productDetails.allOOStock ||
-        this.props.productDetails.winningSellerAvailableStock === "0"
+        (this.props.productDetails.winningSellerAvailableStock === "0" &&
+          this.checkIfSizeSelected())
       ) {
         this.props.displayToast("Product is out of stock");
       } else {
@@ -257,7 +258,8 @@ export default class PdpJewellery extends React.Component {
               })}
             </ProductGalleryMobile>
             {(productData.allOOStock ||
-              productData.winningSellerAvailableStock === "0") && (
+              (this.props.productDetails.winningSellerAvailableStock === "0" &&
+                this.checkIfSizeSelected())) && (
               <div className={styles.flag}>Out of stock</div>
             )}
             {!productData.winningSellerPrice && (

@@ -106,7 +106,8 @@ export default class PdpApparel extends React.Component {
     } else {
       if (
         this.props.productDetails.allOOStock ||
-        this.props.productDetails.winningSellerAvailableStock === "0"
+        (this.props.productDetails.winningSellerAvailableStock === "0" &&
+          this.checkIfSizeSelected())
       ) {
         this.props.displayToast("Product is out of stock");
       } else {
@@ -211,7 +212,8 @@ export default class PdpApparel extends React.Component {
           outOfStock={
             productData.allOOStock ||
             !productData.winningSellerPrice ||
-            productData.winningSellerAvailableStock === "0"
+            (this.props.productDetails.winningSellerAvailableStock === "0" &&
+              this.checkIfSizeSelected())
           }
           ussId={productData.winningUssID}
         >
