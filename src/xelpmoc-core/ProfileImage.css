@@ -3,6 +3,10 @@
   overflow: hidden;
   flex-shrink: 0;
 }
+.image {
+  width: 100%;
+  height: 100%;
+}
 .size1 {
   composes: base;
   width: 40px;
