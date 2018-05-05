@@ -55,7 +55,6 @@ export default class Sort extends React.Component {
     this.props.onCloseSort();
   };
   render() {
-    console.log(this.props);
     let data = this.props.sortList;
     return (
       <div className={styles.base}>
