@@ -12,6 +12,8 @@ import {
   showSecondaryLoader,
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
+import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
+
 const mapDispatchToProps = dispatch => {
   return {
     fetchOrderDetails: orderId => {
@@ -34,6 +36,9 @@ const mapDispatchToProps = dispatch => {
     },
     hideSecondaryLoader: () => {
       dispatch(hideSecondaryLoader());
+    },
+    setUrlToRedirectToAfterAuth: url => {
+      dispatch(setUrlToRedirectToAfterAuth(url));
     }
   };
 };
