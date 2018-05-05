@@ -29,7 +29,7 @@ it("should work with category landing page", () => {
     DUMMY_L1_CATEGORY_VALUE.toUpperCase()
   );
   expect(endUrl).toEqual(
-    `/search/?q=:relevance:category:c-${DUMMY_L1_CATEGORY_VALUE.toUpperCase()}`
+    `/search/?q=:relevance:collectionIds:c-${DUMMY_L1_CATEGORY_VALUE.toUpperCase()}`
   );
 });
 
