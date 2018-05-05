@@ -85,6 +85,7 @@ export default class EmiPanel extends React.Component {
       nextProps.currentPaymentMode !== EMI &&
       this.state.currentSelectedEMIType !== null
     ) {
+      this.props.changeSubEmiOption();
       this.setState({ currentSelectedEMIType: null });
     }
   }

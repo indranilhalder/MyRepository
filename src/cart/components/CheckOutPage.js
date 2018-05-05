@@ -50,7 +50,9 @@ import {
   CASH_ON_DELIVERY_PAYMENT_MODE,
   LOGIN_PATH,
   NO_COST_EMI_COUPON,
-  OLD_CART_CART_ID
+  OLD_CART_CART_ID,
+  SAVED_CARD_PAYMENT_MODE,
+  E_WALLET
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -161,7 +163,14 @@ class CheckOutPage extends React.Component {
     }
 
     this.setState(val);
-    this.setState({ cardDetails: {}, bankCodeForNetBanking: null });
+    this.setState({
+      cardDetails: {},
+      bankCodeForNetBanking: null,
+      savedCardDetails: null,
+      captchaReseponseForCOD: null,
+      noCostEmiBankName: null,
+      isNoCostEmiProceeded: false
+    });
   };
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
@@ -1495,8 +1504,83 @@ class CheckOutPage extends React.Component {
   navigateToOrderDetailPage(orderId) {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
+  validateCard() {
+    if (
+      !this.state.cardDetails.cardNumber ||
+      (this.state.cardDetails.cardNumber &&
+        this.state.cardDetails.cardNumber.length < 14) ||
+      (!this.state.cardDetails.cardName ||
+        (this.state.cardDetails.cardName &&
+          this.state.cardDetails.cardName.length < 4)) ||
+      (!this.state.cardDetails.cvvNumber ||
+        (this.state.cardDetails.cvvNumber &&
+          this.state.cardDetails.cvvNumber.length < 3)) ||
+      !this.state.cardDetails.monthValue ||
+      !this.state.cardDetails.yearValue
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  validateSubmitButtonForNoCostEMi() {
+    if (!this.state.isNoCostEmiApplied) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  validateSubmitButtonForSlanderedEMi() {
+    return this.validateCard();
+  }
+  validateSubmitButton() {
+    if (this.state.cardDetails) {
+      if (
+        this.state.currentPaymentMode === CREDIT_CARD ||
+        this.state.currentPaymentMode === DEBIT_CARD
+      ) {
+        return this.validateCard();
+      }
+      if (this.state.currentPaymentMode === SAVED_CARD_PAYMENT_MODE) {
+        if (!this.state.savedCardDetails) {
+          return true;
+        } else {
+          return false;
+        }
+      } else if (this.state.currentPaymentMode === EMI) {
+        if (this.state.noCostEmiBankName) {
+          return false;
+        } else if (!this.state.cardDetails.emi_bank) {
+          return true;
+        } else {
+          return false;
+        }
+      } else if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
+        if (!this.state.bankCodeForNetBanking) {
+          return true;
+        } else {
+          return false;
+        }
+      } else if (
+        this.state.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
+      ) {
+        if (this.state.captchaReseponseForCOD === null) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
   render() {
-    let labelForButton;
+    let labelForButton,
+      checkoutButtonStatus = false;
+
     if (
       !this.state.isPaymentFailed &&
       !this.state.confirmAddress &&
@@ -1512,18 +1596,27 @@ class CheckOutPage extends React.Component {
     } else if (
       this.state.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
     ) {
+      checkoutButtonStatus = this.validateSubmitButton();
       labelForButton = PLACE_ORDER;
     } else if (this.state.currentPaymentMode === EMI) {
-      if (this.state.isNoCostEmiProceeded) {
+      if (
+        this.state.isNoCostEmiApplied ||
+        (this.state.cardDetails && this.state.cardDetails.emi_bank !== null)
+      ) {
+        checkoutButtonStatus = this.validateCard();
         labelForButton = PAY_NOW;
       } else {
+        checkoutButtonStatus = this.validateSubmitButton();
         labelForButton = CONTINUE;
       }
     } else if (this.state.currentPaymentMode === null) {
       labelForButton = PROCEED;
+      checkoutButtonStatus = true;
     } else {
+      checkoutButtonStatus = this.validateSubmitButton();
       labelForButton = PAY_NOW;
     }
+
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
@@ -1630,6 +1723,7 @@ class CheckOutPage extends React.Component {
                 isPaymentFailed={this.state.isPaymentFailed}
                 isFromGiftCard={this.state.isGiftCard}
                 cart={this.props.cart}
+                changeSubEmiOption={() => this.setState({ cardDetails: null })}
                 selectedBankOfferCode={this.state.selectedBankOfferCode}
                 openBankOffers={() => this.openBankOffers()}
                 cliqCashAmount={this.state.cliqCashAmount}
@@ -1702,6 +1796,7 @@ class CheckOutPage extends React.Component {
 
           {!this.state.showCliqAndPiq && (
             <Checkout
+              disabled={checkoutButtonStatus}
               label={labelForButton}
               noCostEmiEligibility={
                 this.props.cart &&
