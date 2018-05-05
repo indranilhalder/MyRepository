@@ -12,6 +12,11 @@ import {
 
 export default class AddressModal extends React.Component {
   checkPinCodeAvailability(pincode) {
+    if (this.props.addressModalForCartPage) {
+      this.props.checkPinCodeAvailability(pincode);
+      this.props.closeModal();
+      return;
+    }
     this.props.getProductPinCode(pincode, this.props.productCode);
     this.props.closeModal();
   }
