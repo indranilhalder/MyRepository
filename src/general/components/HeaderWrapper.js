@@ -54,9 +54,15 @@ class HeaderWrapper extends React.Component {
       this.props.history.goBack();
     }
   };
+
   goToCart = () => {
     if (this.props.history) {
       this.props.history.push(PRODUCT_CART_ROUTER);
+    }
+  };
+  redirectToHome = () => {
+    if (this.props.history) {
+      this.props.history.push(HOME_ROUTER);
     }
   };
   handleScroll = () => {
@@ -174,6 +180,7 @@ class HeaderWrapper extends React.Component {
       headerToRender = this.state.stickyHeader ? (
         <StickyHeader
           goBack={this.onBackClick}
+          redirectToHome={this.redirectToHome}
           goToCart={this.goToCart}
           goToWishList={this.goToWishList}
           text={this.props.headerText}
@@ -182,6 +189,7 @@ class HeaderWrapper extends React.Component {
       ) : (
         <HollowHeader
           goBack={this.onBackClick}
+          redirectToHome={this.redirectToHome}
           goToCart={this.goToCart}
           goToWishList={this.goToWishList}
           isShowCompanyLogo={companyLogoInPdp}

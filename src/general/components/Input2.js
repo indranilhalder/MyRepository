@@ -30,17 +30,40 @@ export default class Input2 extends React.Component {
       }
     });
   }
+  handleKeyPress(event) {
+    if (this.props.onKeyUp) {
+      this.props.onKeyPress(event);
+    }
+    if (this.props.onlyAlphabet) {
+      var regex = new RegExp("^[a-zA-Z]+$");
+      var charCode = event.which ? event.which : event.keyCode;
+      if (
+        (charCode > 64 && charCode < 91) ||
+        (charCode > 96 && charCode < 123)
+      ) {
+        return true;
+      }
+      var key = String.fromCharCode(
+        !event.charCode ? event.which : event.charCode
+      );
+      if (!regex.test(key)) {
+        event.preventDefault();
+      } else {
+        return false;
+      }
+    }
+  }
   handleKeyUp = event => {
     if (this.props.onKeyUp) {
       this.props.onKeyUp(event);
     }
   };
+
   render() {
     let className = styles.base;
     if (this.props.isWhite) {
       className = styles.whiteHollow;
     }
-
     if (this.props.isWhite && this.props.boxy) {
       className = styles.whiteBox;
     }
@@ -69,6 +92,7 @@ export default class Input2 extends React.Component {
               value={this.props.value}
               maxLength={this.props.maxLength}
               disabled={this.props.disabled}
+              onKeyPress={event => this.handleKeyPress(event)}
             />
           </div>
           {this.props.leftChild && (
@@ -116,5 +140,6 @@ Input2.defaultProps = {
     fontSize: 14
   },
   disabled: false,
-  borderBottom: "1px solid #d2d2d2"
+  borderBottom: "1px solid #d2d2d2",
+  onlyAlphabet: false
 };

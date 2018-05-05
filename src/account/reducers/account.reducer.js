@@ -9,7 +9,7 @@ import {
 import findIndex from "lodash.findindex";
 import { SUCCESS } from "../../lib/constants";
 import { CLEAR_ERROR } from "../../general/error.actions";
-
+import * as Cookies from "../../lib/Cookie";
 const account = (
   state = {
     status: null,
@@ -585,6 +585,18 @@ const account = (
       });
 
     case accountActions.UPDATE_PROFILE_SUCCESS:
+      const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+      //deletre cookie
+      Cookie.deleteCookie(LOGGED_IN_USER_DETAILS);
+      //assign firstName and Last Name
+      let updateUserDetails = JSON.parse(userDetails);
+      updateUserDetails.firstName = action.userDetails.firstName;
+      updateUserDetails.lastName = action.userDetails.lastName;
+      Cookies.createCookie(
+        LOGGED_IN_USER_DETAILS,
+        JSON.stringify(updateUserDetails)
+      );
       return Object.assign({}, state, {
         updateProfileStatus: action.status,
         userDetails: action.userDetails,
@@ -803,6 +815,12 @@ const account = (
       return Object.assign({}, state, {
         giftCardDetails: null,
         giftCardDetailsStatus: null
+      });
+    }
+    case accountActions.CLEAR_ACCOUNT_UPDATE_TYPE: {
+      return Object.assign({}, state, {
+        type: null,
+        status: null
       });
     }
 

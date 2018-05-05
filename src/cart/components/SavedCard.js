@@ -1,5 +1,5 @@
 import React from "react";
-import Icon from "../../xelpmoc-core/Icon";
+import Logo from "../../general/components/Logo";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import styles from "./SavedCard.css";
@@ -32,7 +32,7 @@ export default class SavedCard extends React.Component {
         <div className={styles.cardCvvHolder}>
           <div className={styles.cardsSection}>
             <div className={styles.cardIconHolder}>
-              <Icon image={this.props.cardImage} size={40} />
+              <Logo image={this.props.cardImage} height={40} />
             </div>
           </div>
           <div className={styles.cvvInput}>

@@ -10,7 +10,7 @@ const DUMMY_L2_CATEGORY_VALUE = "msh12";
 const DUMMY_BRAND_VALUE = "mbh1210";
 
 it("should work with category landing page", () => {
-  let pathName = `/electronics-mobile-phones/c-${ANOTHER_DUMMY_CATEGORY_VALUE}`;
+  let pathName = `/electronics-mobile-phones/c-${DUMMY_CATEGORY_VALUE.toUpperCase()}`;
   let searchValue = "";
   let endUrl = createUrlFromQueryAndCategory(
     searchValue,
@@ -18,10 +18,10 @@ it("should work with category landing page", () => {
     DUMMY_CATEGORY_VALUE.toUpperCase()
   );
   expect(endUrl).toEqual(
-    `/search/?q=:relevance:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}`
+    `/search/?q=:relevance:collectionIds:c-${DUMMY_CATEGORY_VALUE.toUpperCase()}`
   );
 
-  pathName = `/electronics-mobile-phones/c-${ANOTHER_DUMMY_CATEGORY_VALUE}`;
+  pathName = `/electronics-mobile-phones/c-${DUMMY_L1_CATEGORY_VALUE.toUpperCase()}`;
   searchValue = "";
   endUrl = createUrlFromQueryAndCategory(
     searchValue,
@@ -29,12 +29,12 @@ it("should work with category landing page", () => {
     DUMMY_L1_CATEGORY_VALUE.toUpperCase()
   );
   expect(endUrl).toEqual(
-    `/search/?q=:relevance:category:${DUMMY_L1_CATEGORY_VALUE.toUpperCase()}`
+    `/search/?q=:relevance:collectionIds:c-${DUMMY_L1_CATEGORY_VALUE.toUpperCase()}`
   );
 });
 
 it("should work with brand landing page", () => {
-  let pathName = `/electronics-mobile-phones/c-${DUMMY_BRAND_VALUE}`;
+  let pathName = `/electronics-mobile-phones/c-${DUMMY_BRAND_VALUE.toUpperCase()}`;
   let searchValue = "";
 
   let endUrl = createUrlFromQueryAndCategory(
@@ -44,10 +44,10 @@ it("should work with brand landing page", () => {
   );
 
   expect(endUrl).toEqual(
-    `/search/?q=:relevance:category:${DUMMY_CATEGORY_VALUE.toUpperCase()}:brand:${DUMMY_BRAND_VALUE.toUpperCase()}`
+    `/search/?q=:relevance:collectionIds:c-${DUMMY_BRAND_VALUE.toUpperCase()}`
   );
 
-  pathName = `/electronics-mobile-phones/c-${DUMMY_BRAND_VALUE}`;
+  pathName = `/electronics-mobile-phones/c-${DUMMY_BRAND_VALUE.toUpperCase()}`;
   searchValue = "";
 
   endUrl = createUrlFromQueryAndCategory(
@@ -57,7 +57,7 @@ it("should work with brand landing page", () => {
   );
 
   expect(endUrl).toEqual(
-    `/search/?q=:relevance:category:${DUMMY_L1_CATEGORY_VALUE.toUpperCase()}:brand:${DUMMY_BRAND_VALUE.toUpperCase()}`
+    `/search/?q=:relevance:collectionIds:c-${DUMMY_BRAND_VALUE.toUpperCase()}`
   );
 });
 

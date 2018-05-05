@@ -337,6 +337,8 @@ class CheckOutPage extends React.Component {
                   selected={this.state.ussIdAndDeliveryModesObj[val.USSID]}
                   productImage={val.imageURL}
                   hasFooter={false}
+                  size={val.size}
+                  color={val.color}
                   productDetails={val.productBrand}
                   productName={val.productName}
                   price={val.offerPrice}
@@ -549,20 +551,20 @@ class CheckOutPage extends React.Component {
           if (
             product.elligibleDeliveryMode &&
             product.elligibleDeliveryMode.findIndex(mode => {
-              return mode.code === HOME_DELIVERY;
-            }) >= 0
-          ) {
-            let newObjectAdd = {};
-            newObjectAdd[product.USSID] = HOME_DELIVERY;
-            Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
-          } else if (
-            product.elligibleDeliveryMode &&
-            product.elligibleDeliveryMode.findIndex(mode => {
               return mode.code === EXPRESS;
             }) >= 0
           ) {
             let newObjectAdd = {};
             newObjectAdd[product.USSID] = EXPRESS;
+            Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
+          } else if (
+            product.elligibleDeliveryMode &&
+            product.elligibleDeliveryMode.findIndex(mode => {
+              return mode.code === HOME_DELIVERY;
+            }) >= 0
+          ) {
+            let newObjectAdd = {};
+            newObjectAdd[product.USSID] = HOME_DELIVERY;
             Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
           }
         });
