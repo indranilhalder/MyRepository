@@ -451,6 +451,8 @@ const cart = (
 
     case cartActions.ORDER_SUMMARY_SUCCESS:
       carDetailsCopy = cloneDeep(state.cartDetailsCNC);
+      carDetailsCopy.cartAmount =
+        action.orderSummary && action.orderSummary.cartAmount;
       carDetailsCopy.deliveryCharge =
         action.orderSummary && action.orderSummary.deliveryCharge;
       return Object.assign({}, state, {
