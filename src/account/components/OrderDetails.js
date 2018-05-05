@@ -130,6 +130,9 @@ export default class OrderDetails extends React.Component {
   }
 
   navigateToLogin() {
+    const url = this.props.location.pathname;
+    this.props.setUrlToRedirectToAfterAuth(url);
+
     return <Redirect to={LOGIN_PATH} />;
   }
   componentWillReceiveProps(nextProps) {
