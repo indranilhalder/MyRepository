@@ -330,10 +330,15 @@ export default class NoCostEmiBankDetails extends React.Component {
               bankName={this.state.selectedBankName}
               term={this.state.selectedTenure}
               emiRate="No Cost"
-              price={`Rs. ${Math.round(
-                this.props.noCostEmiDetails.cartAmount.noCostEMIPerMonthPayable
-                  .value * 100
-              ) / 100}`}
+              price={
+                this.props.noCostEmiDetails.cartAmount &&
+                this.props.noCostEmiDetails.cartAmount
+                  .noCostEMIPerMonthPayable &&
+                `Rs. ${Math.round(
+                  this.props.noCostEmiDetails.cartAmount
+                    .noCostEMIPerMonthPayable.value * 100
+                ) / 100}`
+              }
               changePlan={() => this.changeNoCostEmiPlan()}
             />
             <CreditCardForm

@@ -9,7 +9,9 @@ import {
   LOGGED_IN_USER_DETAILS,
   SUCCESS,
   BANK_COUPON_COOKIE,
-  COUPON_COOKIE
+  COUPON_COOKIE,
+  NO_COST_EMI_COUPON,
+  CART_DETAILS_FOR_LOGGED_IN_USER
 } from "../../lib/constants.js";
 import ItemLevelPopup from "../../cart/components/ItemLevelPopup.js";
 import TermsAndConditionsModal from "../../cart/components/TermsAndConditionsModal.js";
@@ -332,6 +334,10 @@ export default class ModalRoot extends React.Component {
   continueWithoutBankCoupon = async () => {
     const bankCouponCode = localStorage.getItem(BANK_COUPON_COOKIE);
     const userCouponCode = localStorage.getItem(COUPON_COOKIE);
+    const noCostEmiCoupon = localStorage.getItem(NO_COST_EMI_COUPON);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
 
     if (this.props.ownProps && this.props.ownProps.couponCode) {
       if (this.props.ownProps.couponCode === bankCouponCode) {
@@ -352,14 +358,34 @@ export default class ModalRoot extends React.Component {
           this.props.ownProps.redoCreateJusPayApi();
           this.props.hideModal();
         }
+      } else if (this.props.ownProps.couponCode === noCostEmiCoupon) {
+        let carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
+        let cartId = JSON.parse(cartDetailsLoggedInUser).code;
+
+        const releaseCouponCode = await this.props.removeNoCostEmi(
+          noCostEmiCoupon,
+          carGuId,
+          cartId
+        );
+        if (releaseCouponCode.status === SUCCESS) {
+          localStorage.removeItem(NO_COST_EMI_COUPON);
+          this.props.ownProps.redoCreateJusPayApi();
+          this.props.hideModal();
+        }
       }
     } else {
+      let carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
+      let cartId = JSON.parse(cartDetailsLoggedInUser).code;
+
       Promise.all([
         bankCouponCode && this.props.releaseBankOffer(bankCouponCode),
-        userCouponCode && this.props.releaseUserCoupon(userCouponCode)
-      ]).then(() => {
+        userCouponCode && this.props.releaseUserCoupon(userCouponCode),
+        noCostEmiCoupon &&
+          this.props.removeNoCostEmi(noCostEmiCoupon, carGuId, cartId)
+      ]).then(res => {
         localStorage.removeItem(BANK_COUPON_COOKIE);
         localStorage.removeItem(COUPON_COOKIE);
+        localStorage.removeItem(NO_COST_EMI_COUPON);
         this.props.ownProps.redoCreateJusPayApi();
         this.props.hideModal();
       });
