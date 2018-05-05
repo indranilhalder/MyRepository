@@ -630,7 +630,6 @@ class CheckOutPage extends React.Component {
     // end if adding selected default delivery modes for every product
 
     if (nextProps.cart.cliqCashPaymentDetails) {
-      console.log(nextProps.cart.cliqCashPaymentDetails.otherDiscount.value);
       this.setState({
         isRemainingAmount:
           nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
