@@ -224,7 +224,8 @@ export default class PdpApparel extends React.Component {
               })}
             </ProductGalleryMobile>
             {(productData.allOOStock ||
-              productData.winningSellerAvailableStock === "0") && (
+              (productData.winningSellerAvailableStock === "0" &&
+                this.checkIfSizeSelected())) && (
               <div className={styles.flag}>Out of stock</div>
             )}
             {!productData.winningSellerPrice && (

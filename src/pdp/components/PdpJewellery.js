@@ -245,7 +245,8 @@ export default class PdpJewellery extends React.Component {
           outOfStock={
             productData.allOOStock ||
             !productData.winningSellerPrice ||
-            productData.winningSellerAvailableStock === "0"
+            (productData.winningSellerAvailableStock === "0" &&
+              this.checkIfSizeSelected())
           }
           ussId={productData.winningUssID}
         >
