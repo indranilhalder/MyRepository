@@ -47,7 +47,6 @@ export default class SelfCourier extends React.Component {
         initiateReturn.subReasonCode = this.props.data.subReasonCode;
         initiateReturn.comment = this.props.data.comment;
       }
-      console.log(initiateReturn);
       this.props.newReturnInitial(initiateReturn);
     }
   }
