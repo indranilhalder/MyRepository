@@ -44,7 +44,6 @@ export default class EditAccountDetails extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
     if (userDetails && customerCookie) {
       this.props.getUserDetails();
     } else {
@@ -57,23 +56,17 @@ export default class EditAccountDetails extends React.Component {
     if (nextProps.userDetails) {
       let formattedDate = "";
 
-      if (
-        nextProps.userDetails.dateOfBirth &&
-        nextProps.userDetails.dateOfBirth.indexOf("IST") > -1
-      ) {
+      if (nextProps.userDetails.dateOfBirth.indexOf("IST") > -1) {
         let dateOfBirth = new Date(
           nextProps.userDetails.dateOfBirth.split("IST").join()
         );
         formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
-      } else if (nextProps.userDetails.dateOfBirth) {
+      } else {
         formattedDate = nextProps.userDetails.dateOfBirth
           .split("/")
           .reverse()
           .join("-");
       }
-      let email = nextProps.userDetails.emailId
-        ? nextProps.userDetails.emailId
-        : nextProps.userDetails.emailID;
 
       this.setState({
         firstName: nextProps.userDetails.firstName,
@@ -81,7 +74,7 @@ export default class EditAccountDetails extends React.Component {
         dateOfBirth: formattedDate,
         gender: nextProps.userDetails.gender,
         mobileNumber: nextProps.userDetails.mobileNumber,
-        emailId: email
+        emailId: nextProps.userDetails.emailID
       });
     }
     if (nextProps.type === LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER) {
@@ -124,6 +117,7 @@ export default class EditAccountDetails extends React.Component {
   cancel = () => {
     this.props.history.goBack();
   };
+
   changePassword = passwordDetails => {
     this.setState({ changePassword: false });
     this.props.changePassword(passwordDetails);
@@ -159,7 +153,6 @@ export default class EditAccountDetails extends React.Component {
                 textStyle={{ fontSize: 14 }}
                 height={33}
                 onChange={firstName => this.onChange({ firstName })}
-                onlyAlphabet={true}
               />
             </div>
             <div className={styles.container}>
@@ -172,7 +165,6 @@ export default class EditAccountDetails extends React.Component {
                 textStyle={{ fontSize: 14 }}
                 height={33}
                 onChange={lastName => this.onChange({ lastName })}
-                onlyAlphabet={true}
               />
             </div>
             <div className={styles.container}>

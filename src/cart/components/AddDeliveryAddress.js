@@ -9,6 +9,7 @@ import informationIcon from "../../general/components/img/GPS.svg";
 import GridSelect from "../../general/components/GridSelect";
 import CheckboxAndText from "./CheckboxAndText";
 import TextArea from "../../general/components/TextArea.js";
+import cloneDeep from "lodash.clonedeep";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button";
 import { SUCCESS, ERROR } from "../../lib/constants.js";
@@ -17,6 +18,11 @@ import {
   EMAIL_REGULAR_EXPRESSION,
   MOBILE_PATTERN
 } from "../../auth/components/Login";
+
+export const SALUTATION_MR = "Mr. ";
+export const SALUTATION_MS = "Ms. ";
+export const SALUTATION_MSS = "Mss. ";
+
 const SAVE_TEXT = "Save Address";
 const PINCODE_TEXT = "Please enter pincode";
 const NAME_TEXT = "Please enter first name";
@@ -50,7 +56,7 @@ export default class AddDeliveryAddress extends React.Component {
       line2: "",
       line3: "",
       town: "",
-      salutaion: "",
+      salutation: "",
       defaultFlag: true,
       isOtherLandMarkSelected: false,
       selectedLandmarkLabel: "Landmark",
@@ -171,20 +177,6 @@ export default class AddDeliveryAddress extends React.Component {
       this.props.displayToast(ADDRESS_TEXT);
       return false;
     }
-    if (
-      !this.state.landmark &&
-      this.state.selectedLandmarkLabel === "Landmark"
-    ) {
-      this.props.displayToast(LANDMARK_TEXT);
-      return false;
-    }
-    if (
-      this.state.selectedLandmarkLabel === OTHER_LANDMARK &&
-      !this.state.line2
-    ) {
-      this.props.displayToast(LANDMARK_ENTER_TEXT);
-      return false;
-    }
     if (!this.state.emailId) {
       this.props.displayToast(EMAIL_TEXT);
       return false;
@@ -212,7 +204,15 @@ export default class AddDeliveryAddress extends React.Component {
       this.props.displayToast(PHONE_VALID_TEXT);
       return false;
     } else {
-      this.props.addUserAddress(this.state);
+      const addressObj = cloneDeep(this.state);
+      let firstName = addressObj.firstName;
+      let salutation = addressObj.salutation;
+      if (salutation) {
+        Object.assign(addressObj, {
+          firstName: `${salutation} ${firstName}`
+        });
+      }
+      this.props.addUserAddress(addressObj);
     }
   };
 
@@ -228,14 +228,14 @@ export default class AddDeliveryAddress extends React.Component {
       line1: " ",
       titleValue: "",
       addressType: "",
-      salutaion: "",
+      salutation: "",
       defaultFlag: false,
       landmarkList: [],
       emailId: ""
     });
   };
   onChangeSalutation(val) {
-    this.setState({ salutaion: val.value });
+    this.setState({ salutation: val.value });
   }
   render() {
     if (this.props.loading) {
@@ -256,15 +256,18 @@ export default class AddDeliveryAddress extends React.Component {
         label: "Office"
       }
     ];
-    const salutaion = [
+    const salutation = [
       {
-        label: "Mr."
+        label: SALUTATION_MR,
+        value: SALUTATION_MR
       },
       {
-        label: "Mrs."
+        label: SALUTATION_MS,
+        value: SALUTATION_MS
       },
       {
-        label: "Miss."
+        label: SALUTATION_MSS,
+        value: SALUTATION_MSS
       }
     ];
     return (
@@ -300,16 +303,14 @@ export default class AddDeliveryAddress extends React.Component {
           <div className={styles.salutation}>
             <SelectBoxMobile2
               height={33}
-              value={
-                this.state.salutaion ? this.state.salutaion : salutaion[0].label
-              }
-              options={salutaion.map((val, i) => {
+              placeholder="Mr/Ms"
+              options={salutation.map((val, i) => {
                 return {
                   value: val.label,
                   label: val.label
                 };
               })}
-              onChange={salutaion => this.onChangeSalutation(salutaion)}
+              onChange={salutation => this.onChangeSalutation(salutation)}
             />
           </div>
           <div className={styles.name}>
