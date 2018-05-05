@@ -26,11 +26,18 @@ export default class NoCostEmiBankDetails extends React.Component {
   selectOtherBank(val) {
     const selectedBankName = val.label;
     const selectedBankIndex = parseInt(val.value, 10) - 1;
-
+    console.log(val);
+    const selectedBankCodeObj = this.props.bankList.find(
+      bank => bank.bankName === val.label
+    );
+    let selectedBankCode;
+    if (selectedBankCodeObj) {
+      selectedBankCode = selectedBankCode.code;
+    }
     this.setState({
       selectedBankIndex: selectedBankIndex,
       selectedBankName: selectedBankName,
-      selectedBankCode: this.props.bankList[selectedBankIndex].code,
+      selectedBankCode,
       selectedFromDropDown: true,
       selectedMonth: null
     });
@@ -219,13 +226,6 @@ export default class NoCostEmiBankDetails extends React.Component {
         val => !filteredBankListWithLogo.includes(val)
       );
 
-    if (filteredBankListWithOutLogo && filteredBankListWithOutLogo.length > 0) {
-      filteredBankListWithOutLogo &&
-        filteredBankListWithOutLogo.unshift({
-          bankName: "Other Bank",
-          bankCode: "Other Bank"
-        });
-    }
     if (this.state.selectedFromDropDown) {
       modifiedBankList = filteredBankListWithOutLogo;
     } else {
@@ -271,17 +271,19 @@ export default class NoCostEmiBankDetails extends React.Component {
                   />
                 </div>
               )}
-            <div className={styles.itemLevelButtonHolder}>
-              <div className={styles.itemLevelButton}>
-                <UnderLinedButton
-                  size="14px"
-                  fontFamily="regular"
-                  color="#000"
-                  label="View T&C"
-                  onClick={() => this.termsAndCondition()}
-                />
+            {this.state.selectedBankCode && (
+              <div className={styles.itemLevelButtonHolder}>
+                <div className={styles.itemLevelButton}>
+                  <UnderLinedButton
+                    size="14px"
+                    fontFamily="regular"
+                    color="#000"
+                    label="View T&C"
+                    onClick={() => this.termsAndCondition()}
+                  />
+                </div>
               </div>
-            </div>
+            )}
             {this.state.selectedBankIndex !== null && (
               <div className={styles.emiDetailsPlan}>
                 <div className={styles.labelHeader}>
