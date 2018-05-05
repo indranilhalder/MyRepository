@@ -177,7 +177,11 @@ export default class PaymentCardWrapper extends React.Component {
                     ? 0
                     : this.props.cliqCashAmount
                 }
-                value={this.props.cliqCashAmount}
+                value={
+                  this.props.userCliqCashAmount
+                    ? this.props.userCliqCashAmount
+                    : 0
+                }
                 active={cliqCashToggleState}
                 onToggle={val => this.handleClick(val)}
                 isFromGiftCard={this.props.isFromGiftCard}

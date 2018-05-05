@@ -1800,9 +1800,11 @@ export function applyCliqCash() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON);
       dispatch(applyCliqCashSuccess(resultJson));
+      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON);
+
     } catch (e) {
+      console.log(e.message);
       dispatch(applyCliqCashFailure(e.message));
     }
   };
