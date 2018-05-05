@@ -41,7 +41,7 @@ export default class RestorePassword extends React.Component {
         <div className={styles.input}>
           <Input
             hollow={true}
-            placeholder="email id or mobile number"
+            placeholder="Email or phone number"
             onChange={val => this.setState({ userId: val })}
           />
         </div>
