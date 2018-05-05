@@ -1,5 +1,8 @@
 import { connect } from "react-redux";
-import { getAllOrdersDetails } from "../actions/account.actions";
+import {
+  getAllOrdersDetails,
+  clearOrderDetails
+} from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import AllOrderDetails from "../components/AllOrderDetails";
 import { setHeaderText } from "../../general/header.actions";
@@ -13,6 +16,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     paginate: suffix => {
       dispatch(getAllOrdersDetails(suffix, true)); //paginated is true
+    },
+    clearOrderDetails: () => {
+      dispatch(clearOrderDetails());
     }
   };
 };

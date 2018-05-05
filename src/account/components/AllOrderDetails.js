@@ -32,6 +32,7 @@ export default class AllOrderDetails extends React.Component {
     }
   }
   onViewDetails(orderId) {
+    this.props.clearOrderDetails();
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
   componentDidMount() {
@@ -52,14 +53,7 @@ export default class AllOrderDetails extends React.Component {
     }
   }
   componentWillUnmount() {
-    if (
-      this.props.profile.orderDetails &&
-      this.props.profile.orderDetails.currentPage
-    ) {
-      this.props.profile.orderDetails.currentPage = 0;
-      this.props.profile.orderDetails.orderData = [];
-    }
-    window.removeEventListener("scroll", this.throttledScroll);
+    this.props.clearOrderDetails();
   }
   renderToContinueShopping() {
     this.props.history.push(HOME_ROUTER);
@@ -119,6 +113,7 @@ export default class AllOrderDetails extends React.Component {
     return <Redirect to={LOGIN_PATH} />;
   }
   render() {
+    // console.log(this.props);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {

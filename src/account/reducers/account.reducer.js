@@ -823,6 +823,13 @@ const account = (
         status: null
       });
     }
+    case accountActions.Clear_ORDER_DATA: {
+      return Object.assign({}, state, {
+        type: null,
+        status: null,
+        orderDetails: null
+      });
+    }
 
     default:
       return state;
