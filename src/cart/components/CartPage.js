@@ -258,7 +258,12 @@ class CartPage extends React.Component {
   };
 
   changePinCode = () => {
-    this.setState({ changePinCode: true });
+    // show modal for address here
+    this.props.addressModal({
+      addressModalForCartPage: true,
+      checkPinCodeAvailability: pinCode =>
+        this.checkPinCodeAvailability(pinCode)
+    });
   };
 
   renderEmptyBag = () => {
