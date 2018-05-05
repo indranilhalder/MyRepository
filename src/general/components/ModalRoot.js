@@ -160,9 +160,17 @@ export default class ModalRoot extends React.Component {
   componentDidMount() {
     modalRoot.appendChild(this.el);
   }
+  componentWillMount() {
+    if (this.props.history) {
+      this.unlisten = this.props.history.listen((location, action) => {
+        this.handleClose();
+      });
+    }
+  }
 
   componentWillUnmount() {
     modalRoot.removeChild(this.el);
+    this.unlisten();
   }
 
   handleClose() {

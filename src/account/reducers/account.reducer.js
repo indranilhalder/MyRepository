@@ -817,6 +817,12 @@ const account = (
         giftCardDetailsStatus: null
       });
     }
+    case accountActions.CLEAR_ACCOUNT_UPDATE_TYPE: {
+      return Object.assign({}, state, {
+        type: null,
+        status: null
+      });
+    }
 
     default:
       return state;

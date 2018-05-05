@@ -47,6 +47,12 @@ export default class DeliveryInformations extends React.Component {
     if (!this.props.available) {
       typeName = `${typeName}`;
     }
+    let deliveryCharge = "Free";
+    if (this.props.deliveryCharge) {
+      if (parseInt(this.props.deliveryCharge, 10) !== 0) {
+        deliveryCharge = `₹${parseInt(this.props.deliveryCharge, 10)}`;
+      }
+    }
     return (
       <div className={styles.base}>
         <div
@@ -90,7 +96,10 @@ export default class DeliveryInformations extends React.Component {
                 <Icon image={arrowIcon} size={20} />
               </div>
             )}
-          <IconWithHeader image={iconImage} header={typeName}>
+          <IconWithHeader
+            image={iconImage}
+            header={`${typeName} (${deliveryCharge})`}
+          >
             {this.props.placedTime &&
               this.props.available && (
                 <div className={styles.placeTime}>{this.props.placedTime}</div>

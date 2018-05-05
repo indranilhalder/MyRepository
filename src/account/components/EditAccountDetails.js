@@ -57,16 +57,21 @@ export default class EditAccountDetails extends React.Component {
     if (nextProps.userDetails) {
       let formattedDate = "";
 
-      if (nextProps.userDetails.dateOfBirth) {
+      if (nextProps.userDetails.dateOfBirth.indexOf("IST") > -1) {
         let dateOfBirth = new Date(
           nextProps.userDetails.dateOfBirth.split("IST").join()
         );
-
         formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
+      } else {
+        formattedDate = nextProps.userDetails.dateOfBirth
+          .split("/")
+          .reverse()
+          .join("-");
       }
       let email = nextProps.userDetails.emailId
         ? nextProps.userDetails.emailId
         : nextProps.userDetails.emailID;
+
       this.setState({
         firstName: nextProps.userDetails.firstName,
         lastName: nextProps.userDetails.lastName,
@@ -77,6 +82,9 @@ export default class EditAccountDetails extends React.Component {
       });
     }
     if (nextProps.type === LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER) {
+      if (this.props.clearAccountUpdateType) {
+        this.props.clearAccountUpdateType();
+      }
       this.props.history.push(LOGIN_PATH);
     }
   }
@@ -87,8 +95,7 @@ export default class EditAccountDetails extends React.Component {
     this.setState(val);
   }
   onChangeDateOfBirth = val => {
-    let formattedDate = moment(val).format("MM/DD/YYYY");
-    this.setState({ dateOfBirth: formattedDate });
+    this.setState({ dateOfBirth: val });
   };
   updateProfile = () => {
     if (
@@ -176,29 +183,15 @@ export default class EditAccountDetails extends React.Component {
               />
             </div>
             <div className={styles.container}>
-              {userDetails &&
-              userDetails.mobileNumber &&
-              userDetails.mobileNumber.length === 10 ? (
-                <Input2
-                  placeholder="Mobile Number"
-                  value={this.state.mobileNumber}
-                  boxy={true}
-                  textStyle={{ fontSize: 14 }}
-                  height={33}
-                  onChange={mobileNumber => this.onChange({ mobileNumber })}
-                  disabled={true}
-                />
-              ) : (
-                <Input2
-                  placeholder="Mobile NUmber"
-                  value={this.state.mobileNumber}
-                  boxy={true}
-                  textStyle={{ fontSize: 14 }}
-                  height={33}
-                  onChange={mobileNumber => this.onChange({ mobileNumber })}
-                  disabled={false}
-                />
-              )}
+              <Input2
+                placeholder="Mobile NUmber"
+                value={this.state.mobileNumber}
+                boxy={true}
+                textStyle={{ fontSize: 14 }}
+                height={33}
+                onChange={mobileNumber => this.onChange({ mobileNumber })}
+                disabled={false}
+              />
             </div>
 
             <div className={styles.container}>

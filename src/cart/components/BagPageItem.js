@@ -46,6 +46,17 @@ export default class BagPageItem extends React.Component {
               {` ${RUPEE_SYMBOL}${this.props.price}`}
             </div>
           )}
+          {this.props.size &&
+            this.props.size !== "No Size" && (
+              <div className={styles.informationText}>
+                {`Size: ${this.props.size}`}
+              </div>
+            )}
+          {this.props.color && (
+            <div className={styles.informationText}>
+              {`Color: ${this.props.color}`}
+            </div>
+          )}
         </div>
         <div className={styles.productImage}>
           <ProductImage

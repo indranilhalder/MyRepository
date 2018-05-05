@@ -1,11 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./HollowHeader.css";
-import orderIcon from "./img/order-history.svg";
-import backArrow from "./img/arrowBackblack.svg";
-import downloadIcon from "./img/download.svg";
+import orderIcon from "./img/cart-with-bg.svg";
+import backArrow from "./img/back-with-bg.svg";
+import downloadIcon from "./img/save-with-bg.svg";
 import Icon from "../../xelpmoc-core/Icon";
 import companyLogo from "./img/companylogo.svg";
+import { HOME_ROUTER } from "../../lib/constants";
 export default class HollowHeader extends React.Component {
   backPage() {
     if (this.props.goBack) {
@@ -24,15 +25,22 @@ export default class HollowHeader extends React.Component {
       this.props.goToWishList();
     }
   };
-
+  redirectToHome() {
+    if (this.props.redirectToHome) {
+      this.props.redirectToHome();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
         <div className={styles.backArrowHolder} onClick={() => this.backPage()}>
-          <Icon image={backArrow} size={20} />
+          <Icon image={backArrow} size={30} />
         </div>
         {this.props.isShowCompanyLogo && (
-          <div className={styles.logoHolder}>
+          <div
+            className={styles.logoHolder}
+            onClick={() => this.redirectToHome()}
+          >
             <Icon image={companyLogo} size={35} />
           </div>
         )}
@@ -41,13 +49,13 @@ export default class HollowHeader extends React.Component {
             className={styles.orderIconHolder}
             onClick={() => this.goToCartPage()}
           >
-            <Icon image={orderIcon} size={20} />
+            <Icon image={orderIcon} size={30} />
           </div>
           <div
             className={styles.downloadIconHolder}
             onClick={() => this.goToWishList()}
           >
-            <Icon image={downloadIcon} size={20} />
+            <Icon image={downloadIcon} size={30} />
           </div>
         </div>
       </div>

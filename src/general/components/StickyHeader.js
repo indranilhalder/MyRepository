@@ -6,6 +6,7 @@ import backArrow from "./img/arrowBack.svg";
 import downloadIcon from "./img/downloadWhite.svg";
 import Icon from "../../xelpmoc-core/Icon";
 import companyLogo from "./img/group.svg";
+import { HOME_ROUTER } from "../../lib/constants";
 export default class StickyHeader extends React.Component {
   backPage() {
     if (this.props.goBack) {
@@ -24,7 +25,11 @@ export default class StickyHeader extends React.Component {
       this.props.goToWishList();
     }
   };
-
+  redirectToHome() {
+    if (this.props.redirectToHome) {
+      this.props.redirectToHome();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -33,7 +38,10 @@ export default class StickyHeader extends React.Component {
           <Icon image={backArrow} size={20} />
         </div>
         {this.props.isShowCompanyLogo && (
-          <div className={styles.logoHolder}>
+          <div
+            className={styles.logoHolder}
+            onClick={() => this.redirectToHome()}
+          >
             <Icon image={companyLogo} size={35} />
           </div>
         )}

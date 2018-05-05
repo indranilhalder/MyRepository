@@ -29,11 +29,12 @@ export default class BankCoupons extends React.Component {
           </div>
 
           <div className={styles.dataHolder}>
-            {this.props.offerCode && (
+            {this.props.offerMaxDiscount && (
               <div className={styles.amountExpireHolder}>
-                <div className={styles.dataHeader}>Valid till</div>
+                <div className={styles.dataHeader}>Max Discount</div>
                 <div className={styles.dataInformation}>
-                  {this.props.offerCode}
+                  Rs.
+                  {this.props.offerMaxDiscount}
                 </div>
               </div>
             )}
