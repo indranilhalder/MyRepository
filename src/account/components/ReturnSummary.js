@@ -105,8 +105,13 @@ export default class ReturnSummary extends React.Component {
             )}
           </OrderCard>
           <ReturnsToBank
-            cartNumber={this.props.orderDetails.paymentCardDigit}
-            cardLogo={this.getCardLogo(this.props.orderDetails.paymentCard)}
+            cartNumber={
+              this.props.orderDetails &&
+              this.props.orderDetails.paymentCardDigit
+            }
+            cardLogo={this.getCardLogo(
+              this.props.orderDetails && this.props.orderDetails.paymentCard
+            )}
           />
         </div>
       </ReturnsFrame>
