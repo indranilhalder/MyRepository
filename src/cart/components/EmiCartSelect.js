@@ -3,6 +3,7 @@ import CheckBox from "../../general/components/CheckBox";
 import Button from "../../general/components/Button";
 import EmiCard from "../../pdp/components/EmiCard";
 import styles from "./EmiCartSelect.css";
+import sortBy from "lodash.sortby";
 export default class EmiAccordian extends React.Component {
   handleClick() {
     if (this.props.selectItem) {
@@ -32,7 +33,12 @@ export default class EmiAccordian extends React.Component {
           <React.Fragment>
             <div className={styles.options}>
               <EmiCard
-                options={this.props.options}
+                options={
+                  this.props.options &&
+                  sortBy(this.props.options, bank => {
+                    return parseInt(bank.term, 10);
+                  })
+                }
                 onChange={val => this.handlePlanSelect(val)}
               />
             </div>

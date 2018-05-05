@@ -1330,19 +1330,32 @@ export function editAddress(addressDetails) {
     let addressObject = new FormData();
     addressObject.append("countryIso", addressDetails.countryIso);
     addressObject.append("addressType", addressDetails.addressType);
-    addressObject.append("phone", addressDetails.phone);
-    addressObject.append("firstName", addressDetails.firstName);
-    addressObject.append("lastName", addressDetails.lastName);
+    if (addressDetails.phone) {
+      addressObject.append("phone", addressDetails.phone);
+    }
+    if (addressDetails.firstName) {
+      addressObject.append("firstName", addressDetails.firstName);
+    }
+    if (addressDetails.lastName) {
+      addressObject.append("lastName", addressDetails.lastName);
+    }
     addressObject.append("postalCode", addressDetails.postalCode);
-    addressObject.append("line1", addressDetails.line1);
-    addressObject.append("line2", addressDetails.line2);
-    addressObject.append("line3", addressDetails.line3);
+    if (addressDetails.line1) {
+      addressObject.append("line1", addressDetails.line1);
+    }
+    if (addressDetails.line2) {
+      addressObject.append("line2", addressDetails.line2);
+    }
+    if (addressDetails.line3) {
+      addressObject.append("line3", addressDetails.line3);
+    }
     addressObject.append("state", addressDetails.state);
     addressObject.append("town", addressDetails.town);
     addressObject.append("defaultFlag", addressDetails.defaultFlag);
     addressObject.append("addressId", addressDetails.addressId);
-    addressObject.append("emailId", "");
-    addressObject.append("landmark", addressDetails.landmark);
+    if (addressDetails.landmark) {
+      addressObject.append("landmark", addressDetails.landmark);
+    }
     try {
       const result = await api.postFormData(
         `${USER_PATH}/${

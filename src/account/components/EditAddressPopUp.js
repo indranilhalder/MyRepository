@@ -1,9 +1,15 @@
 import React from "react";
+import cloneDeep from "lodash.clonedeep";
 import styles from "./EditAddressPopUp.css";
 import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import OrderReturn from "../../account/components/OrderReturn";
 import { SUCCESS, EDIT_YOUR_ADDRESS } from "../../lib/constants";
+import {
+  SALUTATION_MR,
+  SALUTATION_MS,
+  SALUTATION_MSS
+} from "../../cart/components/AddDeliveryAddress";
 const CANCEL_TEXT = "Cancel";
 const SAVE_CHANGES = "Save changes";
 let addressDetails;
@@ -15,7 +21,8 @@ export default class EditAddressPopUp extends React.Component {
       countryIso: addressDetails.country.isocode,
       addressType: addressDetails.addressType,
       phone: addressDetails.phone,
-      firstName: addressDetails.firstName,
+      salutation: this.getSalutationFromFirstName(addressDetails.firstName),
+      firstName: this.extractSalutationFromFirstName(addressDetails.firstName),
       lastName: addressDetails.lastName,
       postalCode: addressDetails.postalCode,
       line1: addressDetails.line1,
@@ -28,6 +35,7 @@ export default class EditAddressPopUp extends React.Component {
       state: addressDetails.state
     };
   }
+
   componentDidMount() {
     this.props.setHeaderText(EDIT_YOUR_ADDRESS);
   }
@@ -52,6 +60,28 @@ export default class EditAddressPopUp extends React.Component {
       this.props.history.goBack();
     }
   }
+  extractSalutationFromFirstName(name) {
+    if (name && name.includes(SALUTATION_MR)) {
+      return name.replace(SALUTATION_MR, "");
+    } else if (name && name.includes(SALUTATION_MS)) {
+      return name.replace(SALUTATION_MS, "");
+    } else if (name && name.includes(SALUTATION_MSS)) {
+      return name.replace(SALUTATION_MSS, "");
+    } else {
+      return name;
+    }
+  }
+  getSalutationFromFirstName(name) {
+    if (name && name.includes(SALUTATION_MR)) {
+      return SALUTATION_MR;
+    } else if (name && name.includes(SALUTATION_MS)) {
+      return SALUTATION_MS;
+    } else if (name && name.includes(SALUTATION_MSS)) {
+      return SALUTATION_MSS;
+    } else {
+      return "";
+    }
+  }
   onChange(val) {
     this.setState(val);
   }
@@ -65,8 +95,15 @@ export default class EditAddressPopUp extends React.Component {
   }
   editAddress(val) {
     if (this.props.editAddress) {
-      let addressDetails = this.state;
-      this.props.editAddress(addressDetails);
+      const addressObj = cloneDeep(this.state);
+      let firstName = addressObj.firstName;
+      let salutation = addressObj.salutation;
+      Object.assign(addressObj, {
+        firstName: `${salutation} ${firstName}`
+      });
+      delete addressObj.salutation;
+
+      this.props.editAddress(addressObj);
     }
   }
 
