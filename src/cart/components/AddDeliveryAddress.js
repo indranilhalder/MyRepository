@@ -290,13 +290,6 @@ export default class AddDeliveryAddress extends React.Component {
             }
             type={"number"}
             rightChildSize={33}
-            rightChild={
-              <CircleButton
-                size={33}
-                color={"transparent"}
-                icon={<Icon image={informationIcon} size={16} />}
-              />
-            }
           />
         </div>
         <div className={styles.content}>
