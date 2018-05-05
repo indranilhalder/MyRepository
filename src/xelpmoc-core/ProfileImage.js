@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "./Image";
 import PropTypes from "prop-types";
 import styles from "./ProfileImage.css";
 export const SIZE_1 = 1;
@@ -30,7 +29,14 @@ export default class ProfileImage extends React.Component {
       className = this.styles.size4;
     }
     const profile = this.props.image ? (
-      <Image fit="cover" color="#ebeced" image={this.props.image} />
+      <div
+        className={styles.image}
+        style={{
+          backgroundColor: "#ebeced",
+          backgroundImage: `url(${this.props.image})`,
+          backgroundSize: "cover"
+        }}
+      />
     ) : (
       <div className={this.styles.initials}>{initials}</div>
     );

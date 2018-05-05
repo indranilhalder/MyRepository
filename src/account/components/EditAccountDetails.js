@@ -57,12 +57,15 @@ export default class EditAccountDetails extends React.Component {
     if (nextProps.userDetails) {
       let formattedDate = "";
 
-      if (nextProps.userDetails.dateOfBirth.indexOf("IST") > -1) {
+      if (
+        nextProps.userDetails.dateOfBirth &&
+        nextProps.userDetails.dateOfBirth.indexOf("IST") > -1
+      ) {
         let dateOfBirth = new Date(
           nextProps.userDetails.dateOfBirth.split("IST").join()
         );
         formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
-      } else {
+      } else if (nextProps.userDetails.dateOfBirth) {
         formattedDate = nextProps.userDetails.dateOfBirth
           .split("/")
           .reverse()

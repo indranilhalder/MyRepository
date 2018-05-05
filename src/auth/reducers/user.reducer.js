@@ -300,6 +300,13 @@ const user = (
       userDetails.userName = action.user.customerInfo.emailId;
       userDetails.customerId = action.user.customerId;
       userDetails.loginType = action.loginType;
+      if (action.userDetailObj.firstName) {
+        userDetails.firstName = action.userDetailObj.firstName;
+      }
+      if (action.userDetailObj.lastName) {
+        userDetails.lastName = action.userDetailObj.lastName;
+      }
+      userDetails.imageUrl = action.userDetailObj.profileImage;
       Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(userDetails));
       return Object.assign({}, state, {
         status: action.status,
