@@ -66,6 +66,7 @@ export default class AwbForm extends React.Component {
             }
             onChange={courierCharge => this.setState({ courierCharge })}
             textStyle={{ fontSize: 14 }}
+            type={"number"}
             height={35}
           />
         </div>

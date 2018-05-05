@@ -1,7 +1,12 @@
 .mainHolder {
-	width: 100%;
-	height: 40px;
-	line-height: 40px;
-	text-align: center;
-	color: #212121;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: #212121;
+}
+
+.active {
+  composes: mainHolder;
+  color: #ff1744;
 }

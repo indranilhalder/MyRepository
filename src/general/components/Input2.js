@@ -31,7 +31,7 @@ export default class Input2 extends React.Component {
     });
   }
   handleKeyPress(event) {
-    if (this.props.onKeyUp) {
+    if (this.props.onKeyPress) {
       this.props.onKeyPress(event);
     }
     if (this.props.onlyAlphabet) {
