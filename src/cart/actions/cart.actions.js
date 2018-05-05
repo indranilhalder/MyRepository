@@ -2405,8 +2405,8 @@ export function createJusPayOrder(
         }&firstName=${address.firstName}&lastName=${
           address.lastName
         }&addressLine1=${address.line1}&addressLine2=${
-          address.line1
-        }&addressLine3=${address.line1}&country=${
+          address.line2
+        }&addressLine3=${address.line3}&country=${
           address.country.isocode
         }&city=${address.city}&state=${address.state}&pincode=${
           address.postalCode
