@@ -6,7 +6,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
-import { NO_COST_EMI } from "../../lib/constants";
+import { NO_COST_EMI, RUPEE_SYMBOL } from "../../lib/constants";
 
 export default class NoCostEmiBankDetails extends React.Component {
   constructor(props) {
@@ -334,7 +334,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                 this.props.noCostEmiDetails.cartAmount &&
                 this.props.noCostEmiDetails.cartAmount
                   .noCostEMIPerMonthPayable &&
-                `Rs. ${Math.round(
+                `${RUPEE_SYMBOL} ${Math.round(
                   this.props.noCostEmiDetails.cartAmount
                     .noCostEMIPerMonthPayable.value * 100
                 ) / 100}`
