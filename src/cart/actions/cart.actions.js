@@ -1231,6 +1231,7 @@ export function getOrderSummary(pincode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      dispatch(getPaymentModes(resultJson.cartGuid));
       dispatch(orderSumarySuccess(resultJson));
     } catch (e) {
       dispatch(orderSummaryFailure(e.message));
@@ -1799,8 +1800,9 @@ export function applyCliqCash() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON);
       dispatch(applyCliqCashSuccess(resultJson));
+      setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON);
+
     } catch (e) {
       dispatch(applyCliqCashFailure(e.message));
     }
@@ -2403,8 +2405,8 @@ export function createJusPayOrder(
         }&firstName=${address.firstName}&lastName=${
           address.lastName
         }&addressLine1=${address.line1}&addressLine2=${
-          address.line1
-        }&addressLine3=${address.line1}&country=${
+          address.line2
+        }&addressLine3=${address.line3}&country=${
           address.country.isocode
         }&city=${address.city}&state=${address.state}&pincode=${
           address.postalCode

@@ -50,11 +50,7 @@ export default class SelfCourier extends React.Component {
       this.props.newReturnInitial(initiateReturn);
     }
   }
-  downloadForm() {
-    if (this.props.downloadForm) {
-      this.props.downloadForm();
-    }
-  }
+
   navigateToReturnLanding() {
     return (
       <Redirect
@@ -88,7 +84,10 @@ export default class SelfCourier extends React.Component {
             Re-download the form again from below"
             underlineButtonLabel="Download form"
             underlineButtonColour="#ff1744"
-            downloadForm={() => this.downloadForm()}
+            selfCourierDocumentLink={
+              this.props.returnRequest &&
+              this.props.returnRequest.selfCourierDocumentLink
+            }
           />
         </div>
         <div className={styles.card}>
