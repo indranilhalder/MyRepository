@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { RUPEE_SYMBOL } from "../../lib/constants";
 export default class OrderViewPaymentDetails extends React.Component {
   render() {
+    console.log(this.props.coupon);
     return (
       <div className={styles.base}>
         <div className={styles.subTotalsHolder}>
@@ -24,19 +25,17 @@ export default class OrderViewPaymentDetails extends React.Component {
         </div>
         <div className={styles.discountDataHolder}>
           <div className={styles.labelText}>Discount</div>
-          {this.props.Discount && (
-            <div className={styles.infoText}>
-              {`-${RUPEE_SYMBOL} ${this.props.Discount}`}
-            </div>
-          )}
+          <div className={styles.infoText}>
+            {`-${RUPEE_SYMBOL} ${
+              this.props.Discount ? this.props.Discount : 0
+            }`}
+          </div>
         </div>
         <div className={styles.discountDataHolder}>
           <div className={styles.labelText}>Coupon</div>
-          {this.props.coupon && (
-            <div className={styles.infoText}>{`-${RUPEE_SYMBOL} ${
-              this.props.coupon
-            }`}</div>
-          )}
+          <div className={styles.infoText}>{`-${RUPEE_SYMBOL} ${
+            this.props.coupon ? this.props.coupon : 0
+          }`}</div>
         </div>
         <div className={styles.chargeHolder}>
           <div className={styles.labelText}>Convenience Charges</div>
