@@ -354,7 +354,6 @@ const productDescription = (
     case pdpActions.GET_PDP_ITEMS_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
-        error: action.error,
         loading: false
       });
     case pdpActions.PDP_ABOUT_BRAND_SUCCESS:
