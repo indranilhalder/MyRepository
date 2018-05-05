@@ -113,7 +113,6 @@ export default class AllOrderDetails extends React.Component {
     return <Redirect to={LOGIN_PATH} />;
   }
   render() {
-    // console.log(this.props);
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!userDetails || !customerCookie) {
