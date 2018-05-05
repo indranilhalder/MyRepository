@@ -55,6 +55,7 @@ export default class Sort extends React.Component {
     this.props.onCloseSort();
   };
   render() {
+    console.log(this.props);
     let data = this.props.sortList;
     return (
       <div className={styles.base}>
@@ -68,6 +69,7 @@ export default class Sort extends React.Component {
               <SortTab
                 label={datum.name}
                 value={datum.code}
+                selected={datum.selected}
                 key={i}
                 onClick={() => {
                   this.onClick(datum.code);
