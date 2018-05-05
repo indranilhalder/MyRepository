@@ -30,19 +30,24 @@ export default class Input2 extends React.Component {
       }
     });
   }
-  handleOnlyAlphabet(evt) {
+  handleKeyPress(event) {
+    if (this.props.onKeyUp) {
+      this.props.onKeyPress(event);
+    }
     if (this.props.onlyAlphabet) {
       var regex = new RegExp("^[a-zA-Z]+$");
-      var charCode = evt.which ? evt.which : evt.keyCode;
+      var charCode = event.which ? event.which : event.keyCode;
       if (
         (charCode > 64 && charCode < 91) ||
         (charCode > 96 && charCode < 123)
       ) {
         return true;
       }
-      var key = String.fromCharCode(!evt.charCode ? evt.which : evt.charCode);
+      var key = String.fromCharCode(
+        !event.charCode ? event.which : event.charCode
+      );
       if (!regex.test(key)) {
-        evt.preventDefault();
+        event.preventDefault();
       } else {
         return false;
       }
@@ -87,7 +92,7 @@ export default class Input2 extends React.Component {
               value={this.props.value}
               maxLength={this.props.maxLength}
               disabled={this.props.disabled}
-              onKeyPress={event => this.handleOnlyAlphabet(event)}
+              onKeyPress={event => this.handleKeyPress(event)}
             />
           </div>
           {this.props.leftChild && (
