@@ -1804,7 +1804,6 @@ export function applyCliqCash() {
       setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON);
 
     } catch (e) {
-      console.log(e.message);
       dispatch(applyCliqCashFailure(e.message));
     }
   };
