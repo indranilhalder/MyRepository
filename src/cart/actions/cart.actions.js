@@ -1802,7 +1802,6 @@ export function applyCliqCash() {
       }
       dispatch(applyCliqCashSuccess(resultJson));
       setDataLayerForCheckoutDirectCalls(ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_ON);
-
     } catch (e) {
       dispatch(applyCliqCashFailure(e.message));
     }
@@ -2428,7 +2427,9 @@ export function createJusPayOrder(
                 cartItem,
                 address,
                 cardDetails,
-                paymentMode
+                paymentMode,
+                false,
+                bankName
               )
             );
           dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
@@ -4007,9 +4008,9 @@ export function removeNoCostEmi(couponCode, cartGuId, cartId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(removeNoCostEmiSuccess(resultJson, couponCode));
+      return dispatch(removeNoCostEmiSuccess(resultJson, couponCode));
     } catch (e) {
-      dispatch(removeNoCostEmiFailure(e.message));
+      return dispatch(removeNoCostEmiFailure(e.message));
     }
   };
 }
