@@ -265,7 +265,7 @@ export default class ReturnAddressList extends React.Component {
     returnCliqAndPiqObject.comment = this.props.data.comment;
     returnCliqAndPiqObject.addressType = this.state.selectedAddress.addressType;
     returnCliqAndPiqObject.firstName = this.state.selectedAddress.firstName;
-    returnCliqAndPiqObject.lastNaxme = this.state.selectedAddress.lastName;
+    returnCliqAndPiqObject.lastName = this.state.selectedAddress.lastName;
     returnCliqAndPiqObject.addrLine1 = this.state.selectedAddress.line1;
     returnCliqAndPiqObject.addrLine2 = "";
     returnCliqAndPiqObject.addrLine3 = "";
