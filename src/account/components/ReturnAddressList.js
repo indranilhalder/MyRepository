@@ -10,6 +10,7 @@ import AddDeliveryAddress from "../../cart/components/AddDeliveryAddress.js";
 import * as Cookie from "../../lib/Cookie.js";
 import ReturnSummary from "./ReturnSummary.js";
 import Error from "../../general/components/Error.js";
+
 import {
   RETURN_CLIQ_PIQ,
   RETURN_CLIQ_PIQ_DATE,
@@ -47,6 +48,7 @@ export default class ReturnAddressList extends React.Component {
       error: false
     };
   }
+
   getPinCodeDetails = pinCode => {
     if (this.props.getPinCode) {
       this.props.getPinCode(pinCode);

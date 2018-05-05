@@ -46,7 +46,6 @@ export default class ReturnToStore extends React.Component {
   getLocation() {
     if (this.state.pincode && this.state.pincode.length === 6) {
       const ussId = this.props.returnProductDetails.orderProductWsDTO[0].USSID;
-
       this.props.quickDropStore(this.state.pincode, ussId);
     }
   }
@@ -102,7 +101,7 @@ export default class ReturnToStore extends React.Component {
 
   quickDropStore = pincode => {
     this.setState({ pincode });
-    if (pincode.length === 6 && this.props.getReturnRequest) {
+    if (pincode.length === 6) {
       this.props.quickDropStore(
         pincode,
         this.props.returnProductDetails.orderProductWsDTO[0].USSID
@@ -141,7 +140,7 @@ export default class ReturnToStore extends React.Component {
         numberOfStores={noOfStories}
         pincode={this.state.pincode}
         addStoreCNC={storeId => this.selectStore(storeId)}
-        changePincode={pincode => this.getReturnRequest(pincode)}
+        changePincode={pincode => this.quickDropStore(pincode)}
         getLocation={() => this.getLocation()}
       />
     );
