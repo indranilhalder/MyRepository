@@ -135,7 +135,9 @@ export default class PdpJewellery extends React.Component {
   };
 
   goToReviewPage = () => {
-    const url = `${this.props.location.pathname}${PRODUCT_REVIEWS_PATH_SUFFIX}`;
+    const url = `${
+      this.props.location.pathname
+    }/${PRODUCT_REVIEWS_PATH_SUFFIX}`;
     this.props.history.push(url);
   };
   showPincodeModal() {

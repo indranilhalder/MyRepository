@@ -54,10 +54,7 @@ export function createUrlFromQueryAndCategory(query, pathName, val) {
       if (hasCategory && !hasBrand) {
         // we have an existing category
         // we want to replace this category
-        console.log("CORRECT IF");
         const test = query.replace(CATEGORY_URL_CAPTURE_REGEX, `$1${val}$3`);
-        console.log(RegExp.$1); // "John"
-        console.log(RegExp.$3);
 
         url = `/search/?q=${test}`;
       } else if (hasBrand && !hasCategory) {
@@ -101,6 +98,12 @@ export function createUrlFromQueryAndCategory(query, pathName, val) {
       brandId = brandId.replace(BRAND_CATEGORY_PREFIX, "");
       url = `/search/?q=:category:${val}:brand:${brandId.toUpperCase()}`;
     }
+
+    //now it is a url that looks like a static page?
+    // If i hit this am I in a custom sku page?
+    const splitUrl = pathName.split("/");
+    const slug = splitUrl[splitUrl.length - 1];
+    url = `/search/?q=:relevance:collectionIds:${slug}`;
   }
 
   /*

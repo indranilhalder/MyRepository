@@ -32,6 +32,11 @@ class Input extends React.Component {
     }
     this.setState({ focused: false });
   }
+  handleKeyUp(event) {
+    if (this.props.onKeyUp) {
+      this.props.onKeyUp(event);
+    }
+  }
   render() {
     var { leftChild, rightChild, placeholder, type, ...other } = this.props;
     let className = this.styles.base;
@@ -55,6 +60,7 @@ class Input extends React.Component {
           className={styles.box}
           onChange={event => this.handleChange(event)}
           onFocus={event => this.handleFocus(event)}
+          onKeyUp={event => this.handleKeyUp(event)}
           onBlur={event => this.handleBlur(event)}
           placeholder={placeholder}
         />

@@ -2,7 +2,8 @@ import { connect } from "react-redux";
 import {
   getUserDetails,
   updateProfile,
-  changePassword
+  changePassword,
+  clearAccountUpdateType
 } from "../actions/account.actions";
 import { setHeaderText } from "../../general/header.actions";
 import { withRouter } from "react-router-dom";
@@ -29,6 +30,9 @@ const mapDispatchToProps = dispatch => {
       if (response && response.status === SUCCESS) {
         dispatch(displayToast(UPDATE_PASSWORD));
       }
+    },
+    clearAccountUpdateType: () => {
+      dispatch(clearAccountUpdateType());
     },
     setHeaderText: text => {
       dispatch(setHeaderText(text));

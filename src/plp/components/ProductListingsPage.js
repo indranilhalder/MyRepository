@@ -73,7 +73,7 @@ class ProductListingsPage extends Component {
 
     if (this.props.match.path === SKU_PAGE) {
       const skuId = this.props.match.params.slug;
-      const searchText = `:relevance:collectionIds:${skuId}`;
+      let searchText = `:relevance:collectionIds:${skuId}`;
       this.props.getProductListings(searchText, SKU_SUFFIX, 0);
       return;
     }
