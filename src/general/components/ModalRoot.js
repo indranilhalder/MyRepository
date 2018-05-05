@@ -368,7 +368,6 @@ export default class ModalRoot extends React.Component {
           cartId
         );
         if (releaseCouponCode.status === SUCCESS) {
-          localStorage.removeItem(NO_COST_EMI_COUPON);
           this.props.ownProps.redoCreateJusPayApi();
           this.props.hideModal();
         }
@@ -385,7 +384,6 @@ export default class ModalRoot extends React.Component {
       ]).then(res => {
         localStorage.removeItem(BANK_COUPON_COOKIE);
         localStorage.removeItem(COUPON_COOKIE);
-        localStorage.removeItem(NO_COST_EMI_COUPON);
         this.props.ownProps.redoCreateJusPayApi();
         this.props.hideModal();
       });
