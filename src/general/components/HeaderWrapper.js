@@ -145,6 +145,8 @@ class HeaderWrapper extends React.Component {
       )
     ) {
       shouldRenderSearch = false;
+      isGoBack = false;
+      isCross = true;
     }
     if (
       url === HOME_ROUTER ||
