@@ -1551,9 +1551,7 @@ class CheckOutPage extends React.Component {
           return false;
         }
       } else if (this.state.currentPaymentMode === EMI) {
-        debugger;
         if (this.state.isNoCostEmiApplied || this.state.cardDetails.emi_bank) {
-          debugger;
           return false;
         } else {
           return true;
