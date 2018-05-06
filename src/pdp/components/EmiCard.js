@@ -16,6 +16,7 @@ export default class EmiCard extends React.Component {
       interestRate: this.props.options ? this.props.options[0].interestRate : ""
     };
   }
+
   handleChange(val) {
     const updatedValue = this.props.options.filter(option => {
       return option.term === val;

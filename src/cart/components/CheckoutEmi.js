@@ -29,6 +29,7 @@ export default class CheckoutEmi extends React.Component {
         {this.props.cart.emiBankDetails &&
           this.props.cart.emiBankDetails.bankList && (
             <EmiAccordion
+              selectedEMIType={this.props.selectedEMIType}
               emiList={this.props.cart.emiBankDetails.bankList}
               cardDetails={this.props.cardDetails}
               onChangeCvv={i => this.onChangeCvv(i)}
