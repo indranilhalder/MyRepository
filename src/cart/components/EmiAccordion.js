@@ -4,6 +4,7 @@ import EmiCartSelect from "./EmiCartSelect";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
 import PropTypes from "prop-types";
+import { STANDARD_EMI } from "../../lib/constants";
 const PAYMENT_MODE = "EMI";
 
 const IS_EMI = "1";
@@ -18,6 +19,18 @@ export default class EmiAccordion extends React.Component {
       selectedPrice: ""
     };
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedEMIType !== STANDARD_EMI) {
+      this.setState({
+        planSelected: false,
+        selectedEmi: "",
+        selectedBank: "",
+        selectedEmiRate: "",
+        selectedPrice: ""
+      });
+    }
+  }
+
   handleSelectPlan(val) {
     if (val) {
       this.setState({

@@ -6,7 +6,7 @@ import eWalletIcon from "./img/netBanking.svg";
 import NoCostEmi from "./NoCostEmi.js";
 import CheckoutEmi from "./CheckoutEmi.js";
 import NoCostEmiBankDetails from "./NoCostEmiBankDetails.js";
-import { EMI, NO_COST_EMI, STANDARD_DELIVERY } from "../../lib/constants";
+import { EMI, NO_COST_EMI, STANDARD_EMI } from "../../lib/constants";
 const PAYMENT_MODE = "EMI";
 export default class EmiPanel extends React.Component {
   constructor(props) {
@@ -88,6 +88,10 @@ export default class EmiPanel extends React.Component {
       this.setState({ currentSelectedEMIType: null });
     }
   }
+  onChangeEMIType(currentSelectedEMIType) {
+    this.props.changeSubEmiOption(currentSelectedEMIType);
+    this.setState({ currentSelectedEMIType });
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -109,7 +113,7 @@ export default class EmiPanel extends React.Component {
                     this.state.currentSelectedEMIType === NO_COST_EMI
                   }
                   onChangeEMIType={currentSelectedEMIType =>
-                    this.setState({ currentSelectedEMIType })
+                    this.onChangeEMIType(currentSelectedEMIType)
                   }
                   getBankAndTenureDetails={() => this.getBankAndTenureDetails()}
                   onChangeCardDetail={val => this.onChangeCardDetail(val)}
@@ -155,12 +159,10 @@ export default class EmiPanel extends React.Component {
             )}
           <div className={styles.subListHolder}>
             <NoCostEmi
-              isOpenSubEMI={
-                this.state.currentSelectedEMIType === STANDARD_DELIVERY
-              }
-              EMIText={STANDARD_DELIVERY}
+              isOpenSubEMI={this.state.currentSelectedEMIType === STANDARD_EMI}
+              EMIText={STANDARD_EMI}
               onChangeEMIType={currentSelectedEMIType =>
-                this.setState({ currentSelectedEMIType })
+                this.onChangeEMIType(currentSelectedEMIType)
               }
               getEmiBankDetails={() => this.getEmiBankDetails()}
               emiList={
@@ -169,7 +171,10 @@ export default class EmiPanel extends React.Component {
               }
               onChangeCardDetail={val => this.onChangeCardDetail(val)}
             >
-              <CheckoutEmi {...this.props} />
+              <CheckoutEmi
+                {...this.props}
+                selectedEMIType={this.state.currentSelectedEMIType}
+              />
             </NoCostEmi>
           </div>
         </MenuDetails>

@@ -32,10 +32,11 @@ export default class Checkout extends React.Component {
           <div className={styles.totalPriceButtonHolder}>
             <div className={styles.checkoutButtonHolder}>
               <Button
+                disabled={this.props.disabled}
                 type="primary"
                 backgroundColor="#ff1744"
                 height={40}
-                label="Checkout"
+                label={this.props.label}
                 width={120}
                 textStyle={{ color: "#FFF", fontSize: 14 }}
                 onClick={() => this.handleClick()}
@@ -122,6 +123,7 @@ export default class Checkout extends React.Component {
           <div className={styles.totalPriceButtonHolder}>
             <div className={styles.checkoutButtonHolder}>
               <Button
+                disabled={this.props.disabled}
                 type="primary"
                 backgroundColor="#ff1744"
                 height={40}
@@ -241,8 +243,10 @@ Checkout.propTypes = {
   onCheckout: PropTypes.func,
   offers: PropTypes.string,
   payable: PropTypes.string,
-  label: PropTypes.string
+  label: PropTypes.string,
+  disabled: PropTypes.bool
 };
 Checkout.defaultProps = {
-  label: "Continue"
+  label: "Continue",
+  disabled: false
 };
