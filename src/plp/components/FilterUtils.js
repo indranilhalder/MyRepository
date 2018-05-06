@@ -91,19 +91,17 @@ export function createUrlFromQueryAndCategory(query, pathName, val) {
   } else {
     if (CATEGORY_REGEX.test(pathName)) {
       url = `/search/?q=:category:${val}`;
-    }
-
-    if (BRAND_REGEX.test(pathName)) {
+    } else if (BRAND_REGEX.test(pathName)) {
       let brandId = BRAND_CAPTURE_REGEX.exec(pathName)[0];
       brandId = brandId.replace(BRAND_CATEGORY_PREFIX, "");
       url = `/search/?q=:category:${val}:brand:${brandId.toUpperCase()}`;
+    } else {
+      //now it is a url that looks like a static page?
+      // If i hit this am I in a custom sku page?
+      const splitUrl = pathName.split("/");
+      const slug = splitUrl[splitUrl.length - 1];
+      url = `/search/?q=:relevance:collectionIds:${slug}`;
     }
-
-    //now it is a url that looks like a static page?
-    // If i hit this am I in a custom sku page?
-    const splitUrl = pathName.split("/");
-    const slug = splitUrl[splitUrl.length - 1];
-    url = `/search/?q=:relevance:collectionIds:${slug}`;
   }
 
   /*
