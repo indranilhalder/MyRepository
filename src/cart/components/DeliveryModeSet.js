@@ -27,9 +27,10 @@ export default class DeliveryModeSet extends React.Component {
               data.elligibleDeliveryMode.find(mode => {
                 return mode.code === selectedDeliveryModes;
               });
-            let expectedDeliveryDate = deliveryOption.desc
-              ? `:${deliveryOption.desc}`
-              : "";
+            let expectedDeliveryDate =
+              deliveryOption && deliveryOption.desc
+                ? `:${deliveryOption.desc}`
+                : "";
             return (
               <div className={styles.base} key={i}>
                 <div className={styles.productName}>{data.productName}</div>
