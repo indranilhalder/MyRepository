@@ -114,9 +114,10 @@ export function getProductListings(
     try {
       const searchState = getState().search;
       const pageNumber = getState().productListings.pageNumber;
-      let queryString = `${PRODUCT_LISTINGS_PATH}/?searchText=${
-        searchState.string
-      }`;
+      const encodedString = searchState.string.includes("%3A")
+        ? searchState.string
+        : encodeURI(searchState.string);
+      let queryString = `${PRODUCT_LISTINGS_PATH}/?searchText=${encodedString}`;
 
       if (suffix) {
         queryString = `${queryString}${suffix}`;

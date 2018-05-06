@@ -47,10 +47,12 @@ export default class DeliveryInformations extends React.Component {
     if (!this.props.available) {
       typeName = `${typeName}`;
     }
-    let deliveryCharge = "Free";
+    let deliveryCharge = "";
     if (this.props.deliveryCharge) {
-      if (parseInt(this.props.deliveryCharge, 10) !== 0) {
-        deliveryCharge = `₹${parseInt(this.props.deliveryCharge, 10)}`;
+      if (this.props.showDeliveryCharge) {
+        deliveryCharge = "(Free)";
+      } else if (parseInt(this.props.deliveryCharge, 10) !== 0) {
+        deliveryCharge = `(₹${parseInt(this.props.deliveryCharge, 10)})`;
       }
     }
     return (
@@ -98,7 +100,7 @@ export default class DeliveryInformations extends React.Component {
             )}
           <IconWithHeader
             image={iconImage}
-            header={`${typeName} (${deliveryCharge})`}
+            header={`${typeName} ${deliveryCharge}`}
           >
             {this.props.placedTime &&
               this.props.available && (
@@ -141,9 +143,11 @@ DeliveryInformations.propTypes = {
   arrowClick: PropTypes.func,
   onPiq: PropTypes.func,
   showCliqAndPiqButton: PropTypes.bool,
-  available: PropTypes.bool
+  available: PropTypes.bool,
+  showDeliveryCharge: PropTypes.bool
 };
 
 DeliveryInformations.propTypes = {
-  showCliqAndPiqButton: true
+  showCliqAndPiqButton: true,
+  showDeliveryCharge: false
 };
