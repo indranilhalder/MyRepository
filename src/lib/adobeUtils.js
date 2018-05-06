@@ -406,6 +406,7 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
     }
     window.digitalData = currentDigitalData;
   }
+
   // we don't have to trigger virtual page load on first time .
   // thats why we are checking page previous digital data
   if (previousDigitalData) {
@@ -474,6 +475,7 @@ function getDigitalDataForPdp(type, pdpResponse) {
   if (
     window.digitalData &&
     window.digitalData.page &&
+    window.digitalData.page.pageInfo &&
     window.digitalData.page.pageInfo.pageName
   ) {
     Object.assign(data.cpj, {

@@ -165,31 +165,36 @@ export default class PaymentCardWrapper extends React.Component {
     );
   };
 
+  componentWillUnmount() {
+    cliqCashToggleState = false;
+  }
+
   render() {
     if (this.props.cart.paymentModes) {
       return (
         <div className={styles.base}>
-          {!this.props.isFromGiftCard && (
-            <div>
-              <CliqCashToggle
-                cashText="Use My CLiQ Cash Balance"
-                price={
-                  isNaN(this.props.cliqCashAmount)
-                    ? 0
-                    : this.props.cliqCashAmount
-                }
-                value={
-                  this.props.userCliqCashAmount
-                    ? this.props.userCliqCashAmount
-                    : 0
-                }
-                active={cliqCashToggleState}
-                onToggle={val => this.handleClick(val)}
-                isFromGiftCard={this.props.isFromGiftCard}
-                addGiftCard={() => this.addGiftCard()}
-              />
-            </div>
-          )}
+          {!this.props.isFromGiftCard &&
+            !this.props.isPaymentFailed && (
+              <div>
+                <CliqCashToggle
+                  cashText="Use My CLiQ Cash Balance"
+                  price={
+                    isNaN(this.props.cliqCashAmount)
+                      ? 0
+                      : this.props.cliqCashAmount
+                  }
+                  value={
+                    this.props.userCliqCashAmount
+                      ? this.props.userCliqCashAmount
+                      : 0
+                  }
+                  active={cliqCashToggleState}
+                  onToggle={val => this.handleClick(val)}
+                  isFromGiftCard={this.props.isFromGiftCard}
+                  addGiftCard={() => this.addGiftCard()}
+                />
+              </div>
+            )}
           {!this.props.isFromGiftCard &&
             !this.props.isPaymentFailed &&
             this.renderBankOffers()}

@@ -613,37 +613,51 @@ class CheckOutPage extends React.Component {
       nextProps.cart.paymentFailureOrderDetails.cartAmount
     ) {
       this.setState({
-        payableAmount:
-          Math.round(
-            nextProps.cart.paymentFailureOrderDetails.cartAmount.paybleAmount
-              .value * 100
-          ) / 100,
-        cliqCashAmount:
-          Math.round(
-            nextProps.cart.paymentFailureOrderDetails.cliqCashBalance.value *
-              100
-          ) / 100,
-        bagAmount:
-          Math.round(
-            nextProps.cart.paymentFailureOrderDetails.cartAmount.bagTotal
-              .value * 100
-          ) / 100,
-        deliveryCharge:
-          Math.round(
-            nextProps.cart.paymentFailureOrderDetails.deliveryCharges.value *
-              100
-          ) / 100,
-        couponDiscount: nextProps.cart.paymentFailureOrderDetails.couponDiscount
+        payableAmount: nextProps.cart.paymentFailureOrderDetails.cartAmount
+          .paybleAmount.value
           ? Math.round(
-              nextProps.cart.paymentFailureOrderDetails.couponDiscount.value *
+              nextProps.cart.paymentFailureOrderDetails.cartAmount.paybleAmount
+                .value * 100
+            ) / 100
+          : "0.00",
+        cliqCashAmount: nextProps.cart.paymentFailureOrderDetails
+          .cliqCashBalance.value
+          ? Math.round(
+              nextProps.cart.paymentFailureOrderDetails.cliqCashBalance.value *
                 100
             ) / 100
-          : 0,
-        totalDiscount:
-          Math.round(
-            nextProps.cart.paymentFailureOrderDetails.cartAmount
-              .totalDiscountAmount.value * 100
-          ) / 100,
+          : "0.00",
+        bagAmount: nextProps.cart.paymentFailureOrderDetails.cartAmount.bagTotal
+          .value
+          ? Math.round(
+              nextProps.cart.paymentFailureOrderDetails.cartAmount.bagTotal
+                .value * 100
+            ) / 100
+          : "0.00",
+        deliveryCharge: nextProps.cart.paymentFailureOrderDetails
+          .deliveryCharges.value
+          ? Math.round(
+              nextProps.cart.paymentFailureOrderDetails.deliveryCharges.value *
+                100
+            ) / 100
+          : "0.00",
+        couponDiscount:
+          nextProps.cart.paymentFailureOrderDetails.cartAmount
+            .couponDiscountAmount &&
+          nextProps.cart.paymentFailureOrderDetails.cartAmount
+            .couponDiscountAmount.value
+            ? Math.round(
+                nextProps.cart.paymentFailureOrderDetails.cartAmount
+                  .couponDiscountAmount.value * 100
+              ) / 100
+            : "0.00",
+        totalDiscount: nextProps.cart.paymentFailureOrderDetails.cartAmount
+          .totalDiscountAmount.value
+          ? Math.round(
+              nextProps.cart.paymentFailureOrderDetails.cartAmount
+                .totalDiscountAmount.value * 100
+            ) / 100
+          : "0.00",
         isRemainingAmount:
           nextProps.cart.paymentFailureOrderDetails.isRemainingAmount
       });
@@ -657,7 +671,12 @@ class CheckOutPage extends React.Component {
           nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
         payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount,
         cliqCashAmount:
-          nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value,
+          nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value > 0
+            ? Math.round(
+                nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value *
+                  100
+              ) / 100
+            : "0.00",
         bagAmount: nextProps.cart.cliqCashPaymentDetails.totalAmount,
         totalDiscount:
           nextProps.cart.cliqCashPaymentDetails.otherDiscount.value > 0
@@ -712,7 +731,8 @@ class CheckOutPage extends React.Component {
             ) / 100,
 
           totalDiscount:
-            nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount > 0
+            nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount.value >
+            0
               ? Math.round(
                   nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
                     .value * 100
@@ -813,6 +833,7 @@ class CheckOutPage extends React.Component {
           egvCartGuid: giftCartObj.egvCartGuid
         });
       }
+      this.getPaymentModes();
     }
     if (value === PAYMENT_CHARGED) {
       if (this.props.updateTransactionDetails) {
@@ -832,6 +853,7 @@ class CheckOutPage extends React.Component {
       this.props.location.state.isFromGiftCard &&
       this.props.location.state.amount
     ) {
+      this.getPaymentModes();
       this.setState({
         isGiftCard: true,
         isRemainingAmount: true,
@@ -1010,8 +1032,7 @@ class CheckOutPage extends React.Component {
 
   getPaymentModes = () => {
     if (
-      (this.state.isGiftCard &&
-        this.props.location &&
+      (this.props.location &&
         this.props.location.state &&
         this.props.location.state.egvCartGuid) ||
       (this.state.isGiftCard && this.state.egvCartGuid)
@@ -1022,9 +1043,17 @@ class CheckOutPage extends React.Component {
       } else {
         egvGiftCartGuId = this.props.location.state.egvCartGuid;
       }
-      let guIdObject = new FormData();
-      guIdObject.append(CART_GU_ID, egvGiftCartGuId);
-      this.props.getPaymentModes(guIdObject);
+      this.props.getPaymentModes(egvGiftCartGuId);
+    } else {
+      let cartGuId;
+      const parsedQueryString = queryString.parse(this.props.location.search);
+      if (parsedQueryString.value) {
+        cartGuId = parsedQueryString.value;
+      } else {
+        let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+        cartGuId = JSON.parse(cartDetails).guid;
+      }
+      this.props.getPaymentModes(cartGuId);
     }
   };
   onSelectAddress(selectedAddress) {
