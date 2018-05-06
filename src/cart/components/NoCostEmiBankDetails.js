@@ -29,7 +29,6 @@ export default class NoCostEmiBankDetails extends React.Component {
     const selectedBankCodeObj = this.props.bankList.find(
       bank => bank.bankName === val.label
     );
-    console.log(selectedBankCodeObj);
     let selectedBankCode;
     if (selectedBankCodeObj) {
       selectedBankCode = selectedBankCodeObj.code;
