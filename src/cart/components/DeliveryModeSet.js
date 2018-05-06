@@ -31,6 +31,21 @@ export default class DeliveryModeSet extends React.Component {
               deliveryOption && deliveryOption.desc
                 ? `:${deliveryOption.desc}`
                 : "";
+
+            let textForCollect;
+            if (deliveryOption.code === COLLECT) {
+              textForCollect =
+                data.storeDetails &&
+                `Pickup Store: ${
+                  data.storeDetails.displayName
+                    ? data.storeDetails.displayName
+                    : ""
+                } ${
+                  data.storeDetails.address.city
+                    ? data.storeDetails.address.city
+                    : ""
+                }`;
+            }
             return (
               <div className={styles.base} key={i}>
                 <div className={styles.productName}>{data.productName}</div>
@@ -44,17 +59,12 @@ export default class DeliveryModeSet extends React.Component {
                           : deliveryOption.name
                     } ${
                       deliveryOption.code === COLLECT
-                        ? data.storeDetails &&
-                          `Pickup Store: ${
-                            data.storeDetails.displayName
-                              ? data.storeDetails.displayName
-                              : ""
-                          } ${
-                            data.storeDetails.address.city
-                              ? data.storeDetails.address.city
-                              : ""
-                          }`
+                        ? textForCollect
+                          ? textForCollect
+                          : ""
                         : expectedDeliveryDate
+                          ? expectedDeliveryDate
+                          : ""
                     }`}
                 </div>
               </div>
