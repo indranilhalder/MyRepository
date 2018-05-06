@@ -28,7 +28,8 @@ import {
   GENERATE_OTP_FOR_EGV,
   hideModal,
   VERIFY_OTP,
-  GIFT_CARD_MODAL
+  GIFT_CARD_MODAL,
+  UPDATE_REFUND_DETAILS_POPUP
 } from "../../general/modal.actions.js";
 import moment from "moment";
 import { getPaymentModes } from "../../cart/actions/cart.actions.js";
@@ -197,7 +198,7 @@ export const UPDATE_PROFILE_OTP_VERIFICATION = "UpdateProfileOtpVerification";
 export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
 export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
 export const CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAILURE";
-
+export const Clear_ORDER_DATA = "Clear_ORDER_DATA";
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -875,7 +876,7 @@ export function submitSelfCourierReturnInfo(returnDetails) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
+      dispatch(hideModal(UPDATE_REFUND_DETAILS_POPUP));
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -1329,19 +1330,32 @@ export function editAddress(addressDetails) {
     let addressObject = new FormData();
     addressObject.append("countryIso", addressDetails.countryIso);
     addressObject.append("addressType", addressDetails.addressType);
-    addressObject.append("phone", addressDetails.phone);
-    addressObject.append("firstName", addressDetails.firstName);
-    addressObject.append("lastName", addressDetails.lastName);
+    if (addressDetails.phone) {
+      addressObject.append("phone", addressDetails.phone);
+    }
+    if (addressDetails.firstName) {
+      addressObject.append("firstName", addressDetails.firstName);
+    }
+    if (addressDetails.lastName) {
+      addressObject.append("lastName", addressDetails.lastName);
+    }
     addressObject.append("postalCode", addressDetails.postalCode);
-    addressObject.append("line1", addressDetails.line1);
-    addressObject.append("line2", addressDetails.line2);
-    addressObject.append("line3", addressDetails.line3);
+    if (addressDetails.line1) {
+      addressObject.append("line1", addressDetails.line1);
+    }
+    if (addressDetails.line2) {
+      addressObject.append("line2", addressDetails.line2);
+    }
+    if (addressDetails.line3) {
+      addressObject.append("line3", addressDetails.line3);
+    }
     addressObject.append("state", addressDetails.state);
     addressObject.append("town", addressDetails.town);
     addressObject.append("defaultFlag", addressDetails.defaultFlag);
     addressObject.append("addressId", addressDetails.addressId);
-    addressObject.append("emailId", "");
-    addressObject.append("landmark", addressDetails.landmark);
+    if (addressDetails.landmark) {
+      addressObject.append("landmark", addressDetails.landmark);
+    }
     try {
       const result = await api.postFormData(
         `${USER_PATH}/${
@@ -1906,5 +1920,10 @@ export function clearGiftCardStatus() {
 export function clearAccountUpdateType() {
   return {
     type: CLEAR_ACCOUNT_UPDATE_TYPE
+  };
+}
+export function clearOrderDetails() {
+  return {
+    type: Clear_ORDER_DATA
   };
 }

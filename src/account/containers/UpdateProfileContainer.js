@@ -22,6 +22,7 @@ const mapDispatchToProps = dispatch => {
       const response = await dispatch(updateProfile(accountDetails));
 
       if (response && response.status === SUCCESS) {
+        dispatch(getUserDetails());
         dispatch(displayToast(UPDATE_PROFILE_SUCCESS));
       }
     },

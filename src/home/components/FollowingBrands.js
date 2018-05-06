@@ -54,7 +54,11 @@ export default class FollowingBrands extends React.Component {
         {userDetails &&
           customerCookie && (
             <Carousel
-              header={this.props.feedComponentData.title}
+              header={
+                this.props.feedComponentData.title
+                  ? this.props.feedComponentData.title
+                  : "Following Brands"
+              }
               elementWidthMobile={30}
             >
               {followWidgetData.data &&

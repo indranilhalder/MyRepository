@@ -105,7 +105,8 @@ export const LOGIN_WITH_MOBILE = "mobile";
 export const LOGIN_WITH_EMAIL = "email";
 const FACEBOOK_SCOPE = "email,user_likes";
 const LOCALE = "en_US";
-const FACEBOOK_FIELDS = "name, email";
+const FACEBOOK_FIELDS =
+  "first_name.as(firstName),last_name.as(lastName), email, picture.width(60).height(60).as(profileImage)";
 const MY_PROFILE = "me";
 const FAILURE = "Failure";
 const GOOGLE_PLATFORM_URL = "//apis.google.com/js/platform.js";
@@ -668,11 +669,18 @@ export function googlePlusLogin(type) {
       }
 
       const basicProfile = googleResponse.getBasicProfile();
+      const profileImage = basicProfile.getImageUrl();
       const email = basicProfile.getEmail();
+      const name = basicProfile.getName();
       const id = basicProfile.getId();
+      let firstName, lastName;
+      if (name) {
+        firstName = name.split(" ")[0];
+        lastName = name.split(" ")[1];
+      }
       const accessToken = googleResponse.getAuthResponse().access_token;
 
-      return { email, id, accessToken };
+      return { email, id, accessToken, profileImage, firstName, lastName };
     } catch (e) {
       return dispatch(googlePlusLoginFailure(e.message));
     }
@@ -764,12 +772,13 @@ export function socialMediaLoginRequest() {
   };
 }
 
-export function socialMediaLoginSuccess(user, loginType) {
+export function socialMediaLoginSuccess(user, loginType, userDetailObj) {
   return {
     type: SOCIAL_MEDIA_LOGIN_SUCCESS,
     status: SUCCESS,
     user,
-    loginType
+    loginType,
+    userDetailObj
   };
 }
 
@@ -781,7 +790,12 @@ export function socialMediaLoginFailure(error) {
   };
 }
 
-export function socialMediaLogin(userName, platform, customerAccessToken) {
+export function socialMediaLogin(
+  userName,
+  platform,
+  customerAccessToken,
+  userDetailObj
+) {
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaLoginRequest());
     try {
@@ -795,7 +809,9 @@ export function socialMediaLogin(userName, platform, customerAccessToken) {
         throw new Error(resultJsonStatus.message);
       }
 
-      return dispatch(socialMediaLoginSuccess(resultJson, platform));
+      return dispatch(
+        socialMediaLoginSuccess(resultJson, platform, userDetailObj)
+      );
     } catch (e) {
       return dispatch(socialMediaLoginFailure(e.message));
     }

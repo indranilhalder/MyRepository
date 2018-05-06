@@ -34,6 +34,7 @@ const cart = (
     cartDetails: null,
     cartDetailsStatus: null,
     cartDetailsError: null,
+    loadingForCartDetail: false,
 
     cartDetailsCNC: null,
     cartDetailsCNCStatus: null,
@@ -42,6 +43,7 @@ const cart = (
     couponStatus: null,
     couponError: null,
     coupons: null,
+    loadingForDisplayCoupon: false,
 
     deliveryModes: null,
     userAddress: null,
@@ -229,7 +231,7 @@ const cart = (
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
         cartDetailsError: null,
-        loading: true
+        loadingForCartDetail: true
       });
 
     case cartActions.CART_DETAILS_SUCCESS:
@@ -243,14 +245,14 @@ const cart = (
         cartDetailsStatus: action.status,
         cartDetails: action.cartDetails,
         cartDetailsError: null,
-        loading: false
+        loadingForCartDetail: false
       });
 
     case cartActions.CART_DETAILS_FAILURE:
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
         cartDetailsError: action.error,
-        loading: false
+        loadingForCartDetail: false
       });
 
     case cartActions.APPLY_USER_COUPON_REQUEST:
@@ -451,6 +453,8 @@ const cart = (
 
     case cartActions.ORDER_SUMMARY_SUCCESS:
       carDetailsCopy = cloneDeep(state.cartDetailsCNC);
+      carDetailsCopy.cartAmount =
+        action.orderSummary && action.orderSummary.cartAmount;
       carDetailsCopy.deliveryCharge =
         action.orderSummary && action.orderSummary.deliveryCharge;
       return Object.assign({}, state, {
@@ -1050,21 +1054,21 @@ const cart = (
     case cartActions.DISPLAY_COUPON_REQUEST:
       return Object.assign({}, state, {
         couponStatus: action.status,
-        loading: true
+        loadingForDisplayCoupon: true
       });
 
     case cartActions.DISPLAY_COUPON_SUCCESS:
       return Object.assign({}, state, {
         couponStatus: action.status,
         coupons: action.couponDetails,
-        loading: false
+        loadingForDisplayCoupon: false
       });
 
     case cartActions.DISPLAY_COUPON_FAILURE:
       return Object.assign({}, state, {
         couponStatus: action.status,
         couponError: action.error,
-        loading: false
+        loadingForDisplayCoupon: false
       });
 
     case cartActions.SOFT_RESERVATION_FOR_PAYMENT_REQUEST:

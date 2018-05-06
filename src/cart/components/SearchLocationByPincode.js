@@ -38,7 +38,9 @@ export default class SearchLocationByPincode extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.header}>{this.props.header}</div>
+        {this.props.header && (
+          <div className={styles.header}>{this.props.header}</div>
+        )}
         {this.state.errorMessage && (
           <div className={styles.errorMessage}>{this.state.errorMessage}</div>
         )}

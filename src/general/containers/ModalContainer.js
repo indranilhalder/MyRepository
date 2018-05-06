@@ -12,7 +12,10 @@ import {
   loginUserRequest,
   customerAccessToken
 } from "../../auth/actions/user.actions";
-import { redeemCliqVoucher } from "../../account/actions/account.actions";
+import {
+  redeemCliqVoucher,
+  removeAddress
+} from "../../account/actions/account.actions";
 import {
   SUCCESS,
   FAILURE,
@@ -34,7 +37,8 @@ import {
   getCartId,
   applyUserCouponForLoggedInUsers,
   releaseCouponForAnonymous,
-  releaseUserCoupon
+  releaseUserCoupon,
+  removeNoCostEmi
 } from "../../cart/actions/cart.actions";
 import {
   getOtpToActivateWallet,
@@ -172,6 +176,9 @@ const mapDispatchToProps = dispatch => {
     },
     setUrlToRedirectToAfterAuth: url => {
       dispatch(setUrlToRedirectToAfterAuth(url));
+    },
+    removeNoCostEmi: (couponCode, cartGuid, cartId) => {
+      return dispatch(removeNoCostEmi(couponCode, cartGuid, cartId));
     }
   };
 };

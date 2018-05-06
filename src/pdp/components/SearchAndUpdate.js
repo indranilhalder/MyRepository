@@ -63,14 +63,6 @@ export default class SearchAndUpdate extends React.Component {
               textStyle={{ fontSize: 14 }}
               height={35}
               rightChildSize={35}
-              rightChild={
-                <CircleButton
-                  size={35}
-                  color={"transparent"}
-                  icon={<Icon image={gpsIcon} size={20} />}
-                  onClick={() => this.getLocation()}
-                />
-              }
             />
           </div>
         </div>

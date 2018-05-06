@@ -31,7 +31,7 @@ export default class ContentWidgetWrapper extends React.Component {
         </div>
       );
     } else {
-      return this.renderLoader();
+      return null;
     }
   }
 }

@@ -8,7 +8,15 @@ export default class Logo extends React.Component {
         className={styles.base}
         style={{ height: this.props.height, width: this.props.width }}
       >
-        <img className={styles.image} src={this.props.image} alt="" />
+        <img
+          className={styles.image}
+          src={this.props.image}
+          alt=""
+          style={{
+            height: this.props.imageHeight,
+            width: this.props.imageWidth
+          }}
+        />
       </div>
     );
   }
@@ -16,5 +24,11 @@ export default class Logo extends React.Component {
 Logo.propTypes = {
   height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  imageHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  imageWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   image: PropTypes.string
+};
+Logo.defaultProps = {
+  imageHeight: "100%",
+  imageWidth: "auto"
 };

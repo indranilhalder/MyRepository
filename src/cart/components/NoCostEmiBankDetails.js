@@ -6,7 +6,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
-import { NO_COST_EMI } from "../../lib/constants";
+import { NO_COST_EMI, RUPEE_SYMBOL } from "../../lib/constants";
 
 export default class NoCostEmiBankDetails extends React.Component {
   constructor(props) {
@@ -26,11 +26,17 @@ export default class NoCostEmiBankDetails extends React.Component {
   selectOtherBank(val) {
     const selectedBankName = val.label;
     const selectedBankIndex = parseInt(val.value, 10) - 1;
-
+    const selectedBankCodeObj = this.props.bankList.find(
+      bank => bank.bankName === val.label
+    );
+    let selectedBankCode;
+    if (selectedBankCodeObj) {
+      selectedBankCode = selectedBankCode.code;
+    }
     this.setState({
       selectedBankIndex: selectedBankIndex,
       selectedBankName: selectedBankName,
-      selectedBankCode: this.props.bankList[selectedBankIndex].code,
+      selectedBankCode,
       selectedFromDropDown: true,
       selectedMonth: null
     });
@@ -219,13 +225,6 @@ export default class NoCostEmiBankDetails extends React.Component {
         val => !filteredBankListWithLogo.includes(val)
       );
 
-    if (filteredBankListWithOutLogo && filteredBankListWithOutLogo.length > 0) {
-      filteredBankListWithOutLogo &&
-        filteredBankListWithOutLogo.unshift({
-          bankName: "Other Bank",
-          bankCode: "Other Bank"
-        });
-    }
     if (this.state.selectedFromDropDown) {
       modifiedBankList = filteredBankListWithOutLogo;
     } else {
@@ -271,17 +270,19 @@ export default class NoCostEmiBankDetails extends React.Component {
                   />
                 </div>
               )}
-            <div className={styles.itemLevelButtonHolder}>
-              <div className={styles.itemLevelButton}>
-                <UnderLinedButton
-                  size="14px"
-                  fontFamily="regular"
-                  color="#000"
-                  label="View T&C"
-                  onClick={() => this.termsAndCondition()}
-                />
+            {this.state.selectedBankCode && (
+              <div className={styles.itemLevelButtonHolder}>
+                <div className={styles.itemLevelButton}>
+                  <UnderLinedButton
+                    size="14px"
+                    fontFamily="regular"
+                    color="#000"
+                    label="View T&C"
+                    onClick={() => this.termsAndCondition()}
+                  />
+                </div>
               </div>
-            </div>
+            )}
             {this.state.selectedBankIndex !== null && (
               <div className={styles.emiDetailsPlan}>
                 <div className={styles.labelHeader}>
@@ -329,10 +330,15 @@ export default class NoCostEmiBankDetails extends React.Component {
               bankName={this.state.selectedBankName}
               term={this.state.selectedTenure}
               emiRate="No Cost"
-              price={`Rs. ${Math.round(
-                this.props.noCostEmiDetails.cartAmount.noCostEMIPerMonthPayable
-                  .value * 100
-              ) / 100}`}
+              price={
+                this.props.noCostEmiDetails.cartAmount &&
+                this.props.noCostEmiDetails.cartAmount
+                  .noCostEMIPerMonthPayable &&
+                `${RUPEE_SYMBOL} ${Math.round(
+                  this.props.noCostEmiDetails.cartAmount
+                    .noCostEMIPerMonthPayable.value * 100
+                ) / 100}`
+              }
               changePlan={() => this.changeNoCostEmiPlan()}
             />
             <CreditCardForm

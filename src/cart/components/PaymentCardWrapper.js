@@ -16,6 +16,7 @@ import GridSelect from "../../general/components/GridSelect";
 
 import CheckOutHeader from "./CheckOutHeader";
 import { getCookie } from "../../lib/Cookie";
+
 let cliqCashToggleState = false;
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const keyForCreditCard = "Credit Card";
@@ -45,9 +46,6 @@ const typeComponentMapping = {
 
 export default class PaymentCardWrapper extends React.Component {
   componentDidMount = () => {
-    if (this.props.getPaymentModes && !this.props.cart.paymentModes) {
-      this.props.getPaymentModes();
-    }
     if (
       this.props.getCODEligibility &&
       !this.props.cart.codEligibilityDetails
@@ -180,7 +178,11 @@ export default class PaymentCardWrapper extends React.Component {
                     ? 0
                     : this.props.cliqCashAmount
                 }
-                value={this.props.cliqCashAmount}
+                value={
+                  this.props.userCliqCashAmount
+                    ? this.props.userCliqCashAmount
+                    : 0
+                }
                 active={cliqCashToggleState}
                 onToggle={val => this.handleClick(val)}
                 isFromGiftCard={this.props.isFromGiftCard}

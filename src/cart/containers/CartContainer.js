@@ -23,7 +23,11 @@ import {
   showSecondaryLoader,
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
-import { PRODUCT_COUPONS, showModal } from "../../general/modal.actions";
+import {
+  PRODUCT_COUPONS,
+  showModal,
+  ADDRESS
+} from "../../general/modal.actions";
 import { SUCCESS } from "../../lib/constants";
 import {
   setDataLayerForCartDirectCalls,
@@ -122,6 +126,9 @@ const mapDispatchToProps = dispatch => {
     },
     clearCartDetails: () => {
       dispatch(clearCartDetails());
+    },
+    addressModal: pinCodeObj => {
+      dispatch(showModal(ADDRESS, pinCodeObj));
     }
   };
 };
