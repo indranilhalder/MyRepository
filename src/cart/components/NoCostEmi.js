@@ -2,8 +2,7 @@ import React from "react";
 import styles from "./NoCostEmi.css";
 import PropTypes from "prop-types";
 import { Collapse } from "react-collapse";
-const STANDARD_EMI = "Standard Emi";
-const NO_COST_EMI = "No Cost Emi";
+import { NO_COST_EMI, STANDARD_EMI } from "../../lib/constants";
 export default class NoCostEmi extends React.Component {
   constructor(props) {
     super(props);

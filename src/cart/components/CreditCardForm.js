@@ -116,7 +116,7 @@ export default class CreditCardForm extends React.Component {
             <Input2
               placeholder="Name on card*"
               boxy={true}
-              cardName={
+              value={
                 this.props.cardName ? this.props.cardName : this.state.cardName
               }
               onChange={cardName => this.onChange({ cardName })}

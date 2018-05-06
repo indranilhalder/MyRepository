@@ -23,6 +23,20 @@ export default class NoCostEmiBankDetails extends React.Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedEMIType !== NO_COST_EMI) {
+      this.setState({
+        selectedBankIndex: null,
+        selectedMonth: null,
+        showAll: false,
+        selectedBankName: null,
+        selectedBankCode: null,
+        selectedCouponCode: null,
+        selectedTenure: null,
+        selectedFromDropDown: false
+      });
+    }
+  }
   selectOtherBank(val) {
     const selectedBankName = val.label;
     const selectedBankIndex = parseInt(val.value, 10) - 1;
@@ -116,6 +130,7 @@ export default class NoCostEmiBankDetails extends React.Component {
       }
     }
   }
+
   renderMonthsPlan() {
     let noCostEmiDetails = this.props.noCostEmiDetails.cartAmount;
     return (
