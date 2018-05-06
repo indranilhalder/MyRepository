@@ -69,6 +69,12 @@ export default class PiqPage extends React.Component {
       this.props.addPickupPersonCNC(this.state.mobile, this.state.name);
     }
   }
+
+  getPinCodeDetails = pinCode => {
+    if (this.props.changePincode) {
+      this.props.changePincode(pinCode);
+    }
+  };
   render() {
     let selectedStore = {};
     if (this.props.availableStores) {
@@ -96,9 +102,11 @@ export default class PiqPage extends React.Component {
 
         <div className={styles.location}>
           <SearchLocationByPincode
-            header={`${this.props.productName} ${this.props.productColour}`}
+            header={`${this.props.productName ? this.props.productName : ""} ${
+              this.props.productColour ? this.props.productColour : ""
+            }`}
             pincode={this.props.pincode}
-            changePincode={pincode => this.props.changePincode(pincode)}
+            changePincode={pincode => this.getPinCodeDetails(pincode)}
           />
         </div>
         <div className={styles.bannerMobileHolder}>

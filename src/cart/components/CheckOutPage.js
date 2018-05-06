@@ -115,6 +115,7 @@ class CheckOutPage extends React.Component {
       isRemainingAmount: true,
       payableAmount: "",
       cliqCashAmount: "",
+      userCliqCashAmount: "",
       bagAmount: "",
       selectedDeliveryDetails: null,
       ratingExperience: false,
@@ -638,19 +639,20 @@ class CheckOutPage extends React.Component {
     // end if adding selected default delivery modes for every product
 
     if (nextProps.cart.cliqCashPaymentDetails) {
-      if (
-        this.state.isRemainingAmount !==
-        nextProps.cart.cliqCashPaymentDetails.isRemainingAmount
-      ) {
-        this.setState({
-          isRemainingAmount:
-            nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
-          payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount,
-          cliqCashAmount:
-            nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value,
-          bagAmount: nextProps.cart.cliqCashPaymentDetails.totalAmount
-        });
-      }
+      this.setState({
+        isRemainingAmount:
+          nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
+        payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount,
+        cliqCashAmount:
+          nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value,
+        bagAmount: nextProps.cart.cliqCashPaymentDetails.totalAmount,
+        totalDiscount:
+          nextProps.cart.cliqCashPaymentDetails.otherDiscount.value > 0
+            ? Math.round(
+                nextProps.cart.cliqCashPaymentDetails.otherDiscount.value * 100
+              ) / 100
+            : "0.00"
+      });
     } else {
       if (
         nextProps.cart.cartDetailsCNC &&
@@ -690,16 +692,19 @@ class CheckOutPage extends React.Component {
               nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value * 100
             ) / 100,
           cliqCashAmount: cliqCashAmount,
+          userCliqCashAmount: cliqCashAmount,
           bagAmount:
             Math.round(
               nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
             ) / 100,
 
           totalDiscount:
-            Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
-                .value * 100
-            ) / 100
+            nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount > 0
+              ? Math.round(
+                  nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
+                    .value * 100
+                ) / 100
+              : "0.00"
         });
 
         if (
@@ -1007,16 +1012,6 @@ class CheckOutPage extends React.Component {
       let guIdObject = new FormData();
       guIdObject.append(CART_GU_ID, egvGiftCartGuId);
       this.props.getPaymentModes(guIdObject);
-    } else {
-      let cartDetailsLoggedInUser = Cookie.getCookie(
-        CART_DETAILS_FOR_LOGGED_IN_USER
-      );
-      if (cartDetailsLoggedInUser) {
-        let guIdObject = new FormData();
-        guIdObject.append(CART_GU_ID, JSON.parse(cartDetailsLoggedInUser).guid);
-
-        this.props.getPaymentModes(guIdObject);
-      }
     }
   };
   onSelectAddress(selectedAddress) {
@@ -1727,6 +1722,7 @@ class CheckOutPage extends React.Component {
                 selectedBankOfferCode={this.state.selectedBankOfferCode}
                 openBankOffers={() => this.openBankOffers()}
                 cliqCashAmount={this.state.cliqCashAmount}
+                userCliqCashAmount={this.state.userCliqCashAmount}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
                 currentPaymentMode={this.state.currentPaymentMode}
@@ -1767,7 +1763,6 @@ class CheckOutPage extends React.Component {
                 addGiftCard={() => this.addGiftCard()}
                 binValidationForPaytm={val => this.binValidationForPaytm(val)}
                 displayToast={message => this.props.displayToast(message)}
-                getPaymentModes={() => this.getPaymentModes()}
                 getCODEligibility={() => this.getCODEligibility()}
                 getNetBankDetails={() => this.getNetBankDetails()}
                 getEmiBankDetails={() => this.getEmiBankDetails()}

@@ -51,7 +51,7 @@
   vertical-align: top;
 }
 .dataHolder {
-  width: 100%;
+  width: calc(100% - 40px);
   height: auto;
   display: inline-block;
   vertical-align: top;
