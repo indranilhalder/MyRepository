@@ -58,6 +58,8 @@ export default class CheckoutSavedCard extends React.Component {
       });
 
       this.props.binValidationForSavedCard(cardDetails);
+    } else {
+      this.props.binValidationForSavedCard(null);
     }
   }
 
