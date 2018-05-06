@@ -690,7 +690,8 @@ class CheckOutPage extends React.Component {
             ) / 100,
 
           totalDiscount:
-            nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount > 0
+            nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount.value >
+            0
               ? Math.round(
                   nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
                     .value * 100
@@ -810,6 +811,7 @@ class CheckOutPage extends React.Component {
       this.props.location.state.isFromGiftCard &&
       this.props.location.state.amount
     ) {
+      this.getPaymentModes();
       this.setState({
         isGiftCard: true,
         isRemainingAmount: true,
@@ -988,8 +990,7 @@ class CheckOutPage extends React.Component {
 
   getPaymentModes = () => {
     if (
-      (this.state.isGiftCard &&
-        this.props.location &&
+      (this.props.location &&
         this.props.location.state &&
         this.props.location.state.egvCartGuid) ||
       (this.state.isGiftCard && this.state.egvCartGuid)

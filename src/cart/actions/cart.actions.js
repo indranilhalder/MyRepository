@@ -1213,13 +1213,13 @@ export function getOrderSummary(pincode) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
+  let cartId = JSON.parse(cartDetails).code;
   return async (dispatch, getState, { api }) => {
     dispatch(orderSummaryRequest());
     try {
       const result = await api.get(
         `${USER_CART_PATH}/${JSON.parse(userDetails).userName}/carts/${
-          JSON.parse(cartDetails).code
+          cartId
         }/displayOrderSummary?access_token=${
           JSON.parse(customerCookie).access_token
         }&pincode=${pincode}&isPwa=true&platformNumber=2`
@@ -1233,6 +1233,15 @@ export function getOrderSummary(pincode) {
       }
       dispatch(getPaymentModes(resultJson.cartGuid));
       dispatch(orderSumarySuccess(resultJson));
+      dispatch(
+        getCartDetailsCNC(
+          JSON.parse(userDetails).userName,
+          JSON.parse(customerCookie).access_token,
+          cartId,
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
+          false
+        )
+      );
     } catch (e) {
       dispatch(orderSummaryFailure(e.message));
     }
