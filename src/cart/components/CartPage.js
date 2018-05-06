@@ -272,25 +272,11 @@ class CartPage extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.content}>
-          {(!defaultPinCode || this.state.changePinCode) && (
-            <div className={styles.search}>
-              <SearchAndUpdate
-                value={defaultPinCode}
-                checkPinCodeAvailability={val =>
-                  this.checkPinCodeAvailability(val)
-                }
-                labelText="check"
-              />
-            </div>
-          )}
-          {!this.state.changePinCode &&
-            defaultPinCode && (
-              <TextWithUnderLine
-                heading={defaultPinCode}
-                onClick={() => this.changePinCode()}
-                buttonLabel="Change"
-              />
-            )}
+          <TextWithUnderLine
+            heading={defaultPinCode ? defaultPinCode : "Enter Pincode"}
+            onClick={() => this.changePinCode()}
+            buttonLabel="Change"
+          />
         </div>
         <div className={styles.content}>
           <EmptyBag
@@ -350,25 +336,11 @@ class CartPage extends React.Component {
       return (
         <div className={styles.base}>
           <div className={styles.content}>
-            {(!defaultPinCode || this.state.changePinCode) && (
-              <div className={styles.search}>
-                <SearchAndUpdate
-                  value={defaultPinCode}
-                  checkPinCodeAvailability={val =>
-                    this.checkPinCodeAvailability(val)
-                  }
-                  labelText="check"
-                />
-              </div>
-            )}
-            {!this.state.changePinCode &&
-              defaultPinCode && (
-                <TextWithUnderLine
-                  heading={defaultPinCode}
-                  onClick={() => this.changePinCode()}
-                  buttonLabel="Change"
-                />
-              )}
+            <TextWithUnderLine
+              heading={defaultPinCode ? defaultPinCode : "Enter Pincode"}
+              onClick={() => this.changePinCode()}
+              buttonLabel="Change"
+            />
           </div>
 
           <div
