@@ -21,7 +21,8 @@ import {
   MESTRO_CARD,
   DINERS_CARD,
   DISCOVER_CARD,
-  JCB_CARD
+  JCB_CARD,
+  MASTER
 } from "../../lib/constants";
 export default class ReturnSummary extends React.Component {
   getCardLogo(cardType) {
@@ -42,6 +43,8 @@ export default class ReturnSummary extends React.Component {
         return discoverLogo;
       case JCB_CARD:
         return jcbLogo;
+      case MASTER:
+        return masterLogo;
       default:
         return false;
     }

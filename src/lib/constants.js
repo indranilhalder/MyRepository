@@ -236,6 +236,7 @@ export const TITLE_DEFAULT = GOOGLE_TAG_TITLE_DEFAULT;
 export const RUPAY_CARD = "RUPAY";
 export const VISA_CARD = "VISA";
 export const MASTER_CARD = "MASTERCARD";
+export const MASTER = "MASTER";
 export const AMEX_CARD = "AMEX";
 export const MESTRO_CARD = "MAESTRO";
 export const DINERS_CARD = "DINERS";
