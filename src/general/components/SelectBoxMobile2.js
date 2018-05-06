@@ -119,11 +119,22 @@ export default class SelectBoxMobile extends React.Component {
                 <option
                   value={this.props.placeholder}
                   label={this.props.placeholder}
-                />
+                >
+                  {this.props.placeholder}
+                </option>
               )}
             {this.props.options &&
               this.props.options.map((item, i) => {
-                return <option key={i} value={item.value} label={item.label} />;
+                return (
+                  <option
+                    styles={{ backgroundColor: "#000", color: "fff" }}
+                    key={i}
+                    value={item.value}
+                    label={item.label}
+                  >
+                    {item.label}
+                  </option>
+                );
               })}
           </React.Fragment>
         </select>
