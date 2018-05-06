@@ -31,6 +31,7 @@ export default class DeliveryInfoSelect extends React.Component {
               key={i}
               type={datum.code}
               header={datum.name}
+              showDeliveryCharge={true}
               placedTime={datum.desc}
               deliveryCharge={datum.deliveryCost}
               selected={datum.code === this.state.selectedCode}
