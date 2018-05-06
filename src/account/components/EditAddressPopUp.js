@@ -472,6 +472,6 @@ EditAddressPopUp.propTypes = {
   titleValue: PropTypes.string
 };
 EditAddressPopUp.defaultProps = {
-  heading: "Add address",
+  heading: "Edit address",
   defaultAddress: false
 };
