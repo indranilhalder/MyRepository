@@ -1231,7 +1231,6 @@ export function getOrderSummary(pincode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      console.log(resultJson.cartGuid);
       dispatch(getPaymentModes(resultJson.cartGuid));
       dispatch(orderSumarySuccess(resultJson));
       dispatch(
