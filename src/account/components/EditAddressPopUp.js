@@ -22,7 +22,7 @@ import {
   SALUTATION_MS,
   SALUTATION_MR,
   SALUTATION_MSS
-} from "../../cart/components/EditAddressPopUp";
+} from "../../cart/components/AddDeliveryAddress";
 
 const SAVE_TEXT = "Save Address";
 const PINCODE_TEXT = "Please enter pincode";
