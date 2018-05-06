@@ -34,30 +34,34 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       setTimeout(() => {
         window.scrollTo(0, 0);
       }, 0);
-      this.props.getProductDescription(this.props.match.params[0]);
+      if (defaultPinCode) {
+        this.props.getProductDescription(
+          this.props.match.params[0],
+          defaultPinCode
+        );
+      } else {
+        this.props.getProductDescription(this.props.match.params[0]);
+      }
+
       this.props.getMsdRequest(this.props.match.params[0]);
       this.props.pdpAboutBrand(this.props.match.params[0]);
-      if (defaultPinCode) {
-        this.props.getProductPinCode(
-          defaultPinCode,
-          this.props.match.params[0]
-        );
-      }
     } else if (
       this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
     ) {
       setTimeout(() => {
         window.scrollTo(0, 0);
       }, 0);
-      this.props.getProductDescription(this.props.match.params[1]);
+      if (defaultPinCode) {
+        this.props.getProductDescription(
+          this.props.match.params[0],
+          defaultPinCode
+        );
+      } else {
+        this.props.getProductDescription(this.props.match.params[0]);
+      }
+
       this.props.getMsdRequest(this.props.match.params[1]);
       this.props.pdpAboutBrand(this.props.match.params[1]);
-      if (defaultPinCode) {
-        this.props.getProductPinCode(
-          defaultPinCode,
-          this.props.match.params[1]
-        );
-      }
     } else {
       //need to show error page
     }

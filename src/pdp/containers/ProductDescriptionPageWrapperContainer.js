@@ -26,11 +26,16 @@ import {
 } from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
-
+import { SUCCESS } from "../../lib/constants.js";
 const mapDispatchToProps = dispatch => {
   return {
-    getProductDescription: productCode => {
-      dispatch(getProductDescription(productCode));
+    getProductDescription: async (productCode, pinCode) => {
+      const productDetailsResponse = await dispatch(
+        getProductDescription(productCode)
+      );
+      if (productDetailsResponse.status === SUCCESS) {
+        dispatch(getProductPinCode(pinCode, productCode));
+      }
     },
     addProductToCart: (userId, cartId, accessToken, productDetails) => {
       dispatch(addProductToCart(userId, cartId, accessToken, productDetails));
