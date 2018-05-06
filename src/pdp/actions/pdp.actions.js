@@ -5,16 +5,14 @@ import {
   GLOBAL_ACCESS_TOKEN,
   SUCCESS_UPPERCASE,
   SUCCESS_CAMEL_CASE,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE,
-  FAILURE_UPPERCASE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import {
   getMcvId,
   setDataLayerForPdpDirectCalls,
-  SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT,
-  SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT
+  SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT
 } from "../../lib/adobeUtils.js";
 import each from "lodash.foreach";
 
@@ -158,12 +156,12 @@ export function getProductDescription(productCode) {
           getState().icid.value,
           getState().icid.icidType
         );
-        dispatch(getProductDescriptionSuccess(resultJson));
+        return dispatch(getProductDescriptionSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.error}`);
       }
     } catch (e) {
-      dispatch(getProductDescriptionFailure(e.message));
+      return dispatch(getProductDescriptionFailure(e.message));
     }
   };
 }
