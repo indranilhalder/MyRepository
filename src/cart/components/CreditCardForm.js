@@ -181,8 +181,9 @@ export default class CreditCardForm extends React.Component {
           </div>
           <div className={styles.saveCardText}>
             <div className={styles.saveText}>
-              We will save your card for a faster checkout. To remove your
-              details, visit My Cliq.
+              We will save your card details securely for a faster checkout; we
+              don't store the CVV number. To remove your card details, visit My
+              Account.
             </div>
           </div>
         </div>
