@@ -4,6 +4,7 @@ import OrderPlacedAndId from "../../account/components/OrderPlacedAndId";
 import OrderCard from "../../account/components/OrderCard";
 import PriceAndLink from "../../account/components/PriceAndLink";
 import styles from "./OrderDetailsCard.css";
+import { COLLECT } from "../../lib/constants";
 export default class OrderDetailsCard extends React.Component {
   onViewDetails() {
     if (this.props.trackOrder) {
@@ -16,6 +17,8 @@ export default class OrderDetailsCard extends React.Component {
     }
   }
   render() {
+    const deliveryOption = this.props.productDetails.selectedDeliveryMode;
+
     return (
       <div className={styles.base}>
         <div className={styles.orderIdHolder}>
@@ -32,12 +35,30 @@ export default class OrderDetailsCard extends React.Component {
           discountPrice=""
           onClick={() => this.onClick(this.props.orderId)}
         >
-          <div className={styles.quantityHolder}>
-            <div className={styles.quantityLabel}>Qty :</div>
-            <div className={styles.quantityAmount}>
-              {this.props.productDetails.quantity}
+          {this.props.productDetails.quantity && (
+            <div className={styles.quantityHolder}>
+              <div className={styles.quantityLabel}>Qty :</div>
+              <div className={styles.quantityAmount}>
+                {this.props.productDetails.quantity}
+              </div>
             </div>
-          </div>
+          )}
+          {this.props.productDetails.size && (
+            <div className={styles.quantityHolder}>
+              <div className={styles.quantityLabel}>Size :</div>
+              <div className={styles.quantityAmount}>
+                {this.props.productDetails.size}
+              </div>
+            </div>
+          )}
+          {this.props.productDetails.productColour && (
+            <div className={styles.quantityHolder}>
+              <div className={styles.quantityLabel}>Color :</div>
+              <div className={styles.quantityAmount}>
+                {this.props.productDetails.productColour}
+              </div>
+            </div>
+          )}
         </OrderCard>
         <PriceAndLink
           onViewDetails={() => this.onViewDetails()}
@@ -70,12 +91,21 @@ export default class OrderDetailsCard extends React.Component {
           )}
           {this.props.productDetails.selectedDeliveryMode && (
             <div className={styles.addressHolder}>
-              <div className={styles.deliveredTo}>Standard Delivery: </div>
+              <div className={styles.deliveredTo}>
+                {`${
+                  deliveryOption.name === "Home Delivery"
+                    ? "Standard Shipping"
+                    : deliveryOption.name === "Express Delivery"
+                      ? "Express Shipping"
+                      : deliveryOption.name
+                } `}
+              </div>
               <div className={styles.address}>
                 {this.props.productDetails.selectedDeliveryMode.desc}
               </div>
             </div>
           )}
+
           {this.props.orderDetails.sellerName && (
             <div className={styles.orderSoldBy}>
               <div className={styles.labelText}>Sold by:</div>
