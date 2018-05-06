@@ -25,7 +25,10 @@ const productDescription = (
     addReviewStatus: false,
     reviewsError: null,
     msdItems: {},
-    emiTerms: null
+    emiTerms: null,
+    storeDetails: null,
+    storeStatus: null,
+    storeError: null
   },
   action
 ) => {
@@ -380,6 +383,26 @@ const productDescription = (
         status: action.status,
         error: action.error
       });
+    case pdpActions.GET_ALL_STORES_FOR_CLIQ_AND_PIQ_REQUEST:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        loading: true
+      });
+
+    case pdpActions.GET_ALL_STORES_FOR_CLIQ_AND_PIQ_SUCCESS:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeDetails: action.storeDetails,
+        loading: false
+      });
+
+    case pdpActions.GET_ALL_STORES_FOR_CLIQ_AND_PIQ_FAILURE:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeError: action.error,
+        loading: false
+      });
+
     default:
       return state;
   }

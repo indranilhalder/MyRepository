@@ -290,6 +290,7 @@ export default class PdpApparel extends React.Component {
             </Overlay>
           ) : (
             <PdpDeliveryModes
+              getAllStoreForCliqAndPiq={this.props.getAllStoreForCliqAndPiq}
               eligibleDeliveryModes={productData.eligibleDeliveryModes}
               deliveryModesATP={productData.deliveryModesATP}
             />
