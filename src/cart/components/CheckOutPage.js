@@ -52,7 +52,9 @@ import {
   NO_COST_EMI_COUPON,
   OLD_CART_CART_ID,
   SAVED_CARD_PAYMENT_MODE,
-  E_WALLET
+  E_WALLET,
+  NO_COST_EMI,
+  STANDARD_EMI
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -129,6 +131,7 @@ class CheckOutPage extends React.Component {
       couponDiscount: "0.00",
       totalDiscount: "0.00",
       cliqPiqSelected: false,
+      currentSelectedEMIType: null,
       currentPaymentMode: null, // holding selected payments modes
       cardDetails: {}, // for store card detail in card details
       cvvForCurrentPaymentMode: null, // in case on saved card
@@ -170,9 +173,19 @@ class CheckOutPage extends React.Component {
       savedCardDetails: null,
       captchaReseponseForCOD: null,
       noCostEmiBankName: null,
+      noCostEmiDiscount: "0.00",
       isNoCostEmiProceeded: false
     });
   };
+  changeSubEmiOption(currentSelectedEMIType) {
+    this.setState({
+      currentSelectedEMIType,
+      cardDetails: {},
+      noCostEmiBankName: null,
+      noCostEmiDiscount: "0.00",
+      isNoCostEmiApplied: false
+    });
+  }
   updateLocalStoragePinCode(pincode) {
     const postalCode = parseInt(pincode);
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, postalCode);
@@ -1518,17 +1531,7 @@ class CheckOutPage extends React.Component {
       return false;
     }
   }
-  validateSubmitButtonForNoCostEMi() {
-    if (!this.state.isNoCostEmiApplied) {
-      return false;
-    } else {
-      return true;
-    }
-  }
 
-  validateSubmitButtonForSlanderedEMi() {
-    return this.validateCard();
-  }
   validateSubmitButton() {
     if (this.state.cardDetails) {
       if (
@@ -1544,12 +1547,12 @@ class CheckOutPage extends React.Component {
           return false;
         }
       } else if (this.state.currentPaymentMode === EMI) {
-        if (this.state.noCostEmiBankName) {
+        debugger;
+        if (this.state.isNoCostEmiApplied || this.state.cardDetails.emi_bank) {
+          debugger;
           return false;
-        } else if (!this.state.cardDetails.emi_bank) {
-          return true;
         } else {
-          return false;
+          return true;
         }
       } else if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
         if (!this.state.bankCodeForNetBanking) {
@@ -1573,6 +1576,7 @@ class CheckOutPage extends React.Component {
     }
   }
   render() {
+    console.log(this.state);
     let labelForButton,
       checkoutButtonStatus = false;
 
@@ -1594,15 +1598,33 @@ class CheckOutPage extends React.Component {
       checkoutButtonStatus = this.validateSubmitButton();
       labelForButton = PLACE_ORDER;
     } else if (this.state.currentPaymentMode === EMI) {
-      if (
-        this.state.isNoCostEmiApplied ||
-        (this.state.cardDetails && this.state.cardDetails.emi_bank !== null)
-      ) {
-        checkoutButtonStatus = this.validateCard();
-        labelForButton = PAY_NOW;
+      if (this.state.currentSelectedEMIType === NO_COST_EMI) {
+        if (this.state.isNoCostEmiProceeded) {
+          checkoutButtonStatus = this.validateCard();
+          labelForButton = PAY_NOW;
+        } else {
+          if (this.state.isNoCostEmiApplied) {
+            checkoutButtonStatus = false;
+            labelForButton = CONTINUE;
+          } else {
+            checkoutButtonStatus = true;
+            labelForButton = CONTINUE;
+          }
+        }
+      } else if (this.state.currentSelectedEMIType === STANDARD_EMI) {
+        if (
+          this.state.cardDetails &&
+          this.state.cardDetails.emi_bank &&
+          this.state.cardDetails.emi_bank !== null
+        ) {
+          checkoutButtonStatus = this.validateCard();
+          labelForButton = PAY_NOW;
+        } else {
+          checkoutButtonStatus = true;
+        }
       } else {
-        checkoutButtonStatus = this.validateSubmitButton();
-        labelForButton = CONTINUE;
+        checkoutButtonStatus = true;
+        labelForButton = PAY_NOW;
       }
     } else if (this.state.currentPaymentMode === null) {
       labelForButton = PROCEED;
@@ -1718,7 +1740,9 @@ class CheckOutPage extends React.Component {
                 isPaymentFailed={this.state.isPaymentFailed}
                 isFromGiftCard={this.state.isGiftCard}
                 cart={this.props.cart}
-                changeSubEmiOption={() => this.setState({ cardDetails: null })}
+                changeSubEmiOption={currentSelectedEMIType =>
+                  this.changeSubEmiOption(currentSelectedEMIType)
+                }
                 selectedBankOfferCode={this.state.selectedBankOfferCode}
                 openBankOffers={() => this.openBankOffers()}
                 cliqCashAmount={this.state.cliqCashAmount}

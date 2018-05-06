@@ -73,11 +73,7 @@ export default class CreditCardForm extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.cardDetails &&
-      (!nextProps.cardDetails.cardNumber ||
-        nextProps.cardDetails.cardNumber === "")
-    ) {
+    if (!nextProps.cardDetails || !Object.keys(nextProps.cardDetails).length) {
       this.setState({
         selected: false,
         cardNumber: "",
@@ -93,6 +89,7 @@ export default class CreditCardForm extends React.Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <div className={styles.base}>
         <div className={styles.cardDetails}>
@@ -116,7 +113,7 @@ export default class CreditCardForm extends React.Component {
             <Input2
               placeholder="Name on card*"
               boxy={true}
-              cardName={
+              value={
                 this.props.cardName ? this.props.cardName : this.state.cardName
               }
               onChange={cardName => this.onChange({ cardName })}
@@ -134,6 +131,7 @@ export default class CreditCardForm extends React.Component {
                 }
                 options={this.monthOptions}
                 textStyle={{ fontSize: 14 }}
+                label={this.state.monthValue}
                 value={this.state.monthValue}
               />
             </div>
