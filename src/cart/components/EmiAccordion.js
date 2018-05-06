@@ -20,7 +20,6 @@ export default class EmiAccordion extends React.Component {
     };
   }
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.selectedEMIType !== STANDARD_EMI) {
       this.setState({
         planSelected: false,
