@@ -89,8 +89,6 @@ const productDescription = (
 
     case pdpActions.CHECK_PRODUCT_PIN_CODE_SUCCESS:
       const currentPdpDetail = cloneDeep(state.productDetails);
-      console.log("CHECK PRODUCT PIN CODE SUCCESS");
-      console.log(currentPdpDetail);
       let currentProductUssId = currentPdpDetail.winningUssID;
       let deliveryOptionObj;
       if (

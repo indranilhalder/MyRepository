@@ -21,7 +21,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }
     },
     displayToast: () => {
-      console.log("TOAST MESSAGE ALREADY DISPLAYED");
       dispatch(displayToast(toastMessageOnAlreadyInWishlist));
     },
 
