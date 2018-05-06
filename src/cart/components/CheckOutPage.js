@@ -591,37 +591,51 @@ class CheckOutPage extends React.Component {
       nextProps.cart.paymentFailureOrderDetails.cartAmount
     ) {
       this.setState({
-        payableAmount:
-          Math.round(
-            nextProps.cart.paymentFailureOrderDetails.cartAmount.paybleAmount
-              .value * 100
-          ) / 100,
-        cliqCashAmount:
-          Math.round(
-            nextProps.cart.paymentFailureOrderDetails.cliqCashBalance.value *
-              100
-          ) / 100,
-        bagAmount:
-          Math.round(
-            nextProps.cart.paymentFailureOrderDetails.cartAmount.bagTotal
-              .value * 100
-          ) / 100,
-        deliveryCharge:
-          Math.round(
-            nextProps.cart.paymentFailureOrderDetails.deliveryCharges.value *
-              100
-          ) / 100,
-        couponDiscount: nextProps.cart.paymentFailureOrderDetails.couponDiscount
+        payableAmount: nextProps.cart.paymentFailureOrderDetails.cartAmount
+          .paybleAmount.value
           ? Math.round(
-              nextProps.cart.paymentFailureOrderDetails.couponDiscount.value *
+              nextProps.cart.paymentFailureOrderDetails.cartAmount.paybleAmount
+                .value * 100
+            ) / 100
+          : "0.00",
+        cliqCashAmount: nextProps.cart.paymentFailureOrderDetails
+          .cliqCashBalance.value
+          ? Math.round(
+              nextProps.cart.paymentFailureOrderDetails.cliqCashBalance.value *
                 100
             ) / 100
-          : 0,
-        totalDiscount:
-          Math.round(
-            nextProps.cart.paymentFailureOrderDetails.cartAmount
-              .totalDiscountAmount.value * 100
-          ) / 100,
+          : "0.00",
+        bagAmount: nextProps.cart.paymentFailureOrderDetails.cartAmount.bagTotal
+          .value
+          ? Math.round(
+              nextProps.cart.paymentFailureOrderDetails.cartAmount.bagTotal
+                .value * 100
+            ) / 100
+          : "0.00",
+        deliveryCharge: nextProps.cart.paymentFailureOrderDetails
+          .deliveryCharges.value
+          ? Math.round(
+              nextProps.cart.paymentFailureOrderDetails.deliveryCharges.value *
+                100
+            ) / 100
+          : "0.00",
+        couponDiscount:
+          nextProps.cart.paymentFailureOrderDetails.cartAmount
+            .couponDiscountAmount &&
+          nextProps.cart.paymentFailureOrderDetails.cartAmount
+            .couponDiscountAmount.value
+            ? Math.round(
+                nextProps.cart.paymentFailureOrderDetails.cartAmount
+                  .couponDiscountAmount.value * 100
+              ) / 100
+            : "0.00",
+        totalDiscount: nextProps.cart.paymentFailureOrderDetails.cartAmount
+          .totalDiscountAmount.value
+          ? Math.round(
+              nextProps.cart.paymentFailureOrderDetails.cartAmount
+                .totalDiscountAmount.value * 100
+            ) / 100
+          : "0.00",
         isRemainingAmount:
           nextProps.cart.paymentFailureOrderDetails.isRemainingAmount
       });
