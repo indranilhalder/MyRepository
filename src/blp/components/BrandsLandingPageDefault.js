@@ -6,6 +6,7 @@ import filter from "lodash.filter";
 import BrandsCategory from "./BrandsCategory";
 import BrandsSubCategory from "./BrandsSubCategory";
 import BrandBanner from "./BrandBanner";
+import * as Cookie from "../../lib/Cookie";
 import BrandImage from "../../general/components/BrandImage";
 import BannerMobile from "../../general/components/BannerMobile";
 import Carousel from "../../general/components/Carousel";
@@ -18,7 +19,11 @@ import arrowIcon from "../../general/components/img/down-arrow.svg";
 import searchIcon from "../../general/components/img/Search.svg";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import Loader from "../../general/components/Loader";
-import { BRANDS } from "../../lib/constants";
+import {
+  BRANDS,
+  LOGGED_IN_USER_DETAILS,
+  CUSTOMER_ACCESS_TOKEN
+} from "../../lib/constants";
 export default class BrandsLandingPageDefault extends React.Component {
   constructor(props) {
     super(props);
@@ -59,6 +64,8 @@ export default class BrandsLandingPageDefault extends React.Component {
   }
 
   render() {
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (this.props.loading || !this.props.brandsStores) {
       return this.renderLoader();
     }
@@ -112,40 +119,44 @@ export default class BrandsLandingPageDefault extends React.Component {
         </div>
         {/* we need to show this once api will be work and at that
         time also need some modification in integration */}
-        <div className={styles.following}>
-          <div
-            className={
-              this.state.showFollowing
-                ? styles.followVisible
-                : styles.followingHeader
-            }
-            onClick={() => this.handleShowFollow()}
-          >
-            Following Brands
-            <div className={styles.arrow}>
-              <Icon image={arrowIcon} size={18} />
+        {userDetails &&
+          customerCookie && (
+            <div className={styles.following}>
+              <div
+                className={
+                  this.state.showFollowing
+                    ? styles.followVisible
+                    : styles.followingHeader
+                }
+                onClick={() => this.handleShowFollow()}
+              >
+                Following Brands
+                <div className={styles.arrow}>
+                  <Icon image={arrowIcon} size={18} />
+                </div>
+              </div>
+              {this.state.showFollowing && (
+                <Carousel elementWidthMobile={30}>
+                  {this.props.followedBrands &&
+                    this.props.followedBrands.length > 0 &&
+                    this.props.followedBrands
+                      .filter(brand => {
+                        return brand.isFollowing === "true";
+                      })
+                      .map(brand => {
+                        return (
+                          <BrandImage
+                            isFollowing={brand.isFollowing}
+                            image={brand.imageURL}
+                            onClick={() => this.handleClick(brand.webURL)}
+                          />
+                        );
+                      })}
+                </Carousel>
+              )}
             </div>
-          </div>
-          {this.state.showFollowing && (
-            <Carousel elementWidthMobile={30}>
-              {this.props.followedBrands &&
-                this.props.followedBrands.length > 0 &&
-                this.props.followedBrands
-                  .filter(brand => {
-                    return brand.isFollowing === "true";
-                  })
-                  .map(brand => {
-                    return (
-                      <BrandImage
-                        isFollowing={brand.isFollowing}
-                        image={brand.imageURL}
-                        onClick={() => this.handleClick(brand.webURL)}
-                      />
-                    );
-                  })}
-            </Carousel>
           )}
-        </div>
+
         <div className={styles.bannerHolder}>
           {currentActiveHeroBanner &&
             currentActiveHeroBanner.length > 1 && (
