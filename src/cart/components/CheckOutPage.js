@@ -649,7 +649,12 @@ class CheckOutPage extends React.Component {
           nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
         payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount,
         cliqCashAmount:
-          nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value,
+          nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value > 0
+            ? Math.round(
+                nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value *
+                  100
+              ) / 100
+            : "0.00",
         bagAmount: nextProps.cart.cliqCashPaymentDetails.totalAmount,
         totalDiscount:
           nextProps.cart.cliqCashPaymentDetails.otherDiscount.value > 0
