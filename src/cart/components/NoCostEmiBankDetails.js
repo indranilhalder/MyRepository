@@ -25,13 +25,14 @@ export default class NoCostEmiBankDetails extends React.Component {
 
   selectOtherBank(val) {
     const selectedBankName = val.label;
-    const selectedBankIndex = parseInt(val.value, 10) - 1;
+    const selectedBankIndex = val.value;
     const selectedBankCodeObj = this.props.bankList.find(
       bank => bank.bankName === val.label
     );
+    console.log(selectedBankCodeObj);
     let selectedBankCode;
     if (selectedBankCodeObj) {
-      selectedBankCode = selectedBankCode.code;
+      selectedBankCode = selectedBankCodeObj.code;
     }
     this.setState({
       selectedBankIndex: selectedBankIndex,
@@ -47,12 +48,22 @@ export default class NoCostEmiBankDetails extends React.Component {
     }
   }
   handleSelect(index) {
+    if (this.state.selectedFromDropDown === true) {
+      this.setState({
+        selectedBankIndex: null,
+        selectedBankName: null,
+        selectedBankCode: null,
+        selectedFromDropDown: false,
+        selectedTenure: null
+      });
+    }
     if (this.state.selectedBankIndex === index) {
       this.setState({
         selectedBankIndex: null,
         selectedBankName: null,
         selectedBankCode: null,
-        selectedFromDropDown: false
+        selectedFromDropDown: false,
+        selectedTenure: null
       });
     } else {
       this.setState({
@@ -224,7 +235,6 @@ export default class NoCostEmiBankDetails extends React.Component {
       this.props.bankList.filter(
         val => !filteredBankListWithLogo.includes(val)
       );
-
     if (this.state.selectedFromDropDown) {
       modifiedBankList = filteredBankListWithOutLogo;
     } else {
