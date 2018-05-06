@@ -165,6 +165,10 @@ export default class PaymentCardWrapper extends React.Component {
     );
   };
 
+  componentWillUnmount() {
+    cliqCashToggleState = false;
+  }
+
   render() {
     if (this.props.cart.paymentModes) {
       return (
