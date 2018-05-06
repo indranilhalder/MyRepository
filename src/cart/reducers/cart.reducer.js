@@ -231,6 +231,7 @@ const cart = (
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
         cartDetailsError: null,
+        loading: true,
         loadingForCartDetail: true
       });
 
@@ -245,6 +246,7 @@ const cart = (
         cartDetailsStatus: action.status,
         cartDetails: action.cartDetails,
         cartDetailsError: null,
+        loading: false,
         loadingForCartDetail: false
       });
 
@@ -252,6 +254,7 @@ const cart = (
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
         cartDetailsError: action.error,
+        loading: false,
         loadingForCartDetail: false
       });
 
