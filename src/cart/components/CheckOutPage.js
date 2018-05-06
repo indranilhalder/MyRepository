@@ -1438,15 +1438,19 @@ class CheckOutPage extends React.Component {
   };
 
   binValidationForSavedCard = cardDetails => {
-    this.setState({
-      paymentModeSelected: `${cardDetails.cardType} Card`
-    });
-    localStorage.setItem(PAYMENT_MODE_TYPE, `${cardDetails.cardType} Card`);
-    this.setState({ savedCardDetails: cardDetails });
-    this.props.binValidation(
-      `${cardDetails.cardType} Card`,
-      cardDetails.cardISIN
-    );
+    if (cardDetails) {
+      this.setState({
+        paymentModeSelected: `${cardDetails.cardType} Card`
+      });
+      localStorage.setItem(PAYMENT_MODE_TYPE, `${cardDetails.cardType} Card`);
+      this.setState({ savedCardDetails: cardDetails });
+      this.props.binValidation(
+        `${cardDetails.cardType} Card`,
+        cardDetails.cardISIN
+      );
+    } else {
+      this.setState({ savedCardDetails: null });
+    }
   };
 
   softReservationForPayment = (cardDetails, noCostEmiCouponCode) => {
