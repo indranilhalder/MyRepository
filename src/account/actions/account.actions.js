@@ -1342,12 +1342,18 @@ export function editAddress(addressDetails) {
     addressObject.append("postalCode", addressDetails.postalCode);
     if (addressDetails.line1) {
       addressObject.append("line1", addressDetails.line1);
+    } else {
+      addressObject.append("line1", "");
     }
     if (addressDetails.line2) {
       addressObject.append("line2", addressDetails.line2);
+    } else {
+      addressObject.append("line2", "");
     }
     if (addressDetails.line3) {
       addressObject.append("line3", addressDetails.line3);
+    } else {
+      addressObject.append("line3", "");
     }
     addressObject.append("state", addressDetails.state);
     addressObject.append("town", addressDetails.town);
@@ -1356,6 +1362,7 @@ export function editAddress(addressDetails) {
     if (addressDetails.landmark) {
       addressObject.append("landmark", addressDetails.landmark);
     }
+    addressObject.append("emailId", " ");
     try {
       const result = await api.postFormData(
         `${USER_PATH}/${
@@ -1371,9 +1378,9 @@ export function editAddress(addressDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(editAddressSuccess(resultJson));
+      return dispatch(editAddressSuccess(resultJson));
     } catch (e) {
-      dispatch(editAddressFailure(e.message));
+      return dispatch(editAddressFailure(e.message));
     }
   };
 }

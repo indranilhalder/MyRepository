@@ -11,7 +11,7 @@ import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = dispatch => {
   return {
     editAddress: addressDetails => {
-      dispatch(editAddress(addressDetails));
+      return dispatch(editAddress(addressDetails));
     },
     getPinCode: pinCode => {
       dispatch(getPinCode(pinCode));

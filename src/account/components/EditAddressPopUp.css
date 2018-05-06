@@ -1,30 +1,111 @@
 .base {
   width: 100%;
   height: auto;
-  min-height: calc(100vh - 60px);
-  background: #ececec;
-  padding: 15px;
+  border-radius: 4px;
+  background: #fff;
+  padding: 15px 0 100px 0px;
 }
-.container {
+
+.dropDownHolder {
   width: 100%;
   height: auto;
-  margin-bottom: 15px;
+  display: inline-block;
+  position: relative;
+  margin-top: 15px;
+  padding-left: 25%;
+}
+.fullNameBox {
+  height: auto;
+  display: inline-block;
+  border: none;
+  width: 100%;
+}
+.dropDownBox {
+  width: 25%;
+  height: 35px;
+  display: inline-block;
+  border: none;
+  position: absolute;
+  left: 0;
+  border-top: 1px solid #d2d2d2;
+  border-bottom: 1px solid #d2d2d2;
+  border-left: 1px solid #d2d2d2;
+  border-radius: 2px 0 2px 0;
+}
+.content {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  font-family: regular;
+  display: inline-block;
+  margin-top: 15px;
+  padding: 0 15px;
+}
+.salutation {
+  width: 20%;
+  height: auto;
+  font-size: 14px;
+  font-family: regular;
+  display: inline-block;
+  vertical-align: top;
+}
+.name {
+  width: 80%;
+  height: auto;
+  font-size: 14px;
+  font-family: regular;
+  display: inline-block;
+  vertical-align: top;
+}
+.textHolder {
+  height: auto;
+  display: inline-block;
+  border: none;
+  width: 100%;
+  vertical-align: middle;
+}
+
+.defaultText {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  border-top: 1px solid #ececec;
+  padding: 15px 15px 0 15px;
+}
+.button {
+  width: auto;
+  position: absolute;
+  right: 15px;
+  line-height: 16px;
+  top: 0px;
+}
+.addressInnerBox {
+  width: 100%;
+  height: auto;
+  position: relative;
+  padding: 0px 65px 0px 15px;
+}
+.headingText {
+  width: 100%;
+  color: #000000;
+  font-size: 16px;
+  font-family: semibold;
+  margin: auto;
+  text-align: left;
+  line-height: 25px;
 }
 .buttonHolder {
   width: 100%;
   height: auto;
-  padding: 15px;
+  display: inline-block;
+  text-align: center;
+  margin: 10px 0px;
 }
-.formHolder {
-  width: 100%;
+.saveAndContinueButton {
+  width: auto;
   height: auto;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ececec;
-}
-.holder {
-  width: 100%;
-  height: auto;
-  background: #fff;
-  padding: 15px;
-  border-radius: 4px;
+  display: inline-block;
+  border-radius: 19px;
+  vertical-align: middle;
+  box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.24), 0 0 6px 0 rgba(0, 0, 0, 0.12);
 }

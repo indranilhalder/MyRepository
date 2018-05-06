@@ -298,7 +298,7 @@ export default class AddDeliveryAddress extends React.Component {
               height={33}
               options={salutation.map((val, i) => {
                 return {
-                  value: val.label,
+                  value: val.value,
                   label: val.label
                 };
               })}
