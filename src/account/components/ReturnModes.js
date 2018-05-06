@@ -38,9 +38,9 @@ export default class ReturnModes extends React.Component {
   isReturnModesEnabled = () => {
     const data = this.props.returnProductDetails;
     if (
-      data.returnModes.quickDrop ||
-      data.returnModes.schedulePickup ||
-      data.returnModes.selfCourier
+      (data && data.returnModes && data.returnModes.quickDrop) ||
+      (data && data.returnModes && data.returnModes.schedulePickup) ||
+      (data && data.returnModes && data.returnModes.selfCourier)
     ) {
       return true;
     }

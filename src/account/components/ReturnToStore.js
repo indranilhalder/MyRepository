@@ -148,6 +148,7 @@ export default class ReturnToStore extends React.Component {
     const renderFinalSubmit = (
       <ReturnStoreConfirmation
         {...this.props}
+        orderDetails={this.props.orderDetails}
         onContinue={() => this.finalSubmit()}
       />
     );

@@ -6,12 +6,53 @@ import ReturnsToBank from "./ReturnsToBank";
 import OrderReturnAddressDetails from "./OrderReturnAddressDetails";
 import PropTypes from "prop-types";
 import styles from "./ReturnStoreConfirmation.css";
+import visaLogo from "../../cart/components/img/Visa.svg";
+import masterLogo from "../../cart/components/img/Master.svg";
+import amexLogo from "../../cart/components/img/amex.svg";
+import repayLogo from "../../cart/components/img/rupay.svg";
+import dinersLogo from "../../cart/components/img/diners.svg";
+import discoverLogo from "../../cart/components/img/discover.svg";
+import jcbLogo from "../../cart/components/img/jcb.svg";
 import {
+  RUPAY_CARD,
+  VISA_CARD,
+  MASTER_CARD,
+  AMEX_CARD,
+  MESTRO_CARD,
+  DINERS_CARD,
+  DISCOVER_CARD,
+  JCB_CARD,
+  MASTER,
   RETURNS_PREFIX,
   RETURN_LANDING,
   RETURNS_REASON
 } from "../../lib/constants";
 export default class ReturnsStoreConfirmation extends React.Component {
+  getCardLogo(cardType) {
+    switch (cardType) {
+      case VISA_CARD:
+        return visaLogo;
+      case MASTER_CARD:
+        return masterLogo;
+      case AMEX_CARD:
+        return amexLogo;
+      case RUPAY_CARD:
+        return repayLogo;
+      case MESTRO_CARD:
+        return masterLogo;
+      case DINERS_CARD:
+        return dinersLogo;
+      case DISCOVER_CARD:
+        return discoverLogo;
+      case JCB_CARD:
+        return jcbLogo;
+      case MASTER:
+        return masterLogo;
+      default:
+        return false;
+    }
+  }
+
   navigateToReturnLanding() {
     return (
       <Redirect
@@ -53,7 +94,15 @@ export default class ReturnsStoreConfirmation extends React.Component {
               <div>Qty {data.orderProductWsDTO[0].quantity}</div>
             )}
           </OrderCard>
-          <ReturnsToBank />
+          <ReturnsToBank
+            cartNumber={
+              this.props.orderDetails &&
+              this.props.orderDetails.paymentCardDigit
+            }
+            cardLogo={this.getCardLogo(
+              this.props.orderDetails && this.props.orderDetails.paymentCard
+            )}
+          />
         </div>
       </ReturnsFrame>
     );
