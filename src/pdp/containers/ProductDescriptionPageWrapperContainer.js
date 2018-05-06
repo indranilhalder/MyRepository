@@ -7,7 +7,8 @@ import {
   getPdpEmi,
   getEmiTerms,
   pdpAboutBrand,
-  getProductPinCode
+  getProductPinCode,
+  getAllStoresForCliqAndPiq
 } from "../actions/pdp.actions";
 import { displayToast } from "../../general/toast.actions.js";
 import {
@@ -82,6 +83,9 @@ const mapDispatchToProps = dispatch => {
     },
     displayToast: val => {
       dispatch(displayToast(val));
+    },
+    getAllStoreForCliqAndPiq: () => {
+      dispatch(getAllStoresForCliqAndPiq());
     }
   };
 };

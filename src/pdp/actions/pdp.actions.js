@@ -870,13 +870,13 @@ export function getPdpItems(itemIds, widgetKey) {
 }
 
 // Actions to get All Stores CNC
-export function getAllStoresCNCRequest() {
+export function getAllStoresForCliqAndPiqRequest() {
   return {
     type: GET_ALL_STORES_FOR_CLIQ_AND_PIQ_REQUEST,
     status: REQUESTING
   };
 }
-export function getAllStoresCNCSuccess(storeDetails) {
+export function getAllStoresForCliqAndPiqSuccess(storeDetails) {
   return {
     type: GET_ALL_STORES_FOR_CLIQ_AND_PIQ_SUCCESS,
     status: SUCCESS,
@@ -884,7 +884,7 @@ export function getAllStoresCNCSuccess(storeDetails) {
   };
 }
 
-export function getAllStoresCNCFailure(error) {
+export function getAllStoresForCliqAndPiqFailure(error) {
   return {
     type: GET_ALL_STORES_FOR_CLIQ_AND_PIQ_FAILURE,
     status: ERROR,
@@ -893,10 +893,12 @@ export function getAllStoresCNCFailure(error) {
 }
 
 // Action Creator for getting all stores CNC
-export function getAllStoresCNC(pinCode) {
+export function getAllStoresForCliqAndPiq() {
+  console.log("Called me");
+  const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
-    dispatch(getAllStoresCNCRequest());
+    dispatch(getAllStoresForCliqAndPiqRequest());
     try {
       const result = await api.get(
         `${ALL_STORES_FOR_CLIQ_AND_PIQ_PATH}/${pinCode}?access_token=${
@@ -905,13 +907,13 @@ export function getAllStoresCNC(pinCode) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
+      console.log(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(getAllStoresCNCSuccess(resultJson.stores));
+      dispatch(getAllStoresForCliqAndPiqSuccess(resultJson.stores));
     } catch (e) {
-      dispatch(getAllStoresCNCFailure(e.message));
+      dispatch(getAllStoresForCliqAndPiqFailure(e.message));
     }
   };
 }
