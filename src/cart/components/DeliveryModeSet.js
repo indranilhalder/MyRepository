@@ -45,8 +45,14 @@ export default class DeliveryModeSet extends React.Component {
                     } ${
                       deliveryOption.code === COLLECT
                         ? data.storeDetails &&
-                          `Pickup Store: ${data.storeDetails.displayName} ${
+                          `Pickup Store: ${
+                            data.storeDetails.displayName
+                              ? data.storeDetails.displayName
+                              : ""
+                          } ${
                             data.storeDetails.address.city
+                              ? data.storeDetails.address.city
+                              : ""
                           }`
                         : expectedDeliveryDate
                     }`}
