@@ -792,6 +792,7 @@ class CheckOutPage extends React.Component {
           egvCartGuid: giftCartObj.egvCartGuid
         });
       }
+      this.getPaymentModes();
     }
     if (value === PAYMENT_CHARGED) {
       if (this.props.updateTransactionDetails) {
@@ -1001,9 +1002,17 @@ class CheckOutPage extends React.Component {
       } else {
         egvGiftCartGuId = this.props.location.state.egvCartGuid;
       }
-      let guIdObject = new FormData();
-      guIdObject.append(CART_GU_ID, egvGiftCartGuId);
-      this.props.getPaymentModes(guIdObject);
+      this.props.getPaymentModes(egvGiftCartGuId);
+    } else {
+      let cartGuId;
+      const parsedQueryString = queryString.parse(this.props.location.search);
+      if (parsedQueryString.value) {
+        cartGuId = parsedQueryString.value;
+      } else {
+        let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+        cartGuId = JSON.parse(cartDetails).guid;
+      }
+      this.props.getPaymentModes(cartGuId);
     }
   };
   onSelectAddress(selectedAddress) {

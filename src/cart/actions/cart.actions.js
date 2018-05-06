@@ -1231,6 +1231,7 @@ export function getOrderSummary(pincode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      console.log(resultJson.cartGuid);
       dispatch(getPaymentModes(resultJson.cartGuid));
       dispatch(orderSumarySuccess(resultJson));
       dispatch(
@@ -1618,22 +1619,18 @@ export function paymentModesFailure(error) {
 }
 
 // Action Creator for Soft Reservation
-export function getPaymentModes(guIdDetails) {
+export function getPaymentModes(guId) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-
-  let cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
     dispatch(paymentModesRequest());
     try {
-      const result = await api.postFormData(
+      const result = await api.post(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
         }/payments/getPaymentModes?access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartId}&isPwa=true&platformNumber=2`,
-        guIdDetails
+        }&cartGuid=${guId}&isPwa=true&platformNumber=2`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
