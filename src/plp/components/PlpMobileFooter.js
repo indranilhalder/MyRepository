@@ -17,8 +17,14 @@ export default class PlpMobileFooter extends React.Component {
       <div className={styles.base}>
         <div className={styles.buttonHolder}>
           <div className={styles.button} onClick={this.onFilter}>
-            <div className={styles.refine} />
-            Refine
+            {this.props.hasFilters ? (
+              <div className={styles.refineSelected} />
+            ) : (
+              <div className={styles.refine} />
+            )}
+            <span className={this.props.hasFilters && styles.selectedText}>
+              Refine
+            </span>
           </div>
         </div>
         <div className={styles.buttonHolder}>
@@ -28,7 +34,14 @@ export default class PlpMobileFooter extends React.Component {
               this.onSort();
             }}
           >
-            <div className={styles.sort} /> Sort
+            {this.props.hasSort ? (
+              <div className={styles.activeSort} />
+            ) : (
+              <div className={styles.sort} />
+            )}
+            <span className={this.props.hasSort && styles.selectedText}>
+              Sort
+            </span>
           </div>
         </div>
       </div>
