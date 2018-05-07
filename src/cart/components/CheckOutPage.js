@@ -463,9 +463,7 @@ class CheckOutPage extends React.Component {
         productName={currentSelectedProduct.productName}
         productColour={currentSelectedProduct.color}
         hidePickupPersonDetail={() => this.togglePickupPersonForm()}
-        addStoreCNC={slavesId =>
-          this.addStoreCNC(slavesId, currentSelectedProduct)
-        }
+        addStoreCNC={slavesId => this.addStoreCNC(slavesId)}
         addPickupPersonCNC={(mobile, name) =>
           this.addPickupPersonCNC(mobile, name, currentSelectedProduct)
         }
