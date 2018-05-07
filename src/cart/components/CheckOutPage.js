@@ -734,7 +734,12 @@ class CheckOutPage extends React.Component {
                 ) / 100
               : "0.00"
           });
+        } else {
+          this.setState({
+            noCostEmiDiscount: "0.00"
+          });
         }
+
         this.setState({
           payableAmount: nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount
             .value
@@ -1007,7 +1012,8 @@ class CheckOutPage extends React.Component {
     this.setState({
       isNoCostEmiApplied: true,
       isNoCostEmiProceeded: false,
-      noCostEmiBankName: null
+      noCostEmiBankName: null,
+      noCostEmiDiscount: "0.00"
     });
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
