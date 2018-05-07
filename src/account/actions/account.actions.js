@@ -996,12 +996,18 @@ export function removeSavedCardFailure(error) {
   };
 }
 
-export function removeSavedCardDetails(userId, customerAccessToken) {
+export function removeSavedCardDetails(cardToken) {
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
     dispatch(removeSavedCardRequest());
     try {
       const result = await api.post(
-        `${USER_PATH}/${userId}/payments/savedCards?access_token=${customerAccessToken}&cardType=${CARD_TYPE}`
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/payments/removeSavedCards?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cardToken=${cardToken}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -1010,6 +1016,12 @@ export function removeSavedCardDetails(userId, customerAccessToken) {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(removeSavedCardSuccess(resultJson));
+      dispatch(
+        getSavedCardDetails(
+          JSON.parse(userDetails).userName,
+          JSON.parse(customerCookie).access_token
+        )
+      );
     } catch (e) {
       dispatch(removeSavedCardFailure(e.message));
     }
