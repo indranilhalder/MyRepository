@@ -1087,7 +1087,7 @@ class CheckOutPage extends React.Component {
   };
   onSelectAddress(selectedAddress) {
     let addressSelected = find(
-      this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
+      this.props.cart.cartDetailsCNC && this.props.cart.cartDetailsCNC.addressDetailsList && this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
       address => {
         return address.id === selectedAddress[0];
       }
