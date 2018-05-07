@@ -47,7 +47,7 @@ class Login extends Component {
     this.props.history.push(SIGN_UP_PATH);
   }
   goBack() {
-    if (this.props.history.length === 0) {
+    if (this.props.history.length <= 3) {
       this.props.history.push(HOME_ROUTER);
     } else {
       return this.props.history.goBack();
@@ -117,6 +117,7 @@ class Login extends Component {
     let footerText = "";
     let footerClick;
     let showSocialButtons;
+    console.log(this.props.history.length);
     if (pathName === LOGIN_PATH || MAIN_ROUTER) {
       footerText = "Don't have an account? Sign up";
       footerClick = () => this.navigateToSignUp();
