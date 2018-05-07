@@ -50,7 +50,7 @@ export default class PickUpLocation extends React.Component {
             </div>
           )}
         </div>
-        {!this.props.canSelectStore && (
+        {this.props.canSelectStore && (
           <div className={styles.buttonHolder}>
             <div
               className={styles.buttonContainer}
@@ -79,4 +79,7 @@ PickUpLocation.propTypes = {
   iconText: PropTypes.string,
   onClick: PropTypes.func,
   buttonText: PropTypes.string
+};
+PickUpLocation.defaultProps = {
+  canSelectStore: true
 };

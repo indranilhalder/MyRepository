@@ -198,7 +198,7 @@ export function getProductPinCodeFailure(error) {
   };
 }
 
-export function getProductPinCode(pinCode = null, productCode) {
+export function getProductPinCode(pinCode: null, productCode) {
   let validProductCode = productCode.toUpperCase();
 
   if (pinCode) {

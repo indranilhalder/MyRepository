@@ -302,8 +302,9 @@ export default class PdpApparel extends React.Component {
               </React.Fragment>
             )}
           </div>
-          {this.props.productDetails.isServiceableToPincode &&
-          this.props.productDetails.isServiceableToPincode.pinCode ? (
+          {(this.props.productDetails.isServiceableToPincode &&
+            this.props.productDetails.isServiceableToPincode.pinCode) ||
+          !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) ? (
             <PdpPincode
               hasPincode={true}
               pincode={this.props.productDetails.isServiceableToPincode.pinCode}

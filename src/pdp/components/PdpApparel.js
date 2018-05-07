@@ -284,8 +284,9 @@ export default class PdpApparel extends React.Component {
           ) : (
             <PdpPincode onClick={() => this.showPincodeModal()} />
           )}
-          {this.props.productDetails.isServiceableToPincode &&
-          this.props.productDetails.isServiceableToPincode.status === NO ? (
+          {(this.props.productDetails.isServiceableToPincode &&
+            this.props.productDetails.isServiceableToPincode.status === NO) ||
+          !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) ? (
             <Overlay
               labelText="Not serviceable in you pincode,
   please try another pincode"
