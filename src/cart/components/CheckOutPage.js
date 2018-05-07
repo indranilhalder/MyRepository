@@ -364,9 +364,9 @@ class CheckOutPage extends React.Component {
                   hasFooter={false}
                   size={val.size}
                   color={val.color}
-                  productDetails={val.productBrand}
+                  //productDetails={val.productBrand}
                   productName={val.productName}
-                  price={val.offerPrice}
+                  price={val.offerPrice ? val.offerPrice : val.price}
                   deliveryInformation={val.elligibleDeliveryMode}
                   showDelivery={true}
                   deliveryInfoToggle={false}
@@ -1689,6 +1689,10 @@ class CheckOutPage extends React.Component {
       labelForButton = PAY_NOW;
     }
 
+    if (!this.state.isRemainingAmount && this.state.isCliqCashApplied) {
+      checkoutButtonStatus = false;
+      labelForButton = PAY_NOW;
+    }
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {

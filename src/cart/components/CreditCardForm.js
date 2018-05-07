@@ -168,14 +168,6 @@ export default class CreditCardForm extends React.Component {
                         ? this.props.cvvNumber
                         : this.state.cvvNumber
                     }
-                    rightChildSize={33}
-                    rightChild={
-                      <CircleButton
-                        size={33}
-                        color={"transparent"}
-                        icon={<Icon image={informationIcon} size={16} />}
-                      />
-                    }
                   />
                 </div>
               </div>
