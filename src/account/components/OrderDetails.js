@@ -108,6 +108,11 @@ export default class OrderDetails extends React.Component {
       this.props.showModal(orderDetails);
     }
   }
+  // showDeliveryInformation(data){
+  //   if(this.props.showModal){
+  //     this.props
+  //   }
+  // }
 
   componentDidUpdate(prevProps) {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -141,6 +146,7 @@ export default class OrderDetails extends React.Component {
     }
   }
   render() {
+    console.log(this.props);
     if (this.props.loadingForFetchOrderDetails) {
       this.props.showSecondaryLoader();
     } else {
@@ -226,10 +232,7 @@ export default class OrderDetails extends React.Component {
                 {products.statusDisplayMsg && (
                   <div className={styles.orderStatusVertical}>
                     <OrderStatusVertical
-                      statusMessageList={
-                        products.statusDisplayMsg[0].value.statusList[0]
-                          .statusMessageList
-                      }
+                      statusMessageList={products.statusDisplayMsg}
                     />
                   </div>
                 )}
