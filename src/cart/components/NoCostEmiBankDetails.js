@@ -79,7 +79,6 @@ export default class NoCostEmiBankDetails extends React.Component {
         selectedTenure: null
       });
     } else {
-      console.log(this.props.bankList[index]);
       this.setState({
         selectedBankIndex: index,
         selectedMonth: null,
