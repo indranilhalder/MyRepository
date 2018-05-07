@@ -184,7 +184,9 @@ export default class PaymentCardWrapper extends React.Component {
                       : this.props.cliqCashAmount
                   }
                   value={
-                    this.props.userCliqCashAmount
+                    (this.props.userCliqCashAmount &&
+                      this.props.userCliqCashAmount !== "0.00") ||
+                    this.props.isCliqCashApplied === true
                       ? this.props.userCliqCashAmount
                       : 0
                   }
@@ -192,6 +194,7 @@ export default class PaymentCardWrapper extends React.Component {
                   onToggle={val => this.handleClick(val)}
                   isFromGiftCard={this.props.isFromGiftCard}
                   addGiftCard={() => this.addGiftCard()}
+                  isCliqCashApplied={this.props.isCliqCashApplied}
                 />
               </div>
             )}

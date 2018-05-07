@@ -119,6 +119,41 @@ export default class BrandsLandingPageDefault extends React.Component {
         </div>
         {/* we need to show this once api will be work and at that
         time also need some modification in integration */}
+
+        <div className={styles.bannerHolder}>
+          {currentActiveHeroBanner &&
+            currentActiveHeroBanner.length > 1 && (
+              <BannerMobile bannerHeight="45vw">
+                {currentActiveHeroBanner &&
+                  currentActiveHeroBanner.map(heroBanner => {
+                    return (
+                      <BrandBanner
+                        image={heroBanner.imageURL}
+                        logo={heroBanner.brandLogo}
+                        title={heroBanner.title}
+                        onClick={() =>
+                          this.renderToAnotherURL(heroBanner.webURL)
+                        }
+                      />
+                    );
+                  })}
+              </BannerMobile>
+            )}
+          {currentActiveHeroBanner &&
+            currentActiveHeroBanner.length < 2 &&
+            currentActiveHeroBanner.map(heroBanner => {
+              return (
+                <div className={styles.monoBannerHolder}>
+                  <BrandBanner
+                    image={heroBanner.imageURL}
+                    logo={heroBanner.brandLogo}
+                    title={heroBanner.title}
+                    onClick={() => this.renderToAnotherURL(heroBanner.webURL)}
+                  />
+                </div>
+              );
+            })}
+        </div>
         {userDetails &&
           customerCookie && (
             <div className={styles.following}>
@@ -156,41 +191,6 @@ export default class BrandsLandingPageDefault extends React.Component {
               )}
             </div>
           )}
-
-        <div className={styles.bannerHolder}>
-          {currentActiveHeroBanner &&
-            currentActiveHeroBanner.length > 1 && (
-              <BannerMobile bannerHeight="45vw">
-                {currentActiveHeroBanner &&
-                  currentActiveHeroBanner.map(heroBanner => {
-                    return (
-                      <BrandBanner
-                        image={heroBanner.imageURL}
-                        logo={heroBanner.brandLogo}
-                        title={heroBanner.title}
-                        onClick={() =>
-                          this.renderToAnotherURL(heroBanner.webURL)
-                        }
-                      />
-                    );
-                  })}
-              </BannerMobile>
-            )}
-          {currentActiveHeroBanner &&
-            currentActiveHeroBanner.length < 2 &&
-            currentActiveHeroBanner.map(heroBanner => {
-              return (
-                <div className={styles.monoBannerHolder}>
-                  <BrandBanner
-                    image={heroBanner.imageURL}
-                    logo={heroBanner.brandLogo}
-                    title={heroBanner.title}
-                    onClick={() => this.renderToAnotherURL(heroBanner.webURL)}
-                  />
-                </div>
-              );
-            })}
-        </div>
         <div className={styles.searchInput}>
           <Input2
             placeholder="Search your brand"
