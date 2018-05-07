@@ -401,6 +401,7 @@ const productDescription = (
 
     case pdpActions.GET_ALL_STORES_FOR_CLIQ_AND_PIQ_FAILURE:
       return Object.assign({}, state, {
+        storeDetails: null,
         storeStatus: action.status,
         storeError: action.error,
         loadingForCliqAndPiq: false
