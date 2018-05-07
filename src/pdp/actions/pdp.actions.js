@@ -227,7 +227,7 @@ export function getProductPinCode(pinCode, productCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      console.log(resultJson.listOfDataList[0].value);
+      // console.log(resultJson.listOfDataList[0].value);
       dispatch(
         getProductPinCodeSuccess({
           pinCode,
@@ -894,10 +894,16 @@ export function getAllStoresForCliqAndPiqFailure(error) {
 }
 
 // Action Creator for getting all stores CNC
-export function getAllStoresForCliqAndPiq() {
+export function getAllStoresForCliqAndPiq(newPinCode = null) {
   console.log("Called me");
-
-  const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+  let pinCode;
+  if (newPinCode) {
+    localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, newPinCode);
+    pinCode = newPinCode;
+  } else {
+    pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+  }
+  // const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   let accessToken;
@@ -906,6 +912,7 @@ export function getAllStoresForCliqAndPiq() {
   } else {
     accessToken = JSON.parse(globalCookie).access_token;
   }
+
   return async (dispatch, getState, { api }) => {
     dispatch(getAllStoresForCliqAndPiqRequest());
     try {

@@ -106,7 +106,7 @@ const productDescription = (
           }
         );
       }
-
+      console.log(deliveryOptionObj.validDeliveryModes);
       let eligibleDeliveryModes = [];
       if (deliveryOptionObj && deliveryOptionObj.isServicable === YES) {
         eligibleDeliveryModes = transferPincodeToPdpPincode(
@@ -114,6 +114,7 @@ const productDescription = (
         );
         Object.assign(currentPdpDetail, {
           eligibleDeliveryModes,
+          slaveData: deliveryOptionObj.validDeliveryModes,
           isServiceableToPincode: {
             status: YES,
             pinCode: action.productPinCode.pinCode
@@ -404,7 +405,6 @@ const productDescription = (
         loading: false
       });
     case pdpActions.SHOW_PDP_PIQ_PAGE:
-      console.log("in reducer");
       return Object.assign({}, state, {
         showPiqPage: true
       });

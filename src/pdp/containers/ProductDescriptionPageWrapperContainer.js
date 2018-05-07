@@ -93,7 +93,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(showPdpPiqPage());
     },
     hidePdpPiqPage: () => {
-      dispatch(showPdpPiqPage());
+      dispatch(hidePdpPiqPage());
     }
   };
 };
@@ -104,7 +104,8 @@ const mapStateToProps = state => {
     productDetails: state.productDescription.productDetails,
     loading: state.productDescription.loading,
     stores: state.productDescription.storeDetails,
-    showPiqPage: state.productDescription.showPiqPage
+    showPiqPage: state.productDescription.showPiqPage,
+    slaveData: state.productDescription.slaveData
   };
 };
 

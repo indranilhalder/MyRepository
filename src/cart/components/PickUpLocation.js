@@ -12,6 +12,7 @@ export default class PickUpLocation extends React.Component {
   }
 
   render() {
+    console.log(this.props.canSelectStore);
     return (
       <div className={styles.base}>
         <div className={styles.holder}>
@@ -50,19 +51,21 @@ export default class PickUpLocation extends React.Component {
             </div>
           )}
         </div>
-        <div className={styles.buttonHolder}>
-          <div
-            className={styles.buttonContainer}
-            onClick={() => this.handleClick()}
-          >
-            <Button
-              type="primary"
-              color="#fff"
-              label={this.props.buttonText}
-              width={121}
-            />
+        {!this.props.canSelectStore && (
+          <div className={styles.buttonHolder}>
+            <div
+              className={styles.buttonContainer}
+              onClick={() => this.handleClick()}
+            >
+              <Button
+                type="primary"
+                color="#fff"
+                label={this.props.buttonText}
+                width={121}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
