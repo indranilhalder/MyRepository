@@ -5,16 +5,14 @@ import {
   GLOBAL_ACCESS_TOKEN,
   SUCCESS_UPPERCASE,
   SUCCESS_CAMEL_CASE,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE,
-  FAILURE_UPPERCASE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import {
   getMcvId,
   setDataLayerForPdpDirectCalls,
-  SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT,
-  SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT
+  SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT
 } from "../../lib/adobeUtils.js";
 import each from "lodash.foreach";
 
@@ -200,9 +198,12 @@ export function getProductPinCodeFailure(error) {
   };
 }
 
-export function getProductPinCode(pinCode, productCode) {
+export function getProductPinCode(pinCode = null, productCode) {
   let validProductCode = productCode.toUpperCase();
-  localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, pinCode);
+
+  if (pinCode) {
+    localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, pinCode);
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(getProductPinCodeRequest());
     try {
@@ -853,7 +854,7 @@ export function getPdpItems(itemIds, widgetKey) {
       each(itemIds, itemId => {
         productCodes = `${itemId},${productCodes}`;
       });
-      const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
+      const url = `v2/mpl/cms/page/getProductInfo?isPwa=true&productCodes=${productCodes}`;
       const result = await api.get(url);
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);

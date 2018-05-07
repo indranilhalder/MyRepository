@@ -39,14 +39,34 @@
 }
 .refine {
   composes: icon;
-  background: url("./img/filter.svg")no-repeat;
+  background: url("./img/filter.svg") no-repeat;
   background-position: center;
   background-size: 20px;
   z-index: 1000;
 }
+
+.refineSelected {
+  composes: icon;
+  background: url("./img/active-refine.svg") no-repeat;
+  background-position: center;
+  background-size: 20px;
+  z-index: 1000;
+}
+
+.selectedText {
+  color: red;
+}
 .sort {
   composes: icon;
-  background: url("./img/sort.svg")no-repeat;
+  background: url("./img/sort.svg") no-repeat;
+  background-position: center;
+  background-size: 20px;
+  z-index: 1000;
+}
+
+.activeSort {
+  composes: icon;
+  background: url("./img/active-sort.svg") no-repeat;
   background-position: center;
   background-size: 20px;
   z-index: 1000;

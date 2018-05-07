@@ -26,6 +26,12 @@ const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SCROLL_CHECK_INTERVAL = 500;
 const OFFSET_BOTTOM = 800;
 export default class AllOrderDetails extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showOrder: null
+    };
+  }
   onClickImage(productCode) {
     if (productCode) {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
@@ -46,14 +52,17 @@ export default class AllOrderDetails extends React.Component {
       this.props.getAllOrdersDetails();
     }
   }
+  componentWillUnmount() {
+    this.props.clearOrderDetails();
+    window.removeEventListener("scroll", this.throttledScroll);
+  }
+
   componentDidUpdate() {
     if (this.props.shouldCallHeaderContainer) {
       this.props.setHeaderText(ORDER_HISTORY);
     }
   }
-  componentWillUnmount() {
-    this.props.clearOrderDetails();
-  }
+
   renderToContinueShopping() {
     this.props.history.push(HOME_ROUTER);
   }
@@ -61,7 +70,7 @@ export default class AllOrderDetails extends React.Component {
     return throttle(() => {
       if (
         this.props.profile.orderDetails &&
-        this.props.profile.orderDetails.currentPage * 3 <
+        (this.props.profile.orderDetails.currentPage + 1) * 3 <
           this.props.profile.orderDetails.totalNoOfOrders
       ) {
         const windowHeight =
@@ -80,8 +89,7 @@ export default class AllOrderDetails extends React.Component {
         const windowBottom = windowHeight + window.pageYOffset;
         if (
           windowBottom >= docHeight - OFFSET_BOTTOM &&
-          !this.props.profile.loading &&
-          this.props.loadingForClearOrderDetails
+          !this.props.profile.loading
         ) {
           this.props.paginate(
             this.props.profile.orderDetails.pageSize + 1,

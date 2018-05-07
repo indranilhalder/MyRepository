@@ -9,6 +9,7 @@ import {
   renderMetaTags,
   renderMetaTagsWithoutSeoObject
 } from "../../lib/seoUtils.js";
+import SelectedFilter from "./FilterTab";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SCROLL_CHECK_INTERVAL = 500;
 const OFFSET_BOTTOM = 800;
@@ -119,6 +120,29 @@ export default class Plp extends React.Component {
   };
 
   render() {
+    let selectedFilterCount = 0;
+    let filterSelected = false;
+    let hasSorts = false;
+    if (this.props.productListings) {
+      this.props.productListings.facetdata.forEach(filter => {
+        selectedFilterCount += filter.selectedFilterCount;
+      });
+
+      if (this.props.productListings.facetdatacategory.selected === true) {
+        filterSelected = true;
+      }
+
+      if (selectedFilterCount > 0) {
+        filterSelected = true;
+      }
+
+      this.props.productListings.sorts.forEach(sort => {
+        if (sort.selected && !hasSorts) {
+          hasSorts = true;
+        }
+      });
+    }
+
     return (
       this.props.productListings && (
         <div className={styles.base}>
@@ -141,6 +165,8 @@ export default class Plp extends React.Component {
           />
           <div className={styles.footer}>
             <PlpMobileFooter
+              hasFilters={filterSelected}
+              hasSort={hasSorts}
               onFilter={this.toggleFilter}
               onSort={this.onSortClick}
             />

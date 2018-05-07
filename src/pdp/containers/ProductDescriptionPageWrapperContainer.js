@@ -29,19 +29,15 @@ import {
 } from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
-import { SUCCESS, DEFAULT_PIN_CODE_LOCAL_STORAGE } from "../../lib/constants";
-
+import { SUCCESS } from "../../lib/constants.js";
 const mapDispatchToProps = dispatch => {
   return {
-    getProductDescription: async productCode => {
-      const getProductResponse = await dispatch(
+    getProductDescription: async (productCode, pinCode) => {
+      const productDetailsResponse = await dispatch(
         getProductDescription(productCode)
       );
-      if (getProductResponse.status === SUCCESS) {
-        const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-        if (pinCode) {
-          dispatch(getProductPinCode(pinCode, productCode));
-        }
+      if (productDetailsResponse.status === SUCCESS) {
+        dispatch(getProductPinCode(pinCode, productCode));
       }
     },
     addProductToCart: (userId, cartId, accessToken, productDetails) => {

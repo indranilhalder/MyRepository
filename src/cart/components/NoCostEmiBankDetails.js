@@ -84,6 +84,7 @@ export default class NoCostEmiBankDetails extends React.Component {
         selectedMonth: null,
         selectedBankName: this.props.bankList[index].bankName,
         selectedBankCode: this.props.bankList[index].code,
+        selectedCode: this.props.bankList[index].bankCode,
         bankName: null,
         selectedFromDropDown: false
       });
@@ -131,6 +132,12 @@ export default class NoCostEmiBankDetails extends React.Component {
             selectedMonth: index,
             selectedCouponCode: val.emicouponCode,
             selectedTenure: val.tenure
+          });
+
+          this.onChangeCardDetail({
+            is_emi: true,
+            emi_bank: this.state.selectedCode,
+            emi_tenure: val.tenure
           });
           this.props.applyNoCostEmi(
             val.emicouponCode,
@@ -243,7 +250,6 @@ export default class NoCostEmiBankDetails extends React.Component {
           return bank.logoUrl;
         })
         .slice(0, 4);
-
     let filteredBankListWithOutLogo =
       this.props.bankList &&
       this.props.bankList.filter(
@@ -254,6 +260,7 @@ export default class NoCostEmiBankDetails extends React.Component {
     } else {
       modifiedBankList = filteredBankListWithLogo;
     }
+
     return (
       <div className={styles.base}>
         {!this.props.isNoCostEmiProceeded && (
@@ -284,6 +291,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                   <SelectBoxMobile2
                     height={33}
                     placeholder={"Other Bank"}
+                    isEnable={this.state.selectedFromDropDown}
                     options={filteredBankListWithOutLogo.map((val, i) => {
                       return {
                         value: i,

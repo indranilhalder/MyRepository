@@ -86,8 +86,8 @@ export default class CreditCardForm extends React.Component {
         ExpiryMonth: null,
         ExpiryYear: null,
         value: "",
-        monthValue: "",
-        yearValue: ""
+        monthValue: "Expiry Month",
+        yearValue: "Expiry year"
       });
     }
   }
@@ -135,6 +135,7 @@ export default class CreditCardForm extends React.Component {
                 options={this.monthOptions}
                 textStyle={{ fontSize: 14 }}
                 value={this.state.monthValue}
+                label={this.state.monthValue}
               />
             </div>
             <div className={styles.dropDownBox}>
@@ -146,6 +147,7 @@ export default class CreditCardForm extends React.Component {
                   this.onChange({ yearValue: yearValue.value })
                 }
                 value={this.state.yearValue}
+                label={this.state.yearValue}
               />
             </div>
           </div>
@@ -166,14 +168,6 @@ export default class CreditCardForm extends React.Component {
                         ? this.props.cvvNumber
                         : this.state.cvvNumber
                     }
-                    rightChildSize={33}
-                    rightChild={
-                      <CircleButton
-                        size={33}
-                        color={"transparent"}
-                        icon={<Icon image={informationIcon} size={16} />}
-                      />
-                    }
                   />
                 </div>
               </div>
@@ -181,8 +175,9 @@ export default class CreditCardForm extends React.Component {
           </div>
           <div className={styles.saveCardText}>
             <div className={styles.saveText}>
-              We will save your card for a faster checkout. To remove your
-              details, visit My Cliq.
+              We will save your card details securely for a faster checkout; we
+              don't store the CVV number. To remove your card details, visit My
+              Account.
             </div>
           </div>
         </div>

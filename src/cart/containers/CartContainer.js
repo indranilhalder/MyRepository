@@ -137,7 +137,8 @@ const mapStateToProps = state => {
   return {
     cart: state.cart,
     user: state.user,
-    loginFromMyBag: state.cart.loginFromMyBag
+    loginFromMyBag: state.cart.loginFromMyBag,
+    loadingForCartDetail: state.cart.loadingForCartDetail
   };
 };
 const CartContainer = withRouter(

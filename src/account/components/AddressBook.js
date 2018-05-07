@@ -96,14 +96,10 @@ export default class AddressBook extends React.Component {
     );
   };
   render() {
-    if (this.props.loading && !this.props.userAddress) {
-      return this.renderLoader();
+    if (this.props.loading) {
+      this.props.showSecondaryLoader();
     } else {
-      if (this.props.loading) {
-        this.props.showSecondaryLoader();
-      } else {
-        this.props.hideSecondaryLoader();
-      }
+      this.props.hideSecondaryLoader();
     }
 
     return this.renderAddressBook();

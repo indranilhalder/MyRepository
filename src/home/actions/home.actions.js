@@ -163,7 +163,7 @@ export function getItems(positionInFeed, itemIds) {
       each(itemIds, itemId => {
         productCodes = `${itemId},${productCodes}`;
       });
-      const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
+      const url = `v2/mpl/cms/page/getProductInfo?isPwa=true&productCodes=${productCodes}`;
       const result = await api.get(url);
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
