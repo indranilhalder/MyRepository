@@ -209,6 +209,7 @@ export default class OrderDetails extends React.Component {
                   }
                   paymentMethod={orderDetails.paymentMethod}
                   isInvoiceAvailable={products.isInvoiceAvailable}
+                  statusDisplay={products.statusDisplayMsg}
                   request={() =>
                     this.requestInvoice(products.USSID, products.sellerorderno)
                   }

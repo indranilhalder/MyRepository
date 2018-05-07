@@ -217,6 +217,18 @@ export default class Checkout extends React.Component {
                   </div>
                 </div>
               )}
+              {this.props.isCliqCashApplied && (
+                <div className={styles.informationHolder}>
+                  <div className={styles.informationQuestionHolder}>
+                    Cliq Cash
+                  </div>
+                  <div className={classOffers}>
+                    {RUPEE_SYMBOL}
+                    {this.props.cliqCashPaidAmount}
+                  </div>
+                </div>
+              )}
+
               {this.props.payable && (
                 <div className={styles.informationHolder}>
                   <div className={styles.informationQuestionHolder}>
