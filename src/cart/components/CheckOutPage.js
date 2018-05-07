@@ -139,7 +139,8 @@ class CheckOutPage extends React.Component {
       captchaReseponseForCOD: null, // in case of COD order its holding that ceptcha verification
       noCostEmiDiscount: "0.00",
       egvCartGuid: null,
-      noCostEmiBankName: null
+      noCostEmiBankName: null,
+      isCliqCashApplied: false
     };
   }
 
@@ -1428,10 +1429,12 @@ class CheckOutPage extends React.Component {
   };
 
   applyCliqCash = () => {
+    this.setState({ isCliqCashApplied: true });
     this.props.applyCliqCash();
   };
 
   removeCliqCash = () => {
+    this.setState({ isCliqCashApplied: false });
     this.props.removeCliqCash();
   };
 
@@ -1663,7 +1666,10 @@ class CheckOutPage extends React.Component {
       checkoutButtonStatus = this.validateSubmitButton();
       labelForButton = PAY_NOW;
     }
-
+    if (!this.state.isRemainingBalance && this.state.isCliqCashApplied) {
+      checkoutButtonStatus = false;
+      labelForButton = PAY_NOW;
+    }
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
