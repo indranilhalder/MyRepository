@@ -273,7 +273,11 @@ class CartPage extends React.Component {
       <div className={styles.base}>
         <div className={styles.content}>
           <TextWithUnderLine
-            heading={defaultPinCode ? defaultPinCode : "Enter Pincode"}
+            heading={
+              defaultPinCode && defaultPinCode !== "undefined"
+                ? defaultPinCode
+                : "Enter Pincode"
+            }
             onClick={() => this.changePinCode()}
             buttonLabel="Change"
           />
@@ -337,7 +341,11 @@ class CartPage extends React.Component {
         <div className={styles.base}>
           <div className={styles.content}>
             <TextWithUnderLine
-              heading={defaultPinCode ? defaultPinCode : "Enter Pincode"}
+              heading={
+                defaultPinCode && defaultPinCode !== "undefined"
+                  ? defaultPinCode
+                  : "Enter Pincode"
+              }
               onClick={() => this.changePinCode()}
               buttonLabel="Change"
             />
