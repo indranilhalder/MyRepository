@@ -38,7 +38,7 @@ export default class PiqPageForPdp extends React.Component {
           return allStoreIds.includes(val.slaveId);
         })
       : [];
-    console.log(availableStores);
+
     return (
       <div className={styles.piqPageHolder}>
         <div className={styles.piqHeaderHolder}>
