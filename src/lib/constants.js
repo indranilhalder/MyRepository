@@ -154,7 +154,9 @@ export const COLLECT = "click-and-collect";
 export const HOME_DELIVERY = "home-delivery";
 export const SHORT_EXPRESS = "ED";
 export const SHORT_COLLECT = "CNC";
-
+export const EXPRESS_TEXT = "Express Shipping";
+export const HOME_TEXT = "Standard Shipping";
+export const COLLECT_TEXT = "CLiQ & PiQ";
 export const FOLLOW = "Follow";
 export const FOLLOWING = "Following";
 

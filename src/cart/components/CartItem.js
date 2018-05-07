@@ -7,10 +7,15 @@ import BagPageFooter from "../../general/components/BagPageFooter";
 import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import DeliveryInfoSelect from "./DeliveryInfoSelect";
 import PropTypes from "prop-types";
-import { HOME_DELIVERY, EXPRESS, COLLECT } from "../../lib/constants";
-const EXPRESS_TEXT = "Express Shipping";
-const HOME_TEXT = "Standard Shipping";
-const COLLECT_TEXT = "CLiQ & PiQ";
+import {
+  HOME_DELIVERY,
+  EXPRESS,
+  COLLECT,
+  EXPRESS_TEXT,
+  HOME_TEXT,
+  COLLECT_TEXT
+} from "../../lib/constants";
+
 export default class CartItem extends React.Component {
   constructor(props) {
     super(props);
@@ -29,7 +34,7 @@ export default class CartItem extends React.Component {
       this.props.onRemove(index);
     }
   }
-  getDeliveryInFoName = type => {
+  getDeliveryName = type => {
     if (type === HOME_DELIVERY) {
       return HOME_TEXT;
     }
@@ -105,7 +110,7 @@ export default class CartItem extends React.Component {
                 </div>
               )}
               <span>
-                {this.getDeliveryInFoName(this.props.deliveryType)}{" "}
+                {this.getDeliveryName(this.props.deliveryType)}{" "}
                 {this.props.deliverTime && (
                   <span>{`: ${this.props.deliverTime}`}</span>
                 )}
