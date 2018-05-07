@@ -353,7 +353,7 @@ please try another pincode"
             </Overlay>
           ) : (
             <PdpDeliveryModes
-              getAllStoreForCliqAndPiq={this.props.getAllStoreForCliqAndPiq}
+              getAllStoresForCliqAndPiq={this.props.getAllStoresForCliqAndPiq}
               eligibleDeliveryModes={productData.eligibleDeliveryModes}
               deliveryModesATP={productData.deliveryModesATP}
             />

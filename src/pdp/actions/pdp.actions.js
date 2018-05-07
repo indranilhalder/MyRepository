@@ -168,12 +168,12 @@ export function getProductDescription(productCode) {
           getState().icid.value,
           getState().icid.icidType
         );
-        dispatch(getProductDescriptionSuccess(resultJson));
+        return dispatch(getProductDescriptionSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.error}`);
       }
     } catch (e) {
-      dispatch(getProductDescriptionFailure(e.message));
+      return dispatch(getProductDescriptionFailure(e.message));
     }
   };
 }
@@ -227,7 +227,6 @@ export function getProductPinCode(pinCode, productCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      // console.log(resultJson.listOfDataList[0].value);
       dispatch(
         getProductPinCodeSuccess({
           pinCode,
@@ -895,7 +894,6 @@ export function getAllStoresForCliqAndPiqFailure(error) {
 
 // Action Creator for getting all stores CNC
 export function getAllStoresForCliqAndPiq(newPinCode = null) {
-  console.log("Called me");
   let pinCode;
   if (newPinCode) {
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, newPinCode);
@@ -922,7 +920,6 @@ export function getAllStoresForCliqAndPiq(newPinCode = null) {
 
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-      console.log(resultJson);
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -934,7 +931,6 @@ export function getAllStoresForCliqAndPiq(newPinCode = null) {
 }
 
 export function showPdpPiqPage() {
-  console.log("in action");
   return {
     type: SHOW_PDP_PIQ_PAGE
   };

@@ -29,11 +29,20 @@ import {
 } from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
+import { SUCCESS, DEFAULT_PIN_CODE_LOCAL_STORAGE } from "../../lib/constants";
 
 const mapDispatchToProps = dispatch => {
   return {
-    getProductDescription: productCode => {
-      dispatch(getProductDescription(productCode));
+    getProductDescription: async productCode => {
+      const getProductResponse = await dispatch(
+        getProductDescription(productCode)
+      );
+      if (getProductResponse.status === SUCCESS) {
+        const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+        if (pinCode) {
+          dispatch(getProductPinCode(pinCode, productCode));
+        }
+      }
     },
     addProductToCart: (userId, cartId, accessToken, productDetails) => {
       dispatch(addProductToCart(userId, cartId, accessToken, productDetails));
@@ -86,8 +95,8 @@ const mapDispatchToProps = dispatch => {
     displayToast: val => {
       dispatch(displayToast(val));
     },
-    getAllStoreForCliqAndPiq: () => {
-      dispatch(getAllStoresForCliqAndPiq());
+    getAllStoresForCliqAndPiq: pinCode => {
+      dispatch(getAllStoresForCliqAndPiq(pinCode));
     },
     showPdpPiqPage: () => {
       dispatch(showPdpPiqPage());
@@ -99,7 +108,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     productDetails: state.productDescription.productDetails,
     loading: state.productDescription.loading,

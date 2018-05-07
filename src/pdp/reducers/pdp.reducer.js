@@ -106,7 +106,7 @@ const productDescription = (
           }
         );
       }
-      console.log(deliveryOptionObj.validDeliveryModes);
+
       let eligibleDeliveryModes = [];
       if (deliveryOptionObj && deliveryOptionObj.isServicable === YES) {
         eligibleDeliveryModes = transferPincodeToPdpPincode(

@@ -44,11 +44,13 @@ export default class PiqPage extends React.Component {
         mobile: nextProps.userDetails && nextProps.userDetails.mobileNumber
       });
     }
+
     if (nextProps.availableStores.length > 0) {
       this.setState({
         lat: nextProps.availableStores[0].geoPoint.latitude,
         lng: nextProps.availableStores[0].geoPoint.longitude
       });
+      this.forceUpdate();
     }
   }
   componentDidMount = () => {
@@ -97,7 +99,6 @@ export default class PiqPage extends React.Component {
           <Map lat={this.state.lat} lng={this.state.lng} zoom={16}>
             {this.props.availableStores &&
               this.props.availableStores.map((val, i) => {
-                console.log(val);
                 return (
                   <MarkerStore
                     lat={val.geoPoint.latitude}
