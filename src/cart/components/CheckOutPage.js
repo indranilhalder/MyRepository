@@ -1864,6 +1864,7 @@ class CheckOutPage extends React.Component {
                     isNoCostEmiProceeded: false
                   })
                 }
+                isCliqCashApplied={this.state.isCliqCashApplied}
               />
             </div>
           )}
