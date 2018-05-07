@@ -19,6 +19,7 @@ export default class HeroBanner extends React.Component {
                   <BannerImage
                     logo={datum.brandLogo}
                     title={datum.title}
+                    subTitle={datum.subTitle}
                     image={datum.imageURL}
                     key={i}
                     url={datum.webURL}
@@ -39,6 +40,7 @@ export default class HeroBanner extends React.Component {
                     logo={datum.brandLogo}
                     title={datum.title}
                     image={datum.imageURL}
+                    subTitle={datum.subTitle}
                     key={i}
                     url={datum.webURL}
                     {...rest}
