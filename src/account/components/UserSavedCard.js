@@ -75,14 +75,14 @@ export default class UserSavedCard extends React.Component {
   componentDidUpdate() {
     this.props.setHeaderText(SAVED_PAYMENTS);
   }
-  removeSavedCardDetails = () => {
+  removeSavedCardDetails = cardToken => {
     if (this.props.removeSavedCardDetails) {
-      this.props.removeSavedCardDetails();
+      this.props.removeSavedCardDetails(cardToken);
     }
   };
 
   render() {
-    if (this.props.loading) {
+    if (this.props.profile.loading) {
       this.props.showSecondaryLoader();
     } else {
       this.props.hideSecondaryLoader();
@@ -116,7 +116,9 @@ export default class UserSavedCard extends React.Component {
                     cardNumber={cardNumber}
                     cardImage={data.cardImage}
                     onChangeCvv={(cvv, cardNo) => this.onChangeCvv(cvv, cardNo)}
-                    removeSavedCardDetails={() => this.removeSavedCardDetails()}
+                    removeSavedCardDetails={() =>
+                      this.removeSavedCardDetails(data.value.cardToken)
+                    }
                   />
                 </div>
               );
