@@ -184,7 +184,8 @@ export default class PaymentCardWrapper extends React.Component {
                       : this.props.cliqCashAmount
                   }
                   value={
-                    this.props.userCliqCashAmount
+                    this.props.userCliqCashAmount &&
+                    this.props.cliqCashAmount !== "0.00"
                       ? this.props.userCliqCashAmount
                       : 0
                   }

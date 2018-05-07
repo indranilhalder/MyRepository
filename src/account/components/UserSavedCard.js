@@ -54,9 +54,9 @@ export default class UserSavedCard extends React.Component {
               let cardNumber = `${data.value.cardISIN}xx xxxx ${
                 data.value.cardEndingDigits
               }`.replace(CARD_FORMAT, " ");
-              let cardHolderName = `${data.value.firstName}  ${
-                data.value.firstName
-              }`;
+              let cardHolderName = data.value.nameOnCard
+                ? data.value.nameOnCard
+                : "";
               return (
                 <div className={styles.cardHolder}>
                   <SavedPaymentCard
