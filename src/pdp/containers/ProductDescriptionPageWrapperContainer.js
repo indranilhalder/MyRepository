@@ -8,7 +8,9 @@ import {
   getEmiTerms,
   pdpAboutBrand,
   getProductPinCode,
-  getAllStoresForCliqAndPiq
+  getAllStoresForCliqAndPiq,
+  showPdpPiqPage,
+  hidePdpPiqPage
 } from "../actions/pdp.actions";
 import { displayToast } from "../../general/toast.actions.js";
 import {
@@ -86,14 +88,23 @@ const mapDispatchToProps = dispatch => {
     },
     getAllStoreForCliqAndPiq: () => {
       dispatch(getAllStoresForCliqAndPiq());
+    },
+    showPdpPiqPage: () => {
+      dispatch(showPdpPiqPage());
+    },
+    hidePdpPiqPage: () => {
+      dispatch(showPdpPiqPage());
     }
   };
 };
 
 const mapStateToProps = state => {
+  console.log(state);
   return {
     productDetails: state.productDescription.productDetails,
-    loading: state.productDescription.loading
+    loading: state.productDescription.loading,
+    stores: state.productDescription.storeDetails,
+    showPiqPage: state.productDescription.showPiqPage
   };
 };
 

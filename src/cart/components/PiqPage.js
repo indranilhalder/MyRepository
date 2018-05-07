@@ -55,6 +55,67 @@ export default class PiqPage extends React.Component {
       .geoPoint.longitude;
     this.setState({ lat, lng });
   }
+  renderCliqAndPiq() {
+    let currentSelectedProduct = this.props.cart.cartDetailsCNC.products.find(
+      product => {
+        return product.USSID === this.state.selectedProductsUssIdForCliqAndPiq;
+      }
+    );
+    const firstSlaveData =
+      currentSelectedProduct.pinCodeResponse.validDeliveryModes;
+    const someData = firstSlaveData
+      .map(slaves => {
+        return (
+          slaves.CNCServiceableSlavesData &&
+          slaves.CNCServiceableSlavesData.map(slave => {
+            return (
+              slave &&
+              slave.serviceableSlaves.map(serviceableSlave => {
+                return serviceableSlave;
+              })
+            );
+          })
+        );
+      })
+      .map(val => {
+        return (
+          val &&
+          val.map(v => {
+            return v;
+          })
+        );
+      });
+
+    const allStoreIds = [].concat
+      .apply([], [].concat.apply([], someData))
+      .map(store => {
+        return store && store.slaveId;
+      });
+    const availableStores = this.props.cart.storeDetails
+      ? this.props.cart.storeDetails.filter(val => {
+          return allStoreIds.includes(val.slaveId);
+        })
+      : [];
+    return (
+      <PiqPage
+        availableStores={availableStores}
+        selectedSlaveId={this.state.selectedSlaveId}
+        numberOfStores={availableStores.length}
+        showPickupPerson={this.state.showPickupPerson}
+        productName={currentSelectedProduct.productName}
+        productColour={currentSelectedProduct.color}
+        hidePickupPersonDetail={() => this.togglePickupPersonForm()}
+        addStoreCNC={slavesId => this.addStoreCNC(slavesId)}
+        addPickupPersonCNC={(mobile, name) =>
+          this.addPickupPersonCNC(mobile, name, currentSelectedProduct)
+        }
+        changePincode={pincode => this.changePincodeOnCliqAndPiq(pincode)}
+        goBack={() => this.removeCliqAndPiq()}
+        getUserDetails={() => this.getUserDetails()}
+        userDetails={this.props.userDetails}
+      />
+    );
+  }
   getValue(val) {
     this.setState(val);
   }

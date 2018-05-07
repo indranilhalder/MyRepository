@@ -299,6 +299,7 @@ please try another pincode"
             </Overlay>
           ) : (
             <PdpDeliveryModes
+              getAllStoreForCliqAndPiq={this.props.getAllStoreForCliqAndPiq}
               eligibleDeliveryModes={productData.eligibleDeliveryModes}
               deliveryModesATP={productData.deliveryModesATP}
             />

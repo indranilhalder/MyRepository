@@ -110,7 +110,8 @@ export const GET_ALL_STORES_FOR_CLIQ_AND_PIQ_SUCCESS =
   "GET_ALL_STORES_FOR_CLIQ_AND_PIQ_SUCCESS";
 export const GET_ALL_STORES_FOR_CLIQ_AND_PIQ_FAILURE =
   "GET_ALL_STORES_FOR_CLIQ_AND_PIQ_FAILURE";
-
+export const SHOW_PDP_PIQ_PAGE = "showPdpPiqPage";
+export const HIDE_PDP_PIQ_PAGE = "hidePdpPiqPage";
 const ALL_STORES_FOR_CLIQ_AND_PIQ_PATH = "v2/mpl/allStores";
 
 const MY_WISH_LIST = "MyWishList";
@@ -226,7 +227,7 @@ export function getProductPinCode(pinCode, productCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      console.log(resultJson.listOfDataList[0].value);
       dispatch(
         getProductPinCodeSuccess({
           pinCode,
@@ -895,16 +896,23 @@ export function getAllStoresForCliqAndPiqFailure(error) {
 // Action Creator for getting all stores CNC
 export function getAllStoresForCliqAndPiq() {
   console.log("Called me");
+
   const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  let accessToken;
+  if (customerCookie) {
+    accessToken = JSON.parse(customerCookie).access_token;
+  } else {
+    accessToken = JSON.parse(globalCookie).access_token;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(getAllStoresForCliqAndPiqRequest());
     try {
       const result = await api.get(
-        `${ALL_STORES_FOR_CLIQ_AND_PIQ_PATH}/${pinCode}?access_token=${
-          JSON.parse(customerCookie).access_token
-        }`
+        `${ALL_STORES_FOR_CLIQ_AND_PIQ_PATH}/${pinCode}?access_token=${accessToken}`
       );
+
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       console.log(resultJson);
@@ -915,5 +923,17 @@ export function getAllStoresForCliqAndPiq() {
     } catch (e) {
       dispatch(getAllStoresForCliqAndPiqFailure(e.message));
     }
+  };
+}
+
+export function showPdpPiqPage() {
+  console.log("in action");
+  return {
+    type: SHOW_PDP_PIQ_PAGE
+  };
+}
+export function hidePdpPiqPage() {
+  return {
+    type: HIDE_PDP_PIQ_PAGE
   };
 }

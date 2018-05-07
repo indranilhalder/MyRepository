@@ -173,6 +173,12 @@ export default class PdpApparel extends React.Component {
         : false
       : true;
   };
+  handleShowPiqPage = () => {
+    if (this.props.getAllStoreForCliqAndPiq) {
+      this.props.showPdpPiqPage();
+      this.props.getAllStoreForCliqAndPiq();
+    }
+  };
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -290,7 +296,8 @@ export default class PdpApparel extends React.Component {
             </Overlay>
           ) : (
             <PdpDeliveryModes
-              getAllStoreForCliqAndPiq={this.props.getAllStoreForCliqAndPiq}
+              // getAllStoreForCliqAndPiq={this.props.getAllStoreForCliqAndPiq}
+              onPiq={this.handleShowPiqPage}
               eligibleDeliveryModes={productData.eligibleDeliveryModes}
               deliveryModesATP={productData.deliveryModesATP}
             />

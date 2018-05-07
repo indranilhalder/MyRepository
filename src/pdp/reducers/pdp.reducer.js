@@ -28,7 +28,8 @@ const productDescription = (
     emiTerms: null,
     storeDetails: null,
     storeStatus: null,
-    storeError: null
+    storeError: null,
+    showPiqPage: false
   },
   action
 ) => {
@@ -402,7 +403,15 @@ const productDescription = (
         storeError: action.error,
         loading: false
       });
-
+    case pdpActions.SHOW_PDP_PIQ_PAGE:
+      console.log("in reducer");
+      return Object.assign({}, state, {
+        showPiqPage: true
+      });
+    case pdpActions.HIDE_PDP_PIQ_PAGE:
+      return Object.assign({}, state, {
+        showPiqPage: false
+      });
     default:
       return state;
   }

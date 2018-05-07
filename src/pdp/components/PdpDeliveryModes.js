@@ -48,7 +48,8 @@ export default class PdpDeliveryModes extends React.Component {
         />
 
         <DeliveryInformation
-          onPiq={this.props.getAllStoreForCliqAndPiq}
+          // onPiq={this.props.getAllStoreForCliqAndPiq}
+          onPiq={this.props.onPiq}
           type={COLLECT}
           available={eligibleDeliveryModes
             .map(val => {

@@ -3,7 +3,7 @@ import PdpElectronics from "./PdpElectronics";
 import PdpApparel from "./PdpApparel";
 import PdpJewellery from "./PdpJewellery";
 import PdpHome from "./PdpHome";
-
+import PiqPage from "../../cart/components/PiqPage";
 import styles from "./ProductDescriptionPageWrapper.css";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
@@ -29,6 +29,10 @@ const typeComponentMapping = {
 const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 
 export default class ProductDescriptionPageWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { showPiqPage: false };
+  }
   componentDidMount() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
       setTimeout(() => {
@@ -127,20 +131,25 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   */
 
   render() {
+    console.log(this.props);
     if (this.props.loading) {
       this.showLoader();
     } else {
       this.hideLoader();
     }
     if (this.props.productDetails) {
-      return (
-        <div itemscope itemtype="http://schema.org/Product">
-          {this.props.productDetails.seo
-            ? renderMetaTags(this.props.productDetails)
-            : renderMetaTagsWithoutSeoObject(this.props.productDetails)}
-          {this.renderRootCategory(this.props.productDetails.rootCategory)}
-        </div>
-      );
+      if (!this.props.showPiqPage) {
+        return (
+          <div itemscope itemtype="http://schema.org/Product">
+            {this.props.productDetails.seo
+              ? renderMetaTags(this.props.productDetails)
+              : renderMetaTagsWithoutSeoObject(this.props.productDetails)}
+            {this.renderRootCategory(this.props.productDetails.rootCategory)}
+          </div>
+        );
+      } else {
+        return <PiqPage />;
+      }
     } else {
       return this.renderLoader();
     }
