@@ -12,7 +12,6 @@ export default class PickUpLocation extends React.Component {
   }
 
   render() {
-    console.log(this.props.canSelectStore);
     return (
       <div className={styles.base}>
         <div className={styles.holder}>

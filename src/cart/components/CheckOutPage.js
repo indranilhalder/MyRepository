@@ -400,7 +400,7 @@ class CheckOutPage extends React.Component {
         return product.USSID === this.state.selectedProductsUssIdForCliqAndPiq;
       }
     );
-    console.log(currentSelectedProduct);
+
     const firstSlaveData =
       currentSelectedProduct.pinCodeResponse.validDeliveryModes;
     const someData = firstSlaveData

@@ -91,11 +91,6 @@ export default class PiqPage extends React.Component {
         return store.slaveId === this.props.selectedSlaveId;
       });
     }
-    console.log(this.state.lat);
-    //console.log(this.props.availableStores[0].geoPoint.longitude);
-    console.log(this.state.lng);
-    if (this.props.availableStores[0])
-      console.log(this.props.availableStores[0].geoPoint.latitude);
     return (
       <div className={styles.base}>
         <div className={styles.map}>
