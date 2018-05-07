@@ -6,9 +6,15 @@ import { default as styles } from "./AuthFrame.css";
 import SocialButtonsContainer from "../containers/SocialButtonsContainer.js";
 
 export default class AuthFrame extends React.Component {
+  goBack() {
+    if (this.props.goBack) {
+      this.props.goBack();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
+        <div className={styles.goBack} onClick={() => this.goBack()} />
         <div className={styles.center}>
           <div className={styles.logo}>
             <Icon image={tataLogo} size={70} />
