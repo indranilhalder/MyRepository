@@ -18,8 +18,8 @@ const mapDispatchToProps = dispatch => {
     setHeaderText: text => {
       dispatch(setHeaderText(text));
     },
-    removeSavedCardDetails: () => {
-      dispatch(removeSavedCardDetails());
+    removeSavedCardDetails: cardToken => {
+      dispatch(removeSavedCardDetails(cardToken));
     },
     showSecondaryLoader: () => {
       dispatch(showSecondaryLoader());

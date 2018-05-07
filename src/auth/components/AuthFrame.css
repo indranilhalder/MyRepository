@@ -2,9 +2,10 @@
   width: 100%;
   padding: 5vh 40px;
   min-height: 100vh;
-  background: url(./img/background.jpg)no-repeat;
+  background: url(./img/background.jpg) no-repeat;
   background-size: cover;
   background-position: center;
+  position: relative;
 }
 .center {
   width: 100%;
@@ -15,7 +16,16 @@
 .logo {
   display: inline-block;
 }
-
+.goBack {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  background: url(./img/cancel.svg) no-repeat;
+  background-size: auto 15px;
+  background-position: center;
+  right: 40px;
+  top: 15px;
+}
 .footer {
   color: white;
   font-family: regular;
