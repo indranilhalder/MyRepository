@@ -322,19 +322,24 @@ class CartPage extends React.Component {
       let totalDiscount = "0.00";
       if (cartDetails.products) {
         if (cartDetails.deliveryCharge) {
-          deliveryCharge = cartDetails.deliveryCharge;
+          deliveryCharge = cartDetails.deliveryCharge
+            ? cartDetails.deliveryCharge
+            : "0.00";
         }
         if (cartDetails.cartAmount.totalDiscountAmount) {
-          totalDiscount =
-            Math.round(cartDetails.cartAmount.totalDiscountAmount.value * 100) /
-            100;
+          totalDiscount = cartDetails.cartAmount.totalDiscountAmount.value
+            ? Math.round(
+                cartDetails.cartAmount.totalDiscountAmount.value * 100
+              ) / 100
+            : "0.00";
         }
 
         if (cartDetails.cartAmount.couponDiscountAmount) {
-          couponDiscount =
-            Math.round(
-              cartDetails.cartAmount.couponDiscountAmount.value * 100
-            ) / 100;
+          couponDiscount = cartDetails.cartAmount.couponDiscountAmount.value
+            ? Math.round(
+                cartDetails.cartAmount.couponDiscountAmount.value * 100
+              ) / 100
+            : "0.00";
         }
       }
       return (
@@ -420,21 +425,28 @@ class CartPage extends React.Component {
               cartDetails.cartAmount && (
                 <Checkout
                   amount={
-                    Math.round(
-                      cartDetails.cartAmount.paybleAmount.value * 100
-                    ) / 100
+                    cartDetails.cartAmount.paybleAmount.value
+                      ? Math.round(
+                          cartDetails.cartAmount.paybleAmount.value * 100
+                        ) / 100
+                      : "0.00"
                   }
                   bagTotal={
-                    Math.round(cartDetails.cartAmount.bagTotal.value * 100) /
-                    100
+                    cartDetails.cartAmount.bagTotal.value
+                      ? Math.round(
+                          cartDetails.cartAmount.bagTotal.value * 100
+                        ) / 100
+                      : "0.00"
                   }
                   coupons={couponDiscount}
                   discount={totalDiscount}
                   delivery={deliveryCharge}
                   payable={
-                    Math.round(
-                      cartDetails.cartAmount.paybleAmount.value * 100
-                    ) / 100
+                    cartDetails.cartAmount.paybleAmount.value
+                      ? Math.round(
+                          cartDetails.cartAmount.paybleAmount.value * 100
+                        ) / 100
+                      : "0.00"
                   }
                   onCheckout={() => this.renderToCheckOutPage()}
                 />

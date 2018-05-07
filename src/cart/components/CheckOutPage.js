@@ -139,7 +139,9 @@ class CheckOutPage extends React.Component {
       captchaReseponseForCOD: null, // in case of COD order its holding that ceptcha verification
       noCostEmiDiscount: "0.00",
       egvCartGuid: null,
-      noCostEmiBankName: null
+      noCostEmiBankName: null,
+      isCliqCashApplied: false,
+      cliqCashPaidAmount: "0.00"
     };
   }
 
@@ -362,9 +364,9 @@ class CheckOutPage extends React.Component {
                   hasFooter={false}
                   size={val.size}
                   color={val.color}
-                  productDetails={val.productBrand}
+                  //productDetails={val.productBrand}
                   productName={val.productName}
-                  price={val.offerPrice}
+                  price={val.offerPrice ? val.offerPrice : val.price}
                   deliveryInformation={val.elligibleDeliveryMode}
                   showDelivery={true}
                   deliveryInfoToggle={false}
@@ -669,7 +671,9 @@ class CheckOutPage extends React.Component {
       this.setState({
         isRemainingAmount:
           nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
-        payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount,
+        payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount
+          ? nextProps.cart.cliqCashPaymentDetails.paybleAmount
+          : "0.00",
         cliqCashAmount:
           nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value > 0
             ? Math.round(
@@ -677,11 +681,20 @@ class CheckOutPage extends React.Component {
                   100
               ) / 100
             : "0.00",
-        bagAmount: nextProps.cart.cliqCashPaymentDetails.totalAmount,
+        bagAmount: nextProps.cart.cliqCashPaymentDetails.totalAmount
+          ? nextProps.cart.cliqCashPaymentDetails.totalAmount
+          : "0.00",
         totalDiscount:
           nextProps.cart.cliqCashPaymentDetails.otherDiscount.value > 0
             ? Math.round(
                 nextProps.cart.cliqCashPaymentDetails.otherDiscount.value * 100
+              ) / 100
+            : "0.00",
+        cliqCashPaidAmount:
+          nextProps.cart.cliqCashPaymentDetails.cliqCashPaidAmount.value > 0
+            ? Math.round(
+                nextProps.cart.cliqCashPaymentDetails.cliqCashPaidAmount.value *
+                  100
               ) / 100
             : "0.00"
       });
@@ -697,11 +710,13 @@ class CheckOutPage extends React.Component {
           nextProps.cart.paymentModes.cliqCash &&
           nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance
         ) {
-          cliqCashAmount =
-            Math.round(
-              nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance.value *
-                100
-            ) / 100;
+          cliqCashAmount = nextProps.cart.paymentModes.cliqCash
+            .totalCliqCashBalance.value
+            ? Math.round(
+                nextProps.cart.paymentModes.cliqCash.totalCliqCashBalance
+                  .value * 100
+              ) / 100
+            : "0.00";
         }
         if (
           this.props.cart &&
@@ -711,24 +726,30 @@ class CheckOutPage extends React.Component {
           nextProps.cart.cartDetailsCNC.cartAmount.noCostEMIDiscountValue
         ) {
           this.setState({
-            noCostEmiDiscount:
-              Math.round(
-                nextProps.cart.cartDetailsCNC.cartAmount.noCostEMIDiscountValue
-                  .value * 100
-              ) / 100
+            noCostEmiDiscount: nextProps.cart.cartDetailsCNC.cartAmount
+              .noCostEMIDiscountValue.value
+              ? Math.round(
+                  nextProps.cart.cartDetailsCNC.cartAmount
+                    .noCostEMIDiscountValue.value * 100
+                ) / 100
+              : "0.00"
           });
         }
         this.setState({
-          payableAmount:
-            Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value * 100
-            ) / 100,
+          payableAmount: nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount
+            .value
+            ? Math.round(
+                nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value *
+                  100
+              ) / 100
+            : "0.00",
           cliqCashAmount: cliqCashAmount,
           userCliqCashAmount: cliqCashAmount,
-          bagAmount:
-            Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
-            ) / 100,
+          bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
+            ? Math.round(
+                nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
+              ) / 100
+            : "0.00",
 
           totalDiscount:
             nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount.value >
@@ -755,11 +776,13 @@ class CheckOutPage extends React.Component {
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount.value
         ) {
           this.setState({
-            couponDiscount:
-              Math.round(
-                nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
-                  .value * 100
-              ) / 100
+            couponDiscount: nextProps.cart.cartDetailsCNC.cartAmount
+              .couponDiscountAmount
+              ? Math.round(
+                  nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount
+                    .value * 100
+                ) / 100
+              : "0.00"
           });
         }
       }
@@ -1428,10 +1451,12 @@ class CheckOutPage extends React.Component {
   };
 
   applyCliqCash = () => {
+    this.setState({ isCliqCashApplied: true });
     this.props.applyCliqCash();
   };
 
   removeCliqCash = () => {
+    this.setState({ isCliqCashApplied: false });
     this.props.removeCliqCash();
   };
 
@@ -1664,6 +1689,10 @@ class CheckOutPage extends React.Component {
       labelForButton = PAY_NOW;
     }
 
+    if (!this.state.isRemainingAmount && this.state.isCliqCashApplied) {
+      checkoutButtonStatus = false;
+      labelForButton = PAY_NOW;
+    }
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
@@ -1839,6 +1868,7 @@ class CheckOutPage extends React.Component {
                     isNoCostEmiProceeded: false
                   })
                 }
+                isCliqCashApplied={this.state.isCliqCashApplied}
               />
             </div>
           )}
@@ -1864,6 +1894,8 @@ class CheckOutPage extends React.Component {
                   ? this.handleSubmitAfterPaymentFailure
                   : this.handleSubmit
               }
+              isCliqCashApplied={this.state.isCliqCashApplied}
+              cliqCashPaidAmount={this.state.cliqCashPaidAmount}
             />
           )}
         </div>
