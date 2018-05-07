@@ -250,7 +250,6 @@ export default class NoCostEmiBankDetails extends React.Component {
           return bank.logoUrl;
         })
         .slice(0, 4);
-
     let filteredBankListWithOutLogo =
       this.props.bankList &&
       this.props.bankList.filter(
@@ -261,6 +260,7 @@ export default class NoCostEmiBankDetails extends React.Component {
     } else {
       modifiedBankList = filteredBankListWithLogo;
     }
+
     return (
       <div className={styles.base}>
         {!this.props.isNoCostEmiProceeded && (
@@ -291,6 +291,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                   <SelectBoxMobile2
                     height={33}
                     placeholder={"Other Bank"}
+                    isEnable={this.state.selectedFromDropDown}
                     options={filteredBankListWithOutLogo.map((val, i) => {
                       return {
                         value: i,

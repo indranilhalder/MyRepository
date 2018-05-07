@@ -56,6 +56,13 @@ export default class SelectBoxMobile extends React.Component {
       this.setState({ value: nextProps.value });
       this.setState({ touched: true });
     }
+    if (nextProps.isEnable === false) {
+      this.setState({
+        touched: false,
+        value: this.props.placeholder,
+        label: this.props.placeholder
+      });
+    }
     if (nextProps.label && nextProps.label !== this.state.label) {
       this.setState({ label: nextProps.label });
     }
@@ -119,6 +126,7 @@ export default class SelectBoxMobile extends React.Component {
                 <option
                   value={this.props.placeholder}
                   label={this.props.placeholder}
+                  disabled
                 >
                   {this.props.placeholder}
                 </option>
