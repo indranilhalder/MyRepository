@@ -139,11 +139,7 @@ class HeaderWrapper extends React.Component {
     if (this.props.location.pathname.includes("/my-account/")) {
       isLogo = false;
     }
-    if (
-      this.props.location.pathname.includes(
-        "checkout/payment-method/cardPayment"
-      )
-    ) {
+    if (this.props.location.pathname.includes("/checkout")) {
       shouldRenderSearch = false;
       isGoBack = false;
       isCross = true;
