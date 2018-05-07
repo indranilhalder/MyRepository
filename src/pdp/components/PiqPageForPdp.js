@@ -40,30 +40,31 @@ export default class PiqPageForPdp extends React.Component {
       : [];
 
     return (
-      <div className={styles.base}>
-        {this.props.loadingForCliqAndPiq && <div>name</div>}
-
-        <div className={styles.piqPageHolder}>
-          <div className={styles.piqHeaderHolder}>
-            <InformationHeader
-              goBack={() => {
-                this.props.hidePdpPiqPage();
-              }}
-              text="CLiQ & PiQ"
-            />
-          </div>
-          <PiqPage
-            availableStores={availableStores}
-            numberOfStores={availableStores.length}
-            showPickupPerson={false}
-            productName={this.props.productDetails.productName}
-            canSelectStore={false}
-            changePincode={pincode =>
-              this.props.getAllStoresForCliqAndPiq(pincode)
-            }
-            goBack={() => this.props.removeCliqAndPiq()}
+      <div className={styles.piqPageHolder}>
+        <div className={styles.piqHeaderHolder}>
+          <InformationHeader
+            goBack={() => {
+              this.props.hidePdpPiqPage();
+            }}
+            text="CLiQ & PiQ"
           />
         </div>
+        <PiqPage
+          availableStores={availableStores}
+          numberOfStores={availableStores.length}
+          showPickupPerson={false}
+          productName={this.props.productDetails.productName}
+          canSelectStore={false}
+          changePincode={pincode =>
+            this.props.getAllStoresForCliqAndPiq(pincode)
+          }
+          goBack={() => this.props.removeCliqAndPiq()}
+        />
+        {this.props.loadingForCliqAndPiq && (
+          <div className={styles.loaderSection}>
+            <div className={styles.loader} />
+          </div>
+        )}
       </div>
     );
   }
