@@ -53,11 +53,11 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       }, 0);
       if (defaultPinCode) {
         this.props.getProductDescription(
-          this.props.match.params[0],
+          this.props.match.params[1],
           defaultPinCode
         );
       } else {
-        this.props.getProductDescription(this.props.match.params[0]);
+        this.props.getProductDescription(this.props.match.params[1]);
       }
 
       this.props.getMsdRequest(this.props.match.params[1]);
@@ -99,6 +99,8 @@ export default class ProductDescriptionPageWrapper extends React.Component {
             defaultPinCode,
             this.props.match.params[1]
           );
+        } else {
+          this.props.getProductDescription(this.props.match.params[1]);
         }
       } else {
         //need to show error page
