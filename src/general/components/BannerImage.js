@@ -51,7 +51,12 @@ export default class Banner extends React.Component {
                     imageWidth="100%"
                   />
                 </div>
-                <div className={styles.title}>{this.props.title}</div>
+                {this.props.title && (
+                  <div className={styles.title}>{this.props.title}</div>
+                )}
+                {this.props.subTitle && (
+                  <div className={styles.subTitle}>{this.props.subTitle}</div>
+                )}
               </div>
             </div>
           </div>
