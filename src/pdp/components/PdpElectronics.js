@@ -151,7 +151,12 @@ export default class PdpElectronics extends React.Component {
     this.props.getEmiTerms(globalAccessToken, cartValue);
     this.props.showEmiModal();
   };
-
+  handleShowPiqPage = () => {
+    if (this.props.getAllStoresForCliqAndPiq) {
+      this.props.showPdpPiqPage();
+      this.props.getAllStoresForCliqAndPiq();
+    }
+  };
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -299,7 +304,7 @@ please try another pincode"
             </Overlay>
           ) : (
             <PdpDeliveryModes
-              getAllStoresForCliqAndPiq={this.props.getAllStoresForCliqAndPiq}
+              onPiq={this.handleShowPiqPage}
               eligibleDeliveryModes={productData.eligibleDeliveryModes}
               deliveryModesATP={productData.deliveryModesATP}
             />

@@ -211,6 +211,12 @@ export default class PdpJewellery extends React.Component {
       return false;
     }
   };
+  handleShowPiqPage = () => {
+    if (this.props.getAllStoresForCliqAndPiq) {
+      this.props.showPdpPiqPage();
+      this.props.getAllStoresForCliqAndPiq();
+    }
+  };
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -354,6 +360,7 @@ please try another pincode"
             </Overlay>
           ) : (
             <PdpDeliveryModes
+              onPiq={this.handleShowPiqPage}
               getAllStoresForCliqAndPiq={this.props.getAllStoresForCliqAndPiq}
               eligibleDeliveryModes={productData.eligibleDeliveryModes}
               deliveryModesATP={productData.deliveryModesATP}

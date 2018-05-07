@@ -171,6 +171,7 @@ export default class PiqPage extends React.Component {
                         address2={`${val.returnCity} ${val.returnPin}`}
                         iconText="C"
                         headingText={val.displayName}
+                        canSelectStore={this.props.canSelectStore}
                         buttonText="Select"
                         onClick={() => {
                           this.selectStore(val.slaveId);
