@@ -1689,6 +1689,10 @@ class CheckOutPage extends React.Component {
       labelForButton = PAY_NOW;
     }
 
+    if (!this.state.isRemainingAmount && this.state.isCliqCashApplied) {
+      checkoutButtonStatus = false;
+      labelForButton = PAY_NOW;
+    }
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {
