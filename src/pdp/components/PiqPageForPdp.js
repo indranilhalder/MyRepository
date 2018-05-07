@@ -38,7 +38,7 @@ export default class PiqPageForPdp extends React.Component {
           return allStoreIds.includes(val.slaveId);
         })
       : [];
-
+    console.log(availableStores);
     return (
       <div className={styles.piqPageHolder}>
         <div className={styles.piqHeaderHolder}>
@@ -55,6 +55,7 @@ export default class PiqPageForPdp extends React.Component {
           showPickupPerson={false}
           productName={this.props.productDetails.productName}
           canSelectStore={false}
+          pinCodeUpdateDisabled={true}
           changePincode={pincode =>
             this.props.getAllStoresForCliqAndPiq(pincode)
           }

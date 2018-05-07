@@ -114,6 +114,7 @@ export default class PiqPage extends React.Component {
             header={`${this.props.productName ? this.props.productName : ""} ${
               this.props.productColour ? this.props.productColour : ""
             }`}
+            disabled={this.props.pinCodeUpdateDisabled}
             pincode={this.props.pincode}
             changePincode={pincode => this.getPinCodeDetails(pincode)}
           />
