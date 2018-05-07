@@ -117,7 +117,7 @@ class Login extends Component {
     let footerText = "";
     let footerClick;
     let showSocialButtons;
-    console.log(this.props.history.length);
+
     if (pathName === LOGIN_PATH || MAIN_ROUTER) {
       footerText = "Don't have an account? Sign up";
       footerClick = () => this.navigateToSignUp();
