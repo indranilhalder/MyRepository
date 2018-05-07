@@ -1552,7 +1552,7 @@ class CheckOutPage extends React.Component {
         this.state.cardDetails.cardNumber.length < 14) ||
       (!this.state.cardDetails.cardName ||
         (this.state.cardDetails.cardName &&
-          this.state.cardDetails.cardName.length < 4)) ||
+          this.state.cardDetails.cardName.length < 3)) ||
       (!this.state.cardDetails.cvvNumber ||
         (this.state.cardDetails.cvvNumber &&
           this.state.cardDetails.cvvNumber.length < 3)) ||

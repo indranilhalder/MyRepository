@@ -147,6 +147,7 @@ export default class CreditCardForm extends React.Component {
                   this.onChange({ yearValue: yearValue.value })
                 }
                 value={this.state.yearValue}
+                label={this.state.yearValue}
               />
             </div>
           </div>
