@@ -33,6 +33,7 @@ export default class OrderStatusVertical extends React.Component {
     let approvedDate = "";
     let approvedTime = "";
     if (
+      approvedData &&
       approvedData.value.statusList &&
       approvedData.value.statusList[0] &&
       approvedData.value.statusList[0].statusMessageList &&
@@ -44,6 +45,7 @@ export default class OrderStatusVertical extends React.Component {
     let processingDate = "";
     let processingTime = "";
     if (
+      processingData &&
       processingData.value.statusList &&
       processingData.value.statusList[0] &&
       processingData.value.statusList[0].statusMessageList &&
@@ -57,6 +59,7 @@ export default class OrderStatusVertical extends React.Component {
     let shippingDate = "";
     let shippingTime = "";
     if (
+      shippingData &&
       shippingData.value.statusList &&
       shippingData.value.statusList[0] &&
       shippingData.value.statusList[0].statusMessageList &&
@@ -68,6 +71,7 @@ export default class OrderStatusVertical extends React.Component {
     let deliveredDate = "";
     let deliveredTime = "";
     if (
+      deliveredData &&
       deliveredData.value.statusList &&
       deliveredData.value.statusList[0] &&
       deliveredData.value.statusList[0].statusMessageList &&
@@ -98,8 +102,8 @@ export default class OrderStatusVertical extends React.Component {
           />
           <div className={styles.processNameHolder}>Approved</div>
           <div className={styles.dateAndTimeHolder}>
-            <div className={styles.dateHolder}>12/09/18</div>
-            <div className={styles.timeHolder}>19:00 Hrs</div>
+            <div className={styles.dateHolder}>{approvedDate}</div>
+            <div className={styles.timeHolder}>{approvedTime}</div>
           </div>
         </div>
         <div
@@ -118,8 +122,8 @@ export default class OrderStatusVertical extends React.Component {
           />
           <div className={styles.processNameHolder}>Processing</div>
           <div className={styles.dateAndTimeHolder}>
-            <div className={styles.dateHolder}>12/09/18</div>
-            <div className={styles.timeHolder}>19:00 Hrs</div>
+            <div className={styles.dateHolder}>{processingDate}</div>
+            <div className={styles.timeHolder}>{processingTime}</div>
           </div>
         </div>
         <div
@@ -138,13 +142,19 @@ export default class OrderStatusVertical extends React.Component {
           />
           <div className={styles.processNameHolder}>Shipping</div>
           <div className={styles.dateAndTimeHolder}>
-            <div className={styles.dateHolder}>12/09/18</div>
-            <div className={styles.timeHolder}>19:00 Hrs</div>
+            <div className={styles.dateHolder}>{shippingDate}</div>
+            <div className={styles.timeHolder}>{shippingTime}</div>
           </div>
-          <div className={styles.courierInfoHolder}>
-            <div className={styles.moreInfoQuestionHolder}> Courier:</div>
-            <div className={styles.moreAnswerHolder}>Courier process</div>
-          </div>
+          {this.props.logisticName &&
+            completedSteps.includes(SHIPPING) && (
+              <div className={styles.courierInfoHolder}>
+                <div className={styles.moreInfoQuestionHolder}>
+                  Courier:{this.props.logisticName}
+                </div>
+
+                <div className={styles.moreAnswerHolder} />
+              </div>
+            )}
         </div>
         <div
           className={
@@ -162,8 +172,8 @@ export default class OrderStatusVertical extends React.Component {
           />
           <div className={styles.processNameHolder}>Delivered</div>
           <div className={styles.dateAndTimeHolder}>
-            <div className={styles.dateHolder}>12/09/18</div>
-            <div className={styles.timeHolder}>19:00 Hrs</div>
+            <div className={styles.dateHolder}>{deliveredDate}</div>
+            <div className={styles.timeHolder}>{deliveredTime}</div>
           </div>
         </div>
       </div>
