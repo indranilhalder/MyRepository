@@ -188,9 +188,12 @@ export function getProductPinCodeFailure(error) {
   };
 }
 
-export function getProductPinCode(pinCode, productCode) {
+export function getProductPinCode(pinCode = null, productCode) {
   let validProductCode = productCode.toUpperCase();
-  localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, pinCode);
+
+  if (pinCode) {
+    localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, pinCode);
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(getProductPinCodeRequest());
     try {
