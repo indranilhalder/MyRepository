@@ -1218,9 +1218,9 @@ export function getOrderSummary(pincode) {
     dispatch(orderSummaryRequest());
     try {
       const result = await api.get(
-        `${USER_CART_PATH}/${JSON.parse(userDetails).userName}/carts/${
-          cartId
-        }/displayOrderSummary?access_token=${
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).userName
+        }/carts/${cartId}/displayOrderSummary?access_token=${
           JSON.parse(customerCookie).access_token
         }&pincode=${pincode}&isPwa=true&platformNumber=2`
       );
@@ -2875,7 +2875,7 @@ export function jusPayPaymentMethodTypeForGiftCard(
       cardObject.append("merchant_id", getState().cart.paymentModes.merchantID);
       cardObject.append("name_on_card", cardDetails.cardName);
       cardObject.append("order_id", juspayOrderId);
-      cardObject.append("save_to_locker", "1");
+      cardObject.append("save_to_locker", true);
       if (paymentMode === PAYMENT_EMI) {
         cardObject.append("emi_bank", cardDetails.emi_bank);
         cardObject.append("emi_tenure", cardDetails.emi_tenure);

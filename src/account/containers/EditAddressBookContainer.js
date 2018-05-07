@@ -8,6 +8,7 @@ import {
 import { withRouter } from "react-router-dom";
 import EditAddressPopUp from "../components/EditAddressPopUp.js";
 import { setHeaderText } from "../../general/header.actions";
+import { displayToast } from "../../general/toast.actions";
 const mapDispatchToProps = dispatch => {
   return {
     editAddress: addressDetails => {
@@ -21,6 +22,9 @@ const mapDispatchToProps = dispatch => {
     },
     resetAutoPopulateDataForPinCode: () => {
       dispatch(getPinCodeSuccess(null));
+    },
+    displayToast: message => {
+      dispatch(displayToast(message));
     }
   };
 };
@@ -30,7 +34,8 @@ const mapStateToProps = state => {
     editAddressStatus: state.profile.editAddressStatus,
     editAddressError: state.profile.editAddressError,
     getPinCodeStatus: state.profile.getPinCodeStatus,
-    getPinCodeDetails: state.profile.getPinCodeDetails
+    getPinCodeDetails: state.profile.getPinCodeDetails,
+    getPincodeStatus: state.profile.getPinCodeStatus
   };
 };
 

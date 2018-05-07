@@ -38,6 +38,7 @@ const PHONE_VALID_TEXT = "Please fill valid mobile number";
 const PHONE_TEXT = "Please enter mobile number";
 const CITY_TEXT = "please enter city";
 const STATE_TEXT = "please enter state";
+const HOME_TEXT = "please select address type";
 const ISO_CODE = "IN";
 const OTHER_LANDMARK = "other";
 export default class AddDeliveryAddress extends React.Component {
@@ -202,6 +203,10 @@ export default class AddDeliveryAddress extends React.Component {
     }
     if (this.state.phone && !MOBILE_PATTERN.test(this.state.phone)) {
       this.props.displayToast(PHONE_VALID_TEXT);
+      return false;
+    }
+    if (!this.state.addressType) {
+      this.props.displayToast(HOME_TEXT);
       return false;
     } else {
       const addressObj = cloneDeep(this.state);

@@ -39,6 +39,7 @@ const PHONE_VALID_TEXT = "Please fill valid mobile number";
 const PHONE_TEXT = "Please enter mobile number";
 const CITY_TEXT = "please enter city";
 const STATE_TEXT = "please enter state";
+const HOME_TEXT = "please select address type";
 const ISO_CODE = "IN";
 const OTHER_LANDMARK = "other";
 export default class EditAddressPopUp extends React.Component {
@@ -119,9 +120,13 @@ export default class EditAddressPopUp extends React.Component {
       this.props.resetAutoPopulateDataForPinCode();
     }
   }
+  componentDidMount() {
+    if (this.state.postalCode.length === 6 && this.props.getPinCode) {
+      this.props.getPinCode(this.state.postalCode);
+    }
+  }
   componentWillReceiveProps(nextProps) {
     let landmarkList = [];
-
     if (nextProps.getPincodeStatus === ERROR) {
       landmarkList = [{ landmark: OTHER_LANDMARK }];
       this.setState({
@@ -217,6 +222,10 @@ export default class EditAddressPopUp extends React.Component {
       this.props.displayToast(PHONE_VALID_TEXT);
       return false;
     } else {
+      if (!this.state.addressType) {
+        this.props.displayToast(HOME_TEXT);
+        return false;
+      }
       const addressObj = cloneDeep(this.state);
       let firstName = addressObj.firstName;
       let salutation = addressObj.salutation;
@@ -356,22 +365,42 @@ export default class EditAddressPopUp extends React.Component {
           />
         </div>
         <div className={styles.content}>
-          <SelectBoxMobile2
-            height={33}
-            placeholder={"Landmark"}
-            label={this.state.landmark}
-            value={this.state.landmark}
-            options={
-              this.state.landmarkList.length > 0 &&
-              this.state.landmarkList.map((val, i) => {
-                return {
-                  value: val && val.landmark,
-                  label: val && val.landmark
-                };
-              })
-            }
-            onChange={landmark => this.onSelectLandmark(landmark)}
-          />
+          {this.state.postalCode.length === 6 &&
+            this.props.location.state.addressDetails.postalCode ===
+              this.state.postalCode && (
+              <SelectBoxMobile2
+                height={33}
+                label={this.state.landmark}
+                value={this.state.landmark}
+                options={
+                  this.state.landmarkList.length > 0 &&
+                  this.state.landmarkList.map((val, i) => {
+                    return {
+                      value: val && val.landmark,
+                      label: val && val.landmark
+                    };
+                  })
+                }
+                onChange={landmark => this.onSelectLandmark(landmark)}
+              />
+            )}
+          {this.props.location.state.addressDetails.postalCode !==
+            this.state.postalCode && (
+            <SelectBoxMobile2
+              height={33}
+              placeholder={"Landmark"}
+              options={
+                this.state.landmarkList.length > 0 &&
+                this.state.landmarkList.map((val, i) => {
+                  return {
+                    value: val && val.landmark,
+                    label: val && val.landmark
+                  };
+                })
+              }
+              onChange={landmark => this.onSelectLandmark(landmark)}
+            />
+          )}
         </div>
         {this.state.isOtherLandMarkSelected && (
           <div className={styles.content}>

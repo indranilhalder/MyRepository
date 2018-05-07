@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import AddToWishListButtonContainer from "../../wishlist/containers/AddToWishListButtonContainer";
 import styles from "./ProductDescription.css";
-
+import { RUPEE_SYMBOL } from "../../lib/constants";
 export default class ProductDescription extends Component {
   handleClick() {
     if (this.props.onDownload) {
@@ -54,11 +54,19 @@ export default class ProductDescription extends Component {
 
           {this.props.discountPrice &&
             this.props.discountPrice !== this.props.price && (
-              <div className={styles.discount}>{this.props.discountPrice}</div>
+              <div className={styles.discount}>
+                {this.props.discountPrice.toString().includes(RUPEE_SYMBOL)
+                  ? this.props.discountPrice
+                  : `${RUPEE_SYMBOL}${this.props.discountPrice}`}
+              </div>
             )}
 
           {this.props.price && (
-            <div className={priceClass}>{this.props.price}</div>
+            <div className={priceClass}>
+              {this.props.price.toString().includes(RUPEE_SYMBOL)
+                ? this.props.price
+                : `${RUPEE_SYMBOL}${this.props.price}`}
+            </div>
           )}
         </div>
       </div>
