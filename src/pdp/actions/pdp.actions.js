@@ -901,7 +901,6 @@ export function getAllStoresForCliqAndPiq(newPinCode = null) {
   } else {
     pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
   }
-  // const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   let accessToken;

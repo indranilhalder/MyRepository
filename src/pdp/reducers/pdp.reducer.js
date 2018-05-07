@@ -29,7 +29,8 @@ const productDescription = (
     storeDetails: null,
     storeStatus: null,
     storeError: null,
-    showPiqPage: false
+    showPiqPage: false,
+    loadingForCliqAndPiq: false
   },
   action
 ) => {
@@ -388,21 +389,21 @@ const productDescription = (
     case pdpActions.GET_ALL_STORES_FOR_CLIQ_AND_PIQ_REQUEST:
       return Object.assign({}, state, {
         storeStatus: action.status,
-        loading: true
+        loadingForCliqAndPiq: true
       });
 
     case pdpActions.GET_ALL_STORES_FOR_CLIQ_AND_PIQ_SUCCESS:
       return Object.assign({}, state, {
         storeStatus: action.status,
         storeDetails: action.storeDetails,
-        loading: false
+        loadingForCliqAndPiq: false
       });
 
     case pdpActions.GET_ALL_STORES_FOR_CLIQ_AND_PIQ_FAILURE:
       return Object.assign({}, state, {
         storeStatus: action.status,
         storeError: action.error,
-        loading: false
+        loadingForCliqAndPiq: false
       });
     case pdpActions.SHOW_PDP_PIQ_PAGE:
       return Object.assign({}, state, {

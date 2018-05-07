@@ -202,7 +202,7 @@ export default class PdpApparel extends React.Component {
       if (productData.winningSellerPrice) {
         discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
       }
-      console.log(this.props.productDetails);
+
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}

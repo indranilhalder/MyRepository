@@ -126,6 +126,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       } else {
         return (
           <PiqPageForPdp
+            loadingForCliqAndPiq={this.props.loadingForCliqAndPiq}
             productDetails={this.props.productDetails}
             stores={this.props.stores}
             displayToast={this.props.displayToast}

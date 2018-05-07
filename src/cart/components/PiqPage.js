@@ -16,12 +16,12 @@ export default class PiqPage extends React.Component {
       lat:
         this.props.availableStores.length > 0 && this.props.availableStores[0]
           ? this.props.availableStores[0].geoPoint.latitude
-          : 22.575229,
+          : 28.6129918,
 
       lng:
         this.props.availableStores.length > 0 && this.props.availableStores[0]
           ? this.props.availableStores[0].geoPoint.longitude
-          : 88.468341,
+          : 77.2310456,
 
       position: 0,
       selected: false,
@@ -46,11 +46,10 @@ export default class PiqPage extends React.Component {
     }
 
     if (nextProps.availableStores.length > 0) {
-      this.setState({
+      this.setState(prevState => ({
         lat: nextProps.availableStores[0].geoPoint.latitude,
         lng: nextProps.availableStores[0].geoPoint.longitude
-      });
-      this.forceUpdate();
+      }));
     }
   }
   componentDidMount = () => {

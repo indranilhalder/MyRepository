@@ -38,31 +38,32 @@ export default class PiqPageForPdp extends React.Component {
           return allStoreIds.includes(val.slaveId);
         })
       : [];
-    if (availableStores.length === 0) {
-      this.props.displayToast("Sorry");
-    }
 
     return (
-      <div className={styles.piqPageHolder}>
-        <div className={styles.piqHeaderHolder}>
-          <InformationHeader
-            goBack={() => {
-              this.props.hidePdpPiqPage();
-            }}
-            text="CLiQ & PiQ"
+      <div className={styles.base}>
+        {this.props.loadingForCliqAndPiq && <div>name</div>}
+
+        <div className={styles.piqPageHolder}>
+          <div className={styles.piqHeaderHolder}>
+            <InformationHeader
+              goBack={() => {
+                this.props.hidePdpPiqPage();
+              }}
+              text="CLiQ & PiQ"
+            />
+          </div>
+          <PiqPage
+            availableStores={availableStores}
+            numberOfStores={availableStores.length}
+            showPickupPerson={false}
+            productName={this.props.productDetails.productName}
+            canSelectStore={false}
+            changePincode={pincode =>
+              this.props.getAllStoresForCliqAndPiq(pincode)
+            }
+            goBack={() => this.props.removeCliqAndPiq()}
           />
         </div>
-        <PiqPage
-          availableStores={availableStores}
-          numberOfStores={availableStores.length}
-          showPickupPerson={false}
-          productName={this.props.productDetails.productName}
-          canSelectStore={false}
-          changePincode={pincode =>
-            this.props.getAllStoresForCliqAndPiq(pincode)
-          }
-          goBack={() => this.props.removeCliqAndPiq()}
-        />
       </div>
     );
   }

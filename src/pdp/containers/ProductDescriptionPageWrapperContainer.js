@@ -113,7 +113,8 @@ const mapStateToProps = state => {
     loading: state.productDescription.loading,
     stores: state.productDescription.storeDetails,
     showPiqPage: state.productDescription.showPiqPage,
-    slaveData: state.productDescription.slaveData
+    slaveData: state.productDescription.slaveData,
+    loadingForCliqAndPiq: state.productDescription.loadingForCliqAndPiq
   };
 };
 
