@@ -84,6 +84,7 @@ export default class NoCostEmiBankDetails extends React.Component {
         selectedMonth: null,
         selectedBankName: this.props.bankList[index].bankName,
         selectedBankCode: this.props.bankList[index].code,
+        selectedCode: this.props.bankList[index].bankCode,
         bankName: null,
         selectedFromDropDown: false
       });
@@ -131,6 +132,12 @@ export default class NoCostEmiBankDetails extends React.Component {
             selectedMonth: index,
             selectedCouponCode: val.emicouponCode,
             selectedTenure: val.tenure
+          });
+
+          this.onChangeCardDetail({
+            is_emi: true,
+            emi_bank: this.state.selectedCode,
+            emi_tenure: val.tenure
           });
           this.props.applyNoCostEmi(
             val.emicouponCode,
