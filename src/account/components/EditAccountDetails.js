@@ -100,6 +100,11 @@ export default class EditAccountDetails extends React.Component {
   onChangeDateOfBirth = val => {
     this.setState({ dateOfBirth: val });
   };
+  onChangeMobileNumber(val) {
+    if (val.length <= 10) {
+      this.setState({ mobileNumber: val });
+    }
+  }
   updateProfile = () => {
     if (
       this.state.emailId &&
@@ -192,7 +197,9 @@ export default class EditAccountDetails extends React.Component {
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
                 height={33}
-                onChange={mobileNumber => this.onChange({ mobileNumber })}
+                onChange={mobileNumber =>
+                  this.onChangeMobileNumber(mobileNumber)
+                }
                 disabled={false}
               />
             </div>
