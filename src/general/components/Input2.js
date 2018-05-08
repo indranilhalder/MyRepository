@@ -92,6 +92,7 @@ export default class Input2 extends React.Component {
               value={this.props.value}
               maxLength={this.props.maxLength}
               disabled={this.props.disabled}
+              autoFocus={this.props.autoFocus}
               onKeyPress={event => this.handleKeyPress(event)}
             />
           </div>
