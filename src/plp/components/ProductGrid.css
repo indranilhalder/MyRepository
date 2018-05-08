@@ -10,7 +10,7 @@
   position: relative;
   padding-right: 50px;
   padding-left: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 7px;
 }
 .area {
   display: inline-block;
@@ -26,6 +26,8 @@
   position: absolute;
   right: 20px;
   top: 0;
+  bottom: 0;
+  margin: auto;
 }
 .areaChange {
   font-size: 14px;

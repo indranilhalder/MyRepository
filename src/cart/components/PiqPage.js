@@ -14,13 +14,15 @@ export default class PiqPage extends React.Component {
     super(props);
     this.state = {
       lat:
-        props.availableStores && props.availableStores[0]
-          ? props.availableStores[0].geoPoint.latitude
-          : 22.575229,
+        this.props.availableStores.length > 0 && this.props.availableStores[0]
+          ? this.props.availableStores[0].geoPoint.latitude
+          : 28.6129918,
+
       lng:
-        props.availableStores && props.availableStores[0]
-          ? props.availableStores[0].geoPoint.longitude
-          : 88.468341,
+        this.props.availableStores.length > 0 && this.props.availableStores[0]
+          ? this.props.availableStores[0].geoPoint.longitude
+          : 77.2310456,
+
       position: 0,
       selected: false,
       selectedAddress: "",
@@ -42,6 +44,13 @@ export default class PiqPage extends React.Component {
         mobile: nextProps.userDetails && nextProps.userDetails.mobileNumber
       });
     }
+
+    if (nextProps.availableStores.length > 0) {
+      this.setState(prevState => ({
+        lat: nextProps.availableStores[0].geoPoint.latitude,
+        lng: nextProps.availableStores[0].geoPoint.longitude
+      }));
+    }
   }
   componentDidMount = () => {
     if (this.props.getUserDetails) {
@@ -55,6 +64,7 @@ export default class PiqPage extends React.Component {
       .geoPoint.longitude;
     this.setState({ lat, lng });
   }
+
   getValue(val) {
     this.setState(val);
   }
@@ -82,7 +92,6 @@ export default class PiqPage extends React.Component {
         return store.slaveId === this.props.selectedSlaveId;
       });
     }
-
     return (
       <div className={styles.base}>
         <div className={styles.map}>
@@ -105,6 +114,7 @@ export default class PiqPage extends React.Component {
             header={`${this.props.productName ? this.props.productName : ""} ${
               this.props.productColour ? this.props.productColour : ""
             }`}
+            disabled={this.props.pinCodeUpdateDisabled}
             pincode={this.props.pincode}
             changePincode={pincode => this.getPinCodeDetails(pincode)}
           />
@@ -134,6 +144,7 @@ export default class PiqPage extends React.Component {
                             iconText="C"
                             headingText={val.displayName}
                             buttonText="Select"
+                            canSelectStore={this.props.canSelectStore}
                             onClick={() => {
                               this.selectStore(val.slaveId);
                             }}
@@ -161,6 +172,7 @@ export default class PiqPage extends React.Component {
                         address2={`${val.returnCity} ${val.returnPin}`}
                         iconText="C"
                         headingText={val.displayName}
+                        canSelectStore={this.props.canSelectStore}
                         buttonText="Select"
                         onClick={() => {
                           this.selectStore(val.slaveId);
@@ -203,3 +215,6 @@ export default class PiqPage extends React.Component {
     );
   }
 }
+PickUpLocation.defaultProps = {
+  canSelectStore: true
+};
