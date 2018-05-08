@@ -25,19 +25,19 @@
 
 .leftRight {
   composes: card;
-  animation: leftRight 1s ease-out forwards;
+  animation: leftRight 500ms ease-out forwards;
 }
 .rightCenter {
   composes: card;
-  animation: rightCenter 1s ease-out forwards;
+  animation: rightCenter 500ms ease-out forwards;
 }
 .centerLeft {
   composes: card;
-  animation: centerLeft 1s ease-out forwards;
+  animation: centerLeft 500ms ease-out forwards;
 }
 .rightLeft {
   composes: card;
-  animation: rightLeft 1s ease-out forwards;
+  animation: rightLeft 500ms ease-out forwards;
 }
 .leftCenter {
   composes: centerLeft;
