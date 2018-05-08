@@ -273,7 +273,6 @@ export default class NoCostEmiBankDetails extends React.Component {
         } product(s). Standard EMI will apply to products, if any, bought along with it.`;
       }
     }
-    console.log(noCostEmiText);
     return (
       <div className={styles.base}>
         {!this.props.isNoCostEmiProceeded && (
