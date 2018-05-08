@@ -35,6 +35,7 @@ export default class AddressModal extends React.Component {
               checkPinCodeAvailability={pincode =>
                 this.checkPinCodeAvailability(pincode)
               }
+              labelText={this.props.labelText}
             />
           </div>
           {this.props.userAddress && (
