@@ -19,6 +19,11 @@ export default class SaveListCard extends React.Component {
   openPopup() {
     this.setState({ openPopup: true });
   }
+  onClickImage() {
+    if (this.props.onClickImage) {
+      this.props.onClickImage();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -28,6 +33,7 @@ export default class SaveListCard extends React.Component {
             productName={this.props.productName}
             productMaterial={this.props.productMaterial}
             price={this.props.price}
+            onClickImage={() => this.onClickImage()}
           />
           <div className={styles.rating}>
             {this.props.totalNoOfReviews && (
