@@ -299,8 +299,20 @@ const mapDispatchToProps = dispatch => {
     removeNoCostEmi: (couponCode, carGuId, cartId) => {
       dispatch(removeNoCostEmi(couponCode, carGuId, cartId));
     },
-    getItemBreakUpDetails: (couponCode, cartGuId) => {
-      dispatch(getItemBreakUpDetails(couponCode, cartGuId));
+    getItemBreakUpDetails: (
+      couponCode,
+      cartGuId,
+      noCostEmiText,
+      noCostProductCount
+    ) => {
+      dispatch(
+        getItemBreakUpDetails(
+          couponCode,
+          cartGuId,
+          noCostEmiText,
+          noCostProductCount
+        )
+      );
     },
     getPinCode: pinCode => {
       dispatch(getPinCode(pinCode));
