@@ -54,7 +54,7 @@ export default class NoCostEmiBankDetails extends React.Component {
         selectedMonth: null,
         showAll: false,
         selectedBankName: null,
-        selectedBankCode: null,
+        selectedCode: null,
         selectedCouponCode: null,
         selectedTenure: null,
         selectedFromDropDown: false
@@ -67,14 +67,14 @@ export default class NoCostEmiBankDetails extends React.Component {
     const selectedBankCodeObj = this.props.bankList.find(
       bank => bank.bankName === val.label
     );
-    let selectedBankCode;
+    let selectedCode;
     if (selectedBankCodeObj) {
-      selectedBankCode = selectedBankCodeObj.code;
+      selectedCode = selectedBankCodeObj.code;
     }
     this.setState({
       selectedBankIndex: selectedBankIndex,
       selectedBankName: selectedBankName,
-      selectedBankCode,
+      selectedCode,
       selectedFromDropDown: true,
       selectedMonth: null
     });
@@ -88,12 +88,12 @@ export default class NoCostEmiBankDetails extends React.Component {
       );
     }
   }
-  handleSelect(index, bankCode) {
+  handleSelect(index, code) {
     if (this.state.selectedFromDropDown === true) {
       this.setState({
         selectedBankIndex: null,
         selectedBankName: null,
-        selectedBankCode: null,
+        selectedCode: null,
         selectedFromDropDown: false,
         selectedTenure: null
       });
@@ -102,21 +102,21 @@ export default class NoCostEmiBankDetails extends React.Component {
       this.setState({
         selectedBankIndex: null,
         selectedBankName: null,
-        selectedBankCode: null,
+        selectedCode: null,
         selectedFromDropDown: false,
         selectedTenure: null
       });
     } else {
       let selectedBankCodeObj = this.props.bankList.find(
-        bank => bank.code === bankCode
+        bank => bank.code === code
       );
 
       this.setState({
         selectedBankIndex: index,
         selectedMonth: null,
         selectedBankName: selectedBankCodeObj.bankName,
-        selectedBankCode: selectedBankCodeObj.code,
-        selectedCode: selectedBankCodeObj.bankCode,
+        selectedCode: selectedBankCodeObj.code,
+        selectedBankCode: selectedBankCodeObj.bankCode,
         bankName: null,
         selectedFromDropDown: false
       });
@@ -125,7 +125,7 @@ export default class NoCostEmiBankDetails extends React.Component {
   termsAndCondition() {
     if (this.props.getEmiTermsAndConditionsForBank) {
       this.props.getEmiTermsAndConditionsForBank(
-        this.state.selectedBankCode,
+        this.state.selectedCode,
         this.state.selectedBankName
       );
     }
@@ -274,8 +274,6 @@ export default class NoCostEmiBankDetails extends React.Component {
   }
 
   render() {
-    console.log(this.props);
-    console.log(this.state);
     let modifiedBankList;
     let filteredBankListWithLogo =
       this.props.bankList &&
@@ -289,10 +287,11 @@ export default class NoCostEmiBankDetails extends React.Component {
       this.props.bankList.filter(
         val => !filteredBankListWithLogo.includes(val)
       );
-    if (this.state.selectedFromDropDown) {
-      modifiedBankList = filteredBankListWithOutLogo;
-    } else {
-      modifiedBankList = filteredBankListWithLogo;
+
+    if (this.state.selectedCode) {
+      modifiedBankList = this.props.bankList.find(
+        bank => bank.code === this.state.selectedCode
+      );
     }
 
     return (
@@ -313,7 +312,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                           value={val.code}
                           key={i}
                           selectItem={() => this.handleSelect(i, val.code)}
-                          selected={this.state.selectedBankCode === val.code}
+                          selected={this.state.selectedCode === val.code}
                         />
                       </div>
                     );
@@ -357,11 +356,8 @@ export default class NoCostEmiBankDetails extends React.Component {
                 <div className={styles.monthsLabel}>Tenure (Months)</div>
                 <div className={styles.monthsHolder}>
                   {modifiedBankList &&
-                    modifiedBankList[this.state.selectedBankIndex]
-                      .noCostEMICouponList &&
-                    modifiedBankList[
-                      this.state.selectedBankIndex
-                    ].noCostEMICouponList.map((val, i) => {
+                    modifiedBankList.noCostEMICouponList &&
+                    modifiedBankList.noCostEMICouponList.map((val, i) => {
                       return (
                         <div
                           className={styles.monthWithCheckbox}
