@@ -22,31 +22,6 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 // only want to kick off a request for the MSD stuff if they are visible.
 
 class PDPRecommendedSections extends React.Component {
-  // componentDidMount() {
-  //   if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-  //     this.props.getMsdRequest(this.props.match.params[0]);
-  //     this.props.pdpAboutBrand(this.props.match.params[0]);
-  //   }
-  //   if (this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE) {
-  //     this.props.getMsdRequest(this.props.match.params[1]);
-  //     this.props.pdpAboutBrand(this.props.match.params[1]);
-  //   }
-  // }
-
-  // componentDidUpdate(prevProps) {
-  //   console.log("COMPONENT DID UPDATE CALLED")
-  //   console.log(prevProps);
-  //   if (prevProps.location.pathname !== this.props.location.pathname) {
-  //     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-  //       this.props.getMsdRequest(this.props.match.params[0]);
-  //       this.props.pdpAboutBrand(this.props.match.params[0]);
-  //     }
-  //     if (this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE) {
-  //       this.props.getMsdRequest(this.props.match.params[1]);
-  //       this.props.pdpAboutBrand(this.props.match.params[1]);
-  //     }
-  //   }
-  // }
   goToProductDescription = url => {
     this.props.history.push(url);
   };
