@@ -127,11 +127,12 @@ export default class EmiPanel extends React.Component {
                       this.props.cart.bankAndTenureDetails &&
                       this.props.cart.bankAndTenureDetails.bankList
                     }
-                    productCount={
+                    noCostEmiProductCount={
                       this.props.cart &&
                       this.props.cart.bankAndTenureDetails &&
                       this.props.cart.bankAndTenureDetails.numEligibleProducts
                     }
+                    totalProductCount={this.props.totalProductCount}
                     getEmiTermsAndConditionsForBank={(code, bankName) =>
                       this.getEmiTermsAndConditionsForBank(code, bankName)
                     }
