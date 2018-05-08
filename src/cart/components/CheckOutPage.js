@@ -1070,14 +1070,24 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  getItemBreakUpDetails = couponCode => {
+  getItemBreakUpDetails = (couponCode, noCostEmiText, noCostProductCount) => {
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
-      this.props.getItemBreakUpDetails(couponCode, cartGuId);
+      this.props.getItemBreakUpDetails(
+        couponCode,
+        cartGuId,
+        noCostEmiText,
+        noCostProductCount
+      );
     } else {
       if (this.props.getItemBreakUpDetails) {
-        this.props.getItemBreakUpDetails(couponCode);
+        this.props.getItemBreakUpDetails(
+          couponCode,
+          null,
+          noCostEmiText,
+          noCostProductCount
+        );
       }
     }
   };
@@ -1905,8 +1915,8 @@ class CheckOutPage extends React.Component {
                   this.applyNoCostEmi(couponCode, bankName)
                 }
                 removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
-                getItemBreakUpDetails={couponCode =>
-                  this.getItemBreakUpDetails(couponCode)
+                getItemBreakUpDetails={(couponCode, noCostEmiText, noCostProductCount) =>
+                  this.getItemBreakUpDetails(couponCode, noCostEmiText, noCostProductCount)
                 }
                 isNoCostEmiProceeded={this.state.isNoCostEmiProceeded}
                 changeNoCostEmiPlan={() =>
