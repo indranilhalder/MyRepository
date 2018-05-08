@@ -210,8 +210,8 @@ export default class EditAccountDetails extends React.Component {
                 label={this.state.gender}
                 value={this.state.gender}
                 options={[
-                  { label: "Female", value: "Female" },
-                  { label: "Male", value: "Male" }
+                  { label: "Female", value: "FEMALE" },
+                  { label: "Male", value: "MALE" }
                 ]}
                 arrowColour="grey"
                 height={33}

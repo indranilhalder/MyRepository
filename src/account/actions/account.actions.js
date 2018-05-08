@@ -1373,6 +1373,8 @@ export function editAddress(addressDetails) {
     addressObject.append("addressId", addressDetails.addressId);
     if (addressDetails.landmark) {
       addressObject.append("landmark", addressDetails.landmark);
+    } else {
+      addressObject.append("landmark", "");
     }
     addressObject.append("emailId", " ");
     try {
