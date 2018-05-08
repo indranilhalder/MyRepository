@@ -188,31 +188,21 @@ class CartPage extends React.Component {
 
   renderToCheckOutPage() {
     let pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let cartDetailsLoggedInUser = Cookie.getCookie(
-      CART_DETAILS_FOR_LOGGED_IN_USER
-    );
-    if (customerCookie && userDetails && cartDetailsLoggedInUser) {
-      if (pinCode && this.state.isServiceable === true) {
-        setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT);
-        this.props.history.push({
-          pathname: CHECKOUT_ROUTER,
-          state: {
-            productValue: this.props.cart.cartDetails.cartAmount.bagTotal.value,
-            isRequestComeThrowMyBag: true
-          }
-        });
-      }
-      if (!pinCode) {
-        this.props.displayToast("Please enter Pin code / Zip code");
-      } else if (!this.state.isServiceable) {
-        this.props.displayToast(PRODUCT_NOT_SERVICEABLE_MESSAGE);
-      }
-    } else {
-      const url = this.props.location.pathname;
-      this.props.setUrlToRedirectToAfterAuth(url);
-      this.props.history.push(LOGIN_PATH);
+
+    if (pinCode && this.state.isServiceable === true) {
+      setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT);
+      this.props.history.push({
+        pathname: CHECKOUT_ROUTER,
+        state: {
+          productValue: this.props.cart.cartDetails.cartAmount.bagTotal.value,
+          isRequestComeThrowMyBag: true
+        }
+      });
+    }
+    if (!pinCode) {
+      this.props.displayToast("Please enter Pin code / Zip code");
+    } else if (!this.state.isServiceable) {
+      this.props.displayToast(PRODUCT_NOT_SERVICEABLE_MESSAGE);
     }
   }
 

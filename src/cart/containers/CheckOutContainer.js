@@ -76,7 +76,7 @@ import {
   ADOBE_FINAL_PAYMENT_MODES,
   ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER
 } from "../../lib/adobeUtils";
-
+import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 const mapDispatchToProps = dispatch => {
   return {
     getCartDetailsCNC: (
@@ -348,6 +348,9 @@ const mapDispatchToProps = dispatch => {
           isPaymentFailed
         )
       );
+    },
+    setUrlToRedirectToAfterAuth: url => {
+      dispatch(setUrlToRedirectToAfterAuth(url));
     },
     createJusPayOrderForNetBanking: (
       paymentMethodType,
