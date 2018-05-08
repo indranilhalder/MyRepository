@@ -276,6 +276,8 @@ export default class OrderDetails extends React.Component {
                       })
                       .includes(RETURN) && (
                       <OrderStatusHorizontal
+                        trackingAWB={products.trackingAWB}
+                        courier={products.reverseLogisticName}
                         statusMessageList={products.statusDisplayMsg.filter(
                           val => {
                             return val.key === RETURN;

@@ -12,13 +12,21 @@
   font-size: 14px;
   font-family: light;
   text-align: center;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 .stepInactive {
   composes: step;
 }
 .stepInactive:after {
   display: none;
+}
+.row {
+  width: 100%;
+  height: auto;
+  font-family: light;
+  font-size: 14px;
+  line-height: 24px;
+  color: #212121;
 }
 .step:after {
   content: "";
@@ -47,6 +55,7 @@
   font-size: 14px;
   color: #212121;
   font-family: light;
+  margin-bottom: 15px;
 }
 .check {
   width: 20px;
