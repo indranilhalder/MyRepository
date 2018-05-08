@@ -211,7 +211,7 @@ async function handleInvalidCustomerAccessToken(message, oldUrl) {
   if (isCustomerAccessTokenFailure(message)) {
     const customerAccessTokenResponse = await refreshCustomerAccessToken();
     if (!customerAccessTokenResponse) {
-      throw new Error("Customer Cart id refresh failure");
+      throw new Error("Customer Access Token refresh failure ");
     }
     newUrl = replaceOldCustomerCookie(oldUrl, customerAccessTokenResponse);
   }
@@ -223,7 +223,7 @@ async function handleCartNotFoundError(response, oldUrl) {
   if (isCartNotFoundError(response)) {
     const refreshCartIdResponse = await refreshCartId();
     if (!refreshCartIdResponse) {
-      throw new Error("Customer Access Token refresh failure");
+      throw new Error("Customer Cart id refresh failure");
     }
     newUrl = replaceOldCartCookie(oldUrl, refreshCartIdResponse);
   }
