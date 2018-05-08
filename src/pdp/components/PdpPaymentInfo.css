@@ -12,11 +12,12 @@
 .link {
   font-size: 14px;
   color: #ff1744;
-  font-family: regular;
+  font-family: light;
   display: inline-block;
   margin-left: 10px;
 }
 .content {
   width: 100%;
   height: auto;
+  font-family: light;
 }

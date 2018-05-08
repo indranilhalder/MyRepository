@@ -1,5 +1,6 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
+import find from "lodash.find";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
@@ -32,7 +33,8 @@ import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   NO,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  COLLECT
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
@@ -174,7 +176,14 @@ export default class PdpApparel extends React.Component {
       : true;
   };
   handleShowPiqPage = () => {
-    if (this.props.getAllStoresForCliqAndPiq) {
+    const eligibleForCNC = find(
+      this.props.productDetails &&
+        this.props.productDetails.eligibleDeliveryModes,
+      deliveryMode => {
+        return deliveryMode.code === COLLECT;
+      }
+    );
+    if (eligibleForCNC && this.props.getAllStoresForCliqAndPiq) {
       this.props.showPdpPiqPage();
       this.props.getAllStoresForCliqAndPiq();
     }
@@ -284,9 +293,8 @@ export default class PdpApparel extends React.Component {
           ) : (
             <PdpPincode onClick={() => this.showPincodeModal()} />
           )}
-          {(this.props.productDetails.isServiceableToPincode &&
-            this.props.productDetails.isServiceableToPincode.status === NO) ||
-          !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) ? (
+          {this.props.productDetails.isServiceableToPincode &&
+          this.props.productDetails.isServiceableToPincode.status === NO ? (
             <Overlay
               labelText="Not serviceable in you pincode,
   please try another pincode"
