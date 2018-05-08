@@ -105,6 +105,7 @@ export async function get(url) {
       return resultClone;
     }
     let newUrl;
+
     if (isCartNotFoundError(resultJson)) {
       newUrl = await handleCartNotFoundError(resultJson, url);
     }
@@ -222,6 +223,7 @@ async function handleCartNotFoundError(response, oldUrl) {
   let newUrl = null;
   if (isCartNotFoundError(response)) {
     const refreshCartIdResponse = await refreshCartId();
+
     if (!refreshCartIdResponse) {
       throw new Error("Customer Cart id refresh failure");
     }
@@ -327,7 +329,11 @@ async function refreshCartId() {
   const errorStatusForGetCartIdObj = ErrorHandling.getFailureResponse(
     resultForGetCartIdJson
   );
-  if (errorStatusForGetCartIdObj.status) {
+  if (
+    errorStatusForGetCartIdObj.status ||
+    !resultForGetCartIdJson ||
+    !resultForGetCartIdJson.code
+  ) {
     const resultForCreateCartId = await post(
       `${USER_CART_PATH}/${
         JSON.parse(userDetails).userName
