@@ -44,6 +44,7 @@ export default class CodForm extends React.Component {
             verifyCallback={response => {
               this.verifyCallback(response);
             }}
+            isResetCaptcha={this.props.isResetCaptcha}
           />
         </div>
       </div>
