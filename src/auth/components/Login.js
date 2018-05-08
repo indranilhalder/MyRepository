@@ -119,7 +119,7 @@ class Login extends Component {
     let showSocialButtons;
 
     if (pathName === LOGIN_PATH || MAIN_ROUTER) {
-      footerText = "Don't have an account? Sign up";
+      footerText = "New to Tata CLiQ? Sign Up";
       footerClick = () => this.navigateToSignUp();
       showSocialButtons = true;
     }

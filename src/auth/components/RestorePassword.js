@@ -39,9 +39,10 @@ export default class RestorePassword extends React.Component {
             <Icon image={lockIcon} size={30} />
           </div>
         </div>
-        <div className={styles.header}>Restore password</div>
+        <div className={styles.header}>Reset your password</div>
         <div className={styles.content}>
-          Please enter your Email or phone number to restore the password
+          Please enter your email address or phone number to reset your
+          passoword
         </div>
         <div className={styles.input}>
           <Input
@@ -56,7 +57,7 @@ export default class RestorePassword extends React.Component {
         <div className={styles.button}>
           <div className={ownStyles.submit}>
             <Button
-              label={"Restore"}
+              label={"Reset"}
               width={150}
               height={40}
               borderRadius={20}
