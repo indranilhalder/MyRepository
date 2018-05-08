@@ -193,7 +193,7 @@ export default class BrandsLandingPageDefault extends React.Component {
           )}
         <div className={styles.searchInput}>
           <Input2
-            placeholder="Search your brand"
+            placeholder="Find a brand"
             onChange={val => this.setState({ searchBy: val })}
             rightChild={
               <div className={styles.searchIcon}>
