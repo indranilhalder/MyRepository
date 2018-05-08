@@ -2424,13 +2424,17 @@ export function createJusPayOrder(
           JSON.parse(customerCookie).access_token
         }&firstName=${address.firstName}&lastName=${
           address.lastName
-        }&addressLine1=${address.line1}&addressLine2=${
-          address.line2
-        }&addressLine3=${address.line3}&country=${
+        }&addressLine1=${address.line1 ? address.line1 : ""}&addressLine2=${
+          address.line2 ? address.line2 : ""
+        }&addressLine3=${address.line3 ? address.line3 : ""}&country=${
           address.country.isocode
-        }&city=${address.city}&state=${address.state}&pincode=${
+        }&city=${address.city ? address.city : ""}&state=${
+          address.state ? address.state : ""
+        }&pincode=${
           address.postalCode
-        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${bankName}`,
+        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${
+          bankName ? bankName : ""
+        }`,
         cartItem
       );
       const resultJson = await result.json();
