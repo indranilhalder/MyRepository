@@ -336,9 +336,8 @@ export default class PdpJewellery extends React.Component {
               certifications={productData.certificationMapFrJwlry}
             />
           )}
-          {(this.props.productDetails.isServiceableToPincode &&
-            this.props.productDetails.isServiceableToPincode.pinCode) ||
-          !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) ? (
+          {this.props.productDetails.isServiceableToPincode &&
+          this.props.productDetails.isServiceableToPincode.pinCode ? (
             <PdpPincode
               hasPincode={true}
               pincode={this.props.productDetails.isServiceableToPincode.pinCode}
