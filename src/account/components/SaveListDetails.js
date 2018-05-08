@@ -3,7 +3,7 @@ import SaveListCard from "../../blp/components/SaveListCard";
 import styles from "./SaveListDetails.css";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
-import moment from "moment";
+import format from "date-fns/format";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import Button from "../../general/components/Button";
 import {
@@ -111,7 +111,7 @@ export default class SaveListDetails extends React.Component {
                   productName={product.productBrand}
                   productMaterial={product.productName}
                   price={product.mrp && product.mrp.value}
-                  date={moment(product.date).format(dateFormat)}
+                  date={format(product.date, dateFormat)}
                   day=""
                   offer=""
                   offerPrice={product.mop && product.mop.value}

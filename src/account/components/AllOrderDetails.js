@@ -6,7 +6,8 @@ import PriceAndLink from "./PriceAndLink.js";
 import OrderDelivered from "./OrderDelivered.js";
 import PropTypes from "prop-types";
 import Button from "../../general/components/Button";
-import moment from "moment";
+import format from "date-fns/format";
+
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import {
@@ -127,17 +128,20 @@ export default class AllOrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.profile.orderDetails;
+
     return (
       <div className={styles.base}>
         {orderDetails && orderDetails.orderData
           ? orderDetails.orderData.map((orderDetails, i) => {
+              let formattedDate = "";
+              if (orderDetails && orderDetails.orderDate) {
+                formattedDate = format(orderDetails.orderDate, dateFormat);
+              }
               return (
                 <div className={styles.order} key={i}>
                   <div className={styles.orderIdHolder}>
                     <OrderPlacedAndId
-                      placedTime={moment(
-                        orderDetails && orderDetails.orderDate
-                      ).format(dateFormat)}
+                      placedTime={formattedDate}
                       orderId={orderDetails && orderDetails.orderId}
                     />
                   </div>
