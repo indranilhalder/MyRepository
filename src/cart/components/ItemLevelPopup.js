@@ -36,11 +36,21 @@ export default class ItemLevelPopup extends React.Component {
           </div>
           <div className={styles.emiInformationHolder}>
             <div className={styles.emiInfoHeader}>Your EMI Information</div>
-            <div className={styles.emiPlanTextHolder}>
-              {this.props.emiOffer &&
-                this.props.emiOffer.map((val, i) => {
-                  return <div className={styles.emiPlan}>{val.offerText}</div>;
-                })}
+            <div className={styles.emiPlanTextHolder} />
+            <div>
+              {`\n\u2022  ${
+                this.props.emiItemDetails.noCostEMIDiscountValue.formattedValue
+              }
+              for 1 product`}
+            </div>
+            <div>{`\n\u2022  ${
+              this.props.emiItemDetails.cardBlockingAmount.formattedValue
+            }`}</div>
+            <div>
+              {` \n\u2022  ${
+                this.props.emiItemDetails.noCostEMIPerMonthPayable
+                  .formattedValue
+              } for ${emiItemDetails.tenure} months`}
             </div>
           </div>
         </div>
