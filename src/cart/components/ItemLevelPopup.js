@@ -13,7 +13,9 @@ export default class ItemLevelPopup extends React.Component {
             <div className={styles.cardName}>{`${emiItemDetails.bankName} for ${
               emiItemDetails.tenure
             } months`}</div>
-            <div className={styles.offerText}>{this.props.defaultText}</div>
+            <div className={styles.offerText}>
+              {this.props.emiItemDetails.noCostEmiText}
+            </div>
           </div>
           <div className={styles.levelBreakupHolder}>
             {emiItemDetails &&
@@ -40,7 +42,9 @@ export default class ItemLevelPopup extends React.Component {
             <div>
               {`\n\u2022  ${
                 this.props.emiItemDetails.noCostEMIDiscountValue.formattedValue
-              } has been given as No Cost EMI  discount (Interest applicable on 1 product in your cart)`}
+              } has been given as No Cost EMI  discount (Interest applicable on ${
+                this.props.emiItemDetails.noCostEmiProductCount
+              } product in your cart)`}
             </div>
             <div>{`\n\u2022  ${
               this.props.emiItemDetails.cardBlockingAmount.formattedValue
@@ -76,6 +80,5 @@ ItemLevelPopup.propTypes = {
   )
 };
 ItemLevelPopup.defaultProps = {
-  defaultText:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis dapibus sem. Donec id aliquet arcu."
+  defaultText: ""
 };
