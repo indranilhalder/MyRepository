@@ -107,7 +107,8 @@ export async function get(url) {
     let newUrl;
     if (isCartNotFoundError(resultJson)) {
       newUrl = await handleCartNotFoundError(resultJson, url);
-    } else {
+    }
+    if (isInvalidAccessTokenError(errorStatus.message)) {
       newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
         errorStatus.message,
         url
@@ -131,7 +132,6 @@ export async function postFormData(url, payload) {
   const resultClone = result.clone();
   const resultJson = await result.json();
   const errorStatus = ErrorHandling.getFailureResponse(resultJson);
-
   try {
     if (
       (!errorStatus.status ||
@@ -143,8 +143,9 @@ export async function postFormData(url, payload) {
     let newUrl;
     if (isCartNotFoundError(resultJson)) {
       newUrl = await handleCartNotFoundError(resultJson, url);
-    } else {
-      await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
+    }
+    if (isInvalidAccessTokenError(errorStatus.message)) {
+      newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
         errorStatus.message,
         url
       );
@@ -160,6 +161,7 @@ export async function post(path, postData, doNotUseApiSuffix: true) {
   const resultClone = result.clone();
   const resultJson = await result.json();
   const errorStatus = ErrorHandling.getFailureResponse(resultJson);
+
   try {
     if (
       (!errorStatus.status ||
@@ -171,7 +173,8 @@ export async function post(path, postData, doNotUseApiSuffix: true) {
     let newUrl;
     if (isCartNotFoundError(resultJson)) {
       newUrl = await handleCartNotFoundError(resultJson, path);
-    } else {
+    }
+    if (isInvalidAccessTokenError(errorStatus.message)) {
       newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
         errorStatus.message,
         path
@@ -208,7 +211,7 @@ async function handleInvalidCustomerAccessToken(message, oldUrl) {
   if (isCustomerAccessTokenFailure(message)) {
     const customerAccessTokenResponse = await refreshCustomerAccessToken();
     if (!customerAccessTokenResponse) {
-      throw new Error("Customer Access Token refresh failure");
+      throw new Error("Customer Cart id refresh failure");
     }
     newUrl = replaceOldCustomerCookie(oldUrl, customerAccessTokenResponse);
   }
