@@ -111,7 +111,8 @@ class CartPage extends React.Component {
             return (
               product.pinCodeResponse === undefined ||
               (product.pinCodeResponse &&
-                product.pinCodeResponse.isServicable === "N")
+                product.pinCodeResponse.isServicable === "N") ||
+              product.isOutOfStock
             );
           }
         );
@@ -423,6 +424,7 @@ class CartPage extends React.Component {
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
+                  disabled={!this.state.isServiceable}
                   amount={
                     cartDetails.cartAmount.paybleAmount.value
                       ? Math.round(
