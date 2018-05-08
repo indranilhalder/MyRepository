@@ -79,6 +79,11 @@ export default class SaveListDetails extends React.Component {
   renderToContinueShopping() {
     this.props.history.push(HOME_ROUTER);
   }
+  onClickImage(productCode) {
+    if (productCode) {
+      this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    }
+  }
   render() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -111,9 +116,11 @@ export default class SaveListDetails extends React.Component {
                   offer=""
                   offerPrice={product.mop && product.mop.value}
                   image={product.imageURL}
+                  productCode={product.productcode}
                   addToBagItem={() =>
                     this.addToBagItem(product.USSID, product.productcode)
                   }
+                  onClickImage={() => this.onClickImage(product.productcode)}
                   removeItem={productUssid => this.removeItem(product.USSID)}
                 />
               </div>

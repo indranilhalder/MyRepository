@@ -40,17 +40,18 @@ export default class ItemLevelPopup extends React.Component {
             <div>
               {`\n\u2022  ${
                 this.props.emiItemDetails.noCostEMIDiscountValue.formattedValue
-              }
-              for 1 product`}
+              } has been given as No Cost EMI  discount (Interest applicable on 1 product in your cart)`}
             </div>
             <div>{`\n\u2022  ${
               this.props.emiItemDetails.cardBlockingAmount.formattedValue
-            }`}</div>
+            } will be blocked on your card now. It will be converted into EMI in 3-4 working days`}</div>
             <div>
-              {` \n\u2022  ${
+              {` \n\u2022  You will pay ${
                 this.props.emiItemDetails.noCostEMIPerMonthPayable
                   .formattedValue
-              } for ${emiItemDetails.tenure} months`}
+              }  per month for ${
+                emiItemDetails.tenure
+              } months. Total amount paid to bank will be equal ro the value of products on offer.`}
             </div>
           </div>
         </div>
