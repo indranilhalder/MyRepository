@@ -198,9 +198,7 @@ export default class PaymentCardWrapper extends React.Component {
                 />
               </div>
             )}
-          {!this.props.isFromGiftCard &&
-            !this.props.isPaymentFailed &&
-            this.renderBankOffers()}
+          {!this.props.isFromGiftCard && this.renderBankOffers()}
           {this.props.isRemainingBalance && (
             <div className={styles.paymentModes}>
               <div className={styles.card}>
