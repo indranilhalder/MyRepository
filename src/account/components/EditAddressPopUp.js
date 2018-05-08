@@ -320,6 +320,8 @@ export default class EditAddressPopUp extends React.Component {
         <div className={styles.content}>
           <div className={styles.salutation}>
             <SelectBoxMobile2
+              label={this.state.salutation}
+              value={this.state.salutation}
               height={33}
               options={salutation.map((val, i) => {
                 return {
