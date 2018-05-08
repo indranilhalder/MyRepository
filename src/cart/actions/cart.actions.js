@@ -1676,7 +1676,16 @@ export function applyBankOffer(couponCode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+
+  let cartId;
+  const parsedQueryString = queryString.parse(window.location.search);
+  const value = parsedQueryString.value;
+  if (value) {
+    cartId = value;
+  } else {
+    cartId = JSON.parse(cartDetails).guid;
+  }
+
   return async (dispatch, getState, { api }) => {
     dispatch(applyBankOfferRequest());
     try {
@@ -1732,7 +1741,14 @@ export function releaseBankOffer(previousCouponCode, newCouponCode: null) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  const parsedQueryString = queryString.parse(window.location.search);
+  const value = parsedQueryString.value;
+  if (value) {
+    cartId = value;
+  } else {
+    cartId = JSON.parse(cartDetails).guid;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(releaseBankOfferRequest());
     try {

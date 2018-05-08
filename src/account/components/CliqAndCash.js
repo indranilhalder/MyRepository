@@ -6,13 +6,10 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import Button from "../../general/components/Button.js";
 import cliqCashIcon from "./img/cliqcash.png";
 import styles from "./CliqAndCash.css";
-
-import moment from "moment";
+import format from "date-fns/format";
 import {
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_PAGE,
-  SUCCESS,
-  FAILURE,
   CLIQ_CASH
 } from "../../lib/constants.js";
 
@@ -75,9 +72,10 @@ export default class CliqAndCash extends React.Component {
             {this.props.cliqCashUserDetails.balanceClearedAsOf && (
               <div
                 className={styles.expiredBalanceText}
-              >{`Balance as of ${moment(
-                this.props.cliqCashUserDetails.balanceClearedAsOf
-              ).format(DATE_FORMAT)} Hrs`}</div>
+              >{`Balance as of ${format(
+                this.props.cliqCashUserDetails.balanceClearedAsOf,
+                DATE_FORMAT
+              )} Hrs`}</div>
             )}
             <div className={styles.informationText}>
               Once you validate your gift card, the value will automatically be
