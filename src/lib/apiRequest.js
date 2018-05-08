@@ -216,7 +216,6 @@ async function handleInvalidCustomerAccessToken(message, oldUrl) {
 }
 
 async function handleCartNotFoundError(response, oldUrl) {
-  console.log(response, oldUrl);
   let newUrl = null;
   if (isCartNotFoundError(response)) {
     const refreshCartIdResponse = await refreshCartId();
