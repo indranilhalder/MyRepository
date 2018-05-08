@@ -50,19 +50,21 @@ export default class PickUpLocation extends React.Component {
             </div>
           )}
         </div>
-        <div className={styles.buttonHolder}>
-          <div
-            className={styles.buttonContainer}
-            onClick={() => this.handleClick()}
-          >
-            <Button
-              type="primary"
-              color="#fff"
-              label={this.props.buttonText}
-              width={121}
-            />
+        {this.props.canSelectStore && (
+          <div className={styles.buttonHolder}>
+            <div
+              className={styles.buttonContainer}
+              onClick={() => this.handleClick()}
+            >
+              <Button
+                type="primary"
+                color="#fff"
+                label={this.props.buttonText}
+                width={121}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
@@ -77,4 +79,7 @@ PickUpLocation.propTypes = {
   iconText: PropTypes.string,
   onClick: PropTypes.func,
   buttonText: PropTypes.string
+};
+PickUpLocation.defaultProps = {
+  canSelectStore: true
 };

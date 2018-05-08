@@ -402,6 +402,7 @@ class CheckOutPage extends React.Component {
         return product.USSID === this.state.selectedProductsUssIdForCliqAndPiq;
       }
     );
+
     const firstSlaveData =
       currentSelectedProduct.pinCodeResponse.validDeliveryModes;
     const someData = firstSlaveData
@@ -1694,7 +1695,10 @@ class CheckOutPage extends React.Component {
       checkoutButtonStatus = this.validateSubmitButton();
       labelForButton = PAY_NOW;
     }
-
+    if (this.state.isFirstAddress) {
+      labelForButton = CONTINUE;
+      checkoutButtonStatus = false;
+    }
     if (!this.state.isRemainingAmount && this.state.isCliqCashApplied) {
       checkoutButtonStatus = false;
       labelForButton = PAY_NOW;

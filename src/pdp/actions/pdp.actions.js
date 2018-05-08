@@ -102,6 +102,16 @@ export const ABOUT_THE_BRAND_WIDGET_KEY = "aboutTheBrand";
 export const RECOMMENDED_PRODUCTS_WIDGET_KEY = "recommendedProducts";
 export const SIMILAR_PRODUCTS_WIDGET_KEY = "similarProducts";
 
+export const GET_ALL_STORES_FOR_CLIQ_AND_PIQ_REQUEST =
+  "GET_ALL_STORES_FOR_CLIQ_AND_PIQ_REQUEST";
+export const GET_ALL_STORES_FOR_CLIQ_AND_PIQ_SUCCESS =
+  "GET_ALL_STORES_FOR_CLIQ_AND_PIQ_SUCCESS";
+export const GET_ALL_STORES_FOR_CLIQ_AND_PIQ_FAILURE =
+  "GET_ALL_STORES_FOR_CLIQ_AND_PIQ_FAILURE";
+export const SHOW_PDP_PIQ_PAGE = "showPdpPiqPage";
+export const HIDE_PDP_PIQ_PAGE = "hidePdpPiqPage";
+const ALL_STORES_FOR_CLIQ_AND_PIQ_PATH = "v2/mpl/allStores";
+
 const MY_WISH_LIST = "MyWishList";
 const PRODUCT_SPECIFICATION_PATH = "/v2/mpl/products/productDetails";
 const PRODUCT_DESCRIPTION_PATH = "v2/mpl/products/productDetails";
@@ -188,7 +198,7 @@ export function getProductPinCodeFailure(error) {
   };
 }
 
-export function getProductPinCode(pinCode = null, productCode) {
+export function getProductPinCode(pinCode: null, productCode) {
   let validProductCode = productCode.toUpperCase();
 
   if (pinCode) {
@@ -218,7 +228,6 @@ export function getProductPinCode(pinCode = null, productCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
       dispatch(
         getProductPinCodeSuccess({
           pinCode,
@@ -858,5 +867,76 @@ export function getPdpItems(itemIds, widgetKey) {
     } catch (e) {
       dispatch(getPdpItemsFailure(`MSD ${e.message}`));
     }
+  };
+}
+
+// Actions to get All Stores CNC
+export function getAllStoresForCliqAndPiqRequest() {
+  return {
+    type: GET_ALL_STORES_FOR_CLIQ_AND_PIQ_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getAllStoresForCliqAndPiqSuccess(storeDetails) {
+  return {
+    type: GET_ALL_STORES_FOR_CLIQ_AND_PIQ_SUCCESS,
+    status: SUCCESS,
+    storeDetails
+  };
+}
+
+export function getAllStoresForCliqAndPiqFailure(error) {
+  return {
+    type: GET_ALL_STORES_FOR_CLIQ_AND_PIQ_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator for getting all stores CNC
+export function getAllStoresForCliqAndPiq(newPinCode = null) {
+  let pinCode;
+  if (newPinCode) {
+    localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, newPinCode);
+    pinCode = newPinCode;
+  } else {
+    pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+  }
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  let accessToken;
+  if (customerCookie) {
+    accessToken = JSON.parse(customerCookie).access_token;
+  } else {
+    accessToken = JSON.parse(globalCookie).access_token;
+  }
+
+  return async (dispatch, getState, { api }) => {
+    dispatch(getAllStoresForCliqAndPiqRequest());
+    try {
+      const result = await api.get(
+        `${ALL_STORES_FOR_CLIQ_AND_PIQ_PATH}/${pinCode}?access_token=${accessToken}`
+      );
+
+      const resultJson = await result.json();
+      const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJsonStatus.status) {
+        throw new Error(resultJsonStatus.message);
+      }
+      dispatch(getAllStoresForCliqAndPiqSuccess(resultJson.stores));
+    } catch (e) {
+      dispatch(getAllStoresForCliqAndPiqFailure(e.message));
+    }
+  };
+}
+
+export function showPdpPiqPage() {
+  return {
+    type: SHOW_PDP_PIQ_PAGE
+  };
+}
+export function hidePdpPiqPage() {
+  return {
+    type: HIDE_PDP_PIQ_PAGE
   };
 }

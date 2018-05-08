@@ -1,0 +1,38 @@
+.piqPageHolder {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  z-index: 10000;
+}
+.piqHeaderHolder {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 20;
+}
+.loaderSection {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: #fff;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+.loader {
+  width: 120px;
+  height: 8px;
+  background: url("../../general/components/img/loader.gif") no-repeat;
+  background-size: 180%;
+  background-position: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}

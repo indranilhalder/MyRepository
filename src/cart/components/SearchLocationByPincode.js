@@ -44,7 +44,11 @@ export default class SearchLocationByPincode extends React.Component {
         {this.state.errorMessage && (
           <div className={styles.errorMessage}>{this.state.errorMessage}</div>
         )}
-        <div className={styles.inputHolder}>
+        <div
+          className={
+            this.props.disabled ? styles.disabledInput : styles.inputHolder
+          }
+        >
           <Input2
             placeholder={
               this.state.pincode
@@ -57,6 +61,7 @@ export default class SearchLocationByPincode extends React.Component {
             onChange={val => this.getValue(val)}
             textStyle={{ fontSize: 14 }}
             height={35}
+            disabled={this.props.disabled}
             rightChildSize={35}
           />
         </div>
@@ -68,5 +73,9 @@ SearchLocationByPincode.propTypes = {
   header: PropTypes.string,
   pincode: PropTypes.string,
   getLocation: PropTypes.func,
-  changePincode: PropTypes.func
+  changePincode: PropTypes.func,
+  disabled: PropTypes.bool
+};
+SearchLocationByPincode.defaultProps = {
+  disabled: false
 };
