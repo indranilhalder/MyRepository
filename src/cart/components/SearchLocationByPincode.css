@@ -25,7 +25,10 @@
   vertical-align: middle;
   padding-top: 8px;
 }
-
+.disabledInput {
+  composes: inputHolder;
+  opacity: 0.7;
+}
 .buttonCover {
   width: auto;
   height: auto;

@@ -25,7 +25,12 @@ const productDescription = (
     addReviewStatus: false,
     reviewsError: null,
     msdItems: {},
-    emiTerms: null
+    emiTerms: null,
+    storeDetails: null,
+    storeStatus: null,
+    storeError: null,
+    showPiqPage: false,
+    loadingForCliqAndPiq: false
   },
   action
 ) => {
@@ -110,6 +115,7 @@ const productDescription = (
         );
         Object.assign(currentPdpDetail, {
           eligibleDeliveryModes,
+          slaveData: deliveryOptionObj.validDeliveryModes,
           isServiceableToPincode: {
             status: YES,
             pinCode: action.productPinCode.pinCode
@@ -379,6 +385,34 @@ const productDescription = (
       return Object.assign({}, state, {
         status: action.status,
         error: action.error
+      });
+    case pdpActions.GET_ALL_STORES_FOR_CLIQ_AND_PIQ_REQUEST:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        loadingForCliqAndPiq: true
+      });
+
+    case pdpActions.GET_ALL_STORES_FOR_CLIQ_AND_PIQ_SUCCESS:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeDetails: action.storeDetails,
+        loadingForCliqAndPiq: false
+      });
+
+    case pdpActions.GET_ALL_STORES_FOR_CLIQ_AND_PIQ_FAILURE:
+      return Object.assign({}, state, {
+        storeDetails: null,
+        storeStatus: action.status,
+        storeError: action.error,
+        loadingForCliqAndPiq: false
+      });
+    case pdpActions.SHOW_PDP_PIQ_PAGE:
+      return Object.assign({}, state, {
+        showPiqPage: true
+      });
+    case pdpActions.HIDE_PDP_PIQ_PAGE:
+      return Object.assign({}, state, {
+        showPiqPage: false
       });
     default:
       return state;

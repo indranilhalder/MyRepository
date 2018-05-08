@@ -151,7 +151,12 @@ export default class PdpElectronics extends React.Component {
     this.props.getEmiTerms(globalAccessToken, cartValue);
     this.props.showEmiModal();
   };
-
+  handleShowPiqPage = () => {
+    if (this.props.getAllStoresForCliqAndPiq) {
+      this.props.showPdpPiqPage();
+      this.props.getAllStoresForCliqAndPiq();
+    }
+  };
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -285,8 +290,9 @@ export default class PdpElectronics extends React.Component {
           ) : (
             <PdpPincode onClick={() => this.showPincodeModal()} />
           )}
-          {this.props.productDetails.isServiceableToPincode &&
-          this.props.productDetails.isServiceableToPincode.status === NO ? (
+          {(this.props.productDetails.isServiceableToPincode &&
+            this.props.productDetails.isServiceableToPincode.status === NO) ||
+          !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) ? (
             <Overlay
               labelText="Not serviceable in you pincode,
 please try another pincode"
@@ -298,6 +304,7 @@ please try another pincode"
             </Overlay>
           ) : (
             <PdpDeliveryModes
+              onPiq={this.handleShowPiqPage}
               eligibleDeliveryModes={productData.eligibleDeliveryModes}
               deliveryModesATP={productData.deliveryModesATP}
             />

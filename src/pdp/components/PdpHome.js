@@ -178,7 +178,12 @@ export default class PdpApparel extends React.Component {
       return false;
     }
   };
-
+  handleShowPiqPage = () => {
+    if (this.props.getAllStoresForCliqAndPiq) {
+      this.props.showPdpPiqPage();
+      this.props.getAllStoresForCliqAndPiq();
+    }
+  };
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -302,8 +307,9 @@ export default class PdpApparel extends React.Component {
               </React.Fragment>
             )}
           </div>
-          {this.props.productDetails.isServiceableToPincode &&
-          this.props.productDetails.isServiceableToPincode.pinCode ? (
+          {(this.props.productDetails.isServiceableToPincode &&
+            this.props.productDetails.isServiceableToPincode.pinCode) ||
+          !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) ? (
             <PdpPincode
               hasPincode={true}
               pincode={this.props.productDetails.isServiceableToPincode.pinCode}
@@ -325,6 +331,7 @@ export default class PdpApparel extends React.Component {
             </Overlay>
           ) : (
             <PdpDeliveryModes
+              onPiq={this.handleShowPiqPage}
               eligibleDeliveryModes={productData.eligibleDeliveryModes}
               deliveryModesATP={productData.deliveryModesATP}
             />
