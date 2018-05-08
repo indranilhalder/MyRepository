@@ -263,7 +263,10 @@ export default class NoCostEmiBankDetails extends React.Component {
 
     let noCostEmiText = "";
     if (this.props.noCostEmiProductCount > 0) {
-      if (this.props.noCostEmiProductCount === this.props.totalProductCount) {
+      if (
+        parseInt(this.props.noCostEmiProductCount, 10) ===
+        this.props.totalProductCount
+      ) {
         noCostEmiText = `* No cost EMI available only on ${
           this.props.noCostEmiProductCount
         } product`;
