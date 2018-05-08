@@ -1,6 +1,6 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
-
+import find from "lodash.find";
 import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
@@ -34,7 +34,8 @@ import {
   NO,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  COLLECT
 } from "../../lib/constants";
 
 const NO_SIZE = "NO SIZE";
@@ -212,7 +213,14 @@ export default class PdpJewellery extends React.Component {
     }
   };
   handleShowPiqPage = () => {
-    if (this.props.getAllStoresForCliqAndPiq) {
+    const eligibleForCNC = find(
+      this.props.productDetails &&
+        this.props.productDetails.eligibleDeliveryModes,
+      deliveryMode => {
+        return deliveryMode.code === COLLECT;
+      }
+    );
+    if (eligibleForCNC && this.props.getAllStoresForCliqAndPiq) {
       this.props.showPdpPiqPage();
       this.props.getAllStoresForCliqAndPiq();
     }
@@ -336,9 +344,8 @@ export default class PdpJewellery extends React.Component {
               certifications={productData.certificationMapFrJwlry}
             />
           )}
-          {(this.props.productDetails.isServiceableToPincode &&
-            this.props.productDetails.isServiceableToPincode.pinCode) ||
-          !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) ? (
+          {this.props.productDetails.isServiceableToPincode &&
+          this.props.productDetails.isServiceableToPincode.pinCode ? (
             <PdpPincode
               hasPincode={true}
               pincode={this.props.productDetails.isServiceableToPincode.pinCode}
