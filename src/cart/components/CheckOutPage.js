@@ -107,7 +107,7 @@ class CheckOutPage extends React.Component {
       orderConfirmation: false,
       showCliqAndPiq: false,
       showPickupPerson: false,
-      selectedSlaveId: null,
+      selectedSlaveIdObj: {},
       ussIdAndDeliveryModesObj: {}, // this object we are using for check when user will continue after  delivery mode then we ll check for all products we selected delivery mode or not
       selectedProductsUssIdForCliqAndPiq: null,
       orderId: "",
@@ -282,7 +282,11 @@ class CheckOutPage extends React.Component {
       this.state.selectedProductsUssIdForCliqAndPiq
     );
     this.togglePickupPersonForm();
-    this.setState({ selectedSlaveId });
+    const selectedSlaveIdObj = cloneDeep(this.state.selectedSlaveIdObj);
+    selectedSlaveIdObj[
+      this.state.selectedProductsUssIdForCliqAndPiq
+    ] = selectedSlaveId;
+    this.setState({ selectedSlaveIdObj });
     this.props.addStoreCNC(
       this.state.selectedProductsUssIdForCliqAndPiq,
       selectedSlaveId
@@ -441,9 +445,22 @@ class CheckOutPage extends React.Component {
     return (
       <PiqPage
         availableStores={availableStores}
-        selectedSlaveId={this.state.selectedSlaveId}
+        selectedSlaveId={
+          this.state.selectedSlaveIdObj[
+            this.state.selectedProductsUssIdForCliqAndPiq
+          ] &&
+          this.state.selectedSlaveIdObj[
+            this.state.selectedProductsUssIdForCliqAndPiq
+          ]
+        }
         numberOfStores={availableStores.length}
-        showPickupPerson={this.state.showPickupPerson}
+        showPickupPerson={
+          this.state.selectedSlaveIdObj[
+            this.state.selectedProductsUssIdForCliqAndPiq
+          ]
+            ? true
+            : false
+        }
         productName={currentSelectedProduct.productName}
         productColour={currentSelectedProduct.color}
         hidePickupPersonDetail={() => this.togglePickupPersonForm()}
@@ -591,6 +608,7 @@ class CheckOutPage extends React.Component {
           ) {
             let newObjectAdd = {};
             newObjectAdd[product.USSID] = HOME_DELIVERY;
+
             Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
           }
         });
