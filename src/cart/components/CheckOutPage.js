@@ -272,16 +272,23 @@ class CheckOutPage extends React.Component {
     this.props.getAllStoresCNC(pincode);
   };
   togglePickupPersonForm() {
-    this.setState(prevState => ({
-      showPickupPerson: !prevState.showPickupPerson
-    }));
+    const currentSelectedSlaveIdObj = cloneDeep(this.state.selectedSlaveIdObj);
+    if (
+      currentSelectedSlaveIdObj[this.state.selectedProductsUssIdForCliqAndPiq]
+    ) {
+      delete currentSelectedSlaveIdObj[
+        this.state.selectedProductsUssIdForCliqAndPiq
+      ];
+    }
+
+    this.setState({ selectedSlaveIdObj: currentSelectedSlaveIdObj });
   }
   addStoreCNC(selectedSlaveId) {
     this.handleSelectDeliveryMode(
       COLLECT,
       this.state.selectedProductsUssIdForCliqAndPiq
     );
-    this.togglePickupPersonForm();
+
     const selectedSlaveIdObj = cloneDeep(this.state.selectedSlaveIdObj);
     selectedSlaveIdObj[
       this.state.selectedProductsUssIdForCliqAndPiq
@@ -1106,7 +1113,7 @@ class CheckOutPage extends React.Component {
   };
   onSelectAddress(selectedAddress) {
     let addressSelected = find(
-      this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
+      this.props.cart.cartDetailsCNC && this.props.cart.cartDetailsCNC.addressDetailsList && this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
       address => {
         return address.id === selectedAddress[0];
       }

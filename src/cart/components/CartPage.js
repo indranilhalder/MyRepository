@@ -33,10 +33,8 @@ import {
   setDataLayerForCartDirectCalls,
   ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT
 } from "../../lib/adobeUtils";
-
 const PRODUCT_NOT_SERVICEABLE_MESSAGE =
   "Product is not Serviceable,Please try with another pin code";
-
 class CartPage extends React.Component {
   constructor(props) {
     super(props);
@@ -113,7 +111,8 @@ class CartPage extends React.Component {
             return (
               product.pinCodeResponse === undefined ||
               (product.pinCodeResponse &&
-                product.pinCodeResponse.isServicable === "N")
+                product.pinCodeResponse.isServicable === "N") ||
+              product.isOutOfStock
             );
           }
         );
@@ -291,6 +290,7 @@ class CartPage extends React.Component {
       </div>
     );
   };
+
   render() {
     const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const cartDetailsForAnonymous = Cookie.getCookie(
@@ -395,7 +395,7 @@ class CartPage extends React.Component {
                       }
                       deliveryType={
                         product.elligibleDeliveryMode &&
-                        product.elligibleDeliveryMode[0].name
+                        product.elligibleDeliveryMode[0].code
                       }
                       onRemove={this.removeItemFromCart}
                       onQuantityChange={this.updateQuantityInCart}
@@ -424,6 +424,7 @@ class CartPage extends React.Component {
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
+                  disabled={!this.state.isServiceable}
                   amount={
                     cartDetails.cartAmount.paybleAmount.value
                       ? Math.round(
