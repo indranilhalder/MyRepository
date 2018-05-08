@@ -56,8 +56,7 @@ export default class GiftCardPopup extends React.Component {
           />
         </div>
         <div className={styles.termsAndConditionCheck}>
-          *T&C Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-          non mattis lorem,
+          Please read the Terms & Conditions before making your purchase
         </div>
         <div className={styles.buttonHolder}>
           <div className={styles.button}>

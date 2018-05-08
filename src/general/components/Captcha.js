@@ -16,6 +16,7 @@ class Captcha extends Component {
       }
     }
   };
+
   render() {
     return (
       <Recaptcha
@@ -23,6 +24,7 @@ class Captcha extends Component {
         callback={this.verifyCallback}
         locale={LOCALE_ENGLISH}
         data-theme={THEME}
+        className="customClassName"
       />
     );
   }

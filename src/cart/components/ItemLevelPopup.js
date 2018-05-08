@@ -13,7 +13,9 @@ export default class ItemLevelPopup extends React.Component {
             <div className={styles.cardName}>{`${emiItemDetails.bankName} for ${
               emiItemDetails.tenure
             } months`}</div>
-            <div className={styles.offerText}>{this.props.defaultText}</div>
+            <div className={styles.offerText}>
+              {this.props.emiItemDetails.noCostEmiText}
+            </div>
           </div>
           <div className={styles.levelBreakupHolder}>
             {emiItemDetails &&
@@ -36,11 +38,24 @@ export default class ItemLevelPopup extends React.Component {
           </div>
           <div className={styles.emiInformationHolder}>
             <div className={styles.emiInfoHeader}>Your EMI Information</div>
-            <div className={styles.emiPlanTextHolder}>
-              {this.props.emiOffer &&
-                this.props.emiOffer.map((val, i) => {
-                  return <div className={styles.emiPlan}>{val.offerText}</div>;
-                })}
+            <div className={styles.emiPlanTextHolder} />
+            <div>
+              {`\n\u2022  ${
+                this.props.emiItemDetails.noCostEMIDiscountValue.formattedValue
+              } has been given as No Cost EMI  discount (Interest applicable on ${
+                this.props.emiItemDetails.noCostEmiProductCount
+              } product in your cart)`}
+            </div>
+            <div>{`\n\u2022  ${
+              this.props.emiItemDetails.cardBlockingAmount.formattedValue
+            } will be blocked on your card now. It will be converted into EMI in 3-4 working days`}</div>
+            <div>
+              {` \n\u2022  You will pay ${
+                this.props.emiItemDetails.noCostEMIPerMonthPayable
+                  .formattedValue
+              }  per month for ${
+                emiItemDetails.tenure
+              } months. Total amount paid to bank will be equal ro the value of products on offer.`}
             </div>
           </div>
         </div>
@@ -65,6 +80,5 @@ ItemLevelPopup.propTypes = {
   )
 };
 ItemLevelPopup.defaultProps = {
-  defaultText:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis dapibus sem. Donec id aliquet arcu."
+  defaultText: ""
 };

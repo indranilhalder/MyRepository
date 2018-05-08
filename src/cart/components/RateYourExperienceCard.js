@@ -53,7 +53,8 @@ RateyourExperienceCard.propTypes = {
 
 RateyourExperienceCard.defaultProps = {
   heading: "Rate your experience",
-  label: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit. ",
+  label:
+    "We'd love to know your feedback. Tell us, did you enjoy shopping on Tata CLiQ? ",
   buttonText: "Continue shopping",
   isContinue: false
 };

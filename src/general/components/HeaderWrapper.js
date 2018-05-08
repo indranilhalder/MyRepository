@@ -139,6 +139,7 @@ class HeaderWrapper extends React.Component {
     }
     if (this.props.location.pathname.includes("/my-account/")) {
       isLogo = false;
+      shouldRenderSearch = false;
     }
 
     if (

@@ -151,6 +151,8 @@ class CheckOutPage extends React.Component {
     }
   }
   navigateToLogin() {
+    const url = this.props.location.pathname;
+    this.props.setUrlToRedirectToAfterAuth(url);
     this.props.history.push(LOGIN_PATH);
   }
   navigateUserToMyBagAfter15MinOfpaymentFailure() {
@@ -168,6 +170,10 @@ class CheckOutPage extends React.Component {
       this.removeNoCostEmi(noCostEmiCouponCode);
     }
 
+    //here we need to reset captch if if already done .but payment mode is changed
+    if (this.state.captchaReseponseForCOD) {
+      window.grecaptcha.reset();
+    }
     this.setState(val);
     this.setState({
       cardDetails: {},
@@ -180,6 +186,11 @@ class CheckOutPage extends React.Component {
     });
   };
   changeSubEmiOption(currentSelectedEMIType) {
+    let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
+    if (noCostEmiCouponCode) {
+      this.removeNoCostEmi(noCostEmiCouponCode);
+    }
+
     this.setState({
       currentSelectedEMIType,
       cardDetails: {},
@@ -272,16 +283,23 @@ class CheckOutPage extends React.Component {
     this.props.getAllStoresCNC(pincode);
   };
   togglePickupPersonForm() {
-    this.setState(prevState => ({
-      showPickupPerson: !prevState.showPickupPerson
-    }));
+    const currentSelectedSlaveIdObj = cloneDeep(this.state.selectedSlaveIdObj);
+    if (
+      currentSelectedSlaveIdObj[this.state.selectedProductsUssIdForCliqAndPiq]
+    ) {
+      delete currentSelectedSlaveIdObj[
+        this.state.selectedProductsUssIdForCliqAndPiq
+      ];
+    }
+
+    this.setState({ selectedSlaveIdObj: currentSelectedSlaveIdObj });
   }
   addStoreCNC(selectedSlaveId) {
     this.handleSelectDeliveryMode(
       COLLECT,
       this.state.selectedProductsUssIdForCliqAndPiq
     );
-    this.togglePickupPersonForm();
+
     const selectedSlaveIdObj = cloneDeep(this.state.selectedSlaveIdObj);
     selectedSlaveIdObj[
       this.state.selectedProductsUssIdForCliqAndPiq
@@ -850,7 +868,7 @@ class CheckOutPage extends React.Component {
     let cartDetailsLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
-    if (!customerCookie || !userDetails || !cartDetailsLoggedInUser) {
+    if (!customerCookie || !userDetails) {
       return this.navigateToLogin();
     }
     setDataLayerForCheckoutDirectCalls(
@@ -1054,14 +1072,24 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  getItemBreakUpDetails = couponCode => {
+  getItemBreakUpDetails = (couponCode, noCostEmiText, noCostProductCount) => {
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
-      this.props.getItemBreakUpDetails(couponCode, cartGuId);
+      this.props.getItemBreakUpDetails(
+        couponCode,
+        cartGuId,
+        noCostEmiText,
+        noCostProductCount
+      );
     } else {
       if (this.props.getItemBreakUpDetails) {
-        this.props.getItemBreakUpDetails(couponCode);
+        this.props.getItemBreakUpDetails(
+          couponCode,
+          null,
+          noCostEmiText,
+          noCostProductCount
+        );
       }
     }
   };
@@ -1106,7 +1134,9 @@ class CheckOutPage extends React.Component {
   };
   onSelectAddress(selectedAddress) {
     let addressSelected = find(
-      this.props.cart.cartDetailsCNC && this.props.cart.cartDetailsCNC.addressDetailsList && this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
+      this.props.cart.cartDetailsCNC &&
+        this.props.cart.cartDetailsCNC.addressDetailsList &&
+        this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
       address => {
         return address.id === selectedAddress[0];
       }
@@ -1666,7 +1696,7 @@ class CheckOutPage extends React.Component {
       !this.state.isGiftCard &&
       (this.props.cart.userAddress && this.props.cart.userAddress.addresses)
     ) {
-      labelForButton = CONTINUE;
+      labelForButton = PROCEED;
     } else if (
       (this.state.confirmAddress && !this.state.deliverMode) ||
       this.state.isGiftCard
@@ -1838,6 +1868,7 @@ class CheckOutPage extends React.Component {
                 removeCliqCash={() => this.removeCliqCash()}
                 currentPaymentMode={this.state.currentPaymentMode}
                 cardDetails={this.state.cardDetails}
+                captchaReseponseForCOD={this.state.captchaReseponseForCOD}
                 verifyCaptcha={captchaReseponseForCOD =>
                   this.setState({ captchaReseponseForCOD })
                 }
@@ -1886,8 +1917,8 @@ class CheckOutPage extends React.Component {
                   this.applyNoCostEmi(couponCode, bankName)
                 }
                 removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
-                getItemBreakUpDetails={couponCode =>
-                  this.getItemBreakUpDetails(couponCode)
+                getItemBreakUpDetails={(couponCode, noCostEmiText, noCostProductCount) =>
+                  this.getItemBreakUpDetails(couponCode, noCostEmiText, noCostProductCount)
                 }
                 isNoCostEmiProceeded={this.state.isNoCostEmiProceeded}
                 changeNoCostEmiPlan={() =>
@@ -1897,6 +1928,12 @@ class CheckOutPage extends React.Component {
                   })
                 }
                 isCliqCashApplied={this.state.isCliqCashApplied}
+                totalProductCount={
+                  this.props.cart &&
+                  this.props.cart.cartDetailsCNC &&
+                  this.props.cart.cartDetailsCNC.products &&
+                  this.props.cart.cartDetailsCNC.products.length
+                }
               />
             </div>
           )}

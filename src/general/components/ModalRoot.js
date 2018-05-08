@@ -563,7 +563,11 @@ export default class ModalRoot extends React.Component {
       ),
       INVALID_BANK_COUPON_POPUP: (
         <InvalidBankCouponPopup
-          couponCode={couponCode}
+          couponCode={
+            this.props.ownProps && this.props.ownProps.couponCode
+              ? this.props.ownProps.couponCode
+              : ""
+          }
           changePaymentMethod={() => this.handleClose()}
           continueWithoutCoupon={() => this.continueWithoutBankCoupon()}
         />

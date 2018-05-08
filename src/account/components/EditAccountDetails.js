@@ -7,7 +7,8 @@ import MobileDatePicker from "../../general/components/MobileDatePicker";
 import ShopByBrandLists from "../../blp/components/ShopByBrandLists.js";
 import CheckboxAndText from "../../cart/components/CheckboxAndText.js";
 import AccountFooter from "./AccountFooter.js";
-import moment from "moment";
+import format from "date-fns/format";
+
 import { LOG_OUT_ACCOUNT_USING_MOBILE_NUMBER } from "../actions/account.actions.js";
 import ChangePassword from "./ChangePassword.js";
 import * as Cookie from "../../lib/Cookie";
@@ -64,7 +65,7 @@ export default class EditAccountDetails extends React.Component {
         let dateOfBirth = new Date(
           nextProps.userDetails.dateOfBirth.split("IST").join()
         );
-        formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
+        formattedDate = format(dateOfBirth, "YYYY-MM-DD");
       } else if (nextProps.userDetails.dateOfBirth) {
         formattedDate = nextProps.userDetails.dateOfBirth
           .split("/")
@@ -210,8 +211,8 @@ export default class EditAccountDetails extends React.Component {
                 label={this.state.gender}
                 value={this.state.gender}
                 options={[
-                  { label: "Female", value: "Female" },
-                  { label: "Male", value: "Male" }
+                  { label: "Female", value: "FEMALE" },
+                  { label: "Male", value: "MALE" }
                 ]}
                 arrowColour="grey"
                 height={33}

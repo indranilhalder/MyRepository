@@ -31,7 +31,7 @@ import {
   GIFT_CARD_MODAL,
   UPDATE_REFUND_DETAILS_POPUP
 } from "../../general/modal.actions.js";
-import moment from "moment";
+import format from "date-fns/format";
 import { getPaymentModes } from "../../cart/actions/cart.actions.js";
 import {
   getMcvId,
@@ -1373,6 +1373,8 @@ export function editAddress(addressDetails) {
     addressObject.append("addressId", addressDetails.addressId);
     if (addressDetails.landmark) {
       addressObject.append("landmark", addressDetails.landmark);
+    } else {
+      addressObject.append("landmark", "");
     }
     addressObject.append("emailId", " ");
     try {
@@ -1502,7 +1504,8 @@ export function updateProfileFailure(error) {
 }
 
 export function updateProfile(accountDetails, otp) {
-  let dateOfBirth = moment(accountDetails.dateOfBirth).format(
+  let dateOfBirth = format(
+    accountDetails.dateOfBirth,
     DATE_FORMAT_TO_UPDATE_PROFILE
   );
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
