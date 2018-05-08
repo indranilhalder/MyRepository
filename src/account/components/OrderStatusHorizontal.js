@@ -6,7 +6,6 @@ const REFUND_INITIATED = "REFUND_INITIATED";
 const RETURN_COMPLETED = "RETURN_COMPLETED";
 export default class OrderStatusHorizontal extends React.Component {
   render() {
-    console.log(this.props.statusMessageList[0].value.statusList);
     let returnInitiated = false;
     let returnClosed = false;
     let refundInitiated = false;
@@ -20,7 +19,6 @@ export default class OrderStatusHorizontal extends React.Component {
       this.props.statusMessageList[0].value &&
       this.props.statusMessageList[0].value.statusList
     ) {
-      console.log(this.props.statusMessageList[0].value.statusList);
       const codeArray = this.props.statusMessageList[0].value.statusList.map(
         val => {
           return val.responseCode;
@@ -36,13 +34,11 @@ export default class OrderStatusHorizontal extends React.Component {
         time = data[0].time;
         message = data[0].statusDescription;
       }
-      console.log(data[0].date);
       returnInitiated = codeArray.includes(RETURN_INITIATED);
       returnClosed = codeArray.includes(RETURN_CLOSED);
       refundInitiated = codeArray.includes(REFUND_INITIATED);
       refundCompleted = codeArray.includes(RETURN_COMPLETED);
     }
-    console.log(returnInitiated);
     return (
       <div className={styles.base}>
         <div className={styles.status}>

@@ -3,7 +3,6 @@ import SlideModal from "../../general/components/SlideModal";
 import styles from "./OrderModal.css";
 export default class OrderModal extends React.Component {
   render() {
-    console.log(this.props);
     return (
       <SlideModal closeModal={this.props.closeModal}>
         <div className={styles.base}>
@@ -11,7 +10,6 @@ export default class OrderModal extends React.Component {
           {this.props.data &&
             this.props.data.shippingList &&
             this.props.data.shippingList.map(val => {
-              console.log(val);
               return (
                 <div className={styles.step}>
                   <div className={styles.row}>

@@ -165,7 +165,6 @@ export default class OrderDetails extends React.Component {
       <div className={styles.base}>
         {orderDetails &&
           orderDetails.products.map((products, i) => {
-            console.log(products);
             return (
               <div className={styles.order} key={i}>
                 <div className={styles.orderIdHolder}>

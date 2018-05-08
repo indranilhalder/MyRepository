@@ -33,7 +33,6 @@ export default class OrderStatusVertical extends React.Component {
     const cancelledData = this.props.statusMessageList.find(val => {
       return val.key === CANCEL;
     });
-    //console.log(approvedData.value.statusList[0].statusMessageList[0].date);
     let approvedDate = "";
     let approvedTime = "";
     if (
@@ -106,9 +105,7 @@ export default class OrderStatusVertical extends React.Component {
       cancelledTime =
         cancelledData.value.statusList[0].statusMessageList[0].time;
     }
-
     const orderCode = this.props.orderCode;
-
     return (
       <div className={styles.base}>
         <div
@@ -233,8 +230,6 @@ export default class OrderStatusVertical extends React.Component {
             </div>
           </div>
         )}
-
-        {/* {CANCEL} */}
       </div>
     );
   }
@@ -249,63 +244,3 @@ OrderStatusVertical.propTypes = {
     })
   )
 };
-// {this.props.statusMessageList &&
-//   this.props.statusMessageList.map((datum, i) => {
-//     console.log(datum);
-//     return (
-//       <div className={styles.deliveredStepHolder}>
-//         <div
-//           className={
-//             datum.statusDescription === "Order Failed"
-//               ? styles.processFail
-//               : styles.processDone
-//           }
-//         />
-//         <div className={styles.deliveredProcesesAndTime}>
-//           <div className={styles.processNameHolder}>
-//             {datum.statusDescription}
-//           </div>
-//           <div className={styles.dateAndTimeHolder}>
-//             <div className={styles.dateHolder}>{datum.date}</div>
-//             <div className={styles.timeHolder}>{datum.time} </div>
-//           </div>
-//         </div>
-//         {datum.statusDescription === "Shipping" && (
-//           <div className={styles.dummyHolder}>
-//             {datum.courierProcess && (
-//               <div className={styles.courierInfoHolder}>
-//                 <div className={styles.moreInfoQuestionHolder}>
-//                   {" "}
-//                   Courier:
-//                 </div>
-//                 <div className={styles.moreAnswerHolder}>
-//                   {datum.courierProcess}
-//                 </div>
-//               </div>
-//             )}
-//             {datum.awbNo && (
-//               <div className={styles.courierInfoHolder}>
-//                 <div className={styles.moreInfoQuestionHolder}>
-//                   AWB No.
-//                 </div>
-//                 <div className={styles.moreAnswerHolder}>
-//                   {datum.awbNo}
-//                 </div>
-//               </div>
-//             )}
-//             <div className={styles.buttonHolder}>
-//               <div className={styles.button}>
-//                 <UnderLinedButton
-//                   size="14px"
-//                   fontFamily="regular"
-//                   color="#000000"
-//                   label="More details"
-//                   onClick={() => this.handleClick()}
-//                 />
-//               </div>
-//             </div>
-//           </div>
-//         )}
-//       </div>
-//     );
-//   })}
