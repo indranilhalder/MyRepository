@@ -119,7 +119,7 @@ export default class OtpVerification extends React.Component {
             </div>
             <div>
               <div className={ownStyles.content}>
-                Waiting to automatically detect an SMS sent to{" "}
+                OTP sent to{" "}
                 {mobileNumber.indexOf("@") !== -1
                   ? mobileNumber
                   : `+91${mobileNumber}`}.
@@ -127,7 +127,7 @@ export default class OtpVerification extends React.Component {
                   className={ownStyles.span}
                   onClick={() => this.onClickWrongNumber()}
                 >
-                  Wrong number?
+                  Edit number
                 </span>
               </div>
             </div>

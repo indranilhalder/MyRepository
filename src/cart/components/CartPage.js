@@ -261,6 +261,7 @@ class CartPage extends React.Component {
     // show modal for address here
     this.props.addressModal({
       addressModalForCartPage: true,
+      labelText: "Update",
       checkPinCodeAvailability: pinCode =>
         this.checkPinCodeAvailability(pinCode)
     });
