@@ -88,7 +88,7 @@ export default class NoCostEmiBankDetails extends React.Component {
       );
     }
   }
-  handleSelect(index) {
+  handleSelect(index, bankCode) {
     if (this.state.selectedFromDropDown === true) {
       this.setState({
         selectedBankIndex: null,
@@ -107,12 +107,16 @@ export default class NoCostEmiBankDetails extends React.Component {
         selectedTenure: null
       });
     } else {
+      let selectedBankCodeObj = this.props.bankList.find(
+        bank => bank.code === bankCode
+      );
+
       this.setState({
         selectedBankIndex: index,
         selectedMonth: null,
-        selectedBankName: this.props.bankList[index].bankName,
-        selectedBankCode: this.props.bankList[index].code,
-        selectedCode: this.props.bankList[index].bankCode,
+        selectedBankName: selectedBankCodeObj.bankName,
+        selectedBankCode: selectedBankCodeObj.code,
+        selectedCode: selectedBankCodeObj.bankCode,
         bankName: null,
         selectedFromDropDown: false
       });
@@ -270,6 +274,8 @@ export default class NoCostEmiBankDetails extends React.Component {
   }
 
   render() {
+    console.log(this.props);
+    console.log(this.state);
     let modifiedBankList;
     let filteredBankListWithLogo =
       this.props.bankList &&
@@ -306,8 +312,8 @@ export default class NoCostEmiBankDetails extends React.Component {
                           image={val.logoUrl}
                           value={val.code}
                           key={i}
-                          selectItem={() => this.handleSelect(i)}
-                          selected={this.state.selectedBankIndex === i}
+                          selectItem={() => this.handleSelect(i, val.code)}
+                          selected={this.state.selectedBankCode === val.code}
                         />
                       </div>
                     );
