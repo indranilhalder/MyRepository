@@ -273,9 +273,13 @@ class CheckOutPage extends React.Component {
   };
   togglePickupPersonForm() {
     const currentSelectedSlaveIdObj = cloneDeep(this.state.selectedSlaveIdObj);
-    delete currentSelectedSlaveIdObj[
-      this.state.selectedProductsUssIdForCliqAndPiq
-    ];
+    if (
+      currentSelectedSlaveIdObj[this.state.selectedProductsUssIdForCliqAndPiq]
+    ) {
+      delete currentSelectedSlaveIdObj[
+        this.state.selectedProductsUssIdForCliqAndPiq
+      ];
+    }
 
     this.setState({ selectedSlaveIdObj: currentSelectedSlaveIdObj });
   }
