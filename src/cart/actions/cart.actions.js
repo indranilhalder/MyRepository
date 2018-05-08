@@ -2408,13 +2408,17 @@ export function createJusPayOrder(
           JSON.parse(customerCookie).access_token
         }&firstName=${address.firstName}&lastName=${
           address.lastName
-        }&addressLine1=${address.line1}&addressLine2=${
-          address.line2
-        }&addressLine3=${address.line3}&country=${
+        }&addressLine1=${address.line1 ? address.line1 : ""}&addressLine2=${
+          address.line2 ? address.line2 : ""
+        }&addressLine3=${address.line3 ? address.line3 : ""}&country=${
           address.country.isocode
-        }&city=${address.city}&state=${address.state}&pincode=${
+        }&city=${address.city ? address.city : ""}&state=${
+          address.state ? address.state : ""
+        }&pincode=${
           address.postalCode
-        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${bankName}`,
+        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${
+          bankName ? bankName : ""
+        }`,
         cartItem
       );
       const resultJson = await result.json();
@@ -4043,7 +4047,12 @@ export function getItemBreakUpDetailsFailure(error) {
   };
 }
 
-export function getItemBreakUpDetails(couponCode, cartGuId,noCostEmiText,noCostEmiProductCount) {
+export function getItemBreakUpDetails(
+  couponCode,
+  cartGuId,
+  noCostEmiText,
+  noCostEmiProductCount
+) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -4067,10 +4076,9 @@ export function getItemBreakUpDetails(couponCode, cartGuId,noCostEmiText,noCostE
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      let noCostEmiResult =Object.assign({}, resultJson, {
+      let noCostEmiResult = Object.assign({}, resultJson, {
         noCostEmiText: noCostEmiText,
-        noCostEmiProductCount: noCostEmiProductCount,
-
+        noCostEmiProductCount: noCostEmiProductCount
       });
       dispatch(getItemBreakUpDetailsSuccess(resultJson));
       dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE, noCostEmiResult));
