@@ -19,6 +19,7 @@ import PdpDeliveryModes from "./PdpDeliveryModes";
 import Overlay from "./Overlay";
 import Accordion from "../../general/components/Accordion.js";
 import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
+import VisibilityChild from "../../home/components/VisibilityChild.js";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -318,7 +319,7 @@ export default class PdpApparel extends React.Component {
             />
           </div>
           <div className={styles.details}>
-            {productData.details && (
+            {/* {productData.details && (
               <Accordion
                 text="Product Description"
                 headerFontSize={16}
@@ -341,7 +342,7 @@ export default class PdpApparel extends React.Component {
                     );
                   })}
               </Accordion>
-            )}
+            )} */}
             {productData.brandInfo && (
               <ProductFeature
                 heading="Brand Info"

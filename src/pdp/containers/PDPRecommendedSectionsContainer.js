@@ -1,5 +1,17 @@
 import { connect } from "react-redux";
 import PDPRecommendedSections from "../components/PDPRecommendedSections";
+import { getMsdRequest, pdpAboutBrand } from "../actions/pdp.actions.js";
+const mapDispatchToProps = dispatch => {
+  return {
+    getMsdRequest: productCode => {
+      dispatch(getMsdRequest(productCode));
+    },
+    pdpAboutBrand: productCode => {
+      dispatch(pdpAboutBrand(productCode));
+    }
+  };
+};
+
 const mapStateToProps = state => {
   return {
     msdItems: state.productDescription.msdItems,
@@ -7,7 +19,8 @@ const mapStateToProps = state => {
   };
 };
 
-const PDPRecommendedSectionsContainer = connect(mapStateToProps, null)(
-  PDPRecommendedSections
-);
+const PDPRecommendedSectionsContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PDPRecommendedSections);
 export default PDPRecommendedSectionsContainer;

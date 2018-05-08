@@ -40,7 +40,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
         window.scrollTo(0, 0);
       }, 0);
       await this.props.getProductDescription(this.props.match.params[0]);
-      this.props.getMsdRequest(this.props.match.params[0]);
+      // this.props.getMsdRequest(this.props.match.params[0]);
     } else if (
       this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
     ) {
@@ -48,8 +48,8 @@ export default class ProductDescriptionPageWrapper extends React.Component {
         window.scrollTo(0, 0);
       }, 0);
       this.props.getProductDescription(this.props.match.params[1]);
-      this.props.getMsdRequest(this.props.match.params[1]);
-      this.props.pdpAboutBrand(this.props.match.params[1]);
+      // this.props.getMsdRequest(this.props.match.params[1]);
+      // this.props.pdpAboutBrand(this.props.match.params[1]);
     } else {
       //need to show error page
     }

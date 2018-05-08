@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./ProductImage.css";
 import Image from "../../xelpmoc-core/Image";
 import PropTypes from "prop-types";
+import VisibilityChild from "../../home/components/VisibilityChild.js";
 
 export default class ProductImage extends React.Component {
   onClickImage() {
@@ -13,7 +14,9 @@ export default class ProductImage extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.imageHolder} onClick={() => this.onClickImage()}>
-          <Image image={this.props.image} />
+          <VisibilityChild>
+            <Image image={this.props.image} />
+          </VisibilityChild>
         </div>
       </div>
     );

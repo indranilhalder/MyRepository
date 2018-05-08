@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./Icon.css";
+import VisibilityChild from "../home/components/VisibilityChild.js";
 
 export default class Icon extends React.Component {
   handleClick() {
@@ -17,13 +18,15 @@ export default class Icon extends React.Component {
           this.handleClick();
         }}
       >
-        <div
-          className={styles.image}
-          style={{
-            backgroundImage: `url(${this.props.image})`,
-            backgroundSize: `${this.props.backgroundSize}`
-          }}
-        />
+        <VisibilityChild>
+          <div
+            className={styles.image}
+            style={{
+              backgroundImage: `url(${this.props.image})`,
+              backgroundSize: `${this.props.backgroundSize}`
+            }}
+          />
+        </VisibilityChild>
       </div>
     );
   }
