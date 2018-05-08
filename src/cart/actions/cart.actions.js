@@ -841,7 +841,7 @@ export function addUserAddress(userAddress, fromAccount) {
         }&state=${userAddress.state}&line2=${userAddress.line2}&line3=${
           userAddress.line3
         }&town=${userAddress.town}&landmark=${
-          userAddress.landmark
+          userAddress.landmark ? userAddress.landmark : ""
         }&defaultFlag=${userAddress.defaultFlag}`
       );
       const resultJson = await result.json();

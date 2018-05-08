@@ -19,7 +19,12 @@ export default class OfferCard extends React.Component {
   render() {
     if (this.props.potentialPromotions || this.props.secondaryPromotions) {
       return (
-        <div className={styles.base} onClick={this.handleShowDetails}>
+        <div
+          className={
+            this.props.theme === 2 ? styles.themeElectronics : styles.base
+          }
+          onClick={this.handleShowDetails}
+        >
           {this.props.potentialPromotions && (
             <div className={styles.headingText}>
               {this.props.potentialPromotions.title}
@@ -50,5 +55,6 @@ OfferCard.propTypes = {
     endDate: PropTypes.string,
     startDate: PropTypes.string
   }),
-  showDetails: PropTypes.func
+  showDetails: PropTypes.func,
+  theme: PropTypes.number
 };
