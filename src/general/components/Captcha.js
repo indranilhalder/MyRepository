@@ -16,13 +16,18 @@ class Captcha extends Component {
       }
     }
   };
+
   render() {
+    if (this.props.isResetCaptcha) {
+      window.grecaptcha && window.grecaptcha.reset && window.grecaptcha.reset();
+    }
     return (
       <Recaptcha
         sitekey={env.REACT_APP_RECAPTCHA_SITE_KEY}
         callback={this.verifyCallback}
         locale={LOCALE_ENGLISH}
         data-theme={THEME}
+        className="customClassName"
       />
     );
   }

@@ -4,11 +4,19 @@ import ProductImage from "../../general/components/ProductImage.js";
 import StarRating from "../../general/components/StarRating.js";
 import PropTypes from "prop-types";
 export default class ProductDetailsCard extends React.Component {
+  onClickImage() {
+    if (this.props.onClickImage) {
+      this.props.onClickImage();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
         <div className={styles.productImageHolder}>
-          <ProductImage image={this.props.productImage} />
+          <ProductImage
+            image={this.props.productImage}
+            onClickImage={() => this.onClickImage()}
+          />
         </div>
         <div className={styles.productDescriptionHolder}>
           <div className={styles.productName}>{this.props.productName}</div>

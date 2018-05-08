@@ -857,7 +857,7 @@ class CheckOutPage extends React.Component {
     let cartDetailsLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
-    if (!customerCookie || !userDetails || !cartDetailsLoggedInUser) {
+    if (!customerCookie || !userDetails) {
       return this.navigateToLogin();
     }
     setDataLayerForCheckoutDirectCalls(
@@ -1113,7 +1113,9 @@ class CheckOutPage extends React.Component {
   };
   onSelectAddress(selectedAddress) {
     let addressSelected = find(
-      this.props.cart.cartDetailsCNC && this.props.cart.cartDetailsCNC.addressDetailsList && this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
+      this.props.cart.cartDetailsCNC &&
+        this.props.cart.cartDetailsCNC.addressDetailsList &&
+        this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
       address => {
         return address.id === selectedAddress[0];
       }
@@ -1673,7 +1675,7 @@ class CheckOutPage extends React.Component {
       !this.state.isGiftCard &&
       (this.props.cart.userAddress && this.props.cart.userAddress.addresses)
     ) {
-      labelForButton = CONTINUE;
+      labelForButton = PROCEED;
     } else if (
       (this.state.confirmAddress && !this.state.deliverMode) ||
       this.state.isGiftCard
@@ -1904,6 +1906,12 @@ class CheckOutPage extends React.Component {
                   })
                 }
                 isCliqCashApplied={this.state.isCliqCashApplied}
+                totalProductCount={
+                  this.props.cart &&
+                  this.props.cart.cartDetailsCNC &&
+                  this.props.cart.cartDetailsCNC.products &&
+                  this.props.cart.cartDetailsCNC.products.length
+                }
               />
             </div>
           )}

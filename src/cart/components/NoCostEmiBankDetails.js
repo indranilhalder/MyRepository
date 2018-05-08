@@ -261,6 +261,18 @@ export default class NoCostEmiBankDetails extends React.Component {
       modifiedBankList = filteredBankListWithLogo;
     }
 
+    let noCostEmiText = "";
+    if (this.props.noCostEmiProductCount > 0) {
+      if (this.props.noCostEmiProductCount === this.props.totalProductCount) {
+        noCostEmiText = `* No cost EMI available only on ${
+          this.props.noCostEmiProductCount
+        } product`;
+      } else {
+        noCostEmiText = `*No Cost EMI available only on ${
+          this.props.noCostEmiProductCount
+        } product(s). Standard EMI will apply to products, if any, bought along with it.`;
+      }
+    }
     return (
       <div className={styles.base}>
         {!this.props.isNoCostEmiProceeded && (
@@ -317,12 +329,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             )}
             {this.state.selectedBankIndex !== null && (
               <div className={styles.emiDetailsPlan}>
-                <div className={styles.labelHeader}>
-                  {this.props.productCount > 0 &&
-                    `* No cost EMI available only on ${
-                      this.props.productCount
-                    } product`}
-                </div>
+                <div className={styles.labelHeader}>{noCostEmiText}</div>
                 <div className={styles.monthsLabel}>Tenure (Months)</div>
                 <div className={styles.monthsHolder}>
                   {modifiedBankList &&
