@@ -164,19 +164,12 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
-    console.log(orderDetails);
 
     return (
       <div className={styles.base}>
         {orderDetails &&
           orderDetails.products.map((products, i) => {
-            console.log(
-              products.statusDisplayMsg
-                .map(val => {
-                  return val.key;
-                })
-                .includes(RETURN)
-            );
+            console.log(products);
             return (
               <div className={styles.order} key={i}>
                 <div className={styles.orderIdHolder}>

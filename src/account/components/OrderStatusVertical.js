@@ -15,7 +15,6 @@ export default class OrderStatusVertical extends React.Component {
     }
   }
   render() {
-    // console.log(this.props);
     const completedSteps = this.props.statusMessageList.map(val => {
       return val.key;
     });
@@ -76,11 +75,8 @@ export default class OrderStatusVertical extends React.Component {
       shippingTime = shippingData.value.statusList[0].statusMessageList[0].time;
       shippingList = shippingData.value.statusList[0].statusMessageList;
       shippingResponseCode = shippingData.value.statusList[0].responseCode;
-      //       responseCode
-
-      // "REFUND_INITIATED"
     }
-    console.log(shippingResponseCode);
+
     let deliveredDate = "";
     let deliveredTime = "";
     if (
@@ -110,10 +106,9 @@ export default class OrderStatusVertical extends React.Component {
       cancelledTime =
         cancelledData.value.statusList[0].statusMessageList[0].time;
     }
-    //console.log(deliveredDate);
 
     const orderCode = this.props.orderCode;
-    // console.log(orderCode);
+
     return (
       <div className={styles.base}>
         <div
