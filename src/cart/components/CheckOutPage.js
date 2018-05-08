@@ -857,7 +857,7 @@ class CheckOutPage extends React.Component {
     let cartDetailsLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
-    if (!customerCookie || !userDetails || !cartDetailsLoggedInUser) {
+    if (!customerCookie || !userDetails) {
       return this.navigateToLogin();
     }
     setDataLayerForCheckoutDirectCalls(
@@ -1906,8 +1906,12 @@ class CheckOutPage extends React.Component {
                   })
                 }
                 isCliqCashApplied={this.state.isCliqCashApplied}
-                totalProductCount={this.props.cart && this.props.cart.cartDetailsCNC && this.props.cart.cartDetailsCNC.products &&  this.props.cart.cartDetailsCNC.products.length}
-
+                totalProductCount={
+                  this.props.cart &&
+                  this.props.cart.cartDetailsCNC &&
+                  this.props.cart.cartDetailsCNC.products &&
+                  this.props.cart.cartDetailsCNC.products.length
+                }
               />
             </div>
           )}
