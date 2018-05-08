@@ -24,8 +24,7 @@ import {
   JUS_PAY_PENDING,
   JUS_PAY_AUTHENTICATION_FAILED,
   CHECKOUT_ROUTER,
-  CHECKOUT_ROUTER_THANKYOU,
-  MY_ACCOUNT_PAGE_ROOT
+  CHECKOUT_ROUTER_THANKYOU
 } from "../../../src/lib/constants";
 import { SIGN_UP } from "../../auth/actions/user.actions";
 
