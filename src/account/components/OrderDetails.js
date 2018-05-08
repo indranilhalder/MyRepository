@@ -39,6 +39,7 @@ const RETURN = "RETURN";
 const PRODUCT_CANCEL = "Cancel";
 const AWB_POPUP_TRUE = "Y";
 const AWB_POPUP_FALSE = "N";
+const CLICK_COLLECT = "click-and-collect";
 export default class OrderDetails extends React.Component {
   onClickImage(productCode) {
     if (productCode) {
@@ -115,11 +116,6 @@ export default class OrderDetails extends React.Component {
       this.props.showModal(orderDetails);
     }
   }
-  // showDeliveryInformation(data){
-  //   if(this.props.showModal){
-  //     this.props
-  //   }
-  // }
 
   componentDidUpdate(prevProps) {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -180,7 +176,6 @@ export default class OrderDetails extends React.Component {
                     orderId={orderDetails.orderId}
                   />
                 </div>
-
                 <OrderCard
                   imageUrl={products.imageURL}
                   price={products.price}
@@ -188,7 +183,6 @@ export default class OrderDetails extends React.Component {
                   productName={products.productName}
                   onClick={() => this.onClickImage(products.productcode)}
                 />
-
                 <div className={styles.payment}>
                   <OrderViewPaymentDetails
                     SubTotal={
@@ -233,7 +227,6 @@ export default class OrderDetails extends React.Component {
                     }
                   />
                 </div>
-
                 <OrderPaymentMethod
                   phoneNumber={
                     orderDetails.deliveryAddress &&
@@ -255,38 +248,60 @@ export default class OrderDetails extends React.Component {
                     } ${orderDetails.billingAddress.postalcode}`}
                   />
                 )}
-                {products.statusDisplayMsg && (
-                  <div className={styles.orderStatusVertical}>
-                    {!products.statusDisplayMsg
-                      .map(val => {
-                        return val.key;
-                      })
-                      .includes(RETURN) && (
-                      <OrderStatusVertical
-                        statusMessageList={products.statusDisplayMsg}
-                        logisticName={products.logisticName}
-                        trackingAWB={products.trackingAWB}
-                        showShippingDetails={this.props.showShippingDetails}
-                        orderCode={orderDetails.orderId}
-                      />
-                    )}
-                    {products.statusDisplayMsg
-                      .map(val => {
-                        return val.key;
-                      })
-                      .includes(RETURN) && (
-                      <OrderStatusHorizontal
-                        trackingAWB={products.trackingAWB}
-                        courier={products.reverseLogisticName}
-                        statusMessageList={products.statusDisplayMsg.filter(
-                          val => {
-                            return val.key === RETURN;
-                          }
-                        )}
-                      />
-                    )}
-                  </div>
-                )}
+                {products.statusDisplayMsg &&
+                  products.selectedDeliveryMode.code !== CLICK_COLLECT && (
+                    <div className={styles.orderStatusVertical}>
+                      {!products.statusDisplayMsg
+                        .map(val => {
+                          return val.key;
+                        })
+                        .includes(RETURN) && (
+                        <OrderStatusVertical
+                          statusMessageList={products.statusDisplayMsg}
+                          logisticName={products.logisticName}
+                          trackingAWB={products.trackingAWB}
+                          showShippingDetails={this.props.showShippingDetails}
+                          orderCode={orderDetails.orderId}
+                        />
+                      )}
+                      {products.statusDisplayMsg
+                        .map(val => {
+                          return val.key;
+                        })
+                        .includes(RETURN) && (
+                        <OrderStatusHorizontal
+                          trackingAWB={products.trackingAWB}
+                          courier={products.reverseLogisticName}
+                          statusMessageList={products.statusDisplayMsg.filter(
+                            val => {
+                              return val.key === RETURN;
+                            }
+                          )}
+                        />
+                      )}
+                    </div>
+                  )}
+                {products.selectedDeliveryMode.code === CLICK_COLLECT &&
+                  products.storeDetails && (
+                    <div className={styles.orderStatusVertical}>
+                      <div className={styles.header}>Store details:</div>
+                      <div className={styles.row}>
+                        {products.storeDetails.displayName && (
+                          <span>{products.storeDetails.displayName} ,</span>
+                        )}{" "}
+                        {products.storeDetails.displayName && (
+                          <span>{products.storeDetails.returnAddress1} ,</span>
+                        )}{" "}
+                        {products.storeDetails.displayName && (
+                          <span>{products.storeDetails.returnAddress2}</span>
+                        )}{" "}
+                      </div>
+                      <div className={styles.row}>
+                        {products.storeDetails.returnCity}{" "}
+                        {products.storeDetails.returnPin}
+                      </div>
+                    </div>
+                  )}
                 {products.awbPopupLink === AWB_POPUP_FALSE && (
                   <div className={styles.buttonHolder}>
                     <div className={styles.buttonHolderForUpdate}>
