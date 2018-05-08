@@ -6,6 +6,7 @@ import { displayToast } from "../../general/toast.actions";
 import { setHeaderText } from "../../general/header.actions";
 import {
   UPDATE_REFUND_DETAILS_POPUP,
+  ORDER_DETAILS_MODAL,
   showModal
 } from "../../general/modal.actions";
 import {
@@ -39,6 +40,9 @@ const mapDispatchToProps = dispatch => {
     },
     setUrlToRedirectToAfterAuth: url => {
       dispatch(setUrlToRedirectToAfterAuth(url));
+    },
+    showShippingDetails: data => {
+      dispatch(showModal(ORDER_DETAILS_MODAL, data));
     }
   };
 };
