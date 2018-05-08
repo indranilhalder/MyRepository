@@ -8,7 +8,8 @@ import OrderPaymentMethod from "./OrderPaymentMethod";
 import OrderStatusVertical from "./OrderStatusVertical";
 import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
-import moment from "moment";
+import format from "date-fns/format";
+
 import queryString from "query-string";
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
@@ -160,9 +161,7 @@ export default class OrderDetails extends React.Component {
               <div className={styles.order} key={i}>
                 <div className={styles.orderIdHolder}>
                   <OrderPlacedAndId
-                    placedTime={moment(orderDetails.orderDate).format(
-                      dateFormat
-                    )}
+                    placedTime={format(orderDetails.orderDate, dateFormat)}
                     orderId={orderDetails.orderId}
                   />
                 </div>
