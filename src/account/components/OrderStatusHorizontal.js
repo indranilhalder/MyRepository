@@ -24,20 +24,23 @@ export default class OrderStatusHorizontal extends React.Component {
           return val.responseCode;
         }
       );
-      const data = this.props.statusMessageList[0].value.statusList.filter(
+      const filteredData = this.props.statusMessageList[0].value.statusList.filter(
         val => {
           return val.currentFlag;
         }
-      )[0].statusMessageList;
-      if (data && data[0]) {
-        date = data[0].date;
-        time = data[0].time;
-        message = data[0].statusDescription;
+      );
+      if (filteredData && filteredData[0]) {
+        const data = filteredData[0].statusMessageList;
+        if (data && data[0]) {
+          date = data[0].date;
+          time = data[0].time;
+          message = data[0].statusDescription;
+        }
+        returnInitiated = codeArray.includes(RETURN_INITIATED);
+        returnClosed = codeArray.includes(RETURN_CLOSED);
+        refundInitiated = codeArray.includes(REFUND_INITIATED);
+        refundCompleted = codeArray.includes(RETURN_COMPLETED);
       }
-      returnInitiated = codeArray.includes(RETURN_INITIATED);
-      returnClosed = codeArray.includes(RETURN_CLOSED);
-      refundInitiated = codeArray.includes(REFUND_INITIATED);
-      refundCompleted = codeArray.includes(RETURN_COMPLETED);
     }
     return (
       <div className={styles.base}>

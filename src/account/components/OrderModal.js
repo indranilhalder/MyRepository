@@ -13,7 +13,8 @@ export default class OrderModal extends React.Component {
               return (
                 <div className={styles.step}>
                   <div className={styles.row}>
-                    {val.date} , {val.time}
+                    {val.date && <span>{val.date} ,</span>}{" "}
+                    {val.time && <span>{val.time}</span>}
                   </div>
                   <div className={styles.row}>{val.statusDescription}</div>
                 </div>
