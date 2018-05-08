@@ -319,7 +319,7 @@ export default class PdpApparel extends React.Component {
             />
           </div>
           <div className={styles.details}>
-            {/* {productData.details && (
+            {productData.details && (
               <Accordion
                 text="Product Description"
                 headerFontSize={16}
@@ -342,7 +342,7 @@ export default class PdpApparel extends React.Component {
                     );
                   })}
               </Accordion>
-            )} */}
+            )}
             {productData.brandInfo && (
               <ProductFeature
                 heading="Brand Info"
