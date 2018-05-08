@@ -4043,7 +4043,7 @@ export function getItemBreakUpDetailsFailure(error) {
   };
 }
 
-export function getItemBreakUpDetails(couponCode, cartGuId) {
+export function getItemBreakUpDetails(couponCode, cartGuId,noCostEmiText,noCostEmiProductCount) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -4067,8 +4067,13 @@ export function getItemBreakUpDetails(couponCode, cartGuId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      let noCostEmiResult =Object.assign({}, resultJson, {
+        noCostEmiText: noCostEmiText,
+        noCostEmiProductCount: noCostEmiProductCount,
+
+      });
       dispatch(getItemBreakUpDetailsSuccess(resultJson));
-      dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE, resultJson));
+      dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE, noCostEmiResult));
     } catch (e) {
       dispatch(getItemBreakUpDetailsFailure(e.message));
     }
