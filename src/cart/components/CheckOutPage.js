@@ -180,6 +180,11 @@ class CheckOutPage extends React.Component {
     });
   };
   changeSubEmiOption(currentSelectedEMIType) {
+    let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
+    if (noCostEmiCouponCode) {
+      this.removeNoCostEmi(noCostEmiCouponCode);
+    }
+
     this.setState({
       currentSelectedEMIType,
       cardDetails: {},
@@ -1912,6 +1917,7 @@ class CheckOutPage extends React.Component {
                   this.props.cart.cartDetailsCNC.products &&
                   this.props.cart.cartDetailsCNC.products.length
                 }
+
               />
             </div>
           )}
