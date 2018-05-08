@@ -42,7 +42,6 @@ const mapDispatchToProps = dispatch => {
       dispatch(setUrlToRedirectToAfterAuth(url));
     },
     showShippingDetails: data => {
-      console.log(data);
       dispatch(showModal(ORDER_DETAILS_MODAL, data));
     }
   };

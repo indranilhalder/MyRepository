@@ -581,7 +581,7 @@ export default class ModalRoot extends React.Component {
         />
       )
     };
-    console.log(this.props.modalType);
+
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
     //let SelectedModal = MODAL_COMPONENTS["NewPassword"];
     const Modal = this.props.modalStatus ? (
