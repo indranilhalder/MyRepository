@@ -110,7 +110,7 @@
   width: 100%;
   line-height: 24px;
   font-size: 14px;
-  font-family: regular;
+  font-family: light;
   padding-left: 20px;
   margin-bottom: 5px;
   position: relative;
@@ -173,7 +173,7 @@
   margin-top: 10px;
   font-size: 14px;
   line-height: 22px;
-  font-family: regular;
+  font-family: light;
   color: #212121;
   padding-bottom: 15px;
 }

@@ -151,7 +151,12 @@ export default class PdpElectronics extends React.Component {
     this.props.getEmiTerms(globalAccessToken, cartValue);
     this.props.showEmiModal();
   };
-
+  handleShowPiqPage = () => {
+    if (this.props.getAllStoresForCliqAndPiq) {
+      this.props.showPdpPiqPage();
+      this.props.getAllStoresForCliqAndPiq();
+    }
+  };
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -219,62 +224,71 @@ export default class PdpElectronics extends React.Component {
               <div className={styles.flag}>Not Saleable</div>
             )}
           </div>
-          <div className={styles.content}>
-            {productData.rootCategory !== "Watches" && (
-              <ProductDetailsMainCard
-                productName={productData.brandName}
-                productDescription={productData.productName}
-                brandUrl={productData.brandURL}
-                history={this.props.history}
-                price={price}
-                discountPrice={discountPrice}
-                averageRating={productData.averageRating}
-                onClick={this.goToReviewPage}
-                discount={productData.discount}
-              />
-            )}
-            {productData.rootCategory === "Watches" && (
-              <JewelleryDetailsAndLink
-                productName={productData.brandName}
-                productDescription={productData.productName}
-                brandUrl={productData.brandURL}
-                history={this.props.history}
-                price={discountPrice}
-                discountPrice={price}
-                averageRating={productData.averageRating}
-                discount={productData.discount}
-              />
+          <div
+            className={
+              productData.rootCategory !== "Watches"
+                ? styles.whiteBackground
+                : styles.base
+            }
+          >
+            <div className={styles.content}>
+              {productData.rootCategory !== "Watches" && (
+                <ProductDetailsMainCard
+                  productName={productData.brandName}
+                  productDescription={productData.productName}
+                  brandUrl={productData.brandURL}
+                  history={this.props.history}
+                  price={price}
+                  discountPrice={discountPrice}
+                  averageRating={productData.averageRating}
+                  onClick={this.goToReviewPage}
+                  discount={productData.discount}
+                />
+              )}
+              {productData.rootCategory === "Watches" && (
+                <JewelleryDetailsAndLink
+                  productName={productData.brandName}
+                  productDescription={productData.productName}
+                  brandUrl={productData.brandURL}
+                  history={this.props.history}
+                  price={discountPrice}
+                  discountPrice={price}
+                  averageRating={productData.averageRating}
+                  discount={productData.discount}
+                />
+              )}
+            </div>
+            <PdpPaymentInfo
+              hasEmi={productData.isEMIEligible}
+              hasCod={productData.isCOD}
+              showEmiModal={this.showEmiModal}
+            />
+            <OfferCard
+              theme={2}
+              showDetails={this.props.showOfferDetails}
+              potentialPromotions={productData.potentialPromotions}
+              secondaryPromotions={productData.productOfferMsg}
+            />
+            {productData.variantOptions && (
+              <React.Fragment>
+                <SizeSelector
+                  history={this.props.history}
+                  sizeSelected={this.checkIfSizeSelected()}
+                  productId={productData.productListingId}
+                  hasSizeGuide={productData.showSizeGuide}
+                  showSizeGuide={this.props.showSizeGuide}
+                  data={productData.variantOptions}
+                />
+                <ColourSelector
+                  data={productData.variantOptions}
+                  productId={productData.productListingId}
+                  history={this.props.history}
+                  updateColour={val => {}}
+                  getProductSpecification={this.props.getProductSpecification}
+                />
+              </React.Fragment>
             )}
           </div>
-          <PdpPaymentInfo
-            hasEmi={productData.isEMIEligible}
-            hasCod={productData.isCOD}
-            showEmiModal={this.showEmiModal}
-          />
-          <OfferCard
-            showDetails={this.props.showOfferDetails}
-            potentialPromotions={productData.potentialPromotions}
-            secondaryPromotions={productData.productOfferMsg}
-          />
-          {productData.variantOptions && (
-            <React.Fragment>
-              <SizeSelector
-                history={this.props.history}
-                sizeSelected={this.checkIfSizeSelected()}
-                productId={productData.productListingId}
-                hasSizeGuide={productData.showSizeGuide}
-                showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions}
-              />
-              <ColourSelector
-                data={productData.variantOptions}
-                productId={productData.productListingId}
-                history={this.props.history}
-                updateColour={val => {}}
-                getProductSpecification={this.props.getProductSpecification}
-              />
-            </React.Fragment>
-          )}
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.pinCode ? (
             <PdpPincode
@@ -285,8 +299,9 @@ export default class PdpElectronics extends React.Component {
           ) : (
             <PdpPincode onClick={() => this.showPincodeModal()} />
           )}
-          {this.props.productDetails.isServiceableToPincode &&
-          this.props.productDetails.isServiceableToPincode.status === NO ? (
+          {(this.props.productDetails.isServiceableToPincode &&
+            this.props.productDetails.isServiceableToPincode.status === NO) ||
+          !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) ? (
             <Overlay
               labelText="Not serviceable in you pincode,
 please try another pincode"
@@ -298,6 +313,7 @@ please try another pincode"
             </Overlay>
           ) : (
             <PdpDeliveryModes
+              onPiq={this.handleShowPiqPage}
               eligibleDeliveryModes={productData.eligibleDeliveryModes}
               deliveryModesATP={productData.deliveryModesATP}
             />

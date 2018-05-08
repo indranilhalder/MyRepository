@@ -12,9 +12,52 @@ import {
   setDataLayer,
   ADOBE_MY_ACCOUNT_SAVED_PAYMENTS
 } from "../../lib/adobeUtils";
+import visaLogo from "../../cart/components/img/Visa.svg";
+import masterLogo from "../../cart/components/img/Master.svg";
+import amexLogo from "../../cart/components/img/amex.svg";
+import repayLogo from "../../cart/components/img/rupay.svg";
+import dinersLogo from "../../cart/components/img/diners.svg";
+import discoverLogo from "../../cart/components/img/discover.svg";
+import jcbLogo from "../../cart/components/img/jcb.svg";
+import {
+  RUPAY_CARD,
+  VISA_CARD,
+  MASTER_CARD,
+  AMEX_CARD,
+  MESTRO_CARD,
+  DINERS_CARD,
+  DISCOVER_CARD,
+  JCB_CARD,
+  MASTER
+} from "../../lib/constants";
 const CARD_FORMAT = /\B(?=(\d{4})+(?!\d))/g;
 const NO_SAVED_CARDS = "No Saved Cards";
 export default class UserSavedCard extends React.Component {
+  getCardLogo(cardType) {
+    switch (cardType) {
+      case VISA_CARD:
+        return visaLogo;
+      case MASTER_CARD:
+        return masterLogo;
+      case AMEX_CARD:
+        return amexLogo;
+      case RUPAY_CARD:
+        return repayLogo;
+      case MESTRO_CARD:
+        return masterLogo;
+      case DINERS_CARD:
+        return dinersLogo;
+      case DISCOVER_CARD:
+        return discoverLogo;
+      case JCB_CARD:
+        return jcbLogo;
+      case MASTER:
+        return masterLogo;
+      default:
+        return false;
+    }
+  }
+
   componentDidMount() {
     this.props.setHeaderText(SAVED_PAYMENTS);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -28,17 +71,18 @@ export default class UserSavedCard extends React.Component {
       }
     }
   }
+
   componentDidUpdate() {
     this.props.setHeaderText(SAVED_PAYMENTS);
   }
-  removeSavedCardDetails = () => {
+  removeSavedCardDetails = cardToken => {
     if (this.props.removeSavedCardDetails) {
-      this.props.removeSavedCardDetails();
+      this.props.removeSavedCardDetails(cardToken);
     }
   };
 
   render() {
-    if (this.props.loading) {
+    if (this.props.profile.loading) {
       this.props.showSecondaryLoader();
     } else {
       this.props.hideSecondaryLoader();
@@ -63,7 +107,7 @@ export default class UserSavedCard extends React.Component {
                     key={i}
                     bankLogo={""}
                     bankName={data.value.cardIssuer}
-                    cardLogo={""}
+                    cardLogo={this.getCardLogo(data.value.cardBrand)}
                     cardName={data.value.cardType}
                     cardHolderName={cardHolderName}
                     validityDate={`${data.value.expiryMonth}/${
@@ -72,7 +116,9 @@ export default class UserSavedCard extends React.Component {
                     cardNumber={cardNumber}
                     cardImage={data.cardImage}
                     onChangeCvv={(cvv, cardNo) => this.onChangeCvv(cvv, cardNo)}
-                    removeSavedCardDetails={() => this.removeSavedCardDetails()}
+                    removeSavedCardDetails={() =>
+                      this.removeSavedCardDetails(data.value.cardToken)
+                    }
                   />
                 </div>
               );

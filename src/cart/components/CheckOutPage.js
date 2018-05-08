@@ -107,7 +107,7 @@ class CheckOutPage extends React.Component {
       orderConfirmation: false,
       showCliqAndPiq: false,
       showPickupPerson: false,
-      selectedSlaveId: null,
+      selectedSlaveIdObj: {},
       ussIdAndDeliveryModesObj: {}, // this object we are using for check when user will continue after  delivery mode then we ll check for all products we selected delivery mode or not
       selectedProductsUssIdForCliqAndPiq: null,
       orderId: "",
@@ -282,7 +282,11 @@ class CheckOutPage extends React.Component {
       this.state.selectedProductsUssIdForCliqAndPiq
     );
     this.togglePickupPersonForm();
-    this.setState({ selectedSlaveId });
+    const selectedSlaveIdObj = cloneDeep(this.state.selectedSlaveIdObj);
+    selectedSlaveIdObj[
+      this.state.selectedProductsUssIdForCliqAndPiq
+    ] = selectedSlaveId;
+    this.setState({ selectedSlaveIdObj });
     this.props.addStoreCNC(
       this.state.selectedProductsUssIdForCliqAndPiq,
       selectedSlaveId
@@ -364,9 +368,9 @@ class CheckOutPage extends React.Component {
                   hasFooter={false}
                   size={val.size}
                   color={val.color}
-                  productDetails={val.productBrand}
+                  //productDetails={val.productBrand}
                   productName={val.productName}
-                  price={val.offerPrice}
+                  price={val.offerPrice ? val.offerPrice : val.price}
                   deliveryInformation={val.elligibleDeliveryMode}
                   showDelivery={true}
                   deliveryInfoToggle={false}
@@ -402,6 +406,7 @@ class CheckOutPage extends React.Component {
         return product.USSID === this.state.selectedProductsUssIdForCliqAndPiq;
       }
     );
+
     const firstSlaveData =
       currentSelectedProduct.pinCodeResponse.validDeliveryModes;
     const someData = firstSlaveData
@@ -440,9 +445,22 @@ class CheckOutPage extends React.Component {
     return (
       <PiqPage
         availableStores={availableStores}
-        selectedSlaveId={this.state.selectedSlaveId}
+        selectedSlaveId={
+          this.state.selectedSlaveIdObj[
+            this.state.selectedProductsUssIdForCliqAndPiq
+          ] &&
+          this.state.selectedSlaveIdObj[
+            this.state.selectedProductsUssIdForCliqAndPiq
+          ]
+        }
         numberOfStores={availableStores.length}
-        showPickupPerson={this.state.showPickupPerson}
+        showPickupPerson={
+          this.state.selectedSlaveIdObj[
+            this.state.selectedProductsUssIdForCliqAndPiq
+          ]
+            ? true
+            : false
+        }
         productName={currentSelectedProduct.productName}
         productColour={currentSelectedProduct.color}
         hidePickupPersonDetail={() => this.togglePickupPersonForm()}
@@ -590,6 +608,7 @@ class CheckOutPage extends React.Component {
           ) {
             let newObjectAdd = {};
             newObjectAdd[product.USSID] = HOME_DELIVERY;
+
             Object.assign(defaultSelectedDeliveryModes, newObjectAdd);
           }
         });
@@ -734,7 +753,12 @@ class CheckOutPage extends React.Component {
                 ) / 100
               : "0.00"
           });
+        } else {
+          this.setState({
+            noCostEmiDiscount: "0.00"
+          });
         }
+
         this.setState({
           payableAmount: nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount
             .value
@@ -1007,7 +1031,8 @@ class CheckOutPage extends React.Component {
     this.setState({
       isNoCostEmiApplied: true,
       isNoCostEmiProceeded: false,
-      noCostEmiBankName: null
+      noCostEmiBankName: null,
+      noCostEmiDiscount: "0.00"
     });
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
@@ -1081,7 +1106,7 @@ class CheckOutPage extends React.Component {
   };
   onSelectAddress(selectedAddress) {
     let addressSelected = find(
-      this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
+      this.props.cart.cartDetailsCNC && this.props.cart.cartDetailsCNC.addressDetailsList && this.props.cart.cartDetailsCNC.addressDetailsList.addresses,
       address => {
         return address.id === selectedAddress[0];
       }
@@ -1688,7 +1713,14 @@ class CheckOutPage extends React.Component {
       checkoutButtonStatus = this.validateSubmitButton();
       labelForButton = PAY_NOW;
     }
-
+    if (this.state.isFirstAddress) {
+      labelForButton = CONTINUE;
+      checkoutButtonStatus = false;
+    }
+    if (!this.state.isRemainingAmount && this.state.isCliqCashApplied) {
+      checkoutButtonStatus = false;
+      labelForButton = PAY_NOW;
+    }
     if (this.props.cart.getUserAddressStatus === REQUESTING) {
       return this.renderLoader();
     } else {

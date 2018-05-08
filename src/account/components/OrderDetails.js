@@ -187,24 +187,42 @@ export default class OrderDetails extends React.Component {
                     SubTotal={
                       orderDetails.orderAmount &&
                       orderDetails.orderAmount.bagTotal &&
-                      orderDetails.orderAmount.bagTotal.doubleValue
+                      orderDetails.orderAmount.bagTotal.value
+                        ? Math.round(
+                            orderDetails.orderAmount.bagTotal.value * 100
+                          ) / 100
+                        : "0.00"
                     }
                     DeliveryCharges={orderDetails.deliveryCharge}
                     Discount={
                       orderDetails.orderAmount &&
                       orderDetails.orderAmount.totalDiscountAmount &&
-                      orderDetails.orderAmount.totalDiscountAmount.doubleValue
+                      orderDetails.orderAmount.totalDiscountAmount.value
+                        ? Math.round(
+                            orderDetails.orderAmount.totalDiscountAmount.value *
+                              100
+                          ) / 100
+                        : "0.00"
                     }
                     coupon={
                       orderDetails.orderAmount &&
                       orderDetails.orderAmount.couponDiscountAmount &&
-                      orderDetails.orderAmount.couponDiscountAmount.doubleValue
+                      orderDetails.orderAmount.couponDiscountAmount.value
+                        ? Math.round(
+                            orderDetails.orderAmount.couponDiscountAmount
+                              .value * 100
+                          ) / 100
+                        : "0.00"
                     }
                     ConvenienceCharges={orderDetails.convenienceCharge}
                     Total={
                       orderDetails.orderAmount &&
                       orderDetails.orderAmount.paybleAmount &&
-                      orderDetails.orderAmount.paybleAmount.doubleValue
+                      orderDetails.orderAmount.paybleAmount.value
+                        ? Math.round(
+                            orderDetails.orderAmount.paybleAmount.value * 100
+                          ) / 100
+                        : "0.00"
                     }
                   />
                 </div>

@@ -2,6 +2,7 @@ import React from "react";
 import PdpElectronics from "./PdpElectronics";
 import PdpApparel from "./PdpApparel";
 import PdpJewellery from "./PdpJewellery";
+import PiqPageForPdp from "./PiqPageForPdp";
 import PdpHome from "./PdpHome";
 
 import styles from "./ProductDescriptionPageWrapper.css";
@@ -29,43 +30,30 @@ const typeComponentMapping = {
 const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 
 export default class ProductDescriptionPageWrapper extends React.Component {
-  componentDidMount() {
+  constructor(props) {
+    super(props);
+    this.state = { showPiqPage: false };
+  }
+  componentDidMount = async () => {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
       setTimeout(() => {
         window.scrollTo(0, 0);
       }, 0);
-      if (defaultPinCode) {
-        this.props.getProductDescription(
-          this.props.match.params[0],
-          defaultPinCode
-        );
-      } else {
-        this.props.getProductDescription(this.props.match.params[0]);
-      }
-
+      await this.props.getProductDescription(this.props.match.params[0]);
       this.props.getMsdRequest(this.props.match.params[0]);
-      this.props.pdpAboutBrand(this.props.match.params[0]);
     } else if (
       this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
     ) {
       setTimeout(() => {
         window.scrollTo(0, 0);
       }, 0);
-      if (defaultPinCode) {
-        this.props.getProductDescription(
-          this.props.match.params[1],
-          defaultPinCode
-        );
-      } else {
-        this.props.getProductDescription(this.props.match.params[1]);
-      }
-
+      this.props.getProductDescription(this.props.match.params[1]);
       this.props.getMsdRequest(this.props.match.params[1]);
       this.props.pdpAboutBrand(this.props.match.params[1]);
     } else {
       //need to show error page
     }
-  }
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.productDetails && this.props.productDetails !== "null") {
@@ -80,12 +68,6 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
         this.props.getProductDescription(this.props.match.params[0]);
         this.props.getMsdRequest(this.props.match.params[0]);
-        if (defaultPinCode) {
-          this.props.getProductPinCode(
-            defaultPinCode,
-            this.props.match.params[0]
-          );
-        }
       } else if (
         this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
       ) {
@@ -94,19 +76,12 @@ export default class ProductDescriptionPageWrapper extends React.Component {
         }, 0);
         this.props.getProductDescription(this.props.match.params[1]);
         this.props.getMsdRequest(this.props.match.params[1]);
-        if (defaultPinCode) {
-          this.props.getProductPinCode(
-            defaultPinCode,
-            this.props.match.params[1]
-          );
-        } else {
-          this.props.getProductDescription(this.props.match.params[1]);
-        }
       } else {
         //need to show error page
       }
     }
   }
+
   showLoader = () => {
     this.props.showSecondaryLoader();
   };
@@ -139,14 +114,28 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       this.hideLoader();
     }
     if (this.props.productDetails) {
-      return (
-        <div itemscope itemtype="http://schema.org/Product">
-          {this.props.productDetails.seo
-            ? renderMetaTags(this.props.productDetails)
-            : renderMetaTagsWithoutSeoObject(this.props.productDetails)}
-          {this.renderRootCategory(this.props.productDetails.rootCategory)}
-        </div>
-      );
+      if (!this.props.showPiqPage) {
+        return (
+          <div itemscope itemtype="http://schema.org/Product">
+            {this.props.productDetails.seo
+              ? renderMetaTags(this.props.productDetails)
+              : renderMetaTagsWithoutSeoObject(this.props.productDetails)}
+            {this.renderRootCategory(this.props.productDetails.rootCategory)}
+          </div>
+        );
+      } else {
+        return (
+          <PiqPageForPdp
+            loadingForCliqAndPiq={this.props.loadingForCliqAndPiq}
+            productDetails={this.props.productDetails}
+            stores={this.props.stores}
+            displayToast={this.props.displayToast}
+            getAllStoresForCliqAndPiq={this.props.getAllStoresForCliqAndPiq}
+            removeCliqAndPiq={() => this.removeCliqAndPiq()}
+            hidePdpPiqPage={this.props.hidePdpPiqPage}
+          />
+        );
+      }
     } else {
       return this.renderLoader();
     }

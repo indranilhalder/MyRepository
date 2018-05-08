@@ -7,7 +7,10 @@ import {
   getPdpEmi,
   getEmiTerms,
   pdpAboutBrand,
-  getProductPinCode
+  getProductPinCode,
+  getAllStoresForCliqAndPiq,
+  showPdpPiqPage,
+  hidePdpPiqPage
 } from "../actions/pdp.actions";
 import { displayToast } from "../../general/toast.actions.js";
 import {
@@ -26,15 +29,21 @@ import {
 } from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
-import { SUCCESS } from "../../lib/constants.js";
+import {
+  SUCCESS,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
+} from "../../lib/constants.js";
 const mapDispatchToProps = dispatch => {
   return {
-    getProductDescription: async (productCode, pinCode) => {
+    getProductDescription: async productCode => {
       const productDetailsResponse = await dispatch(
         getProductDescription(productCode)
       );
       if (productDetailsResponse.status === SUCCESS) {
-        dispatch(getProductPinCode(pinCode, productCode));
+        const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+        if (pinCode) {
+          dispatch(getProductPinCode(pinCode, productCode));
+        }
       }
     },
     addProductToCart: (userId, cartId, accessToken, productDetails) => {
@@ -87,6 +96,15 @@ const mapDispatchToProps = dispatch => {
     },
     displayToast: val => {
       dispatch(displayToast(val));
+    },
+    getAllStoresForCliqAndPiq: pinCode => {
+      dispatch(getAllStoresForCliqAndPiq(pinCode));
+    },
+    showPdpPiqPage: () => {
+      dispatch(showPdpPiqPage());
+    },
+    hidePdpPiqPage: () => {
+      dispatch(hidePdpPiqPage());
     }
   };
 };
@@ -94,7 +112,11 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     productDetails: state.productDescription.productDetails,
-    loading: state.productDescription.loading
+    loading: state.productDescription.loading,
+    stores: state.productDescription.storeDetails,
+    showPiqPage: state.productDescription.showPiqPage,
+    slaveData: state.productDescription.slaveData,
+    loadingForCliqAndPiq: state.productDescription.loadingForCliqAndPiq
   };
 };
 

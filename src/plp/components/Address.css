@@ -23,6 +23,7 @@
   line-height: 20px;
   white-space: initial;
   margin: auto;
+  word-wrap: break-word;
 }
 .heading {
   width: 100%;

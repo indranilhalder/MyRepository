@@ -211,6 +211,12 @@ export default class PdpJewellery extends React.Component {
       return false;
     }
   };
+  handleShowPiqPage = () => {
+    if (this.props.getAllStoresForCliqAndPiq) {
+      this.props.showPdpPiqPage();
+      this.props.getAllStoresForCliqAndPiq();
+    }
+  };
   render() {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
@@ -330,8 +336,9 @@ export default class PdpJewellery extends React.Component {
               certifications={productData.certificationMapFrJwlry}
             />
           )}
-          {this.props.productDetails.isServiceableToPincode &&
-          this.props.productDetails.isServiceableToPincode.pinCode ? (
+          {(this.props.productDetails.isServiceableToPincode &&
+            this.props.productDetails.isServiceableToPincode.pinCode) ||
+          !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) ? (
             <PdpPincode
               hasPincode={true}
               pincode={this.props.productDetails.isServiceableToPincode.pinCode}
@@ -353,6 +360,8 @@ please try another pincode"
             </Overlay>
           ) : (
             <PdpDeliveryModes
+              onPiq={this.handleShowPiqPage}
+              getAllStoresForCliqAndPiq={this.props.getAllStoresForCliqAndPiq}
               eligibleDeliveryModes={productData.eligibleDeliveryModes}
               deliveryModesATP={productData.deliveryModesATP}
             />

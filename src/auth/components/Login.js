@@ -46,6 +46,13 @@ class Login extends Component {
   navigateToSignUp() {
     this.props.history.push(SIGN_UP_PATH);
   }
+  goBack() {
+    if (this.props.history.length <= 3) {
+      this.props.history.push(HOME_ROUTER);
+    } else {
+      return this.props.history.goBack();
+    }
+  }
   onSubmit = () => {
     if (this.props.onSubmit) {
       let userDetails = {};
@@ -110,6 +117,7 @@ class Login extends Component {
     let footerText = "";
     let footerClick;
     let showSocialButtons;
+
     if (pathName === LOGIN_PATH || MAIN_ROUTER) {
       footerText = "Don't have an account? Sign up";
       footerClick = () => this.navigateToSignUp();
@@ -136,6 +144,7 @@ class Login extends Component {
         footerText={footerText}
         footerClick={footerClick}
         type={SOCIAL_LOG_IN}
+        goBack={() => this.goBack()}
       >
         <React.Fragment>
           <div>

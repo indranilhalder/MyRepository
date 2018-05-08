@@ -74,6 +74,7 @@ export const PRODUCT_SELLER_ROUTER_SUFFIX = "/viewSellers";
 export const PRODUCT_CART_ROUTER = "/cart";
 export const ORDER_SUMMARY_ROUTER = "/orderSummary";
 export const CHECKOUT_ROUTER = "/checkout";
+export const CHECKOUT_ROUTER_THANKYOU = "/checkout/";
 export const ACCOUNT_SAVED_CARD_ROUTER = "/savedCards";
 export const MY_ACCOUNT = "/my-account";
 export const SHORT_URL_ORDER_DETAIL = "/trackOrder/beforeTrack/:orderCode";
@@ -154,7 +155,9 @@ export const COLLECT = "click-and-collect";
 export const HOME_DELIVERY = "home-delivery";
 export const SHORT_EXPRESS = "ED";
 export const SHORT_COLLECT = "CNC";
-
+export const EXPRESS_TEXT = "Express Shipping";
+export const HOME_TEXT = "Standard Shipping";
+export const COLLECT_TEXT = "CLiQ & PiQ";
 export const FOLLOW = "Follow";
 export const FOLLOWING = "Following";
 
