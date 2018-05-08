@@ -4,16 +4,18 @@ import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import PropTypes from "prop-types";
 const APPROVED = "APPROVED";
 const PROCESSING = "PROCESSING";
+const CANCEL = "CANCEL";
 const SHIPPING = "SHIPPING";
 const DELIVERED = "DELIVERED";
+const REFUND_INITIATED = "REFUND_INITIATED";
 export default class OrderStatusVertical extends React.Component {
-  handleClick() {
-    if (this.props.moreDetails) {
-      this.props.moreDetails();
+  handleMoreDetails(val) {
+    if (this.props.showShippingDetails && val) {
+      this.props.showShippingDetails(val);
     }
   }
   render() {
-    console.log(this.props);
+    // console.log(this.props);
     const completedSteps = this.props.statusMessageList.map(val => {
       return val.key;
     });
@@ -29,7 +31,10 @@ export default class OrderStatusVertical extends React.Component {
     const deliveredData = this.props.statusMessageList.find(val => {
       return val.key === DELIVERED;
     });
-    console.log(approvedData.value.statusList[0].statusMessageList[0].date);
+    const cancelledData = this.props.statusMessageList.find(val => {
+      return val.key === CANCEL;
+    });
+    //console.log(approvedData.value.statusList[0].statusMessageList[0].date);
     let approvedDate = "";
     let approvedTime = "";
     if (
@@ -58,6 +63,8 @@ export default class OrderStatusVertical extends React.Component {
     }
     let shippingDate = "";
     let shippingTime = "";
+    let shippingList = null;
+    let shippingResponseCode = "";
     if (
       shippingData &&
       shippingData.value.statusList &&
@@ -65,9 +72,15 @@ export default class OrderStatusVertical extends React.Component {
       shippingData.value.statusList[0].statusMessageList &&
       shippingData.value.statusList[0].statusMessageList[0]
     ) {
-      shippingDate = approvedData.value.statusList[0].statusMessageList[0].date;
-      shippingTime = approvedData.value.statusList[0].statusMessageList[0].time;
+      shippingDate = shippingData.value.statusList[0].statusMessageList[0].date;
+      shippingTime = shippingData.value.statusList[0].statusMessageList[0].time;
+      shippingList = shippingData.value.statusList[0].statusMessageList;
+      shippingResponseCode = shippingData.value.statusList[0].responseCode;
+      //       responseCode
+
+      // "REFUND_INITIATED"
     }
+    console.log(shippingResponseCode);
     let deliveredDate = "";
     let deliveredTime = "";
     if (
@@ -82,8 +95,25 @@ export default class OrderStatusVertical extends React.Component {
       deliveredTime =
         deliveredData.value.statusList[0].statusMessageList[0].time;
     }
-    console.log(deliveredDate);
-    // console.log(completedSteps);
+
+    let cancelledDate = "";
+    let cancelledTime = "";
+    if (
+      cancelledData &&
+      cancelledData.value.statusList &&
+      cancelledData.value.statusList[0] &&
+      cancelledData.value.statusList[0].statusMessageList &&
+      cancelledData.value.statusList[0].statusMessageList[0]
+    ) {
+      cancelledDate =
+        cancelledData.value.statusList[0].statusMessageList[0].date;
+      cancelledTime =
+        cancelledData.value.statusList[0].statusMessageList[0].time;
+    }
+    //console.log(deliveredDate);
+
+    const orderCode = this.props.orderCode;
+    // console.log(orderCode);
     return (
       <div className={styles.base}>
         <div
@@ -126,56 +156,90 @@ export default class OrderStatusVertical extends React.Component {
             <div className={styles.timeHolder}>{processingTime}</div>
           </div>
         </div>
-        <div
-          className={
-            completedSteps.includes(SHIPPING)
-              ? styles.step
-              : styles.stepInactive
-          }
-        >
+        {shippingResponseCode !== REFUND_INITIATED && (
           <div
             className={
               completedSteps.includes(SHIPPING)
-                ? styles.checkActive
-                : styles.check
+                ? styles.step
+                : styles.stepInactive
             }
-          />
-          <div className={styles.processNameHolder}>Shipping</div>
-          <div className={styles.dateAndTimeHolder}>
-            <div className={styles.dateHolder}>{shippingDate}</div>
-            <div className={styles.timeHolder}>{shippingTime}</div>
-          </div>
-          {this.props.logisticName &&
-            completedSteps.includes(SHIPPING) && (
-              <div className={styles.courierInfoHolder}>
-                <div className={styles.moreInfoQuestionHolder}>
-                  Courier:{this.props.logisticName}
+          >
+            <div
+              className={
+                completedSteps.includes(SHIPPING)
+                  ? styles.checkActive
+                  : styles.check
+              }
+            />
+            <div className={styles.processNameHolder}>Shipping</div>
+            <div className={styles.dateAndTimeHolder}>
+              <div className={styles.dateHolder}>{shippingDate}</div>
+              <div className={styles.timeHolder}>{shippingTime}</div>
+            </div>
+            {completedSteps.includes(SHIPPING) && (
+              <div>
+                {this.props.logisticName && (
+                  <div className={styles.courierInfoHolder}>
+                    <div className={styles.moreInfoQuestionHolder}>
+                      Courier: {this.props.logisticName}
+                    </div>
+                  </div>
+                )}
+                {this.props.trackingAWB && (
+                  <div className={styles.courierInfoHolder}>
+                    <div className={styles.moreInfoQuestionHolder}>
+                      AWB No: {this.props.trackingAWB}
+                    </div>
+                  </div>
+                )}
+                <div className={styles.courierInfoHolder}>
+                  <UnderLinedButton
+                    label="More details"
+                    onClick={() =>
+                      this.handleMoreDetails({ shippingList, orderCode })
+                    }
+                  />
                 </div>
 
                 <div className={styles.moreAnswerHolder} />
               </div>
             )}
-        </div>
-        <div
-          className={
-            completedSteps.includes(DELIVERED)
-              ? styles.step
-              : styles.stepInactive
-          }
-        >
+          </div>
+        )}
+        {shippingResponseCode !== REFUND_INITIATED && (
           <div
             className={
               completedSteps.includes(DELIVERED)
-                ? styles.checkActive
-                : styles.check
+                ? styles.step
+                : styles.stepInactive
             }
-          />
-          <div className={styles.processNameHolder}>Delivered</div>
-          <div className={styles.dateAndTimeHolder}>
-            <div className={styles.dateHolder}>{deliveredDate}</div>
-            <div className={styles.timeHolder}>{deliveredTime}</div>
+          >
+            <div
+              className={
+                completedSteps.includes(DELIVERED)
+                  ? styles.checkActive
+                  : styles.check
+              }
+            />
+            <div className={styles.processNameHolder}>Delivered</div>
+            <div className={styles.dateAndTimeHolder}>
+              <div className={styles.dateHolder}>{deliveredDate}</div>
+              <div className={styles.timeHolder}>{deliveredTime}</div>
+            </div>
           </div>
-        </div>
+        )}
+        {completedSteps.includes(CANCEL) && (
+          <div className={styles.step}>
+            <div className={styles.checkActive} />
+            <div className={styles.processNameHolder}>Cancelled</div>
+            <div className={styles.dateAndTimeHolder}>
+              <div className={styles.dateHolder}>{cancelledDate}</div>
+              <div className={styles.timeHolder}>{cancelledTime}</div>
+            </div>
+          </div>
+        )}
+
+        {/* {CANCEL} */}
       </div>
     );
   }

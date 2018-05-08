@@ -129,14 +129,14 @@
   height: auto;
   display: inline-block;
   text-align: right;
-  margin-bottom: 8px;
+  margin-top: 8px;
 }
 .moreInfoQuestionHolder {
   width: auto;
   height: 20px;
   line-height: 20px;
   color: #212121;
-  font-family: regular;
+  font-family: light;
   font-size: 14px;
   display: inline-block;
 }

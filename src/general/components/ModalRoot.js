@@ -4,6 +4,7 @@ import ModalPanel from "./ModalPanel";
 import Loadable from "react-loadable";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import PriceBreakupModal from "../../pdp/components/PriceBreakupModal";
+import OrderModal from "../../account/components/OrderModal";
 import * as Cookie from "../../lib/Cookie.js";
 import {
   LOGGED_IN_USER_DETAILS,
@@ -572,8 +573,15 @@ export default class ModalRoot extends React.Component {
           data={this.props.ownProps}
           closeModal={() => this.handleClose()}
         />
+      ),
+      OrderModal: (
+        <OrderModal
+          data={this.props.ownProps}
+          closeModal={() => this.handleClose()}
+        />
       )
     };
+    console.log(this.props.modalType);
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
     //let SelectedModal = MODAL_COMPONENTS["NewPassword"];
     const Modal = this.props.modalStatus ? (

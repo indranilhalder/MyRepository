@@ -6,6 +6,7 @@ import OrderDelivered from "./OrderDelivered.js";
 import OrderViewPaymentDetails from "./OrderViewPaymentDetails";
 import OrderPaymentMethod from "./OrderPaymentMethod";
 import OrderStatusVertical from "./OrderStatusVertical";
+import OrderStatusHorizontal from "./OrderStatusHorizontal";
 import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -34,6 +35,7 @@ import {
 } from "../../lib/adobeUtils";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_RETURN = "Return";
+const RETURN = "RETURN";
 const PRODUCT_CANCEL = "Cancel";
 const AWB_POPUP_TRUE = "Y";
 const AWB_POPUP_FALSE = "N";
@@ -46,6 +48,11 @@ export default class OrderDetails extends React.Component {
   requestInvoice(ussid, sellerOrderNo) {
     if (this.props.sendInvoice) {
       this.props.sendInvoice(ussid, sellerOrderNo);
+    }
+  }
+  handleshowShippingDetails(val) {
+    if (this.props.showShippingDetails && val) {
+      this.props.showShippingDetails(val);
     }
   }
 
@@ -146,7 +153,6 @@ export default class OrderDetails extends React.Component {
     }
   }
   render() {
-    console.log(this.props);
     if (this.props.loadingForFetchOrderDetails) {
       this.props.showSecondaryLoader();
     } else {
@@ -158,11 +164,19 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
+    console.log(orderDetails);
+
     return (
       <div className={styles.base}>
         {orderDetails &&
           orderDetails.products.map((products, i) => {
-            console.log(this.props);
+            console.log(
+              products.statusDisplayMsg
+                .map(val => {
+                  return val.key;
+                })
+                .includes(RETURN)
+            );
             return (
               <div className={styles.order} key={i}>
                 <div className={styles.orderIdHolder}>
@@ -250,10 +264,32 @@ export default class OrderDetails extends React.Component {
                 )}
                 {products.statusDisplayMsg && (
                   <div className={styles.orderStatusVertical}>
-                    <OrderStatusVertical
-                      statusMessageList={products.statusDisplayMsg}
-                      logisticName={products.logisticName}
-                    />
+                    {!products.statusDisplayMsg
+                      .map(val => {
+                        return val.key;
+                      })
+                      .includes(RETURN) && (
+                      <OrderStatusVertical
+                        statusMessageList={products.statusDisplayMsg}
+                        logisticName={products.logisticName}
+                        trackingAWB={products.trackingAWB}
+                        showShippingDetails={this.props.showShippingDetails}
+                        orderCode={orderDetails.orderId}
+                      />
+                    )}
+                    {products.statusDisplayMsg
+                      .map(val => {
+                        return val.key;
+                      })
+                      .includes(RETURN) && (
+                      <OrderStatusHorizontal
+                        statusMessageList={products.statusDisplayMsg.filter(
+                          val => {
+                            return val.key === RETURN;
+                          }
+                        )}
+                      />
+                    )}
                   </div>
                 )}
                 {products.awbPopupLink === AWB_POPUP_FALSE && (
