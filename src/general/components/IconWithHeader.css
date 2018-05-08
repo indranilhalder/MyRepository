@@ -2,10 +2,9 @@
   width: 100%;
   height: auto;
   background-color: #ffff;
-  padding: 15px 0px 15px 70px;
+  padding: 5px 0px 5px 70px;
   display: inline-block;
   position: relative;
-
 }
 .textHolder {
   width: 100%;
@@ -17,10 +16,10 @@
 }
 .iconHolder {
   width: 30px;
-  height:30px;
+  height: 30px;
   position: absolute;
   left: 20px;
   top: 0px;
-  bottom:0px;
-  margin:auto;
+  bottom: 0px;
+  margin: auto;
 }
