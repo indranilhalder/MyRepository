@@ -161,7 +161,7 @@ export default class Carousel extends React.Component {
                                 : `${this.props.elementWidthMobile}%`
                           }}
                         >
-                          <VisibilityChild>{child}</VisibilityChild>{" "}
+                          <VisibilityChild>{child}</VisibilityChild>
                         </div>
                       </MediaQuery>
                     </React.Fragment>

@@ -15,6 +15,8 @@ import styles from "./PDPRecommendedSections.css";
 import { PDP_FOLLOW_AND_UN_FOLLOW } from "../../lib/constants.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
+// only want to kick off a request for the MSD stuff if they are visible.
+
 class PDPRecommendedSections extends React.Component {
   goToProductDescription = url => {
     this.props.history.push(url);

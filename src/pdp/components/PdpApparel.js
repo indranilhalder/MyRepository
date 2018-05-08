@@ -19,6 +19,7 @@ import PdpDeliveryModes from "./PdpDeliveryModes";
 import Overlay from "./Overlay";
 import Accordion from "../../general/components/Accordion.js";
 import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
+import VisibilityChild from "../../home/components/VisibilityChild.js";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
