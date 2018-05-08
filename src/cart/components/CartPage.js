@@ -193,10 +193,7 @@ class CartPage extends React.Component {
       setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT);
       this.props.history.push({
         pathname: CHECKOUT_ROUTER,
-        state: {
-          productValue: this.props.cart.cartDetails.cartAmount.bagTotal.value,
-          isRequestComeThrowMyBag: true
-        }
+
       });
     }
     if (!pinCode) {
