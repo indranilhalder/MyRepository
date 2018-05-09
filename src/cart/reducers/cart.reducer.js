@@ -242,20 +242,7 @@ const cart = (
       } else {
         Cookies.deleteCookie(COUPON_COOKIE);
       }
-      //set local storage
-      localStorage.setItem(CART_BAG_DETAILS, []);
-      let bagItem = localStorage.getItem(CART_BAG_DETAILS);
-      let bagItemsInJsonFormat = bagItem ? JSON.parse(bagItem) : [];
-      action.cartDetails &&
-        each(action.cartDetails.products, product => {
-          if (!bagItemsInJsonFormat.includes(product.USSID)) {
-            bagItemsInJsonFormat.push(product.USSID);
-          }
-        });
-      localStorage.setItem(
-        CART_BAG_DETAILS,
-        JSON.stringify(bagItemsInJsonFormat)
-      );
+
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
         cartDetails: action.cartDetails,

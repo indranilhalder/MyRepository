@@ -27,9 +27,11 @@ import {
   JUS_PAY_CHARGED,
   FAILURE_LOWERCASE,
   SOFT_RESERVATION_ITEM,
-  ADDRESS_DETAILS_FOR_PAYMENT
+  ADDRESS_DETAILS_FOR_PAYMENT,
+  CART_BAG_DETAILS
 } from "../../lib/constants";
 import queryString, { parse } from "query-string";
+import {setBagCount} from "../../general/header.actions"
 
 import {
   setDataLayer,
@@ -446,6 +448,20 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
         getState().icid.value,
         getState().icid.icidType
       );
+
+      //set the local storage
+        //set local storage
+        localStorage.setItem(CART_BAG_DETAILS, []);
+        let cartProducts =[];
+        resultJson &&
+          each(resultJson.products, product => {
+            cartProducts.push(product.USSID);
+          });
+        localStorage.setItem(
+          CART_BAG_DETAILS,
+          JSON.stringify(cartProducts)
+        );
+        dispatch(setBagCount(cartProducts.length))
       return dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
       return dispatch(cartDetailsFailure(e.message));

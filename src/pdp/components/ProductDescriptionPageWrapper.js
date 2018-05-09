@@ -59,12 +59,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.productDetails && this.props.productDetails !== "null") {
-      let bagCountDetails = localStorage.getItem(CART_BAG_DETAILS);
-      let bagItems = bagCountDetails ? bagCountDetails : [];
-      let bagItemCount = JSON.parse(bagItems).length;
-
       this.props.setHeaderText(this.props.productDetails.productName);
-      this.props.setBagCount(bagItemCount);
     }
 
     if (prevProps.location.pathname !== this.props.location.pathname) {

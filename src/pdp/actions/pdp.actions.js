@@ -22,6 +22,7 @@ import {
   LOGGED_IN_USER_DETAILS,
   ANONYMOUS_USER
 } from "../../lib/constants";
+import { setBagCount } from "../../general/header.actions";
 import { setDataLayer, ADOBE_PDP_TYPE } from "../../lib/adobeUtils.js";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 
@@ -295,8 +296,8 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
       );
 
       // here we dispatch a modal to show something was added to the bag
+      dispatch(setBagCount(bagItemsInJsonFormat.length));
       dispatch(displayToast("Added product to Bag"));
-
       setDataLayerForPdpDirectCalls(SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT);
       dispatch(addProductToCartSuccess());
       // ADOBE_ADD_TO_CART
