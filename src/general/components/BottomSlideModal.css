@@ -7,16 +7,6 @@
   transform: translateY(100%);
   animation: slideInUp 300ms forwards;
 }
-.base:before {
-  content: "";
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  right: 20px;
-  top: -40px;
-  pointer-events: none;
-  background-image: url(./img/closeCircle.svg) no-repeat;
-}
 .content {
   width: 100%;
   height: auto;
