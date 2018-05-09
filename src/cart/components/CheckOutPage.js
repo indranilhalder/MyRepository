@@ -840,9 +840,14 @@ class CheckOutPage extends React.Component {
     if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
       this.setState({ orderConfirmation: true });
     }
-    if (nextProps.cart.cliqCashJusPayDetails) {
+    if (
+      nextProps.cart.cliqCashJusPayDetails &&
+      nextProps.cart.orderConfirmationDetailsStatus !== "requesting"
+    ) {
       this.setState({ orderId: nextProps.cart.cliqCashJusPayDetails.orderId });
-      this.setState({ orderConfirmation: true });
+      this.props.orderConfirmation(
+        nextProps.cart.cliqCashJusPayDetails.orderId
+      );
     }
     if (nextProps.cart.binValidationCODStatus === SUCCESS) {
       this.setState({ binValidationCOD: true });

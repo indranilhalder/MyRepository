@@ -27,11 +27,7 @@ export default class CancelOrder extends React.Component {
   }
   finalSubmit(reason) {
     if (reason.cancelReasonCode) {
-      if (
-        window.confirm(
-          "All the related products in the promotion will get cancelled"
-        )
-      ) {
+      if (window.confirm("Are you sure you want to cancel your order ?")) {
         this.cancelOrder(reason);
       }
     } else {
