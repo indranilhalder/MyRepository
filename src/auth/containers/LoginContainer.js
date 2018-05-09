@@ -100,7 +100,7 @@ const mapDispatchToProps = dispatch => {
                 )
               );
               const existingWishList = await dispatch(getWishListItems());
-              console.log(existingWishList);
+
               if (!existingWishList || !existingWishList.wishlist) {
                 dispatch(createWishlist());
               }
