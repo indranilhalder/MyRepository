@@ -25,7 +25,15 @@ import {
   MY_ACCOUNT_ORDERS_PAGE
 } from "../../lib/constants";
 const RETURN_FLAG = "R";
-
+const IFSC_PATTERN = /^[A-Za-z]{4}0[A-Z0-9a-z]{6}$/;
+const ACCOUNT_NUMBER = "Please enter account number";
+const RE_ENTER_ACCOUNT_NUMBER = "Please re-enter account number";
+const ACCOUNT_NUMBER_MATCH_TEXT = "Account number did not match";
+const ACCOUNT_HOLDER_NAME = "Please enter account holder name";
+const BANK_NAME = "Please enter bank name";
+const IFSC_CODE_TEXT = "Please enter ifsc code";
+const IFSC_CODE_VALID_TEXT = "Please enter valid ifsc code";
+const REFUND_MODE_TEXT = "please select refund mode";
 export default class ReturnFlow extends React.Component {
   constructor(props) {
     super(props);
@@ -61,14 +69,53 @@ export default class ReturnFlow extends React.Component {
     this.setState(val);
   }
   navigateToShowInitiateReturn() {
-    this.props.history.push({
-      pathname: `${RETURNS_PREFIX}/${
-        this.orderCode
-      }${RETURN_LANDING}${RETURNS_MODES}`,
-      state: {
-        authorizedRequest: true
-      }
-    });
+    if (!this.state.bankDetail.accountNumber) {
+      this.props.displayToast(ACCOUNT_NUMBER);
+      return false;
+    }
+    if (!this.state.bankDetail.reEnterAccountNumber) {
+      this.props.displayToast(RE_ENTER_ACCOUNT_NUMBER);
+      return false;
+    }
+    if (
+      this.state.bankDetail.accountNumber !==
+      this.state.bankDetail.reEnterAccountNumber
+    ) {
+      this.props.displayToast(ACCOUNT_NUMBER_MATCH_TEXT);
+      return false;
+    }
+    if (!this.state.bankDetail.userName) {
+      this.props.displayToast(ACCOUNT_HOLDER_NAME);
+      return false;
+    }
+    if (!this.state.bankDetail.mode) {
+      this.props.displayToast(REFUND_MODE_TEXT);
+      return false;
+    }
+    if (!this.state.bankDetail.bankName) {
+      this.props.displayToast(BANK_NAME);
+      return false;
+    }
+    if (!this.state.bankDetail.code) {
+      this.props.displayToast(IFSC_CODE_TEXT);
+      return false;
+    }
+    if (
+      this.state.bankDetail.code &&
+      !IFSC_PATTERN.test(this.state.bankDetail.code)
+    ) {
+      this.props.displayToast(IFSC_CODE_VALID_TEXT);
+      return false;
+    } else {
+      this.props.history.push({
+        pathname: `${RETURNS_PREFIX}/${
+          this.orderCode
+        }${RETURN_LANDING}${RETURNS_MODES}`,
+        state: {
+          authorizedRequest: true
+        }
+      });
+    }
   }
   onCancel() {
     this.props.history.goBack();

@@ -103,6 +103,7 @@ export default class SearchPage extends React.Component {
         {this.state.showResults && (
           <div className={styles.searchResults}>
             {data &&
+              data.topBrands &&
               data.topBrands.map((val, i) => {
                 return (
                   <SearchResultItem
@@ -117,6 +118,7 @@ export default class SearchPage extends React.Component {
                 );
               })}
             {data &&
+              data.topCategories &&
               data.topCategories.map((val, i) => {
                 return (
                   <SearchResultItem

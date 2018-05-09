@@ -52,6 +52,17 @@ export default class Input2 extends React.Component {
         return false;
       }
     }
+    if (this.props.onlyNumber) {
+      var number_regex = new RegExp("^[0-9]+$");
+      var keyCode = String.fromCharCode(
+        !event.charCode ? event.which : event.charCode
+      );
+      if (!number_regex.test(keyCode)) {
+        event.preventDefault();
+      } else {
+        return false;
+      }
+    }
   }
   handleKeyUp = event => {
     if (this.props.onKeyUp) {
@@ -142,5 +153,6 @@ Input2.defaultProps = {
   },
   disabled: false,
   borderBottom: "1px solid #d2d2d2",
-  onlyAlphabet: false
+  onlyAlphabet: false,
+  onlyNumber: false
 };

@@ -808,7 +808,8 @@ const cart = (
 
     case cartActions.ORDER_CONFIRMATION_REQUEST:
       return Object.assign({}, state, {
-        orderConfirmationDetailsStatus: action.status
+        orderConfirmationDetailsStatus: action.status,
+        jusPaymentLoader: true
       });
 
     case cartActions.ORDER_CONFIRMATION_SUCCESS: {
@@ -816,7 +817,8 @@ const cart = (
         orderConfirmationDetailsStatus: action.status,
         orderConfirmationDetails: action.confirmedOrderDetails,
         transactionStatus: action.status,
-        jusPaymentLoader: false
+        jusPaymentLoader: false,
+        cliqCashJusPayDetails: null
       });
     }
 
