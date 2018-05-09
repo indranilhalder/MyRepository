@@ -8,7 +8,7 @@ export default class TermsAndConditionsModal extends React.Component {
       <SlideModal closeModal={this.props.closeModal}>
         <div className={styles.base}>
           <div className={styles.header}>{TERMS_AND_CONDITION_TEXT}</div>
-          <div className={styles.termsAndConditions}>
+          <div className={styles.bankNameHeader}>
             {this.props.emiTermsAndConditions.bankName}
           </div>
           <div className={styles.content}>
