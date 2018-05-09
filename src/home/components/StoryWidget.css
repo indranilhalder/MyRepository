@@ -1,0 +1,72 @@
+.base {
+  width: 100%;
+  min-height: 100vh;
+  background: #ececec;
+  padding: 20px 0px 60px 0px;
+}
+.brandSection {
+  width: 100%;
+  height: auto;
+  min-height: 40px;
+  position: relative;
+  padding-left: 50px;
+  color: #212121;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 20px;
+  padding: 0 30px;
+}
+.brandImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.brandName {
+  width: 100%;
+  height: auto;
+  font-family: semibold;
+}
+.brandProducts {
+  width: 100%;
+  height: auto;
+  font-family: light;
+}
+.productImage {
+  width: 100%;
+  height: auto;
+  padding-bottom: 130%;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.imageActual {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.productSection {
+  width: 100%;
+  height: auto;
+  line-height: 24px;
+  font-family: light;
+  color: #212121;
+  position: relative;
+  padding-right: 130px;
+}
+.row {
+  width: 100%;
+  height: auto;
+}
+.button {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
