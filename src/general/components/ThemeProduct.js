@@ -3,7 +3,7 @@ import styles from "./ThemeProduct.css";
 import CircleProductImage from "./CircleProductImage";
 import PropTypes from "prop-types";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
-
+import { RUPEE_SYMBOL } from "../../lib/constants";
 export default class ThemeProduct extends React.Component {
   onClick = () => {
     let urlSuffix;
@@ -42,12 +42,18 @@ export default class ThemeProduct extends React.Component {
         {this.props.discountPrice &&
           this.props.discountPrice !== this.props.price && (
             <div className={styles.discount}>
-              {`Rs. ${this.props.discountPrice}`}
+              {this.props.discountPrice.toString().includes(RUPEE_SYMBOL)
+                ? this.props.discountPrice
+                : `${RUPEE_SYMBOL}${this.props.discountPrice}`}
             </div>
           )}
 
         {this.props.price && (
-          <div className={priceClass}>{`Rs. ${this.props.price}`}</div>
+          <div className={priceClass}>
+            {this.props.price.toString().includes(RUPEE_SYMBOL)
+              ? this.props.price
+              : `${RUPEE_SYMBOL}${this.props.price}`}
+          </div>
         )}
       </div>
     );

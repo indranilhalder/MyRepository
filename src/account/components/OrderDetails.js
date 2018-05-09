@@ -287,16 +287,29 @@ export default class OrderDetails extends React.Component {
                         {products.storeDetails.displayName && (
                           <span>{products.storeDetails.displayName} ,</span>
                         )}{" "}
-                        {products.storeDetails.displayName && (
+                        {products.storeDetails.returnAddress1 && (
                           <span>{products.storeDetails.returnAddress1} ,</span>
                         )}{" "}
-                        {products.storeDetails.displayName && (
+                        {products.storeDetails.returnAddress2 && (
                           <span>{products.storeDetails.returnAddress2}</span>
                         )}{" "}
                       </div>
                       <div className={styles.row}>
                         {products.storeDetails.returnCity}{" "}
                         {products.storeDetails.returnPin}
+                      </div>
+                    </div>
+                  )}
+                {products.selectedDeliveryMode.code === CLICK_COLLECT &&
+                  (orderDetails.pickupPersonName ||
+                    orderDetails.pickupPersonMobile) && (
+                    <div className={styles.orderStatusVertical}>
+                      <div className={styles.header}>Pickup details:</div>
+                      <div className={styles.row}>
+                        {orderDetails.pickupPersonName}
+                      </div>
+                      <div className={styles.row}>
+                        {orderDetails.pickupPersonMobile}
                       </div>
                     </div>
                   )}
