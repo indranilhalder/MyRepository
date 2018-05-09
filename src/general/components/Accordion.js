@@ -53,7 +53,7 @@ export default class Accordion extends React.Component {
             style={{ fontSize: this.props.headerFontSize }}
           >
             {this.props.text && (
-              <h2 className={styles.text}>{this.props.text}</h2>
+              <h3 className={styles.text}>{this.props.text}</h3>
             )}
             {this.props.headerElement && (
               <div

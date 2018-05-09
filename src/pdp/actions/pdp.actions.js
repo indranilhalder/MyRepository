@@ -797,7 +797,7 @@ export function pdpAboutBrand(productCode) {
     msdRequestObject.append("product_id", productCode.toUpperCase());
 
     dispatch(pdpAboutBrandRequest());
-
+    console.log("PDP ABOUT BRAND REQUEST");
     try {
       // making call for fetch about brand and their items items
       // url may have to change as per api live get live
@@ -811,12 +811,15 @@ export function pdpAboutBrand(productCode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      console.log("ABOUT BRAND");
+      console.log(resultJson);
 
       if (resultJson.data[0].itemIds.length > 0) {
         dispatch(
           getPdpItems(resultJson.data[0].itemIds, ABOUT_THE_BRAND_WIDGET_KEY)
         );
       }
+
       // updating reducer for follow brand  key
       dispatch(pdpAboutBrandSuccess(resultJson.data[0]));
     } catch (e) {

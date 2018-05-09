@@ -21,7 +21,7 @@ export default class DumbCarousel extends React.Component {
                         : `${this.props.elementWidth}%`
                   }}
                 >
-                  <VisibilityChild>{child}</VisibilityChild>
+                  {child}
                 </div>
               );
             })}
