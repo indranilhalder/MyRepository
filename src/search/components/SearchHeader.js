@@ -45,7 +45,6 @@ export default class SearchHeader extends React.Component {
     }
   };
   handleKeyUp = val => {
-    console.log(val);
     if (val === "Enter") {
       this.searchString();
     }
