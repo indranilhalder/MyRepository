@@ -15,7 +15,6 @@ export default class OrderStatusVertical extends React.Component {
     }
   }
   render() {
-    console.log(this.props);
     const completedSteps = this.props.statusMessageList.map(val => {
       return val.key;
     });
@@ -93,7 +92,6 @@ export default class OrderStatusVertical extends React.Component {
         ) {
           deliveredDate = deliveredData[0].statusMessageList[0].date;
           deliveredTime = deliveredData[0].statusMessageList[0].time;
-          console.log(deliveredDate);
         }
       }
     }
