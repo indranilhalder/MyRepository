@@ -446,9 +446,11 @@ function getDigitalDataForPdp(type, pdpResponse) {
   const productBreadcrumbs = getProductBreadCrumbs(pdpResponse);
   if (productBreadcrumbs) {
     Object.assign(data.page, {
-      pageName: "product details:".concat(
-        productBreadcrumbs ? productBreadcrumbs : ""
-      )
+      pageInfo: {
+        pageName: "product details:".concat(
+          productBreadcrumbs ? productBreadcrumbs : ""
+        )
+      }
     });
   }
   const displayHierarchy = getDisplayHierarchy(pdpResponse);

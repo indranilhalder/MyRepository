@@ -44,17 +44,32 @@ export default class EmiAccordion extends React.Component {
     const option = this.props.emiList.filter(data => {
       return data.code === val[0];
     })[0];
-    this.setState({
-      selectedBank: option.emiBank,
-      selectedEmiRate: option.emitermsrate[0].interestRate,
-      selectedEmi: option.emitermsrate[0].term,
-      selectedPrice: option.emitermsrate[0].monthlyInstallment
-    });
-    this.onChangeCardDetail({
-      emi_bank: option.emiBank,
-      emi_tenure: option.emitermsrate[0].interestRate,
-      is_emi: IS_EMI
-    });
+
+    if (val.length === 0) {
+      this.setState({
+        selectedBank: "",
+        selectedEmiRate: "",
+        selectedEmi: "",
+        selectedPrice: ""
+      });
+      this.onChangeCardDetail({
+        emi_bank: null,
+        emi_tenure: null,
+        is_emi: null
+      });
+    } else {
+      this.setState({
+        selectedBank: option.emiBank,
+        selectedEmiRate: option.emitermsrate[0].interestRate,
+        selectedEmi: option.emitermsrate[0].term,
+        selectedPrice: option.emitermsrate[0].monthlyInstallment
+      });
+      this.onChangeCardDetail({
+        emi_bank: option.emiBank,
+        emi_tenure: option.emitermsrate[0].interestRate,
+        is_emi: IS_EMI
+      });
+    }
   }
   handleConfirmPlan() {
     this.setState({ planSelected: true });

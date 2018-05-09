@@ -40,7 +40,7 @@ class PDPRecommendedSections extends React.Component {
       this.props.aboutTheBrand && (
         <React.Fragment>
           <div className={styles.brandSection}>
-            <div className={styles.brandHeader}>About the brand</div>
+            <h3 className={styles.brandHeader}>About the brand</h3>
             <div className={styles.brandLogoSection}>
               {this.props.aboutTheBrand.brandLogo && (
                 <div className={styles.brandLogoHolder}>
@@ -58,9 +58,9 @@ class PDPRecommendedSections extends React.Component {
               )}
             </div>
             {this.props.aboutTheBrand.description && (
-              <div className={styles.brandDescription}>
+              <h3 className={styles.brandDescription}>
                 {this.props.aboutTheBrand.description}
-              </div>
+              </h3>
             )}
 
             {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY] &&
@@ -122,7 +122,6 @@ class PDPRecommendedSections extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {this.renderAboutTheBrand()}
         {this.renderProductModuleSection(
           "Recommended Products",
           "recommendedProducts"
@@ -131,6 +130,7 @@ class PDPRecommendedSections extends React.Component {
           "Similar Products",
           SIMILAR_PRODUCTS_WIDGET_KEY
         )}
+        {this.renderAboutTheBrand()}
       </React.Fragment>
     );
   }

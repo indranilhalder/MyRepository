@@ -78,7 +78,7 @@ export default class MyAccount extends React.Component {
             firstName={
               userDetails &&
               userDetails.firstName &&
-              userDetails.firstName.charAt(0)
+              userDetails.firstName.trim().charAt(0)
             }
             heading={
               userDetails &&
