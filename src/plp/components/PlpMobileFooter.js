@@ -27,6 +27,7 @@ export default class PlpMobileFooter extends React.Component {
             </span>
           </div>
         </div>
+
         <div className={styles.buttonHolder}>
           <div
             className={styles.button}
