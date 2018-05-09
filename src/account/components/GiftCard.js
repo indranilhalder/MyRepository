@@ -196,7 +196,7 @@ export default class GiftCard extends React.Component {
                   onChange={amountText =>
                     this.setState({ amountText: amountText })
                   }
-                  type={"number"}
+                  onlyNumber={true}
                   textStyle={{ fontSize: 14 }}
                   height={33}
                   leftChildSize={this.state.amountText !== "" ? 33 : 10}
