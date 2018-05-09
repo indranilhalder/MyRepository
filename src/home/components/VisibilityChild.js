@@ -17,7 +17,6 @@ export default class VisibilityChild extends React.Component {
       onChange: this.handleIntersection,
       rootMargin: "0% 0% -25%"
     };
-
     return !this.state.visible ? (
       <Observer {...options}>
         <div />

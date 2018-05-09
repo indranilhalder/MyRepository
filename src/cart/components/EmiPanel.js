@@ -60,9 +60,13 @@ export default class EmiPanel extends React.Component {
       this.props.removeNoCostEmi(couponCode);
     }
   };
-  getItemBreakUpDetails = couponCode => {
+  getItemBreakUpDetails = (couponCode, noCostEmiText, noCostProductCount) => {
     if (this.props.getItemBreakUpDetails) {
-      this.props.getItemBreakUpDetails(couponCode);
+      this.props.getItemBreakUpDetails(
+        couponCode,
+        noCostEmiText,
+        noCostProductCount
+      );
     }
   };
 
@@ -143,8 +147,16 @@ export default class EmiPanel extends React.Component {
                       this.removeNoCostEmi(couponCode)
                     }
                     noCostEmiDetails={this.props.cart.noCostEmiDetails}
-                    getItemBreakUpDetails={couponCode =>
-                      this.getItemBreakUpDetails(couponCode)
+                    getItemBreakUpDetails={(
+                      couponCode,
+                      noCostEmiText,
+                      noCostProductCount
+                    ) =>
+                      this.getItemBreakUpDetails(
+                        couponCode,
+                        noCostEmiText,
+                        noCostProductCount
+                      )
                     }
                     isNoCostEmiProceeded={this.props.isNoCostEmiProceeded}
                     binValidation={binNo => this.binValidation(binNo)}

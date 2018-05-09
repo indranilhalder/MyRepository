@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./DumbCarousel.css";
+
 export default class DumbCarousel extends React.Component {
   render() {
     return (

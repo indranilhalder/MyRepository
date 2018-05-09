@@ -10,10 +10,9 @@ import {
   NO_COST_EMI_COUPON,
   OLD_CART_CART_ID
 } from "../../lib/constants";
-import find from "lodash.find";
-import { EGV_GIFT_CART_ID } from "../components/CheckOutPage";
+export const EGV_GIFT_CART_ID = "giftCartId";
+
 const VALIDITY_OF_OLD_CART_ID = 15;
-const IST_TIME_ZONE = "IST";
 const cart = (
   state = {
     status: null,

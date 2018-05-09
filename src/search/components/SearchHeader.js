@@ -9,6 +9,12 @@ import Icon from "../../xelpmoc-core/Icon";
 import Input2 from "../../general/components/Input2.js";
 import companyLogo from "../../general/components/img/group.svg";
 export default class SearchHeader extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      autoFocus: true
+    };
+  }
   onClickBack() {
     if (this.props.onClickBack) {
       this.props.onClickBack();
@@ -34,6 +40,7 @@ export default class SearchHeader extends React.Component {
       this.searchString();
     }
   };
+
   onClickIcon() {
     this.props.onSearchOrCloseIconClick();
   }
@@ -98,6 +105,7 @@ export default class SearchHeader extends React.Component {
                   borderColor={"#212121"}
                   borderBottom={"0px solid #212121"}
                   onKeyUp={event => this.handleKeyUp(event.key)}
+                  autoFocus={this.state.autoFocus}
                 />
               </div>
             </div>

@@ -1676,7 +1676,16 @@ export function applyBankOffer(couponCode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+
+  let cartId;
+  const parsedQueryString = queryString.parse(window.location.search);
+  const value = parsedQueryString.value;
+  if (value) {
+    cartId = value;
+  } else {
+    cartId = JSON.parse(cartDetails).guid;
+  }
+
   return async (dispatch, getState, { api }) => {
     dispatch(applyBankOfferRequest());
     try {
@@ -1732,7 +1741,14 @@ export function releaseBankOffer(previousCouponCode, newCouponCode: null) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  const parsedQueryString = queryString.parse(window.location.search);
+  const value = parsedQueryString.value;
+  if (value) {
+    cartId = value;
+  } else {
+    cartId = JSON.parse(cartDetails).guid;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(releaseBankOfferRequest());
     try {
@@ -2408,13 +2424,17 @@ export function createJusPayOrder(
           JSON.parse(customerCookie).access_token
         }&firstName=${address.firstName}&lastName=${
           address.lastName
-        }&addressLine1=${address.line1}&addressLine2=${
-          address.line2
-        }&addressLine3=${address.line3}&country=${
+        }&addressLine1=${address.line1 ? address.line1 : ""}&addressLine2=${
+          address.line2 ? address.line2 : ""
+        }&addressLine3=${address.line3 ? address.line3 : ""}&country=${
           address.country.isocode
-        }&city=${address.city}&state=${address.state}&pincode=${
+        }&city=${address.city ? address.city : ""}&state=${
+          address.state ? address.state : ""
+        }&pincode=${
           address.postalCode
-        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${bankName}`,
+        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${
+          bankName ? bankName : ""
+        }`,
         cartItem
       );
       const resultJson = await result.json();
@@ -4043,7 +4063,12 @@ export function getItemBreakUpDetailsFailure(error) {
   };
 }
 
-export function getItemBreakUpDetails(couponCode, cartGuId) {
+export function getItemBreakUpDetails(
+  couponCode,
+  cartGuId,
+  noCostEmiText,
+  noCostEmiProductCount
+) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -4067,8 +4092,12 @@ export function getItemBreakUpDetails(couponCode, cartGuId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      let noCostEmiResult = Object.assign({}, resultJson, {
+        noCostEmiText: noCostEmiText,
+        noCostEmiProductCount: noCostEmiProductCount
+      });
       dispatch(getItemBreakUpDetailsSuccess(resultJson));
-      dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE, resultJson));
+      dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE, noCostEmiResult));
     } catch (e) {
       dispatch(getItemBreakUpDetailsFailure(e.message));
     }

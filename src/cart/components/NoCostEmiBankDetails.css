@@ -123,3 +123,10 @@
   height: auto;
   padding: 0px 15px 15px;
 }
+.bankText {
+  padding: 12px;
+  font-size: 14px;
+  font-family: regular;
+  width: 100%;
+  height: auto;
+}
