@@ -49,13 +49,24 @@ export const renderMetaTags = (productDetails, isReviewPage: false) => {
     title = `${productDetails.seo.title} Reviews & Ratings - Tata CLiQ`;
   }
 
+  console.log("CANONICAL URL");
+  console.log(canonicalUrl);
+
   return (
     <MetaTags>
       <title> {title}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={productDetails.seo.keywords} />
-      <link rel="canonical" href={`${canonicalUrl}`} hreflang="en-in" />
-      <link rel="alternate" href={`${alternateUrl}`} hreflang="en-in" />
+      <link
+        rel="canonical"
+        href={`${URL_ROOT}${canonicalUrl}`}
+        hreflang="en-in"
+      />
+      <link
+        rel="alternate"
+        href={`${URL_ROOT}${alternateUrl}`}
+        hreflang="en-in"
+      />
       {renderOgTags(productDetails, isReviewPage)}
     </MetaTags>
   );
