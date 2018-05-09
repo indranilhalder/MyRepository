@@ -52,7 +52,7 @@ export default class ProductDetailsMainCard extends React.Component {
           <div className={styles.productDescriptionSection}>
             <div
               itemProp="brand"
-              itemScope
+              itemScope=""
               itemType="http://schema.org/Organization"
             >
               <span itemProp="name">
@@ -98,26 +98,19 @@ export default class ProductDetailsMainCard extends React.Component {
           </div>
         </div>
         {this.props.averageRating && (
-          <div
-            itemProp="aggregateRating"
-            itemScope=""
-            itemType="http://schema.org/AggregateRating"
-            className={styles.ratingHolder}
-          >
-            <StarRating averageRating={this.props.averageRating}>
-              {this.props.averageRating && (
-                <div
-                  className={styles.ratingText}
-                  onClick={() => this.handleClick()}
-                >
-                  Rating {`${averageRating}`} /5
-                </div>
-              )}
-              <div className={styles.arrowHolder}>
-                <Icon image={arrowIcon} size={15} />
+          <StarRating averageRating={this.props.averageRating}>
+            {this.props.averageRating && (
+              <div
+                className={styles.ratingText}
+                onClick={() => this.handleClick()}
+              >
+                Rating {`${averageRating}`} /5
               </div>
-            </StarRating>
-          </div>
+            )}
+            <div className={styles.arrowHolder}>
+              <Icon image={arrowIcon} size={15} />
+            </div>
+          </StarRating>
         )}
       </div>
     );
