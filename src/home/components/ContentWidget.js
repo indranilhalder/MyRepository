@@ -9,6 +9,8 @@ export default class ContentWidget extends React.Component {
     this.state = {
       goLeft: false,
       goRight: false,
+      touchStart: false,
+      touchEnd: false,
       data: this.props.allData
         ? [
             this.props.allData[this.props.allData.length - 1],
@@ -23,6 +25,7 @@ export default class ContentWidget extends React.Component {
   handleReadMore(webURL) {
     if (webURL) {
       const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1").trim();
+      console.log(webURL);
       const urlPath = new URL(webURL).pathname;
       if (urlPath.indexOf("/que") > -1) {
         window.open(urlSuffix, "_blank");
@@ -47,41 +50,62 @@ export default class ContentWidget extends React.Component {
     this.setState({ touchEnd: evt.touches[0].clientX });
   }
   handleSwipeEnd() {
-    if (this.state.touchStart < this.state.touchEnd) {
-      this.back();
-    } else {
-      this.forward();
+    if (this.state.touchEnd) {
+      if (this.state.touchStart - this.state.touchEnd < -30) {
+        this.back();
+      } else if (this.state.touchStart - this.state.touchEnd > 30) {
+        this.forward();
+      }
     }
   }
   goLeft() {
     if (!this.state.goLeft || !this.state.goRight) {
       const position = this.state.position + 1;
       const currentData = this.state.data;
-      this.setState({ goLeft: true, position }, () => {
-        let data = [];
-        data[0] = this.props.allData[
-          (1 + this.state.position) % this.state.length
-        ];
-        data[1] = currentData[1];
-        data[2] = currentData[0];
-        this.setState({ data });
-      });
+      this.setState(
+        {
+          goLeft: true,
+          position,
+          touchStart: null,
+          touchEnd: null
+        },
+        () => {
+          let data = [];
+
+          data[0] = this.props.allData[
+            (1 + this.state.position) % this.state.length
+          ];
+          data[1] = currentData[1];
+          data[2] = currentData[0];
+
+          this.setState({ data });
+        }
+      );
     }
   }
   goRight() {
+    console.log("go right");
     if (!this.state.goLeft || !this.state.goRight) {
       let position = this.state.position - 1;
       if (position < 0) {
         position = this.props.allData.length + position;
       }
       const currentData = this.state.data;
-      this.setState({ goRight: true, position }, () => {
-        let data = [];
-        data[0] = this.props.allData[position % this.state.length];
-        data[1] = currentData[1];
-        data[2] = currentData[0];
-        this.setState({ data });
-      });
+      this.setState(
+        {
+          goRight: true,
+          position,
+          touchStart: null,
+          touchEnd: null
+        },
+        () => {
+          let data = [];
+          data[0] = this.props.allData[position % (this.state.length - 1)];
+          data[1] = currentData[1];
+          data[2] = currentData[0];
+          this.setState({ data });
+        }
+      );
     }
   }
 
@@ -136,9 +160,6 @@ export default class ContentWidget extends React.Component {
         onTouchStart={evt => this.handleSwipeStart(evt)}
         onTouchMove={evt => this.handleSwipeMove(evt)}
         onTouchEnd={evt => this.handleSwipeEnd(evt)}
-        onClick={() => {
-          this.goRight();
-        }}
       >
         {this.state.data.map((val, i) => {
           let className = styles.card;
