@@ -9,6 +9,12 @@ import styles from "./DiscoverMore500.css";
 const NUM_RESULTS_TO_SHOW = 6;
 
 class DiscoverMore500 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showAll: false
+    };
+  }
   handleClick = webUrl => {
     const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
@@ -25,9 +31,12 @@ class DiscoverMore500 extends React.Component {
         <Grid elementWidthMobile={33.33} offset={20}>
           {feedComponentData &&
             feedComponentData.data &&
-            feedComponentData.data.map((datum, i) => {
-              return (
-                i < NUM_RESULTS_TO_SHOW && (
+            feedComponentData.data
+              .filter((val, i) => {
+                return !this.state.showAll ? i < NUM_RESULTS_TO_SHOW : true;
+              })
+              .map((datum, i) => {
+                return (
                   <CategoryWithName
                     image={datum.imageURL}
                     label={datum.title}
@@ -35,9 +44,8 @@ class DiscoverMore500 extends React.Component {
                     value={datum.webURL}
                     onClick={this.handleClick}
                   />
-                )
-              );
-            })}
+                );
+              })}
         </Grid>
       </div>
     );

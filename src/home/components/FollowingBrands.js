@@ -50,35 +50,37 @@ export default class FollowingBrands extends React.Component {
     }
 
     return (
-      <div className={styles.base}>
+      <div>
         {userDetails &&
           customerCookie && (
-            <Carousel
-              header={
-                this.props.feedComponentData.title
-                  ? this.props.feedComponentData.title
-                  : "Following Brands"
-              }
-              elementWidthMobile={30}
-            >
-              {followWidgetData.data &&
-                followWidgetData.data
-                  .filter(val => {
-                    return val.isFollowing === "true";
-                  })
-                  .map((datum, i) => {
-                    return (
-                      <BrandImage
-                        key={i}
-                        image={datum.imageURL}
-                        value={datum.webURL}
-                        fit={datum.fit}
-                        isFollowing={datum.isFollowing}
-                        onClick={this.handleBrandImageClick}
-                      />
-                    );
-                  })}
-            </Carousel>
+            <div className={styles.base}>
+              <Carousel
+                header={
+                  this.props.feedComponentData.title
+                    ? this.props.feedComponentData.title
+                    : "Following Brands"
+                }
+                elementWidthMobile={30}
+              >
+                {followWidgetData.data &&
+                  followWidgetData.data
+                    .filter(val => {
+                      return val.isFollowing === "true";
+                    })
+                    .map((datum, i) => {
+                      return (
+                        <BrandImage
+                          key={i}
+                          image={datum.imageURL}
+                          value={datum.webURL}
+                          fit={datum.fit}
+                          isFollowing={datum.isFollowing}
+                          onClick={this.handleBrandImageClick}
+                        />
+                      );
+                    })}
+              </Carousel>
+            </div>
           )}
       </div>
     );
