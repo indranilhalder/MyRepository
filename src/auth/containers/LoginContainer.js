@@ -42,6 +42,10 @@ import {
   ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE
 } from "../../lib/adobeUtils";
 import { getCartDetails } from "../../cart/actions/cart.actions.js";
+import {
+  getWishListItems,
+  createWishlist
+} from "../../wishlist/actions/wishlist.actions";
 export const OTP_VERIFICATION_REQUIRED_MESSAGE = "OTP VERIFICATION REQUIRED";
 
 const mapDispatchToProps = dispatch => {
@@ -95,6 +99,11 @@ const mapDispatchToProps = dispatch => {
                   localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
                 )
               );
+              const existingWishList = await dispatch(getWishListItems());
+
+              if (!existingWishList || !existingWishList.wishlist) {
+                dispatch(createWishlist());
+              }
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else if (mergeCartIdWithOldOneResponse.status === ERROR) {
               Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
@@ -131,7 +140,10 @@ const mapDispatchToProps = dispatch => {
                     localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
                   )
                 );
-
+                const existingWishList = await dispatch(getWishListItems());
+                if (!existingWishList || !existingWishList.wishlist) {
+                  dispatch(createWishlist());
+                }
                 dispatch(setIfAllAuthCallsHaveSucceeded());
               } else if (mergeCartIdResponse.status === ERROR) {
                 Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
