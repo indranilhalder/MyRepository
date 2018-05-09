@@ -15,6 +15,7 @@ export default class OrderStatusVertical extends React.Component {
     }
   }
   render() {
+    console.log(this.props);
     const completedSteps = this.props.statusMessageList.map(val => {
       return val.key;
     });
@@ -27,9 +28,7 @@ export default class OrderStatusVertical extends React.Component {
     const shippingData = this.props.statusMessageList.find(val => {
       return val.key === SHIPPING;
     });
-    const deliveredData = this.props.statusMessageList.find(val => {
-      return val.key === DELIVERED;
-    });
+
     const cancelledData = this.props.statusMessageList.find(val => {
       return val.key === CANCEL;
     });
@@ -63,6 +62,10 @@ export default class OrderStatusVertical extends React.Component {
     let shippingTime = "";
     let shippingList = null;
     let shippingResponseCode = "";
+    let deliveredData = null;
+    let deliveredDate = "";
+    let deliveredTime = "";
+    let isDelivered = false;
     if (
       shippingData &&
       shippingData.value.statusList &&
@@ -74,21 +77,25 @@ export default class OrderStatusVertical extends React.Component {
       shippingTime = shippingData.value.statusList[0].statusMessageList[0].time;
       shippingList = shippingData.value.statusList[0].statusMessageList;
       shippingResponseCode = shippingData.value.statusList[0].responseCode;
-    }
 
-    let deliveredDate = "";
-    let deliveredTime = "";
-    if (
-      deliveredData &&
-      deliveredData.value.statusList &&
-      deliveredData.value.statusList[0] &&
-      deliveredData.value.statusList[0].statusMessageList &&
-      deliveredData.value.statusList[0].statusMessageList[0]
-    ) {
-      deliveredDate =
-        deliveredData.value.statusList[0].statusMessageList[0].date;
-      deliveredTime =
-        deliveredData.value.statusList[0].statusMessageList[0].time;
+      isDelivered = shippingData.value.statusList
+        .map(val => {
+          return val.responseCode;
+        })
+        .includes(DELIVERED);
+      if (isDelivered) {
+        deliveredData = shippingData.value.statusList.filter(val => {
+          return val.responseCode === DELIVERED;
+        });
+        if (
+          deliveredData[0].statusMessageList &&
+          deliveredData[0].statusMessageList[0]
+        ) {
+          deliveredDate = deliveredData[0].statusMessageList[0].date;
+          deliveredTime = deliveredData[0].statusMessageList[0].time;
+          console.log(deliveredDate);
+        }
+      }
     }
 
     let cancelledDate = "";
@@ -130,14 +137,16 @@ export default class OrderStatusVertical extends React.Component {
         </div>
         <div
           className={
-            completedSteps.includes(PROCESSING)
+            completedSteps.includes(PROCESSING) ||
+            completedSteps.includes(CANCEL)
               ? styles.step
               : styles.stepInactive
           }
         >
           <div
             className={
-              completedSteps.includes(PROCESSING)
+              completedSteps.includes(PROCESSING) ||
+              completedSteps.includes(CANCEL)
                 ? styles.checkActive
                 : styles.check
             }
@@ -199,20 +208,8 @@ export default class OrderStatusVertical extends React.Component {
           </div>
         )}
         {shippingResponseCode !== REFUND_INITIATED && (
-          <div
-            className={
-              completedSteps.includes(DELIVERED)
-                ? styles.step
-                : styles.stepInactive
-            }
-          >
-            <div
-              className={
-                completedSteps.includes(DELIVERED)
-                  ? styles.checkActive
-                  : styles.check
-              }
-            />
+          <div className={isDelivered ? styles.step : styles.stepInactive}>
+            <div className={isDelivered ? styles.checkActive : styles.check} />
             <div className={styles.processNameHolder}>Delivered</div>
             <div className={styles.dateAndTimeHolder}>
               <div className={styles.dateHolder}>{deliveredDate}</div>
