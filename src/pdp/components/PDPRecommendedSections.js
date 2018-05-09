@@ -110,6 +110,8 @@ class PDPRecommendedSections extends React.Component {
   }
 
   renderProductModuleSection(title, key) {
+    console.log("RENDER PRODUCT MODULE SECTION");
+
     return (
       this.props.msdItems[key] && (
         <div className={styles.brandSection}>

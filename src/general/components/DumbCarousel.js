@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./DumbCarousel.css";
-import VisibilityChild from "../../home/components/VisibilityChild.js";
 
 export default class DumbCarousel extends React.Component {
   render() {
