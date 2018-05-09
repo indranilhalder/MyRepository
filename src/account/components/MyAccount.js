@@ -42,7 +42,6 @@ export default class MyAccount extends React.Component {
     );
   }
   componentDidUpdate() {
-    setDataLayer(ADOBE_MY_ACCOUNT_LANDING_PAGE);
     this.props.setHeaderText(MY_CLIQ);
   }
 
@@ -120,7 +119,10 @@ export default class MyAccount extends React.Component {
           {this.state.isSelected === 0 && (
             <div className={styles.ordersHolder}>
               <div className={styles.recentOrderHolder}>
-                <AllOrderContainer shouldCallHeaderContainer={false} />
+                <AllOrderContainer
+                  shouldCallHeaderContainer={false}
+                  shouldCallSetDataLayer={false}
+                />
               </div>
             </div>
           )}
