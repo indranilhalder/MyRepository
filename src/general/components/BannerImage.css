@@ -71,8 +71,10 @@
   }
   .logo {
     width: 44%;
-    height: auto;
-    display: inline-block;
+    height: 100px;
+    background-size: contain;
+    background-position: bottom left;
+    background-repeat: no-repeat;
   }
   .title {
     width: 100%;

@@ -47,9 +47,9 @@ export default class OrderDetails extends React.Component {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
     }
   }
-  requestInvoice(ussid, sellerOrderNo) {
+  requestInvoice(lineID, orderNumber) {
     if (this.props.sendInvoice) {
-      this.props.sendInvoice(ussid, sellerOrderNo);
+      this.props.sendInvoice(lineID, orderNumber);
     }
   }
   handleshowShippingDetails(val) {
@@ -234,7 +234,10 @@ export default class OrderDetails extends React.Component {
                   isInvoiceAvailable={products.isInvoiceAvailable}
                   statusDisplay={products.statusDisplayMsg}
                   request={() =>
-                    this.requestInvoice(products.USSID, products.sellerorderno)
+                    this.requestInvoice(
+                      products.transactionId,
+                      products.sellerorderno
+                    )
                   }
                 />
                 {orderDetails.billingAddress && (
