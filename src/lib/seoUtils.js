@@ -49,9 +49,6 @@ export const renderMetaTags = (productDetails, isReviewPage: false) => {
     title = `${productDetails.seo.title} Reviews & Ratings - Tata CLiQ`;
   }
 
-  console.log("CANONICAL URL");
-  console.log(canonicalUrl);
-
   return (
     <MetaTags>
       <title> {title}</title>
