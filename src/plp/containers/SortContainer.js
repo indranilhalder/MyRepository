@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import { hideModal } from "../../general/modal.actions";
+import { setIfSortHasBeenClicked } from "../actions/plp.actions";
 import Sort from "../components/Sort";
 import { withRouter } from "react-router-dom";
 
@@ -10,6 +11,9 @@ const mapDispatchToProps = dispatch => {
     },
     onClick: sortBy => {
       dispatch(hideModal());
+    },
+    setIfSortHasBeenClicked: () => {
+      dispatch(setIfSortHasBeenClicked());
     }
   };
 };

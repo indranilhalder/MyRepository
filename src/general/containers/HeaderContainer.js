@@ -19,7 +19,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     headerText: state.header.text,
-    isPlpFilterOpen: state.productListings.isFilterOpen
+    isPlpFilterOpen: state.productListings.isFilterOpen,
+    bagCount: state.header.bagCount
   };
 };
 
