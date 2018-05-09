@@ -243,8 +243,9 @@ export default class PdpElectronics extends React.Component {
             <div className={styles.content}>
               {productData.rootCategory !== "Watches" && (
                 <ProductDetailsMainCard
-                  productName={productData.brandName}
-                  productDescription={productData.productName}
+                  brandName={productData.brandName}
+                  productName={productData.productName}
+                  productDescription={productData.productDescription}
                   brandUrl={productData.brandURL}
                   history={this.props.history}
                   price={price}
@@ -256,8 +257,9 @@ export default class PdpElectronics extends React.Component {
               )}
               {productData.rootCategory === "Watches" && (
                 <JewelleryDetailsAndLink
-                  productName={productData.brandName}
-                  productDescription={productData.productName}
+                  brandName={productData.brandName}
+                  productDescription={productData.productDescription}
+                  productName={productData.productName}
                   brandUrl={productData.brandURL}
                   history={this.props.history}
                   price={discountPrice}
