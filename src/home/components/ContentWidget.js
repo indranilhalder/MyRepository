@@ -9,8 +9,8 @@ export default class ContentWidget extends React.Component {
     this.state = {
       goLeft: false,
       goRight: false,
-      touchStart: false,
-      touchEnd: false,
+      touchStart: null,
+      touchEnd: null,
       data: this.props.allData
         ? [
             this.props.allData[this.props.allData.length - 1],
@@ -25,7 +25,6 @@ export default class ContentWidget extends React.Component {
   handleReadMore(webURL) {
     if (webURL) {
       const urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1").trim();
-      console.log(webURL);
       const urlPath = new URL(webURL).pathname;
       if (urlPath.indexOf("/que") > -1) {
         window.open(urlSuffix, "_blank");
@@ -84,7 +83,6 @@ export default class ContentWidget extends React.Component {
     }
   }
   goRight() {
-    console.log("go right");
     if (!this.state.goLeft || !this.state.goRight) {
       let position = this.state.position - 1;
       if (position < 0) {
