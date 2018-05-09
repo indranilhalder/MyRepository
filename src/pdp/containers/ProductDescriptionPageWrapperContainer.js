@@ -17,7 +17,7 @@ import {
   showSecondaryLoader,
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
-import { setHeaderText } from "../../general/header.actions";
+import { setHeaderText, setBagCount } from "../../general/header.actions";
 import {
   showModal,
   EMI_MODAL,
@@ -93,6 +93,9 @@ const mapDispatchToProps = dispatch => {
     },
     setHeaderText: text => {
       dispatch(setHeaderText(text));
+    },
+    setBagCount: bagCount => {
+      dispatch(setBagCount(bagCount));
     },
     displayToast: val => {
       dispatch(displayToast(val));

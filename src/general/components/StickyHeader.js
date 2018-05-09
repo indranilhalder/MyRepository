@@ -6,7 +6,7 @@ import backArrow from "./img/arrowBack.svg";
 import downloadIcon from "./img/downloadWhite.svg";
 import Icon from "../../xelpmoc-core/Icon";
 import companyLogo from "./img/group.svg";
-import { HOME_ROUTER, CART_BAG_DETAILS } from "../../lib/constants";
+import { HOME_ROUTER } from "../../lib/constants";
 export default class StickyHeader extends React.Component {
   backPage() {
     if (this.props.goBack) {
@@ -55,6 +55,9 @@ export default class StickyHeader extends React.Component {
             onClick={() => this.goToCartPage()}
           >
             <Icon image={orderIcon} size={20} />
+            {this.props.bagCount > 0 && (
+              <div className={styles.bagCount}>{this.props.bagCount}</div>
+            )}
           </div>
           <div
             className={styles.downloadIconHolder}

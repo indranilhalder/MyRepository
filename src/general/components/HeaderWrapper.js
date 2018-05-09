@@ -194,6 +194,7 @@ class HeaderWrapper extends React.Component {
           goToWishList={this.goToWishList}
           text={this.props.headerText}
           isShowCompanyLogo={companyLogoInPdp}
+          bagCount={this.props.bagCount}
         />
       ) : (
         <HollowHeader
@@ -202,6 +203,7 @@ class HeaderWrapper extends React.Component {
           goToCart={this.goToCart}
           goToWishList={this.goToWishList}
           isShowCompanyLogo={companyLogoInPdp}
+          bagCount={this.props.bagCount}
         />
       );
     } else if (shouldRenderSearch) {

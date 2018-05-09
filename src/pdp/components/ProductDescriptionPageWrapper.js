@@ -10,7 +10,8 @@ import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  CART_BAG_DETAILS
 } from "../../lib/constants";
 import {
   renderMetaTags,
@@ -58,7 +59,12 @@ export default class ProductDescriptionPageWrapper extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.productDetails && this.props.productDetails !== "null") {
+      let bagCountDetails = localStorage.getItem(CART_BAG_DETAILS);
+      let bagItems = bagCountDetails ? bagCountDetails : [];
+      let bagItemCount = JSON.parse(bagItems).length;
+
       this.props.setHeaderText(this.props.productDetails.productName);
+      this.props.setBagCount(bagItemCount);
     }
 
     if (prevProps.location.pathname !== this.props.location.pathname) {
