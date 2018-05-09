@@ -56,12 +56,12 @@ export default class ProductDetailsMainCard extends React.Component {
               itemType="http://schema.org/Organization"
             >
               <span itemProp="name">
-                <h1
+                <h2
                   className={styles.brandName}
                   onClick={() => this.handleBrandClick()}
                 >
                   {this.props.brandName}
-                </h1>
+                </h2>
               </span>
             </div>
             <a

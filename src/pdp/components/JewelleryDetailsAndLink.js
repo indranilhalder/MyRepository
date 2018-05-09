@@ -55,7 +55,7 @@ export default class JewelleryDetailsAndLink extends React.Component {
                 }}
               >
                 <span itemProp="name">
-                  <h1>{this.props.brandName}</h1>
+                  <h2>{this.props.brandName}</h2>
                 </span>
               </div>
             )}
