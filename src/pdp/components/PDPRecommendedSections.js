@@ -35,8 +35,6 @@ class PDPRecommendedSections extends React.Component {
     if (this.props.aboutTheBrand) {
       brandId = this.props.aboutTheBrand.id;
     }
-    console.log("ABOUT THE BRAND");
-    console.log(this.props.aboutTheBrand);
 
     return (
       this.props.aboutTheBrand && (
@@ -110,8 +108,6 @@ class PDPRecommendedSections extends React.Component {
   }
 
   renderProductModuleSection(title, key) {
-    console.log("RENDER PRODUCT MODULE SECTION");
-
     return (
       this.props.msdItems[key] && (
         <div className={styles.brandSection}>
