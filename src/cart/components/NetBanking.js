@@ -10,17 +10,22 @@ import axisBankIcon from "./img/pwa_NB_DUMMY.svg";
 import hdfcBankIcon from "./img/pwa_NB_HDFC.svg";
 import iciciBankIcon from "./img/pwa_NB_ICICI.svg";
 import sbiBankIcon from "./img/pwa_NB_SBI.svg";
-
+import induslandBankIcon from "./img/indusind.svg";
+import kotakBankIcon from "./img/kotak.svg";
 const axisBankCode = "NB_AXIS";
 const hdfcBankCode = "NB_HDFC";
 const iciciBankCode = "NB_ICICI";
 const sbiBankCode = "NB_SBI";
+const kotakBankCode = "NB_KOTAK";
+const induslandBankCode = "NB_INDUS";
 const axisBankCodeDummy = "NB_DUMMY";
 const SHOW_DEFAULT_BANK_LIST = [
   axisBankCode,
   hdfcBankCode,
   iciciBankCode,
-  sbiBankCode
+  sbiBankCode,
+  kotakBankCode,
+  induslandBankCode
 ];
 export default class NetBanking extends React.Component {
   constructor(props) {
@@ -89,6 +94,24 @@ export default class NetBanking extends React.Component {
                 selectItem={() => this.handleSelectForIcon(sbiBankCode)}
                 image={sbiBankIcon}
                 selected={this.state.bankCode === sbiBankCode}
+              />
+            ) : null}
+            {this.props.bankList.find(bank => {
+              return bank.bankCode === kotakBankCode;
+            }) ? (
+              <BankSelect
+                selectItem={() => this.handleSelectForIcon(kotakBankCode)}
+                image={kotakBankIcon}
+                selected={this.state.bankCode === kotakBankCode}
+              />
+            ) : null}
+            {this.props.bankList.find(bank => {
+              return bank.bankCode === induslandBankCode;
+            }) ? (
+              <BankSelect
+                selectItem={() => this.handleSelectForIcon(induslandBankCode)}
+                image={induslandBankIcon}
+                selected={this.state.bankCode === induslandBankCode}
               />
             ) : null}
           </Grid>
