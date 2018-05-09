@@ -287,15 +287,25 @@ export default class OrderDetails extends React.Component {
                     <div className={styles.orderStatusVertical}>
                       <div className={styles.header}>Store details:</div>
                       <div className={styles.row}>
-                        {products.storeDetails.displayName && (
-                          <span>{products.storeDetails.displayName} ,</span>
-                        )}{" "}
-                        {products.storeDetails.returnAddress1 && (
-                          <span>{products.storeDetails.returnAddress1} ,</span>
-                        )}{" "}
-                        {products.storeDetails.returnAddress2 && (
-                          <span>{products.storeDetails.returnAddress2}</span>
-                        )}{" "}
+                        {products.storeDetails.displayName &&
+                          products.storeDetails.displayName !== undefined &&
+                          products.storeDetails.displayName !== "undefined" && (
+                            <span>{products.storeDetails.displayName} ,</span>
+                          )}{" "}
+                        {products.storeDetails.returnAddress1 &&
+                          products.storeDetails.returnAddress1 !== undefined &&
+                          products.storeDetails.returnAddress1 !==
+                            "undefined" && (
+                            <span>
+                              {products.storeDetails.returnAddress1} ,
+                            </span>
+                          )}{" "}
+                        {products.storeDetails.returnAddress2 &&
+                          products.storeDetails.returnAddress2 !== undefined &&
+                          products.storeDetails.returnAddress2 !==
+                            "undefined" && (
+                            <span>{products.storeDetails.returnAddress2}</span>
+                          )}{" "}
                       </div>
                       <div className={styles.row}>
                         {products.storeDetails.returnCity}{" "}
