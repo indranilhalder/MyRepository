@@ -1583,14 +1583,13 @@ export function softReservation(pinCode, payload) {
       const resultJson = await result.json();
 
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-      console.log(resultJsonStatus);
+
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(getOrderSummary(pinCode));
       dispatch(softReservationSuccess(resultJson.reservationItem));
     } catch (e) {
-      console.log(e.message);
       dispatch(softReservationFailure(e.message));
     }
   };

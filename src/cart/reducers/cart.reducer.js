@@ -182,7 +182,7 @@ const cart = (
     paymentFailureOrderDetailsError: null,
     paymentFailureOrderDetails: null,
 
-    isSoftReservationFailed: null
+    isSoftReservationFailed: false
   },
   action
 ) => {
@@ -602,6 +602,7 @@ const cart = (
       });
 
     case cartActions.SOFT_RESERVATION_FAILURE:
+      console.log("Coems in failure");
       return Object.assign({}, state, {
         softReserveStatus: action.status,
         softReserveError: action.error,

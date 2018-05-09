@@ -89,6 +89,7 @@ const INVALID_CART_ERROR_MESSAGE =
   "Sorry your cart is not valid any more. Please Try again";
 const PLACE_ORDER = "Place Order";
 const PAY_NOW = "Pay Now";
+const OUT_OF_STOCK_MESSAGE = "Some Products are out of stock";
 export const EGV_GIFT_CART_ID = "giftCartId";
 class CheckOutPage extends React.Component {
   constructor(props) {
@@ -161,7 +162,7 @@ class CheckOutPage extends React.Component {
     this.props.history.push(PRODUCT_CART_ROUTER);
   }
   navigateToCartForOutOfStock() {
-    this.props.displayToast("Some Products are out of stock");
+    this.props.displayToast(OUT_OF_STOCK_MESSAGE);
     this.props.history.push(PRODUCT_CART_ROUTER);
   }
   onChangeCardDetail = val => {
@@ -546,7 +547,7 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.cart.isSoftReservationFailed) {
+    if (nextProps.cart.isSoftReservationFailed) {
       return this.navigateToCartForOutOfStock();
     }
     if (nextProps.cart.jusPayError && this.state.isPaymentFailed === false) {
