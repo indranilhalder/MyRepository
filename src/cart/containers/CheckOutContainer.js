@@ -51,7 +51,8 @@ import {
   clearCartDetails,
   jusPayTokenize,
   createJusPayOrderForNetBanking,
-  createJusPayOrder
+  createJusPayOrder,
+  resetIsSoftReservationFailed
 } from "../actions/cart.actions";
 import {
   showSecondaryLoader,
@@ -381,6 +382,9 @@ const mapDispatchToProps = dispatch => {
           productItems
         )
       );
+    },
+    resetIsSoftReservationFailed: () => {
+      dispatch(resetIsSoftReservationFailed());
     }
   };
 };
