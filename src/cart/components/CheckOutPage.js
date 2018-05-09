@@ -151,6 +151,8 @@ class CheckOutPage extends React.Component {
     }
   }
   navigateToLogin() {
+    const url = this.props.location.pathname;
+    this.props.setUrlToRedirectToAfterAuth(url);
     this.props.history.push(LOGIN_PATH);
   }
   navigateUserToMyBagAfter15MinOfpaymentFailure() {
@@ -168,6 +170,10 @@ class CheckOutPage extends React.Component {
       this.removeNoCostEmi(noCostEmiCouponCode);
     }
 
+    //here we need to reset captch if if already done .but payment mode is changed
+    if (this.state.captchaReseponseForCOD) {
+      window.grecaptcha.reset();
+    }
     this.setState(val);
     this.setState({
       cardDetails: {},
@@ -180,6 +186,11 @@ class CheckOutPage extends React.Component {
     });
   };
   changeSubEmiOption(currentSelectedEMIType) {
+    let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
+    if (noCostEmiCouponCode) {
+      this.removeNoCostEmi(noCostEmiCouponCode);
+    }
+
     this.setState({
       currentSelectedEMIType,
       cardDetails: {},
@@ -1061,14 +1072,24 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  getItemBreakUpDetails = couponCode => {
+  getItemBreakUpDetails = (couponCode, noCostEmiText, noCostProductCount) => {
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
-      this.props.getItemBreakUpDetails(couponCode, cartGuId);
+      this.props.getItemBreakUpDetails(
+        couponCode,
+        cartGuId,
+        noCostEmiText,
+        noCostProductCount
+      );
     } else {
       if (this.props.getItemBreakUpDetails) {
-        this.props.getItemBreakUpDetails(couponCode);
+        this.props.getItemBreakUpDetails(
+          couponCode,
+          null,
+          noCostEmiText,
+          noCostProductCount
+        );
       }
     }
   };
@@ -1847,6 +1868,7 @@ class CheckOutPage extends React.Component {
                 removeCliqCash={() => this.removeCliqCash()}
                 currentPaymentMode={this.state.currentPaymentMode}
                 cardDetails={this.state.cardDetails}
+                captchaReseponseForCOD={this.state.captchaReseponseForCOD}
                 verifyCaptcha={captchaReseponseForCOD =>
                   this.setState({ captchaReseponseForCOD })
                 }
@@ -1895,8 +1917,8 @@ class CheckOutPage extends React.Component {
                   this.applyNoCostEmi(couponCode, bankName)
                 }
                 removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
-                getItemBreakUpDetails={couponCode =>
-                  this.getItemBreakUpDetails(couponCode)
+                getItemBreakUpDetails={(couponCode, noCostEmiText, noCostProductCount) =>
+                  this.getItemBreakUpDetails(couponCode, noCostEmiText, noCostProductCount)
                 }
                 isNoCostEmiProceeded={this.state.isNoCostEmiProceeded}
                 changeNoCostEmiPlan={() =>

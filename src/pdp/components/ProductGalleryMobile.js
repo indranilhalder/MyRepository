@@ -1,6 +1,7 @@
 import React from "react";
 import withMobileGallery from "../../higherOrderComponents/withMobileGallery";
 import styles from "./ProductGalleryMobile.css";
+import VisibilityChild from "../../home/components/VisibilityChild.js";
 class ProductGalleryMobile extends React.Component {
   handleSwipeStart(evt) {
     if (this.props.onTouchStart) {
@@ -35,7 +36,7 @@ class ProductGalleryMobile extends React.Component {
             this.props.children.map((child, i) => {
               return (
                 <div className={styles.content} key={i}>
-                  {child}
+                  <VisibilityChild>{child}</VisibilityChild>
                 </div>
               );
             })}

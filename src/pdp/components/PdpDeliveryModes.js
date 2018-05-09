@@ -1,6 +1,11 @@
 import React from "react";
 import DeliveryInformation from "../../general/components/DeliveryInformations";
-import { EXPRESS, COLLECT, HOME_DELIVERY } from "../../lib/constants";
+import {
+  EXPRESS,
+  COLLECT,
+  HOME_DELIVERY,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
+} from "../../lib/constants";
 import PropTypes from "prop-types";
 import styles from "./PdpDeliveryModes.css";
 export default class PdpDeliveryModes extends React.Component {
@@ -48,7 +53,6 @@ export default class PdpDeliveryModes extends React.Component {
         />
 
         <DeliveryInformation
-          // onPiq={this.props.getAllStoreForCliqAndPiq}
           onPiq={this.props.onPiq}
           type={COLLECT}
           available={eligibleDeliveryModes
@@ -58,6 +62,9 @@ export default class PdpDeliveryModes extends React.Component {
             .includes(COLLECT)}
           showCliqAndPiqButton={false}
           isClickable={true}
+          isShowCliqAndPiqUnderLineText={localStorage.getItem(
+            DEFAULT_PIN_CODE_LOCAL_STORAGE
+          )}
         />
       </div>
     );

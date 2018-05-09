@@ -4,6 +4,7 @@ import ModalPanel from "./ModalPanel";
 import Loadable from "react-loadable";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import PriceBreakupModal from "../../pdp/components/PriceBreakupModal";
+import OrderModal from "../../account/components/OrderModal";
 import * as Cookie from "../../lib/Cookie.js";
 import {
   LOGGED_IN_USER_DETAILS,
@@ -562,7 +563,11 @@ export default class ModalRoot extends React.Component {
       ),
       INVALID_BANK_COUPON_POPUP: (
         <InvalidBankCouponPopup
-          couponCode={couponCode}
+          couponCode={
+            this.props.ownProps && this.props.ownProps.couponCode
+              ? this.props.ownProps.couponCode
+              : ""
+          }
           changePaymentMethod={() => this.handleClose()}
           continueWithoutCoupon={() => this.continueWithoutBankCoupon()}
         />
@@ -572,8 +577,15 @@ export default class ModalRoot extends React.Component {
           data={this.props.ownProps}
           closeModal={() => this.handleClose()}
         />
+      ),
+      OrderModal: (
+        <OrderModal
+          data={this.props.ownProps}
+          closeModal={() => this.handleClose()}
+        />
       )
     };
+
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
     //let SelectedModal = MODAL_COMPONENTS["NewPassword"];
     const Modal = this.props.modalStatus ? (

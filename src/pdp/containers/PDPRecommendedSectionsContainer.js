@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import PDPRecommendedSections from "../components/PDPRecommendedSections";
+
 const mapStateToProps = state => {
   return {
     msdItems: state.productDescription.msdItems,

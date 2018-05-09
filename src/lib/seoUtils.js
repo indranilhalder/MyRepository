@@ -19,7 +19,7 @@ export const getPdpSchemaMetaTags = productDetails => {
   );
 };
 
-export const renderMetaTags = productDetails => {
+export const renderMetaTags = (productDetails, isReviewPage: false) => {
   let canonicalUrl = productDetails.seo.canonicalURL
     ? productDetails.seo.canonicalURL
     : window.location.href;
@@ -41,14 +41,30 @@ export const renderMetaTags = productDetails => {
     alternateUrl = window.location.href;
   }
 
+  let description = productDetails.seo.description;
+  if (isReviewPage) {
+    description = `${productDetails.seo.title} Review - Check ${
+      productDetails.seo.title
+    } reviews, rating & other specifications.`;
+    title = `${productDetails.seo.title} Reviews & Ratings - Tata CLiQ`;
+  }
+
   return (
     <MetaTags>
-      <title> {productDetails.seo.title}</title>
-      <meta name="description" content={productDetails.seo.description} />
+      <title> {title}</title>
+      <meta name="description" content={description} />
       <meta name="keywords" content={productDetails.seo.keywords} />
-      <link rel="canonical" href={`${canonicalUrl}`} hreflang="en-in" />
-      <link rel="alternate" href={`${alternateUrl}`} hreflang="en-in" />
-      {renderOgTags(productDetails)}
+      <link
+        rel="canonical"
+        href={`${URL_ROOT}${canonicalUrl}`}
+        hreflang="en-in"
+      />
+      <link
+        rel="alternate"
+        href={`${URL_ROOT}${alternateUrl}`}
+        hreflang="en-in"
+      />
+      {renderOgTags(productDetails, isReviewPage)}
     </MetaTags>
   );
 };
@@ -67,7 +83,7 @@ export const renderMetaTagsWithoutSeoObject = () => {
   );
 };
 
-export const renderOgTags = productDetails => {
+export const renderOgTags = (productDetails, isReviewPage: false) => {
   let googleTitle = GOOGLE_TAG_TITLE_DEFAULT;
   let googleDescription = null;
   let googleImageUrl = GOOGLE_TAG_IMAGE_DEFAULT;
@@ -89,6 +105,24 @@ export const renderOgTags = productDetails => {
     facebookUrl = window.location.href;
     facebookTitle = productDetails.seo.title;
     facebookImageUrl = productDetails.seo.imageURL;
+    if (isReviewPage) {
+      googleTitle = `${productDetails.seo.title} Reviews & Ratings - Tata CLiQ`;
+      twitterTitle = `${
+        productDetails.seo.title
+      } Reviews & Ratings - Tata CLiQ`;
+      facebookTitle = `${
+        productDetails.seo.title
+      } Reviews & Ratings - Tata CLiQ`;
+      googleDescription = `${productDetails.seo.title} Review - Check ${
+        productDetails.seo.title
+      } reviews, rating & other specifications.`;
+      facebookDescription = `${productDetails.seo.title} Review - Check ${
+        productDetails.seo.title
+      } reviews, rating & other specifications.`;
+      twitterDescription = `${productDetails.seo.title} Review - Check ${
+        productDetails.seo.title
+      } reviews, rating & other specifications.`;
+    }
   }
 
   return (

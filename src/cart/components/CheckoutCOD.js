@@ -37,11 +37,6 @@ export default class CheckoutCOD extends React.Component {
               binValidationForCOD={paymentMode =>
                 this.binValidationForCOD(paymentMode)
               }
-              isResetCaptcha={
-                this.props.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
-                  ? false
-                  : true
-              }
               verifyCaptcha={this.props.verifyCaptcha}
             />
           </MenuDetails>

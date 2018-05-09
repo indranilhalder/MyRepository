@@ -113,19 +113,20 @@ export default class DeliveryInformations extends React.Component {
               </div>
             )}
 
-            {this.props.type === COLLECT && (
-              <div className={styles.underLineButtonHolder}>
-                <span className={styles.buttonHolderPiq}>
-                  <UnderLinedButton
-                    size="14px"
-                    fontFamily="regular"
-                    color="#ff1744"
-                    label="Check for pick up options"
-                    onClick={() => this.onPiq()}
-                  />
-                </span>
-              </div>
-            )}
+            {this.props.type === COLLECT &&
+              this.props.isShowCliqAndPiqUnderLineText && (
+                <div className={styles.underLineButtonHolder}>
+                  <span className={styles.buttonHolderPiq}>
+                    <UnderLinedButton
+                      size="14px"
+                      fontFamily="regular"
+                      color="#ff1744"
+                      label="Check for pick up options"
+                      onClick={() => this.onPiq()}
+                    />
+                  </span>
+                </div>
+              )}
           </IconWithHeader>
         </div>
       </div>
@@ -144,10 +145,12 @@ DeliveryInformations.propTypes = {
   onPiq: PropTypes.func,
   showCliqAndPiqButton: PropTypes.bool,
   available: PropTypes.bool,
-  showDeliveryCharge: PropTypes.bool
+  showDeliveryCharge: PropTypes.bool,
+  isShowCliqAndPiqUnderLineText: PropTypes.bool
 };
 
-DeliveryInformations.propTypes = {
+DeliveryInformations.defaultProps = {
   showCliqAndPiqButton: true,
-  showDeliveryCharge: false
+  showDeliveryCharge: false,
+  isShowCliqAndPiqUnderLineText: true
 };
