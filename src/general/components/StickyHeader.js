@@ -55,6 +55,9 @@ export default class StickyHeader extends React.Component {
             onClick={() => this.goToCartPage()}
           >
             <Icon image={orderIcon} size={20} />
+            {this.props.bagCount > 0 && (
+              <div className={styles.bagCount}>{this.props.bagCount}</div>
+            )}
           </div>
           <div
             className={styles.downloadIconHolder}

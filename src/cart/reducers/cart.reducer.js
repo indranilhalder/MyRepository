@@ -8,7 +8,8 @@ import {
   OLD_CART_GU_ID,
   COUPON_COOKIE,
   NO_COST_EMI_COUPON,
-  OLD_CART_CART_ID
+  OLD_CART_CART_ID,
+  CART_BAG_DETAILS
 } from "../../lib/constants";
 export const EGV_GIFT_CART_ID = "giftCartId";
 
@@ -501,6 +502,7 @@ const cart = (
         JSON.stringify(action.cartDetails)
       );
       Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+
       return Object.assign({}, state, {
         mergeCartIdStatus: action.status,
         type: action.type

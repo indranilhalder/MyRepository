@@ -24,7 +24,10 @@ import {
   SUCCESS,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  ERROR
+  ERROR,
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
 import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
@@ -38,6 +41,7 @@ import {
   ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS,
   ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE
 } from "../../lib/adobeUtils";
+import { getCartDetails } from "../../cart/actions/cart.actions.js";
 export const OTP_VERIFICATION_REQUIRED_MESSAGE = "OTP VERIFICATION REQUIRED";
 
 const mapDispatchToProps = dispatch => {
@@ -77,6 +81,20 @@ const mapDispatchToProps = dispatch => {
             );
 
             if (mergeCartIdWithOldOneResponse.status === SUCCESS) {
+              const customerCookie = Cookies.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+              const userDetails = Cookies.getCookie(LOGGED_IN_USER_DETAILS);
+              const cartDetailsLoggedInUser = Cookies.getCookie(
+                CART_DETAILS_FOR_LOGGED_IN_USER
+              );
+              dispatch(
+                getCartDetails(
+                  JSON.parse(userDetails).userName,
+                  JSON.parse(customerCookie).access_token,
+                  JSON.parse(cartDetailsLoggedInUser).code,
+                  localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+                )
+              );
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else if (mergeCartIdWithOldOneResponse.status === ERROR) {
               Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
@@ -99,6 +117,21 @@ const mapDispatchToProps = dispatch => {
               );
               // merging cart id with new cart id
               if (mergeCartIdResponse.status === SUCCESS) {
+                const customerCookie = Cookies.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+                const userDetails = Cookies.getCookie(LOGGED_IN_USER_DETAILS);
+                const cartDetailsLoggedInUser = Cookies.getCookie(
+                  CART_DETAILS_FOR_LOGGED_IN_USER
+                );
+                dispatch(
+                  getCartDetails(
+                    JSON.parse(userDetails).userName,
+                    JSON.parse(customerCookie).access_token,
+                    JSON.parse(cartDetailsLoggedInUser).code,
+                    localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+                  )
+                );
+
                 dispatch(setIfAllAuthCallsHaveSucceeded());
               } else if (mergeCartIdResponse.status === ERROR) {
                 Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
