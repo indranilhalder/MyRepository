@@ -11,7 +11,6 @@ import {
   OLD_CART_CART_ID,
   CART_BAG_DETAILS
 } from "../../lib/constants";
-import each from "lodash.foreach";
 export const EGV_GIFT_CART_ID = "giftCartId";
 
 const VALIDITY_OF_OLD_CART_ID = 15;

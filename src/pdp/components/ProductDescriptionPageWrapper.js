@@ -10,8 +10,7 @@ import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE,
-  CART_BAG_DETAILS
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import {
   renderMetaTags,

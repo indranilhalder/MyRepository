@@ -22,7 +22,6 @@ const header = (
       });
     case headerAction.SET_BAG_COUNT:
       return Object.assign({}, state, {
-        text: null,
         bagCount: action.bagCount
       });
     default:
