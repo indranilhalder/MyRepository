@@ -15,6 +15,10 @@ export default class BankDetails extends React.Component {
       {
         label: "NEFT",
         value: "NEFT"
+      },
+      {
+        label: "IMPS",
+        value: "IMPS"
       }
     ];
     return (
