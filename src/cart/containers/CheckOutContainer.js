@@ -364,6 +364,9 @@ const mapDispatchToProps = dispatch => {
     setUrlToRedirectToAfterAuth: url => {
       dispatch(setUrlToRedirectToAfterAuth(url));
     },
+    orderConfirmation: orderId => {
+      dispatch(orderConfirmation(orderId));
+    },
     createJusPayOrderForNetBanking: (
       paymentMethodType,
       bankName,
