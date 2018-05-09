@@ -4,6 +4,7 @@ import cancelIcon from "../../general/components/img/cancel.svg";
 import searchIcon from "./img/search.svg";
 import iconImageURL from "../../general/components/img/arrowBack.svg";
 import searchRedIcon from "./img/searchRed.svg";
+import searchwhiteIcon from "./img/searchwhite.svg";
 import PropTypes from "prop-types";
 import Icon from "../../xelpmoc-core/Icon";
 import Input2 from "../../general/components/Input2.js";
@@ -12,7 +13,9 @@ export default class SearchHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      autoFocus: true
+      autoFocus: true,
+      isWhite: true,
+      isRed: false
     };
   }
   onClickBack() {
@@ -23,6 +26,12 @@ export default class SearchHeader extends React.Component {
   onTypedSearch(val) {
     if (this.props.onSearch) {
       this.props.onSearch(val);
+    }
+    if (val.length > 0) {
+      this.setState({ isWhite: false, isRed: true });
+    }
+    if (val.length === 0) {
+      this.setState({ isWhite: true, isRed: false });
     }
   }
   redirectToHome() {
@@ -36,6 +45,7 @@ export default class SearchHeader extends React.Component {
     }
   };
   handleKeyUp = val => {
+    console.log(val);
     if (val === "Enter") {
       this.searchString();
     }
@@ -43,6 +53,7 @@ export default class SearchHeader extends React.Component {
 
   onClickIcon() {
     this.props.onSearchOrCloseIconClick();
+    this.setState({ isWhite: true, isRed: false });
   }
   render() {
     let search = searchIcon;
@@ -94,7 +105,10 @@ export default class SearchHeader extends React.Component {
                   this.searchString();
                 }}
               >
-                <Icon image={searchRedIcon} size={16} />
+                {this.state.isWhite && (
+                  <Icon image={searchwhiteIcon} size={16} />
+                )}
+                {this.state.isRed && <Icon image={searchRedIcon} size={16} />}
               </div>
               <div className={styles.input}>
                 <Input2
