@@ -14,6 +14,7 @@ import { USER_CART_PATH } from "../cart/actions/cart.actions";
 let API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 export let TATA_CLIQ_ROOT = /https?:[\/]{2}\S*?(\/\S*)/;
 export const TOKEN_PATH = "oauth/token";
+export let URL_ROOT = "";
 
 if (
   process.env.REACT_APP_STAGE === "devxelp" ||
@@ -29,6 +30,22 @@ if (
   API_URL_ROOT = "https://p2.tatacliq.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "stage") {
   API_URL_ROOT = "https://stg.tatacliq.com/marketplacewebservices";
+}
+
+if (process.env.REACT_APP_STAGE === "tmpprod") {
+  URL_ROOT = "https://p2tmpprd.tataunistore.com";
+} else if (process.env.REACT_APP_STAGE === "production") {
+  URL_ROOT = "https://www.tatacliq.com";
+} else if (process.env.REACT_APP_STAGE === "p2") {
+  URL_ROOT = "https://p2.tatacliq.com";
+} else if (process.env.REACT_APP_STAGE === "stage") {
+  URL_ROOT = "https://stg.tatacliq.com";
+} else if (process.env.REACT_APP_STAGE === "devxelp") {
+  URL_ROOT = "http://54.147.12.99:3000";
+} else if (process.env.REACT_APP_STAGE === "uat2") {
+  URL_ROOT = "https://uat2.tataunistore.com";
+} else if (process.env.REACT_APP_STAGE === "local") {
+  URL_ROOT = "https://uat2.tataunistore.com";
 }
 
 export const API_URL_ROOT_DUMMY =
