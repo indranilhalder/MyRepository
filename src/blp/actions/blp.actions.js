@@ -1,4 +1,8 @@
 import { SUCCESS, REQUESTING, ERROR, FAILURE } from "../../lib/constants";
+import {
+  setDataLayer,
+  ADOBE_DEFAULT_BLP_PAGE_LOAD
+} from "../../lib/adobeUtils";
 
 export const GET_ALL_BRANDS_STORE_REQUEST = "GET_ALL_BRANDS_STORE_REQUEST";
 export const GET_ALL_BRANDS_STORE_SUCCESS = "GET_ALL_BRANDS_STORE_SUCCESS";
@@ -42,6 +46,7 @@ export function getAllBrands(userId, accessToken, cartId) {
         throw new Error(resultJson.error);
       }
       dispatch(getAllBrandsSuccess(resultJson.items[0]));
+      setDataLayer(ADOBE_DEFAULT_BLP_PAGE_LOAD, resultJson);
     } catch (e) {
       dispatch(getAllBrandsFailure(e.message));
     }
