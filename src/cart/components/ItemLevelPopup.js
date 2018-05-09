@@ -9,6 +9,7 @@ export default class ItemLevelPopup extends React.Component {
     return (
       <SlideModal closeModal={this.props.closeModal}>
         <div className={styles.base}>
+          <div className={styles.header}>Item Level Breakup</div>
           <div className={styles.cardOfferDisplay}>
             <div className={styles.cardName}>{`${emiItemDetails.bankName} for ${
               emiItemDetails.tenure
