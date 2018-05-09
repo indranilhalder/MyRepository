@@ -98,7 +98,7 @@ export default class ContentWidget extends React.Component {
         },
         () => {
           let data = [];
-          data[0] = this.props.allData[position % (this.state.length - 1)];
+          data[0] = this.props.allData[position % this.state.length];
           data[1] = currentData[1];
           data[2] = currentData[0];
           this.setState({ data });
