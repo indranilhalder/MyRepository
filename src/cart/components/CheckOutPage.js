@@ -840,9 +840,14 @@ class CheckOutPage extends React.Component {
     if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
       this.setState({ orderConfirmation: true });
     }
-    if (nextProps.cart.cliqCashJusPayDetails) {
+    if (
+      nextProps.cart.cliqCashJusPayDetails &&
+      nextProps.cart.orderConfirmationDetailsStatus !== "requesting"
+    ) {
       this.setState({ orderId: nextProps.cart.cliqCashJusPayDetails.orderId });
-      this.setState({ orderConfirmation: true });
+      this.props.orderConfirmation(
+        nextProps.cart.cliqCashJusPayDetails.orderId
+      );
     }
     if (nextProps.cart.binValidationCODStatus === SUCCESS) {
       this.setState({ binValidationCOD: true });
@@ -1330,10 +1335,6 @@ class CheckOutPage extends React.Component {
       if (this.state.isFirstAddress) {
         this.addAddress(this.state.addressDetails);
       }
-
-      if (this.state.isNoCostEmiApplied) {
-        this.setState({ isNoCostEmiProceeded: true });
-      }
       if (
         !this.state.confirmAddress &&
         !this.state.isGiftCard &&
@@ -1379,7 +1380,7 @@ class CheckOutPage extends React.Component {
         }
       }
 
-      if (this.state.savedCardDetails !== "") {
+      if (this.state.savedCardDetails && this.state.savedCardDetails !== "") {
         if (this.state.isGiftCard) {
           this.props.createJusPayOrderForGiftCardFromSavedCards(
             this.state.savedCardDetails,
@@ -1447,6 +1448,9 @@ class CheckOutPage extends React.Component {
         } else {
           this.props.softReservationPaymentForWallet(PAYTM);
         }
+      }
+      if (this.state.isNoCostEmiApplied) {
+        this.setState({ isNoCostEmiProceeded: true });
       }
     }
   };
@@ -1917,8 +1921,16 @@ class CheckOutPage extends React.Component {
                   this.applyNoCostEmi(couponCode, bankName)
                 }
                 removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
-                getItemBreakUpDetails={(couponCode, noCostEmiText, noCostProductCount) =>
-                  this.getItemBreakUpDetails(couponCode, noCostEmiText, noCostProductCount)
+                getItemBreakUpDetails={(
+                  couponCode,
+                  noCostEmiText,
+                  noCostProductCount
+                ) =>
+                  this.getItemBreakUpDetails(
+                    couponCode,
+                    noCostEmiText,
+                    noCostProductCount
+                  )
                 }
                 isNoCostEmiProceeded={this.state.isNoCostEmiProceeded}
                 changeNoCostEmiPlan={() =>
