@@ -207,6 +207,9 @@ export const ADOBE_MY_ACCOUNT_ORDER_RETURN = "ADOBE_MY_ACCOUNT_ORDER_RETURN";
 export const ADOBE_BLP_PAGE_LOAD = "ADOBE_BLP_PAGE_LOAD";
 export const ADOBE_CLP_PAGE_LOAD = "ADOBE_CLP_PAGE_LOAD";
 
+export const ADOBE_DEFAULT_BLP_PAGE_LOAD = "ADOBE_DEFAULT_BLP_PAGE_LOAD";
+export const ADOBE_DEFAULT_CLP_PAGE_LOAD = "ADOBE_DEFAULT_CLP_PAGE_LOAD";
+
 // end of  cosnt for BLP and CLP adobe calls
 // const for follow and un follow
 export const ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS =
@@ -314,7 +317,12 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
     window.digitalData = getDigitalDataForCLP(response);
     window._satellite.track(ADOBE_CLP_DIRECT_CALL);
   }
-
+  if (
+    type === ADOBE_DEFAULT_BLP_PAGE_LOAD ||
+    type === ADOBE_DEFAULT_CLP_PAGE_LOAD
+  ) {
+    window.digitalData = getDigitalDataForDefaultBlpOrClp(response);
+  }
   if (icidType === ICID2) {
     window.digitalData.flag = INTERNAL_CAMPAIGN;
     window.digitalData.internal = {
@@ -1379,7 +1387,7 @@ export function getDigitalDataForMyAccount(pageTitle) {
     page: {
       pageInfo: { pageName: pageTitle },
       category: { primaryCategory: pageTitle },
-      display: { hierarchy: `"home"|"my_tata_cliq"|${pageTitle}` }
+      display: { hierarchy: `"home","my_tata_cliq",${pageTitle}` }
     }
   };
   return data;
@@ -1494,4 +1502,35 @@ export function setDataLayerForPinCode(response) {
     });
   }
   return previousData;
+}
+function getDigitalDataForDefaultBlpOrClp(response) {
+  const data = {
+    page: { category: { primaryCategory: "category" } }
+  };
+  const subCategories = getSubCategories(response);
+  if (subCategories) {
+    Object.assign(data.page.category, { ...subCategories });
+  }
+  if (response && response.pageName) {
+    Object.assign(data.page, {
+      pageInfo: {
+        pageName: response.pageName.replace(/ /g, "_").toLowerCase()
+      }
+    });
+  } else {
+    Object.assign(data.page, {
+      pageInfo: {
+        pageName: window.location.pathname.replace(/\//g, "")
+      }
+    });
+  }
+  const hierarchy = getDisplayHierarchy(response);
+  if (hierarchy) {
+    Object.assign(data.page, {
+      display: {
+        hierarchy
+      }
+    });
+  }
+  return data;
 }

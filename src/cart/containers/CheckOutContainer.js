@@ -51,7 +51,8 @@ import {
   clearCartDetails,
   jusPayTokenize,
   createJusPayOrderForNetBanking,
-  createJusPayOrder
+  createJusPayOrder,
+  resetIsSoftReservationFailed
 } from "../actions/cart.actions";
 import {
   showSecondaryLoader,
@@ -364,6 +365,9 @@ const mapDispatchToProps = dispatch => {
     setUrlToRedirectToAfterAuth: url => {
       dispatch(setUrlToRedirectToAfterAuth(url));
     },
+    orderConfirmation: orderId => {
+      dispatch(orderConfirmation(orderId));
+    },
     createJusPayOrderForNetBanking: (
       paymentMethodType,
       bankName,
@@ -378,6 +382,9 @@ const mapDispatchToProps = dispatch => {
           productItems
         )
       );
+    },
+    resetIsSoftReservationFailed: () => {
+      dispatch(resetIsSoftReservationFailed());
     }
   };
 };

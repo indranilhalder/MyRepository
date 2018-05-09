@@ -329,6 +329,8 @@ export const PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS =
   "PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS";
 export const PAYMENT_FAILURE_ORDER_DETAILS_FAILURE =
   "PAYMENT_FAILURE_ORDER_DETAILS_FAILURE";
+export const RESET_IS_SOFT_RESERVATION_FAILED =
+  "RESET_IS_SOFT_RESERVATION_FAILED";
 
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
@@ -4155,5 +4157,11 @@ export function getPaymentFailureOrderDetails() {
     } catch (e) {
       dispatch(getPaymentFailureOrderDetailsFailure(e.message));
     }
+  };
+}
+
+export function resetIsSoftReservationFailed() {
+  return {
+    type: RESET_IS_SOFT_RESERVATION_FAILED
   };
 }
