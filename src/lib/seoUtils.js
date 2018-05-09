@@ -43,10 +43,10 @@ export const renderMetaTags = (productDetails, isReviewPage: false) => {
 
   let description = productDetails.seo.description;
   if (isReviewPage) {
-    description = `${productDetails.seo.title} Review - Check ${
-      productDetails.seo.title
+    description = `${productDetails.productName} Review - Check ${
+      productDetails.productName
     } reviews, rating & other specifications.`;
-    title = `${productDetails.seo.title} Reviews & Ratings - Tata CLiQ`;
+    title = `${productDetails.productName} Reviews & Ratings - Tata CLiQ`;
   }
 
   return (
@@ -106,21 +106,23 @@ export const renderOgTags = (productDetails, isReviewPage: false) => {
     facebookTitle = productDetails.seo.title;
     facebookImageUrl = productDetails.seo.imageURL;
     if (isReviewPage) {
-      googleTitle = `${productDetails.seo.title} Reviews & Ratings - Tata CLiQ`;
+      googleTitle = `${
+        productDetails.productName
+      } Reviews & Ratings - Tata CLiQ`;
       twitterTitle = `${
-        productDetails.seo.title
+        productDetails.productName
       } Reviews & Ratings - Tata CLiQ`;
       facebookTitle = `${
-        productDetails.seo.title
+        productDetails.productName
       } Reviews & Ratings - Tata CLiQ`;
-      googleDescription = `${productDetails.seo.title} Review - Check ${
-        productDetails.seo.title
+      googleDescription = `${productDetails.productName} Review - Check ${
+        productDetails.productName
       } reviews, rating & other specifications.`;
-      facebookDescription = `${productDetails.seo.title} Review - Check ${
-        productDetails.seo.title
+      facebookDescription = `${productDetails.productName} Review - Check ${
+        productDetails.productName
       } reviews, rating & other specifications.`;
-      twitterDescription = `${productDetails.seo.title} Review - Check ${
-        productDetails.seo.title
+      twitterDescription = `${productDetails.productName} Review - Check ${
+        productDetails.productName
       } reviews, rating & other specifications.`;
     }
   }
