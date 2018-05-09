@@ -108,7 +108,7 @@ export default class SaveListDetails extends React.Component {
             return (
               <div className={styles.listCardHolder} key={i}>
                 <SaveListCard
-                  productName={product.productBrand}
+                  //productName={product.productBrand}
                   productMaterial={product.productName}
                   price={product.mrp && product.mrp.value}
                   date={format(product.date, dateFormat)}
