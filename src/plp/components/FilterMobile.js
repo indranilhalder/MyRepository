@@ -7,10 +7,6 @@ import SearchInput from "../../general/components/SearchInput";
 import styles from "./FilterMobile.css";
 import queryString from "query-string";
 import { createUrlFromQueryAndCategory } from "./FilterUtils.js";
-import {
-  CATEGORY_CAPTURE_REGEX,
-  BRAND_CAPTURE_REGEX
-} from "../../plp/components/PlpBrandCategoryWrapper";
 
 const BRAND = "brand";
 export default class FilterMobile extends React.Component {
