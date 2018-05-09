@@ -8,8 +8,10 @@ import {
   OLD_CART_GU_ID,
   COUPON_COOKIE,
   NO_COST_EMI_COUPON,
-  OLD_CART_CART_ID
+  OLD_CART_CART_ID,
+  CART_BAG_DETAILS
 } from "../../lib/constants";
+import each from "lodash.foreach";
 export const EGV_GIFT_CART_ID = "giftCartId";
 
 const VALIDITY_OF_OLD_CART_ID = 15;
@@ -240,6 +242,22 @@ const cart = (
       } else {
         Cookies.deleteCookie(COUPON_COOKIE);
       }
+
+      //set local storage
+      localStorage.setItem(CART_BAG_DETAILS, []);
+      let bagItem = localStorage.getItem(CART_BAG_DETAILS);
+      let bagItemsInJsonFormat = bagItem ? JSON.parse(bagItem) : [];
+      action.cartDetails &&
+        each(action.cartDetails.products, product => {
+          console.log(product.USSID);
+          if (!bagItemsInJsonFormat.includes(product.USSID)) {
+            bagItemsInJsonFormat.push(product.USSID);
+          }
+        });
+      localStorage.setItem(
+        CART_BAG_DETAILS,
+        JSON.stringify(bagItemsInJsonFormat)
+      );
 
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
@@ -499,6 +517,7 @@ const cart = (
         JSON.stringify(action.cartDetails)
       );
       Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+
       return Object.assign({}, state, {
         mergeCartIdStatus: action.status,
         type: action.type

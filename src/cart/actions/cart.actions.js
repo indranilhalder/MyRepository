@@ -453,6 +453,8 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
   };
 }
 
+
+
 export function cartDetailsCNCRequest() {
   return {
     type: CART_DETAILS_CNC_REQUEST,
@@ -1320,7 +1322,7 @@ export function mergeCartId(cartGuId) {
         throw new Error(resultJsonStatus.message);
       }
 
-      return dispatch(mergeCartIdFailure(resultJson));
+      return dispatch(mergeCartIdSuccess(resultJson));
     } catch (e) {
       return dispatch(mergeCartIdFailure(e.message));
     }
