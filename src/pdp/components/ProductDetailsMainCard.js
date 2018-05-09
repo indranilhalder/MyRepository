@@ -110,9 +110,7 @@ export default class ProductDetailsMainCard extends React.Component {
                   className={styles.ratingText}
                   onClick={() => this.handleClick()}
                 >
-                  <span itemProp="ratingValue">
-                    Rating {`${averageRating}`} /5
-                  </span>
+                  Rating {`${averageRating}`} /5
                 </div>
               )}
               <div className={styles.arrowHolder}>
