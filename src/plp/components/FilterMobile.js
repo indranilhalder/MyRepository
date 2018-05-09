@@ -9,7 +9,7 @@ import queryString from "query-string";
 import { createUrlFromQueryAndCategory } from "./FilterUtils.js";
 import {
   CATEGORY_CAPTURE_REGEX,
-  BRAND_CAPTURE_REGEX
+  CATEGORY_REGEX
 } from "../../plp/components/PlpBrandCategoryWrapper";
 
 const BRAND = "brand";
@@ -139,6 +139,11 @@ export default class FilterMobile extends React.Component {
         });
       }
     }
+    const url = this.props.location.pathname;
+    let categoryId = null;
+    if (CATEGORY_REGEX.test(url)) {
+      categoryId = url.match(CATEGORY_CAPTURE_REGEX)[0];
+    }
 
     return (
       <React.Fragment>
@@ -218,6 +223,13 @@ export default class FilterMobile extends React.Component {
                           label={val.name}
                           count={val.count}
                           url={val.url}
+                          value={val.value}
+                          isBrand={
+                            facetData[this.props.filterSelectedIndex].key ===
+                            BRAND
+                          }
+                          categoryId={categoryId}
+                          history={this.props.history}
                         />
                       );
                     })}
