@@ -15,7 +15,8 @@
   right: 20px;
   top: -40px;
   pointer-events: none;
-  background-image: url(./img/closeCircle.svg) no-repeat;
+  background: url("./img/closeIcon.svg") no-repeat;
+  background-position: center;
 }
 .content {
   width: 100%;
