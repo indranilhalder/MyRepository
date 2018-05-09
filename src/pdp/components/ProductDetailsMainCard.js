@@ -24,6 +24,10 @@ export default class ProductDetailsMainCard extends React.Component {
     return (
       <MetaTags>
         <meta itemprop="priceCurrency" content="INR" />
+        <meta
+          itemProp="itemCondition"
+          content="http://schema.org/NewCondition"
+        />
       </MetaTags>
     );
   };
@@ -31,6 +35,7 @@ export default class ProductDetailsMainCard extends React.Component {
   handleLinkClick = e => {
     e.preventDefault();
   };
+
   render() {
     const displayPrice = this.props.discountPrice
       ? this.props.discountPrice
@@ -42,42 +47,44 @@ export default class ProductDetailsMainCard extends React.Component {
 
     return (
       <div className={styles.base}>
-        <meta
-          itemprop="itemCondition"
-          content="http://schema.org/NewCondition"
-        />
+        {this.renderSchemaTags()}
         <div className={styles.productInfo}>
-          <div
-            itemprop="description"
-            className={styles.productDescriptionSection}
-          >
+          <div className={styles.productDescriptionSection}>
             <div
-              itemprop="brand"
-              itemscope
-              itemtype="http://schema.org/Organization"
+              itemProp="brand"
+              itemScope
+              itemType="http://schema.org/Organization"
             >
-              <h1
-                className={styles.productName}
-                onClick={() => this.handleBrandClick()}
-              >
-                {this.props.productName}
-              </h1>
+              <span itemProp="name">
+                <h1
+                  className={styles.brandName}
+                  onClick={() => this.handleBrandClick()}
+                >
+                  {this.props.brandName}
+                </h1>
+              </span>
             </div>
-            <a href={window.location.href} onClick={this.handleLinkClick}>
-              <h1 className={styles.productDescription}>
-                {this.props.productDescription}
-              </h1>
+            <a
+              itemProp="url"
+              href={window.location.href}
+              onClick={this.handleLinkClick}
+            >
+              <div itemProp="name">
+                <h1 className={styles.productName}>{this.props.productName}</h1>
+              </div>
             </a>
+            <div className={styles.productDescription} itemProp="description">
+              {this.props.productDescription}
+            </div>
           </div>
           <div
-            itemprop="offers"
-            itemscope=""
-            itemtype="http://schema.org/Offer"
+            itemProp="offers"
+            itemScope=""
+            itemType="http://schema.org/Offer"
             className={styles.productPriceSection}
           >
             <div className={styles.price}>
-              <span itemprop="price">{displayPrice}</span>
-              <meta itemprop="priceCurrency" content="INR" />
+              <span itemType="price">{displayPrice}</span>
             </div>
             {this.props.discountPrice &&
               this.props.discountPrice !== this.props.price && (
@@ -92,9 +99,9 @@ export default class ProductDetailsMainCard extends React.Component {
         </div>
         {this.props.averageRating && (
           <div
-            itemprop="aggregateRating"
-            itemscope
-            itemtype="http://schema.org/AggregateRating"
+            itemProp="aggregateRating"
+            itemScope=""
+            itemType="http://schema.org/AggregateRating"
             className={styles.ratingHolder}
           >
             <StarRating averageRating={this.props.averageRating}>
@@ -103,7 +110,7 @@ export default class ProductDetailsMainCard extends React.Component {
                   className={styles.ratingText}
                   onClick={() => this.handleClick()}
                 >
-                  <span itemprop="ratingValue">
+                  <span itemProp="ratingValue">
                     Rating {`${averageRating}`} /5
                   </span>
                 </div>

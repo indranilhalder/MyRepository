@@ -117,7 +117,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     if (this.props.productDetails) {
       if (!this.props.showPiqPage) {
         return (
-          <div itemscope itemtype="http://schema.org/Product">
+          <div itemScope itemType="http://schema.org/Product">
             {this.props.productDetails.seo
               ? renderMetaTags(this.props.productDetails)
               : renderMetaTagsWithoutSeoObject(this.props.productDetails)}

@@ -13,8 +13,8 @@ import { URL_ROOT } from "./apiRequest";
 export const getPdpSchemaMetaTags = productDetails => {
   return (
     <MetaTags>
-      <meta itemprop="priceCurrency" content="INR" />
-      <meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
+      <meta itemProp="priceCurrency" content="INR" />
+      <meta itemProp="itemCondition" content="http://schema.org/NewCondition" />
     </MetaTags>
   );
 };
@@ -57,12 +57,12 @@ export const renderMetaTags = (productDetails, isReviewPage: false) => {
       <link
         rel="canonical"
         href={`${URL_ROOT}${canonicalUrl}`}
-        hreflang="en-in"
+        hrefLang="en-in"
       />
       <link
         rel="alternate"
         href={`${URL_ROOT}${alternateUrl}`}
-        hreflang="en-in"
+        hrefLang="en-in"
       />
       {renderOgTags(productDetails, isReviewPage)}
     </MetaTags>
@@ -76,8 +76,8 @@ export const renderMetaTagsWithoutSeoObject = () => {
       <title> {TITLE_DEFAULT}</title>
       <meta name="description" content={description} />
 
-      <link rel="canonical" href={window.location.href} hreflang="en-in" />
-      <link rel="alternate" href={window.location.href} hreflang="en-in" />
+      <link rel="canonical" href={window.location.href} hrefLang="en-in" />
+      <link rel="alternate" href={window.location.href} hrefLang="en-in" />
       {renderOgTags()}
     </MetaTags>
   );
@@ -129,11 +129,11 @@ export const renderOgTags = (productDetails, isReviewPage: false) => {
 
   return (
     <React.Fragment>
-      <meta itemprop="name" content={googleTitle} />
+      <meta itemProp="name" content={googleTitle} />
       {googleDescription && (
-        <meta itemprop="description" content={googleDescription} />
+        <meta itemProp="description" content={googleDescription} />
       )}
-      <meta itemprop="image" content={googleImageUrl} />
+      <meta itemProp="image" content={googleImageUrl} />
       <meta name="twitter:card" content="Website" />
       <meta name="twitter:site" content="@tatacliq" />
       <meta name="twitter:title" content={twitterTitle} />

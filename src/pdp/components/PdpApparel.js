@@ -209,6 +209,8 @@ export default class PdpApparel extends React.Component {
       if (productData.winningSellerPrice) {
         discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
       }
+      console.log("PRODUC TDETAILS");
+      console.log(productData);
 
       return (
         <PdpFrame
@@ -241,8 +243,9 @@ export default class PdpApparel extends React.Component {
           </div>
           <div className={styles.content}>
             <ProductDetailsMainCard
-              productName={productData.brandName}
-              productDescription={productData.productName}
+              brandName={productData.brandName}
+              productName={productData.productName}
+              productDescription={productData.productDescription}
               brandUrl={productData.brandURL}
               history={this.props.history}
               price={price}
