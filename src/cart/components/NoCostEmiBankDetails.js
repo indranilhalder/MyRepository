@@ -296,6 +296,11 @@ export default class NoCostEmiBankDetails extends React.Component {
 
     return (
       <div className={styles.base}>
+        <div className={styles.bankText}>
+          Tata CLIQ does not levy any charges on EMIs taken. Charges, if any,
+          are levied for your bank. Please check with your bank for charges
+          related to interest, processing fees, refunds or pre-closures.
+        </div>
         {!this.props.isNoCostEmiProceeded && (
           <div>
             <div className={styles.bankLogoHolder}>
