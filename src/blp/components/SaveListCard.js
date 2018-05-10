@@ -83,12 +83,12 @@ SaveListCard.propTypes = {
   underlineButtonColour: PropTypes.string,
   underlineButtonLabel: PropTypes.string,
   buttonLabel: PropTypes.string,
-  isDisabled: PropTypes.bool
+  outOfStock: PropTypes.bool
 };
 SaveListCard.defaultProps = {
   underlineButtonLabel: "Add to bag",
   buttonLabel: "Remove",
   underlineButtonColour: "#ff1744",
   isEditable: true,
-  isDisabled: false
+  outOfStock: false
 };
