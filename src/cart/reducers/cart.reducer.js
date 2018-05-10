@@ -1106,7 +1106,8 @@ const cart = (
         softReservationForPaymentStatus: action.status,
         softReservationForPaymentError: action.error,
         jusPaymentLoader: false,
-        isSoftReservationFailed: true
+        isSoftReservationFailed: true,
+        isPaymentProceeded:false
       });
 
     case cartActions.JUS_PAY_TOKENIZE_REQUEST:
