@@ -30,6 +30,7 @@ export default class SaveListCard extends React.Component {
         <div className={styles.imageHolder}>
           <ProductDetailsCard
             productImage={this.props.image}
+            outOfStock={this.props.outOfStock}
             productName={this.props.productName}
             productMaterial={this.props.productMaterial}
             price={this.props.price}
@@ -61,6 +62,7 @@ export default class SaveListCard extends React.Component {
             buttonLabel={this.props.buttonLabel}
             underlineButtonColour={this.props.underlineButtonColour}
             isEditable={this.props.isEditable}
+            outOfStock={this.props.outOfStock}
           />
         </div>
       </div>
@@ -80,11 +82,13 @@ SaveListCard.propTypes = {
   addToBagItem: PropTypes.func,
   underlineButtonColour: PropTypes.string,
   underlineButtonLabel: PropTypes.string,
-  buttonLabel: PropTypes.string
+  buttonLabel: PropTypes.string,
+  outOfStock: PropTypes.bool
 };
 SaveListCard.defaultProps = {
   underlineButtonLabel: "Add to bag",
   buttonLabel: "Remove",
   underlineButtonColour: "#ff1744",
-  isEditable: true
+  isEditable: true,
+  outOfStock: false
 };

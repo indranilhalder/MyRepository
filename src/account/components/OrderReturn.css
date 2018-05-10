@@ -24,3 +24,8 @@
   font-size: 14px;
   display: inline-block;
 }
+.reviewDesible {
+  composes: review;
+  opacity: 0.5;
+  pointer-events: none;
+}
