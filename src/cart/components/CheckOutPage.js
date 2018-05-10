@@ -20,6 +20,7 @@ import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
 import size from "lodash.size";
 import TransactionFailed from "./TransactionFailed.js";
+import cardValidator from "simple-card-validator";
 import * as Cookies from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -54,7 +55,8 @@ import {
   SAVED_CARD_PAYMENT_MODE,
   E_WALLET,
   NO_COST_EMI,
-  STANDARD_EMI
+  STANDARD_EMI,
+  CASH_ON_DELIVERY
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -70,7 +72,7 @@ import {
   CART_PATH
 } from "../actions/cart.actions";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
-const PAYMENT_CHARGED = "CHARGED";
+export const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
 const NET_BANKING = "NB";
 const CART_GU_ID = "cartGuid";
@@ -1333,7 +1335,7 @@ class CheckOutPage extends React.Component {
       );
     }
     if (this.state.binValidationCOD) {
-      this.softReservationForCODPayment();
+      this.props.updateTransactionDetailsForCOD(CASH_ON_DELIVERY, "");
     }
   };
   handleSubmit = () => {
@@ -1642,20 +1644,32 @@ class CheckOutPage extends React.Component {
   validateCard() {
     if (
       !this.state.cardDetails.cardNumber ||
-      (this.state.cardDetails.cardNumber &&
-        this.state.cardDetails.cardNumber.length < 14) ||
       (!this.state.cardDetails.cardName ||
         (this.state.cardDetails.cardName &&
           this.state.cardDetails.cardName.length < 3)) ||
-      (!this.state.cardDetails.cvvNumber ||
-        (this.state.cardDetails.cvvNumber &&
-          this.state.cardDetails.cvvNumber.length < 3)) ||
+      !this.state.cardDetails.cvvNumber ||
       !this.state.cardDetails.monthValue ||
       !this.state.cardDetails.yearValue
     ) {
       return true;
     } else {
-      return false;
+      const card = new cardValidator(
+        parseInt(this.state.cardDetails.cardNumber, 10)
+      );
+      console.log(card.validateCard());
+      console.log(
+        this.state.cardDetails.cvvNumber.length > 1 &&
+          card.validateCvv(this.state.cardDetails.cvvNumber)
+      );
+      if (
+        card.validateCard() &&
+        this.state.cardDetails.cvvNumber.length > 1 &&
+        card.validateCvv(this.state.cardDetails.cvvNumber)
+      ) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 
