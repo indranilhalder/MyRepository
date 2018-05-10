@@ -78,6 +78,7 @@ class WriteReview extends React.Component {
             this.props.comment ? this.props.comment : this.state.comment
           }
           onChange={val => this.onChangeComment(val)}
+          placeholder="Tell us what you think of this product"
         />
         <div className={styles.container}>
           <div className={styles.cancelButton} onClick={() => this.onCancel()}>
