@@ -14,6 +14,10 @@ import {
   MAIN_ROUTER
 } from "../../lib/constants";
 import { EMAIL_REGULAR_EXPRESSION, MOBILE_PATTERN } from "./Login";
+import {
+  setDataLayer,
+  ADOBE_LOGIN_AND_SIGN_UP_PAGE
+} from "../../lib/adobeUtils";
 
 class SignUp extends Component {
   constructor(props) {
@@ -24,7 +28,9 @@ class SignUp extends Component {
       passwordValue: props.passwordValue ? props.passwordValue : ""
     };
   }
-
+  componentDidMount() {
+    setDataLayer(ADOBE_LOGIN_AND_SIGN_UP_PAGE);
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.authCallsIsSucceed) {
       if (this.props.redirectToAfterAuthUrl) {
