@@ -41,6 +41,7 @@ import {
 const NO_SIZE = "NO SIZE";
 const FREE_SIZE = "Free Size";
 const PRODUCT_QUANTITY = "1";
+const IMAGE = "Image";
 export default class PdpJewellery extends React.Component {
   constructor(props) {
     super(props);
@@ -230,7 +231,7 @@ export default class PdpJewellery extends React.Component {
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
           .filter(val => {
-            return val.mediaType === "Image";
+            return val.mediaType === IMAGE;
           })
           .map(galleryImageList => {
             return galleryImageList.galleryImages.filter(galleryImages => {
