@@ -4,3 +4,10 @@
   justify-content: center;
   height: 100vh;
 }
+
+.gallery {
+  width: 100%;
+  height: auto;
+  min-height: 60%;
+  position: relative;
+}

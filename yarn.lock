@@ -158,6 +158,13 @@ ajv-keywords@^3.0.0, ajv-keywords@^3.1.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.2.0.tgz#e86b819c602cf8821ad637413698f1dec021847a"
 
+ajv@4.11.2:
+  version "4.11.2"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.11.2.tgz#f166c3c11cbc6cb9dcc102a5bcfe5b72c95287e6"
+  dependencies:
+    co "^4.6.0"
+    json-stable-stringify "^1.0.1"
+
 ajv@^5.0.0, ajv@^5.1.0, ajv@^5.2.0, ajv@^5.2.3, ajv@^5.3.0:
   version "5.5.2"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.5.2.tgz#73b5eeca3fab653e3d3f9422b341ad42205dc965"
@@ -418,7 +425,7 @@ async@1.5, async@^1.4.0, async@^1.5, async@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
 
-async@^2.1.2, async@^2.1.4, async@^2.4.1, async@^2.5:
+async@^2.1.2, async@^2.1.4, async@^2.4.1, async@^2.5, async@^2.5.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.0.tgz#61a29abb6fcc026fea77e56d1c6ec53a795951f4"
   dependencies:
@@ -3133,6 +3140,17 @@ extglob@^2.0.4:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
+
+extract-css-chunks-webpack-plugin@^2.0.19:
+  version "2.0.19"
+  resolved "https://registry.yarnpkg.com/extract-css-chunks-webpack-plugin/-/extract-css-chunks-webpack-plugin-2.0.19.tgz#a2babd7f51568165944f5ed4816bcd4bf84f5bbb"
+  dependencies:
+    ajv "4.11.2"
+    async "^2.5.0"
+    loader-utils "^1.1.0"
+    schema-utils "^0.3.0"
+    style-loader "^0.18.2"
+    webpack-sources "^1.0.1"
 
 extract-text-webpack-plugin@3.0.2:
   version "3.0.2"
@@ -6787,6 +6805,10 @@ react-is@^16.3.2:
   version "16.3.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.3.2.tgz#f4d3d0e2f5fbb6ac46450641eb2e25bf05d36b22"
 
+react-loadable-visibility@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/react-loadable-visibility/-/react-loadable-visibility-2.4.2.tgz#c83daf9a5abb41248bc20f60a3c5cbbbeef901ce"
+
 react-loadable@^5.3.1:
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/react-loadable/-/react-loadable-5.4.0.tgz#3b6b7d51121a7868fd155be848a36e02084742c9"
@@ -7819,6 +7841,13 @@ strip-json-comments@~2.0.1:
 style-loader@0.19.0:
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.19.0.tgz#7258e788f0fee6a42d710eaf7d6c2412a4c50759"
+  dependencies:
+    loader-utils "^1.0.2"
+    schema-utils "^0.3.0"
+
+style-loader@^0.18.2:
+  version "0.18.2"
+  resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.18.2.tgz#cc31459afbcd6d80b7220ee54b291a9fd66ff5eb"
   dependencies:
     loader-utils "^1.0.2"
     schema-utils "^0.3.0"

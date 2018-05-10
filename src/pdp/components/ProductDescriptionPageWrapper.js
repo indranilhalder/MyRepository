@@ -1,9 +1,5 @@
 import React from "react";
-import PdpElectronics from "./PdpElectronics";
-import PdpApparel from "./PdpApparel";
-import PdpJewellery from "./PdpJewellery";
-import PiqPageForPdp from "./PiqPageForPdp";
-import PdpHome from "./PdpHome";
+import Loadable from "react-loadable";
 
 import styles from "./ProductDescriptionPageWrapper.css";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -17,14 +13,62 @@ import {
   renderMetaTagsWithoutSeoObject
 } from "../../lib/seoUtils.js";
 // prettier-ignore
+
+const PiqPageForPdp = Loadable({
+  loader: () => import("./PiqPageForPdp"),
+  loading() {
+    return <div className={styles.loadingIndicator}><Loader /></div>
+  }
+})
+
+const PdpElectronics = Loadable({
+  loader: () => import("./PdpApparel"),
+  loading() {
+    return (
+      <div className={styles.loadingIndicator}>
+        <Loader />
+      </div>
+    );
+  }
+});
+
+const PdpJewellery = Loadable({
+  loader: () => import("./PdpJewellery"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const PdpApparel = Loadable({
+  loader: () => import("./PdpApparel"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const PdpHome = Loadable({
+  loader: () => import("./PdpHome"),
+  loading() {
+    return <Loader />;
+  }
+});
+
 const typeComponentMapping = {
-  "Electronics": props => <PdpElectronics {...props} />,
-  "Watches":props =><PdpElectronics {...props} />,
-  "FashionJewellery":props => <PdpJewellery {...props} />,
-  "Clothing":props => <PdpApparel {...props} />,
-  "Footwear":props => <PdpApparel {...props} />,
-  "HomeFurnishing":props => <PdpHome {...props} />,
-  "FineJewellery": props => <PdpJewellery {...props} />,
+  Electronics: props => <PdpElectronics {...props} />,
+  Watches: props => <PdpElectronics {...props} />,
+  FashionJewellery: props => <PdpJewellery {...props} />,
+  Clothing: props => <PdpApparel {...props} />,
+  Footwear: props => <PdpApparel {...props} />,
+  HomeFurnishing: props => <PdpHome {...props} />,
+  FineJewellery: props => <PdpJewellery {...props} />
+};
+
+const Loader = () => {
+  return (
+    <div>
+      <SecondaryLoader />
+    </div>
+  );
 };
 
 const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);

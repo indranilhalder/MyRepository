@@ -1,0 +1,27 @@
+.base {
+  background: white;
+}
+.imageSkeleton {
+  background: #ececec;
+}
+
+.nameSkeleton {
+  background: #ececec;
+  margin-left: 10px;
+  margin-top: 10px;
+  width: 30%;
+  height: 20px;
+  margin-bottom: 10px;
+}
+
+.descriptionSkeleton {
+  background: #ececec;
+  margin-left: 10px;
+  height: 20px;
+  width: 50%;
+  margin-bottom: 10px;
+}
+
+.detailsSkeleton {
+  height: 40%;
+}
