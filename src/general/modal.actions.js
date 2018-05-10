@@ -32,9 +32,13 @@ export const INVALID_USER_COUPON_POPUP = "INVALID_USER_COUPON_POPUP";
 export const CANCEL_ORDER_POP_UP = "CancelOrderPopUp";
 
 export function showModal(type, ownProps) {
+  const scrollPosition =
+    window.pageYOffset || document.documentElement.scrollTop;
+
   return {
     type: SHOW_MODAL,
     modalType: type,
+    scrollPosition: scrollPosition,
     ownProps
   };
 }

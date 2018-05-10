@@ -10,6 +10,7 @@ body {
 .base {
   width: 100%;
   color: #212121;
+  transition-delay: 100ms;
 }
 * {
   -webkit-tap-highlight-color: transparent;
@@ -21,10 +22,12 @@ body {
     filter: url("./general/components/img/blur.svg#");
     filter: blur(10px);
     pointer-events: none;
-    transition: 200ms;
+    transition: 200ms filter linear;
+    transition: 200ms -webkit-filter linear;
     position: fixed;
     left: 0;
     top: 0;
+    transition-delay: 100ms;
   }
 }
 p {
