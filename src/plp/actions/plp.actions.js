@@ -132,6 +132,7 @@ export function getProductListings(
       const encodedString = searchState.string.includes("%3A")
         ? searchState.string
         : encodeURI(searchState.string);
+
       let queryString = `${PRODUCT_LISTINGS_PATH}/?searchText=${encodedString}`;
 
       if (suffix) {
@@ -139,6 +140,7 @@ export function getProductListings(
       }
       queryString = `${queryString}&page=${pageNumber}`;
       queryString = `${queryString}${PRODUCT_LISTINGS_SUFFIX}`;
+      debugger;
       const result = await api.get(queryString);
       const resultJson = await result.json();
       if (resultJson.error) {
