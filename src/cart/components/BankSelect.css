@@ -22,3 +22,15 @@
   right: 0;
   margin: auto;
 }
+.name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-family: regular;
+  font-size: 13px;
+  padding-top: 5px;
+  text-align: center;
+}
