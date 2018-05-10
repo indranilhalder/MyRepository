@@ -36,6 +36,8 @@ export default class SearchLocationByPincode extends React.Component {
     }
   }
   render() {
+    console.log(this.state.pincode);
+    console.log(this.state.pinCode);
     return (
       <div className={styles.base}>
         {this.props.header && (
@@ -51,18 +53,22 @@ export default class SearchLocationByPincode extends React.Component {
         >
           <Input2
             placeholder={
-              this.state.pincode
-                ? `Your pincode :${this.state.pincode}`
-                : "Enter your pincode"
+              this.state.pinCode ? this.state.pinCode : "Enter your pincode"
             }
-            type="number"
+            onlyNumber={true}
             value={this.state.pinCode ? this.state.pinCode : ""}
             boxy={true}
             onChange={val => this.getValue(val)}
             textStyle={{ fontSize: 14 }}
             height={35}
             disabled={this.props.disabled}
+            leftChild={
+              this.state.pinCode && (
+                <div className={styles.pincodeText}> your pincode:</div>
+              )
+            }
             rightChildSize={35}
+            leftChildSize={this.state.pinCode ? 100 : 10}
           />
         </div>
       </div>
