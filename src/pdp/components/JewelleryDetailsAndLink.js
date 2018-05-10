@@ -3,6 +3,8 @@ import styles from "./JewelleryDetailsAndLink.css";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+import MetaTags from "react-meta-tags";
+
 export default class JewelleryDetailsAndLink extends React.Component {
   readMore() {
     if (this.props.readMore) {
@@ -14,41 +16,74 @@ export default class JewelleryDetailsAndLink extends React.Component {
       this.props.showPriceBreakUp();
     }
   }
+
+  handleLinkClick = e => {
+    e.preventDefault();
+  };
   handleBrandClick() {
     if (this.props.brandUrl) {
       const urlSuffix = this.props.brandUrl.replace(TATA_CLIQ_ROOT, "$1");
       this.props.history.push(urlSuffix);
     }
   }
+
+  renderSchemaTags = () => {
+    return (
+      <MetaTags>
+        <meta itemprop="priceCurrency" content="INR" />
+        <meta
+          itemProp="itemCondition"
+          content="http://schema.org/NewCondition"
+        />
+      </MetaTags>
+    );
+  };
   render() {
     return (
       <div className={styles.base}>
+        {this.renderSchemaTags()}
         <div className={styles.linkHolder}>
           <div className={styles.detailsContainer}>
-            {this.props.productName && (
+            {this.props.brandName && (
               <div
-                className={styles.productName}
+                itemProp="brand"
+                itemScope=""
+                itemType="http://schema.org/Organization"
+                className={styles.brandName}
                 onClick={() => {
                   this.handleBrandClick();
                 }}
               >
-                {this.props.productName}
+                <span itemProp="name">
+                  <h2>{this.props.brandName}</h2>
+                </span>
               </div>
             )}
-            {this.props.productDescription && (
-              <div className={styles.productDescription}>
-                {this.props.productDescription}
-              </div>
-            )}
-            {this.props.productMaterial && (
-              <div className={styles.productMaterial}>
-                {this.props.productMaterial}
-              </div>
+            {this.props.productName && (
+              <a
+                className={styles.productNameLink}
+                itemProp="url"
+                href={window.location.href}
+                onClick={this.handleLinkClick}
+              >
+                <div itemProp="name">
+                  <h1 className={styles.productName}>
+                    {this.props.productName}
+                  </h1>
+                </div>
+              </a>
             )}
           </div>
-          <div className={styles.priceContainer}>
+          <div
+            itemProp="offers"
+            itemScope=""
+            itemType="http://schema.org/Offer"
+            className={styles.priceContainer}
+          >
             {this.props.price && (
-              <div className={styles.price}>{`${this.props.price}`}</div>
+              <div className={styles.price}>
+                <span itemType="price">{`${this.props.price}`}</span>
+              </div>
             )}
             {this.props.discountPrice &&
               this.props.discountPrice !== this.props.price && (
@@ -95,7 +130,7 @@ export default class JewelleryDetailsAndLink extends React.Component {
 JewelleryDetailsAndLink.propTypes = {
   productName: PropTypes.string,
   productDescription: PropTypes.string,
-  productMaterial: PropTypes.string,
+  brandName: PropTypes.string,
   discountPrice: PropTypes.string,
   discount: PropTypes.string,
   onClick: PropTypes.func,

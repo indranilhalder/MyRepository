@@ -140,6 +140,8 @@ export const CATEGORIES_LANDING_PAGE = "/categories";
 export const ANONYMOUS_USER = "anonymous";
 export const COUPON_COOKIE = "couponCode";
 export const BANK_COUPON_COOKIE = "bankCoupon";
+export const CART_BAG_DETAILS = "cartBagDetails";
+export const APP_VIEW = "isAppView";
 
 export const SAVE_LIST_PAGE = "/default/wishList";
 export const PAYMENT_MODE_TYPE = "paymentMode";

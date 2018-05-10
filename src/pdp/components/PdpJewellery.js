@@ -283,8 +283,8 @@ export default class PdpJewellery extends React.Component {
           </div>
           <div className={styles.content}>
             <JewelleryDetailsAndLink
-              productName={productData.brandName}
-              productDescription={productData.productName}
+              brandName={productData.brandName}
+              productName={productData.productName}
               price={price}
               discountPrice={discountPrice}
               averageRating={productData.averageRating}
@@ -386,7 +386,7 @@ please try another pincode"
                 headerFontSize={16}
                 isOpen={true}
               >
-                <div className={styles.accordionContent}>
+                <div className={styles.accordionContent} itemProp="description">
                   {productData.productDescription}
                 </div>
               </Accordion>

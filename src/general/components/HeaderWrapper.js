@@ -24,7 +24,8 @@ import {
   JUS_PAY_PENDING,
   JUS_PAY_AUTHENTICATION_FAILED,
   CHECKOUT_ROUTER,
-  CHECKOUT_ROUTER_THANKYOU
+  CHECKOUT_ROUTER_THANKYOU,
+  APP_VIEW
 } from "../../../src/lib/constants";
 import { SIGN_UP } from "../../auth/actions/user.actions";
 
@@ -101,6 +102,9 @@ class HeaderWrapper extends React.Component {
   render() {
     const searchQuery = queryString.parse(this.props.history.location.search);
     const hasAppView = searchQuery.appview;
+    if (hasAppView && !Cookie.getCookie(APP_VIEW)) {
+      Cookie.createCookie(APP_VIEW, true);
+    }
     const url = this.props.location.pathname;
     let shouldRenderSearch = false;
 
@@ -174,7 +178,7 @@ class HeaderWrapper extends React.Component {
       shouldRenderSearch = false;
     }
 
-    if (hasAppView === "true") {
+    if (hasAppView === "true" || Cookie.getCookie(APP_VIEW)) {
       shouldRenderHeader = false;
     }
     let headerToRender = (
@@ -194,6 +198,7 @@ class HeaderWrapper extends React.Component {
           goToWishList={this.goToWishList}
           text={this.props.headerText}
           isShowCompanyLogo={companyLogoInPdp}
+          bagCount={this.props.bagCount}
         />
       ) : (
         <HollowHeader
@@ -202,6 +207,7 @@ class HeaderWrapper extends React.Component {
           goToCart={this.goToCart}
           goToWishList={this.goToWishList}
           isShowCompanyLogo={companyLogoInPdp}
+          bagCount={this.props.bagCount}
         />
       );
     } else if (shouldRenderSearch) {

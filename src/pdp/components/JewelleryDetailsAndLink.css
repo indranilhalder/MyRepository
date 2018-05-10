@@ -13,19 +13,24 @@
   text-align: left;
   vertical-align: top;
 }
-.productName {
+.brandName {
   font-size: 16px;
   width: 100%;
   height: auto;
   font-family: semibold;
 }
-.productDescription {
+
+.productNameLink {
+  color: inherit;
+  text-decoration: none;
+}
+.productName {
   padding-top: 10px;
   font-family: regular;
   font-size: 16px;
   line-height: 22px;
 }
-.productMaterial {
+.productDescription {
   padding-top: 3px;
   font-family: regular;
   font-size: 14px;
