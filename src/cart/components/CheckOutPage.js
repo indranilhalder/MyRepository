@@ -1799,7 +1799,7 @@ class CheckOutPage extends React.Component {
     if (
       this.state.addNewAddress &&
       !this.state.orderConfirmation &&
-      !this.state.isGiftCard
+      !this.state.isGiftCard && !this.props.cart.isPaymentProceeded
     ) {
       return (
         <div className={styles.addDeliveryAddressHolder}>
@@ -1821,7 +1821,7 @@ class CheckOutPage extends React.Component {
     } else if (
       (!this.state.addNewAddress &&
         this.props.cart &&
-        !this.state.orderConfirmation) ||
+        !this.state.orderConfirmation && !this.props.cart.isPaymentProceeded) ||
       this.state.isGiftCard
     ) {
 

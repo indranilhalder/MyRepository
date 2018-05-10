@@ -32,9 +32,7 @@ export default class NoCostEmiBankDetails extends React.Component {
           this.props.totalProductCount
         ) {
           this.setState({
-            noCostEmiText: `* No cost EMI available only on ${
-              this.props.noCostEmiProductCount
-            } product`
+            noCostEmiText: ``
           });
         } else {
           this.setState({
@@ -344,9 +342,11 @@ export default class NoCostEmiBankDetails extends React.Component {
 
             {this.state.selectedBankIndex !== null && (
               <div className={styles.emiDetailsPlan}>
-                <div className={styles.labelHeader}>
-                  {this.state.noCostEmiText}
-                </div>
+                {this.state.noCostEmiText !== "" && (
+                  <div className={styles.labelHeader}>
+                    {this.state.noCostEmiText}
+                  </div>
+                )}
                 <div className={styles.monthsLabel}>Tenure (Months)</div>
                 <div className={styles.monthsHolder}>
                   {modifiedBankList &&
