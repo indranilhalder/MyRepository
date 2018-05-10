@@ -14,12 +14,21 @@ export default class PaytmOption extends React.Component {
       selected: false
     };
   }
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.paymentModeSelected) {
+      this.setState({ selected: false });
+    }
+  }
   handleOnSelect() {
-    this.setState({ selected: !this.state.selected }, () => {
+    if (this.state.selected) {
+      this.props.binValidationForPaytm(false);
+      this.setState({ selected: false });
+    } else {
       if (this.props.binValidationForPaytm) {
-        this.props.binValidationForPaytm(this.state);
+        this.setState({ selected: true });
+        this.props.binValidationForPaytm(true);
       }
-    });
+    }
   }
   render() {
     return (
