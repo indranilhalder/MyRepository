@@ -9,7 +9,6 @@ export default class CancelOrderPopUp extends React.Component {
   }
 
   cancelModal() {
-    console.log(this.props);
     if (this.props.cancelModal) {
       this.props.cancelModal();
     }

@@ -17,7 +17,6 @@ export default class CancelOrderModal extends React.Component {
     }
   }
   render() {
-    console.log(this.props.data);
     return (
       <BottomSlideModal>
         <CancelOrderPopUp
