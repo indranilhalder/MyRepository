@@ -159,6 +159,7 @@ export const SHORT_EXPRESS = "ED";
 export const SHORT_COLLECT = "CNC";
 export const EXPRESS_TEXT = "Express Shipping";
 export const HOME_TEXT = "Standard Shipping";
+export const STANDARD_SHIPPING = "Standard delivery";
 export const COLLECT_TEXT = "CLiQ & PiQ";
 export const FOLLOW = "Follow";
 export const FOLLOWING = "Following";
