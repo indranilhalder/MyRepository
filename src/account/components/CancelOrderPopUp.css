@@ -1,0 +1,40 @@
+.base {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  padding: 30px 20px;
+  position: absolute;
+  bottom: 0;
+}
+.cancelOrderTextHolder {
+  width: 100%;
+  height: auto;
+  background: #fef6f7;
+  padding: 15px 20px 25px;
+  border-radius: 4px;
+}
+.cancelOrderText {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 16px;
+  line-height: normal;
+  font-family: regular;
+}
+.buttonHolderForCancelOrder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-top: 40px;
+  text-align: center;
+}
+.button {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+}
+.buttonHolderForCloseModal {
+  composes: buttonHolderForCancelOrder;
+  margin-top: 20px;
+}

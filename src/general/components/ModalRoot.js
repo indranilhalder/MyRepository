@@ -149,6 +149,12 @@ const InvalidBankCouponPopup = Loadable({
   }
 });
 
+const CancelOrderPopUp = Loadable({
+  loader: () => import("../../account/components/CancelOrderPopUp.js"),
+  loading() {
+    return <Loader />;
+  }
+});
 export default class ModalRoot extends React.Component {
   constructor(props) {
     super(props);
@@ -332,6 +338,9 @@ export default class ModalRoot extends React.Component {
     this.props.history.push(LOGIN_PATH);
   };
 
+  cancelOrderProduct = (cancelProductDetails, productDetails) => {
+    this.props.cancelProduct(cancelProductDetails, productDetails);
+  };
   continueWithoutBankCoupon = async () => {
     const bankCouponCode = localStorage.getItem(BANK_COUPON_COOKIE);
     const userCouponCode = localStorage.getItem(COUPON_COOKIE);
@@ -582,6 +591,16 @@ export default class ModalRoot extends React.Component {
         <OrderModal
           data={this.props.ownProps}
           closeModal={() => this.handleClose()}
+        />
+      ),
+      CancelOrderPopUp: (
+        <CancelOrderPopUp
+          data={this.props.ownProps}
+          loadingForCancelProduct={this.props.loadingForCancelProduct}
+          cancelModal={() => this.handleClose()}
+          cancelProduct={(cancelProductDetails, productDetails) =>
+            this.cancelOrderProduct(cancelProductDetails, productDetails)
+          }
         />
       )
     };
