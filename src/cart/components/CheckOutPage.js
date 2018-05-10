@@ -1760,7 +1760,7 @@ class CheckOutPage extends React.Component {
         checkoutButtonStatus = false;
       } else {
         labelForButton = PROCEED;
-        console.log("comes in ");
+
         checkoutButtonStatus = true;
       }
     } else if (this.state.currentPaymentMode === null) {
