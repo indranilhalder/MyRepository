@@ -2824,6 +2824,8 @@ export function createJusPayOrderForCliqCash(
         }
       }
       dispatch(createJusPayOrderSuccessForCliqCash(resultJson));
+      dispatch(setBagCount(0));
+      localStorage.setItem(CART_BAG_DETAILS,[]);
       dispatch(generateCartIdForLoggedInUser());
     } catch (e) {
       dispatch(createJusPayOrderFailure(e.message));
@@ -2974,6 +2976,8 @@ export function jusPayPaymentMethodType(
         resultJson.status === JUS_PAY_CHARGED
       ) {
         dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+        dispatch(setBagCount(0));
+        localStorage.setItem(CART_BAG_DETAILS,[]);
         dispatch(generateCartIdForLoggedInUser());
       } else {
         throw new Error(resultJson.error_message);
@@ -3011,6 +3015,8 @@ export function jusPayPaymentMethodTypeForSavedCards(
         resultJson.status === JUS_PAY_CHARGED
       ) {
         dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+        dispatch(setBagCount(0));
+        localStorage.setItem(CART_BAG_DETAILS,[]);
         dispatch(generateCartIdForLoggedInUser());
       } else {
         throw new Error(resultJson.error_message);
@@ -3086,6 +3092,8 @@ export function jusPayPaymentMethodTypeForNetBanking(
         resultJson.status === JUS_PAY_CHARGED
       ) {
         dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
+        dispatch(setBagCount(0));
+        localStorage.setItem(CART_BAG_DETAILS,[]);
         dispatch(generateCartIdForLoggedInUser());
       } else {
         throw new Error(resultJson.error_message);
