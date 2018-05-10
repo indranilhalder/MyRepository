@@ -7,10 +7,10 @@ import * as styles from "./UserCoupons.css";
 export default class UserCoupons extends React.Component {
   render() {
     const { userCoupons } = this.props;
+    console.log(userCoupons.unusedCouponsList);
     return (
       <div className={styles.base}>
-        {userCoupons &&
-          userCoupons.unusedCouponsList &&
+        {userCoupons && userCoupons.unusedCouponsList ? (
           userCoupons.unusedCouponsList.map(coupon => (
             <div className={styles.cardHolder}>
               <MyCoupons
@@ -25,7 +25,10 @@ export default class UserCoupons extends React.Component {
                 expiryDateValue={coupon.expiryDate}
               />
             </div>
-          ))}
+          ))
+        ) : (
+          <div className={styles.noCoupon}>{"No Coupons"}</div>
+        )}
       </div>
     );
   }

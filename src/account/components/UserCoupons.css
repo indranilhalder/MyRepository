@@ -11,3 +11,12 @@
   background: #fff;
   padding: 15px;
 }
+.noCoupon {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding-top: 10px;
+  font-size: 16px;
+  font-family: regular;
+  text-align: center;
+}
