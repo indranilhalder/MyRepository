@@ -45,8 +45,8 @@
   position: relative;
 }
 .bagCount {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background-color: #ff1744;
   top: 3px;
@@ -56,4 +56,5 @@
   right: 0px;
   text-align: center;
   color: #fff;
+  line-height: 14px;
 }
