@@ -8,7 +8,8 @@ import {
   OLD_CART_GU_ID,
   COUPON_COOKIE,
   NO_COST_EMI_COUPON,
-  OLD_CART_CART_ID
+  OLD_CART_CART_ID,
+  CART_BAG_DETAILS
 } from "../../lib/constants";
 export const EGV_GIFT_CART_ID = "giftCartId";
 
@@ -180,7 +181,9 @@ const cart = (
 
     paymentFailureOrderDetailsStatus: null,
     paymentFailureOrderDetailsError: null,
-    paymentFailureOrderDetails: null
+    paymentFailureOrderDetails: null,
+
+    isSoftReservationFailed: false
   },
   action
 ) => {
@@ -499,6 +502,7 @@ const cart = (
         JSON.stringify(action.cartDetails)
       );
       Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+
       return Object.assign({}, state, {
         mergeCartIdStatus: action.status,
         type: action.type
@@ -603,7 +607,8 @@ const cart = (
       return Object.assign({}, state, {
         softReserveStatus: action.status,
         softReserveError: action.error,
-        selectDeliveryModeLoader: false
+        selectDeliveryModeLoader: false,
+        isSoftReservationFailed: true
       });
 
     case cartActions.GET_PAYMENT_MODES_REQUEST:
@@ -789,7 +794,8 @@ const cart = (
 
     case cartActions.ORDER_CONFIRMATION_REQUEST:
       return Object.assign({}, state, {
-        orderConfirmationDetailsStatus: action.status
+        orderConfirmationDetailsStatus: action.status,
+        jusPaymentLoader: true
       });
 
     case cartActions.ORDER_CONFIRMATION_SUCCESS: {
@@ -797,7 +803,8 @@ const cart = (
         orderConfirmationDetailsStatus: action.status,
         orderConfirmationDetails: action.confirmedOrderDetails,
         transactionStatus: action.status,
-        jusPaymentLoader: false
+        jusPaymentLoader: false,
+        cliqCashJusPayDetails: null
       });
     }
 
@@ -956,7 +963,8 @@ const cart = (
       return Object.assign({}, state, {
         softReserveCODPaymentStatus: action.status,
         softReserveCODPaymentError: action.error,
-        loading: false
+        loading: false,
+        isSoftReservationFailed: true
       });
 
     case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST:
@@ -1089,7 +1097,8 @@ const cart = (
       return Object.assign({}, state, {
         softReservationForPaymentStatus: action.status,
         softReservationForPaymentError: action.error,
-        jusPaymentLoader: false
+        jusPaymentLoader: false,
+        isSoftReservationFailed: true
       });
 
     case cartActions.JUS_PAY_TOKENIZE_REQUEST:
@@ -1267,6 +1276,11 @@ const cart = (
         paymentFailureOrderDetailsError: action.error,
         loading: false
       });
+    case cartActions.RESET_IS_SOFT_RESERVATION_FAILED:
+      return Object.assign({}, state, {
+        isSoftReservationFailed: false
+      });
+
     case cartActions.CLEAR_CART_DETAILS:
       return Object.assign({}, state, {
         status: null,
@@ -1433,7 +1447,9 @@ const cart = (
 
         paymentFailureOrderDetailsStatus: null,
         paymentFailureOrderDetailsError: null,
-        paymentFailureOrderDetails: null
+        paymentFailureOrderDetails: null,
+
+        isSoftReservationFailed: false
       });
 
     default:

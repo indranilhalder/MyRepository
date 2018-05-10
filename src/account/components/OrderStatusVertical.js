@@ -155,65 +155,71 @@ export default class OrderStatusVertical extends React.Component {
             <div className={styles.timeHolder}>{processingTime}</div>
           </div>
         </div>
-        {shippingResponseCode !== REFUND_INITIATED && (
-          <div
-            className={
-              completedSteps.includes(SHIPPING)
-                ? styles.step
-                : styles.stepInactive
-            }
-          >
-            <div
-              className={
-                completedSteps.includes(SHIPPING)
-                  ? styles.checkActive
-                  : styles.check
-              }
-            />
-            <div className={styles.processNameHolder}>Shipping</div>
-            <div className={styles.dateAndTimeHolder}>
-              <div className={styles.dateHolder}>{shippingDate}</div>
-              <div className={styles.timeHolder}>{shippingTime}</div>
-            </div>
-            {completedSteps.includes(SHIPPING) && (
-              <div>
-                {this.props.logisticName && (
-                  <div className={styles.courierInfoHolder}>
-                    <div className={styles.moreInfoQuestionHolder}>
-                      Courier: {this.props.logisticName}
-                    </div>
-                  </div>
-                )}
-                {this.props.trackingAWB && (
-                  <div className={styles.courierInfoHolder}>
-                    <div className={styles.moreInfoQuestionHolder}>
-                      AWB No: {this.props.trackingAWB}
-                    </div>
-                  </div>
-                )}
-                <div className={styles.courierInfoHolder}>
-                  <UnderLinedButton
-                    label="More details"
-                    onClick={() =>
-                      this.handleMoreDetails({ shippingList, orderCode })
-                    }
-                  />
+        {!completedSteps.includes(CANCEL) && (
+          <React.Fragment>
+            {shippingResponseCode !== REFUND_INITIATED && (
+              <div
+                className={
+                  completedSteps.includes(SHIPPING)
+                    ? styles.step
+                    : styles.stepInactive
+                }
+              >
+                <div
+                  className={
+                    completedSteps.includes(SHIPPING)
+                      ? styles.checkActive
+                      : styles.check
+                  }
+                />
+                <div className={styles.processNameHolder}>Shipping</div>
+                <div className={styles.dateAndTimeHolder}>
+                  <div className={styles.dateHolder}>{shippingDate}</div>
+                  <div className={styles.timeHolder}>{shippingTime}</div>
                 </div>
+                {completedSteps.includes(SHIPPING) && (
+                  <div>
+                    {this.props.logisticName && (
+                      <div className={styles.courierInfoHolder}>
+                        <div className={styles.moreInfoQuestionHolder}>
+                          Courier: {this.props.logisticName}
+                        </div>
+                      </div>
+                    )}
+                    {this.props.trackingAWB && (
+                      <div className={styles.courierInfoHolder}>
+                        <div className={styles.moreInfoQuestionHolder}>
+                          AWB No: {this.props.trackingAWB}
+                        </div>
+                      </div>
+                    )}
+                    <div className={styles.courierInfoHolder}>
+                      <UnderLinedButton
+                        label="More details"
+                        onClick={() =>
+                          this.handleMoreDetails({ shippingList, orderCode })
+                        }
+                      />
+                    </div>
 
-                <div className={styles.moreAnswerHolder} />
+                    <div className={styles.moreAnswerHolder} />
+                  </div>
+                )}
               </div>
             )}
-          </div>
-        )}
-        {shippingResponseCode !== REFUND_INITIATED && (
-          <div className={isDelivered ? styles.step : styles.stepInactive}>
-            <div className={isDelivered ? styles.checkActive : styles.check} />
-            <div className={styles.processNameHolder}>Delivered</div>
-            <div className={styles.dateAndTimeHolder}>
-              <div className={styles.dateHolder}>{deliveredDate}</div>
-              <div className={styles.timeHolder}>{deliveredTime}</div>
-            </div>
-          </div>
+            {shippingResponseCode !== REFUND_INITIATED && (
+              <div className={isDelivered ? styles.step : styles.stepInactive}>
+                <div
+                  className={isDelivered ? styles.checkActive : styles.check}
+                />
+                <div className={styles.processNameHolder}>Delivered</div>
+                <div className={styles.dateAndTimeHolder}>
+                  <div className={styles.dateHolder}>{deliveredDate}</div>
+                  <div className={styles.timeHolder}>{deliveredTime}</div>
+                </div>
+              </div>
+            )}
+          </React.Fragment>
         )}
         {completedSteps.includes(CANCEL) && (
           <div className={styles.step}>

@@ -49,6 +49,7 @@ export default class Sort extends React.Component {
         isFilter: false
       });
       this.props.onClick();
+      this.props.setIfSortHasBeenClicked();
     }
   }
   handleCloseClick = () => {

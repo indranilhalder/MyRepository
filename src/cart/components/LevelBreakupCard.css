@@ -73,10 +73,19 @@
   font-family: semibold;
   text-align: right;
 }
+.amountDiscount {
+  composes: amount;
+  font-family: regular;
+}
+.amountEmi {
+  composes: amount;
+  font-family: regular;
+}
 .discount {
   composes: amountData;
   color: #ff1744;
 }
+
 .totalAmountDisplay {
   composes: amountPlaneForMonth;
   border-bottom: none;

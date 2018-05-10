@@ -66,7 +66,8 @@ import {
 } from "../../lib/adobeUtils";
 import {
   CART_ITEM_COOKIE,
-  ADDRESS_FOR_PLACE_ORDER
+  ADDRESS_FOR_PLACE_ORDER,
+  CART_PATH
 } from "../actions/cart.actions";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const PAYMENT_CHARGED = "CHARGED";
@@ -88,6 +89,7 @@ const INVALID_CART_ERROR_MESSAGE =
   "Sorry your cart is not valid any more. Please Try again";
 const PLACE_ORDER = "Place Order";
 const PAY_NOW = "Pay Now";
+const OUT_OF_STOCK_MESSAGE = "Some Products are out of stock";
 export const EGV_GIFT_CART_ID = "giftCartId";
 class CheckOutPage extends React.Component {
   constructor(props) {
@@ -157,6 +159,10 @@ class CheckOutPage extends React.Component {
   }
   navigateUserToMyBagAfter15MinOfpaymentFailure() {
     this.props.displayToast(INVALID_CART_ERROR_MESSAGE);
+    this.props.history.push(PRODUCT_CART_ROUTER);
+  }
+  navigateToCartForOutOfStock() {
+    this.props.displayToast(OUT_OF_STOCK_MESSAGE);
     this.props.history.push(PRODUCT_CART_ROUTER);
   }
   onChangeCardDetail = val => {
@@ -541,6 +547,9 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.cart.isSoftReservationFailed) {
+      return this.navigateToCartForOutOfStock();
+    }
     if (nextProps.cart.jusPayError && this.state.isPaymentFailed === false) {
       const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
       if (!oldCartId) {
@@ -840,9 +849,14 @@ class CheckOutPage extends React.Component {
     if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
       this.setState({ orderConfirmation: true });
     }
-    if (nextProps.cart.cliqCashJusPayDetails) {
+    if (
+      nextProps.cart.cliqCashJusPayDetails &&
+      nextProps.cart.orderConfirmationDetailsStatus !== "requesting"
+    ) {
       this.setState({ orderId: nextProps.cart.cliqCashJusPayDetails.orderId });
-      this.setState({ orderConfirmation: true });
+      this.props.orderConfirmation(
+        nextProps.cart.cliqCashJusPayDetails.orderId
+      );
     }
     if (nextProps.cart.binValidationCODStatus === SUCCESS) {
       this.setState({ binValidationCOD: true });
@@ -861,6 +875,7 @@ class CheckOutPage extends React.Component {
     if (this.props.history.action === "POP") {
       this.props.clearCartDetails();
     }
+    this.props.resetIsSoftReservationFailed();
   }
   componentDidMount() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -1330,10 +1345,6 @@ class CheckOutPage extends React.Component {
       if (this.state.isFirstAddress) {
         this.addAddress(this.state.addressDetails);
       }
-
-      if (this.state.isNoCostEmiApplied) {
-        this.setState({ isNoCostEmiProceeded: true });
-      }
       if (
         !this.state.confirmAddress &&
         !this.state.isGiftCard &&
@@ -1379,7 +1390,7 @@ class CheckOutPage extends React.Component {
         }
       }
 
-      if (this.state.savedCardDetails !== "") {
+      if (this.state.savedCardDetails && this.state.savedCardDetails !== "") {
         if (this.state.isGiftCard) {
           this.props.createJusPayOrderForGiftCardFromSavedCards(
             this.state.savedCardDetails,
@@ -1447,6 +1458,9 @@ class CheckOutPage extends React.Component {
         } else {
           this.props.softReservationPaymentForWallet(PAYTM);
         }
+      }
+      if (this.state.isNoCostEmiApplied) {
+        this.setState({ isNoCostEmiProceeded: true });
       }
     }
   };
@@ -1917,8 +1931,16 @@ class CheckOutPage extends React.Component {
                   this.applyNoCostEmi(couponCode, bankName)
                 }
                 removeNoCostEmi={couponCode => this.removeNoCostEmi(couponCode)}
-                getItemBreakUpDetails={(couponCode, noCostEmiText, noCostProductCount) =>
-                  this.getItemBreakUpDetails(couponCode, noCostEmiText, noCostProductCount)
+                getItemBreakUpDetails={(
+                  couponCode,
+                  noCostEmiText,
+                  noCostProductCount
+                ) =>
+                  this.getItemBreakUpDetails(
+                    couponCode,
+                    noCostEmiText,
+                    noCostProductCount
+                  )
                 }
                 isNoCostEmiProceeded={this.state.isNoCostEmiProceeded}
                 changeNoCostEmiPlan={() =>

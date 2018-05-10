@@ -12,13 +12,23 @@ const productListings = (
     isFilterOpen: false,
     filterTabIndex: 0,
     isCategorySelected: true,
-    selectedFacetKey: null
+    selectedFacetKey: null,
+    filterHasBeenClicked: false,
+    sortHasBeenClicked: false
   },
   action
 ) => {
   let existingProductListings;
   let toUpdate;
   switch (action.type) {
+    case plpActions.SORT_HAS_BEEN_CLICKED:
+      return Object.assign({}, state, {
+        sortHasBeenClicked: true
+      });
+    case plpActions.FILTER_HAS_BEEN_CLICKED:
+      return Object.assign({}, state, {
+        filterHasBeenClicked: true
+      });
     case plpActions.SET_FILTER_SELECTED_DATA:
       const selectedFacetKey =
         state.productListings.facetdata[action.filterTabIndex].key;

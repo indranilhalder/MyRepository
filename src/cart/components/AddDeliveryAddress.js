@@ -293,7 +293,8 @@ export default class AddDeliveryAddress extends React.Component {
                 ? this.props.postalCode
                 : this.state.postalCode
             }
-            type={"number"}
+            maxLength={"6"}
+            onlyNumber={true}
             rightChildSize={33}
           />
         </div>

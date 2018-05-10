@@ -5,6 +5,7 @@
   position: relative;
   font-size: 14px;
   font-family: regular;
+  display: block;
 }
 .itemHasColour {
   composes: item;

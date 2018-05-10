@@ -9,7 +9,9 @@ import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getAllOrdersDetails: () => {
-      dispatch(getAllOrdersDetails());
+      dispatch(
+        getAllOrdersDetails(false, false, ownProps.shouldCallSetDataLayer)
+      );
     },
     setHeaderText: text => {
       dispatch(setHeaderText(text));
