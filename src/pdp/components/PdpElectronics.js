@@ -48,6 +48,8 @@ import {
 
 const DELIVERY_TEXT = "Delivery Options For";
 const PRODUCT_QUANTITY = "1";
+const VIDEO = "Video";
+const IMAGE = "Image";
 export default class PdpElectronics extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
@@ -170,6 +172,9 @@ export default class PdpElectronics extends React.Component {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
+          .filter(val => {
+            return val.mediaType === IMAGE;
+          })
           .map(galleryImageList => {
             return galleryImageList.galleryImages.filter(galleryImages => {
               return galleryImages.key === "product";
