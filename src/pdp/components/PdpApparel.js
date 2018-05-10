@@ -243,7 +243,6 @@ export default class PdpApparel extends React.Component {
             <ProductDetailsMainCard
               brandName={productData.brandName}
               productName={productData.productName}
-              productDescription={productData.productDescription}
               brandUrl={productData.brandURL}
               history={this.props.history}
               price={price}
@@ -323,7 +322,7 @@ export default class PdpApparel extends React.Component {
                 headerFontSize={16}
                 isOpen={true}
               >
-                <div className={styles.accordionContent}>
+                <div className={styles.accordionContent} itemProp="description">
                   {productData.productDescription}
                 </div>
               </Accordion>
