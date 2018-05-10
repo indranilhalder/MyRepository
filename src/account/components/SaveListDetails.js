@@ -123,7 +123,6 @@ export default class SaveListDetails extends React.Component {
                   }
                   onClickImage={() => this.onClickImage(product.productcode)}
                   removeItem={productUssid => this.removeItem(product.USSID)}
-                  isDisabled={product.availableStock === 0 ? true : false}
                 />
               </div>
             );

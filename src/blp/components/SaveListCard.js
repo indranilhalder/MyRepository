@@ -62,7 +62,7 @@ export default class SaveListCard extends React.Component {
             buttonLabel={this.props.buttonLabel}
             underlineButtonColour={this.props.underlineButtonColour}
             isEditable={this.props.isEditable}
-            isDisabled={this.props.isDisabled}
+            outOfStock={this.props.outOfStock}
           />
         </div>
       </div>
