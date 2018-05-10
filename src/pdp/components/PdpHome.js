@@ -249,8 +249,9 @@ export default class PdpApparel extends React.Component {
           <div className={styles.whiteBackground}>
             <div className={styles.content}>
               <ProductDetailsMainCard
-                productName={productData.brandName}
-                productDescription={productData.productName}
+                brandName={productData.brandName}
+                productName={productData.productName}
+                productDescription={productData.productDescription}
                 brandUrl={productData.brandURL}
                 history={this.props.history}
                 price={price}

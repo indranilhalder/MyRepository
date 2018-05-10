@@ -38,7 +38,22 @@
   vertical-align: top;
   margin-left: 5px;
 }
+
 .orderIconHolder {
   composes: downloadIconHolder;
   margin-left: 0px;
+  position: relative;
+}
+.bagCount {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ff1744;
+  top: 3px;
+  font-size: 9px;
+  font-family: regular;
+  position: absolute;
+  right: 0px;
+  text-align: center;
+  color: #fff;
 }

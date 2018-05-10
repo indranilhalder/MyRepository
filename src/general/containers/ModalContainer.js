@@ -21,7 +21,10 @@ import {
   FAILURE,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  ERROR_MESSAGE_FOR_VERIFY_OTP
+  ERROR_MESSAGE_FOR_VERIFY_OTP,
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import { updateProfile } from "../../account/actions/account.actions.js";
 import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
@@ -38,7 +41,8 @@ import {
   applyUserCouponForLoggedInUsers,
   releaseCouponForAnonymous,
   releaseUserCoupon,
-  removeNoCostEmi
+  removeNoCostEmi,
+  getCartDetails
 } from "../../cart/actions/cart.actions";
 import {
   getOtpToActivateWallet,
@@ -98,6 +102,20 @@ const mapDispatchToProps = dispatch => {
               mergeCartId(createdCartVal.cartDetails.guid)
             );
             if (mergeCartIdResponse.status === SUCCESS) {
+              const customerCookie = Cookies.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+              const userDetails = Cookies.getCookie(LOGGED_IN_USER_DETAILS);
+              const cartDetailsLoggedInUser = Cookies.getCookie(
+                CART_DETAILS_FOR_LOGGED_IN_USER
+              );
+              dispatch(
+                getCartDetails(
+                  JSON.parse(userDetails).userName,
+                  JSON.parse(customerCookie).access_token,
+                  JSON.parse(cartDetailsLoggedInUser).code,
+                  localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+                )
+              );
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
               Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);

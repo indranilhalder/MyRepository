@@ -1,4 +1,5 @@
 import React from "react";
+import sortBy from "lodash.sortby";
 import EmiCard from "./EmiCard";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import SlideModal from "../../general/components/SlideModal";
@@ -58,7 +59,12 @@ export default class EmiModal extends React.Component {
                     isOpen={this.state.openIndex === i}
                     onOpen={() => this.handleOpen(i)}
                   >
-                    <EmiCard options={val.emitermsrate} />
+                    <EmiCard
+                      options={sortBy(
+                        val.emitermsrate,
+                        item => item && parseInt(item.term, 10)
+                      )}
+                    />
                   </Accordion>
                 );
               })}
