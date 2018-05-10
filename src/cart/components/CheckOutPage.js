@@ -1773,7 +1773,7 @@ class CheckOutPage extends React.Component {
         this.props.cart.loading ||
         this.props.cart.jusPaymentLoader ||
         this.props.cart.selectDeliveryModeLoader ||
-        (!this.props.cart.paymentModes && this.state.deliverMode)
+        (!this.props.cart.paymentModes && this.state.deliverMode) || this.props.cart.isPaymentProceeded
       ) {
         this.props.showSecondaryLoader();
       } else {
@@ -1786,7 +1786,7 @@ class CheckOutPage extends React.Component {
     if (
       this.state.addNewAddress &&
       !this.state.orderConfirmation &&
-      !this.state.isGiftCard && !this.props.cart.isPaymentProceeded
+      !this.state.isGiftCard
     ) {
       return (
         <div className={styles.addDeliveryAddressHolder}>
@@ -1808,7 +1808,7 @@ class CheckOutPage extends React.Component {
     } else if (
       (!this.state.addNewAddress &&
         this.props.cart &&
-        !this.state.orderConfirmation && !this.props.cart.isPaymentProceeded) ||
+        !this.state.orderConfirmation) ||
       this.state.isGiftCard
     ) {
 
