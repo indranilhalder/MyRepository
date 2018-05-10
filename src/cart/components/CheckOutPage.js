@@ -20,7 +20,6 @@ import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
 import size from "lodash.size";
 import TransactionFailed from "./TransactionFailed.js";
-import cardValidator from "simple-card-validator";
 import * as Cookies from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -1653,23 +1652,7 @@ class CheckOutPage extends React.Component {
     ) {
       return true;
     } else {
-      const card = new cardValidator(
-        parseInt(this.state.cardDetails.cardNumber, 10)
-      );
-      console.log(card.validateCard());
-      console.log(
-        this.state.cardDetails.cvvNumber.length > 1 &&
-          card.validateCvv(this.state.cardDetails.cvvNumber)
-      );
-      if (
-        card.validateCard() &&
-        this.state.cardDetails.cvvNumber.length > 1 &&
-        card.validateCvv(this.state.cardDetails.cvvNumber)
-      ) {
-        return false;
-      } else {
-        return true;
-      }
+      return false;
     }
   }
 
