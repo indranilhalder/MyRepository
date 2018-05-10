@@ -3,7 +3,8 @@ import {
   REQUESTING,
   ERROR,
   SUCCESS_CAMEL_CASE,
-  SUCCESS_UPPERCASE
+  SUCCESS_UPPERCASE,
+  JUS_PAY_AUTHENTICATION_FAILED
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash.foreach";
@@ -58,6 +59,7 @@ import {
   ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF,
   ADOBE_MY_ACCOUNT_ADDRESS_BOOK
 } from "../../lib/adobeUtils";
+import { PAYMENT_CHARGED } from "../components/CheckOutPage";
 
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
 export const USER_CART_PATH = "v2/mpl/users";
@@ -3442,7 +3444,14 @@ export function updateTransactionDetailsForCOD(paymentMode, juspayOrderID) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  const cartId = JSON.parse(cartDetails).guid;
+  const parsedQueryString = queryString.parse(window.location.search);
+  let cartId;
+  if (parsedQueryString.value) {
+    cartId = parsedQueryString.value;
+  } else {
+    cartId = JSON.parse(cartDetails).guid;
+  }
+
   return async (dispatch, getState, { api }) => {
     dispatch(updateTransactionDetailsForCODRequest());
     try {
@@ -3459,7 +3468,17 @@ export function updateTransactionDetailsForCOD(paymentMode, juspayOrderID) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+
+      const oldUrl = window.location.href;
+      if (oldUrl.includes(JUS_PAY_AUTHENTICATION_FAILED)) {
+        let newUrl = oldUrl.replace(
+          JUS_PAY_AUTHENTICATION_FAILED,
+          PAYMENT_CHARGED
+        );
+        window.location.href = newUrl;
+      }
       dispatch(orderConfirmation(resultJson.orderId));
+      dispatch(updateTransactionDetailsForCODSuccess(resultJson));
     } catch (e) {
       dispatch(updateTransactionDetailsForCODFailure(e.message));
     }

@@ -54,7 +54,8 @@ import {
   SAVED_CARD_PAYMENT_MODE,
   E_WALLET,
   NO_COST_EMI,
-  STANDARD_EMI
+  STANDARD_EMI,
+  CASH_ON_DELIVERY
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -70,7 +71,7 @@ import {
   CART_PATH
 } from "../actions/cart.actions";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
-const PAYMENT_CHARGED = "CHARGED";
+export const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
 const NET_BANKING = "NB";
 const CART_GU_ID = "cartGuid";
@@ -1333,7 +1334,7 @@ class CheckOutPage extends React.Component {
       );
     }
     if (this.state.binValidationCOD) {
-      this.softReservationForCODPayment();
+      this.props.updateTransactionDetailsForCOD(CASH_ON_DELIVERY, "");
     }
   };
   handleSubmit = () => {
