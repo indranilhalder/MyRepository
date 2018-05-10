@@ -14,7 +14,8 @@ import {
 } from "../../auth/actions/user.actions";
 import {
   redeemCliqVoucher,
-  removeAddress
+  removeAddress,
+  cancelProduct
 } from "../../account/actions/account.actions";
 import {
   SUCCESS,
@@ -24,12 +25,14 @@ import {
   ERROR_MESSAGE_FOR_VERIFY_OTP,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  MY_ACCOUNT,
+  MY_ACCOUNT_ORDERS_PAGE
 } from "../../lib/constants";
 import { updateProfile } from "../../account/actions/account.actions.js";
 import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 import * as Cookies from "../../lib/Cookie";
-
+import { setDataLayerForMyAccountDirectCalls } from "../../lib/adobeUtils";
 import {
   applyBankOffer,
   releaseBankOffer,
@@ -55,6 +58,7 @@ import {
   setIfAllAuthCallsHaveSucceeded
 } from "../../auth/actions/auth.actions.js";
 import { displayToast } from "../../general/toast.actions";
+const ERROR_MESSAGE_IN_CANCELING_ORDER = "Error in Canceling order";
 const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
@@ -67,7 +71,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     displayToast: toastMessage => {
       dispatch(displayToast(toastMessage));
@@ -197,6 +201,17 @@ const mapDispatchToProps = dispatch => {
     },
     removeNoCostEmi: (couponCode, cartGuid, cartId) => {
       return dispatch(removeNoCostEmi(couponCode, cartGuid, cartId));
+    },
+    cancelProduct: async (cancelProductDetails, productDetials) => {
+      const cancelOrderDetails = await dispatch(
+        cancelProduct(cancelProductDetails)
+      );
+      if (cancelOrderDetails.status === SUCCESS) {
+        setDataLayerForMyAccountDirectCalls(productDetials);
+        ownProps.history.push(`${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}`);
+      } else {
+        dispatch(displayToast(ERROR_MESSAGE_IN_CANCELING_ORDER));
+      }
     }
   };
 };

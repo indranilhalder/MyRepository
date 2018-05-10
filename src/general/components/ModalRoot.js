@@ -5,6 +5,7 @@ import Loadable from "react-loadable";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import PriceBreakupModal from "../../pdp/components/PriceBreakupModal";
 import OrderModal from "../../account/components/OrderModal";
+import CancelOrderModal from "../../account/components/CancelOrderModal";
 import * as Cookie from "../../lib/Cookie.js";
 import {
   LOGGED_IN_USER_DETAILS,
@@ -332,6 +333,9 @@ export default class ModalRoot extends React.Component {
     this.props.history.push(LOGIN_PATH);
   };
 
+  cancelOrderProduct = (cancelProductDetails, productDetails) => {
+    this.props.cancelProduct(cancelProductDetails, productDetails);
+  };
   continueWithoutBankCoupon = async () => {
     const bankCouponCode = localStorage.getItem(BANK_COUPON_COOKIE);
     const userCouponCode = localStorage.getItem(COUPON_COOKIE);
@@ -582,6 +586,15 @@ export default class ModalRoot extends React.Component {
         <OrderModal
           data={this.props.ownProps}
           closeModal={() => this.handleClose()}
+        />
+      ),
+      CancelOrderPopUp: (
+        <CancelOrderModal
+          data={this.props.ownProps}
+          cancelModal={() => this.handleClose()}
+          cancelProduct={(cancelProductDetails, productDetails) =>
+            this.cancelOrderProduct(cancelProductDetails, productDetails)
+          }
         />
       )
     };
