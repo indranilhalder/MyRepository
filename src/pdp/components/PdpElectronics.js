@@ -168,8 +168,12 @@ export default class PdpElectronics extends React.Component {
   };
   render() {
     const productData = this.props.productDetails;
+    console.log(productData.galleryImagesList);
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
+          .filter(val => {
+            return val.mediaType === "Image";
+          })
           .map(galleryImageList => {
             return galleryImageList.galleryImages.filter(galleryImages => {
               return galleryImages.key === "product";
