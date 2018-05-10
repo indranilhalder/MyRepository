@@ -14,6 +14,10 @@ export default class ProductDetailsCard extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.productImageHolder}>
+          {this.props.outOfStock && (
+            <div className={styles.flag}>Out Of Stock</div>
+          )}
+
           <ProductImage
             image={this.props.productImage}
             onClickImage={() => this.onClickImage()}
@@ -74,5 +78,6 @@ ProductDetailsCard.propTypes = {
   price: PropTypes.string,
   discountPrice: PropTypes.string,
   averageRating: PropTypes.number,
-  totalNoOfReviews: PropTypes.number
+  totalNoOfReviews: PropTypes.number,
+  outOfStock: PropTypes.bool
 };

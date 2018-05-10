@@ -27,7 +27,12 @@ export default class OrderReturn extends React.Component {
         </div>
         {this.props.isEditable && (
           <div className={styles.reviewHolder}>
-            <div className={styles.review} onClick={() => this.writeReview()}>
+            <div
+              className={
+                this.props.isDisabled ? styles.reviewDesible : styles.review
+              }
+              onClick={() => this.writeReview()}
+            >
               <UnderLinedButton
                 label={this.props.underlineButtonLabel}
                 color={this.props.underlineButtonColour}
@@ -45,11 +50,13 @@ OrderReturn.propTypes = {
   buttonLabel: PropTypes.string,
   replaceItem: PropTypes.func,
   writeReview: PropTypes.func,
-  isEditable: PropTypes.bool
+  isEditable: PropTypes.bool,
+  isDisabled: PropTypes.bool
 };
 OrderReturn.defaultProps = {
   underlineButtonLabel: "Write a review",
   buttonLabel: "Return or Replace",
   underlineButtonColour: "#ff1744",
-  isEditable: false
+  isEditable: false,
+  isDisabled: false
 };

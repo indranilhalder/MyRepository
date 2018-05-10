@@ -109,6 +109,7 @@ export default class SaveListDetails extends React.Component {
               <div className={styles.listCardHolder} key={i}>
                 <SaveListCard
                   //productName={product.productBrand}
+                  outOfStock={product.availableStock === 0}
                   productMaterial={product.productName}
                   price={product.mrp && product.mrp.value}
                   date={format(product.date, dateFormat)}
@@ -122,6 +123,7 @@ export default class SaveListDetails extends React.Component {
                   }
                   onClickImage={() => this.onClickImage(product.productcode)}
                   removeItem={productUssid => this.removeItem(product.USSID)}
+                  isDisabled={product.availableStock === 0 ? true : false}
                 />
               </div>
             );
