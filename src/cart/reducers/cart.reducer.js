@@ -183,7 +183,8 @@ const cart = (
     paymentFailureOrderDetailsError: null,
     paymentFailureOrderDetails: null,
 
-    isSoftReservationFailed: false
+    isSoftReservationFailed: false,
+    isPaymentProceeded: false
   },
   action
 ) => {
@@ -744,7 +745,8 @@ const cart = (
       return Object.assign({}, state, {
         createJusPayStatus: action.status,
         createJusPayError: action.error,
-        jusPaymentLoader: false
+        jusPaymentLoader: false,
+        isPaymentProceeded: false
       });
 
     case cartActions.BIN_VALIDATION_REQUEST:
@@ -789,7 +791,8 @@ const cart = (
       return Object.assign({}, state, {
         transactionStatus: action.status,
         jusPayError: action.error,
-        jusPaymentLoader: false
+        jusPaymentLoader: false,
+        isPaymentProceeded: false
       });
 
     case cartActions.ORDER_CONFIRMATION_REQUEST:
@@ -804,7 +807,8 @@ const cart = (
         orderConfirmationDetails: action.confirmedOrderDetails,
         transactionStatus: action.status,
         jusPaymentLoader: false,
-        cliqCashJusPayDetails: null
+        cliqCashJusPayDetails: null,
+        isPaymentProceeded: false
       });
     }
 
@@ -813,7 +817,8 @@ const cart = (
         orderConfirmationDetailsStatus: action.status,
         transactionStatus: action.status,
         orderConfirmationDetailsError: action.error,
-        jusPaymentLoader: false
+        jusPaymentLoader: false,
+        isPaymentProceeded: false
       });
 
     case cartActions.CLEAR_ORDER_EXPERIENCE_CAPTURE:
@@ -851,7 +856,6 @@ const cart = (
         action.guid,
         VALIDITY_OF_OLD_CART_ID
       );
-
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetails: action.justPayPaymentDetails,
@@ -863,7 +867,8 @@ const cart = (
       return Object.assign({}, state, {
         justPayPaymentDetailsStatus: action.status,
         justPayPaymentDetailsError: action.error,
-        jusPaymentLoader: false
+        jusPaymentLoader: false,
+        isPaymentProceeded: false
       });
 
     case cartActions.GET_COD_ELIGIBILITY_REQUEST:
@@ -948,6 +953,7 @@ const cart = (
 
     case cartActions.SOFT_RESERVATION_FOR_COD_PAYMENT_REQUEST:
       return Object.assign({}, state, {
+        isPaymentProceeded: true,
         softReserveCODPaymentStatus: action.status,
         loading: true
       });
@@ -964,7 +970,8 @@ const cart = (
         softReserveCODPaymentStatus: action.status,
         softReserveCODPaymentError: action.error,
         loading: false,
-        isSoftReservationFailed: true
+        isSoftReservationFailed: true,
+        isPaymentProceeded: false
       });
 
     case cartActions.REMOVE_ITEM_FROM_CART_LOGGED_IN_REQUEST:
@@ -1083,6 +1090,7 @@ const cart = (
 
     case cartActions.SOFT_RESERVATION_FOR_PAYMENT_REQUEST:
       return Object.assign({}, state, {
+        isPaymentProceeded: true,
         softReservationForPaymentStatus: action.status,
         jusPaymentLoader: true
       });
@@ -1098,7 +1106,8 @@ const cart = (
         softReservationForPaymentStatus: action.status,
         softReservationForPaymentError: action.error,
         jusPaymentLoader: false,
-        isSoftReservationFailed: true
+        isSoftReservationFailed: true,
+        isPaymentProceeded:false
       });
 
     case cartActions.JUS_PAY_TOKENIZE_REQUEST:
@@ -1117,7 +1126,8 @@ const cart = (
       return Object.assign({}, state, {
         jusPayTokenizeStatus: action.status,
         jusPayTokenizeError: action.error,
-        jusPaymentLoader: false
+        jusPaymentLoader: false,
+        isPaymentProceeded: false
       });
 
     case cartActions.ELIGIBILITY_OF_NO_COST_EMI_REQUEST:
