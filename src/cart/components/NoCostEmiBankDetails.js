@@ -314,6 +314,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                         <BankSelect
                           image={val.logoUrl}
                           value={val.code}
+                          name={val.bankName}
                           key={i}
                           selectItem={() => this.handleSelect(i, val.code)}
                           selected={this.state.selectedCode === val.code}
@@ -373,19 +374,20 @@ export default class NoCostEmiBankDetails extends React.Component {
             {this.state.selectedMonth !== null &&
               this.props.noCostEmiDetails &&
               this.renderMonthsPlan()}
-            {this.state.selectedBankCode && (
-              <div className={styles.itemLevelButtonHolder}>
-                <div className={styles.itemLevelButton}>
-                  <UnderLinedButton
-                    size="14px"
-                    fontFamily="regular"
-                    color="#000"
-                    label="View T&C"
-                    onClick={() => this.termsAndCondition()}
-                  />
+            {this.state.selectedBankCode &&
+              this.state.selectedBankIndex !== null && (
+                <div className={styles.itemLevelButtonHolder}>
+                  <div className={styles.itemLevelButton}>
+                    <UnderLinedButton
+                      size="14px"
+                      fontFamily="regular"
+                      color="#000"
+                      label="View T&C"
+                      onClick={() => this.termsAndCondition()}
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         )}
 
