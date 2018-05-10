@@ -140,7 +140,6 @@ export function getProductListings(
       }
       queryString = `${queryString}&page=${pageNumber}`;
       queryString = `${queryString}${PRODUCT_LISTINGS_SUFFIX}`;
-      debugger;
       const result = await api.get(queryString);
       const resultJson = await result.json();
       if (resultJson.error) {

@@ -39,6 +39,7 @@ import {
 import styles from "./ProductDescriptionPage.css";
 
 const PRODUCT_QUANTITY = "1";
+const IMAGE = "Image";
 export default class PdpApparel extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
@@ -190,6 +191,9 @@ export default class PdpApparel extends React.Component {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
+          .filter(val => {
+            return val.mediaType === IMAGE;
+          })
           .map(galleryImageList => {
             return galleryImageList.galleryImages.filter(galleryImages => {
               return galleryImages.key === "product";

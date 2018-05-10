@@ -264,7 +264,7 @@ class CartPage extends React.Component {
           <TextWithUnderLine
             heading={
               defaultPinCode && defaultPinCode !== "undefined"
-                ? defaultPinCode
+                ? `Pincode-${defaultPinCode}`
                 : "Enter Pincode"
             }
             onClick={() => this.changePinCode()}
