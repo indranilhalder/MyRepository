@@ -161,7 +161,6 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
-    console.log(orderDetails);
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -245,9 +244,21 @@ export default class OrderDetails extends React.Component {
                     <OrderDelivered
                       deliveredAddress={`${
                         orderDetails.billingAddress.addressLine1
-                      } ${orderDetails.billingAddress.town} ${
+                          ? orderDetails.billingAddress.addressLine1
+                          : ""
+                      } ${
+                        orderDetails.billingAddress.town
+                          ? orderDetails.billingAddress.town
+                          : ""
+                      } ${
                         orderDetails.billingAddress.state
-                      } ${orderDetails.billingAddress.postalcode}`}
+                          ? orderDetails.billingAddress.state
+                          : ""
+                      } ${
+                        orderDetails.billingAddress.postalcode
+                          ? orderDetails.billingAddress.postalcode
+                          : ""
+                      }`}
                     />
                   )}
                 {products.statusDisplayMsg &&
