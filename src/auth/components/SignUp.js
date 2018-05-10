@@ -66,6 +66,9 @@ class SignUp extends Component {
       });
     }
   }
+  goBack() {
+    this.props.history.push(HOME_ROUTER);
+  }
   navigateToLogin() {
     this.props.history.push(LOGIN_PATH);
   }
@@ -129,6 +132,7 @@ class SignUp extends Component {
         footerText={footerText}
         footerClick={footerClick}
         isSignUp={true}
+        goBack={() => this.goBack()}
       >
         <div>
           <div>
