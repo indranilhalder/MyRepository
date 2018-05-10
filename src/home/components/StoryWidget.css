@@ -9,12 +9,11 @@
   height: auto;
   min-height: 40px;
   position: relative;
-  padding-left: 50px;
   color: #212121;
   font-size: 14px;
   line-height: 20px;
   margin-bottom: 20px;
-  padding: 0 30px;
+  padding: 0 30px 0 70px;
 }
 .brandImage {
   width: 40px;
@@ -22,9 +21,32 @@
   border-radius: 4px;
   overflow: hidden;
   position: absolute;
-  left: 0;
+  left: 20px;
   top: 0;
 }
+.timer {
+  width: 100%;
+  height: 3px;
+  background: #d8d8d8;
+  position: relative;
+}
+.timerHolder {
+  width: 100%;
+  height: auto;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+.timerProgress {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(267deg, #fd2c7a, #ff7255);
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* transform: scaleX(0); */
+  transform-origin: left;
+}
+
 .brandName {
   width: 100%;
   height: auto;
@@ -34,6 +56,18 @@
   width: 100%;
   height: auto;
   font-family: light;
+}
+.gallery {
+  width: 100%;
+  height: auto;
+  white-space: nowrap;
+  transition: 300ms;
+}
+.content {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 0 20px;
 }
 .productImage {
   width: 100%;
