@@ -15,7 +15,8 @@ import {
   setDataLayer,
   ADOBE_HOME_TYPE,
   ADOBE_BLP_PAGE_LOAD,
-  ADOBE_CLP_PAGE_LOAD
+  ADOBE_CLP_PAGE_LOAD,
+  ADOBE_STATIC_PAGE
 } from "../../lib/adobeUtils.js";
 import { setHeaderText } from "../../general/header.actions.js";
 import * as Cookie from "../../lib/Cookie";
@@ -334,6 +335,7 @@ export function homeFeed(brandIdOrCategoryId: null) {
     } else {
       dispatch(homeFeedRequest());
     }
+
     try {
       let url, result, feedTypeRequest, resultJson;
       if (brandIdOrCategoryId) {
@@ -356,13 +358,23 @@ export function homeFeed(brandIdOrCategoryId: null) {
               getState().icid.value,
               getState().icid.icidType
             );
-          } else if (BRAND_REGEX.test(brandIdOrCategoryId))
+          } else if (BRAND_REGEX.test(brandIdOrCategoryId)) {
             setDataLayer(
               ADOBE_BLP_PAGE_LOAD,
               resultJson,
               getState().icid.value,
               getState().icid.icidType
             );
+          } else if (
+            brandIdOrCategoryId === window.location.pathname.replace("/", "")
+          ) {
+            setDataLayer(
+              ADOBE_STATIC_PAGE,
+              resultJson,
+              getState().icid.value,
+              getState().icid.icidType
+            );
+          }
         }
       } else {
         let mbox = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
