@@ -189,7 +189,8 @@ class CheckOutPage extends React.Component {
       captchaReseponseForCOD: null,
       noCostEmiBankName: null,
       noCostEmiDiscount: "0.00",
-      isNoCostEmiProceeded: false
+      isNoCostEmiProceeded: false,
+      paymentModeSelected: null
     });
   };
   changeSubEmiOption(currentSelectedEMIType) {
@@ -1320,8 +1321,8 @@ class CheckOutPage extends React.Component {
         }
       } else {
         this.props.createJusPayOrderForNetBanking(
+          WALLET,
           PAYTM,
-          this.state.bankCodeForNetBanking,
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
           JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
         );
@@ -1457,7 +1458,7 @@ class CheckOutPage extends React.Component {
             this.props.location.state.egvCartGuid
           );
         } else {
-          this.props.softReservationPaymentForWallet(PAYTM);
+          this.softReservationPaymentForWallet(PAYTM);
         }
       }
       if (this.state.isNoCostEmiApplied) {
@@ -1494,6 +1495,8 @@ class CheckOutPage extends React.Component {
       localStorage.setItem(PAYMENT_MODE_TYPE, PAYTM);
       this.setState({ paymentModeSelected: PAYTM });
       this.props.binValidation(PAYTM, "");
+    } else {
+      this.setState({ paymentModeSelected: null });
     }
   };
   applyBankCoupons = async val => {
@@ -1702,6 +1705,7 @@ class CheckOutPage extends React.Component {
     }
   }
   render() {
+    console.log(this.state);
     let labelForButton,
       checkoutButtonStatus = false;
 
@@ -1750,6 +1754,15 @@ class CheckOutPage extends React.Component {
       } else {
         checkoutButtonStatus = true;
         labelForButton = PAY_NOW;
+      }
+    } else if (this.state.currentPaymentMode === E_WALLET) {
+      if (this.state.paymentModeSelected === PAYTM) {
+        labelForButton = PAY_NOW;
+        checkoutButtonStatus = false;
+      } else {
+        labelForButton = PROCEED;
+        console.log("comes in ");
+        checkoutButtonStatus = true;
       }
     } else if (this.state.currentPaymentMode === null) {
       labelForButton = PROCEED;
@@ -1872,6 +1885,7 @@ class CheckOutPage extends React.Component {
                 isPaymentFailed={this.state.isPaymentFailed}
                 isFromGiftCard={this.state.isGiftCard}
                 cart={this.props.cart}
+                paymentModeSelected={this.state.paymentModeSelected}
                 changeSubEmiOption={currentSelectedEMIType =>
                   this.changeSubEmiOption(currentSelectedEMIType)
                 }
