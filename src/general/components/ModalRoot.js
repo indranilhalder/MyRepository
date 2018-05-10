@@ -5,7 +5,6 @@ import Loadable from "react-loadable";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import PriceBreakupModal from "../../pdp/components/PriceBreakupModal";
 import OrderModal from "../../account/components/OrderModal";
-import CancelOrderModal from "../../account/components/CancelOrderModal";
 import * as Cookie from "../../lib/Cookie.js";
 import {
   LOGGED_IN_USER_DETAILS,
@@ -150,6 +149,12 @@ const InvalidBankCouponPopup = Loadable({
   }
 });
 
+const CancelOrderPopUp = Loadable({
+  loader: () => import("../../account/components/CancelOrderPopUp.js"),
+  loading() {
+    return <Loader />;
+  }
+});
 export default class ModalRoot extends React.Component {
   constructor(props) {
     super(props);
@@ -589,8 +594,9 @@ export default class ModalRoot extends React.Component {
         />
       ),
       CancelOrderPopUp: (
-        <CancelOrderModal
+        <CancelOrderPopUp
           data={this.props.ownProps}
+          loadingForCancelProduct={this.props.loadingForCancelProduct}
           cancelModal={() => this.handleClose()}
           cancelProduct={(cancelProductDetails, productDetails) =>
             this.cancelOrderProduct(cancelProductDetails, productDetails)

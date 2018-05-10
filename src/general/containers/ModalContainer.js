@@ -67,7 +67,8 @@ const mapStateToProps = (state, ownProps) => {
     user: state.user,
     loadingForGetOtpToActivateWallet:
       state.profile.loadingForGetOtpToActivateWallet,
-    loadingForVerifyWallet: state.profile.loadingForverifyWallet
+    loadingForVerifyWallet: state.profile.loadingForverifyWallet,
+    loadingForCancelProduct: state.profile.loadingForCancelProduct
   };
 };
 
