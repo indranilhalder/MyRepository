@@ -1643,10 +1643,14 @@ class CheckOutPage extends React.Component {
   validateCard() {
     if (
       !this.state.cardDetails.cardNumber ||
+      (this.state.cardDetails.cardNumber &&
+        this.state.cardDetails.cardNumber.length < 14) ||
       (!this.state.cardDetails.cardName ||
         (this.state.cardDetails.cardName &&
           this.state.cardDetails.cardName.length < 3)) ||
-      !this.state.cardDetails.cvvNumber ||
+      (!this.state.cardDetails.cvvNumber ||
+        (this.state.cardDetails.cvvNumber &&
+          this.state.cardDetails.cvvNumber.length < 3)) ||
       !this.state.cardDetails.monthValue ||
       !this.state.cardDetails.yearValue
     ) {
