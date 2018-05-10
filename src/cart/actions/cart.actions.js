@@ -2555,7 +2555,13 @@ export function createJusPayOrderForNetBanking(
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  const parsedQueryString = queryString.parse(window.location.search);
+  if (parsedQueryString.value) {
+    cartId = parsedQueryString.value;
+  } else {
+    cartId = JSON.parse(cartDetails).guid;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
 
@@ -2563,7 +2569,7 @@ export function createJusPayOrderForNetBanking(
       const result = await api.post(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
-        }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
+        }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&bankname=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
         }&juspayUrl=${jusPayUrl}`,
         cartItem
@@ -2827,7 +2833,7 @@ export function createJusPayOrderForCliqCash(
       }
       dispatch(createJusPayOrderSuccessForCliqCash(resultJson));
       dispatch(setBagCount(0));
-      localStorage.setItem(CART_BAG_DETAILS,[]);
+      localStorage.setItem(CART_BAG_DETAILS, []);
       dispatch(generateCartIdForLoggedInUser());
     } catch (e) {
       dispatch(createJusPayOrderFailure(e.message));
@@ -2979,7 +2985,7 @@ export function jusPayPaymentMethodType(
       ) {
         dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
         dispatch(setBagCount(0));
-        localStorage.setItem(CART_BAG_DETAILS,[]);
+        localStorage.setItem(CART_BAG_DETAILS, []);
         dispatch(generateCartIdForLoggedInUser());
       } else {
         throw new Error(resultJson.error_message);
@@ -3018,7 +3024,7 @@ export function jusPayPaymentMethodTypeForSavedCards(
       ) {
         dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
         dispatch(setBagCount(0));
-        localStorage.setItem(CART_BAG_DETAILS,[]);
+        localStorage.setItem(CART_BAG_DETAILS, []);
         dispatch(generateCartIdForLoggedInUser());
       } else {
         throw new Error(resultJson.error_message);
@@ -3095,7 +3101,7 @@ export function jusPayPaymentMethodTypeForNetBanking(
       ) {
         dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
         dispatch(setBagCount(0));
-        localStorage.setItem(CART_BAG_DETAILS,[]);
+        localStorage.setItem(CART_BAG_DETAILS, []);
         dispatch(generateCartIdForLoggedInUser());
       } else {
         throw new Error(resultJson.error_message);
