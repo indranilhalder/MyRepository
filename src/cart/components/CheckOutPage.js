@@ -880,6 +880,7 @@ class CheckOutPage extends React.Component {
     this.props.resetIsSoftReservationFailed();
   }
   componentDidMount() {
+
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsLoggedInUser = Cookie.getCookie(
@@ -1785,7 +1786,7 @@ class CheckOutPage extends React.Component {
         this.props.cart.loading ||
         this.props.cart.jusPaymentLoader ||
         this.props.cart.selectDeliveryModeLoader ||
-        (!this.props.cart.paymentModes && this.state.deliverMode)
+        (!this.props.cart.paymentModes && this.state.deliverMode) || this.props.cart.isPaymentProceeded
       ) {
         this.props.showSecondaryLoader();
       } else {
@@ -1823,6 +1824,7 @@ class CheckOutPage extends React.Component {
         !this.state.orderConfirmation) ||
       this.state.isGiftCard
     ) {
+
       return (
         <div className={styles.base}>
           {!this.state.isPaymentFailed &&
