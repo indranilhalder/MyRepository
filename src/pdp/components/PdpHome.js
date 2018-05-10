@@ -35,10 +35,12 @@ import {
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   COLLECT
 } from "../../lib/constants";
+
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import styles from "./ProductDescriptionPage.css";
 import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
-
+const VIDEO = "Video";
+const IMAGE = "Image";
 export default class PdpApparel extends React.Component {
   constructor(props) {
     super(props);
@@ -197,6 +199,9 @@ export default class PdpApparel extends React.Component {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
+          .filter(val => {
+            return val.mediaType === IMAGE;
+          })
           .map(galleryImageList => {
             return galleryImageList.galleryImages.filter(galleryImages => {
               return galleryImages.key === "product";
@@ -251,7 +256,6 @@ export default class PdpApparel extends React.Component {
               <ProductDetailsMainCard
                 brandName={productData.brandName}
                 productName={productData.productName}
-                productDescription={productData.productDescription}
                 brandUrl={productData.brandURL}
                 history={this.props.history}
                 price={price}
@@ -363,7 +367,7 @@ export default class PdpApparel extends React.Component {
                 headerFontSize={16}
                 isOpen={true}
               >
-                <div className={styles.accordionContent}>
+                <div className={styles.accordionContent} itemProp="description">
                   {productData.productDescription}
                 </div>
               </Accordion>

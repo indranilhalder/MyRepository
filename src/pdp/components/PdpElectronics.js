@@ -48,6 +48,8 @@ import {
 
 const DELIVERY_TEXT = "Delivery Options For";
 const PRODUCT_QUANTITY = "1";
+const VIDEO = "Video";
+const IMAGE = "Image";
 export default class PdpElectronics extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
@@ -170,6 +172,9 @@ export default class PdpElectronics extends React.Component {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
+          .filter(val => {
+            return val.mediaType === IMAGE;
+          })
           .map(galleryImageList => {
             return galleryImageList.galleryImages.filter(galleryImages => {
               return galleryImages.key === "product";
@@ -245,7 +250,6 @@ export default class PdpElectronics extends React.Component {
                 <ProductDetailsMainCard
                   brandName={productData.brandName}
                   productName={productData.productName}
-                  productDescription={productData.productDescription}
                   brandUrl={productData.brandURL}
                   history={this.props.history}
                   price={price}
@@ -258,7 +262,6 @@ export default class PdpElectronics extends React.Component {
               {productData.rootCategory === "Watches" && (
                 <JewelleryDetailsAndLink
                   brandName={productData.brandName}
-                  productDescription={productData.productDescription}
                   productName={productData.productName}
                   brandUrl={productData.brandURL}
                   history={this.props.history}
@@ -343,7 +346,10 @@ please try another pincode"
                   headerFontSize={16}
                   isOpen={true}
                 >
-                  <div className={styles.accordionContent}>
+                  <div
+                    className={styles.accordionContent}
+                    itemProp="description"
+                  >
                     {productData.productDescription}
                     <div style={{ marginTop: 10 }}>
                       {productData.details &&
@@ -380,7 +386,10 @@ please try another pincode"
                   headerFontSize={16}
                   isOpen={true}
                 >
-                  <div className={styles.accordionContent}>
+                  <div
+                    className={styles.accordionContent}
+                    itemProp="description"
+                  >
                     {productData.productDescription}
                   </div>
                 </Accordion>

@@ -19,6 +19,10 @@ import {
   MAIN_ROUTER,
   SOCIAL_LOG_IN
 } from "../../lib/constants";
+import {
+  setDataLayer,
+  ADOBE_LOGIN_AND_SIGN_UP_PAGE
+} from "../../lib/adobeUtils";
 
 export const EMAIL_REGULAR_EXPRESSION = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -32,7 +36,9 @@ class Login extends Component {
       passwordValue: props.passwordValue ? props.passwordValue : ""
     };
   }
-
+  componentDidMount() {
+    setDataLayer(ADOBE_LOGIN_AND_SIGN_UP_PAGE);
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.authCallsIsSucceed) {
       if (this.props.redirectToAfterAuthUrl) {

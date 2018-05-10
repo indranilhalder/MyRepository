@@ -12,7 +12,7 @@ import {
   EXPRESS,
   COLLECT,
   EXPRESS_TEXT,
-  HOME_TEXT,
+  STANDARD_SHIPPING,
   COLLECT_TEXT
 } from "../../lib/constants";
 
@@ -36,7 +36,7 @@ export default class CartItem extends React.Component {
   }
   getDeliveryName = type => {
     if (type === HOME_DELIVERY) {
-      return HOME_TEXT;
+      return STANDARD_SHIPPING;
     }
     if (type === EXPRESS) {
       return EXPRESS_TEXT;

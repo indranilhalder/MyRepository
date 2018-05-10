@@ -54,7 +54,8 @@ import {
   SAVED_CARD_PAYMENT_MODE,
   E_WALLET,
   NO_COST_EMI,
-  STANDARD_EMI
+  STANDARD_EMI,
+  CASH_ON_DELIVERY
 } from "../../lib/constants";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -70,7 +71,7 @@ import {
   CART_PATH
 } from "../actions/cart.actions";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
-const PAYMENT_CHARGED = "CHARGED";
+export const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
 const NET_BANKING = "NB";
 const CART_GU_ID = "cartGuid";
@@ -188,7 +189,8 @@ class CheckOutPage extends React.Component {
       captchaReseponseForCOD: null,
       noCostEmiBankName: null,
       noCostEmiDiscount: "0.00",
-      isNoCostEmiProceeded: false
+      isNoCostEmiProceeded: false,
+      paymentModeSelected: null
     });
   };
   changeSubEmiOption(currentSelectedEMIType) {
@@ -878,6 +880,7 @@ class CheckOutPage extends React.Component {
     this.props.resetIsSoftReservationFailed();
   }
   componentDidMount() {
+
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsLoggedInUser = Cookie.getCookie(
@@ -1319,8 +1322,8 @@ class CheckOutPage extends React.Component {
         }
       } else {
         this.props.createJusPayOrderForNetBanking(
+          WALLET,
           PAYTM,
-          this.state.bankCodeForNetBanking,
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
           JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
         );
@@ -1333,7 +1336,7 @@ class CheckOutPage extends React.Component {
       );
     }
     if (this.state.binValidationCOD) {
-      this.softReservationForCODPayment();
+      this.props.updateTransactionDetailsForCOD(CASH_ON_DELIVERY, "");
     }
   };
   handleSubmit = () => {
@@ -1456,7 +1459,7 @@ class CheckOutPage extends React.Component {
             this.props.location.state.egvCartGuid
           );
         } else {
-          this.props.softReservationPaymentForWallet(PAYTM);
+          this.softReservationPaymentForWallet(PAYTM);
         }
       }
       if (this.state.isNoCostEmiApplied) {
@@ -1493,6 +1496,8 @@ class CheckOutPage extends React.Component {
       localStorage.setItem(PAYMENT_MODE_TYPE, PAYTM);
       this.setState({ paymentModeSelected: PAYTM });
       this.props.binValidation(PAYTM, "");
+    } else {
+      this.setState({ paymentModeSelected: null });
     }
   };
   applyBankCoupons = async val => {
@@ -1750,6 +1755,15 @@ class CheckOutPage extends React.Component {
         checkoutButtonStatus = true;
         labelForButton = PAY_NOW;
       }
+    } else if (this.state.currentPaymentMode === E_WALLET) {
+      if (this.state.paymentModeSelected === PAYTM) {
+        labelForButton = PAY_NOW;
+        checkoutButtonStatus = false;
+      } else {
+        labelForButton = PROCEED;
+
+        checkoutButtonStatus = true;
+      }
     } else if (this.state.currentPaymentMode === null) {
       labelForButton = PROCEED;
       checkoutButtonStatus = true;
@@ -1772,7 +1786,7 @@ class CheckOutPage extends React.Component {
         this.props.cart.loading ||
         this.props.cart.jusPaymentLoader ||
         this.props.cart.selectDeliveryModeLoader ||
-        (!this.props.cart.paymentModes && this.state.deliverMode)
+        (!this.props.cart.paymentModes && this.state.deliverMode) || this.props.cart.isPaymentProceeded
       ) {
         this.props.showSecondaryLoader();
       } else {
@@ -1810,6 +1824,7 @@ class CheckOutPage extends React.Component {
         !this.state.orderConfirmation) ||
       this.state.isGiftCard
     ) {
+
       return (
         <div className={styles.base}>
           {!this.state.isPaymentFailed &&
@@ -1871,6 +1886,7 @@ class CheckOutPage extends React.Component {
                 isPaymentFailed={this.state.isPaymentFailed}
                 isFromGiftCard={this.state.isGiftCard}
                 cart={this.props.cart}
+                paymentModeSelected={this.state.paymentModeSelected}
                 changeSubEmiOption={currentSelectedEMIType =>
                   this.changeSubEmiOption(currentSelectedEMIType)
                 }
