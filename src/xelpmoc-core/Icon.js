@@ -18,15 +18,13 @@ export default class Icon extends React.Component {
           this.handleClick();
         }}
       >
-        <VisibilityChild>
-          <div
-            className={styles.image}
-            style={{
-              backgroundImage: `url(${this.props.image})`,
-              backgroundSize: `${this.props.backgroundSize}`
-            }}
-          />
-        </VisibilityChild>
+        <div
+          className={styles.image}
+          style={{
+            backgroundImage: `url(${this.props.image})`,
+            backgroundSize: `${this.props.backgroundSize}`
+          }}
+        />
       </div>
     );
   }

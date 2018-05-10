@@ -31,7 +31,7 @@ import {
   CART_BAG_DETAILS
 } from "../../lib/constants";
 import queryString, { parse } from "query-string";
-import {setBagCount} from "../../general/header.actions"
+import { setBagCount } from "../../general/header.actions";
 
 import {
   setDataLayer,
@@ -344,6 +344,7 @@ export const CART_ITEM_COOKIE = "cartItems";
 export const ADDRESS_FOR_PLACE_ORDER = "orderAddress";
 export const ANONYMOUS_USER = "anonymous";
 
+const ERROR_MESSAGE_FOR_CREATE_JUS_PAY_CALL = "Something went wrong";
 export function displayCouponRequest() {
   return {
     type: DISPLAY_COUPON_REQUEST,
@@ -452,26 +453,21 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
       );
 
       //set the local storage
-        //set local storage
-        localStorage.setItem(CART_BAG_DETAILS, []);
-        let cartProducts =[];
-        resultJson &&
-          each(resultJson.products, product => {
-            cartProducts.push(product.USSID);
-          });
-        localStorage.setItem(
-          CART_BAG_DETAILS,
-          JSON.stringify(cartProducts)
-        );
-        dispatch(setBagCount(cartProducts.length))
+      //set local storage
+      localStorage.setItem(CART_BAG_DETAILS, []);
+      let cartProducts = [];
+      resultJson &&
+        each(resultJson.products, product => {
+          cartProducts.push(product.USSID);
+        });
+      localStorage.setItem(CART_BAG_DETAILS, JSON.stringify(cartProducts));
+      dispatch(setBagCount(cartProducts.length));
       return dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
       return dispatch(cartDetailsFailure(e.message));
     }
   };
 }
-
-
 
 export function cartDetailsCNCRequest() {
   return {
@@ -2891,7 +2887,7 @@ export function jusPayPaymentMethodTypeFailure(error) {
   return {
     type: JUS_PAY_PAYMENT_METHOD_TYPE_FAILURE,
     status: ERROR,
-    error
+    error: ERROR_MESSAGE_FOR_CREATE_JUS_PAY_CALL
   };
 }
 
