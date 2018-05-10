@@ -1705,7 +1705,6 @@ class CheckOutPage extends React.Component {
     }
   }
   render() {
-    console.log(this.state);
     let labelForButton,
       checkoutButtonStatus = false;
 
