@@ -67,6 +67,7 @@ export default class NetBanking extends React.Component {
                 selectItem={() => this.handleSelectForIcon(axisBankCode)}
                 image={axisBankIcon}
                 selected={this.state.bankCode === axisBankCode}
+                name="Axis Bank"
               />
             ) : null}
             {this.props.bankList.find(bank => {
@@ -76,6 +77,7 @@ export default class NetBanking extends React.Component {
                 selectItem={() => this.handleSelectForIcon(hdfcBankCode)}
                 image={hdfcBankIcon}
                 selected={this.state.bankCode === hdfcBankCode}
+                name="HDFC BANK, LTD."
               />
             ) : null}
             {this.props.bankList.find(bank => {
@@ -85,6 +87,7 @@ export default class NetBanking extends React.Component {
                 selectItem={() => this.handleSelectForIcon(iciciBankCode)}
                 image={iciciBankIcon}
                 selected={this.state.bankCode === iciciBankCode}
+                name="ICICI Bank"
               />
             ) : null}
             {this.props.bankList.find(bank => {
@@ -94,6 +97,7 @@ export default class NetBanking extends React.Component {
                 selectItem={() => this.handleSelectForIcon(sbiBankCode)}
                 image={sbiBankIcon}
                 selected={this.state.bankCode === sbiBankCode}
+                name="State Bank of India"
               />
             ) : null}
             {this.props.bankList.find(bank => {
@@ -103,6 +107,7 @@ export default class NetBanking extends React.Component {
                 selectItem={() => this.handleSelectForIcon(kotakBankCode)}
                 image={kotakBankIcon}
                 selected={this.state.bankCode === kotakBankCode}
+                name="Kotak Bank"
               />
             ) : null}
             {this.props.bankList.find(bank => {
@@ -112,6 +117,7 @@ export default class NetBanking extends React.Component {
                 selectItem={() => this.handleSelectForIcon(induslandBankCode)}
                 image={induslandBankIcon}
                 selected={this.state.bankCode === induslandBankCode}
+                name="IndusInd Bank"
               />
             ) : null}
           </Grid>

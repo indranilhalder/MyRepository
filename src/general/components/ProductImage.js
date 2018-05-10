@@ -12,7 +12,7 @@ export default class ProductImage extends React.Component {
   }
   render() {
     return (
-      <div className={styles.base}>
+      <div className={this.props.flatImage ? styles.flatImage : styles.base}>
         <div className={styles.imageHolder} onClick={() => this.onClickImage()}>
           <VisibilityChild>
             <Image image={this.props.image} />
@@ -23,5 +23,6 @@ export default class ProductImage extends React.Component {
   }
 }
 ProductImage.propTypes = {
-  image: PropTypes.string
+  image: PropTypes.string,
+  flatImage: false
 };

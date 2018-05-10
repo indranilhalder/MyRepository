@@ -10,15 +10,20 @@ export default class BankSelect extends React.Component {
   }
   render() {
     return (
-      <div
-        className={this.props.selected ? styles.selected : styles.base}
-        onClick={() => {
-          this.handleClick();
-        }}
-      >
-        <div className={styles.image}>
-          <Image image={this.props.image} />
+      <div>
+        <div
+          className={this.props.selected ? styles.selected : styles.base}
+          onClick={() => {
+            this.handleClick();
+          }}
+        >
+          <div className={styles.image}>
+            <Image image={this.props.image} />
+          </div>
         </div>
+        {this.props.name && (
+          <div className={styles.name}>{this.props.name}</div>
+        )}
       </div>
     );
   }
