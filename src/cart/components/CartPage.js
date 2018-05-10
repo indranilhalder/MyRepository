@@ -107,7 +107,9 @@ class CartPage extends React.Component {
     if (prevProps.cart) {
       if (prevProps.cart.cartDetails !== this.props.cart.cartDetails) {
         let productServiceAvailability = filter(
-          this.props.cart.cartDetails.products,
+          this.props.cart &&
+            this.props.cart.cartDetails &&
+            this.props.cart.cartDetails.products,
           product => {
             return (
               product.pinCodeResponse === undefined ||
@@ -192,8 +194,7 @@ class CartPage extends React.Component {
     if (pinCode && this.state.isServiceable === true) {
       setDataLayerForCartDirectCalls(ADOBE_CALLS_FOR_ON_CLICK_CHECKOUT);
       this.props.history.push({
-        pathname: CHECKOUT_ROUTER,
-
+        pathname: CHECKOUT_ROUTER
       });
     }
     if (!pinCode) {

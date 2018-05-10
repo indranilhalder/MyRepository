@@ -50,6 +50,9 @@ export default class HollowHeader extends React.Component {
             onClick={() => this.goToCartPage()}
           >
             <Icon image={orderIcon} size={30} />
+            {this.props.bagCount > 0 && (
+              <div className={styles.bagCount}>{this.props.bagCount}</div>
+            )}
           </div>
           <div
             className={styles.downloadIconHolder}

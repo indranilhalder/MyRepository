@@ -30,6 +30,21 @@ export const UPDATE_FACETS = "UPDATE_FACETS";
 
 export const SET_PAGE = "SET_PAGE";
 
+export const FILTER_HAS_BEEN_CLICKED = "FILTER_HAS_BEEN_CLICKED";
+export const SORT_HAS_BEEN_CLICKED = "SORT_HAS_BEEN_CLICKED";
+
+export function setIfSortHasBeenClicked() {
+  return {
+    type: SORT_HAS_BEEN_CLICKED
+  };
+}
+
+export function setIfFilterHasBeenClicked() {
+  return {
+    type: FILTER_HAS_BEEN_CLICKED
+  };
+}
+
 export function setFilterSelectedData(isCategorySelected, filterTabIndex) {
   return {
     type: SET_FILTER_SELECTED_DATA,
@@ -117,6 +132,7 @@ export function getProductListings(
       const encodedString = searchState.string.includes("%3A")
         ? searchState.string
         : encodeURI(searchState.string);
+
       let queryString = `${PRODUCT_LISTINGS_PATH}/?searchText=${encodedString}`;
 
       if (suffix) {
@@ -124,6 +140,7 @@ export function getProductListings(
       }
       queryString = `${queryString}&page=${pageNumber}`;
       queryString = `${queryString}${PRODUCT_LISTINGS_SUFFIX}`;
+      debugger;
       const result = await api.get(queryString);
       const resultJson = await result.json();
       if (resultJson.error) {

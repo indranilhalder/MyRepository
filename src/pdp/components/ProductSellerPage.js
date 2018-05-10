@@ -129,8 +129,6 @@ class ProductSellerPage extends Component {
   };
 
   render() {
-    console.log("PRODUCT DETAILS");
-    console.log(this.props.productDetails);
     const sellers = this.props.productDetails
       ? this.props.productDetails.otherSellers
       : [];

@@ -47,9 +47,9 @@ export default class OrderDetails extends React.Component {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
     }
   }
-  requestInvoice(ussid, sellerOrderNo) {
+  requestInvoice(lineID, orderNumber) {
     if (this.props.sendInvoice) {
-      this.props.sendInvoice(ussid, sellerOrderNo);
+      this.props.sendInvoice(lineID, orderNumber);
     }
   }
   handleshowShippingDetails(val) {
@@ -161,7 +161,6 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
-
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -234,18 +233,34 @@ export default class OrderDetails extends React.Component {
                   isInvoiceAvailable={products.isInvoiceAvailable}
                   statusDisplay={products.statusDisplayMsg}
                   request={() =>
-                    this.requestInvoice(products.USSID, products.sellerorderno)
+                    this.requestInvoice(
+                      products.transactionId,
+                      products.sellerorderno
+                    )
                   }
                 />
-                {orderDetails.billingAddress && (
-                  <OrderDelivered
-                    deliveredAddress={`${
-                      orderDetails.billingAddress.addressLine1
-                    } ${orderDetails.billingAddress.town} ${
-                      orderDetails.billingAddress.state
-                    } ${orderDetails.billingAddress.postalcode}`}
-                  />
-                )}
+                {orderDetails.billingAddress &&
+                  Object.keys(orderDetails.billingAddress).length !== 0 && (
+                    <OrderDelivered
+                      deliveredAddress={`${
+                        orderDetails.billingAddress.addressLine1
+                          ? orderDetails.billingAddress.addressLine1
+                          : ""
+                      } ${
+                        orderDetails.billingAddress.town
+                          ? orderDetails.billingAddress.town
+                          : ""
+                      } ${
+                        orderDetails.billingAddress.state
+                          ? orderDetails.billingAddress.state
+                          : ""
+                      } ${
+                        orderDetails.billingAddress.postalcode
+                          ? orderDetails.billingAddress.postalcode
+                          : ""
+                      }`}
+                    />
+                  )}
                 {products.statusDisplayMsg &&
                   products.selectedDeliveryMode.code !== CLICK_COLLECT && (
                     <div className={styles.orderStatusVertical}>
@@ -284,15 +299,25 @@ export default class OrderDetails extends React.Component {
                     <div className={styles.orderStatusVertical}>
                       <div className={styles.header}>Store details:</div>
                       <div className={styles.row}>
-                        {products.storeDetails.displayName && (
-                          <span>{products.storeDetails.displayName} ,</span>
-                        )}{" "}
-                        {products.storeDetails.returnAddress1 && (
-                          <span>{products.storeDetails.returnAddress1} ,</span>
-                        )}{" "}
-                        {products.storeDetails.returnAddress2 && (
-                          <span>{products.storeDetails.returnAddress2}</span>
-                        )}{" "}
+                        {products.storeDetails.displayName &&
+                          products.storeDetails.displayName !== undefined &&
+                          products.storeDetails.displayName !== "undefined" && (
+                            <span>{products.storeDetails.displayName} ,</span>
+                          )}{" "}
+                        {products.storeDetails.returnAddress1 &&
+                          products.storeDetails.returnAddress1 !== undefined &&
+                          products.storeDetails.returnAddress1 !==
+                            "undefined" && (
+                            <span>
+                              {products.storeDetails.returnAddress1} ,
+                            </span>
+                          )}{" "}
+                        {products.storeDetails.returnAddress2 &&
+                          products.storeDetails.returnAddress2 !== undefined &&
+                          products.storeDetails.returnAddress2 !==
+                            "undefined" && (
+                            <span>{products.storeDetails.returnAddress2}</span>
+                          )}{" "}
                       </div>
                       <div className={styles.row}>
                         {products.storeDetails.returnCity}{" "}
