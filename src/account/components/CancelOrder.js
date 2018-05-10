@@ -27,9 +27,7 @@ export default class CancelOrder extends React.Component {
   }
   finalSubmit(reason) {
     if (reason.cancelReasonCode) {
-      if (window.confirm("Are you sure you want to cancel your order ?")) {
-        this.cancelOrder(reason);
-      }
+      this.cancelOrder(reason);
     } else {
       this.props.displayToast(SELECT_REASON_MESSAGE);
     }
@@ -42,10 +40,16 @@ export default class CancelOrder extends React.Component {
     cancelProductDetails.ticketTypeCode = "C";
     cancelProductDetails.reasonCode = reason.cancelReasonCode;
     cancelProductDetails.refundType = "";
-    this.props.cancelProduct(
-      cancelProductDetails,
-      this.props.cancelProductDetails.orderProductWsDTO[0]
-    );
+    let orderDetails = {};
+    orderDetails.cancelProductDetails = cancelProductDetails;
+    orderDetails.productDetails =
+      this.props.cancelProductDetails &&
+      this.props.cancelProductDetails.orderProductWsDTO &&
+      this.props.cancelProductDetails.orderProductWsDTO[0];
+
+    if (this.props.showCancelOrderModal) {
+      this.props.showCancelOrderModal(orderDetails);
+    }
   };
   onCancel() {
     this.props.history.goBack();

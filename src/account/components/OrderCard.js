@@ -17,6 +17,7 @@ export default class OrderCard extends React.Component {
           <ProductImage
             image={this.props.imageUrl}
             onClickImage={() => this.onClick()}
+            flatImage={this.props.productName === "Gift Card"}
           />
         </div>
         <div className={styles.productDetails}>
