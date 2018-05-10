@@ -4,7 +4,8 @@ const header = (
     text: null,
     status: null,
     loading: false,
-    error: null
+    error: null,
+    bagCount: 0
   },
   action
 ) => {
@@ -18,6 +19,10 @@ const header = (
       return Object.assign({}, state, {
         text: null,
         status: action.status
+      });
+    case headerAction.SET_BAG_COUNT:
+      return Object.assign({}, state, {
+        bagCount: action.bagCount
       });
     default:
       return state;

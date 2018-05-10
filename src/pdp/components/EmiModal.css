@@ -28,10 +28,24 @@
 .termsAndConditions {
   background: #ececec;
   padding: 10px;
+  font-family: light;
+  font-size: 14px;
 }
 .termsAndConditions li {
   font-size: 14px;
   line-height: 22px;
   font-family: regular;
   margin-bottom: 5px;
+}
+.bankNameHeader {
+  width: 100%;
+}
+.bankNameHeader {
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  color: #000;
+  font-family: semibold;
+  font-size: 14px;
+  background: #ececec;
 }

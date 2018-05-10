@@ -27,9 +27,11 @@ import {
   JUS_PAY_CHARGED,
   FAILURE_LOWERCASE,
   SOFT_RESERVATION_ITEM,
-  ADDRESS_DETAILS_FOR_PAYMENT
+  ADDRESS_DETAILS_FOR_PAYMENT,
+  CART_BAG_DETAILS
 } from "../../lib/constants";
 import queryString, { parse } from "query-string";
+import { setBagCount } from "../../general/header.actions";
 
 import {
   setDataLayer,
@@ -329,6 +331,8 @@ export const PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS =
   "PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS";
 export const PAYMENT_FAILURE_ORDER_DETAILS_FAILURE =
   "PAYMENT_FAILURE_ORDER_DETAILS_FAILURE";
+export const RESET_IS_SOFT_RESERVATION_FAILED =
+  "RESET_IS_SOFT_RESERVATION_FAILED";
 
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
@@ -340,6 +344,7 @@ export const CART_ITEM_COOKIE = "cartItems";
 export const ADDRESS_FOR_PLACE_ORDER = "orderAddress";
 export const ANONYMOUS_USER = "anonymous";
 
+const ERROR_MESSAGE_FOR_CREATE_JUS_PAY_CALL = "Something went wrong";
 export function displayCouponRequest() {
   return {
     type: DISPLAY_COUPON_REQUEST,
@@ -446,6 +451,17 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
         getState().icid.value,
         getState().icid.icidType
       );
+
+      //set the local storage
+      //set local storage
+      localStorage.setItem(CART_BAG_DETAILS, []);
+      let cartProducts = [];
+      resultJson &&
+        each(resultJson.products, product => {
+          cartProducts.push(product.USSID);
+        });
+      localStorage.setItem(CART_BAG_DETAILS, JSON.stringify(cartProducts));
+      dispatch(setBagCount(cartProducts.length));
       return dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
       return dispatch(cartDetailsFailure(e.message));
@@ -1320,7 +1336,7 @@ export function mergeCartId(cartGuId) {
         throw new Error(resultJsonStatus.message);
       }
 
-      return dispatch(mergeCartIdFailure(resultJson));
+      return dispatch(mergeCartIdSuccess(resultJson));
     } catch (e) {
       return dispatch(mergeCartIdFailure(e.message));
     }
@@ -2871,7 +2887,7 @@ export function jusPayPaymentMethodTypeFailure(error) {
   return {
     type: JUS_PAY_PAYMENT_METHOD_TYPE_FAILURE,
     status: ERROR,
-    error
+    error: ERROR_MESSAGE_FOR_CREATE_JUS_PAY_CALL
   };
 }
 
@@ -4155,5 +4171,11 @@ export function getPaymentFailureOrderDetails() {
     } catch (e) {
       dispatch(getPaymentFailureOrderDetailsFailure(e.message));
     }
+  };
+}
+
+export function resetIsSoftReservationFailed() {
+  return {
+    type: RESET_IS_SOFT_RESERVATION_FAILED
   };
 }

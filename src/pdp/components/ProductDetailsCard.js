@@ -3,6 +3,7 @@ import styles from "./ProductDetailsCard.css";
 import ProductImage from "../../general/components/ProductImage.js";
 import StarRating from "../../general/components/StarRating.js";
 import PropTypes from "prop-types";
+import { RUPEE_SYMBOL } from "../../lib/constants";
 export default class ProductDetailsCard extends React.Component {
   onClickImage() {
     if (this.props.onClickImage) {
@@ -19,20 +20,28 @@ export default class ProductDetailsCard extends React.Component {
           />
         </div>
         <div className={styles.productDescriptionHolder}>
-          <div className={styles.productName}>{this.props.productName}</div>
+          {this.props.productName && (
+            <div className={styles.productName}>{this.props.productName}</div>
+          )}
           <div className={styles.producMaterial}>
             {this.props.productMaterial}
           </div>
 
           <div className={styles.productPrice}>
             {this.props.price && (
-              <span className={styles.onPrice}>{this.props.price}</span>
+              <span className={styles.onPrice}>
+                {this.props.price.toString().includes(RUPEE_SYMBOL)
+                  ? this.props.price
+                  : `${RUPEE_SYMBOL}${this.props.price}`}
+              </span>
             )}
             {this.props.discountPrice &&
               this.props.discountPrice !== this.props.price && (
                 <del>
                   <span className={styles.deletePrice}>
-                    {this.props.discountPrice}
+                    {this.props.discountPrice.toString().includes(RUPEE_SYMBOL)
+                      ? this.props.discountPrice
+                      : `${RUPEE_SYMBOL}${this.props.discountPrice}`}
                   </span>
                 </del>
               )}

@@ -13,8 +13,8 @@ import { URL_ROOT } from "./apiRequest";
 export const getPdpSchemaMetaTags = productDetails => {
   return (
     <MetaTags>
-      <meta itemprop="priceCurrency" content="INR" />
-      <meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
+      <meta itemProp="priceCurrency" content="INR" />
+      <meta itemProp="itemCondition" content="http://schema.org/NewCondition" />
     </MetaTags>
   );
 };
@@ -43,10 +43,10 @@ export const renderMetaTags = (productDetails, isReviewPage: false) => {
 
   let description = productDetails.seo.description;
   if (isReviewPage) {
-    description = `${productDetails.seo.title} Review - Check ${
-      productDetails.seo.title
+    description = `${productDetails.productName} Review - Check ${
+      productDetails.productName
     } reviews, rating & other specifications.`;
-    title = `${productDetails.seo.title} Reviews & Ratings - Tata CLiQ`;
+    title = `${productDetails.productName} Reviews & Ratings - Tata CLiQ`;
   }
 
   return (
@@ -57,12 +57,12 @@ export const renderMetaTags = (productDetails, isReviewPage: false) => {
       <link
         rel="canonical"
         href={`${URL_ROOT}${canonicalUrl}`}
-        hreflang="en-in"
+        hrefLang="en-in"
       />
       <link
         rel="alternate"
         href={`${URL_ROOT}${alternateUrl}`}
-        hreflang="en-in"
+        hrefLang="en-in"
       />
       {renderOgTags(productDetails, isReviewPage)}
     </MetaTags>
@@ -76,8 +76,8 @@ export const renderMetaTagsWithoutSeoObject = () => {
       <title> {TITLE_DEFAULT}</title>
       <meta name="description" content={description} />
 
-      <link rel="canonical" href={window.location.href} hreflang="en-in" />
-      <link rel="alternate" href={window.location.href} hreflang="en-in" />
+      <link rel="canonical" href={window.location.href} hrefLang="en-in" />
+      <link rel="alternate" href={window.location.href} hrefLang="en-in" />
       {renderOgTags()}
     </MetaTags>
   );
@@ -106,32 +106,34 @@ export const renderOgTags = (productDetails, isReviewPage: false) => {
     facebookTitle = productDetails.seo.title;
     facebookImageUrl = productDetails.seo.imageURL;
     if (isReviewPage) {
-      googleTitle = `${productDetails.seo.title} Reviews & Ratings - Tata CLiQ`;
+      googleTitle = `${
+        productDetails.productName
+      } Reviews & Ratings - Tata CLiQ`;
       twitterTitle = `${
-        productDetails.seo.title
+        productDetails.productName
       } Reviews & Ratings - Tata CLiQ`;
       facebookTitle = `${
-        productDetails.seo.title
+        productDetails.productName
       } Reviews & Ratings - Tata CLiQ`;
-      googleDescription = `${productDetails.seo.title} Review - Check ${
-        productDetails.seo.title
+      googleDescription = `${productDetails.productName} Review - Check ${
+        productDetails.productName
       } reviews, rating & other specifications.`;
-      facebookDescription = `${productDetails.seo.title} Review - Check ${
-        productDetails.seo.title
+      facebookDescription = `${productDetails.productName} Review - Check ${
+        productDetails.productName
       } reviews, rating & other specifications.`;
-      twitterDescription = `${productDetails.seo.title} Review - Check ${
-        productDetails.seo.title
+      twitterDescription = `${productDetails.productName} Review - Check ${
+        productDetails.productName
       } reviews, rating & other specifications.`;
     }
   }
 
   return (
     <React.Fragment>
-      <meta itemprop="name" content={googleTitle} />
+      <meta itemProp="name" content={googleTitle} />
       {googleDescription && (
-        <meta itemprop="description" content={googleDescription} />
+        <meta itemProp="description" content={googleDescription} />
       )}
-      <meta itemprop="image" content={googleImageUrl} />
+      <meta itemProp="image" content={googleImageUrl} />
       <meta name="twitter:card" content="Website" />
       <meta name="twitter:site" content="@tatacliq" />
       <meta name="twitter:title" content={twitterTitle} />

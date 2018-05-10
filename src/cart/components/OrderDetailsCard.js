@@ -62,7 +62,7 @@ export default class OrderDetailsCard extends React.Component {
         </OrderCard>
         <PriceAndLink
           onViewDetails={() => this.onViewDetails()}
-          price={this.props.orderDetails.subTotal}
+          price={this.props.orderDetails.finalAmount}
         />
         <div className={styles.informationDataHolder}>
           {this.props.orderDetails.shippingAddress && (

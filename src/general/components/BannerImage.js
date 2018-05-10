@@ -44,13 +44,10 @@ export default class Banner extends React.Component {
             />
             <div className={styles.overlay}>
               <div className={styles.logoAndText}>
-                <div className={styles.logo}>
-                  <Logo
-                    image={this.props.logo}
-                    imageHeight="auto"
-                    imageWidth="100%"
-                  />
-                </div>
+                <div
+                  className={styles.logo}
+                  style={{ backgroundImage: `url(${this.props.logo})` }}
+                />
                 {this.props.title && (
                   <div className={styles.title}>{this.props.title}</div>
                 )}

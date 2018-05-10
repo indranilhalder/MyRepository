@@ -212,7 +212,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             noCostEmiDetails.noCostEMIDiscountValue.value && (
               <div className={styles.discount}>
                 <div className={styles.amountLabel}>No Cost EMI Discount</div>
-                <div className={styles.amount}>{`-Rs. ${Math.round(
+                <div className={styles.amountDiscount}>{`-Rs. ${Math.round(
                   noCostEmiDetails.noCostEMIDiscountValue.value * 100
                 ) / 100}`}</div>
               </div>
@@ -223,7 +223,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             noCostEmiDetails.noCostEMITotalPayable &&
             noCostEmiDetails.noCostEMITotalPayable.value && (
               <div className={styles.totalAmountLabel}>
-                <div className={styles.amountLabel}>Total Amount Payable</div>
+                <div className={styles.amountPayble}>Total Amount Payable</div>
                 <div className={styles.amount}>{`Rs. ${Math.round(
                   noCostEmiDetails.noCostEMITotalPayable.value * 100
                 ) / 100}`}</div>
@@ -234,7 +234,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             noCostEmiDetails.noCostEMIPerMonthPayable.value && (
               <div className={styles.totalAmountLabel}>
                 <div className={styles.amountLabel}>EMI p.m</div>
-                <div className={styles.amount}>{`Rs. ${Math.round(
+                <div className={styles.amountEmi}>{`Rs. ${Math.round(
                   noCostEmiDetails.noCostEMIPerMonthPayable.value * 100
                 ) / 100}`}</div>
               </div>
@@ -297,9 +297,8 @@ export default class NoCostEmiBankDetails extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.bankText}>
-          Tata CLIQ does not levy any charges on EMIs taken. Charges, if any,
-          are levied for your bank. Please check with your bank for charges
-          related to interest, processing fees, refunds or pre-closures.
+          Tata CLiQ does not levy any charges on EMIs taken. Charges, if any,
+          are levied by your bank
         </div>
         {!this.props.isNoCostEmiProceeded && (
           <div>
@@ -329,6 +328,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                   <SelectBoxMobile2
                     height={33}
                     placeholder={"Other Bank"}
+                    backgroundColor="#fff"
                     isEnable={this.state.selectedFromDropDown}
                     options={filteredBankListWithOutLogo.map((val, i) => {
                       return {
@@ -340,19 +340,7 @@ export default class NoCostEmiBankDetails extends React.Component {
                   />
                 </div>
               )}
-            {this.state.selectedBankCode && (
-              <div className={styles.itemLevelButtonHolder}>
-                <div className={styles.itemLevelButton}>
-                  <UnderLinedButton
-                    size="14px"
-                    fontFamily="regular"
-                    color="#000"
-                    label="View T&C"
-                    onClick={() => this.termsAndCondition()}
-                  />
-                </div>
-              </div>
-            )}
+
             {this.state.selectedBankIndex !== null && (
               <div className={styles.emiDetailsPlan}>
                 <div className={styles.labelHeader}>
@@ -385,6 +373,19 @@ export default class NoCostEmiBankDetails extends React.Component {
             {this.state.selectedMonth !== null &&
               this.props.noCostEmiDetails &&
               this.renderMonthsPlan()}
+            {this.state.selectedBankCode && (
+              <div className={styles.itemLevelButtonHolder}>
+                <div className={styles.itemLevelButton}>
+                  <UnderLinedButton
+                    size="14px"
+                    fontFamily="regular"
+                    color="#000"
+                    label="View T&C"
+                    onClick={() => this.termsAndCondition()}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         )}
 

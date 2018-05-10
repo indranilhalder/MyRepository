@@ -110,7 +110,8 @@ export default class SelectBoxMobile extends React.Component {
         className={themeClass}
         style={{
           height: this.props.height,
-          lineHeight: `${this.props.height}px`
+          lineHeight: `${this.props.height}px`,
+          backgroundColor: this.props.backgroundColor
         }}
       >
         <select
@@ -156,6 +157,7 @@ export default class SelectBoxMobile extends React.Component {
 }
 SelectBoxMobile.propTypes = {
   height: PropTypes.number,
+  backgroundColor: PropTypes.string,
   options: PropTypes.arrayOf(
     PropTypes.shape({ value: PropTypes.string, label: PropTypes.string })
   ),

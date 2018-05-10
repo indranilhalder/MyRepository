@@ -10,7 +10,6 @@ import OfferCard from "./OfferCard";
 import OtherSellersLink from "./OtherSellersLink";
 import PdpPaymentInfo from "./PdpPaymentInfo";
 import ProductDetails from "./ProductDetails";
-import ProductFeatures from "./ProductFeatures";
 import ProductFeature from "./ProductFeature";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
@@ -19,7 +18,6 @@ import PdpDeliveryModes from "./PdpDeliveryModes";
 import Overlay from "./Overlay";
 import Accordion from "../../general/components/Accordion.js";
 import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
-import VisibilityChild from "../../home/components/VisibilityChild.js";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -41,7 +39,6 @@ import {
 import styles from "./ProductDescriptionPage.css";
 
 const PRODUCT_QUANTITY = "1";
-const DELIVERY_TEXT = "Delivery Options For";
 export default class PdpApparel extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
@@ -244,8 +241,9 @@ export default class PdpApparel extends React.Component {
           </div>
           <div className={styles.content}>
             <ProductDetailsMainCard
-              productName={productData.brandName}
-              productDescription={productData.productName}
+              brandName={productData.brandName}
+              productName={productData.productName}
+              productDescription={productData.productDescription}
               brandUrl={productData.brandURL}
               history={this.props.history}
               price={price}

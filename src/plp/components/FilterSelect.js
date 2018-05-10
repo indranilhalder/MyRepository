@@ -4,12 +4,20 @@ import CheckBox from "../../general/components/CheckBox.js";
 import styles from "./FilterSelect.css";
 
 export default class FilterSelect extends React.Component {
-  handleClick() {
+  handleUrlClick = e => {
+    e.preventDefault();
     if (this.props.onClick) {
       this.props.onClick(this.props.url);
     }
-  }
-  render() {
+  };
+
+  handleClick = () => {
+    if (this.props.onClick) {
+      this.props.onClick(this.props.url);
+    }
+  };
+
+  renderBody = () => {
     let contentClass = styles.itemContent;
     let countStyle = styles.count;
     if (this.props.selected) {
@@ -17,10 +25,7 @@ export default class FilterSelect extends React.Component {
       countStyle = styles.countSelected;
     }
     return (
-      <div
-        className={this.props.hexColor ? styles.itemHasColour : styles.item}
-        onClick={() => this.handleClick()}
-      >
+      <React.Fragment>
         {this.props.hexColor && (
           <div
             className={styles.colourIndicator}
@@ -41,6 +46,33 @@ export default class FilterSelect extends React.Component {
             <CheckBox selected={this.props.selected} />
           </div>
         </div>
+      </React.Fragment>
+    );
+  };
+
+  constructCategoryAndBrandUrl = () => {
+    return `${
+      this.props.history.location.pathname
+    }/b-${this.props.value.toLowerCase()}`;
+  };
+  render() {
+    if (this.props.isBrand && this.props.categoryId) {
+      return (
+        <a
+          className={this.props.hexColor ? styles.itemHasColour : styles.item}
+          onClick={this.handleUrlClick}
+          href={this.constructCategoryAndBrandUrl()}
+        >
+          {this.renderBody()}
+        </a>
+      );
+    }
+    return (
+      <div
+        className={this.props.hexColor ? styles.itemHasColour : styles.item}
+        onClick={this.handleClick}
+      >
+        {this.renderBody()}
       </div>
     );
   }
