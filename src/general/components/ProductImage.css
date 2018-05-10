@@ -3,6 +3,10 @@
   padding-bottom: 133%;
   position: relative;
 }
+.flatImage {
+  composes: base;
+  padding-bottom: 64%;
+}
 .imageHolder {
   position: absolute;
   top: 0px;
