@@ -73,9 +73,6 @@ export default class ProductDetailsMainCard extends React.Component {
                 <h1 className={styles.productName}>{this.props.productName}</h1>
               </div>
             </a>
-            <div className={styles.productDescription} itemProp="description">
-              {this.props.productDescription}
-            </div>
           </div>
           <div
             itemProp="offers"
