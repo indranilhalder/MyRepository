@@ -33,7 +33,7 @@ export default class ProductDescription extends Component {
     return (
       <div className={styles.base}>
         <div className={headerClass}>
-          <h3 className={headerText}>{this.props.title}</h3>
+          <h2 className={headerText}>{this.props.title}</h2>
           {this.props.showWishListButton &&
             this.props.productListingId &&
             this.props.winningUssID &&
@@ -49,7 +49,7 @@ export default class ProductDescription extends Component {
         </div>
         <div className={contentClass}>
           {this.props.description && (
-            <h3 className={styles.description}>{this.props.description}</h3>
+            <h2 className={styles.description}>{this.props.description}</h2>
           )}
 
           {this.props.discountPrice &&

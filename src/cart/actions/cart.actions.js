@@ -27,9 +27,11 @@ import {
   JUS_PAY_CHARGED,
   FAILURE_LOWERCASE,
   SOFT_RESERVATION_ITEM,
-  ADDRESS_DETAILS_FOR_PAYMENT
+  ADDRESS_DETAILS_FOR_PAYMENT,
+  CART_BAG_DETAILS
 } from "../../lib/constants";
 import queryString, { parse } from "query-string";
+import { setBagCount } from "../../general/header.actions";
 
 import {
   setDataLayer,
@@ -329,6 +331,8 @@ export const PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS =
   "PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS";
 export const PAYMENT_FAILURE_ORDER_DETAILS_FAILURE =
   "PAYMENT_FAILURE_ORDER_DETAILS_FAILURE";
+export const RESET_IS_SOFT_RESERVATION_FAILED =
+  "RESET_IS_SOFT_RESERVATION_FAILED";
 
 export const PAYMENT_MODE = "credit card";
 const PAYMENT_EMI = "EMI";
@@ -340,6 +344,7 @@ export const CART_ITEM_COOKIE = "cartItems";
 export const ADDRESS_FOR_PLACE_ORDER = "orderAddress";
 export const ANONYMOUS_USER = "anonymous";
 
+const ERROR_MESSAGE_FOR_CREATE_JUS_PAY_CALL = "Something went wrong";
 export function displayCouponRequest() {
   return {
     type: DISPLAY_COUPON_REQUEST,
@@ -446,6 +451,17 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
         getState().icid.value,
         getState().icid.icidType
       );
+
+      //set the local storage
+      //set local storage
+      localStorage.setItem(CART_BAG_DETAILS, []);
+      let cartProducts = [];
+      resultJson &&
+        each(resultJson.products, product => {
+          cartProducts.push(product.USSID);
+        });
+      localStorage.setItem(CART_BAG_DETAILS, JSON.stringify(cartProducts));
+      dispatch(setBagCount(cartProducts.length));
       return dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
       return dispatch(cartDetailsFailure(e.message));
@@ -1320,7 +1336,7 @@ export function mergeCartId(cartGuId) {
         throw new Error(resultJsonStatus.message);
       }
 
-      return dispatch(mergeCartIdFailure(resultJson));
+      return dispatch(mergeCartIdSuccess(resultJson));
     } catch (e) {
       return dispatch(mergeCartIdFailure(e.message));
     }
@@ -1676,7 +1692,16 @@ export function applyBankOffer(couponCode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+
+  let cartId;
+  const parsedQueryString = queryString.parse(window.location.search);
+  const value = parsedQueryString.value;
+  if (value) {
+    cartId = value;
+  } else {
+    cartId = JSON.parse(cartDetails).guid;
+  }
+
   return async (dispatch, getState, { api }) => {
     dispatch(applyBankOfferRequest());
     try {
@@ -1732,7 +1757,14 @@ export function releaseBankOffer(previousCouponCode, newCouponCode: null) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  const parsedQueryString = queryString.parse(window.location.search);
+  const value = parsedQueryString.value;
+  if (value) {
+    cartId = value;
+  } else {
+    cartId = JSON.parse(cartDetails).guid;
+  }
   return async (dispatch, getState, { api }) => {
     dispatch(releaseBankOfferRequest());
     try {
@@ -2408,13 +2440,17 @@ export function createJusPayOrder(
           JSON.parse(customerCookie).access_token
         }&firstName=${address.firstName}&lastName=${
           address.lastName
-        }&addressLine1=${address.line1}&addressLine2=${
-          address.line2
-        }&addressLine3=${address.line3}&country=${
+        }&addressLine1=${address.line1 ? address.line1 : ""}&addressLine2=${
+          address.line2 ? address.line2 : ""
+        }&addressLine3=${address.line3 ? address.line3 : ""}&country=${
           address.country.isocode
-        }&city=${address.city}&state=${address.state}&pincode=${
+        }&city=${address.city ? address.city : ""}&state=${
+          address.state ? address.state : ""
+        }&pincode=${
           address.postalCode
-        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${bankName}`,
+        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${
+          bankName ? bankName : ""
+        }`,
         cartItem
       );
       const resultJson = await result.json();
@@ -2851,7 +2887,7 @@ export function jusPayPaymentMethodTypeFailure(error) {
   return {
     type: JUS_PAY_PAYMENT_METHOD_TYPE_FAILURE,
     status: ERROR,
-    error
+    error: ERROR_MESSAGE_FOR_CREATE_JUS_PAY_CALL
   };
 }
 
@@ -4043,7 +4079,12 @@ export function getItemBreakUpDetailsFailure(error) {
   };
 }
 
-export function getItemBreakUpDetails(couponCode, cartGuId) {
+export function getItemBreakUpDetails(
+  couponCode,
+  cartGuId,
+  noCostEmiText,
+  noCostEmiProductCount
+) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -4067,8 +4108,12 @@ export function getItemBreakUpDetails(couponCode, cartGuId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      let noCostEmiResult = Object.assign({}, resultJson, {
+        noCostEmiText: noCostEmiText,
+        noCostEmiProductCount: noCostEmiProductCount
+      });
       dispatch(getItemBreakUpDetailsSuccess(resultJson));
-      dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE, resultJson));
+      dispatch(showModal(EMI_ITEM_LEVEL_BREAKAGE, noCostEmiResult));
     } catch (e) {
       dispatch(getItemBreakUpDetailsFailure(e.message));
     }
@@ -4126,5 +4171,11 @@ export function getPaymentFailureOrderDetails() {
     } catch (e) {
       dispatch(getPaymentFailureOrderDetailsFailure(e.message));
     }
+  };
+}
+
+export function resetIsSoftReservationFailed() {
+  return {
+    type: RESET_IS_SOFT_RESERVATION_FAILED
   };
 }

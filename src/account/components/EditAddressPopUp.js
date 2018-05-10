@@ -313,13 +313,16 @@ export default class EditAddressPopUp extends React.Component {
                 ? this.props.postalCode
                 : this.state.postalCode
             }
-            type={"number"}
+            maxLength={"6"}
+            onlyNumber={true}
             rightChildSize={33}
           />
         </div>
         <div className={styles.content}>
           <div className={styles.salutation}>
             <SelectBoxMobile2
+              label={this.state.salutation}
+              value={this.state.salutation}
               height={33}
               options={salutation.map((val, i) => {
                 return {

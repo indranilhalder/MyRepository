@@ -15,7 +15,7 @@
   display: inline-block;
   vertical-align: top;
 }
-.productName {
+.brandName {
   width: 100%;
   height: auto;
   display: inline-block;
@@ -24,7 +24,8 @@
   font-family: semibold;
   margin-bottom: 10px;
 }
-.productDescription {
+
+.productName {
   width: 100%;
   height: auto;
   color: #181818;
@@ -33,6 +34,10 @@
   font-family: light;
   font-weight: inherit;
   display: inline-block;
+}
+.productDescription {
+  composes: productName;
+  margin-top: 10px;
 }
 .ratingHolder {
   width: 100%;

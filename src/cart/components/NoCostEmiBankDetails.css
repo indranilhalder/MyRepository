@@ -19,6 +19,7 @@
   width: 100%;
   height: auto;
   padding: 15px;
+  background: #fff;
 }
 .labelHeader {
   width: 100%;
@@ -63,6 +64,7 @@
 .monthsPlanDataHolder {
   width: 100%;
   height: auto;
+  background: #fff;
 }
 .amountPlaneForMonth {
   width: 100%;
@@ -85,6 +87,10 @@
   font-size: 14px;
   font-family: regular;
 }
+.amountPayble {
+  composes: amountLabel;
+  font-family: semibold;
+}
 .totalAmountLabel {
   composes: amountData;
   font-family: semibold;
@@ -97,6 +103,14 @@
   font-size: 14px;
   font-family: semibold;
   text-align: right;
+}
+.amountDiscount {
+  composes: amount;
+  font-family: regular;
+}
+.amountEmi {
+  composes: amount;
+  font-family: regular;
 }
 .discount {
   composes: amountData;
@@ -111,7 +125,7 @@
   height: auto;
   display: inline-block;
   text-align: left;
-  padding: 0px 15px 15px;
+  padding: 15px 15px 15px;
 }
 .itemLevelButton {
   width: auto;
@@ -122,4 +136,11 @@
   width: 100%;
   height: auto;
   padding: 0px 15px 15px;
+}
+.bankText {
+  padding: 12px;
+  font-size: 14px;
+  font-family: regular;
+  width: 100%;
+  height: auto;
 }

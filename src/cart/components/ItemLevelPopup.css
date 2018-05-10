@@ -4,6 +4,16 @@
   background: #fff;
   min-height: 100vh;
 }
+.header {
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  color: #fff;
+  font-size: 14px;
+  padding-left: 15px;
+  font-family: regular;
+  background: #000;
+}
 .cardOfferDisplay {
   width: 100%;
   height: auto;

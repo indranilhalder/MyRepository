@@ -5,7 +5,8 @@ import {
   GLOBAL_ACCESS_TOKEN,
   SUCCESS_UPPERCASE,
   SUCCESS_CAMEL_CASE,
-  DEFAULT_PIN_CODE_LOCAL_STORAGE
+  DEFAULT_PIN_CODE_LOCAL_STORAGE,
+  CART_BAG_DETAILS
 } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
@@ -21,6 +22,7 @@ import {
   LOGGED_IN_USER_DETAILS,
   ANONYMOUS_USER
 } from "../../lib/constants";
+import { setBagCount } from "../../general/header.actions";
 import { setDataLayer, ADOBE_PDP_TYPE } from "../../lib/adobeUtils.js";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 
@@ -279,7 +281,22 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
         throw new Error(resultJsonStatus.message);
       }
 
+      //set local storage
+      let bagItem = localStorage.getItem(CART_BAG_DETAILS);
+
+      let bagItemsInJsonFormat = bagItem ? JSON.parse(bagItem) : [];
+
+      if (!bagItemsInJsonFormat.includes(productDetails.ussId)) {
+        bagItemsInJsonFormat.push(productDetails.ussId);
+      }
+
+      localStorage.setItem(
+        CART_BAG_DETAILS,
+        JSON.stringify(bagItemsInJsonFormat)
+      );
+
       // here we dispatch a modal to show something was added to the bag
+      dispatch(setBagCount(bagItemsInJsonFormat.length));
       dispatch(displayToast("Added product to Bag"));
       setDataLayerForPdpDirectCalls(SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT);
       dispatch(addProductToCartSuccess());
@@ -797,7 +814,6 @@ export function pdpAboutBrand(productCode) {
     msdRequestObject.append("product_id", productCode.toUpperCase());
 
     dispatch(pdpAboutBrandRequest());
-
     try {
       // making call for fetch about brand and their items items
       // url may have to change as per api live get live
@@ -817,6 +833,7 @@ export function pdpAboutBrand(productCode) {
           getPdpItems(resultJson.data[0].itemIds, ABOUT_THE_BRAND_WIDGET_KEY)
         );
       }
+
       // updating reducer for follow brand  key
       dispatch(pdpAboutBrandSuccess(resultJson.data[0]));
     } catch (e) {

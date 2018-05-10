@@ -10,15 +10,18 @@ export default class ItemLevelPopup extends React.Component {
     return (
       <SlideModal closeModal={this.props.closeModal}>
         <div className={styles.base}>
+          <div className={styles.header}>Item Level Breakup</div>
           <div className={styles.cardOfferDisplay}>
             <div className={styles.cardName}>{`${emiItemDetails.bankName} for ${
               emiItemDetails.tenure
             } months`}</div>
+
             <div
               className={styles.offerText}
             >{` No Coast EMI available only on ${
               emiItemDetails.itemBreakUpDetailList[0].quantity
             } product(s). Standard EMI will apply to products, if any, bought along with it.`}</div>
+
           </div>
           <div className={styles.levelBreakupHolder}>
             {emiItemDetails &&
@@ -45,7 +48,9 @@ export default class ItemLevelPopup extends React.Component {
             <div>
               {`\n\u2022  ${
                 this.props.emiItemDetails.noCostEMIDiscountValue.formattedValue
-              } has been given as No Cost EMI  discount (Interest applicable on 1 product in your cart)`}
+              } has been given as No Cost EMI  discount (Interest applicable on ${
+                this.props.emiItemDetails.noCostEmiProductCount
+              } product in your cart)`}
             </div>
             <div>{`\n\u2022  ${
               this.props.emiItemDetails.cardBlockingAmount.formattedValue
@@ -80,3 +85,4 @@ ItemLevelPopup.propTypes = {
     })
   )
 };
+

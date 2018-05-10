@@ -283,8 +283,9 @@ export default class PdpJewellery extends React.Component {
           </div>
           <div className={styles.content}>
             <JewelleryDetailsAndLink
-              productName={productData.brandName}
-              productDescription={productData.productName}
+              brandName={productData.brandName}
+              productName={productData.productName}
+              productDescription={productData.productDescription}
               price={price}
               discountPrice={discountPrice}
               averageRating={productData.averageRating}

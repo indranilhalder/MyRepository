@@ -4,11 +4,20 @@ import cancelIcon from "../../general/components/img/cancel.svg";
 import searchIcon from "./img/search.svg";
 import iconImageURL from "../../general/components/img/arrowBack.svg";
 import searchRedIcon from "./img/searchRed.svg";
+import searchwhiteIcon from "./img/searchwhite.svg";
 import PropTypes from "prop-types";
 import Icon from "../../xelpmoc-core/Icon";
 import Input2 from "../../general/components/Input2.js";
 import companyLogo from "../../general/components/img/group.svg";
 export default class SearchHeader extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      autoFocus: true,
+      isWhite: true,
+      isRed: false
+    };
+  }
   onClickBack() {
     if (this.props.onClickBack) {
       this.props.onClickBack();
@@ -17,6 +26,12 @@ export default class SearchHeader extends React.Component {
   onTypedSearch(val) {
     if (this.props.onSearch) {
       this.props.onSearch(val);
+    }
+    if (val.length > 0) {
+      this.setState({ isWhite: false, isRed: true });
+    }
+    if (val.length === 0) {
+      this.setState({ isWhite: true, isRed: false });
     }
   }
   redirectToHome() {
@@ -34,8 +49,10 @@ export default class SearchHeader extends React.Component {
       this.searchString();
     }
   };
+
   onClickIcon() {
     this.props.onSearchOrCloseIconClick();
+    this.setState({ isWhite: true, isRed: false });
   }
   render() {
     let search = searchIcon;
@@ -87,7 +104,10 @@ export default class SearchHeader extends React.Component {
                   this.searchString();
                 }}
               >
-                <Icon image={searchRedIcon} size={16} />
+                {this.state.isWhite && (
+                  <Icon image={searchwhiteIcon} size={16} />
+                )}
+                {this.state.isRed && <Icon image={searchRedIcon} size={16} />}
               </div>
               <div className={styles.input}>
                 <Input2
@@ -98,6 +118,7 @@ export default class SearchHeader extends React.Component {
                   borderColor={"#212121"}
                   borderBottom={"0px solid #212121"}
                   onKeyUp={event => this.handleKeyUp(event.key)}
+                  autoFocus={this.state.autoFocus}
                 />
               </div>
             </div>

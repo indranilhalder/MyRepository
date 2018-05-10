@@ -1,0 +1,38 @@
+.base {
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  background: #e6e6e6;
+  padding: 50px 15px 15px 15px;
+  position: relative;
+}
+.step {
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
+  height: auto;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.header {
+  width: 100%;
+  height: 40px;
+  background: #212121;
+  color: #fff;
+  padding: 0 20px;
+  line-height: 40px;
+  font-size: 14px;
+  font-family: regular;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.row {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  font-family: light;
+  color: #212121;
+}

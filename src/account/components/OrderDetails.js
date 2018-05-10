@@ -6,9 +6,11 @@ import OrderDelivered from "./OrderDelivered.js";
 import OrderViewPaymentDetails from "./OrderViewPaymentDetails";
 import OrderPaymentMethod from "./OrderPaymentMethod";
 import OrderStatusVertical from "./OrderStatusVertical";
+import OrderStatusHorizontal from "./OrderStatusHorizontal";
 import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
-import moment from "moment";
+import format from "date-fns/format";
+
 import queryString from "query-string";
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
@@ -34,18 +36,25 @@ import {
 } from "../../lib/adobeUtils";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_RETURN = "Return";
+const RETURN = "RETURN";
 const PRODUCT_CANCEL = "Cancel";
 const AWB_POPUP_TRUE = "Y";
 const AWB_POPUP_FALSE = "N";
+const CLICK_COLLECT = "click-and-collect";
 export default class OrderDetails extends React.Component {
   onClickImage(productCode) {
     if (productCode) {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
     }
   }
-  requestInvoice(ussid, sellerOrderNo) {
+  requestInvoice(lineID, orderNumber) {
     if (this.props.sendInvoice) {
-      this.props.sendInvoice(ussid, sellerOrderNo);
+      this.props.sendInvoice(lineID, orderNumber);
+    }
+  }
+  handleshowShippingDetails(val) {
+    if (this.props.showShippingDetails && val) {
+      this.props.showShippingDetails(val);
     }
   }
 
@@ -152,6 +161,7 @@ export default class OrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.orderDetails;
+
     return (
       <div className={styles.base}>
         {orderDetails &&
@@ -160,13 +170,10 @@ export default class OrderDetails extends React.Component {
               <div className={styles.order} key={i}>
                 <div className={styles.orderIdHolder}>
                   <OrderPlacedAndId
-                    placedTime={moment(orderDetails.orderDate).format(
-                      dateFormat
-                    )}
+                    placedTime={format(orderDetails.orderDate, dateFormat)}
                     orderId={orderDetails.orderId}
                   />
                 </div>
-
                 <OrderCard
                   imageUrl={products.imageURL}
                   price={products.price}
@@ -174,7 +181,6 @@ export default class OrderDetails extends React.Component {
                   productName={products.productName}
                   onClick={() => this.onClickImage(products.productcode)}
                 />
-
                 <div className={styles.payment}>
                   <OrderViewPaymentDetails
                     SubTotal={
@@ -219,7 +225,6 @@ export default class OrderDetails extends React.Component {
                     }
                   />
                 </div>
-
                 <OrderPaymentMethod
                   phoneNumber={
                     orderDetails.deliveryAddress &&
@@ -229,7 +234,10 @@ export default class OrderDetails extends React.Component {
                   isInvoiceAvailable={products.isInvoiceAvailable}
                   statusDisplay={products.statusDisplayMsg}
                   request={() =>
-                    this.requestInvoice(products.USSID, products.sellerorderno)
+                    this.requestInvoice(
+                      products.transactionId,
+                      products.sellerorderno
+                    )
                   }
                 />
                 {orderDetails.billingAddress && (
@@ -241,16 +249,83 @@ export default class OrderDetails extends React.Component {
                     } ${orderDetails.billingAddress.postalcode}`}
                   />
                 )}
-                {products.statusDisplayMsg && (
-                  <div className={styles.orderStatusVertical}>
-                    <OrderStatusVertical
-                      statusMessageList={
-                        products.statusDisplayMsg[0].value.statusList[0]
-                          .statusMessageList
-                      }
-                    />
-                  </div>
-                )}
+                {products.statusDisplayMsg &&
+                  products.selectedDeliveryMode.code !== CLICK_COLLECT && (
+                    <div className={styles.orderStatusVertical}>
+                      {!products.statusDisplayMsg
+                        .map(val => {
+                          return val.key;
+                        })
+                        .includes(RETURN) && (
+                        <OrderStatusVertical
+                          statusMessageList={products.statusDisplayMsg}
+                          logisticName={products.logisticName}
+                          trackingAWB={products.trackingAWB}
+                          showShippingDetails={this.props.showShippingDetails}
+                          orderCode={orderDetails.orderId}
+                        />
+                      )}
+                      {products.statusDisplayMsg
+                        .map(val => {
+                          return val.key;
+                        })
+                        .includes(RETURN) && (
+                        <OrderStatusHorizontal
+                          trackingAWB={products.trackingAWB}
+                          courier={products.reverseLogisticName}
+                          statusMessageList={products.statusDisplayMsg.filter(
+                            val => {
+                              return val.key === RETURN;
+                            }
+                          )}
+                        />
+                      )}
+                    </div>
+                  )}
+                {products.selectedDeliveryMode.code === CLICK_COLLECT &&
+                  products.storeDetails && (
+                    <div className={styles.orderStatusVertical}>
+                      <div className={styles.header}>Store details:</div>
+                      <div className={styles.row}>
+                        {products.storeDetails.displayName &&
+                          products.storeDetails.displayName !== undefined &&
+                          products.storeDetails.displayName !== "undefined" && (
+                            <span>{products.storeDetails.displayName} ,</span>
+                          )}{" "}
+                        {products.storeDetails.returnAddress1 &&
+                          products.storeDetails.returnAddress1 !== undefined &&
+                          products.storeDetails.returnAddress1 !==
+                            "undefined" && (
+                            <span>
+                              {products.storeDetails.returnAddress1} ,
+                            </span>
+                          )}{" "}
+                        {products.storeDetails.returnAddress2 &&
+                          products.storeDetails.returnAddress2 !== undefined &&
+                          products.storeDetails.returnAddress2 !==
+                            "undefined" && (
+                            <span>{products.storeDetails.returnAddress2}</span>
+                          )}{" "}
+                      </div>
+                      <div className={styles.row}>
+                        {products.storeDetails.returnCity}{" "}
+                        {products.storeDetails.returnPin}
+                      </div>
+                    </div>
+                  )}
+                {products.selectedDeliveryMode.code === CLICK_COLLECT &&
+                  (orderDetails.pickupPersonName ||
+                    orderDetails.pickupPersonMobile) && (
+                    <div className={styles.orderStatusVertical}>
+                      <div className={styles.header}>Pickup details:</div>
+                      <div className={styles.row}>
+                        {orderDetails.pickupPersonName}
+                      </div>
+                      <div className={styles.row}>
+                        {orderDetails.pickupPersonMobile}
+                      </div>
+                    </div>
+                  )}
                 {products.awbPopupLink === AWB_POPUP_FALSE && (
                   <div className={styles.buttonHolder}>
                     <div className={styles.buttonHolderForUpdate}>

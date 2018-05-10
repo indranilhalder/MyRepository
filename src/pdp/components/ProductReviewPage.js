@@ -206,7 +206,7 @@ class ProductReviewPage extends Component {
   renderMetaTags = () => {
     const productDetails = this.props.productDetails;
     return productDetails.seo
-      ? renderMetaTags(productDetails)
+      ? renderMetaTags(productDetails, true)
       : renderMetaTagsWithoutSeoObject(productDetails);
   };
 

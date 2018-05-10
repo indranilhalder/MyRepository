@@ -1,4 +1,8 @@
 import { SUCCESS, REQUESTING, ERROR, FAILURE } from "../../lib/constants";
+import {
+  setDataLayer,
+  ADOBE_DEFAULT_CLP_PAGE_LOAD
+} from "../../lib/adobeUtils";
 
 export const GET_CATEGORIES_REQUEST = "GET_CATEGORIES_REQUEST";
 export const GET_CATEGORIES_SUCCESS = "GET_CATEGORIES_SUCCESS";
@@ -39,6 +43,7 @@ export function getCategories(userId, accessToken, cartId) {
         throw new Error(resultJson.error);
       }
       dispatch(getCategoriesSuccess(resultJson));
+      setDataLayer(ADOBE_DEFAULT_CLP_PAGE_LOAD, resultJson);
     } catch (e) {
       dispatch(getCategoriesFailure(e.message));
     }

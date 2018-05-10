@@ -1,13 +1,20 @@
 import "isomorphic-fetch";
 import cloneDeep from "lodash.clonedeep";
 import * as Cookie from "./Cookie";
-import { SUCCESS, FAILURE } from "./constants.js";
+import {
+  SUCCESS,
+  FAILURE,
+  LOGGED_IN_USER_DETAILS,
+  CART_DETAILS_FOR_LOGGED_IN_USER
+} from "./constants.js";
 import * as ErrorHandling from "../general/ErrorHandling.js";
 import { CUSTOMER_ACCESS_TOKEN, GLOBAL_ACCESS_TOKEN } from "../lib/constants";
 import { customerAccessToken } from "../auth/actions/user.actions";
+import { USER_CART_PATH } from "../cart/actions/cart.actions";
 let API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 export let TATA_CLIQ_ROOT = /https?:[\/]{2}\S*?(\/\S*)/;
 export const TOKEN_PATH = "oauth/token";
+export let URL_ROOT = "";
 
 if (
   process.env.REACT_APP_STAGE === "devxelp" ||
@@ -25,6 +32,22 @@ if (
   API_URL_ROOT = "https://stg.tatacliq.com/marketplacewebservices";
 }
 
+if (process.env.REACT_APP_STAGE === "tmpprod") {
+  URL_ROOT = "https://p2tmpprd.tataunistore.com";
+} else if (process.env.REACT_APP_STAGE === "production") {
+  URL_ROOT = "https://www.tatacliq.com";
+} else if (process.env.REACT_APP_STAGE === "p2") {
+  URL_ROOT = "https://p2.tatacliq.com";
+} else if (process.env.REACT_APP_STAGE === "stage") {
+  URL_ROOT = "https://stg.tatacliq.com";
+} else if (process.env.REACT_APP_STAGE === "devxelp") {
+  URL_ROOT = "http://54.147.12.99:3000";
+} else if (process.env.REACT_APP_STAGE === "uat2") {
+  URL_ROOT = "https://uat2.tataunistore.com";
+} else if (process.env.REACT_APP_STAGE === "local") {
+  URL_ROOT = "https://uat2.tataunistore.com";
+}
+
 export const API_URL_ROOT_DUMMY =
   "https://www.tatacliq.com/marketplacewebservices";
 // export const API_URL_ROOT = API_URL_ROOT_DUMMY;
@@ -38,6 +61,8 @@ const ACCESS_TOKEN_INVALID_MESSAGE = "Invalid access token";
 const CLIENT_ID = "gauravj@dewsolutions.in";
 const CUSTOMER_ACCESS_TOKEN_INVALID = "customerAccessTokenInvalid";
 const GLOBAL_ACCESS_TOKEN_INVALID = "globalAccessTokenInvalid";
+const CART_NOT_FOUND_ERROR = "CartError";
+
 export const API_MSD_URL_ROOT = "https://ap-southeast-1-api.madstreetden.com";
 
 export async function postAdobeTargetUrl(
@@ -90,15 +115,23 @@ export async function get(url) {
 
   try {
     if (
-      !errorStatus.status ||
-      !isInvalidAccessTokenError(errorStatus.message)
+      (!errorStatus.status ||
+        !isInvalidAccessTokenError(errorStatus.message)) &&
+      !isCartNotFoundError(resultJson)
     ) {
       return resultClone;
     }
-    const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
-      errorStatus.message,
-      url
-    );
+    let newUrl;
+
+    if (isCartNotFoundError(resultJson)) {
+      newUrl = await handleCartNotFoundError(resultJson, url);
+    }
+    if (isInvalidAccessTokenError(errorStatus.message)) {
+      newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
+        errorStatus.message,
+        url
+      );
+    }
     return await coreGet(newUrl);
   } catch (e) {
     throw e;
@@ -117,20 +150,24 @@ export async function postFormData(url, payload) {
   const resultClone = result.clone();
   const resultJson = await result.json();
   const errorStatus = ErrorHandling.getFailureResponse(resultJson);
-
   try {
     if (
-      !errorStatus.status ||
-      !isInvalidAccessTokenError(errorStatus.message)
+      (!errorStatus.status ||
+        !isInvalidAccessTokenError(errorStatus.message)) &&
+      !isCartNotFoundError(resultJson)
     ) {
       return resultClone;
     }
-
-    const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
-      errorStatus.message,
-      url
-    );
-
+    let newUrl;
+    if (isCartNotFoundError(resultJson)) {
+      newUrl = await handleCartNotFoundError(resultJson, url);
+    }
+    if (isInvalidAccessTokenError(errorStatus.message)) {
+      newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
+        errorStatus.message,
+        url
+      );
+    }
     return await corePostFormData(newUrl, payload);
   } catch (e) {
     throw e;
@@ -142,18 +179,25 @@ export async function post(path, postData, doNotUseApiSuffix: true) {
   const resultClone = result.clone();
   const resultJson = await result.json();
   const errorStatus = ErrorHandling.getFailureResponse(resultJson);
+
   try {
     if (
-      !errorStatus.status ||
-      !isInvalidAccessTokenError(errorStatus.message)
+      (!errorStatus.status ||
+        !isInvalidAccessTokenError(errorStatus.message)) &&
+      !isCartNotFoundError(resultJson)
     ) {
       return resultClone;
     }
-    const newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
-      errorStatus.message,
-      path
-    );
-
+    let newUrl;
+    if (isCartNotFoundError(resultJson)) {
+      newUrl = await handleCartNotFoundError(resultJson, path);
+    }
+    if (isInvalidAccessTokenError(errorStatus.message)) {
+      newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
+        errorStatus.message,
+        path
+      );
+    }
     return await corePost(newUrl, postData);
   } catch (e) {
     throw e;
@@ -185,13 +229,25 @@ async function handleInvalidCustomerAccessToken(message, oldUrl) {
   if (isCustomerAccessTokenFailure(message)) {
     const customerAccessTokenResponse = await refreshCustomerAccessToken();
     if (!customerAccessTokenResponse) {
-      throw new Error("Customer Access Token refresh failure");
+      throw new Error("Customer Access Token refresh failure ");
     }
     newUrl = replaceOldCustomerCookie(oldUrl, customerAccessTokenResponse);
   }
   return newUrl;
 }
 
+async function handleCartNotFoundError(response, oldUrl) {
+  let newUrl = null;
+  if (isCartNotFoundError(response)) {
+    const refreshCartIdResponse = await refreshCartId();
+
+    if (!refreshCartIdResponse) {
+      throw new Error("Customer Cart id refresh failure");
+    }
+    newUrl = replaceOldCartCookie(oldUrl, refreshCartIdResponse);
+  }
+  return newUrl;
+}
 async function handleInvalidGlobalAccessToken(message, oldUrl) {
   let newUrl = oldUrl;
   if (isGlobalAccessTokenFailure(message)) {
@@ -227,6 +283,17 @@ function replaceOldCustomerCookie(url, newCustomerCookie) {
     oldCustomerCookie.access_token,
     newCustomerCookie.access_token
   );
+}
+async function replaceOldCartCookie(url, newCustomerCookie) {
+  let oldCustomerCookie = JSON.parse(
+    Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER)
+  );
+  Cookie.deleteCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  Cookie.createCookie(
+    CART_DETAILS_FOR_LOGGED_IN_USER,
+    JSON.stringify(newCustomerCookie)
+  );
+  return url.replace(oldCustomerCookie.code, newCustomerCookie.code);
 }
 
 async function refreshCustomerAccessToken() {
@@ -266,6 +333,43 @@ async function refreshGlobalAccessToken() {
   return resultJson;
 }
 
+async function refreshCartId() {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+  const resultForGetCartId = await get(
+    `${USER_CART_PATH}/${JSON.parse(userDetails).userName}/carts?access_token=${
+      JSON.parse(customerCookie).access_token
+    }&isPwa=true`
+  );
+  const resultForGetCartIdJson = await resultForGetCartId.json();
+  const errorStatusForGetCartIdObj = ErrorHandling.getFailureResponse(
+    resultForGetCartIdJson
+  );
+  if (
+    errorStatusForGetCartIdObj.status ||
+    !resultForGetCartIdJson ||
+    !resultForGetCartIdJson.code
+  ) {
+    const resultForCreateCartId = await post(
+      `${USER_CART_PATH}/${
+        JSON.parse(userDetails).userName
+      }/carts?access_token=${
+        JSON.parse(customerCookie).access_token
+      }&isPwa=true`
+    );
+    const resultForCreateCartIdJson = await resultForCreateCartId.json();
+    const errorStatusForCreateCartObj = ErrorHandling.getFailureResponse(
+      resultForCreateCartIdJson
+    );
+    if (errorStatusForCreateCartObj.status) {
+      return null;
+    }
+    return resultForCreateCartIdJson;
+  }
+  return resultForGetCartIdJson;
+}
+
 function isCustomerAccessTokenFailure(message) {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const customerAccessToken =
@@ -292,7 +396,14 @@ function isInvalidAccessTokenError(message) {
     message.indexOf(ACCESS_TOKEN_INVALID_MESSAGE) >= 0
   );
 }
-
+function isCartNotFoundError(resultJson) {
+  return (
+    resultJson &&
+    resultJson.errors &&
+    resultJson.errors[0] &&
+    resultJson.errors[0].type === CART_NOT_FOUND_ERROR
+  );
+}
 export async function getWithoutApiUrlRoot(url) {
   return await fetch(url, {
     headers: {

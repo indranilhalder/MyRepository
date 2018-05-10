@@ -31,7 +31,7 @@ import {
   GIFT_CARD_MODAL,
   UPDATE_REFUND_DETAILS_POPUP
 } from "../../general/modal.actions.js";
-import moment from "moment";
+import format from "date-fns/format";
 import { getPaymentModes } from "../../cart/actions/cart.actions.js";
 import {
   getMcvId,
@@ -1051,7 +1051,11 @@ export function getAllOrdersFailure(error, isPaginated) {
     isPaginated
   };
 }
-export function getAllOrdersDetails(suffix: null, paginated: false) {
+export function getAllOrdersDetails(
+  suffix: null,
+  paginated: false,
+  isSetDataLayer: true
+) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -1075,7 +1079,9 @@ export function getAllOrdersDetails(suffix: null, paginated: false) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayer(ADOBE_MY_ACCOUNT_ORDER_HISTORY);
+      if (isSetDataLayer) {
+        setDataLayer(ADOBE_MY_ACCOUNT_ORDER_HISTORY);
+      }
       if (paginated) {
         dispatch(getAllOrdersSuccess(resultJson, paginated));
         dispatch(hideSecondaryLoader());
@@ -1504,7 +1510,8 @@ export function updateProfileFailure(error) {
 }
 
 export function updateProfile(accountDetails, otp) {
-  let dateOfBirth = moment(accountDetails.dateOfBirth).format(
+  let dateOfBirth = format(
+    accountDetails.dateOfBirth,
     DATE_FORMAT_TO_UPDATE_PROFILE
   );
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);

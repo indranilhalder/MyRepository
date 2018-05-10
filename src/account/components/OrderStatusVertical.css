@@ -1,7 +1,32 @@
 .base {
   width: 100%;
   height: auto;
-  display: inline-block;
+}
+
+.step {
+  width: 100%;
+  height: auto;
+  padding-left: 25px;
+  position: relative;
+  padding-bottom: 50px;
+}
+.step:before {
+  content: "";
+  width: 2px;
+  height: 100%;
+  position: absolute;
+  left: 8.5px;
+  top: 0;
+  background: #12de7c;
+}
+.step:last-child:before {
+  display: none;
+}
+.stepInactive {
+  composes: step;
+}
+.stepInactive:before {
+  background: #eeeeee;
 }
 .deliveredStepHolder {
   width: 100%;
@@ -17,26 +42,26 @@
   padding-bottom: 0px;
   border-left: none;
 }
-.processCheckHolder {
+.check {
   width: 20px;
   height: 20px;
   position: absolute;
   left: -1px;
   top: 0;
   border-radius: 50%;
-  border: 1px solid #eeeeee;
+  border: 2px solid #eeeeee;
   z-index: 10;
   background: #fff;
 }
-.processDone {
-  composes: processCheckHolder;
-  background: url(../../general/components/img/check.svg)no-repeat;
+.checkActive {
+  composes: check;
+  background: url(../../general/components/img/check.svg) no-repeat;
   background-size: auto 35px;
   background-position: center;
   border: none;
 }
 .processFail {
-  composes: processCheckHolder;
+  composes: check;
   background: red;
   background-size: auto 35px;
   background-position: center;
@@ -84,7 +109,7 @@
   padding-left: 10px;
   color: #212121;
   font-size: 14px;
-  font-family: regular;
+  font-family: light;
 }
 .dateHolder {
   composes: timeHolder;
@@ -104,14 +129,15 @@
   height: auto;
   display: inline-block;
   text-align: right;
-  margin-bottom: 8px;
+  margin-top: 8px;
 }
 .moreInfoQuestionHolder {
   width: auto;
   height: 20px;
   line-height: 20px;
   color: #212121;
-  font-family: regular;
+  font-family: light;
+  font-size: 14px;
   display: inline-block;
 }
 .moreAnswerHolder {

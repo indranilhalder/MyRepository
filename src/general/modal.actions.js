@@ -21,7 +21,7 @@ export const EMI_BANK_TERMS_AND_CONDITIONS = "EmiTermsAndConditions";
 
 export const GENERATE_OTP_FOR_CLIQ_CASH = "generateOtpForCliqCash";
 export const VERIFY_OTP_FOR_CLIQ_CASH = "verifyOtpForCliqCash";
-
+export const ORDER_DETAILS_MODAL = "OrderModal";
 export const UPDATE_REFUND_DETAILS_POPUP = "UpdateRefundDetailsPopup";
 
 export const NEW_PASSWORD = "NewPassword";

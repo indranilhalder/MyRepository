@@ -3,7 +3,11 @@ import { withRouter } from "react-router-dom";
 import Plp from "../components/Plp";
 import { showModal, SORT } from "../../general/modal.actions.js";
 import { setHeaderText } from "../../general/header.actions";
-import { showFilter, hideFilter } from "../../plp/actions/plp.actions.js";
+import {
+  showFilter,
+  hideFilter,
+  setIfFilterHasBeenClicked
+} from "../../plp/actions/plp.actions.js";
 import { displayToast } from "../../general/toast.actions";
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -11,7 +15,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     showSort: () => {
       dispatch(showModal(SORT));
     },
-
     displayToast: text => {
       dispatch(displayToast(text));
     },
@@ -26,6 +29,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     hideFilter: () => {
       dispatch(hideFilter());
+    },
+    setIfFilterHasBeenClicked: () => {
+      dispatch(setIfFilterHasBeenClicked());
     }
   };
 };
@@ -39,6 +45,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     onFilterClick: ownProps.onFilterClick,
     isFilterOpen,
+    filterHasBeenClicked: state.productListings.filterHasBeenClicked,
+    sortHasBeenClicked: state.productListings.sortHasBeenClicked,
     productListings: state.productListings.productListings,
     pageNumber: state.productListings.pageNumber,
     loading: state.productListings.loading,

@@ -1,7 +1,6 @@
 {
   "git.ignoreLimitWarning": true,
   "eslint.enable": true,
-  "flow.useNPMPackagedFlow": true,
   "javascript.format.enable": false,
   "javascript.validate.enable": false,
   "eslint.autoFixOnSave": true,
@@ -14,12 +13,5 @@
   "files.trimTrailingWhitespace": true,
   "window.zoomLevel": 0,
   "files.eol": "\n",
-  "extension-manager.extensions": [
-    "dbaeumer.vscode-eslint",
-    "flowtype.flow-for-vscode",
-    "pywhere.guides",
-    "eg2.vscode-npm-script",
-    "esbenp.prettier-vscode",
-    "shinnn.stylelint"
-  ]
+  "prettier.eslintIntegration": true
 }
