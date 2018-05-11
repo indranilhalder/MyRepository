@@ -5,8 +5,7 @@
   object-fit: contain;
   background-image: linear-gradient(#fce38a, #f38181);
   background-image: url(./img/download.svg) no-repeat;
-
-  margin-top: 40px;
+  margin-top: 50px;
 }
 .downloadInnerBox {
   width: 100%;

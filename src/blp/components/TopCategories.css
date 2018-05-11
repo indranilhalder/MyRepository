@@ -1,9 +1,8 @@
 .base {
   width: 100%;
   height: auto;
-  display: inline-block;
-  padding: 10px;
-  margin-top: 40px;
+  padding: 0px 15px;
+  margin-top: 50px;
 }
 .headerText {
   width: 100%;
