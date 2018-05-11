@@ -20,7 +20,6 @@ export default class OrderDetailsCard extends React.Component {
   }
   render() {
     const deliveryOption = this.props.productDetails.selectedDeliveryMode;
-
     return (
       <div className={styles.base}>
         <div className={styles.orderIdHolder}>
@@ -34,6 +33,7 @@ export default class OrderDetailsCard extends React.Component {
           }
           productName={this.props.productDetails.productName}
           price={this.props.productDetails.pricevalue}
+          isGiveAway={this.props.productDetails.isGiveAway}
           discountPrice=""
           onClick={() => this.onClick(this.props.orderId)}
         >
