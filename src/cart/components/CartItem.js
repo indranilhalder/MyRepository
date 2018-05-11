@@ -132,26 +132,32 @@ export default class CartItem extends React.Component {
               isClickable={this.props.isClickable}
             />
           )}
-        {this.props.hasFooter && (
-          <div className={styles.footer}>
-            <BagPageFooter
-              productCode={this.props.product.productcode}
-              winningUssID={this.props.product.USSID}
-              onRemove={() => this.handleRemove(this.props.index)}
-            />
-            <div className={styles.dropdown}>
-              <div className={styles.dropdownLabel}>
-                {this.props.dropdownLabel}
-              </div>
-              <SelectBoxMobile2
-                disabled={this.props.isOutOfStock}
-                theme="hollowBox"
-                options={fetchedQuantityList}
-                onChange={val => this.handleQuantityChange(val)}
-                value={this.props.qtySelectedByUser}
-                label={this.props.qtySelectedByUser}
+        {this.props.isGiveAway === NO &&
+          this.props.hasFooter && (
+            <div className={styles.footer}>
+              <BagPageFooter
+                productCode={this.props.product.productcode}
+                winningUssID={this.props.product.USSID}
+                onRemove={() => this.handleRemove(this.props.index)}
               />
+              <div className={styles.dropdown}>
+                <div className={styles.dropdownLabel}>
+                  {this.props.dropdownLabel}
+                </div>
+                <SelectBoxMobile2
+                  disabled={this.props.isOutOfStock}
+                  theme="hollowBox"
+                  options={fetchedQuantityList}
+                  onChange={val => this.handleQuantityChange(val)}
+                  value={this.props.qtySelectedByUser}
+                  label={this.props.qtySelectedByUser}
+                />
+              </div>
             </div>
+          )}
+        {this.props.isGiveAway === YES && (
+          <div className={styles.footerForFreeProduct}>
+            <div className={styles.footerText}>Qut : 1</div>
           </div>
         )}
       </div>
