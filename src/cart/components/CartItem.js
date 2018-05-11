@@ -160,7 +160,7 @@ export default class CartItem extends React.Component {
             <div className={styles.footerText}>
               {this.props.product &&
                 this.props.product.qtySelectedByUser &&
-                `Qut : ${this.props.product.qtySelectedByUser}`}
+                `Qty :  ${this.props.product.qtySelectedByUser}`}
             </div>
           </div>
         )}

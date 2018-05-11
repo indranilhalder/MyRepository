@@ -178,6 +178,7 @@ export default class OrderDetails extends React.Component {
                   price={products.price}
                   discountPrice={""}
                   productName={products.productName}
+                  isGiveAway={products.isGiveAway}
                   onClick={() => this.onClickImage(products.productcode)}
                 />
                 <div className={styles.payment}>
