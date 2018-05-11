@@ -159,7 +159,10 @@ export function loginUser(userLoginDetails) {
       if (resultJson.errorCode) {
         dispatch(stopLoaderOnLoginForOTPVerification());
         return dispatch(
-          showModal(OTP_LOGIN_MODAL, { userObj: userLoginDetails })
+          showModal(OTP_LOGIN_MODAL, {
+            username: userLoginDetails.username,
+            password: userLoginDetails.password
+          })
         );
       }
       if (resultJsonStatus.status) {
