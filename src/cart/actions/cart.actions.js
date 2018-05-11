@@ -461,7 +461,9 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
       let cartProducts = [];
       resultJson &&
         each(resultJson.products, product => {
-          cartProducts.push(product.USSID);
+          if (product.isGiveAway === NO) {
+            cartProducts.push(product.USSID);
+          }
         });
       localStorage.setItem(CART_BAG_DETAILS, JSON.stringify(cartProducts));
       dispatch(setBagCount(cartProducts.length));
