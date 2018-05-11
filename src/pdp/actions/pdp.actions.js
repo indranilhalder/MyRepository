@@ -299,7 +299,7 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
       dispatch(setBagCount(bagItemsInJsonFormat.length));
       dispatch(displayToast("Added product to Bag"));
       setDataLayerForPdpDirectCalls(SET_DATA_LAYER_FOR_ADD_TO_BAG_EVENT);
-      dispatch(addProductToCartSuccess());
+      return dispatch(addProductToCartSuccess());
       // ADOBE_ADD_TO_CART
     } catch (e) {
       dispatch(addProductToCartFailure(e.message));

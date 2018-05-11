@@ -71,7 +71,7 @@ export default class SaveListDetails extends React.Component {
   }
   removeItem(ussid) {
     const productDetails = {};
-    productDetails.USSID = ussid;
+    productDetails.ussId = ussid;
     if (this.props.removeProductFromWishList) {
       this.props.removeProductFromWishList(productDetails);
     }
