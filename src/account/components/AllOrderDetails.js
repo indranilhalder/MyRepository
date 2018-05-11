@@ -17,7 +17,9 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   LOGIN_PATH,
-  ORDER_HISTORY
+  ORDER_HISTORY,
+  MY_ACCOUNT_GIFT_CARD_PAGE,
+  MY_ACCOUNT_PAGE
 } from "../../lib/constants";
 
 import { HOME_ROUTER } from "../../lib/constants";
@@ -33,9 +35,11 @@ export default class AllOrderDetails extends React.Component {
       showOrder: null
     };
   }
-  onClickImage(productCode) {
-    if (productCode) {
+  onClickImage(isEgvOrder, productCode) {
+    if (!isEgvOrder && productCode) {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    } else if (isEgvOrder) {
+      this.props.history.push(`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_GIFT_CARD_PAGE}`);
     }
   }
   onViewDetails(orderId) {
@@ -157,10 +161,11 @@ export default class AllOrderDetails extends React.Component {
                       orderDetails.products &&
                       orderDetails.products[0].productName
                     }
+                    isEgvOrder={orderDetails.isEgvOrder}
                     onClick={() =>
                       this.onClickImage(
-                        !orderDetails.isEgvOrder &&
-                          orderDetails &&
+                        orderDetails.isEgvOrder,
+                        orderDetails &&
                           orderDetails.products &&
                           orderDetails.products[0] &&
                           orderDetails.products.length &&
@@ -168,14 +173,16 @@ export default class AllOrderDetails extends React.Component {
                       )
                     }
                   />
-                  {!orderDetails.isEgvOrder && (
-                    <PriceAndLink
-                      onViewDetails={() =>
-                        this.onViewDetails(orderDetails && orderDetails.orderId)
-                      }
-                      price={orderDetails && orderDetails.totalOrderAmount}
-                    />
-                  )}
+
+                  <PriceAndLink
+                    onViewDetails={() =>
+                      this.onViewDetails(orderDetails && orderDetails.orderId)
+                    }
+                    isEgvOrder={orderDetails.isEgvOrder}
+                    status={!orderDetails.giftCardStatus}
+                    price={orderDetails && orderDetails.totalOrderAmount}
+                  />
+
                   {!orderDetails.isEgvOrder &&
                     orderDetails &&
                     orderDetails.billingAddress && (

@@ -23,6 +23,12 @@ export default class PriceAndLink extends React.Component {
             />
           </div>
         )}
+        {this.props.isEgvOrder && (
+          <div className={styles.statusFailedBase}>
+            <div className={styles.priceHeader}>Status</div>
+            <div className={styles.statusFailed}>Failed</div>
+          </div>
+        )}
         <div className={styles.priceTextHolder}>
           <div className={styles.priceHeader}>Total Price </div>
           <div className={styles.priceAmount}>{`${RUPEE_SYMBOL} ${
