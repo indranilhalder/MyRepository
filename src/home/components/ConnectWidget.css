@@ -1,6 +1,7 @@
 .holder {
   width: 100%;
   height: auto;
+  margin-top: 40px;
 }
 .base {
   composes: holder;
@@ -20,7 +21,6 @@
   min-height: 125px;
   overflow: hidden;
   padding: 30px;
-  margin: 20px 0;
 }
 .content {
   width: 100%;

@@ -4,9 +4,9 @@
   padding: 30px;
   object-fit: contain;
   background-image: linear-gradient(#fce38a, #f38181);
-  background-image: url(./img/download.svg)no-repeat;
-  margin-bottom: 20px;
-  margin-top: 20px;
+  background-image: url(./img/download.svg) no-repeat;
+
+  margin-top: 40px;
 }
 .downloadInnerBox {
   width: 100%;
