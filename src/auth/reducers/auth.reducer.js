@@ -40,6 +40,10 @@ const auth = (
       return Object.assign({}, state, {
         authCallsIsSucceed: false
       });
+    case authActions.STOP_LOADING_ON_LOGIN:
+      return Object.assign({}, state, {
+        authCallsInProcess: false
+      });
     default:
       return state;
   }

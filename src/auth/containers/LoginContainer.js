@@ -30,7 +30,10 @@ import {
   DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
-import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
+import {
+  clearUrlToRedirectToAfterAuth,
+  stopLoaderOnLoginForOTPVerification
+} from "../../auth/actions/auth.actions.js";
 
 import {
   singleAuthCallHasFailed,
@@ -159,10 +162,6 @@ const mapDispatchToProps = dispatch => {
             }
             // end of generating new cart if if wont get any existing cartId
           }
-        } else if (
-          loginUserResponse.error === OTP_VERIFICATION_REQUIRED_MESSAGE
-        ) {
-          dispatch(showModal(OTP_LOGIN_MODAL, userDetails));
         } else {
           setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE);
         }

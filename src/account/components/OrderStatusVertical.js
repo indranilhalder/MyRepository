@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./OrderStatusVertical.css";
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import PropTypes from "prop-types";
+const PAYMENT = "PAYMENT";
 const APPROVED = "APPROVED";
 const PROCESSING = "PROCESSING";
 const CANCEL = "CANCEL";
@@ -18,6 +19,9 @@ export default class OrderStatusVertical extends React.Component {
     const completedSteps = this.props.statusMessageList.map(val => {
       return val.key;
     });
+    const paymentData = this.props.statusMessageList.find(val => {
+      return val.key === PAYMENT;
+    });
     const approvedData = this.props.statusMessageList.find(val => {
       return val.key === APPROVED;
     });
@@ -31,6 +35,21 @@ export default class OrderStatusVertical extends React.Component {
     const cancelledData = this.props.statusMessageList.find(val => {
       return val.key === CANCEL;
     });
+
+    let paymentDate = "";
+    let paymentTime = "";
+    let paymentMessage = "";
+    if (
+      paymentData &&
+      paymentData.value.statusList &&
+      paymentData.value.statusList[0] &&
+      paymentData.value.statusList[0].statusMessageList &&
+      paymentData.value.statusList[0].statusMessageList[0]
+    ) {
+      paymentDate = paymentData.value.statusList[0].statusMessageList[0].date;
+      paymentTime = paymentData.value.statusList[0].statusMessageList[0].time;
+      paymentMessage = paymentData.value.statusList[0].shipmentStatus;
+    }
     let approvedDate = "";
     let approvedTime = "";
     if (
@@ -113,6 +132,23 @@ export default class OrderStatusVertical extends React.Component {
     const orderCode = this.props.orderCode;
     return (
       <div className={styles.base}>
+        {completedSteps.includes("PAYMENT") && (
+          <div className={styles.step}>
+            <div className={styles.checkActive} />
+            <div className={styles.processNameHolder}>Payment</div>
+            <div className={styles.dateAndTimeHolder}>
+              <div className={styles.dateHolder}>{paymentDate}</div>
+              <div className={styles.timeHolder}>{paymentTime}</div>
+            </div>
+            {paymentMessage && (
+              <div className={styles.courierInfoHolder}>
+                <div className={styles.moreInfoQuestionHolder}>
+                  {paymentMessage}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
         <div
           className={
             completedSteps.includes(APPROVED)
