@@ -6,10 +6,23 @@ import styles from "./FollowBase.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 export default class FollowBase extends React.Component {
-  handleClick = webUrl => {
-    const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "$1");
-    this.props.history.push(urlSuffix);
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: this.props.feedComponentData.items
+        ? this.props.feedComponentData.items
+        : null
+    };
+  }
+  handleClick = data => {
+    if (this.props.getItems) {
+      this.props.showStory({
+        positionInFeed: this.props.positionInFeed,
+        ...data
+      });
+    }
   };
+
   render() {
     let { feedComponentData, ...rest } = this.props;
     feedComponentData = feedComponentData.data;
@@ -20,6 +33,7 @@ export default class FollowBase extends React.Component {
           {feedComponentData &&
             (feedComponentData.length > 0 &&
               feedComponentData.map(datum => {
+                console.log(datum);
                 return (
                   <NewBrand
                     image={datum.imageURL}
@@ -30,7 +44,14 @@ export default class FollowBase extends React.Component {
                     webUrl={datum.webURL}
                     brandId={datum.id}
                     isFollowing={datum.isFollowing}
-                    onClick={this.handleClick}
+                    onClick={() =>
+                      this.handleClick({
+                        itemIds: datum.itemIds,
+                        image: datum.imageURL,
+                        title: datum.title,
+                        brandName: datum.brandName
+                      })
+                    }
                     {...rest}
                   />
                 );

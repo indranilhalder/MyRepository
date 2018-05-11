@@ -2,7 +2,7 @@
   width: 100%;
   min-height: 100vh;
   background: #ececec;
-  padding: 20px 0px 60px 0px;
+  padding: 40px 0px 60px 0px;
 }
 .brandSection {
   width: 100%;
@@ -13,7 +13,27 @@
   font-size: 14px;
   line-height: 20px;
   margin-bottom: 20px;
-  padding: 0 30px 0 70px;
+  padding: 0 90px;
+}
+.loader {
+  width: 100%;
+  padding-bottom: 130%;
+  background: url("../../general/components/img/loader.gif") no-repeat;
+  background-size: 250px;
+  background-position: center;
+}
+
+.cancel {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 30px;
+  margin: auto;
+  background: url("./img/cancel.svg") no-repeat;
+  background-size: 15px;
+  background-position: center;
 }
 .brandImage {
   width: 40px;
@@ -21,7 +41,7 @@
   border-radius: 4px;
   overflow: hidden;
   position: absolute;
-  left: 20px;
+  left: 40px;
   top: 0;
 }
 .timer {
@@ -33,7 +53,7 @@
 .timerHolder {
   width: 100%;
   height: auto;
-  padding: 0 20px;
+  padding: 0 40px;
   margin-bottom: 20px;
 }
 .timerProgress {
@@ -67,7 +87,8 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  padding: 0 20px;
+  vertical-align: top;
+  padding: 0 40px;
 }
 .productImage {
   width: 100%;
@@ -89,15 +110,19 @@
 .productSection {
   width: 100%;
   height: auto;
-  line-height: 24px;
+  line-height: 21px;
   font-family: light;
+  font-size: 14px;
   color: #212121;
   position: relative;
   padding-right: 130px;
+  white-space: normal;
 }
 .row {
   width: 100%;
   height: auto;
+  max-height: 65px;
+  overflow: hidden;
 }
 .button {
   position: absolute;

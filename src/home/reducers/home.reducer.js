@@ -209,6 +209,16 @@ const home = (
         homeFeed: homeFeedData,
         status: action.status
       });
+    case homeActions.CLEAR_ITEMS_FOR_PARTICULAR_POSITION:
+      homeFeedData = state.homeFeed;
+      clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
+      clonedComponent.items = [];
+      homeFeedData[action.positionInFeed] = clonedComponent;
+      return Object.assign({}, state, {
+        homeFeed: homeFeedData,
+        status: action.status
+      });
+
     case FOLLOW_AND_UN_FOLLOW_BRANDS_IN_HOME_FEED_SUCCESS:
       homeFeedData = cloneDeep(state.homeFeed);
       clonedComponent = homeFeedData[action.positionInFeed];

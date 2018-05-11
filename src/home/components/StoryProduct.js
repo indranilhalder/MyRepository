@@ -5,16 +5,17 @@ import styles from "./StoryWidget.css";
 
 export default class StoryProduct extends React.Component {
   render() {
+    console.log(this.props);
     return (
       <div className={styles.content}>
         <div className={styles.productImage}>
           <div className={styles.imageActual}>
-            <Image image="http://img.tatacliq.com/images/i3/252Wx374H/MP000000002333309_252Wx374H_20180127024115.jpeg" />
+            <Image image={this.props.imageUrl} />
           </div>
         </div>
         <div className={styles.productSection}>
-          <div className={styles.row}>A product name</div>
-          <div className={styles.row}>4095 </div>
+          <div className={styles.row}>{this.props.productName}</div>
+          <div className={styles.row}>{this.props.mrp} </div>
           <div className={styles.button}>
             <Button label="View Product" type="secondary" />
           </div>

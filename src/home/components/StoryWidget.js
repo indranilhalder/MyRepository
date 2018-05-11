@@ -1,7 +1,5 @@
 import React from "react";
-import StoryProduct from "./StoryProduct";
 import Image from "../../xelpmoc-core/Image";
-
 import styles from "./StoryWidget.css";
 
 export default class StoryWidget extends React.Component {
@@ -9,43 +7,49 @@ export default class StoryWidget extends React.Component {
     super(props);
     this.state = {
       position: 0,
-      length: this.props.children.length,
-      totalTimer: 0
+      length: this.props.children ? this.props.children.length : 0,
+      totalTimer: 0,
+      request: 0
     };
   }
-  componentDidMount = () => {
-    this.registerAnimationElement();
-    this.runTimer();
-  };
-  runTimer = () => {
-    const totalTimer = this.state.totalTimer + 1;
 
-    // if (translate > 662 - HEIGHT_OF_CONTAINER) {
-    //   translate = 0;
-    // }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.children !== nextProps.children) {
+      this.setState({ length: nextProps.children.length });
+      this.runTimer();
+    }
+  }
+  runTimer = () => {
+    let totalTimer = this.state.totalTimer + 1;
+
+    if (totalTimer > 240) {
+      totalTimer = 0;
+      this.forward();
+    }
     this.setState({ totalTimer }, () => {
       requestAnimationFrame(this.runTimer);
     });
   };
 
   forward = () => {
-    if (this.state.position < this.state.length) {
+    if (this.state.position < this.state.length - 1) {
       const position = this.state.position + 1;
       this.setState({ position });
+      this.setState({ totalTimer: 0 });
+    } else {
+      if (this.props.onEnd) {
+        this.props.onEnd();
+      }
     }
   };
   back = () => {
     if (this.state.position > 0) {
       const position = this.state.position - 1;
       this.setState({ position });
+      this.setState({ totalTimer: 0 });
     }
   };
-  registerAnimationElement = () => {
-    const element = document.getElementById("storyWidget");
-    element.addEventListener("animationend", () => {
-      this.revert();
-    });
-  };
+
   handleSwipeStart(evt) {
     evt.stopPropagation();
     this.setState({ touchStart: evt.touches[0].clientX });
@@ -63,36 +67,56 @@ export default class StoryWidget extends React.Component {
       }
     }
   }
-  // style={{ transform: `translateY(${-this.state.totalTranslate}px)`
+  renderLoader() {
+    if (this.props.feedComponentData.items.length > 0) {
+      return null;
+    } else {
+      return <div className={styles.loader} />;
+    }
+  }
+
   render() {
-    // console.log(this.state.position);
     const translateAmount = this.state.position * -100;
-    // console.log(translateAmount);
-    return (
-      <div className={styles.base}>
-        <div className={styles.timerHolder}>
-          <div className={styles.timer}>
-            <div className={styles.timerProgress} />
+
+    if (this.props.feedComponentData && this.props.feedComponentData.items) {
+      return (
+        <div className={styles.base}>
+          <div className={styles.timerHolder}>
+            <div className={styles.timer}>
+              <div
+                className={styles.timerProgress}
+                style={{ transform: `scaleX(${this.state.totalTimer / 240})` }}
+              />
+            </div>
           </div>
-        </div>
-        <div className={styles.brandSection}>
-          <div className={styles.brandImage}>
-            <Image image="http://img.tatacliq.com/images/i3/252Wx374H/MP000000002333309_252Wx374H_20180127024115.jpeg" />
+          <div className={styles.brandSection}>
+            <div className={styles.brandImage}>
+              <Image image={this.props.image} />
+            </div>
+            <div className={styles.brandName}>{this.props.brandName}</div>
+            <div className={styles.brandProducts}>{this.props.title}</div>
+            <div
+              className={styles.cancel}
+              onClick={() => this.props.closeModal()}
+            />
           </div>
-          <div className={styles.brandName}>Adidas</div>
-          <div className={styles.brandProducts}>18 New Products</div>
+
+          {this.props.feedComponentData.items.length > 0 && (
+            <div
+              className={styles.gallery}
+              style={{ transform: `translateX(${translateAmount}%)` }}
+              onTouchStart={evt => this.handleSwipeStart(evt)}
+              onTouchMove={evt => this.handleSwipeMove(evt)}
+              onTouchEnd={evt => this.handleSwipeEnd(evt)}
+            >
+              {this.props.children}
+            </div>
+          )}
+          {this.renderLoader()}
         </div>
-        <div
-          className={styles.gallery}
-          style={{ transform: `translateX(${translateAmount}%)` }}
-          id={"storyWidget"}
-          onTouchStart={evt => this.handleSwipeStart(evt)}
-          onTouchMove={evt => this.handleSwipeMove(evt)}
-          onTouchEnd={evt => this.handleSwipeEnd(evt)}
-        >
-          {this.props.children}
-        </div>
-      </div>
-    );
+      );
+    } else {
+      return <div className={styles.loader} />;
+    }
   }
 }
