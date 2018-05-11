@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./EmiPanel.css";
 import PropTypes from "prop-types";
 import MenuDetails from "../../general/components/MenuDetails.js";
-import eWalletIcon from "./img/netBanking.svg";
+import emiIcon from "./img/emi.svg";
 import NoCostEmi from "./NoCostEmi.js";
 import CheckoutEmi from "./CheckoutEmi.js";
 import NoCostEmiBankDetails from "./NoCostEmiBankDetails.js";
@@ -101,7 +101,7 @@ export default class EmiPanel extends React.Component {
       <div className={styles.base}>
         <MenuDetails
           text={EMI}
-          icon={eWalletIcon}
+          icon={emiIcon}
           isOpen={this.props.currentPaymentMode === EMI}
           onOpenMenu={currentPaymentMode =>
             this.props.onChange({ currentPaymentMode })

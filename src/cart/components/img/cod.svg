@@ -1,25 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="50px" height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
-<g id="Desktop-_x2F_-Checkout-1">
-	<g id="Desktop-Checkout_PAYMENT" transform="translate(-155.000000, -1091.000000)">
-		<g id="Group-24" transform="translate(155.000000, 1090.000000)">
-			<g id="Net">
-				<g id="Page-1" transform="translate(0.000000, 1.000000)">
-					<path id="Stroke-1" fill="none" stroke="#040505" stroke-width="1.4" d="M46.294,41.186H3.707
-						c-1.772,0-3.207-1.436-3.207-3.207v-2.447h49v2.447C49.5,39.75,48.065,41.186,46.294,41.186z"/>
-					<path id="Stroke-3" fill="none" stroke="#040505" stroke-width="1.4" d="M3.107,36.307V12.147c0-1.837,1.504-3.341,3.333-3.341
-						h37.122c1.829,0,3.34,1.503,3.34,3.341v24.159"/>
-					<path id="Stroke-5" fill="none" stroke="#040505" stroke-width="1.4" stroke-linecap="round" d="M21.46,36.827h7.08"/>
-					<path id="Fill-7" fill="#231F20" d="M25.125,19.072c-0.39-1.107-1.447-1.889-2.665-1.889h-2.826v-1.877h10.732v1.877h-4.14
-						c0.341,0.45,0.589,0.955,0.743,1.499c0.078,0.225,0.271,0.391,0.512,0.391h2.885v1.886h-2.884
-						c-0.241,0-0.436,0.166-0.514,0.399c-0.578,1.965-2.396,3.376-4.509,3.376h-0.45l3.899,5.008l-1.486,1.154l-4.683-6.012
-						c-0.072-0.096-0.107-0.203-0.107-0.322v-1.715h2.826c1.218,0,2.275-0.774,2.665-1.889h-5.491v-1.886H25.125z"/>
-				</g>
-			</g>
-		</g>
-	</g>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="23px" viewBox="0 0 34 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Page 1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="5-Select-coupon-Copy-5" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-37.000000, -801.000000)">
+        <g id="Payment-menthod" transform="translate(16.000000, 150.000000)">
+            <g id="Page-1" transform="translate(22.000000, 652.000000)">
+                <path d="M26,18 L26.9478673,18 C28.0767773,18 29,17.0767773 29,15.9478673 L29,15" id="Stroke-1" stroke="#020303" stroke-width="1.4" stroke-linecap="round"></path>
+                <path d="M5,2 L4.05183312,2 C2.92351454,2 2,2.92322275 2,4.0521327 L2,5" id="Stroke-3" stroke="#020303" stroke-width="1.4" stroke-linecap="round"></path>
+                <path d="M26,2 L26.9478673,2 C28.0767773,2 29,2.92322275 29,4.0521327 L29,5" id="Stroke-5" stroke="#020303" stroke-width="1.4" stroke-linecap="round"></path>
+                <path d="M5,18 L4.05183312,18 C2.92351454,18 2,17.0767773 2,15.9478673 L2,15" id="Stroke-7" stroke="#020303" stroke-width="1.4" stroke-linecap="round"></path>
+                <path d="M29.8221845,21 L2.1788219,21 C0.981224644,21 0,20.0266026 0,18.8363394 L0,2.16366059 C0,0.973397421 0.981224644,0 2.1788219,0 L29.8221845,0 C31.0197817,0 32,0.973397421 32,2.16366059 L32,18.8363394 C32,20.0266026 31.0197817,21 29.8221845,21 Z" id="Stroke-9" stroke="#020303" stroke-width="1.4"></path>
+                <path d="M15.5833812,7.41849437 C15.3272101,6.70618455 14.6360505,6.20727129 13.8434271,6.20727129 L12,6.20727129 L12,5 L19,5 L19,6.20727129 L16.2976464,6.20727129 C16.5176521,6.49476388 16.6834099,6.81881051 16.7868829,7.16557992 C16.831085,7.31278403 16.9586682,7.41849437 17.11438,7.41849437 L19,7.41849437 L19,8.62576566 L17.1153846,8.62576566 C16.9596728,8.62576566 16.831085,8.73246394 16.7868829,8.87966805 C16.407147,10.1402885 15.2227325,11.04426 13.8434271,11.04426 L13.5510907,11.04426 L16.0927095,14.2580518 L15.1232778,15 L12.0733352,11.1440427 C12.0261194,11.08279 12,11.0096819 12,10.93361 L12,9.83698874 L13.8434271,9.83698874 C14.6360505,9.83698874 15.3272101,9.33807548 15.5833812,8.62576566 L12,8.62576566 L12,7.41849437 L15.5833812,7.41849437 Z" id="Fill-11" fill="#231F20"></path>
+            </g>
+        </g>
+    </g>
 </svg>
