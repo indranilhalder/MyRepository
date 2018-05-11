@@ -15,12 +15,10 @@ export default class FollowBase extends React.Component {
     };
   }
   handleClick = data => {
-    if (this.props.getItems) {
-      this.props.showStory({
-        positionInFeed: this.props.positionInFeed,
-        ...data
-      });
-    }
+    this.props.showStory({
+      positionInFeed: this.props.positionInFeed,
+      ...data
+    });
   };
 
   render() {
