@@ -115,6 +115,7 @@ const PDPRecommendedSectionsContainer = LoadableVisibility({
 const NO_SIZE = "NO SIZE";
 const FREE_SIZE = "Free Size";
 const PRODUCT_QUANTITY = "1";
+const IMAGE = "Image";
 export default class PdpJewellery extends React.Component {
   constructor(props) {
     super(props);
@@ -303,6 +304,9 @@ export default class PdpJewellery extends React.Component {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
+          .filter(val => {
+            return val.mediaType === IMAGE;
+          })
           .map(galleryImageList => {
             return galleryImageList.galleryImages.filter(galleryImages => {
               return galleryImages.key === "product";
@@ -359,7 +363,6 @@ export default class PdpJewellery extends React.Component {
             <JewelleryDetailsAndLink
               brandName={productData.brandName}
               productName={productData.productName}
-              productDescription={productData.productDescription}
               price={price}
               discountPrice={discountPrice}
               averageRating={productData.averageRating}
@@ -461,7 +464,7 @@ please try another pincode"
                 headerFontSize={16}
                 isOpen={true}
               >
-                <div className={styles.accordionContent}>
+                <div className={styles.accordionContent} itemProp="description">
                   {productData.productDescription}
                 </div>
               </Accordion>

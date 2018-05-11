@@ -6,6 +6,7 @@ import SlideModal from "../../general/components/SlideModal";
 export default class ItemLevelPopup extends React.Component {
   render() {
     let emiItemDetails = this.props.emiItemDetails;
+
     return (
       <SlideModal closeModal={this.props.closeModal}>
         <div className={styles.base}>
@@ -14,9 +15,12 @@ export default class ItemLevelPopup extends React.Component {
             <div className={styles.cardName}>{`${emiItemDetails.bankName} for ${
               emiItemDetails.tenure
             } months`}</div>
-            <div className={styles.offerText}>
-              {this.props.emiItemDetails.noCostEmiText}
-            </div>
+
+            <div
+              className={styles.offerText}
+            >{` No Coast EMI available only on ${
+              emiItemDetails.itemBreakUpDetailList[0].quantity
+            } product(s). Standard EMI will apply to products, if any, bought along with it.`}</div>
           </div>
           <div className={styles.levelBreakupHolder}>
             {emiItemDetails &&
@@ -79,7 +83,4 @@ ItemLevelPopup.propTypes = {
       emiAmount: PropTypes.string
     })
   )
-};
-ItemLevelPopup.defaultProps = {
-  defaultText: ""
 };

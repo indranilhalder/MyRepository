@@ -557,7 +557,11 @@ export function returnPinCode(productDetails) {
       resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        let message = resultJsonStatus.message;
+        if (resultJsonStatus.message === FAILURE_UPPERCASE) {
+          message = "Sorry! pick up is not available for your area......";
+        }
+        throw new Error(message);
       }
 
       dispatch(returnPInCodeSuccess(resultJson));
@@ -966,7 +970,11 @@ export function getPinCode(pinCode) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        let errorMessage = resultJsonStatus.message;
+        if (errorMessage === FAILURE_UPPERCASE) {
+          errorMessage = "Pincode is not serviceable";
+        }
+        throw new Error(errorMessage);
       }
       dispatch(getPinCodeSuccess(resultJson));
     } catch (e) {

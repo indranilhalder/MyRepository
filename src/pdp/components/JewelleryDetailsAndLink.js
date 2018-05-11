@@ -73,11 +73,6 @@ export default class JewelleryDetailsAndLink extends React.Component {
                 </div>
               </a>
             )}
-            {this.props.productDescription && (
-              <div itemProp="description" className={styles.productDescription}>
-                {this.props.productDescription}
-              </div>
-            )}
           </div>
           <div
             itemProp="offers"

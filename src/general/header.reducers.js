@@ -1,11 +1,19 @@
 import * as headerAction from "./header.actions.js";
+import { CART_BAG_DETAILS } from "../lib/constants";
+let bagCount = 0;
+if (
+  localStorage.getItem(CART_BAG_DETAILS) &&
+  JSON.parse(localStorage.getItem(CART_BAG_DETAILS))
+) {
+  bagCount = JSON.parse(localStorage.getItem(CART_BAG_DETAILS)).length;
+}
 const header = (
   state = {
     text: null,
     status: null,
     loading: false,
     error: null,
-    bagCount: 0
+    bagCount
   },
   action
 ) => {

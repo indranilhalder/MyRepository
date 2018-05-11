@@ -56,6 +56,7 @@ const ADOBE_CHECKOUT_APPLY_COUPON_SUCCESS =
 const ADOBE_CHECKOUT_APPLY_COUPON_FAILURE = "cpj_checkout_payment_coupon_fail";
 // end of checkout adobe constants
 // direct call for login tracking
+
 const ADOBE_LOGIN_SUCCESS = "login_successful";
 const ADOBE_LOGIN_FAILURE = "login_failed";
 // end of direct call for login tracking
@@ -218,6 +219,9 @@ export const ADOBE_ON_UN_FOLLOW_BRANDS = "ADOBE_ON_UN_FOLLOW_BRANDS";
 export const ADOBE_ON_CLICK_FOLLOWED_WIDGET = "ADOBE_ON_CLICK_FOLLOWED_WIDGET";
 // end const for follow and un follow
 
+export const ADOBE_STATIC_PAGE = "ADOBE_STATIC_PAGE";
+export const ADOBE_LOGIN_AND_SIGN_UP_PAGE = "ADOBE_LOGIN_AND_SIGN_UP_PAGE";
+
 const GOOGLE = "google";
 const FACEBOOK = "facebook";
 const MOBILE = "mobile";
@@ -322,6 +326,12 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
     type === ADOBE_DEFAULT_CLP_PAGE_LOAD
   ) {
     window.digitalData = getDigitalDataForDefaultBlpOrClp(response);
+  }
+  if (type === ADOBE_LOGIN_AND_SIGN_UP_PAGE) {
+    window.digitalData = getDigitalDataForLoginAndSignup();
+  }
+  if (type === ADOBE_STATIC_PAGE) {
+    window.digitalData = getDigitalDataForStatic(response);
   }
   if (icidType === ICID2) {
     window.digitalData.flag = INTERNAL_CAMPAIGN;
@@ -788,7 +798,7 @@ function getDisplayHierarchy(response) {
   }
 }
 function getSubCategories(response) {
-  if (response.seo && response.seo.breadcrumbs) {
+  if (response && response.seo && response.seo.breadcrumbs) {
     const breadcrumbs = response.seo.breadcrumbs.reverse();
     const subCatagories = {};
     if (breadcrumbs[0]) {
@@ -1387,7 +1397,7 @@ export function getDigitalDataForMyAccount(pageTitle) {
     page: {
       pageInfo: { pageName: pageTitle },
       category: { primaryCategory: pageTitle },
-      display: { hierarchy: `"home","my_tata_cliq",${pageTitle}` }
+      display: { hierarchy: `home|my_tata_cliq|${pageTitle}` }
     }
   };
   return data;
@@ -1529,6 +1539,49 @@ function getDigitalDataForDefaultBlpOrClp(response) {
     Object.assign(data.page, {
       display: {
         hierarchy
+      }
+    });
+  }
+  return data;
+}
+
+function getDigitalDataForLoginAndSignup() {
+  const pageTitle = window.location.pathname.replace(/\//g, "");
+  const data = {
+    page: {
+      pageInfo: { pageName: pageTitle },
+      category: { primaryCategory: pageTitle },
+      display: { hierarchy: `"home"|"${pageTitle}"` }
+    }
+  };
+  return data;
+}
+function getDigitalDataForStatic(response) {
+  const data = {
+    page: { category: { primaryCategory: "category" } }
+  };
+  const subCategories = getSubCategories(response);
+  if (subCategories) {
+    Object.assign(data.page.category, { ...subCategories });
+  }
+  if (response && response.pageName) {
+    Object.assign(data.page, {
+      pageInfo: {
+        pageName: response.pageName.replace(/ /g, "_").toLowerCase()
+      }
+    });
+  } else {
+    Object.assign(data.page, {
+      pageInfo: {
+        pageName: window.location.pathname.replace(/\//g, "")
+      }
+    });
+  }
+
+  if (response && response.pageName) {
+    Object.assign(data.page, {
+      display: {
+        hierarchy: `home|${response.pageName.replace(/ /g, "").toLowerCase()}`
       }
     });
   }

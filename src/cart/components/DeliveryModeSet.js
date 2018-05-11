@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import DeliveryCard from "./DeliveryCard.js";
 import styles from "./DeliveryModeSet.css";
-import { COLLECT } from "../../lib/constants";
+import { COLLECT, YES } from "../../lib/constants";
 export default class DeliveryModeSet extends React.Component {
   handleClick() {
     if (this.props.changeDeliveryModes) {
@@ -18,6 +18,9 @@ export default class DeliveryModeSet extends React.Component {
       >
         {this.props.productDelivery &&
           this.props.productDelivery.map((data, i) => {
+            if (data.isGiveAway === YES) {
+              return <div />;
+            }
             const selectedDeliveryModes = this.props.selectedDeliveryDetails[
               data.USSID
             ];

@@ -5,7 +5,6 @@ import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ProductFeatures from "./ProductFeatures";
-import ProductFeature from "./ProductFeature";
 import Accordion from "../../general/components/Accordion.js";
 import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
@@ -114,6 +113,8 @@ const PDPRecommendedSectionsContainer = LoadableVisibility({
   },
   delay: 400
 });
+const VIDEO = "Video";
+const IMAGE = "Image";
 export default class PdpElectronics extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
@@ -236,6 +237,9 @@ export default class PdpElectronics extends React.Component {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
+          .filter(val => {
+            return val.mediaType === IMAGE;
+          })
           .map(galleryImageList => {
             return galleryImageList.galleryImages.filter(galleryImages => {
               return galleryImages.key === "product";
@@ -311,7 +315,6 @@ export default class PdpElectronics extends React.Component {
                 <ProductDetailsMainCard
                   brandName={productData.brandName}
                   productName={productData.productName}
-                  productDescription={productData.productDescription}
                   brandUrl={productData.brandURL}
                   history={this.props.history}
                   price={price}
@@ -324,7 +327,6 @@ export default class PdpElectronics extends React.Component {
               {productData.rootCategory === "Watches" && (
                 <JewelleryDetailsAndLink
                   brandName={productData.brandName}
-                  productDescription={productData.productDescription}
                   productName={productData.productName}
                   brandUrl={productData.brandURL}
                   history={this.props.history}
@@ -409,7 +411,10 @@ please try another pincode"
                   headerFontSize={16}
                   isOpen={true}
                 >
-                  <div className={styles.accordionContent}>
+                  <div
+                    className={styles.accordionContent}
+                    itemProp="description"
+                  >
                     {productData.productDescription}
                     <div style={{ marginTop: 10 }}>
                       {productData.details &&
@@ -446,7 +451,10 @@ please try another pincode"
                   headerFontSize={16}
                   isOpen={true}
                 >
-                  <div className={styles.accordionContent}>
+                  <div
+                    className={styles.accordionContent}
+                    itemProp="description"
+                  >
                     {productData.productDescription}
                   </div>
                 </Accordion>

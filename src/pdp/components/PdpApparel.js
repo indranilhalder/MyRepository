@@ -112,6 +112,7 @@ const PDPRecommendedSectionsContainer = LoadableVisibility({
 });
 
 const PRODUCT_QUANTITY = "1";
+const IMAGE = "Image";
 export default class PdpApparel extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
@@ -263,6 +264,9 @@ export default class PdpApparel extends React.Component {
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
+          .filter(val => {
+            return val.mediaType === IMAGE;
+          })
           .map(galleryImageList => {
             return galleryImageList.galleryImages.filter(galleryImages => {
               return galleryImages.key === "product";
@@ -316,7 +320,6 @@ export default class PdpApparel extends React.Component {
             <ProductDetailsMainCard
               brandName={productData.brandName}
               productName={productData.productName}
-              productDescription={productData.productDescription}
               brandUrl={productData.brandURL}
               history={this.props.history}
               price={price}
@@ -396,7 +399,7 @@ export default class PdpApparel extends React.Component {
                 headerFontSize={16}
                 isOpen={true}
               >
-                <div className={styles.accordionContent}>
+                <div className={styles.accordionContent} itemProp="description">
                   {productData.productDescription}
                 </div>
               </Accordion>

@@ -25,22 +25,25 @@ export default class OtpVerification extends React.Component {
       this.props.resendOtp(this.props.userObj);
     }
   };
-  onSubmitOtp = () => {
+  onSubmitOtp = otp => {
     if (this.props.submitOtp) {
       if (this.props.username && this.props.password) {
         this.props.submitOtp({
           username: this.props.username,
           password: this.props.password,
-          otp: this.state.otp
+          otp: otp
         });
       } else {
-        this.props.submitOtp(this.state.otp);
+        this.props.submitOtp(otp);
       }
     }
   };
   handleOtpInput(val) {
     if (val.length <= 6) {
       this.setState({ otp: val });
+      if (val.length === 6) {
+        this.onSubmitOtp(val);
+      }
     }
   }
   onClickWrongNumber() {
@@ -55,6 +58,8 @@ export default class OtpVerification extends React.Component {
       mobileNumber = this.props.userObj.username;
     } else if (this.props.userObj && this.props.userObj.mobileNumber) {
       mobileNumber = this.props.userObj.mobileNumber;
+    } else if (this.props.username) {
+      mobileNumber = this.props.username;
     } else {
       mobileNumber = this.props.userObj;
     }
@@ -93,7 +98,7 @@ export default class OtpVerification extends React.Component {
 
             <div className={ownStyles.time}>30 sec</div>
           </div>
-          <div className={styles.button}>
+          {/* <div className={styles.button}>
             <div className={ownStyles.submit}>
               <Button
                 backgroundColor={"transparent"}
@@ -110,7 +115,7 @@ export default class OtpVerification extends React.Component {
                 onClick={() => this.onSubmitOtp()}
               />
             </div>
-          </div>
+          </div> */}
         </MediaQuery>
         <MediaQuery query="(max-device-width: 1024px)">
           <React.Fragment>
@@ -159,13 +164,13 @@ export default class OtpVerification extends React.Component {
                   label={"Resend OTP"}
                   onClick={() => this.resendOtp()}
                 />
-                <Button
+                {/* <Button
                   backgroundColor={"transparent"}
                   height={30}
                   label={"Submit"}
                   textStyle={{ color: "#fff", fontSize: 14 }}
                   onClick={() => this.onSubmitOtp()}
-                />
+                /> */}
               </div>
             </div>
           </React.Fragment>

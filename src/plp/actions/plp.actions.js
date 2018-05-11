@@ -132,6 +132,7 @@ export function getProductListings(
       const encodedString = searchState.string.includes("%3A")
         ? searchState.string
         : encodeURI(searchState.string);
+
       let queryString = `${PRODUCT_LISTINGS_PATH}/?searchText=${encodedString}`;
 
       if (suffix) {

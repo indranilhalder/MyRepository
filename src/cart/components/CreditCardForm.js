@@ -108,7 +108,7 @@ export default class CreditCardForm extends React.Component {
               onChange={val => this.onChangeCardNumber(val)}
               textStyle={{ fontSize: 14 }}
               height={33}
-              maxLength="16"
+              maxLength="19"
             />
           </div>
 
@@ -162,7 +162,7 @@ export default class CreditCardForm extends React.Component {
                     onChange={cvvNumber => this.onChange({ cvvNumber })}
                     textStyle={{ fontSize: 14 }}
                     height={33}
-                    maxLength={"3"}
+                    maxLength={"4"}
                     value={
                       this.props.cvvNumber
                         ? this.props.cvvNumber

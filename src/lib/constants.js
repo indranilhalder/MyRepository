@@ -5,7 +5,7 @@ export const SUCCESS_UPPERCASE = "SUCCESS";
 export const SUCCESS_CAMEL_CASE = "Success";
 export const SUCCESS_FOR_ADDING_TO_WSHLIST =
   "Product added successfully to the wishlist";
-
+export const SUCCESS_FOR_ADDING_TO_BAG = "Product added successfully to bag";
 export const REQUESTING = "requesting";
 export const ERROR = "error";
 export const FAILURE = "Failure";
@@ -13,6 +13,7 @@ export const FAILURE_UPPERCASE = "FAILURE";
 export const FAILURE_LOWERCASE = "failure";
 export const JUS_PAY_PENDING = "PENDING_VBV";
 export const JUS_PAY_CHARGED = "CHARGED";
+export const JUS_PAY_SUCCESS = "S";
 export const JUS_PAY_AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
 export const JUS_PAY_AUTHORIZATION_FAILED = "JUS_PAY_AUTHORIZATION_FAILED";
 export const SINGLE_SELECT_HEADING_COPY = "Thanks!!!";
@@ -141,6 +142,7 @@ export const ANONYMOUS_USER = "anonymous";
 export const COUPON_COOKIE = "couponCode";
 export const BANK_COUPON_COOKIE = "bankCoupon";
 export const CART_BAG_DETAILS = "cartBagDetails";
+export const APP_VIEW = "isAppView";
 
 export const SAVE_LIST_PAGE = "/default/wishList";
 export const PAYMENT_MODE_TYPE = "paymentMode";
@@ -158,6 +160,7 @@ export const SHORT_EXPRESS = "ED";
 export const SHORT_COLLECT = "CNC";
 export const EXPRESS_TEXT = "Express Shipping";
 export const HOME_TEXT = "Standard Shipping";
+export const STANDARD_SHIPPING = "Standard delivery";
 export const COLLECT_TEXT = "CLiQ & PiQ";
 export const FOLLOW = "Follow";
 export const FOLLOWING = "Following";

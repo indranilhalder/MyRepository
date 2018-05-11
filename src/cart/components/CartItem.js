@@ -12,8 +12,10 @@ import {
   EXPRESS,
   COLLECT,
   EXPRESS_TEXT,
-  HOME_TEXT,
-  COLLECT_TEXT
+  STANDARD_SHIPPING,
+  COLLECT_TEXT,
+  YES,
+  NO
 } from "../../lib/constants";
 
 export default class CartItem extends React.Component {
@@ -36,7 +38,7 @@ export default class CartItem extends React.Component {
   }
   getDeliveryName = type => {
     if (type === HOME_DELIVERY) {
-      return HOME_TEXT;
+      return STANDARD_SHIPPING;
     }
     if (type === EXPRESS) {
       return EXPRESS_TEXT;
@@ -90,6 +92,7 @@ export default class CartItem extends React.Component {
             price={this.props.price}
             color={this.props.color}
             size={this.props.size}
+            isGiveAway={this.props.isGiveAway}
             isOutOfStock={this.props.isOutOfStock}
             isServiceAvailable={this.props.productIsServiceable}
             onClickImage={() => this.onClick()}
@@ -118,7 +121,8 @@ export default class CartItem extends React.Component {
             </div>
           )}
 
-        {this.state.showDelivery &&
+        {this.props.isGiveAway === NO &&
+          this.state.showDelivery &&
           this.props.deliveryInformation && (
             <DeliveryInfoSelect
               deliveryInformation={this.props.deliveryInformation}
@@ -128,25 +132,35 @@ export default class CartItem extends React.Component {
               isClickable={this.props.isClickable}
             />
           )}
-        {this.props.hasFooter && (
-          <div className={styles.footer}>
-            <BagPageFooter
-              productCode={this.props.product.productcode}
-              winningUssID={this.props.product.USSID}
-              onRemove={() => this.handleRemove(this.props.index)}
-            />
-            <div className={styles.dropdown}>
-              <div className={styles.dropdownLabel}>
-                {this.props.dropdownLabel}
-              </div>
-              <SelectBoxMobile2
-                disabled={this.props.isOutOfStock}
-                theme="hollowBox"
-                options={fetchedQuantityList}
-                onChange={val => this.handleQuantityChange(val)}
-                value={this.props.qtySelectedByUser}
-                label={this.props.qtySelectedByUser}
+        {this.props.isGiveAway === NO &&
+          this.props.hasFooter && (
+            <div className={styles.footer}>
+              <BagPageFooter
+                productCode={this.props.product.productcode}
+                winningUssID={this.props.product.USSID}
+                onRemove={() => this.handleRemove(this.props.index)}
               />
+              <div className={styles.dropdown}>
+                <div className={styles.dropdownLabel}>
+                  {this.props.dropdownLabel}
+                </div>
+                <SelectBoxMobile2
+                  disabled={this.props.isOutOfStock}
+                  theme="hollowBox"
+                  options={fetchedQuantityList}
+                  onChange={val => this.handleQuantityChange(val)}
+                  value={this.props.qtySelectedByUser}
+                  label={this.props.qtySelectedByUser}
+                />
+              </div>
+            </div>
+          )}
+        {this.props.isGiveAway === YES && (
+          <div className={styles.footerForFreeProduct}>
+            <div className={styles.footerText}>
+              {this.props.product &&
+                this.props.product.qtySelectedByUser &&
+                `Qty :  ${this.props.product.qtySelectedByUser}`}
             </div>
           </div>
         )}

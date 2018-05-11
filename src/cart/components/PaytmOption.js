@@ -3,7 +3,7 @@ import styles from "./PaytmOption.css";
 import PropTypes from "prop-types";
 import MenuDetails from "../../general/components/MenuDetails.js";
 import CheckBox from "../../general/components/CheckBox.js";
-import eWalletIcon from "./img/netBanking.svg";
+import eWalletIcon from "./img/ewallet.svg";
 import paytmIcon from "./img/paytm.png";
 import Logo from "../../general/components/Logo";
 import { E_WALLET } from "../../lib/constants";
@@ -14,12 +14,21 @@ export default class PaytmOption extends React.Component {
       selected: false
     };
   }
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.paymentModeSelected) {
+      this.setState({ selected: false });
+    }
+  }
   handleOnSelect() {
-    this.setState({ selected: !this.state.selected }, () => {
+    if (this.state.selected) {
+      this.props.binValidationForPaytm(false);
+      this.setState({ selected: false });
+    } else {
       if (this.props.binValidationForPaytm) {
-        this.props.binValidationForPaytm(this.state);
+        this.setState({ selected: true });
+        this.props.binValidationForPaytm(true);
       }
-    });
+    }
   }
   render() {
     return (

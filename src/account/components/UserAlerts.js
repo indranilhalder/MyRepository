@@ -7,8 +7,7 @@ export default class UserAlerts extends React.Component {
     const { userAlerts } = this.props;
     return (
       <div className={styles.base}>
-        {userAlerts &&
-          userAlerts.orderNotifications &&
+        {userAlerts && userAlerts.orderNotifications ? (
           userAlerts.orderNotifications.map(alert => (
             <div className={styles.cardHolder}>
               <ShippingCommenced
@@ -17,7 +16,10 @@ export default class UserAlerts extends React.Component {
                 orderNotificationPassDate={alert.orderNotificationPassDate}
               />
             </div>
-          ))}
+          ))
+        ) : (
+          <div className={styles.noAlerts}>{"No Alerts"}</div>
+        )}
       </div>
     );
   }
