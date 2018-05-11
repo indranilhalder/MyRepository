@@ -187,7 +187,7 @@ export function removeProductFromWishList(productDetails) {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     const productToBeRemove = new FormData();
-    productToBeRemove.append("USSID", productDetails.USSID);
+    productToBeRemove.append("USSID", productDetails.ussId);
     productToBeRemove.append("wishlistName", MY_WISH_LIST);
     dispatch(removeProductFromWishListRequest());
     dispatch(showSecondaryLoader());
@@ -207,6 +207,7 @@ export function removeProductFromWishList(productDetails) {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(hideSecondaryLoader());
+      dispatch(getWishListItems());
       return dispatch(removeProductFromWishListSuccess(productDetails));
     } catch (e) {
       dispatch(hideSecondaryLoader());
