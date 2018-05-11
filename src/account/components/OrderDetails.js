@@ -10,7 +10,7 @@ import OrderStatusHorizontal from "./OrderStatusHorizontal";
 import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
 import format from "date-fns/format";
-
+import each from "lodash.foreach";
 import queryString from "query-string";
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
@@ -165,6 +165,16 @@ export default class OrderDetails extends React.Component {
       <div className={styles.base}>
         {orderDetails &&
           orderDetails.products.map((products, i) => {
+            let isOrderReturnable = false;
+
+            each(products.statusDisplayMsg, orderStatus => {
+              each(orderStatus.value.statusList, status => {
+                if (status.responseCode === "DELIVERED") {
+                  isOrderReturnable = true;
+                }
+              });
+            });
+
             return (
               <div className={styles.order} key={i}>
                 <div className={styles.orderIdHolder}>
@@ -343,7 +353,7 @@ export default class OrderDetails extends React.Component {
                   <div className={styles.buttonHolder}>
                     <div className={styles.buttonHolderForUpdate}>
                       <div className={styles.replaceHolder}>
-                        {products.isReturned && (
+                        {(products.isReturned || isOrderReturnable) && (
                           <div
                             className={styles.review}
                             onClick={() =>
