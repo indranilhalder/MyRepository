@@ -154,6 +154,12 @@ export default class AllOrderDetails extends React.Component {
                       orderDetails.products &&
                       orderDetails.products[0].imageURL
                     }
+                    isGiveAway={
+                      orderDetails &&
+                      orderDetails.products &&
+                      orderDetails.products[0] &&
+                      orderDetails.products[0].isGiveAway
+                    }
                     price={orderDetails && orderDetails.totalOrderAmount}
                     discountPrice={""}
                     productName={
