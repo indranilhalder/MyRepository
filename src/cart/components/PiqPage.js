@@ -14,13 +14,19 @@ export default class PiqPage extends React.Component {
     super(props);
     this.state = {
       lat:
-        this.props.availableStores.length > 0 && this.props.availableStores[0]
-          ? this.props.availableStores[0].geoPoint.latitude
+        this.props.availableStores &&
+        this.props.availableStores.length > 0 &&
+        this.props.availableStores[0]
+          ? this.props.availableStores &&
+            this.props.availableStores[0].geoPoint.latitude
           : 28.6129918,
 
       lng:
-        this.props.availableStores.length > 0 && this.props.availableStores[0]
-          ? this.props.availableStores[0].geoPoint.longitude
+        this.props.availableStores &&
+        this.props.availableStores.length > 0 &&
+        this.props.availableStores[0]
+          ? this.props.availableStores &&
+            this.props.availableStores[0].geoPoint.longitude
           : 77.2310456,
 
       position: 0,
@@ -45,7 +51,7 @@ export default class PiqPage extends React.Component {
       });
     }
 
-    if (nextProps.availableStores.length > 0) {
+    if (nextProps.availableStores && nextProps.availableStores.length > 0) {
       this.setState(prevState => ({
         lat: nextProps.availableStores[0].geoPoint.latitude,
         lng: nextProps.availableStores[0].geoPoint.longitude
