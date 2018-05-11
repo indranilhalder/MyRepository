@@ -167,12 +167,17 @@ export default class OrderDetails extends React.Component {
           orderDetails.products.map((products, i) => {
             let isOrderReturnable = false;
 
-            each(products.statusDisplayMsg, orderStatus => {
-              each(orderStatus.value.statusList, status => {
-                if (status.responseCode === "DELIVERED") {
-                  isOrderReturnable = true;
+            each(products && products.statusDisplayMsg, orderStatus => {
+              each(
+                orderStatus &&
+                  orderStatus.value &&
+                  orderStatus.value.statusList,
+                status => {
+                  if (status.responseCode === "DELIVERED") {
+                    isOrderReturnable = true;
+                  }
                 }
-              });
+              );
             });
 
             return (
