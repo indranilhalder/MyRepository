@@ -12,8 +12,10 @@ export default class OrderDetailsCard extends React.Component {
     }
   }
   onClick(val) {
-    if (this.props.onClick) {
-      this.props.onClick(val);
+    if (!this.props.orderDetails.isEgvOrder) {
+      if (this.props.onClick) {
+        this.props.onClick(val);
+      }
     }
   }
   render() {
@@ -61,6 +63,7 @@ export default class OrderDetailsCard extends React.Component {
           )}
         </OrderCard>
         <PriceAndLink
+          isEgvOrder={this.props.orderDetails.isEgvOrder}
           onViewDetails={() => this.onViewDetails()}
           price={this.props.orderDetails.finalAmount}
         />

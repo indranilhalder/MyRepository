@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 import { getComponentData, getItems } from "../actions/home.actions";
 import { withRouter } from "react-router-dom";
 import Widget from "../components/Widget";
+import { showModal, STORY_MODAL } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getComponentData: (
@@ -17,6 +18,9 @@ const mapDispatchToProps = dispatch => {
     },
     getItems: (positionInFeed, itemIds) => {
       dispatch(getItems(positionInFeed, itemIds));
+    },
+    showStory: (position, data) => {
+      dispatch(showModal(STORY_MODAL, position, data));
     }
   };
 };
