@@ -21,7 +21,6 @@ export default class ItemLevelPopup extends React.Component {
             >{` No Coast EMI available only on ${
               emiItemDetails.itemBreakUpDetailList[0].quantity
             } product(s). Standard EMI will apply to products, if any, bought along with it.`}</div>
-
           </div>
           <div className={styles.levelBreakupHolder}>
             {emiItemDetails &&
@@ -85,4 +84,3 @@ ItemLevelPopup.propTypes = {
     })
   )
 };
-

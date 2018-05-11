@@ -59,6 +59,7 @@
     "react-dom": "^16.3.1",
     "react-grecaptcha": "^1.2.5",
     "react-loadable": "^5.3.1",
+    "react-loadable-visibility": "^2.4.2",
     "react-meta-tags": "^0.4.1",
     "react-motion": "^0.5.2",
     "react-player": "^1.1.1",
@@ -79,7 +80,7 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "start": "REACT_APP_STAGE=tmpprod node -r dotenv/config scripts/start.js",
+    "start": "REACT_APP_STAGE=p2 node -r dotenv/config scripts/start.js",
     "stage": " REACT_APP_STAGE=stage node scripts/build.js",
     "tmpprod": " REACT_APP_STAGE=tmpprod node scripts/build.js",
     "local": " REACT_APP_STAGE=local node scripts/build.js",
@@ -108,6 +109,7 @@
     "eslint": "^4.14.0",
     "eslint-config-recommended": "^2.0.0",
     "eslint-plugin-react": "^7.5.1",
+    "extract-css-chunks-webpack-plugin": "^2.0.19",
     "husky": "^0.14.3",
     "lint-staged": "^6.0.0",
     "pm2": "^2.9.1",

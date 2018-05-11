@@ -23,7 +23,7 @@ export default class ProductDetailsMainCard extends React.Component {
   renderSchemaTags = () => {
     return (
       <MetaTags>
-        <meta itemprop="priceCurrency" content="INR" />
+        <meta itemProp="priceCurrency" content="INR" />
         <meta
           itemProp="itemCondition"
           content="http://schema.org/NewCondition"
