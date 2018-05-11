@@ -5,6 +5,7 @@ import Loadable from "react-loadable";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import PriceBreakupModal from "../../pdp/components/PriceBreakupModal";
 import OrderModal from "../../account/components/OrderModal";
+
 import * as Cookie from "../../lib/Cookie.js";
 import {
   LOGGED_IN_USER_DETAILS,
@@ -69,7 +70,12 @@ const SizeGuideModal = Loadable({
     return <Loader />;
   }
 });
-
+const StoryWidgetContainer = Loadable({
+  loader: () => import("../../home/containers/StoryWidgetContainer"),
+  loading() {
+    return <Loader />;
+  }
+});
 const AddressModalContainer = Loadable({
   loader: () => import("../../plp/containers/AddressModalContainer"),
   loading() {
@@ -511,6 +517,12 @@ export default class ModalRoot extends React.Component {
         />
       ),
       SizeGuide: <SizeGuideModal closeModal={() => this.handleClose()} />,
+      StoryModal: (
+        <StoryWidgetContainer
+          closeModal={() => this.handleClose()}
+          {...this.props.ownProps}
+        />
+      ),
       GenerateOtpForEgv: (
         <KycApplicationFormWithBottomSlideModal
           closeModal={() => this.handleClose()}

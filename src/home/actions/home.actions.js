@@ -51,11 +51,14 @@ export const MULTI_SELECT_SUBMIT_PATH = "submitMultiSelectQuestion";
 export const GET_ITEMS_REQUEST = "GET_SALE_ITEMS_REQUEST";
 export const GET_ITEMS_SUCCESS = "GET_SALE_ITEMS_SUCCESS";
 export const GET_ITEMS_FAILURE = "GET_SALE_ITEMS_FAILURE";
+export const CLEAR_ITEMS = "CLEAR_ITEMS";
 
 export const GET_PRODUCT_CAPSULES_REQUEST = "GET_PRODUCT_CAPSULES_REQUEST";
 export const GET_PRODUCT_CAPSULES_SUCCESS = "GET_PRODUCT_CAPSULES_SUCCESS";
 export const GET_PRODUCT_CAPSULES_FAILURE = "GET_PRODUCT_CAPSULES_FAILURE";
 
+export const CLEAR_ITEMS_FOR_PARTICULAR_POSITION =
+  "CLEAR_ITEMS_FOR_PARTICULAR_POSITION";
 const ADOBE_TARGET_DELAY = 1500;
 const MSD_NUM_PRODUCTS = 10;
 const MSD_NUM_RESULTS = 10;
@@ -149,6 +152,14 @@ export function getItemsSuccess(positionInFeed, items, itemIds) {
     itemIds
   };
 }
+export function clearItemsSuccess(positionInFeed) {
+  return {
+    type: CLEAR_ITEMS_FOR_PARTICULAR_POSITION,
+    status: SUCCESS,
+    positionInFeed
+  };
+}
+
 export function getItemsFailure(positionInFeed, errorMsg) {
   return {
     type: GET_ITEMS_FAILURE,
@@ -167,6 +178,7 @@ export function getItems(positionInFeed, itemIds) {
       const url = `v2/mpl/cms/page/getProductInfo?isPwa=true&productCodes=${productCodes}`;
       const result = await api.get(url);
       const resultJson = await result.json();
+
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
