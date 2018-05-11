@@ -5,7 +5,6 @@ import styles from "./StoryWidget.css";
 
 export default class StoryProduct extends React.Component {
   render() {
-    console.log(this.props);
     return (
       <div className={styles.content}>
         <div className={styles.productImage}>
