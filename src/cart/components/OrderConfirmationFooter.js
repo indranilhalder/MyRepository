@@ -17,25 +17,43 @@ export default class OrderConfirmationFooter extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.footerButtonHolder}>
-          <FooterButton
-            borderColor="#ececec"
-            label={this.props.viewFullDetailsText}
-            onClick={() => this.trackOrder()}
-          />
-        </div>
-        <div className={styles.footerButtonHolder}>
-          <FooterButton
-            backgroundColor="#ff1744"
-            label={this.props.continueShoppingText}
-            onClick={() => this.continueShopping()}
-            labelStyle={{
-              color: "#fff",
-              fontSize: 14,
-              fontFamily: "semibold"
-            }}
-          />
-        </div>
+        {!this.props.isEgvOrder && (
+          <div>
+            <div className={styles.footerButtonHolder}>
+              <FooterButton
+                borderColor="#ececec"
+                label={this.props.viewFullDetailsText}
+                onClick={() => this.trackOrder()}
+              />
+            </div>
+            <div className={styles.footerButtonHolder}>
+              <FooterButton
+                backgroundColor="#ff1744"
+                label={this.props.continueShoppingText}
+                onClick={() => this.continueShopping()}
+                labelStyle={{
+                  color: "#fff",
+                  fontSize: 14,
+                  fontFamily: "semibold"
+                }}
+              />
+            </div>}
+          </div>
+        )}
+        {this.props.isEgvOrder && (
+          <div className={styles.buttonHolder}>
+            <FooterButton
+              backgroundColor="#ff1744"
+              onClick={() => this.continueShopping()}
+              label={this.props.continueShoppingText}
+              labelStyle={{
+                color: "#fff",
+                fontSize: 14,
+                fontFamily: "semibold"
+              }}
+            />
+          </div>
+        )}
       </div>
     );
   }
