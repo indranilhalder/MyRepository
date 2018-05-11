@@ -111,7 +111,7 @@ export default class SaveListDetails extends React.Component {
                 <SaveListCard
                   //productName={product.productBrand}
                   outOfStock={product.availableStock === 0}
-                  productMaterial={product.productName}
+                  productName={product.productName}
                   price={product.mrp && product.mrp.value}
                   date={format(product.date, dateFormat)}
                   day=""
@@ -122,6 +122,7 @@ export default class SaveListDetails extends React.Component {
                   addToBagItem={() =>
                     this.addToBagItem(product.USSID, product.productcode)
                   }
+                  brandName={product.brandName}
                   onClickImage={() => this.onClickImage(product.productcode)}
                   removeItem={productUssid => this.removeItem(product.USSID)}
                 />
