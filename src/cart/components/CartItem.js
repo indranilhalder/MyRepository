@@ -157,7 +157,11 @@ export default class CartItem extends React.Component {
           )}
         {this.props.isGiveAway === YES && (
           <div className={styles.footerForFreeProduct}>
-            <div className={styles.footerText}>Qut : 1</div>
+            <div className={styles.footerText}>
+              {this.props.product &&
+                this.props.product.qtySelectedByUser &&
+                `Qut : ${this.props.product.qtySelectedByUser}`}
+            </div>
           </div>
         )}
       </div>
