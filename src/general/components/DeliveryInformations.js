@@ -10,9 +10,9 @@ import HomeImage from "./img/homeDelivery.svg";
 import arrowIcon from "./img/arrowBackblack.svg";
 import CollectImage from "./img/collect.svg";
 import { EXPRESS, COLLECT } from "../../lib/constants";
-const EXPRESS_TEXT = "Express Delivery";
-const HOME_TEXT = "Standard Delivery (FREE)";
-const COLLECT_TEXT = "QUiQ PiQ";
+const EXPRESS_TEXT = "Express Shipping";
+const HOME_TEXT = "Standard Shipping";
+const COLLECT_TEXT = "CLiQ & PiQ";
 export default class DeliveryInformations extends React.Component {
   handleClick() {
     if (this.props.onClick) {
