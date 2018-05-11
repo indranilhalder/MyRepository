@@ -71,7 +71,7 @@ export default class SaveListDetails extends React.Component {
   }
   removeItem(ussid) {
     const productDetails = {};
-    productDetails.USSID = ussid;
+    productDetails.ussId = ussid;
     if (this.props.removeProductFromWishList) {
       this.props.removeProductFromWishList(productDetails);
     }
@@ -103,7 +103,8 @@ export default class SaveListDetails extends React.Component {
 
     return (
       <div className={styles.base}>
-        {wishList &&
+        {this.props.count > 0 &&
+          wishList &&
           wishList.map((product, i) => {
             return (
               <div className={styles.listCardHolder} key={i}>
@@ -127,7 +128,10 @@ export default class SaveListDetails extends React.Component {
               </div>
             );
           })}
-        {(!wishList || wishList.length === 0) && (
+        {(!wishList ||
+          wishList.length === 0 ||
+          this.props.count === 0 ||
+          this.props.count === null) && (
           <div className={styles.noSaveListBlock}>
             <div className={styles.noSaveListText}>{NO_SAVELIST_TEXT}</div>
             <div className={styles.buttonHolder}>

@@ -39,3 +39,20 @@
   bottom: 0;
   margin: auto;
 }
+.statusFailedBase {
+  width: auto;
+  height: auto;
+  position: absolute;
+  right: 0;
+  top: 25px;
+  bottom: 0;
+  margin: auto;
+}
+.statusFailed {
+  width: 100%;
+  height: auto;
+  color: #181818;
+  font-size: 14px;
+  font-family: semibold;
+  display: inline-block;
+}
