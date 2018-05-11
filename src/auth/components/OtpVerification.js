@@ -73,7 +73,7 @@ export default class OtpVerification extends React.Component {
           <div>
             <Input
               value={this.state.otp}
-              placeholder={"Enter 6-digit code"}
+              placeholder={"Enter 6-digit OTP"}
               onChange={val => {
                 this.handleOtpInput(val);
               }}
