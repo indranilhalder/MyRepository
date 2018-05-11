@@ -41,7 +41,8 @@ import {
   REQUESTING,
   THANK_YOU,
   COUPON_COOKIE,
-  JUS_PAY_AUTHENTICATION_FAILED,
+  JUS_PAY_CHARGED,
+  JUS_PAY_SUCCESS,
   JUS_PAY_AUTHORIZATION_FAILED,
   CREDIT_CARD,
   NET_BANKING_PAYMENT_MODE,
@@ -73,7 +74,6 @@ import {
   CART_PATH
 } from "../actions/cart.actions";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
-export const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
 const NET_BANKING = "NB";
 const CART_GU_ID = "cartGuid";
@@ -162,7 +162,7 @@ class CheckOutPage extends React.Component {
   }
   navigateUserToMyBagAfter15MinOfpaymentFailure() {
     this.props.displayToast(INVALID_CART_ERROR_MESSAGE);
-    this.props.history.push(PRODUCT_CART_ROUTER);
+    this.props.history.replace(HOME_ROUTER);
   }
   navigateToCartForOutOfStock() {
     this.props.displayToast(OUT_OF_STOCK_MESSAGE);
@@ -234,10 +234,7 @@ class CheckOutPage extends React.Component {
   componentDidUpdate() {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
-    if (
-      value === JUS_PAY_AUTHENTICATION_FAILED ||
-      value === JUS_PAY_AUTHORIZATION_FAILED
-    ) {
+    if (value && value !== JUS_PAY_CHARGED && value !== JUS_PAY_SUCCESS) {
       const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
       if (!oldCartId) {
         return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
@@ -900,10 +897,7 @@ class CheckOutPage extends React.Component {
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
     this.setState({ orderId: orderId });
-    if (
-      value === JUS_PAY_AUTHENTICATION_FAILED ||
-      value === JUS_PAY_AUTHORIZATION_FAILED
-    ) {
+    if (value && value !== JUS_PAY_CHARGED && value !== JUS_PAY_SUCCESS) {
       const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
       if (!oldCartId) {
         return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
@@ -922,7 +916,7 @@ class CheckOutPage extends React.Component {
       }
       this.getPaymentModes();
     }
-    if (value === PAYMENT_CHARGED) {
+    if (value === JUS_PAY_CHARGED) {
       if (this.props.updateTransactionDetails) {
         const cartId = parsedQueryString.value;
 
@@ -999,10 +993,7 @@ class CheckOutPage extends React.Component {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
 
-    if (
-      value === JUS_PAY_AUTHENTICATION_FAILED ||
-      value === JUS_PAY_AUTHORIZATION_FAILED
-    ) {
+    if (value && value !== JUS_PAY_CHARGED && value !== JUS_PAY_SUCCESS) {
       carGuId = parsedQueryString.value;
 
       //get the NoCost Emi Coupon Code to release
