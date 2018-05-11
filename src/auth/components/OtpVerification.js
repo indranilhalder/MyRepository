@@ -127,7 +127,7 @@ export default class OtpVerification extends React.Component {
                   className={ownStyles.span}
                   onClick={() => this.onClickWrongNumber()}
                 >
-                  Edit number
+                  Edit
                 </span>
               </div>
             </div>
