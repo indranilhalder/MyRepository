@@ -21,7 +21,6 @@ export default class OtpVerification extends React.Component {
     }
   };
   resendOtp = () => {
-    console.log(this.props.userObj);
     if (this.props.resendOtp) {
       this.props.resendOtp(this.props.userObj);
     }

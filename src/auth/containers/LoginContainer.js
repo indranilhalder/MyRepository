@@ -74,7 +74,6 @@ const mapDispatchToProps = dispatch => {
         dispatch(singleAuthCallHasFailed(userDetailsResponse.error));
       } else if (userDetailsResponse.status === SUCCESS) {
         const loginUserResponse = await dispatch(loginUser(userDetails));
-        console.log(loginUserResponse);
         if (
           loginUserResponse.status === SUCCESS
           // &&
