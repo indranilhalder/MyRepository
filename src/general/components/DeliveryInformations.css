@@ -62,3 +62,12 @@
   composes: buttonHolder;
   margin-left: 0;
 }
+.arrowWhiteHolder {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 15px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}

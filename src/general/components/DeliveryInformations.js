@@ -8,6 +8,7 @@ import Icon from "../../xelpmoc-core/Icon";
 import ExpressImage from "./img/expressDelivery.svg";
 import HomeImage from "./img/homeDelivery.svg";
 import arrowIcon from "./img/arrowBackblack.svg";
+import greyArrow from "./img/greyArrow.svg";
 import CollectImage from "./img/collect.svg";
 import { EXPRESS, COLLECT } from "../../lib/constants";
 const EXPRESS_TEXT = "Express Shipping";
@@ -35,6 +36,7 @@ export default class DeliveryInformations extends React.Component {
     }
   }
   render() {
+    console.log(this.props);
     let iconImage = HomeImage;
     let typeName = HOME_TEXT;
     if (this.props.type === EXPRESS) {
@@ -96,6 +98,15 @@ export default class DeliveryInformations extends React.Component {
                 onClick={() => this.arrowClick()}
               >
                 <Icon image={arrowIcon} size={20} />
+              </div>
+            )}
+          {this.props.showCliqAndPiqButton &&
+            this.props.type === COLLECT && (
+              <div
+                className={styles.arrowWhiteHolder}
+                onClick={() => this.onPiq()}
+              >
+                <Icon image={greyArrow} size={20} />
               </div>
             )}
           <IconWithHeader
