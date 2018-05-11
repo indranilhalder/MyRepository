@@ -3,7 +3,7 @@ import styles from "./PaytmOption.css";
 import PropTypes from "prop-types";
 import MenuDetails from "../../general/components/MenuDetails.js";
 import CheckBox from "../../general/components/CheckBox.js";
-import eWalletIcon from "./img/netBanking.svg";
+import eWalletIcon from "./img/ewallet.svg";
 import paytmIcon from "./img/paytm.png";
 import Logo from "../../general/components/Logo";
 import { E_WALLET } from "../../lib/constants";
