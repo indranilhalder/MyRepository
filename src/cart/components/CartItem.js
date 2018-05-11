@@ -13,7 +13,9 @@ import {
   COLLECT,
   EXPRESS_TEXT,
   STANDARD_SHIPPING,
-  COLLECT_TEXT
+  COLLECT_TEXT,
+  YES,
+  NO
 } from "../../lib/constants";
 
 export default class CartItem extends React.Component {
@@ -90,6 +92,7 @@ export default class CartItem extends React.Component {
             price={this.props.price}
             color={this.props.color}
             size={this.props.size}
+            isGiveAway={this.props.isGiveAway}
             isOutOfStock={this.props.isOutOfStock}
             isServiceAvailable={this.props.productIsServiceable}
             onClickImage={() => this.onClick()}
@@ -118,7 +121,8 @@ export default class CartItem extends React.Component {
             </div>
           )}
 
-        {this.state.showDelivery &&
+        {this.props.isGiveAway === NO &&
+          this.state.showDelivery &&
           this.props.deliveryInformation && (
             <DeliveryInfoSelect
               deliveryInformation={this.props.deliveryInformation}
