@@ -173,7 +173,7 @@ class CheckOutPage extends React.Component {
   };
   onChangePaymentMode = val => {
     let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
-    if (this.state.currentPaymentMode !== EMI && noCostEmiCouponCode) {
+    if (val.currentPaymentMode !== EMI && noCostEmiCouponCode) {
       this.removeNoCostEmi(noCostEmiCouponCode);
     }
 
@@ -880,7 +880,6 @@ class CheckOutPage extends React.Component {
     this.props.resetIsSoftReservationFailed();
   }
   componentDidMount() {
-
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsLoggedInUser = Cookie.getCookie(
@@ -1786,7 +1785,8 @@ class CheckOutPage extends React.Component {
         this.props.cart.loading ||
         this.props.cart.jusPaymentLoader ||
         this.props.cart.selectDeliveryModeLoader ||
-        (!this.props.cart.paymentModes && this.state.deliverMode) || this.props.cart.isPaymentProceeded
+        (!this.props.cart.paymentModes && this.state.deliverMode) ||
+        this.props.cart.isPaymentProceeded
       ) {
         this.props.showSecondaryLoader();
       } else {
@@ -1799,7 +1799,8 @@ class CheckOutPage extends React.Component {
     if (
       this.state.addNewAddress &&
       !this.state.orderConfirmation &&
-      !this.state.isGiftCard && !this.props.cart.isPaymentProceeded
+      !this.state.isGiftCard &&
+      !this.props.cart.isPaymentProceeded
     ) {
       return (
         <div className={styles.addDeliveryAddressHolder}>
@@ -1821,10 +1822,10 @@ class CheckOutPage extends React.Component {
     } else if (
       (!this.state.addNewAddress &&
         this.props.cart &&
-        !this.state.orderConfirmation && !this.props.cart.isPaymentProceeded) ||
+        !this.state.orderConfirmation &&
+        !this.props.cart.isPaymentProceeded) ||
       this.state.isGiftCard
     ) {
-
       return (
         <div className={styles.base}>
           {!this.state.isPaymentFailed &&
