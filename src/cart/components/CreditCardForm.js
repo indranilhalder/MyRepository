@@ -104,6 +104,9 @@ export default class CreditCardForm extends React.Component {
                   ? this.props.cardNumber
                   : this.state.cardNumber
               }
+              onFocus={() => {
+                this.props.onFocusInput();
+              }}
               boxy={true}
               onChange={val => this.onChangeCardNumber(val)}
               textStyle={{ fontSize: 14 }}
@@ -122,6 +125,9 @@ export default class CreditCardForm extends React.Component {
               onChange={cardName => this.onChange({ cardName })}
               textStyle={{ fontSize: 14 }}
               height={33}
+              onFocus={() => {
+                this.props.onFocusInput();
+              }}
             />
           </div>
           <div className={styles.dropDownHolder}>
@@ -168,6 +174,9 @@ export default class CreditCardForm extends React.Component {
                         ? this.props.cvvNumber
                         : this.state.cvvNumber
                     }
+                    onFocus={() => {
+                      this.props.onFocusInput();
+                    }}
                   />
                 </div>
               </div>

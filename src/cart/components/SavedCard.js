@@ -44,6 +44,9 @@ export default class SavedCard extends React.Component {
                 color: "#000",
                 fontSize: 13
               }}
+              onFocus={() => {
+                this.props.onFocusInput();
+              }}
               onChange={val => this.onChangeCvv(val)}
             />
           </div>
