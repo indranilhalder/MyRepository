@@ -51,7 +51,7 @@ class HeaderWrapper extends React.Component {
       value === JUS_PAY_PENDING ||
       value === JUS_PAY_AUTHENTICATION_FAILED
     ) {
-      window.history.go(-3);
+      window.history.go(-2);
     } else {
       this.props.history.goBack();
     }

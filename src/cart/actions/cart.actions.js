@@ -60,8 +60,6 @@ import {
   ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF,
   ADOBE_MY_ACCOUNT_ADDRESS_BOOK
 } from "../../lib/adobeUtils";
-import { PAYMENT_CHARGED } from "../components/CheckOutPage";
-
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
 export const USER_CART_PATH = "v2/mpl/users";
 export const CART_PATH = "v2/mpl";
@@ -3495,7 +3493,7 @@ export function updateTransactionDetailsForCOD(paymentMode, juspayOrderID) {
       if (oldUrl.includes(JUS_PAY_AUTHENTICATION_FAILED)) {
         let newUrl = oldUrl.replace(
           JUS_PAY_AUTHENTICATION_FAILED,
-          PAYMENT_CHARGED
+          JUS_PAY_CHARGED
         );
         window.location.href = newUrl;
       }
