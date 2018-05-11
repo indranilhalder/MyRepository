@@ -18,7 +18,6 @@ export default class OrderDetailsCard extends React.Component {
   }
   render() {
     const deliveryOption = this.props.productDetails.selectedDeliveryMode;
-    console.log(this.props.productDetails);
     return (
       <div className={styles.base}>
         <div className={styles.orderIdHolder}>
