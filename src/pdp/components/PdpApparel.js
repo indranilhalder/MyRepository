@@ -300,7 +300,7 @@ export default class PdpApparel extends React.Component {
           <div className={styles.gallery}>
             <ProductGalleryMobile>
               {mobileGalleryImages.map((val, idx) => {
-                return <Image image={val} key={idx} />;
+                return <Image lazyLoad={true} image={val} key={idx} />;
               })}
             </ProductGalleryMobile>
             {(productData.allOOStock ||
