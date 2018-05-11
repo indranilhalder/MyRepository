@@ -92,10 +92,14 @@ export default class ProductDetailsMainCard extends React.Component {
               )}
           </div>
         </div>
+
         {this.props.averageRating && (
           <StarRating averageRating={this.props.averageRating}>
             {this.props.averageRating && (
               <div
+                itemprop="aggregateRating"
+                itemscope
+                itemtype="http://schema.org/AggregateRating"
                 className={styles.ratingText}
                 onClick={() => this.handleClick()}
               >
