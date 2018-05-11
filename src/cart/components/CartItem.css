@@ -61,3 +61,12 @@
   top: 0;
   font-family: regular;
 }
+.footerForFreeProduct {
+  text-align: right;
+  padding: 20px;
+}
+.footerText {
+  font-family: regular;
+  font-size: 15px;
+  margin-right: 35px;
+}

@@ -4,7 +4,8 @@ import {
   ERROR,
   SUCCESS_CAMEL_CASE,
   SUCCESS_UPPERCASE,
-  JUS_PAY_AUTHENTICATION_FAILED
+  JUS_PAY_AUTHENTICATION_FAILED,
+  NO
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash.foreach";
@@ -460,7 +461,9 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
       let cartProducts = [];
       resultJson &&
         each(resultJson.products, product => {
-          cartProducts.push(product.USSID);
+          if (product.isGiveAway === NO) {
+            cartProducts.push(product.USSID);
+          }
         });
       localStorage.setItem(CART_BAG_DETAILS, JSON.stringify(cartProducts));
       dispatch(setBagCount(cartProducts.length));
@@ -516,27 +519,31 @@ export function getCartDetailsCNC(
         let productItems = {};
         let item = [];
         each(resultJson.products, product => {
-          let productDetails = {};
-          productDetails.ussId = product.USSID;
-          productDetails.quantity = product.qtySelectedByUser;
-          productDetails.fulfillmentType = product.fullfillmentType;
+          if (product.isGiveAway === NO) {
+            let productDetails = {};
+            productDetails.ussId = product.USSID;
+            productDetails.quantity = product.qtySelectedByUser;
+            productDetails.fulfillmentType = product.fullfillmentType;
 
-          if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
-            productDetails.deliveryMode =
-              product.pinCodeResponse.validDeliveryModes[0].type;
-            productDetails.serviceableSlaves =
-              product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
-          } else if (
-            product.pinCodeResponse.validDeliveryModes[0]
-              .CNCServiceableSlavesData
-          ) {
-            productDetails.deliveryMode =
-              product.pinCodeResponse.validDeliveryModes[0].type;
-            productDetails.serviceableSlaves =
-              product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+            if (
+              product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves
+            ) {
+              productDetails.deliveryMode =
+                product.pinCodeResponse.validDeliveryModes[0].type;
+              productDetails.serviceableSlaves =
+                product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
+            } else if (
+              product.pinCodeResponse.validDeliveryModes[0]
+                .CNCServiceableSlavesData
+            ) {
+              productDetails.deliveryMode =
+                product.pinCodeResponse.validDeliveryModes[0].type;
+              productDetails.serviceableSlaves =
+                product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+            }
+            item.push(productDetails);
+            productItems.item = item;
           }
-          item.push(productDetails);
-          productItems.item = item;
         });
 
         dispatch(softReservation(pinCode, productItems));
@@ -2031,25 +2038,27 @@ export function softReservationForPayment(
     let productItems = {};
     let item = [];
     each(getState().cart.cartDetailsCNC.products, product => {
-      let productDetails = {};
-      productDetails.ussId = product.USSID;
-      productDetails.quantity = product.qtySelectedByUser;
-      productDetails.fulfillmentType = product.fullfillmentType;
-      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
-      } else if (
-        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
-      ) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+      if (product.isGiveAway === NO) {
+        let productDetails = {};
+        productDetails.ussId = product.USSID;
+        productDetails.quantity = product.qtySelectedByUser;
+        productDetails.fulfillmentType = product.fullfillmentType;
+        if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
+        } else if (
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+        ) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+        }
+        item.push(productDetails);
+        productItems.item = item;
       }
-      item.push(productDetails);
-      productItems.item = item;
     });
 
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -2107,25 +2116,27 @@ export function softReservationPaymentForNetBanking(
     let productItems = {};
     let item = [];
     each(getState().cart.cartDetailsCNC.products, product => {
-      let productDetails = {};
-      productDetails.ussId = product.USSID;
-      productDetails.quantity = product.qtySelectedByUser;
-      productDetails.fulfillmentType = product.fullfillmentType;
-      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
-      } else if (
-        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
-      ) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+      if (product.isGiveAway === NO) {
+        let productDetails = {};
+        productDetails.ussId = product.USSID;
+        productDetails.quantity = product.qtySelectedByUser;
+        productDetails.fulfillmentType = product.fullfillmentType;
+        if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
+        } else if (
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+        ) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+        }
+        item.push(productDetails);
+        productItems.item = item;
       }
-      item.push(productDetails);
-      productItems.item = item;
     });
 
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -2173,25 +2184,27 @@ export function softReservationPaymentForSavedCard(
     let productItems = {};
     let item = [];
     each(getState().cart.cartDetailsCNC.products, product => {
-      let productDetails = {};
-      productDetails.ussId = product.USSID;
-      productDetails.quantity = product.qtySelectedByUser;
-      productDetails.fulfillmentType = product.fullfillmentType;
-      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
-      } else if (
-        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
-      ) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+      if (product.isGiveAway === NO) {
+        let productDetails = {};
+        productDetails.ussId = product.USSID;
+        productDetails.quantity = product.qtySelectedByUser;
+        productDetails.fulfillmentType = product.fullfillmentType;
+        if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
+        } else if (
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+        ) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+        }
+        item.push(productDetails);
+        productItems.item = item;
       }
-      item.push(productDetails);
-      productItems.item = item;
     });
 
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -2228,26 +2241,29 @@ export function softReservationForCliqCash(pinCode) {
     let productItems = {};
     let item = [];
     each(getState().cart.cartDetailsCNC.products, product => {
-      let productDetails = {};
-      productDetails.ussId = product.USSID;
-      productDetails.quantity = product.qtySelectedByUser;
-      productDetails.fulfillmentType = product.fullfillmentType;
+      if (product.isGiveAway === NO) {
+        let productDetails = {};
+        productDetails.ussId = product.USSID;
+        productDetails.quantity = product.qtySelectedByUser;
+        productDetails.fulfillmentType = product.fullfillmentType;
 
-      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
-      } else if (
-        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
-      ) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+        if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
+        } else if (
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+        ) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+        }
+        item.push(productDetails);
+
+        productItems.item = item;
       }
-      item.push(productDetails);
-      productItems.item = item;
     });
 
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -3523,16 +3539,18 @@ export function softReservationForCODPayment(pinCode) {
     let productItems = {};
     let item = [];
     each(getState().cart.cartDetailsCNC.products, product => {
-      let productDetails = {};
-      productDetails.ussId = product.USSID;
-      productDetails.quantity = product.qtySelectedByUser;
-      productDetails.deliveryMode =
-        product.pinCodeResponse.validDeliveryModes[0].type;
-      productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
-      productDetails.fulfillmentType = product.fullfillmentType;
-      item.push(productDetails);
-      productItems.item = item;
+      if (product.isGiveAway === NO) {
+        let productDetails = {};
+        productDetails.ussId = product.USSID;
+        productDetails.quantity = product.qtySelectedByUser;
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
+        productDetails.fulfillmentType = product.fullfillmentType;
+        item.push(productDetails);
+        productItems.item = item;
+      }
     });
 
     const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);

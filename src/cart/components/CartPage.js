@@ -5,7 +5,7 @@ import SearchAndUpdate from "../../pdp/components/SearchAndUpdate";
 import styles from "./CartPage.css";
 import PropTypes from "prop-types";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
-import { SUCCESS, HOME_ROUTER } from "../../lib/constants";
+import { SUCCESS, HOME_ROUTER, NO } from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
 import filter from "lodash.filter";
 import { Redirect } from "react-router-dom";
@@ -112,10 +112,11 @@ class CartPage extends React.Component {
             this.props.cart.cartDetails.products,
           product => {
             return (
-              product.pinCodeResponse === undefined ||
-              (product.pinCodeResponse &&
-                product.pinCodeResponse.isServicable === "N") ||
-              product.isOutOfStock
+              product.isGiveAway === NO &&
+              (product.pinCodeResponse === undefined ||
+                (product.pinCodeResponse &&
+                  product.pinCodeResponse.isServicable === "N") ||
+                product.isOutOfStock)
             );
           }
         );
@@ -376,6 +377,7 @@ class CartPage extends React.Component {
                       price={
                         product.offerPrice ? product.offerPrice : product.price
                       }
+                      isGiveAway={product.isGiveAway}
                       index={i}
                       entryNumber={product.entryNumber}
                       deliveryInformation={product.elligibleDeliveryMode}
