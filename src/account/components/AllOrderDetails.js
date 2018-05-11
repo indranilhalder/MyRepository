@@ -179,7 +179,7 @@ export default class AllOrderDetails extends React.Component {
                       this.onViewDetails(orderDetails && orderDetails.orderId)
                     }
                     isEgvOrder={orderDetails.isEgvOrder}
-                    status={!orderDetails.giftCardStatus}
+                    status={orderDetails.giftCardStatus}
                     price={orderDetails && orderDetails.totalOrderAmount}
                   />
 
