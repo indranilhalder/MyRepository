@@ -133,7 +133,6 @@ export default class AllOrderDetails extends React.Component {
       orderDetails.orderData.filter(order => {
         return order.isEgvOrder === false;
       });
-    console.log(orderListWithoutEgv);
     return (
       <div className={styles.base}>
         {orderListWithoutEgv
