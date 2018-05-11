@@ -128,11 +128,16 @@ export default class AllOrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.profile.orderDetails;
-
+    let orderListWithoutEgv =
+      orderDetails &&
+      orderDetails.orderData.filter(order => {
+        return order.isEgvOrder === false;
+      });
+    console.log(orderListWithoutEgv);
     return (
       <div className={styles.base}>
-        {orderDetails && orderDetails.orderData
-          ? orderDetails.orderData.map((orderDetails, i) => {
+        {orderListWithoutEgv
+          ? orderListWithoutEgv.map((orderDetails, i) => {
               let formattedDate = "";
               if (orderDetails && orderDetails.orderDate) {
                 formattedDate = format(orderDetails.orderDate, dateFormat);
@@ -168,12 +173,14 @@ export default class AllOrderDetails extends React.Component {
                       )
                     }
                   />
-                  <PriceAndLink
-                    onViewDetails={() =>
-                      this.onViewDetails(orderDetails && orderDetails.orderId)
-                    }
-                    price={orderDetails && orderDetails.totalOrderAmount}
-                  />
+                  {!orderDetails.isEgvOrder && (
+                    <PriceAndLink
+                      onViewDetails={() =>
+                        this.onViewDetails(orderDetails && orderDetails.orderId)
+                      }
+                      price={orderDetails && orderDetails.totalOrderAmount}
+                    />
+                  )}
                   {orderDetails &&
                     orderDetails.billingAddress && (
                       <OrderDelivered

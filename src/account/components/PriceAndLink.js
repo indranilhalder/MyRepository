@@ -12,15 +12,17 @@ export default class PriceAndLink extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.buttonHolder}>
-          <UnderLinedButton
-            size="14px"
-            fontFamily="regular"
-            color="#000000"
-            label="View details"
-            onClick={() => this.handleClick()}
-          />
-        </div>
+        {!this.props.isEgvOrder && (
+          <div className={styles.buttonHolder}>
+            <UnderLinedButton
+              size="14px"
+              fontFamily="regular"
+              color="#000000"
+              label="View details"
+              onClick={() => this.handleClick()}
+            />
+          </div>
+        )}
         <div className={styles.priceTextHolder}>
           <div className={styles.priceHeader}>Total Price </div>
           <div className={styles.priceAmount}>{`${RUPEE_SYMBOL} ${

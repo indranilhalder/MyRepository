@@ -33,7 +33,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     wishList: state.wishlistItems.wishlistItems,
-    loading: state.wishlistItems.loading
+    loading: state.wishlistItems.loading,
+    count: state.wishlistItems.count
   };
 };
 

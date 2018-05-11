@@ -207,6 +207,7 @@ export function removeProductFromWishList(productDetails) {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(hideSecondaryLoader());
+      dispatch(getWishListItems());
       return dispatch(removeProductFromWishListSuccess(productDetails));
     } catch (e) {
       dispatch(hideSecondaryLoader());
