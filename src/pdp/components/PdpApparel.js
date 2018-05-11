@@ -100,7 +100,7 @@ const ColourSelector = LoadableVisibility({
 const PdpDeliveryModes = LoadableVisibility({
   loader: () => import("./PdpDeliveryModes"),
   loading: () => <div />,
-  delay: 400
+  delay: 1000
 });
 
 const PDPRecommendedSectionsContainer = LoadableVisibility({
