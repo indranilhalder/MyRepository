@@ -30,7 +30,10 @@ import {
   DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
-import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
+import {
+  clearUrlToRedirectToAfterAuth,
+  stopLoaderOnLoginForOTPVerification
+} from "../../auth/actions/auth.actions.js";
 
 import {
   singleAuthCallHasFailed,
@@ -71,7 +74,13 @@ const mapDispatchToProps = dispatch => {
         dispatch(singleAuthCallHasFailed(userDetailsResponse.error));
       } else if (userDetailsResponse.status === SUCCESS) {
         const loginUserResponse = await dispatch(loginUser(userDetails));
-        if (loginUserResponse.status === SUCCESS) {
+        console.log(loginUserResponse);
+        if (
+          loginUserResponse.status === SUCCESS
+          // &&
+          // loginUserResponse.user &&
+          // loginUserResponse.user.status !== OTP_VERIFICATION_REQUIRED_MESSAGE
+        ) {
           setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS);
           const cartVal = await dispatch(getCartId());
           if (
@@ -159,10 +168,6 @@ const mapDispatchToProps = dispatch => {
             }
             // end of generating new cart if if wont get any existing cartId
           }
-        } else if (
-          loginUserResponse.error === OTP_VERIFICATION_REQUIRED_MESSAGE
-        ) {
-          dispatch(showModal(OTP_LOGIN_MODAL, userDetails));
         } else {
           setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE);
         }
