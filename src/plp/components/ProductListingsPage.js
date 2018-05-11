@@ -24,41 +24,55 @@ class ProductListingsPage extends Component {
     const parsedQueryString = queryString.parse(this.props.location.search);
 
     const searchCategory = parsedQueryString.searchCategory;
+    console.log(parsedQueryString);
     let searchText = parsedQueryString.q;
-
-    if (searchCategory && searchCategory !== SEARCH_CATEGORY_TO_IGNORE) {
+    console.log(searchText);
+    if (
+      searchCategory &&
+      searchCategory !== "" &&
+      searchCategory !== SEARCH_CATEGORY_TO_IGNORE
+    ) {
+      console.log("Coems in 1");
       searchText = `:category:${searchCategory}`;
     }
 
     if (!searchText) {
+      console.log("Conesoel in second");
       searchText = parsedQueryString.text;
     }
 
     if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
-      if (!searchText) {
-        searchText = `:relevance:category:${this.props.match.params[0].toUpperCase()}`;
+      console.log("Comes in");
+      console.log(searchText);
+      if (searchText) {
+        searchText = searchText.replace(
+          ":relevance",
+          `:relevance:category:${this.props.match.params[0].toUpperCase()}`
+        );
       }
     }
+    console.log(searchText);
     let match;
+    // debugger;
     const url = this.props.location.pathname;
 
-    if (CATEGORY_REGEX.test(url)) {
-      match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
-      match = match.replace(BRAND_CATEGORY_PREFIX, "");
+    // if (CATEGORY_REGEX.test(url)) {
+    //   match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
+    //   match = match.replace(BRAND_CATEGORY_PREFIX, "");
 
-      match = match.toUpperCase();
+    //   match = match.toUpperCase();
 
-      searchText = `:relevance:category:${match}`;
-    }
+    //   searchText = `:relevance:category:${match}`;
+    // }
 
-    if (BRAND_REGEX.test(url)) {
-      match = BRAND_CAPTURE_REGEX.exec(url)[0];
-      match = match.replace(BRAND_CATEGORY_PREFIX, "");
+    // if (BRAND_REGEX.test(url)) {
+    //   match = BRAND_CAPTURE_REGEX.exec(url)[0];
+    //   match = match.replace(BRAND_CATEGORY_PREFIX, "");
 
-      match = match.toUpperCase();
+    //   match = match.toUpperCase();
 
-      searchText = `:relevance:brand:${match}`;
-    }
+    //   searchText = `:relevance:brand:${match}`;
+    // }
 
     return encodeURIComponent(searchText);
   }
