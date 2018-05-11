@@ -74,12 +74,7 @@ const mapDispatchToProps = dispatch => {
         dispatch(singleAuthCallHasFailed(userDetailsResponse.error));
       } else if (userDetailsResponse.status === SUCCESS) {
         const loginUserResponse = await dispatch(loginUser(userDetails));
-        if (
-          loginUserResponse.status === SUCCESS
-          // &&
-          // loginUserResponse.user &&
-          // loginUserResponse.user.status !== OTP_VERIFICATION_REQUIRED_MESSAGE
-        ) {
+        if (loginUserResponse.status === SUCCESS) {
           setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS);
           const cartVal = await dispatch(getCartId());
           if (
