@@ -31,7 +31,7 @@ export default class PdpFrame extends React.Component {
   renderAvailabilityMetaTag = () => {
     return (
       <MetaTags>
-        <meta itemprop="availability" content="http://schema.org/InStock" />
+        <meta itemProp="availability" content="http://schema.org/InStock" />
       </MetaTags>
     );
   };
