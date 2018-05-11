@@ -6,6 +6,10 @@
   padding: 15px 85px 15px 15px;
   border-radius: 4px;
 }
+.classNameWithShadow {
+  composes: base;
+  box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.2);
+}
 .headingText {
   width: 100%;
   color: #000000;

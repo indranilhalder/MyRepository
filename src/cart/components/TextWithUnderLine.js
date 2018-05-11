@@ -12,7 +12,11 @@ export default class TextWithUnderLine extends React.Component {
 
   render() {
     return (
-      <div className={styles.base}>
+      <div
+        className={
+          this.props.borderBox ? styles.base : styles.classNameWithShadow
+        }
+      >
         {this.props.borderBox === false ? (
           <div className={styles.textBorder}>
             <div className={styles.headingText}>{this.props.heading}</div>
