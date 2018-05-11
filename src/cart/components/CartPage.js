@@ -354,6 +354,10 @@ class CartPage extends React.Component {
                 : styles.content
             }
           >
+            <div className={styles.congractText}>
+              Congratulations your cart qualifies for
+            </div>
+            <div className={styles.shippingText}>FREE shipping.</div>
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
                 let serviceable = false;
@@ -404,7 +408,6 @@ class CartPage extends React.Component {
                   </div>
                 );
               })}
-
             {cartDetails.products && (
               <SavedProduct
                 saveProduct={() => this.goToWishList()}
@@ -412,7 +415,6 @@ class CartPage extends React.Component {
                 appliedCouponCode={this.state.appliedCouponCode}
               />
             )}
-
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
