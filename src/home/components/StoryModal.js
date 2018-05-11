@@ -10,6 +10,7 @@ export default class StoryModal extends React.Component {
     this.props.clearItems(this.props.positionInFeed);
   }
   render() {
+    console.log(this.props);
     const items = this.props.feedComponentData.items;
 
     return (
@@ -17,7 +18,7 @@ export default class StoryModal extends React.Component {
         <StoryWidget {...this.props}>
           {items &&
             items.map(val => {
-              return <StoryProduct {...val} />;
+              return <StoryProduct {...val} history={this.props.history} />;
             })}
         </StoryWidget>
       </div>

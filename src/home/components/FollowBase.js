@@ -46,7 +46,8 @@ export default class FollowBase extends React.Component {
                         itemIds: datum.itemIds,
                         image: datum.imageURL,
                         title: datum.title,
-                        brandName: datum.brandName
+                        brandName: datum.brandName,
+                        history: this.props.history
                       })
                     }
                     {...rest}
