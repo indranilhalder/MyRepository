@@ -36,7 +36,6 @@ export default class DeliveryInformations extends React.Component {
     }
   }
   render() {
-    console.log(this.props);
     let iconImage = HomeImage;
     let typeName = HOME_TEXT;
     if (this.props.type === EXPRESS) {
@@ -103,7 +102,7 @@ export default class DeliveryInformations extends React.Component {
           {this.props.showCliqAndPiqButton &&
             this.props.type === COLLECT && (
               <div
-                className={styles.arrowWhiteHolder}
+                className={styles.checkboxHolder}
                 onClick={() => this.onPiq()}
               >
                 <Icon image={greyArrow} size={20} />
