@@ -4,7 +4,8 @@ import ProductImage from "../../general/components/ProductImage.js";
 import PropTypes from "prop-types";
 import {
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
-  RUPEE_SYMBOL
+  RUPEE_SYMBOL,
+  NO
 } from "../../lib/constants";
 
 const NOT_SERVICEABLE = "Service Not Available";
@@ -20,7 +21,7 @@ export default class BagPageItem extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.productDescription}>
-          {!this.props.isServiceAvailable
+          {this.props.isGiveAway === NO && !this.props.isServiceAvailable
             ? localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) && (
                 <div className={styles.serviceAvailabilityText}>
                   {NOT_SERVICEABLE}
