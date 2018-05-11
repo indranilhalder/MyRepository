@@ -24,8 +24,13 @@
 }
 .disabled {
   composes: content;
-  opacity: 0.5;
   pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #ececec;
+  z-index: 1;
+  opacity: 0.5;
 }
 .cartLoader {
   width: 100%;
@@ -60,19 +65,4 @@
   line-height: 22px;
   text-align: center;
   color: #212121;
-}
-.congractText {
-  font-size: 14px;
-  width: 100%;
-  height: auto;
-  font-family: regular;
-  text-align: center;
-}
-.shippingText {
-  font-size: 14px;
-  width: 100%;
-  height: auto;
-  font-family: semibold;
-  text-align: center;
-  padding: 5px 0px 20px 0px;
 }

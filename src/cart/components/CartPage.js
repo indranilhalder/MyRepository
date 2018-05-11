@@ -268,6 +268,9 @@ class CartPage extends React.Component {
                 ? `Pincode-${defaultPinCode}`
                 : "Enter Pincode"
             }
+            borderBox={
+              defaultPinCode && defaultPinCode !== "undefined" ? true : false
+            }
             onClick={() => this.changePinCode()}
             buttonLabel="Change"
           />
@@ -342,6 +345,9 @@ class CartPage extends React.Component {
                   ? defaultPinCode
                   : "Enter Pincode"
               }
+              borderBox={
+                defaultPinCode && defaultPinCode !== "undefined" ? true : false
+              }
               onClick={() => this.changePinCode()}
               buttonLabel="Change"
             />
@@ -354,10 +360,6 @@ class CartPage extends React.Component {
                 : styles.content
             }
           >
-            <div className={styles.congractText}>
-              Congratulations your cart qualifies for
-            </div>
-            <div className={styles.shippingText}>FREE shipping.</div>
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
                 let serviceable = false;
