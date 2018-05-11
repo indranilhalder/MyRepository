@@ -231,6 +231,12 @@ export default class ModalRoot extends React.Component {
   releaseBankOffer = (previousCouponCode, newCouponCode) => {
     return this.props.releaseBankOffer(previousCouponCode, newCouponCode);
   };
+
+  resendOtpForLogin = userDetails => {
+    if (this.props.loginUser) {
+      this.props.loginUser(userDetails);
+    }
+  };
   releasePreviousAndApplyNewBankOffer = (
     previousCouponCode,
     newSelectedCouponCode
@@ -549,6 +555,10 @@ export default class ModalRoot extends React.Component {
         <OtpVerification
           submitOtp={val => this.props.loginUser(val)}
           {...this.props.ownProps}
+          userObj={this.props.ownProps}
+          closeModal={() => this.handleClose()}
+          resendOtp={userDetails => this.resendOtpForLogin(userDetails)}
+          onClickWrongNumber={() => this.handleClose()}
         />
       ),
       SizeSelector: (
