@@ -658,7 +658,7 @@ class CheckOutPage extends React.Component {
           defaultSelectedDeliveryModes
         );
       }
-      console.log(defaultSelectedDeliveryModes);
+
       this.setState({ ussIdAndDeliveryModesObj: defaultSelectedDeliveryModes });
     }
 
