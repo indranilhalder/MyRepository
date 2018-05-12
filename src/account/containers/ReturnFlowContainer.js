@@ -34,7 +34,8 @@ const mapStateToProps = state => {
   return {
     returnRequest: state.profile.returnRequest,
     returnProductDetails: state.profile.returnProductDetails,
-    loading: state.profile.loading
+    loading: state.profile.loading,
+    error: state.profile.error
   };
 };
 

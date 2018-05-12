@@ -27,6 +27,7 @@ import {
 } from "./auth.actions";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
 import { OTP_VERIFICATION_REQUIRED_MESSAGE } from "../containers/LoginContainer";
+import { displayToast } from "../../general/toast.actions";
 
 export const LOGIN_USER_REQUEST = "LOGIN_USER_REQUEST";
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
@@ -157,6 +158,7 @@ export function loginUser(userLoginDetails) {
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJson.errorCode) {
+        dispatch(displayToast(resultJsonStatus.message));
         dispatch(stopLoaderOnLoginForOTPVerification());
         return dispatch(
           showModal(OTP_LOGIN_MODAL, {
