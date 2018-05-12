@@ -5,7 +5,8 @@ import {
   SUCCESS_CAMEL_CASE,
   SUCCESS_UPPERCASE,
   JUS_PAY_AUTHENTICATION_FAILED,
-  NO
+  NO,
+  BANK_COUPON_COOKIE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash.foreach";
@@ -1729,6 +1730,7 @@ export function applyBankOffer(couponCode) {
         );
         throw new Error(resultJsonStatus.message);
       }
+      localStorage.setItem(BANK_COUPON_COOKIE, couponCode);
       setDataLayerForCheckoutDirectCalls(
         ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS,
         couponCode
@@ -1788,6 +1790,7 @@ export function releaseBankOffer(previousCouponCode, newCouponCode: null) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      localStorage.removeItem(BANK_COUPON_COOKIE);
       if (newCouponCode) {
         return dispatch(applyBankOffer(newCouponCode));
       }
