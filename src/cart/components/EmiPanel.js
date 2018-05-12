@@ -126,6 +126,7 @@ export default class EmiPanel extends React.Component {
                     selectedEMIType={this.state.currentSelectedEMIType}
                     onBankSelect={val => this.onBankSelect(val)}
                     onSelectMonth={val => this.onSelectMonth(val)}
+                    onFocusInput={this.props.onFocusInput}
                     bankList={
                       this.props.cart &&
                       this.props.cart.bankAndTenureDetails &&
