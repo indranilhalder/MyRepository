@@ -22,7 +22,7 @@ const PiqPageForPdp = Loadable({
 })
 
 const PdpElectronics = Loadable({
-  loader: () => import("./PdpApparel"),
+  loader: () => import("./PdpElectronics"),
   loading() {
     return (
       <div className={styles.loadingIndicator}>
