@@ -71,7 +71,11 @@ export default class CreditCardForm extends React.Component {
       this.props.onChangeCardDetail(val);
     }
   }
-
+  handleOnFocusInput() {
+    if (this.props.onFocusInput) {
+      this.props.onFocusInput();
+    }
+  }
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.cardDetails &&
@@ -105,7 +109,7 @@ export default class CreditCardForm extends React.Component {
                   : this.state.cardNumber
               }
               onFocus={() => {
-                this.props.onFocusInput();
+                this.handleOnFocusInput();
               }}
               boxy={true}
               onChange={val => this.onChangeCardNumber(val)}
@@ -126,7 +130,7 @@ export default class CreditCardForm extends React.Component {
               textStyle={{ fontSize: 14 }}
               height={33}
               onFocus={() => {
-                this.props.onFocusInput();
+                this.handleOnFocusInput();
               }}
             />
           </div>
@@ -175,7 +179,7 @@ export default class CreditCardForm extends React.Component {
                         : this.state.cvvNumber
                     }
                     onFocus={() => {
-                      this.props.onFocusInput();
+                      this.handleOnFocusInput();
                     }}
                   />
                 </div>
