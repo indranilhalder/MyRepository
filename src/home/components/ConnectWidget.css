@@ -3,8 +3,13 @@
   height: auto;
   margin-top: 50px;
 }
-.base {
+.firstPositionHolder {
   composes: holder;
+  margin-top: 20px;
+}
+.base {
+  width: 100%;
+  height: auto;
   margin: 0px;
 }
 .inCard {
