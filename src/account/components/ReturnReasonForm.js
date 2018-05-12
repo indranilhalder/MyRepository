@@ -91,19 +91,26 @@ export default class ReturnReasonForm extends React.Component {
           <OrderCard
             imageUrl={
               data &&
+              data.orderProductWsDTO &&
               data.orderProductWsDTO[0] &&
               data.orderProductWsDTO[0].imageURL
             }
-            productName={`${data.orderProductWsDTO[0].productBrand} ${
+            productName={`${data &&
+              data.orderProductWsDTO &&
+              data.orderProductWsDTO[0].productBrand} ${
               data.orderProductWsDTO[0].productName
             }`}
-            price={data.orderProductWsDTO[0].price}
+            price={
+              data && data.orderProductWsDTO && data.orderProductWsDTO[0].price
+            }
           >
-            {data.orderProductWsDTO[0].quantity && (
-              <div className={styles.quantity}>
-                Qty {data.orderProductWsDTO[0].quantity}
-              </div>
-            )}
+            {data &&
+              data.orderProductWsDTO &&
+              data.orderProductWsDTO[0].quantity && (
+                <div className={styles.quantity}>
+                  Qty {data.orderProductWsDTO[0].quantity}
+                </div>
+              )}
           </OrderCard>
           <div className={styles.select}>
             <SelectBoxMobile2
