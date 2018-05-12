@@ -35,6 +35,9 @@ export function getFailureResponse(response) {
     } else {
       return { status: true, message: response.status };
     }
+  }
+  if (response.errorCode) {
+    return { status: true, message: "An exception occurred at back-end." };
   } else {
     return { status: false };
   }

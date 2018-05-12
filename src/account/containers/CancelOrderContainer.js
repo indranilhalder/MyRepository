@@ -14,6 +14,7 @@ import {
 import { showModal, CANCEL_ORDER_POP_UP } from "../../general/modal.actions";
 import { setDataLayerForMyAccountDirectCalls } from "../../lib/adobeUtils";
 const ERROR_MESSAGE_IN_CANCELING_ORDER = "Error in Canceling order";
+
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getDetailsOfCancelledProduct: cancelProductDetails => {
@@ -41,7 +42,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const mapStateToProps = state => {
   return {
     cancelProductDetails: state.profile.cancelProductDetails,
-    loadingForCancelProductDetails: state.profile.loadingForCancelProductDetails
+    loadingForCancelProductDetails:
+      state.profile.loadingForCancelProductDetails,
+    error: state.profile.cancelProductDetailsError
   };
 };
 
