@@ -23,6 +23,7 @@ export default class ProductModule extends React.Component {
       this.props.onDownload();
     }
   };
+
   onClick = () => {
     let urlSuffix;
     if (this.props.webURL) {
