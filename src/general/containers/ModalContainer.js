@@ -27,8 +27,10 @@ import {
   LOGGED_IN_USER_DETAILS,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   MY_ACCOUNT,
-  MY_ACCOUNT_ORDERS_PAGE
+  MY_ACCOUNT_ORDERS_PAGE,
+  ERROR
 } from "../../lib/constants";
+
 import { updateProfile } from "../../account/actions/account.actions.js";
 import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 import * as Cookies from "../../lib/Cookie";
@@ -52,12 +54,20 @@ import {
   verifyWallet,
   submitSelfCourierReturnInfo
 } from "../../account/actions/account.actions";
-import { createWishlist } from "../../wishlist/actions/wishlist.actions";
+import {
+  createWishlist,
+  getWishListItems
+} from "../../wishlist/actions/wishlist.actions";
 import {
   singleAuthCallHasFailed,
   setIfAllAuthCallsHaveSucceeded
 } from "../../auth/actions/auth.actions.js";
 import { displayToast } from "../../general/toast.actions";
+import {
+  setDataLayerForLogin,
+  ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS,
+  ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE
+} from "../../lib/adobeUtils";
 const ERROR_MESSAGE_IN_CANCELING_ORDER = "Error in Canceling order";
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -87,6 +97,93 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const loginResponse = await dispatch(loginUser(userDetails));
       if (loginResponse.status === SUCCESS) {
         dispatch(modalActions.hideModal());
+        setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS);
+        const cartVal = await dispatch(getCartId());
+        if (
+          cartVal.status === SUCCESS &&
+          cartVal.cartDetails.guid &&
+          cartVal.cartDetails.code
+        ) {
+          // if get old cart id then just merge it with anonymous cart id
+          const mergeCartIdWithOldOneResponse = await dispatch(
+            mergeCartId(cartVal.cartDetails.guid)
+          );
+
+          if (mergeCartIdWithOldOneResponse.status === SUCCESS) {
+            const customerCookie = Cookies.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+            const userDetails = Cookies.getCookie(LOGGED_IN_USER_DETAILS);
+            const cartDetailsLoggedInUser = Cookies.getCookie(
+              CART_DETAILS_FOR_LOGGED_IN_USER
+            );
+            dispatch(
+              getCartDetails(
+                JSON.parse(userDetails).userName,
+                JSON.parse(customerCookie).access_token,
+                JSON.parse(cartDetailsLoggedInUser).code,
+                localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+              )
+            );
+            const existingWishList = await dispatch(getWishListItems());
+
+            if (!existingWishList || !existingWishList.wishlist) {
+              dispatch(createWishlist());
+            }
+            dispatch(setIfAllAuthCallsHaveSucceeded());
+          } else if (mergeCartIdWithOldOneResponse.status === ERROR) {
+            Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+            Cookies.createCookie(
+              CART_DETAILS_FOR_LOGGED_IN_USER,
+              JSON.stringify(cartVal.cartDetails)
+            );
+            dispatch(setIfAllAuthCallsHaveSucceeded());
+          }
+          //end of  merge old cart id with anonymous cart id
+        } else {
+          // generating new cart if if wont get any existing cartId
+          const newCartIdObj = await dispatch(generateCartIdForLoggedInUser());
+
+          if (newCartIdObj.status === SUCCESS) {
+            const mergeCartIdResponse = await dispatch(
+              mergeCartId(newCartIdObj.cartDetails.guid)
+            );
+            // merging cart id with new cart id
+            if (mergeCartIdResponse.status === SUCCESS) {
+              const customerCookie = Cookies.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+              const userDetails = Cookies.getCookie(LOGGED_IN_USER_DETAILS);
+              const cartDetailsLoggedInUser = Cookies.getCookie(
+                CART_DETAILS_FOR_LOGGED_IN_USER
+              );
+              dispatch(
+                getCartDetails(
+                  JSON.parse(userDetails).userName,
+                  JSON.parse(customerCookie).access_token,
+                  JSON.parse(cartDetailsLoggedInUser).code,
+                  localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+                )
+              );
+              const existingWishList = await dispatch(getWishListItems());
+              if (!existingWishList || !existingWishList.wishlist) {
+                dispatch(createWishlist());
+              }
+              dispatch(setIfAllAuthCallsHaveSucceeded());
+            } else if (mergeCartIdResponse.status === ERROR) {
+              Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+              Cookies.createCookie(
+                CART_DETAILS_FOR_LOGGED_IN_USER,
+                JSON.stringify(newCartIdObj.cartDetails)
+              );
+              dispatch(setIfAllAuthCallsHaveSucceeded());
+            }
+            // end of merging cart id with new cart id
+          } else if (newCartIdObj.status === ERROR) {
+            dispatch(singleAuthCallHasFailed(newCartIdObj.error));
+          }
+          // end of generating new cart if if wont get any existing cartId
+        }
+      } else {
+        setDataLayerForLogin(ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE);
       }
     },
     otpVerification: async (otpDetails, userDetails) => {
