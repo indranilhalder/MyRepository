@@ -115,7 +115,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
         setTimeout(() => {
           window.scrollTo(0, 0);
         }, 0);
-        // this.props.getProductDescription(this.props.match.params[1]);
+        this.props.getProductDescription(this.props.match.params[1]);
         // this.props.getMsdRequest(this.props.match.params[1]);
       } else {
         //need to show error page
