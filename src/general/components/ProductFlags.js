@@ -25,7 +25,7 @@ export default class ProductFlags extends React.Component {
           className={styles.base}
           style={{ backgroundImage: `url(${offerFlag})` }}
         >
-          {parseInt(this.props.discountPercent, 10)} % off{" "}
+          {parseInt(this.props.discountPercent, 10)}% off{" "}
         </div>
       );
     } else if (this.props.isOfferExisting) {
