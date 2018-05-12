@@ -97,7 +97,6 @@ export default class EmiPanel extends React.Component {
     this.setState({ currentSelectedEMIType });
   }
   render() {
-    console.log(this.props.onFocusInput);
     return (
       <div className={styles.base}>
         <MenuDetails
