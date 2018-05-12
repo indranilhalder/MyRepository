@@ -98,6 +98,7 @@ export default class PaymentCardWrapper extends React.Component {
         binValidationForSavedCard={cardDetails =>
           this.binValidationForSavedCard(cardDetails)
         }
+        onFocusInput={this.props.onFocusInput}
         saveCardDetails={
           this.props.cart.paymentModes.savedCardResponse.savedCardDetailsMap
         }

@@ -147,7 +147,8 @@ class CheckOutPage extends React.Component {
       egvCartGuid: null,
       noCostEmiBankName: null,
       isCliqCashApplied: false,
-      cliqCashPaidAmount: "0.00"
+      cliqCashPaidAmount: "0.00",
+      showCartDetails: false
     };
   }
 
@@ -377,6 +378,9 @@ class CheckOutPage extends React.Component {
       </div>
     );
   };
+  onFocusInput() {
+    this.setState({ showCartDetails: false });
+  }
   renderDeliverModes = () => {
     return (
       <div className={styles.products}>
@@ -1945,6 +1949,7 @@ class CheckOutPage extends React.Component {
                 createJusPayOrderForGiftCardNetBanking={bankName =>
                   this.createJusPayOrderForGiftCardNetBanking(bankName)
                 }
+                onFocusInput={() => this.onFocusInput()}
                 addGiftCard={() => this.addGiftCard()}
                 binValidationForPaytm={val => this.binValidationForPaytm(val)}
                 displayToast={message => this.props.displayToast(message)}
@@ -2005,6 +2010,7 @@ class CheckOutPage extends React.Component {
               coupons={this.state.couponDiscount}
               discount={this.state.totalDiscount}
               delivery={this.state.deliveryCharge}
+              showDetails={this.state.showCartDetails}
               onCheckout={
                 this.state.isPaymentFailed
                   ? this.handleSubmitAfterPaymentFailure
