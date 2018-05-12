@@ -19,7 +19,8 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   GLOBAL_ACCESS_TOKEN,
-  PLAT_FORM_NUMBER
+  PLAT_FORM_NUMBER,
+  SUCCESS_MESSAGE_IN_CANCELING_ORDER
 } from "../../lib/constants";
 import {
   showModal,
@@ -53,6 +54,7 @@ import {
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
+import { displayToast } from "../../general/toast.actions";
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
 export const GET_USER_DETAILS_FAILURE = "GET_USER_DETAILS_FAILURE";
@@ -338,6 +340,7 @@ export function cancelProduct(cancelProductDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      dispatch(displayToast(SUCCESS_MESSAGE_IN_CANCELING_ORDER));
       return dispatch(cancelProductSuccess(resultJson));
     } catch (e) {
       return dispatch(cancelProductFailure(e.message));

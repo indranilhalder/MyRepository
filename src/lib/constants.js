@@ -107,7 +107,8 @@ export const RETURNS_NEW_ADDRESS = "/addDeliveryLocation";
 export const RETURN_CLIQ_PIQ = "/cliqpiq";
 export const RETURN_CLIQ_PIQ_ADDRESS = "/address";
 export const RETURN_CLIQ_PIQ_DATE = "/dateTime";
-
+export const SUCCESS_MESSAGE_IN_CANCELING_ORDER =
+  "Your order cancelled successfully";
 export const RETURN_CLIQ_PIQ_RETURN_SUMMARY = "/returnSummary";
 
 export const RETURN_TO_STORE = "/store";
