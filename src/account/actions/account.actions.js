@@ -1129,7 +1129,7 @@ export function getUserDetailsFailure(error) {
   };
 }
 
-export function getUserDetails() {
+export function getUserDetails(isSetDataLayer) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -1148,7 +1148,9 @@ export function getUserDetails() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayer(AODBE_MY_ACCOUNT_SETTINGS);
+      if (isSetDataLayer) {
+        setDataLayer(AODBE_MY_ACCOUNT_SETTINGS);
+      }
       dispatch(getUserDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(getUserDetailsFailure(e.message));
