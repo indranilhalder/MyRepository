@@ -1,14 +1,11 @@
 import React from "react";
 import Image from "../../xelpmoc-core/Image";
 import Button from "../../general/components/Button";
-import { HOME_ROUTER } from "../../lib/constants.js";
 import styles from "./StoryWidget.css";
 
 export default class StoryProduct extends React.Component {
   handleClick() {
-    this.props.history.push(
-      `${HOME_ROUTER}/p-${this.props.productListingId.toLowerCase()}`
-    );
+    this.props.history.push(`/p-${this.props.productListingId.toLowerCase()}`);
   }
   render() {
     return (
@@ -22,7 +19,11 @@ export default class StoryProduct extends React.Component {
           <div className={styles.row}>{this.props.productName}</div>
           <div className={styles.row}>{this.props.mrp} </div>
           <div className={styles.button}>
-            <Button label="View Product" type="secondary" />
+            <Button
+              label="View Product"
+              type="secondary"
+              onClick={() => this.handleClick()}
+            />
           </div>
         </div>
       </div>

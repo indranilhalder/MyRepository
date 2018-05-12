@@ -48,7 +48,7 @@ export default class ItemLevelPopup extends React.Component {
               nonNoCostEMIProduct > 0 && (
                 <div
                   className={styles.offerText}
-                >{` No Coast EMI available only on ${noCostEMIProduct} product(s). Standard EMI will apply to products, if any, bought along with it.`}</div>
+                >{` No Cost EMI available only on ${noCostEMIProduct} product(s). Standard EMI will apply to products, if any, bought along with it.`}</div>
               )}
           </div>
           <div className={styles.levelBreakupHolder}>
