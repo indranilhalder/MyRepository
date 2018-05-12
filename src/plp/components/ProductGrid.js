@@ -48,6 +48,7 @@ export default class ProductGrid extends React.Component {
     // if (data.type === PRODUCT) {
     return (
       <ProductModule
+        isPlp={true}
         productImage={data.imageURL}
         title={data.brandname}
         price={data.price.mrpPrice.formattedValueNoDecimal}

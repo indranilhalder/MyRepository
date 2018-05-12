@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import CheckBox from "../../general/components/CheckBox.js";
 import styles from "./FilterSelect.css";
+import { URL_ROOT } from "../../lib/apiRequest";
 
 export default class FilterSelect extends React.Component {
   handleUrlClick = e => {
@@ -51,7 +52,7 @@ export default class FilterSelect extends React.Component {
   };
 
   constructCategoryAndBrandUrl = () => {
-    return `${
+    return `${URL_ROOT}${
       this.props.history.location.pathname
     }/b-${this.props.value.toLowerCase()}`;
   };

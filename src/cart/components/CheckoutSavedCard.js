@@ -79,6 +79,7 @@ export default class CheckoutSavedCard extends React.Component {
             return (
               <SavedCard
                 key={i}
+                onFocusInput={this.props.onFocusInput}
                 cardNumber={data.value.cardEndingDigits}
                 cardImage={cardLogo}
                 onChangeCvv={(cvv, cardNo) => this.onChangeCvv(cvv, cardNo)}

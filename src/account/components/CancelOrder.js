@@ -70,6 +70,9 @@ export default class CancelOrder extends React.Component {
     let cancelProductDetails = this.props.cancelProductDetails;
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (this.props.error) {
+      this.props.history.goBack();
+    }
     if (this.props.loadingForCancelProductDetails) {
       return this.renderLoader();
     }
