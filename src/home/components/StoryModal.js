@@ -10,9 +10,7 @@ export default class StoryModal extends React.Component {
     this.props.clearItems(this.props.positionInFeed);
   }
   render() {
-    console.log(this.props);
     const items = this.props.feedComponentData.items;
-
     return (
       <div className={styles.base}>
         <StoryWidget {...this.props}>
