@@ -1,25 +1,11 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
 import find from "lodash.find";
-import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
-import SizeSelector from "./SizeSelector";
-import PriceBreakUp from "./PriceBreakUp";
-import OfferCard from "./OfferCard";
-import OtherSellersLink from "./OtherSellersLink";
-import PdpDeliveryModes from "./PdpDeliveryModes";
-import JewelleryClassification from "./JewelleryClassification";
-import RatingAndTextLink from "./RatingAndTextLink";
-import AllDescription from "./AllDescription";
-import PdpPincode from "./PdpPincode";
-import Overlay from "./Overlay";
-import PdpPaymentInfo from "./PdpPaymentInfo";
 import Accordion from "../../general/components/Accordion.js";
-import JewelleryCertification from "./JewelleryCertification.js";
 import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
-import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
 import {
   PRODUCT_SELLER_ROUTER_SUFFIX,
   CUSTOMER_ACCESS_TOKEN,
@@ -37,6 +23,94 @@ import {
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   COLLECT
 } from "../../lib/constants";
+import LoadableVisibility from "react-loadable-visibility/react-loadable";
+
+const PriceBreakUp = LoadableVisibility({
+  loader: () => import("./PriceBreakUp"),
+  loading: () => <div />
+});
+const JewelleryDetailsAndLink = LoadableVisibility({
+  loader: () => import("./JewelleryDetailsAndLink"),
+  loading: () => <div />
+});
+
+const JewelleryClassification = LoadableVisibility({
+  loader: () => import("./JewelleryClassification"),
+  loading: () => <div />
+});
+
+const JewelleryCertification = LoadableVisibility({
+  loader: () => import("./JewelleryCertification"),
+  loading: () => <div />
+});
+
+const Overlay = LoadableVisibility({
+  loader: () => import("./Overlay"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpPincode = LoadableVisibility({
+  loader: () => import("./PdpPincode"),
+  loading: () => <div />,
+  delay: 1000
+});
+
+const ProductFeature = LoadableVisibility({
+  loader: () => import("./ProductFeature"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const AllDescription = LoadableVisibility({
+  loader: () => import("./AllDescription"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const RatingAndTextLink = LoadableVisibility({
+  loader: () => import("./PdpPaymentInfo"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpPaymentInfo = LoadableVisibility({
+  loader: () => import("./PdpPaymentInfo"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const OtherSellersLink = LoadableVisibility({
+  loader: () => import("./OtherSellersLink"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const OfferCard = LoadableVisibility({
+  loader: () => import("./OfferCard"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const SizeSelector = LoadableVisibility({
+  loader: () => import("./SizeSelector"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpDeliveryModes = LoadableVisibility({
+  loader: () => import("./PdpDeliveryModes"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PDPRecommendedSectionsContainer = LoadableVisibility({
+  loader: () => import("../containers/PDPRecommendedSectionsContainer"),
+  loading: () => {
+    return <div />;
+  },
+  delay: 400
+});
 
 const NO_SIZE = "NO SIZE";
 const FREE_SIZE = "Free Size";

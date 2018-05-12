@@ -1,9 +1,5 @@
 import React from "react";
-import PdpElectronics from "./PdpElectronics";
-import PdpApparel from "./PdpApparel";
-import PdpJewellery from "./PdpJewellery";
-import PiqPageForPdp from "./PiqPageForPdp";
-import PdpHome from "./PdpHome";
+import Loadable from "react-loadable";
 
 import styles from "./ProductDescriptionPageWrapper.css";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
@@ -17,14 +13,62 @@ import {
   renderMetaTagsWithoutSeoObject
 } from "../../lib/seoUtils.js";
 // prettier-ignore
+
+const PiqPageForPdp = Loadable({
+  loader: () => import("./PiqPageForPdp"),
+  loading() {
+    return <div className={styles.loadingIndicator}><Loader /></div>
+  }
+})
+
+const PdpElectronics = Loadable({
+  loader: () => import("./PdpApparel"),
+  loading() {
+    return (
+      <div className={styles.loadingIndicator}>
+        <Loader />
+      </div>
+    );
+  }
+});
+
+const PdpJewellery = Loadable({
+  loader: () => import("./PdpJewellery"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const PdpApparel = Loadable({
+  loader: () => import("./PdpApparel"),
+  loading() {
+    return <Loader />;
+  }
+});
+
+const PdpHome = Loadable({
+  loader: () => import("./PdpHome"),
+  loading() {
+    return <Loader />;
+  }
+});
+
 const typeComponentMapping = {
-  "Electronics": props => <PdpElectronics {...props} />,
-  "Watches":props =><PdpElectronics {...props} />,
-  "FashionJewellery":props => <PdpJewellery {...props} />,
-  "Clothing":props => <PdpApparel {...props} />,
-  "Footwear":props => <PdpApparel {...props} />,
-  "HomeFurnishing":props => <PdpHome {...props} />,
-  "FineJewellery": props => <PdpJewellery {...props} />,
+  Electronics: props => <PdpElectronics {...props} />,
+  Watches: props => <PdpElectronics {...props} />,
+  FashionJewellery: props => <PdpJewellery {...props} />,
+  Clothing: props => <PdpApparel {...props} />,
+  Footwear: props => <PdpApparel {...props} />,
+  HomeFurnishing: props => <PdpHome {...props} />,
+  FineJewellery: props => <PdpJewellery {...props} />
+};
+
+const Loader = () => {
+  return (
+    <div>
+      <SecondaryLoader />
+    </div>
+  );
 };
 
 const defaultPinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
@@ -40,8 +84,6 @@ export default class ProductDescriptionPageWrapper extends React.Component {
         window.scrollTo(0, 0);
       }, 0);
       await this.props.getProductDescription(this.props.match.params[0]);
-      this.props.getMsdRequest(this.props.match.params[0]);
-      this.props.pdpAboutBrand(this.props.match.params[0]);
     } else if (
       this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
     ) {
@@ -49,8 +91,6 @@ export default class ProductDescriptionPageWrapper extends React.Component {
         window.scrollTo(0, 0);
       }, 0);
       this.props.getProductDescription(this.props.match.params[1]);
-      this.props.getMsdRequest(this.props.match.params[1]);
-      this.props.pdpAboutBrand(this.props.match.params[1]);
     } else {
       //need to show error page
     }
@@ -68,15 +108,15 @@ export default class ProductDescriptionPageWrapper extends React.Component {
 
       if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
         this.props.getProductDescription(this.props.match.params[0]);
-        this.props.getMsdRequest(this.props.match.params[0]);
+        // this.props.getMsdRequest(this.props.match.params[0]);
       } else if (
         this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
       ) {
         setTimeout(() => {
           window.scrollTo(0, 0);
         }, 0);
-        this.props.getProductDescription(this.props.match.params[1]);
-        this.props.getMsdRequest(this.props.match.params[1]);
+        // this.props.getProductDescription(this.props.match.params[1]);
+        // this.props.getMsdRequest(this.props.match.params[1]);
       } else {
         //need to show error page
       }

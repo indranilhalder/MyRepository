@@ -17,7 +17,7 @@ import {
 const SEARCH_CATEGORY_TO_IGNORE = "all";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SKU_SUFFIX = `&isFilter=false&channel=mobile`;
-const PAGE_REGEX = /page-(\d)/;
+const PAGE_REGEX = /page-(\d+)/;
 
 class ProductListingsPage extends Component {
   getSearchTextFromUrl() {

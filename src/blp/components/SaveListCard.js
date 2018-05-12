@@ -32,6 +32,7 @@ export default class SaveListCard extends React.Component {
             productImage={this.props.image}
             outOfStock={this.props.outOfStock}
             productName={this.props.productName}
+            brandName={this.props.brandName}
             productMaterial={this.props.productMaterial}
             price={this.props.price}
             onClickImage={() => this.onClickImage()}

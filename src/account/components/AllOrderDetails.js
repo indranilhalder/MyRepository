@@ -148,31 +148,42 @@ export default class AllOrderDetails extends React.Component {
                       orderId={orderDetails && orderDetails.orderId}
                     />
                   </div>
-                  <OrderCard
-                    imageUrl={
-                      orderDetails &&
-                      orderDetails.products &&
-                      orderDetails.products[0].imageURL
-                    }
-                    price={orderDetails && orderDetails.totalOrderAmount}
-                    discountPrice={""}
-                    productName={
-                      orderDetails &&
-                      orderDetails.products &&
-                      orderDetails.products[0].productName
-                    }
-                    isEgvOrder={orderDetails.isEgvOrder}
-                    onClick={() =>
-                      this.onClickImage(
-                        orderDetails.isEgvOrder,
-                        orderDetails &&
+                  {orderDetails &&
+                    orderDetails.products && (
+                      <OrderCard
+                        imageUrl={
+                          orderDetails &&
+                          orderDetails.products &&
+                          orderDetails.products[0].imageURL
+                        }
+                        hasProduct={orderDetails && orderDetails.products}
+                        isGiveAway={
+                          orderDetails &&
                           orderDetails.products &&
                           orderDetails.products[0] &&
-                          orderDetails.products.length &&
-                          orderDetails.products[0].productcode
-                      )
-                    }
-                  />
+                          orderDetails.products[0].isGiveAway
+                        }
+                        price={orderDetails && orderDetails.totalOrderAmount}
+                        discountPrice={""}
+                        productName={
+                          orderDetails &&
+                          orderDetails.products &&
+                          orderDetails.products[0] &&
+                          orderDetails.products[0].productName
+                        }
+                        isEgvOrder={orderDetails.isEgvOrder}
+                        onClick={() =>
+                          this.onClickImage(
+                            orderDetails.isEgvOrder,
+                            orderDetails &&
+                              orderDetails.products &&
+                              orderDetails.products[0] &&
+                              orderDetails.products.length &&
+                              orderDetails.products[0].productcode
+                          )
+                        }
+                      />
+                    )}
 
                   <PriceAndLink
                     onViewDetails={() =>
