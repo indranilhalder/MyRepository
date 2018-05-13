@@ -1,10 +1,15 @@
 .holder {
   width: 100%;
   height: auto;
+  margin-top: 50px;
+}
+.firstPositionHolder {
+  composes: holder;
   margin-top: 20px;
 }
 .base {
-  composes: holder;
+  width: 100%;
+  height: auto;
   margin: 0px;
 }
 .inCard {

@@ -191,9 +191,9 @@ export const CANCEL_PREFIX = "/cancel/(.*)";
 export const WALLET = "WALLET";
 
 //header name
-export const SAVED_PAYMENTS = "Saved Payments";
-export const MY_CLIQ = "My Cliq";
-export const SAVED_LIST = "Saved list";
+export const SAVED_PAYMENTS = "Saved Cards";
+export const MY_CLIQ = "My Account";
+export const SAVED_LIST = "My Wish List";
 export const ALERTS_COUPON = "Alerts & Coupons";
 export const BRANDS = "Brands";
 export const ADDRESS_BOOK = "Address Book";
@@ -226,7 +226,7 @@ export const STANDARD_EMI = "Standard Emi";
 export const CREDIT_CARD = "Credit Card";
 export const DEBIT_CARD = "Debit Card";
 export const E_WALLET = "E - Wallet";
-export const CASH_ON_DELIVERY_PAYMENT_MODE = "Cash On Delivery";
+export const CASH_ON_DELIVERY_PAYMENT_MODE = "Cash on Delivery";
 export const RUPEE_SYMBOL = "₹";
 
 // META TAGS CONSTANTS
