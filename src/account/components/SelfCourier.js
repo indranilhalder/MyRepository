@@ -61,13 +61,11 @@ export default class SelfCourier extends React.Component {
     );
   }
   render() {
-    // Preventing user to open this page direct by hitting URL
-    // if (
-    //   !this.props.location.state ||
-    //   !this.props.location.state.authorizedRequest
-    // ) {
-    //   return this.navigateToReturnLanding();
-    // }
+    if (this.props.loading) {
+      this.props.showSecondaryLoader();
+    } else {
+      this.props.hideSecondaryLoader();
+    }
     return (
       <ReturnsFrame
         headerText="Steps for self courier"
