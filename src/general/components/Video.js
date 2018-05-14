@@ -10,6 +10,9 @@ export default class Video extends React.Component {
         width="100%"
         height="100%"
         controls={this.props.controls}
+        onPause={this.props.onPause}
+        onEnded={this.props.onEnded}
+        onPlay={this.props.onPlay}
       />
     );
   }
