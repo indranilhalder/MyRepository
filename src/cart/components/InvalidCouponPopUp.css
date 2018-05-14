@@ -69,3 +69,6 @@
   composes: buttonHolderForPaymentMode;
   margin-top: 20px;
 }
+.invalidCouponHeading {
+  margin-bottom: 10px;
+}

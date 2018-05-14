@@ -148,8 +148,8 @@ const KycDetailPopUpWithBottomSlideModal = Loadable({
   }
 });
 
-const InvalidBankCouponPopup = Loadable({
-  loader: () => import("../../cart/components/DifferentAccountPopup"),
+const InvalidCouponPopupContainer = Loadable({
+  loader: () => import("../../cart/containers/InvalidCouponPopUpContainer"),
   loading() {
     return <Loader />;
   }
@@ -593,14 +593,11 @@ export default class ModalRoot extends React.Component {
         />
       ),
       INVALID_BANK_COUPON_POPUP: (
-        <InvalidBankCouponPopup
-          couponCode={
-            this.props.ownProps && this.props.ownProps.couponCode
-              ? this.props.ownProps.couponCode
-              : ""
-          }
+        <InvalidCouponPopupContainer
+          {...this.props.ownProps}
+          closeModal={() => this.handleClose()}
           changePaymentMethod={() => this.handleClose()}
-          continueWithoutCoupon={() => this.continueWithoutBankCoupon()}
+          // continueWithoutCoupon={() => this.continueWithoutBankCoupon()}
         />
       ),
       PriceBreakup: (

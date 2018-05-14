@@ -177,7 +177,11 @@ class CheckOutPage extends React.Component {
   };
   onChangePaymentMode = val => {
     let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
-    if (val.currentPaymentMode !== EMI && noCostEmiCouponCode) {
+    if (
+      val.currentPaymentMode !== EMI &&
+      val.currentPaymentMode !== null &&
+      noCostEmiCouponCode
+    ) {
       this.removeNoCostEmi(noCostEmiCouponCode);
     }
 
@@ -1292,22 +1296,19 @@ class CheckOutPage extends React.Component {
         JSON.parse(localStorage.getItem(CART_ITEM_COOKIE)),
         JSON.parse(localStorage.getItem(ADDRESS_FOR_PLACE_ORDER)),
         this.state.cardDetails,
-        this.state.paymentModeSelected,
-        this.state.noCostEmiBankName
+        this.state.paymentModeSelected
       );
     }
     if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
       if (this.state.isGiftCard) {
         if (this.props.createJusPayOrderForGiftCardNetBanking) {
           this.props.createJusPayOrderForGiftCardNetBanking(
-            this.state.bankCodeForNetBanking,
             this.state.egvCartGuid
           );
         }
       } else {
         this.props.createJusPayOrderForNetBanking(
           NET_BANKING,
-          this.state.bankCodeForNetBanking,
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
           JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
         );
@@ -1317,14 +1318,12 @@ class CheckOutPage extends React.Component {
       if (this.state.isGiftCard) {
         if (this.props.createJusPayOrderForGiftCardNetBanking) {
           this.props.createJusPayOrderForGiftCardNetBanking(
-            this.state.bankCodeForNetBanking,
             this.state.egvCartGuid
           );
         }
       } else {
         this.props.createJusPayOrderForNetBanking(
           WALLET,
-          PAYTM,
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
           JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
         );
@@ -1428,10 +1427,7 @@ class CheckOutPage extends React.Component {
             this.props.location.state.egvCartGuid
           );
         } else {
-          this.softReservationForPayment(
-            this.state.cardDetails,
-            this.state.noCostEmiBankName
-          );
+          this.softReservationForPayment(this.state.cardDetails);
         }
         this.onChangePaymentMode({ currentPaymentMode: null });
       }
@@ -1439,7 +1435,6 @@ class CheckOutPage extends React.Component {
       if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
         if (this.state.isGiftCard) {
           this.props.createJusPayOrderForGiftCardNetBanking(
-            this.state.bankCodeForNetBanking,
             this.props.location.state.egvCartGuid
           );
         } else {
@@ -1461,7 +1456,6 @@ class CheckOutPage extends React.Component {
       if (this.state.paymentModeSelected === PAYTM) {
         if (this.state.isGiftCard) {
           this.props.createJusPayOrderForGiftCardNetBanking(
-            this.state.bankCodeForNetBanking,
             this.props.location.state.egvCartGuid
           );
         } else {
@@ -1588,13 +1582,12 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  softReservationForPayment = (cardDetails, noCostEmiCouponCode) => {
+  softReservationForPayment = cardDetails => {
     cardDetails.pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.props.softReservationForPayment(
       cardDetails,
       this.state.selectedAddress,
-      this.state.paymentModeSelected,
-      noCostEmiCouponCode
+      this.state.paymentModeSelected
     );
   };
 
@@ -1607,10 +1600,9 @@ class CheckOutPage extends React.Component {
     );
   };
 
-  createJusPayOrderForGiftCardNetBanking = bankName => {
+  createJusPayOrderForGiftCardNetBanking = () => {
     if (this.props.createJusPayOrderForGiftCardNetBanking) {
       this.props.createJusPayOrderForGiftCardNetBanking(
-        bankName,
         this.props.location.state.egvCartGuid
       );
     }
@@ -1947,8 +1939,8 @@ class CheckOutPage extends React.Component {
                 binValidationForSavedCard={cardDetails =>
                   this.binValidationForSavedCard(cardDetails)
                 }
-                createJusPayOrderForGiftCardNetBanking={bankName =>
-                  this.createJusPayOrderForGiftCardNetBanking(bankName)
+                createJusPayOrderForGiftCardNetBanking={() =>
+                  this.createJusPayOrderForGiftCardNetBanking()
                 }
                 onFocusInput={() => this.onFocusInput()}
                 addGiftCard={() => this.addGiftCard()}

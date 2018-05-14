@@ -295,8 +295,13 @@ const cart = (
 
     case cartActions.RELEASE_USER_COUPON_SUCCESS:
       carDetailsCopy = cloneDeep(state.cartDetails);
+
       cartAmount = action.couponResult && action.couponResult.cartAmount;
-      carDetailsCopy.cartAmount = cartAmount;
+      if (carDetailsCopy) {
+        carDetailsCopy.cartAmount = cartAmount;
+      } else {
+        carDetailsCopy = { cartAmount };
+      }
       delete carDetailsCopy["appliedCoupon"];
 
       Cookies.deleteCookie(COUPON_COOKIE);
