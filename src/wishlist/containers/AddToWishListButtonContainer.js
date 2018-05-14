@@ -5,7 +5,8 @@ import { addProductToWishList } from "../actions/wishlist.actions";
 import { SUCCESS } from "../../lib/constants";
 import { withRouter } from "react-router-dom";
 import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
-
+import { removeItemFromCartLoggedIn } from "../../cart/actions/cart.actions";
+import { DEFAULT_PIN_CODE_LOCAL_STORAGE } from "../../lib/constants";
 const toastMessageOnSuccessAddToWishlist = "Added";
 
 const toastMessageOnAlreadyInWishlist = "Already in wishlist";
@@ -17,6 +18,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         addProductToWishList(productObj, ownProps.setDataLayerType)
       );
       if (wishlistResponse.status === SUCCESS) {
+        dispatch(
+          removeItemFromCartLoggedIn(
+            ownProps.index,
+            localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+          )
+        );
         dispatch(displayToast(toastMessageOnSuccessAddToWishlist));
       }
     },
@@ -36,7 +43,8 @@ const mapStateToProps = (state, ownProps) => {
     winningUssID: ownProps.winningUssID,
     isWhite: ownProps.isWhite,
     wishlistItems: state.wishlistItems.wishlistItems,
-    type: ownProps.type
+    type: ownProps.type,
+    index: ownProps.index
   };
 };
 const AddToWishListButtonContainer = withRouter(
