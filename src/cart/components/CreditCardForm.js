@@ -53,15 +53,22 @@ export default class CreditCardForm extends React.Component {
       ExpiryYear: props.ExpiryYear ? props.ExpiryYear : null,
       value: props.value ? props.value : "",
       monthValue: "",
-      yearValue: ""
+      yearValue: "",
+      isCalledBinValidation: false
     };
   }
 
   onChangeCardNumber(val) {
     this.setState({ cardNumber: val });
     this.onChange({ cardNumber: val });
-    if (val.length === 6) {
-      this.props.binValidation(val);
+    if (val.length < 6) {
+      this.setState({ isCalledBinValidation: false });
+    }
+    if (val.length >= 6) {
+      this.setState({ isCalledBinValidation: true });
+      if (!this.state.isCalledBinValidation) {
+        this.props.binValidation(val);
+      }
     }
   }
 
