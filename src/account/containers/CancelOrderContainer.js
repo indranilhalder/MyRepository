@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       );
       if (cancelOrderDetails.status === SUCCESS) {
         setDataLayerForMyAccountDirectCalls(productDetials);
-        ownProps.history.push(`${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}`);
+        ownProps.history.go(-4);
       } else {
         dispatch(displayToast(ERROR_MESSAGE_IN_CANCELING_ORDER));
       }

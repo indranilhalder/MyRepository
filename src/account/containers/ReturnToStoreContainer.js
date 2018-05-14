@@ -2,13 +2,31 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import ReturnToStore from "../components/ReturnToStore";
 import { quickDropStore, newReturnInitial } from "../actions/account.actions";
-const mapDispatchToProps = dispatch => {
+import { displayToast } from "../../general/toast.actions.js";
+import {
+  SUCCESS,
+  MY_ACCOUNT,
+  MY_ACCOUNT_ORDERS_PAGE
+} from "../../lib/constants.js";
+const RETURN_SUCCESS_MESSAGE = "Return has been initiated";
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  console.log(ownProps);
   return {
     quickDropStore: (pincode, ussId) => {
       dispatch(quickDropStore(pincode, ussId));
     },
     newReturnInitial: (productObjToBeReturn, product) => {
-      dispatch(newReturnInitial(productObjToBeReturn, product));
+      dispatch(newReturnInitial(productObjToBeReturn, product)).then(res => {
+        if (res.status === SUCCESS) {
+          dispatch(displayToast(RETURN_SUCCESS_MESSAGE));
+          if (ownProps.isCOD) {
+            ownProps.history.go(-5);
+          } else {
+            ownProps.history.go(-4);
+          }
+        }
+      });
     }
   };
 };

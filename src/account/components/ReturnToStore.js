@@ -118,11 +118,18 @@ export default class ReturnToStore extends React.Component {
     }
     let noOfStories = 0;
 
-    if (this.props.returnRequest.returnStoreDetailsList) {
+    if (
+      this.props.returnRequest &&
+      this.props.returnRequest.returnStoreDetailsList
+    ) {
       noOfStories = this.props.returnRequest.returnStoreDetailsList.length;
     }
 
-    if (!this.props.returnRequest || !this.props.returnProductDetails) {
+    if (
+      !this.props.returnRequest ||
+      !this.props.returnProductDetails ||
+      this.props.loading
+    ) {
       return this.renderLoader();
     }
 

@@ -3,7 +3,11 @@ import { connect } from "react-redux";
 import { newReturnInitial, returnPinCode } from "../actions/account.actions";
 import ReturnAddressList from "../components/ReturnAddressList.js";
 import { addUserAddress } from "../../cart/actions/cart.actions.js";
-import { SUCCESS } from "../../lib/constants";
+import {
+  SUCCESS,
+  MY_ACCOUNT,
+  MY_ACCOUNT_ORDERS_PAGE
+} from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
 import {
   getPinCode,
@@ -11,6 +15,7 @@ import {
   getReturnRequest
 } from "../../account/actions/account.actions.js";
 const mapDispatchToProps = (dispatch, ownProps) => {
+  console.log(ownProps);
   return {
     addUserAddress: async (addressDetails, fromAccount) => {
       const addAddressResponse = await dispatch(
@@ -23,7 +28,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             ownProps.returnProductDetails.orderProductWsDTO[0].transactionId
           )
         );
-        ownProps.history.goBack();
+        if (ownProps.isCOD) {
+          ownProps.history.go(-5);
+        } else {
+          ownProps.history.go(-4);
+        }
       }
     },
     newReturnInitial: (returnDetails, product) => {
