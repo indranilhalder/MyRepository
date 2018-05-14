@@ -39,6 +39,7 @@ export default class ReturnReasonForm extends React.Component {
     const label = val.label;
     const data = this.props.returnProductDetails;
     this.setState({
+      subReasonCode: null,
       returnReasonCode: code,
       reason: label,
       secondaryReasons: data.returnReasonMap
@@ -97,15 +98,21 @@ export default class ReturnReasonForm extends React.Component {
             }
             productName={`${data &&
               data.orderProductWsDTO &&
-              data.orderProductWsDTO[0].productBrand} ${
-              data.orderProductWsDTO[0].productName
-            }`}
+              data.orderProductWsDTO[0] &&
+              data.orderProductWsDTO[0].productBrand} ${data &&
+              data.orderProductWsDTO &&
+              data.orderProductWsDTO[0] &&
+              data.orderProductWsDTO[0].productName}`}
             price={
-              data && data.orderProductWsDTO && data.orderProductWsDTO[0].price
+              data &&
+              data.orderProductWsDTO &&
+              data.orderProductWsDTO[0] &&
+              data.orderProductWsDTO[0].price
             }
           >
             {data &&
               data.orderProductWsDTO &&
+              data.orderProductWsDTO[0] &&
               data.orderProductWsDTO[0].quantity && (
                 <div className={styles.quantity}>
                   Qty {data.orderProductWsDTO[0].quantity}
@@ -115,12 +122,16 @@ export default class ReturnReasonForm extends React.Component {
           <div className={styles.select}>
             <SelectBoxMobile2
               placeholder={"Select a reason"}
-              options={data.returnReasonMap.map((val, i) => {
-                return {
-                  value: val.parentReasonCode,
-                  label: val.parentReturnReason
-                };
-              })}
+              options={
+                data &&
+                data.returnReasonMap &&
+                data.returnReasonMap.map((val, i) => {
+                  return {
+                    value: val.parentReasonCode,
+                    label: val.parentReturnReason
+                  };
+                })
+              }
               onChange={val => this.onChangePrimary(val)}
             />
           </div>

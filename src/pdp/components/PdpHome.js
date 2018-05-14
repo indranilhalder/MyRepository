@@ -162,7 +162,14 @@ export default class PdpApparel extends React.Component {
       }
     });
   };
-
+  showEmiModal = () => {
+    const cartValue = this.props.productDetails.winningSellerPrice.value;
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    const globalAccessToken = JSON.parse(globalCookie).access_token;
+    this.props.getPdpEmi(globalAccessToken, cartValue);
+    this.props.getEmiTerms(globalAccessToken, cartValue);
+    this.props.showEmiModal();
+  };
   addToCart = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
@@ -338,7 +345,7 @@ export default class PdpApparel extends React.Component {
             <PdpPaymentInfo
               hasEmi={productData.isEMIEligible}
               hasCod={productData.isCOD}
-              showEmiModal={this.showEmiModal}
+              showEmiModal={() => this.showEmiModal()}
             />
             <OfferCard
               showDetails={this.props.showOfferDetails}
