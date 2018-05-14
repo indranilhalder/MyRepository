@@ -13,16 +13,6 @@ export default class OfferModal extends React.Component {
               <div className={styles.headingText}>
                 {this.props.potentialPromotions.title}
               </div>
-              <div className={styles.section}>
-                <div className={styles.timeSection}>
-                  <div className={styles.subHeader}>Valid From</div>
-                  {this.props.potentialPromotions.startDate}
-                </div>
-                <div className={styles.timeSection}>
-                  <div className={styles.subHeader}>Valid Till</div>
-                  {this.props.potentialPromotions.endDate}
-                </div>
-              </div>
               {this.props.potentialPromotions.description && (
                 <div className={styles.section}>
                   <div
@@ -33,6 +23,16 @@ export default class OfferModal extends React.Component {
                   />
                 </div>
               )}
+              <div className={styles.section}>
+                <div className={styles.timeSection}>
+                  <div className={styles.subHeader}>Valid From</div>
+                  {this.props.potentialPromotions.startDate}
+                </div>
+                <div className={styles.timeSection}>
+                  <div className={styles.subHeader}>Valid Till</div>
+                  {this.props.potentialPromotions.endDate}
+                </div>
+              </div>
             </div>
           )}
           {this.props.secondaryPromotions && (
@@ -40,16 +40,6 @@ export default class OfferModal extends React.Component {
               <div className={styles.border} />
               <div className={styles.headingText}>
                 {this.props.secondaryPromotions.messageID}
-              </div>
-              <div className={styles.section}>
-                <div className={styles.timeSection}>
-                  <div className={styles.subHeader}>Valid From</div>
-                  {this.props.secondaryPromotions.startDate}
-                </div>
-                <div className={styles.timeSection}>
-                  <div className={styles.subHeader}>Valid Till</div>
-                  {this.props.secondaryPromotions.endDate}
-                </div>
               </div>
               {this.props.secondaryPromotions.messageDetails && (
                 <div className={styles.section}>
@@ -61,6 +51,16 @@ export default class OfferModal extends React.Component {
                   />
                 </div>
               )}
+              <div className={styles.section}>
+                <div className={styles.timeSection}>
+                  <div className={styles.subHeader}>Valid From</div>
+                  {this.props.secondaryPromotions.startDate}
+                </div>
+                <div className={styles.timeSection}>
+                  <div className={styles.subHeader}>Valid Till</div>
+                  {this.props.secondaryPromotions.endDate}
+                </div>
+              </div>
             </div>
           )}
         </div>
