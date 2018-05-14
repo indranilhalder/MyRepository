@@ -3239,7 +3239,7 @@ export function orderConfirmation(orderId) {
           JSON.parse(userDetails).userName
         }/orderConfirmation/${orderId}?access_token=${
           JSON.parse(customerCookie).access_token
-        }&platformNumber=2`
+        }&platformNumber=2&isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
