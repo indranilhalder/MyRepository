@@ -1542,6 +1542,7 @@ class CheckOutPage extends React.Component {
 
   binValidation = (paymentMode, binNo) => {
     if (this.state.isPaymentFailed) {
+      localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
       this.props.binValidation(paymentMode, binNo, cartGuId);
@@ -1721,6 +1722,7 @@ class CheckOutPage extends React.Component {
     }
   }
   render() {
+    console.log(this.state);
     let labelForButton,
       checkoutButtonStatus = false;
 
