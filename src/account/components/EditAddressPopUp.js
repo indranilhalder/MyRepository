@@ -42,6 +42,11 @@ const STATE_TEXT = "please enter state";
 const HOME_TEXT = "please select address type";
 const ISO_CODE = "IN";
 const OTHER_LANDMARK = "other";
+const NAME_REGEX = new RegExp("^[a-zA-Z]+$");
+const FIRST_NAME_VALIDATION_TEXT =
+  "First name should not contain any special characters and space";
+const LAST_NAME_VALIDATION_TEXT =
+  "Last name should not contain any special characters and space";
 export default class EditAddressPopUp extends React.Component {
   constructor(props) {
     super(props);
@@ -51,7 +56,9 @@ export default class EditAddressPopUp extends React.Component {
       addressType: addressDetails.addressType,
       phone: addressDetails.phone,
       salutation: this.getSalutationFromFirstName(addressDetails.firstName),
-      firstName: this.extractSalutationFromFirstName(addressDetails.firstName),
+      firstName: this.extractSalutationFromFirstName(
+        addressDetails.firstName
+      ).trim(),
       lastName: addressDetails.lastName,
       postalCode: addressDetails.postalCode,
       line1: addressDetails.line1,
@@ -197,8 +204,16 @@ export default class EditAddressPopUp extends React.Component {
       this.props.displayToast(NAME_TEXT);
       return false;
     }
+    if (!NAME_REGEX.test(this.state.firstName)) {
+      this.props.displayToast(FIRST_NAME_VALIDATION_TEXT);
+      return false;
+    }
     if (!this.state.lastName) {
       this.props.displayToast(LAST_NAME_TEXT);
+      return false;
+    }
+    if (!NAME_REGEX.test(this.state.lastName)) {
+      this.props.displayToast(LAST_NAME_VALIDATION_TEXT);
       return false;
     }
     if (!this.state.line1) {
@@ -228,6 +243,7 @@ export default class EditAddressPopUp extends React.Component {
       }
       const addressObj = cloneDeep(this.state);
       let firstName = addressObj.firstName;
+
       let salutation = addressObj.salutation;
       if (salutation) {
         Object.assign(addressObj, {
@@ -335,16 +351,16 @@ export default class EditAddressPopUp extends React.Component {
           </div>
           <div className={styles.name}>
             <Input2
-              option={this.state.options}
               placeholder="First Name*"
               value={
                 this.props.firstName
-                  ? this.props.firstName
-                  : this.state.firstName
+                  ? this.props.firstName.trim()
+                  : this.state.firstName.trim()
               }
               onChange={firstName => this.onChange({ firstName })}
               textStyle={{ fontSize: 14 }}
               height={33}
+              onlyAlphabet={true}
             />
           </div>
         </div>
@@ -353,11 +369,14 @@ export default class EditAddressPopUp extends React.Component {
             boxy={true}
             placeholder="Last Name*"
             value={
-              this.props.lastName ? this.props.lastName : this.state.lastName
+              this.props.lastName
+                ? this.props.lastName.trim()
+                : this.state.lastName.trim()
             }
             onChange={lastName => this.onChange({ lastName })}
             textStyle={{ fontSize: 14 }}
             height={33}
+            onlyAlphabet={true}
           />
         </div>
         <div className={styles.content}>
