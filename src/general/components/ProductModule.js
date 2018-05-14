@@ -23,6 +23,7 @@ export default class ProductModule extends React.Component {
       this.props.onDownload();
     }
   };
+
   onClick = () => {
     let urlSuffix;
     if (this.props.webURL) {
@@ -101,9 +102,11 @@ ProductModule.propTypes = {
   totalNoOfReviews: PropTypes.number,
   offerText: PropTypes.string,
   bestDeliveryInfo: PropTypes.string,
-  onOffer: PropTypes.bool
+  onOffer: PropTypes.bool,
+  isPlp: PropTypes.bool
 };
 ProductModule.defaultProps = {
   view: "grid",
-  showWishListButton: true
+  showWishListButton: true,
+  isPlp: false
 };

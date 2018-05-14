@@ -1,9 +1,16 @@
 .holder {
   width: 100%;
   height: auto;
+  margin-top: 50px;
+}
+.firstPositionHolder {
+  composes: holder;
+  margin-top: 20px;
 }
 .base {
-  composes: holder;
+  width: 100%;
+  height: auto;
+  margin: 0px;
 }
 .inCard {
   composes: base;
@@ -20,7 +27,6 @@
   min-height: 125px;
   overflow: hidden;
   padding: 30px;
-  margin: 20px 0;
 }
 .content {
   width: 100%;

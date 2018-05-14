@@ -6,6 +6,34 @@ import SlideModal from "../../general/components/SlideModal";
 export default class ItemLevelPopup extends React.Component {
   render() {
     let emiItemDetails = this.props.emiItemDetails;
+    let noCostEMIProduct = 0,
+      nonNoCostEMIProduct = 0;
+    const noCostEMIApplicableProduct = this.props.emiItemDetails.itemBreakUpDetailList.filter(
+      product => {
+        return (
+          product &&
+          product.lineValue &&
+          product.lineValue.value > 1 &&
+          product.isNoCostEMIEligible
+        );
+      }
+    );
+    const nonNoCostEMIApplicableProduct = this.props.emiItemDetails.itemBreakUpDetailList.filter(
+      product => {
+        return (
+          product &&
+          product.lineValue &&
+          product.lineValue.value > 1 &&
+          !product.isNoCostEMIEligible
+        );
+      }
+    );
+    if (noCostEMIApplicableProduct) {
+      noCostEMIProduct = noCostEMIApplicableProduct.length;
+    }
+    if (nonNoCostEMIApplicableProduct) {
+      nonNoCostEMIProduct = nonNoCostEMIApplicableProduct.length;
+    }
 
     return (
       <SlideModal closeModal={this.props.closeModal}>
@@ -16,12 +44,12 @@ export default class ItemLevelPopup extends React.Component {
               emiItemDetails.tenure
             } months`}</div>
 
-            <div
-              className={styles.offerText}
-            >{` No Coast EMI available only on ${
-              emiItemDetails.itemBreakUpDetailList[0].quantity
-            } product(s). Standard EMI will apply to products, if any, bought along with it.`}</div>
-
+            {noCostEMIProduct > 0 &&
+              nonNoCostEMIProduct > 0 && (
+                <div
+                  className={styles.offerText}
+                >{` No Cost EMI available only on ${noCostEMIProduct} product(s). Standard EMI will apply to products, if any, bought along with it.`}</div>
+              )}
           </div>
           <div className={styles.levelBreakupHolder}>
             {emiItemDetails &&
@@ -85,4 +113,3 @@ ItemLevelPopup.propTypes = {
     })
   )
 };
-

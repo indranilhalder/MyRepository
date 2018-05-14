@@ -4,19 +4,8 @@ import find from "lodash.find";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
-import ColourSelector from "./ColourSelector";
-import SizeQuantitySelect from "./SizeQuantitySelect";
-import OfferCard from "./OfferCard";
-import OtherSellersLink from "./OtherSellersLink";
-import ProductFeature from "./ProductFeature";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-import PdpPaymentInfo from "./PdpPaymentInfo";
-import ProductFeatures from "./ProductFeatures";
-import RatingAndTextLink from "./RatingAndTextLink";
-import PdpDeliveryModes from "./PdpDeliveryModes";
-import AllDescription from "./AllDescription";
-import PdpPincode from "./PdpPincode";
-import Overlay from "./Overlay";
+
 import Accordion from "../../general/components/Accordion.js";
 import * as Cookie from "../../lib/Cookie";
 import {
@@ -38,7 +27,88 @@ import {
 
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import styles from "./ProductDescriptionPage.css";
-import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
+import LoadableVisibility from "react-loadable-visibility/react-loadable";
+
+const ProductFeatures = LoadableVisibility({
+  loader: () => import("./ProductFeatures"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const ProductFeature = LoadableVisibility({
+  loader: () => import("./ProductFeature"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const SizeQuantitySelect = LoadableVisibility({
+  loader: () => import("./SizeQuantitySelect"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const Overlay = LoadableVisibility({
+  loader: () => import("./Overlay"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpPincode = LoadableVisibility({
+  loader: () => import("./PdpPincode"),
+  loading: () => <div />,
+  delay: 1000
+});
+
+const AllDescription = LoadableVisibility({
+  loader: () => import("./AllDescription"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const RatingAndTextLink = LoadableVisibility({
+  loader: () => import("./RatingAndTextLink"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpPaymentInfo = LoadableVisibility({
+  loader: () => import("./PdpPaymentInfo"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const OtherSellersLink = LoadableVisibility({
+  loader: () => import("./OtherSellersLink"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const OfferCard = LoadableVisibility({
+  loader: () => import("./OfferCard"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const ColourSelector = LoadableVisibility({
+  loader: () => import("./ColourSelector"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpDeliveryModes = LoadableVisibility({
+  loader: () => import("./PdpDeliveryModes"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PDPRecommendedSectionsContainer = LoadableVisibility({
+  loader: () => import("../containers/PDPRecommendedSectionsContainer"),
+  loading: () => {
+    return <div />;
+  },
+  delay: 400
+});
+
 const VIDEO = "Video";
 const IMAGE = "Image";
 export default class PdpApparel extends React.Component {

@@ -1,23 +1,11 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
 import find from "lodash.find";
-import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
-import ColourSelector from "./ColourSelector";
-import SizeSelector from "./SizeSelector";
-import OfferCard from "./OfferCard";
-import OtherSellersLink from "./OtherSellersLink";
-import PdpPaymentInfo from "./PdpPaymentInfo";
-import ProductDetails from "./ProductDetails";
-import ProductFeature from "./ProductFeature";
-import RatingAndTextLink from "./RatingAndTextLink";
-import AllDescription from "./AllDescription";
-import PdpPincode from "./PdpPincode";
-import PdpDeliveryModes from "./PdpDeliveryModes";
-import Overlay from "./Overlay";
 import Accordion from "../../general/components/Accordion.js";
-import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
+import LoadableVisibility from "react-loadable-visibility/react-loadable";
+
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -37,6 +25,91 @@ import {
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
+const ProductDetailsMainCard = LoadableVisibility({
+  loader: () => import("./ProductDetailsMainCard"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const ProductDetails = LoadableVisibility({
+  loader: () => import("./ProductDetails"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const Overlay = LoadableVisibility({
+  loader: () => import("./Overlay"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpPincode = LoadableVisibility({
+  loader: () => import("./PdpPincode"),
+  loading: () => <div />,
+  delay: 1000
+});
+
+const ProductFeature = LoadableVisibility({
+  loader: () => import("./ProductFeature"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const AllDescription = LoadableVisibility({
+  loader: () => import("./AllDescription"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const RatingAndTextLink = LoadableVisibility({
+  loader: () => import("./RatingAndTextLink"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpPaymentInfo = LoadableVisibility({
+  loader: () => import("./PdpPaymentInfo"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const OtherSellersLink = LoadableVisibility({
+  loader: () => import("./OtherSellersLink"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const OfferCard = LoadableVisibility({
+  loader: () => import("./OfferCard"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const SizeSelector = LoadableVisibility({
+  loader: () => import("./SizeSelector"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const ColourSelector = LoadableVisibility({
+  loader: () => import("./ColourSelector"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpDeliveryModes = LoadableVisibility({
+  loader: () => import("./PdpDeliveryModes"),
+  loading: () => <div />,
+  delay: 1000
+});
+
+const PDPRecommendedSectionsContainer = LoadableVisibility({
+  loader: () => import("../containers/PDPRecommendedSectionsContainer"),
+  loading: () => {
+    return <div />;
+  },
+  delay: 400
+});
 
 const PRODUCT_QUANTITY = "1";
 const IMAGE = "Image";
@@ -231,7 +304,7 @@ export default class PdpApparel extends React.Component {
           <div className={styles.gallery}>
             <ProductGalleryMobile>
               {mobileGalleryImages.map((val, idx) => {
-                return <Image image={val} key={idx} />;
+                return <Image lazyLoad={true} image={val} key={idx} />;
               })}
             </ProductGalleryMobile>
             {(productData.allOOStock ||

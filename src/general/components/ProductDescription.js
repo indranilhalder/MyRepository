@@ -10,6 +10,14 @@ export default class ProductDescription extends Component {
     }
   }
 
+  renderTitle = headerText => {
+    if (this.props.isPlp) {
+      return <div className={headerText}>{this.props.title}</div>;
+    } else {
+      return <h2 className={headerText}>{this.props.title}</h2>;
+    }
+  };
+
   render() {
     let headerClass = styles.header;
     let priceClass = styles.priceHolder;
@@ -33,7 +41,8 @@ export default class ProductDescription extends Component {
     return (
       <div className={styles.base}>
         <div className={headerClass}>
-          <h2 className={headerText}>{this.props.title}</h2>
+          {this.renderTitle(headerText)}
+
           {this.props.showWishListButton &&
             this.props.productListingId &&
             this.props.winningUssID &&
@@ -92,5 +101,6 @@ ProductDescription.defaultProps = {
   isWhite: false,
   textColor: "#212121",
   showWishListButton: true,
-  isShowAddToWishlistIcon: true
+  isShowAddToWishlistIcon: true,
+  isPlp: PropTypes.bool
 };

@@ -230,6 +230,9 @@ class ProductReviewPage extends Component {
             return image[0].value;
           });
 
+      console.log("PRODUCT REVIEW PAGE");
+      console.log(this.props.productDetails);
+
       return (
         <PdpFrame
           {...this.props.productDetails}
@@ -241,8 +244,8 @@ class ProductReviewPage extends Component {
             <div className={styles.productBackground}>
               <ProductDetailsCard
                 productImage={mobileGalleryImages[0]}
-                productName={this.props.productDetails.brandName}
-                productMaterial={this.props.productDetails.productName}
+                brandName={this.props.productDetails.brandName}
+                productName={this.props.productDetails.productName}
                 price={
                   this.props.productDetails &&
                   this.props.productDetails.winningSellerPrice &&
