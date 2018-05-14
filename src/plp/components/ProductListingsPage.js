@@ -24,26 +24,21 @@ class ProductListingsPage extends Component {
     const parsedQueryString = queryString.parse(this.props.location.search);
 
     const searchCategory = parsedQueryString.searchCategory;
-    console.log(parsedQueryString);
     let searchText = parsedQueryString.q;
-    console.log(searchText);
+
     if (
       searchCategory &&
       searchCategory !== "" &&
       searchCategory !== SEARCH_CATEGORY_TO_IGNORE
     ) {
-      console.log("Coems in 1");
       searchText = `:category:${searchCategory}`;
     }
 
     if (!searchText) {
-      console.log("Conesoel in second");
       searchText = parsedQueryString.text;
     }
 
     if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
-      console.log("Comes in");
-      console.log(searchText);
       if (searchText) {
         searchText = searchText.replace(
           ":relevance",
@@ -51,28 +46,8 @@ class ProductListingsPage extends Component {
         );
       }
     }
-    console.log(searchText);
     let match;
-    // debugger;
     const url = this.props.location.pathname;
-
-    // if (CATEGORY_REGEX.test(url)) {
-    //   match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
-    //   match = match.replace(BRAND_CATEGORY_PREFIX, "");
-
-    //   match = match.toUpperCase();
-
-    //   searchText = `:relevance:category:${match}`;
-    // }
-
-    // if (BRAND_REGEX.test(url)) {
-    //   match = BRAND_CAPTURE_REGEX.exec(url)[0];
-    //   match = match.replace(BRAND_CATEGORY_PREFIX, "");
-
-    //   match = match.toUpperCase();
-
-    //   searchText = `:relevance:brand:${match}`;
-    // }
 
     return encodeURIComponent(searchText);
   }
