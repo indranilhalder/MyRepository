@@ -51,8 +51,10 @@ const wishlistItems = (
       let wishListNewItems = cloneDeep(state.wishlistItems);
       let wishListName = null;
       let wishListcount = null;
-      if (action.wishlist && action.wishlist.products) {
-        wishListNewItems = action.wishlist.products;
+      if (action.wishlist) {
+        wishListNewItems = action.wishlist.products
+          ? action.wishlist.products
+          : [];
         wishListName = action.wishlist.name;
         wishListcount = action.wishlist.count;
       }
