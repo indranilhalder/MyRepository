@@ -15,7 +15,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const returnInitiate = await dispatch(newReturnInitial(returnDetails));
       if (returnInitiate.status === SUCCESS) {
         dispatch(displayToast(RETURN_SUCCESS_MESSAGE));
-        ownProps.history.go(-3);
+        if (ownProps.isCOD) {
+          ownProps.history.go(-4);
+        } else {
+          ownProps.history.go(-3);
+        }
       }
     }
   };
@@ -25,6 +29,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     returnRequest: state.profile.returnRequest,
     returnProductDetails: state.profile.returnProductDetails,
+    loading: state.profile.loading,
     ...ownProps
   };
 };

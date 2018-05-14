@@ -562,7 +562,7 @@ export function returnPinCode(productDetails) {
       if (resultJsonStatus.status) {
         let message = resultJsonStatus.message;
         if (resultJsonStatus.message === FAILURE_UPPERCASE) {
-          message = "Sorry! pick up is not available for your area......";
+          message = "Sorry! pick up is not available for your area. You can still return the item by dropping in store or by self shipping the product";
         }
         throw new Error(message);
       }
