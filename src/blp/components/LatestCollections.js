@@ -18,7 +18,9 @@ export default class LatestCollections extends React.Component {
 
     return (
       <div
-        className={styles.base}
+        className={
+          this.props.positionInFeed === 1 ? styles.firstItemBase : styles.base
+        }
         style={{ backgroundColor: feedComponentData.startHexCode }}
       >
         <div
