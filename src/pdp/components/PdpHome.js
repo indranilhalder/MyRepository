@@ -66,7 +66,7 @@ const AllDescription = LoadableVisibility({
 });
 
 const RatingAndTextLink = LoadableVisibility({
-  loader: () => import("./PdpPaymentInfo"),
+  loader: () => import("./RatingAndTextLink"),
   loading: () => <div />,
   delay: 400
 });

@@ -158,7 +158,9 @@ export function loginUser(userLoginDetails) {
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJson.errorCode) {
-        dispatch(displayToast(resultJsonStatus.message));
+        if (resultJsonStatus.message === "Invalid OTP. Please try again") {
+          dispatch(displayToast(resultJsonStatus.message));
+        }
         dispatch(stopLoaderOnLoginForOTPVerification());
         return dispatch(
           showModal(OTP_LOGIN_MODAL, {
