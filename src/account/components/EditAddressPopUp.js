@@ -59,7 +59,7 @@ export default class EditAddressPopUp extends React.Component {
       firstName: this.extractSalutationFromFirstName(
         addressDetails.firstName
       ).trim(),
-      lastName: addressDetails.lastName,
+      lastName: addressDetails.lastName.trim(),
       postalCode: addressDetails.postalCode,
       line1: addressDetails.line1,
       landmark: addressDetails.landmark,
@@ -354,8 +354,8 @@ export default class EditAddressPopUp extends React.Component {
               placeholder="First Name*"
               value={
                 this.props.firstName
-                  ? this.props.firstName.trim()
-                  : this.state.firstName.trim()
+                  ? this.props.firstName
+                  : this.state.firstName
               }
               onChange={firstName => this.onChange({ firstName })}
               textStyle={{ fontSize: 14 }}
@@ -369,9 +369,7 @@ export default class EditAddressPopUp extends React.Component {
             boxy={true}
             placeholder="Last Name*"
             value={
-              this.props.lastName
-                ? this.props.lastName.trim()
-                : this.state.lastName.trim()
+              this.props.lastName ? this.props.lastName : this.state.lastName
             }
             onChange={lastName => this.onChange({ lastName })}
             textStyle={{ fontSize: 14 }}
