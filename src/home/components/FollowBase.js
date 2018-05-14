@@ -26,7 +26,16 @@ export default class FollowBase extends React.Component {
     feedComponentData = feedComponentData.data;
 
     return (
-      <div className={styles.base}>
+      <div
+        className={
+          this.props.positionInFeed === 1 ? styles.firstItemBase : styles.base
+        }
+      >
+        <div className={styles.header}>
+          {this.props.feedComponentData.title
+            ? this.props.feedComponentData.title
+            : "Fresh from Brands"}
+        </div>
         <Carousel elementWidthMobile={85} elementWidthDesktop={33.333}>
           {feedComponentData &&
             (feedComponentData.length > 0 &&

@@ -26,10 +26,17 @@ export default class TopCategories extends React.Component {
     ];
 
     return (
-      <div className={styles.base}>
-        <div className={styles.headerText}>
-          {this.props.feedComponentData.title}
-        </div>
+      <div
+        className={
+          this.props.positionInFeed === 1 ? styles.firstItemBase : styles.base
+        }
+      >
+        {this.props.feedComponentData.title && (
+          <div className={styles.headerText}>
+            {this.props.feedComponentData.title}
+          </div>
+        )}
+
         <div className={styles.categorieHolder}>
           <div className={styles.leftSection}>
             <div

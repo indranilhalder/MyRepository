@@ -11,7 +11,11 @@ export default class SubBrandsBanner extends React.Component {
   }
   render() {
     return (
-      <div className={styles.base}>
+      <div
+        className={
+          this.props.positionInFeed === 1 ? styles.firstItemBase : styles.base
+        }
+      >
         <Carousel
           header={
             this.props.feedComponentData && this.props.feedComponentData.title

@@ -25,7 +25,9 @@ class FeedComponent extends React.Component {
 
     return (
       <div
-        className={styles.base}
+        className={
+          this.props.positionInFeed === 1 ? styles.firstItemBase : styles.base
+        }
         style={{
           backgroundColor: backgroundColor,
           backgroundImage: `url(${backgroundImage})`

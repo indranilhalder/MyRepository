@@ -3,6 +3,10 @@
   height: auto;
   margin: 50px 0px 0px 0px;
 }
+.firstItemBase {
+  composes: base;
+  margin: 20px 0px 0px 0px;
+}
 .headerText {
   width: 100%;
   height: auto;
