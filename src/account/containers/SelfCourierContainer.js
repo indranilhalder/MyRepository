@@ -15,7 +15,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const returnInitiate = await dispatch(newReturnInitial(returnDetails));
       if (returnInitiate.status === SUCCESS) {
         dispatch(displayToast(RETURN_SUCCESS_MESSAGE));
-        ownProps.history.push(`${MY_ACCOUNT}${MY_ACCOUNT_ORDERS_PAGE}`);
+        ownProps.history.go(-3);
       }
     }
   };
