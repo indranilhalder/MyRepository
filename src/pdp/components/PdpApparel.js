@@ -211,6 +211,14 @@ export default class PdpApparel extends React.Component {
       this.props.showPincodeModal(this.props.match.params[1]);
     }
   }
+  showEmiModal = () => {
+    const cartValue = this.props.productDetails.winningSellerPrice.value;
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    const globalAccessToken = JSON.parse(globalCookie).access_token;
+    this.props.getPdpEmi(globalAccessToken, cartValue);
+    this.props.getEmiTerms(globalAccessToken, cartValue);
+    this.props.showEmiModal();
+  };
   showSizeSelector = () => {
     if (
       this.props.showSizeSelector &&
@@ -332,7 +340,7 @@ export default class PdpApparel extends React.Component {
           <PdpPaymentInfo
             hasEmi={productData.isEMIEligible}
             hasCod={productData.isCOD}
-            showEmiModal={this.showEmiModal}
+            showEmiModal={() => this.showEmiModal()}
           />
           <OfferCard
             showDetails={this.props.showOfferDetails}
