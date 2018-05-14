@@ -3,3 +3,7 @@
   height: auto;
   margin-top: 50px;
 }
+.firstItemBase {
+  composes: base;
+  margin-top: 20px;
+}
