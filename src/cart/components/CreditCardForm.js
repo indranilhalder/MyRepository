@@ -67,7 +67,7 @@ export default class CreditCardForm extends React.Component {
     if (val.length >= 6) {
       this.setState({ isCalledBinValidation: true });
       if (!this.state.isCalledBinValidation) {
-        this.props.binValidation(val);
+        this.props.binValidation(val.substring(0, 6));
       }
     }
   }
