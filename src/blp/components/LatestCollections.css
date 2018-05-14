@@ -3,6 +3,10 @@
   height: auto;
   margin-top: 50px;
 }
+.firstItemBase {
+  composes: base;
+  margin-top: 20px;
+}
 .LatestCollectionsHolder {
   width: 100%;
   height: auto;
