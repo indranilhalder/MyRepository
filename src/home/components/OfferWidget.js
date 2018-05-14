@@ -14,7 +14,13 @@ export default class OfferWidget extends React.Component {
     let { feedComponentData, rest } = this.props;
     const data = feedComponentData.items ? feedComponentData.items : false;
     return (
-      <div className={styles.holder}>
+      <div
+        className={
+          this.props.positionInFeed === 1
+            ? styles.firstItemHolder
+            : styles.holder
+        }
+      >
         <Carousel
           elementWidthMobile={90}
           elementWidthDesktop={33.33}
