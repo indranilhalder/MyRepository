@@ -15,7 +15,6 @@ import {
   getReturnRequest
 } from "../../account/actions/account.actions.js";
 const mapDispatchToProps = (dispatch, ownProps) => {
-  console.log(ownProps);
   return {
     addUserAddress: async (addressDetails, fromAccount) => {
       const addAddressResponse = await dispatch(

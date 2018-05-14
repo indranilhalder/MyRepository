@@ -11,7 +11,6 @@ import {
 const RETURN_SUCCESS_MESSAGE = "Return has been initiated";
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  console.log(ownProps);
   return {
     quickDropStore: (pincode, ussId) => {
       dispatch(quickDropStore(pincode, ussId));
