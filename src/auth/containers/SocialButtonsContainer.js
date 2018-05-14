@@ -34,7 +34,10 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER
 } from "../../lib/constants";
-import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
+import {
+  createWishlist,
+  getWishListItems
+} from "../../wishlist/actions/wishlist.actions.js";
 import { displayToast } from "../../general/toast.actions.js";
 import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 import {
@@ -138,6 +141,11 @@ const mapDispatchToProps = dispatch => {
             );
 
             if (mergeCartResponse.status === SUCCESS) {
+              const existingWishList = await dispatch(getWishListItems());
+
+              if (!existingWishList || !existingWishList.wishlist) {
+                dispatch(createWishlist());
+              }
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
               Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
@@ -162,6 +170,11 @@ const mapDispatchToProps = dispatch => {
                 mergeCartId(createdCartVal.cartDetails.guid)
               );
               if (mergeCartResponse.status === SUCCESS) {
+                const existingWishList = await dispatch(getWishListItems());
+
+                if (!existingWishList || !existingWishList.wishlist) {
+                  dispatch(createWishlist());
+                }
                 dispatch(setIfAllAuthCallsHaveSucceeded());
               }
             }
@@ -256,6 +269,11 @@ const mapDispatchToProps = dispatch => {
             );
 
             if (mergeCartResponse.status === SUCCESS) {
+              const existingWishList = await dispatch(getWishListItems());
+
+              if (!existingWishList || !existingWishList.wishlist) {
+                dispatch(createWishlist());
+              }
               dispatch(setIfAllAuthCallsHaveSucceeded());
             } else {
               Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
@@ -283,6 +301,11 @@ const mapDispatchToProps = dispatch => {
                 mergeCartId(createdCartVal.cartDetails.guid)
               );
               if (mergeCartResponse.status === SUCCESS) {
+                const existingWishList = await dispatch(getWishListItems());
+
+                if (!existingWishList || !existingWishList.wishlist) {
+                  dispatch(createWishlist());
+                }
                 dispatch(setIfAllAuthCallsHaveSucceeded());
               } else {
                 // ignore the anonymous cart
