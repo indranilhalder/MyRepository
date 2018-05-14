@@ -165,7 +165,7 @@ export default class BrandsLandingPageDefault extends React.Component {
                 }
                 onClick={() => this.handleShowFollow()}
               >
-                Following Brands
+                Brands You Follow
                 <div className={styles.arrow}>
                   <Icon image={arrowIcon} size={18} />
                 </div>
@@ -193,7 +193,7 @@ export default class BrandsLandingPageDefault extends React.Component {
           )}
         <div className={styles.searchInput}>
           <Input2
-            placeholder="Find a brand"
+            placeholder="Find your favourite brands"
             onChange={val => this.setState({ searchBy: val })}
             rightChild={
               <div className={styles.searchIcon}>

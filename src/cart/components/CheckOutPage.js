@@ -385,7 +385,7 @@ class CheckOutPage extends React.Component {
     return (
       <div className={styles.products}>
         <div className={styles.header}>
-          <CheckOutHeader indexNumber="2" confirmTitle="Choose delivery mode" />
+          <CheckOutHeader indexNumber="2" confirmTitle="Choose Delivery Mode" />
         </div>
         {this.props.cart.cartDetailsCNC.products &&
           this.props.cart.cartDetailsCNC.products.map((val, i) => {

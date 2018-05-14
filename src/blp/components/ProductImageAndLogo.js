@@ -19,7 +19,7 @@ export default class ProductImageAndLogo extends React.Component {
         </div>
         <div className={styles.logonHolder}>
           <div className={styles.companyIcon}>
-            <Logo image={this.props.logo} />
+            <Logo image={this.props.logo} imageWidth="75%" imageHeight="auto" />
           </div>
         </div>
       </div>

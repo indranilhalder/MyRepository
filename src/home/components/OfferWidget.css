@@ -5,6 +5,10 @@
   background: #ececec;
   margin-top: 50px;
 }
+.firstItemHolder {
+  composes: holder;
+  margin-top: 20px;
+}
 .base {
   width: 100%;
   height: auto;

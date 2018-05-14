@@ -9,7 +9,7 @@ export default class HeroBanner extends React.Component {
   renderBanner = () => {
     const { feedComponentData, ...rest } = this.props;
     if (!this.props.loading) {
-      if (feedComponentData.items.length > 1) {
+      if (feedComponentData.items && feedComponentData.items.length > 1) {
         return (
           <Banner>
             {feedComponentData.items &&
