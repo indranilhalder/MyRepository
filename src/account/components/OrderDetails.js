@@ -358,23 +358,24 @@ export default class OrderDetails extends React.Component {
                   <div className={styles.buttonHolder}>
                     <div className={styles.buttonHolderForUpdate}>
                       <div className={styles.replaceHolder}>
-                        {(products.isReturned || isOrderReturnable) && (
-                          <div
-                            className={styles.review}
-                            onClick={() =>
-                              this.replaceItem(
-                                products.sellerorderno,
-                                orderDetails.paymentMethod,
-                                products.transactionId
-                              )
-                            }
-                          >
-                            <UnderLinedButton
-                              label={PRODUCT_RETURN}
-                              color="#000"
-                            />
-                          </div>
-                        )}
+                        {products.isReturned &&
+                          isOrderReturnable && (
+                            <div
+                              className={styles.review}
+                              onClick={() =>
+                                this.replaceItem(
+                                  products.sellerorderno,
+                                  orderDetails.paymentMethod,
+                                  products.transactionId
+                                )
+                              }
+                            >
+                              <UnderLinedButton
+                                label={PRODUCT_RETURN}
+                                color="#000"
+                              />
+                            </div>
+                          )}
                         {products.cancel && (
                           <div
                             className={styles.review}
