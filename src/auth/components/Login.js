@@ -56,6 +56,9 @@ class Login extends Component {
   }
   goBack() {
     if (this.props.history.length <= 3) {
+      this.props.history.replace(HOME_ROUTER);
+    }
+    if (this.props.history.length === 2) {
       this.props.history.push(HOME_ROUTER);
     }
     if (this.props.redirectToAfterAuthUrl === CHECKOUT_ROUTER) {

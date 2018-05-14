@@ -21,11 +21,13 @@
   height: auto;
   display: inline-block;
   vertical-align: top;
+  text-align: center;
 }
 .iconWithWidth {
   composes: dataTextHolder;
   width: calc(100% - 40px);
   padding-left: 10px;
+  text-align: left;
 }
 .downloadBox {
   width: 100%;
