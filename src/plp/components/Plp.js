@@ -167,7 +167,7 @@ export default class Plp extends React.Component {
     let selectedFilterCount = 0;
     let filterSelected = false;
     let hasSorts = false;
-    if (this.props.productListings) {
+    if (this.props.productListings && this.props.productListings.facetdata) {
       this.props.productListings.facetdata.forEach(filter => {
         selectedFilterCount += filter.selectedFilterCount;
       });
