@@ -17,13 +17,7 @@ export default class TextWithUnderLine extends React.Component {
           this.props.borderBox ? styles.base : styles.classNameWithShadow
         }
       >
-        {this.props.borderBox === false ? (
-          <div className={styles.textBorder}>
-            <div className={styles.headingText}>{this.props.heading}</div>
-          </div>
-        ) : (
-          <div className={styles.headingText}>{this.props.heading}</div>
-        )}
+        <div className={styles.headingText}>{this.props.heading}</div>
         <div className={styles.button} onClick={() => this.onClick()}>
           <UnderLinedButton label={this.props.buttonLabel} />
         </div>
