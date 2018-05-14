@@ -12,11 +12,7 @@ export default class TextWithUnderLine extends React.Component {
 
   render() {
     return (
-      <div
-        className={
-          this.props.borderBox ? styles.base : styles.classNameWithShadow
-        }
-      >
+      <div className={this.props.boxShadow ? styles.base : styles.withShadow}>
         <div className={styles.headingText}>{this.props.heading}</div>
         <div className={styles.button} onClick={() => this.onClick()}>
           <UnderLinedButton label={this.props.buttonLabel} />

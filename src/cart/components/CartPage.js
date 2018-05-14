@@ -268,7 +268,7 @@ class CartPage extends React.Component {
                 ? `Pincode-${defaultPinCode}`
                 : "Enter Pincode"
             }
-            borderBox={
+            boxShadow={
               defaultPinCode && defaultPinCode !== "undefined" ? true : false
             }
             onClick={() => this.changePinCode()}
@@ -345,7 +345,7 @@ class CartPage extends React.Component {
                   ? defaultPinCode
                   : "Enter Pincode"
               }
-              borderBox={
+              boxShadow={
                 defaultPinCode && defaultPinCode !== "undefined" ? true : false
               }
               onClick={() => this.changePinCode()}

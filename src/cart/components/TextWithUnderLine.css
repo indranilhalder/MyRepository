@@ -6,7 +6,7 @@
   padding: 15px 65px 15px 15px;
   border-radius: 4px;
 }
-.classNameWithShadow {
+.withShadow {
   composes: base;
   box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.2);
 }
