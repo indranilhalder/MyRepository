@@ -6,7 +6,8 @@ import { addUserAddress } from "../../cart/actions/cart.actions.js";
 import {
   SUCCESS,
   MY_ACCOUNT,
-  MY_ACCOUNT_ORDERS_PAGE
+  MY_ACCOUNT_ORDERS_PAGE,
+  RETURN_SUCCESS_MESSAGE
 } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
 import {
@@ -21,6 +22,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         addUserAddress(addressDetails, fromAccount)
       );
       if (addAddressResponse.status === SUCCESS) {
+        dispatch(displayToast(RETURN_SUCCESS_MESSAGE));
         dispatch(
           getReturnRequest(
             ownProps.returnProductDetails.orderProductWsDTO[0].sellerorderno,
