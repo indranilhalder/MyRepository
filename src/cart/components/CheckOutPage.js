@@ -160,7 +160,7 @@ class CheckOutPage extends React.Component {
   navigateToLogin() {
     const url = this.props.location.pathname;
     this.props.setUrlToRedirectToAfterAuth(url);
-    this.props.history.push(LOGIN_PATH);
+    this.props.history.replace(LOGIN_PATH);
   }
   navigateUserToMyBagAfter15MinOfpaymentFailure() {
     this.props.displayToast(INVALID_CART_ERROR_MESSAGE);
