@@ -345,7 +345,7 @@ export default class PdpApparel extends React.Component {
             <PdpPaymentInfo
               hasEmi={productData.isEMIEligible}
               hasCod={productData.isCOD}
-              showEmiModal={this.showEmiModal}
+              showEmiModal={() => this.showEmiModal()}
             />
             <OfferCard
               showDetails={this.props.showOfferDetails}
