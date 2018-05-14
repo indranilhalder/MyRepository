@@ -54,7 +54,7 @@
   top: 0;
   bottom: 0;
   margin: auto;
-  background: url(./img/play.svg)no-repeat;
+  background: url(./img/play.svg) no-repeat;
   background-size: 50px;
   background-position: center;
 }
