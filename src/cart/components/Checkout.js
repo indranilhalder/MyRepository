@@ -20,6 +20,11 @@ export default class Checkout extends React.Component {
   handleShowDetail() {
     this.setState({ showDetails: !this.state.showDetails });
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.showDetails !== this.state.showDetails) {
+      this.setState({ showDetails: nextProps.showDetails });
+    }
+  }
   render() {
     let classOffers = styles.informationAnswerHolder;
     if (this.props.offers) {

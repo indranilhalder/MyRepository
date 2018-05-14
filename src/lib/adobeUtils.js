@@ -330,7 +330,7 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   if (type === ADOBE_LOGIN_AND_SIGN_UP_PAGE) {
     window.digitalData = getDigitalDataForLoginAndSignup();
   }
-  if (ADOBE_STATIC_PAGE) {
+  if (type === ADOBE_STATIC_PAGE) {
     window.digitalData = getDigitalDataForStatic(response);
   }
   if (icidType === ICID2) {

@@ -5,7 +5,7 @@ export const SUCCESS_UPPERCASE = "SUCCESS";
 export const SUCCESS_CAMEL_CASE = "Success";
 export const SUCCESS_FOR_ADDING_TO_WSHLIST =
   "Product added successfully to the wishlist";
-
+export const SUCCESS_FOR_ADDING_TO_BAG = "Product added successfully to bag";
 export const REQUESTING = "requesting";
 export const ERROR = "error";
 export const FAILURE = "Failure";
@@ -13,6 +13,7 @@ export const FAILURE_UPPERCASE = "FAILURE";
 export const FAILURE_LOWERCASE = "failure";
 export const JUS_PAY_PENDING = "PENDING_VBV";
 export const JUS_PAY_CHARGED = "CHARGED";
+export const JUS_PAY_SUCCESS = "S";
 export const JUS_PAY_AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
 export const JUS_PAY_AUTHORIZATION_FAILED = "JUS_PAY_AUTHORIZATION_FAILED";
 export const SINGLE_SELECT_HEADING_COPY = "Thanks!!!";
@@ -81,6 +82,7 @@ export const SHORT_URL_ORDER_DETAIL = "/trackOrder/beforeTrack/:orderCode";
 export const ORDER_PREFIX = "/my-account/order/(.*)";
 export const ORDER_CODE = "orderCode";
 export const ORDER = "/order";
+export const RETURN_SUCCESS_MESSAGE = "Return has been initiated";
 // MyAccount Routes
 export const MY_ACCOUNT_PAGE_ROOT = "/my-account/.*";
 export const MY_ACCOUNT_PAGE = "/my-account";
@@ -106,7 +108,8 @@ export const RETURNS_NEW_ADDRESS = "/addDeliveryLocation";
 export const RETURN_CLIQ_PIQ = "/cliqpiq";
 export const RETURN_CLIQ_PIQ_ADDRESS = "/address";
 export const RETURN_CLIQ_PIQ_DATE = "/dateTime";
-
+export const SUCCESS_MESSAGE_IN_CANCELING_ORDER =
+  "Your order cancelled successfully";
 export const RETURN_CLIQ_PIQ_RETURN_SUMMARY = "/returnSummary";
 
 export const RETURN_TO_STORE = "/store";
@@ -189,9 +192,9 @@ export const CANCEL_PREFIX = "/cancel/(.*)";
 export const WALLET = "WALLET";
 
 //header name
-export const SAVED_PAYMENTS = "Saved Payments";
-export const MY_CLIQ = "My Cliq";
-export const SAVED_LIST = "Saved list";
+export const SAVED_PAYMENTS = "Saved Cards";
+export const MY_CLIQ = "My Account";
+export const SAVED_LIST = "My Wish List";
 export const ALERTS_COUPON = "Alerts & Coupons";
 export const BRANDS = "Brands";
 export const ADDRESS_BOOK = "Address Book";
@@ -224,7 +227,7 @@ export const STANDARD_EMI = "Standard Emi";
 export const CREDIT_CARD = "Credit Card";
 export const DEBIT_CARD = "Debit Card";
 export const E_WALLET = "E - Wallet";
-export const CASH_ON_DELIVERY_PAYMENT_MODE = "Cash On Delivery";
+export const CASH_ON_DELIVERY_PAYMENT_MODE = "Cash on Delivery";
 export const RUPEE_SYMBOL = "₹";
 
 // META TAGS CONSTANTS

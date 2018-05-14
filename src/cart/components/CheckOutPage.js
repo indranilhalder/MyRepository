@@ -20,6 +20,7 @@ import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
 import size from "lodash.size";
 import TransactionFailed from "./TransactionFailed.js";
+import cardValidator from "simple-card-validator";
 import * as Cookies from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -41,7 +42,8 @@ import {
   REQUESTING,
   THANK_YOU,
   COUPON_COOKIE,
-  JUS_PAY_AUTHENTICATION_FAILED,
+  JUS_PAY_CHARGED,
+  JUS_PAY_SUCCESS,
   JUS_PAY_AUTHORIZATION_FAILED,
   CREDIT_CARD,
   NET_BANKING_PAYMENT_MODE,
@@ -73,7 +75,6 @@ import {
   CART_PATH
 } from "../actions/cart.actions";
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
-export const PAYMENT_CHARGED = "CHARGED";
 const PAYMENT_MODE = "EMI";
 const NET_BANKING = "NB";
 const CART_GU_ID = "cartGuid";
@@ -146,7 +147,8 @@ class CheckOutPage extends React.Component {
       egvCartGuid: null,
       noCostEmiBankName: null,
       isCliqCashApplied: false,
-      cliqCashPaidAmount: "0.00"
+      cliqCashPaidAmount: "0.00",
+      showCartDetails: false
     };
   }
 
@@ -158,11 +160,11 @@ class CheckOutPage extends React.Component {
   navigateToLogin() {
     const url = this.props.location.pathname;
     this.props.setUrlToRedirectToAfterAuth(url);
-    this.props.history.push(LOGIN_PATH);
+    this.props.history.replace(LOGIN_PATH);
   }
   navigateUserToMyBagAfter15MinOfpaymentFailure() {
     this.props.displayToast(INVALID_CART_ERROR_MESSAGE);
-    this.props.history.push(PRODUCT_CART_ROUTER);
+    this.props.history.replace(HOME_ROUTER);
   }
   navigateToCartForOutOfStock() {
     this.props.displayToast(OUT_OF_STOCK_MESSAGE);
@@ -234,10 +236,7 @@ class CheckOutPage extends React.Component {
   componentDidUpdate() {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
-    if (
-      value === JUS_PAY_AUTHENTICATION_FAILED ||
-      value === JUS_PAY_AUTHORIZATION_FAILED
-    ) {
+    if (value && value !== JUS_PAY_CHARGED && value !== JUS_PAY_SUCCESS) {
       const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
       if (!oldCartId) {
         return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
@@ -379,11 +378,14 @@ class CheckOutPage extends React.Component {
       </div>
     );
   };
+  onFocusInput() {
+    this.setState({ showCartDetails: false });
+  }
   renderDeliverModes = () => {
     return (
       <div className={styles.products}>
         <div className={styles.header}>
-          <CheckOutHeader indexNumber="2" confirmTitle="Choose delivery mode" />
+          <CheckOutHeader indexNumber="2" confirmTitle="Choose Delivery Mode" />
         </div>
         {this.props.cart.cartDetailsCNC.products &&
           this.props.cart.cartDetailsCNC.products.map((val, i) => {
@@ -900,10 +902,7 @@ class CheckOutPage extends React.Component {
     const value = parsedQueryString.status;
     const orderId = parsedQueryString.order_id;
     this.setState({ orderId: orderId });
-    if (
-      value === JUS_PAY_AUTHENTICATION_FAILED ||
-      value === JUS_PAY_AUTHORIZATION_FAILED
-    ) {
+    if (value && value !== JUS_PAY_CHARGED && value !== JUS_PAY_SUCCESS) {
       const oldCartId = Cookies.getCookie(OLD_CART_GU_ID);
       if (!oldCartId) {
         return this.navigateUserToMyBagAfter15MinOfpaymentFailure();
@@ -922,7 +921,7 @@ class CheckOutPage extends React.Component {
       }
       this.getPaymentModes();
     }
-    if (value === PAYMENT_CHARGED) {
+    if (value === JUS_PAY_CHARGED) {
       if (this.props.updateTransactionDetails) {
         const cartId = parsedQueryString.value;
 
@@ -999,10 +998,7 @@ class CheckOutPage extends React.Component {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const value = parsedQueryString.status;
 
-    if (
-      value === JUS_PAY_AUTHENTICATION_FAILED ||
-      value === JUS_PAY_AUTHORIZATION_FAILED
-    ) {
+    if (value && value !== JUS_PAY_CHARGED && value !== JUS_PAY_SUCCESS) {
       carGuId = parsedQueryString.value;
 
       //get the NoCost Emi Coupon Code to release
@@ -1657,20 +1653,29 @@ class CheckOutPage extends React.Component {
   validateCard() {
     if (
       !this.state.cardDetails.cardNumber ||
-      (this.state.cardDetails.cardNumber &&
-        this.state.cardDetails.cardNumber.length < 14) ||
       (!this.state.cardDetails.cardName ||
         (this.state.cardDetails.cardName &&
           this.state.cardDetails.cardName.length < 3)) ||
       (!this.state.cardDetails.cvvNumber ||
-        (this.state.cardDetails.cvvNumber &&
-          this.state.cardDetails.cvvNumber.length < 3)) ||
+        (this.state.cardDetails.cardName &&
+          this.state.cardDetails.cardName.length < 1)) ||
       !this.state.cardDetails.monthValue ||
       !this.state.cardDetails.yearValue
     ) {
       return true;
     } else {
-      return false;
+      const card = new cardValidator(
+        parseInt(this.state.cardDetails.cardNumber, 10)
+      );
+      if (
+        card.validateCard() &&
+        this.state.cardDetails.cvvNumber.length > 1 &&
+        card.validateCvv(this.state.cardDetails.cvvNumber)
+      ) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 
@@ -1944,6 +1949,7 @@ class CheckOutPage extends React.Component {
                 createJusPayOrderForGiftCardNetBanking={bankName =>
                   this.createJusPayOrderForGiftCardNetBanking(bankName)
                 }
+                onFocusInput={() => this.onFocusInput()}
                 addGiftCard={() => this.addGiftCard()}
                 binValidationForPaytm={val => this.binValidationForPaytm(val)}
                 displayToast={message => this.props.displayToast(message)}
@@ -2004,6 +2010,7 @@ class CheckOutPage extends React.Component {
               coupons={this.state.couponDiscount}
               discount={this.state.totalDiscount}
               delivery={this.state.deliveryCharge}
+              showDetails={this.state.showCartDetails}
               onCheckout={
                 this.state.isPaymentFailed
                   ? this.handleSubmitAfterPaymentFailure

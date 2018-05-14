@@ -139,6 +139,7 @@ const account = (
   switch (action.type) {
     case CLEAR_ERROR:
       return Object.assign({}, state, {
+        error: null,
         orderDetailsError: null,
         fetchOrderDetailsError: null,
         userDetailsError: null,
@@ -168,7 +169,8 @@ const account = (
     case accountActions.RETURN_PRODUCT_DETAILS_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        loading: true
+        loading: true,
+        error: null
       });
     case accountActions.GET_RETURN_REQUEST_SUCCESS:
       return Object.assign({}, state, {
@@ -191,7 +193,8 @@ const account = (
     case accountActions.RETURN_PRODUCT_DETAILS_FAILURE:
       return Object.assign({}, state, {
         loading: false,
-        status: action.status
+        status: action.status,
+        error: action.error
       });
 
     case accountActions.QUICK_DROP_STORE_REQUEST:

@@ -34,7 +34,7 @@ export default class CodForm extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.codText}>
-          Pay with Cash or Card when your order is delivered
+          Pay with cash or card when your order is delivered
         </div>
         <div className={styles.captcha}>
           <Captcha

@@ -52,17 +52,18 @@ export default class ReturnDateTime extends React.Component {
         </div>
         <div className={styles.cardOffset}>
           <div className={styles.header}>Select return date</div>
-          {this.props.dateSlot.map(val => {
-            return (
-              <SelectReturnDate
-                label={val}
-                selectItem={() => {
-                  this.handleDateSelect(val);
-                }}
-                selected={val === this.state.selectedDate}
-              />
-            );
-          })}
+          {this.props.dateSlot &&
+            this.props.dateSlot.map(val => {
+              return (
+                <SelectReturnDate
+                  label={val}
+                  selectItem={() => {
+                    this.handleDateSelect(val);
+                  }}
+                  selected={val === this.state.selectedDate}
+                />
+              );
+            })}
         </div>
 
         <div className={styles.card}>

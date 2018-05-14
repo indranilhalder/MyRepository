@@ -8,6 +8,7 @@ import Icon from "../../xelpmoc-core/Icon";
 import ExpressImage from "./img/expressDelivery.svg";
 import HomeImage from "./img/homeDelivery.svg";
 import arrowIcon from "./img/arrowBackblack.svg";
+import greyArrow from "./img/greyArrow.svg";
 import CollectImage from "./img/collect.svg";
 import { EXPRESS, COLLECT } from "../../lib/constants";
 const EXPRESS_TEXT = "Express Shipping";
@@ -51,7 +52,8 @@ export default class DeliveryInformations extends React.Component {
     if (this.props.deliveryCharge) {
       if (this.props.showDeliveryCharge) {
         deliveryCharge = "(Free)";
-      } else if (parseInt(this.props.deliveryCharge, 10) !== 0) {
+      }
+      if (parseInt(this.props.deliveryCharge, 10) !== 0) {
         deliveryCharge = `(₹${parseInt(this.props.deliveryCharge, 10)})`;
       }
     }
@@ -96,6 +98,16 @@ export default class DeliveryInformations extends React.Component {
                 onClick={() => this.arrowClick()}
               >
                 <Icon image={arrowIcon} size={20} />
+              </div>
+            )}
+          {this.props.showCliqAndPiqButton &&
+            !this.props.selected &&
+            this.props.type === COLLECT && (
+              <div
+                className={styles.checkboxHolder}
+                onClick={() => this.onPiq()}
+              >
+                <Icon image={greyArrow} size={20} />
               </div>
             )}
           <IconWithHeader

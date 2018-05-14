@@ -2,14 +2,17 @@
   width: 100%;
   height: auto;
   padding: 0px 15px;
-  margin-top: 30px;
+  margin-top: 50px;
+}
+.firstItemBase {
+  composes: base;
+  margin-top: 20px;
 }
 .shopeRangeHeader {
   width: 100%;
   height: auto;
   color: #212121;
   font-size: 20px;
-  margin-bottom: 10px;
   font-family: semibold;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }

@@ -1107,7 +1107,7 @@ const cart = (
         softReservationForPaymentError: action.error,
         jusPaymentLoader: false,
         isSoftReservationFailed: true,
-        isPaymentProceeded:false
+        isPaymentProceeded: false
       });
 
     case cartActions.JUS_PAY_TOKENIZE_REQUEST:

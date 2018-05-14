@@ -44,13 +44,13 @@ export default class SavedPaymentCard extends React.Component {
           </div>
           <div className={styles.cardNumberHolder}>
             <div className={styles.cardDataHolder}>
-              <div className={styles.dataHeader}>Card Number</div>
+              <div className={styles.dataHeader}>Card number</div>
               <div className={styles.dataHolder}>{this.props.cardNumber}</div>
             </div>
           </div>
           <div className={styles.cardNameAndValidityHolder}>
             <div className={styles.nameOfCardHolder}>
-              <div className={styles.dataHeader}>Name on the card</div>
+              <div className={styles.dataHeader}>Name on card</div>
               <div className={styles.dataHolder}>
                 {this.props.cardHolderName}
               </div>

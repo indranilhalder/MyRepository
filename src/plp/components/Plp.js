@@ -5,10 +5,14 @@ import PlpMobileFooter from "./PlpMobileFooter";
 import styles from "./Plp.css";
 import throttle from "lodash.throttle";
 import Loader from "../../general/components/Loader";
+import { Helmet } from "react-helmet";
+
 import {
   renderMetaTags,
   renderMetaTagsWithoutSeoObject
 } from "../../lib/seoUtils.js";
+import { URL_ROOT } from "../../lib/apiRequest";
+
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SCROLL_CHECK_INTERVAL = 500;
 const OFFSET_BOTTOM = 800;
@@ -121,6 +125,44 @@ export default class Plp extends React.Component {
     this.props.hideFilter();
   };
 
+  renderPageTags = () => {
+    let url = `${URL_ROOT}${this.props.productListings.currentQuery.url}`;
+    const lastPage = Number.parseInt(
+      this.props.productListings.pagination.totalPages,
+      10
+    );
+    const page =
+      Number.parseInt(this.props.productListings.pagination.currentPage, 10) +
+      1;
+
+    if (page === 1) {
+      url = url.replace("{pageNo}", page + 1);
+      return (
+        <Helmet>
+          <link rel="next" id="next" href={url} />
+        </Helmet>
+      );
+    } else if (page === lastPage) {
+      url = url.replace("{pageNo}", page - 1);
+
+      return (
+        <Helmet>
+          <link rel="prev" id="prev" href={url} />
+        </Helmet>
+      );
+    } else if (page > 1 && page < lastPage) {
+      const prevUrl = url.replace("{pageNo}", page - 1);
+      const nextUrl = url.replace("{pageNo}", page + 1);
+      return (
+        <Helmet>
+          <link rel="next" id="next" href={nextUrl} />
+          <link rel="prev" id="prev" href={prevUrl} />
+        </Helmet>
+      );
+    }
+    return null;
+  };
+
   render() {
     let selectedFilterCount = 0;
     let filterSelected = false;
@@ -144,6 +186,7 @@ export default class Plp extends React.Component {
     return (
       this.props.productListings && (
         <div className={styles.base}>
+          {this.renderPageTags()}
           {this.props.productListings.seo
             ? renderMetaTags(this.props.productListings)
             : renderMetaTagsWithoutSeoObject(this.props.productListings)}

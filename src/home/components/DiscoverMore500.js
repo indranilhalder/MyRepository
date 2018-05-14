@@ -28,7 +28,7 @@ class DiscoverMore500 extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.header}>{feedComponentData.title}</div>
-        <Grid elementWidthMobile={33.33} offset={20}>
+        <Grid elementWidthMobile={33.33} offset={0}>
           {feedComponentData &&
             feedComponentData.data &&
             feedComponentData.data

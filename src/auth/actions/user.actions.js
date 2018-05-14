@@ -14,16 +14,20 @@ import {
   SIGN_UP_OTP_VERIFICATION,
   hideModal,
   FORGOT_PASSWORD_OTP_VERIFICATION,
-  NEW_PASSWORD
+  NEW_PASSWORD,
+  OTP_LOGIN_MODAL
 } from "../../general/modal.actions.js";
 import * as Cookie from "../../lib/Cookie";
 import config from "../../lib/config";
 import { SOCIAL_SIGN_UP } from "../../lib/constants";
 import {
   authCallsAreInProgress,
-  singleAuthCallHasFailed
+  singleAuthCallHasFailed,
+  stopLoaderOnLoginForOTPVerification
 } from "./auth.actions";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
+import { OTP_VERIFICATION_REQUIRED_MESSAGE } from "../containers/LoginContainer";
+import { displayToast } from "../../general/toast.actions";
 
 export const LOGIN_USER_REQUEST = "LOGIN_USER_REQUEST";
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
@@ -153,6 +157,18 @@ export function loginUser(userLoginDetails) {
       const result = await api.post(url);
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
+      if (resultJson.errorCode) {
+        if (resultJsonStatus.message === "Invalid OTP. Please try again") {
+          dispatch(displayToast(resultJsonStatus.message));
+        }
+        dispatch(stopLoaderOnLoginForOTPVerification());
+        return dispatch(
+          showModal(OTP_LOGIN_MODAL, {
+            username: userLoginDetails.username,
+            password: userLoginDetails.password
+          })
+        );
+      }
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }

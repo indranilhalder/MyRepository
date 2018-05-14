@@ -4,15 +4,28 @@
   padding: 30px;
   object-fit: contain;
   background-image: linear-gradient(#fce38a, #f38181);
-  background-image: url(./img/download.svg)no-repeat;
-  margin-bottom: 20px;
+  background-image: url(./img/download.svg) no-repeat;
+  margin-top: 50px;
+}
+.firstItemBase {
+  composes: base;
   margin-top: 20px;
 }
 .downloadInnerBox {
   width: 100%;
   height: auto;
-  position: relative;
-  padding-left: 45px;
+  display: inline-block;
+}
+.dataTextHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+}
+.iconWithWidth {
+  composes: dataTextHolder;
+  width: calc(100% - 40px);
+  padding-left: 10px;
 }
 .downloadBox {
   width: 100%;
@@ -21,7 +34,6 @@
   font-size: 16px;
   line-height: 20px;
   font-weight: bold;
-  margin-left: 10px;
 }
 .downloadLabel {
   width: 100%;
@@ -29,12 +41,10 @@
   color: #fff;
   font-size: 14px;
   line-height: 20px;
-  margin-left: 10px;
 }
 .downloadIcon {
   width: 40px;
   height: 40px;
-  position: absolute;
-  left: 0;
-  top: 0;
+  display: inline-block;
+  vertical-align: top;
 }

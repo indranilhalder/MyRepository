@@ -1,5 +1,5 @@
 import React from "react";
-import creditCardIcon from "./img/credit-card.svg";
+import creditCardIcon from "./img/cod.svg";
 import PropTypes from "prop-types";
 import CodForm from "./CodForm.js";
 import CodUnavailable from "./CodUnavailable";

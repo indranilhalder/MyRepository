@@ -5,7 +5,8 @@ import {
   SUCCESS_CAMEL_CASE,
   SUCCESS_UPPERCASE,
   JUS_PAY_AUTHENTICATION_FAILED,
-  NO
+  NO,
+  BANK_COUPON_COOKIE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash.foreach";
@@ -60,8 +61,6 @@ import {
   ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF,
   ADOBE_MY_ACCOUNT_ADDRESS_BOOK
 } from "../../lib/adobeUtils";
-import { PAYMENT_CHARGED } from "../components/CheckOutPage";
-
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
 export const USER_CART_PATH = "v2/mpl/users";
 export const CART_PATH = "v2/mpl";
@@ -1731,6 +1730,7 @@ export function applyBankOffer(couponCode) {
         );
         throw new Error(resultJsonStatus.message);
       }
+      localStorage.setItem(BANK_COUPON_COOKIE, couponCode);
       setDataLayerForCheckoutDirectCalls(
         ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS,
         couponCode
@@ -1790,6 +1790,7 @@ export function releaseBankOffer(previousCouponCode, newCouponCode: null) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      localStorage.removeItem(BANK_COUPON_COOKIE);
       if (newCouponCode) {
         return dispatch(applyBankOffer(newCouponCode));
       }
@@ -3238,7 +3239,7 @@ export function orderConfirmation(orderId) {
           JSON.parse(userDetails).userName
         }/orderConfirmation/${orderId}?access_token=${
           JSON.parse(customerCookie).access_token
-        }&platformNumber=2`
+        }&platformNumber=2&isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -3495,7 +3496,7 @@ export function updateTransactionDetailsForCOD(paymentMode, juspayOrderID) {
       if (oldUrl.includes(JUS_PAY_AUTHENTICATION_FAILED)) {
         let newUrl = oldUrl.replace(
           JUS_PAY_AUTHENTICATION_FAILED,
-          PAYMENT_CHARGED
+          JUS_PAY_CHARGED
         );
         window.location.href = newUrl;
       }

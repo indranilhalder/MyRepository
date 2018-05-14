@@ -17,7 +17,9 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   LOGIN_PATH,
-  ORDER_HISTORY
+  ORDER_HISTORY,
+  MY_ACCOUNT_GIFT_CARD_PAGE,
+  MY_ACCOUNT_PAGE
 } from "../../lib/constants";
 
 import { HOME_ROUTER } from "../../lib/constants";
@@ -33,9 +35,11 @@ export default class AllOrderDetails extends React.Component {
       showOrder: null
     };
   }
-  onClickImage(productCode) {
-    if (productCode) {
+  onClickImage(isEgvOrder, productCode) {
+    if (!isEgvOrder && productCode) {
       this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    } else if (isEgvOrder) {
+      this.props.history.push(`${MY_ACCOUNT_PAGE}${MY_ACCOUNT_GIFT_CARD_PAGE}`);
     }
   }
   onViewDetails(orderId) {
@@ -128,7 +132,6 @@ export default class AllOrderDetails extends React.Component {
       return this.navigateToLogin();
     }
     const orderDetails = this.props.profile.orderDetails;
-
     return (
       <div className={styles.base}>
         {orderDetails && orderDetails.orderData
@@ -145,36 +148,54 @@ export default class AllOrderDetails extends React.Component {
                       orderId={orderDetails && orderDetails.orderId}
                     />
                   </div>
-                  <OrderCard
-                    imageUrl={
-                      orderDetails &&
-                      orderDetails.products &&
-                      orderDetails.products[0].imageURL
-                    }
-                    price={orderDetails && orderDetails.totalOrderAmount}
-                    discountPrice={""}
-                    productName={
-                      orderDetails &&
-                      orderDetails.products &&
-                      orderDetails.products[0].productName
-                    }
-                    onClick={() =>
-                      this.onClickImage(
-                        orderDetails &&
+                  {orderDetails &&
+                    orderDetails.products && (
+                      <OrderCard
+                        imageUrl={
+                          orderDetails &&
+                          orderDetails.products &&
+                          orderDetails.products[0].imageURL
+                        }
+                        hasProduct={orderDetails && orderDetails.products}
+                        isGiveAway={
+                          orderDetails &&
                           orderDetails.products &&
                           orderDetails.products[0] &&
-                          orderDetails.products.length &&
-                          orderDetails.products[0].productcode
-                      )
-                    }
-                  />
+                          orderDetails.products[0].isGiveAway
+                        }
+                        price={orderDetails && orderDetails.totalOrderAmount}
+                        discountPrice={""}
+                        productName={
+                          orderDetails &&
+                          orderDetails.products &&
+                          orderDetails.products[0] &&
+                          orderDetails.products[0].productName
+                        }
+                        isEgvOrder={orderDetails.isEgvOrder}
+                        onClick={() =>
+                          this.onClickImage(
+                            orderDetails.isEgvOrder,
+                            orderDetails &&
+                              orderDetails.products &&
+                              orderDetails.products[0] &&
+                              orderDetails.products.length &&
+                              orderDetails.products[0].productcode
+                          )
+                        }
+                      />
+                    )}
+
                   <PriceAndLink
                     onViewDetails={() =>
                       this.onViewDetails(orderDetails && orderDetails.orderId)
                     }
+                    isEgvOrder={orderDetails.isEgvOrder}
+                    status={orderDetails.giftCardStatus}
                     price={orderDetails && orderDetails.totalOrderAmount}
                   />
-                  {orderDetails &&
+
+                  {!orderDetails.isEgvOrder &&
+                    orderDetails &&
                     orderDetails.billingAddress && (
                       <OrderDelivered
                         deliveredAddress={`${
