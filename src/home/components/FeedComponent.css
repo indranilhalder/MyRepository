@@ -4,6 +4,10 @@
   background-repeat: no-repeat;
   margin-top: 50px;
 }
+.firstItemBase {
+  composes: base;
+  margin-top: 20px;
+}
 .banner {
   width: 100%;
   height: auto;

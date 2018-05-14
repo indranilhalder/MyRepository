@@ -160,7 +160,7 @@ class CheckOutPage extends React.Component {
   navigateToLogin() {
     const url = this.props.location.pathname;
     this.props.setUrlToRedirectToAfterAuth(url);
-    this.props.history.push(LOGIN_PATH);
+    this.props.history.replace(LOGIN_PATH);
   }
   navigateUserToMyBagAfter15MinOfpaymentFailure() {
     this.props.displayToast(INVALID_CART_ERROR_MESSAGE);
@@ -385,7 +385,7 @@ class CheckOutPage extends React.Component {
     return (
       <div className={styles.products}>
         <div className={styles.header}>
-          <CheckOutHeader indexNumber="2" confirmTitle="Choose delivery mode" />
+          <CheckOutHeader indexNumber="2" confirmTitle="Choose Delivery Mode" />
         </div>
         {this.props.cart.cartDetailsCNC.products &&
           this.props.cart.cartDetailsCNC.products.map((val, i) => {

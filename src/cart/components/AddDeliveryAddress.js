@@ -285,7 +285,7 @@ export default class AddDeliveryAddress extends React.Component {
         </div>
         <div className={styles.content}>
           <Input2
-            placeholder="Enter a pincode/zipcode*"
+            placeholder="Enter your PIN code*"
             onChange={postalCode => this.getPinCodeDetails(postalCode)}
             textStyle={{ fontSize: 14 }}
             value={
