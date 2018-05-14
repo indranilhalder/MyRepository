@@ -101,6 +101,7 @@ export default class DeliveryInformations extends React.Component {
               </div>
             )}
           {this.props.showCliqAndPiqButton &&
+            !this.props.selected &&
             this.props.type === COLLECT && (
               <div
                 className={styles.checkboxHolder}
