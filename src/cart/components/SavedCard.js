@@ -32,7 +32,7 @@ export default class SavedCard extends React.Component {
         <div className={styles.cardCvvHolder}>
           <div className={styles.cardsSection}>
             <div className={styles.cardIconHolder}>
-              <Logo image={this.props.cardImage} width={66} />
+              <Logo image={this.props.cardImage} width={75} imageWidth="100%" />
             </div>
           </div>
           <div className={styles.cvvInput}>
