@@ -9,7 +9,8 @@ import {
   BANK_COUPON_COOKIE,
   PAYMENT_MODE_TYPE,
   SELECTED_BANK_NAME,
-  EMI
+  EMI,
+  NO_COST_EMI_COUPON
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash.foreach";
@@ -2958,7 +2959,7 @@ export function jusPayPaymentMethodTypeForGiftCard(
       cardObject.append("name_on_card", cardDetails.cardName);
       cardObject.append("order_id", juspayOrderId);
       cardObject.append("save_to_locker", true);
-      if (paymentMode === PAYMENT_EMI) {
+      if (localStorage.getItem(NO_COST_EMI_COUPON)) {
         cardObject.append("emi_bank", cardDetails.emi_bank);
         cardObject.append("emi_tenure", cardDetails.emi_tenure);
         cardObject.append("is_emi", cardDetails.is_emi);
@@ -3004,7 +3005,7 @@ export function jusPayPaymentMethodType(
       cardObject.append("name_on_card", cardDetails.cardName);
       cardObject.append("order_id", juspayOrderId);
       cardObject.append("save_to_locker", "1");
-      if (paymentMode === PAYMENT_EMI) {
+      if (localStorage.getItem(NO_COST_EMI_COUPON)) {
         cardObject.append("emi_bank", cardDetails.emi_bank);
         cardObject.append("emi_tenure", cardDetails.emi_tenure);
         cardObject.append("is_emi", cardDetails.is_emi);
@@ -4104,7 +4105,22 @@ export function removeNoCostEmi(couponCode, cartGuId, cartId) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
+    if (!cartGuId) {
+      const cartDetails = JSON.parse(
+        Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER)
+      );
+      if (cartDetails) {
+        cartGuId = cartDetails.guid;
+      }
+    }
+    if (!cartId) {
+      const cartDetails = JSON.parse(
+        Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER)
+      );
+      if (cartDetails) {
+        cartId = cartDetails.code;
+      }
+    }
     dispatch(removeNoCostEmiRequest());
     try {
       const result = await api.post(
