@@ -26,7 +26,6 @@
   composes: content;
   opacity: 0.5;
   pointer-events: none;
-  position: absolute;
 }
 .cartLoader {
   width: 100%;
