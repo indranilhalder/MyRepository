@@ -8,7 +8,6 @@ export default class ProductVideo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      playing: false,
       played: false
     };
   }
