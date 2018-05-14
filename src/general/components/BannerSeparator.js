@@ -14,7 +14,7 @@ export default class BannerSeparator extends React.Component {
     return (
       <div
         className={
-          this.props.positionInFeed === 2 ? styles.firstItemBase : styles.base
+          this.props.positionInFeed === 1 ? styles.firstItemBase : styles.base
         }
         style={{
           backgroundImage: `linear-gradient(165deg, ${
