@@ -861,7 +861,7 @@ export function addUserAddress(userAddress, fromAccount) {
           userAddress.countryIso
         }&addressType=${userAddress.addressType}&phone=${
           userAddress.phone
-        }&emailId=${userAddress.emailId}&firstName=${
+        }&firstName=${
           userAddress.firstName
         }&lastName=${userAddress.lastName}
         &postalCode=${userAddress.postalCode}&line1=${
@@ -870,7 +870,7 @@ export function addUserAddress(userAddress, fromAccount) {
           userAddress.line3
         }&town=${userAddress.town}&landmark=${
           userAddress.landmark ? userAddress.landmark : ""
-        }&defaultFlag=${userAddress.defaultFlag}`
+        }&defaultFlag=${userAddress.defaultFlag}&emailId=""`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);

@@ -163,12 +163,14 @@ export function loginUser(userLoginDetails) {
           dispatch(displayToast(resultJsonStatus.message));
         }
         dispatch(stopLoaderOnLoginForOTPVerification());
-        return dispatch(
-          showModal(OTP_LOGIN_MODAL, {
-            username: userLoginDetails.username,
-            password: userLoginDetails.password
-          })
-        );
+        if (resultJson.errorCode === "NU0002") {
+          return dispatch(
+            showModal(OTP_LOGIN_MODAL, {
+              username: userLoginDetails.username,
+              password: userLoginDetails.password
+            })
+          );
+        }
       }
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);

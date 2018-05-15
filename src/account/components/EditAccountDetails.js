@@ -29,6 +29,7 @@ const NEW_PASSWORD_TEXT = "Please enter new password";
 const PASSWORD_LENGTH_TEXT = "Password length should be minimum 8 character";
 const CONFIRM_PASSWORD_TEXT = "Please confirm your passowrd";
 const PASSWORD_MATCH_TEXT = "Password did not match";
+const DATE_FORMAT_TO_UPDATE_PROFILE = "DD/MM/YYYY";
 export default class EditAccountDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -127,8 +128,21 @@ export default class EditAccountDetails extends React.Component {
       this.props.displayToast("Please fill valid mobile number");
       return false;
     } else {
+      let dateOfBirth = format(
+        this.state.dateOfBirth,
+        DATE_FORMAT_TO_UPDATE_PROFILE
+      );
+
+      let userDetails = new FormData();
+      userDetails.append("firstName", this.state.firstName);
+      userDetails.append("lastName", this.state.lastName);
+      userDetails.append("dateOfBirth", dateOfBirth);
+      userDetails.append("gender", this.state.gender);
+      userDetails.append("mobileNumber", this.state.mobileNumber);
+      userDetails.append("emailid", this.state.emailId);
+
       if (this.props.updateProfile) {
-        this.props.updateProfile(this.state);
+        this.props.updateProfile(userDetails);
       }
     }
   };

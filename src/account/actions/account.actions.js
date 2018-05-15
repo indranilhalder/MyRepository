@@ -1539,17 +1539,11 @@ export function updateProfile(accountDetails, otp) {
         JSON.parse(userDetails).userName
       }/updateprofile?isPwa=true&access_token=${
         JSON.parse(customerCookie).access_token
-      }&ProfileDataRequired=true&firstName=${
-        accountDetails.firstName
-      }&lastName=${accountDetails.lastName}&dateOfBirth=${dateOfBirth}&gender=${
-        accountDetails.gender
-      }&mobilenumber=${accountDetails.mobileNumber}&emailid=${
-        accountDetails.emailId
-      }`;
+      }&ProfileDataRequired=true`;
       if (otp) {
         updateProfileUrl = `${updateProfileUrl}&otp=${otp}`;
       }
-      const result = await api.post(updateProfileUrl);
+      const result = await api.postFormData(updateProfileUrl,accountDetails);
       const resultJson = await result.json();
 
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
