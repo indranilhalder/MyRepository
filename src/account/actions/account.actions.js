@@ -201,7 +201,7 @@ export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
 export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
 export const CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAILURE";
 export const Clear_ORDER_DATA = "Clear_ORDER_DATA";
-export const RE_SET_ADD_ADDRESS_DETAILS="RE_SET_ADD_ADDRESS_DETAILS"
+export const RE_SET_ADD_ADDRESS_DETAILS = "RE_SET_ADD_ADDRESS_DETAILS";
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -563,7 +563,8 @@ export function returnPinCode(productDetails) {
       if (resultJsonStatus.status) {
         let message = resultJsonStatus.message;
         if (resultJsonStatus.message === FAILURE_UPPERCASE) {
-          message = "Sorry! pick up is not available for your area. You can still return the item by dropping in store or by self shipping the product";
+          message =
+            "Sorry! pick up is not available for your area. You can still return the item by dropping in store or by self shipping the product";
         }
         throw new Error(message);
       }
@@ -1975,4 +1976,3 @@ export function resetAddAddressDetails() {
     type: RE_SET_ADD_ADDRESS_DETAILS
   };
 }
-
