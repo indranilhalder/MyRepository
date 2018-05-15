@@ -53,6 +53,7 @@ export default class FollowingBrands extends React.Component {
       <div>
         {userDetails &&
           customerCookie &&
+          followWidgetData &&
           followWidgetData.data &&
           followWidgetData.data.filter(val => {
             return val.isFollowing === "true";
