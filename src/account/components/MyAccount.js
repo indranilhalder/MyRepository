@@ -134,7 +134,10 @@ export default class MyAccount extends React.Component {
           )}
           {this.state.isSelected === 2 && (
             <div className={styles.couponHolder}>
-              <UserCoupons userCoupons={this.props.userCoupons} />
+              <UserCoupons
+                userCoupons={this.props.userCoupons}
+                displayToast={message => this.props.displayToast(message)}
+              />
             </div>
           )}
         </div>
