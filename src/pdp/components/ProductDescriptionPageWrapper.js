@@ -12,6 +12,10 @@ import {
   renderMetaTags,
   renderMetaTagsWithoutSeoObject
 } from "../../lib/seoUtils.js";
+import PdpElectronics from "./PdpElectronics";
+import PdpJewellery from "./PdpJewellery";
+import PdpApparel from "./PdpApparel";
+import PdpHome from "./PdpHome";
 // prettier-ignore
 
 const PiqPageForPdp = Loadable({
@@ -20,38 +24,6 @@ const PiqPageForPdp = Loadable({
     return <div className={styles.loadingIndicator}><Loader /></div>
   }
 })
-
-const PdpElectronics = Loadable({
-  loader: () => import("./PdpElectronics"),
-  loading() {
-    return (
-      <div className={styles.loadingIndicator}>
-        <Loader />
-      </div>
-    );
-  }
-});
-
-const PdpJewellery = Loadable({
-  loader: () => import("./PdpJewellery"),
-  loading() {
-    return <Loader />;
-  }
-});
-
-const PdpApparel = Loadable({
-  loader: () => import("./PdpApparel"),
-  loading() {
-    return <Loader />;
-  }
-});
-
-const PdpHome = Loadable({
-  loader: () => import("./PdpHome"),
-  loading() {
-    return <Loader />;
-  }
-});
 
 const typeComponentMapping = {
   Electronics: props => <PdpElectronics {...props} />,

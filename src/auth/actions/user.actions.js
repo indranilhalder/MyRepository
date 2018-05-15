@@ -144,17 +144,18 @@ export function loginUserFailure(error) {
 export function loginUser(userLoginDetails) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
+    let loginDetails = new FormData();
+    loginDetails.append("password", userLoginDetails.password);
+    loginDetails.append("isPwa", true);
     dispatch(loginUserRequest());
     try {
       let url = `${LOGIN_PATH}/${
         userLoginDetails.username
-      }/customerLogin?access_token=${
-        JSON.parse(customerCookie).access_token
-      }&password=${userLoginDetails.password}&isPwa=true`;
+      }/customerLogin?access_token=${JSON.parse(customerCookie).access_token}`;
       if (userLoginDetails.otp) {
         url = `${url}&otp=${userLoginDetails.otp}`;
       }
-      const result = await api.post(url);
+      const result = await api.postFormData(url, loginDetails);
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJson.errorCode) {
@@ -529,19 +530,20 @@ export function customerAccessTokenFailure(error) {
 export function customerAccessToken(userDetails) {
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
+    let userLoginDetails = new FormData();
+    userLoginDetails.append("username", userDetails.username);
+    userLoginDetails.append("password", userDetails.password);
     dispatch(customerAccessTokenRequest());
     // this is our first call so we are setting true that from this
     // we started loading and  this loading will end with merge cart
     // id request success
     dispatch(authCallsAreInProgress());
     try {
-      console.log("GET CUSTOMER ACCESS TOKEN");
-      const result = await api.post(
-        `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${
-          userDetails.username
-        }&password=${userDetails.password}&access_token=${
+      const result = await api.postFormData(
+        `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&access_token=${
           JSON.parse(globalCookie).access_token
-        }`
+        }`,
+        userLoginDetails
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
