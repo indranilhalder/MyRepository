@@ -12,6 +12,7 @@ const paths = require("./paths");
 const getClientEnvironment = require("./env");
 const CompressionPlugin = require("compression-webpack-plugin");
 const PreloadWebpackPlugin = require("preload-webpack-plugin");
+const BrotliPlugin = require("brotli-webpack-plugin"); // NEW!
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -338,7 +339,8 @@ module.exports = {
       algorithm: "gzip",
       test: /\.js$|\.css$|\.html$/,
       threshold: 0
-    })
+    }),
+    new BrotliPlugin() // brotli NEW!
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
