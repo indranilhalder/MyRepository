@@ -25,38 +25,6 @@ const PiqPageForPdp = Loadable({
   }
 })
 
-// const PdpElectronics = Loadable({
-//   loader: () => import("./PdpElectronics"),
-//   loading() {
-//     return (
-//       <div className={styles.loadingIndicator}>
-//         <Loader />
-//       </div>
-//     );
-//   }
-// });
-
-// const PdpJewellery = Loadable({
-//   loader: () => import("./PdpJewellery"),
-//   loading() {
-//     return <Loader />;
-//   }
-// });
-
-// const PdpApparel = Loadable({
-//   loader: () => import("./PdpApparel"),
-//   loading() {
-//     return <Loader />;
-//   }
-// });
-
-// const PdpHome = Loadable({
-//   loader: () => import("./PdpHome"),
-//   loading() {
-//     return <Loader />;
-//   }
-// });
-
 const typeComponentMapping = {
   Electronics: props => <PdpElectronics {...props} />,
   Watches: props => <PdpElectronics {...props} />,
