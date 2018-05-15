@@ -59,8 +59,6 @@ export default class InvalidCouponPopUp extends React.Component {
     }
   }
   async continueWithoutCoupon() {
-    console.log(this.props);
-    console.log("comes in console");
     let releaseStatus = {};
     if (this.props.result && this.props.result.userCoupon) {
       if (
@@ -123,14 +121,12 @@ export default class InvalidCouponPopUp extends React.Component {
       }
     }
     if (releaseStatus.status === SUCCESS) {
-      debugger;
       this.props.redoCreateJusPayApi();
       this.props.closeModal();
     }
   }
   render() {
     const data = this.props.result;
-    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.paymentMethodDescription}>

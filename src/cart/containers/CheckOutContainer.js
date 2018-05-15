@@ -61,7 +61,8 @@ import {
 import {
   showModal,
   BANK_OFFERS,
-  GIFT_CARD_MODAL
+  GIFT_CARD_MODAL,
+  CLIQ_CASH_AND_NO_COST_EMI_POPUP
 } from "../../general/modal.actions";
 import {
   getPinCode,
@@ -371,6 +372,9 @@ const mapDispatchToProps = dispatch => {
     },
     resetIsSoftReservationFailed: () => {
       dispatch(resetIsSoftReservationFailed());
+    },
+    showModalForCliqCashOrNoCostEmi: modalProps => {
+      dispatch(showModal(CLIQ_CASH_AND_NO_COST_EMI_POPUP, modalProps));
     }
   };
 };

@@ -1525,8 +1525,20 @@ class CheckOutPage extends React.Component {
   };
 
   applyCliqCash = () => {
-    this.setState({ isCliqCashApplied: true });
-    this.props.applyCliqCash();
+    if (this.state.isNoCostEmiApplied) {
+      const doCallForApplyCliqCash = () => {
+        this.setState({
+          isCliqCashApplied: true,
+          currentPaymentMode: null,
+          isNoCostEmiApplied: false
+        });
+        this.props.applyCliqCash();
+      };
+      this.props.showModalForCliqCashOrNoCostEmi({ doCallForApplyCliqCash });
+    } else {
+      this.setState({ isCliqCashApplied: true });
+      this.props.applyCliqCash();
+    }
   };
 
   removeCliqCash = () => {
@@ -1892,6 +1904,7 @@ class CheckOutPage extends React.Component {
             <div className={styles.paymentCardHolderπp}>
               <PaymentCardWrapper
                 applyBankCoupons={val => this.applyBankCoupons(val)}
+                isCliqCashApplied={this.state.isCliqCashApplied}
                 isRemainingBalance={this.state.isRemainingAmount}
                 isPaymentFailed={this.state.isPaymentFailed}
                 isFromGiftCard={this.state.isGiftCard}

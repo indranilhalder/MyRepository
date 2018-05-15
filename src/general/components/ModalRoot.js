@@ -161,6 +161,12 @@ const CancelOrderPopUp = Loadable({
     return <Loader />;
   }
 });
+const CliqCashAndNoCostEmiPopup = Loadable({
+  loader: () => import("../../cart/components/CliqCashAndNoCostEmiPopup.js"),
+  loading() {
+    return <Loader />;
+  }
+});
 export default class ModalRoot extends React.Component {
   constructor(props) {
     super(props);
@@ -620,6 +626,14 @@ export default class ModalRoot extends React.Component {
           cancelProduct={(cancelProductDetails, productDetails) =>
             this.cancelOrderProduct(cancelProductDetails, productDetails)
           }
+        />
+      ),
+      CliqCashAndNoCostEmiPopup: (
+        <CliqCashAndNoCostEmiPopup
+          {...this.props.ownProps}
+          handleClose={() => this.handleClose()}
+          removeNoCostEmi={couponCode => this.props.removeNoCostEmi(couponCode)}
+          continueWithNoCostEmi={() => this.handleClose()}
         />
       )
     };
