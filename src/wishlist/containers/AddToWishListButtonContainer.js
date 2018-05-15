@@ -18,12 +18,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         addProductToWishList(productObj, ownProps.setDataLayerType)
       );
       if (wishlistResponse.status === SUCCESS) {
-        dispatch(
-          removeItemFromCartLoggedIn(
-            ownProps.index,
-            localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
-          )
-        );
+        if (ownProps.index >= 0) {
+          dispatch(
+            removeItemFromCartLoggedIn(
+              ownProps.index,
+              localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+            )
+          );
+        }
         dispatch(displayToast(toastMessageOnSuccessAddToWishlist));
       }
     },
