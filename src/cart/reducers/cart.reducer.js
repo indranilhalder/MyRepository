@@ -719,7 +719,8 @@ const cart = (
     case cartActions.CREATE_JUS_PAY_ORDER_REQUEST:
       return Object.assign({}, state, {
         createJusPayStatus: action.status,
-        jusPaymentLoader: true
+        jusPaymentLoader: true,
+        isPaymentProceeded: true
       });
 
     case cartActions.CREATE_JUS_PAY_ORDER_SUCCESS: {
