@@ -560,8 +560,9 @@ class CheckOutPage extends React.Component {
           resetAutoPopulateDataForPinCode={() =>
             this.props.resetAutoPopulateDataForPinCode()
           }
+          onFocusInput={() => this.onFocusInput()}
           getPincodeStatus={this.props.getPincodeStatus}
-          resetAddAddressDetails={()=>this.props.resetAddAddressDetails()}
+          resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -1498,8 +1499,7 @@ class CheckOutPage extends React.Component {
   };
 
   addAddress = address => {
-    if(!address)
-    {
+    if (!address) {
       this.props.displayToast("Please enter the valid details");
       return false;
     }
@@ -1528,7 +1528,8 @@ class CheckOutPage extends React.Component {
       return false;
     }
     if (
-      address && address.emailId &&
+      address &&
+      address.emailId &&
       !EMAIL_REGULAR_EXPRESSION.test(address.emailId)
     ) {
       this.props.displayToast(EMAIL_VALID_TEXT);
@@ -1554,24 +1555,24 @@ class CheckOutPage extends React.Component {
       this.props.displayToast(SELECT_ADDRESS_TYPE);
       return false;
     } else {
-    if (this.props.addUserAddress) {
-      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-      let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-      let cartDetailsLoggedInUser = Cookie.getCookie(
-        CART_DETAILS_FOR_LOGGED_IN_USER
-      );
-      let getCartDetailCNCObj = {
-        userId: JSON.parse(userDetails).userName,
-        accessToken: JSON.parse(customerCookie).access_token,
-        cartId: JSON.parse(cartDetailsLoggedInUser).code,
-        pinCode: address && address.postalCode,
-        isSoftReservation: false
-      };
-      this.props.addUserAddress(address, getCartDetailCNCObj);
+      if (this.props.addUserAddress) {
+        let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+        let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+        let cartDetailsLoggedInUser = Cookie.getCookie(
+          CART_DETAILS_FOR_LOGGED_IN_USER
+        );
+        let getCartDetailCNCObj = {
+          userId: JSON.parse(userDetails).userName,
+          accessToken: JSON.parse(customerCookie).access_token,
+          cartId: JSON.parse(cartDetailsLoggedInUser).code,
+          pinCode: address && address.postalCode,
+          isSoftReservation: false
+        };
+        this.props.addUserAddress(address, getCartDetailCNCObj);
 
-      this.setState({ addNewAddress: false });
+        this.setState({ addNewAddress: false });
+      }
     }
-  }
   };
 
   addNewAddress = () => {
@@ -1913,7 +1914,8 @@ class CheckOutPage extends React.Component {
             getPinCode={val => this.getPinCodeDetails(val)}
             getPinCodeDetails={this.props.getPinCodeDetails}
             getPincodeStatus={this.props.getPincodeStatus}
-            resetAddAddressDetails={()=>this.props.resetAddAddressDetails()}
+            onFocusInput={() => this.onFocusInput()}
+            resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
           />
         </div>
       );
