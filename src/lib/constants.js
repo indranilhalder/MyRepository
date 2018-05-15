@@ -251,3 +251,24 @@ export const MESTRO_CARD = "MAESTRO";
 export const DINERS_CARD = "DINERS";
 export const DISCOVER_CARD = "DISCOVER";
 export const JCB_CARD = "JCB";
+
+//add address Constants
+
+export const SAVE_TEXT = "Save Address";
+export const PINCODE_TEXT = "Please enter pincode";
+export const NAME_TEXT = "Please enter first name";
+export const LAST_NAME_TEXT = "plese enter last name";
+export const ADDRESS_TEXT = "Please enter address";
+export const EMAIL_TEXT = "Please enter email id";
+export const LANDMARK_TEXT = "Please select landmark";
+export const LANDMARK_ENTER_TEXT = "Please enter landmark";
+export const MOBILE_TEXT = "Please enter mobile number";
+export const PINCODE_VALID_TEXT = "Please enter valid pincode";
+export const EMAIL_VALID_TEXT = "Please enter valid emailId";
+export const PHONE_VALID_TEXT = "Please fill valid mobile number";
+export const PHONE_TEXT = "Please enter mobile number";
+export const CITY_TEXT = "please enter city";
+export const STATE_TEXT = "please enter state";
+export const SELECT_ADDRESS_TYPE = "please select address type";
+export const ISO_CODE = "IN";
+export const OTHER_LANDMARK = "other";

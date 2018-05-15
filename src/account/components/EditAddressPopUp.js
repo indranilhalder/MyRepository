@@ -18,11 +18,6 @@ import {
   EMAIL_REGULAR_EXPRESSION,
   MOBILE_PATTERN
 } from "../../auth/components/Login";
-import {
-  SALUTATION_MS,
-  SALUTATION_MR,
-  SALUTATION_MSS
-} from "../../cart/components/AddDeliveryAddress";
 
 const SAVE_TEXT = "Save Address";
 const PINCODE_TEXT = "Please enter pincode";
@@ -50,8 +45,7 @@ export default class EditAddressPopUp extends React.Component {
       countryIso: addressDetails.country.isocode,
       addressType: addressDetails.addressType,
       phone: addressDetails.phone,
-      salutation: this.getSalutationFromFirstName(addressDetails.firstName),
-      firstName: this.extractSalutationFromFirstName(addressDetails.firstName),
+      firstName: addressDetails.firstName,
       lastName: addressDetails.lastName,
       postalCode: addressDetails.postalCode,
       line1: addressDetails.line1,
@@ -68,28 +62,7 @@ export default class EditAddressPopUp extends React.Component {
       landmarkList: []
     };
   }
-  extractSalutationFromFirstName(name) {
-    if (name && name.includes(SALUTATION_MR)) {
-      return name.replace(SALUTATION_MR, "");
-    } else if (name && name.includes(SALUTATION_MS)) {
-      return name.replace(SALUTATION_MS, "");
-    } else if (name && name.includes(SALUTATION_MSS)) {
-      return name.replace(SALUTATION_MSS, "");
-    } else {
-      return name;
-    }
-  }
-  getSalutationFromFirstName(name) {
-    if (name && name.includes(SALUTATION_MR)) {
-      return SALUTATION_MR;
-    } else if (name && name.includes(SALUTATION_MS)) {
-      return SALUTATION_MS;
-    } else if (name && name.includes(SALUTATION_MSS)) {
-      return SALUTATION_MSS;
-    } else {
-      return "";
-    }
-  }
+
   getPinCodeDetails = val => {
     let landmarkList = [];
     if (val.length <= 6) {
@@ -253,15 +226,11 @@ export default class EditAddressPopUp extends React.Component {
       line1: " ",
       titleValue: "",
       addressType: "",
-      salutation: SALUTATION_MR,
       defaultFlag: false,
       landmarkList: [],
       emailId: ""
     });
   };
-  onChangeSalutation(val) {
-    this.setState({ salutation: val.value });
-  }
   render() {
     if (this.props.loading) {
       if (this.props.showSecondaryLoader) {
@@ -281,20 +250,7 @@ export default class EditAddressPopUp extends React.Component {
         label: "Office"
       }
     ];
-    const salutation = [
-      {
-        label: "Mr",
-        value: SALUTATION_MR
-      },
-      {
-        label: "Ms",
-        value: SALUTATION_MS
-      },
-      {
-        label: "Mss",
-        value: SALUTATION_MSS
-      }
-    ];
+
     return (
       <div className={styles.base}>
         <div className={styles.addressInnerBox}>
@@ -319,35 +275,18 @@ export default class EditAddressPopUp extends React.Component {
           />
         </div>
         <div className={styles.content}>
-          <div className={styles.salutation}>
-            <SelectBoxMobile2
-              label={this.state.salutation}
-              value={this.state.salutation}
-              height={33}
-              options={salutation.map((val, i) => {
-                return {
-                  value: val.value,
-                  label: val.label
-                };
-              })}
-              onChange={salutation => this.onChangeSalutation(salutation)}
-            />
-          </div>
-          <div className={styles.name}>
-            <Input2
-              option={this.state.options}
-              placeholder="First Name*"
-              value={
-                this.props.firstName
-                  ? this.props.firstName
-                  : this.state.firstName
-              }
-              onChange={firstName => this.onChange({ firstName })}
-              textStyle={{ fontSize: 14 }}
-              height={33}
-            />
-          </div>
+          <Input2
+            option={this.state.options}
+            placeholder="First Name*"
+            value={
+              this.props.firstName ? this.props.firstName : this.state.firstName
+            }
+            onChange={firstName => this.onChange({ firstName })}
+            textStyle={{ fontSize: 14 }}
+            height={33}
+          />
         </div>
+
         <div className={styles.content}>
           <Input2
             boxy={true}
