@@ -286,3 +286,5 @@ export const STATE_TEXT = "please enter state";
 export const SELECT_ADDRESS_TYPE = "please select address type";
 export const ISO_CODE = "IN";
 export const OTHER_LANDMARK = "other";
+export const OTP_VERIFICATION_REQUIRED_CODE = "NU0002";
+export const OTP_VERIFICATION_REQUIRED_TEXT = "OTP VERIFICATION REQUIRED";
