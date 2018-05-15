@@ -12,12 +12,13 @@ export default class AccountNavigationComponent extends Component {
     return (
       <div className={styles.navigationHolder}>
         <SelectBoxMobile2
+          placeholder={"Select"}
           value={this.props.location.pathname.replace("/", "")}
-          label={this.props.location.pathname.replace("/", "")}
+          label={this.props.feedComponentData.nodeList.linkName}
           height={40}
           options={this.props.feedComponentData.nodeList.map((val, i) => {
             return {
-              value: val.url,
+              value: val.url.replace("/", ""),
               label: val.linkName
             };
           })}
