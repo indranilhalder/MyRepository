@@ -835,6 +835,12 @@ const account = (
         loadingForClearOrderDetails: false
       });
     }
+    case accountActions.RE_SET_ADD_ADDRESS_DETAILS: {
+      return Object.assign({}, state, {
+        addUserAddressStatus: null,
+        addUserAddressError: null
+      });
+    }
 
     default:
       return state;

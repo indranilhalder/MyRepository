@@ -201,6 +201,7 @@ export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
 export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
 export const CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAILURE";
 export const Clear_ORDER_DATA = "Clear_ORDER_DATA";
+export const RE_SET_ADD_ADDRESS_DETAILS="RE_SET_ADD_ADDRESS_DETAILS"
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -1968,3 +1969,10 @@ export function clearOrderDetails() {
     type: Clear_ORDER_DATA
   };
 }
+
+export function resetAddAddressDetails() {
+  return {
+    type: RE_SET_ADD_ADDRESS_DETAILS
+  };
+}
+

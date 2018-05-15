@@ -66,7 +66,8 @@ import {
 import {
   getPinCode,
   getUserDetails,
-  getPinCodeSuccess
+  getPinCodeSuccess,
+  resetAddAddressDetails
 } from "../../account/actions/account.actions.js";
 import { displayToast } from "../../general/toast.actions";
 import { SUCCESS } from "../../lib/constants";
@@ -385,6 +386,9 @@ const mapDispatchToProps = dispatch => {
     },
     resetIsSoftReservationFailed: () => {
       dispatch(resetIsSoftReservationFailed());
+    },
+    resetAddAddressDetails: () => {
+      dispatch(resetAddAddressDetails());
     }
   };
 };

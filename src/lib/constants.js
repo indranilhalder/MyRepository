@@ -216,6 +216,14 @@ export const REVIEW_SUBMIT_TOAST_TEXT =
 
 export const CDN_URL_ROOT =
   "https://assets.tatacliq.com/medias/sys_master/pwaImg/";
+export const QUE_MAGAZINE = "https://www.tatacliq.com/que";
+
+export const TERMS_AND_CONDITION_URL = "/tncPayment";
+export const ABOUT_US_URL = "/aboutus";
+export const PRIVACY_POLICY_URL = "/privacy-policy";
+export const CANCEL_URL = "/cancellation";
+export const RETURN_URL = "/returns";
+export const FAQ_URL = "/faq";
 
 // constants for payments method
 export const EASY_MONTHLY_INSTALLMENTS = "Easy monthly installments";
@@ -251,3 +259,24 @@ export const MESTRO_CARD = "MAESTRO";
 export const DINERS_CARD = "DINERS";
 export const DISCOVER_CARD = "DISCOVER";
 export const JCB_CARD = "JCB";
+
+//add address Constants
+
+export const SAVE_TEXT = "Save Address";
+export const PINCODE_TEXT = "Please enter pincode";
+export const NAME_TEXT = "Please enter first name";
+export const LAST_NAME_TEXT = "plese enter last name";
+export const ADDRESS_TEXT = "Please enter address";
+export const EMAIL_TEXT = "Please enter email id";
+export const LANDMARK_TEXT = "Please select landmark";
+export const LANDMARK_ENTER_TEXT = "Please enter landmark";
+export const MOBILE_TEXT = "Please enter mobile number";
+export const PINCODE_VALID_TEXT = "Please enter valid pincode";
+export const EMAIL_VALID_TEXT = "Please enter valid emailId";
+export const PHONE_VALID_TEXT = "Please fill valid mobile number";
+export const PHONE_TEXT = "Please enter mobile number";
+export const CITY_TEXT = "please enter city";
+export const STATE_TEXT = "please enter state";
+export const SELECT_ADDRESS_TYPE = "please select address type";
+export const ISO_CODE = "IN";
+export const OTHER_LANDMARK = "other";
