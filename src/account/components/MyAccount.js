@@ -5,8 +5,10 @@ import InformationHeader from "../../general/components/InformationHeader.js";
 import AllOrderContainer from "../containers/AllOrderContainer";
 import UserCoupons from "./UserCoupons";
 import UserAlerts from "./UserAlerts";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import ProfileMenuGrid from "../../blp/components/ProfileMenuGrid.js";
 import AccountSetting from "./AccountSetting.js";
+import AccountUsefulLink from "./AccountUsefulLink.js";
 import TabHolder from "./TabHolder";
 import TabData from "./TabData";
 import styles from "./MyAccount.css";
@@ -17,7 +19,14 @@ import {
   LOGIN_PATH,
   MY_CLIQ,
   MY_ACCOUNT_PAGE,
-  MY_ACCOUNT_UPDATE_PROFILE_PAGE
+  MY_ACCOUNT_UPDATE_PROFILE_PAGE,
+  QUE_MAGAZINE,
+  TERMS_AND_CONDITION_URL,
+  ABOUT_US_URL,
+  PRIVACY_POLICY_URL,
+  CANCEL_URL,
+  RETURN_URL,
+  FAQ_URL
 } from "../../lib/constants";
 
 import * as Cookie from "../../lib/Cookie";
@@ -41,6 +50,11 @@ export default class MyAccount extends React.Component {
       `${MY_ACCOUNT_PAGE}${MY_ACCOUNT_UPDATE_PROFILE_PAGE}`
     );
   }
+  redirectPage = url => {
+    const urlSuffix = url.replace(TATA_CLIQ_ROOT, "$1");
+    this.props.history.push(urlSuffix);
+  };
+
   componentDidUpdate() {
     this.props.setHeaderText(MY_CLIQ);
   }
@@ -103,6 +117,12 @@ export default class MyAccount extends React.Component {
             />
             <TabData
               width="40%"
+              label="Useful Links "
+              selected={this.state.isSelected === 3}
+              selectItem={() => this.tabSelect(3)}
+            />
+            <TabData
+              width="40%"
               label="Alerts "
               selected={this.state.isSelected === 1}
               selectItem={() => this.tabSelect(1)}
@@ -126,7 +146,47 @@ export default class MyAccount extends React.Component {
               </div>
             </div>
           )}
-
+          {this.state.isSelected === 3 && (
+            <div className={styles.useFulLinkHolder}>
+              <div className={styles.linkTabHolder}>
+                <a target="_blank" href="https://www.tatacliq.com/que">
+                  <AccountUsefulLink>
+                    <div className={styles.usefulLinkText}>Que Magazine</div>
+                  </AccountUsefulLink>
+                </a>
+                {/* <AccountUsefulLink>
+                  <div className={styles.usefulLinkText}>Our Stores</div>
+                </AccountUsefulLink> */}
+              </div>
+              <div className={styles.linkTabHolder}>
+                {/* <AccountUsefulLink>
+                  <div className={styles.usefulLinkText}>Help & Services</div>
+                </AccountUsefulLink> */}
+                <AccountUsefulLink
+                  onClick={() => this.redirectPage(PRIVACY_POLICY_URL)}
+                >
+                  <div className={styles.usefulLinkText}>Privacy policy</div>
+                </AccountUsefulLink>
+                <AccountUsefulLink>
+                  <div className={styles.usefulLinkText}>
+                    <a href="tel:5551234567">Call Tata CLIQ Care</a>
+                  </div>
+                </AccountUsefulLink>
+                <AccountUsefulLink
+                  onClick={() => this.redirectPage(TERMS_AND_CONDITION_URL)}
+                >
+                  <div className={styles.usefulLinkText}>
+                    Terms & Conditions
+                  </div>
+                </AccountUsefulLink>
+                <AccountUsefulLink
+                  onClick={() => this.redirectPage(ABOUT_US_URL)}
+                >
+                  <div className={styles.usefulLinkText}>About us</div>
+                </AccountUsefulLink>
+              </div>
+            </div>
+          )}
           {this.state.isSelected === 1 && (
             <div className={styles.alertsHolder}>
               <UserAlerts userAlerts={this.props.userAlerts} />

@@ -216,6 +216,14 @@ export const REVIEW_SUBMIT_TOAST_TEXT =
 
 export const CDN_URL_ROOT =
   "https://assets.tatacliq.com/medias/sys_master/pwaImg/";
+export const QUE_MAGAZINE = "https://www.tatacliq.com/que";
+
+export const TERMS_AND_CONDITION_URL = "/tncPayment";
+export const ABOUT_US_URL = "/aboutus";
+export const PRIVACY_POLICY_URL = "/privacy-policy";
+export const CANCEL_URL = "/cancellation";
+export const RETURN_URL = "/returns";
+export const FAQ_URL = "/faq";
 
 // constants for payments method
 export const EASY_MONTHLY_INSTALLMENTS = "Easy monthly installments";
