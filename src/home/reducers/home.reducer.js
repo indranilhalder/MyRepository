@@ -115,36 +115,6 @@ const home = (
       }
       return state;
 
-    case homeActions.SINGLE_SELECT_REQUEST:
-    case homeActions.MULTI_SELECT_SUBMIT_REQUEST:
-      homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].submitLoading = true;
-      return Object.assign({}, state, {
-        status: action.status,
-        homeFeed: homeFeedData
-      });
-    case homeActions.SINGLE_SELECT_FAILURE:
-    case homeActions.MULTI_SELECT_SUBMIT_FAILURE:
-      homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].submitLoading = false;
-
-      return Object.assign({}, state, {
-        status: action.status,
-        error: action.error,
-        homeFeed: homeFeedData
-      });
-
-    case homeActions.SINGLE_SELECT_SUCCESS:
-    case homeActions.MULTI_SELECT_SUBMIT_SUCCESS:
-      homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].submitLoading = false;
-      homeFeedData[action.positionInFeed].type = PRODUCT_RECOMMENDATION_TYPE;
-      homeFeedData[action.positionInFeed].data = action.data;
-      return Object.assign({}, state, {
-        status: action.status,
-        homeFeed: homeFeedData
-      });
-
     case homeActions.COMPONENT_BACK_UP_REQUEST:
       homeFeedData = state.homeFeed;
       clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
