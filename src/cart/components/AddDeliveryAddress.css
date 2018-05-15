@@ -2,10 +2,21 @@
   width: 100%;
   height: auto;
   border-radius: 4px;
+}
+.formHolder {
+  width: 100%;
+  height: auto;
   background: #fff;
   padding: 15px 0;
+  border-radius: 4px;
 }
-
+.emailHolder {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
 .dropDownHolder {
   width: 100%;
   height: auto;
