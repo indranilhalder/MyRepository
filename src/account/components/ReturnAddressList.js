@@ -61,16 +61,7 @@ export default class ReturnAddressList extends React.Component {
         this.props.history.goBack();
       }
     }
-    if (nextProps.returnInitiateStatus === SUCCESS) {
-      this.props.history.push(
-        `${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${this.orderCode}`
-      );
-    } else if (nextProps.returnInitiateStatus === FAILURE) {
-      this.setState({
-        errorMessage: nextProps.returnInitiateError,
-        error: true
-      });
-    }
+
     if (nextProps.returnPinCodeStatus === FAILURE) {
       this.setState({
         errorMessage: nextProps.returnPinCodeError,

@@ -61,7 +61,8 @@ export default class ProductDescription extends Component {
             <h2 className={styles.description}>{this.props.description}</h2>
           )}
 
-          {this.props.discountPrice &&
+          {!this.props.isRange &&
+            this.props.discountPrice &&
             this.props.discountPrice !== this.props.price && (
               <div className={styles.discount}>
                 {this.props.discountPrice.toString().includes(RUPEE_SYMBOL)
@@ -70,13 +71,27 @@ export default class ProductDescription extends Component {
               </div>
             )}
 
-          {this.props.price && (
-            <div className={priceClass}>
-              {this.props.price.toString().includes(RUPEE_SYMBOL)
-                ? this.props.price
-                : `${RUPEE_SYMBOL}${this.props.price}`}
-            </div>
-          )}
+          {!this.props.isRange &&
+            this.props.price && (
+              <div className={priceClass}>
+                {this.props.price.toString().includes(RUPEE_SYMBOL)
+                  ? this.props.price
+                  : `${RUPEE_SYMBOL}${this.props.price}`}
+              </div>
+            )}
+          {this.props.isRange &&
+            this.props.minPrice &&
+            this.props.maxPrice && (
+              <div className={styles.description}>
+                {this.props.minPrice.toString().includes(RUPEE_SYMBOL)
+                  ? this.props.minPrice
+                  : `${RUPEE_SYMBOL}${this.props.minPrice}`}{" "}
+                -{" "}
+                {this.props.maxPrice.toString().includes(RUPEE_SYMBOL)
+                  ? this.props.maxPrice
+                  : `${RUPEE_SYMBOL}${this.props.maxPrice}`}
+              </div>
+            )}
         </div>
       </div>
     );
@@ -99,6 +114,7 @@ ProductDescription.defaultProps = {
   description: "",
   price: "",
   isWhite: false,
+  isRange: false,
   textColor: "#212121",
   showWishListButton: true,
   isShowAddToWishlistIcon: true,
