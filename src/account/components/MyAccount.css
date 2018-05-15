@@ -50,3 +50,29 @@
   bottom: 0px;
   margin: auto;
 }
+.useFulLinkHolder {
+  width: 100%;
+  height: auto;
+  padding: 20px 0px 80px 0px;
+}
+.linkTabHolder {
+  width: 100%;
+  height: auto;
+  padding: 10px 0px;
+  background: #fff;
+  margin-top: 20px;
+}
+.linkTabHolder:first-child {
+  margin-top: 0px;
+}
+.usefulLinkText {
+  width: 100%;
+  height: auto;
+  color: #212121;
+  font-size: 16px;
+  font-family: light;
+}
+a {
+  text-decoration: none;
+  color: initial;
+}

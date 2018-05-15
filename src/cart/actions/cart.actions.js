@@ -2439,16 +2439,26 @@ export function createJusPayOrder(
   paymentMode,
   isPaymentFailed
 ) {
+  console.log(
+    token,
+    cartItem,
+    address,
+    cardDetails,
+    paymentMode,
+    isPaymentFailed
+  );
   const jusPayUrl = `${
     window.location.origin
   }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartId;
+
   if (isPaymentFailed) {
     let url = queryString.parse(window.location.search);
     cartId = url && url.value;
   } else {
+    localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     cartId = JSON.parse(cartDetails).guid;
   }
@@ -2586,6 +2596,7 @@ export function createJusPayOrderForNetBanking(
   if (parsedQueryString.value) {
     cartId = parsedQueryString.value;
   } else {
+    localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
     cartId = JSON.parse(cartDetails).guid;
   }
   const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);

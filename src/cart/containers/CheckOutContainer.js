@@ -67,7 +67,8 @@ import {
 import {
   getPinCode,
   getUserDetails,
-  getPinCodeSuccess
+  getPinCodeSuccess,
+  resetAddAddressDetails
 } from "../../account/actions/account.actions.js";
 import { displayToast } from "../../general/toast.actions";
 import { SUCCESS } from "../../lib/constants";
@@ -375,6 +376,9 @@ const mapDispatchToProps = dispatch => {
     },
     showModalForCliqCashOrNoCostEmi: modalProps => {
       dispatch(showModal(CLIQ_CASH_AND_NO_COST_EMI_POPUP, modalProps));
+    },
+    resetAddAddressDetails: () => {
+      dispatch(resetAddAddressDetails());
     }
   };
 };

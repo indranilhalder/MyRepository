@@ -7,13 +7,13 @@ import * as styles from "./UserCoupons.css";
 export default class UserCoupons extends React.Component {
   render() {
     const { userCoupons } = this.props;
-    console.log(userCoupons.unusedCouponsList);
     return (
       <div className={styles.base}>
         {userCoupons && userCoupons.unusedCouponsList ? (
           userCoupons.unusedCouponsList.map(coupon => (
             <div className={styles.cardHolder}>
               <MyCoupons
+                displayToast={message => this.props.displayToast(message)}
                 heading={coupon.description}
                 image="../../general/components/img/coupon-1.svg"
                 couponNumber={coupon.couponCode}

@@ -16,7 +16,7 @@ import SecondaryLoader from "./general/components/SecondaryLoader";
 import HeaderContainer from "./general/containers/HeaderContainer.js";
 import StaticPageContainer from "./staticpage/containers/StaticPageContainer.js";
 import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
-
+import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
 import {
   HOME_ROUTER,
@@ -160,14 +160,6 @@ const LoginContainer = Loadable({
 
 const SignUpContainer = Loadable({
   loader: () => import("./auth/containers/SignUpContainer.js"),
-  loading() {
-    return <Loader />;
-  }
-});
-
-const ProductDescriptionPageWrapperContainer = Loadable({
-  loader: () =>
-    import("./pdp/containers/ProductDescriptionPageWrapperContainer"),
   loading() {
     return <Loader />;
   }

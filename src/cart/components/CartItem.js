@@ -96,6 +96,7 @@ export default class CartItem extends React.Component {
             isOutOfStock={this.props.isOutOfStock}
             isServiceAvailable={this.props.productIsServiceable}
             onClickImage={() => this.onClick()}
+            index={this.props.index}
           />
         </div>
         {this.props.deliveryInformation &&
@@ -139,6 +140,7 @@ export default class CartItem extends React.Component {
                 productCode={this.props.product.productcode}
                 winningUssID={this.props.product.USSID}
                 onRemove={() => this.handleRemove(this.props.index)}
+                index={this.props.index}
               />
               <div className={styles.dropdown}>
                 <div className={styles.dropdownLabel}>

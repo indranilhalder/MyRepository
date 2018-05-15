@@ -15,7 +15,7 @@ import {
   SAVE_LIST_PAGE
 } from "../../lib/constants";
 import styles from "./ProfileMenuGrid.css";
-import savedList from "../../general/components/img/savewhite.svg";
+import savedList from "../../general/components/img/downloadWhite.svg";
 import addressBook from "../../general/components/img/addressbookwhite.svg";
 import brands from "../../general/components/img/brandswhite.svg";
 import orderHistory from "../../general/components/img/orderhistorywhite.svg";
