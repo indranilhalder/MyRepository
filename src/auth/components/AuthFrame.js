@@ -14,7 +14,9 @@ export default class AuthFrame extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.goBack} onClick={() => this.goBack()} />
+        {this.props.showCrossIcon && (
+          <div className={styles.goBack} onClick={() => this.goBack()} />
+        )}
         <div className={styles.center}>
           <div className={styles.logo}>
             <Icon image={tataLogo} size={70} />
@@ -49,5 +51,6 @@ AuthFrame.propTypes = {
 
 AuthFrame.defaultProps = {
   showSocialButtons: false,
-  type: "Login"
+  type: "Login",
+  showCrossIcon: true
 };
