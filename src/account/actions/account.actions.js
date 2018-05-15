@@ -1737,7 +1737,7 @@ export function followAndUnFollowBrand(
 
         // dispatch success for following brand on the basis of page type
         if (pageType === HOME_FEED_FOLLOW_AND_UN_FOLLOW) {
-          const clonedComponent = getState().home.homeFeed[positionInFeed];
+          const clonedComponent = getState().feed.homeFeed[positionInFeed];
           const indexOfBrand = findIndex(clonedComponent.data, item => {
             return item.id === brandId;
           });

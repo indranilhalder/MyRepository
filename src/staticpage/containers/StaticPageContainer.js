@@ -21,8 +21,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    data: state.home.homeFeed,
-    loading: state.home.loading
+    data: state.feed.homeFeed,
+    loading: state.feed.loading
   };
 };
 

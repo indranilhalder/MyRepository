@@ -12,7 +12,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    homeFeedData: state.home
+    homeFeedData: state.feed
   };
 };
 

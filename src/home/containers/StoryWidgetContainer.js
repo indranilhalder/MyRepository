@@ -15,7 +15,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   const positionInFeed = ownProps.positionInFeed;
-  const feedComponentData = state.home.homeFeed[ownProps.positionInFeed];
+  const feedComponentData = state.feed.homeFeed[ownProps.positionInFeed];
   return {
     ownProps: ownProps,
     feedComponentData: feedComponentData,

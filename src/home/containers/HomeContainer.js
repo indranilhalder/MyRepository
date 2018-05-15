@@ -37,9 +37,9 @@ const mapStateToProps = state => {
     }
   }
   return {
-    homeFeedData: state.home.homeFeed,
+    homeFeedData: state.feed.homeFeed,
     isHomeFeedPage: true,
-    loading: state.home.loading,
+    loading: state.feed.loading,
     type: state.cart.type,
     headerMessage,
     loginFromMyBag: state.cart.loginFromMyBag

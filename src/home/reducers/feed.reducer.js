@@ -4,9 +4,8 @@ import { FOLLOW_AND_UN_FOLLOW_BRANDS_IN_HOME_FEED_SUCCESS } from "../../account/
 import cloneDeep from "lodash.clonedeep";
 import map from "lodash.map";
 import findIndex from "lodash.findindex";
-import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
 import { transformFetchingItemsOrder } from "./utils";
-const home = (
+const feed = (
   state = {
     homeFeed: [], //array of objects
     status: null,
@@ -252,4 +251,4 @@ const home = (
   }
 };
 
-export default home;
+export default feed;

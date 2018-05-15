@@ -309,7 +309,7 @@ export function getFeed(brandIdOrCategoryId: null) {
         }
 
         delay(() => {
-          const isHomeFeedLoading = getState().home.loading;
+          const isHomeFeedLoading = getState().feed.loading;
           if (isHomeFeedLoading) {
             dispatch(homeFeedBackUp());
           }
@@ -502,7 +502,7 @@ export function getComponentData(
         dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
         delay(() => {
-          const isFetchUrlDataLoading = getState().home.homeFeed[positionInFeed]
+          const isFetchUrlDataLoading = getState().feed.homeFeed[positionInFeed]
             .loading;
           if (isFetchUrlDataLoading && backUpUrl) {
             dispatch(getComponentDataBackUp(backUpUrl, positionInFeed));
