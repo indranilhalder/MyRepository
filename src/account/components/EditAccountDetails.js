@@ -107,6 +107,10 @@ export default class EditAccountDetails extends React.Component {
     }
   }
   updateProfile = () => {
+    if (!this.state.dateOfBirth) {
+      this.props.displayToast("Please Enter valid date in format dd/mm/yyyy");
+      return false;
+    }
     if (
       this.state.emailId &&
       !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
@@ -193,7 +197,7 @@ export default class EditAccountDetails extends React.Component {
             </div>
             <div className={styles.container}>
               <Input2
-                placeholder="Mobile NUmber"
+                placeholder="Mobile Number"
                 value={this.state.mobileNumber}
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
