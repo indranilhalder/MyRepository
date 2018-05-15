@@ -2439,14 +2439,6 @@ export function createJusPayOrder(
   paymentMode,
   isPaymentFailed
 ) {
-  console.log(
-    token,
-    cartItem,
-    address,
-    cardDetails,
-    paymentMode,
-    isPaymentFailed
-  );
   const jusPayUrl = `${
     window.location.origin
   }/checkout/payment-method/cardPayment`;
