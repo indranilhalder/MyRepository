@@ -595,8 +595,16 @@ const account = (
       Cookie.deleteCookie(LOGGED_IN_USER_DETAILS);
       //assign firstName and Last Name
       let updateUserDetails = JSON.parse(userDetails);
-      updateUserDetails.firstName = action.userDetails.firstName;
-      updateUserDetails.lastName = action.userDetails.lastName;
+      updateUserDetails.firstName =
+        action.userDetails.firstName !== undefined &&
+        action.userDetails.firstName !== "undefined"
+          ? action.userDetails.firstName
+          : "";
+      updateUserDetails.lastName =
+        action.userDetails.lastName !== undefined &&
+        action.userDetails.lastName !== "undefined"
+          ? action.userDetails.lastName
+          : "";
       Cookies.createCookie(
         LOGGED_IN_USER_DETAILS,
         JSON.stringify(updateUserDetails)
