@@ -2598,7 +2598,7 @@ export function createJusPayOrderForNetBanking(
           JSON.parse(userDetails).userName
         }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&bankName=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}`,
+        }&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}&isPwa=true`,
         cartItem
       );
       const resultJson = await result.json();

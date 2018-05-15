@@ -12,62 +12,7 @@ import {
   INVALID_NO_COST_EMI_TYPE,
   NO_COST_EMI_COUPON
 } from "../../lib/constants";
-// const data = {
-//   type: "orderCreateInJusPayWsDto",
-//   error: "Coupon Invalid ",
-//   errorCode: "B9078",
-//   status: "Failure",
-//   bankOffer: {
-//     status: "FAILURE",
-//     bankDetails: [
-//       {
-//         bankCode: "DUMMYB",
-//         bankName: "Dummy Bank"
-//       }
-//     ],
-//     couponCode: "Netbankoffer",
-//     couponType: "BANKOFFER",
-//     name: "Netbankoffer",
-//     paymentModes: [
-//       {
-//         mode: "Netbanking"
-//       }
-//     ]
-//   },
-//   cliqcashSelected: false,
-//   errorMessage:
-//     "Sorry! The bank offer and coupon can't be applied with this card/bank. Please use the applicable card/bank.",
-//   userCoupon: {
-//     status: "FAILURE",
-//     bankDetails: [
-//       {
-//         bankCode: "AXIS BANK",
-//         bankName: "AXIS BANK"
-//       },
-//       {
-//         bankCode: "AXIS BANK LIMITED",
-//         bankName: "AXIS BANK LIMITED"
-//       },
-//       {
-//         bankCode: "AXIS BANK, LTD.",
-//         bankName: "AXIS BANK, LTD."
-//       }
-//     ],
-//     couponCode: "AX12",
-//     couponType: "COUPON",
-//     paymentModes: [
-//       {
-//         mode: "Credit Card"
-//       },
-//       {
-//         mode: "Debit Card"
-//       },
-//       {
-//         mode: "EMI"
-//       }
-//     ]
-//   }
-// };
+
 export default class InvalidCouponPopUp extends React.Component {
   getBanksList(bankDetail) {
     return (
@@ -198,7 +143,7 @@ export default class InvalidCouponPopUp extends React.Component {
             {data &&
               data.userCoupon &&
               data.userCoupon.status &&
-              data.userCoupon.status.toLowerCase() === WRONG_FAILURE && (
+              data.userCoupon.status.toLowerCase() === FAILURE_LOWERCASE && (
                 <div className={styles.invalidCouponHeading}>
                   {this.getInvalidUserCouponTemplate(data.userCoupon)}
                 </div>
@@ -206,7 +151,7 @@ export default class InvalidCouponPopUp extends React.Component {
             {data &&
               data.bankOffer &&
               data.bankOffer.status &&
-              data.bankOffer.status.toLowerCase() === WRONG_FAILURE && (
+              data.bankOffer.status.toLowerCase() === FAILURE_LOWERCASE && (
                 <div className={styles.invalidCouponHeading}>
                   {this.getInvalidBankOfferTemplate(data.bankOffer)}
                 </div>
@@ -214,7 +159,8 @@ export default class InvalidCouponPopUp extends React.Component {
             {data &&
               data.noCostEmiCoupon &&
               data.noCostEmiCoupon.status &&
-              data.noCostEmiCoupon.status.toLowerCase() === WRONG_FAILURE && (
+              data.noCostEmiCoupon.status.toLowerCase() ===
+                FAILURE_LOWERCASE && (
                 <div className={styles.invalidCouponHeading}>
                   {this.getInvalidNCEOfferTemplate(data.noCostEmiCoupon)}
                 </div>
