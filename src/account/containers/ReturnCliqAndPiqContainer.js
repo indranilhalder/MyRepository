@@ -22,22 +22,25 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         addUserAddress(addressDetails, fromAccount)
       );
       if (addAddressResponse.status === SUCCESS) {
-        dispatch(displayToast(RETURN_SUCCESS_MESSAGE));
         dispatch(
           getReturnRequest(
             ownProps.returnProductDetails.orderProductWsDTO[0].sellerorderno,
             ownProps.returnProductDetails.orderProductWsDTO[0].transactionId
           )
         );
-        if (ownProps.isCOD) {
-          ownProps.history.go(-5);
-        } else {
-          ownProps.history.go(-4);
-        }
       }
     },
     newReturnInitial: (returnDetails, product) => {
-      dispatch(newReturnInitial(returnDetails, product));
+      dispatch(newReturnInitial(returnDetails, product)).then(res => {
+        if (res.status === SUCCESS) {
+          dispatch(displayToast(RETURN_SUCCESS_MESSAGE));
+          if (ownProps.isCOD) {
+            ownProps.history.go(-6);
+          } else {
+            ownProps.history.go(-5);
+          }
+        }
+      });
     },
     returnPinCode: productDetails => {
       dispatch(returnPinCode(productDetails));
