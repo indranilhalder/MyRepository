@@ -8,7 +8,6 @@ import CircleButton from "../../xelpmoc-core/CircleButton";
 import informationIcon from "../../general/components/img/GPS.svg";
 import GridSelect from "../../general/components/GridSelect";
 import CheckboxAndText from "./CheckboxAndText";
-import AddEmailAddress from "./AddEmailAddress";
 import TextArea from "../../general/components/TextArea.js";
 import cloneDeep from "lodash.clonedeep";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
@@ -78,9 +77,9 @@ export default class AddDeliveryAddress extends React.Component {
   };
   handlePhoneInput(val) {
     if (val.length <= 10) {
-      this.setState({ phone: val });
       const cloneAddress = cloneDeep(this.state);
       Object.assign(cloneAddress, { phone: val });
+      this.setState({ phone: val });
       if (this.props.getAddressDetails) {
         this.props.getAddressDetails(cloneAddress);
       }
@@ -223,7 +222,13 @@ export default class AddDeliveryAddress extends React.Component {
       return false;
     } else {
       const addressObj = cloneDeep(this.state);
-
+      let firstName = addressObj.firstName;
+      let salutation = addressObj.salutation;
+      if (salutation) {
+        Object.assign(addressObj, {
+          firstName: `${salutation} ${firstName}`
+        });
+      }
       this.props.addUserAddress(addressObj);
     }
   };
@@ -312,6 +317,7 @@ export default class AddDeliveryAddress extends React.Component {
               }}
             />
           </div>
+
           <div className={styles.content}>
             <Input2
               boxy={true}
@@ -351,9 +357,6 @@ export default class AddDeliveryAddress extends React.Component {
                 })
               }
               onChange={landmark => this.onSelectLandmark(landmark)}
-              onFocus={() => {
-                this.handleOnFocusInput();
-              }}
             />
           </div>
           {this.state.isOtherLandMarkSelected && (
@@ -371,7 +374,21 @@ export default class AddDeliveryAddress extends React.Component {
               />
             </div>
           )}
-
+          <div className={styles.content}>
+            <Input2
+              boxy={true}
+              placeholder="Email*"
+              value={
+                this.props.emailId ? this.props.emailId : this.state.emailId
+              }
+              onChange={emailId => this.onChange({ emailId })}
+              textStyle={{ fontSize: 14 }}
+              height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
+            />
+          </div>
           <div className={styles.content}>
             <Input2
               boxy={true}
@@ -439,15 +456,6 @@ export default class AddDeliveryAddress extends React.Component {
               selectItem={() => this.onChangeDefaultFlag()}
             />
           </div>
-        </div>
-        <div className={styles.emailHolder}>
-          <AddEmailAddress
-            value={this.props.emailId ? this.props.emailId : this.state.emailId}
-            onChange={emailId => this.onChange({ emailId })}
-            onFocusInput={() => {
-              this.handleOnFocusInput();
-            }}
-          />
         </div>
         <div className={styles.buttonHolder}>
           <div className={styles.saveAndContinueButton}>
