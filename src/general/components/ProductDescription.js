@@ -113,6 +113,7 @@ ProductDescription.defaultProps = {
   description: "",
   price: "",
   isWhite: false,
+  isRange: false,
   textColor: "#212121",
   showWishListButton: true,
   isShowAddToWishlistIcon: true,
