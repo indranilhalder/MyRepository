@@ -51,7 +51,9 @@ export default class InvalidCouponPopUp extends React.Component {
   }
   getInvalidNCEOfferTemplate(couponResponse) {
     return `The No Cost Emi offer is valid only for ${
-      couponResponse.couponCode ? couponResponse.couponCode : ""
+      couponResponse.bankDetails
+        ? this.getBanksList(couponResponse.bankDetails)
+        : ""
     }`;
   }
   changePaymentMethod() {

@@ -2453,9 +2453,9 @@ export function createJusPayOrder(
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartId;
+  let url = queryString.parse(window.location.search);
 
-  if (isPaymentFailed) {
-    let url = queryString.parse(window.location.search);
+  if (url && url.value) {
     cartId = url && url.value;
   } else {
     localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
@@ -4139,7 +4139,7 @@ export function removeNoCostEmi(couponCode, cartGuId, cartId) {
           JSON.parse(userDetails).userName
         }/carts/${cartId}/releaseNoCostEMI?couponCode=${couponCode}&access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartGuId}`
+        }&cartGuid=${cartGuId}&isPwa=true`
       );
       const resultJson = await result.json();
 
