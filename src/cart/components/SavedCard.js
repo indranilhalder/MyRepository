@@ -32,7 +32,7 @@ export default class SavedCard extends React.Component {
         <div className={styles.cardCvvHolder}>
           <div className={styles.cardsSection}>
             <div className={styles.cardIconHolder}>
-              <Logo image={this.props.cardImage} width={66} />
+              <Logo image={this.props.cardImage} width={75} imageWidth="100%" />
             </div>
           </div>
           <div className={styles.cvvInput}>
@@ -43,6 +43,9 @@ export default class SavedCard extends React.Component {
               textStyle={{
                 color: "#000",
                 fontSize: 13
+              }}
+              onFocus={() => {
+                this.props.onFocusInput();
               }}
               onChange={val => this.onChangeCvv(val)}
             />

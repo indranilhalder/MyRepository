@@ -36,8 +36,6 @@ export default class SearchLocationByPincode extends React.Component {
     }
   }
   render() {
-    console.log(this.state.pincode);
-    console.log(this.state.pinCode);
     return (
       <div className={styles.base}>
         {this.props.header && (

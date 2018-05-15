@@ -34,7 +34,7 @@ export default class ProfileMenuGrid extends React.Component {
     const data = [
       {
         image: savedList,
-        text: "Saved List",
+        text: "My Wish List",
         url: SAVE_LIST_PAGE
       },
       {
@@ -50,7 +50,7 @@ export default class ProfileMenuGrid extends React.Component {
       },
       {
         image: savedPayments,
-        text: "Saved Payments",
+        text: "Saved Cards",
         url: MY_ACCOUNT_SAVED_CARDS_PAGE
       },
       {

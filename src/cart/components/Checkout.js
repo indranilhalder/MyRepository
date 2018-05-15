@@ -20,6 +20,11 @@ export default class Checkout extends React.Component {
   handleShowDetail() {
     this.setState({ showDetails: !this.state.showDetails });
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.showDetails !== this.state.showDetails) {
+      this.setState({ showDetails: nextProps.showDetails });
+    }
+  }
   render() {
     let classOffers = styles.informationAnswerHolder;
     if (this.props.offers) {
@@ -58,7 +63,7 @@ export default class Checkout extends React.Component {
               {this.props.bagTotal && (
                 <div className={styles.informationHolder}>
                   <div className={styles.informationQuestionHolder}>
-                    Bag Total
+                    Bag total
                   </div>
                   <div className={styles.informationAnswerHolder}>
                     {RUPEE_SYMBOL}
@@ -79,7 +84,7 @@ export default class Checkout extends React.Component {
               )}
               {this.props.tax && (
                 <div className={styles.informationHolder}>
-                  <div className={styles.informationQuestionHolder}>Tax</div>
+                  <div className={styles.informationQuestionHolder}>Taxes</div>
                   <div className={styles.informationAnswerHolder}>
                     {this.props.tax}
                   </div>
@@ -88,7 +93,7 @@ export default class Checkout extends React.Component {
               {this.props.delivery && (
                 <div className={styles.informationHolder}>
                   <div className={styles.informationQuestionHolder}>
-                    Delivery
+                    Shipping fee
                   </div>
                   <div className={styles.informationAnswerHolder}>
                     {RUPEE_SYMBOL}
@@ -108,7 +113,7 @@ export default class Checkout extends React.Component {
               {this.props.payable && (
                 <div className={styles.informationHolder}>
                   <div className={styles.informationQuestionHolder}>
-                    Total Payable
+                    Total payable
                   </div>
                   <div className={styles.informationAnswerHolder}>
                     {RUPEE_SYMBOL}
@@ -154,7 +159,7 @@ export default class Checkout extends React.Component {
               {this.props.bagTotal && (
                 <div className={styles.informationHolder}>
                   <div className={styles.informationQuestionHolder}>
-                    Bag Total
+                    Bag total
                   </div>
                   <div className={styles.informationAnswerHolder}>
                     {RUPEE_SYMBOL}
@@ -187,7 +192,7 @@ export default class Checkout extends React.Component {
               {this.props.delivery && (
                 <div className={styles.informationHolder}>
                   <div className={styles.informationQuestionHolder}>
-                    Delivery Charges
+                    Shipping fee
                   </div>
                   <div className={styles.informationAnswerHolder}>
                     {RUPEE_SYMBOL}
@@ -232,7 +237,7 @@ export default class Checkout extends React.Component {
               {this.props.payable && (
                 <div className={styles.informationHolder}>
                   <div className={styles.informationQuestionHolder}>
-                    Total Payable
+                    Total payable
                   </div>
                   <div className={styles.informationAnswerHolder}>
                     {RUPEE_SYMBOL}

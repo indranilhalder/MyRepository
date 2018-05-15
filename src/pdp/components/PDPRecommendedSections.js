@@ -5,6 +5,8 @@ import { transformData } from "../../home/components/utils.js";
 import Logo from "../../general/components/Logo.js";
 import Button from "../../general/components/Button.js";
 import { withRouter } from "react-router-dom";
+import Observer from "@researchgate/react-intersection-observer";
+
 import {
   ABOUT_THE_BRAND_WIDGET_KEY,
   RECOMMENDED_PRODUCTS_WIDGET_KEY,
@@ -12,7 +14,11 @@ import {
 } from "../actions/pdp.actions.js";
 import { FollowUnFollowButtonContainer } from "../containers/FollowUnFollowButtonContainer";
 import styles from "./PDPRecommendedSections.css";
-import { PDP_FOLLOW_AND_UN_FOLLOW } from "../../lib/constants.js";
+import {
+  PDP_FOLLOW_AND_UN_FOLLOW,
+  PRODUCT_DESCRIPTION_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+} from "../../lib/constants.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 // only want to kick off a request for the MSD stuff if they are visible.
@@ -31,6 +37,17 @@ class PDPRecommendedSections extends React.Component {
   }
   renderAboutTheBrand() {
     let brandId;
+    if (!this.props.aboutTheBrand) {
+      const options = {
+        onChange: this.handleIntersection,
+        rootMargin: "0% 0% -25%"
+      };
+      return (
+        <Observer {...options}>
+          <div />
+        </Observer>
+      );
+    }
 
     if (this.props.aboutTheBrand) {
       brandId = this.props.aboutTheBrand.id;
@@ -109,15 +126,27 @@ class PDPRecommendedSections extends React.Component {
 
   renderProductModuleSection(title, key) {
     return (
-      this.props.msdItems[key] && (
-        <div className={styles.brandSection}>
-          <h3 className={styles.brandHeader}>{title}</h3>
-          {this.props.msdItems[key] &&
-            this.renderCarousel(this.props.msdItems[key])}
-        </div>
-      )
+      <div className={styles.brandSection}>
+        <h3 className={styles.brandHeader}>{title}</h3>
+        {this.props.msdItems[key] &&
+          this.renderCarousel(this.props.msdItems[key])}
+      </div>
     );
   }
+
+  handleIntersection = event => {
+    if (event.isIntersecting && !this.props.aboutTheBrand) {
+      if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+        this.props.getMsdRequest(this.props.match.params[0]);
+        this.props.pdpAboutBrand(this.props.match.params[0]);
+      } else if (
+        this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+      ) {
+        this.props.getMsdRequest(this.props.match.params[1]);
+        this.props.pdpAboutBrand(this.props.match.params[1]);
+      }
+    }
+  };
 
   render() {
     return (

@@ -171,8 +171,8 @@ class ProductSellerPage extends Component {
           <div className={styles.base}>
             <ProductDetailsCard
               productImage={mobileGalleryImages[0]}
-              productName={this.props.productDetails.brandName}
-              productMaterial={this.props.productDetails.productName}
+              productName={this.props.productDetails.productName}
+              brandName={this.props.productDetails.brandName}
               price={
                 this.props.productDetails.winningSellerPrice
                   .formattedValueNoDecimal

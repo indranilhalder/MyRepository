@@ -31,7 +31,7 @@ export default class SavedProduct extends React.Component {
             <Button
               type="hollow"
               height={40}
-              label="View saved products"
+              label="View My Wish List"
               width={200}
               textStyle={{ color: "#212121", fontSize: 14 }}
               onClick={() => this.handleClick()}

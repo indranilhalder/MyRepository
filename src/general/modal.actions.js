@@ -30,7 +30,7 @@ export const VERIFY_OTP = "verifyOtp";
 export const INVALID_BANK_COUPON_POPUP = "INVALID_BANK_COUPON_POPUP";
 export const INVALID_USER_COUPON_POPUP = "INVALID_USER_COUPON_POPUP";
 export const CANCEL_ORDER_POP_UP = "CancelOrderPopUp";
-
+export const STORY_MODAL = "StoryModal";
 export function showModal(type, ownProps) {
   const scrollPosition =
     window.pageYOffset || document.documentElement.scrollTop;

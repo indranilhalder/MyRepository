@@ -24,6 +24,7 @@ export default class BagPageFooter extends React.Component {
             productListingId={this.props.productCode}
             winningUssID={this.props.winningUssID}
             setDataLayerType={ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART}
+            index={this.props.index}
           />
           <div className={styles.removeLabel} onClick={() => this.onRemove()}>
             {this.props.removeText}

@@ -7,7 +7,7 @@ import * as user from "../mocks/user.mock";
 import * as Cookie from "../../lib/Cookie";
 const SIGN_UP_PATH = `v2/mpl/users/customerRegistration?access_token=d2470a48-e71e-41b7-b6b2-a083af3d8c08&isPwa=true&username=test@xelpmoc.in&password=123456&platformNumber=2`;
 const LOGIN_PATH =
-  "v2/mpl/users/test@xelpmoc.in/customerLogin?access_token=d2470a48-e71e-41b7-b6b2-a083af3d8c08&password=123456&isPwa=true";
+  "v2/mpl/users/test@xelpmoc.in/customerLogin?access_token=d2470a48-e71e-41b7-b6b2-a083af3d8c08";
 const OTP_VERIFICATION_PATH =
   "/v2/mpl/users/registrationOTPVerification?access_token=d2470a48-e71e-41b7-b6b2-a083af3d8c08&otp=[object Object]&isPwa=true&platformNumber=2&username=undefined&password=undefined";
 import {
@@ -60,7 +60,7 @@ describe("User Actions", () => {
     postMock.mockReturnValueOnce(result);
 
     apiMock = {
-      post: postMock
+      postFormData: postMock
     };
 
     middleWares = [
@@ -100,7 +100,7 @@ describe("User Actions", () => {
     postMock.mockReturnValueOnce(result);
 
     apiMock = {
-      post: postMock
+      postFormData: postMock
     };
 
     middleWares = [

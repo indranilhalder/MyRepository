@@ -15,7 +15,11 @@ export default class MonoBanner extends React.Component {
   render() {
     let feedComponentData = this.props.feedComponentData;
     return (
-      <div className={styles.base}>
+      <div
+        className={
+          this.props.positionInFeed === 1 ? styles.firstItemBase : styles.base
+        }
+      >
         <div className={styles.shopeRangeHeader}>{feedComponentData.title}</div>
         <ShopCollection
           image={feedComponentData.items[0].imageURL}

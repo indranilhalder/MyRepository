@@ -4,7 +4,10 @@ import {
   ERROR,
   SUCCESS_CAMEL_CASE,
   SUCCESS_UPPERCASE,
-  JUS_PAY_AUTHENTICATION_FAILED
+  JUS_PAY_AUTHENTICATION_FAILED,
+  NO,
+  BANK_COUPON_COOKIE,
+  PAYMENT_MODE_TYPE
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash.foreach";
@@ -59,8 +62,6 @@ import {
   ADOBE_CALL_FOR_CLIQ_CASH_TOGGLE_OFF,
   ADOBE_MY_ACCOUNT_ADDRESS_BOOK
 } from "../../lib/adobeUtils";
-import { PAYMENT_CHARGED } from "../components/CheckOutPage";
-
 export const CLEAR_CART_DETAILS = "CLEAR_CART_DETAILS";
 export const USER_CART_PATH = "v2/mpl/users";
 export const CART_PATH = "v2/mpl";
@@ -460,7 +461,9 @@ export function getCartDetails(userId, accessToken, cartId, pinCode) {
       let cartProducts = [];
       resultJson &&
         each(resultJson.products, product => {
-          cartProducts.push(product.USSID);
+          if (product.isGiveAway === NO) {
+            cartProducts.push(product.USSID);
+          }
         });
       localStorage.setItem(CART_BAG_DETAILS, JSON.stringify(cartProducts));
       dispatch(setBagCount(cartProducts.length));
@@ -516,27 +519,31 @@ export function getCartDetailsCNC(
         let productItems = {};
         let item = [];
         each(resultJson.products, product => {
-          let productDetails = {};
-          productDetails.ussId = product.USSID;
-          productDetails.quantity = product.qtySelectedByUser;
-          productDetails.fulfillmentType = product.fullfillmentType;
+          if (product.isGiveAway === NO) {
+            let productDetails = {};
+            productDetails.ussId = product.USSID;
+            productDetails.quantity = product.qtySelectedByUser;
+            productDetails.fulfillmentType = product.fullfillmentType;
 
-          if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
-            productDetails.deliveryMode =
-              product.pinCodeResponse.validDeliveryModes[0].type;
-            productDetails.serviceableSlaves =
-              product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
-          } else if (
-            product.pinCodeResponse.validDeliveryModes[0]
-              .CNCServiceableSlavesData
-          ) {
-            productDetails.deliveryMode =
-              product.pinCodeResponse.validDeliveryModes[0].type;
-            productDetails.serviceableSlaves =
-              product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+            if (
+              product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves
+            ) {
+              productDetails.deliveryMode =
+                product.pinCodeResponse.validDeliveryModes[0].type;
+              productDetails.serviceableSlaves =
+                product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
+            } else if (
+              product.pinCodeResponse.validDeliveryModes[0]
+                .CNCServiceableSlavesData
+            ) {
+              productDetails.deliveryMode =
+                product.pinCodeResponse.validDeliveryModes[0].type;
+              productDetails.serviceableSlaves =
+                product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+            }
+            item.push(productDetails);
+            productItems.item = item;
           }
-          item.push(productDetails);
-          productItems.item = item;
         });
 
         dispatch(softReservation(pinCode, productItems));
@@ -1724,6 +1731,7 @@ export function applyBankOffer(couponCode) {
         );
         throw new Error(resultJsonStatus.message);
       }
+      localStorage.setItem(BANK_COUPON_COOKIE, couponCode);
       setDataLayerForCheckoutDirectCalls(
         ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS,
         couponCode
@@ -1783,6 +1791,7 @@ export function releaseBankOffer(previousCouponCode, newCouponCode: null) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      localStorage.removeItem(BANK_COUPON_COOKIE);
       if (newCouponCode) {
         return dispatch(applyBankOffer(newCouponCode));
       }
@@ -2031,25 +2040,27 @@ export function softReservationForPayment(
     let productItems = {};
     let item = [];
     each(getState().cart.cartDetailsCNC.products, product => {
-      let productDetails = {};
-      productDetails.ussId = product.USSID;
-      productDetails.quantity = product.qtySelectedByUser;
-      productDetails.fulfillmentType = product.fullfillmentType;
-      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
-      } else if (
-        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
-      ) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+      if (product.isGiveAway === NO) {
+        let productDetails = {};
+        productDetails.ussId = product.USSID;
+        productDetails.quantity = product.qtySelectedByUser;
+        productDetails.fulfillmentType = product.fullfillmentType;
+        if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
+        } else if (
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+        ) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+        }
+        item.push(productDetails);
+        productItems.item = item;
       }
-      item.push(productDetails);
-      productItems.item = item;
     });
 
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -2107,25 +2118,27 @@ export function softReservationPaymentForNetBanking(
     let productItems = {};
     let item = [];
     each(getState().cart.cartDetailsCNC.products, product => {
-      let productDetails = {};
-      productDetails.ussId = product.USSID;
-      productDetails.quantity = product.qtySelectedByUser;
-      productDetails.fulfillmentType = product.fullfillmentType;
-      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
-      } else if (
-        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
-      ) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+      if (product.isGiveAway === NO) {
+        let productDetails = {};
+        productDetails.ussId = product.USSID;
+        productDetails.quantity = product.qtySelectedByUser;
+        productDetails.fulfillmentType = product.fullfillmentType;
+        if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
+        } else if (
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+        ) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+        }
+        item.push(productDetails);
+        productItems.item = item;
       }
-      item.push(productDetails);
-      productItems.item = item;
     });
 
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -2173,25 +2186,27 @@ export function softReservationPaymentForSavedCard(
     let productItems = {};
     let item = [];
     each(getState().cart.cartDetailsCNC.products, product => {
-      let productDetails = {};
-      productDetails.ussId = product.USSID;
-      productDetails.quantity = product.qtySelectedByUser;
-      productDetails.fulfillmentType = product.fullfillmentType;
-      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
-      } else if (
-        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
-      ) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+      if (product.isGiveAway === NO) {
+        let productDetails = {};
+        productDetails.ussId = product.USSID;
+        productDetails.quantity = product.qtySelectedByUser;
+        productDetails.fulfillmentType = product.fullfillmentType;
+        if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
+        } else if (
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+        ) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+        }
+        item.push(productDetails);
+        productItems.item = item;
       }
-      item.push(productDetails);
-      productItems.item = item;
     });
 
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -2228,26 +2243,29 @@ export function softReservationForCliqCash(pinCode) {
     let productItems = {};
     let item = [];
     each(getState().cart.cartDetailsCNC.products, product => {
-      let productDetails = {};
-      productDetails.ussId = product.USSID;
-      productDetails.quantity = product.qtySelectedByUser;
-      productDetails.fulfillmentType = product.fullfillmentType;
+      if (product.isGiveAway === NO) {
+        let productDetails = {};
+        productDetails.ussId = product.USSID;
+        productDetails.quantity = product.qtySelectedByUser;
+        productDetails.fulfillmentType = product.fullfillmentType;
 
-      if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
-      } else if (
-        product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
-      ) {
-        productDetails.deliveryMode =
-          product.pinCodeResponse.validDeliveryModes[0].type;
-        productDetails.serviceableSlaves =
-          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+        if (product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
+        } else if (
+          product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData
+        ) {
+          productDetails.deliveryMode =
+            product.pinCodeResponse.validDeliveryModes[0].type;
+          productDetails.serviceableSlaves =
+            product.pinCodeResponse.validDeliveryModes[0].CNCServiceableSlavesData[0].serviceableSlaves;
+        }
+        item.push(productDetails);
+
+        productItems.item = item;
       }
-      item.push(productDetails);
-      productItems.item = item;
     });
 
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
@@ -2431,6 +2449,7 @@ export function createJusPayOrder(
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     cartId = JSON.parse(cartDetails).guid;
   }
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
 
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
@@ -2452,7 +2471,7 @@ export function createJusPayOrder(
           address.postalCode
         }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${
           bankName ? bankName : ""
-        }`,
+        }&paymentMode=${currentSelectedPaymentMode}`,
         cartItem
       );
       const resultJson = await result.json();
@@ -2512,6 +2531,8 @@ export function createJusPayOrderForGiftCard(
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let cartId = JSON.parse(cartDetails).guid;
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
+
   return async (dispatch, getState, { api }) => {
     let orderDetails = getState().cart.cartDetailsCNC;
     dispatch(createJusPayOrderRequest());
@@ -2521,7 +2542,7 @@ export function createJusPayOrderForGiftCard(
           JSON.parse(userDetails).userName
         }/createJuspayOrder?access_token=${
           JSON.parse(customerCookie).access_token
-        }&firstName=&lastName=&addressLine1=&addressLine2=&addressLine3=&country=&city=&state=&pincode=&cardSaved=true&sameAsShipping=true&cartGuid=${guId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}`
+        }&firstName=&lastName=&addressLine1=&addressLine2=&addressLine3=&country=&city=&state=&pincode=&cardSaved=true&sameAsShipping=true&cartGuid=${guId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -2555,7 +2576,15 @@ export function createJusPayOrderForNetBanking(
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
-  let cartId = JSON.parse(cartDetails).guid;
+  let cartId;
+  const parsedQueryString = queryString.parse(window.location.search);
+  if (parsedQueryString.value) {
+    cartId = parsedQueryString.value;
+  } else {
+    cartId = JSON.parse(cartDetails).guid;
+  }
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
+
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
 
@@ -2563,9 +2592,9 @@ export function createJusPayOrderForNetBanking(
       const result = await api.post(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
-        }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
+        }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&bankname=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}`,
+        }&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}`,
         cartItem
       );
       const resultJson = await result.json();
@@ -2615,6 +2644,7 @@ export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
   }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
 
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
@@ -2625,7 +2655,7 @@ export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
           JSON.parse(userDetails).userName
         }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=&city=&cartGuid=${guId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}`
+        }&juspayUrl=${jusPayUrl}$paymentMode=${currentSelectedPaymentMode}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -2669,6 +2699,8 @@ export function createJusPayOrderForSavedCards(
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     cartId = JSON.parse(cartDetails).guid;
   }
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
+
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
     try {
@@ -2686,7 +2718,7 @@ export function createJusPayOrderForSavedCards(
           cardDetails.cardReferenceNumber
         }&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}`,
+        }&juspayUrl=${jusPayUrl}$paymentMode=${currentSelectedPaymentMode}`,
         cartItem
       );
       const resultJson = await result.json();
@@ -2728,6 +2760,7 @@ export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
   }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
 
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
@@ -2744,7 +2777,7 @@ export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
           cardDetails.cardReferenceNumber
         }&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}`
+        }&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -2792,6 +2825,8 @@ export function createJusPayOrderForCliqCash(
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     cartId = JSON.parse(cartDetails).guid;
   }
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
+
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
 
@@ -2801,7 +2836,7 @@ export function createJusPayOrderForCliqCash(
           JSON.parse(userDetails).userName
         }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}`,
+        }&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}`,
         cartItem
       );
       const resultJson = await result.json();
@@ -2827,7 +2862,7 @@ export function createJusPayOrderForCliqCash(
       }
       dispatch(createJusPayOrderSuccessForCliqCash(resultJson));
       dispatch(setBagCount(0));
-      localStorage.setItem(CART_BAG_DETAILS,[]);
+      localStorage.setItem(CART_BAG_DETAILS, []);
       dispatch(generateCartIdForLoggedInUser());
     } catch (e) {
       dispatch(createJusPayOrderFailure(e.message));
@@ -2979,7 +3014,7 @@ export function jusPayPaymentMethodType(
       ) {
         dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
         dispatch(setBagCount(0));
-        localStorage.setItem(CART_BAG_DETAILS,[]);
+        localStorage.setItem(CART_BAG_DETAILS, []);
         dispatch(generateCartIdForLoggedInUser());
       } else {
         throw new Error(resultJson.error_message);
@@ -3018,7 +3053,7 @@ export function jusPayPaymentMethodTypeForSavedCards(
       ) {
         dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
         dispatch(setBagCount(0));
-        localStorage.setItem(CART_BAG_DETAILS,[]);
+        localStorage.setItem(CART_BAG_DETAILS, []);
         dispatch(generateCartIdForLoggedInUser());
       } else {
         throw new Error(resultJson.error_message);
@@ -3095,7 +3130,7 @@ export function jusPayPaymentMethodTypeForNetBanking(
       ) {
         dispatch(jusPayPaymentMethodTypeSuccess(resultJson));
         dispatch(setBagCount(0));
-        localStorage.setItem(CART_BAG_DETAILS,[]);
+        localStorage.setItem(CART_BAG_DETAILS, []);
         dispatch(generateCartIdForLoggedInUser());
       } else {
         throw new Error(resultJson.error_message);
@@ -3216,7 +3251,7 @@ export function orderConfirmation(orderId) {
           JSON.parse(userDetails).userName
         }/orderConfirmation/${orderId}?access_token=${
           JSON.parse(customerCookie).access_token
-        }&platformNumber=2`
+        }&platformNumber=2&isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -3473,7 +3508,7 @@ export function updateTransactionDetailsForCOD(paymentMode, juspayOrderID) {
       if (oldUrl.includes(JUS_PAY_AUTHENTICATION_FAILED)) {
         let newUrl = oldUrl.replace(
           JUS_PAY_AUTHENTICATION_FAILED,
-          PAYMENT_CHARGED
+          JUS_PAY_CHARGED
         );
         window.location.href = newUrl;
       }
@@ -3517,16 +3552,18 @@ export function softReservationForCODPayment(pinCode) {
     let productItems = {};
     let item = [];
     each(getState().cart.cartDetailsCNC.products, product => {
-      let productDetails = {};
-      productDetails.ussId = product.USSID;
-      productDetails.quantity = product.qtySelectedByUser;
-      productDetails.deliveryMode =
-        product.pinCodeResponse.validDeliveryModes[0].type;
-      productDetails.serviceableSlaves =
-        product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
-      productDetails.fulfillmentType = product.fullfillmentType;
-      item.push(productDetails);
-      productItems.item = item;
+      if (product.isGiveAway === NO) {
+        let productDetails = {};
+        productDetails.ussId = product.USSID;
+        productDetails.quantity = product.qtySelectedByUser;
+        productDetails.deliveryMode =
+          product.pinCodeResponse.validDeliveryModes[0].type;
+        productDetails.serviceableSlaves =
+          product.pinCodeResponse.validDeliveryModes[0].serviceableSlaves;
+        productDetails.fulfillmentType = product.fullfillmentType;
+        item.push(productDetails);
+        productItems.item = item;
+      }
     });
 
     const cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);

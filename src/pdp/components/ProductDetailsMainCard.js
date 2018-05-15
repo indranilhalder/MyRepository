@@ -23,7 +23,7 @@ export default class ProductDetailsMainCard extends React.Component {
   renderSchemaTags = () => {
     return (
       <MetaTags>
-        <meta itemprop="priceCurrency" content="INR" />
+        <meta itemProp="priceCurrency" content="INR" />
         <meta
           itemProp="itemCondition"
           content="http://schema.org/NewCondition"
@@ -55,14 +55,12 @@ export default class ProductDetailsMainCard extends React.Component {
               itemScope=""
               itemType="http://schema.org/Organization"
             >
-              <span itemProp="name">
-                <h2
-                  className={styles.brandName}
-                  onClick={() => this.handleBrandClick()}
-                >
-                  {this.props.brandName}
-                </h2>
-              </span>
+              <h2
+                className={styles.brandName}
+                onClick={() => this.handleBrandClick()}
+              >
+                <span itemProp="name">{this.props.brandName}</span>
+              </h2>
             </div>
             <a
               itemProp="url"
@@ -94,10 +92,14 @@ export default class ProductDetailsMainCard extends React.Component {
               )}
           </div>
         </div>
+
         {this.props.averageRating && (
           <StarRating averageRating={this.props.averageRating}>
             {this.props.averageRating && (
               <div
+                itemprop="aggregateRating"
+                itemscope
+                itemtype="http://schema.org/AggregateRating"
                 className={styles.ratingText}
                 onClick={() => this.handleClick()}
               >

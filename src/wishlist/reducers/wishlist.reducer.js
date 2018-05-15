@@ -51,8 +51,10 @@ const wishlistItems = (
       let wishListNewItems = cloneDeep(state.wishlistItems);
       let wishListName = null;
       let wishListcount = null;
-      if (action.wishlist && action.wishlist.products) {
-        wishListNewItems = action.wishlist.products;
+      if (action.wishlist) {
+        wishListNewItems = action.wishlist.products
+          ? action.wishlist.products
+          : [];
         wishListName = action.wishlist.name;
         wishListcount = action.wishlist.count;
       }
@@ -72,14 +74,8 @@ const wishlistItems = (
         loading: false
       });
     case wishlistActions.REMOVE_PRODUCT_FROM_WISH_LIST_SUCCESS:
-      currentWishlistItems = cloneDeep(state.wishlistItems);
-      indexToBeRemove = currentWishlistItems.findIndex(item => {
-        return item.winningUssID === action.product.winningUssID;
-      });
-      currentWishlistItems.splice(indexToBeRemove, 1);
       return Object.assign({}, state, {
         status: action.status,
-        wishlistItems: currentWishlistItems,
         loading: false
       });
     default:

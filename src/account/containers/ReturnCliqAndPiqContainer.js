@@ -3,7 +3,12 @@ import { connect } from "react-redux";
 import { newReturnInitial, returnPinCode } from "../actions/account.actions";
 import ReturnAddressList from "../components/ReturnAddressList.js";
 import { addUserAddress } from "../../cart/actions/cart.actions.js";
-import { SUCCESS } from "../../lib/constants";
+import {
+  SUCCESS,
+  MY_ACCOUNT,
+  MY_ACCOUNT_ORDERS_PAGE,
+  RETURN_SUCCESS_MESSAGE
+} from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
 import {
   getPinCode,
@@ -23,11 +28,19 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             ownProps.returnProductDetails.orderProductWsDTO[0].transactionId
           )
         );
-        ownProps.history.goBack();
       }
     },
     newReturnInitial: (returnDetails, product) => {
-      dispatch(newReturnInitial(returnDetails, product));
+      dispatch(newReturnInitial(returnDetails, product)).then(res => {
+        if (res.status === SUCCESS) {
+          dispatch(displayToast(RETURN_SUCCESS_MESSAGE));
+          if (ownProps.isCOD) {
+            ownProps.history.go(-6);
+          } else {
+            ownProps.history.go(-5);
+          }
+        }
+      });
     },
     returnPinCode: productDetails => {
       dispatch(returnPinCode(productDetails));

@@ -48,6 +48,7 @@ export default class OrderConfirmation extends React.Component {
           })}
 
         <OrderConfirmationFooter
+          isEgvOrder={this.props.orderDetails.isEgvOrder}
           continueShopping={() => this.continueShopping()}
           trackOrder={() => this.trackOrder()}
         />

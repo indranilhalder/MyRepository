@@ -31,20 +31,13 @@ class BankOffersDetails extends Component {
           this.setState({
             previousSelectedCouponCode: this.state.selectedBankOfferCode
           });
-          localStorage.setItem(
-            BANK_COUPON_COOKIE,
-            this.state.selectedBankOfferCode
-          );
+
           this.props.selecteBankOffer(this.state.selectedBankOfferCode);
           const applyNewBankOfferStatus = await this.props.releaseBankOffer(
             this.state.previousSelectedCouponCode,
             this.state.selectedBankOfferCode
           );
           if (applyNewBankOfferStatus.status === SUCCESS) {
-            localStorage.setItem(
-              BANK_COUPON_COOKIE,
-              this.state.selectedBankOfferCode
-            );
             this.props.selecteBankOffer(this.state.selectedBankOfferCode);
             this.props.closeModal();
           } else {
@@ -59,7 +52,6 @@ class BankOffersDetails extends Component {
               applyNewBankOfferStatus.status === ERROR &&
               applyNewBankOfferStatus.type === APPLY_BANK_OFFER_FAILURE
             ) {
-              localStorage.removeItem(BANK_COUPON_COOKIE);
               this.props.selecteBankOffer("");
               this.setState({
                 previousSelectedCouponCode: "",
@@ -72,10 +64,6 @@ class BankOffersDetails extends Component {
             this.state.selectedBankOfferCode
           );
           if (applyNewCouponCode.status === SUCCESS) {
-            localStorage.setItem(
-              BANK_COUPON_COOKIE,
-              this.state.selectedBankOfferCode
-            );
             this.props.selecteBankOffer(this.state.selectedBankOfferCode);
             this.props.closeModal();
           } else {

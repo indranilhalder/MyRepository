@@ -19,7 +19,8 @@
   display: inline-block;
   vertical-align: top;
 }
-.productName {
+
+.brandName {
   width: 100%;
   height: auto;
   color: #181818;
@@ -28,6 +29,10 @@
   font-size: 16px;
   line-height: 22px;
   display: inline-block;
+}
+
+.productName {
+  composes: brandName;
 }
 .producMaterial {
   width: 100%;

@@ -12,9 +12,9 @@ export default class PdpPaymentInfo extends React.Component {
         <div className={styles.base}>
           {this.props.hasEmi === "Y" && (
             <div className={styles.content}>
-              Emi available on this product.
+              Buy this product on EMI
               <span className={styles.link} onClick={this.showEmiModal}>
-                View Plans
+                View plans
               </span>
             </div>
           )}

@@ -13,7 +13,9 @@ export default class BannerSeparator extends React.Component {
   render() {
     return (
       <div
-        className={styles.base}
+        className={
+          this.props.positionInFeed === 1 ? styles.firstItemBase : styles.base
+        }
         style={{
           backgroundImage: `linear-gradient(165deg, ${
             this.props.feedComponentData.startHexCode
@@ -24,17 +26,27 @@ export default class BannerSeparator extends React.Component {
         }}
       >
         <div className={styles.downloadInnerBox}>
-          <div className={styles.downloadIcon}>
-            <Image
-              image={this.props.feedComponentData.iconImageURL}
-              color="transparent"
-            />
-          </div>
-          <div className={styles.downloadBox}>
-            {this.props.feedComponentData.title}
-          </div>
-          <div className={styles.downloadLabel}>
-            {this.props.feedComponentData.description}
+          {this.props.feedComponentData.iconImageURL && (
+            <div className={styles.downloadIcon}>
+              <Image
+                image={this.props.feedComponentData.iconImageURL}
+                color="transparent"
+              />
+            </div>
+          )}
+          <div
+            className={
+              this.props.feedComponentData.iconImageURL
+                ? styles.iconWithWidth
+                : styles.dataTextHolder
+            }
+          >
+            <div className={styles.downloadBox}>
+              {this.props.feedComponentData.title}
+            </div>
+            <div className={styles.downloadLabel}>
+              {this.props.feedComponentData.description}
+            </div>
           </div>
         </div>
       </div>

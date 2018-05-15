@@ -10,7 +10,7 @@ import {
   setDataLayerForPdpDirectCalls,
   SET_DATA_LAYER_FOR_EMI_BANK_EVENT
 } from "../../lib/adobeUtils";
-const EMI_INFO = "EMI for the product is provided by the following banks";
+const EMI_INFO = "An EMI for this product is provided by the following banks";
 export default class EmiModal extends React.Component {
   constructor(props) {
     super(props);

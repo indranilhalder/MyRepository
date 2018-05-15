@@ -12,13 +12,14 @@ export default class OrderDetailsCard extends React.Component {
     }
   }
   onClick(val) {
-    if (this.props.onClick) {
-      this.props.onClick(val);
+    if (!this.props.orderDetails.isEgvOrder) {
+      if (this.props.onClick) {
+        this.props.onClick(val);
+      }
     }
   }
   render() {
     const deliveryOption = this.props.productDetails.selectedDeliveryMode;
-
     return (
       <div className={styles.base}>
         <div className={styles.orderIdHolder}>
@@ -32,6 +33,7 @@ export default class OrderDetailsCard extends React.Component {
           }
           productName={this.props.productDetails.productName}
           price={this.props.productDetails.pricevalue}
+          isGiveAway={this.props.productDetails.isGiveAway}
           discountPrice=""
           onClick={() => this.onClick(this.props.orderId)}
         >
@@ -61,6 +63,7 @@ export default class OrderDetailsCard extends React.Component {
           )}
         </OrderCard>
         <PriceAndLink
+          isEgvOrder={this.props.orderDetails.isEgvOrder}
           onViewDetails={() => this.onViewDetails()}
           price={this.props.orderDetails.finalAmount}
         />
