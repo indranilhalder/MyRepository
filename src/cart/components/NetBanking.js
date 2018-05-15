@@ -12,20 +12,20 @@ import iciciBankIcon from "./img/pwa_NB_ICICI.svg";
 import sbiBankIcon from "./img/pwa_NB_SBI.svg";
 import induslandBankIcon from "./img/indusind.svg";
 import kotakBankIcon from "./img/kotak.svg";
-const axisBankCode = "NB_AXIS";
-const hdfcBankCode = "NB_HDFC";
-const iciciBankCode = "NB_ICICI";
-const sbiBankCode = "NB_SBI";
-const kotakBankCode = "NB_KOTAK";
-const induslandBankCode = "NB_INDUS";
-const axisBankCodeDummy = "NB_DUMMY";
+const axisBankName = "Axis Bank";
+const hdfcBankName = "HDFC BANK, LTD.";
+const iciciBankName = "ICICI Bank";
+const sbiBankName = "State Bank of India";
+const kotakBankName = "Kotak Bank";
+const induslandBankName = "IndusInd Bank";
+const axisBankCodeDummy = "Dummy Bank";
 const SHOW_DEFAULT_BANK_LIST = [
-  axisBankCode,
-  hdfcBankCode,
-  iciciBankCode,
-  sbiBankCode,
-  kotakBankCode,
-  induslandBankCode
+  axisBankName,
+  hdfcBankName,
+  iciciBankName,
+  sbiBankName,
+  kotakBankName,
+  induslandBankName
 ];
 export default class NetBanking extends React.Component {
   constructor(props) {
@@ -36,7 +36,7 @@ export default class NetBanking extends React.Component {
     };
   }
   handleSelectForIcon(val) {
-    this.setState({ bankCode: val });
+    this.setState({ bankCode: val, bankName: val });
     if (this.props.binValidationForNetBank) {
       this.props.binValidationForNetBank(val);
     }
@@ -47,7 +47,7 @@ export default class NetBanking extends React.Component {
     const bankName = val.label;
     this.setState({ bankCode: bankCode, bankName: bankName });
     if (this.props.binValidationForNetBank) {
-      this.props.binValidationForNetBank(bankCode);
+      this.props.binValidationForNetBank(bankName);
     }
     this.props.onSelectBankForNetBanking(bankCode);
   }
@@ -59,64 +59,64 @@ export default class NetBanking extends React.Component {
           <Grid limit={1} offset={30} elementWidthMobile={33.33}>
             {this.props.bankList.find(bank => {
               return (
-                bank.bankCode === axisBankCode ||
-                bank.bankCode === axisBankCodeDummy
+                bank.bankName === axisBankName ||
+                bank.bankName === axisBankCodeDummy
               );
             }) ? (
               <BankSelect
-                selectItem={() => this.handleSelectForIcon(axisBankCode)}
+                selectItem={() => this.handleSelectForIcon(axisBankName)}
                 image={axisBankIcon}
-                selected={this.state.bankCode === axisBankCode}
+                selected={this.state.bankName === axisBankName}
                 name="Axis Bank"
               />
             ) : null}
             {this.props.bankList.find(bank => {
-              return bank.bankCode === hdfcBankCode;
+              return bank.bankName === hdfcBankName;
             }) ? (
               <BankSelect
-                selectItem={() => this.handleSelectForIcon(hdfcBankCode)}
+                selectItem={() => this.handleSelectForIcon(hdfcBankName)}
                 image={hdfcBankIcon}
-                selected={this.state.bankCode === hdfcBankCode}
+                selected={this.state.bankName === hdfcBankName}
                 name="HDFC BANK, LTD."
               />
             ) : null}
             {this.props.bankList.find(bank => {
-              return bank.bankCode === iciciBankCode;
+              return bank.bankName === iciciBankName;
             }) ? (
               <BankSelect
-                selectItem={() => this.handleSelectForIcon(iciciBankCode)}
+                selectItem={() => this.handleSelectForIcon(iciciBankName)}
                 image={iciciBankIcon}
-                selected={this.state.bankCode === iciciBankCode}
+                selected={this.state.bankName === iciciBankName}
                 name="ICICI Bank"
               />
             ) : null}
             {this.props.bankList.find(bank => {
-              return bank.bankCode === sbiBankCode;
+              return bank.bankName === sbiBankName;
             }) ? (
               <BankSelect
-                selectItem={() => this.handleSelectForIcon(sbiBankCode)}
+                selectItem={() => this.handleSelectForIcon(sbiBankName)}
                 image={sbiBankIcon}
-                selected={this.state.bankCode === sbiBankCode}
+                selected={this.state.bankName === sbiBankName}
                 name="State Bank of India"
               />
             ) : null}
             {this.props.bankList.find(bank => {
-              return bank.bankCode === kotakBankCode;
+              return bank.bankName === kotakBankName;
             }) ? (
               <BankSelect
-                selectItem={() => this.handleSelectForIcon(kotakBankCode)}
+                selectItem={() => this.handleSelectForIcon(kotakBankName)}
                 image={kotakBankIcon}
-                selected={this.state.bankCode === kotakBankCode}
+                selected={this.state.bankName === kotakBankName}
                 name="Kotak Bank"
               />
             ) : null}
             {this.props.bankList.find(bank => {
-              return bank.bankCode === induslandBankCode;
+              return bank.bankName === induslandBankName;
             }) ? (
               <BankSelect
-                selectItem={() => this.handleSelectForIcon(induslandBankCode)}
+                selectItem={() => this.handleSelectForIcon(induslandBankName)}
                 image={induslandBankIcon}
-                selected={this.state.bankCode === induslandBankCode}
+                selected={this.state.bankName === induslandBankName}
                 name="IndusInd Bank"
               />
             ) : null}
