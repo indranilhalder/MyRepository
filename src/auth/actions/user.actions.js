@@ -168,7 +168,7 @@ export function loginUser(userLoginDetails) {
 
         if (
           resultJson.errorCode === OTP_VERIFICATION_REQUIRED_CODE ||
-          resultJson.errorCode === OTP_VERIFICATION_REQUIRED_TEXT
+          resultJson.status === OTP_VERIFICATION_REQUIRED_TEXT
         ) {
           return dispatch(
             showModal(OTP_LOGIN_MODAL, {
