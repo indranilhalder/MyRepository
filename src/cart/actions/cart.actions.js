@@ -1752,10 +1752,11 @@ export function releaseBankOfferRequest() {
     status: REQUESTING
   };
 }
-export function releaseBankOfferSuccess() {
+export function releaseBankOfferSuccess(bankOffer) {
   return {
     type: RELEASE_BANK_OFFER_SUCCESS,
-    status: SUCCESS
+    status: SUCCESS,
+    bankOffer
   };
 }
 export function releaseBankOfferFailure(error) {
@@ -1786,7 +1787,7 @@ export function releaseBankOffer(previousCouponCode, newCouponCode: null) {
           JSON.parse(userDetails).userName
         }/carts/releaseCartCoupons?access_token=${
           JSON.parse(customerCookie).access_token
-        }&paymentMode=${PAYMENT_MODE}&couponCode=${previousCouponCode}&cartGuid=${cartId}`
+        }&paymentMode=${PAYMENT_MODE}&couponCode=${previousCouponCode}&cartGuid=${cartId}&isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -1798,7 +1799,7 @@ export function releaseBankOffer(previousCouponCode, newCouponCode: null) {
       if (newCouponCode) {
         return dispatch(applyBankOffer(newCouponCode));
       }
-      return dispatch(releaseBankOfferSuccess());
+      return dispatch(releaseBankOfferSuccess(resultJson));
     } catch (e) {
       return dispatch(releaseBankOfferFailure(e.message));
     }
