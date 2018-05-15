@@ -1,6 +1,9 @@
 import { connect } from "react-redux";
 import { getUserAddress } from "../../cart/actions/cart.actions";
-import { removeAddress } from "../actions/account.actions";
+import {
+  removeAddress,
+  resetAddAddressDetails
+} from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import AddressBook from "../components/AddressBook.js";
 import { setHeaderText } from "../../general/header.actions";
@@ -25,6 +28,9 @@ const mapDispatchToProps = dispatch => {
     },
     hideSecondaryLoader: () => {
       dispatch(hideSecondaryLoader());
+    },
+    resetAddAddressDetails: () => {
+      dispatch(resetAddAddressDetails());
     }
   };
 };

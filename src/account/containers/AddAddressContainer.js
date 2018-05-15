@@ -2,7 +2,11 @@ import { connect } from "react-redux";
 import { addUserAddress } from "../../cart/actions/cart.actions";
 import { withRouter } from "react-router-dom";
 import AddDeliveryAddress from "../../cart/components/AddDeliveryAddress.js";
-import { getPinCode, getPinCodeSuccess } from "../actions/account.actions.js";
+import {
+  getPinCode,
+  getPinCodeSuccess,
+  resetAddAddressDetails
+} from "../actions/account.actions.js";
 import {
   showSecondaryLoader,
   hideSecondaryLoader
@@ -27,6 +31,9 @@ const mapDispatchToProps = dispatch => {
     },
     displayToast: message => {
       dispatch(displayToast(message));
+    },
+    resetAddAddressDetails: () => {
+      dispatch(resetAddAddressDetails());
     }
   };
 };

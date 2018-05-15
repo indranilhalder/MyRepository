@@ -59,8 +59,30 @@ import {
   STANDARD_EMI,
   CASH_ON_DELIVERY,
   YES,
-  NO
+  NO,
+  SAVE_TEXT,
+  PINCODE_TEXT,
+  NAME_TEXT,
+  LAST_NAME_TEXT,
+  ADDRESS_TEXT,
+  EMAIL_TEXT,
+  LANDMARK_TEXT,
+  LANDMARK_ENTER_TEXT,
+  MOBILE_TEXT,
+  PINCODE_VALID_TEXT,
+  EMAIL_VALID_TEXT,
+  PHONE_VALID_TEXT,
+  PHONE_TEXT,
+  CITY_TEXT,
+  STATE_TEXT,
+  SELECT_ADDRESS_TYPE,
+  ISO_CODE,
+  OTHER_LANDMARK
 } from "../../lib/constants";
+import {
+  EMAIL_REGULAR_EXPRESSION,
+  MOBILE_PATTERN
+} from "../../auth/components/Login";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
@@ -539,6 +561,7 @@ class CheckOutPage extends React.Component {
             this.props.resetAutoPopulateDataForPinCode()
           }
           getPincodeStatus={this.props.getPincodeStatus}
+          resetAddAddressDetails={()=>this.props.resetAddAddressDetails()}
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -1475,6 +1498,62 @@ class CheckOutPage extends React.Component {
   };
 
   addAddress = address => {
+    if(!address)
+    {
+      this.props.displayToast("Please enter the valid details");
+      return false;
+    }
+    if (address && !address.postalCode) {
+      this.props.displayToast(PINCODE_TEXT);
+      return false;
+    }
+    if (address && address.postalCode && address.postalCode.length < 6) {
+      this.props.displayToast(PINCODE_VALID_TEXT);
+      return false;
+    }
+    if (address && !address.firstName) {
+      this.props.displayToast(NAME_TEXT);
+      return false;
+    }
+    if (address && !address.lastName) {
+      this.props.displayToast(LAST_NAME_TEXT);
+      return false;
+    }
+    if (address && !address.line1) {
+      this.props.displayToast(ADDRESS_TEXT);
+      return false;
+    }
+    if (address && !address.emailId) {
+      this.props.displayToast(EMAIL_TEXT);
+      return false;
+    }
+    if (
+      address && address.emailId &&
+      !EMAIL_REGULAR_EXPRESSION.test(address.emailId)
+    ) {
+      this.props.displayToast(EMAIL_VALID_TEXT);
+      return false;
+    }
+    if (address && !address.town) {
+      this.props.displayToast(CITY_TEXT);
+      return false;
+    }
+    if (address && !address.state) {
+      this.props.displayToast(STATE_TEXT);
+      return false;
+    }
+    if (address && !address.phone) {
+      this.props.displayToast(PHONE_TEXT);
+      return false;
+    }
+    if (address && address.phone) {
+      this.props.displayToast(PHONE_VALID_TEXT);
+      return false;
+    }
+    if (address && !address.addressType) {
+      this.props.displayToast(SELECT_ADDRESS_TYPE);
+      return false;
+    } else {
     if (this.props.addUserAddress) {
       let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
       let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -1485,13 +1564,14 @@ class CheckOutPage extends React.Component {
         userId: JSON.parse(userDetails).userName,
         accessToken: JSON.parse(customerCookie).access_token,
         cartId: JSON.parse(cartDetailsLoggedInUser).code,
-        pinCode: address.postalCode,
+        pinCode: address && address.postalCode,
         isSoftReservation: false
       };
       this.props.addUserAddress(address, getCartDetailCNCObj);
 
       this.setState({ addNewAddress: false });
     }
+  }
   };
 
   addNewAddress = () => {
@@ -1833,6 +1913,7 @@ class CheckOutPage extends React.Component {
             getPinCode={val => this.getPinCodeDetails(val)}
             getPinCodeDetails={this.props.getPinCodeDetails}
             getPincodeStatus={this.props.getPincodeStatus}
+            resetAddAddressDetails={()=>this.props.resetAddAddressDetails()}
           />
         </div>
       );
