@@ -23,6 +23,12 @@ import {
   LOGIN_PATH
 } from "../../lib/constants";
 const ACCOUNT_SETTING_HEADER = "Account Settings";
+const MINIMUM_PASSWORD_LENGTH = 8;
+const OLD_PASSWORD_TEXT = "Please enter old password";
+const NEW_PASSWORD_TEXT = "Please enter new password";
+const PASSWORD_LENGTH_TEXT = "Password length should be minimum 8 character";
+const CONFIRM_PASSWORD_TEXT = "Please confirm your passowrd";
+const PASSWORD_MATCH_TEXT = "Password did not match";
 export default class EditAccountDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -107,10 +113,6 @@ export default class EditAccountDetails extends React.Component {
     }
   }
   updateProfile = () => {
-    if (!this.state.dateOfBirth) {
-      this.props.displayToast("Please Enter valid date in format dd/mm/yyyy");
-      return false;
-    }
     if (
       this.state.emailId &&
       !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
@@ -134,10 +136,33 @@ export default class EditAccountDetails extends React.Component {
   cancel = () => {
     this.props.history.goBack();
   };
-  changePassword = passwordDetails => {
-    this.setState({ changePassword: false });
-    this.props.changePassword(passwordDetails);
-  };
+  changePassword(passwordDetails) {
+    const oldPassword = passwordDetails.oldPassword;
+    const newPassword = passwordDetails.newPassword;
+    const confirmedPassword = passwordDetails.confirmPassword;
+    if (!oldPassword) {
+      this.props.displayToast(OLD_PASSWORD_TEXT);
+      return false;
+    }
+    if (!newPassword) {
+      this.props.displayToast(NEW_PASSWORD_TEXT);
+      return false;
+    }
+    if (newPassword.length < MINIMUM_PASSWORD_LENGTH) {
+      this.props.displayToast(PASSWORD_LENGTH_TEXT);
+      return false;
+    }
+    if (!confirmedPassword) {
+      this.props.displayToast(CONFIRM_PASSWORD_TEXT);
+      return false;
+    }
+    if (newPassword !== confirmedPassword) {
+      this.props.displayToast(PASSWORD_MATCH_TEXT);
+    } else {
+      this.setState({ changePassword: false });
+      this.props.changePassword(passwordDetails);
+    }
+  }
   renderChangePassword = () => {
     this.setState({ changePassword: true });
   };
