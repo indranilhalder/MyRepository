@@ -564,6 +564,7 @@ class CheckOutPage extends React.Component {
           resetAutoPopulateDataForPinCode={() =>
             this.props.resetAutoPopulateDataForPinCode()
           }
+          onFocusInput={() => this.onFocusInput()}
           getPincodeStatus={this.props.getPincodeStatus}
           resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
         />
@@ -1540,7 +1541,7 @@ class CheckOutPage extends React.Component {
       this.props.displayToast(PHONE_TEXT);
       return false;
     }
-    if (address && address.phone) {
+    if (address && !MOBILE_PATTERN.test(address.phone)) {
       this.props.displayToast(PHONE_VALID_TEXT);
       return false;
     }
@@ -1917,6 +1918,7 @@ class CheckOutPage extends React.Component {
             getPinCode={val => this.getPinCodeDetails(val)}
             getPinCodeDetails={this.props.getPinCodeDetails}
             getPincodeStatus={this.props.getPincodeStatus}
+            onFocusInput={() => this.onFocusInput()}
             resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
           />
         </div>

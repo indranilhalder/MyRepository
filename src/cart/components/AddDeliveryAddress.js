@@ -8,7 +8,6 @@ import CircleButton from "../../xelpmoc-core/CircleButton";
 import informationIcon from "../../general/components/img/GPS.svg";
 import GridSelect from "../../general/components/GridSelect";
 import CheckboxAndText from "./CheckboxAndText";
-import AddEmailAddress from "./AddEmailAddress";
 import TextArea from "../../general/components/TextArea.js";
 import cloneDeep from "lodash.clonedeep";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
@@ -62,7 +61,11 @@ export default class AddDeliveryAddress extends React.Component {
       landmarkList: []
     };
   }
-
+  handleOnFocusInput() {
+    if (this.props.onFocusInput) {
+      this.props.onFocusInput();
+    }
+  }
   getPinCodeDetails = val => {
     let landmarkList = [];
     if (val.length <= 6) {
@@ -74,9 +77,11 @@ export default class AddDeliveryAddress extends React.Component {
   };
   handlePhoneInput(val) {
     if (val.length <= 10) {
+      const cloneAddress = cloneDeep(this.state);
+      Object.assign(cloneAddress, { phone: val });
       this.setState({ phone: val });
       if (this.props.getAddressDetails) {
-        this.props.getAddressDetails(this.state);
+        this.props.getAddressDetails(cloneAddress);
       }
     }
   }
@@ -290,6 +295,9 @@ export default class AddDeliveryAddress extends React.Component {
               maxLength={"6"}
               onlyNumber={true}
               rightChildSize={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
             />
           </div>
           <div className={styles.content}>
@@ -304,6 +312,9 @@ export default class AddDeliveryAddress extends React.Component {
               onChange={firstName => this.onChange({ firstName })}
               textStyle={{ fontSize: 14 }}
               height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
             />
           </div>
 
@@ -317,6 +328,9 @@ export default class AddDeliveryAddress extends React.Component {
               onChange={lastName => this.onChange({ lastName })}
               textStyle={{ fontSize: 14 }}
               height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
             />
           </div>
           <div className={styles.content}>
@@ -324,6 +338,9 @@ export default class AddDeliveryAddress extends React.Component {
               placeholder="Address*"
               value={this.props.line1 ? this.props.line1 : this.state.line1}
               onChange={line1 => this.onChange({ line1 })}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
             />
           </div>
           <div className={styles.content}>
@@ -351,19 +368,27 @@ export default class AddDeliveryAddress extends React.Component {
                 onChange={line2 => this.onChange({ line2 })}
                 textStyle={{ fontSize: 14 }}
                 height={33}
+                onFocus={() => {
+                  this.handleOnFocusInput();
+                }}
               />
             </div>
           )}
-          {/* <div className={styles.content}>
-          <Input2
-            boxy={true}
-            placeholder="Email*"
-            value={this.props.emailId ? this.props.emailId : this.state.emailId}
-            onChange={emailId => this.onChange({ emailId })}
-            textStyle={{ fontSize: 14 }}
-            height={33}
-          />
-        </div> */}
+          <div className={styles.content}>
+            <Input2
+              boxy={true}
+              placeholder="Email*"
+              value={
+                this.props.emailId ? this.props.emailId : this.state.emailId
+              }
+              onChange={emailId => this.onChange({ emailId })}
+              textStyle={{ fontSize: 14 }}
+              height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
+            />
+          </div>
           <div className={styles.content}>
             <Input2
               boxy={true}
@@ -372,6 +397,9 @@ export default class AddDeliveryAddress extends React.Component {
               onChange={town => this.onChange({ town })}
               textStyle={{ fontSize: 14 }}
               height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
             />
           </div>
           <div className={styles.content}>
@@ -382,6 +410,9 @@ export default class AddDeliveryAddress extends React.Component {
               onChange={state => this.onChange({ state })}
               textStyle={{ fontSize: 14 }}
               height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
             />
           </div>
           <div className={styles.content}>
@@ -393,6 +424,9 @@ export default class AddDeliveryAddress extends React.Component {
               onChange={phone => this.handlePhoneInput(phone)}
               textStyle={{ fontSize: 14 }}
               height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
             />
           </div>
 
@@ -422,12 +456,6 @@ export default class AddDeliveryAddress extends React.Component {
               selectItem={() => this.onChangeDefaultFlag()}
             />
           </div>
-        </div>
-        <div className={styles.emailHolder}>
-          <AddEmailAddress
-            value={this.props.emailId ? this.props.emailId : this.state.emailId}
-            onChange={emailId => this.onChange({ emailId })}
-          />
         </div>
         <div className={styles.buttonHolder}>
           <div className={styles.saveAndContinueButton}>
