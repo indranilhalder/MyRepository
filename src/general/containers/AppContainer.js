@@ -10,16 +10,15 @@ import {
   generateCartIdForLoggedInUser,
   generateCartIdForAnonymous
 } from "../../cart/actions/cart.actions.js";
-import * as Cookie from "../../lib/Cookie.js";
 import { withRouter } from "react-router-dom";
 import App from "../../App.js";
 import { createWishlist } from "../../wishlist/actions/wishlist.actions.js";
 import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
-import { homeFeed } from "../../home/actions/home.actions.js";
+import { getFeed } from "../../home/actions/home.actions.js";
 const mapDispatchToProps = dispatch => {
   return {
     homeFeed: () => {
-      dispatch(homeFeed());
+      dispatch(getFeed());
     },
     showModal: type => {
       dispatch(showModal(type));

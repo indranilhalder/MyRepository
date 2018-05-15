@@ -36,7 +36,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
 
     categoryOrBrandId = categoryOrBrandId.replace(BRAND_CATEGORY_PREFIX, "");
 
-    this.props.homeFeed(categoryOrBrandId);
+    this.props.getFeed(categoryOrBrandId);
   }
 
   componentDidUpdate() {
@@ -59,7 +59,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
       this.pathname !== this.props.location.pathname
     ) {
       this.pathname = this.props.location.pathname;
-      this.props.homeFeed(categoryOrBrandId);
+      this.props.getFeed(categoryOrBrandId);
     }
   }
   renderLoader() {

@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { homeFeed } from "../actions/home.actions";
+import { getFeed } from "../actions/home.actions";
 import { getCartId } from "../../cart/actions/cart.actions";
 import { getWishListItems } from "../../wishlist/actions/wishlist.actions";
 import Feed from "../components/Feed";
@@ -10,7 +10,7 @@ import { LOGGED_IN_USER_DETAILS } from "../../lib/constants";
 const mapDispatchToProps = dispatch => {
   return {
     homeFeed: () => {
-      dispatch(homeFeed());
+      dispatch(getFeed());
     },
     getCartId: () => {
       dispatch(getCartId());

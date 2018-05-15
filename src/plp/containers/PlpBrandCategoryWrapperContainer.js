@@ -1,11 +1,11 @@
 import { connect } from "react-redux";
-import { homeFeed } from "../../home/actions/home.actions";
+import { getFeed } from "../../home/actions/home.actions";
 import PlpBrandCategoryWrapper from "../components/PlpBrandCategoryWrapper";
 
 const mapDispatchToProps = dispatch => {
   return {
-    homeFeed: brandIdOrCategoryId => {
-      dispatch(homeFeed(brandIdOrCategoryId));
+    getFeed: brandIdOrCategoryId => {
+      dispatch(getFeed(brandIdOrCategoryId));
     }
   };
 };

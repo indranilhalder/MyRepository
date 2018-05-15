@@ -251,7 +251,7 @@ export function homeFeedBackUp() {
 // brand feed and category feed  . we need to rename this function name like feed
 // this is also now used for static pages, so the name brandIdOrCategoryId makes less sense
 // however there isn't a good name to replace it.
-export function homeFeed(brandIdOrCategoryId: null) {
+export function getFeed(brandIdOrCategoryId: null) {
   return async (dispatch, getState, { api }) => {
     if (brandIdOrCategoryId) {
       dispatch(homeFeedRequest(BLP_OR_CLP_FEED_TYPE));
