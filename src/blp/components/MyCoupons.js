@@ -12,7 +12,7 @@ export default class MyCoupons extends React.Component {
     };
   }
   copyCouponCode() {
-    this.props.displayToast("Coupon copied");
+    this.props.displayToast("Coupon code copied");
   }
   render() {
     return (
