@@ -30,7 +30,7 @@ const mapStateToProps = state => {
 
   if (userDetails) {
     userDetails = JSON.parse(userDetails);
-    if (userDetails.firstName) {
+    if (userDetails.firstName && userDetails.firstName !== "undefined") {
       headerMessage = `Welcome ${userDetails.firstName}`;
     } else {
       headerMessage = `Welcome`;
