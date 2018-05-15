@@ -85,7 +85,8 @@ export default class ProductDescription extends Component {
               <div className={styles.description}>
                 {this.props.minPrice.toString().includes(RUPEE_SYMBOL)
                   ? this.props.minPrice
-                  : `${RUPEE_SYMBOL}${this.props.minPrice}`}-
+                  : `${RUPEE_SYMBOL}${this.props.minPrice}`}{" "}
+                -{" "}
                 {this.props.maxPrice.toString().includes(RUPEE_SYMBOL)
                   ? this.props.maxPrice
                   : `${RUPEE_SYMBOL}${this.props.maxPrice}`}
