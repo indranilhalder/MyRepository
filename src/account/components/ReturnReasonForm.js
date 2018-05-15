@@ -16,7 +16,8 @@ export default class ReturnReasonForm extends React.Component {
       comment: null,
       reverseSeal: null,
       returnReasonCode: null,
-      subReasonCode: null
+      subReasonCode: null,
+      isEnable: false
     };
   }
   handleContinue() {
@@ -40,8 +41,10 @@ export default class ReturnReasonForm extends React.Component {
     const data = this.props.returnProductDetails;
     this.setState({
       subReasonCode: null,
+      subReason: null,
       returnReasonCode: code,
       reason: label,
+      isEnable: false,
       secondaryReasons: data.returnReasonMap
         .filter(val => {
           return val.parentReasonCode === code;
@@ -67,7 +70,7 @@ export default class ReturnReasonForm extends React.Component {
   onChangeSecondary(val) {
     const code = val.value;
     const label = val.label;
-    this.setState({ subReasonCode: code, subReason: label });
+    this.setState({ subReasonCode: code, subReason: label, isEnable: true });
   }
   handleCancel() {
     if (this.props.onCancel) {
@@ -141,6 +144,7 @@ export default class ReturnReasonForm extends React.Component {
                 placeholder={"Select a reason"}
                 options={this.state.secondaryReasons}
                 onChange={val => this.onChangeSecondary(val)}
+                isEnable={this.state.isEnable}
               />
             </div>
           )}
