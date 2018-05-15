@@ -24,8 +24,12 @@ export default class CliqCashAndNoCostEmiPopup extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.paymentMethodDescription}>
-          <div className={styles.bankLogoAndCouponCode}>
-            Cliq Cash and No Cost Emi can not user together
+          <div className={styles.heading}>
+            Cliq Cash and No Cost Emi can not use together
+          </div>
+          <div className={styles.subHeading}>
+            Please choose to use your CliQ Cash balance or continue with No Cost
+            EMI
           </div>
         </div>
         <div className={styles.buttonHolderForPaymentMode}>

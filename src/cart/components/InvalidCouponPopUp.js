@@ -10,7 +10,8 @@ import {
   WRONG_FAILURE,
   SUCCESS,
   INVALID_NO_COST_EMI_TYPE,
-  NO_COST_EMI_COUPON
+  NO_COST_EMI_COUPON,
+  BANK_COUPON_COOKIE
 } from "../../lib/constants";
 
 export default class InvalidCouponPopUp extends React.Component {
@@ -61,22 +62,15 @@ export default class InvalidCouponPopUp extends React.Component {
   async continueWithoutCoupon() {
     let releaseStatus = {};
     if (this.props.result && this.props.result.userCoupon) {
-      if (
-        this.props.result.noCostEmiCoupon &&
-        this.props.result.noCostEmiCoupon.couponType ===
-          INVALID_NO_COST_EMI_TYPE
-      ) {
+      if (localStorage.getItem(NO_COST_EMI_COUPON)) {
         releaseStatus = await this.props.releaseNoCostEmiCoupon(
           localStorage.getItem(NO_COST_EMI_COUPON)
         );
       }
       if (!releaseStatus.status || releaseStatus.status === SUCCESS) {
-        if (
-          this.props.result.bankOffer &&
-          this.props.result.bankOffer.couponCode
-        ) {
+        if (localStorage.getItem(BANK_COUPON_COOKIE)) {
           releaseStatus = await this.props.releaseBankOffer(
-            this.props.result.bankOffer.couponCode
+            localStorage.getItem(BANK_COUPON_COOKIE)
           );
         }
       }
@@ -91,22 +85,15 @@ export default class InvalidCouponPopUp extends React.Component {
         }
       }
     } else if (this.props.result && this.props.result.bankOffer) {
-      if (
-        this.props.result.noCostEmiCoupon &&
-        this.props.result.noCostEmiCoupon.couponType ===
-          INVALID_NO_COST_EMI_TYPE
-      ) {
+      if (localStorage.getItem(NO_COST_EMI_COUPON)) {
         releaseStatus = await this.props.releaseNoCostEmiCoupon(
           localStorage.getItem(NO_COST_EMI_COUPON)
         );
       }
       if (!releaseStatus.status || releaseStatus.status === SUCCESS) {
-        if (
-          this.props.result.bankOffer &&
-          this.props.result.bankOffer.couponCode
-        ) {
+        if (localStorage.getItem(BANK_COUPON_COOKIE)) {
           releaseStatus = await this.props.releaseBankOffer(
-            this.props.result.bankOffer.couponCode
+            localStorage.getItem(BANK_COUPON_COOKIE)
           );
         }
       }
