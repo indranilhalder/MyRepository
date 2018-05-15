@@ -1,0 +1,38 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 15px 15px 30px;
+  background: #fff;
+  border-radius: 4px;
+}
+.header {
+  width: 100%;
+  height: auto;
+  font-size: 16px;
+  color: #000000;
+  font-family: semibold;
+  margin-bottom: 20px;
+}
+.subText {
+  width: 100%;
+  height: auto;
+  color: #000000;
+  font-size: 14px;
+  font-family: light;
+  margin-bottom: 25px;
+}
+.inputHolder {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+.noteText {
+  width: 100%;
+  height: auto;
+  color: #000000;
+  font-size: 14px;
+  font-family: light;
+}
+.noteText span {
+  font-family: semibold;
+}
