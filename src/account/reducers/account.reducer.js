@@ -589,7 +589,6 @@ const account = (
       });
 
     case accountActions.UPDATE_PROFILE_SUCCESS:
-      console.log(action.userDetails);
       const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
 
       //deletre cookie

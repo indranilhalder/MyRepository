@@ -54,10 +54,6 @@ const user = (
       });
 
     case userActions.LOGIN_USER_SUCCESS:
-      console.log(
-        action.user.customerInfo.firstName,
-        action.user.customerInfo.lastName
-      );
       userDetails.userName = action.userName;
       userDetails.customerId = action.user.customerId;
       if (action.user.customerInfo) {
