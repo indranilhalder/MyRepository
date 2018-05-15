@@ -11,6 +11,7 @@ export const ERROR = "error";
 export const FAILURE = "Failure";
 export const FAILURE_UPPERCASE = "FAILURE";
 export const FAILURE_LOWERCASE = "failure";
+export const WRONG_FAILURE = "faliure";
 export const JUS_PAY_PENDING = "PENDING_VBV";
 export const JUS_PAY_CHARGED = "CHARGED";
 export const JUS_PAY_SUCCESS = "S";
@@ -260,6 +261,11 @@ export const DINERS_CARD = "DINERS";
 export const DISCOVER_CARD = "DISCOVER";
 export const JCB_CARD = "JCB";
 
+export const INVALID_USER_COUPON_TYPE = "COUPON";
+export const INVALID_BANK_OFFER_TYPE = "BANKOFFER";
+export const INVALID_NO_COST_EMI_TYPE = "NOCOSTEMI";
+
+export const SELECTED_BANK_NAME = "selectedBankName";
 //add address Constants
 
 export const SAVE_TEXT = "Save Address";

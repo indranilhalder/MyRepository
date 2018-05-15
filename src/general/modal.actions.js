@@ -31,6 +31,7 @@ export const INVALID_BANK_COUPON_POPUP = "INVALID_BANK_COUPON_POPUP";
 export const INVALID_USER_COUPON_POPUP = "INVALID_USER_COUPON_POPUP";
 export const CANCEL_ORDER_POP_UP = "CancelOrderPopUp";
 export const STORY_MODAL = "StoryModal";
+export const CLIQ_CASH_AND_NO_COST_EMI_POPUP = "CliqCashAndNoCostEmiPopup";
 export function showModal(type, ownProps) {
   return {
     type: SHOW_MODAL,

@@ -61,7 +61,8 @@ import {
 import {
   showModal,
   BANK_OFFERS,
-  GIFT_CARD_MODAL
+  GIFT_CARD_MODAL,
+  CLIQ_CASH_AND_NO_COST_EMI_POPUP
 } from "../../general/modal.actions";
 import {
   getPinCode,
@@ -174,15 +175,8 @@ const mapDispatchToProps = dispatch => {
     binValidation: (paymentMode, binNo, cartGuId) => {
       dispatch(binValidation(paymentMode, binNo, cartGuId));
     },
-    softReservationForPayment: (
-      cardDetails,
-      address,
-      paymentMode,
-      bankName
-    ) => {
-      dispatch(
-        softReservationForPayment(cardDetails, address, paymentMode, bankName)
-      );
+    softReservationForPayment: (cardDetails, address, paymentMode) => {
+      dispatch(softReservationForPayment(cardDetails, address, paymentMode));
     },
     updateTransactionDetails: (paymentMode, juspayOrderID, cartId) => {
       dispatch(updateTransactionDetails(paymentMode, juspayOrderID, cartId));
@@ -259,13 +253,12 @@ const mapDispatchToProps = dispatch => {
           address,
           cardDetails,
           paymentMode,
-          true,
-          bankName
+          true
         )
       );
     },
-    createJusPayOrderForGiftCardNetBanking: (bankName, guId) => {
-      dispatch(createJusPayOrderForGiftCardNetBanking(bankName, guId));
+    createJusPayOrderForGiftCardNetBanking: guId => {
+      dispatch(createJusPayOrderForGiftCardNetBanking(guId));
     },
     createJusPayOrderForGiftCardFromSavedCards: (cardDetails, guId) => {
       dispatch(createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId));
@@ -371,21 +364,18 @@ const mapDispatchToProps = dispatch => {
     },
     createJusPayOrderForNetBanking: (
       paymentMethodType,
-      bankName,
       pinCode,
       productItems
     ) => {
       dispatch(
-        createJusPayOrderForNetBanking(
-          paymentMethodType,
-          bankName,
-          pinCode,
-          productItems
-        )
+        createJusPayOrderForNetBanking(paymentMethodType, pinCode, productItems)
       );
     },
     resetIsSoftReservationFailed: () => {
       dispatch(resetIsSoftReservationFailed());
+    },
+    showModalForCliqCashOrNoCostEmi: modalProps => {
+      dispatch(showModal(CLIQ_CASH_AND_NO_COST_EMI_POPUP, modalProps));
     },
     resetAddAddressDetails: () => {
       dispatch(resetAddAddressDetails());
