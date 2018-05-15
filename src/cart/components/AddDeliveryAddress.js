@@ -78,8 +78,10 @@ export default class AddDeliveryAddress extends React.Component {
   handlePhoneInput(val) {
     if (val.length <= 10) {
       this.setState({ phone: val });
+      const cloneAddress = cloneDeep(this.state);
+      Object.assign(cloneAddress, { phone: val });
       if (this.props.getAddressDetails) {
-        this.props.getAddressDetails(this.state);
+        this.props.getAddressDetails(cloneAddress);
       }
     }
   }
@@ -177,18 +179,22 @@ export default class AddDeliveryAddress extends React.Component {
       return false;
     }
     if (!this.state.firstName) {
+      console.log(3);
       this.props.displayToast(NAME_TEXT);
       return false;
     }
     if (!this.state.lastName) {
+      console.log(4);
       this.props.displayToast(LAST_NAME_TEXT);
       return false;
     }
     if (!this.state.line1) {
+      console.log(5);
       this.props.displayToast(ADDRESS_TEXT);
       return false;
     }
     if (!this.state.emailId) {
+      console.log(6);
       this.props.displayToast(EMAIL_TEXT);
       return false;
     }
@@ -196,10 +202,13 @@ export default class AddDeliveryAddress extends React.Component {
       this.state.emailId &&
       !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
     ) {
+      console.log("comesin emial id and changes for name");
+      console.log(this.state);
       this.props.displayToast(EMAIL_VALID_TEXT);
       return false;
     }
     if (!this.state.town) {
+      console.log(7);
       this.props.displayToast(CITY_TEXT);
       return false;
     }
@@ -208,25 +217,22 @@ export default class AddDeliveryAddress extends React.Component {
       return false;
     }
     if (!this.state.phone) {
+      console.log(8);
       this.props.displayToast(PHONE_TEXT);
       return false;
     }
     if (this.state.phone && !MOBILE_PATTERN.test(this.state.phone)) {
+      console.log("adding changes for 1");
       this.props.displayToast(PHONE_VALID_TEXT);
       return false;
     }
     if (!this.state.addressType) {
+      console.log(9);
       this.props.displayToast(SELECT_ADDRESS_TYPE);
       return false;
     } else {
       const addressObj = cloneDeep(this.state);
-      let firstName = addressObj.firstName;
-      let salutation = addressObj.salutation;
-      if (salutation) {
-        Object.assign(addressObj, {
-          firstName: `${salutation} ${firstName}`
-        });
-      }
+      console.log("comesin final sfljksdfj");
       this.props.addUserAddress(addressObj);
     }
   };
@@ -252,6 +258,7 @@ export default class AddDeliveryAddress extends React.Component {
     this.setState({ salutation: val.value });
   }
   render() {
+    console.log("comes in add initial");
     if (this.props.loading) {
       if (this.props.showSecondaryLoader) {
         this.props.showSecondaryLoader();
