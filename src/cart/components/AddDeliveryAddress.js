@@ -19,10 +19,6 @@ import {
   MOBILE_PATTERN
 } from "../../auth/components/Login";
 
-export const SALUTATION_MR = "Mr. ";
-export const SALUTATION_MS = "Ms. ";
-export const SALUTATION_MSS = "Mss. ";
-
 const SAVE_TEXT = "Save Address";
 const PINCODE_TEXT = "Please enter pincode";
 const NAME_TEXT = "Please enter first name";
@@ -57,7 +53,6 @@ export default class AddDeliveryAddress extends React.Component {
       line2: "",
       line3: "",
       town: "",
-      salutation: SALUTATION_MR,
       defaultFlag: true,
       isOtherLandMarkSelected: false,
       selectedLandmarkLabel: "Landmark",
@@ -233,7 +228,6 @@ export default class AddDeliveryAddress extends React.Component {
       line1: " ",
       titleValue: "",
       addressType: "",
-      salutation: SALUTATION_MR,
       defaultFlag: false,
       landmarkList: [],
       emailId: ""
@@ -261,20 +255,7 @@ export default class AddDeliveryAddress extends React.Component {
         label: "Office"
       }
     ];
-    const salutation = [
-      {
-        label: "Mr",
-        value: SALUTATION_MR
-      },
-      {
-        label: "Ms",
-        value: SALUTATION_MS
-      },
-      {
-        label: "Mss",
-        value: SALUTATION_MSS
-      }
-    ];
+
     return (
       <div className={styles.base}>
         <div className={styles.addressInnerBox}>
@@ -299,33 +280,18 @@ export default class AddDeliveryAddress extends React.Component {
           />
         </div>
         <div className={styles.content}>
-          <div className={styles.salutation}>
-            <SelectBoxMobile2
-              height={33}
-              options={salutation.map((val, i) => {
-                return {
-                  value: val.value,
-                  label: val.label
-                };
-              })}
-              onChange={salutation => this.onChangeSalutation(salutation)}
-            />
-          </div>
-          <div className={styles.name}>
-            <Input2
-              option={this.state.options}
-              placeholder="First Name*"
-              value={
-                this.props.firstName
-                  ? this.props.firstName
-                  : this.state.firstName
-              }
-              onChange={firstName => this.onChange({ firstName })}
-              textStyle={{ fontSize: 14 }}
-              height={33}
-            />
-          </div>
+          <Input2
+            option={this.state.options}
+            placeholder="First Name*"
+            value={
+              this.props.firstName ? this.props.firstName : this.state.firstName
+            }
+            onChange={firstName => this.onChange({ firstName })}
+            textStyle={{ fontSize: 14 }}
+            height={33}
+          />
         </div>
+
         <div className={styles.content}>
           <Input2
             boxy={true}
