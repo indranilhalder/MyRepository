@@ -60,6 +60,14 @@ export default class NoCostEmiBankDetails extends React.Component {
     }
   }
   selectOtherBank(val) {
+    if (
+      this.props.removeNoCostEmi &&
+      this.state.selectedCouponCode &&
+      this.state.selectedCouponCode !== ""
+    ) {
+      this.props.removeNoCostEmi(this.state.selectedCouponCode);
+    }
+
     const selectedBankName = val.label;
     const selectedBankIndex = val.value;
     const selectedBankCodeObj = this.props.bankList.find(
@@ -87,6 +95,13 @@ export default class NoCostEmiBankDetails extends React.Component {
     }
   }
   handleSelect(index, code) {
+    if (
+      this.props.removeNoCostEmi &&
+      this.state.selectedCouponCode &&
+      this.state.selectedCouponCode !== ""
+    ) {
+      this.props.removeNoCostEmi(this.state.selectedCouponCode);
+    }
     if (this.state.selectedFromDropDown === true) {
       this.setState({
         selectedBankIndex: null,
@@ -170,7 +185,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             });
             this.onChangeCardDetail({
               is_emi: true,
-              emi_bank: this.state.selectedCode,
+              emi_bank: this.state.selectedBankCode,
               emi_tenure: val.tenure
             });
           }
