@@ -170,7 +170,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             });
             this.onChangeCardDetail({
               is_emi: true,
-              emi_bank: this.state.selectedCode,
+              emi_bank: this.state.selectedBankCode,
               emi_tenure: val.tenure
             });
           }
