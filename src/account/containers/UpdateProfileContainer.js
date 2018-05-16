@@ -3,7 +3,8 @@ import {
   getUserDetails,
   updateProfile,
   changePassword,
-  clearAccountUpdateType
+  clearAccountUpdateType,
+  clearChangePasswordDetails
 } from "../actions/account.actions";
 import { setHeaderText } from "../../general/header.actions";
 import { withRouter } from "react-router-dom";
@@ -20,7 +21,6 @@ const mapDispatchToProps = dispatch => {
 
     updateProfile: async accountDetails => {
       const response = await dispatch(updateProfile(accountDetails));
-
       if (response && response.status === SUCCESS) {
         dispatch(getUserDetails());
         dispatch(displayToast(UPDATE_PROFILE_SUCCESS));
@@ -33,6 +33,9 @@ const mapDispatchToProps = dispatch => {
       } else {
         dispatch(displayToast(response.error));
       }
+    },
+    clearChangePasswordDetails: () => {
+      dispatch(clearChangePasswordDetails());
     },
     clearAccountUpdateType: () => {
       dispatch(clearAccountUpdateType());

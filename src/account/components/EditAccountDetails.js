@@ -53,7 +53,6 @@ export default class EditAccountDetails extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
     if (userDetails && customerCookie) {
       this.props.getUserDetails();
     } else {
@@ -169,7 +168,6 @@ export default class EditAccountDetails extends React.Component {
     if (newPassword !== confirmedPassword) {
       this.props.displayToast(PASSWORD_MATCH_TEXT);
     } else {
-      this.setState({ changePassword: true });
       this.props.changePassword(passwordDetails);
     }
   }
@@ -283,6 +281,9 @@ export default class EditAccountDetails extends React.Component {
           <ChangePassword
             updatePassword={passwordDetails =>
               this.changePassword(passwordDetails)
+            }
+            clearChangePasswordDetails={() =>
+              this.props.clearChangePasswordDetails()
             }
           />
         </div>
