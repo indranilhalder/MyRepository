@@ -336,9 +336,9 @@ export default class PdpApparel extends React.Component {
                 brandUrl={productData.brandURL}
                 history={this.props.history}
                 price={price}
+                goToReviewPage={this.goToReviewPage}
                 discountPrice={discountPrice}
                 averageRating={productData.averageRating}
-                onClick={this.goToReviewPage}
                 discount={productData.discount}
               />
             </div>

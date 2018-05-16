@@ -363,7 +363,7 @@ export default class PdpApparel extends React.Component {
               price={price}
               discountPrice={discountPrice}
               averageRating={productData.averageRating}
-              onClick={this.goToReviewPage}
+              goToReviewPage={this.goToReviewPage}
               discount={productData.discount}
             />
           </div>
