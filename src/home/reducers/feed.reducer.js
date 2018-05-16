@@ -78,7 +78,7 @@ const feed = (
         homeFeed: homeFeedData
       });
 
-    case homeActions.HOME_FEED_REQUEST:
+    case homeActions.FEED_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
         loading: true,

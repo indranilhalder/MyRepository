@@ -25,7 +25,7 @@ import * as ErrorHandling from "../../general/ErrorHandling.js";
 import { getMcvId } from "../../lib/adobeUtils.js";
 import { getMsdFormData } from "../../lib/msdUtils.js";
 
-export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
+export const FEED_REQUEST = "FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
 export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
 
@@ -205,9 +205,9 @@ export function homeFeedBackUpFailure(error) {
   };
 }
 
-export function homeFeedRequest(feedType) {
+export function feedRequest(feedType) {
   return {
-    type: HOME_FEED_REQUEST,
+    type: FEED_REQUEST,
     status: REQUESTING,
     feedType
   };
@@ -254,9 +254,9 @@ export function homeFeedBackUp() {
 export function getFeed(pageId: null) {
   return async (dispatch, getState, { api }) => {
     if (pageId) {
-      dispatch(homeFeedRequest(SECONDARY_FEED_TYPE));
+      dispatch(feedRequest(SECONDARY_FEED_TYPE));
     } else {
-      dispatch(homeFeedRequest());
+      dispatch(feedRequest());
     }
 
     try {
