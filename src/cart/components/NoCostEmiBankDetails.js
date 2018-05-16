@@ -163,14 +163,16 @@ export default class NoCostEmiBankDetails extends React.Component {
 
   async onSelectMonth(index, val) {
     if (this.state.selectedBankName !== "Other Bank") {
+      if (this.props.removeNoCostEmi) {
+        this.props.removeNoCostEmi(val.emicouponCode);
+      }
+
       if (this.state.selectedMonth === index) {
         this.setState({
           selectedMonth: null,
           selectedCouponCode: null,
           selectedTenure: null
         });
-
-        this.props.removeNoCostEmi(val.emicouponCode);
       } else {
         if (val && this.props.applyNoCostEmi) {
           const applyNoCostEmiReponse = await this.props.applyNoCostEmi(
@@ -187,6 +189,12 @@ export default class NoCostEmiBankDetails extends React.Component {
               is_emi: true,
               emi_bank: this.state.selectedBankCode,
               emi_tenure: val.tenure
+            });
+          } else {
+            this.setState({
+              selectedMonth: index,
+              selectedCouponCode: null,
+              selectedTenure: null
             });
           }
         }
