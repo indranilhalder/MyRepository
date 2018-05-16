@@ -697,7 +697,6 @@ function getProductsDigitalData(response) {
           product.productBrand.replace(/ /g, "_").toLowerCase()
       );
     });
-    productIdsArray = productIdsArray.join(",").toLowerCase();
     return {
       productIdsArray,
       productQuantityArray,
@@ -726,7 +725,7 @@ function getProductCategoryHierarchy(response) {
         );
       }
     });
-    return category.join(",");
+    return category;
   } else {
     return null;
   }

@@ -69,57 +69,59 @@ export default class OrderDetailsCard extends React.Component {
           onViewDetails={() => this.onViewDetails()}
           price={this.props.orderDetails.finalAmount}
         />
-        <div className={styles.informationDataHolder}>
-          {this.props.orderDetails.shippingAddress && (
-            <div className={styles.addressHolder}>
-              <div className={styles.deliveredTo}>Delivery Address: </div>
-              <div className={styles.address}>
-                {`${
-                  this.props.orderDetails.shippingAddress.addressLine1
-                    ? this.props.orderDetails.shippingAddress.addressLine1
-                    : ""
-                } ${
-                  this.props.orderDetails.shippingAddress.addressLine2
-                    ? this.props.orderDetails.shippingAddress.addressLine2
-                    : ""
-                } ${
-                  this.props.orderDetails.shippingAddress.state
-                    ? this.props.orderDetails.shippingAddress.state
-                    : ""
-                } ${
-                  this.props.orderDetails.shippingAddress.postalcode
-                    ? this.props.orderDetails.shippingAddress.postalcode
-                    : ""
-                }`}
+        {!this.props.orderDetails.isEgvOrder && (
+          <div className={styles.informationDataHolder}>
+            {this.props.orderDetails.shippingAddress && (
+              <div className={styles.addressHolder}>
+                <div className={styles.deliveredTo}>Delivery Address: </div>
+                <div className={styles.address}>
+                  {`${
+                    this.props.orderDetails.shippingAddress.addressLine1
+                      ? this.props.orderDetails.shippingAddress.addressLine1
+                      : ""
+                  } ${
+                    this.props.orderDetails.shippingAddress.addressLine2
+                      ? this.props.orderDetails.shippingAddress.addressLine2
+                      : ""
+                  } ${
+                    this.props.orderDetails.shippingAddress.state
+                      ? this.props.orderDetails.shippingAddress.state
+                      : ""
+                  } ${
+                    this.props.orderDetails.shippingAddress.postalcode
+                      ? this.props.orderDetails.shippingAddress.postalcode
+                      : ""
+                  }`}
+                </div>
               </div>
-            </div>
-          )}
-          {this.props.productDetails.selectedDeliveryMode && (
-            <div className={styles.addressHolder}>
-              <div className={styles.deliveredTo}>
-                {`${
-                  deliveryOption.name === "Home Delivery"
-                    ? "Standard Shipping"
-                    : deliveryOption.name === "Express Delivery"
-                      ? "Express Shipping"
-                      : deliveryOption.name
-                } `}
+            )}
+            {this.props.productDetails.selectedDeliveryMode && (
+              <div className={styles.addressHolder}>
+                <div className={styles.deliveredTo}>
+                  {`${
+                    deliveryOption.name === "Home Delivery"
+                      ? "Standard Shipping"
+                      : deliveryOption.name === "Express Delivery"
+                        ? "Express Shipping"
+                        : deliveryOption.name
+                  } `}
+                </div>
+                <div className={styles.address}>
+                  {this.props.productDetails.selectedDeliveryMode.desc}
+                </div>
               </div>
-              <div className={styles.address}>
-                {this.props.productDetails.selectedDeliveryMode.desc}
-              </div>
-            </div>
-          )}
+            )}
 
-          {this.props.orderDetails.sellerName && (
-            <div className={styles.orderSoldBy}>
-              <div className={styles.labelText}>Sold by:</div>
-              <div className={styles.infoText}>
-                {this.props.orderDetails.sellerName}
+            {this.props.orderDetails.sellerName && (
+              <div className={styles.orderSoldBy}>
+                <div className={styles.labelText}>Sold by:</div>
+                <div className={styles.infoText}>
+                  {this.props.orderDetails.sellerName}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     );
   }
