@@ -4074,9 +4074,9 @@ export function applyNoCostEmi(couponCode, cartGuId, cartId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(applyNoCostEmiSuccess(resultJson, couponCode));
+      return dispatch(applyNoCostEmiSuccess(resultJson, couponCode));
     } catch (e) {
-      dispatch(applyNoCostEmiFailure(e.message));
+      return dispatch(applyNoCostEmiFailure(e.message));
     }
   };
 }

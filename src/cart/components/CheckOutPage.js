@@ -1066,18 +1066,25 @@ class CheckOutPage extends React.Component {
       this.props.getEmiTermsAndConditionsForBank(bankCode, bankName);
     }
   };
-  applyNoCostEmi = (couponCode, bankName) => {
-    this.setState({
-      isNoCostEmiApplied: true,
-      isNoCostEmiProceeded: false,
-      noCostEmiBankName: bankName
-    });
+  applyNoCostEmi = async (couponCode, bankName) => {
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
       const cartId = localStorage.getItem(OLD_CART_CART_ID);
       if (this.props.applyNoCostEmi) {
-        this.props.applyNoCostEmi(couponCode, cartGuId, cartId);
+        const applyNoCostEmiResponse = await this.props.applyNoCostEmi(
+          couponCode,
+          cartGuId,
+          cartId
+        );
+        if (applyNoCostEmiResponse.status === SUCCESS) {
+          this.setState({
+            isNoCostEmiApplied: true,
+            isNoCostEmiProceeded: false,
+            noCostEmiBankName: bankName
+          });
+        }
+        return applyNoCostEmiResponse;
       }
     } else {
       let cartDetailsLoggedInUser = Cookie.getCookie(
@@ -1087,7 +1094,19 @@ class CheckOutPage extends React.Component {
         let carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
         let cartId = JSON.parse(cartDetailsLoggedInUser).code;
         if (this.props.applyNoCostEmi) {
-          this.props.applyNoCostEmi(couponCode, carGuId, cartId);
+          let applyNoCostEmiResponse = await this.props.applyNoCostEmi(
+            couponCode,
+            carGuId,
+            cartId
+          );
+          if (applyNoCostEmiResponse.status === SUCCESS) {
+            this.setState({
+              isNoCostEmiApplied: true,
+              isNoCostEmiProceeded: false,
+              noCostEmiBankName: bankName
+            });
+          }
+          return applyNoCostEmiResponse;
         }
       }
     }
@@ -1095,7 +1114,7 @@ class CheckOutPage extends React.Component {
 
   removeNoCostEmi = couponCode => {
     this.setState({
-      isNoCostEmiApplied: true,
+      isNoCostEmiApplied: false,
       isNoCostEmiProceeded: false,
       noCostEmiBankName: null,
       noCostEmiDiscount: "0.00"
@@ -2001,6 +2020,7 @@ class CheckOutPage extends React.Component {
                 isRemainingBalance={this.state.isRemainingAmount}
                 isPaymentFailed={this.state.isPaymentFailed}
                 isFromGiftCard={this.state.isGiftCard}
+                isNoCostEmiApplied={this.state.isNoCostEmiApplied}
                 cart={this.props.cart}
                 paymentModeSelected={this.state.paymentModeSelected}
                 changeSubEmiOption={currentSelectedEMIType =>
