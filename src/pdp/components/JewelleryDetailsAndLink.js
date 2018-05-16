@@ -1,9 +1,12 @@
 import React from "react";
 import styles from "./JewelleryDetailsAndLink.css";
+import StarRating from "../../general/components/StarRating.js";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import MetaTags from "react-meta-tags";
+import arrowIcon from "../../general/components/img/arrow.svg";
 
 export default class JewelleryDetailsAndLink extends React.Component {
   readMore() {
@@ -39,6 +42,10 @@ export default class JewelleryDetailsAndLink extends React.Component {
     );
   };
   render() {
+    let averageRating = "";
+    if (this.props.averageRating) {
+      averageRating = Math.floor(this.props.averageRating);
+    }
     return (
       <div className={styles.base}>
         {this.renderSchemaTags()}
@@ -108,6 +115,25 @@ export default class JewelleryDetailsAndLink extends React.Component {
               </div>
             )}
           </div>
+          {this.props.averageRating && (
+            <div className={styles.ratingHolder}>
+              <StarRating averageRating={this.props.averageRating}>
+                {this.props.averageRating && (
+                  <div
+                    itemprop="aggregateRating"
+                    itemscope
+                    itemtype="http://schema.org/AggregateRating"
+                    className={styles.ratingText}
+                  >
+                    Rating {`${averageRating}`} /5
+                  </div>
+                )}
+                <div className={styles.arrowHolder}>
+                  <Icon image={arrowIcon} size={15} />
+                </div>
+              </StarRating>
+            </div>
+          )}
         </div>
         {this.props.informationText && (
           <div className={styles.textHolder}>
