@@ -25,7 +25,11 @@ class ChangePassword extends Component {
       this.props.updatePassword(this.state);
     }
   };
-
+  componentWillUnmount() {
+    if (this.props.clearChangePasswordDetails) {
+      this.props.clearChangePasswordDetails();
+    }
+  }
   render() {
     return (
       <AuthFrame
