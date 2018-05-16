@@ -26,6 +26,7 @@ const feed = (
     toUpdate,
     componentData,
     homeFeedClonedData,
+    secondaryFeedData,
     clonedComponent;
   switch (action.type) {
     case homeActions.SECONDARY_FEED_SUCCESS:
@@ -169,6 +170,15 @@ const feed = (
         homeFeed: homeFeedData
       });
 
+    case homeActions.SECONDARY_FEED_COMPONENT_DATA_REQUEST:
+      secondaryFeedData = state.secondaryFeed;
+      clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
+      clonedComponent.loading = true;
+      secondaryFeedData[action.positionInFeed] = clonedComponent;
+      return Object.assign({}, state, {
+        status: action.status,
+        homeFeed: homeFeedData
+      });
     case homeActions.COMPONENT_DATA_REQUEST:
       homeFeedData = state.homeFeed;
       clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
@@ -216,6 +226,35 @@ const feed = (
         homeFeed: homeFeedData,
         status: action.status
       });
+    case homeActions.SECONDARY_FEED_COMPONENT_DATA_SUCCESS:
+      secondaryFeedData = state.secondaryFeed;
+      componentData = {
+        loading: false,
+        status: action.status
+      };
+      if (!action.isMsd) {
+        toUpdate = action.data[action.data.componentName];
+        componentData = {
+          ...secondaryFeedData[action.positionInFeed],
+          ...toUpdate,
+          ...componentData
+        };
+      } else {
+        if (action.data.type) {
+          action.data.category = action.data.type;
+        }
+        componentData = {
+          ...action.data,
+          ...secondaryFeedData[action.positionInFeed],
+          ...componentData
+        };
+      }
+      secondaryFeedData[action.positionInFeed] = componentData;
+      return Object.assign({}, state, {
+        status: action.status,
+        secondaryFeed: secondaryFeedData
+      });
+
     case homeActions.COMPONENT_DATA_SUCCESS:
       if (!state.homeFeed[action.positionInFeed].useBackUpData) {
         homeFeedData = state.homeFeed;
@@ -247,6 +286,18 @@ const feed = (
         });
       }
       break;
+
+    case homeActions.SECONDARY_FEED_COMPONENT_DATA_FAILURE:
+      secondaryFeedData = state.secondaryFeed;
+      clonedComponent = cloneDeep(secondaryFeedData[action.positionInFeed]);
+      clonedComponent.loading = true;
+      clonedComponent.status = action.error;
+      secondaryFeedData[action.positionInFeed] = clonedComponent;
+
+      return Object.assign({}, state, {
+        status: action.status,
+        secondaryFeed: secondaryFeedData
+      });
 
     case homeActions.COMPONENT_DATA_FAILURE:
       homeFeedData = state.homeFeed;

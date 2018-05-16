@@ -151,7 +151,7 @@ export const SAVE_LIST_PAGE = "/default/wishList";
 export const PAYMENT_MODE_TYPE = "paymentMode";
 // fetching feed information contant
 export const HOME_FEED_TYPE = "home";
-export const SECONDARY_FEED = "secondaryFeed";
+export const SECONDARY_FEED_TYPE = "secondaryFeed";
 
 export const YES = "Y";
 export const NO = "N";

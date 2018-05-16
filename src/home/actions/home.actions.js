@@ -32,6 +32,13 @@ export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
 export const SECONDARY_FEED_SUCCESS = "SECONDARY_FEED_SUCCESS";
 export const SECONDARY_FEED_FAILURE = "SECONDARY_FEED_FAILURE";
 
+export const SECONDARY_FEED_COMPONENT_DATA_SUCCESS =
+  "SECONDARY_FEED_COMPONENT_DATA_SUCCESS";
+export const SECONDARY_FEED_COMPONENT_DATA_FAILURE =
+  "SECONDARY_FEED_COMPONENT_DATA_FAILURE";
+export const SECONDARY_FEED_COMPONENT_DATA_REQUEST =
+  "SECONDARY_FEED_COMPONENT_DATA_REQUEST";
+
 export const HOME_FEED_BACK_UP_FAILURE = "HOME_FEED_BACK_UP_FAILURE";
 export const HOME_FEED_BACK_UP_REQUEST = "HOME_FEED_BACK_UP_REQUEST";
 export const HOME_FEED_BACK_UP_SUCCESS = "HOME_FEED_BACK_UP_SUCCESS";
@@ -400,11 +407,47 @@ export function getComponentDataBackUp(url, positionInFeed) {
   };
 }
 
+export function secondaryFeedComponentDataRequest(positionInFeed) {
+  return {
+    type: SECONDARY_FEED_COMPONENT_DATA_REQUEST,
+    status: REQUESTING,
+    positionInFeed
+  };
+}
+
 export function componentDataRequest(positionInFeed) {
   return {
     type: COMPONENT_DATA_REQUEST,
     status: REQUESTING,
     positionInFeed
+  };
+}
+
+export function secondaryFeedComponentDataSuccess(
+  data,
+  positioninFeed,
+  isMsd: false
+) {
+  return {
+    type: SECONDARY_FEED_COMPONENT_DATA_SUCCESS,
+    status: SUCCESS,
+    data,
+    positioninFeed,
+    isMsd
+  };
+}
+
+export function secondaryFeedComponentDataFailure(
+  data,
+  positioninFeed,
+  isMsd: false
+) {
+  return {
+    type: SECONDARY_FEED_COMPONENT_DATA_FAILURE,
+    status: FAILURE,
+    data,
+    positioninFeed,
+    isMsd
   };
 }
 
