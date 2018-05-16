@@ -51,7 +51,7 @@ export default class EmiPanel extends React.Component {
   };
   applyNoCostEmi = (couponCode, bankName) => {
     if (this.props.applyNoCostEmi) {
-      this.props.applyNoCostEmi(couponCode, bankName);
+      return this.props.applyNoCostEmi(couponCode, bankName);
     }
   };
 
@@ -123,6 +123,7 @@ export default class EmiPanel extends React.Component {
                   onChangeCardDetail={val => this.onChangeCardDetail(val)}
                 >
                   <NoCostEmiBankDetails
+                    isNoCostEmiApplied={this.props.isNoCostEmiApplied}
                     selectedEMIType={this.state.currentSelectedEMIType}
                     onBankSelect={val => this.onBankSelect(val)}
                     onSelectMonth={val => this.onSelectMonth(val)}
