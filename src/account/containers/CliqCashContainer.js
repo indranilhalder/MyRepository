@@ -21,7 +21,6 @@ const mapDispatchToProps = dispatch => {
     },
     redeemCliqVoucher: cliqCashDetails => {
       dispatch(redeemCliqVoucher(cliqCashDetails)).then(result => {
-        console.log(result.status);
         if (
           result.status === "success" ||
           result.status === SUCCESS_CAMEL_CASE ||
