@@ -1,4 +1,5 @@
 import * as authActions from "../actions/auth.actions";
+import { CLEAR_ERROR } from "../../general/error.actions";
 const auth = (
   state = {
     authCallsInProcess: false,
@@ -9,6 +10,10 @@ const auth = (
   action
 ) => {
   switch (action.type) {
+    case CLEAR_ERROR:
+      return Object.assign({}, state, {
+        error: null
+      });
     case authActions.SET_URL_TO_REDIRECT_TO_AFTER_AUTH:
       return Object.assign({}, state, {
         redirectToAfterAuthUrl: action.url

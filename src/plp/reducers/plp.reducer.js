@@ -1,6 +1,7 @@
 import * as plpActions from "../actions/plp.actions";
 import concat from "lodash.concat";
 import cloneDeep from "lodash.clonedeep";
+import { CLEAR_ERROR } from "../../general/error.actions";
 const productListings = (
   state = {
     status: null,
@@ -21,6 +22,10 @@ const productListings = (
   let existingProductListings;
   let toUpdate;
   switch (action.type) {
+    case CLEAR_ERROR:
+      return Object.assign({}, state, {
+        error: null
+      });
     case plpActions.SORT_HAS_BEEN_CLICKED:
       return Object.assign({}, state, {
         sortHasBeenClicked: true

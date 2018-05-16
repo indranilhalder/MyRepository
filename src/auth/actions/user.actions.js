@@ -7,7 +7,9 @@ import {
 import {
   GLOBAL_ACCESS_TOKEN,
   CUSTOMER_ACCESS_TOKEN,
-  FAILURE_UPPERCASE
+  FAILURE_UPPERCASE,
+  OTP_VERIFICATION_REQUIRED_CODE,
+  OTP_VERIFICATION_REQUIRED_TEXT
 } from "../../lib/constants";
 import {
   showModal,
@@ -163,7 +165,11 @@ export function loginUser(userLoginDetails) {
           dispatch(displayToast(resultJsonStatus.message));
         }
         dispatch(stopLoaderOnLoginForOTPVerification());
-        if (resultJson.errorCode === "NU0002") {
+
+        if (
+          resultJson.errorCode === OTP_VERIFICATION_REQUIRED_CODE ||
+          resultJson.status === OTP_VERIFICATION_REQUIRED_TEXT
+        ) {
           return dispatch(
             showModal(OTP_LOGIN_MODAL, {
               username: userLoginDetails.username,
