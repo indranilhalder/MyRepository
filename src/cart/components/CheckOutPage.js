@@ -1114,12 +1114,7 @@ class CheckOutPage extends React.Component {
   };
 
   removeNoCostEmi = async couponCode => {
-    this.setState({
-      isNoCostEmiApplied: false,
-      isNoCostEmiProceeded: false,
-      noCostEmiBankName: null,
-      noCostEmiDiscount: "0.00"
-    });
+
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
@@ -1136,6 +1131,15 @@ class CheckOutPage extends React.Component {
         let carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
         let cartId = JSON.parse(cartDetailsLoggedInUser).code;
         const removeNoCostEmiResponse = await this.props.removeNoCostEmi(couponCode, carGuId, cartId);
+        if(removeNoCostEmiResponse.status === SUCCESS)
+        {
+          this.setState({
+            isNoCostEmiApplied: false,
+            isNoCostEmiProceeded: false,
+            noCostEmiBankName: null,
+            noCostEmiDiscount: "0.00"
+          });
+        }
         return removeNoCostEmiResponse;
       }
     }
