@@ -22,17 +22,18 @@ export default class BagPageItem extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.productDescription}>
-          {this.props.isGiveAway === NO && !this.props.isServiceAvailable
-            ? localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) && (
-                <div className={styles.serviceAvailabilityText}>
-                  {NOT_SERVICEABLE}
-                </div>
-              )
-            : this.props.isOutOfStock && (
-                <div className={styles.serviceAvailabilityText}>
-                  {OUT_OF_STOCK}
-                </div>
-              )}
+          {this.props.isGiveAway === NO &&
+            (!this.props.isServiceAvailable
+              ? localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) && (
+                  <div className={styles.serviceAvailabilityText}>
+                    {NOT_SERVICEABLE}
+                  </div>
+                )
+              : this.props.isOutOfStock && (
+                  <div className={styles.serviceAvailabilityText}>
+                    {OUT_OF_STOCK}
+                  </div>
+                ))}
           {this.props.productName && (
             <div className={styles.informationText}>
               {this.props.productName}
