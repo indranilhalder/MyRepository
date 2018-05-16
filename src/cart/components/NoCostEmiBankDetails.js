@@ -147,6 +147,8 @@ export default class NoCostEmiBankDetails extends React.Component {
   };
 
   async onSelectMonth(index, val) {
+    console.log(val);
+    console.log(this.state);
     if (this.state.selectedBankName !== "Other Bank") {
       if (this.state.selectedMonth === index) {
         this.setState({
@@ -170,7 +172,7 @@ export default class NoCostEmiBankDetails extends React.Component {
             });
             this.onChangeCardDetail({
               is_emi: true,
-              emi_bank: this.state.selectedCode,
+              emi_bank: this.state.selectedBankCode,
               emi_tenure: val.tenure
             });
           }
