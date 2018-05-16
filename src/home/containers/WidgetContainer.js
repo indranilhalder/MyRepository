@@ -10,10 +10,18 @@ const mapDispatchToProps = dispatch => {
       positionInFeed,
       postParams,
       backUpUrl,
-      type
+      type,
+      feedType
     ) => {
       dispatch(
-        getComponentData(positionInFeed, fetchUrl, postParams, backUpUrl, type)
+        getComponentData(
+          positionInFeed,
+          fetchUrl,
+          postParams,
+          backUpUrl,
+          type,
+          feedType
+        )
       );
     },
     getItems: (positionInFeed, itemIds) => {

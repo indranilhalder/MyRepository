@@ -36,7 +36,9 @@ import List from "@researchgate/react-intersection-list";
 import map from "lodash.map";
 import {
   LOGGED_IN_USER_DETAILS,
-  CUSTOMER_ACCESS_TOKEN
+  CUSTOMER_ACCESS_TOKEN,
+  HOME_FEED_TYPE,
+  SECONDARY_FEED_TYPE
 } from "../../lib/constants";
 import {
   renderMetaTags,
@@ -165,6 +167,7 @@ class Feed extends Component {
           key={index}
           type={typeKeyMapping[feedDatum.type]}
           postData={feedDatum.postParams}
+          feedType={this.props.feedType}
         >
           {typeComponentMapping[feedDatum.type] &&
             typeComponentMapping[feedDatum.type]}
@@ -185,7 +188,7 @@ class Feed extends Component {
   componentWillMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    if (this.props.isHomeFeedPage) {
+    if (this.props.feedType === HOME_FEED_TYPE) {
       this.props.homeFeed();
     }
     if (userDetails && customerCookie && this.props.getWishListItems) {
@@ -253,7 +256,8 @@ Feed.propTypes = {
   onChangePassword: PropTypes.func,
   emailValue: PropTypes.string,
   passwordValue: PropTypes.string,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  feedType: PropTypes.oneOf([HOME_FEED_TYPE, SECONDARY_FEED_TYPE])
 };
 
 Feed.defaultProps = {

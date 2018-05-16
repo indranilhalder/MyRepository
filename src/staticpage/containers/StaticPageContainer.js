@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { setHeaderText } from "../../general/header.actions";
 import { displayToast } from "../../general/toast.actions";
 import { getFeed } from "../../home/actions/home.actions";
+import { SECONDARY_FEED_TYPE } from "../../lib/constants";
 
 import StaticPage from "../components/StaticPage";
 const mapDispatchToProps = dispatch => {
@@ -22,7 +23,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     data: state.feed.homeFeed,
-    loading: state.feed.loading
+    loading: state.feed.loading,
+    feedType: SECONDARY_FEED_TYPE
   };
 };
 

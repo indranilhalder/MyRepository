@@ -13,7 +13,8 @@ export default class Widget extends React.Component {
         this.props.positionInFeed,
         this.props.postData,
         this.props.feedComponentData.backupURL,
-        this.props.feedComponentData.type
+        this.props.feedComponentData.type,
+        this.props.feedType
       );
     }
   }

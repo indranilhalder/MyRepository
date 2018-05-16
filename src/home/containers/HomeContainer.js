@@ -6,7 +6,7 @@ import Feed from "../components/Feed";
 import { setHeaderText } from "../../general/header.actions";
 import { withRouter } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
-import { LOGGED_IN_USER_DETAILS } from "../../lib/constants";
+import { LOGGED_IN_USER_DETAILS, HOME_FEED_TYPE } from "../../lib/constants";
 const mapDispatchToProps = dispatch => {
   return {
     homeFeed: () => {
@@ -38,11 +38,11 @@ const mapStateToProps = state => {
   }
   return {
     homeFeedData: state.feed.homeFeed,
-    isHomeFeedPage: true,
     loading: state.feed.loading,
     type: state.cart.type,
     headerMessage,
-    loginFromMyBag: state.cart.loginFromMyBag
+    loginFromMyBag: state.cart.loginFromMyBag,
+    feedType: HOME_FEED_TYPE
   };
 };
 

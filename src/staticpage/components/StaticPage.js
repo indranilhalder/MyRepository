@@ -23,6 +23,7 @@ export default class StaticPage extends Component {
       return (
         <div className={styles.base}>
           <Feed
+            feedType={this.props.feedType}
             homeFeedData={this.props.data}
             setHeaderText={this.props.setHeaderText}
           />
