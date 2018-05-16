@@ -47,6 +47,8 @@ export default class SavedCard extends React.Component {
               onFocus={() => {
                 this.props.onFocusInput();
               }}
+              onlyNumber={true}
+              maxLength="4"
               onChange={val => this.onChangeCvv(val)}
             />
           </div>
