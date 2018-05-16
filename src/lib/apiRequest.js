@@ -12,6 +12,8 @@ import * as ErrorHandling from "../general/ErrorHandling.js";
 import { CUSTOMER_ACCESS_TOKEN, GLOBAL_ACCESS_TOKEN } from "../lib/constants";
 import { USER_CART_PATH } from "../cart/actions/cart.actions";
 let API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
+let MIDDLEWARE_API_URL_ROOT =
+  "http://tmppprd.tataque.com/marketplacewebservices";
 export let TATA_CLIQ_ROOT = /https?:[\/]{2}\S*?(\/\S*)/;
 export const TOKEN_PATH = "oauth/token";
 export let URL_ROOT = "";
@@ -22,14 +24,20 @@ if (
   process.env.REACT_APP_STAGE === "local"
 ) {
   API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
+  MIDDLEWARE_API_URL_ROOT =
+    "https://uat2.tataunistore.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "tmpprod") {
   API_URL_ROOT = "https://tmppprd.tataunistore.com/marketplacewebservices";
+  MIDDLEWARE_API_URL_ROOT = "http://tmppprd.tataque.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "production") {
   API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
+  MIDDLEWARE_API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "p2") {
   API_URL_ROOT = "https://p2.tatacliq.com/marketplacewebservices";
+  MIDDLEWARE_API_URL_ROOT = "https://p2app.tatacliq.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "stage") {
   API_URL_ROOT = "https://stg.tatacliq.com/marketplacewebservices";
+  MIDDLEWARE_API_URL_ROOT = "https://stg.tatacliq.com/marketplacewebservices";
 }
 
 if (process.env.REACT_APP_STAGE === "tmpprod") {
@@ -133,6 +141,45 @@ export async function get(url) {
       );
     }
     return await coreGet(newUrl);
+  } catch (e) {
+    throw e;
+  }
+}
+
+export async function coreGetMiddlewareUrl(url) {
+  return await fetch(`${MIDDLEWARE_API_URL_ROOT}/${url}`, {
+    headers: {
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
+    }
+  });
+}
+
+export async function getMiddlewareUrl(url) {
+  const result = await coreGetMiddlewareUrl(url);
+  const resultClone = result.clone();
+  const resultJson = await result.json();
+  const errorStatus = ErrorHandling.getFailureResponse(resultJson);
+
+  try {
+    if (
+      (!errorStatus.status ||
+        !isInvalidAccessTokenError(errorStatus.message)) &&
+      !isCartNotFoundError(resultJson)
+    ) {
+      return resultClone;
+    }
+    let newUrl;
+
+    if (isCartNotFoundError(resultJson)) {
+      newUrl = await handleCartNotFoundError(resultJson, url);
+    }
+    if (isInvalidAccessTokenError(errorStatus.message)) {
+      newUrl = await handleInvalidGlobalAccesssTokenOrCustomerAccessToken(
+        errorStatus.message,
+        url
+      );
+    }
+    return await coreGetMiddlewareUrl(newUrl);
   } catch (e) {
     throw e;
   }

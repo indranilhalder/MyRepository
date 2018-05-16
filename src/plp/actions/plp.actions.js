@@ -140,7 +140,7 @@ export function getProductListings(
       }
       queryString = `${queryString}&page=${pageNumber}`;
       queryString = `${queryString}${PRODUCT_LISTINGS_SUFFIX}`;
-      const result = await api.get(queryString);
+      const result = await api.getMiddlewareUrl(queryString);
       const resultJson = await result.json();
       if (resultJson.error) {
         if (

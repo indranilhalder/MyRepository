@@ -333,7 +333,7 @@ export function getProductSizeGuide(productCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductSizeGuideRequest());
     try {
-      const result = await api.get(
+      const result = await api.getMiddlewareUrl(
         `${PRODUCT_SIZE_GUIDE_PATH}/${productCode}/sizeGuide?isPwa=true`
       );
       const resultJson = await result.json();
@@ -459,7 +459,7 @@ export function getProductSpecification(productId) {
   return async (dispatch, getState, { api }) => {
     dispatch(ProductSpecificationRequest());
     try {
-      const result = await api.get(
+      const result = await api.getMiddlewareUrl(
         `${PRODUCT_SPECIFICATION_PATH}/${productId}`
       );
       const resultJson = await result.json();
@@ -872,7 +872,7 @@ export function getPdpItems(itemIds, widgetKey) {
         productCodes = `${itemId},${productCodes}`;
       });
       const url = `v2/mpl/cms/page/getProductInfo?isPwa=true&productCodes=${productCodes}`;
-      const result = await api.get(url);
+      const result = await api.getMiddlewareUrl(url);
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
