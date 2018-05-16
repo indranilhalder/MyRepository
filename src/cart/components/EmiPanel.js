@@ -57,7 +57,7 @@ export default class EmiPanel extends React.Component {
 
   removeNoCostEmi = couponCode => {
     if (this.props.removeNoCostEmi) {
-      this.props.removeNoCostEmi(couponCode);
+      return this.props.removeNoCostEmi(couponCode);
     }
   };
   getItemBreakUpDetails = (couponCode, noCostEmiText, noCostProductCount) => {

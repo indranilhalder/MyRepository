@@ -1113,7 +1113,7 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  removeNoCostEmi = couponCode => {
+  removeNoCostEmi = async couponCode => {
     this.setState({
       isNoCostEmiApplied: false,
       isNoCostEmiProceeded: false,
@@ -1135,7 +1135,8 @@ class CheckOutPage extends React.Component {
       if (this.props.removeNoCostEmi) {
         let carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
         let cartId = JSON.parse(cartDetailsLoggedInUser).code;
-        this.props.removeNoCostEmi(couponCode, carGuId, cartId);
+        const removeNoCostEmiResponse = await this.props.removeNoCostEmi(couponCode, carGuId, cartId);
+        return removeNoCostEmiResponse;
       }
     }
   };
