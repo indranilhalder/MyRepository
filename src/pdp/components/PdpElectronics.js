@@ -320,6 +320,7 @@ export default class PdpElectronics extends React.Component {
                   price={price}
                   discountPrice={discountPrice}
                   averageRating={productData.averageRating}
+                  goToReviewPage={this.goToReviewPage}
                   onClick={this.goToReviewPage}
                   discount={productData.discount}
                 />
@@ -333,6 +334,7 @@ export default class PdpElectronics extends React.Component {
                   price={discountPrice}
                   discountPrice={price}
                   averageRating={productData.averageRating}
+                  goToReviewPage={this.goToReviewPage}
                   discount={productData.discount}
                 />
               )}
