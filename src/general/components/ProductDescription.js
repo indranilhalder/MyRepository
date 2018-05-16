@@ -86,10 +86,14 @@ export default class ProductDescription extends Component {
                 {this.props.minPrice.toString().includes(RUPEE_SYMBOL)
                   ? this.props.minPrice
                   : `${RUPEE_SYMBOL}${this.props.minPrice}`}{" "}
-                -{" "}
-                {this.props.maxPrice.toString().includes(RUPEE_SYMBOL)
-                  ? this.props.maxPrice
-                  : `${RUPEE_SYMBOL}${this.props.maxPrice}`}
+                {this.props.maxPrice !== this.props.minPrice && (
+                  <React.Fragment>
+                    -{" "}
+                    {this.props.maxPrice.toString().includes(RUPEE_SYMBOL)
+                      ? this.props.maxPrice
+                      : `${RUPEE_SYMBOL}${this.props.maxPrice}`}
+                  </React.Fragment>
+                )}
               </div>
             )}
         </div>
