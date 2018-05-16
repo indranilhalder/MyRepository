@@ -14,7 +14,6 @@ export default class MobileDatePicker extends React.Component {
     }
   }
   handleChange(event) {
-    console.log(event.target.value);
     this.setState({ value: event.target.value }, () => {
       if (this.props.onChange) {
         this.props.onChange(this.state.value);
