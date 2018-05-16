@@ -88,7 +88,9 @@ export default class AddDeliveryAddress extends React.Component {
   onChange(val) {
     this.setState(val);
     if (this.props.getAddressDetails) {
-      this.props.getAddressDetails(this.state);
+      const cloneAddress = cloneDeep(this.state);
+      Object.assign(cloneAddress, val);
+      this.props.getAddressDetails(cloneAddress);
     }
   }
   onChangeDefaultFlag() {
@@ -96,7 +98,9 @@ export default class AddDeliveryAddress extends React.Component {
       defaultFlag: !prevState.defaultFlag
     }));
     if (this.props.getAddressDetails) {
-      this.props.getAddressDetails(this.state);
+      const cloneAddress = cloneDeep(this.state);
+      Object.assign(cloneAddress, { defaultFlag: this.state.defaultFlag });
+      this.props.getAddressDetails(cloneAddress);
     }
   }
   componentWillUnmount() {
