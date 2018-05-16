@@ -26,7 +26,9 @@ class ChangePassword extends Component {
     }
   };
   componentWillUnmount() {
-    this.props.clearChangePasswordDetails();
+    if (this.props.clearChangePasswordDetails) {
+      this.props.clearChangePasswordDetails();
+    }
   }
   render() {
     return (
