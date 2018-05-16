@@ -152,6 +152,7 @@ export const PAYMENT_MODE_TYPE = "paymentMode";
 // fetching feed information contant
 export const BLP_OR_CLP_FEED_TYPE = "blpOrClp";
 export const HOME_FEED_TYPE = "home";
+export const SECONDARY_FEED = "secondaryFeed";
 
 export const YES = "Y";
 export const NO = "N";
