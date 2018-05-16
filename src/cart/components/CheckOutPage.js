@@ -270,7 +270,7 @@ class CheckOutPage extends React.Component {
     }
     if (
       this.props.cart.orderConfirmationDetails ||
-      this.props.cart.cliqCashPaymentDetails
+      this.props.cart.cliqCashJusPayDetails
     ) {
       this.props.setHeaderText(THANK_YOU);
     } else {
@@ -787,6 +787,7 @@ class CheckOutPage extends React.Component {
         this.state.isRemainingAmount &&
         !this.state.isPaymentFailed
       ) {
+
         let cliqCashAmount = 0;
         if (
           nextProps.cart.paymentModes &&

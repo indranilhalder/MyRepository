@@ -5,20 +5,33 @@ import {
 } from "../actions/account.actions";
 import { withRouter } from "react-router-dom";
 import CliqAndCash from "../components/CliqAndCash.js";
-import { setHeaderText } from "../../general/header.actions";
+import { setHeaderText, SUCCESS } from "../../general/header.actions";
 import {
   showSecondaryLoader,
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
+import { SUCCESS_CAMEL_CASE, SUCCESS_UPPERCASE } from "../../lib/constants";
+import { displayToast } from "../../general/toast.actions";
+const CLIQ_CASH_REDEEM_SUCCESS =
+  "Congrats!  Money has been added to your Cliq Cash balance";
 const mapDispatchToProps = dispatch => {
   return {
     getCliqCashDetails: () => {
       dispatch(getCliqCashDetails());
     },
     redeemCliqVoucher: cliqCashDetails => {
-      dispatch(redeemCliqVoucher(cliqCashDetails)).then(
-        dispatch(getCliqCashDetails())
-      );
+      dispatch(redeemCliqVoucher(cliqCashDetails)).then(result => {
+        if (
+          result.status === "success" ||
+          result.status === SUCCESS_CAMEL_CASE ||
+          result.status === SUCCESS_UPPERCASE
+        ) {
+          dispatch(displayToast(CLIQ_CASH_REDEEM_SUCCESS));
+          dispatch(getCliqCashDetails());
+        } else {
+          dispatch(displayToast(result.error));
+        }
+      });
     },
     setHeaderText: text => {
       dispatch(setHeaderText(text));
