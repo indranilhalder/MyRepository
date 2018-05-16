@@ -24,7 +24,7 @@
 }
 .selected {
   composes: textHolder;
-  color: #ffff;
+  color: #fff;
 }
 .baseActive {
   composes: base;
