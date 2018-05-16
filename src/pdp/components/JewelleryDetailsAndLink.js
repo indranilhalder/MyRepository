@@ -19,7 +19,11 @@ export default class JewelleryDetailsAndLink extends React.Component {
       this.props.showPriceBreakUp();
     }
   }
-
+  handleRatingLink() {
+    if (this.props.goToReviewPage) {
+      this.props.goToReviewPage();
+    }
+  }
   handleLinkClick = e => {
     e.preventDefault();
   };
@@ -116,7 +120,10 @@ export default class JewelleryDetailsAndLink extends React.Component {
             )}
           </div>
           {this.props.averageRating && (
-            <div className={styles.ratingHolder}>
+            <div
+              className={styles.ratingHolder}
+              onClick={() => this.handleRatingLink()}
+            >
               <StarRating averageRating={this.props.averageRating}>
                 {this.props.averageRating && (
                   <div
