@@ -251,9 +251,9 @@ export function homeFeedBackUp() {
 // brand feed and category feed  . we need to rename this function name like feed
 // this is also now used for static pages, so the name brandIdOrCategoryId makes less sense
 // however there isn't a good name to replace it.
-export function getFeed(brandIdOrCategoryId: null) {
+export function getFeed(pageId: null) {
   return async (dispatch, getState, { api }) => {
-    if (brandIdOrCategoryId) {
+    if (pageId) {
       dispatch(homeFeedRequest(BLP_OR_CLP_FEED_TYPE));
     } else {
       dispatch(homeFeedRequest());
@@ -261,10 +261,8 @@ export function getFeed(brandIdOrCategoryId: null) {
 
     try {
       let url, result, feedTypeRequest, resultJson;
-      if (brandIdOrCategoryId) {
-        result = await api.get(
-          `v2/mpl/cms/defaultpage?pageId=${brandIdOrCategoryId}`
-        );
+      if (pageId) {
+        result = await api.get(`v2/mpl/cms/defaultpage?pageId=${pageId}`);
         feedTypeRequest = BLP_OR_CLP_FEED_TYPE;
         resultJson = await result.json();
         if (resultJson.errors) {
@@ -274,23 +272,21 @@ export function getFeed(brandIdOrCategoryId: null) {
             dispatch(setHeaderText(resultJson.pageName));
           }
           dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
-          if (CATEGORY_REGEX.test(brandIdOrCategoryId)) {
+          if (CATEGORY_REGEX.test(pageId)) {
             setDataLayer(
               ADOBE_CLP_PAGE_LOAD,
               resultJson,
               getState().icid.value,
               getState().icid.icidType
             );
-          } else if (BRAND_REGEX.test(brandIdOrCategoryId)) {
+          } else if (BRAND_REGEX.test(pageId)) {
             setDataLayer(
               ADOBE_BLP_PAGE_LOAD,
               resultJson,
               getState().icid.value,
               getState().icid.icidType
             );
-          } else if (
-            brandIdOrCategoryId === window.location.pathname.replace("/", "")
-          ) {
+          } else if (pageId === window.location.pathname.replace("/", "")) {
             setDataLayer(
               ADOBE_STATIC_PAGE,
               resultJson,

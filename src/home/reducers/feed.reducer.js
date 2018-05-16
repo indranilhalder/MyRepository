@@ -7,7 +7,8 @@ import findIndex from "lodash.findindex";
 import { transformFetchingItemsOrder } from "./utils";
 const feed = (
   state = {
-    homeFeed: [], //array of objects
+    homeFeed: [], //array of objects,
+    secondaryFeed: [],
     status: null,
     error: null,
     loading: false,
