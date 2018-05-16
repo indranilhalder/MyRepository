@@ -437,17 +437,12 @@ export function secondaryFeedComponentDataSuccess(
   };
 }
 
-export function secondaryFeedComponentDataFailure(
-  data,
-  positioninFeed,
-  isMsd: false
-) {
+export function secondaryFeedComponentDataFailure(error, positioninFeed) {
   return {
     type: SECONDARY_FEED_COMPONENT_DATA_FAILURE,
     status: FAILURE,
-    data,
-    positioninFeed,
-    isMsd
+    error,
+    positioninFeed
   };
 }
 
@@ -501,7 +496,8 @@ export function getComponentData(
   fetchURL,
   postParams: null,
   backUpUrl,
-  type
+  type,
+  feedType
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(componentDataRequest(positionInFeed));
@@ -549,7 +545,13 @@ export function getComponentData(
 
         resultJson.data = resultJson.data[0];
 
-        dispatch(componentDataSuccess(resultJson, positionInFeed, true));
+        if (feedType === SECONDARY_FEED_TYPE) {
+          dispatch(
+            secondaryFeedComponentDataSuccess(resultJson, positionInFeed, true)
+          );
+        } else {
+          dispatch(componentDataSuccess(resultJson, positionInFeed, true));
+        }
       } else {
         delay(() => {
           const isFetchUrlDataLoading = getState().feed.homeFeed[positionInFeed]
@@ -573,10 +575,20 @@ export function getComponentData(
         }
         let parsedResultJson = JSON.parse(resultJson.content);
         parsedResultJson = parsedResultJson.items[0];
-        dispatch(componentDataSuccess(parsedResultJson, positionInFeed));
+        if (feedType === SECONDARY_FEED_TYPE) {
+          dispatch(
+            secondaryFeedComponentDataSuccess(resultJson, positionInFeed, true)
+          );
+        } else {
+          dispatch(componentDataSuccess(parsedResultJson, positionInFeed));
+        }
       }
     } catch (e) {
-      dispatch(componentDataFailure(positionInFeed, e.message));
+      if (feedType === SECONDARY_FEED_TYPE) {
+        dispatch(secondaryFeedComponentDataFailure(positionInFeed, e.message));
+      } else {
+        dispatch(componentDataFailure(positionInFeed, e.message));
+      }
     }
   };
 }
