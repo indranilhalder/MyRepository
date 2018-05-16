@@ -3,7 +3,7 @@ import {
   REQUESTING,
   ERROR,
   FAILURE,
-  BLP_OR_CLP_FEED_TYPE,
+  SECONDARY_FEED_TYPE,
   HOME_FEED_TYPE,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS
@@ -254,7 +254,7 @@ export function homeFeedBackUp() {
 export function getFeed(pageId: null) {
   return async (dispatch, getState, { api }) => {
     if (pageId) {
-      dispatch(homeFeedRequest(BLP_OR_CLP_FEED_TYPE));
+      dispatch(homeFeedRequest(SECONDARY_FEED_TYPE));
     } else {
       dispatch(homeFeedRequest());
     }
@@ -263,7 +263,7 @@ export function getFeed(pageId: null) {
       let url, result, feedTypeRequest, resultJson;
       if (pageId) {
         result = await api.get(`v2/mpl/cms/defaultpage?pageId=${pageId}`);
-        feedTypeRequest = BLP_OR_CLP_FEED_TYPE;
+        feedTypeRequest = SECONDARY_FEED_TYPE;
         resultJson = await result.json();
         if (resultJson.errors) {
           dispatch(homeFeedSuccess([], feedTypeRequest));
