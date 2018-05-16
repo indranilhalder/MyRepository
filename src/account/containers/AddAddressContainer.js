@@ -5,17 +5,38 @@ import AddDeliveryAddress from "../../cart/components/AddDeliveryAddress.js";
 import {
   getPinCode,
   getPinCodeSuccess,
-  resetAddAddressDetails
+  resetAddAddressDetails,
+  getUserDetails,
+  updateProfile
 } from "../actions/account.actions.js";
 import {
   showSecondaryLoader,
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
 import { displayToast } from "../../general/toast.actions";
+import {
+  SUCCESS_CAMEL_CASE,
+  SUCCESS,
+  SUCCESS_UPPERCASE
+} from "../../lib/constants";
 const mapDispatchToProps = dispatch => {
   return {
     addUserAddress: addressDetails => {
-      dispatch(addUserAddress(addressDetails));
+      if (addressDetails.emailId && addressDetails.emailId !== "") {
+        let userDetails = {};
+        userDetails.emailId = addressDetails.emailId;
+        dispatch(updateProfile(userDetails)).then(res => {
+          if (
+            res.status === SUCCESS ||
+            res.status === SUCCESS_CAMEL_CASE ||
+            res.status === SUCCESS_UPPERCASE
+          ) {
+            dispatch(addUserAddress(addressDetails));
+          }
+        });
+      } else {
+        dispatch(addUserAddress(addressDetails));
+      }
     },
     getPinCode: pinCode => {
       dispatch(getPinCode(pinCode));
@@ -34,6 +55,9 @@ const mapDispatchToProps = dispatch => {
     },
     resetAddAddressDetails: () => {
       dispatch(resetAddAddressDetails());
+    },
+    getUserDetails: () => {
+      dispatch(getUserDetails());
     }
   };
 };
@@ -44,7 +68,8 @@ const mapStateToProps = state => {
     getPinCodeDetails: state.profile.getPinCodeDetails,
     getPincodeStatus: state.profile.getPinCodeStatus,
     addUserAddressError: state.profile.addUserAddressError,
-    loading: state.profile.loading
+    loading: state.profile.loading,
+    userDetails: state.profile.userDetails
   };
 };
 

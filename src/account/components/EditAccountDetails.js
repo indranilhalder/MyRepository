@@ -31,6 +31,7 @@ const NEW_PASSWORD_TEXT = "Please enter new password";
 const PASSWORD_LENGTH_TEXT = "Password length should be minimum 8 character";
 const CONFIRM_PASSWORD_TEXT = "Please confirm your passowrd";
 const PASSWORD_MATCH_TEXT = "Password did not match";
+const DATE_FORMAT_TO_UPDATE_PROFILE = "DD/MM/YYYY";
 export default class EditAccountDetails extends React.Component {
   constructor(props) {
     super(props);
