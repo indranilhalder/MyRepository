@@ -650,11 +650,14 @@ export function giftCardFailure(error) {
 }
 export function getGiftCardDetails() {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
     dispatch(giftCardRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_PATH}/egvProductInfo?access_token=${
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/giftCard/egvProductInfo?access_token=${
           JSON.parse(customerCookie).access_token
         }`
       );
@@ -763,7 +766,7 @@ export function getOtpToActivateWallet(customerDetails, isFromCliqCash) {
           JSON.parse(userDetails).userName
         }/checkWalletMobileNumber?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isUpdateProfile=0`,
+        }&isUpdateProfile=false`,
         customerDetails
       );
       const resultJson = await result.json();
@@ -819,8 +822,11 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
           JSON.parse(userDetails).userName
         }/verifyWalletOtp?access_token=${
           JSON.parse(customerCookie).access_token
-        }&otp=${customerDetailsWithOtp.otp}`,
-        customerDetailsWithOtp
+        }&otp=${customerDetailsWithOtp.otp}&firstName=${
+          customerDetailsWithOtp.firstName
+        }&lastName=${customerDetailsWithOtp.lastName}&mobileNumber=${
+          customerDetailsWithOtp.mobileNumber
+        }`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
