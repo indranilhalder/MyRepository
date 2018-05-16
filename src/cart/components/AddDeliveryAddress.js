@@ -109,7 +109,7 @@ export default class AddDeliveryAddress extends React.Component {
     }
   }
   componentWillUnmount() {
-    if (this.props.resetAddAddressDetails()) {
+    if (this.props.resetAddAddressDetails) {
       this.props.resetAddAddressDetails();
     }
     if (this.props.resetAutoPopulateDataForPinCode) {
@@ -396,7 +396,7 @@ export default class AddDeliveryAddress extends React.Component {
               />
             </div>
           )}
-          <div className={styles.content}>
+          {/* <div className={styles.content}>
             <Input2
               boxy={true}
               placeholder="Email*"
@@ -410,7 +410,7 @@ export default class AddDeliveryAddress extends React.Component {
                 this.handleOnFocusInput();
               }}
             />
-          </div>
+          </div> */}
           <div className={styles.content}>
             <Input2
               boxy={true}

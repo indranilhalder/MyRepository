@@ -567,6 +567,8 @@ class CheckOutPage extends React.Component {
           onFocusInput={() => this.onFocusInput()}
           getPincodeStatus={this.props.getPincodeStatus}
           resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
+          getUserDetails={()=>this.props.getUserDetails()}
+          userDetails={this.props.userDetails}
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -1517,18 +1519,8 @@ class CheckOutPage extends React.Component {
       this.props.displayToast(ADDRESS_TEXT);
       return false;
     }
-    if (address && !address.emailId) {
-      this.props.displayToast(EMAIL_TEXT);
-      return false;
-    }
-    if (
-      address &&
-      address.emailId &&
-      !EMAIL_REGULAR_EXPRESSION.test(address.emailId)
-    ) {
-      this.props.displayToast(EMAIL_VALID_TEXT);
-      return false;
-    }
+
+
     if (address && !address.town) {
       this.props.displayToast(CITY_TEXT);
       return false;
@@ -1548,7 +1540,24 @@ class CheckOutPage extends React.Component {
     if (address && !address.addressType) {
       this.props.displayToast(SELECT_ADDRESS_TYPE);
       return false;
-    } else {
+    }
+    if (
+      !address.userEmailId &&
+      !address.emailId &&
+      address.emailId === ""
+    ) {
+      this.props.displayToast("Please enter the EmailId");
+      return false;
+    }
+    if (
+      address.emailId &&
+      address.emailId !== "" &&
+      !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
+    ) {
+      this.props.displayToast(EMAIL_VALID_TEXT);
+      return false;
+    }
+     else {
       if (this.props.addUserAddress) {
         let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
         let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -1563,7 +1572,6 @@ class CheckOutPage extends React.Component {
           isSoftReservation: false
         };
         this.props.addUserAddress(address, getCartDetailCNCObj);
-
         this.setState({ addNewAddress: false });
       }
     }
@@ -1920,6 +1928,8 @@ class CheckOutPage extends React.Component {
             getPincodeStatus={this.props.getPincodeStatus}
             onFocusInput={() => this.onFocusInput()}
             resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
+            getUserDetails={() => this.props.getUserDetails()}
+            userDetails={this.props.userDetails}
           />
         </div>
       );

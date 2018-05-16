@@ -7,26 +7,56 @@ import {
   SUCCESS,
   MY_ACCOUNT,
   MY_ACCOUNT_ORDERS_PAGE,
-  RETURN_SUCCESS_MESSAGE
+  RETURN_SUCCESS_MESSAGE,
+  SUCCESS_CAMEL_CASE
 } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
 import {
   getPinCode,
   getPinCodeSuccess,
-  getReturnRequest
+  getReturnRequest,
+  getUserDetails,
+  updateProfile,
+  resetAddAddressDetails
 } from "../../account/actions/account.actions.js";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    addUserAddress: async (addressDetails, fromAccount) => {
-      const addAddressResponse = await dispatch(
-        addUserAddress(addressDetails, fromAccount)
-      );
-      if (addAddressResponse.status === SUCCESS) {
-        dispatch(
-          getReturnRequest(
-            ownProps.returnProductDetails.orderProductWsDTO[0].sellerorderno,
-            ownProps.returnProductDetails.orderProductWsDTO[0].transactionId
-          )
+    addUserAddress: (addressDetails, fromAccount) => {
+      if (addressDetails.emailId) {
+        let userDetails = {};
+        userDetails.emailid = addressDetails.emailId;
+        dispatch(updateProfile(userDetails)).then(res => {
+          if (res.status === SUCCESS_CAMEL_CASE) {
+            dispatch(addUserAddress(addressDetails, fromAccount)).then(
+              addAddressResponse => {
+                if (addAddressResponse.status === SUCCESS) {
+                  dispatch(
+                    getReturnRequest(
+                      ownProps.returnProductDetails.orderProductWsDTO[0]
+                        .sellerorderno,
+                      ownProps.returnProductDetails.orderProductWsDTO[0]
+                        .transactionId
+                    )
+                  );
+                }
+              }
+            );
+          }
+        });
+      } else {
+        dispatch(addUserAddress(addressDetails, fromAccount)).then(
+          addAddressResponse => {
+            if (addAddressResponse.status === SUCCESS) {
+              dispatch(
+                getReturnRequest(
+                  ownProps.returnProductDetails.orderProductWsDTO[0]
+                    .sellerorderno,
+                  ownProps.returnProductDetails.orderProductWsDTO[0]
+                    .transactionId
+                )
+              );
+            }
+          }
         );
       }
     },
@@ -53,6 +83,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     resetAutoPopulateDataForPinCode: () => {
       dispatch(getPinCodeSuccess(null));
+    },
+    getUserDetails: () => {
+      dispatch(getUserDetails());
+    },
+    resetAddAddressDetails: () => {
+      dispatch(resetAddAddressDetails());
     }
   };
 };
@@ -69,6 +105,8 @@ const mapStateToProps = (state, ownProps) => {
     getPincodeStatus: state.profile.getPinCodeStatus,
     getPinCodeDetails: state.profile.getPinCodeDetails,
     orderDetails: state.profile.fetchOrderDetails,
+    userDetails: state.profile.userDetails,
+    addUserAddressStatus: state.profile.addUserAddressStatus,
     ...ownProps
   };
 };

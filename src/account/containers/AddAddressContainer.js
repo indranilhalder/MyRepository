@@ -20,8 +20,8 @@ const mapDispatchToProps = dispatch => {
   return {
     addUserAddress: addressDetails => {
       if (addressDetails.emailId && addressDetails.emailId !== "") {
-        let userDetails = new FormData();
-        userDetails.append("emailid", addressDetails.emailId);
+        let userDetails = {};
+        userDetails.emailid = addressDetails.emailId;
         dispatch(updateProfile(userDetails)).then(res => {
           if (res.status === SUCCESS_CAMEL_CASE) {
             dispatch(addUserAddress(addressDetails));

@@ -139,7 +139,7 @@ export default class EditAccountDetails extends React.Component {
       userDetails.append("dateOfBirth", dateOfBirth);
       userDetails.append("gender", this.state.gender);
       userDetails.append("mobileNumber", this.state.mobileNumber);
-      userDetails.append("emailid", this.state.emailId);
+      userDetails.append("emailId", this.state.emailId);
 
       if (this.props.updateProfile) {
         this.props.updateProfile(userDetails);
