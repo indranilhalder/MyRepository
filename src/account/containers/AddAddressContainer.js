@@ -14,19 +14,25 @@ import {
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
 import { displayToast } from "../../general/toast.actions";
-import { SUCCESS } from "../../general/header.actions";
-import { SUCCESS_CAMEL_CASE } from "../../lib/constants";
+import {
+  SUCCESS_CAMEL_CASE,
+  SUCCESS,
+  SUCCESS_UPPERCASE
+} from "../../lib/constants";
 const mapDispatchToProps = dispatch => {
   return {
     addUserAddress: addressDetails => {
       if (addressDetails.emailId && addressDetails.emailId !== "") {
         let userDetails = {};
-        userDetails.emailid = addressDetails.emailId;
+        userDetails.emailId = addressDetails.emailId;
         dispatch(updateProfile(userDetails)).then(res => {
-          if (res.status === SUCCESS_CAMEL_CASE) {
+          console.log(res);
+          if (
+            res.status === SUCCESS ||
+            res.status === SUCCESS_CAMEL_CASE ||
+            res.status === SUCCESS_UPPERCASE
+          ) {
             dispatch(addUserAddress(addressDetails));
-          } else {
-            dispatch(displayToast(res.error));
           }
         });
       } else {

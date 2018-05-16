@@ -1534,16 +1534,35 @@ export function updateProfile(accountDetails, otp) {
   return async (dispatch, getState, { api }) => {
     dispatch(updateProfileRequest());
     let updateProfileUrl;
+    let requestUrl = `isPwa=true&access_token=${
+      JSON.parse(customerCookie).access_token
+    }&ProfileDataRequired=true`;
+    if (accountDetails.firstName) {
+      requestUrl = requestUrl + `&firstName=${accountDetails.firstName}`;
+    }
+    if (accountDetails.lastName) {
+      requestUrl = requestUrl + `&lastName=${accountDetails.lastName}`;
+    }
+    if (accountDetails.dateOfBirth) {
+      requestUrl = requestUrl + `&dateOfBirth=${dateOfBirth}`;
+    }
+    if (accountDetails.mobileNumber) {
+      requestUrl = requestUrl + `&mobilenumber=${accountDetails.mobileNumber}`;
+    }
+    if (accountDetails.gender) {
+      requestUrl = requestUrl + `&gender=${accountDetails.gender}`;
+    }
+    if (accountDetails.emailId) {
+      requestUrl = requestUrl + `&emailid=${accountDetails.emailId}`;
+    }
     try {
       updateProfileUrl = `${USER_PATH}/${
         JSON.parse(userDetails).userName
-      }/updateprofile?isPwa=true&access_token=${
-        JSON.parse(customerCookie).access_token
-      }&ProfileDataRequired=true`;
+      }/updateprofile?${requestUrl}`;
       if (otp) {
         updateProfileUrl = `${updateProfileUrl}&otp=${otp}`;
       }
-      const result = await api.postFormData(updateProfileUrl,accountDetails);
+      const result = await api.post(updateProfileUrl);
       const resultJson = await result.json();
 
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);

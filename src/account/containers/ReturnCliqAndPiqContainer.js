@@ -8,7 +8,8 @@ import {
   MY_ACCOUNT,
   MY_ACCOUNT_ORDERS_PAGE,
   RETURN_SUCCESS_MESSAGE,
-  SUCCESS_CAMEL_CASE
+  SUCCESS_CAMEL_CASE,
+  SUCCESS_UPPERCASE
 } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
 import {
@@ -24,12 +25,16 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     addUserAddress: (addressDetails, fromAccount) => {
       if (addressDetails.emailId) {
         let userDetails = {};
-        userDetails.emailid = addressDetails.emailId;
+        userDetails.emailId = addressDetails.emailId;
         dispatch(updateProfile(userDetails)).then(res => {
-          if (res.status === SUCCESS_CAMEL_CASE) {
+          if (res.status === SUCCESS || res.status === SUCCESS_CAMEL_CASE) {
             dispatch(addUserAddress(addressDetails, fromAccount)).then(
               addAddressResponse => {
-                if (addAddressResponse.status === SUCCESS) {
+                if (
+                  res.status === SUCCESS ||
+                  res.status === SUCCESS_CAMEL_CASE ||
+                  res.status === SUCCESS_UPPERCASE
+                ) {
                   dispatch(
                     getReturnRequest(
                       ownProps.returnProductDetails.orderProductWsDTO[0]

@@ -94,6 +94,15 @@ export default class AddDeliveryAddress extends React.Component {
       }
     }
   }
+
+  onChangeEmailId(val) {
+    const cloneAddress = cloneDeep(this.state);
+    Object.assign(cloneAddress, { emailId: val });
+    this.setState({ emailId: val });
+    if (this.props.getAddressDetails) {
+      this.props.getAddressDetails(cloneAddress);
+    }
+  }
   onChange(val) {
     this.setState(val);
     if (this.props.getAddressDetails) {
@@ -486,7 +495,7 @@ export default class AddDeliveryAddress extends React.Component {
                 value={
                   this.props.emailId ? this.props.emailId : this.state.emailId
                 }
-                onChange={emailId => this.onChange({ emailId })}
+                onChange={emailId => this.onChangeEmailId(emailId)}
               />
             </div>
           )}
