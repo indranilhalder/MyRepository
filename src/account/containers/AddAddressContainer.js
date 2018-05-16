@@ -26,7 +26,6 @@ const mapDispatchToProps = dispatch => {
         let userDetails = {};
         userDetails.emailId = addressDetails.emailId;
         dispatch(updateProfile(userDetails)).then(res => {
-          console.log(res);
           if (
             res.status === SUCCESS ||
             res.status === SUCCESS_CAMEL_CASE ||
