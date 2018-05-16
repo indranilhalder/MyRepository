@@ -163,7 +163,8 @@ const account = (
         cancelProductError: null,
         verifyWalletError: null,
         wishlistError: null,
-        updateProfileError: null
+        updateProfileError: null,
+        changePasswordError: null
       });
     case accountActions.GET_RETURN_REQUEST:
     case accountActions.RETURN_PRODUCT_DETAILS_REQUEST:
@@ -849,7 +850,12 @@ const account = (
         addUserAddressError: null
       });
     }
-
+    case accountActions.CLEAR_CHANGE_PASSWORD_DETAILS: {
+      return Object.assign({}, state, {
+        changePasswordStatus: null,
+        changePasswordError: null
+      });
+    }
     default:
       return state;
   }

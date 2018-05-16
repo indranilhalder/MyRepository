@@ -20,7 +20,9 @@ import {
 import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
-  LOGIN_PATH
+  LOGIN_PATH,
+  ERROR,
+  REQUESTING
 } from "../../lib/constants";
 const ACCOUNT_SETTING_HEADER = "Account Settings";
 const MINIMUM_PASSWORD_LENGTH = 8;
@@ -51,7 +53,6 @@ export default class EditAccountDetails extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
     if (userDetails && customerCookie) {
       this.props.getUserDetails();
     } else {
@@ -96,6 +97,14 @@ export default class EditAccountDetails extends React.Component {
         this.props.clearAccountUpdateType();
       }
       this.props.history.push(LOGIN_PATH);
+    }
+    if (
+      nextProps.changePasswordStatus === REQUESTING ||
+      nextProps.changePasswordStatus === ERROR
+    ) {
+      this.setState({ changePassword: true });
+    } else {
+      this.setState({ changePassword: false });
     }
   }
   onChangeGender(val) {
@@ -159,7 +168,6 @@ export default class EditAccountDetails extends React.Component {
     if (newPassword !== confirmedPassword) {
       this.props.displayToast(PASSWORD_MATCH_TEXT);
     } else {
-      this.setState({ changePassword: false });
       this.props.changePassword(passwordDetails);
     }
   }
@@ -273,6 +281,9 @@ export default class EditAccountDetails extends React.Component {
           <ChangePassword
             updatePassword={passwordDetails =>
               this.changePassword(passwordDetails)
+            }
+            clearChangePasswordDetails={() =>
+              this.props.clearChangePasswordDetails()
             }
           />
         </div>
