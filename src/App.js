@@ -18,6 +18,7 @@ import StaticPageContainer from "./staticpage/containers/StaticPageContainer.js"
 import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
 import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
+import HelpDetailsContainer from "./account/containers/HelpDetailsContainer.js";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -62,7 +63,8 @@ import {
   MY_ACCOUNT,
   STATIC_PAGE,
   SKU_PAGE_FILTER,
-  PRODUCT_LISTINGS_WITHOUT_SLASH
+  PRODUCT_LISTINGS_WITHOUT_SLASH,
+  HELP_URL
 } from "../src/lib/constants";
 import Loadable from "react-loadable";
 
@@ -432,6 +434,7 @@ class App extends Component {
               path={SKU_PAGE_FILTER}
               component={ProductListingsContainer}
             />
+            <Route exact path={HELP_URL} component={HelpDetailsContainer} />
             <Route exact path={SKU_PAGE} component={ProductListingsContainer} />
             <Route exact path={STATIC_PAGE} component={StaticPageContainer} />
           </Switch>
