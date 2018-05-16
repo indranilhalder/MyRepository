@@ -289,10 +289,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(getEmiTermsAndConditionsForBank(code, bankName));
     },
     applyNoCostEmi: (couponCode, carGuId, cartId) => {
-      dispatch(applyNoCostEmi(couponCode, carGuId, cartId));
+      return dispatch(applyNoCostEmi(couponCode, carGuId, cartId));
     },
     removeNoCostEmi: (couponCode, carGuId, cartId) => {
-      dispatch(removeNoCostEmi(couponCode, carGuId, cartId));
+      return dispatch(removeNoCostEmi(couponCode, carGuId, cartId));
     },
     getItemBreakUpDetails: (
       couponCode,
