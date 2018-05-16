@@ -26,7 +26,8 @@ import {
   PRIVACY_POLICY_URL,
   CANCEL_URL,
   RETURN_URL,
-  FAQ_URL
+  FAQ_URL,
+  HELP_URL
 } from "../../lib/constants";
 
 import * as Cookie from "../../lib/Cookie";
@@ -54,7 +55,10 @@ export default class MyAccount extends React.Component {
     const urlSuffix = url.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
   };
-
+  redirectToHelp = url => {
+    const urlSuffix = url.replace(TATA_CLIQ_ROOT, "$1");
+    this.props.history.push(urlSuffix);
+  };
   componentDidUpdate() {
     this.props.setHeaderText(MY_CLIQ);
   }
@@ -159,9 +163,11 @@ export default class MyAccount extends React.Component {
                 </AccountUsefulLink> */}
               </div>
               <div className={styles.linkTabHolder}>
-                {/* <AccountUsefulLink>
+                <AccountUsefulLink
+                  onClick={() => this.redirectToHelp(HELP_URL)}
+                >
                   <div className={styles.usefulLinkText}>Help & Services</div>
-                </AccountUsefulLink> */}
+                </AccountUsefulLink>
                 <AccountUsefulLink
                   onClick={() => this.redirectPage(PRIVACY_POLICY_URL)}
                 >
@@ -183,6 +189,9 @@ export default class MyAccount extends React.Component {
                   onClick={() => this.redirectPage(ABOUT_US_URL)}
                 >
                   <div className={styles.usefulLinkText}>About us</div>
+                </AccountUsefulLink>
+                <AccountUsefulLink onClick={() => this.redirectPage(FAQ_URL)}>
+                  <div className={styles.usefulLinkText}>FAQ</div>
                 </AccountUsefulLink>
               </div>
             </div>

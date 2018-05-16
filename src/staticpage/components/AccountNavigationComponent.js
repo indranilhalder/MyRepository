@@ -22,6 +22,7 @@ export default class AccountNavigationComponent extends Component {
               label: val.linkName
             };
           })}
+          backgroundColor="#fff"
           onChange={this.handleItemClick}
         />
       </div>
