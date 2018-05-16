@@ -56,9 +56,7 @@ export default class ReturnAddressList extends React.Component {
     }
   };
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.addUserAddressStatus);
     if (nextProps.addUserAddressStatus === SUCCESS) {
-      console.log(this.state.addNewAddress);
       if (this.state.addNewAddress === true) {
         this.setState({ addNewAddress: false });
         this.props.history.goBack();
@@ -132,7 +130,6 @@ export default class ReturnAddressList extends React.Component {
         return address.defaultAddress === true;
       }
     );
-    console.log(defaultAddress);
     if (this.props.returnRequest) {
       return (
         <ReturnsFrame
