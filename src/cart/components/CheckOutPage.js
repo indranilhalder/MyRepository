@@ -647,7 +647,6 @@ class CheckOutPage extends React.Component {
       nextProps.cart &&
       nextProps.cart.cartDetailsCNC
     ) {
-      console.log("in 1",nextProps.cart.cartDetailsCNC);
       let defaultSelectedDeliveryModes = {};
       if (
         nextProps.cart.cartDetailsCNC &&
@@ -788,7 +787,6 @@ class CheckOutPage extends React.Component {
         this.state.isRemainingAmount &&
         !this.state.isPaymentFailed
       ) {
-        console.log( nextProps.cart.cartDetailsCNC);
         let cliqCashAmount = 0;
         if (
           nextProps.cart.paymentModes &&
