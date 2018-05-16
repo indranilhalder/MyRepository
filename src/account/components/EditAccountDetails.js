@@ -128,21 +128,8 @@ export default class EditAccountDetails extends React.Component {
       this.props.displayToast("Please fill valid mobile number");
       return false;
     } else {
-      let dateOfBirth = format(
-        this.state.dateOfBirth,
-        DATE_FORMAT_TO_UPDATE_PROFILE
-      );
-
-      let userDetails = new FormData();
-      userDetails.append("firstName", this.state.firstName);
-      userDetails.append("lastName", this.state.lastName);
-      userDetails.append("dateOfBirth", dateOfBirth);
-      userDetails.append("gender", this.state.gender);
-      userDetails.append("mobileNumber", this.state.mobileNumber);
-      userDetails.append("emailId", this.state.emailId);
-
       if (this.props.updateProfile) {
-        this.props.updateProfile(userDetails);
+        this.props.updateProfile(this.state);
       }
     }
   };

@@ -870,7 +870,7 @@ export function addUserAddress(userAddress, fromAccount) {
           userAddress.line3
         }&town=${userAddress.town}&landmark=${
           userAddress.landmark ? userAddress.landmark : ""
-        }&defaultFlag=${userAddress.defaultFlag}&emailId=""`
+        }&defaultFlag=${userAddress.defaultFlag}&emailId=${JSON.parse(userDetails).userName}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
