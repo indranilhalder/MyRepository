@@ -30,6 +30,8 @@ const mapDispatchToProps = dispatch => {
       const response = await dispatch(changePassword(passwordDetails));
       if (response && response.status === SUCCESS) {
         dispatch(displayToast(UPDATE_PASSWORD));
+      } else {
+        dispatch(displayToast(response.error));
       }
     },
     clearAccountUpdateType: () => {
@@ -46,6 +48,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
+    changePasswordStatus: state.profile.changePasswordStatus,
     userDetails: state.profile.userDetails,
     type: state.profile.type
   };

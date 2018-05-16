@@ -20,7 +20,9 @@ import {
 import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
-  LOGIN_PATH
+  LOGIN_PATH,
+  ERROR,
+  REQUESTING
 } from "../../lib/constants";
 const ACCOUNT_SETTING_HEADER = "Account Settings";
 const MINIMUM_PASSWORD_LENGTH = 8;
@@ -97,6 +99,14 @@ export default class EditAccountDetails extends React.Component {
       }
       this.props.history.push(LOGIN_PATH);
     }
+    if (
+      nextProps.changePasswordStatus === REQUESTING ||
+      nextProps.changePasswordStatus === ERROR
+    ) {
+      this.setState({ changePassword: true });
+    } else {
+      this.setState({ changePassword: false });
+    }
   }
   onChangeGender(val) {
     this.setState({ gender: val.value });
@@ -159,7 +169,7 @@ export default class EditAccountDetails extends React.Component {
     if (newPassword !== confirmedPassword) {
       this.props.displayToast(PASSWORD_MATCH_TEXT);
     } else {
-      this.setState({ changePassword: false });
+      this.setState({ changePassword: true });
       this.props.changePassword(passwordDetails);
     }
   }
