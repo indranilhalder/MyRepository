@@ -112,6 +112,7 @@ export default class SearchHeader extends React.Component {
               <div className={styles.input}>
                 <Input2
                   onChange={val => this.onTypedSearch(val)}
+                  placeholder="What are you looking for?"
                   textStyle={{ fontSize: 14 }}
                   height={30}
                   isWhite={true}
