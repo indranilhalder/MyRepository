@@ -189,6 +189,19 @@ const feed = (
         homeFeed: homeFeedData
       });
 
+    case homeActions.SECONDARY_FEED_GET_ITEMS_SUCCESS:
+      secondaryFeedData = state.secondaryFeed;
+      clonedComponent = cloneDeep(secondaryFeedData[action.positionInFeed]);
+      clonedComponent.items = transformFetchingItemsOrder(
+        action.itemIds,
+        action.items
+      );
+      secondaryFeedData[action.positionInFeed] = clonedComponent;
+      return Object.assign({}, state, {
+        secondaryFeed: secondaryFeedData,
+        status: action.status
+      });
+
     case homeActions.GET_ITEMS_SUCCESS:
       homeFeedData = state.homeFeed;
       clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);

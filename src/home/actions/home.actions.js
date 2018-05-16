@@ -39,6 +39,13 @@ export const SECONDARY_FEED_COMPONENT_DATA_FAILURE =
 export const SECONDARY_FEED_COMPONENT_DATA_REQUEST =
   "SECONDARY_FEED_COMPONENT_DATA_REQUEST";
 
+export const SECONDARY_FEED_GET_ITEMS_REQUEST =
+  "SECONDARY_FEED_GET_ITEMS_REQUEST";
+export const SECONDARY_FEED_GET_ITEMS_FAILURE =
+  "SECONDARY_FEED_GET_ITEMS_FAILURE";
+export const SECONDARY_FEED_GET_ITEMS_SUCCESS =
+  "SECONDARY_FEED_GET_ITEMS_SUCCESS";
+
 export const HOME_FEED_BACK_UP_FAILURE = "HOME_FEED_BACK_UP_FAILURE";
 export const HOME_FEED_BACK_UP_REQUEST = "HOME_FEED_BACK_UP_REQUEST";
 export const HOME_FEED_BACK_UP_SUCCESS = "HOME_FEED_BACK_UP_SUCCESS";
@@ -138,6 +145,24 @@ export function getProductCapsules(positionInFeed) {
   };
 }
 
+export function secondaryFeedGetItemsFailure(positionInFeed, error) {
+  return {
+    type: SECONDARY_FEED_GET_ITEMS_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function secondaryFeedGetItemsSuccess(positionInFeed, items, itemIds) {
+  return {
+    type: SECONDARY_FEED_GET_ITEMS_SUCCESS,
+    status: SUCCESS,
+    items,
+    positionInFeed,
+    itemIds
+  };
+}
+
 export function getItemsRequest(positionInFeed) {
   return {
     type: GET_ITEMS_REQUEST,
@@ -169,7 +194,7 @@ export function getItemsFailure(positionInFeed, errorMsg) {
     status: FAILURE
   };
 }
-export function getItems(positionInFeed, itemIds) {
+export function getItems(positionInFeed, itemIds, feedType) {
   return async (dispatch, getState, { api }) => {
     dispatch(getItemsRequest(positionInFeed));
     try {
@@ -185,9 +210,23 @@ export function getItems(positionInFeed, itemIds) {
         throw new Error(`${resultJson.message}`);
       }
 
-      dispatch(getItemsSuccess(positionInFeed, resultJson.results, itemIds));
+      if (feedType === SECONDARY_FEED_TYPE) {
+        dispatch(
+          secondaryFeedGetItemsSuccess(
+            positionInFeed,
+            resultJson.results,
+            itemIds
+          )
+        );
+      } else {
+        dispatch(getItemsSuccess(positionInFeed, resultJson.results, itemIds));
+      }
     } catch (e) {
-      dispatch(getItemsFailure(positionInFeed, e.message));
+      if (feedType === SECONDARY_FEED_TYPE) {
+        dispatch(secondaryFeedGetItemsFailure(positionInFeed, e.message));
+      } else {
+        dispatch(getItemsFailure(positionInFeed, e.message));
+      }
     }
   };
 }
