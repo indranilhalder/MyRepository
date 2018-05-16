@@ -123,6 +123,7 @@ export default class CreditCardForm extends React.Component {
               textStyle={{ fontSize: 14 }}
               height={33}
               maxLength="19"
+              onlyNumber={true}
             />
           </div>
 
@@ -139,6 +140,7 @@ export default class CreditCardForm extends React.Component {
               onFocus={() => {
                 this.handleOnFocusInput();
               }}
+              onlyAlphabet={true}
             />
           </div>
           <div className={styles.dropDownHolder}>
