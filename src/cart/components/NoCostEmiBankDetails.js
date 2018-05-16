@@ -163,8 +163,8 @@ export default class NoCostEmiBankDetails extends React.Component {
 
   async onSelectMonth(index, val) {
     if (this.state.selectedBankName !== "Other Bank") {
-      if (this.props.removeNoCostEmi) {
-        this.props.removeNoCostEmi(val.emicouponCode);
+      if (this.props.removeNoCostEmi && this.state.selectedCouponCode) {
+        this.props.removeNoCostEmi(this.state.selectedCouponCode);
       }
 
       if (this.state.selectedMonth === index) {
