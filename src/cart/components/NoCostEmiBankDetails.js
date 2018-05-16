@@ -6,7 +6,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
-import { NO_COST_EMI, RUPEE_SYMBOL } from "../../lib/constants";
+import { NO_COST_EMI, RUPEE_SYMBOL, SUCCESS } from "../../lib/constants";
 
 export default class NoCostEmiBankDetails extends React.Component {
   constructor(props) {
@@ -146,7 +146,7 @@ export default class NoCostEmiBankDetails extends React.Component {
     }
   };
 
-  onSelectMonth(index, val) {
+  async onSelectMonth(index, val) {
     if (this.state.selectedBankName !== "Other Bank") {
       if (this.state.selectedMonth === index) {
         this.setState({
@@ -158,21 +158,22 @@ export default class NoCostEmiBankDetails extends React.Component {
         this.props.removeNoCostEmi(val.emicouponCode);
       } else {
         if (val && this.props.applyNoCostEmi) {
-          this.setState({
-            selectedMonth: index,
-            selectedCouponCode: val.emicouponCode,
-            selectedTenure: val.tenure
-          });
-
-          this.onChangeCardDetail({
-            is_emi: true,
-            emi_bank: this.state.selectedCode,
-            emi_tenure: val.tenure
-          });
-          this.props.applyNoCostEmi(
+          const applyNoCostEmiReponse = await this.props.applyNoCostEmi(
             val.emicouponCode,
             this.state.selectedBankName
           );
+          if (applyNoCostEmiReponse.status === SUCCESS) {
+            this.setState({
+              selectedMonth: index,
+              selectedCouponCode: val.emicouponCode,
+              selectedTenure: val.tenure
+            });
+            this.onChangeCardDetail({
+              is_emi: true,
+              emi_bank: this.state.selectedCode,
+              emi_tenure: val.tenure
+            });
+          }
         }
       }
     }
