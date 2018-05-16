@@ -30,13 +30,10 @@
 .offerText {
   width: 100%;
   height: auto;
-  padding: 0px 35px 0px 0px;
+  padding: 0px 10px 0px 0px;
   color: #000;
   font-size: 12px;
   line-height: normal;
-  background: url(./img/icon.svg) no-repeat;
-  background-size: auto 22px;
-  background-position: right top;
 }
 .levelBreakupHolder {
   width: 100%;
