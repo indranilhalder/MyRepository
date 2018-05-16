@@ -208,6 +208,7 @@ export const CHECKOUT = "Checkout";
 export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
 export const ERROR_MESSAGE_FOR_VERIFY_OTP = "Please Enter an Valid OTP";
+export const HELP = "Help";
 
 // COPY
 //STATIC PAGE
@@ -225,6 +226,7 @@ export const PRIVACY_POLICY_URL = "/privacy-policy";
 export const CANCEL_URL = "/cancellation";
 export const RETURN_URL = "/returns";
 export const FAQ_URL = "/faq";
+export const HELP_URL = "/help";
 
 // constants for payments method
 export const EASY_MONTHLY_INSTALLMENTS = "Easy monthly installments";
