@@ -33,7 +33,7 @@ export default class OrderCard extends React.Component {
             )}
             {this.props.productName}
           </div>
-          {this.props.isGiveAway === NO ? (
+          {this.props.isGiveAway === NO || !this.props.isGiveAway ? (
             <div className={styles.priceHolder}>
               <div className={styles.price}>
                 {this.props.isEgvOrder && this.props.egvCardNumber
