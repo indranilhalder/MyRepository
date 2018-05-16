@@ -112,6 +112,7 @@ export default class ReturnReasonForm extends React.Component {
               data.orderProductWsDTO[0] &&
               data.orderProductWsDTO[0].price
             }
+            isSelect={true}
           >
             {data &&
               data.orderProductWsDTO &&
