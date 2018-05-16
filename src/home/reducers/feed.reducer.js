@@ -28,6 +28,18 @@ const feed = (
     homeFeedClonedData,
     clonedComponent;
   switch (action.type) {
+    case homeActions.SECONDARY_FEED_SUCCESS:
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.status,
+        secondaryFeed: action.data
+      });
+    case homeActions.SECONDARY_FEED_FAILURE:
+      return Object.assign({}, state, {
+        loading: false,
+        status: action.status,
+        secondaryFeed: []
+      });
     case homeActions.HOME_FEED_BACK_UP_FAILURE:
       return Object.assign({}, state, {
         loading: false,
@@ -105,6 +117,7 @@ const feed = (
         });
       }
       return state;
+
     case homeActions.HOME_FEED_FAILURE:
       if (!state.useBackUpData) {
         return Object.assign({}, state, {

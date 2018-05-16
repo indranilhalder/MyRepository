@@ -29,6 +29,9 @@ export const FEED_REQUEST = "FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
 export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
 
+export const SECONDARY_FEED_SUCCESS = "SECONDARY_FEED_SUCCESS";
+export const SECONDARY_FEED_FAILURE = "SECONDARY_FEED_FAILURE";
+
 export const HOME_FEED_BACK_UP_FAILURE = "HOME_FEED_BACK_UP_FAILURE";
 export const HOME_FEED_BACK_UP_REQUEST = "HOME_FEED_BACK_UP_REQUEST";
 export const HOME_FEED_BACK_UP_SUCCESS = "HOME_FEED_BACK_UP_SUCCESS";
@@ -202,6 +205,14 @@ export function homeFeedBackUpFailure(error) {
     type: HOME_FEED_BACK_UP_FAILURE,
     status: ERROR,
     error
+  };
+}
+
+export function secondaryFeedSuccess(data) {
+  return {
+    type: SECONDARY_FEED_SUCCESS,
+    status: SUCCESS,
+    data
   };
 }
 
