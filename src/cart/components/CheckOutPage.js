@@ -787,6 +787,7 @@ class CheckOutPage extends React.Component {
         this.state.isRemainingAmount &&
         !this.state.isPaymentFailed
       ) {
+
         let cliqCashAmount = 0;
         if (
           nextProps.cart.paymentModes &&

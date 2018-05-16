@@ -1949,9 +1949,9 @@ export function redeemCliqVoucher(cliqCashDetails, fromCheckout) {
         guIdObject.append(CART_GU_ID, JSON.parse(cartDetails).guid);
         dispatch(getPaymentModes(guIdObject));
       }
-      dispatch(redeemCliqVoucherSuccess(resultJson));
+      return dispatch(redeemCliqVoucherSuccess(resultJson));
     } catch (e) {
-      dispatch(redeemCliqVoucherFailure(e.message));
+      return dispatch(redeemCliqVoucherFailure(e.message));
     }
   };
 }
