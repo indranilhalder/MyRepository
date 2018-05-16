@@ -11,7 +11,7 @@ import {
 
 const NOT_SERVICEABLE = "Service Not Available";
 const OUT_OF_STOCK = "Product is out of stock";
-
+const NO_SIZE = "NO SIZE";
 export default class BagPageItem extends React.Component {
   onClick() {
     if (this.props.onClickImage) {
@@ -54,7 +54,7 @@ export default class BagPageItem extends React.Component {
             <div className={styles.informationText}>Free</div>
           )}
           {this.props.size &&
-            this.props.size !== "No Size" && (
+            this.props.size.toUpperCase() !== NO_SIZE && (
               <div className={styles.informationText}>
                 {`Size: ${this.props.size}`}
               </div>

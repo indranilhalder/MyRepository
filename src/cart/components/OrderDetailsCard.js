@@ -5,6 +5,7 @@ import OrderCard from "../../account/components/OrderCard";
 import PriceAndLink from "../../account/components/PriceAndLink";
 import styles from "./OrderDetailsCard.css";
 import { COLLECT } from "../../lib/constants";
+const NO_SIZE = "NO SIZE";
 export default class OrderDetailsCard extends React.Component {
   onViewDetails() {
     if (this.props.trackOrder) {
@@ -45,14 +46,15 @@ export default class OrderDetailsCard extends React.Component {
               </div>
             </div>
           )}
-          {this.props.productDetails.size && (
-            <div className={styles.quantityHolder}>
-              <div className={styles.quantityLabel}>Size :</div>
-              <div className={styles.quantityAmount}>
-                {this.props.productDetails.size}
+          {this.props.productDetails.size &&
+            this.props.productDetails.size.toUpperCase() !== NO_SIZE && (
+              <div className={styles.quantityHolder}>
+                <div className={styles.quantityLabel}>Size :</div>
+                <div className={styles.quantityAmount}>
+                  {this.props.productDetails.size}
+                </div>
               </div>
-            </div>
-          )}
+            )}
           {this.props.productDetails.productColour && (
             <div className={styles.quantityHolder}>
               <div className={styles.quantityLabel}>Color :</div>
