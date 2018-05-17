@@ -36,6 +36,8 @@ import {
 } from "../../lib/adobeUtils";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_RETURN = "Return";
+const LOST_IN_TRANSIT = "LOST_IN_TRANSIT";
+const SHIPPING = "SHIPPING";
 const RETURN = "RETURN";
 const PRODUCT_CANCEL = "Cancel";
 const AWB_POPUP_TRUE = "Y";
@@ -167,11 +169,20 @@ export default class OrderDetails extends React.Component {
           orderDetails.products.map((products, i) => {
             let isOrderReturnable = false;
             let isReturned = false;
-            isReturned = products.statusDisplayMsg
-              .map(val => {
-                return val.key;
-              })
-              .includes(RETURN);
+
+            if (
+              products.statusDisplayMsg
+                .map(val => {
+                  return val.key;
+                })
+                .includes(RETURN)
+            )
+              isReturned = products.statusDisplayMsg
+                .map(val => {
+                  return val.key;
+                })
+                .includes(RETURN);
+
             each(products && products.statusDisplayMsg, orderStatus => {
               each(
                 orderStatus &&
@@ -285,12 +296,14 @@ export default class OrderDetails extends React.Component {
                 {products.statusDisplayMsg &&
                   products.selectedDeliveryMode.code !== CLICK_COLLECT && (
                     <div className={styles.orderStatusVertical}>
+                      {/* This block of code needs to be duplicated below for CNC as well */}
                       {!products.statusDisplayMsg
                         .map(val => {
                           return val.key;
                         })
                         .includes(RETURN) && (
                         <OrderStatusVertical
+                          isCNC={false}
                           statusMessageList={products.statusDisplayMsg}
                           logisticName={products.logisticName}
                           trackingAWB={products.trackingAWB}
@@ -313,6 +326,7 @@ export default class OrderDetails extends React.Component {
                           )}
                         />
                       )}
+                      {/* Block of code ends here */}
                     </div>
                   )}
                 {products.selectedDeliveryMode.code === CLICK_COLLECT &&
@@ -357,6 +371,21 @@ export default class OrderDetails extends React.Component {
                       <div className={styles.row}>
                         {orderDetails.pickupPersonMobile}
                       </div>
+                      {/* This block of code needs to be duplicated above for non CNC as well */}
+                      {!products.statusDisplayMsg
+                        .map(val => {
+                          return val.key;
+                        })
+                        .includes(RETURN) && (
+                        <OrderStatusVertical
+                          isCNC={true}
+                          statusMessageList={products.statusDisplayMsg}
+                          logisticName={products.logisticName}
+                          trackingAWB={products.trackingAWB}
+                          showShippingDetails={this.props.showShippingDetails}
+                          orderCode={orderDetails.orderId}
+                        />
+                      )}
                       {products.statusDisplayMsg
                         .map(val => {
                           return val.key;
@@ -372,6 +401,7 @@ export default class OrderDetails extends React.Component {
                           )}
                         />
                       )}
+                      {/* Block of code ends here */}
                     </div>
                   )}
 
