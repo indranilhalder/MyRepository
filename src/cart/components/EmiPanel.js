@@ -107,8 +107,7 @@ export default class EmiPanel extends React.Component {
             this.props.onChange({ currentPaymentMode })
           }
         >
-          {!this.props.isCliqCashApplied &&
-            this.props.cart &&
+          {this.props.cart &&
             this.props.cart.emiEligibilityDetails &&
             this.props.cart.emiEligibilityDetails.isNoCostEMIEligible && (
               <div className={styles.subListHolder}>
