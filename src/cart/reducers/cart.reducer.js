@@ -1245,7 +1245,8 @@ const cart = (
         noCostEmiStatus: action.status,
         noCostEmiDetails: action.noCostEmiResult,
         cartDetailsCNC: carDetailsCopy,
-        loading: false
+        loading: false,
+        cliqCashPaymentDetails:null
       });
 
     case cartActions.APPLY_NO_COST_EMI_FAILURE:
@@ -1273,7 +1274,8 @@ const cart = (
         noCostEmiStatus: action.status,
         noCostEmiDetails: action.noCostEmiResult,
         cartDetailsCNC: carDetailsCopy,
-        loading: false
+        loading: false,
+        cliqCashPaymentDetails:null
       });
 
     case cartActions.REMOVE_NO_COST_EMI_FAILURE:
