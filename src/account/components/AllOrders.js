@@ -44,7 +44,7 @@ export default class AllOrders extends React.Component {
         <OrderDelivered deliveredAddress={this.props.deliveryAddress} />
         <div className={styles.buttonHolder}>
           <OrderReturn
-            buttonLabel="Return or Replace"
+            buttonLabel="Return"
             underlineButtonLabel="Write a review"
             underlineButtonColour=" #ff1744"
             isEditable={true}
