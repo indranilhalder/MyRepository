@@ -42,7 +42,6 @@ const home = (
         status: action.status
       });
     case homeActions.HOME_FEED_BACK_UP_SUCCESS:
-      console.log("HOME FEED BACK UP SUCCESS");
       if (state.useBackUpHomeFeed) {
         homeFeedClonedData = cloneDeep(action.data);
 
@@ -60,7 +59,7 @@ const home = (
           loading: false
         });
       }
-      break;
+      return state;
 
     case homeActions.GET_PRODUCT_CAPSULES_REQUEST:
       return Object.assign({}, state, {
@@ -93,8 +92,6 @@ const home = (
       });
 
     case homeActions.HOME_FEED_SUCCESS:
-      console.log("HOME _FEED SUCCESS");
-      console.log(state.useBackUpData);
       if (!state.useBackUpHomeFeed) {
         homeFeedClonedData = cloneDeep(action.data);
 
