@@ -18,7 +18,8 @@ const home = (
     productCapsulesStatus: null,
     productCapsulesLoading: null,
     backUpLoading: false,
-    useBackUpData: false
+    useBackUpData: false,
+    useBackUpHomeFeed: false
   },
   action
 ) => {
@@ -41,20 +42,26 @@ const home = (
         status: action.status
       });
     case homeActions.HOME_FEED_BACK_UP_SUCCESS:
-      homeFeedClonedData = cloneDeep(action.data);
-      homeFeedData = map(homeFeedClonedData, subData => {
-        // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
-        return {
-          ...subData[subData.componentName],
-          loading: false,
-          status: ""
-        };
-      });
-      return Object.assign({}, state, {
-        homeFeed: homeFeedData,
-        status: action.status,
-        loading: false
-      });
+      console.log("HOME FEED BACK UP SUCCESS");
+      if (state.useBackUpHomeFeed) {
+        homeFeedClonedData = cloneDeep(action.data);
+
+        homeFeedData = map(homeFeedClonedData, subData => {
+          // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
+          return {
+            ...subData[subData.componentName],
+            loading: false,
+            status: ""
+          };
+        });
+        return Object.assign({}, state, {
+          homeFeed: homeFeedData,
+          status: action.status,
+          loading: false
+        });
+      }
+      break;
+
     case homeActions.GET_PRODUCT_CAPSULES_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
@@ -86,7 +93,9 @@ const home = (
       });
 
     case homeActions.HOME_FEED_SUCCESS:
-      if (!state.useBackUpData) {
+      console.log("HOME _FEED SUCCESS");
+      console.log(state.useBackUpData);
+      if (!state.useBackUpHomeFeed) {
         homeFeedClonedData = cloneDeep(action.data);
 
         homeFeedData = map(homeFeedClonedData, subData => {
