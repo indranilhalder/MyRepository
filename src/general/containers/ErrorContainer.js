@@ -16,7 +16,7 @@ const mapStateToProps = state => {
   return {
     loginError: state.auth.error,
     userError: state.user.error,
-    pdpError: state.productDescription.error,
+    // pdpError: state.productDescription.error, // commented for  reusing this error state
     plpError: state.productListings.error,
     userCartError: state.cart.userCartError,
     cartDetailsError: state.cart.cartDetailsError,
