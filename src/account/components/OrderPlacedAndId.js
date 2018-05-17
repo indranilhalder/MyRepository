@@ -28,5 +28,5 @@ OrderPlacedAndId.propTypes = {
   orderId: PropTypes.string
 };
 OrderPlacedAndId.defaultProps = {
-  label: "Order Placed"
+  label: "Order placed"
 };

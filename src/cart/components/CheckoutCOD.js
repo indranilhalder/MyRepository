@@ -17,34 +17,38 @@ export default class CheckoutCOD extends React.Component {
   };
 
   render() {
-    return (
-      <div>
-        {this.props.cart &&
-        this.props.cart.codEligibilityDetails &&
-        this.props.cart.codEligibilityDetails.status ? (
-          <MenuDetails
-            text={CASH_ON_DELIVERY_PAYMENT_MODE}
-            isOpen={
-              this.props.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
-            }
-            onOpenMenu={currentPaymentMode =>
-              this.props.onChange({ currentPaymentMode })
-            }
-            icon={creditCardIcon}
-          >
-            <CodForm
-              cart={this.props.cart}
-              binValidationForCOD={paymentMode =>
-                this.binValidationForCOD(paymentMode)
+    if (this.props.isCliqCashApplied) {
+      return null;
+    } else {
+      return (
+        <div>
+          {this.props.cart &&
+          this.props.cart.codEligibilityDetails &&
+          this.props.cart.codEligibilityDetails.status ? (
+            <MenuDetails
+              text={CASH_ON_DELIVERY_PAYMENT_MODE}
+              isOpen={
+                this.props.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
               }
-              verifyCaptcha={this.props.verifyCaptcha}
-            />
-          </MenuDetails>
-        ) : (
-          <CodUnavailable message="Cash on delivery not available " />
-        )}
-      </div>
-    );
+              onOpenMenu={currentPaymentMode =>
+                this.props.onChange({ currentPaymentMode })
+              }
+              icon={creditCardIcon}
+            >
+              <CodForm
+                cart={this.props.cart}
+                binValidationForCOD={paymentMode =>
+                  this.binValidationForCOD(paymentMode)
+                }
+                verifyCaptcha={this.props.verifyCaptcha}
+              />
+            </MenuDetails>
+          ) : (
+            <CodUnavailable message="Cash on delivery not available " />
+          )}
+        </div>
+      );
+    }
   }
 }
 
