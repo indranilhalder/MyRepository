@@ -22,7 +22,8 @@ import {
   RETURN_CLIQ_PIQ,
   RETURNS_SELF_COURIER,
   MY_ACCOUNT,
-  MY_ACCOUNT_ORDERS_PAGE
+  MY_ACCOUNT_ORDERS_PAGE,
+  BACK_END_ISSUE_ERROR_MESSAGE
 } from "../../lib/constants";
 const RETURN_FLAG = "R";
 const IFSC_PATTERN = /^[A-Za-z]{4}0[A-Z0-9a-z]{6}$/;
@@ -128,7 +129,7 @@ export default class ReturnFlow extends React.Component {
   }
   render() {
     // if user hit return page by url then i am navigating him on orderDetial page
-    if (this.props.error) {
+    if (this.props.error === BACK_END_ISSUE_ERROR_MESSAGE) {
       this.props.displayToast(this.props.error);
       this.props.history.goBack();
     }
