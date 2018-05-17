@@ -52,9 +52,6 @@ class ProductListingsPage extends Component {
       }
     }
 
-    let match;
-    const url = this.props.location.pathname;
-
     return encodeURIComponent(searchText);
   }
 
@@ -74,7 +71,8 @@ class ProductListingsPage extends Component {
     }
 
     if (this.props.searchText) {
-      this.props.getProductListings(this.props.searchText, SUFFIX, 0);
+      let searchText = this.getSearchTextFromUrl();
+      this.props.getProductListings(searchText, SUFFIX, 0);
       return;
     }
     let page = null;
