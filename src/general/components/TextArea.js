@@ -5,8 +5,15 @@ export default class TextArea extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      focused: false,
       value: props.value ? props.value : ""
     };
+  }
+  handleFocus(event) {
+    if (this.props.onFocus) {
+      this.props.onFocus(event);
+    }
+    this.setState({ focused: true });
   }
   handleChange(event) {
     if (this.props.onChange) {
@@ -25,6 +32,7 @@ export default class TextArea extends React.Component {
             this.handleChange(event);
           }}
           style={{ height: `${this.props.height}px` }}
+          onFocus={event => this.handleFocus(event)}
         />
       </div>
     );

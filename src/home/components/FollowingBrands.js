@@ -52,7 +52,12 @@ export default class FollowingBrands extends React.Component {
     return (
       <div>
         {userDetails &&
-          customerCookie && (
+          customerCookie &&
+          followWidgetData &&
+          followWidgetData.data &&
+          followWidgetData.data.filter(val => {
+            return val.isFollowing === "true";
+          }).length > 1 && (
             <div className={styles.base}>
               <Carousel
                 header={

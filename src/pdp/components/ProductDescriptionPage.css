@@ -16,6 +16,7 @@
 .whiteBackground {
   composes: base;
   background: #fff;
+  padding-bottom: 15px;
 }
 .info {
   width: 100%;

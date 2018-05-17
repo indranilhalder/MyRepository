@@ -10,7 +10,8 @@ import format from "date-fns/format";
 import {
   MY_ACCOUNT_GIFT_CARD_PAGE,
   MY_ACCOUNT_PAGE,
-  CLIQ_CASH
+  CLIQ_CASH,
+  SUCCESS
 } from "../../lib/constants.js";
 
 const DATE_FORMAT = "DD/MM/YYYY, hh:mm";
@@ -25,6 +26,11 @@ export default class CliqAndCash extends React.Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.cliqCashVoucherDetailsStatus === SUCCESS) {
+      this.setState({ cardNumber: "", pinNumber: "", cliqCashUpdate: "" });
+    }
+  }
   componentDidUpdate() {
     this.props.setHeaderText(CLIQ_CASH);
   }

@@ -148,8 +148,8 @@ const KycDetailPopUpWithBottomSlideModal = Loadable({
   }
 });
 
-const InvalidBankCouponPopup = Loadable({
-  loader: () => import("../../cart/components/DifferentAccountPopup"),
+const InvalidCouponPopupContainer = Loadable({
+  loader: () => import("../../cart/containers/InvalidCouponPopUpContainer"),
   loading() {
     return <Loader />;
   }
@@ -157,6 +157,12 @@ const InvalidBankCouponPopup = Loadable({
 
 const CancelOrderPopUp = Loadable({
   loader: () => import("../../account/components/CancelOrderPopUp.js"),
+  loading() {
+    return <Loader />;
+  }
+});
+const CliqCashAndNoCostEmiPopup = Loadable({
+  loader: () => import("../../cart/components/CliqCashAndNoCostEmiPopup.js"),
   loading() {
     return <Loader />;
   }
@@ -207,14 +213,12 @@ export default class ModalRoot extends React.Component {
   }
   submitOtp(otpDetails) {
     this.props.otpVerification(otpDetails, this.props.ownProps);
-    this.props.hideModal();
   }
   resendOTP(userObj) {
     this.props.resendOTP(userObj);
   }
   resetPassword(userDetails) {
     this.props.resetPassword(userDetails);
-    this.props.hideModal();
   }
 
   handleRestoreClick(userDetails) {
@@ -223,7 +227,7 @@ export default class ModalRoot extends React.Component {
   }
   submitOtpForgotPassword(otpDetails) {
     this.props.forgotPasswordOtpVerification(otpDetails, this.props.ownProps);
-    this.props.hideModal();
+
   }
   applyBankOffer = couponCode => {
     return this.props.applyBankOffer(couponCode);
@@ -593,14 +597,11 @@ export default class ModalRoot extends React.Component {
         />
       ),
       INVALID_BANK_COUPON_POPUP: (
-        <InvalidBankCouponPopup
-          couponCode={
-            this.props.ownProps && this.props.ownProps.couponCode
-              ? this.props.ownProps.couponCode
-              : ""
-          }
+        <InvalidCouponPopupContainer
+          {...this.props.ownProps}
+          closeModal={() => this.handleClose()}
           changePaymentMethod={() => this.handleClose()}
-          continueWithoutCoupon={() => this.continueWithoutBankCoupon()}
+          // continueWithoutCoupon={() => this.continueWithoutBankCoupon()}
         />
       ),
       PriceBreakup: (
@@ -623,6 +624,14 @@ export default class ModalRoot extends React.Component {
           cancelProduct={(cancelProductDetails, productDetails) =>
             this.cancelOrderProduct(cancelProductDetails, productDetails)
           }
+        />
+      ),
+      CliqCashAndNoCostEmiPopup: (
+        <CliqCashAndNoCostEmiPopup
+          {...this.props.ownProps}
+          handleClose={() => this.handleClose()}
+          removeNoCostEmi={couponCode => this.props.removeNoCostEmi(couponCode)}
+          continueWithNoCostEmi={() => this.handleClose()}
         />
       )
     };

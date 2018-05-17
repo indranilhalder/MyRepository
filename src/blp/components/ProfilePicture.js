@@ -4,6 +4,8 @@ import ProfileImage from "../../xelpmoc-core/ProfileImage";
 import editIcon from "../../general/components/img/tick.svg";
 import PropTypes from "prop-types";
 import Icon from "../../xelpmoc-core/Icon";
+import { CDN_URL_ROOT } from "../../../src/lib/constants";
+const userIcon = `${CDN_URL_ROOT}myCliq_icon.png`;
 export default class ProfilePicture extends React.Component {
   onEdit() {
     if (this.props.onEdit) {
@@ -21,16 +23,23 @@ export default class ProfilePicture extends React.Component {
             >
               <Icon image={editIcon} size={18} />
             </div>
-            {this.props.firstName &&
-              this.props.lastName && (
-                <ProfileImage
-                  image={this.props.profileImageLink}
-                  size={3}
-                  initials={
-                    this.props.firstName.charAt(0) +
-                    this.props.lastName.charAt(0)
-                  }
-                />
+            {(this.props.firstName || this.props.lastName) && (
+              <ProfileImage
+                image={this.props.profileImageLink}
+                size={3}
+                initials={
+                  this.props.firstName && !this.props.lastName
+                    ? this.props.firstName.charAt(0)
+                    : this.props.lastName && !this.props.firstName
+                      ? this.props.lastName.charAt(0)
+                      : this.props.firstName.charAt(0) +
+                        this.props.lastName.charAt(0)
+                }
+              />
+            )}
+            {!this.props.firstName &&
+              !this.props.lastName && (
+                <ProfileImage image={userIcon} size={3} />
               )}
           </div>
           {!this.props.edit && (

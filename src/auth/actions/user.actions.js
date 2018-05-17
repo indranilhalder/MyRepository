@@ -7,7 +7,10 @@ import {
 import {
   GLOBAL_ACCESS_TOKEN,
   CUSTOMER_ACCESS_TOKEN,
-  FAILURE_UPPERCASE
+  FAILURE_UPPERCASE,
+  OTP_VERIFICATION_REQUIRED_CODE,
+  OTP_VERIFICATION_REQUIRED_TEXT,
+  RESET_PASSWORD_SUCCESS_MESSAGE
 } from "../../lib/constants";
 import {
   showModal,
@@ -163,12 +166,18 @@ export function loginUser(userLoginDetails) {
           dispatch(displayToast(resultJsonStatus.message));
         }
         dispatch(stopLoaderOnLoginForOTPVerification());
-        return dispatch(
-          showModal(OTP_LOGIN_MODAL, {
-            username: userLoginDetails.username,
-            password: userLoginDetails.password
-          })
-        );
+
+        if (
+          resultJson.errorCode === OTP_VERIFICATION_REQUIRED_CODE ||
+          resultJson.status === OTP_VERIFICATION_REQUIRED_TEXT
+        ) {
+          return dispatch(
+            showModal(OTP_LOGIN_MODAL, {
+              username: userLoginDetails.username,
+              password: userLoginDetails.password
+            })
+          );
+        }
       }
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
@@ -270,7 +279,8 @@ export function otpVerification(otpDetails, userDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(hideModal());
+
+      dispatch(hideModal(SIGN_UP_OTP_VERIFICATION));
       return dispatch(otpVerificationSuccess(resultJson, userDetails.username));
     } catch (e) {
       return dispatch(otpVerificationFailure(e.message));
@@ -361,6 +371,7 @@ export function forgotPasswordOtpVerification(otpDetails, userDetails) {
         throw new Error(resultJsonStatus.message);
       }
       // TODO: dispatch a modal here
+      dispatch(hideModal(FORGOT_PASSWORD_OTP_VERIFICATION));
       dispatch(
         showModal(NEW_PASSWORD, {
           otpDetails: otpDetails,
@@ -410,6 +421,8 @@ export function resetPassword(userDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      dispatch(hideModal(NEW_PASSWORD));
+      dispatch(displayToast(RESET_PASSWORD_SUCCESS_MESSAGE));
       // TODO: dispatch a modal here
       dispatch(resetPasswordSuccess(resultJson));
     } catch (e) {

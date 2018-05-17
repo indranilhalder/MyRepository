@@ -129,9 +129,10 @@ export function getProductListings(
     try {
       const searchState = getState().search;
       const pageNumber = getState().productListings.pageNumber;
-      const encodedString = searchState.string.includes("%3A")
-        ? searchState.string
-        : encodeURI(searchState.string);
+      const encodedString =
+        searchState.string.includes("%3A") || searchState.string.includes("%20")
+          ? searchState.string
+          : encodeURI(searchState.string);
 
       let queryString = `${PRODUCT_LISTINGS_PATH}/?searchText=${encodedString}`;
 

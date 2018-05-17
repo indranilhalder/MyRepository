@@ -20,9 +20,18 @@ import {
 import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
-  LOGIN_PATH
+  LOGIN_PATH,
+  ERROR,
+  REQUESTING
 } from "../../lib/constants";
 const ACCOUNT_SETTING_HEADER = "Account Settings";
+const MINIMUM_PASSWORD_LENGTH = 8;
+const OLD_PASSWORD_TEXT = "Please enter old password";
+const NEW_PASSWORD_TEXT = "Please enter new password";
+const PASSWORD_LENGTH_TEXT = "Password length should be minimum 8 character";
+const CONFIRM_PASSWORD_TEXT = "Please confirm your passowrd";
+const PASSWORD_MATCH_TEXT = "Password did not match";
+const DATE_FORMAT_TO_UPDATE_PROFILE = "DD/MM/YYYY";
 export default class EditAccountDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -45,7 +54,6 @@ export default class EditAccountDetails extends React.Component {
   componentDidMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
     if (userDetails && customerCookie) {
       this.props.getUserDetails();
     } else {
@@ -91,6 +99,14 @@ export default class EditAccountDetails extends React.Component {
       }
       this.props.history.push(LOGIN_PATH);
     }
+    if (
+      nextProps.changePasswordStatus === REQUESTING ||
+      nextProps.changePasswordStatus === ERROR
+    ) {
+      this.setState({ changePassword: true });
+    } else {
+      this.setState({ changePassword: false });
+    }
   }
   onChangeGender(val) {
     this.setState({ gender: val.value });
@@ -130,10 +146,32 @@ export default class EditAccountDetails extends React.Component {
   cancel = () => {
     this.props.history.goBack();
   };
-  changePassword = passwordDetails => {
-    this.setState({ changePassword: false });
-    this.props.changePassword(passwordDetails);
-  };
+  changePassword(passwordDetails) {
+    const oldPassword = passwordDetails.oldPassword;
+    const newPassword = passwordDetails.newPassword;
+    const confirmedPassword = passwordDetails.confirmPassword;
+    if (!oldPassword) {
+      this.props.displayToast(OLD_PASSWORD_TEXT);
+      return false;
+    }
+    if (!newPassword) {
+      this.props.displayToast(NEW_PASSWORD_TEXT);
+      return false;
+    }
+    if (newPassword.length < MINIMUM_PASSWORD_LENGTH) {
+      this.props.displayToast(PASSWORD_LENGTH_TEXT);
+      return false;
+    }
+    if (!confirmedPassword) {
+      this.props.displayToast(CONFIRM_PASSWORD_TEXT);
+      return false;
+    }
+    if (newPassword !== confirmedPassword) {
+      this.props.displayToast(PASSWORD_MATCH_TEXT);
+    } else {
+      this.props.changePassword(passwordDetails);
+    }
+  }
   renderChangePassword = () => {
     this.setState({ changePassword: true });
   };
@@ -193,7 +231,7 @@ export default class EditAccountDetails extends React.Component {
             </div>
             <div className={styles.container}>
               <Input2
-                placeholder="Mobile NUmber"
+                placeholder="Mobile Number"
                 value={this.state.mobileNumber}
                 boxy={true}
                 textStyle={{ fontSize: 14 }}
@@ -244,6 +282,9 @@ export default class EditAccountDetails extends React.Component {
           <ChangePassword
             updatePassword={passwordDetails =>
               this.changePassword(passwordDetails)
+            }
+            clearChangePasswordDetails={() =>
+              this.props.clearChangePasswordDetails()
             }
           />
         </div>

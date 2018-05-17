@@ -11,6 +11,7 @@ export const ERROR = "error";
 export const FAILURE = "Failure";
 export const FAILURE_UPPERCASE = "FAILURE";
 export const FAILURE_LOWERCASE = "failure";
+export const WRONG_FAILURE = "faliure";
 export const JUS_PAY_PENDING = "PENDING_VBV";
 export const JUS_PAY_CHARGED = "CHARGED";
 export const JUS_PAY_SUCCESS = "S";
@@ -207,6 +208,7 @@ export const CHECKOUT = "Checkout";
 export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
 export const ERROR_MESSAGE_FOR_VERIFY_OTP = "Please Enter an Valid OTP";
+export const HELP = "Help";
 
 // COPY
 //STATIC PAGE
@@ -216,6 +218,15 @@ export const REVIEW_SUBMIT_TOAST_TEXT =
 
 export const CDN_URL_ROOT =
   "https://assets.tatacliq.com/medias/sys_master/pwaImg/";
+export const QUE_MAGAZINE = "https://www.tatacliq.com/que";
+
+export const TERMS_AND_CONDITION_URL = "/tncPayment";
+export const ABOUT_US_URL = "/aboutus";
+export const PRIVACY_POLICY_URL = "/privacy-policy";
+export const CANCEL_URL = "/cancellation";
+export const RETURN_URL = "/returns";
+export const FAQ_URL = "/faq";
+export const HELP_URL = "/help";
 
 // constants for payments method
 export const EASY_MONTHLY_INSTALLMENTS = "Easy monthly installments";
@@ -251,3 +262,33 @@ export const MESTRO_CARD = "MAESTRO";
 export const DINERS_CARD = "DINERS";
 export const DISCOVER_CARD = "DISCOVER";
 export const JCB_CARD = "JCB";
+
+export const INVALID_USER_COUPON_TYPE = "COUPON";
+export const INVALID_BANK_OFFER_TYPE = "BANKOFFER";
+export const INVALID_NO_COST_EMI_TYPE = "NOCOSTEMI";
+
+export const SELECTED_BANK_NAME = "selectedBankName";
+//add address Constants
+
+export const SAVE_TEXT = "Save Address";
+export const PINCODE_TEXT = "Please enter pincode";
+export const NAME_TEXT = "Please enter first name";
+export const LAST_NAME_TEXT = "plese enter last name";
+export const ADDRESS_TEXT = "Please enter address";
+export const EMAIL_TEXT = "Please enter email id";
+export const LANDMARK_TEXT = "Please select landmark";
+export const LANDMARK_ENTER_TEXT = "Please enter landmark";
+export const MOBILE_TEXT = "Please enter mobile number";
+export const PINCODE_VALID_TEXT = "Please enter valid pincode";
+export const EMAIL_VALID_TEXT = "Please enter valid emailId";
+export const PHONE_VALID_TEXT = "Please fill valid mobile number";
+export const PHONE_TEXT = "Please enter mobile number";
+export const CITY_TEXT = "please enter city";
+export const STATE_TEXT = "please enter state";
+export const SELECT_ADDRESS_TYPE = "please select address type";
+export const ISO_CODE = "IN";
+export const OTHER_LANDMARK = "other";
+export const OTP_VERIFICATION_REQUIRED_CODE = "NU0002";
+export const RESET_PASSWORD_SUCCESS_MESSAGE =
+  "Password reset successfully. Kindly login with your new password";
+export const OTP_VERIFICATION_REQUIRED_TEXT = "OTP VERIFICATION REQUIRED";

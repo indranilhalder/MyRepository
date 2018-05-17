@@ -166,7 +166,12 @@ export default class OrderDetails extends React.Component {
         {orderDetails &&
           orderDetails.products.map((products, i) => {
             let isOrderReturnable = false;
-
+            let isReturned = false;
+            isReturned = products.statusDisplayMsg
+              .map(val => {
+                return val.key;
+              })
+              .includes(RETURN);
             each(products && products.statusDisplayMsg, orderStatus => {
               each(
                 orderStatus &&
@@ -352,8 +357,24 @@ export default class OrderDetails extends React.Component {
                       <div className={styles.row}>
                         {orderDetails.pickupPersonMobile}
                       </div>
+                      {products.statusDisplayMsg
+                        .map(val => {
+                          return val.key;
+                        })
+                        .includes(RETURN) && (
+                        <OrderStatusHorizontal
+                          trackingAWB={products.trackingAWB}
+                          courier={products.reverseLogisticName}
+                          statusMessageList={products.statusDisplayMsg.filter(
+                            val => {
+                              return val.key === RETURN;
+                            }
+                          )}
+                        />
+                      )}
                     </div>
                   )}
+
                 {products.awbPopupLink === AWB_POPUP_FALSE && (
                   <div className={styles.buttonHolder}>
                     <div className={styles.buttonHolderForUpdate}>
@@ -394,19 +415,21 @@ export default class OrderDetails extends React.Component {
                           </div>
                         )}
                       </div>
-                      <div className={styles.reviewHolder}>
-                        <div
-                          className={styles.replace}
-                          onClick={val =>
-                            this.writeReview(products.productcode)
-                          }
-                        >
-                          <UnderLinedButton
-                            label="Write a review"
-                            color="#ff1744"
-                          />
+                      {!isReturned && (
+                        <div className={styles.reviewHolder}>
+                          <div
+                            className={styles.replace}
+                            onClick={val =>
+                              this.writeReview(products.productcode)
+                            }
+                          >
+                            <UnderLinedButton
+                              label="Write a review"
+                              color="#ff1744"
+                            />
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 )}

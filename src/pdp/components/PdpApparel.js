@@ -110,7 +110,8 @@ const PDPRecommendedSectionsContainer = LoadableVisibility({
   },
   delay: 400
 });
-
+const NO_SIZE = "NO SIZE";
+const FREE_SIZE = "Free Size";
 const PRODUCT_QUANTITY = "1";
 const IMAGE = "Image";
 export default class PdpApparel extends React.Component {
@@ -168,7 +169,12 @@ export default class PdpApparel extends React.Component {
       ) {
         this.props.displayToast("Product is out of stock");
       } else {
-        if (this.checkIfSizeSelected() || this.checkIfSizeDoesNotExist()) {
+        if (
+          this.checkIfSizeSelected() ||
+          this.checkIfSizeDoesNotExist() ||
+          this.checkIfFreeSize() ||
+          this.checkIfNoSize()
+        ) {
           if (userDetails) {
             if (cartDetailsLoggedInUser && customerCookie) {
               this.props.addProductToCart(
@@ -255,6 +261,30 @@ export default class PdpApparel extends React.Component {
         : false
       : true;
   };
+  checkIfNoSize = () => {
+    if (
+      this.props.productDetails.variantOptions &&
+      this.props.productDetails.variantOptions[0].sizelink &&
+      (this.props.productDetails.variantOptions[0].sizelink.size.toUpperCase() ===
+        NO_SIZE ||
+        this.props.productDetails.variantOptions[0].sizelink.size === "0")
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  checkIfFreeSize = () => {
+    if (
+      this.props.productDetails.variantOptions &&
+      this.props.productDetails.variantOptions[0].sizelink &&
+      this.props.productDetails.variantOptions[0].sizelink.size === FREE_SIZE
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   handleShowPiqPage = () => {
     const eligibleForCNC = find(
       this.props.productDetails &&
@@ -333,7 +363,7 @@ export default class PdpApparel extends React.Component {
               price={price}
               discountPrice={discountPrice}
               averageRating={productData.averageRating}
-              onClick={this.goToReviewPage}
+              goToReviewPage={this.goToReviewPage}
               discount={productData.discount}
             />
           </div>
@@ -349,14 +379,17 @@ export default class PdpApparel extends React.Component {
           />
           {productData.variantOptions && (
             <React.Fragment>
-              <SizeSelector
-                history={this.props.history}
-                sizeSelected={this.checkIfSizeSelected()}
-                productId={productData.productListingId}
-                hasSizeGuide={productData.showSizeGuide}
-                showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions}
-              />
+              {!this.checkIfNoSize() && (
+                <SizeSelector
+                  history={this.props.history}
+                  sizeSelected={this.checkIfSizeSelected()}
+                  productId={productData.productListingId}
+                  hasSizeGuide={productData.showSizeGuide}
+                  showSizeGuide={this.props.showSizeGuide}
+                  data={productData.variantOptions}
+                />
+              )}
+
               <ColourSelector
                 data={productData.variantOptions}
                 productId={productData.productListingId}
