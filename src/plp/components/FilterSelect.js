@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import CheckBox from "../../general/components/CheckBox.js";
 import styles from "./FilterSelect.css";
 import { URL_ROOT } from "../../lib/apiRequest";
-
+const MULTI_COLOR = "#multi";
 export default class FilterSelect extends React.Component {
   handleUrlClick = e => {
     e.preventDefault();
@@ -29,8 +29,14 @@ export default class FilterSelect extends React.Component {
       <React.Fragment>
         {this.props.hexColor && (
           <div
-            className={styles.colourIndicator}
-            style={{ backgroundColor: this.props.hexColor }}
+            className={
+              this.props.hexColor === MULTI_COLOR
+                ? styles.multiColorIndicator
+                : styles.colourIndicator
+            }
+            style={{
+              backgroundColor: this.props.hexColor
+            }}
           />
         )}
         <div className={contentClass}>
