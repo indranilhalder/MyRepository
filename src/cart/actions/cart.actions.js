@@ -2849,7 +2849,7 @@ export function createJusPayOrderForCliqCash(
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     cartId = JSON.parse(cartDetails).guid;
   }
-  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
+
 
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
@@ -2862,7 +2862,7 @@ export function createJusPayOrderForCliqCash(
           JSON.parse(customerCookie).access_token
         }&juspayUrl=${encodeURIComponent(
           jusPayUrl
-        )}&paymentMode=${currentSelectedPaymentMode}`,
+        )}&paymentMode=Cliq Cash`,
         cartItem
       );
       const resultJson = await result.json();

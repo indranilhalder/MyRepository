@@ -1394,7 +1394,7 @@ class CheckOutPage extends React.Component {
         true // for payment failure we need to use old cart id
       );
     }
-    if (this.state.binValidationCOD) {
+    if (this.state.binValidationCOD && !this.state.isCliqCashApplied) {
       this.props.updateTransactionDetailsForCOD(CASH_ON_DELIVERY, "");
     }
   };
@@ -1509,7 +1509,7 @@ class CheckOutPage extends React.Component {
         );
       }
 
-      if (this.state.binValidationCOD) {
+      if (this.state.binValidationCOD && !this.state.isCliqCashApplied) {
         this.softReservationForCODPayment();
       }
       if (this.state.paymentModeSelected === PAYTM) {
@@ -1641,24 +1641,29 @@ class CheckOutPage extends React.Component {
   };
 
   applyCliqCash = () => {
+
     if (this.state.isNoCostEmiApplied) {
       const doCallForApplyCliqCash = () => {
         this.setState({
           isCliqCashApplied: true,
           currentPaymentMode: null,
-          isNoCostEmiApplied: false
+          isNoCostEmiApplied: false,
+          binValidationCOD:false,
+          captchaReseponseForCOD:null,
+          PAYMENT_MODE_TYPE:"Cliq Cash"
+
         });
         this.props.applyCliqCash();
       };
       this.props.showModalForCliqCashOrNoCostEmi({ doCallForApplyCliqCash });
     } else {
-      this.setState({ isCliqCashApplied: true });
+      this.setState({ isCliqCashApplied: true,  binValidationCOD:false,captchaReseponseForCOD:null, PAYMENT_MODE_TYPE:"Cliq Cash" });
       this.props.applyCliqCash();
     }
   };
 
   removeCliqCash = () => {
-    this.setState({ isCliqCashApplied: false });
+    this.setState({ isCliqCashApplied: false ,isCliqCashApplied:false,captchaReseponseForCOD:null, PAYMENT_MODE_TYPE:null,binValidationCOD:false});
     this.props.removeCliqCash();
   };
 
