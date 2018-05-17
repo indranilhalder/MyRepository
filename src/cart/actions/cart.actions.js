@@ -10,7 +10,8 @@ import {
   PAYMENT_MODE_TYPE,
   SELECTED_BANK_NAME,
   EMI,
-  NO_COST_EMI_COUPON
+  NO_COST_EMI_COUPON,
+  CLIQ_CASH
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash.foreach";
@@ -2849,7 +2850,7 @@ export function createJusPayOrderForCliqCash(
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     cartId = JSON.parse(cartDetails).guid;
   }
-  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
+
 
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
@@ -2862,7 +2863,7 @@ export function createJusPayOrderForCliqCash(
           JSON.parse(customerCookie).access_token
         }&juspayUrl=${encodeURIComponent(
           jusPayUrl
-        )}&paymentMode=${currentSelectedPaymentMode}`,
+        )}&paymentMode=${CLIQ_CASH}`,
         cartItem
       );
       const resultJson = await result.json();
@@ -3539,6 +3540,8 @@ export function updateTransactionDetailsForCOD(paymentMode, juspayOrderID) {
         );
         window.location.href = newUrl;
       }
+      dispatch(setBagCount(0));
+      localStorage.setItem(CART_BAG_DETAILS, []);
       dispatch(orderConfirmation(resultJson.orderId));
       dispatch(updateTransactionDetailsForCODSuccess(resultJson));
     } catch (e) {

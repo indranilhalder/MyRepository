@@ -589,8 +589,6 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-
-
     if (nextProps.cart.isSoftReservationFailed) {
       return this.navigateToCartForOutOfStock();
     }
@@ -763,7 +761,8 @@ class CheckOutPage extends React.Component {
       this.setState({
         isRemainingAmount:
           nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
-        payableAmount: nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value
+        payableAmount: nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount
+          .value
           ? nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value
           : "0.00",
         cliqCashAmount:
@@ -777,9 +776,10 @@ class CheckOutPage extends React.Component {
           ? nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
           : "0.00",
         totalDiscount:
-        nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount.value > 0
+          nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount.value > 0
             ? Math.round(
-              nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount.value * 100
+                nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
+                  .value * 100
               ) / 100
             : "0.00",
         cliqCashPaidAmount:
@@ -1394,7 +1394,7 @@ class CheckOutPage extends React.Component {
         true // for payment failure we need to use old cart id
       );
     }
-    if (this.state.binValidationCOD) {
+    if (this.state.binValidationCOD && !this.state.isCliqCashApplied) {
       this.props.updateTransactionDetailsForCOD(CASH_ON_DELIVERY, "");
     }
   };
@@ -1509,7 +1509,7 @@ class CheckOutPage extends React.Component {
         );
       }
 
-      if (this.state.binValidationCOD) {
+      if (this.state.binValidationCOD && !this.state.isCliqCashApplied) {
         this.softReservationForCODPayment();
       }
       if (this.state.paymentModeSelected === PAYTM) {
@@ -1646,19 +1646,33 @@ class CheckOutPage extends React.Component {
         this.setState({
           isCliqCashApplied: true,
           currentPaymentMode: null,
-          isNoCostEmiApplied: false
+          isNoCostEmiApplied: false,
+          binValidationCOD: false,
+          captchaReseponseForCOD: null,
+          PAYMENT_MODE_TYPE: "Cliq Cash"
         });
         this.props.applyCliqCash();
       };
       this.props.showModalForCliqCashOrNoCostEmi({ doCallForApplyCliqCash });
     } else {
-      this.setState({ isCliqCashApplied: true });
+      this.setState({
+        isCliqCashApplied: true,
+        binValidationCOD: false,
+        captchaReseponseForCOD: null,
+        PAYMENT_MODE_TYPE: "Cliq Cash"
+      });
       this.props.applyCliqCash();
     }
   };
 
   removeCliqCash = () => {
-    this.setState({ isCliqCashApplied: false });
+    this.setState({
+      isCliqCashApplied: false,
+      isCliqCashApplied: false,
+      captchaReseponseForCOD: null,
+      PAYMENT_MODE_TYPE: null,
+      binValidationCOD: false
+    });
     this.props.removeCliqCash();
   };
 
@@ -1857,6 +1871,10 @@ class CheckOutPage extends React.Component {
       !this.state.isGiftCard &&
       (this.props.cart.userAddress && this.props.cart.userAddress.addresses)
     ) {
+      if (!this.state.addressId) {
+        checkoutButtonStatus = true;
+      }
+
       labelForButton = PROCEED;
     } else if (
       (this.state.confirmAddress && !this.state.deliverMode) ||
@@ -1926,6 +1944,7 @@ class CheckOutPage extends React.Component {
     } else {
       if (
         this.props.cart.loading ||
+        this.props.cart.cartDetailsCNCLoader ||
         this.props.cart.jusPaymentLoader ||
         this.props.cart.selectDeliveryModeLoader ||
         (!this.props.cart.paymentModes && this.state.deliverMode) ||
