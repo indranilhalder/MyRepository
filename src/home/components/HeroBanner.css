@@ -2,3 +2,9 @@
   width: 100%;
   height: auto;
 }
+.monoBanner {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  transform: scale(0.86);
+}

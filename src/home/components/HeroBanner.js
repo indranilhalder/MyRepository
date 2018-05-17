@@ -31,7 +31,7 @@ export default class HeroBanner extends React.Component {
         );
       } else {
         return (
-          <React.Fragment>
+          <div className={styles.monoBanner}>
             {feedComponentData.items &&
               feedComponentData.items.map &&
               feedComponentData.items.map((datum, i) => {
@@ -47,7 +47,7 @@ export default class HeroBanner extends React.Component {
                   />
                 );
               })}
-          </React.Fragment>
+          </div>
         );
       }
     } else {
