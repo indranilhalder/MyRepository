@@ -1944,6 +1944,7 @@ class CheckOutPage extends React.Component {
     } else {
       if (
         this.props.cart.loading ||
+        this.props.cart.cartDetailsCNCLoader ||
         this.props.cart.jusPaymentLoader ||
         this.props.cart.selectDeliveryModeLoader ||
         (!this.props.cart.paymentModes && this.state.deliverMode) ||

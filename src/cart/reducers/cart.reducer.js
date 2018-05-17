@@ -39,6 +39,7 @@ const cart = (
     cartDetailsCNC: null,
     cartDetailsCNCStatus: null,
     cartDetailsCNCError: null,
+    cartDetailsCNCLoader: false,
 
     couponStatus: null,
     couponError: null,
@@ -359,7 +360,8 @@ const cart = (
     case cartActions.CART_DETAILS_CNC_REQUEST:
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
-        loading: true
+        loading: true,
+        cartDetailsCNCLoader: true
       });
     case cartActions.CART_DETAILS_CNC_SUCCESS: {
       return Object.assign({}, state, {
@@ -367,14 +369,16 @@ const cart = (
         setAddress: action.setAddress,
         userAddress: action.cartDetailsCnc.addressDetailsList,
         cartDetailsCNC: action.cartDetailsCnc,
-        loading: false
+        loading: false,
+        cartDetailsCNCLoader: false
       });
     }
     case cartActions.CART_DETAILS_CNC_FAILURE:
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
         cartDetailsCNCError: action.error,
-        loading: false
+        loading: false,
+        cartDetailsCNCLoader: false
       });
 
     case cartActions.NET_BANKING_DETAILS_REQUEST:
