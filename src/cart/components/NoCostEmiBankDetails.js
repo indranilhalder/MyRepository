@@ -161,35 +161,50 @@ export default class NoCostEmiBankDetails extends React.Component {
     }
   };
 
-  async onSelectMonth(index, val) {
-    if (this.state.selectedBankName !== "Other Bank") {
-      if (this.state.selectedMonth === index) {
+  async applyNoCostEmi(index, val) {
+    if (val && this.props.applyNoCostEmi) {
+      const applyNoCostEmiReponse = await this.props.applyNoCostEmi(
+        val.emicouponCode,
+        this.state.selectedBankName
+      );
+      if (applyNoCostEmiReponse.status === SUCCESS) {
+        this.setState({
+          selectedMonth: index,
+          selectedCouponCode: val.emicouponCode,
+          selectedTenure: val.tenure
+        });
+        this.onChangeCardDetail({
+          is_emi: true,
+          emi_bank: this.state.selectedBankCode,
+          emi_tenure: val.tenure
+        });
+      } else {
         this.setState({
           selectedMonth: null,
           selectedCouponCode: null,
           selectedTenure: null
         });
-
-        this.props.removeNoCostEmi(val.emicouponCode);
-      } else {
-        if (val && this.props.applyNoCostEmi) {
-          const applyNoCostEmiReponse = await this.props.applyNoCostEmi(
-            val.emicouponCode,
-            this.state.selectedBankName
-          );
-          if (applyNoCostEmiReponse.status === SUCCESS) {
-            this.setState({
-              selectedMonth: index,
-              selectedCouponCode: val.emicouponCode,
-              selectedTenure: val.tenure
-            });
-            this.onChangeCardDetail({
-              is_emi: true,
-              emi_bank: this.state.selectedBankCode,
-              emi_tenure: val.tenure
-            });
+      }
+    }
+  }
+  async onSelectMonth(index, val) {
+    if (this.state.selectedBankName !== "Other Bank") {
+      if (this.props.removeNoCostEmi && this.state.selectedCouponCode) {
+        const removeNoCostEmiResponce = await this.props.removeNoCostEmi(
+          this.state.selectedCouponCode
+        );
+        if (removeNoCostEmiResponce.status === SUCCESS) {
+          if (this.state.selectedMonth !== index) {
+            this.applyNoCostEmi(index, val);
           }
+          this.setState({
+            selectedMonth: null,
+            selectedCouponCode: null,
+            selectedTenure: null
+          });
         }
+      } else {
+        this.applyNoCostEmi(index, val);
       }
     }
   }

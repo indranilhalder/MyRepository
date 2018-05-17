@@ -5,6 +5,8 @@ import {
   getSearchResults,
   clearSearchResults
 } from "./actions/search.actions.js";
+import throttle from "lodash.throttle";
+const SEARCH_RESULTS_THROTTLE_TIME = 500;
 const mapStateToProps = (state, ownProps) => {
   return {
     searchResult: state.search.searchResult.result,
@@ -14,11 +16,12 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
+  const throttledSearchResultsFunction = throttle(string => {
+    dispatch(getSearchResults(string));
+  }, SEARCH_RESULTS_THROTTLE_TIME);
   return {
     goBack: () => dispatch(ownProps.goBack()),
-    getSearchResults: string => {
-      dispatch(getSearchResults(string));
-    },
+    getSearchResults: throttledSearchResultsFunction,
     clearSearchResults: () => {
       dispatch(clearSearchResults());
     }

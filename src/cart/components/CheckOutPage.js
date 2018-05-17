@@ -1113,13 +1113,8 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  removeNoCostEmi = couponCode => {
-    this.setState({
-      isNoCostEmiApplied: false,
-      isNoCostEmiProceeded: false,
-      noCostEmiBankName: null,
-      noCostEmiDiscount: "0.00"
-    });
+  removeNoCostEmi = async couponCode => {
+
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
@@ -1135,7 +1130,17 @@ class CheckOutPage extends React.Component {
       if (this.props.removeNoCostEmi) {
         let carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
         let cartId = JSON.parse(cartDetailsLoggedInUser).code;
-        this.props.removeNoCostEmi(couponCode, carGuId, cartId);
+        const removeNoCostEmiResponse = await this.props.removeNoCostEmi(couponCode, carGuId, cartId);
+        if(removeNoCostEmiResponse.status === SUCCESS)
+        {
+          this.setState({
+            isNoCostEmiApplied: false,
+            isNoCostEmiProceeded: false,
+            noCostEmiBankName: null,
+            noCostEmiDiscount: "0.00"
+          });
+        }
+        return removeNoCostEmiResponse;
       }
     }
   };

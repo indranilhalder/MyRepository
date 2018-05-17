@@ -9,28 +9,17 @@ import RecommendationWidget from "./RecommendationWidget.js";
 import HeroBanner from "./HeroBanner.js";
 import FollowBase from "./FollowBase.js";
 import ConnectWidget from "./ConnectWidget";
-import BrandCardHeader from "../../blp/components/BrandCardHeader";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
 import FollowingBrands from "./FollowingBrands";
 import ContentWidgetWrapper from "./ContentWidgetWrapper";
 import FlashSale from "./FlashSale";
-import AllBrandTypes from "../../blp/components/AllBrandTypes";
 import OfferWidget from "./OfferWidget.js";
 import ThemeOffer from "./ThemeOffer.js";
 import ThemeProductWidget from "./ThemeProductWidget.js";
 import DiscoverMore from "./DiscoverMore.js";
 import CuratedProductsComponent from "./CuratedProductsComponent";
-import CuratedFeature from "../../blp/components/CuratedFeature";
-import LatestCollections from "../../blp/components/LatestCollections";
 import MonoBanner from "./MonoBanner";
 import styles from "./Feed.css";
-import TopCategories from "../../blp/components/TopCategories";
-import SubBrandsBanner from "../../blp/components/SubBrandsBanner";
-import ProductCapsulesContainer from "../containers/ProductCapsulesContainer";
-import CMSParagraphComponent from "../../staticpage/components/CMSParagraphComponent";
-import SimpleBannerComponent from "../../staticpage/components/SimpleBannerComponent.js";
-import CMSTextComponent from "../../staticpage/components/CMSTextComponent.js";
-import AccountNavigationComponent from "../../staticpage/components/AccountNavigationComponent.js";
 import * as Cookie from "../../lib/Cookie";
 import List from "@researchgate/react-intersection-list";
 import map from "lodash.map";
@@ -42,12 +31,91 @@ import {
   renderMetaTags,
   renderMetaTagsWithoutSeoObject
 } from "../../lib/seoUtils";
+import Loadable from "react-loadable";
 
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeKeyMapping = {
   "Hero Banner Component": "heroBannerComponent"
 };
+
+const ProductCapsulesContainer = Loadable({
+  loader: () => import("../containers/ProductCapsulesContainer"),
+  loading() {
+    return <div />;
+  }
+});
+
+const CMSParagraphComponent = Loadable({
+  loader: () => import("../../staticpage/components/CMSParagraphComponent"),
+  loading() {
+    return <div />;
+  }
+});
+
+const SimpleBannerComponent = Loadable({
+  loader: () => import("../../staticpage/components/SimpleBannerComponent.js"),
+  loading() {
+    return <div />;
+  }
+});
+
+const CMSTextComponent = Loadable({
+  loader: () => import("../../staticpage/components/CMSTextComponent.js"),
+  loading() {
+    return <div />;
+  }
+});
+
+const AccountNavigationComponent = Loadable({
+  loader: () =>
+    import("../../staticpage/components/AccountNavigationComponent.js"),
+  loading() {
+    return <div />;
+  }
+});
+
+const TopCategories = Loadable({
+  loader: () => import("../../blp/components/TopCategories"),
+  loading() {
+    return <div />;
+  }
+});
+
+const SubBrandsBanner = Loadable({
+  loader: () => import("../../blp/components/SubBrandsBanner"),
+  loading() {
+    return <div />;
+  }
+});
+
+const BrandCardHeader = Loadable({
+  loader: () => import("../../blp/components/BrandCardHeader"),
+  loading() {
+    return <div />;
+  }
+});
+
+const AllBrandTypes = Loadable({
+  loader: () => import("../../blp/components/AllBrandTypes"),
+  loading() {
+    return <div />;
+  }
+});
+
+const CuratedFeature = Loadable({
+  loader: () => import("../../blp/components/CuratedFeature"),
+  loading() {
+    return <div />;
+  }
+});
+
+const LatestCollections = Loadable({
+  loader: () => import("../../blp/components/LatestCollections"),
+  loading() {
+    return <div />;
+  }
+});
 
 export const typeComponentMapping = {
   "Product Capsules Component": props => (
