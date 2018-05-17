@@ -95,17 +95,29 @@ class ErrorDisplay extends React.Component {
     const errorKeys = keys(this.props);
     let seenError = false;
 
-    if (this.props.userError !== "" && this.props.userError !== null) {
+    if (
+      this.props.userError !== "" &&
+      this.props.userError !== null &&
+      this.props.userError !== undefined
+    ) {
       this.displayError(this.props.userError);
       return;
     }
 
-    if (this.props.plpError !== "" && this.props.plpError !== null) {
+    if (
+      this.props.plpError !== "" &&
+      this.props.plpError !== null &&
+      this.props.plpError !== undefined
+    ) {
       this.displayError(this.props.plpError);
       return;
     }
 
-    if (this.props.pdpError !== "" && this.props.pdpError !== null) {
+    if (
+      this.props.pdpError !== "" &&
+      this.props.pdpError !== null &&
+      this.props.pdpError !== undefined
+    ) {
       this.displayError(this.props.pdpError);
       return;
     }
@@ -114,6 +126,7 @@ class ErrorDisplay extends React.Component {
       const currentError = this.props[key];
 
       if (
+        currentError !== undefined &&
         currentError !== "" &&
         currentError !== null &&
         !seenError &&
