@@ -213,14 +213,12 @@ export default class ModalRoot extends React.Component {
   }
   submitOtp(otpDetails) {
     this.props.otpVerification(otpDetails, this.props.ownProps);
-
   }
   resendOTP(userObj) {
     this.props.resendOTP(userObj);
   }
   resetPassword(userDetails) {
     this.props.resetPassword(userDetails);
-    this.props.hideModal();
   }
 
   handleRestoreClick(userDetails) {
@@ -229,7 +227,7 @@ export default class ModalRoot extends React.Component {
   }
   submitOtpForgotPassword(otpDetails) {
     this.props.forgotPasswordOtpVerification(otpDetails, this.props.ownProps);
-    this.props.hideModal();
+
   }
   applyBankOffer = couponCode => {
     return this.props.applyBankOffer(couponCode);
