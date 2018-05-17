@@ -14,9 +14,6 @@ import MobileFooter from "./general/components/MobileFooter.js";
 import * as Cookie from "./lib/Cookie";
 import SecondaryLoader from "./general/components/SecondaryLoader";
 import HeaderContainer from "./general/containers/HeaderContainer.js";
-import StaticPageContainer from "./staticpage/containers/StaticPageContainer.js";
-import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
-import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
 import HelpDetailsContainer from "./account/containers/HelpDetailsContainer.js";
 import {
@@ -67,6 +64,10 @@ import {
   HELP_URL
 } from "../src/lib/constants";
 import Loadable from "react-loadable";
+
+import StaticPageContainer from "./staticpage/containers/StaticPageContainer.js";
+import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
+import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 
 const Loader = () => {
   return (
@@ -279,7 +280,10 @@ class App extends Component {
 
     return (
       <React.Fragment>
-        <div className={className}>
+        <div
+          className={className}
+          style={{ transform: `translateY(-${this.props.scrollPosition}px)` }}
+        >
           <HeaderContainer />
           <Switch>
             <Route path={MY_ACCOUNT} component={MyAccountWrapper} />{" "}

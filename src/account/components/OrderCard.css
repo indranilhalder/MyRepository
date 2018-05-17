@@ -63,3 +63,17 @@
   height: auto;
   display: inline-block;
 }
+.quantityHolder {
+  width: 100%;
+  height: auto;
+  color: #000;
+  font-size: 14px;
+  font-family: regular;
+  line-height: 20px;
+  margin-top: 5px;
+  display: inline-block;
+}
+.quantity {
+  composes: price;
+  padding-left: 5px;
+}

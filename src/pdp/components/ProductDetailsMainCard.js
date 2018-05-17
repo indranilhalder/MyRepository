@@ -19,7 +19,11 @@ export default class ProductDetailsMainCard extends React.Component {
       this.props.history.push(urlSuffix);
     }
   }
-
+  handleRatingLink() {
+    if (this.props.goToReviewPage) {
+      this.props.goToReviewPage();
+    }
+  }
   renderSchemaTags = () => {
     return (
       <MetaTags>
@@ -94,22 +98,27 @@ export default class ProductDetailsMainCard extends React.Component {
         </div>
 
         {this.props.averageRating && (
-          <StarRating averageRating={this.props.averageRating}>
-            {this.props.averageRating && (
-              <div
-                itemprop="aggregateRating"
-                itemscope
-                itemtype="http://schema.org/AggregateRating"
-                className={styles.ratingText}
-                onClick={() => this.handleClick()}
-              >
-                Rating {`${averageRating}`} /5
+          <div
+            className={styles.ratingHolder}
+            onClick={() => this.handleRatingLink()}
+          >
+            <StarRating averageRating={this.props.averageRating}>
+              {this.props.averageRating && (
+                <div
+                  itemprop="aggregateRating"
+                  itemscope
+                  itemtype="http://schema.org/AggregateRating"
+                  className={styles.ratingText}
+                  onClick={() => this.handleClick()}
+                >
+                  Rating {`${averageRating}`} /5
+                </div>
+              )}
+              <div className={styles.arrowHolder}>
+                <Icon image={arrowIcon} size={15} />
               </div>
-            )}
-            <div className={styles.arrowHolder}>
-              <Icon image={arrowIcon} size={15} />
-            </div>
-          </StarRating>
+            </StarRating>
+          </div>
         )}
       </div>
     );

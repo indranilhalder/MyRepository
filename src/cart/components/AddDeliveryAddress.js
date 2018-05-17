@@ -18,6 +18,7 @@ import {
   EMAIL_REGULAR_EXPRESSION,
   MOBILE_PATTERN
 } from "../../auth/components/Login";
+import AddEmailAddress from "../components/AddEmailAddress";
 import {
   SAVE_TEXT,
   PINCODE_TEXT,
@@ -58,7 +59,8 @@ export default class AddDeliveryAddress extends React.Component {
       defaultFlag: true,
       isOtherLandMarkSelected: false,
       selectedLandmarkLabel: "Landmark",
-      landmarkList: []
+      landmarkList: [],
+      userEmailId: ""
     };
   }
   handleOnFocusInput() {
@@ -66,6 +68,13 @@ export default class AddDeliveryAddress extends React.Component {
       this.props.onFocusInput();
     }
   }
+
+  componentDidMount() {
+    if (this.props.getUserDetails) {
+      this.props.getUserDetails();
+    }
+  }
+
   getPinCodeDetails = val => {
     let landmarkList = [];
     if (val.length <= 6) {
@@ -83,6 +92,15 @@ export default class AddDeliveryAddress extends React.Component {
       if (this.props.getAddressDetails) {
         this.props.getAddressDetails(cloneAddress);
       }
+    }
+  }
+
+  onChangeEmailId(val) {
+    const cloneAddress = cloneDeep(this.state);
+    Object.assign(cloneAddress, { emailId: val });
+    this.setState({ emailId: val });
+    if (this.props.getAddressDetails) {
+      this.props.getAddressDetails(cloneAddress);
     }
   }
   onChange(val) {
@@ -104,7 +122,7 @@ export default class AddDeliveryAddress extends React.Component {
     }
   }
   componentWillUnmount() {
-    if (this.props.resetAddAddressDetails()) {
+    if (this.props.resetAddAddressDetails) {
       this.props.resetAddAddressDetails();
     }
     if (this.props.resetAutoPopulateDataForPinCode) {
@@ -122,6 +140,13 @@ export default class AddDeliveryAddress extends React.Component {
         state: "",
         town: "",
         landmarkList
+      });
+    }
+    if (nextProps.userDetails) {
+      this.setState({
+        userEmailId: nextProps.userDetails.emailID
+          ? nextProps.userDetails.emailID
+          : ""
       });
     }
     if (nextProps.getPincodeStatus === SUCCESS && nextProps.getPinCodeDetails) {
@@ -194,17 +219,7 @@ export default class AddDeliveryAddress extends React.Component {
       this.props.displayToast(ADDRESS_TEXT);
       return false;
     }
-    if (!this.state.emailId) {
-      this.props.displayToast(EMAIL_TEXT);
-      return false;
-    }
-    if (
-      this.state.emailId &&
-      !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
-    ) {
-      this.props.displayToast(EMAIL_VALID_TEXT);
-      return false;
-    }
+
     if (!this.state.town) {
       this.props.displayToast(CITY_TEXT);
       return false;
@@ -223,6 +238,22 @@ export default class AddDeliveryAddress extends React.Component {
     }
     if (!this.state.addressType) {
       this.props.displayToast(SELECT_ADDRESS_TYPE);
+      return false;
+    }
+    if (
+      !this.state.userEmailId &&
+      !this.state.emailId &&
+      this.state.emailId === ""
+    ) {
+      this.props.displayToast("Please enter the EmailId");
+      return false;
+    }
+    if (
+      this.state.emailId &&
+      this.state.emailId !== "" &&
+      !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
+    ) {
+      this.props.displayToast(EMAIL_VALID_TEXT);
       return false;
     } else {
       const addressObj = cloneDeep(this.state);
@@ -378,7 +409,7 @@ export default class AddDeliveryAddress extends React.Component {
               />
             </div>
           )}
-          <div className={styles.content}>
+          {/* <div className={styles.content}>
             <Input2
               boxy={true}
               placeholder="Email*"
@@ -392,7 +423,7 @@ export default class AddDeliveryAddress extends React.Component {
                 this.handleOnFocusInput();
               }}
             />
-          </div>
+          </div> */}
           <div className={styles.content}>
             <Input2
               boxy={true}
@@ -461,6 +492,17 @@ export default class AddDeliveryAddress extends React.Component {
             />
           </div>
         </div>
+        {!this.state.userEmailId &&
+          this.state.userEmailId === "" && (
+            <div className={styles.emailHolder}>
+              <AddEmailAddress
+                value={
+                  this.props.emailId ? this.props.emailId : this.state.emailId
+                }
+                onChange={emailId => this.onChangeEmailId(emailId)}
+              />
+            </div>
+          )}
         <div className={styles.buttonHolder}>
           <div className={styles.saveAndContinueButton}>
             {!this.props.isFirstAddress && (

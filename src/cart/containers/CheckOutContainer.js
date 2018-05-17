@@ -68,10 +68,10 @@ import {
   getPinCode,
   getUserDetails,
   getPinCodeSuccess,
-  resetAddAddressDetails
+  resetAddAddressDetails,
+  updateProfile
 } from "../../account/actions/account.actions.js";
 import { displayToast } from "../../general/toast.actions";
-import { SUCCESS } from "../../lib/constants";
 import { setHeaderText } from "../../general/header.actions.js";
 import {
   setDataLayerForCheckoutDirectCalls,
@@ -80,6 +80,11 @@ import {
   ADOBE_CALL_FOR_SEE_ALL_BANK_OFFER
 } from "../../lib/adobeUtils";
 import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
+import {
+  SUCCESS_CAMEL_CASE,
+  SUCCESS_UPPERCASE,
+  SUCCESS
+} from "../../lib/constants.js";
 const mapDispatchToProps = dispatch => {
   return {
     getCartDetailsCNC: (
@@ -104,17 +109,41 @@ const mapDispatchToProps = dispatch => {
       dispatch(getUserAddress());
     },
     addUserAddress: (userAddress, getCartDetailCNCObj) => {
-      dispatch(addUserAddress(userAddress)).then(() => {
-        dispatch(
-          getCartDetailsCNC(
-            getCartDetailCNCObj.userId,
-            getCartDetailCNCObj.accessToken,
-            getCartDetailCNCObj.cartId,
-            getCartDetailCNCObj.pinCode,
-            getCartDetailCNCObj.isSoftReservation
-          )
-        );
-      });
+      if (userAddress.emailId) {
+        let userDetails = {};
+        userDetails.emailId = userAddress.emailId;
+        dispatch(updateProfile(userDetails)).then(res => {
+          if (
+            res.status === SUCCESS ||
+            res.status === SUCCESS_CAMEL_CASE ||
+            res.status === SUCCESS_UPPERCASE
+          ) {
+            dispatch(addUserAddress(userAddress)).then(() => {
+              dispatch(
+                getCartDetailsCNC(
+                  getCartDetailCNCObj.userId,
+                  getCartDetailCNCObj.accessToken,
+                  getCartDetailCNCObj.cartId,
+                  getCartDetailCNCObj.pinCode,
+                  getCartDetailCNCObj.isSoftReservation
+                )
+              );
+            });
+          }
+        });
+      } else {
+        dispatch(addUserAddress(userAddress)).then(() => {
+          dispatch(
+            getCartDetailsCNC(
+              getCartDetailCNCObj.userId,
+              getCartDetailCNCObj.accessToken,
+              getCartDetailCNCObj.cartId,
+              getCartDetailCNCObj.pinCode,
+              getCartDetailCNCObj.isSoftReservation
+            )
+          );
+        });
+      }
     },
     addAddressToCart: (addressId, pinCode) => {
       dispatch(addAddressToCart(addressId, pinCode));
@@ -387,7 +416,8 @@ const mapStateToProps = state => {
     cart: state.cart,
     getPinCodeDetails: state.profile.getPinCodeDetails,
     userDetails: state.profile.userDetails,
-    getPincodeStatus: state.profile.getPinCodeStatus
+    getPincodeStatus: state.profile.getPinCodeStatus,
+    addUserAddressStatus: state.profile.addUserAddressStatus
   };
 };
 
