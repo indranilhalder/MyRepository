@@ -6,11 +6,13 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 export default class RecommendationWidget extends React.Component {
   handleClick() {
-    const urlSuffix = this.props.feedComponentData.webURL.replace(
-      TATA_CLIQ_ROOT,
-      "$1"
-    );
-    this.props.history.push(urlSuffix);
+    if (this.props.feedComponentData.webURL) {
+      const urlSuffix = this.props.feedComponentData.webURL.replace(
+        TATA_CLIQ_ROOT,
+        "$1"
+      );
+      this.props.history.push(urlSuffix);
+    }
   }
 
   componentDidUpdate() {
