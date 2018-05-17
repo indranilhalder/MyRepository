@@ -36,8 +36,6 @@ import {
 } from "../../lib/adobeUtils";
 const dateFormat = "DD MMM YYYY";
 const PRODUCT_RETURN = "Return";
-const LOST_IN_TRANSIT = "LOST_IN_TRANSIT";
-const SHIPPING = "SHIPPING";
 const RETURN = "RETURN";
 const PRODUCT_CANCEL = "Cancel";
 const AWB_POPUP_TRUE = "Y";
