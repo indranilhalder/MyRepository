@@ -43,8 +43,8 @@ export default class BannerMobile extends React.Component {
     }
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if (nextProps.children.length !== nextState.children.length) {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.children) {
       const itemArray = React.Children.map(nextProps.children, (child, i) => {
         return child;
       });
