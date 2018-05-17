@@ -55,7 +55,7 @@ OrderReturn.propTypes = {
 };
 OrderReturn.defaultProps = {
   underlineButtonLabel: "Write a review",
-  buttonLabel: "Return or Replace",
+  buttonLabel: "Return",
   underlineButtonColour: "#ff1744",
   isEditable: false,
   outOfStock: false
