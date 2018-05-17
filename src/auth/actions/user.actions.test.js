@@ -75,11 +75,11 @@ describe("User Actions", () => {
     const expectedActions = [
       { type: userActions.LOGIN_USER_REQUEST, status: REQUESTING },
       {
+        scrollPosition: 0,
         type: userActions.LOGIN_USER_SUCCESS,
         user: userMock,
         status: SUCCESS,
-        userName: "test@xelpmoc.in",
-        scrollPosition: 0
+        userName: "test@xelpmoc.in"
       }
     ];
 
