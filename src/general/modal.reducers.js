@@ -16,7 +16,6 @@ const modal = (
         ownProps: action.ownProps
       });
     case modalActions.HIDE_MODAL:
-      console.log(state);
       window.scrollTo(0, state.scrollPosition);
       setTimeout(() => {
         window.scrollTo(0, state.scrollPosition);
