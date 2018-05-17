@@ -1,18 +1,11 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MyAccount from "../components/MyAccount";
-import { getUserCoupons, getUserAlerts } from "../actions/account.actions";
 import { setHeaderText } from "../../general/header.actions";
 import { setUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 import { displayToast } from "../../general/toast.actions.js";
 const mapDispatchToProps = dispatch => {
   return {
-    getUserCoupons: () => {
-      dispatch(getUserCoupons());
-    },
-    getUserAlerts: () => {
-      dispatch(getUserAlerts());
-    },
     displayToast: message => {
       dispatch(displayToast(message));
     },
@@ -26,9 +19,7 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   return {
-    userDetails: state.profile.userDetails,
-    userCoupons: state.profile.userCoupons,
-    userAlerts: state.profile.userAlerts
+    userDetails: state.profile.userDetails
   };
 };
 const MyAccountContainer = withRouter(

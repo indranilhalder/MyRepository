@@ -1,10 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
-import InformationHeader from "../../general/components/InformationHeader.js";
 import AllOrderContainer from "../containers/AllOrderContainer";
-import UserCoupons from "./UserCoupons";
-import UserAlerts from "./UserAlerts";
+import UserCouponsContainer from "../containers/UserCouponsContainer";
+import UserAlertsContainer from "../containers/UserAlertsContainer";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import ProfileMenuGrid from "../../blp/components/ProfileMenuGrid.js";
 import AccountSetting from "./AccountSetting.js";
@@ -20,12 +18,9 @@ import {
   MY_CLIQ,
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_UPDATE_PROFILE_PAGE,
-  QUE_MAGAZINE,
   TERMS_AND_CONDITION_URL,
   ABOUT_US_URL,
   PRIVACY_POLICY_URL,
-  CANCEL_URL,
-  RETURN_URL,
   FAQ_URL,
   HELP_URL
 } from "../../lib/constants";
@@ -66,12 +61,6 @@ export default class MyAccount extends React.Component {
   componentDidMount() {
     this.props.setHeaderText(MY_CLIQ);
     setDataLayer(ADOBE_MY_ACCOUNT_LANDING_PAGE);
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    if (userDetails && customerCookie) {
-      this.props.getUserCoupons();
-      this.props.getUserAlerts();
-    }
   }
 
   navigateToLogin() {
@@ -198,13 +187,12 @@ export default class MyAccount extends React.Component {
           )}
           {this.state.isSelected === 1 && (
             <div className={styles.alertsHolder}>
-              <UserAlerts userAlerts={this.props.userAlerts} />
+              <UserAlertsContainer />
             </div>
           )}
           {this.state.isSelected === 2 && (
             <div className={styles.couponHolder}>
-              <UserCoupons
-                userCoupons={this.props.userCoupons}
+              <UserCouponsContainer
                 displayToast={message => this.props.displayToast(message)}
               />
             </div>
