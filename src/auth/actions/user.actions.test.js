@@ -157,7 +157,8 @@ describe("User Actions", () => {
       {
         modalType: SIGN_UP_OTP_VERIFICATION,
         ownProps: { password: "123456", username: "test@xelpmoc.in" },
-        type: SHOW_MODAL
+        type: SHOW_MODAL,
+        scrollPosition: 0
       },
       {
         type: userActions.SIGN_UP_USER_SUCCESS,
