@@ -77,7 +77,8 @@ describe("User Actions", () => {
         type: userActions.LOGIN_USER_SUCCESS,
         user: userMock,
         status: SUCCESS,
-        userName: "test@xelpmoc.in"
+        userName: "test@xelpmoc.in",
+        scrollPosition: 0
       }
     ];
 
