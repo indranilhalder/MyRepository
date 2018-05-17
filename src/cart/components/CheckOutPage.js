@@ -1783,14 +1783,21 @@ class CheckOutPage extends React.Component {
       return true;
     } else {
       const card = new cardValidator(this.state.cardDetails.cardNumber);
-
-      if (
-        card.validateCard() &&
-        ((!this.state.cardDetails.cvvNumber && card.validateCvv("")) ||
-          (this.state.cardDetails.cvvNumber.length > 1 &&
-            card.validateCvv(this.state.cardDetails.cvvNumber)))
-      ) {
-        return false;
+      let cardDetails = card.getCardDetails();
+      if (card.validateCard()) {
+        if (
+          cardDetails &&
+          cardDetails.cvv_length &&
+          cardDetails.cvv_length.includes(
+            this.state.cardDetails.cvvNumber
+              ? this.state.cardDetails.cvvNumber.length
+              : 0
+          )
+        ) {
+          return false;
+        } else {
+          return true;
+        }
       } else {
         return true;
       }
