@@ -270,7 +270,7 @@ class CheckOutPage extends React.Component {
     }
     if (
       this.props.cart.orderConfirmationDetails ||
-      this.props.cart.cliqCashPaymentDetails
+      this.props.cart.cliqCashJusPayDetails
     ) {
       this.props.setHeaderText(THANK_YOU);
     } else {
@@ -452,8 +452,13 @@ class CheckOutPage extends React.Component {
   };
 
   getUserDetails = () => {
-    if (this.props.getUserDetails) {
-      this.props.getUserDetails();
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+    if (userDetails && customerCookie) {
+      if (this.props.getUserDetails) {
+        this.props.getUserDetails();
+      }
     }
   };
 
@@ -567,6 +572,8 @@ class CheckOutPage extends React.Component {
           onFocusInput={() => this.onFocusInput()}
           getPincodeStatus={this.props.getPincodeStatus}
           resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
+          getUserDetails={() => this.getUserDetails()}
+          userDetails={this.props.userDetails}
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -754,8 +761,9 @@ class CheckOutPage extends React.Component {
       this.setState({
         isRemainingAmount:
           nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
-        payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount
-          ? nextProps.cart.cliqCashPaymentDetails.paybleAmount
+        payableAmount: nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount
+          .value
+          ? nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value
           : "0.00",
         cliqCashAmount:
           nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value > 0
@@ -764,13 +772,14 @@ class CheckOutPage extends React.Component {
                   100
               ) / 100
             : "0.00",
-        bagAmount: nextProps.cart.cliqCashPaymentDetails.totalAmount
-          ? nextProps.cart.cliqCashPaymentDetails.totalAmount
+        bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
+          ? nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
           : "0.00",
         totalDiscount:
-          nextProps.cart.cliqCashPaymentDetails.otherDiscount.value > 0
+          nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount.value > 0
             ? Math.round(
-                nextProps.cart.cliqCashPaymentDetails.otherDiscount.value * 100
+                nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount
+                  .value * 100
               ) / 100
             : "0.00",
         cliqCashPaidAmount:
@@ -1110,13 +1119,7 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  removeNoCostEmi = couponCode => {
-    this.setState({
-      isNoCostEmiApplied: false,
-      isNoCostEmiProceeded: false,
-      noCostEmiBankName: null,
-      noCostEmiDiscount: "0.00"
-    });
+  removeNoCostEmi = async couponCode => {
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
@@ -1132,7 +1135,20 @@ class CheckOutPage extends React.Component {
       if (this.props.removeNoCostEmi) {
         let carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
         let cartId = JSON.parse(cartDetailsLoggedInUser).code;
-        this.props.removeNoCostEmi(couponCode, carGuId, cartId);
+        const removeNoCostEmiResponse = await this.props.removeNoCostEmi(
+          couponCode,
+          carGuId,
+          cartId
+        );
+        if (removeNoCostEmiResponse.status === SUCCESS) {
+          this.setState({
+            isNoCostEmiApplied: false,
+            isNoCostEmiProceeded: false,
+            noCostEmiBankName: null,
+            noCostEmiDiscount: "0.00"
+          });
+        }
+        return removeNoCostEmiResponse;
       }
     }
   };
@@ -1378,7 +1394,7 @@ class CheckOutPage extends React.Component {
         true // for payment failure we need to use old cart id
       );
     }
-    if (this.state.binValidationCOD) {
+    if (this.state.binValidationCOD && !this.state.isCliqCashApplied) {
       this.props.updateTransactionDetailsForCOD(CASH_ON_DELIVERY, "");
     }
   };
@@ -1493,7 +1509,7 @@ class CheckOutPage extends React.Component {
         );
       }
 
-      if (this.state.binValidationCOD) {
+      if (this.state.binValidationCOD && !this.state.isCliqCashApplied) {
         this.softReservationForCODPayment();
       }
       if (this.state.paymentModeSelected === PAYTM) {
@@ -1536,18 +1552,7 @@ class CheckOutPage extends React.Component {
       this.props.displayToast(ADDRESS_TEXT);
       return false;
     }
-    if (address && !address.emailId) {
-      this.props.displayToast(EMAIL_TEXT);
-      return false;
-    }
-    if (
-      address &&
-      address.emailId &&
-      !EMAIL_REGULAR_EXPRESSION.test(address.emailId)
-    ) {
-      this.props.displayToast(EMAIL_VALID_TEXT);
-      return false;
-    }
+
     if (address && !address.town) {
       this.props.displayToast(CITY_TEXT);
       return false;
@@ -1567,6 +1572,18 @@ class CheckOutPage extends React.Component {
     if (address && !address.addressType) {
       this.props.displayToast(SELECT_ADDRESS_TYPE);
       return false;
+    }
+    if (!address.userEmailId && !address.emailId && address.emailId === "") {
+      this.props.displayToast("Please enter the EmailId");
+      return false;
+    }
+    if (
+      address.emailId &&
+      address.emailId !== "" &&
+      !EMAIL_REGULAR_EXPRESSION.test(address.emailId)
+    ) {
+      this.props.displayToast(EMAIL_VALID_TEXT);
+      return false;
     } else {
       if (this.props.addUserAddress) {
         let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -1582,7 +1599,6 @@ class CheckOutPage extends React.Component {
           isSoftReservation: false
         };
         this.props.addUserAddress(address, getCartDetailCNCObj);
-
         this.setState({ addNewAddress: false });
       }
     }
@@ -1630,19 +1646,33 @@ class CheckOutPage extends React.Component {
         this.setState({
           isCliqCashApplied: true,
           currentPaymentMode: null,
-          isNoCostEmiApplied: false
+          isNoCostEmiApplied: false,
+          binValidationCOD: false,
+          captchaReseponseForCOD: null,
+          PAYMENT_MODE_TYPE: "Cliq Cash"
         });
         this.props.applyCliqCash();
       };
       this.props.showModalForCliqCashOrNoCostEmi({ doCallForApplyCliqCash });
     } else {
-      this.setState({ isCliqCashApplied: true });
+      this.setState({
+        isCliqCashApplied: true,
+        binValidationCOD: false,
+        captchaReseponseForCOD: null,
+        PAYMENT_MODE_TYPE: "Cliq Cash"
+      });
       this.props.applyCliqCash();
     }
   };
 
   removeCliqCash = () => {
-    this.setState({ isCliqCashApplied: false });
+    this.setState({
+      isCliqCashApplied: false,
+      isCliqCashApplied: false,
+      captchaReseponseForCOD: null,
+      PAYMENT_MODE_TYPE: null,
+      binValidationCOD: false
+    });
     this.props.removeCliqCash();
   };
 
@@ -1761,23 +1791,29 @@ class CheckOutPage extends React.Component {
       (!this.state.cardDetails.cardName ||
         (this.state.cardDetails.cardName &&
           this.state.cardDetails.cardName.length < 3)) ||
-      (!this.state.cardDetails.cvvNumber ||
-        (this.state.cardDetails.cardName &&
-          this.state.cardDetails.cardName.length < 1)) ||
+      (this.state.cardDetails.cardName &&
+        this.state.cardDetails.cardName.length < 1) ||
       !this.state.cardDetails.monthValue ||
       !this.state.cardDetails.yearValue
     ) {
       return true;
     } else {
-      const card = new cardValidator(
-        parseInt(this.state.cardDetails.cardNumber, 10)
-      );
-      if (
-        card.validateCard() &&
-        this.state.cardDetails.cvvNumber.length > 1 &&
-        card.validateCvv(this.state.cardDetails.cvvNumber)
-      ) {
-        return false;
+      const card = new cardValidator(this.state.cardDetails.cardNumber);
+      let cardDetails = card.getCardDetails();
+      if (card.validateCard()) {
+        if (
+          cardDetails &&
+          cardDetails.cvv_length &&
+          cardDetails.cvv_length.includes(
+            this.state.cardDetails.cvvNumber
+              ? this.state.cardDetails.cvvNumber.length
+              : 0
+          )
+        ) {
+          return false;
+        } else {
+          return true;
+        }
       } else {
         return true;
       }
@@ -1835,6 +1871,10 @@ class CheckOutPage extends React.Component {
       !this.state.isGiftCard &&
       (this.props.cart.userAddress && this.props.cart.userAddress.addresses)
     ) {
+      if (!this.state.addressId) {
+        checkoutButtonStatus = true;
+      }
+
       labelForButton = PROCEED;
     } else if (
       (this.state.confirmAddress && !this.state.deliverMode) ||
@@ -1904,6 +1944,7 @@ class CheckOutPage extends React.Component {
     } else {
       if (
         this.props.cart.loading ||
+        this.props.cart.cartDetailsCNCLoader ||
         this.props.cart.jusPaymentLoader ||
         this.props.cart.selectDeliveryModeLoader ||
         (!this.props.cart.paymentModes && this.state.deliverMode) ||
@@ -1939,6 +1980,8 @@ class CheckOutPage extends React.Component {
             getPincodeStatus={this.props.getPincodeStatus}
             onFocusInput={() => this.onFocusInput()}
             resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
+            getUserDetails={() => this.getUserDetails()}
+            userDetails={this.props.userDetails}
           />
         </div>
       );

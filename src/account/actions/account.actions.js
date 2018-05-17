@@ -7,7 +7,8 @@ import {
   FAILURE,
   HOME_FEED_FOLLOW_AND_UN_FOLLOW,
   PDP_FOLLOW_AND_UN_FOLLOW,
-  MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW
+  MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW,
+  STORE_NOT_AVAILABLE_TEXT
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import findIndex from "lodash.findindex";
@@ -617,12 +618,20 @@ export function quickDropStore(pincode, ussId) {
 
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+      if (resultJsonStatus.status || resultJson.status === "Store Not available") {
+
+        let errorMessage=resultJsonStatus.message
+        if(resultJson.status === "Store Not available")
+        {
+
+          errorMessage="Store Not available";
+        }
+
+        throw new Error(errorMessage);
       }
-      dispatch(quickDropStoreSuccess(resultJson.returnStoreDetailsList));
+     return dispatch(quickDropStoreSuccess(resultJson.returnStoreDetailsList));
     } catch (e) {
-      dispatch(quickDropStoreFailure(e.message));
+      return  dispatch(quickDropStoreFailure(e.message));
     }
   };
 }
@@ -1962,9 +1971,9 @@ export function redeemCliqVoucher(cliqCashDetails, fromCheckout) {
         guIdObject.append(CART_GU_ID, JSON.parse(cartDetails).guid);
         dispatch(getPaymentModes(guIdObject));
       }
-      dispatch(redeemCliqVoucherSuccess(resultJson));
+      return dispatch(redeemCliqVoucherSuccess(resultJson));
     } catch (e) {
-      dispatch(redeemCliqVoucherFailure(e.message));
+      return dispatch(redeemCliqVoucherFailure(e.message));
     }
   };
 }

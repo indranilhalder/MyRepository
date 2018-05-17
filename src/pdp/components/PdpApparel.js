@@ -265,6 +265,7 @@ export default class PdpApparel extends React.Component {
     if (
       this.props.productDetails.variantOptions &&
       this.props.productDetails.variantOptions[0].sizelink &&
+      this.props.productDetails.variantOptions[0].sizelink.size &&
       (this.props.productDetails.variantOptions[0].sizelink.size.toUpperCase() ===
         NO_SIZE ||
         this.props.productDetails.variantOptions[0].sizelink.size === "0")
@@ -363,7 +364,7 @@ export default class PdpApparel extends React.Component {
               price={price}
               discountPrice={discountPrice}
               averageRating={productData.averageRating}
-              onClick={this.goToReviewPage}
+              goToReviewPage={this.goToReviewPage}
               discount={productData.discount}
             />
           </div>
