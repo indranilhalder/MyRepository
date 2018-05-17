@@ -68,6 +68,7 @@ export default class CancelReasonForm extends React.Component {
               )
             }
             price={data.orderProductWsDTO[0].price}
+            quantity={true}
           >
             {data.orderProductWsDTO[0].quantity && (
               <div className={styles.quantity}>
