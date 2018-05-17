@@ -4,7 +4,6 @@ import Image from "../../xelpmoc-core/Image";
 import Icon from "../../xelpmoc-core/Icon";
 import Button from "../../general/components/Button";
 import PropTypes from "prop-types";
-import Logo from "../../general/components/Logo";
 export default class ShopCollection extends React.Component {
   handleClick = () => {
     if (this.props.onClick) {
@@ -15,7 +14,7 @@ export default class ShopCollection extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.imageHolder}>
-          <Image image={this.props.image} />
+          <Image image={this.props.image} lazyLoad={true} />
         </div>
         <div className={styles.textLine}>
           <div className={styles.headingHolder}>
