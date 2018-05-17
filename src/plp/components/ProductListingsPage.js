@@ -20,7 +20,8 @@ const SEARCH_CATEGORY_TO_IGNORE = "all";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SKU_SUFFIX = `&isFilter=false&channel=mobile`;
 const PAGE_REGEX = /page-(\d+)/;
-
+const MAX_PRICE_FROM_API = "and Above";
+const MAX_PRICE_FROM_UI = "-₹9,999,999";
 class ProductListingsPage extends Component {
   getSearchTextFromUrl() {
     const parsedQueryString = queryString.parse(this.props.location.search);
@@ -49,9 +50,14 @@ class ProductListingsPage extends Component {
           ":relevance",
           `:relevance:category:${this.props.match.params[0].toUpperCase()}`
         );
+      } else {
+        searchText = `:relevance:category:${this.props.match.params[0].toUpperCase()}`;
       }
     }
-
+    if (searchText) {
+      searchText = searchText.replace("+", " ");
+      searchText = searchText.replace(MAX_PRICE_FROM_API, MAX_PRICE_FROM_UI);
+    }
     return encodeURIComponent(searchText);
   }
 
