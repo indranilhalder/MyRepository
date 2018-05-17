@@ -698,7 +698,7 @@ const cart = (
         });
       }
       return Object.assign({}, state, {
-        cloneCartDetailCNC,
+        cartDetailsCNC: cloneCartDetailCNC,
         cliqCashPaymentStatus: action.status,
         cliqCashPaymentDetails: action.paymentDetails,
         loading: false
@@ -732,7 +732,7 @@ const cart = (
         });
       }
       return Object.assign({}, state, {
-        cloneCartDetailCNC,
+        cartDetailsCNC: cloneCartDetailCNC,
         cliqCashPaymentStatus: action.status,
         cliqCashPaymentDetails: action.paymentDetails,
         loading: false
@@ -1246,7 +1246,7 @@ const cart = (
         noCostEmiDetails: action.noCostEmiResult,
         cartDetailsCNC: carDetailsCopy,
         loading: false,
-        cliqCashPaymentDetails:null
+        cliqCashPaymentDetails: null
       });
 
     case cartActions.APPLY_NO_COST_EMI_FAILURE:
@@ -1275,7 +1275,7 @@ const cart = (
         noCostEmiDetails: action.noCostEmiResult,
         cartDetailsCNC: carDetailsCopy,
         loading: false,
-        cliqCashPaymentDetails:null
+        cliqCashPaymentDetails: null
       });
 
     case cartActions.REMOVE_NO_COST_EMI_FAILURE:
