@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import WidgetContainer from "../containers/WidgetContainer";
 import HomeSkeleton from "../../general/components/HomeSkeleton.js";
-
 import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
 import VideoProductCarousel from "./VideoProductCarousel.js";
@@ -14,7 +13,6 @@ import BannerSeparator from "../../general/components/BannerSeparator.js";
 import FollowingBrands from "./FollowingBrands";
 import ContentWidgetWrapper from "./ContentWidgetWrapper";
 import FlashSale from "./FlashSale";
-
 import OfferWidget from "./OfferWidget.js";
 import ThemeOffer from "./ThemeOffer.js";
 import ThemeProductWidget from "./ThemeProductWidget.js";
