@@ -861,16 +861,16 @@ export function addUserAddress(userAddress, fromAccount) {
           userAddress.countryIso
         }&addressType=${userAddress.addressType}&phone=${
           userAddress.phone
-        }&firstName=${
-          userAddress.firstName
-        }&lastName=${userAddress.lastName}
+        }&firstName=${userAddress.firstName}&lastName=${userAddress.lastName}
         &postalCode=${userAddress.postalCode}&line1=${
           userAddress.line1
         }&state=${userAddress.state}&line2=${userAddress.line2}&line3=${
           userAddress.line3
         }&town=${userAddress.town}&landmark=${
           userAddress.landmark ? userAddress.landmark : ""
-        }&defaultFlag=${userAddress.defaultFlag}&emailId=${JSON.parse(userDetails).userName}`
+        }&defaultFlag=${userAddress.defaultFlag}&emailId=${
+          JSON.parse(userDetails).userName
+        }`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -1844,7 +1844,7 @@ export function applyCliqCash() {
           JSON.parse(userDetails).userName
         }/applyCliqCash?access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartId}`
+        }&cartGuid=${cartId}&isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -1898,7 +1898,7 @@ export function removeCliqCash() {
           JSON.parse(userDetails).userName
         }/removeCliqCash?access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartId}`
+        }&cartGuid=${cartId}&isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
