@@ -4,7 +4,9 @@ import queryString from "query-string";
 import {
   CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
   BRAND_AND_CATEGORY_PAGE,
-  SKU_PAGE
+  SKU_PAGE,
+  CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
+  CATEGORY_PAGE_WITH_SLUG
 } from "../../lib/constants.js";
 import {
   CATEGORY_CAPTURE_REGEX,
@@ -21,6 +23,7 @@ const PAGE_REGEX = /page-(\d)/;
 
 class ProductListingsPage extends Component {
   getSearchTextFromUrl() {
+    console.log("Comes in search url");
     const parsedQueryString = queryString.parse(this.props.location.search);
 
     const searchCategory = parsedQueryString.searchCategory;
@@ -38,7 +41,11 @@ class ProductListingsPage extends Component {
       searchText = parsedQueryString.text;
     }
 
-    if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
+    if (
+      this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE ||
+      this.props.match.path === CATEGORY_PAGE_WITH_SLUG
+    ) {
+      console.log("Comes in console");
       if (searchText) {
         searchText = searchText.replace(
           ":relevance",
@@ -46,6 +53,7 @@ class ProductListingsPage extends Component {
         );
       }
     }
+    console.log(searchText);
     let match;
     const url = this.props.location.pathname;
 
@@ -53,6 +61,7 @@ class ProductListingsPage extends Component {
   }
 
   componentDidMount() {
+    console.log("Comes in plp");
     if (
       this.props.location.state &&
       this.props.location.state.disableSerpSearch === true
@@ -68,13 +77,20 @@ class ProductListingsPage extends Component {
     }
 
     if (this.props.searchText) {
-      this.props.getProductListings(this.props.searchText, SUFFIX, 0);
+      let searchText = this.getSearchTextFromUrl();
+      this.props.getProductListings(searchText, SUFFIX, 0);
       return;
     }
     let page = null;
-    if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
+
+    if (
+      this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE ||
+      this.props.match.path === CATEGORY_PAGE_WITH_SLUG
+    ) {
       page = this.props.match.params[1];
+
       let searchText = this.getSearchTextFromUrl();
+
       this.props.getProductListings(searchText, SUFFIX, page - 1);
       return;
     }
