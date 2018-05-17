@@ -213,7 +213,7 @@ export default class ModalRoot extends React.Component {
   }
   submitOtp(otpDetails) {
     this.props.otpVerification(otpDetails, this.props.ownProps);
-    this.props.hideModal();
+
   }
   resendOTP(userObj) {
     this.props.resendOTP(userObj);

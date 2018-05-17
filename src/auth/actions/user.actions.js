@@ -278,7 +278,8 @@ export function otpVerification(otpDetails, userDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(hideModal());
+
+      dispatch(hideModal(SIGN_UP_OTP_VERIFICATION));
       return dispatch(otpVerificationSuccess(resultJson, userDetails.username));
     } catch (e) {
       return dispatch(otpVerificationFailure(e.message));
