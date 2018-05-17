@@ -6,11 +6,16 @@ import iconImageURL from "./img/Connect_Small.svg";
 import MediaQuery from "react-responsive";
 import ConnectKnowMoreContainer from "../containers/ConnectKnowMoreContainer";
 import ConnectKnowMore from "./ConnectKnowMore";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import ConnectBaseWidget from "./ConnectBaseWidget";
 export default class ConnectWidget extends React.Component {
   handleClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
+    if (this.props.feedComponentData.webURL) {
+      const urlSuffix = this.props.feedComponentData.webURL.replace(
+        TATA_CLIQ_ROOT,
+        "$1"
+      );
+      this.props.history.push(urlSuffix);
     }
   }
   render() {
@@ -26,6 +31,9 @@ export default class ConnectWidget extends React.Component {
             ? styles.firstPositionHolder
             : styles.holder
         }
+        onClick={() => {
+          this.handleClick();
+        }}
         style={{
           backgroundImage: `linear-gradient(165deg, ${
             this.props.feedComponentData.startHexCode
