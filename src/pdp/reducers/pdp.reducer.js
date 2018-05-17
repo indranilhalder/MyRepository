@@ -85,7 +85,8 @@ const productDescription = (
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
-        loading: false
+        loading: false,
+        visitedNewProduct: true
       });
     case pdpActions.SET_TO_OLD:
       return Object.assign({}, state, {
