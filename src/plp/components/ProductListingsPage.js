@@ -4,7 +4,9 @@ import queryString from "query-string";
 import {
   CATEGORY_PRODUCT_LISTINGS_WITH_PAGE,
   BRAND_AND_CATEGORY_PAGE,
-  SKU_PAGE
+  SKU_PAGE,
+  CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
+  CATEGORY_PAGE_WITH_SLUG
 } from "../../lib/constants.js";
 import {
   CATEGORY_CAPTURE_REGEX,
@@ -26,7 +28,11 @@ class ProductListingsPage extends Component {
     const searchCategory = parsedQueryString.searchCategory;
     let searchText = parsedQueryString.q;
 
-    if (searchCategory && searchCategory !== SEARCH_CATEGORY_TO_IGNORE) {
+    if (
+      searchCategory &&
+      searchCategory !== "" &&
+      searchCategory !== SEARCH_CATEGORY_TO_IGNORE
+    ) {
       searchText = `:category:${searchCategory}`;
     }
 
@@ -34,30 +40,16 @@ class ProductListingsPage extends Component {
       searchText = parsedQueryString.text;
     }
 
-    if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
-      if (!searchText) {
-        searchText = `:relevance:category:${this.props.match.params[0].toUpperCase()}`;
+    if (
+      this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE ||
+      this.props.match.path === CATEGORY_PAGE_WITH_SLUG
+    ) {
+      if (searchText) {
+        searchText = searchText.replace(
+          ":relevance",
+          `:relevance:category:${this.props.match.params[0].toUpperCase()}`
+        );
       }
-    }
-    let match;
-    const url = this.props.location.pathname;
-
-    if (CATEGORY_REGEX.test(url)) {
-      match = CATEGORY_CAPTURE_REGEX.exec(url)[0];
-      match = match.replace(BRAND_CATEGORY_PREFIX, "");
-
-      match = match.toUpperCase();
-
-      searchText = `:relevance:category:${match}`;
-    }
-
-    if (BRAND_REGEX.test(url)) {
-      match = BRAND_CAPTURE_REGEX.exec(url)[0];
-      match = match.replace(BRAND_CATEGORY_PREFIX, "");
-
-      match = match.toUpperCase();
-
-      searchText = `:relevance:brand:${match}`;
     }
 
     return encodeURIComponent(searchText);
@@ -79,13 +71,20 @@ class ProductListingsPage extends Component {
     }
 
     if (this.props.searchText) {
-      this.props.getProductListings(this.props.searchText, SUFFIX, 0);
+      let searchText = this.getSearchTextFromUrl();
+      this.props.getProductListings(searchText, SUFFIX, 0);
       return;
     }
     let page = null;
-    if (this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE) {
+
+    if (
+      this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE ||
+      this.props.match.path === CATEGORY_PAGE_WITH_SLUG
+    ) {
       page = this.props.match.params[1];
+
       let searchText = this.getSearchTextFromUrl();
+
       this.props.getProductListings(searchText, SUFFIX, page - 1);
       return;
     }
