@@ -268,7 +268,9 @@ export default class PdpJewellery extends React.Component {
     if (
       this.props.productDetails.variantOptions &&
       this.props.productDetails.variantOptions[0].sizelink &&
-      (this.props.productDetails.variantOptions[0].sizelink.size === NO_SIZE ||
+      this.props.productDetails.variantOptions[0].sizelink.size &&
+      (this.props.productDetails.variantOptions[0].sizelink.size.toUpperCase() ===
+        NO_SIZE ||
         this.props.productDetails.variantOptions[0].sizelink.size === "0")
     ) {
       return true;
