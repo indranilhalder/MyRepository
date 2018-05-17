@@ -40,7 +40,8 @@ describe("User Actions", () => {
       user: null,
       status: null,
       error: null,
-      isLoggedIn: false
+      isLoggedIn: false,
+      scrollPosition: 0
     };
   });
 
