@@ -188,7 +188,7 @@ const cart = (
   },
   action
 ) => {
-  let updatedCartDetailsCNC, cartDetails;
+  let updatedCartDetailsCNC, cloneCartDetailCNC, cartDetails;
   switch (action.type) {
     case CLEAR_ERROR:
       return Object.assign({}, state, {
@@ -663,7 +663,7 @@ const cart = (
         loading: true
       });
     case cartActions.RELEASE_BANK_OFFER_SUCCESS:
-      const cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
       cloneCartDetailCNC.cartAmount = action.bankOffer.cartAmount;
       return Object.assign({}, state, {
         bankOfferStatus: action.status,
@@ -685,7 +685,20 @@ const cart = (
       });
 
     case cartActions.APPLY_CLIQ_CASH_SUCCESS: {
+      cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      if (
+        cloneCartDetailCNC.cartAmount &&
+        action.paymentDetails &&
+        action.paymentDetails.cartAmount
+      ) {
+        cloneCartDetailCNC.cartAmount = action.paymentDetails.cartAmount;
+      } else {
+        Object.assign(cloneCartDetailCNC, {
+          cartAmount: action.paymentDetails.cartAmount
+        });
+      }
       return Object.assign({}, state, {
+        cloneCartDetailCNC,
         cliqCashPaymentStatus: action.status,
         cliqCashPaymentDetails: action.paymentDetails,
         loading: false
@@ -706,7 +719,20 @@ const cart = (
       });
 
     case cartActions.REMOVE_CLIQ_CASH_SUCCESS: {
+      cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      if (
+        cloneCartDetailCNC.cartAmount &&
+        action.paymentDetails &&
+        action.paymentDetails.cartAmount
+      ) {
+        cloneCartDetailCNC.cartAmount = action.paymentDetails.cartAmount;
+      } else {
+        Object.assign(cloneCartDetailCNC, {
+          cartAmount: action.paymentDetails.cartAmount
+        });
+      }
       return Object.assign({}, state, {
+        cloneCartDetailCNC,
         cliqCashPaymentStatus: action.status,
         cliqCashPaymentDetails: action.paymentDetails,
         loading: false
