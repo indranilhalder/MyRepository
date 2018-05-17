@@ -52,6 +52,14 @@ export default class OrderCard extends React.Component {
               <div className={styles.price}>Free</div>
             </div>
           )}
+          {this.props.quantity && (
+            <div className={styles.quantityHolder}>
+              <div className={styles.price}>Qty</div>
+              <div className={styles.quantity}>
+                {this.props.numberOfQuantity}
+              </div>
+            </div>
+          )}
           {this.props.children && (
             <div className={styles.additionalContent}>
               {this.props.children}
@@ -68,4 +76,8 @@ OrderCard.propTypes = {
   price: PropTypes.number,
   discountPrice: PropTypes.string,
   isSelect: PropTypes.bool
+};
+OrderCard.defaultProps = {
+  quantity: false,
+  numberOfQuantity: 1
 };

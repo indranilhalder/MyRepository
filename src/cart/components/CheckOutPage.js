@@ -452,8 +452,13 @@ class CheckOutPage extends React.Component {
   };
 
   getUserDetails = () => {
-    if (this.props.getUserDetails) {
-      this.props.getUserDetails();
+    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
+    if (userDetails && customerCookie) {
+      if (this.props.getUserDetails) {
+        this.props.getUserDetails();
+      }
     }
   };
 
@@ -567,7 +572,7 @@ class CheckOutPage extends React.Component {
           onFocusInput={() => this.onFocusInput()}
           getPincodeStatus={this.props.getPincodeStatus}
           resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
-          getUserDetails={()=>this.props.getUserDetails()}
+          getUserDetails={() => this.getUserDetails()}
           userDetails={this.props.userDetails}
         />
         <DummyTab title="Delivery Mode" number={2} />
@@ -791,7 +796,6 @@ class CheckOutPage extends React.Component {
         this.state.isRemainingAmount &&
         !this.state.isPaymentFailed
       ) {
-
         let cliqCashAmount = 0;
         if (
           nextProps.cart.paymentModes &&
@@ -1116,7 +1120,6 @@ class CheckOutPage extends React.Component {
   };
 
   removeNoCostEmi = async couponCode => {
-
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
@@ -1132,9 +1135,12 @@ class CheckOutPage extends React.Component {
       if (this.props.removeNoCostEmi) {
         let carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
         let cartId = JSON.parse(cartDetailsLoggedInUser).code;
-        const removeNoCostEmiResponse = await this.props.removeNoCostEmi(couponCode, carGuId, cartId);
-        if(removeNoCostEmiResponse.status === SUCCESS)
-        {
+        const removeNoCostEmiResponse = await this.props.removeNoCostEmi(
+          couponCode,
+          carGuId,
+          cartId
+        );
+        if (removeNoCostEmiResponse.status === SUCCESS) {
           this.setState({
             isNoCostEmiApplied: false,
             isNoCostEmiProceeded: false,
@@ -1547,7 +1553,6 @@ class CheckOutPage extends React.Component {
       return false;
     }
 
-
     if (address && !address.town) {
       this.props.displayToast(CITY_TEXT);
       return false;
@@ -1568,11 +1573,7 @@ class CheckOutPage extends React.Component {
       this.props.displayToast(SELECT_ADDRESS_TYPE);
       return false;
     }
-    if (
-      !address.userEmailId &&
-      !address.emailId &&
-      address.emailId === ""
-    ) {
+    if (!address.userEmailId && !address.emailId && address.emailId === "") {
       this.props.displayToast("Please enter the EmailId");
       return false;
     }
@@ -1583,8 +1584,7 @@ class CheckOutPage extends React.Component {
     ) {
       this.props.displayToast(EMAIL_VALID_TEXT);
       return false;
-    }
-     else {
+    } else {
       if (this.props.addUserAddress) {
         let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
         let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -1777,23 +1777,29 @@ class CheckOutPage extends React.Component {
       (!this.state.cardDetails.cardName ||
         (this.state.cardDetails.cardName &&
           this.state.cardDetails.cardName.length < 3)) ||
-      (!this.state.cardDetails.cvvNumber ||
-        (this.state.cardDetails.cardName &&
-          this.state.cardDetails.cardName.length < 1)) ||
+      (this.state.cardDetails.cardName &&
+        this.state.cardDetails.cardName.length < 1) ||
       !this.state.cardDetails.monthValue ||
       !this.state.cardDetails.yearValue
     ) {
       return true;
     } else {
-      const card = new cardValidator(
-        parseInt(this.state.cardDetails.cardNumber, 10)
-      );
-      if (
-        card.validateCard() &&
-        this.state.cardDetails.cvvNumber.length > 1 &&
-        card.validateCvv(this.state.cardDetails.cvvNumber)
-      ) {
-        return false;
+      const card = new cardValidator(this.state.cardDetails.cardNumber);
+      let cardDetails = card.getCardDetails();
+      if (card.validateCard()) {
+        if (
+          cardDetails &&
+          cardDetails.cvv_length &&
+          cardDetails.cvv_length.includes(
+            this.state.cardDetails.cvvNumber
+              ? this.state.cardDetails.cvvNumber.length
+              : 0
+          )
+        ) {
+          return false;
+        } else {
+          return true;
+        }
       } else {
         return true;
       }
@@ -1955,7 +1961,7 @@ class CheckOutPage extends React.Component {
             getPincodeStatus={this.props.getPincodeStatus}
             onFocusInput={() => this.onFocusInput()}
             resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
-            getUserDetails={() => this.props.getUserDetails()}
+            getUserDetails={() => this.getUserDetails()}
             userDetails={this.props.userDetails}
           />
         </div>
