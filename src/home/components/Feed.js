@@ -3,13 +3,28 @@ import PropTypes from "prop-types";
 import WidgetContainer from "../containers/WidgetContainer";
 import HomeSkeleton from "../../general/components/HomeSkeleton.js";
 
-// import MonoBanner from "./MonoBanner";
+import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
+import BannerProductCarousel from "./BannerProductCarousel.js";
+import VideoProductCarousel from "./VideoProductCarousel.js";
+import RecommendationWidget from "./RecommendationWidget.js";
+import HeroBanner from "./HeroBanner.js";
+import FollowBase from "./FollowBase.js";
+import ConnectWidget from "./ConnectWidget";
+import BannerSeparator from "../../general/components/BannerSeparator.js";
+import FollowingBrands from "./FollowingBrands";
+import ContentWidgetWrapper from "./ContentWidgetWrapper";
+import FlashSale from "./FlashSale";
+
+import OfferWidget from "./OfferWidget.js";
+import ThemeOffer from "./ThemeOffer.js";
+import ThemeProductWidget from "./ThemeProductWidget.js";
+import DiscoverMore from "./DiscoverMore.js";
+import CuratedProductsComponent from "./CuratedProductsComponent";
+import MonoBanner from "./MonoBanner";
 import styles from "./Feed.css";
 import * as Cookie from "../../lib/Cookie";
 import List from "@researchgate/react-intersection-list";
 import map from "lodash.map";
-import BannerSeparator from "../../general/components/BannerSeparator.js";
-
 import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN
@@ -19,26 +34,12 @@ import {
   renderMetaTagsWithoutSeoObject
 } from "../../lib/seoUtils";
 import Loadable from "react-loadable";
-// import ContentWidgetWrapper from "./ContentWidgetWrapper";
 
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeKeyMapping = {
   "Hero Banner Component": "heroBannerComponent"
 };
-
-const MonoBanner = Loadable({
-  loader: () => import("./MonoBanner"),
-  loading() {
-    return <div />;
-  }
-});
-const ContentWidgetWrapper = Loadable({
-  loader: () => import("./ContentWidgetWrapper"),
-  loading() {
-    return <div />;
-  }
-});
 
 const ProductCapsulesContainer = Loadable({
   loader: () => import("../containers/ProductCapsulesContainer"),
@@ -113,102 +114,6 @@ const CuratedFeature = Loadable({
 
 const LatestCollections = Loadable({
   loader: () => import("../../blp/components/LatestCollections"),
-  loading() {
-    return <div />;
-  }
-});
-
-const AutomatedBrandProductCarousel = Loadable({
-  loader: () => import("./AutomatedBrandProductCarousel.js"),
-  loading() {
-    return <div />;
-  }
-});
-
-const BannerProductCarousel = Loadable({
-  loader: () => import("./BannerProductCarousel.js"),
-  loading() {
-    return <div />;
-  }
-});
-
-const RecommendationWidget = Loadable({
-  loader: () => import("./RecommendationWidget.js"),
-  loading() {
-    return <div />;
-  }
-});
-
-const HeroBanner = Loadable({
-  loader: () => import("./HeroBanner.js"),
-  loading() {
-    return <div />;
-  }
-});
-
-const FollowBase = Loadable({
-  loader: () => import("./FollowBase.js"),
-  loading() {
-    return <div />;
-  }
-});
-
-const ConnectWidget = Loadable({
-  loader: () => import("./ConnectWidget.js"),
-  loading() {
-    return <div />;
-  }
-});
-
-const FollowingBrands = Loadable({
-  loader: () => import("./FollowingBrands.js"),
-  loading() {
-    return <div />;
-  }
-});
-
-const FlashSale = Loadable({
-  loader: () => import("./FlashSale.js"),
-  loading() {
-    return <div />;
-  }
-});
-
-const OfferWidget = Loadable({
-  loader: () => import("./OfferWidget.js"),
-  loading() {
-    return <div />;
-  }
-});
-const ThemeOffer = Loadable({
-  loader: () => import("./ThemeOffer.js"),
-  loading() {
-    return <div />;
-  }
-});
-const ThemeProductWidget = Loadable({
-  loader: () => import("./ThemeProductWidget.js"),
-  loading() {
-    return <div />;
-  }
-});
-
-const DiscoverMore = Loadable({
-  loader: () => import("./DiscoverMore.js"),
-  loading() {
-    return <div />;
-  }
-});
-
-const CuratedProductsComponent = Loadable({
-  loader: () => import("./CuratedProductsComponent.js"),
-  loading() {
-    return <div />;
-  }
-});
-
-const VideoProductCarousel = Loadable({
-  loader: () => import("./VideoProductCarousel.js"),
   loading() {
     return <div />;
   }
