@@ -200,10 +200,7 @@ export default class PaymentCardWrapper extends React.Component {
           {this.props.isRemainingBalance && (
             <div className={styles.paymentModes}>
               <div className={styles.card}>
-                <CheckOutHeader
-                  confirmTitle="Choose payment Method"
-                  indexNumber="3"
-                />
+                <CheckOutHeader confirmTitle="Make Payment" indexNumber="3" />
               </div>
               {this.renderSavedCards()}
               {this.props.cart.paymentModes &&
