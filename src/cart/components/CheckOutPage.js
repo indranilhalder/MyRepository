@@ -1871,6 +1871,10 @@ class CheckOutPage extends React.Component {
       !this.state.isGiftCard &&
       (this.props.cart.userAddress && this.props.cart.userAddress.addresses)
     ) {
+      if (!this.state.addressId) {
+        checkoutButtonStatus = true;
+      }
+
       labelForButton = PROCEED;
     } else if (
       (this.state.confirmAddress && !this.state.deliverMode) ||
