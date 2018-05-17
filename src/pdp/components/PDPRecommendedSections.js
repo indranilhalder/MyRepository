@@ -24,12 +24,6 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 // only want to kick off a request for the MSD stuff if they are visible.
 
 class PDPRecommendedSections extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      hasCalledMSD: false
-    };
-  }
   goToProductDescription = url => {
     this.props.history.push(url);
   };
@@ -40,9 +34,6 @@ class PDPRecommendedSections extends React.Component {
     } else if (this.props.aboutTheBrand && this.props.aboutTheBrand.brandId) {
       this.props.history.push(`c-${this.props.aboutTheBrand.brandId}`);
     }
-  }
-  componentWillUnmount() {
-    console.log("unmounted");
   }
   renderAboutTheBrand() {
     let brandId;
@@ -61,7 +52,7 @@ class PDPRecommendedSections extends React.Component {
     if (this.props.aboutTheBrand) {
       brandId = this.props.aboutTheBrand.id;
     }
-    console.log(this.props);
+
     const options = {
       onChange: this.handleIntersection,
       rootMargin: "0% 0% -25%"
@@ -148,7 +139,6 @@ class PDPRecommendedSections extends React.Component {
   }
 
   handleIntersection = event => {
-    console.log("in intersection");
     if (event.isIntersecting) {
       if (this.props.visitedNewProduct) {
         if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
