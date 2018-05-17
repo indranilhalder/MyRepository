@@ -202,7 +202,7 @@ const account = (
       return Object.assign({}, state, {
         status: action.status,
         loading: true,
-        error: action.error
+        error: null
       });
     case accountActions.QUICK_DROP_STORE_SUCCESS:
       currentReturnRequest = cloneDeep(state.returnRequest);
@@ -218,7 +218,8 @@ const account = (
     case accountActions.QUICK_DROP_STORE_FAILURE:
       return Object.assign({}, state, {
         loading: false,
-        status: action.status
+        status: action.status,
+        error: action.error
       });
 
     case accountActions.GET_GIFTCARD_REQUEST:
